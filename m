@@ -4,75 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E416C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E146C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A26820656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB87C217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GT0S++/n"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3842AqDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbfEIR0A (ORCPT
+        id S1726932AbfEIR0C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:26:00 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:41808 "EHLO
+        Thu, 9 May 2019 13:26:02 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:41858 "EHLO
         aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfEIRZ4 (ORCPT
+        with ESMTP id S1726892AbfEIRZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:25:56 -0400
+        Thu, 9 May 2019 13:25:59 -0400
 Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HKMNq163067;
-        Thu, 9 May 2019 17:25:41 GMT
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HJSBL162321;
+        Thu, 9 May 2019 17:25:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=corp-2018-07-02;
- bh=fE8Bp2MSKiL96GYLWx6ZDwxFcOoxxUljtd3qqTK15hw=;
- b=GT0S++/n0i8uxfZfkbroVV8WnK/yXwkmx3uwfOUMvpwJpBrFHj4QyU2GB0k/lfl8TkQb
- OZI1wAkIrhvaBTasrF4jS07iBvesMeuTM/FFxHBvnfZ24fJFgoGhcCKlSMakX5Jfi1BV
- HKASbp/uTDt20b2m74xUWZ/8n9uLoGiD/4o9oJMGk+Qw7i7UvddmkNDDXa/U6j7P+ExY
- r+sNPYXqBFAZZdqQUbyM/DvTNzb3SIMUHeRWZi0flKn1px2I1q2RTlw4UFNSsDErzxfu
- lZhJKEIl/1HSDS+hxLceAaPTCbFYwPhQ3SsnPm3q7A6i+bkcGlHlPOVCA1fSyvCv3P7P dA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2s94b6ceyn-1
+ bh=Yk7rv8RXBJruI/gHyJZRpw6blRShhbnurNLnUDXHVG8=;
+ b=3842AqDIae0mBybH8EwVXHVP7Az1QqpsCu9UqGSrKXcJdjk4pT/v3IY1JZLehGBTMQla
+ Ka/PebsY9rjiZA9OjQPCy5SuDcUgDt2stmSliya0SqaaPfrEp87L7254aVOndOtu0YqW
+ iP4oUPRJMH8OLN5ToG/AF2dxOU5EHpqaEbh+UkTOL8x/2Xn/kH+cmXBf7Mq6GfMlLEWA
+ 4sDsWHxYSbgvGIKi0z3gVlLt+XLIGgns8WyntldRhfU74w98YZsxxxJn4J0mtkmGArEr
+ jALu42mtQ/i/knlbAB1R7AlwWXf9VeBShvck+EqMkMK7rFP2V2pW30stZCM0R8etoQQo Bw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2s94b6cf0q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:25:40 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HO0Ln109706;
-        Thu, 9 May 2019 17:25:40 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2sagyvcg4c-1
+        Thu, 09 May 2019 17:25:49 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49HP7wJ152264;
+        Thu, 9 May 2019 17:25:49 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2schvyy7xq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 17:25:40 +0000
+        Thu, 09 May 2019 17:25:49 +0000
 Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x49HPdgR011020;
-        Thu, 9 May 2019 17:25:39 GMT
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x49HPmEI031352;
+        Thu, 9 May 2019 17:25:48 GMT
 Received: from aa1-ca-oracle-com.ca.oracle.com (/10.156.75.204)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 May 2019 10:25:38 -0700
+        with ESMTP ; Thu, 09 May 2019 10:25:47 -0700
 From:   Ankur Arora <ankur.a.arora@oracle.com>
 To:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
 Cc:     jgross@suse.com, pbonzini@redhat.com, boris.ostrovsky@oracle.com,
         konrad.wilk@oracle.com, sstabellini@kernel.org,
         joao.m.martins@oracle.com, ankur.a.arora@oracle.com
-Subject: [RFC PATCH 05/16] x86/xen: add feature support in xenhost_t
-Date:   Thu,  9 May 2019 10:25:29 -0700
-Message-Id: <20190509172540.12398-6-ankur.a.arora@oracle.com>
+Subject: [RFC PATCH 16/16] xen/grant-table: host_addr fixup in mapping on xenhost_r0
+Date:   Thu,  9 May 2019 10:25:40 -0700
+Message-Id: <20190509172540.12398-17-ankur.a.arora@oracle.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190509172540.12398-1-ankur.a.arora@oracle.com>
 References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1810050000 definitions=main-1905090100
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905090100
@@ -81,199 +81,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With nested xenhosts, both the xenhosts could have different supported
-xen_features. Add support for probing both.
+Xenhost type xenhost_r0 does not support standard GNTTABOP_map_grant_ref
+semantics (map a gref onto a specified host_addr). That's because
+since the hypervisor is local (same address space as the caller of
+GNTTABOP_map_grant_ref), there is no external entity that could
+map an arbitrary page underneath an arbitrary address.
 
-In addition, validate that features are compatible across xenhosts.
+To handle this, the GNTTABOP_map_grant_ref hypercall on xenhost_r0
+treats the host_addr as an OUT parameter instead of IN and expects the
+gnttab_map_refs() and similar to fixup any state that caches the
+value of host_addr from before the hypercall.
 
-For runtime feature checking, the code uses xen_feature() with the
-default xenhost. This should be good enough because we do feature
-validation early which guarantees that the features of interest are
-compatible. Features not of interest, are related to MMU, clock, pirq, etc where
-the interface to L0-Xen should not matter.
+Accordingly gnttab_map_refs() now adds two parameters, a fixup function
+and a pointer to cached maps to fixup:
+ int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
+ 		    struct gnttab_map_grant_ref *kmap_ops,
+-		    struct page **pages, unsigned int count)
++		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
++		    void **map_fixup[], unsigned int count)
 
+The reason we use a fixup function and not an additional mapping op
+in the xenhost_t is because, depending on the caller, what we are fixing
+might be different: blkback, netback for instance cache host_addr in
+via a struct page *, while __xenbus_map_ring() caches a phys_addr.
+
+This patch fixes up xen-blkback and xen-gntdev drivers.
+
+TODO:
+  - also rewrite gnttab_batch_map() and __xenbus_map_ring().
+  - modify xen-netback, scsiback, pciback etc
+
+Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
 Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 ---
- arch/x86/xen/enlighten_hvm.c | 15 +++++++++++----
- arch/x86/xen/enlighten_pv.c  | 14 ++++++++++----
- drivers/xen/features.c       | 33 +++++++++++++++++++++++++++------
- include/xen/features.h       | 17 ++++++++++++++---
- include/xen/xenhost.h        | 10 ++++++++++
- 5 files changed, 72 insertions(+), 17 deletions(-)
+ drivers/block/xen-blkback/blkback.c | 14 +++++++++++++-
+ drivers/xen/gntdev.c                |  2 +-
+ drivers/xen/grant-table.c           | 20 ++++++++++++++------
+ include/xen/grant_table.h           | 11 ++++++++++-
+ 4 files changed, 38 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index f84941d6944e..a118b61a1a8a 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -119,17 +119,24 @@ static void __init init_hvm_pv_info(void)
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index d366a17a4bd8..50ce40ba35e5 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -806,11 +806,18 @@ static void xen_blkbk_unmap(struct xen_blkif_ring *ring,
+ 	}
+ }
  
- 	xen_domain_type = XEN_HVM_DOMAIN;
- 
--	/* PVH set up hypercall page in xen_prepare_pvh(). */
- 	if (xen_pvh_domain())
- 		pv_info.name = "Xen PVH";
--	else {
-+	else
- 		pv_info.name = "Xen HVM";
- 
--		for_each_xenhost(xh)
-+	for_each_xenhost(xh) {
-+		/* PVH set up hypercall page in xen_prepare_pvh(). */
-+		if (!xen_pvh_domain())
- 			xenhost_setup_hypercall_page(*xh);
-+		xen_setup_features(*xh);
++static void blkbk_map_fixup(uint64_t host_addr, void **fixup)
++{
++	struct page **pg = (struct page **)fixup;
++	*pg = virt_to_page(host_addr);
++}
++
+ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			 struct grant_page *pages[],
+ 			 int num, bool ro)
+ {
+ 	struct gnttab_map_grant_ref map[BLKIF_MAX_SEGMENTS_PER_REQUEST];
++	struct page **map_fixup[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+ 	struct page *pages_to_gnt[BLKIF_MAX_SEGMENTS_PER_REQUEST];
+ 	struct persistent_gnt *persistent_gnt = NULL;
+ 	phys_addr_t addr = 0;
+@@ -858,6 +865,9 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
+ 			gnttab_set_map_op(&map[segs_to_map++], addr,
+ 					  flags, pages[i]->gref,
+ 					  blkif->domid);
++
++			if (gnttab_map_fixup(dev->xh))
++				  map_fixup[i] = &pages[i]->page;
+ 		}
+ 		map_until = i + 1;
+ 		if (segs_to_map == BLKIF_MAX_SEGMENTS_PER_REQUEST)
+@@ -865,7 +875,9 @@ static int xen_blkbk_map(struct xen_blkif_ring *ring,
  	}
  
--	xen_setup_features();
-+	/*
-+	 * Check if features are compatible across L1-Xen and L0-Xen;
-+	 * If not, get rid of xenhost_r2.
-+	 */
-+	if (xen_validate_features() == false)
-+		__xenhost_unregister(xenhost_r2);
+ 	if (segs_to_map) {
+-		ret = gnttab_map_refs(dev->xh, map, NULL, pages_to_gnt, segs_to_map);
++		ret = gnttab_map_refs(dev->xh, map, NULL, pages_to_gnt,
++			gnttab_map_fixup(dev->xh) ? blkbk_map_fixup : NULL,
++					(void ***) map_fixup, segs_to_map);
+ 		BUG_ON(ret);
+ 	}
  
- 	cpuid(base + 4, &eax, &ebx, &ecx, &edx);
- 	if (eax & XEN_HVM_CPUID_VCPU_ID_PRESENT)
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index a2c07cc71498..484968ff16a4 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -1236,13 +1236,19 @@ asmlinkage __visible void __init xen_start_kernel(void)
- 	if (xen_driver_domain() && xen_nested())
- 		xenhost_register(xenhost_r2, &xh_pv_nested_ops);
+diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
+index 40a42abe2dd0..32c6471834ba 100644
+--- a/drivers/xen/gntdev.c
++++ b/drivers/xen/gntdev.c
+@@ -342,7 +342,7 @@ int gntdev_map_grant_pages(struct gntdev_grant_map *map)
  
--	for_each_xenhost(xh)
--		xenhost_setup_hypercall_page(*xh);
--
- 	xen_domain_type = XEN_PV_DOMAIN;
- 	xen_start_flags = xen_start_info->flags;
+ 	pr_debug("map %d+%d\n", map->index, map->count);
+ 	err = gnttab_map_refs(xh, map->map_ops, use_ptemod ? map->kmap_ops : NULL,
+-			map->pages, map->count);
++			map->pages, NULL, NULL, map->count);
+ 	if (err)
+ 		return err;
  
--	xen_setup_features();
-+	for_each_xenhost(xh) {
-+		xenhost_setup_hypercall_page(*xh);
-+		xen_setup_features(*xh);
-+	}
-+	/*
-+	 * Check if features are compatible across L1-Xen and L0-Xen;
-+	 * If not, get rid of xenhost_r2.
-+	 */
-+	if (xen_validate_features() == false)
-+		__xenhost_unregister(xenhost_r2);
+diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
+index 959b81ade113..2f3a0a4a2660 100644
+--- a/drivers/xen/grant-table.c
++++ b/drivers/xen/grant-table.c
+@@ -1084,7 +1084,8 @@ void gnttab_foreach_grant(struct page **pages,
  
- 	/* Install Xen paravirt ops */
- 	pv_info = xen_info;
-diff --git a/drivers/xen/features.c b/drivers/xen/features.c
-index d7d34fdfc993..b4fba808ebae 100644
---- a/drivers/xen/features.c
-+++ b/drivers/xen/features.c
-@@ -15,19 +15,40 @@
- #include <xen/interface/version.h>
- #include <xen/features.h>
- 
--u8 xen_features[XENFEAT_NR_SUBMAPS * 32] __read_mostly;
--EXPORT_SYMBOL_GPL(xen_features);
--
--void xen_setup_features(void)
-+void xen_setup_features(xenhost_t *xh)
+ int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
+ 		    struct gnttab_map_grant_ref *kmap_ops,
+-		    struct page **pages, unsigned int count)
++		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
++		    void **map_fixup[], unsigned int count)
  {
- 	struct xen_feature_info fi;
- 	int i, j;
+ 	int i, ret;
  
- 	for (i = 0; i < XENFEAT_NR_SUBMAPS; i++) {
- 		fi.submap_idx = i;
--		if (HYPERVISOR_xen_version(XENVER_get_features, &fi) < 0)
-+		if (hypervisor_xen_version(xh, XENVER_get_features, &fi) < 0)
+@@ -1096,12 +1097,19 @@ int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
+ 		switch (map_ops[i].status) {
+ 		case GNTST_okay:
+ 		{
+-			struct xen_page_foreign *foreign;
++			if (!gnttab_map_fixup(xh)) {
++				struct xen_page_foreign *foreign;
+ 
+-			SetPageForeign(pages[i]);
+-			foreign = xen_page_foreign(pages[i]);
+-			foreign->domid = map_ops[i].dom;
+-			foreign->gref = map_ops[i].ref;
++				SetPageForeign(pages[i]);
++				foreign = xen_page_foreign(pages[i]);
++				foreign->domid = map_ops[i].dom;
++				foreign->gref = map_ops[i].ref;
++			} else {
++				pages[i] = virt_to_page(map_ops[i].host_addr);
++
++				if (map_fixup_fn)
++					map_fixup_fn(map_ops[i].host_addr, map_fixup[i]);
++			}
  			break;
- 		for (j = 0; j < 32; j++)
--			xen_features[i * 32 + j] = !!(fi.submap & 1<<j);
-+			xh->features[i * 32 + j] = !!(fi.submap & 1<<j);
- 	}
- }
-+
-+bool xen_validate_features(void)
+ 		}
+ 
+diff --git a/include/xen/grant_table.h b/include/xen/grant_table.h
+index 827b790199fb..14f7cc70cd01 100644
+--- a/include/xen/grant_table.h
++++ b/include/xen/grant_table.h
+@@ -219,9 +219,18 @@ int gnttab_dma_free_pages(xenhost_t *xh, struct gnttab_dma_alloc_args *args);
+ int gnttab_pages_set_private(int nr_pages, struct page **pages);
+ void gnttab_pages_clear_private(int nr_pages, struct page **pages);
+ 
++static inline bool
++gnttab_map_fixup(xenhost_t *xh)
 +{
-+	int fail = 0;
-+
-+	if (xh_default && xh_remote) {
-+		/*
-+		 * Check xh_default->features and xh_remote->features for
-+		 * compatibility. Relevant features should be compatible
-+		 * or we are asking for trouble.
-+		 */
-+		fail += __xen_feature(xh_default, XENFEAT_auto_translated_physmap) !=
-+			__xen_feature(xh_remote, XENFEAT_auto_translated_physmap);
-+
-+		/* We would like callbacks via hvm_callback_vector. */
-+		fail += __xen_feature(xh_default, XENFEAT_hvm_callback_vector) == 0;
-+		fail += __xen_feature(xh_remote, XENFEAT_hvm_callback_vector) == 0;
-+
-+		if (fail)
-+			return false;
-+	}
-+
-+	return fail ? false : true;
-+}
-diff --git a/include/xen/features.h b/include/xen/features.h
-index e4cb464386a9..63e6735ed6a3 100644
---- a/include/xen/features.h
-+++ b/include/xen/features.h
-@@ -11,14 +11,25 @@
- #define __XEN_FEATURES_H__
- 
- #include <xen/interface/features.h>
-+#include <xen/xenhost.h>
- 
--void xen_setup_features(void);
-+void xen_setup_features(xenhost_t *xh);
- 
--extern u8 xen_features[XENFEAT_NR_SUBMAPS * 32];
-+bool xen_validate_features(void);
- 
-+static inline int __xen_feature(xenhost_t *xh, int flag)
-+{
-+	return xh->features[flag];
++	return xh->type == xenhost_r0;
 +}
 +
-+/*
-+ * We've validated the features that need to be common for both xenhost_r1 and
-+ * xenhost_r2 (XENFEAT_hvm_callback_vector, XENFEAT_auto_translated_physmap.)
-+ * Most of the other features should be only needed for the default xenhost.
-+ */
- static inline int xen_feature(int flag)
- {
--	return xen_features[flag];
-+	return __xen_feature(xh_default, flag);
- }
- 
- #endif /* __ASM_XEN_FEATURES_H__ */
-diff --git a/include/xen/xenhost.h b/include/xen/xenhost.h
-index d9bc1fb6cce4..dd1e2b64f50d 100644
---- a/include/xen/xenhost.h
-+++ b/include/xen/xenhost.h
-@@ -4,6 +4,7 @@
- #include <xen/interface/features.h>
- #include <xen/interface/xen.h>
- #include <asm/xen/hypervisor.h>
++typedef void (*gnttab_map_fixup_t)(uint64_t host_addr, void **map_fixup);
 +
- /*
-  * Xenhost abstracts out the Xen interface. It co-exists with the PV/HVM/PVH
-  * abstractions (x86_init, hypervisor_x86, pv_ops etc) and is meant to
-@@ -72,6 +73,15 @@ typedef struct {
- 	struct xenhost_ops *ops;
- 
- 	struct hypercall_entry *hypercall_page;
-+
-+	/*
-+	 * Not clear if we need to draw features from two different
-+	 * hypervisors. There is one feature that seems might be necessary:
-+	 * XENFEAT_hvm_callback_vector.
-+	 * Ensuring support in both L1-Xen and L0-Xen means that L0-Xen can
-+	 * bounce callbacks via L1-Xen.
-+	 */
-+	u8 features[XENFEAT_NR_SUBMAPS * 32];
- } xenhost_t;
- 
- typedef struct xenhost_ops {
+ int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
+ 		    struct gnttab_map_grant_ref *kmap_ops,
+-		    struct page **pages, unsigned int count);
++		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
++		    void **map_fixup[], unsigned int count);
+ int gnttab_unmap_refs(xenhost_t *xh, struct gnttab_unmap_grant_ref *unmap_ops,
+ 		      struct gnttab_unmap_grant_ref *kunmap_ops,
+ 		      struct page **pages, unsigned int count);
 -- 
 2.20.1
 
