@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82994C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777EEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578DC2183F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D27F2183E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:46:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427603;
-	bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
+	s=default; t=1557427607;
+	bh=MOv2AaTh1w0/0TobC/dEXlg7Pdgap2FW3MINoZAneYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YaqRwUVGQCaijNYBuV4fyRX82jWyt2wEZQU9WHGZ8HFHRKgxz1gdnvRGhPy0DPSym
-	 ilzVvDW/k0JWLMeVPpNX88eV+t3K9DaGsm02VH29XqCtI+6bPmy/YAQtbb7QHkXEz9
-	 Y5DRv4I4p3BTBChbMFyUsFP16FQesYGEOqc7aPT8=
+	b=PehJQGFpkRJBIAYn3FQme6ybHwEQtHXWrO9NGx4t9BdQ7kHD813CD302iNmjUCcXv
+	 qaiXSLhVAbusXiaN7pYLcFgH//ND7FZNtH4+RaIKkdZ6YvTsSU3wkseJdySnj/4W56
+	 ALRQpHHXY2Hb+y5sn7Fipi7EwX4VxnVtmFRTdEq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfEISql (ORCPT
+        id S1727667AbfEISqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:46:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39032 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfEISqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:46:39 -0400
+        id S1727660AbfEISqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:46:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50F9D2182B;
-        Thu,  9 May 2019 18:46:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8259B2182B;
+        Thu,  9 May 2019 18:46:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427597;
-        bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
+        s=default; t=1557427603;
+        bh=MOv2AaTh1w0/0TobC/dEXlg7Pdgap2FW3MINoZAneYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TiQ5QylFh6A7TxJSlvqqWWddXKT5TNuDinKB9Gq8vLXAuRh5Ixzz8BqdcWJRg7woW
-         gfFF3P98tPRc3ZN0SiugHtJL0YROjtV2ULycIW2xX/oeXzUNrSBUs2JE31pIsOfvm0
-         UdjwbclEmBt3OSIFIbn4WymIx9HLGKwfLrydghHg=
+        b=ho+mOrIN5Pk6KwYJ0A9+cC/az5Y9tvWDyoJEJYCL+3ZGnTunJZrarzicUEp9tigNz
+         IigufMwemH3VBt5ch06Gi/cQGsMGdsJrNMxBK91Zu9rofNxZfn80yx3HpZIDPwH6UD
+         nvEKSQggcnu65Ys52Cl4FeAbq//4DsjBpR9KFVqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.14 42/42] arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
-Date:   Thu,  9 May 2019 20:42:31 +0200
-Message-Id: <20190509181300.512525411@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 32/42] USB: serial: f81232: fix interrupt worker not stop
+Date:   Thu,  9 May 2019 20:42:21 +0200
+Message-Id: <20190509181259.118772686@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
 References: <20190509181252.616018683@linuxfoundation.org>
@@ -58,142 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
 
-commit 03110a5cb2161690ae5ac04994d47ed0cd6cef75 upstream.
+commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
 
-Our futex implementation makes use of LDXR/STXR loops to perform atomic
-updates to user memory from atomic context. This can lead to latency
-problems if we end up spinning around the LL/SC sequence at the expense
-of doing something useful.
+The F81232 will use interrupt worker to handle MSR change.
+This patch will fix the issue that interrupt work should stop
+in close() and suspend().
 
-Rework our futex atomic operations so that we return -EAGAIN if we fail
-to update the futex word after 128 attempts. The core futex code will
-reschedule if necessary and we'll try again later.
+This also fixes line-status events being disabled after a suspend cycle
+until the port is re-opened.
 
-Cc: <stable@kernel.org>
-Fixes: 6170a97460db ("arm64: Atomic operations")
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+[ johan: amend commit message ]
+Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
+Cc: stable <stable@vger.kernel.org>	# 4.1
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/futex.h |   55 +++++++++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 21 deletions(-)
+ drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/arch/arm64/include/asm/futex.h
-+++ b/arch/arm64/include/asm/futex.h
-@@ -23,26 +23,34 @@
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -560,9 +560,12 @@ static int f81232_open(struct tty_struct
  
- #include <asm/errno.h>
- 
-+#define FUTEX_MAX_LOOPS	128 /* What's the largest number you can think of? */
-+
- #define __futex_atomic_op(insn, ret, oldval, uaddr, tmp, oparg)		\
- do {									\
-+	unsigned int loops = FUTEX_MAX_LOOPS;				\
-+									\
- 	uaccess_enable();						\
- 	asm volatile(							\
- "	prfm	pstl1strm, %2\n"					\
- "1:	ldxr	%w1, %2\n"						\
- 	insn "\n"							\
- "2:	stlxr	%w0, %w3, %2\n"						\
--"	cbnz	%w0, 1b\n"						\
--"	dmb	ish\n"							\
-+"	cbz	%w0, 3f\n"						\
-+"	sub	%w4, %w4, %w0\n"					\
-+"	cbnz	%w4, 1b\n"						\
-+"	mov	%w0, %w7\n"						\
- "3:\n"									\
-+"	dmb	ish\n"							\
- "	.pushsection .fixup,\"ax\"\n"					\
- "	.align	2\n"							\
--"4:	mov	%w0, %w5\n"						\
-+"4:	mov	%w0, %w6\n"						\
- "	b	3b\n"							\
- "	.popsection\n"							\
- 	_ASM_EXTABLE(1b, 4b)						\
- 	_ASM_EXTABLE(2b, 4b)						\
--	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp)	\
--	: "r" (oparg), "Ir" (-EFAULT)					\
-+	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp),	\
-+	  "+r" (loops)							\
-+	: "r" (oparg), "Ir" (-EFAULT), "Ir" (-EAGAIN)			\
- 	: "memory");							\
- 	uaccess_disable();						\
- } while (0)
-@@ -57,23 +65,23 @@ arch_futex_atomic_op_inuser(int op, int
- 
- 	switch (op) {
- 	case FUTEX_OP_SET:
--		__futex_atomic_op("mov	%w3, %w4",
-+		__futex_atomic_op("mov	%w3, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_ADD:
--		__futex_atomic_op("add	%w3, %w1, %w4",
-+		__futex_atomic_op("add	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_OR:
--		__futex_atomic_op("orr	%w3, %w1, %w4",
-+		__futex_atomic_op("orr	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	case FUTEX_OP_ANDN:
--		__futex_atomic_op("and	%w3, %w1, %w4",
-+		__futex_atomic_op("and	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, ~oparg);
- 		break;
- 	case FUTEX_OP_XOR:
--		__futex_atomic_op("eor	%w3, %w1, %w4",
-+		__futex_atomic_op("eor	%w3, %w1, %w5",
- 				  ret, oldval, uaddr, tmp, oparg);
- 		break;
- 	default:
-@@ -93,6 +101,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 			      u32 oldval, u32 newval)
+ static void f81232_close(struct usb_serial_port *port)
  {
- 	int ret = 0;
-+	unsigned int loops = FUTEX_MAX_LOOPS;
- 	u32 val, tmp;
- 	u32 __user *uaddr;
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++
+ 	f81232_port_disable(port);
+ 	usb_serial_generic_close(port);
+ 	usb_kill_urb(port->interrupt_in_urb);
++	flush_work(&port_priv->interrupt_work);
+ }
  
-@@ -104,20 +113,24 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 	asm volatile("// futex_atomic_cmpxchg_inatomic\n"
- "	prfm	pstl1strm, %2\n"
- "1:	ldxr	%w1, %2\n"
--"	sub	%w3, %w1, %w4\n"
--"	cbnz	%w3, 3f\n"
--"2:	stlxr	%w3, %w5, %2\n"
--"	cbnz	%w3, 1b\n"
--"	dmb	ish\n"
-+"	sub	%w3, %w1, %w5\n"
-+"	cbnz	%w3, 4f\n"
-+"2:	stlxr	%w3, %w6, %2\n"
-+"	cbz	%w3, 3f\n"
-+"	sub	%w4, %w4, %w3\n"
-+"	cbnz	%w4, 1b\n"
-+"	mov	%w0, %w8\n"
- "3:\n"
-+"	dmb	ish\n"
-+"4:\n"
- "	.pushsection .fixup,\"ax\"\n"
--"4:	mov	%w0, %w6\n"
--"	b	3b\n"
-+"5:	mov	%w0, %w7\n"
-+"	b	4b\n"
- "	.popsection\n"
--	_ASM_EXTABLE(1b, 4b)
--	_ASM_EXTABLE(2b, 4b)
--	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp)
--	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
-+	_ASM_EXTABLE(1b, 5b)
-+	_ASM_EXTABLE(2b, 5b)
-+	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
-+	: "r" (oldval), "r" (newval), "Ir" (-EFAULT), "Ir" (-EAGAIN)
- 	: "memory");
- 	uaccess_disable();
+ static void f81232_dtr_rts(struct usb_serial_port *port, int on)
+@@ -656,6 +659,40 @@ static int f81232_port_remove(struct usb
+ 	return 0;
+ }
  
++static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
++{
++	struct usb_serial_port *port = serial->port[0];
++	struct f81232_private *port_priv = usb_get_serial_port_data(port);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
++		usb_kill_urb(port->read_urbs[i]);
++
++	usb_kill_urb(port->interrupt_in_urb);
++
++	if (port_priv)
++		flush_work(&port_priv->interrupt_work);
++
++	return 0;
++}
++
++static int f81232_resume(struct usb_serial *serial)
++{
++	struct usb_serial_port *port = serial->port[0];
++	int result;
++
++	if (tty_port_initialized(&port->port)) {
++		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
++		if (result) {
++			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
++					result);
++			return result;
++		}
++	}
++
++	return usb_serial_generic_resume(serial);
++}
++
+ static struct usb_serial_driver f81232_device = {
+ 	.driver = {
+ 		.owner =	THIS_MODULE,
+@@ -679,6 +716,8 @@ static struct usb_serial_driver f81232_d
+ 	.read_int_callback =	f81232_read_int_callback,
+ 	.port_probe =		f81232_port_probe,
+ 	.port_remove =		f81232_port_remove,
++	.suspend =		f81232_suspend,
++	.resume =		f81232_resume,
+ };
+ 
+ static struct usb_serial_driver * const serial_drivers[] = {
 
 
