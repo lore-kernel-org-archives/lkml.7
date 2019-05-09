@@ -2,150 +2,224 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC20C04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BE7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EDCE2177B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557364842;
-	bh=oPvPuQ74RU1mLepyoEpxjH/yNzo+8P7yFE0PP+o30Oo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xSLM/hm5pOFbO3aqJZLHLf3GR3Uno7yxQmkP53Cv1irCuHX1IYQlkPTNvAqAERMJ7
-	 iYV9mCoC06COToehwcDScGjXZWu1qNCPmcbCrujRnNW08Cpy01lOhuFmjiNGZmFqXF
-	 REqDOcvtZsL6Noo12//nZ8lSroBFRr6LYp/aPiVw=
+	by mail.kernel.org (Postfix) with ESMTP id 024E921744
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:20:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JVCBpRtM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfEIBUk (ORCPT
+        id S1726617AbfEIBUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:20:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58304 "EHLO mail.kernel.org"
+        Wed, 8 May 2019 21:20:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:45811 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725778AbfEIBUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:20:40 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725778AbfEIBUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:20:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034DC2173E;
-        Thu,  9 May 2019 01:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557364838;
-        bh=oPvPuQ74RU1mLepyoEpxjH/yNzo+8P7yFE0PP+o30Oo=;
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44zwWp2Vddz9s55;
+        Thu,  9 May 2019 11:20:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557364839;
+        bh=iUNt+AiggzT1LswLDZrrMkDk7hiFd6QDbiaJHCHel9k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qY45YTDqXQdybXAQAMPwVnrkEhhduuYyYkgZFawIL7jWuKNHik7uqDaNUS3XVNRj8
-         AAQqoQ2qMYdJRnT+93TWVWISLbHNk7va1yNGo0Pn8rb9yfZQqhAbAJ5krp21kfGlqw
-         +6NfvKyNEYNLW1ddu9dBVyeqRDyn61IFvUHXciZM=
-Date:   Thu, 9 May 2019 10:20:30 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        linux-kselftest@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-Id: <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
-In-Reply-To: <20190508184848.qerg3flv3ej3xsev@treble>
-References: <20190508074901.982470324@infradead.org>
-        <20190508080612.721269814@infradead.org>
-        <20190508115416.nblx7c2kocidpytm@treble>
-        <20190508120416.GL2589@hirez.programming.kicks-ass.net>
-        <20190508124248.u5ukpbhnh4wpiccq@treble>
-        <20190508153907.GM2589@hirez.programming.kicks-ass.net>
-        <20190508184848.qerg3flv3ej3xsev@treble>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        b=JVCBpRtMmfSVIuE0hLDxxYrw/hmSsxE2cm9yP/KNV7nEOpiWK+BZ6g3YLYDBR9Vsl
+         hcxdkADpH3po2PQHf+I21b6JFGbTi15qdAlJdYo5WG4wRGMsG0B0vktOwWWvd869gc
+         CZR4ql6cR2z8g6X5I4uQnXu3xLbhZ6LNeQKL/YM07UR/Yu7ot4Ohm9KyWGDd5KwQ0F
+         nMUazVCXgqftT+2U6YAxDvUrBn7BBGDK9Jj22enqBlvSUEkDoSnQp88Nw+hQBx4N8r
+         M8gSZP6IiTZWWATBV5XOvse74rKZ5ECly/ONYjd0H6s/V5vme7JlLkHjr2Xu2R4dw2
+         x2rCzqfrBVZEw==
+Date:   Thu, 9 May 2019 11:20:37 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: Re: linux-next: manual merge of the ipsec-next tree with the ipsec
+ tree
+Message-ID: <20190509112037.32468e3d@canb.auug.org.au>
+In-Reply-To: <20190501130157.27fb69cd@canb.auug.org.au>
+References: <20190426114120.73e906e3@canb.auug.org.au>
+        <20190501130157.27fb69cd@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8.7tSq7kxA1pH_HRAtOipbq"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josh,
+--Sig_/8.7tSq7kxA1pH_HRAtOipbq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 8 May 2019 13:48:48 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+Hi Dave,
 
-> On Wed, May 08, 2019 at 05:39:07PM +0200, Peter Zijlstra wrote:
-> > On Wed, May 08, 2019 at 07:42:48AM -0500, Josh Poimboeuf wrote:
-> > > On Wed, May 08, 2019 at 02:04:16PM +0200, Peter Zijlstra wrote:
-> > 
-> > > > Do the x86_64 variants also want some ORC annotation?
-> > > 
-> > > Maybe so.  Though it looks like regs->ip isn't saved.  The saved
-> > > registers might need to be tweaked.  I'll need to look into it.
-> > 
-> > What all these sites do (and maybe we should look at unifying them
-> > somehow) is turn a CALL frame (aka RET-IP) into an exception frame (aka
-> > pt_regs).
-> > 
-> > So regs->ip will be the return address (which is fixed up to be the CALL
-> > address in the handler).
-> 
-> But from what I can tell, trampoline_handler() hard-codes regs->ip to
-> point to kretprobe_trampoline(), and the original return address is
-> placed in regs->sp.
-> 
-> Masami, is there a reason why regs->ip doesn't have the original return
-> address and regs->sp doesn't have the original SP?  I think that would
-> help the unwinder understand things.
+On Wed, 1 May 2019 13:01:57 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> On Fri, 26 Apr 2019 11:41:20 +1000 Stephen Rothwell <sfr@canb.auug.org.au=
+> wrote:
+> >
+> > Today's linux-next merge of the ipsec-next tree got a conflict in:
+> >=20
+> >   net/ipv4/xfrm4_policy.c
+> >=20
+> > between commit:
+> >=20
+> >   8742dc86d0c7 ("xfrm4: Fix uninitialized memory read in _decode_sessio=
+n4")
+> >=20
+> > from the ipsec tree and commit:
+> >=20
+> >   c53ac41e3720 ("xfrm: remove decode_session indirection from afinfo_po=
+licy")
+> >=20
+> > from the ipsec-next tree.
+> >=20
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Fri, 26 Apr 2019 11:37:41 +1000
+> > Subject: [PATCH] xfrm4: fix up for moved _decode_session4
+> >=20
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  net/xfrm/xfrm_policy.c | 24 +++++++++++++-----------
+> >  1 file changed, 13 insertions(+), 11 deletions(-)
+> >=20
+> > diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+> > index 410233c5681e..7a43ae6b2a44 100644
+> > --- a/net/xfrm/xfrm_policy.c
+> > +++ b/net/xfrm/xfrm_policy.c
+> > @@ -3264,7 +3264,8 @@ static void
+> >  decode_session4(struct sk_buff *skb, struct flowi *fl, bool reverse)
+> >  {
+> >  	const struct iphdr *iph =3D ip_hdr(skb);
+> > -	u8 *xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +	int ihl =3D iph->ihl;
+> > +	u8 *xprth =3D skb_network_header(skb) + ihl * 4;
+> >  	struct flowi4 *fl4 =3D &fl->u.ip4;
+> >  	int oif =3D 0;
+> > =20
+> > @@ -3275,6 +3276,11 @@ decode_session4(struct sk_buff *skb, struct flow=
+i *fl, bool reverse)
+> >  	fl4->flowi4_mark =3D skb->mark;
+> >  	fl4->flowi4_oif =3D reverse ? skb->skb_iif : oif;
+> > =20
+> > +	fl4->flowi4_proto =3D iph->protocol;
+> > +	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
+> > +	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
+> > +	fl4->flowi4_tos =3D iph->tos;
+> > +
+> >  	if (!ip_is_fragment(iph)) {
+> >  		switch (iph->protocol) {
+> >  		case IPPROTO_UDP:
+> > @@ -3286,7 +3292,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+> >  				__be16 *ports;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				ports =3D (__be16 *)xprth;
+> > =20
+> >  				fl4->fl4_sport =3D ports[!!reverse];
+> > @@ -3298,7 +3304,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+> >  				u8 *icmp;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				icmp =3D xprth;
+> > =20
+> >  				fl4->fl4_icmp_type =3D icmp[0];
+> > @@ -3310,7 +3316,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+> >  				__be32 *ehdr;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				ehdr =3D (__be32 *)xprth;
+> > =20
+> >  				fl4->fl4_ipsec_spi =3D ehdr[0];
+> > @@ -3321,7 +3327,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+> >  				__be32 *ah_hdr;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				ah_hdr =3D (__be32 *)xprth;
+> > =20
+> >  				fl4->fl4_ipsec_spi =3D ah_hdr[1];
+> > @@ -3332,7 +3338,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+> >  				__be16 *ipcomp_hdr;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				ipcomp_hdr =3D (__be16 *)xprth;
+> > =20
+> >  				fl4->fl4_ipsec_spi =3D htonl(ntohs(ipcomp_hdr[1]));
+> > @@ -3344,7 +3350,7 @@ decode_session4(struct sk_buff *skb, struct flowi=
+ *fl, bool reverse)
+> >  				__be16 *greflags;
+> >  				__be32 *gre_hdr;
+> > =20
+> > -				xprth =3D skb_network_header(skb) + iph->ihl * 4;
+> > +				xprth =3D skb_network_header(skb) + ihl * 4;
+> >  				greflags =3D (__be16 *)xprth;
+> >  				gre_hdr =3D (__be32 *)xprth;
+> > =20
+> > @@ -3360,10 +3366,6 @@ decode_session4(struct sk_buff *skb, struct flow=
+i *fl, bool reverse)
+> >  			break;
+> >  		}
+> >  	}
+> > -	fl4->flowi4_proto =3D iph->protocol;
+> > -	fl4->daddr =3D reverse ? iph->saddr : iph->daddr;
+> > -	fl4->saddr =3D reverse ? iph->daddr : iph->saddr;
+> > -	fl4->flowi4_tos =3D iph->tos;
+> >  }
+> > =20
+> >  #if IS_ENABLED(CONFIG_IPV6) =20
+>=20
+> This is now a conflict between the net and net-next trees.
 
-Yes, for regs->ip, there is a histrical reason. Since previously, we had
-an int3 at trampoline, so the user (kretprobe) handler expects that
-regs->ip is trampoline address and ri->ret_addr is original return address.
-It is better to check the other archs, but I think it is possible to
-change the regs->ip to original return address, since no one cares such
-"fixed address". :)
+It looks like this fixup has been missed in Linus' merge of the
+net-next tree ...
 
-For the regs->sp, there are 2 reasons.
+--=20
+Cheers,
+Stephen Rothwell
 
-For x86-64, it's just for over-optimizing (reduce stack usage).
-I think we can make a gap for putting return address, something like
+--Sig_/8.7tSq7kxA1pH_HRAtOipbq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-	"kretprobe_trampoline:\n"
-#ifdef CONFIG_X86_64
-	"	pushq %rsp\n"	/* Make a gap for return address */
-	"	pushq 0(%rsp)\n"	/* Copy original stack pointer */
-	"	pushfq\n"
-	SAVE_REGS_STRING
-	"	movq %rsp, %rdi\n"
-	"	call trampoline_handler\n"
-	/* Push the true return address to the bottom */
-	"	movq %rax, 20*8(%rsp)\n"
-	RESTORE_REGS_STRING
-	"	popfq\n"
-	"	addq $8, %rsp\n"	/* Skip original stack pointer */
+-----BEGIN PGP SIGNATURE-----
 
-For i386 (x86-32), there is no other way to keep &regs->sp as
-the original stack pointer. It has to be changed with this series,
-maybe as same as x86-64.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzTgGUACgkQAVBC80lX
+0GzQgwf/aaYmzQSYs0z5lraiYgZFBRsMVA2vmwAANQGZN+mKzP6eHo02D+GFxI93
+HTbKgFEcHL2OGF0LHm/v1I7S4jH+2HMUQF2dB/af96/rOIBCIecLYYfOGjjS0mI9
+DGNpxCjkXM/CJA4nVdn3lJa7byWVM2Z6QqZDoMqqbyIkny6ZTrnOm8ifLXKrcCdJ
+xMNriAbNJD3dTX2wgz1o0ZARdrqf22aGiKpNs/IOlJ5nHZ4wQaRvUfyRQhqkyo/u
+IKMa8ZpkRiHVHzzCO3Ok4uG5wQSQVyMuSJLD99swFhpwsRwMVmtSaJ+eol4H5F9m
+col98L1Hy595I/mM7UNF0u/9LKpWSg==
+=mE28
+-----END PGP SIGNATURE-----
 
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+--Sig_/8.7tSq7kxA1pH_HRAtOipbq--
