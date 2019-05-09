@@ -2,310 +2,214 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_HIGH,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FA6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E31C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729B320644
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TyVinD7B"
+	by mail.kernel.org (Postfix) with ESMTP id 48DAE216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbfEIOuq (ORCPT
+        id S1726795AbfEIOu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:50:46 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52620 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfEIOuq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:50:46 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49EcglG195701;
-        Thu, 9 May 2019 14:49:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2018-07-02;
- bh=TPuW6utPKYY5uh6xzNiMwUXqKVxe0amP9GwFWNtITsc=;
- b=TyVinD7BXhdhg7NuHqsdjsfIhAC+BOnUs9DOUfMGhxbCEIBJGqLPwbDBjsjJHOD+UfzG
- hOL+vUaq6Ccbs2KaqcJiwZ4nuAy1fWHolGlBCqI+R1AABnrEFjgAfQrV3gBw9irQNsjH
- 9xY/EFWinWUkC4qAxdxa2sXhRZn42tBWJ23O/iXXn7F1tu77ek6hkTIS0wdj5mvLN/yD
- twtzcmIi/lhX4Drp/WlZ4hfEZy1XyDl+UQoRyjQVBG7MOr3EfVOAoqw0Npo7+rU057ru
- piXSGPrDowQ4V1Mj3bTXfp+0Yc/gPiwG9mjzoHqLcckjL7XixY9GyhU6Z285s/D4SHKB /Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2s94bgbcss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 14:49:13 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49Em0Ge056998;
-        Thu, 9 May 2019 14:49:13 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2sagyv9kfd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 14:49:13 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x49En1VI030147;
-        Thu, 9 May 2019 14:49:01 GMT
-Received: from asu (/92.220.18.196)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 May 2019 14:49:00 +0000
-Message-ID: <3ce70d58c41be8c907c21ec7d3450b269ede8287.camel@oracle.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-From:   Knut Omang <knut.omang@oracle.com>
-To:     "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Date:   Thu, 09 May 2019 16:48:51 +0200
-In-Reply-To: <20190509133551.GD29703@mit.edu>
-References: <20190501230126.229218-1-brendanhiggins@google.com>
-         <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
-         <20190507080119.GB28121@kroah.com>
-         <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
-         <20190509015856.GB7031@mit.edu>
-         <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
-         <20190509032017.GA29703@mit.edu>
-         <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
-         <20190509133551.GD29703@mit.edu>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 9 May 2019 10:50:57 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48518 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbfEIOu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:50:56 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3B676271413EEE816D2A;
+        Thu,  9 May 2019 22:50:52 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Thu, 9 May 2019
+ 22:50:49 +0800
+Subject: Re: [PATCH] scsi: qedi: remove memset/memcpy to nfunc and use func
+ instead
+To:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <mojha@codeaurora.org>,
+        <skashyap@marvell.com>, <gregkh@linuxfoundation.org>
+References: <20190412094829.15868-1-colin.king@canonical.com>
+ <20190420040554.41888-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <2907a552-a557-afeb-de56-88c958480f0c@huawei.com>
+Date:   Thu, 9 May 2019 22:50:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
+In-Reply-To: <20190420040554.41888-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905090086
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9251 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905090086
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-09 at 09:35 -0400, Theodore Ts'o wrote:
-> On Thu, May 09, 2019 at 01:52:15PM +0200, Knut Omang wrote:
-> > 1) Tests that exercises typically algorithmic or intricate, complex
-> >    code with relatively few outside dependencies, or where the dependencies 
-> >    are considered worth mocking, such as the basics of container data 
-> >    structures or page table code. If I get you right, Ted, the tests 
-> >    you refer to in this thread are such tests. I believe covering this space 
-> >    is the goal Brendan has in mind for KUnit.
-> 
-> Yes, that's correct.  I'd also add that one of the key differences is
-> that it sounds like Frank and you are coming from the perspective of
-> testing *device drivers* where in general there aren't a lot of
-> complex code which is hardware independent.  After all, the vast
-> majority of device drivers are primarily interface code to hardware,
-> with as much as possible abstracted away to common code.  (Take, for
-> example, the model of the SCSI layer; or all of the kobject code.)
->
-> > 2) Tests that exercises interaction between a module under test and other 
-> >    parts of the kernel, such as testing intricacies of the interaction of 
-> >    a driver or file system with the rest of the kernel, and with hardware, 
-> >    whether that is real hardware or a model/emulation. 
-> >    Using your testing needs as example again, Ted, from my shallow understanding,
-> >    you have such needs within the context of xfstests (
-> https://github.com/tytso/xfstests)
-> 
-> Well, upstream is for xfstests is git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
 
-Thanks for the correction!
+Friendly ping, could someone review this patch ?
 
-> The test framework where I can run 20 hours worth of xfstests
-> (multiple file system features enabled, multiple mount options, etc.)
-> in 3 hours of wall clock time using multiple cloud VM is something
-> called gce-xfstests.
+On 2019/4/20 12:05, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
 > 
-> I also have kvm-xfstests, which optimizes low test latency, where I
-> want to run a one or a small number of tests with a minimum of
-> overhead --- gce startup and shutdown is around 2 minutes, where as
-> kvm startup and shutdown is about 7 seconds.  As far as I'm concerned,
-> 7 seconds is still too slow, but that's the best I've been able to do
-> given all of the other things I want a test framework to do, including
-> archiving test results, parsing the test results so it's easy to
-> interpret, etc.  Both kvm-xfstests and gce-xfstests are located at:
+> KASAN report this:
 > 
-> 	git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+> BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
+> Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
 > 
-> So if Frank's primary argument is "too many frameworks", it's already
-> too late.  The block layer has blktests has a seprate framework,
-> called blktests --- and yeah, it's a bit painful to launch or learn
-> how to set things up.
-
-I agree at that level - and the good thing is that there are a lot to learn 
-from looking at other people's ways - but working towards unification rather than even
-more similar, but subtly different ways I think is a good thing anyway!
-
-> That's why I added support to run blktests using gce-xfstests and
-> kvm-xfstests, so that "gce-xfstests --blktests" or "kvm-xfstests
-> --xfstests" will pluck a kernel from your build tree, and launch at
-> test appliance VM using that kernel and run the block layer tests.
+> CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+>  print_address_description+0x1c4/0x270 mm/kasan/report.c:187
+>  kasan_report+0x149/0x18d mm/kasan/report.c:317
+>  memcpy+0x1f/0x50 mm/kasan/common.c:130
+>  qedi_dbg_err+0xda/0x330 [qedi]
+>  ? 0xffffffffc12d0000
+>  qedi_init+0x118/0x1000 [qedi]
+>  ? 0xffffffffc12d0000
+>  ? 0xffffffffc12d0000
+>  ? 0xffffffffc12d0000
+>  do_one_initcall+0xfa/0x5ca init/main.c:887
+>  do_init_module+0x204/0x5f6 kernel/module.c:3460
+>  load_module+0x66b2/0x8570 kernel/module.c:3808
+>  __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+>  do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x462e99
+> Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
+> RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
+> RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
+> R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 > 
-> The point is we *already* have multiple test frameworks, which are
-> optimized for testing different parts of the kernel.  And if you plan
-> to do a lot of work in these parts of the kernel, you're going to have
-> to learn how to use some other test framework other than kselftest.
-> Sorry, that's just the way it goes.
+> The buggy address belongs to the variable:
+>  __func__.67584+0x0/0xffffffffffffd520 [qedi]
 > 
-> Of course, I'll accept trivial patches that haven't been tested using
-> xfstests --- but that's because I can trivially run the smoke test for
-> you.  Of course, if I get a lot of patches from a contributor which
-> cause test regressions, I'll treat them much like someone who
-> contribute patches which fail to build.  I'll apply pressure to the
-> contributor to actually build test, or run a ten minute kvm-xfstests
-> smoke test.  Part of the reason why I feel comfortable to do this is
-> it's really easy to run the smoke test.  There are pre-compiled test
-> appliances, and a lot of documentation:
+> Memory state around the buggy address:
+>  ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
+>  ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
+>> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
+>                                                           ^
+>  ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
+>  ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
 > 
-> https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-quickstart.md
+> Currently the qedi_dbg_* family of functions can overrun the end
+> of the source string if it is less than the destination buffer
+> length because of the use of a fixed sized memcpy. Remove the
+> memset/memcpy calls to nfunc and just use func instead as it
+> is always a null terminated string.
 > 
-> This is why I have close to zero sympathy to Frank's complaint that
-> extra test frameworks are a bad thing.  To me, that's whining.  I've
-> done a huge amount of work to meet contributors more than half-way.
-> The insistence that "There Must Be One", ala the Highlander movie, is
-> IMHO so wrong that it's not even close.  Is it really that hard to do
-> a "git pull", download a test appliance, set up a config file to tell
-> kvm-xfstests where to find your build tree, and then run "kvm-xfstests
-> --smoke" or "gce-xfstests --smoke"?  Cry me a river.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/scsi/qedi/qedi_dbg.c | 32 ++++++++------------------------
+>  1 file changed, 8 insertions(+), 24 deletions(-)
 > 
-> There are already multiple test frameworks, and if you expect to do a
-> lot of work in a particular subsystem, you'll be expected to use the
-> Maintainer's choice of tests.  Deal with it.  We do this so we can
-> scale to the number of contributors we have in our subsystem.
+> diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
+> index 8fd28b0..3383314 100644
+> --- a/drivers/scsi/qedi/qedi_dbg.c
+> +++ b/drivers/scsi/qedi/qedi_dbg.c
+> @@ -16,10 +16,6 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  {
+>  	va_list va;
+>  	struct va_format vaf;
+> -	char nfunc[32];
+> -
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -28,9 +24,9 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  
+>  	if (likely(qedi) && likely(qedi->pdev))
+>  		pr_err("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+> -		       nfunc, line, qedi->host_no, &vaf);
+> +		       func, line, qedi->host_no, &vaf);
+>  	else
+> -		pr_err("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
+> +		pr_err("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+>  
+>  	va_end(va);
+>  }
+> @@ -41,10 +37,6 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  {
+>  	va_list va;
+>  	struct va_format vaf;
+> -	char nfunc[32];
+> -
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -56,9 +48,9 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  
+>  	if (likely(qedi) && likely(qedi->pdev))
+>  		pr_warn("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+> -			nfunc, line, qedi->host_no, &vaf);
+> +			func, line, qedi->host_no, &vaf);
+>  	else
+> -		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
+> +		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+>  
+>  ret:
+>  	va_end(va);
+> @@ -70,10 +62,6 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  {
+>  	va_list va;
+>  	struct va_format vaf;
+> -	char nfunc[32];
+> -
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -85,10 +73,10 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  
+>  	if (likely(qedi) && likely(qedi->pdev))
+>  		pr_notice("[%s]:[%s:%d]:%d: %pV",
+> -			  dev_name(&qedi->pdev->dev), nfunc, line,
+> +			  dev_name(&qedi->pdev->dev), func, line,
+>  			  qedi->host_no, &vaf);
+>  	else
+> -		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
+> +		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+>  
+>  ret:
+>  	va_end(va);
+> @@ -100,10 +88,6 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  {
+>  	va_list va;
+>  	struct va_format vaf;
+> -	char nfunc[32];
+> -
+> -	memset(nfunc, 0, sizeof(nfunc));
+> -	memcpy(nfunc, func, sizeof(nfunc) - 1);
+>  
+>  	va_start(va, fmt);
+>  
+> @@ -115,9 +99,9 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
+>  
+>  	if (likely(qedi) && likely(qedi->pdev))
+>  		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
+> -			nfunc, line, qedi->host_no, &vaf);
+> +			func, line, qedi->host_no, &vaf);
+>  	else
+> -		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
+> +		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
+>  
+>  ret:
+>  	va_end(va);
 > 
-> > To 1) I agree with Frank in that the problem with using UML is that you still have to
-> > relate to the complexity of a kernel run time system, while what you really want for
-> these
-> > types of tests is just to compile a couple of kernel source files in a normal user
-> land
-> > context, to allow the use of Valgrind and other user space tools on the code.
-> 
-> "Just compiling a couple of kernel source files in a normal user land"
-> is much harder than you think.  It requires writing vast numbers of
-> mocking functions --- for a file system I would have to simulate the
-> block device layer, large portions of the VFS layer, the scheduler and
-> the locking layer if I want to test locking bugs, etc., etc.  In
-> practice, UML itself is serving as mocking layer, by its mere
-> existence.  
-
-I might not see the full picture here wrt file system testing, 
-but I do know exactly how difficult it is to do it for that ~29,000 
-lines of code Infiniband driver I was working on, since actually I did it
-with several versions of the kernel. Anyway that's probably more of a 
-topic for a talk than an email thread :-)
-
-> So when Frank says that KUnit doesn't provide any mocking
-> functions, I don't at all agree.  Using KUnit and UML makes testing
-> internal interfaces *far* simpler, especially if the comparison is
-> "just compile some kernel source files as part of a userspace test
-> program".
-> 
-> Perhaps your and Frank's experience is different --- perhaps that can
-> be explained by your past experience and interest in testing device
-> drivers as opposed to file systems.
-> 
-> The other thing I'd add is that at least for me, a really important
-> consideration is how quickly we can run tests.  I consider
-> minimization of developer friction (e.g., all you need to do is
-> running "make ; kvm-xfstests --smoke" to run tests), and maximizing
-> developer velocity to be high priority goals.  Developer velocity is
-> how quickly can you run the tests; ideally, less than 5-10 seconds.
-
-I completely agree on that one. I think a fundamental feature of any 
-framework at this level is that it should be usable as developer tests as part
-of an efficient work cycle.
-
-> And that's the other reason why I consider unit tests to be a
-> complement to integration tests.  "gce-xfstests --smoke" takes 10-15
-> minutes.  If I can have unit tests which takes 5-15 seconds for a
-> smoke test of the specific part of ext4 that I am modifying (and often
-> with much better coverage than integration tests from userspace),
-> that's at really big deal.  I can do this for e2fsprogs; but if I have
-> to launch a VM, the VM overhead pretty much eats all or most of that
-> time budget right there.
-
-This is exactly the way we work with KTF as well: 
-Change the kernel module under test, and/or the test code, 
-compile, unload/load modules and run the tests again, all within seconds.
-The overhead of rebooting one or more VMs (network tests sometimes 
-require more than one node) or even a physical system, 
-if the issue cannot be reproduced without running non-virtualized, 
-would only be necessary if the test causes an oops or other crash 
-that prevents the unload/load path.
-
-> From looking at your documentation of KTF, you are targetting the use
-> case of continuous testing.  That's a different testing scenario than
-> what I'm describing; with continuous testing, overhead measured in
-> minutes or even tens of minutes is not a big deal.  But if you are
-> trying to do real-time testing as part of your development process ---
-> *real* Test Driven Development, then test latency is a really big
-> deal.
-
-My experience is that unless one can enforce tests to be run on 
-everyone else's changes as well, one often ends up having to pursue the bugs 
-introduced by others but caught by the tests, so I believe automation and 
-unit/low level testing really should go hand in hand. This is the reason for 
-the emphasis on automation in the KTF docs, but the primary driver for me has 
-always been as a developer toolkit.
-
-> I'll grant that for people who are working on device drivers where
-> architecture dependencies are a big deal, building for an architecture
-> where you can run in a virtual environment or using test hardware is
-> going to be a better way to go.  And Brendan has said he's willing to
-> look at adapting KUnit so it can be built for use in a virtual
-> environment to accomodate your requirements.
-> 
-> As far as I'm concerned, however, I would *not* be interested in KTF
-> unless you could demonstrate to me that launching at test VM, somehow
-> getting the kernel modules copied into the VM, and running the tests
-> as kernel modules, has zero overhead compared to using UML.
-
-As you alluded to above, the development cycle time is really the crucial 
-thing here - if what you get has more value to you, then you'd be willing 
-to wait just a few more seconds for it. And IMHO the real interesting notion of 
-time is the time from saving the changes until you can verify that 
-the test either passes, or even more important: Why it failed..
-
-> Ultimately, I'm a pragmatist.  If KTF serves your needs best, good for
-> you.  If other approaches are better for other parts of the kernel,
-> let's not try to impose a strict "There Must Be Only One" religion.
-> That's already not true today, and for good reason.  There are many
-> different kinds of kernel code, and many different types of test
-> philosophies.  Trying to force all kernel testing into a single
-> Procrustean Bed is simply not productive.
-
-I definitely pragmatically prefer evolution over revolution myself, 
-no doubt about that, and I definitely appreciate this detailed view seen from the 
-filesystem side,
-
-Thanks!
-Knut
-
-> 
-> Regards,
-> 
-> 						- Ted
 
