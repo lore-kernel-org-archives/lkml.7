@@ -2,132 +2,94 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C17FEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366C1C04AAD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9236C2173B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J19yNRSD"
+	by mail.kernel.org (Postfix) with ESMTP id 06E172173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 01:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557363964;
+	bh=600qRXLEDKMKeph/AjRgQT+N42KTSsWElKhQOKqFhe8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k+6fvfaEomXyoMt3xzZ8jj23B3jYV5/vRtiHxADEzFijTzCBTMo99Wipz/j7KriK5
+	 cIFCuYsSAduq6BMmn/syAHQHqv2Uhan1fxO09jc+nWIat/pSavz6xk6wfV37y4CHWn
+	 mssryFwDxfqx0Ofo41/YkDIMAasbRprQ6mg4haRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfEIBBb (ORCPT
+        id S1726429AbfEIBGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 8 May 2019 21:01:31 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:18779 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfEIBBb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 8 May 2019 21:01:31 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x4910hX5026248;
-        Thu, 9 May 2019 10:00:44 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x4910hX5026248
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557363644;
-        bh=W0lfXc6AxJfFbQb9h4FjR/5t6SeEfM/LyaprjVB7Apw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=J19yNRSDsAQu73Q9fxFJ0JIowc43871V/0i0356E4y+uM2TFafnOc8y3MH7Yo7nrw
-         2GkjjGbNdc/SHpTEuDTNjBUy/IXVLhJ1pa3I5Q1pv34ptrs1f/SYyvcXwgTkDTi6S9
-         dFUgmOl0bOFKQ0a+AEeRBEm9WEMgBYKwoBKXxSvG2pbFqGKF+caEctbdhjGt8OPOYt
-         tjFkmRuTh7UlD6+yJ8iNzQK/Eh0Ksquvy3ak894d+irzuS29PDFset9T5KYNZjG8tG
-         ZtwFDsCLEFpodPvFiTu1VJoII3apndgl4A1KZXUTeGpu1j7ZeZvZ/Rd8wUYjMg1+jr
-         diMFWErcNO3LA==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, netdev@vger.kernel.org,
-        Yonghong Song <yhs@fb.com>, linux-kernel@vger.kernel.org,
-        Martin KaFai Lau <kafai@fb.com>, bpf@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH v2] samples: guard sub-directories with CONFIG options
-Date:   Thu,  9 May 2019 10:00:19 +0900
-Message-Id: <1557363619-1211-1-git-send-email-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 8 May 2019 21:06:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725778AbfEIBGD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 8 May 2019 21:06:03 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D653621479;
+        Thu,  9 May 2019 01:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557363962;
+        bh=600qRXLEDKMKeph/AjRgQT+N42KTSsWElKhQOKqFhe8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oPg5LdTAmRD2OhNEmBwJTTJmPX6CbMLJ90xwUz39kvxl1oA/GSKPUSv+b3lR9GPWl
+         nSQW9zRFSc5byUJNsQAkQeMTqlkmxmbqN+V/jsgqhEInRiICHL4XGpDmP6dwSzR8Kf
+         Iax1Wo8NaXsjSQBviB+p9Ck0C8WRJAmzapEjWbk8=
+Date:   Wed, 8 May 2019 21:06:00 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        "juliana.rodrigueiro@intra2net.com" 
+        <juliana.rodrigueiro@intra2net.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] Drivers: hv: vmbus: Fix virt_to_hvpfn() for X86_PAE
+Message-ID: <20190509010600.GQ1747@sasha-vm>
+References: <1557215147-89776-1-git-send-email-decui@microsoft.com>
+ <DM5PR2101MB09188A7DB0777CD50333F94ED7310@DM5PR2101MB0918.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <DM5PR2101MB09188A7DB0777CD50333F94ED7310@DM5PR2101MB0918.namprd21.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not descend to sub-directories when unneeded.
+On Tue, May 07, 2019 at 12:51:51PM +0000, Michael Kelley wrote:
+>From: Dexuan Cui <decui@microsoft.com> Sent: Tuesday, May 7, 2019 12:47 AM
+>>
+>> In the case of X86_PAE, unsigned long is u32, but the physical address type
+>> should be u64. Due to the bug here, the netvsc driver can not load
+>> successfully, and sometimes the VM can panic due to memory corruption (the
+>> hypervisor writes data to the wrong location).
+>>
+>> Fixes: 6ba34171bcbd ("Drivers: hv: vmbus: Remove use of slow_virt_to_phys()")
+>> Cc: stable@vger.kernel.org
+>> Cc: Michael Kelley <mikelley@microsoft.com>
+>> Reported-and-tested-by: Juliana Rodrigueiro <juliana.rodrigueiro@intra2net.com>
+>> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+>
+>Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
 
-I used subdir-$(CONFIG_...) for hidraw, seccomp, and vfs because
-they only contain host programs.
+Queued for hyperv-fixes, thanks!
 
-While we are here, let's add SPDX License tag, and sort the directories
-alphabetically.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
-Changes in v2:
-  - Rebased on mainline
-
- samples/Makefile         | 24 ++++++++++++++++++++----
- samples/seccomp/Makefile |  2 +-
- samples/vfs/Makefile     |  2 +-
- 3 files changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/samples/Makefile b/samples/Makefile
-index 8e096e0..debf892 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -1,6 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
- # Makefile for Linux samples code
- 
--obj-y			+= kobject/ kprobes/ trace_events/ livepatch/ \
--			   hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
--			   configfs/ connector/ v4l/ trace_printk/ \
--			   vfio-mdev/ vfs/ qmi/ binderfs/ pidfd/
-+obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
-+obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
-+obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
-+subdir-y				+= hidraw
-+obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
-+obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
-+obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
-+obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
-+obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
-+obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
-+subdir-y				+= pidfd
-+obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
-+obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
-+subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
-+obj-$(CONFIG_SAMPLE_TRACE_EVENTS)	+= trace_events/
-+obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
-+obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
-+obj-y					+= vfio-mdev/
-+subdir-$(CONFIG_SAMPLE_VFS)		+= vfs
-diff --git a/samples/seccomp/Makefile b/samples/seccomp/Makefile
-index 00e0b5e..009775b 100644
---- a/samples/seccomp/Makefile
-+++ b/samples/seccomp/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- ifndef CROSS_COMPILE
--hostprogs-$(CONFIG_SAMPLE_SECCOMP) := bpf-fancy dropper bpf-direct user-trap
-+hostprogs-y := bpf-fancy dropper bpf-direct user-trap
- 
- HOSTCFLAGS_bpf-fancy.o += -I$(objtree)/usr/include
- HOSTCFLAGS_bpf-fancy.o += -idirafter $(objtree)/include
-diff --git a/samples/vfs/Makefile b/samples/vfs/Makefile
-index 4ac9690..a3e4ffd 100644
---- a/samples/vfs/Makefile
-+++ b/samples/vfs/Makefile
-@@ -1,5 +1,5 @@
- # List of programs to build
--hostprogs-$(CONFIG_SAMPLE_VFS) := \
-+hostprogs-y := \
- 	test-fsmount \
- 	test-statx
- 
--- 
-2.7.4
-
+--
+Thanks,
+Sasha
