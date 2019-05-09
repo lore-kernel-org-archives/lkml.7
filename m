@@ -2,143 +2,86 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B0CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B30CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF09F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557413996;
-	bh=wnHtBCFO8szDArFQFgMjX+Ip2HAmkQDzsQ7wLrAXddw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DiX8Z99YjYBdDapkY2L+2vpdNGrGcQ+v18q9JUCsOrDZXxSoMsL+vaFT8tp02jPCq
-	 woEFGthGwmlW7gwErnu5Y/aKBVsHjXw0jrZHzznBpx7EHXwul4yyMTMncrvxUyEO0b
-	 qDvQPf1+Zzltj5hh8wo3W0w1ItHOyL6na3rB50l8=
+	by mail.kernel.org (Postfix) with ESMTP id D8CC62054F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f+T0ZaBI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfEIO7z (ORCPT
+        id S1726761AbfEIPBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:59:55 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41514 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726234AbfEIO7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:59:54 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g190so1624097qkf.8;
-        Thu, 09 May 2019 07:59:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4gjHH6OYdovENGKv9IjwwO4ODZYrK1/UA7BvRASYLNI=;
-        b=ayPSsWC0hR8g3mnVVrm+gQZmYbe42qhRJXMZYN7ygfB92Wm/rOAOjjrvjb/6q4fUsl
-         Lyv9bzDlEqFyLPcOJ7xiIaOBB22MPJpS+EfmN6P8J8pq8v/m5YgUqwtpARAdWnqd+dvP
-         mSsm0qZoa7YrHEQoYbTlpwrPKuBV9EzdYYfe+0BACLO3heXSQo6AXtFd+yqVafsqZ90F
-         KnT3W5xoQMuRKttdtZlLiBTJ67VBhggvbdAAwXrUGCUZvSyC909x5JX9KzENIYK/A0T/
-         DMGi8VhyeDsNLpSJ01yy0Tvh58H4nfxyN1ITN+jtfYWb5NA+2KqyRaW1af+fgazMkW2G
-         WfOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4gjHH6OYdovENGKv9IjwwO4ODZYrK1/UA7BvRASYLNI=;
-        b=QbbvEJsW6YPeuRXl7GbBj2Pmm+gYBqrwMnxZYJY87pNW6fbPW/cYxQl/mSMzK0OzZL
-         MObM79yJXOlFcbx3v/Yd7VQ8TbU1fFpZk9cvIMJn0DjhkIfvaKNmhlfIGlC9BBsqgf0H
-         9anzqr/Wcj49q9n9DrmHJ8zAKl2XV7a8lvs8NxUMKVr1gAZqCHC4sX3/IH2SzPnv5zsr
-         aUBYRuvvtl4E8QZzpiglvQOUg1j+utnYwGr9HT+WGoSZSPDxALMTFM2JjEIlLIVTonKQ
-         HCpAgE4r0/1rygm0TOT4+T0oW51y1DuP1I76PH+Ti2Zd8vdIXc2uDL25eXvZ+OoHlixa
-         w7Cw==
-X-Gm-Message-State: APjAAAU1zGWAXA+CGWkUlIJOYS0Z0+TXMq9Tj8d5aqOL0KoJXRRQslnR
-        7Ka/bM9qBq42ksObtJUx2eE=
-X-Google-Smtp-Source: APXvYqw+TWBoOVTjrbLlCjTBgfg0fnuiq+rbpYtl/1hunt8oRsdn+hey5vud63/GdfuOr6EVh8aRlw==
-X-Received: by 2002:a37:b802:: with SMTP id i2mr3484347qkf.343.1557413993211;
-        Thu, 09 May 2019 07:59:53 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::1:c346])
-        by smtp.gmail.com with ESMTPSA id k53sm1301341qtb.65.2019.05.09.07.59.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 07:59:52 -0700 (PDT)
-Date:   Thu, 9 May 2019 07:59:49 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, kernel-team@fb.com,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: Re: [PATCH] cgroup: never call do_group_exit() with task->frozen bit
- set
-Message-ID: <20190509145949.GU374014@devbig004.ftw2.facebook.com>
-References: <20190508203420.580163-1-guro@fb.com>
+        Thu, 9 May 2019 11:01:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38992 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfEIPBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:01:50 -0400
+Received: from zn.tnic (p200300EC2F0F5F00A4EF991375FD2B9A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:5f00:a4ef:9913:75fd:2b9a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7E06F1EC0AD6;
+        Thu,  9 May 2019 17:01:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557414108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=lcBwb2Z+A8lEvl5TQHsmwSZ2gCU/axb76s/Arz6Z4D4=;
+        b=f+T0ZaBI9tX1QOINVSzFPUnyUS/ia4dOu7sR6qAO3Ct0zzrAx/jtbKTtzju7UdvnxSgqZ7
+        hjmG5doHYBzxV4aH2MKdN75OegL5Af7PV8YGFmvDHh7iFz3xAAKWQ/0bJ1Lt502CxDNnuf
+        MHFx+w2d7kzCYrJItufLtEVgf/Aeo3I=
+Date:   Thu, 9 May 2019 17:01:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Tony Luck <tony.luck@intel.com>, Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>, linux-edac@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] EDAC, sb_edac: remove redundant update of tad_base
+Message-ID: <20190509150146.GE17053@zn.tnic>
+References: <20190508224201.27120-1-colin.king@canonical.com>
+ <20190509141313.GA17053@zn.tnic>
+ <55f8efee-a02c-1574-42fa-35e1d3df14f7@canonical.com>
+ <20190509144113.GB17053@zn.tnic>
+ <ebe15617-fe6a-2668-f14e-146811147f14@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190508203420.580163-1-guro@fb.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <ebe15617-fe6a-2668-f14e-146811147f14@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:34:20PM -0700, Roman Gushchin wrote:
-> I've got two independent reports that cgroup_task_frozen() check
-> in cgroup_exit() has been triggered by lkp libhugetlbfs-test and
-> LTP ptrace01 tests.
-> 
-> For example:
-> [   44.576072] WARNING: CPU: 1 PID: 3028 at kernel/cgroup/cgroup.c:5932 cgroup_exit+0x148/0x160
-> [   44.577724] Modules linked in: crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel sr_mod cdrom
-> bochs_drm sg ttm ata_generic pata_acpi ppdev drm_kms_helper snd_pcm syscopyarea aesni_intel snd_timer
-> sysfillrect sysimgblt snd crypto_simd cryptd glue_helper soundcore fb_sys_fops joydev drm serio_raw pcspkr
-> ata_piix libata i2c_piix4 floppy parport_pc parport ip_tables
-> [   44.583106] CPU: 1 PID: 3028 Comm: ptrace-write-hu Not tainted 5.1.0-rc3-00053-g9262503 #5
-> [   44.584600] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-> [   44.586116] RIP: 0010:cgroup_exit+0x148/0x160
-> [   44.587135] Code: 0f 84 50 ff ff ff 48 8b 85 c8 0c 00 00 48 8b 78 70 e8 ec 2e 00 00 e9 3b ff ff ff f0 ff 43 60
-> 0f 88 72 21 89 00 e9 48 ff ff ff <0f> 0b e9 1b ff ff ff e8 3c 73 f4 ff 66 90 66 2e 0f 1f 84 00 00 00
-> [   44.590113] RSP: 0018:ffffb25702dcfd30 EFLAGS: 00010002
-> [   44.591167] RAX: ffff96a7fee32410 RBX: ffff96a7ff1d6000 RCX: dead000000000200
-> [   44.592446] RDX: ffff96a7ff1d6080 RSI: ffff96a7fec75290 RDI: ffff96a7fec75290
-> [   44.593715] RBP: ffff96a7fec745c0 R08: ffff96a7fec74658 R09: 0000000000000000
-> [   44.594985] R10: 0000000000000000 R11: 0000000000000001 R12: ffff96a7fec75101
-> [   44.596266] R13: ffff96a7fec745c0 R14: ffff96a7ff3bde30 R15: ffff96a7fec75130
-> [   44.597550] FS:  0000000000000000(0000) GS:ffff96a7dd700000(0000) knlGS:0000000000000000
-> [   44.598950] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-> [   44.600098] CR2: 00000000f7a00000 CR3: 000000000d20e000 CR4: 00000000000406e0
-> [   44.601417] Call Trace:
-> [   44.602777]  do_exit+0x337/0xc40
-> [   44.603677]  do_group_exit+0x3a/0xa0
-> [   44.604610]  get_signal+0x12e/0x8d0
-> [   44.605533]  ? __switch_to_asm+0x40/0x70
-> [   44.606503]  do_signal+0x36/0x650
-> [   44.607409]  ? __switch_to_asm+0x40/0x70
-> [   44.608383]  ? __schedule+0x267/0x860
-> [   44.609329]  exit_to_usermode_loop+0x89/0xf0
-> [   44.610349]  do_fast_syscall_32+0x251/0x2e3
-> [   44.611357]  entry_SYSENTER_compat+0x7f/0x91
-> [   44.612376] ---[ end trace e4ca5cfc4b7f7964 ]---
-> 
-> The problem is caused by the ptrace_signal() call in the for loop
-> in get_signal(). There is a cgroup_enter_frozen() call inside
-> ptrace_signal(), so after exit from ptrace_signal() the task->frozen
-> bit might be set. In this case do_group_exit() can be called with the
-> task->frozen bit set and trigger the warning. This is only place where
-> we can leave the loop with the task->frozen bit set and without
-> setting JOBCTL_TRAP_FREEZE and TIF_SIGPENDING.
-> 
-> To resolve this problem, let's move cgroup_leave_frozen(true) call to
-> just after the fatal label. If the task is going to die, the frozen
-> bit must be cleared no matter how we get into this point.
-> 
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+On Thu, May 09, 2019 at 03:55:32PM +0100, Colin Ian King wrote:
+> Yep, I agree, but explaining all the Coverity error types in a kernel
+> doc is going to take some effort, which I really don't have much time
+> for at the moment.
 
-Applied to cgroup/for-5.2 for now.
+I'm not suggesting you should document them all or write a comprehensive
+howto on how to run Coverity - all I'm suggesting is starting a small
+doc somewhere in Documentation/ which contains some info on what all
+those tools tags we use, mean and how people can find the information
+they contain. Basically what you said above (which I've snipped).
 
-Thanks.
+But it would be a lot more helpful if it is written down so that people
+can look it up. Also, that doc will serve as a documentation of all
+those tags we're using in the kernel and what their format, etc would
+be.
+
+Otherwise we'll have the current head scratching when a tag like that is
+encountered...
+
+Thx.
 
 -- 
-tejun
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
