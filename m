@@ -2,149 +2,180 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA2AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AFEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3312217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A895B217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:19:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZmDFKam/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfEIRSc (ORCPT
+        id S1726845AbfEIRTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:18:32 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44037 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfEIRSc (ORCPT
+        Thu, 9 May 2019 13:19:02 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52004 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfEIRTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:18:32 -0400
-Received: from 79.184.254.161.ipv4.supernova.orange.pl (79.184.254.161) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id dde0ba7bd4127124; Thu, 9 May 2019 19:18:29 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Ido Schimmel <idosch@idosch.org>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 9 May 2019 13:19:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=h9oK3RsLQP7A0Z8d5uEJwqxM0kwLaT657qEgfdThiz0=; b=ZmDFKam/fMA79ssTdityQOLPmr
+        IksuipOforKZi0mU4GnsCvS63QktfJcCEqwLiBqsvQObZ8YTIzQ/diRiczfU6MMxVoRdkKLvIaLzZ
+        26CrOAvas1A6QpLFWO+4ipn/jQk4ShpkE2YvdG0JU//CoZbWiUClosxmP3AkKbAKz25OTkXcjOBNS
+        GKDFSYEVgy6DWEizZvJ9OFlq5Mg4qpRDcVStqjVqsU4xC43zdMAMwmBbIOb/L1vVjl6feijiY5tr/
+        lcIA42F9qSapoW0//LhPr+tc+qk0Q+aAhuAgzw7rDgnzhm8yZO634in7uWey3LbQ+h6W+qjrRK6Lk
+        y/cyfYVA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOmgs-0006Dd-Jr; Thu, 09 May 2019 17:18:42 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 981EF2019FECA; Thu,  9 May 2019 19:18:40 +0200 (CEST)
+Date:   Thu, 9 May 2019 19:18:40 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs interface
-Date:   Thu, 09 May 2019 19:18:28 +0200
-Message-ID: <1627338.1fd8ofggM8@kreacher>
-In-Reply-To: <20190509102315.GA31824@splinter>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan> <1762575.ER2xjzr9E1@aspire.rjw.lan> <20190509102315.GA31824@splinter>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190509171840.GZ2623@hirez.programming.kicks-ass.net>
+References: <20190508074901.982470324@infradead.org>
+ <20190508080612.721269814@infradead.org>
+ <20190508115416.nblx7c2kocidpytm@treble>
+ <20190508120416.GL2589@hirez.programming.kicks-ass.net>
+ <20190508124248.u5ukpbhnh4wpiccq@treble>
+ <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+ <20190508184848.qerg3flv3ej3xsev@treble>
+ <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
+ <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+ <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, May 9, 2019 12:23:15 PM CEST Ido Schimmel wrote:
-> On Thu, Mar 21, 2019 at 11:20:17PM +0100, Rafael J. Wysocki wrote:
-> > +static struct attribute *intel_epb_attrs[] = {
-> > +	&dev_attr_energy_perf_bias.attr,
-> > +	NULL
-> > +};
+On Thu, May 09, 2019 at 09:20:06AM -0700, Andy Lutomirski wrote:
+> > +ENTRY(call_to_exception_trampoline)
+> > +    /*
+> > +     * On entry the stack looks like:
+> > +     *
+> > +     *   2*4(%esp) <previous context>
+> > +     *   1*4(%esp) RET-IP
+> > +     *   0*4(%esp) func
+> > +     *
+> > +     * transform this into:
+> > +     *
+> > +     *  19*4(%esp) <previous context>
+> > +     *  18*4(%esp) gap / RET-IP
+> > +     *  17*4(%esp) gap / func
+> > +     *  16*4(%esp) ss
+> > +     *  15*4(%esp) sp / <previous context>
+> > +     *  14*4(%esp) flags
+> > +     *  13*4(%esp) cs
+> > +     *  12*4(%esp) ip / RET-IP
+> > +     *  11*4(%esp) orig_eax
+> > +     *  10*4(%esp) gs
+> > +     *   9*4(%esp) fs
+> > +     *   8*4(%esp) es
+> > +     *   7*4(%esp) ds
+> > +     *   6*4(%esp) eax
+> > +     *   5*4(%esp) ebp
+> > +     *   4*4(%esp) edi
+> > +     *   3*4(%esp) esi
+> > +     *   2*4(%esp) edx
+> > +     *   1*4(%esp) ecx
+> > +     *   0*4(%esp) ebx
+> > +     */
+> > +    pushl    %ss
+> > +    pushl    %esp        # points at ss
+> > +    addl    $3*4, (%esp)    #   point it at <previous context>
+> > +    pushfl
+> > +    pushl    %cs
+> > +    pushl    5*4(%esp)    # RET-IP
+> > +    subl    5, (%esp)    #   point at CALL instruction
+> > +    pushl    $-1
+> > +    pushl    %gs
+> > +    pushl    %fs
+> > +    pushl    %es
+> > +    pushl    %ds
+> > +    pushl    %eax
+> > +    pushl    %ebp
+> > +    pushl    %edi
+> > +    pushl    %esi
+> > +    pushl    %edx
+> > +    pushl    %ecx
+> > +    pushl    %ebx
 > > +
-> > +static const struct attribute_group intel_epb_attr_group = {
-> > +	.name = power_group_name,
-> > +	.attrs =  intel_epb_attrs
-> > +};
+> > +    ENCODE_FRAME_POINTER
 > > +
-> >  static int intel_epb_online(unsigned int cpu)
-> >  {
-> > +	struct device *cpu_dev = get_cpu_device(cpu);
+> > +    movl    %esp, %eax    # 1st argument: pt_regs
 > > +
-> >  	intel_epb_restore();
-> > +	if (!cpuhp_tasks_frozen)
-> > +		sysfs_merge_group(&cpu_dev->kobj, &intel_epb_attr_group);
+> > +    movl    17*4(%esp), %ebx    # func
+> > +    CALL_NOSPEC %ebx
 > > +
-> >  	return 0;
-> >  }
-> >  
-> >  static int intel_epb_offline(unsigned int cpu)
-> >  {
-> > -	return intel_epb_save();
-> > +	struct device *cpu_dev = get_cpu_device(cpu);
+> > +    movl    PT_OLDESP(%esp), %eax
 > > +
-> > +	if (!cpuhp_tasks_frozen)
-> > +		sysfs_unmerge_group(&cpu_dev->kobj, &intel_epb_attr_group);
+> > +    movl    PT_EIP(%esp), %ecx
+> > +    movl    %ecx, -1*4(%eax)
 > > +
-> > +	intel_epb_save();
-> > +	return 0;
-> >  }
-> 
-> Hi,
-> 
-> I just booted net-next and got the following NULL pointer dereference
-> [1] during boot. I believe it is caused by this patch.
+> > +    movl    PT_EFLAGS(%esp), %ecx
+> > +    movl    %ecx, -2*4(%eax)
+> > +
+> > +    movl    PT_EAX(%esp), %ecx
+> > +    movl    %ecx, -3*4(%eax)
+> > +
+> > +    popl    %ebx
+> > +    popl    %ecx
+> > +    popl    %edx
+> > +    popl    %esi
+> > +    popl    %edi
+> > +    popl    %ebp
+> > +
+> > +    lea    -3*4(%eax), %esp
+> > +    popl    %eax
+> > +    popfl
+> > +    ret
+> > +END(call_to_exception_trampoline)
 
-I think you're right, sorry about this.
+> Potentially minor nit: you’re doing popfl, but you’re not doing
+> TRACE_IRQ_whatever.  This makes me think that you should either add
+> the tracing (ugh!) or you should maybe just skip the popfl.
 
-> CONFIG_PM is disabled in my config which means 'power_group_name' is
-> defined as NULL. When I enable CONFIG_PM the issue is not reproduced.
-
-So does the patch below fix it for you?
-
----
- arch/x86/kernel/cpu/intel_epb.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-Index: linux-pm/arch/x86/kernel/cpu/intel_epb.c
-===================================================================
---- linux-pm.orig/arch/x86/kernel/cpu/intel_epb.c
-+++ linux-pm/arch/x86/kernel/cpu/intel_epb.c
-@@ -97,6 +97,7 @@ static void intel_epb_restore(void)
- 	wrmsrl(MSR_IA32_ENERGY_PERF_BIAS, (epb & ~EPB_MASK) | val);
- }
- 
-+#ifdef CONFIG_PM
- static struct syscore_ops intel_epb_syscore_ops = {
- 	.suspend = intel_epb_save,
- 	.resume = intel_epb_restore,
-@@ -193,6 +194,25 @@ static int intel_epb_offline(unsigned in
- 	return 0;
- }
- 
-+static inline void register_intel_ebp_syscore_ops(void)
-+{
-+	register_syscore_ops(&intel_epb_syscore_ops);
-+}
-+#else /* !CONFIG_PM */
-+static int intel_epb_online(unsigned int cpu)
-+{
-+	intel_epb_restore();
-+	return 0;
-+}
-+
-+static int intel_epb_offline(unsigned int cpu)
-+{
-+	return intel_epb_save();
-+}
-+
-+static inline void register_intel_ebp_syscore_ops(void) {}
-+#endif
-+
- static __init int intel_epb_init(void)
- {
- 	int ret;
-@@ -206,7 +226,7 @@ static __init int intel_epb_init(void)
- 	if (ret < 0)
- 		goto err_out_online;
- 
--	register_syscore_ops(&intel_epb_syscore_ops);
-+	register_intel_ebp_syscore_ops();
- 	return 0;
- 
- err_out_online:
-
-
-
+Yeah, so we really should not change flags I suppose. If this lives I'll
+remove the popfl.
