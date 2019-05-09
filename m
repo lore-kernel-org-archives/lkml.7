@@ -2,205 +2,110 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0938C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7C9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F8121479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D44221479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:51:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L/7bDbph"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfEIMuR (ORCPT
+        id S1726661AbfEIMvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:50:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59008 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfEIMuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:50:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A047EF74A3;
-        Thu,  9 May 2019 12:50:15 +0000 (UTC)
-Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D03855783;
-        Thu,  9 May 2019 12:50:11 +0000 (UTC)
-Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
- after arch_add_memory()
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-5-david@redhat.com>
- <20190509124302.at7jltfrycj7sxbd@master>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <85a81b34-4f8d-9649-939a-f722528e37ee@redhat.com>
-Date:   Thu, 9 May 2019 14:50:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 08:51:15 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58046 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfEIMvO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:51:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=t0R1VUJJpsY1eusaHX/1WZb8mvW8M0k/0c+bY4+19pk=; b=L/7bDbphkzq4BzbOgQs8HTsnG
+        0GBm3lkiGp7zTZbYCswxeJDVmOkma4KoRHropEotGvYjQmCM0HeoVx2CLF9Bb7pwFjqA/STo9r6ae
+        /Itil4rq6feK6pSNYAe0ubtxQrThrLnz98WNVgF2lUIOWdCAjpkLvvfStCl7pKS4bPfYi5EvfPJgk
+        UaSxkDOVGOK3JEP4VGPEBhjIc7HiFg6PAHRDbJ8e2YZnDrT65kdaER1wIYeYvv4FwjUVm+WGiNyge
+        oHkL+lG6z7Az5XHSODakI72uVu/fzkynhCFKY/eAWGpcqSoxijxkf2ZvIk50xB/LOQiP6wYSfCZQi
+        jgH3gWQkg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOiVu-0003BH-Qz; Thu, 09 May 2019 12:51:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 940FB22158200; Thu,  9 May 2019 14:51:05 +0200 (CEST)
+Date:   Thu, 9 May 2019 14:51:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 11/16] sched/fair: uclamp: Add uclamp support to
+ energy_compute()
+Message-ID: <20190509125105.GU2623@hirez.programming.kicks-ass.net>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-12-patrick.bellasi@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509124302.at7jltfrycj7sxbd@master>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 09 May 2019 12:50:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190402104153.25404-12-patrick.bellasi@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.05.19 14:43, Wei Yang wrote:
-> On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
->> Only memory to be added to the buddy and to be onlined/offlined by
->> user space using memory block devices needs (and should have!) memory
->> block devices.
->>
->> Factor out creation of memory block devices Create all devices after
->> arch_add_memory() succeeded. We can later drop the want_memblock parameter,
->> because it is now effectively stale.
->>
->> Only after memory block devices have been added, memory can be onlined
->> by user space. This implies, that memory is not visible to user space at
->> all before arch_add_memory() succeeded.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Andrew Banman <andrew.banman@hpe.com>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Arun KS <arunks@codeaurora.org>
->> Cc: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
->> include/linux/memory.h |  2 +-
->> mm/memory_hotplug.c    | 15 ++++-----
->> 3 files changed, 53 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 6e0cb4fda179..862c202a18ca 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
->> 	return 0;
->> }
->>
->> +static void unregister_memory(struct memory_block *memory)
->> +{
->> +	BUG_ON(memory->dev.bus != &memory_subsys);
->> +
->> +	/* drop the ref. we got via find_memory_block() */
->> +	put_device(&memory->dev);
->> +	device_unregister(&memory->dev);
->> +}
->> +
->> /*
->> - * need an interface for the VM to add new memory regions,
->> - * but without onlining it.
->> + * Create memory block devices for the given memory area. Start and size
->> + * have to be aligned to memory block granularity. Memory block devices
->> + * will be initialized as offline.
->>  */
->> -int hotplug_memory_register(int nid, struct mem_section *section)
->> +int hotplug_memory_register(unsigned long start, unsigned long size)
->> {
->> -	int ret = 0;
->> +	unsigned long block_nr_pages = memory_block_size_bytes() >> PAGE_SHIFT;
->> +	unsigned long start_pfn = PFN_DOWN(start);
->> +	unsigned long end_pfn = start_pfn + (size >> PAGE_SHIFT);
->> +	unsigned long pfn;
->> 	struct memory_block *mem;
->> +	int ret = 0;
->>
->> -	mutex_lock(&mem_sysfs_mutex);
->> +	BUG_ON(!IS_ALIGNED(start, memory_block_size_bytes()));
->> +	BUG_ON(!IS_ALIGNED(size, memory_block_size_bytes()));
-> 
-> After this change, the call flow looks like this:
-> 
-> add_memory_resource
->     check_hotplug_memory_range
->     hotplug_memory_register
-> 
-> Since in check_hotplug_memory_range() has checked the boundary, do we need to
-> check here again?
-> 
+On Tue, Apr 02, 2019 at 11:41:47AM +0100, Patrick Bellasi wrote:
+> @@ -6484,11 +6494,29 @@ compute_energy(struct task_struct *p, int dst_cpu, struct perf_domain *pd)
+>  		 * it will not appear in its pd list and will not be accounted
+>  		 * by compute_energy().
+>  		 */
+> -		for_each_cpu_and(cpu, perf_domain_span(pd), cpu_online_mask) {
+> -			util = cpu_util_next(cpu, p, dst_cpu);
+> -			util = schedutil_energy_util(cpu, util);
+> -			max_util = max(util, max_util);
+> -			sum_util += util;
+> +		for_each_cpu_and(cpu, pd_mask, cpu_online_mask) {
+> +			util_cfs = cpu_util_next(cpu, p, dst_cpu);
+> +
+> +			/*
+> +			 * Busy time computation: utilization clamping is not
+> +			 * required since the ratio (sum_util / cpu_capacity)
+> +			 * is already enough to scale the EM reported power
+> +			 * consumption at the (eventually clamped) cpu_capacity.
+> +			 */
+> +			sum_util += schedutil_cpu_util(cpu, util_cfs, cpu_cap,
+> +						       ENERGY_UTIL, NULL);
+> +
+> +			/*
+> +			 * Performance domain frequency: utilization clamping
+> +			 * must be considered since it affects the selection
+> +			 * of the performance domain frequency.
+> +			 * NOTE: in case RT tasks are running, by default the
+> +			 * FREQUENCY_UTIL's utilization can be max OPP.
+> +			 */
+> +			tsk = cpu == dst_cpu ? p : NULL;
+> +			cpu_util = schedutil_cpu_util(cpu, util_cfs, cpu_cap,
+> +						      FREQUENCY_UTIL, tsk);
+> +			max_util = max(max_util, cpu_util);
+>  		}
 
-I prefer to check for such requirements explicitly in applicable places,
-especially if they are placed in different files. Makes code easier to
-get. WARN_ON_ONCE will indicate that this has to be assured by the caller.
-
-Thanks!
-
--- 
-
-Thanks,
-
-David / dhildenb
+That's a bit unfortunate; having to do both variants here, but I see
+why. Nothing to be done about it I suppose.
