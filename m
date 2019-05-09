@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DB6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBECAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D559204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4173204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428074;
-	bh=erub84zW5SlMt2EeVa3Z6abSx4S29rau3YDLlNndXu8=;
+	s=default; t=1557428077;
+	bh=qxNcQDxSh66X3XT1A9HlEwqB20CxHkhLaAHXQ69M1j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwubMK52UOjcniLsfhqlqD85sQp5sbu2iHQQox3QaPVZxatoF+AHgp88AOzvoCsTR
-	 9l74DJJNlHwvXG3rgtGeXEAtnHoxUjetAi/8RhiBTQsUPI+ZDa03aWrh/wPOZR32QA
-	 SlJoaDGNR8s7qVEanNLJjvTCgECqZW+Nmdm6yA54=
+	b=ek/zOOZMeigLfBnAuQyecNjBpxrERV51+1Gl/j4MW8mqZikM7SwJIWMx0msh4jJ8a
+	 pc2CxWsTYbwVg+rALZN5EKb5ErInPuUoO1S3aP+Z2xyyP9QaZ8jEPMv+/5xHlFsLwv
+	 IgqjKhgWniGdaYtS5C9ykexNSge+MjEiYi1VKyvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfEISyd (ORCPT
+        id S1729108AbfEISyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49316 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:54:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbfEISya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:30 -0400
+        id S1728609AbfEISyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64F0C21841;
-        Thu,  9 May 2019 18:54:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 017222184B;
+        Thu,  9 May 2019 18:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428069;
-        bh=erub84zW5SlMt2EeVa3Z6abSx4S29rau3YDLlNndXu8=;
+        s=default; t=1557428072;
+        bh=qxNcQDxSh66X3XT1A9HlEwqB20CxHkhLaAHXQ69M1j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gt4PLKBIRkX3Kgs3r29QfUg5XyS8B0OgaEA5JJWnfSLaoQjcx1lx4HOqRvBNBuvfZ
-         9bp57TlPJAarlZC515CN4QVbY2mdh+FzA5SQoG2l9ySdgzovngLKmHIawl/I1BTBGK
-         ngyAO2kxDALTNkXNPszN8WjnKuAnoUv5r91KaKJ4=
+        b=Xwo3rxbf/HuPqX2iKJA0/3vIKuEjSSfcpjkprUWndDQsNwtBqTtC4KMQUGS+wYFr+
+         hxiSEte721/0pXRsPRbNTqlRO8B/bj/2Bitpq5n8s3+id3ACJJff+6QMkvKHjF6APP
+         flVP8juSAvwEfcQqscoS954kc5yoCaGmIOUa8mqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Neubert <christian.neubert.86@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 5.1 15/30] cpufreq: armada-37xx: fix frequency calculation for opp
-Date:   Thu,  9 May 2019 20:42:47 +0200
-Message-Id: <20190509181254.052900467@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.1 16/30] ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
+Date:   Thu,  9 May 2019 20:42:48 +0200
+Message-Id: <20190509181254.247477276@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -61,75 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 8db82563451f976597ab7b282ec655e4390a4088 upstream.
+commit c8afd03486c26accdda4846e5561aa3f8e862a9d upstream.
 
-The frequency calculation was based on the current(max) frequency of the
-CPU. However for low frequency, the value used was already the parent
-frequency divided by a factor of 2.
+Commit 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from
+resume_noirq") makes acpi_lpss_{suspend_late,resume_early}() bail early
+on BYT/CHT as resume_from_noirq is set.
 
-Instead of using this frequency, this fix directly get the frequency from
-the parent clock.
+This means that on resume from hibernate dw_i2c_plat_resume() doesn't get
+called by the restore_early callback, acpi_lpss_resume_early(). Instead it
+should be called by the restore_noirq callback matching how things are done
+when resume_from_noirq is set and we are doing a regular resume.
 
-Fixes: 92ce45fb875d ("cpufreq: Add DVFS support for Armada 37xx")
-Cc: <stable@vger.kernel.org>
-Reported-by: Christian Neubert <christian.neubert.86@gmail.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Change the restore_noirq callback to acpi_lpss_resume_noirq so that
+dw_i2c_plat_resume() gets properly called when resume_from_noirq is set
+and we are resuming from hibernate.
+
+Likewise also change the poweroff_noirq callback so that
+dw_i2c_plat_suspend gets called properly.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202139
+Fixes: 48402cee6889 ("ACPI / LPSS: Resume BYT/CHT I2C controllers from resume_noirq")
+Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/armada-37xx-cpufreq.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/acpi/acpi_lpss.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/cpufreq/armada-37xx-cpufreq.c
-+++ b/drivers/cpufreq/armada-37xx-cpufreq.c
-@@ -359,11 +359,11 @@ static int __init armada37xx_cpufreq_dri
- 	struct armada_37xx_dvfs *dvfs;
- 	struct platform_device *pdev;
- 	unsigned long freq;
--	unsigned int cur_frequency;
-+	unsigned int cur_frequency, base_frequency;
- 	struct regmap *nb_pm_base, *avs_base;
- 	struct device *cpu_dev;
- 	int load_lvl, ret;
--	struct clk *clk;
-+	struct clk *clk, *parent;
- 
- 	nb_pm_base =
- 		syscon_regmap_lookup_by_compatible("marvell,armada-3700-nb-pm");
-@@ -399,6 +399,22 @@ static int __init armada37xx_cpufreq_dri
- 		return PTR_ERR(clk);
- 	}
- 
-+	parent = clk_get_parent(clk);
-+	if (IS_ERR(parent)) {
-+		dev_err(cpu_dev, "Cannot get parent clock for CPU0\n");
-+		clk_put(clk);
-+		return PTR_ERR(parent);
-+	}
-+
-+	/* Get parent CPU frequency */
-+	base_frequency =  clk_get_rate(parent);
-+
-+	if (!base_frequency) {
-+		dev_err(cpu_dev, "Failed to get parent clock rate for CPU\n");
-+		clk_put(clk);
-+		return -EINVAL;
-+	}
-+
- 	/* Get nominal (current) CPU frequency */
- 	cur_frequency = clk_get_rate(clk);
- 	if (!cur_frequency) {
-@@ -431,7 +447,7 @@ static int __init armada37xx_cpufreq_dri
- 	for (load_lvl = ARMADA_37XX_DVFS_LOAD_0; load_lvl < LOAD_LEVEL_NR;
- 	     load_lvl++) {
- 		unsigned long u_volt = avs_map[dvfs->avs[load_lvl]] * 1000;
--		freq = cur_frequency / dvfs->divider[load_lvl];
-+		freq = base_frequency / dvfs->divider[load_lvl];
- 		ret = dev_pm_opp_add(cpu_dev, freq, u_volt);
- 		if (ret)
- 			goto remove_opp;
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -1142,8 +1142,8 @@ static struct dev_pm_domain acpi_lpss_pm
+ 		.thaw_noirq = acpi_subsys_thaw_noirq,
+ 		.poweroff = acpi_subsys_suspend,
+ 		.poweroff_late = acpi_lpss_suspend_late,
+-		.poweroff_noirq = acpi_subsys_suspend_noirq,
+-		.restore_noirq = acpi_subsys_resume_noirq,
++		.poweroff_noirq = acpi_lpss_suspend_noirq,
++		.restore_noirq = acpi_lpss_resume_noirq,
+ 		.restore_early = acpi_lpss_resume_early,
+ #endif
+ 		.runtime_suspend = acpi_lpss_runtime_suspend,
 
 
