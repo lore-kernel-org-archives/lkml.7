@@ -2,184 +2,209 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB598C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BABC04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E93120989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E0D20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 22:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="datqtN+7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lcbJ3zLp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfEIWUA (ORCPT
+        id S1727036AbfEIWUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 18:20:00 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:39878 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727597AbfEIWT6 (ORCPT
+        Thu, 9 May 2019 18:20:50 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39999 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726219AbfEIWUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 18:19:58 -0400
-Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49MErZa025743;
-        Thu, 9 May 2019 18:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=K9cqzmRV2uaZUgOsZ4hzM/AFUcjgV9eO8YboIz/FZao=;
- b=datqtN+7mHmjm2u/DNkcoS6M4f7iV6b470ZMKWB4R5Rlli1AW0370VH0PTy13r+qPuTY
- TS7+u6ORwUnqZMumJtLLAjvWLsLRNvDeulY5Z6nzh3TKhp+R4Jqs/Z5SUcxDIhVWc2lL
- wytlaq3LFh3kwUItxVGMcIdiM1bApslPymeBTJoPCL+2jaDhXSTCNopPPJOAFo3fLYN/
- Dembf2xp9omP8sDcViGg5HN44lk1iA0Qj/+YIpjGHaSRHYSetsyErc0FVUZ91zQNUoOn
- 1VIIOe4rr4vhnqnTgkc9qSkQIUSfbCGiqx8eUdOz+RIzHLX2giuCqlGukPqYa9+VUBgI RQ== 
-Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
-        by mx0b-00154904.pphosted.com with ESMTP id 2sc9gvbyxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 May 2019 18:19:56 -0400
-Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
-        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49MI0PL067949;
-        Thu, 9 May 2019 18:19:56 -0400
-Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
-        by mx0b-00154901.pphosted.com with ESMTP id 2scp1dex7b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 18:19:56 -0400
-X-LoopCount0: from 10.166.132.127
-X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
-   d="scan'208";a="1233931848"
-From:   <Mario.Limonciello@dell.com>
-To:     <kbusch@kernel.org>
-CC:     <kai.heng.feng@canonical.com>, <hch@lst.de>, <axboe@fb.com>,
-        <sagi@grimberg.me>, <rafael@kernel.org>,
-        <linux-pm@vger.kernel.org>, <rafael.j.wysocki@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-nvme@lists.infradead.org>,
-        <keith.busch@intel.com>
-Subject: RE: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-Thread-Topic: [PATCH] nvme-pci: Use non-operational power state instead of D3
- on Suspend-to-Idle
-Thread-Index: AQHVBdBS/xizqbOjGUOY5SKUREVH6KZh7T4AgAAD4gD//6zksIAAWSuA//+yBvCAAPthgIAACiqAgAAmlACAAAnmAIAAA8eAgAAJFgCAAADiAIAAGKaA///lboAAEvm1AAAGPtNA///21YCAAFIOcA==
-Date:   Thu, 9 May 2019 22:19:53 +0000
-Message-ID: <495d76c66aec41a8bfbbf527820f8eb9@AUSX13MPC101.AMER.DELL.COM>
-References: <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
- <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
- <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
- <20190509095601.GA19041@lst.de>
- <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
- <20190509103142.GA19550@lst.de>
- <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
- <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
- <20190509192807.GB9675@localhost.localdomain>
- <7a002851c435481593f8629ec9193e40@AUSX13MPC101.AMER.DELL.COM>
- <20190509215409.GD9675@localhost.localdomain>
-In-Reply-To: <20190509215409.GD9675@localhost.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.242.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 May 2019 18:20:50 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b3so1802708plr.7;
+        Thu, 09 May 2019 15:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Z1YADLv+X+eTaFOCPRPMkyVNxJwrl9u02E65BW40D5k=;
+        b=lcbJ3zLpdbWPY6o2RCZ4AodP4ic2pzULnGi7IghozPpmKe1z1o67yEB9TIsnQngizS
+         KQgXLqZNB7Ae2D6QTJeoIIqZefMYGYF5wjyAxNmtBeh5ZS633Cqonxv8mDbqMMjSRZDR
+         KNS33bTuluL5H/WFj/xZ8RngtzSlE+Lf1/8paQYrrVKmxaXOoWm8NnMgpEKH6ztlYaad
+         PI4+UUj4as/Xt/f8FdwsSAi1UFvM6iDeS4eALzNNvTEt665rIfZ0LHkKzXP0zOrqi6Dg
+         e2TU2/pqcloLVkFbFoZh4bIvUClKXvQke538xFqKLidb8EG8zEgLTojfB0qEVQCKzKrw
+         6t5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Z1YADLv+X+eTaFOCPRPMkyVNxJwrl9u02E65BW40D5k=;
+        b=gaD0DqIqvzADPn5ow3Y2Y7MOgJCBDoj2xHvIJUPKu15jkqzcBIYwRaCzjikkhtLLW6
+         DhDE4CsOqs7VVSaKTrH+4DrA1YPNECR4Ofqn6c4GOJkb5DMkg1EBbv9+lW4H8TQyye0z
+         ZNe6n3OmBuI0nT7gj2h+VDStHZi7YRSTH5lZtVOPxj7lTlbePnzR0rsJjpvRCNDuRuAa
+         SyivS4b2wKowzGNc9fZ8Ykeh1Wqbrf/LYilDUdoHPAmENeSyGagc3nlNvHYMZfb1BNg9
+         C4nXo/tJnAko/7pH08LdYjuVGF6xF2qJzW+v0MlTt17vgFwmMN+eHe9q7TbUWcBU+0GO
+         MQiA==
+X-Gm-Message-State: APjAAAWnMa10DlnkpuJGs2gIqRTCzVdV9nM5p/HYVgeClmcufFi4z7iD
+        juabw0K+Wm3AKrjb4Coub9k=
+X-Google-Smtp-Source: APXvYqzSmVmq4+FqBEl/cq1bHlnhsA+wSlbzzJZ/8v9nTieYPU4Ln2SpEjRuNj0P80hXDrqRQNAbHg==
+X-Received: by 2002:a17:902:8bca:: with SMTP id r10mr8481101plo.67.1557440449042;
+        Thu, 09 May 2019 15:20:49 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:200::bc44])
+        by smtp.gmail.com with ESMTPSA id o71sm8197898pfi.174.2019.05.09.15.20.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 15:20:47 -0700 (PDT)
+Date:   Thu, 9 May 2019 15:20:46 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.2-rc1
+Message-ID: <20190509222043.b4zn32kuohduzzzr@ast-mbp>
+References: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090127
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905090127
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Keith Busch <kbusch@kernel.org>
-> Sent: Thursday, May 9, 2019 4:54 PM
-> To: Limonciello, Mario
-> Cc: kai.heng.feng@canonical.com; hch@lst.de; axboe@fb.com;
-> sagi@grimberg.me; rafael@kernel.org; linux-pm@vger.kernel.org;
-> rafael.j.wysocki@intel.com; linux-kernel@vger.kernel.org; linux-
-> nvme@lists.infradead.org; keith.busch@intel.com
-> Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of=
- D3 on
-> Suspend-to-Idle
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Thu, May 09, 2019 at 09:37:58PM +0000, Mario.Limonciello@dell.com wrot=
-e:
-> > > +int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss)
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	mutex_lock(&ctrl->scan_lock);
-> > > +	nvme_start_freeze(ctrl);
-> > > +	nvme_wait_freeze(ctrl);
-> > > +	ret =3D nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, npss, NULL, 0=
-,
-> > > +				NULL);
-> > > +	nvme_unfreeze(ctrl);
-> > > +	mutex_unlock(&ctrl->scan_lock);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(nvme_set_power);
-> >
-> > I believe without memory barriers at the end disks with HMB this will
-> > still kernel panic (Such as Toshiba BG3).
->=20
-> Well, the mutex has an implied memory barrier, but your HMB explanation
-> doesn't make much sense to me anyway. The "mb()" in this thread's origina=
-l
-> patch is a CPU memory barrier, and the CPU had better not be accessing
-> HMB memory. Is there something else going on here?
+On Mon, May 06, 2019 at 10:56:56AM -0600, Shuah Khan wrote:
+> Hi Linus,
+> 
+> Please pull the following Kselftest update for Linux 5.2-rc1
+> 
+> This Kselftest update for Linux 5.2-rc1 consists of
+> 
+> - fixes to seccomp test, and kselftest framework
+> - cleanups to remove duplicate header defines
+> - fixes to efivarfs "make clean" target
+> - cgroup cleanup path
+> - Moving the IMA kexec_load selftest to selftests/kexec work from
+>   Mimi Johar and Petr Vorel
+> - A framework to kselftest for writing kernel test modules addition
+>   from Tobin C. Harding
+> 
+> diff is attached.
+> 
+> thanks,
+> -- Shuah
+> 
+> 
+> ----------------------------------------------------------------
+> The following changes since commit 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
+> 
+>   Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+> tags/linux-kselftest-5.2-rc1
+> 
+> for you to fetch changes up to d917fb876f6eaeeea8a2b620d2a266ce26372f4d:
+> 
+>   selftests: build and run gpio when output directory is the src dir
+> (2019-04-22 17:02:26 -0600)
+> 
+> ----------------------------------------------------------------
+> linux-kselftest-5.2-rc1
+> 
+> This Kselftest update for Linux 5.2-rc1 consists of
+> 
+> - fixes to seccomp test, and kselftest framework
+> - cleanups to remove duplicate header defines
+> - fixes to efivarfs "make clean" target
+> - cgroup cleanup path
+> - Moving the IMA kexec_load selftest to selftests/kexec work from
+>   Mimi Johar and Petr Vorel
+> - A framework to kselftest for writing kernel test modules addition
+>   from Tobin C. Harding
+> 
+> ----------------------------------------------------------------
+> Kees Cook (3):
+>       selftests/seccomp: Handle namespace failures gracefully
+>       selftests/harness: Add 30 second timeout per test
+>       selftests/ipc: Fix msgque compiler warnings
+> 
+> Mathieu Desnoyers (1):
+>       rseq/selftests: Adapt number of threads to the number of detected cpus
+> 
+> Mimi Zohar (9):
+>       selftests/kexec: move the IMA kexec_load selftest to selftests/kexec
+>       selftests/kexec: cleanup the kexec selftest
+>       selftests/kexec: define a set of common functions
+>       selftests/kexec: define common logging functions
+>       selftests/kexec: define "require_root_privileges"
+>       selftests/kexec: kexec_file_load syscall test
+>       selftests/kexec: check kexec_load and kexec_file_load are enabled
+>       selftests/kexec: make kexec_load test independent of IMA being enabled
+>       selftests/kexec: update get_secureboot_mode
+> 
+> Petr Vorel (1):
+>       selftests/kexec: Add missing '=y' to config options
+> 
+> Po-Hsu Lin (1):
+>       selftests/efivarfs: clean up test files from test_create*()
+> 
+> Roman Gushchin (1):
+>       selftests: cgroup: fix cleanup path in test_memcg_subtree_control()
+> 
+> Sabyasachi Gupta (4):
+>       selftest/x86/mpx-dig.c: Remove duplicate header
+>       selftest/timers: Remove duplicate header
+>       selftest/rseq: Remove duplicate header
+>       selftest/gpio: Remove duplicate header
+> 
+> Shuah Khan (2):
+>       selftests: fix headers_install circular dependency
 
-Kai Heng will need to speak up a bit in his time zone as he has this disk o=
-n hand,
-but what I recall from our discussion was that DMA operation MemRd after
-resume was the source of the hang.
+Shuah,
 
->=20
-> > This still allows D3 which we found at least failed to go into deepest =
-state and
-> blocked
-> > platform s0ix for the following SSDs (maybe others):
-> > Hynix PC601
-> > LiteOn CL1
->=20
-> We usually write features to spec first, then quirk non-compliant
-> devices after.
+the commit 8ce72dc32578 ("selftests: fix headers_install circular dependency")
+broke our build/test workflow, since it added:
+  ifneq ($(KBUILD_OUTPUT),)
+          OUTPUT := $(KBUILD_OUTPUT)
+  else
 
-NVME spec doesn't talk about a relationship between SetFeatures w/
-NVME_FEAT_POWER_MGMGT and D3 support, nor order of events.
+which means that all of selftests/bpf artifacts are now going into
+main build directory cluttering it with all sorts of .o, generated files
+and executables.
+The end result is humans and scripts can no longer find tests.
 
-This is why we opened a dialog with storage vendors, including contrasting =
-the behavior
-of Microsoft Windows inbox NVME driver and Intel's Windows RST driver.
+For now I hacked it as:
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 5979fdc4f36c..caecec7aebde 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -6,12 +6,8 @@ ifeq (0,$(MAKELEVEL))
+     ifneq ($(O),)
+        OUTPUT := $(O)
+     else
+-       ifneq ($(KBUILD_OUTPUT),)
+-               OUTPUT := $(KBUILD_OUTPUT)
+-       else
+-               OUTPUT := $(shell pwd)
+-               DEFAULT_INSTALL_HDR_PATH := 1
+-       endif
++       OUTPUT := $(shell pwd)
++       DEFAULT_INSTALL_HDR_PATH := 1
+     endif
+ endif
 
-Those two I mention that come to mind immediately because they were most re=
-cently
-tested to fail.  Our discussion with storage vendors overwhelmingly request=
-ed
-that we don't use D3 under S2I because their current firmware architecture =
-won't
-support it.
+bpf developers are doing "cd tools/testing/selftests/bpf; make; ./test_verifier; ..."
+while KBUILD_OUTPUT is also set.
+I don't quite get this 'circular dependency' issue that your commit suppose to address
+but please fix it differently, so bpf developer's workflow is restored and buildbots work again.
+People and scripts depend on it.
+It's even described in Documentation/bpf/bpf_devel_QA.rst
 
-For example one vendor told us with current implementation that receiving D=
-3hot
-after NVME shutdown will prevent being able to enter L1.2.  D3hot entry was=
- supported
-by an IRQ handler that isn't serviced in NVME shutdown state.
+Thanks
 
-Another vendor told us that with current implementation it's impossible to =
-transition
-to PS4 (at least via APST) while L1.2 D3hot is active.
