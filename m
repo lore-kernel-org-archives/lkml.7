@@ -4,41 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929D7C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4DCC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EC82175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4B22173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557411315;
-	bh=WIKCzbiln2ryVc0ZJl9EtTNS6DNS8zJk67eaHWlgcpc=;
+	s=default; t=1557411319;
+	bh=bo7d7nw9IyqAsNFvZFQhFiqb7L+HG9kdqi7oAcH8DbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxOHiqcCfoOxDKJVSWgCd4BRjihB/OTAdwHpjLMoGVa8LevnngtQLOByD/IFwYACl
-	 pjfjTEY01bdhSGp45Q6YFTc5GE7wRekW+xNRNhBHBXGnX6cQfcNEFLkXAz60QDluKv
-	 TRGMmEVytmirZ5A8yZ2trM9rhlpYjauvTX+EtJy8=
+	b=qHq9eqYS0SedgpeniVkaOJiXCKL2k5usKuC0UZYUlo88NJa74n2/K8bW/t1Uexl+u
+	 smvIwahEnMQ/d7kCdbLcOvlZN39RAGdnO3mumUek4DD7TwLH5C3EMYr0Ar0SWRGHF3
+	 6ryGqYDo9fHyRvXZNMZcUeMmf4euaGFs9gdTCANQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfEIOPO (ORCPT
+        id S1727023AbfEIOPS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:15:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50098 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:15:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726881AbfEIOPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:09 -0400
+        id S1726881AbfEIOPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:15 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BD262173B;
-        Thu,  9 May 2019 14:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7667E2173B;
+        Thu,  9 May 2019 14:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411308;
-        bh=WIKCzbiln2ryVc0ZJl9EtTNS6DNS8zJk67eaHWlgcpc=;
+        s=default; t=1557411314;
+        bh=bo7d7nw9IyqAsNFvZFQhFiqb7L+HG9kdqi7oAcH8DbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vds5aSwvcHZAlbJqICKIpaiqiXkLVscokxxFAlQ2x/U7+UD6nkoiG9MvQLFAXOBRL
-         ddD3rHN0LkaI4QzcMNldxTMBzOcMyPmHIUne/9+uE9CscsPktDBTBYD12N7Jqyc430
-         xqrRyZLlyUHk81vn7hwXgttC7slsBLrgsdZ+BiuA=
+        b=q3hl8UUlKpePDFEhho1NWoIHP8WAW4g5/qHHQ2vtI5WCI1WcgR31fZcf9drkG1teL
+         3gx+GLUE75oeJ+tlN08qUNmbuXoMWw5b9EAyk5LfD1YIItVmD6navhnsrVsEgBrnoK
+         eRppsvP4hVO7SiJMyGRfukd0c2wIrRaVT1g6fpjs=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -49,9 +48,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 02/10] PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
-Date:   Thu,  9 May 2019 09:14:48 -0500
-Message-Id: <20190509141456.223614-3-helgaas@kernel.org>
+Subject: [PATCH 06/10] PCI: pciehp: Replace pciehp_debug module param with dyndbg
+Date:   Thu,  9 May 2019 09:14:52 -0500
+Message-Id: <20190509141456.223614-7-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -64,65 +63,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frederick Lawler <fred@fredlawl.com>
 
-Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
-consistent with other logging.
+Previously pciehp debug messages were enabled by the pciehp_debug module
+parameter, e.g., by booting with this kernel command line option:
 
-These could be converted to dev_dbg(), but that depends on
-CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
-*always* be in the dmesg log.
+  pciehp.pciehp_debug=1
 
-Also, use dev_fmt() to add the service name.  Example output change:
+Convert this mechanism to use the generic dynamic debug (dyndbg) feature.
+After this commit, pciehp debug messages are enabled by building the kernel
+with CONFIG_DYNAMIC_DEBUG=y and booting with this command line option:
 
-  - pcieport 0000:80:10.0: Signaling PME with IRQ ...
-  + pcieport 0000:80:10.0: PME: Signaling with IRQ ...
+  dyndbg="file pciehp* +p"
 
-Link: https://lore.kernel.org/lkml/20190503035946.23608-4-fred@fredlawl.com
+The dyndbg facility is much more flexible: messages can be enabled at boot-
+or run-time based on the file name, function name, line number, message
+test, etc.  See Documentation/admin-guide/dynamic-debug-howto.rst for more
+details.
+
+Link: https://lore.kernel.org/lkml/20190503035946.23608-8-fred@fredlawl.com
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
+[bhelgaas: commit log, comment, remove pciehp_debug parameter]
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pcie/pme.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/pci/hotplug/pciehp.h      | 16 ++++++----------
+ drivers/pci/hotplug/pciehp_core.c |  3 ---
+ 2 files changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index 54d593d10396..f38e6c19dd50 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -7,6 +7,8 @@
-  * Copyright (C) 2009 Rafael J. Wysocki <rjw@sisk.pl>, Novell Inc.
+diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
+index 506e1d923a1f..af5d9f92e6d5 100644
+--- a/drivers/pci/hotplug/pciehp.h
++++ b/drivers/pci/hotplug/pciehp.h
+@@ -29,13 +29,13 @@
+ 
+ extern bool pciehp_poll_mode;
+ extern int pciehp_poll_time;
+-extern bool pciehp_debug;
+ 
++/*
++ * Set CONFIG_DYNAMIC_DEBUG=y and boot with 'dyndbg="file pciehp* +p"' to
++ * enable debug messages.
++ */
+ #define dbg(format, arg...)						\
+-do {									\
+-	if (pciehp_debug)						\
+-		printk(KERN_DEBUG "%s: " format, MY_NAME, ## arg);	\
+-} while (0)
++	pr_debug("%s: " format, MY_NAME, ## arg);
+ #define err(format, arg...)						\
+ 	printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
+ #define info(format, arg...)						\
+@@ -44,11 +44,7 @@ do {									\
+ 	printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
+ 
+ #define ctrl_dbg(ctrl, format, arg...)					\
+-	do {								\
+-		if (pciehp_debug)					\
+-			dev_printk(KERN_DEBUG, &ctrl->pcie->device,	\
+-					format, ## arg);		\
+-	} while (0)
++	dev_dbg(&ctrl->pcie->device, format, ## arg)
+ #define ctrl_err(ctrl, format, arg...)					\
+ 	dev_err(&ctrl->pcie->device, format, ## arg)
+ #define ctrl_info(ctrl, format, arg...)					\
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index fc5366b50e95..6ff204c435bf 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -27,7 +27,6 @@
+ #include "../pci.h"
+ 
+ /* Global variables */
+-bool pciehp_debug;
+ bool pciehp_poll_mode;
+ int pciehp_poll_time;
+ 
+@@ -35,10 +34,8 @@ int pciehp_poll_time;
+  * not really modular, but the easiest way to keep compat with existing
+  * bootargs behaviour is to continue using module_param here.
   */
+-module_param(pciehp_debug, bool, 0644);
+ module_param(pciehp_poll_mode, bool, 0644);
+ module_param(pciehp_poll_time, int, 0644);
+-MODULE_PARM_DESC(pciehp_debug, "Debugging mode enabled or not");
+ MODULE_PARM_DESC(pciehp_poll_mode, "Using polling mechanism for hot-plug events or not");
+ MODULE_PARM_DESC(pciehp_poll_time, "Polling mechanism frequency, in seconds");
  
-+#define dev_fmt(fmt) "PME: " fmt
-+
- #include <linux/pci.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-@@ -194,14 +196,14 @@ static void pcie_pme_handle_request(struct pci_dev *port, u16 req_id)
- 		 * assuming that the PME was reported by a PCIe-PCI bridge that
- 		 * used devfn different from zero.
- 		 */
--		pci_dbg(port, "PME interrupt generated for non-existent device %02x:%02x.%d\n",
--			busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+		pci_info(port, "interrupt generated for non-existent device %02x:%02x.%d\n",
-+			 busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
- 		found = pcie_pme_from_pci_bridge(bus, 0);
- 	}
- 
-  out:
- 	if (!found)
--		pci_dbg(port, "Spurious native PME interrupt!\n");
-+		pci_info(port, "Spurious native interrupt!\n");
- }
- 
- /**
-@@ -341,7 +343,7 @@ static int pcie_pme_probe(struct pcie_device *srv)
- 		return ret;
- 	}
- 
--	pci_info(port, "Signaling PME with IRQ %d\n", srv->irq);
-+	pci_info(port, "Signaling with IRQ %d\n", srv->irq);
- 
- 	pcie_pme_mark_devices(port);
- 	pcie_pme_interrupt_enable(port, true);
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
