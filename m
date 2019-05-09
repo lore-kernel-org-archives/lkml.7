@@ -2,150 +2,225 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1F9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74345C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0667217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4CE2184B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428123;
-	bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHPTGONAvyGn9RkJ7a0y8pMaTqU4zcc/RTdfvlNMYCr+EHmGPvPQCHmEYv8NHlF2v
-	 OanIk2N/r8xXII5zgC2xOavWN3o7f2zyx4v/A1jUtLg2r/3NJZBulUuEIZTI3nkywI
-	 HImySMKmXh2RkFR6HsTzxhN8fR0Pbo7lj7kP7+Ek=
+	s=default; t=1557428128;
+	bh=rKlNMGiGE87j05Hs5EDmbJNz8PnL4zYhc55QwOj/DU8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=urKulcc4rsMY0qSOP7r29R20VRrQesvOHAmMD6KlScyMZPAiKPhRTI98P51W9wTRG
+	 KE1s4US0dvo8O7ojSdabeahCUJcwONK9g0dXnuen89j6PRrOsRnxSp1mY30lfh8qmO
+	 I7bv+LFFcZ67miQjKy+UnwUeR6JbdYomauTOnSE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbfEISzW (ORCPT
+        id S1728809AbfEISzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbfEISzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:19 -0400
+        id S1729214AbfEISzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94619204FD;
-        Thu,  9 May 2019 18:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C599204FD;
+        Thu,  9 May 2019 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428118;
-        bh=y588Izky8SnyNVqv+CaJcldVbCrc8tfq22LbV1mgVjI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IV3SICB2jPRBTVZkxd7osE81qH5b/NGBgFzeh7gIqvjmWKsOJQB6gojFDOYbg//6x
-         d0E3GG2qg96k5y26War3sdfPZ484TSPN3kn2TeTtowweI9SbJe/lJmLpKW3nJLA8fL
-         F5ZxDdkM0AMgVult3mvxZcrZ/S7UfDnobswCdmUw=
+        s=default; t=1557428120;
+        bh=rKlNMGiGE87j05Hs5EDmbJNz8PnL4zYhc55QwOj/DU8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=T6LtnTtY6P1d4t8/nKutCzwAiAMncEUviX7rSKNownwAmbj0+H/lLrsrVSFQFafjM
+         Wp4fJY9yf+az+neEo0tuNkgbwdyGXqI9O7onpwz0LaH02cfZmZTFI8AQWlE6/qTz7A
+         yi71A40b+Ia3CbrXQtxPsO3si0VyGeWs4xBadU4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.1 09/30] USB: serial: f81232: fix interrupt worker not stop
-Date:   Thu,  9 May 2019 20:42:41 +0200
-Message-Id: <20190509181252.590284425@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.1 00/30] 5.1.1-stable review
+Date:   Thu,  9 May 2019 20:42:32 +0200
+Message-Id: <20190509181250.417203112@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
-References: <20190509181250.417203112@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.1.1-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.1.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.1.1-rc1
+X-KernelTest-Deadline: 2019-05-11T18:12+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
+This is the start of the stable review cycle for the 5.1.1 release.
+There are 30 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 804dbee1e49774918339c1e5a87400988c0819e8 upstream.
+Responses should be made by Sat 11 May 2019 06:11:35 PM UTC.
+Anything received after that time might be too late.
 
-The F81232 will use interrupt worker to handle MSR change.
-This patch will fix the issue that interrupt work should stop
-in close() and suspend().
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.1-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+and the diffstat can be found below.
 
-This also fixes line-status events being disabled after a suspend cycle
-until the port is re-opened.
+thanks,
 
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-[ johan: amend commit message ]
-Fixes: 87fe5adcd8de ("USB: f81232: implement read IIR/MSR with endpoint")
-Cc: stable <stable@vger.kernel.org>	# 4.1
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+greg k-h
 
----
- drivers/usb/serial/f81232.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+-------------
+Pseudo-Shortlog of commits:
 
---- a/drivers/usb/serial/f81232.c
-+++ b/drivers/usb/serial/f81232.c
-@@ -556,9 +556,12 @@ static int f81232_open(struct tty_struct
- 
- static void f81232_close(struct usb_serial_port *port)
- {
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+
- 	f81232_port_disable(port);
- 	usb_serial_generic_close(port);
- 	usb_kill_urb(port->interrupt_in_urb);
-+	flush_work(&port_priv->interrupt_work);
- }
- 
- static void f81232_dtr_rts(struct usb_serial_port *port, int on)
-@@ -632,6 +635,40 @@ static int f81232_port_remove(struct usb
- 	return 0;
- }
- 
-+static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
-+		usb_kill_urb(port->read_urbs[i]);
-+
-+	usb_kill_urb(port->interrupt_in_urb);
-+
-+	if (port_priv)
-+		flush_work(&port_priv->interrupt_work);
-+
-+	return 0;
-+}
-+
-+static int f81232_resume(struct usb_serial *serial)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	int result;
-+
-+	if (tty_port_initialized(&port->port)) {
-+		result = usb_submit_urb(port->interrupt_in_urb, GFP_NOIO);
-+		if (result) {
-+			dev_err(&port->dev, "submit interrupt urb failed: %d\n",
-+					result);
-+			return result;
-+		}
-+	}
-+
-+	return usb_serial_generic_resume(serial);
-+}
-+
- static struct usb_serial_driver f81232_device = {
- 	.driver = {
- 		.owner =	THIS_MODULE,
-@@ -655,6 +692,8 @@ static struct usb_serial_driver f81232_d
- 	.read_int_callback =	f81232_read_int_callback,
- 	.port_probe =		f81232_port_probe,
- 	.port_remove =		f81232_port_remove,
-+	.suspend =		f81232_suspend,
-+	.resume =		f81232_resume,
- };
- 
- static struct usb_serial_driver * const serial_drivers[] = {
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.1.1-rc1
+
+Will Deacon <will.deacon@arm.com>
+    arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
+
+Will Deacon <will.deacon@arm.com>
+    locking/futex: Allow low-level atomic operations to return -EAGAIN
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    i3c: Fix a shift wrap bug in i3c_bus_set_addr_slot_status()
+
+Ross Zwisler <zwisler@chromium.org>
+    ASoC: Intel: avoid Oops if DMA setup fails
+
+Oliver Neukum <oneukum@suse.com>
+    UAS: fix alignment of scatter/gather segments
+
+Chen-Yu Tsai <wens@csie.org>
+    Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
+
+Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+    Bluetooth: Fix not initializing L2CAP tx_credits
+
+Marcel Holtmann <marcel@holtmann.org>
+    Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+
+Young Xiao <YangX92@hotmail.com>
+    Bluetooth: hidp: fix buffer overflow
+
+Quinn Tran <qtran@marvell.com>
+    scsi: qla2xxx: Fix device staying in blocked state
+
+Giridhar Malavali <gmalavali@marvell.com>
+    scsi: qla2xxx: Set remote port devloss timeout to 0
+
+Andrew Vasquez <andrewv@marvell.com>
+    scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+
+Silvio Cesare <silvio.cesare@gmail.com>
+    scsi: lpfc: change snprintf to scnprintf for possible overflow
+
+Samuel Holland <samuel@sholland.org>
+    soc: sunxi: Fix missing dependency on REGMAP_MMIO
+
+Hans de Goede <hdegoede@redhat.com>
+    ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
+
+Gregory CLEMENT <gregory.clement@bootlin.com>
+    cpufreq: armada-37xx: fix frequency calculation for opp
+
+Bjorn Andersson <bjorn.andersson@linaro.org>
+    iio: adc: qcom-spmi-adc5: Fix of-based module autoloading
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: pci: Add Comet Lake support
+
+Prasad Sodagudi <psodagud@codeaurora.org>
+    genirq: Prevent use-after-free and work list corruption
+
+Alan Stern <stern@rowland.harvard.edu>
+    usb-storage: Set virt_boundary_mask to avoid SG overflows
+
+Johan Hovold <johan@kernel.org>
+    USB: cdc-acm: fix unthrottle races
+
+Ji-Ze Hong (Peter Hong) <hpeter@gmail.com>
+    USB: serial: f81232: fix interrupt worker not stop
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: dwc3: Fix default lpm_nyet_threshold value
+
+Marc Gonzalez <marc.w.gonzalez@free.fr>
+    usb: dwc3: Allow building USB_DWC3_QCOM without EXTCON
+
+Christian Gromm <christian.gromm@microchip.com>
+    staging: most: sound: pass correct device when creating a sound card
+
+Suresh Udipi <sudipi@jp.adit-jv.com>
+    staging: most: cdev: fix chrdev_region leak in mod_exit
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    staging: wilc1000: Avoid GFP_KERNEL allocation from atomic context.
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: power_supply: fix prop-descriptor request size
+
+Andrey Ryabinin <aryabinin@virtuozzo.com>
+    ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
+
+Dexuan Cui <decui@microsoft.com>
+    Drivers: hv: vmbus: Remove the undesired put_cpu_ptr() in hv_synic_cleanup()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                               |   4 +-
+ arch/arm64/include/asm/futex.h         |  55 ++--
+ drivers/acpi/acpi_lpss.c               |   4 +-
+ drivers/bluetooth/hci_bcm.c            |  20 +-
+ drivers/cpufreq/armada-37xx-cpufreq.c  |  22 +-
+ drivers/hv/hv.c                        |   1 -
+ drivers/hwtracing/intel_th/pci.c       |   5 +
+ drivers/i3c/master.c                   |   5 +-
+ drivers/iio/adc/qcom-spmi-adc5.c       |   1 +
+ drivers/scsi/lpfc/lpfc_attr.c          | 196 +++++++-------
+ drivers/scsi/lpfc/lpfc_ct.c            |  12 +-
+ drivers/scsi/lpfc/lpfc_debugfs.c       | 474 +++++++++++++++++----------------
+ drivers/scsi/lpfc/lpfc_debugfs.h       |   6 +-
+ drivers/scsi/qla2xxx/qla_attr.c        |   4 +-
+ drivers/scsi/qla2xxx/qla_nvme.c        |  19 +-
+ drivers/scsi/qla2xxx/qla_target.c      |   4 +-
+ drivers/soc/sunxi/Kconfig              |   1 +
+ drivers/staging/greybus/power_supply.c |   2 +-
+ drivers/staging/most/cdev/cdev.c       |   2 +-
+ drivers/staging/most/sound/sound.c     |   2 +-
+ drivers/staging/wilc1000/wilc_netdev.c |   2 +-
+ drivers/usb/class/cdc-acm.c            |  32 ++-
+ drivers/usb/dwc3/Kconfig               |   6 +-
+ drivers/usb/dwc3/core.c                |   2 +-
+ drivers/usb/musb/Kconfig               |   2 +-
+ drivers/usb/serial/f81232.c            |  39 +++
+ drivers/usb/storage/scsiglue.c         |  26 +-
+ drivers/usb/storage/uas.c              |  35 ++-
+ include/net/bluetooth/hci_core.h       |   3 +
+ kernel/futex.c                         | 188 ++++++++-----
+ kernel/irq/manage.c                    |   4 +-
+ lib/ubsan.c                            |  49 ++--
+ net/bluetooth/hci_conn.c               |   8 +
+ net/bluetooth/hidp/sock.c              |   1 +
+ net/bluetooth/l2cap_core.c             |   9 +-
+ sound/soc/intel/common/sst-firmware.c  |   8 +-
+ 36 files changed, 716 insertions(+), 537 deletions(-)
 
 
