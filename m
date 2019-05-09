@@ -2,108 +2,161 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C32FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D00C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA2D221744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696B5216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:04:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PiVaQAlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEIJC2 (ORCPT
+        id S1726560AbfEIJEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:02:28 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50696 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfEIJC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:02:28 -0400
-Received: from we0048.dip.tu-dresden.de ([141.76.176.48] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hOewa-00026i-Bs; Thu, 09 May 2019 11:02:24 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, andriy.shevchenko@linux.intel.com
-Subject: Re: [PATCH 02/16] treewide: rename match_string() -> __match_string()
-Date:   Thu, 09 May 2019 11:02:23 +0200
-Message-ID: <7309540.OPNIuQxnsW@phil>
-In-Reply-To: <155733480678.14659.15999974975874060801@swboyd.mtv.corp.google.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com> <20190508112842.11654-4-alexandru.ardelean@analog.com> <155733480678.14659.15999974975874060801@swboyd.mtv.corp.google.com>
+        Thu, 9 May 2019 05:04:21 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43897 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfEIJEV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:04:21 -0400
+Received: by mail-wr1-f68.google.com with SMTP id r4so1867390wro.10;
+        Thu, 09 May 2019 02:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=JpLDmJ7s889veboW3Rv53oO/LHxCjZWmDgHuSW3TagQ=;
+        b=PiVaQAlRCqcaxH/t1Ma0i3Mv3txU3+BTLiQ709cQeQESh9ShOWallWzcSJfmgI/jKx
+         yXPtQXSV9IO2sowYJ8/0mMEdlDC1houJq2slnF41bqMBfMb7r3LB8NuA7fRN0sIrm87S
+         tH6iyFvGktgqAlJgR6nOnRaHCkB+jutadvwTQWA7wDhq8alYs4JmpYmSShEsu2qOcTtS
+         9XqO1NN9gPhPv71gscI6jmzlp+j08Yt9Q2Gg4QqCnO5ii/muZz6ZgLnzq8ZaGeA2RzH5
+         +9OsLguIkPPQsuiL1RyJXa5tZmyNw8ZXEqysIMg3Zurs8TaMSpMTeqjSVrGab3JuvgEK
+         rJfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JpLDmJ7s889veboW3Rv53oO/LHxCjZWmDgHuSW3TagQ=;
+        b=EufEkL9LpuwGhPjzAch28uRj06Y4XUIRS7FoCThJAwLz5QSsKjGbXfjVaFzGVpp9Xl
+         URYkY4uFC6MmMJ3bTZdtfcWLttsLXw8eQ+6D0JtI/2gVW0TxLllaxP9392qOB6HEOgfc
+         W7ySvHWIBzGi6sN1b7LKnJHSWw+rk1VkEU6aOVwZxPu3880/ShtI1JxS/npMaiuDPFob
+         igF8du5uYQzKAdR0ozoGEHBk1jA26D1jvYp1Cm0pouQo8pgr7gXh+6YtVLm1TZlc4ARN
+         lMzb/ZM2nYr0rVgyXusPF0eNOMpnC6atv0OT1di284HcQdhgQzvbLgm28dlkGKW3RmSP
+         SoVw==
+X-Gm-Message-State: APjAAAUwZqnCjlkT7DGAgm81W/+Cvqyt+XGiRS6/Liv3NyWVdF0wjBAk
+        9U4KScm6Zunu/evigp0h2EM=
+X-Google-Smtp-Source: APXvYqyttn1Qx8cKR4bIGf+yaqR0e3OpYZiBxXqTERuvfXIerrcaq5xBFdU42WbLdfKODFctvuI9xA==
+X-Received: by 2002:adf:e845:: with SMTP id d5mr2295362wrn.154.1557392659400;
+        Thu, 09 May 2019 02:04:19 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id l12sm975072wmj.0.2019.05.09.02.04.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 02:04:18 -0700 (PDT)
+Date:   Thu, 9 May 2019 11:04:16 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next 00/11] net: stmmac: Selftests
+Message-ID: <20190509090416.GB1605@Red>
+References: <cover.1557300602.git.joabreu@synopsys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1557300602.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 8. Mai 2019, 19:00:06 CEST schrieb Stephen Boyd:
-> (Trimming the lists but keeping lkml)
+On Wed, May 08, 2019 at 09:51:00AM +0200, Jose Abreu wrote:
+> [ Submitting with net-next closed for proper review and testing. ]
 > 
-> Quoting Alexandru Ardelean (2019-05-08 04:28:28)
-> > This change does a rename of match_string() -> __match_string().
-> > 
-> > There are a few parts to the intention here (with this change):
-> > 1. Align with sysfs_match_string()/__sysfs_match_string()
-> > 2. This helps to group users of `match_string()` into simple users:
-> >    a. those that use ARRAY_SIZE(_a) to specify the number of elements
-> >    b. those that use -1 to pass a NULL terminated array of strings
-> >    c. special users, which (after eliminating 1 & 2) are not that many
-> > 3. The final intent is to fix match_string()/__match_string() which is
-> >    slightly broken, in the sense that passing -1 or a positive value does
-> >    not make any difference: the iteration will stop at the first NULL
-> >    element.
-> > 
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> [...]
-> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> > index 96053a96fe2f..0b6c3d300411 100644
-> > --- a/drivers/clk/clk.c
-> > +++ b/drivers/clk/clk.c
-> > @@ -2305,8 +2305,8 @@ bool clk_has_parent(struct clk *clk, struct clk *parent)
-> >         if (core->parent == parent_core)
-> >                 return true;
-> >  
-> > -       return match_string(core->parent_names, core->num_parents,
-> > -                           parent_core->name) >= 0;
-> > +       return __match_string(core->parent_names, core->num_parents,
-> > +                             parent_core->name) >= 0;
+> This introduces selftests support in stmmac driver. We add 4 basic sanity
+> checks and MAC loopback support for all cores within the driver. This way
+> more tests can easily be added in the future and can be run in virtually
+> any MAC/GMAC/QoS/XGMAC platform.
 > 
-> This is essentially ARRAY_SIZE(core->parent_names) so it should be fine
-> to put this back to match_string() later in the series.
+> Having this we can find regressions and missing features in the driver
+> while at the same time we can check if the IP is correctly working.
 > 
-> >  }
-> >  EXPORT_SYMBOL_GPL(clk_has_parent);
-> >  
-> > diff --git a/drivers/clk/rockchip/clk.c b/drivers/clk/rockchip/clk.c
-> > index c3ad92965823..373f13e9cd83 100644
-> > --- a/drivers/clk/rockchip/clk.c
-> > +++ b/drivers/clk/rockchip/clk.c
-> > @@ -276,8 +276,8 @@ static struct clk *rockchip_clk_register_frac_branch(
-> >                 struct clk *mux_clk;
-> >                 int ret;
-> >  
-> > -               frac->mux_frac_idx = match_string(child->parent_names,
-> > -                                                 child->num_parents, name);
-> > +               frac->mux_frac_idx = __match_string(child->parent_names,
-> > +                                                   child->num_parents, name);
+> We have been using this for some time now and I do have more tests to
+> submit in the feature. My experience is that although writing the tests
+> adds more development time, the gain results are obvious.
 > 
-> I suspect this is the same as above, but Heiko can ack/confirm.
+> I let this feature optional within the driver under a Kconfig option.
+> 
+> For this series the output result will be something like this
+> (e.g. for dwmac1000):
+> ----
+> # ethtool -t eth0
+> The test result is PASS
+> The test extra info:
+> 1. MAC Loopback                 0
+> 2. PHY Loopback                 -95
+> 3. MMC Counters                 0
+> 4. EEE                          -95
+> 5. Hash Filter MC               0
+> 6. Perfect Filter UC            0
+> 7. Flow Control                 0
+> ----
+> 
+> (Error code -95 means EOPNOTSUPP in current HW).
+> 
 
-Right now, clock-driver do carry the parent_names in static arrays,
-but that isn't necessarily guaranteed. So only in the driver declaring
-the array do we use ARRAY_SIZE to determine the number of elements
-(from inside the helper-macros in drivers/clk/rockchip/clk.h), but the
-rest of the code does explicitly carry around the real number of elements
-so later clocks could in theory also do that dynamically.
+Hello
 
+I have started to patch dwmac_sun8i for using your patchset and get the following:
+The test result is FAIL
+The test extra info:
+ 1. MAC Loopback         	 0
+ 2. PHY Loopback         	 -95
+ 3. MMC Counters         	 -95
+ 4. EEE                  	 -95
+ 5. Hash Filter MC       	 0
+ 6. Perfect Filter UC    	 1
+ 7. Flow Control         	 -95
 
-Heiko
+What means 1 for "Perfect Filter UC" ?
 
+I have added my patch below
 
+Regards
+
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -976,6 +976,18 @@ static void sun8i_dwmac_exit(struct platform_device *pdev, void *priv)
+                regulator_disable(gmac->regulator);
+ }
+ 
++static void sun8i_dwmac_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++       u32 value = readl(ioaddr + EMAC_BASIC_CTL0);
++
++       if (enable)
++               value |= EMAC_LOOPBACK;
++       else
++               value &= ~EMAC_LOOPBACK;
++
++       writel(value, ioaddr + EMAC_BASIC_CTL0);
++}
++
+ static const struct stmmac_ops sun8i_dwmac_ops = {
+        .core_init = sun8i_dwmac_core_init,
+        .set_mac = sun8i_dwmac_set_mac,
+@@ -985,6 +997,7 @@ static const struct stmmac_ops sun8i_dwmac_ops = {
+        .flow_ctrl = sun8i_dwmac_flow_ctrl,
+        .set_umac_addr = sun8i_dwmac_set_umac_addr,
+        .get_umac_addr = sun8i_dwmac_get_umac_addr,
++       .set_mac_loopback = sun8i_dwmac_set_mac_loopback,
+ };
+ 
+ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
