@@ -2,181 +2,67 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033BAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:01:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B994C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBA92175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="gZou6hCj"
+	by mail.kernel.org (Postfix) with ESMTP id 5218121019
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:03:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbfEIIBT (ORCPT
+        id S1726611AbfEIIDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:01:19 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:20772 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfEIIBS (ORCPT
+        Thu, 9 May 2019 04:03:48 -0400
+Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:40533 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725963AbfEIIDs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:01:18 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x497xj2q012573;
-        Thu, 9 May 2019 16:59:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x497xj2q012573
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557388786;
-        bh=jub7bB0RFseuMn3f9vTFge0BDW0edV2DzaD6c3dAiQA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gZou6hCj3tbogxwjicKwMCixLy35m9sNFb8Dmpz2aK4xYQrkVyYiZo/DkZgQkNEpz
-         zcem2So5e6G5IrKS+bzKlVHtzPP1kHIPA5S5WSPdkFNlUuT5PvQyA/rd9YIpxq50UT
-         SqbrvmSvrvooJKtMuNSq1l1hVHstwznIQHQdbzGEZ7I6gn9sKP3f0SP4gjxAqJNmb7
-         wu03p5mEpDt/pZPyWzv7rudw7YIx3uyiNX/Scy3stjMSLIXlHl1MzfhMBbvnfHzNhR
-         n/uZdlXeIjx5vwCuBbrhoBgtAWNhqj0KuPLMH6PqiGLEb2I09Nrblyqwko1WiV28fl
-         /3zJI3cVHzCGA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-xtensa@linux-xtensa.org, Greentime Hu <green.hu@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
-        Guo Ren <guoren@kernel.org>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv@lists.infradead.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Subject: [PATCH] arch: remove dangling asm-generic wrappers
-Date:   Thu,  9 May 2019 16:59:34 +0900
-Message-Id: <20190509075934.12185-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 04:03:48 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A754C180A8437;
+        Thu,  9 May 2019 08:03:46 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: crown87_3c409a1aa411
+X-Filterd-Recvd-Size: 1325
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  9 May 2019 08:03:45 +0000 (UTC)
+Message-ID: <3d1911051672d4d84b46dfa229b8c82c4a41813b.camel@perches.com>
+Subject: Re: [PATCH v4] checkpatch: add command-line option for TAB size
+From:   Joe Perches <joe@perches.com>
+To:     Antonio Borneo <borneo.antonio@gmail.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        "Elliott, Robert (Servers)" <elliott@hpe.com>
+Cc:     linux-kernel@vger.kernel.org
+Date:   Thu, 09 May 2019 01:03:44 -0700
+In-Reply-To: <20190509072104.18734-1-borneo.antonio@gmail.com>
+References: <20190509072104.18734-1-borneo.antonio@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These generic-y defines do not have the corresponding generic header
-in include/asm-generic/, so they are definitely invalid.
+On Thu, 2019-05-09 at 09:21 +0200, Antonio Borneo wrote:
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -2224,7 +2229,7 @@ sub string_find_replace {
+>  sub tabify {
+>  	my ($leading) = @_;
+>  
+> -	my $source_indent = 8;
+> +	my $source_indent = $tabsize;
+>  	my $max_spaces_before_tab = $source_indent - 1;
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+I didn't test this.
 
- arch/csky/include/asm/Kbuild   | 4 ----
- arch/h8300/include/asm/Kbuild  | 1 -
- arch/nds32/include/asm/Kbuild  | 3 ---
- arch/riscv/include/asm/Kbuild  | 4 ----
- arch/xtensa/include/asm/Kbuild | 1 -
- 5 files changed, 13 deletions(-)
+Does this work properly if --tab-size=1 ?
+Maybe die if ($tabsize < 2); is necessary?
 
-diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-index a9b63efef416..c1a6c0f31150 100644
---- a/arch/csky/include/asm/Kbuild
-+++ b/arch/csky/include/asm/Kbuild
-@@ -1,6 +1,5 @@
- generic-y += asm-offsets.h
- generic-y += bugs.h
--generic-y += clkdev.h
- generic-y += compat.h
- generic-y += current.h
- generic-y += delay.h
-@@ -29,15 +28,12 @@ generic-y += local64.h
- generic-y += mm-arch-hooks.h
- generic-y += mmiowb.h
- generic-y += module.h
--generic-y += mutex.h
- generic-y += pci.h
- generic-y += percpu.h
- generic-y += preempt.h
- generic-y += qrwlock.h
--generic-y += scatterlist.h
- generic-y += sections.h
- generic-y += serial.h
--generic-y += shm.h
- generic-y += timex.h
- generic-y += topology.h
- generic-y += trace_clock.h
-diff --git a/arch/h8300/include/asm/Kbuild b/arch/h8300/include/asm/Kbuild
-index 123d8f54be4a..63e5ab115e3c 100644
---- a/arch/h8300/include/asm/Kbuild
-+++ b/arch/h8300/include/asm/Kbuild
-@@ -38,7 +38,6 @@ generic-y += pci.h
- generic-y += percpu.h
- generic-y += pgalloc.h
- generic-y += preempt.h
--generic-y += scatterlist.h
- generic-y += sections.h
- generic-y += serial.h
- generic-y += shmparam.h
-diff --git a/arch/nds32/include/asm/Kbuild b/arch/nds32/include/asm/Kbuild
-index 5bd2b4ee951f..6897045e7be5 100644
---- a/arch/nds32/include/asm/Kbuild
-+++ b/arch/nds32/include/asm/Kbuild
-@@ -4,10 +4,8 @@ generic-y += bitops.h
- generic-y += bug.h
- generic-y += bugs.h
- generic-y += checksum.h
--generic-y += clkdev.h
- generic-y += cmpxchg.h
- generic-y += compat.h
--generic-y += cputime.h
- generic-y += device.h
- generic-y += div64.h
- generic-y += dma.h
-@@ -26,7 +24,6 @@ generic-y += kdebug.h
- generic-y += kmap_types.h
- generic-y += kprobes.h
- generic-y += kvm_para.h
--generic-y += limits.h
- generic-y += local.h
- generic-y += local64.h
- generic-y += mm-arch-hooks.h
-diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-index cccd12cf27d4..f86d68dabaf0 100644
---- a/arch/riscv/include/asm/Kbuild
-+++ b/arch/riscv/include/asm/Kbuild
-@@ -1,7 +1,6 @@
- generic-y += bugs.h
- generic-y += checksum.h
- generic-y += compat.h
--generic-y += cputime.h
- generic-y += device.h
- generic-y += div64.h
- generic-y += dma.h
-@@ -11,7 +10,6 @@ generic-y += emergency-restart.h
- generic-y += exec.h
- generic-y += fb.h
- generic-y += hardirq.h
--generic-y += hash.h
- generic-y += hw_irq.h
- generic-y += irq_regs.h
- generic-y += irq_work.h
-@@ -21,10 +19,8 @@ generic-y += kvm_para.h
- generic-y += local.h
- generic-y += local64.h
- generic-y += mm-arch-hooks.h
--generic-y += mutex.h
- generic-y += percpu.h
- generic-y += preempt.h
--generic-y += scatterlist.h
- generic-y += sections.h
- generic-y += serial.h
- generic-y += shmparam.h
-diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-index 35f83c4bf239..f1686d919178 100644
---- a/arch/xtensa/include/asm/Kbuild
-+++ b/arch/xtensa/include/asm/Kbuild
-@@ -27,7 +27,6 @@ generic-y += preempt.h
- generic-y += qrwlock.h
- generic-y += qspinlock.h
- generic-y += sections.h
--generic-y += socket.h
- generic-y += topology.h
- generic-y += trace_clock.h
- generic-y += vga.h
--- 
-2.17.1
 
