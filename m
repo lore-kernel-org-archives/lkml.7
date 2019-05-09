@@ -2,156 +2,121 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C04C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28264C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59789217F9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F302B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FcMOrOHH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hQYjAcZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfEISYq (ORCPT
+        id S1726796AbfEISZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:24:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35152 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726632AbfEISYq (ORCPT
+        Thu, 9 May 2019 14:25:28 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43072 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfEISZ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:24:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=N9B1cpMq+/LvLmsepUerJSSHdTQN572R9HJQBCxTJBE=; b=FcMOrOHHcG1ZwURclcVBLK1Ut
-        SPCIj8zaGs/U/st2rzMJHf1OgImQ3EzUSC3TzCjw8nolbOJvNd3b6VlKt0SE5qNFqiDR5YBOG4ygR
-        F/LmZ8zNvc0VBqSiZrRP6vWWPOky/GDT0DXYAtxxopXEC1s9RSO7Fx6HqCM/2x+4E3qFk3xsjK243
-        74JqVIF6vW3wMw1mPLz0vu0bvweRPPoQvXwIULz5rhYepTZUucDiZ1lIgpVeSmAG9dCHVfWp2DSJe
-        0O2zDhqo3Um0naQTSkmMqwac4xnGnRsEd5odZRu4gdFHlSAGSBlj2BJLp6LzKD/biQI838QA8VM3l
-        T/Bkhm4tw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOnig-00030y-1J; Thu, 09 May 2019 18:24:38 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B75302143093D; Thu,  9 May 2019 20:24:35 +0200 (CEST)
-Date:   Thu, 9 May 2019 20:24:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "jstancek@redhat.com" <jstancek@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Message-ID: <20190509182435.GA2623@hirez.programming.kicks-ass.net>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
- <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+        Thu, 9 May 2019 14:25:27 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so4336618wro.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:25:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q8AxXyua6skxc3/3kJBuCD7WeH5GL35ISvW5fGGS1Eo=;
+        b=hQYjAcZ5MDNPj6PBJB0Dlxy5j1K6Is+95GIDcnqeKNHP3o5YhX/VdojpxEE+Y8PIn9
+         /fDqo/k1ReiQClt2rA6ccdDUYxCsVG5oAVrjjlu6UDUp0NgJdXlLBtInln8PnklrzfJV
+         DLBNO3BMDsOIOvsVEp5acBBy+sPABhK1y8hIi+9SFc1WnnI4jGuCynFeEUq09y2GbZkT
+         k9gYjETJovJMIg+ZmPP2KKnznNs9QABQ9BODXKGEIN/RKwa/pm6KQaODoACb0hHV9uCC
+         iD+570gPRIgSdGmIfM80s57JZgIk28wGy9tEBilYPQkkjxA1C0bLtfFmSOagtNiUZCUk
+         rieg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q8AxXyua6skxc3/3kJBuCD7WeH5GL35ISvW5fGGS1Eo=;
+        b=kMKNR/zNGYJgWTCqDT+WfzpD5kibWQqNAqcfWqXaUwi7j4Ei7rpgP1r+RG5NyvgC+C
+         nW8RBaPmyzpQit7ipG6/ILz2XmykIQrYdZPm5DufcxuAQ/EnqjWrZPKxjwzYpP1xHObZ
+         NaneQpPD9IM1G9OKd8km+Jg6sxQxWo1d+rQl4Y4XLNlREHWMkXbDW4jOTQaJQXxEqyjt
+         Kr3pAmIGUto9Zv3wfQ9yNs189IfHFZA3iezKM4q98Hbf2pz18uSJTDG0UZuZzdhv3gXc
+         Fb7YyNclSFwzV7ksDqG+nT+f03EAXiAOycRRdEYKSbUGV5ufW2jrXGPiBLLCK1yYoeX1
+         SiPA==
+X-Gm-Message-State: APjAAAWnaHBf+rTgdGnrGKnM/rb2buQQBAp4oKxF39nuBBCksEu/407h
+        G4mJppaPECyPK6r1rrj79fYEr4ywJbwcauOApdy3ow==
+X-Google-Smtp-Source: APXvYqwrj4aBN6HdRlizpUxg1PGEChem2gmiZwG/9gSosEfNDYAwOUv4ht7lxL+8e98302C4W9vgXaGVYprhjoWVbcc=
+X-Received: by 2002:a5d:50c2:: with SMTP id f2mr4344469wrt.253.1557426325552;
+ Thu, 09 May 2019 11:25:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
+ <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com>
+In-Reply-To: <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Thu, 9 May 2019 11:25:14 -0700
+Message-ID: <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
+Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
+To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc:     Felipe Balbi <balbi@kernel.org>, "Yang, Fei" <fei.yang@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Chen Yu <chenyu56@huawei.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "kernel@collabora.com" <kernel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 05:36:29PM +0000, Nadav Amit wrote:
-> > On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, May 9, 2019 at 7:02 AM Andrzej Pietrasiewicz
+<andrzej.p@collabora.com> wrote:
+>
+> Hi John,
+> W dniu 08.05.2019 o 04:18, John Stultz pisze:
+> > Since commit 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather
+> > buffers"), I've been seeing trouble with adb transfers in Android on
+> > HiKey960, HiKey and now Dragonboard 845c.
+> >
+> > Sometimes things crash, but often the transfers just stop w/o any
+> > obvious error messages.
+> >
+> > Initially I thought it was an issue with the HiKey960 dwc3 usb patches
+> > being upstreamed, and was using the following hack workaround:
+> >    https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-5.1&id=dcdadaaec9db7a7b78ea9b838dd1453359a2f388
+> >
+> > Then dwc2 added sg support, and I ended up having to revert it to get
+> > by on HiKey:
+> >    https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey-5.1&id=6e91b4c7bd1e94bdd835263403c53e85a677b848
+> >
+> > (See thread here: https://lkml.org/lkml/2019/3/8/765)
+>
+> So the thread says there are problems at boot, but here you mention about
+> adb transfers, which must obviously be happening after the board has booted.
+> Do you experience problems at boot or not?
+>
+> If a crash happens, what is in the log?
 
-> > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-> > index 99740e1dd273..fe768f8d612e 100644
-> > --- a/mm/mmu_gather.c
-> > +++ b/mm/mmu_gather.c
-> > @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
-> > 		unsigned long start, unsigned long end)
-> > {
-> > 	/*
-> > -	 * If there are parallel threads are doing PTE changes on same range
-> > -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
-> > -	 * flush by batching, a thread has stable TLB entry can fail to flush
-> > -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
-> > -	 * forcefully if we detect parallel PTE batching threads.
-> > +	 * Sensible comment goes here..
-> > 	 */
-> > -	if (mm_tlb_flush_nested(tlb->mm)) {
-> > -		__tlb_reset_range(tlb);
-> > -		__tlb_adjust_range(tlb, start, end - start);
-> > +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
-> > +		/*
-> > +		 * Since we're can't tell what we actually should have
-> > +		 * flushed flush everything in the given range.
-> > +		 */
-> > +		tlb->start = start;
-> > +		tlb->end = end;
-> > +		tlb->freed_tables = 1;
-> > +		tlb->cleared_ptes = 1;
-> > +		tlb->cleared_pmds = 1;
-> > +		tlb->cleared_puds = 1;
-> > +		tlb->cleared_p4ds = 1;
-> > 	}
-> > 
-> > 	tlb_flush_mmu(tlb);
-> 
-> As a simple optimization, I think it is possible to hold multiple nesting
-> counters in the mm, similar to tlb_flush_pending, for freed_tables,
-> cleared_ptes, etc.
-> 
-> The first time you set tlb->freed_tables, you also atomically increase
-> mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
-> mm->tlb_flush_freed_tables instead of tlb->freed_tables.
+So, yes.  Sorry, I am maybe muddling two issues (though they both seem
+to be tied to f_fs sg).  On dwc2, with the current code, we often (but
+not always) crash as soon as adb starts up in the boot process. Thus
+I'm running with a revert of "usb: dwc2: gadget: Add scatter-gather
+mode" to get by.
 
-That sounds fraught with races and expensive; I would much prefer to not
-go there for this arguably rare case.
+As for example crashes, there is a crash in the thread linked above
+(https://lkml.org/lkml/2019/3/8/765) and also the one I sent yesterday
+when testing with your zlp patch. Let me know if you're looking for
+something more specific.
 
-Consider such fun cases as where CPU-0 sees and clears a PTE, CPU-1
-races and doesn't see that PTE. Therefore CPU-0 sets and counts
-cleared_ptes. Then if CPU-1 flushes while CPU-0 is still in mmu_gather,
-it will see cleared_ptes count increased and flush that granularity,
-OTOH if CPU-1 flushes after CPU-0 completes, it will not and potentiall
-miss an invalidate it should have had.
+One thing I didn't do, but I should is run w/ the zlp + your
+memset/kzalloc patch. See if that helps get dwc2 further along at
+least.  I'll test that shortly here and get back to you.
 
-This whole concurrent mmu_gather stuff is horrible.
-
-  /me ponders more....
-
-So I think the fundamental race here is this:
-
-	CPU-0				CPU-1
-
-	tlb_gather_mmu(.start=1,	tlb_gather_mmu(.start=2,
-		       .end=3);			       .end=4);
-
-	ptep_get_and_clear_full(2)
-	tlb_remove_tlb_entry(2);
-	__tlb_remove_page();
-					if (pte_present(2)) // nope
-
-					tlb_finish_mmu();
-
-					// continue without TLBI(2)
-					// whoopsie
-
-	tlb_finish_mmu();
-	  tlb_flush()		->	TLBI(2)
-
-
-And we can fix that by having tlb_finish_mmu() sync up. Never let a
-concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
-have completed.
-
-This should not be too hard to make happen.
+thanks
+-john
