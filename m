@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252EFC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC839C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E285A2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BC02175B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557411356;
-	bh=u6q0Pg2OL3Py+IxHhJLbr82hQI5NOVhVXSbkc/oe1uQ=;
+	s=default; t=1557411359;
+	bh=KgP1iC3RQeOa98BidEwWEDVB/LKZqMorxMgNDOS57/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TMJ9fkuJpSE5d15uhlYJsPY95qQ+1TUrhr+VBgBSFcDO/g2elxxAGmKe54KqcZza1
-	 QPuEMDKDC7zMp3xthb0QI7RTA5TjjZRvlOdJmrAiPSX2SKbh5UE++oVjAWb2kk/ho/
-	 tqgcqKGM2B+e8wuuL5UD7xcyCIqdgOLz8OPAUL/0=
+	b=XYy6tNiUwroEZREk9R+BxrD1fKgF03ydNR2pmtYq3IvhyB5ADiV33ympd+aX3hD6v
+	 g40Q9/cBDncDycGUWhAAI0/mZILhA93nNN5KTdYVr/f+/dtzLsGQrUX78Wo94ZWrw9
+	 Mze5FWKtU7nUEd1Rb2zIS6/1IscpZ3MeFFPICX3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfEIOPz (ORCPT
+        id S1726879AbfEIOPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:15:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726791AbfEIOPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:17 -0400
+        id S1726560AbfEIOPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:11 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09C102177B;
-        Thu,  9 May 2019 14:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E77A2175B;
+        Thu,  9 May 2019 14:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411316;
-        bh=u6q0Pg2OL3Py+IxHhJLbr82hQI5NOVhVXSbkc/oe1uQ=;
+        s=default; t=1557411310;
+        bh=KgP1iC3RQeOa98BidEwWEDVB/LKZqMorxMgNDOS57/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYFroVDZauLesCkfkIsha6zyux2eyZYbGxVIXnMwELns5SdAWkCVxkDKrxn8eCL6/
-         S+t/QFge7JZwaEFlETzcbRt1FBYXKpdsbEbWymOAZDetqU9VNYOHpLbeUym+GIhkZ2
-         HbdDPcKfpqlF9EUYBnPrlqJpSvBMMa8wV9kK1P1s=
+        b=O10LYy/DrCVeFBc1FovNtawHF2vv7UAKx7M0B16m1oKVq2Eul4hUPPYPbuIT4Q7DY
+         T6Nc6PdnoH6Lg0aOPlf8kb2kbvunMqEWonOHqyrQJhBHetMpvMTXoVpaTSIS+2G9dg
+         Sebp35SPgYsILSgJJ0e7+aPi3AFhicn0nQGPUlAY=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 07/10] PCI: pciehp: Log messages with pci_dev, not pcie_device
-Date:   Thu,  9 May 2019 09:14:53 -0500
-Message-Id: <20190509141456.223614-8-helgaas@kernel.org>
+Subject: [PATCH 03/10] PCI/DPC: Log messages with pci_dev, not pcie_device
+Date:   Thu,  9 May 2019 09:14:49 -0500
+Message-Id: <20190509141456.223614-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -69,125 +69,157 @@ prefixes with dev_fmt().
 
 Example output change:
 
-  - pciehp 0000:00:06.0:pcie004: Slot(0) Powering on due to button press
-  + pcieport 0000:00:06.0: pciehp: Slot(0) Powering on due to button press
+  - dpc 0000:00:01.1:pcie008: DPC error containment capabilities...
+  + pcieport 0000:00:01.1: DPC: error containment capabilities...
 
-Link: https://lore.kernel.org/lkml/20190503035946.23608-7-fred@fredlawl.com
+Link: https://lore.kernel.org/lkml/20190503035946.23608-3-fred@fredlawl.com
 Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/hotplug/pciehp.h      | 16 ++++++++--------
- drivers/pci/hotplug/pciehp_core.c |  7 +++++--
- drivers/pci/hotplug/pciehp_ctrl.c |  2 ++
- drivers/pci/hotplug/pciehp_hpc.c  |  2 ++
- drivers/pci/hotplug/pciehp_pci.c  |  2 ++
- 5 files changed, 19 insertions(+), 10 deletions(-)
+ drivers/pci/pcie/dpc.c | 37 ++++++++++++++++++-------------------
+ 1 file changed, 18 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index af5d9f92e6d5..2f0295b48d5d 100644
---- a/drivers/pci/hotplug/pciehp.h
-+++ b/drivers/pci/hotplug/pciehp.h
-@@ -35,22 +35,22 @@ extern int pciehp_poll_time;
-  * enable debug messages.
-  */
- #define dbg(format, arg...)						\
--	pr_debug("%s: " format, MY_NAME, ## arg);
-+	pr_debug(format, ## arg);
- #define err(format, arg...)						\
--	printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
-+	pr_err(format, ## arg)
- #define info(format, arg...)						\
--	printk(KERN_INFO "%s: " format, MY_NAME, ## arg)
-+	pr_info(format, ## arg)
- #define warn(format, arg...)						\
--	printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
-+	pr_warn(format, ## arg)
- 
- #define ctrl_dbg(ctrl, format, arg...)					\
--	dev_dbg(&ctrl->pcie->device, format, ## arg)
-+	pci_dbg(ctrl->pcie->port, format, ## arg)
- #define ctrl_err(ctrl, format, arg...)					\
--	dev_err(&ctrl->pcie->device, format, ## arg)
-+	pci_err(ctrl->pcie->port, format, ## arg)
- #define ctrl_info(ctrl, format, arg...)					\
--	dev_info(&ctrl->pcie->device, format, ## arg)
-+	pci_info(ctrl->pcie->port, format, ## arg)
- #define ctrl_warn(ctrl, format, arg...)					\
--	dev_warn(&ctrl->pcie->device, format, ## arg)
-+	pci_warn(ctrl->pcie->port, format, ## arg)
- 
- #define SLOT_NAME_SIZE 10
- 
-diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
-index 6ff204c435bf..b85b22880c50 100644
---- a/drivers/pci/hotplug/pciehp_core.c
-+++ b/drivers/pci/hotplug/pciehp_core.c
-@@ -17,6 +17,9 @@
-  *   Dely Sy <dely.l.sy@intel.com>"
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index 7b77754a82de..a32ec3487a8d 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -6,6 +6,8 @@
+  * Copyright (C) 2016 Intel Corp.
   */
  
-+#define pr_fmt(fmt) "pciehp: " fmt
-+#define dev_fmt pr_fmt
++#define dev_fmt(fmt) "DPC: " fmt
 +
- #include <linux/moduleparam.h>
- #include <linux/kernel.h>
- #include <linux/slab.h>
-@@ -179,14 +182,14 @@ static int pciehp_probe(struct pcie_device *dev)
+ #include <linux/aer.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+@@ -100,7 +102,6 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
+ {
+ 	unsigned long timeout = jiffies + HZ;
+ 	struct pci_dev *pdev = dpc->dev->port;
+-	struct device *dev = &dpc->dev->device;
+ 	u16 cap = dpc->cap_pos, status;
  
- 	if (!dev->port->subordinate) {
- 		/* Can happen if we run out of bus numbers during probe */
--		dev_err(&dev->device,
-+		pci_err(dev->port,
- 			"Hotplug bridge without secondary bus, ignoring\n");
- 		return -ENODEV;
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+@@ -110,7 +111,7 @@ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
+ 		pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	}
+ 	if (status & PCI_EXP_DPC_RP_BUSY) {
+-		dev_warn(dev, "DPC root port still busy\n");
++		pci_warn(pdev, "root port still busy\n");
+ 		return -EBUSY;
+ 	}
+ 	return 0;
+@@ -148,7 +149,6 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 
+ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ {
+-	struct device *dev = &dpc->dev->device;
+ 	struct pci_dev *pdev = dpc->dev->port;
+ 	u16 cap = dpc->cap_pos, dpc_status, first_error;
+ 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
+@@ -156,13 +156,13 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ 
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, &status);
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_MASK, &mask);
+-	dev_err(dev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
++	pci_err(pdev, "rp_pio_status: %#010x, rp_pio_mask: %#010x\n",
+ 		status, mask);
+ 
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SEVERITY, &sev);
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_SYSERROR, &syserr);
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_EXCEPTION, &exc);
+-	dev_err(dev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
++	pci_err(pdev, "RP PIO severity=%#010x, syserror=%#010x, exception=%#010x\n",
+ 		sev, syserr, exc);
+ 
+ 	/* Get First Error Pointer */
+@@ -171,7 +171,7 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(rp_pio_error_string); i++) {
+ 		if ((status & ~mask) & (1 << i))
+-			dev_err(dev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
++			pci_err(pdev, "[%2d] %s%s\n", i, rp_pio_error_string[i],
+ 				first_error == i ? " (First)" : "");
  	}
  
- 	ctrl = pcie_init(dev);
- 	if (!ctrl) {
--		dev_err(&dev->device, "Controller initialization failed\n");
-+		pci_err(dev->port, "Controller initialization failed\n");
- 		return -ENODEV;
+@@ -185,18 +185,18 @@ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ 			      &dw2);
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_HEADER_LOG + 12,
+ 			      &dw3);
+-	dev_err(dev, "TLP Header: %#010x %#010x %#010x %#010x\n",
++	pci_err(pdev, "TLP Header: %#010x %#010x %#010x %#010x\n",
+ 		dw0, dw1, dw2, dw3);
+ 
+ 	if (dpc->rp_log_size < 5)
+ 		goto clear_status;
+ 	pci_read_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_IMPSPEC_LOG, &log);
+-	dev_err(dev, "RP PIO ImpSpec Log %#010x\n", log);
++	pci_err(pdev, "RP PIO ImpSpec Log %#010x\n", log);
+ 
+ 	for (i = 0; i < dpc->rp_log_size - 5; i++) {
+ 		pci_read_config_dword(pdev,
+ 			cap + PCI_EXP_DPC_RP_PIO_TLPPREFIX_LOG, &prefix);
+-		dev_err(dev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
++		pci_err(pdev, "TLP Prefix Header: dw%d, %#010x\n", i, prefix);
  	}
- 	set_service_data(dev, ctrl);
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 3f3df4c29f6e..bf81f977a751 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -13,6 +13,8 @@
-  *
-  */
+  clear_status:
+ 	pci_write_config_dword(pdev, cap + PCI_EXP_DPC_RP_PIO_STATUS, status);
+@@ -229,18 +229,17 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ 	struct aer_err_info info;
+ 	struct dpc_dev *dpc = context;
+ 	struct pci_dev *pdev = dpc->dev->port;
+-	struct device *dev = &dpc->dev->device;
+ 	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
  
-+#define dev_fmt(fmt) "pciehp: " fmt
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/pm_runtime.h>
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index e121f1c06c21..913c7e66504f 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -12,6 +12,8 @@
-  * Send feedback to <greg@kroah.com>,<kristen.c.accardi@intel.com>
-  */
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
  
-+#define dev_fmt(fmt) "pciehp: " fmt
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/jiffies.h>
-diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
-index b9c1396db6fe..d17f3bf36f70 100644
---- a/drivers/pci/hotplug/pciehp_pci.c
-+++ b/drivers/pci/hotplug/pciehp_pci.c
-@@ -13,6 +13,8 @@
-  *
-  */
+-	dev_info(dev, "DPC containment event, status:%#06x source:%#06x\n",
++	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+ 		 status, source);
  
-+#define dev_fmt(fmt) "pciehp: " fmt
-+
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <linux/pci.h>
+ 	reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN) >> 1;
+ 	ext_reason = (status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT) >> 5;
+-	dev_warn(dev, "DPC %s detected\n",
++	pci_warn(pdev, "%s detected\n",
+ 		 (reason == 0) ? "unmasked uncorrectable error" :
+ 		 (reason == 1) ? "ERR_NONFATAL" :
+ 		 (reason == 2) ? "ERR_FATAL" :
+@@ -307,7 +306,7 @@ static int dpc_probe(struct pcie_device *dev)
+ 					   dpc_handler, IRQF_SHARED,
+ 					   "pcie-dpc", dpc);
+ 	if (status) {
+-		dev_warn(device, "request IRQ%d failed: %d\n", dev->irq,
++		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
+ 			 status);
+ 		return status;
+ 	}
+@@ -319,7 +318,7 @@ static int dpc_probe(struct pcie_device *dev)
+ 	if (dpc->rp_extensions) {
+ 		dpc->rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
+ 		if (dpc->rp_log_size < 4 || dpc->rp_log_size > 9) {
+-			dev_err(device, "RP PIO log size %u is invalid\n",
++			pci_err(pdev, "RP PIO log size %u is invalid\n",
+ 				dpc->rp_log_size);
+ 			dpc->rp_log_size = 0;
+ 		}
+@@ -328,11 +327,11 @@ static int dpc_probe(struct pcie_device *dev)
+ 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+ 	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
+ 
+-	dev_info(device, "DPC error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+-		cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+-		FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
+-		FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
+-		FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
++	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
++		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
++		 FLAG(cap, PCI_EXP_DPC_CAP_POISONED_TLP),
++		 FLAG(cap, PCI_EXP_DPC_CAP_SW_TRIGGER), dpc->rp_log_size,
++		 FLAG(cap, PCI_EXP_DPC_CAP_DL_ACTIVE));
+ 
+ 	pci_add_ext_cap_save_buffer(pdev, PCI_EXT_CAP_ID_DPC, sizeof(u16));
+ 	return status;
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
