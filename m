@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FED9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12CFC04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF9C2085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A06F2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfEIONq (ORCPT
+        id S1726933AbfEIONu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:13:46 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46960 "EHLO
+        Thu, 9 May 2019 10:13:50 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:46942 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726700AbfEIONL (ORCPT
+        by vger.kernel.org with ESMTP id S1726694AbfEIONL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 May 2019 10:13:11 -0400
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hOjnI-000127-Lg; Thu, 09 May 2019 15:13:08 +0100
+        id 1hOjnI-000129-Lt; Thu, 09 May 2019 15:13:08 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hOjnI-0006MF-DT; Thu, 09 May 2019 15:13:08 +0100
+        id 1hOjnI-0006MP-FI; Thu, 09 May 2019 15:13:08 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "Tom Gundersen" <teg@jklm.no>, "Jann Horn" <jannh@google.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "David Herrmann" <dh.herrmann@gmail.com>
 Date:   Thu, 09 May 2019 15:08:17 +0100
-Message-ID: <lsq.1557410897.156917509@decadent.org.uk>
+Message-ID: <lsq.1557410897.703932534@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 06/10] ipv4: fix a race in update_or_create_fnhe()
+Subject: [PATCH 3.16 08/10] fork: record start_time late
 In-Reply-To: <lsq.1557410896.171359878@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,85 +56,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Herrmann <dh.herrmann@gmail.com>
 
-commit caa415270c732505240bb60171c44a7838c555e8 upstream.
+commit 7b55851367136b1efd84d98fea81ba57a98304cf upstream.
 
-nh_exceptions is effectively used under rcu, but lacks proper
-barriers. Between kzalloc() and setting of nh->nh_exceptions(),
-we need a proper memory barrier.
+This changes the fork(2) syscall to record the process start_time after
+initializing the basic task structure but still before making the new
+process visible to user-space.
 
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Fixes: 4895c771c7f00 ("ipv4: Add FIB nexthop exceptions.")
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Technically, we could record the start_time anytime during fork(2).  But
+this might lead to scenarios where a start_time is recorded long before
+a process becomes visible to user-space.  For instance, with
+userfaultfd(2) and TLS, user-space can delay the execution of fork(2)
+for an indefinite amount of time (and will, if this causes network
+access, or similar).
+
+By recording the start_time late, it much closer reflects the point in
+time where the process becomes live and can be observed by other
+processes.
+
+Lastly, this makes it much harder for user-space to predict and control
+the start_time they get assigned.  Previously, user-space could fork a
+process and stall it in copy_thread_tls() before its pid is allocated,
+but after its start_time is recorded.  This can be misused to later-on
+cycle through PIDs and resume the stalled fork(2) yielding a process
+that has the same pid and start_time as a process that existed before.
+This can be used to circumvent security systems that identify processes
+by their pid+start_time combination.
+
+Even though user-space was always aware that start_time recording is
+flaky (but several projects are known to still rely on start_time-based
+identification), changing the start_time to be recorded late will help
+mitigate existing attacks and make it much harder for user-space to
+control the start_time a process gets assigned.
+
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Tom Gundersen <teg@jklm.no>
+Signed-off-by: David Herrmann <dh.herrmann@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: start_time initialisation code is different]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/net/ip_fib.h     | 2 +-
- net/ipv4/fib_semantics.c | 8 +++++---
- net/ipv4/route.c         | 6 +++---
- 3 files changed, 9 insertions(+), 7 deletions(-)
+ kernel/fork.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/include/net/ip_fib.h
-+++ b/include/net/ip_fib.h
-@@ -89,7 +89,7 @@ struct fib_nh {
- 	int			nh_saddr_genid;
- 	struct rtable __rcu * __percpu *nh_pcpu_rth_output;
- 	struct rtable __rcu	*nh_rth_input;
--	struct fnhe_hash_bucket	*nh_exceptions;
-+	struct fnhe_hash_bucket	__rcu *nh_exceptions;
- };
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1265,9 +1265,6 @@ static struct task_struct *copy_process(
  
- /*
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -157,9 +157,12 @@ static void rt_fibinfo_free(struct rtabl
+ 	posix_cpu_timers_init(p);
  
- static void free_nh_exceptions(struct fib_nh *nh)
- {
--	struct fnhe_hash_bucket *hash = nh->nh_exceptions;
-+	struct fnhe_hash_bucket *hash;
- 	int i;
+-	do_posix_clock_monotonic_gettime(&p->start_time);
+-	p->real_start_time = p->start_time;
+-	monotonic_to_bootbased(&p->real_start_time);
+ 	p->io_context = NULL;
+ 	p->audit_context = NULL;
+ 	if (clone_flags & CLONE_THREAD)
+@@ -1423,6 +1420,18 @@ static struct task_struct *copy_process(
+ 	p->task_works = NULL;
  
-+	hash = rcu_dereference_protected(nh->nh_exceptions, 1);
-+	if (!hash)
-+		return;
- 	for (i = 0; i < FNHE_HASH_SIZE; i++) {
- 		struct fib_nh_exception *fnhe;
- 
-@@ -206,8 +209,7 @@ static void free_fib_info_rcu(struct rcu
- 	change_nexthops(fi) {
- 		if (nexthop_nh->nh_dev)
- 			dev_put(nexthop_nh->nh_dev);
--		if (nexthop_nh->nh_exceptions)
--			free_nh_exceptions(nexthop_nh);
-+		free_nh_exceptions(nexthop_nh);
- 		rt_fibinfo_free_cpus(nexthop_nh->nh_pcpu_rth_output);
- 		rt_fibinfo_free(&nexthop_nh->nh_rth_input);
- 	} endfor_nexthops(fi);
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -635,12 +635,12 @@ static void update_or_create_fnhe(struct
- 
- 	spin_lock_bh(&fnhe_lock);
- 
--	hash = nh->nh_exceptions;
-+	hash = rcu_dereference(nh->nh_exceptions);
- 	if (!hash) {
- 		hash = kzalloc(FNHE_HASH_SIZE * sizeof(*hash), GFP_ATOMIC);
- 		if (!hash)
- 			goto out_unlock;
--		nh->nh_exceptions = hash;
-+		rcu_assign_pointer(nh->nh_exceptions, hash);
- 	}
- 
- 	hash += hval;
-@@ -1293,7 +1293,7 @@ static void ip_del_fnhe(struct fib_nh *n
- 
- static struct fib_nh_exception *find_exception(struct fib_nh *nh, __be32 daddr)
- {
--	struct fnhe_hash_bucket *hash = nh->nh_exceptions;
-+	struct fnhe_hash_bucket *hash = rcu_dereference(nh->nh_exceptions);
- 	struct fib_nh_exception *fnhe;
- 	u32 hval;
- 
+ 	/*
++	 * From this point on we must avoid any synchronous user-space
++	 * communication until we take the tasklist-lock. In particular, we do
++	 * not want user-space to be able to predict the process start-time by
++	 * stalling fork(2) after we recorded the start_time but before it is
++	 * visible to the system.
++	 */
++
++	do_posix_clock_monotonic_gettime(&p->start_time);
++	p->real_start_time = p->start_time;
++	monotonic_to_bootbased(&p->real_start_time);
++
++	/*
+ 	 * Make it visible to the rest of the system, but dont wake it up yet.
+ 	 * Need tasklist lock for parent etc handling!
+ 	 */
 
