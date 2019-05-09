@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79B1C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5148CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9786C2184B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2714D2183F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428135;
-	bh=w5ymQl7lHM1mS1Q4LCFLffre3cuHotjrwiYmGOLvaco=;
+	s=default; t=1557428138;
+	bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzICbgQaOCjxaiiv0YEBazPLUrTK3ZRusrxqvDlJtV0Ce102fWXMUgDIlQM/VzzXw
-	 4qpe5ks24zQEkvbVeJl0FH+BoXUyegDHeZqctBcPSJS1U4MxKCdUC6D7lE6c2dJL0h
-	 JFckjuqi+k64JcfL+OmBTY2eQG7w0U6i632/fLSk=
+	b=tx0BHGpA6ncWnNS+Av15vUfu6aRIExWdIkRY1EjGQzl/+IMTthpWRZMI9LTbuwWEt
+	 wI6mz1xr0W9V30QwBztQ7OUlU0ZGeLjDySBfUP+xGPYzrte3koCYPq6D0nE1ICw9TB
+	 RARmpt5Aqs2kTb2ftLBIly3OWZN6JWgH8LQ/ExtY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfEISze (ORCPT
+        id S1729262AbfEISzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50564 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729231AbfEISz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:55:29 -0400
+        id S1729252AbfEISze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 145232183F;
-        Thu,  9 May 2019 18:55:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56B582183F;
+        Thu,  9 May 2019 18:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428128;
-        bh=w5ymQl7lHM1mS1Q4LCFLffre3cuHotjrwiYmGOLvaco=;
+        s=default; t=1557428133;
+        bh=M/WflKJ18bUUTjs4bfqR6PSZ0fvoLlGIFcH8OVmjCno=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xK5FNZ8NU6fYjarHPMg/8dlARJCet77ZS0KPPGpCsguZhFSFrAZn4XzpYj25BOy6N
-         JVOe6dowCc79cqXys3LBVeEjAcRGDGoNx3Gx8OetHC+qscWpg8OFdkpMqlEMdV4qQ9
-         ooWTM/K6AAx/Pqs0F+1V4lMNQli10GbOEa/rKJC4=
+        b=MqX2ECYGyHWVHUInosHyqNpSsFxx8NTH5r/KTvpei+KGQpQsI60aRfNmVt9XYWgDM
+         3sYmoaW4CSPzrnWjf9Yug/8/fC2Ifp0JwdNQ7T8G7Ux7gjF+3D9416LUYRvI2vVUfW
+         WU6cUydGeAGaDRv/+UQhmup+Dl+nfDCmqtL3J+DQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH 5.1 28/30] i3c: Fix a shift wrap bug in i3c_bus_set_addr_slot_status()
-Date:   Thu,  9 May 2019 20:43:00 +0200
-Message-Id: <20190509181257.001930575@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.1 30/30] arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
+Date:   Thu,  9 May 2019 20:43:02 +0200
+Message-Id: <20190509181257.397658621@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -59,38 +59,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 476c7e1d34f2a03b1aa5a924c50703053fe5f77c upstream.
+commit 03110a5cb2161690ae5ac04994d47ed0cd6cef75 upstream.
 
-The problem here is that addr can be I3C_BROADCAST_ADDR (126).  That
-means we're shifting by (126 * 2) % 64 which is 60.  The
-I3C_ADDR_SLOT_STATUS_MASK is an enum which is an unsigned int in GCC
-so shifts greater than 31 are undefined.
+Our futex implementation makes use of LDXR/STXR loops to perform atomic
+updates to user memory from atomic context. This can lead to latency
+problems if we end up spinning around the LL/SC sequence at the expense
+of doing something useful.
 
-Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+Rework our futex atomic operations so that we return -EAGAIN if we fail
+to update the futex word after 128 attempts. The core futex code will
+reschedule if necessary and we'll try again later.
+
+Cc: <stable@kernel.org>
+Fixes: 6170a97460db ("arm64: Atomic operations")
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i3c/master.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/futex.h |   55 +++++++++++++++++++++++++----------------
+ 1 file changed, 34 insertions(+), 21 deletions(-)
 
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -385,8 +385,9 @@ static void i3c_bus_set_addr_slot_status
- 		return;
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -23,26 +23,34 @@
  
- 	ptr = bus->addrslots + (bitpos / BITS_PER_LONG);
--	*ptr &= ~(I3C_ADDR_SLOT_STATUS_MASK << (bitpos % BITS_PER_LONG));
--	*ptr |= status << (bitpos % BITS_PER_LONG);
-+	*ptr &= ~((unsigned long)I3C_ADDR_SLOT_STATUS_MASK <<
-+						(bitpos % BITS_PER_LONG));
-+	*ptr |= (unsigned long)status << (bitpos % BITS_PER_LONG);
- }
+ #include <asm/errno.h>
  
- static bool i3c_bus_dev_addr_is_avail(struct i3c_bus *bus, u8 addr)
++#define FUTEX_MAX_LOOPS	128 /* What's the largest number you can think of? */
++
+ #define __futex_atomic_op(insn, ret, oldval, uaddr, tmp, oparg)		\
+ do {									\
++	unsigned int loops = FUTEX_MAX_LOOPS;				\
++									\
+ 	uaccess_enable();						\
+ 	asm volatile(							\
+ "	prfm	pstl1strm, %2\n"					\
+ "1:	ldxr	%w1, %2\n"						\
+ 	insn "\n"							\
+ "2:	stlxr	%w0, %w3, %2\n"						\
+-"	cbnz	%w0, 1b\n"						\
+-"	dmb	ish\n"							\
++"	cbz	%w0, 3f\n"						\
++"	sub	%w4, %w4, %w0\n"					\
++"	cbnz	%w4, 1b\n"						\
++"	mov	%w0, %w7\n"						\
+ "3:\n"									\
++"	dmb	ish\n"							\
+ "	.pushsection .fixup,\"ax\"\n"					\
+ "	.align	2\n"							\
+-"4:	mov	%w0, %w5\n"						\
++"4:	mov	%w0, %w6\n"						\
+ "	b	3b\n"							\
+ "	.popsection\n"							\
+ 	_ASM_EXTABLE(1b, 4b)						\
+ 	_ASM_EXTABLE(2b, 4b)						\
+-	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp)	\
+-	: "r" (oparg), "Ir" (-EFAULT)					\
++	: "=&r" (ret), "=&r" (oldval), "+Q" (*uaddr), "=&r" (tmp),	\
++	  "+r" (loops)							\
++	: "r" (oparg), "Ir" (-EFAULT), "Ir" (-EAGAIN)			\
+ 	: "memory");							\
+ 	uaccess_disable();						\
+ } while (0)
+@@ -57,23 +65,23 @@ arch_futex_atomic_op_inuser(int op, int
+ 
+ 	switch (op) {
+ 	case FUTEX_OP_SET:
+-		__futex_atomic_op("mov	%w3, %w4",
++		__futex_atomic_op("mov	%w3, %w5",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ADD:
+-		__futex_atomic_op("add	%w3, %w1, %w4",
++		__futex_atomic_op("add	%w3, %w1, %w5",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_OR:
+-		__futex_atomic_op("orr	%w3, %w1, %w4",
++		__futex_atomic_op("orr	%w3, %w1, %w5",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ANDN:
+-		__futex_atomic_op("and	%w3, %w1, %w4",
++		__futex_atomic_op("and	%w3, %w1, %w5",
+ 				  ret, oldval, uaddr, tmp, ~oparg);
+ 		break;
+ 	case FUTEX_OP_XOR:
+-		__futex_atomic_op("eor	%w3, %w1, %w4",
++		__futex_atomic_op("eor	%w3, %w1, %w5",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	default:
+@@ -93,6 +101,7 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 			      u32 oldval, u32 newval)
+ {
+ 	int ret = 0;
++	unsigned int loops = FUTEX_MAX_LOOPS;
+ 	u32 val, tmp;
+ 	u32 __user *uaddr;
+ 
+@@ -104,20 +113,24 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 	asm volatile("// futex_atomic_cmpxchg_inatomic\n"
+ "	prfm	pstl1strm, %2\n"
+ "1:	ldxr	%w1, %2\n"
+-"	sub	%w3, %w1, %w4\n"
+-"	cbnz	%w3, 3f\n"
+-"2:	stlxr	%w3, %w5, %2\n"
+-"	cbnz	%w3, 1b\n"
+-"	dmb	ish\n"
++"	sub	%w3, %w1, %w5\n"
++"	cbnz	%w3, 4f\n"
++"2:	stlxr	%w3, %w6, %2\n"
++"	cbz	%w3, 3f\n"
++"	sub	%w4, %w4, %w3\n"
++"	cbnz	%w4, 1b\n"
++"	mov	%w0, %w8\n"
+ "3:\n"
++"	dmb	ish\n"
++"4:\n"
+ "	.pushsection .fixup,\"ax\"\n"
+-"4:	mov	%w0, %w6\n"
+-"	b	3b\n"
++"5:	mov	%w0, %w7\n"
++"	b	4b\n"
+ "	.popsection\n"
+-	_ASM_EXTABLE(1b, 4b)
+-	_ASM_EXTABLE(2b, 4b)
+-	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp)
+-	: "r" (oldval), "r" (newval), "Ir" (-EFAULT)
++	_ASM_EXTABLE(1b, 5b)
++	_ASM_EXTABLE(2b, 5b)
++	: "+r" (ret), "=&r" (val), "+Q" (*uaddr), "=&r" (tmp), "+r" (loops)
++	: "r" (oldval), "r" (newval), "Ir" (-EFAULT), "Ir" (-EAGAIN)
+ 	: "memory");
+ 	uaccess_disable();
+ 
 
 
