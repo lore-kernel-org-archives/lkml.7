@@ -2,103 +2,160 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA5EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48696C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77603216C4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AFB22173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:31:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MDs2QHjl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfEIMbK convert rfc822-to-8bit (ORCPT
+        id S1726709AbfEIMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:31:10 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22904 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726426AbfEIMbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:31:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 05:31:09 -0700
-X-ExtLoop1: 1
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 09 May 2019 05:31:06 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Daniel Drake <drake@endlessm.com>,
-        Paulo Zanoni <paulo.r.zanoni@intel.com>
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Subject: Re: [PATCH] i915: disable framebuffer compression on GeminiLake
-In-Reply-To: <CAD8Lp462rLGnnTLCSOoMWwU37bxCk1cznsw8==Z8AgumeqHXkQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190423092810.28359-1-jian-hong@endlessm.com> <155613593248.25205.769591454199358982@skylake-alporthouse-com> <15be67b19d898ab74c9ae6d9d9080ef339772e00.camel@intel.com> <CAD8Lp462rLGnnTLCSOoMWwU37bxCk1cznsw8==Z8AgumeqHXkQ@mail.gmail.com>
-Date:   Thu, 09 May 2019 15:33:12 +0300
-Message-ID: <87ftpnlsdz.fsf@intel.com>
+        Thu, 9 May 2019 08:31:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57890 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726426AbfEIMbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 08:31:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=STuNDqhHWk4xUPlw4l8ibpyKNVMs8YJpESd8dG0MbCA=; b=MDs2QHjlE/RbLxY2I/iid5ZpW
+        GshO7LKO+WxIhPVZCajrx7EVEqK+CKKczBKtK5Or3RAXVoh0TFWiI2fNxWfmCZsjee/oDW3qHCHK8
+        cxwH951iYsoPvcVFDFeE9+o5qu8Ahk5UESKy70qrO4dz3jLNxDrzgVuPqGQ/+JMTevEtjWWkN3vyP
+        IG1owGFEZWKeVgJUFNjzV0pep/I7uBW47bzY7K6wxYDN/SRHIAUA2LatMcitFhfjuV1YnPF5SlOYF
+        8lGAoQNRLs+HqgKOBPZHRmTrrvhfc9kKPgig33rBKnGdg8Q0Kxrjxy/0ZzbuaXnk4nHvT3nM2NOI9
+        operbSoww==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hOiCX-00033y-Vv; Thu, 09 May 2019 12:31:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 76A562029F884; Thu,  9 May 2019 14:31:04 +0200 (CEST)
+Date:   Thu, 9 May 2019 14:31:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
+Message-ID: <20190509123104.GQ2589@hirez.programming.kicks-ass.net>
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 May 2019, Daniel Drake <drake@endlessm.com> wrote:
-> Hi,
->
->
-> On Thu, Apr 25, 2019 at 4:27 AM Paulo Zanoni <paulo.r.zanoni@intel.com> wrote:
->>
->> Em qua, 2019-04-24 às 20:58 +0100, Chris Wilson escreveu:
->> > Quoting Jian-Hong Pan (2019-04-23 10:28:10)
->> > > From: Daniel Drake <drake@endlessm.com>
->> > >
->> > > On many (all?) the Gemini Lake systems we work with, there is frequent
->> > > momentary graphical corruption at the top of the screen, and it seems
->> > > that disabling framebuffer compression can avoid this.
->> > >
->> > > The ticket was reported 6 months ago and has already affected a
->> > > multitude of users, without any real progress being made. So, lets
->> > > disable framebuffer compression on GeminiLake until a solution is found.
->> > >
->> > > Buglink: https://bugs.freedesktop.org/show_bug.cgi?id=108085
->> > > Signed-off-by: Daniel Drake <drake@endlessm.com>
->> > > Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
->> >
->> > Fixes: fd7d6c5c8f3e ("drm/i915: enable FBC on gen9+ too") ?
->> > Cc: Paulo Zanoni <paulo.r.zanoni@intel.com>
->> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
->> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
->> > Cc: <stable@vger.kernel.org> # v4.11+
->> >
->> > glk landed 1 month before, so that seems the earliest broken point.
->> >
->>
->> The bug is well reported, the bug author is helpful and it even has a
->> description of "steps to reproduce" that looks very easy (although I
->> didn't try it). Everything suggests this is a bug the display team
->> could actually solve with not-so-many hours of debugging.
->>
->> In the meantime, unbreak the systems:
->> Reviewed-by: Paulo Zanoni <paulo.r.zanoni@intel.com>
->
-> Quick ping here. Any further comments on this patch? Can it be applied?
+On Thu, May 09, 2019 at 02:09:03PM +0200, Daniel Vetter wrote:
+> Fix this by creating a prinkt_safe_up() which calls wake_up_process
+> outside of the spinlock. This isn't correct in full generality, but
+> good enough for console_lock:
+> 
+> - console_lock doesn't use interruptible or killable or timeout down()
+>   calls, hence an up() is the only thing that can wake up a process.
 
-Pushed now, thanks. Needed to get a clean CI result, and I dropped the
-ball a bit there, sorry.
+Wrong :/ Any task can be woken at any random time. We must, at all
+times, assume spurious wakeups will happen.
 
-BR,
-Jani.
+> +void printk_safe_up(struct semaphore *sem)
+> +{
+> +	unsigned long flags;
+> +	struct semaphore_waiter *waiter = NULL;
+> +
+> +	raw_spin_lock_irqsave(&sem->lock, flags);
+> +	if (likely(list_empty(&sem->wait_list))) {
+> +		sem->count++;
+> +	} else {
+> +		waiter = list_first_entry(&sem->wait_list,
+> +					  struct semaphore_waiter, list);
+> +		list_del(&waiter->list);
+> +		waiter->up = true;
+> +	}
+> +	raw_spin_unlock_irqrestore(&sem->lock, flags);
+> +
+> +	if (waiter) /* protected by being sole wake source */
+> +		wake_up_process(waiter->task);
+> +}
+> +EXPORT_SYMBOL(printk_safe_up);
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Since its only used from printk, that EXPORT really isn't needed.
+
+Something like the below might work.
+
+---
+ kernel/locking/semaphore.c | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
+index 561acdd39960..ac0a67e95aac 100644
+--- a/kernel/locking/semaphore.c
++++ b/kernel/locking/semaphore.c
+@@ -38,7 +38,6 @@ static noinline void __down(struct semaphore *sem);
+ static noinline int __down_interruptible(struct semaphore *sem);
+ static noinline int __down_killable(struct semaphore *sem);
+ static noinline int __down_timeout(struct semaphore *sem, long timeout);
+-static noinline void __up(struct semaphore *sem);
+ 
+ /**
+  * down - acquire the semaphore
+@@ -178,14 +177,24 @@ EXPORT_SYMBOL(down_timeout);
+  */
+ void up(struct semaphore *sem)
+ {
++	struct semaphore_waiter *waiter;
++	DEFINE_WAKE_Q(wake_q);
+ 	unsigned long flags;
+ 
+ 	raw_spin_lock_irqsave(&sem->lock, flags);
+-	if (likely(list_empty(&sem->wait_list)))
++	if (likely(list_empty(&sem->wait_list))) {
+ 		sem->count++;
+-	else
+-		__up(sem);
++		goto unlock;
++	}
++
++	waiter = list_first_entry(&sem->wait_list, struct semaphore_waiter, list);
++	list_del(&waiter->list);
++	waiter->up = true;
++	wake_q_add(&wake_q, waiter->task);
++unlock:
+ 	raw_spin_unlock_irqrestore(&sem->lock, flags);
++
++	wake_up_q(&wake_q);
+ }
+ EXPORT_SYMBOL(up);
+ 
+@@ -252,12 +261,3 @@ static noinline int __sched __down_timeout(struct semaphore *sem, long timeout)
+ {
+ 	return __down_common(sem, TASK_UNINTERRUPTIBLE, timeout);
+ }
+-
+-static noinline void __sched __up(struct semaphore *sem)
+-{
+-	struct semaphore_waiter *waiter = list_first_entry(&sem->wait_list,
+-						struct semaphore_waiter, list);
+-	list_del(&waiter->list);
+-	waiter->up = true;
+-	wake_up_process(waiter->task);
+-}
