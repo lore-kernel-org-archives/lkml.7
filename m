@@ -2,93 +2,89 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A35C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE56C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F89B2175B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 095A1206A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfEIJ4V (ORCPT
+        id S1726557AbfEIJ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:56:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:44825 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfEIJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:56:21 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 726AE68AFE; Thu,  9 May 2019 11:56:01 +0200 (CEST)
-Date:   Thu, 9 May 2019 11:56:01 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Keith Busch <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of
- D3 on Suspend-to-Idle
-Message-ID: <20190509095601.GA19041@lst.de>
-References: <20190508185955.11406-1-kai.heng.feng@canonical.com> <20190508191624.GA8365@localhost.localdomain> <3CDA9F13-B17C-456F-8CE1-3A63C6E0DC8F@canonical.com> <f8a043b00909418bad6adcdb62d16e6e@AUSX13MPC105.AMER.DELL.COM> <20190508195159.GA1530@lst.de> <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM> <20190509061237.GA15229@lst.de> <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com> <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com> <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
+        Thu, 9 May 2019 05:57:28 -0400
+Received: from outbound-smtp06.blacknight.com ([81.17.249.39]:58555 "EHLO
+        outbound-smtp06.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725826AbfEIJ52 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:57:28 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp06.blacknight.com (Postfix) with ESMTPS id 5E10C98969
+        for <linux-kernel@vger.kernel.org>; Thu,  9 May 2019 09:57:26 +0000 (UTC)
+Received: (qmail 28448 invoked from network); 9 May 2019 09:57:26 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 May 2019 09:57:26 -0000
+Date:   Thu, 9 May 2019 10:57:24 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     syzbot <syzbot+d84c80f9fe26a0f7a734@syzkaller.appspotmail.com>
+Cc:     akpm@linux-foundation.org, aryabinin@virtuozzo.com, cai@lca.pw,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+Subject: Re: BUG: unable to handle kernel paging request in
+ isolate_freepages_block
+Message-ID: <20190509095724.GG18914@techsingularity.net>
+References: <0000000000003beebd0588492456@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <0000000000003beebd0588492456@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 05:42:30PM +0800, Kai-Heng Feng wrote:
->> That would be a set of 6 new suspend and resume callbacks, mind you,
->> and there's quite a few of them already.  And the majority of drivers
->> would not need to use them anyway.
->
-> I think suspend_to_idle() and resume_from_idle() should be enough?
-> What are other 4 callbacks?
->
->>
->> Also, please note that, possibly apart from the device power state
->> setting, the S2I and S2R handling really aren't that different at all.
->> You basically need to carry out the same preparations during suspend
->> and reverse them during resume in both cases.
->
-> But for this case, it’s quite different to the original suspend and 
-> resume callbacks.
+On Tue, May 07, 2019 at 02:50:05AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    baf76f0c slip: make slhc_free() silently accept an error p..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16dbe6cca00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a42d110b47dd6b36
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d84c80f9fe26a0f7a734
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
 
-Let's think of what cases we needed.
+How reproducible is it and can the following (compile tested only) patch
+be tested please? I'm thinking it's a similar class of bug to 6b0868c820ff
+("mm/compaction.c: correct zone boundary handling when resetting pageblock
+skip hints")
 
-The "classic" suspend in the nvme driver basically shuts down the
-device entirely.  This is useful for:
-
- a) device that have no power management
- b) System power states that eventually power off the entire PCIe bus.
-    I think that would:
-
-     - suspend to disk (hibernate)
-     - classic suspend to ram
-
-The we have the sequence in your patch.  This seems to be related to
-some of the MS wording, but I'm not sure what for example tearing down
-the queues buys us.  Can you explain a bit more where those bits
-make a difference?
-
-Otherwise I think we should use a "no-op" suspend, just leaving the
-power management to the device, or a simple setting the device to the
-deepest power state for everything else, where everything else is
-suspend, or suspend to idle.
-
-And of course than we have windows modern standby actually mandating
-runtime D3 in some case, and vague handwaving mentions of this being
-forced on the platforms, which I'm not entirely sure how they fit
-into the above picture.
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 3319e0872d01..ae4d99d31b61 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1228,7 +1228,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
+ 
+ 	/* Pageblock boundaries */
+ 	start_pfn = pageblock_start_pfn(pfn);
+-	end_pfn = min(start_pfn + pageblock_nr_pages, zone_end_pfn(cc->zone));
++	end_pfn = min(start_pfn + pageblock_nr_pages, zone_end_pfn(cc->zone) - 1);
+ 
+ 	/* Scan before */
+ 	if (start_pfn != pfn) {
+@@ -1239,7 +1239,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
+ 
+ 	/* Scan after */
+ 	start_pfn = pfn + nr_isolated;
+-	if (start_pfn != end_pfn)
++	if (start_pfn < end_pfn)
+ 		isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
+ 
+ 	/* Skip this pageblock in the future as it's full or nearly full */
