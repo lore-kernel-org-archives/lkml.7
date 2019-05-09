@@ -2,156 +2,486 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA190C46470
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED4EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8627F2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294062173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 11:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="DVfCDgS2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfEIKzO (ORCPT
+        id S1726254AbfEILFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 06:55:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36680 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726415AbfEIKzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 06:55:14 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B9F77C064293;
-        Thu,  9 May 2019 10:55:13 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-112-5.rdu2.redhat.com [10.10.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D6505DF4C;
-        Thu,  9 May 2019 10:55:11 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, trond.myklebust@hammerspace.com,
-        "Roberto Bergantinos Corpas" <rbergant@redhat.com>,
-        syzbot <syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com>
-Subject: Re: WARNING: locking bug in nfs_get_client
-Date:   Thu, 09 May 2019 06:55:10 -0400
-Message-ID: <C6C33F7F-8CD2-4E0F-82BA-5443133FBB54@redhat.com>
-In-Reply-To: <000000000000c3e9dc0588695e22@google.com>
-References: <000000000000c3e9dc0588695e22@google.com>
+        Thu, 9 May 2019 07:05:01 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55395 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfEILFA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 07:05:00 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x49B4El91516529
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 9 May 2019 04:04:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x49B4El91516529
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557399855;
+        bh=BhaEi5a8+vBEhNAXXLXG3xv0CV1lMdgmtWTqzr2sqe4=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=DVfCDgS26lpluQsIXtluCTFLUpApAcjqpB5A+OR5LBoeRfZTgSZWz8GZOSYA5OL5B
+         nzDrAd/vhfbKJnY0BB+OgkY/PUS1VMkTddNANT+QOWQDGLhCXxvfCaEI1ty2EKbiRe
+         xW3kTDYyIwj4Q/zQRuoe9I6pBc1elFt7oC2P8gkuiVIha0yHr8StwWmt4lqPCeiHSO
+         tsnLUb5CU9/nyfxxPSem8H/MVfi624Q2QzeiAFotvl0AUysZlFzC5ptUloqQV2D6yS
+         cODJH69hPbU4xHyyrhTmZBWdf8WKDexEudKjgsKQGTibdQ5kePpdEsVH19yP2xy/+s
+         VhvxPsHYzpFfQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x49B4DI41516525;
+        Thu, 9 May 2019 04:04:13 -0700
+Date:   Thu, 9 May 2019 04:04:13 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Brijesh Singh <tipbot@zytor.com>
+Message-ID: <tip-eccd906484d1cd4b5da00f093d678badb6f48f28@git.kernel.org>
+Cc:     kirill.shutemov@linux.intel.com, mingo@kernel.org, bp@suse.de,
+        peterz@infradead.org, linux-kernel@vger.kernel.org,
+        brijesh.singh@amd.com, mingo@redhat.com, tglx@linutronix.de,
+        dave.hansen@intel.com, dan.j.williams@intel.com, hpa@zytor.com,
+        x86@kernel.org, luto@kernel.org, Thomas.Lendacky@amd.com
+Reply-To: mingo@kernel.org, bp@suse.de, kirill.shutemov@linux.intel.com,
+          luto@kernel.org, dan.j.williams@intel.com, brijesh.singh@amd.com,
+          mingo@redhat.com, linux-kernel@vger.kernel.org,
+          peterz@infradead.org, Thomas.Lendacky@amd.com, hpa@zytor.com,
+          x86@kernel.org, dave.hansen@intel.com, tglx@linutronix.de
+In-Reply-To: <20190417154102.22613-1-brijesh.singh@amd.com>
+References: <20190417154102.22613-1-brijesh.singh@amd.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/mm: Do not use set_{pud, pmd}_safe() when
+ splitting a large page
+Git-Commit-ID: eccd906484d1cd4b5da00f093d678badb6f48f28
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 09 May 2019 10:55:13 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need to return from nfs_match_client() while still holding the 
-nfs_client_lock, or maybe fixed with ISERR_OR_NULL in nfs_match 
-client().
+Commit-ID:  eccd906484d1cd4b5da00f093d678badb6f48f28
+Gitweb:     https://git.kernel.org/tip/eccd906484d1cd4b5da00f093d678badb6f48f28
+Author:     Brijesh Singh <brijesh.singh@amd.com>
+AuthorDate: Wed, 17 Apr 2019 15:41:17 +0000
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 8 May 2019 19:08:35 +0200
 
-Anna, would you like a patch to fix it, or can that commit be pulled out 
-and fixed up at this point?
+x86/mm: Do not use set_{pud, pmd}_safe() when splitting a large page
 
-Ben
+The commit
 
+  0a9fe8ca844d ("x86/mm: Validate kernel_physical_mapping_init() PTE population")
 
-On 8 May 2019, at 20:17, syzbot wrote:
+triggers this warning in SEV guests:
 
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    31ccad9b Add linux-next specific files for 20190508
-> git tree:       linux-next
-> console output: 
-> https://syzkaller.appspot.com/x/log.txt?x=1082d2aca00000
-> kernel config:  
-> https://syzkaller.appspot.com/x/.config?x=63cd766601c6c9fc
-> dashboard link: 
-> https://syzkaller.appspot.com/bug?extid=228a82b263b5da91883d
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      
-> https://syzkaller.appspot.com/x/repro.syz?x=140fdce8a00000
-> C reproducer:   
-> https://syzkaller.appspot.com/x/repro.c?x=134dce02a00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the 
-> commit:
-> Reported-by: syzbot+228a82b263b5da91883d@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(depth <= 0)
-> WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052 
-> __lock_release kernel/locking/lockdep.c:4052 [inline]
-> WARNING: CPU: 1 PID: 7948 at kernel/locking/lockdep.c:4052 
-> lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 7948 Comm: syz-executor561 Not tainted 5.1.0-next-20190508 
-> #3
-> Hardware name: Google Google Compute Engine/Google Compute Engine, 
-> BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
->  panic+0x2cb/0x75a kernel/panic.c:218
->  __warn.cold+0x20/0x47 kernel/panic.c:575
->  report_bug+0x263/0x2b0 lib/bug.c:186
->  fixup_bug arch/x86/kernel/traps.c:179 [inline]
->  fixup_bug arch/x86/kernel/traps.c:174 [inline]
->  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
->  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
->  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-> RIP: 0010:__lock_release kernel/locking/lockdep.c:4052 [inline]
-> RIP: 0010:lock_release+0x667/0xa00 kernel/locking/lockdep.c:4321
-> Code: 0f 85 a0 03 00 00 8b 35 a7 02 09 08 85 f6 75 23 48 c7 c6 e0 57 
-> 6b 87 48 c7 c7 80 27 6b 87 4c 89 85 70 ff ff ff e8 37 7c eb ff <0f> 0b 
-> 4c 8b 85 70 ff ff ff 4c 89 ea 4c 89 e6 4c 89 c7 e8 52 63 ff
-> RSP: 0018:ffff888095867730 EFLAGS: 00010082
-> RAX: 0000000000000000 RBX: 1ffff11012b0ceec RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff815b20c6 RDI: ffffed1012b0ced8
-> RBP: ffff8880958677e8 R08: ffff88809a5b83c0 R09: fffffbfff1133071
-> R10: fffffbfff1133070 R11: ffffffff88998383 R12: ffff888219eeb700
-> R13: ffffffff821668ab R14: ffffffff8a45bd40 R15: ffff8880958677c0
->  __raw_spin_unlock include/linux/spinlock_api_smp.h:150 [inline]
->  _raw_spin_unlock+0x1b/0x50 kernel/locking/spinlock.c:183
->  spin_unlock include/linux/spinlock.h:378 [inline]
->  nfs_get_client+0xc1b/0x1300 fs/nfs/client.c:412
->  nfs_init_server+0x26f/0xea0 fs/nfs/client.c:675
->  nfs_create_server+0x12b/0x6d0 fs/nfs/client.c:962
->  nfs_try_mount+0x15a/0x910 fs/nfs/super.c:1882
->  nfs_fs_mount+0x184a/0x2690 fs/nfs/super.c:2718
->  legacy_get_tree+0x10a/0x220 fs/fs_context.c:665
->  vfs_get_tree+0x93/0x3a0 fs/super.c:1476
->  do_new_mount fs/namespace.c:2790 [inline]
->  do_mount+0x138c/0x1c00 fs/namespace.c:3110
->  ksys_mount+0xdb/0x150 fs/namespace.c:3319
->  __do_sys_mount fs/namespace.c:3333 [inline]
->  __se_sys_mount fs/namespace.c:3330 [inline]
->  __x64_sys_mount+0xbe/0x150 fs/namespace.c:3330
->  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x4467d9
-> Code: e8 5c b3 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 
-> 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 
-> 01 f0 ff ff 0f 83 0b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007f54c53e0db8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 00000000004467d9
-> RDX: 0000000020fb5ffc RSI: 0000000020343ff8 RDI: 0000000000000000
-> RBP: 00000000006dbc30 R08: 000000002000a000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc3c
-> R13: 00007ffe22037e2f R14: 00007f54c53e19c0 R15: 20c49ba5e353f7cf
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgalloc.h:87 phys_pmd_init+0x30d/0x386
+  Call Trace:
+   kernel_physical_mapping_init+0xce/0x259
+   early_set_memory_enc_dec+0x10f/0x160
+   kvm_smp_prepare_boot_cpu+0x71/0x9d
+   start_kernel+0x1c9/0x50b
+   secondary_startup_64+0xa4/0xb0
+
+A SEV guest calls kernel_physical_mapping_init() to clear the encryption
+mask from an existing mapping. While doing so, it also splits large
+pages into smaller.
+
+To split a page, kernel_physical_mapping_init() allocates a new page and
+updates the existing entry. The set_{pud,pmd}_safe() helpers trigger a
+warning when updating an entry with a page in the present state.
+
+Add a new kernel_physical_mapping_change() helper which uses the
+non-safe variants of set_{pmd,pud,p4d}() and {pmd,pud,p4d}_populate()
+routines when updating the entry.
+
+Since kernel_physical_mapping_change() may replace an existing
+entry with a new entry, the caller is responsible to flush
+the TLB at the end. Change early_set_memory_enc_dec() to use
+kernel_physical_mapping_change() when it wants to clear the memory
+encryption mask from the page table entry.
+
+ [ bp:
+   - massage commit message.
+   - flesh out comment according to dhansen's request.
+   - align function arguments at opening brace. ]
+
+Fixes: 0a9fe8ca844d ("x86/mm: Validate kernel_physical_mapping_init() PTE population")
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Acked-by:  Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190417154102.22613-1-brijesh.singh@amd.com
+---
+ arch/x86/mm/init_64.c     | 144 +++++++++++++++++++++++++++++++++-------------
+ arch/x86/mm/mem_encrypt.c |  10 +++-
+ arch/x86/mm/mm_internal.h |   3 +
+ 3 files changed, 114 insertions(+), 43 deletions(-)
+
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index bccff68e3267..5cd125bd2a85 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -58,6 +58,37 @@
+ 
+ #include "ident_map.c"
+ 
++#define DEFINE_POPULATE(fname, type1, type2, init)		\
++static inline void fname##_init(struct mm_struct *mm,		\
++		type1##_t *arg1, type2##_t *arg2, bool init)	\
++{								\
++	if (init)						\
++		fname##_safe(mm, arg1, arg2);			\
++	else							\
++		fname(mm, arg1, arg2);				\
++}
++
++DEFINE_POPULATE(p4d_populate, p4d, pud, init)
++DEFINE_POPULATE(pgd_populate, pgd, p4d, init)
++DEFINE_POPULATE(pud_populate, pud, pmd, init)
++DEFINE_POPULATE(pmd_populate_kernel, pmd, pte, init)
++
++#define DEFINE_ENTRY(type1, type2, init)			\
++static inline void set_##type1##_init(type1##_t *arg1,		\
++			type2##_t arg2, bool init)		\
++{								\
++	if (init)						\
++		set_##type1##_safe(arg1, arg2);			\
++	else							\
++		set_##type1(arg1, arg2);			\
++}
++
++DEFINE_ENTRY(p4d, p4d, init)
++DEFINE_ENTRY(pud, pud, init)
++DEFINE_ENTRY(pmd, pmd, init)
++DEFINE_ENTRY(pte, pte, init)
++
++
+ /*
+  * NOTE: pagetable_init alloc all the fixmap pagetables contiguous on the
+  * physical space so we can cache the place of the first one and move
+@@ -414,7 +445,7 @@ void __init cleanup_highmap(void)
+  */
+ static unsigned long __meminit
+ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+-	      pgprot_t prot)
++	      pgprot_t prot, bool init)
+ {
+ 	unsigned long pages = 0, paddr_next;
+ 	unsigned long paddr_last = paddr_end;
+@@ -432,7 +463,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+ 					     E820_TYPE_RAM) &&
+ 			    !e820__mapped_any(paddr & PAGE_MASK, paddr_next,
+ 					     E820_TYPE_RESERVED_KERN))
+-				set_pte_safe(pte, __pte(0));
++				set_pte_init(pte, __pte(0), init);
+ 			continue;
+ 		}
+ 
+@@ -452,7 +483,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+ 			pr_info("   pte=%p addr=%lx pte=%016lx\n", pte, paddr,
+ 				pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL).pte);
+ 		pages++;
+-		set_pte_safe(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
++		set_pte_init(pte, pfn_pte(paddr >> PAGE_SHIFT, prot), init);
+ 		paddr_last = (paddr & PAGE_MASK) + PAGE_SIZE;
+ 	}
+ 
+@@ -468,7 +499,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+  */
+ static unsigned long __meminit
+ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+-	      unsigned long page_size_mask, pgprot_t prot)
++	      unsigned long page_size_mask, pgprot_t prot, bool init)
+ {
+ 	unsigned long pages = 0, paddr_next;
+ 	unsigned long paddr_last = paddr_end;
+@@ -487,7 +518,7 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+ 					     E820_TYPE_RAM) &&
+ 			    !e820__mapped_any(paddr & PMD_MASK, paddr_next,
+ 					     E820_TYPE_RESERVED_KERN))
+-				set_pmd_safe(pmd, __pmd(0));
++				set_pmd_init(pmd, __pmd(0), init);
+ 			continue;
+ 		}
+ 
+@@ -496,7 +527,8 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+ 				spin_lock(&init_mm.page_table_lock);
+ 				pte = (pte_t *)pmd_page_vaddr(*pmd);
+ 				paddr_last = phys_pte_init(pte, paddr,
+-							   paddr_end, prot);
++							   paddr_end, prot,
++							   init);
+ 				spin_unlock(&init_mm.page_table_lock);
+ 				continue;
+ 			}
+@@ -524,19 +556,20 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+ 		if (page_size_mask & (1<<PG_LEVEL_2M)) {
+ 			pages++;
+ 			spin_lock(&init_mm.page_table_lock);
+-			set_pte_safe((pte_t *)pmd,
+-				pfn_pte((paddr & PMD_MASK) >> PAGE_SHIFT,
+-					__pgprot(pgprot_val(prot) | _PAGE_PSE)));
++			set_pte_init((pte_t *)pmd,
++				     pfn_pte((paddr & PMD_MASK) >> PAGE_SHIFT,
++					     __pgprot(pgprot_val(prot) | _PAGE_PSE)),
++				     init);
+ 			spin_unlock(&init_mm.page_table_lock);
+ 			paddr_last = paddr_next;
+ 			continue;
+ 		}
+ 
+ 		pte = alloc_low_page();
+-		paddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot);
++		paddr_last = phys_pte_init(pte, paddr, paddr_end, new_prot, init);
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+-		pmd_populate_kernel_safe(&init_mm, pmd, pte);
++		pmd_populate_kernel_init(&init_mm, pmd, pte, init);
+ 		spin_unlock(&init_mm.page_table_lock);
+ 	}
+ 	update_page_count(PG_LEVEL_2M, pages);
+@@ -551,7 +584,7 @@ phys_pmd_init(pmd_t *pmd_page, unsigned long paddr, unsigned long paddr_end,
+  */
+ static unsigned long __meminit
+ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+-	      unsigned long page_size_mask)
++	      unsigned long page_size_mask, bool init)
+ {
+ 	unsigned long pages = 0, paddr_next;
+ 	unsigned long paddr_last = paddr_end;
+@@ -573,7 +606,7 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 					     E820_TYPE_RAM) &&
+ 			    !e820__mapped_any(paddr & PUD_MASK, paddr_next,
+ 					     E820_TYPE_RESERVED_KERN))
+-				set_pud_safe(pud, __pud(0));
++				set_pud_init(pud, __pud(0), init);
+ 			continue;
+ 		}
+ 
+@@ -583,7 +616,7 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 				paddr_last = phys_pmd_init(pmd, paddr,
+ 							   paddr_end,
+ 							   page_size_mask,
+-							   prot);
++							   prot, init);
+ 				continue;
+ 			}
+ 			/*
+@@ -610,9 +643,10 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 		if (page_size_mask & (1<<PG_LEVEL_1G)) {
+ 			pages++;
+ 			spin_lock(&init_mm.page_table_lock);
+-			set_pte_safe((pte_t *)pud,
+-				pfn_pte((paddr & PUD_MASK) >> PAGE_SHIFT,
+-					PAGE_KERNEL_LARGE));
++			set_pte_init((pte_t *)pud,
++				     pfn_pte((paddr & PUD_MASK) >> PAGE_SHIFT,
++					     PAGE_KERNEL_LARGE),
++				     init);
+ 			spin_unlock(&init_mm.page_table_lock);
+ 			paddr_last = paddr_next;
+ 			continue;
+@@ -620,10 +654,10 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 
+ 		pmd = alloc_low_page();
+ 		paddr_last = phys_pmd_init(pmd, paddr, paddr_end,
+-					   page_size_mask, prot);
++					   page_size_mask, prot, init);
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+-		pud_populate_safe(&init_mm, pud, pmd);
++		pud_populate_init(&init_mm, pud, pmd, init);
+ 		spin_unlock(&init_mm.page_table_lock);
+ 	}
+ 
+@@ -634,14 +668,15 @@ phys_pud_init(pud_t *pud_page, unsigned long paddr, unsigned long paddr_end,
+ 
+ static unsigned long __meminit
+ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+-	      unsigned long page_size_mask)
++	      unsigned long page_size_mask, bool init)
+ {
+ 	unsigned long paddr_next, paddr_last = paddr_end;
+ 	unsigned long vaddr = (unsigned long)__va(paddr);
+ 	int i = p4d_index(vaddr);
+ 
+ 	if (!pgtable_l5_enabled())
+-		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end, page_size_mask);
++		return phys_pud_init((pud_t *) p4d_page, paddr, paddr_end,
++				     page_size_mask, init);
+ 
+ 	for (; i < PTRS_PER_P4D; i++, paddr = paddr_next) {
+ 		p4d_t *p4d;
+@@ -657,39 +692,34 @@ phys_p4d_init(p4d_t *p4d_page, unsigned long paddr, unsigned long paddr_end,
+ 					     E820_TYPE_RAM) &&
+ 			    !e820__mapped_any(paddr & P4D_MASK, paddr_next,
+ 					     E820_TYPE_RESERVED_KERN))
+-				set_p4d_safe(p4d, __p4d(0));
++				set_p4d_init(p4d, __p4d(0), init);
+ 			continue;
+ 		}
+ 
+ 		if (!p4d_none(*p4d)) {
+ 			pud = pud_offset(p4d, 0);
+-			paddr_last = phys_pud_init(pud, paddr,
+-					paddr_end,
+-					page_size_mask);
++			paddr_last = phys_pud_init(pud, paddr, paddr_end,
++						   page_size_mask, init);
+ 			continue;
+ 		}
+ 
+ 		pud = alloc_low_page();
+ 		paddr_last = phys_pud_init(pud, paddr, paddr_end,
+-					   page_size_mask);
++					   page_size_mask, init);
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+-		p4d_populate_safe(&init_mm, p4d, pud);
++		p4d_populate_init(&init_mm, p4d, pud, init);
+ 		spin_unlock(&init_mm.page_table_lock);
+ 	}
+ 
+ 	return paddr_last;
+ }
+ 
+-/*
+- * Create page table mapping for the physical memory for specific physical
+- * addresses. The virtual and physical addresses have to be aligned on PMD level
+- * down. It returns the last physical address mapped.
+- */
+-unsigned long __meminit
+-kernel_physical_mapping_init(unsigned long paddr_start,
+-			     unsigned long paddr_end,
+-			     unsigned long page_size_mask)
++static unsigned long __meminit
++__kernel_physical_mapping_init(unsigned long paddr_start,
++			       unsigned long paddr_end,
++			       unsigned long page_size_mask,
++			       bool init)
+ {
+ 	bool pgd_changed = false;
+ 	unsigned long vaddr, vaddr_start, vaddr_end, vaddr_next, paddr_last;
+@@ -709,19 +739,22 @@ kernel_physical_mapping_init(unsigned long paddr_start,
+ 			p4d = (p4d_t *)pgd_page_vaddr(*pgd);
+ 			paddr_last = phys_p4d_init(p4d, __pa(vaddr),
+ 						   __pa(vaddr_end),
+-						   page_size_mask);
++						   page_size_mask,
++						   init);
+ 			continue;
+ 		}
+ 
+ 		p4d = alloc_low_page();
+ 		paddr_last = phys_p4d_init(p4d, __pa(vaddr), __pa(vaddr_end),
+-					   page_size_mask);
++					   page_size_mask, init);
+ 
+ 		spin_lock(&init_mm.page_table_lock);
+ 		if (pgtable_l5_enabled())
+-			pgd_populate_safe(&init_mm, pgd, p4d);
++			pgd_populate_init(&init_mm, pgd, p4d, init);
+ 		else
+-			p4d_populate_safe(&init_mm, p4d_offset(pgd, vaddr), (pud_t *) p4d);
++			p4d_populate_init(&init_mm, p4d_offset(pgd, vaddr),
++					  (pud_t *) p4d, init);
++
+ 		spin_unlock(&init_mm.page_table_lock);
+ 		pgd_changed = true;
+ 	}
+@@ -732,6 +765,37 @@ kernel_physical_mapping_init(unsigned long paddr_start,
+ 	return paddr_last;
+ }
+ 
++
++/*
++ * Create page table mapping for the physical memory for specific physical
++ * addresses. Note that it can only be used to populate non-present entries.
++ * The virtual and physical addresses have to be aligned on PMD level
++ * down. It returns the last physical address mapped.
++ */
++unsigned long __meminit
++kernel_physical_mapping_init(unsigned long paddr_start,
++			     unsigned long paddr_end,
++			     unsigned long page_size_mask)
++{
++	return __kernel_physical_mapping_init(paddr_start, paddr_end,
++					      page_size_mask, true);
++}
++
++/*
++ * This function is similar to kernel_physical_mapping_init() above with the
++ * exception that it uses set_{pud,pmd}() instead of the set_{pud,pte}_safe()
++ * when updating the mapping. The caller is responsible to flush the TLBs after
++ * the function returns.
++ */
++unsigned long __meminit
++kernel_physical_mapping_change(unsigned long paddr_start,
++			       unsigned long paddr_end,
++			       unsigned long page_size_mask)
++{
++	return __kernel_physical_mapping_init(paddr_start, paddr_end,
++					      page_size_mask, false);
++}
++
+ #ifndef CONFIG_NUMA
+ void __init initmem_init(void)
+ {
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 385afa2b9e17..51f50a7a07ef 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -301,9 +301,13 @@ static int __init early_set_memory_enc_dec(unsigned long vaddr,
+ 		else
+ 			split_page_size_mask = 1 << PG_LEVEL_2M;
+ 
+-		kernel_physical_mapping_init(__pa(vaddr & pmask),
+-					     __pa((vaddr_end & pmask) + psize),
+-					     split_page_size_mask);
++		/*
++		 * kernel_physical_mapping_change() does not flush the TLBs, so
++		 * a TLB flush is required after we exit from the for loop.
++		 */
++		kernel_physical_mapping_change(__pa(vaddr & pmask),
++					       __pa((vaddr_end & pmask) + psize),
++					       split_page_size_mask);
+ 	}
+ 
+ 	ret = 0;
+diff --git a/arch/x86/mm/mm_internal.h b/arch/x86/mm/mm_internal.h
+index 319bde386d5f..eeae142062ed 100644
+--- a/arch/x86/mm/mm_internal.h
++++ b/arch/x86/mm/mm_internal.h
+@@ -13,6 +13,9 @@ void early_ioremap_page_table_range_init(void);
+ unsigned long kernel_physical_mapping_init(unsigned long start,
+ 					     unsigned long end,
+ 					     unsigned long page_size_mask);
++unsigned long kernel_physical_mapping_change(unsigned long start,
++					     unsigned long end,
++					     unsigned long page_size_mask);
+ void zone_sizes_init(void);
+ 
+ extern int after_bootmem;
