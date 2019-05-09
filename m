@@ -2,106 +2,147 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A83C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC400C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B0F217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3AE217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YvZ6FfLq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="WAECiaM4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbfEIRBe (ORCPT
+        id S1726857AbfEIRDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:01:34 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39943 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbfEIRBd (ORCPT
+        Thu, 9 May 2019 13:03:13 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:17257 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726657AbfEIRDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:01:33 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b3so1435200plr.7
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 10:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LdvvFe4BkIp3b7mnRhmSmtM8iVd7O7mPWgxjVeW2r74=;
-        b=YvZ6FfLqkCLwg0RXt97ETkf1zBpl0R5wJOGGli5uw/GEl0JXidDWRTX84yjlUV0OaL
-         rfiJgBIlmZYZEzGBjJl1Pfimc6Y8KtyD18DrFBOG70zW94DGzIONHMCGFqB9UPFSoWTM
-         TbOK2BLlrTlkRfRC5Z1FQ2TTsq+yLTjQ/Kngu9p7ExpOc5qdlY2FN3K/QVyxD5TLoFBb
-         vZbeK5PK5UB2Ivd1FSiOC2bCestoGrXt3DXDTEzQci427useXy2/dx71RyIo34hspYkD
-         mI4jfGHYQ9Z/SKbVjMAgQL8IK8o+8OG36dgk216Fz0YOgkOX/Dgu9KREW18seIY1pPu1
-         nLaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LdvvFe4BkIp3b7mnRhmSmtM8iVd7O7mPWgxjVeW2r74=;
-        b=sBQT012pQ+ECxJjaMq6TwqLP6RMVmsmS6eobLypNAnOfmQMSVzk+d0mNIrsV5RPd6s
-         Xzm5D1P46BuqKYrYVoiozdu7AVOtc8JfxzA6TAp0nX1xq39uRGMRP5Zl88ok+VFSYoYq
-         q5vMp2OkhAs8RHtpuk11w9LJXOZ8tQOUuFmr51pV4nxrfk9t8yCZJ56619rLbEHVX4Fl
-         ha9zpjnAjrEkBMgEFtMj6ZBjoYXgUpcnuPHzECQ8lAsHIj6ZtGfqDE4ZO+mSqYYoL1cK
-         9/guY28ECI3K1cGfeJ8k0iQUuBww1f4F6FK5feeEvgpucsRMQkp04JfF3d/2Err1e9mx
-         y7Ag==
-X-Gm-Message-State: APjAAAW3uOBiPZ8PRM3nq7l1yF+XKSlkXej/0alGGpW4+gKnUzk0Vkjk
-        L18N9Zp6ES5P+wHa6Gk7sj46c1cFTnlkejvYGR9Ppw==
-X-Google-Smtp-Source: APXvYqwDxtDS2K1shctsc+8evA6YFokeIrz181rTl7BWeAC13GrDNtUhiD/aN1XuWZ/gK8GEc59YncloA04rNVSkgvI=
-X-Received: by 2002:a17:902:e287:: with SMTP id cf7mr6577691plb.217.1557421292762;
- Thu, 09 May 2019 10:01:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK7LNASpsid7_sh4rdRNSTwZ1YtW_+uH2eoarJNNUttntQZ-kg@mail.gmail.com>
- <20190509114824.25866-1-natechancellor@gmail.com> <CA+icZUUN7cVXnkUv9DzYC7voys_CS=DJDm19EeYSWPyQwVdXVw@mail.gmail.com>
-In-Reply-To: <CA+icZUUN7cVXnkUv9DzYC7voys_CS=DJDm19EeYSWPyQwVdXVw@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 9 May 2019 10:01:21 -0700
-Message-ID: <CAKwvOdkofHbT0qTvEkevvKUmzw5Ex5AD0wm+u4KYm7-HHMrnow@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Don't try to add '-fcatch-undefined-behavior' flag
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 9 May 2019 13:03:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1557421390;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=H3lnJ9dE3RVSGljpof8FDqvjGlBz4jQwVwWyCSSvC34=;
+        b=WAECiaM4cB7lJHQ3PB4vKaWRnAtMOSXJz3LFMRLqLog29C9H44JOgQn9HyLRFY3VyV
+        hSEJPCCyZoqtEGjj99hJwKPuiymrj3MgAmR7Z+UGmevIpYnX2Bw9VAR16H5VpDovrrID
+        uCOqeLDh6yBLHX21z6hAiuCGKyHfTiTno7NWQHtRFEIXHiNCxZQfOyJZ+FVKFr/+y6Y/
+        laxPWETgirMjqNFXm0GojR9ijcxXGiKUCWTq/sYgZo95FKOlcggU5v4+vEhTXbjdvkrZ
+        3I6iazqB/wb1t+GYlRNxmhzbZOs+VD2kc0wTgxSlqUTX4kHRO0cen5WBz5tgvMuomszh
+        RuQA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCym3tRTG2PRBNSU9ZENVnYhackh9D8ptgIbhm9v"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:263c:7500:a9fa:6d0c:a26d:f576]
+        by smtp.strato.de (RZmta 44.18 AUTH)
+        with ESMTPSA id j04dc1v49H2lNQX
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 9 May 2019 19:02:47 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [RFC v2] iio: input-bridge: optionally bridge iio acceleometers to create a /dev/input interface
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
+Date:   Thu, 9 May 2019 19:02:49 +0200
+Cc:     linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-iio <linux-iio@vger.kernel.org>, kernel@pyra-handheld.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
+References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com> <20190407133037.0ad98897@archlinux> <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com> <20190414124029.1f1f6084@archlinux> <CD6219BE-61FF-4C38-9532-054C60A77F89@goldelico.com> <20190422152014.7c6637ab@archlinux> <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
+To:     Jonathan Cameron <jic23@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Thu, May 9, 2019 at 1:49 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > This is no longer a valid option in clang, it was removed in 3.5, which
-> > we don't support.
-> >
-> > https://github.com/llvm/llvm-project/commit/cb3f812b6b9fab8f3b41414f24e90222170417b4
 
-lol, good catch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Am 09.05.2019 um 11:09 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Jonathan,
+>>=20
+>>=20
+>> And how does that work on the common case of a sensor in the lid of a =
+laptop?
+>> how do you know what angle the screen is at? =20
+>=20
+> Well, I am not aware of laptops where the sensor is in the lid because =
+I am in the handhelds
+> business, but let's assume it is common.
+>=20
+> I realized that if the sensor orientation is related to the lid =
+position, while the reference
+> frame reported to user space is to be referenced to the lap or =
+keyboard of the laptop, there does
+> not exist a static mount-matrix to describe it properly. So no driver =
+can report that correctly.
+>=20
+> Therefore, such a device needs a dynamic mount matrix, i.e. there =
+should be a kernel driver that
+> reads out the lid angle sensor and modifies the mount-matrix of the =
+accelerometer by some sin()/cos()
+> table.
 
-> >
->
-> Cool.
->
-> Can you test with -mglobal-merge (inverted -mno-global-merge) which is
-> default for Clang?
+One more thought on this topic.
 
-Looks like these were added in r234668 in 2015, which would've been
-Clang 3.6.2, according to:
-http://releases.llvm.org/
+My answer to the question "how do you know what angle the screen is at?" =
+by requiring an ADC to
+measure some potentiometer in the hinge to make the mount matrix dynamic =
+is probably completely
+wrong...
 
-I'd be fine with dropping the option check there.
+If we take the definition for the mount matrix, it defines a specific =
+g-vector pointing to
+center of earth if the user is holding the device in a specific position =
+and looking on the display
+or the keyboard.
 
-There's a few here (-Qunused-arguments) that don't need cc-option
-checks.  I recommend someone audit all of them, rather than send a
-bunch of little patches.
--- 
-Thanks,
-~Nick Desaulniers
+So far the description assumes that there is a single accelerometer and =
+display and keys of a phone
+are in a single plane, i.e. there is no angle and everything is fine.
+
+Now if we simply take the two accelerometers separately, one z-axis is =
+going through the keyboard
+and the other through the display. Which means if the mount matrices are =
+well defined, the accelerometers
+should report almost the same values if the display is fully opened by =
+180 degrees, i.e. the display
+is sitting flat on the table. This is what my RFC does by autoscaling. =
+The values differ only
+by noise.
+
+Now what about measuring the lid angle? Well, it is already measured by =
+both accelerometers! If they
+do not agree, the angle can be calculated by some arctan() based on y =
+and z axis reports...
+
+If you close the lid, the display is turned upside down and y and z axes =
+reverse sign.
+
+So there remains only the issue that user-space must know which sensor =
+device file is which sensor
+and can do the calculation of the lid angle. This is possible because =
+the iio accelerometer name
+is available through the input event ioctls.
+
+In summary this case also does not need policy or configuration. Just =
+user space using the information
+that is already presented.
+
+BR,
+Nikolaus
+
+
+
