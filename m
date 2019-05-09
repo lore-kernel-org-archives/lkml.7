@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0A5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB22BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11CBE20578
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1DD220578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428103;
-	bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+	s=default; t=1557428107;
+	bh=lioSarW61e1fg5cWblIDvNnD9WgAyJjR+Tnu0ISsUdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eYGe7P6qLp1d5AYyn0VHCXDtDRcyIv1TXz40Z789D1GcBdkc61ur01VFoHt06PgY3
-	 8Ek68yH7mCGfz6KZUJZsC3nBgZ4X3GYvXBd81LPHOBYGIYGW0RWP/T+t/ZVzIuZZSK
-	 3q2GrV3d/4myb+jvcyUtfw5iw7LIKuGonLO5250s=
+	b=gz1JFDRj07XYqT7ngX4MgeJki/xqVz5xpUkUte/OW72elTpj0KxOGtJxEvUSa5diU
+	 pQyK7efOQzhfGM8YANh2/54GuZ111T2vX0FKvMxzNpqRl9cepDrhDT1YYwq45plOE8
+	 UQqoH7w3kcbmYWIKrcEuyvcZZnm6z11kV4ZmI2YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfEISzC (ORCPT
+        id S1728618AbfEISzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:55:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49914 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728474AbfEISyz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:55 -0400
+        id S1728172AbfEISzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:55:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7346217D6;
-        Thu,  9 May 2019 18:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20CB2204FD;
+        Thu,  9 May 2019 18:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428094;
-        bh=vXxZdof0fj3EGo3Sl0TaM9lj10tLhaQcGMTDjVs0RdM=;
+        s=default; t=1557428102;
+        bh=lioSarW61e1fg5cWblIDvNnD9WgAyJjR+Tnu0ISsUdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1erFEsXZUaFAH8o7ZQwNqSt2xn+zI+7En+5ATL4yMUWczGL+MNY2rcklTVsZQ6gtR
-         he717pLsD6Fws14xpwhDQ4+U4qSE5hF6UsOQyeS+oYw95IaNTnxcMR7AfTOdO+/Pca
-         E+QaRkugKeFAngXmMVCL5ScdNGLOTkn1/hfXoRYc=
+        b=zUbtSXLidaizvTbVrfpzeG9cnGJ4DDW8zxixUJ70iLBqfm++b21wUG4L2F61qf/Vq
+         8CaWitEUbXm2Vnt3zP0vjP2JrMpKCvGz3QHO2xoy0T66+PHtLLLZZFYNaNpDUlARFs
+         UljAA+mciweOuQ7pMqYtILO2P/+RC14p15wFg/v0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@intel.com>
-Subject: [PATCH 5.1 23/30] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
-Date:   Thu,  9 May 2019 20:42:55 +0200
-Message-Id: <20190509181255.902104673@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>
+Subject: [PATCH 5.1 04/30] staging: wilc1000: Avoid GFP_KERNEL allocation from atomic context.
+Date:   Thu,  9 May 2019 20:42:36 +0200
+Message-Id: <20190509181251.512793363@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -59,52 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcel Holtmann <marcel@holtmann.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
+commit ae26aa844679cdf660e12c7055f958cb90889eb6 upstream.
 
-The minimum encryption key size for LE connections is 56 bits and to
-align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
-BR/EDR connections as well.
+Since wilc_set_multicast_list() is called with dev->addr_list_lock
+spinlock held, we can't use GFP_KERNEL memory allocation.
 
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Fixes: e624c58cf8eb ("staging: wilc1000: refactor code to avoid use of wilc_set_multicast_list global")
+Cc: Ajay Singh <ajay.kathat@microchip.com>
+Reviewed-by: Adham Abozaeid <adham.abozaeid@microchip.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/hci_core.h |    3 +++
- net/bluetooth/hci_conn.c         |    8 ++++++++
- 2 files changed, 11 insertions(+)
+ drivers/staging/wilc1000/wilc_netdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -190,6 +190,9 @@ struct adv_info {
+--- a/drivers/staging/wilc1000/wilc_netdev.c
++++ b/drivers/staging/wilc1000/wilc_netdev.c
+@@ -708,7 +708,7 @@ static void wilc_set_multicast_list(stru
+ 		return;
+ 	}
  
- #define HCI_MAX_SHORT_NAME_LENGTH	10
- 
-+/* Min encryption key size to match with SMP */
-+#define HCI_MIN_ENC_KEY_SIZE		7
-+
- /* Default LE RPA expiry time, 15 minutes */
- #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
- 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1276,6 +1276,14 @@ int hci_conn_check_link_mode(struct hci_
- 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
- 		return 0;
- 
-+	/* The minimum encryption key size needs to be enforced by the
-+	 * host stack before establishing any L2CAP connections. The
-+	 * specification in theory allows a minimum of 1, but to align
-+	 * BR/EDR and LE transports, a minimum of 7 is chosen.
-+	 */
-+	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
-+		return 0;
-+
- 	return 1;
- }
+-	mc_list = kmalloc_array(dev->mc.count, ETH_ALEN, GFP_KERNEL);
++	mc_list = kmalloc_array(dev->mc.count, ETH_ALEN, GFP_ATOMIC);
+ 	if (!mc_list)
+ 		return;
  
 
 
