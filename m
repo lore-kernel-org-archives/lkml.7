@@ -2,115 +2,127 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F657C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 765C8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E98217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5A7217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:47:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557427647;
+	bh=L7LiBg8b87YxHI+ehl0PGs0I5NZhj7bgJrz5e0yXmDE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=M/M6RRiJxjpHr7OeKKoUIowLvApDrINh5H+j8orlt/D8+MGaKaz6ZRqQxq4a85wG9
+	 dygtbeO/IFscj5fu9E+u8HI0YBmKf1BQWwKYbs9o5ocblzF1VQyO6FjqTIIm8q5/MM
+	 gd9lzAVLm3J7Rt65Af4r5i1X9O5LeHlQudNJCqvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfEISrX (ORCPT
+        id S1727824AbfEISrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:47:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46328 "EHLO mx1.redhat.com"
+        Thu, 9 May 2019 14:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbfEISrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727769AbfEISrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 9 May 2019 14:47:19 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 60A00308FC5E;
-        Thu,  9 May 2019 18:47:19 +0000 (UTC)
-Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 272014A3;
-        Thu,  9 May 2019 18:47:17 +0000 (UTC)
-Date:   Thu, 9 May 2019 13:47:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "julien.thierry@arm.com" <julien.thierry@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "mingo@kernel.org" <mingo@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "valentin.schneider@arm.com" <valentin.schneider@arm.com>,
-        "brgerst@gmail.com" <brgerst@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "dvlasenk@redhat.com" <dvlasenk@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dvyukov@google.com" <dvyukov@google.com>
-Subject: Re: [PATCH 02/25] tracing: Improve "if" macro code generation
-Message-ID: <20190509184715.6y2uzlld4irlm3tw@treble>
-References: <20190318153840.906404905@infradead.org>
- <20190318155140.058627431@infradead.org>
- <f918ecb0b6bf43f3bf0f526084d8467b@AcuMS.aculab.com>
- <CAHk-=wiALN3jRuzARpwThN62iKd476Xj-uom+YnLZ4=eqcz7xQ@mail.gmail.com>
- <20190509090058.6554dc81@gandalf.local.home>
- <CAHk-=wiLMXDO-_NGjgtoHxp9TRpcnykHPNWOHfXfWd9GmCu1Uw@mail.gmail.com>
- <20190509142902.08a32f20@gandalf.local.home>
- <20190509184531.jhinxi2x2pdfaefb@treble>
+        by mail.kernel.org (Postfix) with ESMTPSA id 61AFA2184B;
+        Thu,  9 May 2019 18:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557427638;
+        bh=L7LiBg8b87YxHI+ehl0PGs0I5NZhj7bgJrz5e0yXmDE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ltfGF4xv9cuIRF4TvDEGt0nWTLgFg5LMxN+aZQULGEFA+Zd567fk+WguT4+BX1rky
+         yDS4/f/jGeOO0QhOCQcsRUAGpCfpKnfQZSeU5tp6klCJBBYioYpUj438KKaT5CLoRK
+         IwuxBdI8ESYlJjxea2qWfxkQgv+um03YN+6HJAYQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Philipp Puschmann <philipp.puschmann@emlix.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 07/66] ASoC: tlv320aic3x: fix reset gpio reference counting
+Date:   Thu,  9 May 2019 20:41:42 +0200
+Message-Id: <20190509181302.623871892@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
+References: <20190509181301.719249738@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190509184531.jhinxi2x2pdfaefb@treble>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 09 May 2019 18:47:19 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 01:45:31PM -0500, Josh Poimboeuf wrote:
-> On Thu, May 09, 2019 at 02:29:02PM -0400, Steven Rostedt wrote:
-> > On Thu, 9 May 2019 09:51:59 -0700
-> > Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > 
-> > > On Thu, May 9, 2019 at 6:01 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > > >
-> > > > This patch works. Can I get your Signed-off-by for it?  
-> > > 
-> > > Yes. Please write some kind of comprehensible commit log for it, but
-> > 
-> > How's this:
-> > 
-> > "Peter Zijlstra noticed that with CONFIG_PROFILE_ALL_BRANCHES, the "if"
-> > macro converts the conditional to an array index.  This can cause GCC
-> > to create horrible code.  When there are nested ifs, the generated code
-> > uses register values to encode branching decisions.
-> > 
-> > Josh Poimboeuf found that replacing the define "if" macro from using
-> > the condition as an array index and incrementing the branch statics
-> > with an if statement itself, reduced the asm complexity and shrinks the
-> > generated code quite a bit.
-> > 
-> > But this can be simplified even further by replacing the internal if
-> > statement with a ternary operator.
-> > 
-> > Reported-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reported-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> 
-> Actually, my original fix already went in:
-> 
->   37686b1353cf ("tracing: Improve "if" macro code generation")
-> 
-> But it introduced a regression:
-> 
->   https://lkml.kernel.org/r/201905040509.iqQ2CrOU%lkp@intel.com
-> 
-> which Linus' patch fixes for some reason.
+[ Upstream commit 82ad759143ed77673db0d93d53c1cde7b99917ee ]
 
-/me curses URL encoding
+This patch fixes a bug that prevents freeing the reset gpio on unloading
+the module.
 
-https://lkml.kernel.org/r/201905040509.iqQ2CrOU%25lkp@intel.com
+aic3x_i2c_probe is called when loading the module and it calls list_add
+with a probably uninitialized list entry aic3x->list (next = prev = NULL)).
+So even if list_del is called it does nothing and in the end the gpio_reset
+is not freed. Then a repeated module probing fails silently because
+gpio_request fails.
 
+When moving INIT_LIST_HEAD to aic3x_i2c_probe we also have to move
+list_del to aic3x_i2c_remove because aic3x_remove may be called
+multiple times without aic3x_i2c_remove being called which leads to
+a NULL pointer dereference.
+
+Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/tlv320aic3x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index 6a271e6e6b8fc..6c0a3dad44b89 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -1599,7 +1599,6 @@ static int aic3x_probe(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int ret, i;
+ 
+-	INIT_LIST_HEAD(&aic3x->list);
+ 	aic3x->component = component;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++) {
+@@ -1682,7 +1681,6 @@ static void aic3x_remove(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int i;
+ 
+-	list_del(&aic3x->list);
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
+ 		regulator_unregister_notifier(aic3x->supplies[i].consumer,
+ 					      &aic3x->disable_nb[i].nb);
+@@ -1880,6 +1878,7 @@ static int aic3x_i2c_probe(struct i2c_client *i2c,
+ 	if (ret != 0)
+ 		goto err_gpio;
+ 
++	INIT_LIST_HEAD(&aic3x->list);
+ 	list_add(&aic3x->list, &reset_list);
+ 
+ 	return 0;
+@@ -1896,6 +1895,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
+ {
+ 	struct aic3x_priv *aic3x = i2c_get_clientdata(client);
+ 
++	list_del(&aic3x->list);
++
+ 	if (gpio_is_valid(aic3x->gpio_reset) &&
+ 	    !aic3x_is_shared_reset(aic3x)) {
+ 		gpio_set_value(aic3x->gpio_reset, 0);
 -- 
-Josh
+2.20.1
+
+
+
