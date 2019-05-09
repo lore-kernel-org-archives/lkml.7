@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA99C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C41C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B702182B
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5B0217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:49:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427737;
-	bh=alTQxv/IZIHGOE6lLi9Gqr4JkGzvGVvbp3XilPxfFPc=;
+	s=default; t=1557427742;
+	bh=TvIgUxE/jg4U8tFihnytSuY5nITRgIV5hwKbFi2V/uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRJuF6hhYlIdEq4RUTplGqNElwB00nmK7SMKysWx3cMbhKiEuzsUvD1MjOZkPRn73
-	 hnXbWvmIqjcWjWd4aHK41SL2qQLvgqO3aOSx9z/85SlOXGEsovKwk69Aa9AOFKwJzS
-	 WO9SwUfHvKAocTmmOLB5wbh573wm33+v8dMZIGgE=
+	b=bSuOuNxu5x4nRDwmFWRArIAkQ+VtDKw2iSs7tEGRN2nBAw/J8dUeFHa0Rl+Vj0rob
+	 A4E9ZioMAtsRfR1Y1K63O9VLjJacklA8rHzb8D3MMv+o8JH79p99cTrcWvJEkV4sQY
+	 C/mekoj5tsaLsD/EKm5SYQHYSGmKTdvIVgfUYasQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfEISsz (ORCPT
+        id S1728146AbfEIStA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42024 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:49:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726811AbfEISsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:52 -0400
+        id S1727649AbfEISsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3D4C217F5;
-        Thu,  9 May 2019 18:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 547A42182B;
+        Thu,  9 May 2019 18:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427732;
-        bh=alTQxv/IZIHGOE6lLi9Gqr4JkGzvGVvbp3XilPxfFPc=;
+        s=default; t=1557427734;
+        bh=TvIgUxE/jg4U8tFihnytSuY5nITRgIV5hwKbFi2V/uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AJn+KU0mLfoEgjUcxV6zITVnfNU4EALBqrAskwY5SecQ3uNxnDvjc9I3Qm9YvpXK5
-         4PdNkH4b7LZ4DkFgqvikA72c/xMMblh2LUVKwz2LmLxepQBH9ZJpCZoxXakwOqoSkl
-         uDiUta7BzAB6Aiskv23b59wvmkhaFXfW5d7Kuyd8=
+        b=LjYPkMt+8o2e2cw2OeuPbt1Z4pfwu7BuMtm048qowW5ulQgBoZC+naf64s+66HS6I
+         hsfDzdaUpUv3WTrQlxs1r9R0HJNH0uxdZI6hJ36wRBsZQsjwFmz2j3qXaSRRLQYSmU
+         mwnt6Ar9X4tg3e4MhWVUzd0EkZmzQ/Lm6uwu8eYw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
+        stable@vger.kernel.org,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/66] ASoC: rt5682: recording has no sound after booting
-Date:   Thu,  9 May 2019 20:41:51 +0200
-Message-Id: <20190509181303.620096596@linuxfoundation.org>
+Subject: [PATCH 4.19 17/66] ASoC: wm_adsp: Add locking to wm_adsp2_bus_error
+Date:   Thu,  9 May 2019 20:41:52 +0200
+Message-Id: <20190509181303.724648986@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,60 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1c5b6a27e432e4fe170a924c8b41012271496a4c ]
+[ Upstream commit a2225a6d155fcb247fe4c6d87f7c91807462966d ]
 
-If ASRC turns on, HW will use clk_dac as the reference clock
-whether recording or playback.
-Both of clk_dac and clk_adc should set proper clock while using ASRC.
+Best to lock across handling the bus error to ensure the DSP doesn't
+change power state as we are reading the status registers.
 
-Signed-off-by: Shuming Fan <shumingf@realtek.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/rt5682.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ sound/soc/codecs/wm_adsp.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index 79ebcc2397865..6f5dac09ceded 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -1196,7 +1196,7 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
- 	struct snd_soc_component *component =
- 		snd_soc_dapm_to_component(w->dapm);
- 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
--	int ref, val, reg, sft, mask, idx = -EINVAL;
-+	int ref, val, reg, idx = -EINVAL;
- 	static const int div_f[] = {1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48};
- 	static const int div_o[] = {1, 2, 4, 6, 8, 12, 16, 24, 32, 48};
+diff --git a/sound/soc/codecs/wm_adsp.c b/sound/soc/codecs/wm_adsp.c
+index a651fed62a27d..ee85056a85774 100644
+--- a/sound/soc/codecs/wm_adsp.c
++++ b/sound/soc/codecs/wm_adsp.c
+@@ -3819,11 +3819,13 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 	struct regmap *regmap = dsp->regmap;
+ 	int ret = 0;
  
-@@ -1210,15 +1210,10 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
- 
- 	idx = rt5682_div_sel(rt5682, ref, div_f, ARRAY_SIZE(div_f));
- 
--	if (w->shift == RT5682_PWR_ADC_S1F_BIT) {
-+	if (w->shift == RT5682_PWR_ADC_S1F_BIT)
- 		reg = RT5682_PLL_TRACK_3;
--		sft = RT5682_ADC_OSR_SFT;
--		mask = RT5682_ADC_OSR_MASK;
--	} else {
-+	else
- 		reg = RT5682_PLL_TRACK_2;
--		sft = RT5682_DAC_OSR_SFT;
--		mask = RT5682_DAC_OSR_MASK;
--	}
- 
- 	snd_soc_component_update_bits(component, reg,
- 		RT5682_FILTER_CLK_DIV_MASK, idx << RT5682_FILTER_CLK_DIV_SFT);
-@@ -1230,7 +1225,8 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
++	mutex_lock(&dsp->pwr_lock);
++
+ 	ret = regmap_read(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL, &val);
+ 	if (ret) {
+ 		adsp_err(dsp,
+ 			"Failed to read Region Lock Ctrl register: %d\n", ret);
+-		return IRQ_HANDLED;
++		goto error;
  	}
  
- 	snd_soc_component_update_bits(component, RT5682_ADDA_CLK_1,
--		mask, idx << sft);
-+		RT5682_ADC_OSR_MASK | RT5682_DAC_OSR_MASK,
-+		(idx << RT5682_ADC_OSR_SFT) | (idx << RT5682_DAC_OSR_SFT));
+ 	if (val & ADSP2_WDT_TIMEOUT_STS_MASK) {
+@@ -3842,7 +3844,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 			adsp_err(dsp,
+ 				 "Failed to read Bus Err Addr register: %d\n",
+ 				 ret);
+-			return IRQ_HANDLED;
++			goto error;
+ 		}
  
- 	return 0;
+ 		adsp_err(dsp, "bus error address = 0x%x\n",
+@@ -3855,7 +3857,7 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 			adsp_err(dsp,
+ 				 "Failed to read Pmem Xmem Err Addr register: %d\n",
+ 				 ret);
+-			return IRQ_HANDLED;
++			goto error;
+ 		}
+ 
+ 		adsp_err(dsp, "xmem error address = 0x%x\n",
+@@ -3868,6 +3870,9 @@ irqreturn_t wm_adsp2_bus_error(struct wm_adsp *dsp)
+ 	regmap_update_bits(regmap, dsp->base + ADSP2_LOCK_REGION_CTRL,
+ 			   ADSP2_CTRL_ERR_EINT, ADSP2_CTRL_ERR_EINT);
+ 
++error:
++	mutex_unlock(&dsp->pwr_lock);
++
+ 	return IRQ_HANDLED;
  }
+ EXPORT_SYMBOL_GPL(wm_adsp2_bus_error);
 -- 
 2.20.1
 
