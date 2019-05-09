@@ -2,149 +2,149 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE11C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FB2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2228F2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxvvo8O1"
+	by mail.kernel.org (Postfix) with ESMTP id 9B90E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:33:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557430423;
+	bh=B8940uDPWwvLH7c3LJvYVhhJK9nH/nJxVq6EHC8ysVM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=crEDVIC26dRj6BABmfC+WiaMBh5fL8dakKZPG0MeOGDge3iB6Vd6XCZBMu+Qyjnfw
+	 8UZ+HbpvMVOCCS05xYqPAPzIiBthbGF/2zIrhLGKOPCT7kVkXnpMYOiIy+QrADiVwo
+	 Hj4IEcLe7jhP0Kvx8ptU9FbE56d6K7/Pil15+Ovs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfEITdc (ORCPT
+        id S1727083AbfEITdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:33:32 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46657 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbfEITdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 15:33:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id v17so3352541otp.13;
-        Thu, 09 May 2019 12:33:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=V8Sbu+nF/y2l4Be322vESGiIAHuI7U+n53RdchBNOMc=;
-        b=jxvvo8O1D37pcBNcnmIwAgX5PxsMLZ3bfVmhhTNVXb7jw4iY0VVt2JdGWD/XQT7qgl
-         bFL1z8hbSryiztooY0XTvvbvOfbiTkwdJ74FWiiyIWWBoxKnSLzphl2nOKK8EhTe4DkV
-         4X3Rn6WKRQ+ZBGQw0tn0TYRHlNOXyTwy/mvnugG1EaYg9cgsKjOuRsXtWRsxJQYzXV6R
-         vyqgtziAyNqH84LyobQLNsgr1rVMCjUigJUvLTF4U377qZHMzsE5+jh4IJjzLX7GyBWS
-         RjRjXBQQs9D6IVKCP4Z1yZKSviCZvR1L1yiFmODzWwV4LNlqQak9vO7kiNtXxWybc4Oy
-         waOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=V8Sbu+nF/y2l4Be322vESGiIAHuI7U+n53RdchBNOMc=;
-        b=l1v5vMVluVGsYQ07HO1RNKz3HIcN0at6XLzhY2xWlGqKJqXzc7vLyHt8IhZixba0wZ
-         KQYybo/rMmuH3d1CokhCM0cPNTZdC7MyxodjppmH57mpPCVoIoPskxR63CMNC7uqov8P
-         kvbpPUmUNjRfW5EXU1nLj7yrGXgk0tR/dorcYe5dhDMDmrKQiAg/0g0JQHeioOe18wHW
-         C2H2Izb3GdUmWHhbxQaal+WzcnXwg4A6Xh0U/JWjBNDzz6DFR3I71PkA8aGOJhOZfCBX
-         O8xqqu7ZsSJVR26oShqA5JLNjNmar5M5y0aK+49FpeH6lul7GIagwZjexEVb2LjX+DSP
-         gINQ==
-X-Gm-Message-State: APjAAAWfbikXqqn86keNBYJXID71f6kLZEggsmOQNQeGzRQVAyMIM/LX
-        COpVNDgWhPOHjkJ2Lwh4pg==
-X-Google-Smtp-Source: APXvYqxIH8KO3OYJTFXo7+q5gnhUmFxYPRIOnN6qOpzXNLGA82xQ9joj4mnIWntbnEL9u+YIAy+7Dw==
-X-Received: by 2002:a9d:7dd8:: with SMTP id k24mr658569otn.170.1557430410914;
-        Thu, 09 May 2019 12:33:30 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.134.43])
-        by smtp.gmail.com with ESMTPSA id r65sm1216184oif.47.2019.05.09.12.33.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 12:33:30 -0700 (PDT)
-Received: from t430.minyard.net (t430m.minyard.net [192.168.27.3])
-        by serve.minyard.net (Postfix) with ESMTPA id CED7318190F;
-        Thu,  9 May 2019 19:33:29 +0000 (UTC)
-Received: by t430.minyard.net (Postfix, from userid 1000)
-        id 40D39300158; Thu,  9 May 2019 14:33:29 -0500 (CDT)
-From:   minyard@acm.org
-To:     linux-rt-users@vger.kernel.org
-Cc:     minyard@acm.org, linux-kernel@vger.kernel.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Date:   Thu,  9 May 2019 14:33:20 -0500
-Message-Id: <20190509193320.21105-1-minyard@acm.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 15:33:43 -0400
+Received: from mga02.intel.com ([134.134.136.20]:1557 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbfEITdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 15:33:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 12:33:41 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 May 2019 12:33:39 -0700
+Date:   Thu, 9 May 2019 13:28:08 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Mario.Limonciello@dell.com
+Cc:     kai.heng.feng@canonical.com, hch@lst.de, axboe@fb.com,
+        sagi@grimberg.me, rafael@kernel.org, linux-pm@vger.kernel.org,
+        rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, keith.busch@intel.com
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+Message-ID: <20190509192807.GB9675@localhost.localdomain>
+References: <b43f2c0078f245398101fa9a40cfc2dc@AUSX13MPC105.AMER.DELL.COM>
+ <20190509061237.GA15229@lst.de>
+ <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+ <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
+ <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
+ <20190509095601.GA19041@lst.de>
+ <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
+ <20190509103142.GA19550@lst.de>
+ <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
+ <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+On Thu, May 09, 2019 at 06:57:34PM +0000, Mario.Limonciello@dell.com wrote:
+> No, current Windows versions don't transition to D3 with inbox NVME driver.
+> You're correct, it's explicit state transitions even if APST was enabled
+> (as this patch is currently doing as well).
 
-The function call do_wait_for_common() has a race condition that
-can result in lockups waiting for completions.  Adding the thread
-to (and removing the thread from) the wait queue for the completion
-is done outside the do loop in that function.  However, if the thread
-is woken up, the swake_up_locked() function will delete the entry
-from the wait queue.  If that happens and another thread sneaks
-in and decrements the done count in the completion to zero, the
-loop will go around again, but the thread will no longer be in the
-wait queue, so there is no way to wake it up.
+The proposed patch does too much, and your resume latency will be worse
+off for doing an unnecessary controller reset.
 
-Visually, here's a diagram from Sebastian Andrzej Siewior:
-  T0                    T1                       T2
-  wait_for_completion()
-   do_wait_for_common()
-    __prepare_to_swait()
-     schedule()
-                        complete()
-                         x->done++ (0 -> 1)
-                         raw_spin_lock_irqsave()
-                         swake_up_locked()       wait_for_completion()
-                          wake_up_process(T0)
-                          list_del_init()
-                         raw_spin_unlock_irqrestore()
-                                                  raw_spin_lock_irq(&x->wait.lock)
-  raw_spin_lock_irq(&x->wait.lock)                x->done != UINT_MAX, 1 -> 0
-                                                  raw_spin_unlock_irq(&x->wait.lock)
-                                                  return 1
-   while (!x->done && timeout),
-   continue loop, not enqueued
-   on &x->wait
+The following should be all that's needed if the device is spec
+compliant. The resume part isn't necessary if npss is non-operational, but
+we're not saving that info, and it shouldn't hurt to be explicit anyway.
 
-Basically, the problem is that the original wait queues used in
-completions did not remove the item from the queue in the wakeup
-function, but swake_up_locked() does.
+I don't have any PS capable devices, so this is just compile tested.
 
-Fix it by adding the thread to the wait queue inside the do loop.
-The design of swait detects if it is already in the list and doesn't
-do the list add again.
-
-Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
 ---
-Changes since v1:
-* Only move __prepare_to_swait() into the loop.  __prepare_to_swait()
-  handles if called when already in the list, and of course
-  __finish_swait() handles if the item is not queued on the
-  list.
-
- kernel/sched/completion.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
-index 755a58084978..49c14137988e 100644
---- a/kernel/sched/completion.c
-+++ b/kernel/sched/completion.c
-@@ -72,12 +72,12 @@ do_wait_for_common(struct completion *x,
- 	if (!x->done) {
- 		DECLARE_SWAITQUEUE(wait);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 6265d9225ec8..ce8b9bc949b9 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1132,6 +1132,22 @@ static int nvme_set_features(struct nvme_ctrl *dev, unsigned fid, unsigned dword
+ 	return ret;
+ }
  
--		__prepare_to_swait(&x->wait, &wait);
- 		do {
- 			if (signal_pending_state(state, current)) {
- 				timeout = -ERESTARTSYS;
- 				break;
- 			}
-+			__prepare_to_swait(&x->wait, &wait);
- 			__set_current_state(state);
- 			raw_spin_unlock_irq(&x->wait.lock);
- 			timeout = action(timeout);
--- 
-2.17.1
-
++int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss)
++{
++	int ret;
++
++	mutex_lock(&ctrl->scan_lock);
++	nvme_start_freeze(ctrl);
++	nvme_wait_freeze(ctrl);
++	ret = nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, npss, NULL, 0,
++				NULL);
++	nvme_unfreeze(ctrl);
++	mutex_unlock(&ctrl->scan_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(nvme_set_power);
++
+ int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count)
+ {
+ 	u32 q_count = (*count - 1) | ((*count - 1) << 16);
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 527d64545023..f2be6aad9804 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -459,6 +459,7 @@ int __nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
+ 		unsigned timeout, int qid, int at_head,
+ 		blk_mq_req_flags_t flags, bool poll);
+ int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count);
++int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss);
+ void nvme_stop_keep_alive(struct nvme_ctrl *ctrl);
+ int nvme_reset_ctrl(struct nvme_ctrl *ctrl);
+ int nvme_reset_ctrl_sync(struct nvme_ctrl *ctrl);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index a90cf5d63aac..2c4154cb4e79 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -18,6 +18,7 @@
+ #include <linux/mutex.h>
+ #include <linux/once.h>
+ #include <linux/pci.h>
++#include <linux/suspend.h>
+ #include <linux/t10-pi.h>
+ #include <linux/types.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+@@ -2851,6 +2852,8 @@ static int nvme_suspend(struct device *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
+ 
++	if (!pm_suspend_via_firmware())
++		return nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
+ 	nvme_dev_disable(ndev, true);
+ 	return 0;
+ }
+@@ -2860,6 +2863,8 @@ static int nvme_resume(struct device *dev)
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
+ 
++	if (!pm_suspend_via_firmware())
++		return nvme_set_power(&ndev->ctrl, 0);
+ 	nvme_reset_ctrl(&ndev->ctrl);
+ 	return 0;
+ }
+--
