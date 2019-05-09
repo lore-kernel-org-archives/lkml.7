@@ -2,192 +2,94 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D020C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73946C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D805E217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A55217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557438590;
+	bh=DNYF0XAZHikO5naLw8zwpVh5tp2jK6gYi5MIZybDugA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I7YZWbO6KeRbxWqHMgc9Viln3T5bZnbJoW2W8PSI1y7ybPOgYevkTOPV28tnK45Ca
+	 lbM4ZZVfpZAltZG5xxLpkI+sIzlamBfUXRn2lTDrG5qsAcdzi2H7zWxZzH7Wj5yM42
+	 9uDjXMrJ5zqQ73q0AdZGi3SDSCq3Q60cDN5YBbuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbfEIVsp (ORCPT
+        id S1726880AbfEIVtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:48:45 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:53267 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726698AbfEIVsp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:48:45 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TRHcHwW_1557438515;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRHcHwW_1557438515)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 May 2019 05:48:39 +0800
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-To:     Jan Stancek <jstancek@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Nadav Amit <namit@vmware.com>, Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        aneesh kumar <aneesh.kumar@linux.vnet.ibm.com>,
-        npiggin@gmail.com, minchan@kernel.org, Mel Gorman <mgorman@suse.de>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
- <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
- <20190509182435.GA2623@hirez.programming.kicks-ass.net>
- <84720bb8-bf3d-8c10-d675-0670f13b2efc@linux.alibaba.com>
- <249230644.21949166.1557435998550.JavaMail.zimbra@redhat.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <6f606e4f-d151-0c43-11f4-4a78e6dfabbf@linux.alibaba.com>
-Date:   Thu, 9 May 2019 14:48:35 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 9 May 2019 17:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726219AbfEIVts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:49:48 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8827217D7;
+        Thu,  9 May 2019 21:49:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557438588;
+        bh=DNYF0XAZHikO5naLw8zwpVh5tp2jK6gYi5MIZybDugA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PCmZHR/425O6CqVM+hAgxbLbc9oj7WysMXnOT9UbzwK5lyeHnNhoKzIBvyh64D6up
+         1q1t6fR2sbOVmI72yt8AguPy79F1J0s74LhXOlF/+GAMQ9gRE3Bq9nAuXSAyxdqV0G
+         50JDm/jVCaVu+dpBP++a992tsT0k27FR3xyBwHH8=
+Date:   Thu, 9 May 2019 16:49:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/10] PCI: Log with pci_dev, not pcie_device
+Message-ID: <20190509214946.GF235064@google.com>
+References: <20190509141456.223614-1-helgaas@kernel.org>
+ <CAHp75VdrQgu3Tis1V1j1AgjS=Uvw-7tz5ke4kSxRWM=0DrSjhw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <249230644.21949166.1557435998550.JavaMail.zimbra@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdrQgu3Tis1V1j1AgjS=Uvw-7tz5ke4kSxRWM=0DrSjhw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 09, 2019 at 08:49:08PM +0300, Andy Shevchenko wrote:
+> On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> >
+> > This is a collection of updates to Fred's v2 patches from:
+> >
+> >   https://lore.kernel.org/lkml/20190503035946.23608-1-fred@fredlawl.com
+> >
+> > and some follow-on discussion.
+> >
+> 
+> For non-commented patches,
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> For the commented ones, I hope you will address them, and then my tag
+> applies for them as well.
 
+Thanks, Andy and Keith, I really appreciate you taking a look.  Andy,
+I added your tag to all except these:
 
-On 5/9/19 2:06 PM, Jan Stancek wrote:
-> ----- Original Message -----
->>
->> On 5/9/19 11:24 AM, Peter Zijlstra wrote:
->>> On Thu, May 09, 2019 at 05:36:29PM +0000, Nadav Amit wrote:
->>>>> On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->>>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>>>> index 99740e1dd273..fe768f8d612e 100644
->>>>> --- a/mm/mmu_gather.c
->>>>> +++ b/mm/mmu_gather.c
->>>>> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>>>> 		unsigned long start, unsigned long end)
->>>>> {
->>>>> 	/*
->>>>> -	 * If there are parallel threads are doing PTE changes on same range
->>>>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
->>>>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
->>>>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
->>>>> -	 * forcefully if we detect parallel PTE batching threads.
->>>>> +	 * Sensible comment goes here..
->>>>> 	 */
->>>>> -	if (mm_tlb_flush_nested(tlb->mm)) {
->>>>> -		__tlb_reset_range(tlb);
->>>>> -		__tlb_adjust_range(tlb, start, end - start);
->>>>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
->>>>> +		/*
->>>>> +		 * Since we're can't tell what we actually should have
->>>>> +		 * flushed flush everything in the given range.
->>>>> +		 */
->>>>> +		tlb->start = start;
->>>>> +		tlb->end = end;
->>>>> +		tlb->freed_tables = 1;
->>>>> +		tlb->cleared_ptes = 1;
->>>>> +		tlb->cleared_pmds = 1;
->>>>> +		tlb->cleared_puds = 1;
->>>>> +		tlb->cleared_p4ds = 1;
->>>>> 	}
->>>>>
->>>>> 	tlb_flush_mmu(tlb);
->>>> As a simple optimization, I think it is possible to hold multiple nesting
->>>> counters in the mm, similar to tlb_flush_pending, for freed_tables,
->>>> cleared_ptes, etc.
->>>>
->>>> The first time you set tlb->freed_tables, you also atomically increase
->>>> mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
->>>> mm->tlb_flush_freed_tables instead of tlb->freed_tables.
->>> That sounds fraught with races and expensive; I would much prefer to not
->>> go there for this arguably rare case.
->>>
->>> Consider such fun cases as where CPU-0 sees and clears a PTE, CPU-1
->>> races and doesn't see that PTE. Therefore CPU-0 sets and counts
->>> cleared_ptes. Then if CPU-1 flushes while CPU-0 is still in mmu_gather,
->>> it will see cleared_ptes count increased and flush that granularity,
->>> OTOH if CPU-1 flushes after CPU-0 completes, it will not and potentiall
->>> miss an invalidate it should have had.
->>>
->>> This whole concurrent mmu_gather stuff is horrible.
->>>
->>>     /me ponders more....
->>>
->>> So I think the fundamental race here is this:
->>>
->>> 	CPU-0				CPU-1
->>>
->>> 	tlb_gather_mmu(.start=1,	tlb_gather_mmu(.start=2,
->>> 		       .end=3);			       .end=4);
->>>
->>> 	ptep_get_and_clear_full(2)
->>> 	tlb_remove_tlb_entry(2);
->>> 	__tlb_remove_page();
->>> 					if (pte_present(2)) // nope
->>>
->>> 					tlb_finish_mmu();
->>>
->>> 					// continue without TLBI(2)
->>> 					// whoopsie
->>>
->>> 	tlb_finish_mmu();
->>> 	  tlb_flush()		->	TLBI(2)
->> I'm not quite sure if this is the case Jan really met. But, according to
->> his test, once correct tlb->freed_tables and tlb->cleared_* are set, his
->> test works well.
-> My theory was following sequence:
->
-> t1: map_write_unmap()                 t2: dummy()
->
->    map_address = mmap()
->    map_address[i] = 'b'
->    munmap(map_address)
->    downgrade_write(&mm->mmap_sem);
->    unmap_region()
->    tlb_gather_mmu()
->      inc_tlb_flush_pending(tlb->mm);
->    free_pgtables()
->      tlb->freed_tables = 1
->      tlb->cleared_pmds = 1
->
->                                          pthread_exit()
->                                          madvise(thread_stack, 8M, MADV_DONTNEED)
+> >   PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
+> >   PCI/DPC: Log messages with pci_dev, not pcie_device
 
-I'm not quite familiar with the implementation detail of pthread_exit(), 
-does pthread_exit() call MADV_DONTNEED all the time? I don't see your 
-test call it. If so this pattern is definitely possible.
+because I didn't make the capitalization and other message changes you
+pointed out.  I'd totally be fine with those changes, but I don't
+think we have time to do a complete job of it for this cycle.
 
->                                            zap_page_range()
->                                              tlb_gather_mmu()
->                                                inc_tlb_flush_pending(tlb->mm);
->
->    tlb_finish_mmu()
->      if (mm_tlb_flush_nested(tlb->mm))
->        __tlb_reset_range()
->          tlb->freed_tables = 0
->          tlb->cleared_pmds = 0
->      __flush_tlb_range(last_level = 0)
->    ...
->    map_address = mmap()
->      map_address[i] = 'b'
->        <page fault loop>
->        # PTE appeared valid to me,
->        # so I suspected stale TLB entry at higher level as result of "freed_tables = 0"
->
->
-> I'm happy to apply/run any debug patches to get more data that would help.
->
->>>
->>> And we can fix that by having tlb_finish_mmu() sync up. Never let a
->>> concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
->>> have completed.
->> Not sure if this will scale well.
->>
->>> This should not be too hard to make happen.
->>
-
+Bjorn
