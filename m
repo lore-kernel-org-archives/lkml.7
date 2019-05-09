@@ -2,130 +2,138 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34491C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E78C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E882173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:55:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="WY8l8dc+"
+	by mail.kernel.org (Postfix) with ESMTP id 7B5CD216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 05:59:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557381562;
+	bh=WnEha//6UYNHnLUsbzQBF7PulaZ8cx0sIGXx71okKBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sikH4qVZ5V2xigMfvksuDUsnYex2KltSKlpjUsRpCdsxEMdTqqjh2BkrC+EuAj0ky
+	 2MW7w08yYYon88eku4QnVpi+I98/qNcJZBdTdkMUGsK5cTQ7KT04HzqwZR6rFfZthw
+	 lqEKuylG0/VPgli6JTWyu8MJ6Cvo45ETd9SPuY7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbfEIFyc (ORCPT
+        id S1726812AbfEIF7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 01:54:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35025 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEIFyb (ORCPT
+        Thu, 9 May 2019 01:59:21 -0400
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:40669 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEIF7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 01:54:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h1so626940pgs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:54:31 -0700 (PDT)
+        Thu, 9 May 2019 01:59:20 -0400
+Received: by mail-wm1-f49.google.com with SMTP id h11so1437846wmb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2019 22:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MOdd8WODSKAcoIO4YQx/Lh3fMGICrMESlcX7S3xlaIE=;
-        b=WY8l8dc+g75Z1nXPaySHYzrv10cvaRv3g6XT1/Gx8dYFZKef/lQ1660+F+N0yDkIkV
-         puVThSfQ2h7u3N3gXrgxcybLClNd73qlaCSNweokDlVX66bFIendMuM3qsh/2+g9IkPH
-         MMeec0AYchWDJftg8XRwKfTCxU0PVULzf5bUnZWhaeTyDewBJiAHf1F1Ak2aGn5cTpVv
-         bEq0Gk7IkGVaAo2qaNQxh8yG4PxBmW/lspWVIZHNiqDFrkOmzlXG1ybDksvqgSY9xJwq
-         pfyBkrnOeduhnQ7buQ5QvAPNjHGIqfXAboBP5R8Jtcipr3qA1w50GXP+Dwcptc0WBVV/
-         BpKw==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CDL1LOFL6Jlvbl8W+9pBU7MYHG/j9NgPfPY2BCaA4/8=;
+        b=ukO8xFTk6d8lkBW+BnbvosZqdHt/Z23qFZl2MnuIOiwHS6LgHeQK+TQJEHet9+/uGo
+         FvQwCmaCHeebWVzM8tcXAVKzKQu+a4x3FpcKhw9r+wBGuwFc55GycXOJzz1hcBWOjJGq
+         2Uktdl4/e6sVL1dTceBmmYDDwxwKqkQ1e7vVoHA6pQLMkHSjP3XZyczyTaH52Hf/IN1S
+         iOXyxRvpW6PlcOop3UKlghRbwjLs1Ei2AGyUQg6J45/cfC/paMnKRw8eR+I9l4kqILj4
+         7DlxP2MzWhz0W4Y97L3EaHc5rLnKCKdpyM+6qLDGYsY6zwWospLTzTm17dX4pNNIdCmZ
+         IIpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MOdd8WODSKAcoIO4YQx/Lh3fMGICrMESlcX7S3xlaIE=;
-        b=oQZOQodyPVQDCRcFV2RnNvXCwQT4FkbE8UX7w1jDMn+uaGU8PhH+/2bBJj1/FdVqDJ
-         jyvWpcuKHiwwPgrVjvmhHqiHXQtkzphWFuBO+u3grnPYSrzaUICqkL36Uj30kamwk7ic
-         LW00EigcHxEawqxKyfQPbiUReI5hRtneb4Sl1EQy6Y6YUX2se8c41+2C3CZEDFSKRYma
-         3QIo92TcwcoPwfQRqfnwAPNsL92lQypVaJkl4pl2SLn8AecxyOiMr8BIyEI0CsKOBkdP
-         CIBzs5kIgLHV09WkYaFK19zW88Epvv/3zU4CNPDFRmws5OpdCPuVcrulJC7usknlmOfI
-         EuOw==
-X-Gm-Message-State: APjAAAWgbsURtwZxfUL3nygWAwrSJOanGLa9pp4ae4+TSIrsGlpz0TEE
-        Anwp4gqyWPHLTNMm+alH1KStUA==
-X-Google-Smtp-Source: APXvYqwl6cBbjrCiiyFAlij5R8mG1qr4uX+A/6IpQ1mLq9cK6GeJ5adK0ex8ZUHucBoei8MQw97Iew==
-X-Received: by 2002:a63:cf54:: with SMTP id b20mr3082109pgj.307.1557381270963;
-        Wed, 08 May 2019 22:54:30 -0700 (PDT)
-Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id f20sm1363137pff.176.2019.05.08.22.54.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 08 May 2019 22:54:30 -0700 (PDT)
-From:   Daniel Drake <drake@endlessm.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de
-Cc:     hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org,
-        len.brown@intel.com, rafael.j.wysocki@intel.com,
-        linux@endlessm.com, peterz@infradead.org
-Subject: [PATCH v2 3/3] x86/tsc: set LAPIC timer period to crystal clock frequency
-Date:   Thu,  9 May 2019 13:54:17 +0800
-Message-Id: <20190509055417.13152-3-drake@endlessm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190509055417.13152-1-drake@endlessm.com>
-References: <20190509055417.13152-1-drake@endlessm.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CDL1LOFL6Jlvbl8W+9pBU7MYHG/j9NgPfPY2BCaA4/8=;
+        b=YpzKH8mx3gBDZ3Tji5apziZJb9JQKM8cibDh5O4XeyLQm3SjHcXPMFE/tQfbcKw30F
+         AIbMOpS3Nqx092uSP5xRxz2wrIYdAGpZCfW9BRwc08jwnxaFYz+adk9UxWDUI8qUqukV
+         jaXc5Dynt4zfWzZxkG721cnlCZM9fbkUuOmzAmqnGDtXeK3Rnan7s1tFCu3gJqwFyE68
+         GdFQIDNgoym4sNAmfnHAqiH9lJJKkTg1YJcbGNmyGoM0Dk9mjMN/4AWU1JuN78l0a7sh
+         xNOQZ1rNDr1U42krDAYLEpe1bX9gpL3plmYb0Ct6mF9afw8YWmymrJNTgkHbE2Ntmv6k
+         tlCw==
+X-Gm-Message-State: APjAAAW96v5mnPDqeR2xwtKHamhKw443BiYnfvs0YDkvrm6cmqE1Y0Jx
+        rxWyeEFqcbMB17XZ6ANuPEw=
+X-Google-Smtp-Source: APXvYqzhrqUo1CvwG+RMHZq8RlOHZQ/qqgQavage6WPcNUl9NMahmJz5bNig2fptPyoNSBBZW0CWgQ==
+X-Received: by 2002:a7b:c7d4:: with SMTP id z20mr1441523wmk.66.1557381558974;
+        Wed, 08 May 2019 22:59:18 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id g3sm1397588wmh.27.2019.05.08.22.59.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 08 May 2019 22:59:17 -0700 (PDT)
+Date:   Thu, 9 May 2019 07:59:15 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     David Laight <David.Laight@ACULAB.COM>,
+        Andy Lutomirski <luto@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190509055915.GA58462@gmail.com>
+References: <2e55aeb3b39440c0bebf47f0f9522dd8@AcuMS.aculab.com>
+ <CALCETrXjGvWVgZHrKCfH6RBsnYOyD2+Mey1Esw7BsA4Eg6PS0A@mail.gmail.com>
+ <20190502150853.GA16779@gmail.com>
+ <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
+ <20190502164524.GB115950@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
+ <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
+ <20190508113239.GA33324@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The APIC timer calibration (calibrate_APIC_timer()) can be skipped
-in cases where we know the APIC timer frequency. On Intel SoCs,
-we believe that the APIC is fed by the crystal clock; this would make
-sense, and the crystal clock frequency has been verified against the
-APIC timer calibration result on ApolloLake, GeminiLake, Kabylake,
-CoffeeLake, WhiskeyLake and AmberLake.
 
-Set lapic_timer_period based on the crystal clock frequency
-accordingly.
+* Reshetova, Elena <elena.reshetova@intel.com> wrote:
 
-APIC timer calibration would normally be skipped on modern CPUs
-by nature of the TSC deadline timer being used instead,
-however this change is still potentially useful, e.g. if the
-TSC deadline timer has been disabled with a kernel parameter.
-calibrate_APIC_timer() uses the legacy timer, but we are seeing
-new platforms that omit such legacy functionality, so avoiding
-such codepaths is becoming more important.
+> > * Reshetova, Elena <elena.reshetova@intel.com> wrote:
+> > 
+> > > CONFIG_PAGE_TABLE_ISOLATION=n:
+> > >
+> > > base:                                  Simple syscall: 0.0510 microseconds
+> > > get_random_bytes(4096 bytes buffer):   Simple syscall: 0.0597 microseconds
+> > >
+> > > So, pure speed wise get_random_bytes() with 1 page per-cpu buffer wins.
+> > 
+> > It still adds +17% overhead to the system call path, which is sad.
+> > Why is it so expensive?
+> 
+> I guess I can experiment further with buffer size increase and/or 
+> using HW acceleration (I mostly played around different rdrand paths now). 
+> 
+> What would be acceptable overheard approximately (so that I know how
+> much I need to squeeze this thing)? 
 
-Link: https://lkml.kernel.org/r/20190419083533.32388-1-drake@endlessm.com
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
----
+As much as possible? No idea, I'm sad about anything that is more than 
+0%, and I'd be *really* sad about anything more than say 1-2%.
 
-Notes:
-    v2:
-     - remove unnecessary braces
-     - use newly renamed variable lapic_timer_period
+I find it ridiculous that even with 4K blocked get_random_bytes(), which 
+gives us 32k bits, which with 5 bits should amortize the RNG call to 
+something like "once per 6553 calls", we still see 17% overhead? It's 
+either a measurement artifact, or something doesn't compute.
 
- arch/x86/kernel/tsc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Thanks,
 
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 6e6d933fb99c..8f47c4862c56 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -671,6 +671,16 @@ unsigned long native_calibrate_tsc(void)
- 	if (boot_cpu_data.x86_model == INTEL_FAM6_ATOM_GOLDMONT)
- 		setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
- 
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	/*
-+	 * The local APIC appears to be fed by the core crystal clock
-+	 * (which sounds entirely sensible). We can set the global
-+	 * lapic_timer_period here to avoid having to calibrate the APIC
-+	 * timer later.
-+	 */
-+	lapic_timer_period = crystal_khz * 1000 / HZ;
-+#endif
-+
- 	return crystal_khz * ebx_numerator / eax_denominator;
- }
- 
--- 
-2.20.1
-
+	Ingo
