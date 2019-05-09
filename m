@@ -2,174 +2,167 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11949C04AB3
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B84392173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFADA216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:11:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NnHwrUhX"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="HHGeg5nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbfEIILh (ORCPT
+        id S1726765AbfEIILj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:11:37 -0400
-Received: from mout.web.de ([217.72.192.78]:47197 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725822AbfEIILg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:11:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557389459;
-        bh=C6VrNUr3KSKlna0pY1MdZrQdH3t43UtamDaNsAwYX9M=;
-        h=X-UI-Sender-Class:Subject:Cc:References:To:From:Date:In-Reply-To;
-        b=NnHwrUhXt43StzTiAeFSHr0hxkbkg2hvi3WVisIcwUyXRYlIaXW/4mG1sGnk7niEg
-         R6lajH0tlosCX8HiKaArgdj94VNFeJU5Mui4fVsRngbQI6b5KcZpvKqthQEsqI9ynO
-         U8YxeN3RyItZdH0FCLnzIiYUej0a8Z6RWNN+oL10=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([78.49.6.113]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Ltnmz-1ghEs349G1-011CBE; Thu, 09
- May 2019 10:10:59 +0200
-Subject: Re: Coccinelle: semantic patch for missing of_node_put
-Cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yi Wang <wang.yi59@zte.com.cn>
-References: <201905090947015772925@zte.com.cn>
-To:     Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <141163ed-a78b-6d89-e6cd-3442adda7073@web.de>
-Date:   Thu, 9 May 2019 10:10:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 04:11:39 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37587 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfEIILi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 04:11:38 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c1so417012qkk.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 01:11:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MZ9j8DW6C0QPBPihBypnn3DlkomTOJO7L08Uqx5vJYU=;
+        b=HHGeg5nTEZtwEihgdWHuHLbrIH9mh0jmv2zT7N0nIbOS1yqrPGZ2oFF/SS3Mfox+Ua
+         kEE3TnCfDG6KOYuxxu41TjHEZcHan75RCtjB4NNkc5SbI/60fMcRJD8xAWPNyn0N7zRg
+         bZrLmt53b43Ac/AXmG3idX2X83a6knJF3Y41TYfk7LqV+JHK7pHRPI/VKXw2hqmJtwaM
+         7+5Pripdq3aP16Kxu8SYSw1phMZpr9uBzFEYRIN2vMB5Z00zQQ+Cb/I/SqhG/D/T3pFP
+         ct9nyhk/MCwyWZttZ2Hv2IYBdLBJAfEfi2cljj2ixY4Rb27iULi317KtEKem1Hy3vzT2
+         OU5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MZ9j8DW6C0QPBPihBypnn3DlkomTOJO7L08Uqx5vJYU=;
+        b=kMJFXCM0Y5NtvJE+GplBlx/hjohh93S5XqV4ok2ntPku1tk9imdDRrtHkcORK0jQCR
+         BFW7u4XHp0ISkzn9S0NHY1rOpgPYVtKFBoqHkHKQLMVDHcHA3lKx35GmXnqApsoeuoaR
+         lXO5KP75IxzTAKXuqoT6eeYkSfdSWxs+Eq3KyVE9xTLAxGX2XtT/rEJZA5KDeawbmKSk
+         AOgF8mc6Ia8puJYi9SKzAKe3tAeHrhNC8f5ZgJ+wNra1xSjzzLb03MjQVokEQ9rboWoZ
+         OYMW2+1H5RE3hrFM02OJKnywcoQD4rjjv4nMzk8Jz2jJGotP+1Y7dJ/32Pc9NDwIiu6j
+         k4Ig==
+X-Gm-Message-State: APjAAAUdrMFomvROZWDYpSrzCTZv935R6Q96sgsbmJklQiuJZOREnHEx
+        3OODcj7T9AR80Thbu4d3A5ukzzmPumIe3dqB3Phmzg==
+X-Google-Smtp-Source: APXvYqxWvqXBsvrh/XSSgmp5AEHQq9IidEJZXlP3PpzWVoV6Col2TMUYGWzcFEYtr9kCGTdGZaUw1Q7Ip/ofVuVlSz8=
+X-Received: by 2002:ae9:dcc3:: with SMTP id q186mr2136160qkf.114.1557389496781;
+ Thu, 09 May 2019 01:11:36 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <201905090947015772925@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:VOV3WvEGfkxwV7iT1XhUEiLOH6hfXaL9ulbvLGoAkL1fJmZWYbz
- gY50LqPyYRL7sXDi0f6ZHQ3yJD2c7jxTzmRI3LSuJTyAio4XGfWaZHWG0pGRyH4mxA73Is+
- wf//OtmzB7Qlkq8Tnb3KAqh1LZTDmt4RnAd34JVKndFBXNmn4BfKNF/xYzLTZL4BumvfmmS
- bIebnePIhpDVZQSrpRDLQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PT9in4O+5Wc=:4bgd73Uy3tlkeMl/Uo7J+h
- LJGqs0xkH8nNwt3WX7nLZlDafIzX/DkrVW1GEp74UAxKzqdAVTttwBahgIIIek6uSkRLvpojS
- zXgKxwD+uPkr/mAb9W7z/wPpBbbuBzmnnhg0v8sQEvkOiQVFi+cz2kgv3hbEtqceoV61gDt0s
- sknzO1Zx1xAAS2aLx02lgzALnhNpgARuyAc7+TKpd/ntUP8CMv+roxDIb76Oic/YLKTa//UDe
- d04jVekY24fw3lb/2HLC+LURpMl8LtxqT4SFfrtJQr1OnDFCxWlEohZoQPTF/nJ76OWK+pjNH
- ulvRBIs2NYp6CZ0p2Rxj6ay0RYzVhJAMwnUwHOPgHJXlw3UhjY6VVISvhn1nQ4xRyXgxnDwIm
- xW0ht8gIjp7tfXl3ItqX78uktnh2fnptoLq8sJaG9aGk6yVmeB8+k/f/aN1ZWvd3Zo1HLYLrZ
- OOWjNNR9w4oKIblVfVZnhzlpmkDKL0N15Tl9hXW5R2h5Z28YR39LE9wuO8KSXujuiChJ1F7Lc
- FTFx65FV0e/DArjpoJAjknMZ7zspUYKuJrweKsfYxZN2hAIbzjMi6Kua14ARFAkxAtURpNKO9
- vWw4Gnf5FFNZ0KLPdtYCrRSEZ/zNX2+bIAOb3JxRuR/tTbMT+gq4Uj8FHa4GA8cfeD0pF9UEG
- LmU9Pp4WtzPhQJNzSL/PN9ZJGuJvIvj7gWG66W0RxD8YK+mpDf2yV4p6zeGwpun96OaFyjNh6
- Qlto9O/f8xlR/G0t+MKD2hgFWxazldTp39f7VGegzHYVfl350HCykaAlFjnt8QHayBBFFXG0D
- 4PfM2tB04P6J7vq4ANDXpTu7YVuc7eQuNE0sz2mENmFCunAByou51R30C6OKm4TsfVXSjzYUf
- rrAzVx16eOK2eR/G6FJEYML0NLeZ0OBBSvnGJEs/y9Ge1HCwoMltKigHe56WnhZPOBd5v/l+o
- v3PTK9DQMYg==
+References: <20190503072146.49999-1-chiu@endlessm.com> <20190503072146.49999-2-chiu@endlessm.com>
+In-Reply-To: <20190503072146.49999-2-chiu@endlessm.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Thu, 9 May 2019 16:11:25 +0800
+Message-ID: <CAD8Lp45WmPz2c+OnszFyaRL=veF0avEffwv3muwXNoeLcE0fhw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] rtl8xxxu: Add rate adaptive related data
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     jes.sorensen@gmail.com, Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> It's interesting to get the function list automatically.
+Hi Chris,
 
-I occasionally imported code data into list variables
-or even database tables.
+Thanks for this! Some suggestions below, although let me know if any
+don't make sense.
 
+On Fri, May 3, 2019 at 3:22 PM Chris Chiu <chiu@endlessm.com> wrote:
+>
+> Add wireless mode, signal strength level, and rate table index
+> to tell the firmware that we need to adjust the tx rate bitmap
+> accordingly.
+> ---
+>  .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  | 45 +++++++++++++++++++
+>  .../wireless/realtek/rtl8xxxu/rtl8xxxu_core.c | 45 ++++++++++++++++++-
+>  2 files changed, 89 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+> index 8828baf26e7b..771f58aa7cae 100644
+> --- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+> +++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+> @@ -1195,6 +1195,50 @@ struct rtl8723bu_c2h {
+>
+>  struct rtl8xxxu_fileops;
+>
+> +/*mlme related.*/
+> +enum wireless_mode {
+> +       WIRELESS_MODE_UNKNOWN = 0,
+> +       //Sub-Element
 
-> I'll try to parse the drivers/of/base.c file based on comments like this
-> "* Returns a node pointer with refcount incremented, use
-> * of_node_put() on it when done."
-> to automatically get the name of the function that needs to be checked.
+Run these patches through checkpatch.pl, it'll have some suggestions
+to bring the coding style in line, for example not using // style
+comments.
 
-Will feature requests like the following become more interesting?
+> +       WIRELESS_MODE_B = BIT(0), // tx: cck only , rx: cck only, hw: cck
+> +       WIRELESS_MODE_G = BIT(1), // tx: ofdm only, rx: ofdm & cck, hw: cck & ofdm
+> +       WIRELESS_MODE_A = BIT(2), // tx: ofdm only, rx: ofdm only, hw: ofdm only
+> +       WIRELESS_MODE_N_24G = BIT(3), // tx: MCS only, rx: MCS & cck, hw: MCS & cck
+> +       WIRELESS_MODE_N_5G = BIT(4), // tx: MCS only, rx: MCS & ofdm, hw: ofdm only
+> +       WIRELESS_AUTO = BIT(5),
+> +       WIRELESS_MODE_AC = BIT(6),
+> +       WIRELESS_MODE_MAX = (WIRELESS_MODE_B|WIRELESS_MODE_G|WIRELESS_MODE_A|WIRELESS_MODE_N_24G|WIRELESS_MODE_N_5G|WIRELESS_MODE_AC),
+> +};
+> +
+> +/* from rtlwifi/wifi.h */
+> +enum ratr_table_mode_new {
+> +        RATEID_IDX_BGN_40M_2SS = 0,
+> +        RATEID_IDX_BGN_40M_1SS = 1,
+> +        RATEID_IDX_BGN_20M_2SS_BN = 2,
+> +        RATEID_IDX_BGN_20M_1SS_BN = 3,
+> +        RATEID_IDX_GN_N2SS = 4,
+> +        RATEID_IDX_GN_N1SS = 5,
+> +        RATEID_IDX_BG = 6,
+> +        RATEID_IDX_G = 7,
+> +        RATEID_IDX_B = 8,
+> +        RATEID_IDX_VHT_2SS = 9,
+> +        RATEID_IDX_VHT_1SS = 10,
+> +        RATEID_IDX_MIX1 = 11,
+> +        RATEID_IDX_MIX2 = 12,
+> +        RATEID_IDX_VHT_3SS = 13,
+> +        RATEID_IDX_BGN_3SS = 14,
+> +};
+> +
+> +#define RTL8XXXU_RATR_STA_INIT 0
+> +#define RTL8XXXU_RATR_STA_HIGH 1
+> +#define RTL8XXXU_RATR_STA_MID  2
+> +#define RTL8XXXU_RATR_STA_LOW  3
+> +
+> +struct rtl8xxxu_rate_adaptive {
+> +       u16 wireless_mode;
+> +       u8 ratr_index;
+> +       u8 rssi_level;          /* INIT, HIGH, MIDDLE, LOW */
+> +} __packed;
 
-* Advanced data processing for source code comments
-  https://github.com/coccinelle/coccinelle/issues/57
+It would be better/cleaner to avoid storing data in per-device
+structures if at all possible.
 
-* Add a metavariable for the handling of source code
-  https://github.com/coccinelle/coccinelle/issues/140
+For wireless_mode, I think you should just call
+rtl8xxxu_wireless_mode() every time from rtl8723b_refresh_rate_mask().
+The work done there is simple (i.e. it's not expensive to call) and
+then we avoid having to store data (which might become stale etc).
 
+For ratr_index, I believe you can just make it a parameter passed to
+rtl8xxxu_gen2_update_rate_mask which is the only consumer of this
+variable. The two callsites (rtl8xxxu_bss_info_changed and
+rtl8723b_refresh_rate_mask) already know which value they want to be
+used.
 
-> We will continue to analyze the code of coccinelle
+rssi_level is the one that you probably do want to store, since I see
+the logic in patch 2 - if the rssi level hasn't changed then you don't
+need to set the rate mask again, and that's a good idea since it
+reduces bus traffic. You could move this into rtl8xxxu_priv rather
+than having its own separate structure.
 
-How will the understanding evolve for the OCaml source code
-of this software?
-
-
-> to confirm whether this false positive is a bug in coccinelle.
-
-I am also curious on how the corresponding clarification will be continued=
-.
-
-By the way:
-Yesterday I stumbled on another questionable software behaviour
-while trying to apply an update suggestion from our development discussion
-on the topic =E2=80=9C[v6] coccinelle: semantic code search for missing pu=
-t_device()=E2=80=9D.
-https://lore.kernel.org/cocci/201902191014156680299@zte.com.cn/
-https://systeme.lip6.fr/pipermail/cocci/2019-February/005620.html
-
-
-> But this statement is currently needed here.
-
-Will the need be reconsidered?
-
-
-I got another development concern here:
-You propose to use a SmPL conjunction in the rule =E2=80=9Cr1=E2=80=9D.
-How does it fit to the previous exclusion specification =E2=80=9Cwhen !=3D=
- of_node_put(x)=E2=80=9D?
-
-Regards,
-Markus
+After making those changes it might even make sense to collapse this
+all into a single patch; you can judge!
