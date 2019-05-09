@@ -2,151 +2,363 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7837CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A84C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE8521744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6EF216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 07:33:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="g0paTyjp"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="gx4qlp2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEIHbe (ORCPT
+        id S1726674AbfEIHdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 03:31:34 -0400
-Received: from mail-eopbgr810052.outbound.protection.outlook.com ([40.107.81.52]:54271
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        Thu, 9 May 2019 03:33:53 -0400
+Received: from mail-eopbgr690055.outbound.protection.outlook.com ([40.107.69.55]:37889
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726099AbfEIHbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 03:31:34 -0400
+        id S1725940AbfEIHdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 03:33:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L7CFroJe1r+cPipzwnXEfpNcGv+uKNPfMUrW6mwLWYA=;
- b=g0paTyjpwYXbCRQ+5kHYPbrDhOFXF3zxYX9uMztCP3Ie8YwD+ItlA7wpuen2EK6SUp9I+YAtK2om0JiuvcaOGyHdImfhBBJ4tS/GSV2jCnzro7yjHtO03X/qh+ANxD7e6pevDTyhBzuTk3q1KkF+wmLD/Ti5O/3Vb8aGdN9pzAA=
-Received: from CY4PR03CA0023.namprd03.prod.outlook.com (2603:10b6:903:33::33)
- by BY2PR03MB553.namprd03.prod.outlook.com (2a01:111:e400:2c38::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Thu, 9 May
- 2019 07:31:30 +0000
-Received: from CY1NAM02FT010.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::202) by CY4PR03CA0023.outlook.office365.com
- (2603:10b6:903:33::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.21 via Frontend
- Transport; Thu, 9 May 2019 07:31:30 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT010.mail.protection.outlook.com (10.152.75.50) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
- via Frontend Transport; Thu, 9 May 2019 07:31:29 +0000
-Received: from NWD2HUBCAS9.ad.analog.com (nwd2hubcas9.ad.analog.com [10.64.69.109])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x497VSvl024076
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 9 May 2019 00:31:28 -0700
-Received: from NWD2MBX7.ad.analog.com ([fe80::190e:f9c1:9a22:9663]) by
- NWD2HUBCAS9.ad.analog.com ([fe80::44a2:871b:49ab:ea47%12]) with mapi id
- 14.03.0415.000; Thu, 9 May 2019 03:31:28 -0400
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+ bh=a8MZZk28Mt75KbHEhXaxA09nUWxCk4RvpYQI/2ot/Xk=;
+ b=gx4qlp2r9uCkvDyv6k0bxGz/yRKGjeIY1K/YjZZu3TsMsy/GQsx+slQrF6LRpTUOxk70rE2e2inOWugKraUJ30d/isu2H2OKzREOYXMGfpQKwz3ojtZvs0+ZAuZ/mMO76shX5tacA0WCdQJCcWRdJElAbRIs1uAINvbqFRSK9ws=
+Received: from BL0PR02MB5587.namprd02.prod.outlook.com (20.177.241.30) by
+ BL0PR02MB4419.namprd02.prod.outlook.com (10.167.179.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1856.14; Thu, 9 May 2019 07:33:46 +0000
+Received: from BL0PR02MB5587.namprd02.prod.outlook.com
+ ([fe80::50eb:f7a2:d218:3aad]) by BL0PR02MB5587.namprd02.prod.outlook.com
+ ([fe80::50eb:f7a2:d218:3aad%7]) with mapi id 15.20.1856.012; Thu, 9 May 2019
+ 07:33:46 +0000
+From:   Anurag Kumar Vulisha <anuragku@xilinx.com>
+To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        "Claus H. Stovgaard" <cst@phaseone.com>
+CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jic23@kernel.org" <jic23@kernel.org>
-Subject: Re: [PATCH 3/3][V3] iio: Handle enumerated properties with gaps
-Thread-Topic: [PATCH 3/3][V3] iio: Handle enumerated properties with gaps
-Thread-Index: AQHVBY/z/hY+5eHS1kGQU0cKESrq0qZheMuAgAExjgA=
-Date:   Thu, 9 May 2019 07:31:27 +0000
-Message-ID: <780a4bcbf2e8a2d816efe2ed9613ac2b1594282e.camel@analog.com>
-References: <20190508111913.7276-1-alexandru.ardelean@analog.com>
-         <20190508111913.7276-3-alexandru.ardelean@analog.com>
-         <20190508131749.GM9224@smile.fi.intel.com>
-In-Reply-To: <20190508131749.GM9224@smile.fi.intel.com>
+        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
+Subject: RE: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Thread-Topic: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
+ and U2 entries
+Thread-Index: AQHVBXNeXBGr58NUnEy04Lh8niwnw6ZiY1Lg
+Date:   Thu, 9 May 2019 07:33:46 +0000
+Message-ID: <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
+References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
+In-Reply-To: <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.50.1.244]
-x-adiroutedonprem: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <15E851FD6999254CAA0FC0D7B0F4C8D0@analog.com>
-Content-Transfer-Encoding: base64
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anuragku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f8f70e76-6a49-4cba-0371-08d6d450ac02
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BL0PR02MB4419;
+x-ms-traffictypediagnostic: BL0PR02MB4419:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <BL0PR02MB44197E47F56841EE51B9AC4FA7330@BL0PR02MB4419.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 003245E729
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(396003)(39860400002)(346002)(199004)(189003)(13464003)(7416002)(4326008)(81156014)(81166006)(33656002)(486006)(8676002)(14444005)(476003)(71200400001)(71190400001)(186003)(966005)(11346002)(229853002)(25786009)(6436002)(446003)(74316002)(68736007)(6506007)(256004)(6306002)(14454004)(55016002)(478600001)(73956011)(6246003)(66946007)(305945005)(7696005)(86362001)(76176011)(76116006)(53936002)(7736002)(102836004)(26005)(316002)(66066001)(52536014)(2906002)(66556008)(64756008)(66446008)(66476007)(8936002)(54906003)(99286004)(6116002)(3846002)(110136005)(5660300002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR02MB4419;H:BL0PR02MB5587.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: shj21ZzbbwNTfnRp8VBz1NdMTxC3TTWWXU9AfNLOBftG9wx3ViPQ4kVZGyywmL4iPLP9HP0gg8wfvFS7EiphJDM6OuQ7lHlcI83LlVPiALvwH9kPUWGn5ZcAoJzwiWbEnCeXAvJQ9sLiSoZvyettAn+NhfQt0BUDCu0WqN5jgTgjxKtwzWY7M7aAzfbHCYTCQLzlRHIygHVEbHmAPPeQqOlpTgrlPz2ov/bk+w9Bf0h08MUUIyiYqlClz7nk+ingtpESDFgjqtfjbGVzGuJicF0zeNFFXO8C/1+fy2LLftdd+vD3lsFCqJ90dkUHSoI8x8jkgNyuHp2ZsmSEeSMHEpB6DndCPFM3UkNAtqaTdBtvPTZ4Z6s0qXaxgdBUSOL1XakuYI74n5jv+BEOt7pEFYPtOfLT1uX0ahmoSFbckTA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(346002)(136003)(2980300002)(199004)(189003)(478600001)(7696005)(76176011)(2486003)(23676004)(316002)(26005)(246002)(2501003)(186003)(8676002)(2351001)(14454004)(6916009)(336012)(86362001)(436003)(426003)(5660300002)(446003)(11346002)(229853002)(8936002)(2906002)(70206006)(70586007)(476003)(102836004)(2616005)(486006)(126002)(4326008)(356004)(50466002)(118296001)(54906003)(6246003)(36756003)(47776003)(5640700003)(106002)(7736002)(7636002)(3846002)(6116002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY2PR03MB553;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 93c8d5df-645f-4c83-7862-08d6d4505a83
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328)(7193020);SRVR:BY2PR03MB553;
-X-MS-TrafficTypeDiagnostic: BY2PR03MB553:
-X-Microsoft-Antispam-PRVS: <BY2PR03MB55351709CC9E0DAF16B5DDEF9330@BY2PR03MB553.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 003245E729
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: TEjhdMAS2/W1Yk9XWi0AG87eDJxsuLhPeGJCOyQyt1Z+FyyRQIqtpf9kptq4BiLSFf5Hin2t7qbimqxhmNhWhSuAAle7oXAdb8UPZZu/spwzAsajU6fHQATfQ3rKCE8pAs3gwRWmkt+mSvnRjczgxEYlKuQYziZMUb8pnFZhtmlNRxR54/bfKsORkbB3wZ76hmnRgK0/JahlTXirP4sn/s3tdw7S1s3N84FWKQTcTZeUK2kU+HAi2n6bAScER2MdkOAwVC7ZrPDAwwYJq/FFixkwq9GVwqS1ARSJjMOYpyHcAmoup3zyAceZt19XcwCEALRd50Iipz7nhq40+JUpPE/MlWFQgTWnoGGCZCbZmbXHf20Sr+ZpGpFYWEcpt8379UjpiS7NSqxT9s+QsrE/H3Ckw2q7B1PzU4n/TJOocCA=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2019 07:31:29.5097
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8f70e76-6a49-4cba-0371-08d6d450ac02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 07:33:46.6100
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93c8d5df-645f-4c83-7862-08d6d4505a83
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY2PR03MB553
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR02MB4419
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTA4IGF0IDE2OjE3ICswMzAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
-DQo+IFtFeHRlcm5hbF0NCj4gDQo+IA0KPiBPbiBXZWQsIE1heSAwOCwgMjAxOSBhdCAwMjoxOTox
-M1BNICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gRnJvbTogTGFycy1QZXRl
-ciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+DQo+ID4gDQo+ID4gU29tZSBlbnVtcyBtaWdodCBo
-YXZlIGdhcHMgb3IgcmVzZXJ2ZWQgdmFsdWVzIGluIHRoZSBtaWRkbGUgb2YgdGhlaXINCj4gPiB2
-YWx1ZQ0KPiA+IHJhbmdlLiBFLmcuIGNvbnNpZGVyIGEgMi1iaXQgZW51bSB3aGVyZSB0aGUgdmFs
-dWVzIDAsIDEgYW5kIDMgaGF2ZSBhDQo+ID4gbWVhbmluZywgYnV0IDIgaXMgYSByZXNlcnZlZCB2
-YWx1ZSBhbmQgY2FuIG5vdCBiZSB1c2VkLg0KPiA+IA0KPiA+IEFkZCBzdXBwb3J0IGZvciBzdWNo
-IGVudW1zIHRvIHRoZSBJSU8gZW51bSBoZWxwZXIgZnVuY3Rpb25zLiBBIHJlc2VydmVkDQo+ID4g
-dmFsdWVzIGlzIG1hcmtlZCBieSBzZXR0aW5nIGl0cyBlbnRyeSBpbiB0aGUgaXRlbXMgYXJyYXkg
-dG8gTlVMTCByYXRoZXINCj4gPiB0aGFuIHRoZSBub3JtYWwgZGVzY3JpcHRpdmUgc3RyaW5nIHZh
-bHVlLg0KPiA+IA0KPiA+IEFsc28sIGBfX3N5c2ZzX21hdGNoX3N0cmluZygpYCBub3cgc3VwcG9y
-dHMgTlVMTCBnYXBzLCBzbyB0aGF0IGRvZXNuJ3QNCj4gPiByZXF1aXJlIGFueSBjaGFuZ2VzLg0K
-PiA+IC0gICAgIGZvciAoaSA9IDA7IGkgPCBlLT5udW1faXRlbXM7ICsraSkNCj4gPiArICAgICBm
-b3IgKGkgPSAwOyBpIDwgZS0+bnVtX2l0ZW1zOyArK2kpIHsNCj4gPiArICAgICAgICAgICAgIGlm
-ICghZS0+aXRlbXNbaV0pDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+
-ICAgICAgICAgICAgICAgbGVuICs9IHNjbnByaW50ZihidWYgKyBsZW4sIFBBR0VfU0laRSAtIGxl
-biwgIiVzICIsIGUtDQo+ID4gPml0ZW1zW2ldKTsNCj4gPiArICAgICB9DQo+IA0KPiBUaGUgcHJv
-YmxlbSBoZXJlIHRoYXQgdGhlIHVzZXIgd2lsbCBoYXZlIG5vIGNsdWUgd2hlcmUgdGhlIGdhcCBp
-cw0KPiBoYXBwZW5lZCwgdG8NCj4gc29sdmUgdGhpcyB3ZSBuZWVkIGVpdGhlciBiaXRtYXAgb2Yg
-YXJyYXksIHdoZXJlIHNldCBiaXRzIHNob3dzIGRlZmluZWQNCj4gaXRlbXMsDQo+IG9yIHVzZSBj
-b21tYS1zZXBhcmF0ZWQgbGlzdCBvZiB2YWx1ZXMuIFRoZSBsYXR0ZXIgd291bGQgbmVlZCBhbm90
-aGVyIG5vZGUNCj4gc2luY2UNCj4gd2UgZG9uJ3QgYnJlYWsgdXNlciBzcGFjZS4NCg0KSG1tbS4N
-CkkgYW0gd29uZGVyaW5nIGlmIHRoZXJlIGFyZSBjYXNlcyB3aGVyZSB1c2Vyc3BhY2Ugd291bGQg
-Y2FyZSBhYm91dCByZXNlcnZlZA0KdmFsdWVzIGFuZC9vciBwb3NpdGlvbnMgb2YgcmVzZXJ2ZWQg
-Yml0LWZpZWxkcy4NCk1heWJlIHlvdSBjb3VsZCBvZmZlciBleGFtcGxlcy91c2UtY2FzZXMgd2hl
-cmUgdGhpcyBpcyBuZWVkZWQuDQoNClRvIHNvbWUgZXh0ZW50IHRoZSBrZXJuZWwgW2RyaXZlcnMg
-JiBmcmFtZXdvcmtzXSBzaG91bGQgcHJvYmFibHkgbm90IG5lZWQNCnRvIGV4cG9zZSB0aGF0ICJz
-dHJpbmctZW51bS1YIiAgPT0gYGJpdGZpZWxkXzJgIG1hdGNoaW5nOyBvdGhlcndpc2UgaXQNCmRv
-ZXNuJ3QgcmVhbGx5IGFkZCBtdWNoIHZhbHVlIDsgdGhlIHdob2xlIHBvaW50IG9mIGZyYW1ld29y
-a3MgW2luIGdlbmVyYWxdDQppcyB0byBvZmZlciBzb21lIGxldmVsIG9mIGFic3RyYWN0aW9uIHRv
-IEhXLg0KDQpUaGUgb25seSBleGFtcGxlIEkgY2FuIHRoaW5rIG9mIFthdG1dLCBpcyB3aGVuIGEg
-cmVzZXJ2ZWQgYml0LWZpZWxkIHdpbGwgYmUNCnVzZWQgaW4gdGhlIGZ1dHVyZS4gQnV0IHRoZW4s
-IHRoZSBkcml2ZXIgc2hvdWxkIGNhcmUgYWJvdXQgdGhpcywgYW5kIG5vdA0KdGhlIGZyYW1ld29y
-ay4gVGhlIGRyaXZlciBzaG91bGQgZGVjaWRlIHRoYXQgImJpdGZpZWxkXzIiIHdpbGwNCmVuYWJs
-ZS9kaXNhYmxlIHNvbWV0aGluZyBbaW4gdGhlIGZ1dHVyZV0sIGFuZCBzaG91bGQgYmUgY29uc2lk
-ZXJlZCBpbiBhDQpzdWNoIGEgd2F5ICh3aGVuIGJlaW5nIHdyaXR0ZW4pLiBJZiB0aGUgZHJpdmVy
-IGNhbid0IG1ha2UgdGhpcyBwcmVkaWN0aW9uIFsNCmFib3V0ICJiaXRmaWVsZF8yIl0gdGhlbiBh
-IG5ldyBkcml2ZXIgbXVzdCBiZSB3cml0dGVuIGFueXdheS4NCg0KQnV0IEkgd2lsbCBhZ3JlZSB0
-aGF0IEkgbWF5IG5vdCBoYXZlIGFsbCBhcmd1bWVudHMgaW4gbWluZCB0byBiZSAxMDAlIHN1cmUN
-Cm9mIGFsbCB0aGlzLg0KDQpUaGFua3MNCkFsZXgNCg0KPiANCj4gLS0NCj4gV2l0aCBCZXN0IFJl
-Z2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KPiANCj4gDQo=
+
+Hi Thinh,
+
+>-----Original Message-----
+>From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]
+>Sent: Thursday, May 09, 2019 1:03 AM
+>To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Greg Kroah-Hartman
+><gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutla=
+nd
+><mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Thinh Nguyen
+><Thinh.Nguyen@synopsys.com>; Claus H. Stovgaard <cst@phaseone.com>
+>Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>kernel@vger.kernel.org; v.anuragkumar@gmail.com
+>Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U=
+1 and U2
+>entries
+>
+>Hi Anurag,
+>
+>Anurag Kumar Vulisha wrote:
+>> Gadget applications may have a requirement to disable the U1 and U2
+>> entry based on the usecase. Below are few usecases where the disabling
+>> U1/U2 entries may be possible.
+>>
+>> Usecase 1:
+>> When combining dwc3 with an redriver for a USB Type-C device solution, i=
+t
+>> sometimes have problems with leaving U1/U2 for certain hosts, resulting =
+in
+>> link training errors and reconnects. For this U1/U2 state entries may be
+>> avoided.
+>>
+>> Usecase 2:
+>> When performing performance benchmarking on mass storage gadget the
+>> U1 and U2 entries can be disabled.
+>>
+>> Usecase 3:
+>> When periodic transfers like ISOC transfers are used with bInterval
+>> of 1 which doesn't require the link to enter into U1 or U2 state entry
+>> (since ping is issued from host for every uframe interval). In this
+>> case the U1 and U2 entry can be disabled.
+>>
+>> Disablement of U1/U2 can be done by setting U1DevExitLat and U2DevExitLa=
+t
+>> values to 0 in the BOS descriptor. Host on seeing 0 value for U1DevExitL=
+at
+>> and U2DevExitLat, it doesn't send SET_SEL requests to the gadget. There
+>> may be some hosts which may send SET_SEL requests even after seeing 0 in
+>> the UxDevExitLat of BOS descriptor. To aviod U1/U2 entries for these typ=
+e
+>> of hosts, dwc3 controller can be programmed to reject those U1/U2 reques=
+ts
+>> by not enabling ACCEPTUxENA bits in DCTL register.
+>>
+>> This patch updates the same.
+>>
+>> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+>> Signed-off-by: Claus H. Stovgaard <cst@phaseone.com>
+>> ---
+>>  Changes in v2
+>> 	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+>> 	   to "snps,dis-u1-entry-quirk"
+>> 	2. Merged the changes done by Claus H. Stovgaard in ep0.c for rejecting
+>> 	   U1/U2 requests into this patch. Changes done by Claus can be found
+>> 	   here https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__marc.inf=
+o_-
+>3Fl-3Dlinux-2Dkernel-26m-3D155722068820568-26w-
+>3D2&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=3Du9FYoxKtyhjrGFcyixFYqTjw1ZX0=
+Vs
+>G2d8FCmzkTY-
+>w&m=3DdJMdvubLsepuGRDdkLZNJ00bhu52jPV7TZaFkDGD0Vs&s=3DwT7eyWpRKPAqXmLf
+>dfiArbnZ7vE9Vi8DOfRdULmeIqY&e=3D
+>> 	3. Changed the commit message.
+>> ---
+>>  drivers/usb/dwc3/core.c   |  4 ++++
+>>  drivers/usb/dwc3/core.h   |  4 ++++
+>>  drivers/usb/dwc3/ep0.c    |  9 ++++++++-
+>>  drivers/usb/dwc3/gadget.c | 19 +++++++++++++++++++
+>>  drivers/usb/dwc3/gadget.h |  6 ++++++
+>>  5 files changed, 41 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+>> index a1b126f..180239b 100644
+>> --- a/drivers/usb/dwc3/core.c
+>> +++ b/drivers/usb/dwc3/core.c
+>> @@ -1285,6 +1285,10 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+>>  				"snps,dis_u2_susphy_quirk");
+>>  	dwc->dis_enblslpm_quirk =3D device_property_read_bool(dev,
+>>  				"snps,dis_enblslpm_quirk");
+>> +	dwc->dis_u1_entry_quirk =3D device_property_read_bool(dev,
+>> +				"snps,dis-u1-entry-quirk");
+>> +	dwc->dis_u2_entry_quirk =3D device_property_read_bool(dev,
+>> +				"snps,dis-u2-entry-quirk");
+>>  	dwc->dis_rxdet_inp3_quirk =3D device_property_read_bool(dev,
+>>  				"snps,dis_rxdet_inp3_quirk");
+>>  	dwc->dis_u2_freeclk_exists_quirk =3D device_property_read_bool(dev,
+>> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+>> index 1528d39..fa398e2 100644
+>> --- a/drivers/usb/dwc3/core.h
+>> +++ b/drivers/usb/dwc3/core.h
+>> @@ -1015,6 +1015,8 @@ struct dwc3_scratchpad_array {
+>>   * @dis_u2_susphy_quirk: set if we disable usb2 suspend phy
+>>   * @dis_enblslpm_quirk: set if we clear enblslpm in GUSB2PHYCFG,
+>>   *                      disabling the suspend signal to the PHY.
+>> + * @dis_u1_entry_quirk: set if link entering into U1 state needs to be =
+disabled.
+>> + * @dis_u2_entry_quirk: set if link entering into U2 state needs to be =
+disabled.
+>>   * @dis_rxdet_inp3_quirk: set if we disable Rx.Detect in P3
+>>   * @dis_u2_freeclk_exists_quirk : set if we clear u2_freeclk_exists
+>>   *			in GUSB2PHYCFG, specify that USB2 PHY doesn't
+>> @@ -1206,6 +1208,8 @@ struct dwc3 {
+>>  	unsigned		dis_u3_susphy_quirk:1;
+>>  	unsigned		dis_u2_susphy_quirk:1;
+>>  	unsigned		dis_enblslpm_quirk:1;
+>> +	unsigned		dis_u1_entry_quirk:1;
+>> +	unsigned		dis_u2_entry_quirk:1;
+>>  	unsigned		dis_rxdet_inp3_quirk:1;
+>>  	unsigned		dis_u2_freeclk_exists_quirk:1;
+>>  	unsigned		dis_del_phy_power_chg_quirk:1;
+>> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
+>> index 8efde17..8e94efc 100644
+>> --- a/drivers/usb/dwc3/ep0.c
+>> +++ b/drivers/usb/dwc3/ep0.c
+>> @@ -379,6 +379,8 @@ static int dwc3_ep0_handle_u1(struct dwc3 *dwc, enum
+>usb_device_state state,
+>>  	if ((dwc->speed !=3D DWC3_DSTS_SUPERSPEED) &&
+>>  			(dwc->speed !=3D DWC3_DSTS_SUPERSPEED_PLUS))
+>>  		return -EINVAL;
+>> +	if (dwc->dis_u1_entry_quirk)
+>
+>We only need to reject on SET_FEATURE(enable U1/U2) and not
+>SET_FEATURE(disable U1/U2).
+>
+>Let's change the if condition to if (set && dis_u1_entry_quirk).
+>
+
+Thanks for reviewing the patch.
+I agree. Will correct it in the next series.
+
+>> +		return -EINVAL;
+>>
+>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);
+>>  	if (set)
+>> @@ -401,6 +403,8 @@ static int dwc3_ep0_handle_u2(struct dwc3 *dwc, enum
+>usb_device_state state,
+>>  	if ((dwc->speed !=3D DWC3_DSTS_SUPERSPEED) &&
+>>  			(dwc->speed !=3D DWC3_DSTS_SUPERSPEED_PLUS))
+>>  		return -EINVAL;
+>> +	if (dwc->dis_u2_entry_quirk)
+>
+>Same comment as previous.
+>
+
+Will fix it in the next series
+
+>> +		return -EINVAL;
+>>
+>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);
+>>  	if (set)
+>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dwc, st=
+ruct
+>usb_ctrlrequest *ctrl)
+>>  			 * nothing is pending from application.
+>>  			 */
+>>  			reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);
+>> -			reg |=3D (DWC3_DCTL_ACCEPTU1ENA |
+>DWC3_DCTL_ACCEPTU2ENA);
+>> +			if (!dwc->dis_u1_entry_quirk)
+>> +				reg |=3D DWC3_DCTL_ACCEPTU1ENA;
+>> +			if (!dwc->dis_u2_entry_quirk)
+>> +				reg |=3D DWC3_DCTL_ACCEPTU2ENA;
+>>  			dwc3_writel(dwc->regs, DWC3_DCTL, reg);
+>>  		}
+>>  		break;
+>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+>> index e293400..f2d3112 100644
+>> --- a/drivers/usb/dwc3/gadget.c
+>> +++ b/drivers/usb/dwc3/gadget.c
+>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadget *g)
+>>  	return 0;
+>>  }
+>>
+>> +static void dwc3_gadget_config_params(struct usb_gadget *g,
+>> +				      struct usb_dcd_config_params *params)
+>> +{
+>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);
+>> +
+>> +	/* U1 Device exit Latency */
+>> +	if (dwc->dis_u1_entry_quirk)
+>> +		params->bU1devExitLat =3D 0;
+>
+>It doesn't make sense to have exit latency of 0. Rejecting
+>SET_FEATURE(enable U1/U2) should already let the host know that the
+>device doesn't support U1/U2.
+>
+I am okay to remove this, but I feel that it is better to report zero value=
+ instead
+of a non-zero value in exit latency of BOS when U1 or U2 entries are not su=
+pported.=20
+Advantage of reporting 0 is that some hosts doesn't even send SET_FEATURE(U=
+1/U2)
+requests on seeing zero value in BOS descriptor. Also there can be cases wh=
+ere U1 is
+disabled and U2 entry is allowed or vice versa, for these kind of cases the=
+ driver can
+set zero exit latency value for U1 and non-zero exit latency value for U2 .=
+ Based on this
+I think it would be better to report 0 when U1/U2 states are not enabled. P=
+lease provide
+your opinion on this.
+
+>> +	else
+>> +		params->bU1devExitLat =3D DWC3_DEFAULT_U1_DEV_EXIT_LAT;
+>> +
+>> +	/* U2 Device exit Latency */
+>> +	if (dwc->dis_u2_entry_quirk)
+>> +		params->bU2DevExitLat =3D 0;
+>> +	else
+>> +		params->bU2DevExitLat =3D DWC3_DEFAULT_U2_DEV_EXIT_LAT;
+>
+>This is a le16 value. Assign it with cpu_to_le16().
+>
+Sure, will correct this in next series
+
+Thanks,
+Anurag Kumar Vulisha
+
+>> +}
+>> +
+>>  static void dwc3_gadget_set_speed(struct usb_gadget *g,
+>>  				  enum usb_device_speed speed)
+>>  {
+>> @@ -2142,6 +2160,7 @@ static const struct usb_gadget_ops dwc3_gadget_ops=
+ =3D {
+>>  	.udc_start		=3D dwc3_gadget_start,
+>>  	.udc_stop		=3D dwc3_gadget_stop,
+>>  	.udc_set_speed		=3D dwc3_gadget_set_speed,
+>> +	.get_config_params	=3D dwc3_gadget_config_params,
+>>  };
+>>
+>>  /* --------------------------------------------------------------------=
+------ */
+>> diff --git a/drivers/usb/dwc3/gadget.h b/drivers/usb/dwc3/gadget.h
+>> index 3ed738e..5faf4d1 100644
+>> --- a/drivers/usb/dwc3/gadget.h
+>> +++ b/drivers/usb/dwc3/gadget.h
+>> @@ -48,6 +48,12 @@ struct dwc3;
+>>  /* DEPXFERCFG parameter 0 */
+>>  #define DWC3_DEPXFERCFG_NUM_XFER_RES(n)	((n) & 0xffff)
+>>
+>> +/* U1 Device exit Latency */
+>> +#define DWC3_DEFAULT_U1_DEV_EXIT_LAT	0x0A	/* Less then 10 microsec */
+>> +
+>> +/* U2 Device exit Latency */
+>> +#define DWC3_DEFAULT_U2_DEV_EXIT_LAT	0x1FF	/* Less then 511 microsec
+>*/
+>> +
+>>  /* --------------------------------------------------------------------=
+------ */
+>>
+>>  #define to_dwc3_request(r)	(container_of(r, struct dwc3_request, reques=
+t))
+>
+>BR,
+>Thinh
