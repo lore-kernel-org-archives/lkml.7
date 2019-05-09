@@ -2,171 +2,177 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBB1C04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C44DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39442085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BBD20989
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:02:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZz3d9Y8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="spnNZ30h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfEISAp (ORCPT
+        id S1726734AbfEISC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:00:45 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38063 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbfEISAp (ORCPT
+        Thu, 9 May 2019 14:02:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46267 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726632AbfEISCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:00:45 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y19so2213197lfy.5;
-        Thu, 09 May 2019 11:00:43 -0700 (PDT)
+        Thu, 9 May 2019 14:02:25 -0400
+Received: by mail-ot1-f65.google.com with SMTP id v17so3092116otp.13;
+        Thu, 09 May 2019 11:02:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8IBAb1U4AHGolLyRh4wnILWJ7YPjMF8I4QRhEu/lDNQ=;
-        b=oZz3d9Y8lqRxl8XUFIBauj79NFGzhaIgVCsRnDu+nHqOgGtg/KfXxBmtyEa4iYIAtR
-         3ODP2NMrBGgfZUJbb3He9Ow/q7sqqEwi2lXjijncwPpBDRMY1qvFJdwVEcJ1AkgQ+QbZ
-         gOPJhJwu+BPpBnbR0OosoLxmUAZOL+XHUDJwPOpIhXwKC6/AOp8VtkhtzADVEQTc7p7Q
-         aaCwVlKMM+RMkmMm05UC8VXUEHPoPZXzWexnQS+99CT3OepvNZFWeLmptO/2H0sc+EOE
-         zLuheTVRB9E3d138PWMdUm7+LgWv3gLjaIWP7Y6tHlG0zxcF4FQ2oV2q0P+iya7Nf8ax
-         F/nQ==
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=9Kix0hRwqeGvHkSMR0p3zhMGn8QRE0CDFVhyJ6yQh/4=;
+        b=spnNZ30hG0eWa8gfeA/dtxgaPaoTkUW6GHMcpbg1dMuGFAkagEfbkKtuhcdHNI0GNM
+         HdBhoqo1enNfyYN0oU09MriJzmBnyqpsGtCnWn7EEU2aM43mxkaNIoIwUMwzP77IZ2kV
+         nVu9BvJLh5XjGlXPGcILXxUqInvDDuPnisIvWPGAxkUxzcVUO11nNno8B8KPeZAUfW7z
+         oJ17XojYVX5rnsLs6sLVGsxrAOe+eXGqZVsnEBBpw58oV5V5FUutt9nziniDWVS+YSHS
+         spUjjYhI2ZtwB34y4IFjeFYGBM5we7gZaSu+M0ChWvkJQeE7/BE1IemP/xnEpgF58HVD
+         jwJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8IBAb1U4AHGolLyRh4wnILWJ7YPjMF8I4QRhEu/lDNQ=;
-        b=ex8cZlLMl7DXirAJ4pgFNIA04O31UoAUeaVJKbywox9vREbclVANaj2AYyyQaRFC1h
-         OlEUKvHm1pm6vEz3CZXeNhLd4lqHtZhpRcz/s0JcK0pmUiM1sKnSOrs3cVU8Uts7IOYm
-         oYdExW7ruycn806f5w5daZ+1KXqY1D0nQ2dHMMimxQjFuuxhJSvhhP6wZlzAiYFVorg9
-         AcagSPnWvcYUb2stTicQQ332YlZPa0CBnUY4ixAf8zZZddrOBcBUuUG4LlIiQ7JDLz5Y
-         0LGeisQECsjPTAZFeEQiEootAmlOdCQtrxeHMLlTA1WoKPscUtD0SYBTXYyV0WyGSza/
-         5vCw==
-X-Gm-Message-State: APjAAAXQ7IkvCFnlZgqZ9+oeMPY1Xbr7qNUHdNGKryYaCb+gXbkDeyTl
-        ukyv+bpVlNeFgJfW/mxobblugVjtkRQt0cDOp8rn5mQ=
-X-Google-Smtp-Source: APXvYqxKDfL6B/hHddJAL2/0n2LWN+cD1YcUAbcuH9yCTFjqDi1jJQvIGvWp1Qc5qQHXGFmXLqei6h3DJQBXw/uWScU=
-X-Received: by 2002:a19:fc04:: with SMTP id a4mr3210598lfi.39.1557424842743;
- Thu, 09 May 2019 11:00:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190405213635.24383-1-longli@linuxonhyperv.com> <20190405213635.24383-5-longli@linuxonhyperv.com>
-In-Reply-To: <20190405213635.24383-5-longli@linuxonhyperv.com>
-From:   Pavel Shilovsky <piastryyy@gmail.com>
-Date:   Thu, 9 May 2019 11:00:31 -0700
-Message-ID: <CAKywueTBsHuBOchj7ysL8S+pU=nL6dfF65YT9YZrVk74HUoRVQ@mail.gmail.com>
-Subject: Re: [Patch (resend) 5/5] cifs: Call MID callback before destroying transport
-To:     Long Li <longli@microsoft.com>
-Cc:     Steve French <sfrench@samba.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=9Kix0hRwqeGvHkSMR0p3zhMGn8QRE0CDFVhyJ6yQh/4=;
+        b=Kp8l6AOAYRyV535IuMgyCyXVewtBrqScv79dc1UXJeCPgRefBv1CSt5u/urd2Gg3ie
+         2XkJf4CurpS0vUHF/f1fobWpxEVKU2b6Qkf5z3YMxUrqMi0vv9aQoBWAj4mnST6MjrPl
+         W2hrZtBWq6PjnGQdfYH3dWG4fuAa3ffF+wcZpfSAKWau4qMZwmPLWM1yd2bLAxvVRtAM
+         hhYYO3rBb8eq5T5xiDIbVmHOiDElw7s1rDGm1IqjUGNl+uMi7Ztv6fzIIVbjsdrkJvzr
+         lc2kkMiZ5LOnA37k4UtzDFk7lVMzYtvlXn/efextIMQ8E5MqRdJZUiRnITOx28AUTflV
+         fUnw==
+X-Gm-Message-State: APjAAAXWNVdM2V3/7/286TYEhP36OPZ8q5NkDGqeH7f2/yZ0bfTuG/jq
+        LMx2Tx58tzro1ElCDuW7iw==
+X-Google-Smtp-Source: APXvYqxA8xFqga/Mq4WQpY6+ycMiSTPqm0BpXBfDG5VvsQFurYbfGJHwizWJ2fUYZGei3fAEDIE/AA==
+X-Received: by 2002:a9d:5c0f:: with SMTP id o15mr3508745otk.47.1557424944331;
+        Thu, 09 May 2019 11:02:24 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id e6sm1152544oih.51.2019.05.09.11.02.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 11:02:23 -0700 (PDT)
+Received: from t430.minyard.net (t430m.minyard.net [192.168.27.3])
+        by serve.minyard.net (Postfix) with ESMTPA id 084B518190F;
+        Thu,  9 May 2019 18:02:23 +0000 (UTC)
+Received: by t430.minyard.net (Postfix, from userid 1000)
+        id 921B2300158; Thu,  9 May 2019 13:02:22 -0500 (CDT)
+From:   minyard@acm.org
+To:     linux-rt-users@vger.kernel.org
+Cc:     minyard@acm.org, linux-kernel@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: [PATCH RT] Fix a lockup in wait_for_completion() and friends
+Date:   Thu,  9 May 2019 13:02:11 -0500
+Message-Id: <20190509180211.14893-1-minyard@acm.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=BF=D1=82, 5 =D0=B0=D0=BF=D1=80. 2019 =D0=B3. =D0=B2 14:39, Long Li <lon=
-gli@linuxonhyperv.com>:
->
-> From: Long Li <longli@microsoft.com>
->
-> When transport is being destroyed, it's possible that some processes may
-> hold memory registrations that need to be deregistred.
->
-> Call them first so nobody is using transport resources, and it can be
-> destroyed.
->
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  fs/cifs/connect.c | 36 +++++++++++++++++++-----------------
->  1 file changed, 19 insertions(+), 17 deletions(-)
->
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index 33e4d98..084756cf 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -528,22 +528,6 @@ cifs_reconnect(struct TCP_Server_Info *server)
->         /* do not want to be sending data on a socket we are freeing */
->         cifs_dbg(FYI, "%s: tearing down socket\n", __func__);
->         mutex_lock(&server->srv_mutex);
-> -       if (server->ssocket) {
-> -               cifs_dbg(FYI, "State: 0x%x Flags: 0x%lx\n",
-> -                        server->ssocket->state, server->ssocket->flags);
-> -               kernel_sock_shutdown(server->ssocket, SHUT_WR);
-> -               cifs_dbg(FYI, "Post shutdown state: 0x%x Flags: 0x%lx\n",
-> -                        server->ssocket->state, server->ssocket->flags);
-> -               sock_release(server->ssocket);
-> -               server->ssocket =3D NULL;
-> -       } else if (cifs_rdma_enabled(server))
-> -               smbd_destroy(server);
-> -       server->sequence_number =3D 0;
-> -       server->session_estab =3D false;
-> -       kfree(server->session_key.response);
-> -       server->session_key.response =3D NULL;
-> -       server->session_key.len =3D 0;
-> -       server->lstrp =3D jiffies;
->
->         /* mark submitted MIDs for retry and issue callback */
->         INIT_LIST_HEAD(&retry_list);
-> @@ -556,7 +540,6 @@ cifs_reconnect(struct TCP_Server_Info *server)
->                 list_move(&mid_entry->qhead, &retry_list);
->         }
->         spin_unlock(&GlobalMid_Lock);
-> -       mutex_unlock(&server->srv_mutex);
->
->         cifs_dbg(FYI, "%s: issuing mid callbacks\n", __func__);
->         list_for_each_safe(tmp, tmp2, &retry_list) {
-> @@ -565,6 +548,25 @@ cifs_reconnect(struct TCP_Server_Info *server)
->                 mid_entry->callback(mid_entry);
->         }
+From: Corey Minyard <cminyard@mvista.com>
 
-The original call was issuing callbacks without holding srv_mutex -
-callbacks may take this mutex for its internal needs. With the
-proposed patch the code will deadlock.
+The function call do_wait_for_common() has a race condition that
+can result in lockups waiting for completions.  Adding the thread
+to (and removing the thread from) the wait queue for the completion
+is done outside the do loop in that function.  However, if the thread
+is woken up, the swake_up_locked() function will delete the entry
+from the wait queue.  If that happens and another thread sneaks
+in and decrements the done count in the completion to zero, the
+loop will go around again, but the thread will no longer be in the
+wait queue, so there is no way to wake it up.
 
-Also the idea of destroying the socket first is to allow possible
-retries (from callbacks) to return a proper error instead of trying to
-send anything through the reconnecting socket.
+Visually, here's a diagram from Sebastian Andrzej Siewior:
+  T0                    T1                       T2
+  wait_for_completion()
+   do_wait_for_common()
+    __prepare_to_swait()
+     schedule()
+                        complete()
+                         x->done++ (0 -> 1)
+                         raw_spin_lock_irqsave()
+                         swake_up_locked()       wait_for_completion()
+                          wake_up_process(T0)
+                          list_del_init()
+                         raw_spin_unlock_irqrestore()
+                                                  raw_spin_lock_irq(&x->wait.lock)
+  raw_spin_lock_irq(&x->wait.lock)                x->done != UINT_MAX, 1 -> 0
+                                                  raw_spin_unlock_irq(&x->wait.lock)
+                                                  return 1
+   while (!x->done && timeout),
+   continue loop, not enqueued
+   on &x->wait
 
->
-> +       if (server->ssocket) {
-> +               cifs_dbg(FYI, "State: 0x%x Flags: 0x%lx\n",
-> +                        server->ssocket->state, server->ssocket->flags);
-> +               kernel_sock_shutdown(server->ssocket, SHUT_WR);
-> +               cifs_dbg(FYI, "Post shutdown state: 0x%x Flags: 0x%lx\n",
-> +                        server->ssocket->state, server->ssocket->flags);
-> +               sock_release(server->ssocket);
-> +               server->ssocket =3D NULL;
-> +       } else if (cifs_rdma_enabled(server))
-> +               smbd_destroy(server);
+Basically, the problem is that the original wait queues used in
+completions did not remove the item from the queue in the wakeup
+function, but swake_up_locked() does.
 
-If we need to call smbd_destroy() *after* callbacks, let's just move
-it alone without the rest of the code.
+Fix it by adding/removing the thread to/from the wait queue inside
+the do loop.
 
+Fixes: a04ff6b4ec4ee7e ("completion: Use simple wait queues")
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+---
+This looks like a fairly serious bug, I guess, but I've never seen a
+report on it before.
 
-> +       server->sequence_number =3D 0;
-> +       server->session_estab =3D false;
-> +       kfree(server->session_key.response);
-> +       server->session_key.response =3D NULL;
-> +       server->session_key.len =3D 0;
-> +       server->lstrp =3D jiffies;
-> +
-> +       mutex_unlock(&server->srv_mutex);
-> +
->         do {
->                 try_to_freeze();
->
-> --
-> 2.7.4
->
+I found it because I have an out-of-tree feature (hopefully in tree some
+day) that takes a core dump of a running process without killing it.  It
+makes extensive use of completions, and the test code is fairly brutal.
+It didn't lock up on stock 4.19, but failed with the RT patches applied.
 
+The funny thing is, I've never seen this test code fail before on earlier
+releases, but it locks up pretty reliably on 4.19-rt.  It looks like this
+bug goes back to at least the 4.4-rt kernel.  But we haven't received any
+customer reports of failures.  I'm guessing that almost all completion
+users have a single waiter, so you would never see this.
 
---
-Best regards,
-Pavel Shilovsky
+The feature and test are in a public tree if someone wants to try to
+reproduce this.  But hopefully this is pretty obvious with the explaination.
+
+Also, you could put the DECLARE_SWAITQUEUE() outside the loop, I think,
+but maybe it's cleaner or safer to declare it in the loop?  If someone
+cares I can test it that way.
+
+-corey
+
+ kernel/sched/completion.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
+index 755a58084978..4f9b4cc0c95a 100644
+--- a/kernel/sched/completion.c
++++ b/kernel/sched/completion.c
+@@ -70,20 +70,20 @@ do_wait_for_common(struct completion *x,
+ 		   long (*action)(long), long timeout, int state)
+ {
+ 	if (!x->done) {
+-		DECLARE_SWAITQUEUE(wait);
+-
+-		__prepare_to_swait(&x->wait, &wait);
+ 		do {
++			DECLARE_SWAITQUEUE(wait);
++
+ 			if (signal_pending_state(state, current)) {
+ 				timeout = -ERESTARTSYS;
+ 				break;
+ 			}
++			__prepare_to_swait(&x->wait, &wait);
+ 			__set_current_state(state);
+ 			raw_spin_unlock_irq(&x->wait.lock);
+ 			timeout = action(timeout);
+ 			raw_spin_lock_irq(&x->wait.lock);
++			__finish_swait(&x->wait, &wait);
+ 		} while (!x->done && timeout);
+-		__finish_swait(&x->wait, &wait);
+ 		if (!x->done)
+ 			return timeout;
+ 	}
+-- 
+2.17.1
+
