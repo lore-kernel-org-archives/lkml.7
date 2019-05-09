@@ -2,68 +2,105 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE687C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E06C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF4A217D6
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557435022;
-	bh=gIJEdJgaa6GXbK6N5/rL43It8AHH+QUeyq0uEvYq6FU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=TJaTf0na1WxaWMSNnrlIbGF4gAm6uvzhBfwM0UnZVLqsuQQm3jSFYEhdcP+4SWVAm
-	 5XzRZlrcEE0cfARn9rbMxtuNjtLRwmGPCRS42diGBTXQ0maBpVHW2+aEbFMrrm6a8A
-	 htso8FLpoGRcbt8KfOx03Np5LjTH6/RDzA08OLTw=
+	by mail.kernel.org (Postfix) with ESMTP id 67905217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 20:52:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="onL47UGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfEIUuV (ORCPT
+        id S1726977AbfEIUwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 16:50:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbfEIUuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 16:50:16 -0400
-Subject: Re: [GIT PULL] Security subsystem: Smack updates for v5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557435015;
-        bh=gIJEdJgaa6GXbK6N5/rL43It8AHH+QUeyq0uEvYq6FU=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=mwIG5r0185QMyMQcvZTAXA9UpK1iXkEe1RstPra7YDMZjz8AhQdszuavGeUbjl2g/
-         LLcn0SrMDwZWrEyvt90eBgGhdsG7RlHlGfJQGxg8jFk3pTIvq5972KFTwe0e0UgCHI
-         8ONheii/niwoNB2KPWos6x7ehckXXwE1UzfRt1ww=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <alpine.LRH.2.21.1905100325330.25349@namei.org>
-References: <alpine.LRH.2.21.1905100325330.25349@namei.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <alpine.LRH.2.21.1905100325330.25349@namei.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
- next-smack
-X-PR-Tracked-Commit-Id: 8d31a5c35ed179825a2145881ad7cd8f9907d94b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 800c608c976c3f0a6d02ed7fbc600f1f6962ac73
-Message-Id: <155743501574.12157.3971455155840137875.pr-tracker-bot@kernel.org>
-Date:   Thu, 09 May 2019 20:50:15 +0000
-To:     James Morris <jmorris@namei.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+        Thu, 9 May 2019 16:52:08 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44420 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726682AbfEIUwH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 16:52:07 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n134so2542713lfn.11;
+        Thu, 09 May 2019 13:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8izfY7QaATSiteV+jgAASzN3KHkaEiuR2IercyuoomA=;
+        b=onL47UGdbdYp6jBL7dw86aJtJ9+XHCblfj1S2UF8L/0l3M1HoE5EjfEZB+8ncJeQes
+         CDq5hzA3ZEaeJgjsNmL5afpuLujvbJ9AZg//GUXdDGZXNKg2qKFPZl0Nonmyig/rXyhM
+         4KJCtrxJYPhjcgpCenoPS2oNj0FSsh9AmdxSww3hqpHCC0RAt91ex0HsmooyKMhrNBP7
+         qcjLhwYf1WeT6N4kSKxq8vRbbkbjWTkFtDhgHs2bgzqpJiZbNT6iwE1AgIv0hQa9apvY
+         Z1YBewW/UToX3mwziHunEM9TDkS1f5ybpDHj9kbzaGXGI7liVus8VKLd6MTttJd9HqMS
+         KFuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8izfY7QaATSiteV+jgAASzN3KHkaEiuR2IercyuoomA=;
+        b=FuuCa2wVun9clu7QQgVbVdLhCGAvCLgYgAkBermclrX5kPxsC506S7Z/cGXr1zpNJ1
+         EApTEUy7OCzzwiHuPTTgf2zsskYVNjQU2qkLsElZf/hx+nDBsIFJsMXBCjlX0JYlmETy
+         dL8UWzMra3JtYBgA9s9YKlvcjE8cYf7xYAFpaluFsp0yiIM4jwp5AU/IGUcHW2reEMP9
+         hKOE3a2LxqkZeb5N2rQAam+dpzzhUh2BzCioA02HDKJnzompXGBRJSo93srmr+GOBS3g
+         a6DB7nUI/D/nqSGxAeayfEfLyQdPNdXwrfn7kov2x6wCyDmeSa1z0i33fWRbDpWP6Ez/
+         rtYA==
+X-Gm-Message-State: APjAAAXh81rT/bSYUMMOJJ5kdcFZqIyyELLqIJ5kZEYJ740F9YYEnACf
+        HVVPYfdrt4yzJY1l3AsXkSMfXp4XzkQyZAmmtiw=
+X-Google-Smtp-Source: APXvYqyNz7VRs76mnyUSutong8ogRBnUo1HREZ8RuBuXFpYB8nt0XjI4isUzAAUFh8CyIYznJaoqycgB5KRFCJL7Kmc=
+X-Received: by 2002:ac2:5606:: with SMTP id v6mr3318657lfd.129.1557435125608;
+ Thu, 09 May 2019 13:52:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190507231224.GA3787@ip-172-31-29-54.us-west-2.compute.internal>
+In-Reply-To: <20190507231224.GA3787@ip-172-31-29-54.us-west-2.compute.internal>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 9 May 2019 13:51:54 -0700
+Message-ID: <CAADnVQ+e6TW9cH6yDmRSG5pRHXJiZajcx_q9SoPQi1keDROh-g@mail.gmail.com>
+Subject: Re: [PATCH] selftests/bpf: Fix compile warning in bpf selftest
+To:     Alakesh Haloi <alakesh.haloi@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 May 2019 03:28:49 +1000 (AEST):
+On Tue, May 7, 2019 at 4:12 PM Alakesh Haloi <alakesh.haloi@gmail.com> wrot=
+e:
+>
+> This fixes the following compile time warning
+>
+> flow_dissector_load.c: In function =E2=80=98detach_program=E2=80=99:
+> flow_dissector_load.c:55:19: warning: format not a string literal and no =
+format arguments [-Wformat-security]
+>    error(1, errno, command);
+>                    ^~~~~~~
+> Signed-off-by: Alakesh Haloi <alakesh.haloi@gmail.com>
+> ---
+>  tools/testing/selftests/bpf/flow_dissector_load.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/selftests/bpf/flow_dissector_load.c b/tools/te=
+sting/selftests/bpf/flow_dissector_load.c
+> index 77cafa66d048..7136ab9ffa73 100644
+> --- a/tools/testing/selftests/bpf/flow_dissector_load.c
+> +++ b/tools/testing/selftests/bpf/flow_dissector_load.c
+> @@ -52,7 +52,7 @@ static void detach_program(void)
+>         sprintf(command, "rm -r %s", cfg_pin_path);
+>         ret =3D system(command);
+>         if (ret)
+> -               error(1, errno, command);
+> +               error(1, errno, "%s", command);
+>  }
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-smack
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/800c608c976c3f0a6d02ed7fbc600f1f6962ac73
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+it was fixed month ago.
