@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B09C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA99C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DC22184D
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B702182B
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427733;
-	bh=uZaDk2MwG1pjJ1LTJ9lj/yeRBUt9aHHPE2OQWP7w6zY=;
+	s=default; t=1557427737;
+	bh=alTQxv/IZIHGOE6lLi9Gqr4JkGzvGVvbp3XilPxfFPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHNWLeefHFeYVW3CGJfRUQCD9JyNlTXBiFDpVOj0aFv86K6WJFG4E0MImt98uFRqE
-	 PCQoIDU8HxCalGLERODdf4ZThYF4b15/etPTTx+SIwT2pB2Cy4LKy3xsBlTOGeRody
-	 5d7ETub7IMRNBPYn90MtiVZyMeWKJLz2wfUvQ3HU=
+	b=TRJuF6hhYlIdEq4RUTplGqNElwB00nmK7SMKysWx3cMbhKiEuzsUvD1MjOZkPRn73
+	 hnXbWvmIqjcWjWd4aHK41SL2qQLvgqO3aOSx9z/85SlOXGEsovKwk69Aa9AOFKwJzS
+	 WO9SwUfHvKAocTmmOLB5wbh573wm33+v8dMZIGgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbfEISsw (ORCPT
+        id S1728119AbfEISsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:48:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41876 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728070AbfEISsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:48:47 -0400
+        id S1726811AbfEISsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:48:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786112183E;
-        Thu,  9 May 2019 18:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3D4C217F5;
+        Thu,  9 May 2019 18:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427727;
-        bh=uZaDk2MwG1pjJ1LTJ9lj/yeRBUt9aHHPE2OQWP7w6zY=;
+        s=default; t=1557427732;
+        bh=alTQxv/IZIHGOE6lLi9Gqr4JkGzvGVvbp3XilPxfFPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ffh8Ie/7yySYxUd2b/3TPmkYtPZD/Rm4gYRKu8hZWTVJ4smgLDwWY+q8J79AVpbLr
-         3/D1wi4pnNGf1pu86krnHtbbTPvaqtC0pZx5GHlqmmbALT2JmmVr5C6K6syLLqxBrI
-         RzSLNpgYI8pU2DswTR0JuO5HWT2iTCPQkJyqPXRs=
+        b=AJn+KU0mLfoEgjUcxV6zITVnfNU4EALBqrAskwY5SecQ3uNxnDvjc9I3Qm9YvpXK5
+         4PdNkH4b7LZ4DkFgqvikA72c/xMMblh2LUVKwz2LmLxepQBH9ZJpCZoxXakwOqoSkl
+         uDiUta7BzAB6Aiskv23b59wvmkhaFXfW5d7Kuyd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hsu <KCHSU0@nuvoton.com>,
+        stable@vger.kernel.org, Shuming Fan <shumingf@realtek.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/66] ASoC: nau8810: fix the issue of widget with prefixed name
-Date:   Thu,  9 May 2019 20:41:49 +0200
-Message-Id: <20190509181303.418977513@linuxfoundation.org>
+Subject: [PATCH 4.19 16/66] ASoC: rt5682: recording has no sound after booting
+Date:   Thu,  9 May 2019 20:41:51 +0200
+Message-Id: <20190509181303.620096596@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
 References: <20190509181301.719249738@linuxfoundation.org>
@@ -60,35 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 54d1cf78b0f4ba348a7c7fb8b7d0708d71b6cc8a ]
+[ Upstream commit 1c5b6a27e432e4fe170a924c8b41012271496a4c ]
 
-The driver changes the stream name of DAC and ADC to avoid the issue of
-widget with prefixed name. When the machine adds prefixed name for codec,
-the stream name of DAI may not find the widgets.
+If ASRC turns on, HW will use clk_dac as the reference clock
+whether recording or playback.
+Both of clk_dac and clk_adc should set proper clock while using ASRC.
 
-Signed-off-by: John Hsu <KCHSU0@nuvoton.com>
+Signed-off-by: Shuming Fan <shumingf@realtek.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/nau8810.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/rt5682.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/codecs/nau8810.c b/sound/soc/codecs/nau8810.c
-index bfd74b86c9d2f..645aa07941237 100644
---- a/sound/soc/codecs/nau8810.c
-+++ b/sound/soc/codecs/nau8810.c
-@@ -411,9 +411,9 @@ static const struct snd_soc_dapm_widget nau8810_dapm_widgets[] = {
- 	SND_SOC_DAPM_MIXER("Mono Mixer", NAU8810_REG_POWER3,
- 		NAU8810_MOUTMX_EN_SFT, 0, &nau8810_mono_mixer_controls[0],
- 		ARRAY_SIZE(nau8810_mono_mixer_controls)),
--	SND_SOC_DAPM_DAC("DAC", "HiFi Playback", NAU8810_REG_POWER3,
-+	SND_SOC_DAPM_DAC("DAC", "Playback", NAU8810_REG_POWER3,
- 		NAU8810_DAC_EN_SFT, 0),
--	SND_SOC_DAPM_ADC("ADC", "HiFi Capture", NAU8810_REG_POWER2,
-+	SND_SOC_DAPM_ADC("ADC", "Capture", NAU8810_REG_POWER2,
- 		NAU8810_ADC_EN_SFT, 0),
- 	SND_SOC_DAPM_PGA("SpkN Out", NAU8810_REG_POWER3,
- 		NAU8810_NSPK_EN_SFT, 0, NULL, 0),
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index 79ebcc2397865..6f5dac09ceded 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -1196,7 +1196,7 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 	struct snd_soc_component *component =
+ 		snd_soc_dapm_to_component(w->dapm);
+ 	struct rt5682_priv *rt5682 = snd_soc_component_get_drvdata(component);
+-	int ref, val, reg, sft, mask, idx = -EINVAL;
++	int ref, val, reg, idx = -EINVAL;
+ 	static const int div_f[] = {1, 2, 3, 4, 6, 8, 12, 16, 24, 32, 48};
+ 	static const int div_o[] = {1, 2, 4, 6, 8, 12, 16, 24, 32, 48};
+ 
+@@ -1210,15 +1210,10 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 
+ 	idx = rt5682_div_sel(rt5682, ref, div_f, ARRAY_SIZE(div_f));
+ 
+-	if (w->shift == RT5682_PWR_ADC_S1F_BIT) {
++	if (w->shift == RT5682_PWR_ADC_S1F_BIT)
+ 		reg = RT5682_PLL_TRACK_3;
+-		sft = RT5682_ADC_OSR_SFT;
+-		mask = RT5682_ADC_OSR_MASK;
+-	} else {
++	else
+ 		reg = RT5682_PLL_TRACK_2;
+-		sft = RT5682_DAC_OSR_SFT;
+-		mask = RT5682_DAC_OSR_MASK;
+-	}
+ 
+ 	snd_soc_component_update_bits(component, reg,
+ 		RT5682_FILTER_CLK_DIV_MASK, idx << RT5682_FILTER_CLK_DIV_SFT);
+@@ -1230,7 +1225,8 @@ static int set_filter_clk(struct snd_soc_dapm_widget *w,
+ 	}
+ 
+ 	snd_soc_component_update_bits(component, RT5682_ADDA_CLK_1,
+-		mask, idx << sft);
++		RT5682_ADC_OSR_MASK | RT5682_DAC_OSR_MASK,
++		(idx << RT5682_ADC_OSR_SFT) | (idx << RT5682_DAC_OSR_SFT));
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
