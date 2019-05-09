@@ -2,102 +2,99 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD554C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0C7C04AB2
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9773121744
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h06WdcHv"
+	by mail.kernel.org (Postfix) with ESMTP id 7747D217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 21:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557436350;
+	bh=yjSJ5+Ioa9r+AGOxhWCEdbWXRoBVtO7ci0q8/R0m/2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=r1yjN98Z9ggJgMm28X78IhBVP4ky/nDj6qnll69sLBtxETMebf6yQrOw0IZ4uVlsh
+	 aTIENDedYx95dqRxBZz1HBIZulvQdT8zRDgZpkJsC+Lwn5jb8ffFaCcsEnW5s8NcqZ
+	 W2b/FS5fE/LR3m8Ve4xJfXPinkqIsQaspQJYxftc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfEIVMR (ORCPT
+        id S1726922AbfEIVM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 17:12:17 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42106 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbfEIVMR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 17:12:17 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so1716939pln.9;
-        Thu, 09 May 2019 14:12:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XchIQ0AZQeRGIdq/2nF2UsN/rGYnQ8oRBDgU+OwHFOQ=;
-        b=h06WdcHvp6WlG/4gmsdbHNCHdNJycwyUJyTbcMLnzcWKm/Q5sIi41mDciwWf2q4P3m
-         8XFB9AcWniLCwTMFBQVAI2/aYHhTTgsYoEbT6lRpV2IDmm9TRvH9G/BhSbYqYzaqGTch
-         qXiC4NRIX+LmLYkWCSHOzjwuO7H+2XQwviPoZDrzETOu6qMzy3yLYA5pLtBFdCmY7Zbu
-         skylZcWQN/bLSPg0ko0UF7NGNuB+Sb2Bm3WnzXl1niz+zJASZ7M9adikxHS9VOKsRstS
-         oM+sogMwUdGRPQxMsCMoQwMBH3Fk8H6j6IM/jDSPiOyQcOfV5kvfM1sJkBwiblx6DsoE
-         QwAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XchIQ0AZQeRGIdq/2nF2UsN/rGYnQ8oRBDgU+OwHFOQ=;
-        b=XyVsRhlfC/txrZ7tLnquDjq3mxEqUTEfJd1dVj5EmBCeCnXg/0NKpyAEOF7PjdmbY+
-         Mby/5ugHm2OWUAIwOdLVl2kIltehkgguxGvOWJqjaP0OCc7nZvewSkzusCuld4zJPE/P
-         9v2exyWg0UO2Hdrn/8yuJvdXK3JNmkLidMIhLtfkNrJ6PUQQ4bxb6soHdooU63wUXr/0
-         z5Nedim70ydKb8+GqBVAHrVxdcY/s3LRFyL8ckVk5YgrmtC0M58KCkPKPQ10a1YrMt9k
-         wy5L7tiE2YoL1D/JgDY1R+GjEoTKd8VHwtRR+IjERYEopVuUfCtnvsr4v57nvU9kMf2I
-         zFWw==
-X-Gm-Message-State: APjAAAXF3bJvHHoDyShIVqyEln/x0siRqcxO56XInUcZ6+92c1buz+PP
-        oCZ7KdEO47PZNj0AzuvAm3cCYwaN
-X-Google-Smtp-Source: APXvYqz5TNYDm7+pNd+Gdu8MOu9qaXb0QKIcU0YBiGqe8MvC1uVctsjgLOR8LasG89GzHZh7Xsfl8w==
-X-Received: by 2002:a17:902:1123:: with SMTP id d32mr8229816pla.82.1557436336270;
-        Thu, 09 May 2019 14:12:16 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id w12sm8815119pfj.41.2019.05.09.14.12.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 14:12:15 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        linux-serial@vger.kernel.org (open list:SERIAL DRIVERS)
-Subject: [PATCH] tty: amba-pl011: allow shared interrupt
-Date:   Thu,  9 May 2019 14:11:58 -0700
-Message-Id: <20190509211159.29364-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 9 May 2019 17:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44304 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbfEIVM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 17:12:29 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB97217D7;
+        Thu,  9 May 2019 21:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557436348;
+        bh=yjSJ5+Ioa9r+AGOxhWCEdbWXRoBVtO7ci0q8/R0m/2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HVKWjoFzoI283O7REsm3MYyiuLd91yFoVnEZqWp8/+BsaCjSbJ6Zdvxq1oXe073Xh
+         XIkgjPQS0R2/MYz3D3WBSxDB7qARP3dsoNfqt2zUWU8DUsMECDS7dl1Db99BV/BgnF
+         FTenRAp+AqMKqDGc9cg0tU/LGJKbRa+rzazhW2Sc=
+Date:   Thu, 9 May 2019 16:12:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dongdong Liu <liudongdong3@huawei.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 02/10] PCI/PME: Replace dev_printk(KERN_DEBUG) with
+ dev_info()
+Message-ID: <20190509211226.GC235064@google.com>
+References: <20190509141456.223614-1-helgaas@kernel.org>
+ <20190509141456.223614-3-helgaas@kernel.org>
+ <CAHp75Ve9-659N5N=f7pPb-9amvbGbi+zWxL9p-BnYocvXJPwZg@mail.gmail.com>
+ <69ff0a66d8c68f9e1adc8308847541e9566fe23e.camel@perches.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <69ff0a66d8c68f9e1adc8308847541e9566fe23e.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+On Thu, May 09, 2019 at 11:31:04AM -0700, Joe Perches wrote:
+> On Thu, 2019-05-09 at 20:35 +0300, Andy Shevchenko wrote:
+> > On Thu, May 9, 2019 at 5:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > Replace dev_printk(KERN_DEBUG) with dev_info() or dev_err() to be more
+> > > consistent with other logging.
+> > > 
+> > > These could be converted to dev_dbg(), but that depends on
+> > > CONFIG_DYNAMIC_DEBUG and DEBUG, and we want most of these messages to
+> > > *always* be in the dmesg log.
+> > > 
+> > > Also, use dev_fmt() to add the service name.  Example output change:
+> > > 
+> > >   - pcieport 0000:80:10.0: Signaling PME with IRQ ...
+> > >   + pcieport 0000:80:10.0: PME: Signaling with IRQ ...
+> > > +               pci_info(port, "interrupt generated for non-existent device %02x:%02x.%d\n",
+> > > +                        busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
+> > > +               pci_info(port, "Spurious native interrupt!\n");
+> > > +       pci_info(port, "Signaling with IRQ %d\n", srv->irq);
+> 
+> Why change the logging level?
+> Why not use #define DEBUG and use pci_dbg ?
 
-The PL011 register space includes all necessary status bits to
-determine whether a device instance requires handling in response
-to an interrupt. Therefore, multiple instances of the device could
-be serviced by a single shared interrupt, which is the case on BCM7211.
+What would the benefit of using DEBUG be?  I don't want these
+particular messages to be conditional.
 
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/tty/serial/amba-pl011.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For messages that *should* be conditional, there's a later patch in
+the series to use pci_dbg() and convert them to dyndbg so we have a
+single mechanism for turning them off/on.
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 89ade213a1a9..5921a33b2a07 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -1717,7 +1717,7 @@ static int pl011_allocate_irq(struct uart_amba_port *uap)
- {
- 	pl011_write(uap->im, uap, REG_IMSC);
- 
--	return request_irq(uap->port.irq, pl011_int, 0, "uart-pl011", uap);
-+	return request_irq(uap->port.irq, pl011_int, IRQF_SHARED, "uart-pl011", uap);
- }
- 
- /*
--- 
-2.17.1
-
+Bjorn
