@@ -2,98 +2,106 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45939C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF04C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC312173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 907C82084E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 15:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfEIPtQ (ORCPT
+        id S1726653AbfEIPxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 11:49:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:17718 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbfEIPtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 11:49:15 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CFA953079B73;
-        Thu,  9 May 2019 15:49:14 +0000 (UTC)
-Received: from work-vm (ovpn-116-174.ams2.redhat.com [10.36.116.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 347CF5B681;
-        Thu,  9 May 2019 15:49:00 +0000 (UTC)
-Date:   Thu, 9 May 2019 16:48:57 +0100
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190509154857.GF2868@work-vm>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
- <20190506014904.3621-1-yan.y.zhao@intel.com>
- <20190507151826.502be009@x1.home>
- <20190509173839.2b9b2b46.cohuck@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509173839.2b9b2b46.cohuck@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 09 May 2019 15:49:15 +0000 (UTC)
+        Thu, 9 May 2019 11:53:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52154 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726558AbfEIPxu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 11:53:50 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49Fq0Xf141808
+        for <linux-kernel@vger.kernel.org>; Thu, 9 May 2019 11:53:49 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2scm8dhecj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:53:49 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 9 May 2019 16:53:46 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 16:53:40 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49Frehq58917042
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 15:53:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE50511C058;
+        Thu,  9 May 2019 15:53:39 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E438B11C054;
+        Thu,  9 May 2019 15:53:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.95.107])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 15:53:37 +0000 (GMT)
+Subject: Re: [PATCH v10 08/12] ima: Factor xattr_verify() out of
+ ima_appraise_measurement()
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Date:   Thu, 09 May 2019 11:53:27 -0400
+In-Reply-To: <20190418035120.2354-9-bauerman@linux.ibm.com>
+References: <20190418035120.2354-1-bauerman@linux.ibm.com>
+         <20190418035120.2354-9-bauerman@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050915-0008-0000-0000-000002E4F7B6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050915-0009-0000-0000-000022517F01
+Message-Id: <1557417207.10635.67.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=942 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Cornelia Huck (cohuck@redhat.com) wrote:
-> On Tue, 7 May 2019 15:18:26 -0600
-> Alex Williamson <alex.williamson@redhat.com> wrote:
+On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+> Verify xattr signature in a separate function so that the logic in
+> ima_appraise_measurement() remains clear when it gains the ability to also
+> verify an appended module signature.
 > 
-> > On Sun,  5 May 2019 21:49:04 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> The code in the switch statement is unchanged except for having to
+> dereference the status and cause variables (since they're now pointers),
+> and fixing the style of a block comment to appease checkpatch.
 > 
-> > > +  Errno:
-> > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > > +  devices, it should not register version attribute for this mdev device. But if
-> > > +  a vendor driver has already registered version attribute and it wants to claim
-> > > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > > +  -ENODEV on access to this mdev device's version attribute.
-> > > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > > +  incompatible mdev devices's version strings to its version attribute should
-> > > +  return -EINVAL;  
-> > 
-> > I think it's best not to define the specific errno returned for a
-> > specific situation, let the vendor driver decide, userspace simply
-> > needs to know that an errno on read indicates the device does not
-> > support migration version comparison and that an errno on write
-> > indicates the devices are incompatible or the target doesn't support
-> > migration versions.
-> 
-> I think I have to disagree here: It's probably valuable to have an
-> agreed error for 'cannot migrate at all' vs 'cannot migrate between
-> those two particular devices'. Userspace might want to do different
-> things (e.g. trying with different device pairs).
+> Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Trying to stuff these things down an errno seems a bad idea; we can't
-get much information that way.
+Reviewed-by:  Mimi Zohar <zohar@linux.ibm.com>
 
-Dave
-
---
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
