@@ -2,135 +2,109 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80127C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2819EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A6920989
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE111216C4
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 12:23:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qk8MMLe0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEIMV2 convert rfc822-to-8bit (ORCPT
+        id S1726644AbfEIMXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 08:21:28 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:51566 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726448AbfEIMV1 (ORCPT
+        Thu, 9 May 2019 08:23:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36480 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726438AbfEIMXI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 08:21:27 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16502409-1500050 
-        for multiple; Thu, 09 May 2019 13:21:24 +0100
-Content-Type: text/plain; charset="utf-8"
+        Thu, 9 May 2019 08:23:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a8so1855317edx.3;
+        Thu, 09 May 2019 05:23:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kK0i9uM3pyYFcRAwxUAkFyXbwheiX8gFOss9me4xCFo=;
+        b=Qk8MMLe0+SuyWjMgP91XatGFW2t4dggZxTtSGYKpznsJLPVr8BcONtuSS7vK2+gf7K
+         AOz8f2Re+43WGH4w2gU97ZACFASGwvlJ9BsYZk/I6zKhqxZtdFYrjX/38dnU40HQkh1U
+         G4tN2R4s9R9CwWJ/bmndCbeWVPryUwwLWlbwiPDwH/eQq8vJx/xuBrsY/S0DY47vftPl
+         beRNHavogoku7ouurr5Qk28cy6CYq3fUoDbbB7XwFqW/xUFQkGf9jzXQyPoxzYSR02oS
+         LuXCyGRPIx2GXpfe/NaXJcWMPc29xGk8RCsL4VkdyzOoOb94p8cK40z5g0o66s7TUtCa
+         IGkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kK0i9uM3pyYFcRAwxUAkFyXbwheiX8gFOss9me4xCFo=;
+        b=gphytXu3nMoA3wHVO94KY1Hu2ucIJGUlmlHE5pBpK1Ixn7NMMEk02oPsGTuDOOwHkv
+         yE9zsBNZ1SeFFGBA2J0x3otRfjvvC4qxGKOSXZu8Vg9yPPYN0FJ4Q7PevR+qbUfSL85+
+         uqmIwBI7M7DicAqjXTJiStZ7usutx1L2GnXRENSVPbxUGb3j+Th3KfVeGd2C1N20Kwve
+         VNyJR78zHafjPpTb/wZkIonC9K52oMr2SoVOok0EOdnC022a+hAN9UZCsGX6Cu4FB1w3
+         j9ej9iFwyXd2/VFOtJSFK2ynGvEt1tMJYzv1Iz/ndWDjy6YLZyCRYEkzQsUTPErGUSDC
+         eMhw==
+X-Gm-Message-State: APjAAAWZ9nJusvDtsjPbSJcWxiAfESOyNvKYoBxM+YG70NSIG48tAtDT
+        DZ5vkCuKnQMeqPPyaSeE91U=
+X-Google-Smtp-Source: APXvYqx/LQ9p+oEzzHrZ1uIdWPZDCJZ5+WDWvbYvuz3X/C9E2PgZsOqljcdk3brSDSoy+FnXpjuuOw==
+X-Received: by 2002:a17:906:5013:: with SMTP id s19mr2949960ejj.203.1557404586529;
+        Thu, 09 May 2019 05:23:06 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id c2sm299961eja.61.2019.05.09.05.23.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 05:23:05 -0700 (PDT)
+Date:   Thu, 9 May 2019 12:23:04 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v2 1/8] mm/memory_hotplug: Simplify and fix
+ check_hotplug_memory_range()
+Message-ID: <20190509122304.haksywk3p2ks6gcg@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190507183804.5512-1-david@redhat.com>
+ <20190507183804.5512-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org
-References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
-Message-ID: <155740448210.28545.914918106077410179@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
-Date:   Thu, 09 May 2019 13:21:22 +0100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507183804.5512-2-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Daniel Vetter (2019-05-09 13:09:03)
-> console_trylock, called from within printk, can be called from pretty
-> much anywhere. Including try_to_wake_up. Note that this isn't common,
-> usually the box is in pretty bad shape at that point already. But it
-> really doesn't help when then lockdep jumps in and spams the logs,
-> potentially obscuring the real backtrace we're really interested in.
-> One case I've seen (slightly simplified backtrace):
-> 
->  Call Trace:
->   <IRQ>
->   console_trylock+0xe/0x60
->   vprintk_emit+0xf1/0x320
->   printk+0x4d/0x69
->   __warn_printk+0x46/0x90
->   native_smp_send_reschedule+0x2f/0x40
->   check_preempt_curr+0x81/0xa0
->   ttwu_do_wakeup+0x14/0x220
->   try_to_wake_up+0x218/0x5f0
->   pollwake+0x6f/0x90
->   credit_entropy_bits+0x204/0x310
->   add_interrupt_randomness+0x18f/0x210
->   handle_irq+0x67/0x160
->   do_IRQ+0x5e/0x130
->   common_interrupt+0xf/0xf
->   </IRQ>
-> 
-> This alone isn't a problem, but the spinlock in the semaphore is also
-> still held while waking up waiters (up() -> __up() -> try_to_wake_up()
-> callchain), which then closes the runqueue vs. semaphore.lock loop,
-> and upsets lockdep, which issues a circular locking splat to dmesg.
-> Worse it upsets developers, since we don't want to spam dmesg with
-> clutter when the machine is dying already.
-> 
-> Fix this by creating a prinkt_safe_up() which calls wake_up_process
-> outside of the spinlock. This isn't correct in full generality, but
-> good enough for console_lock:
-> 
-> - console_lock doesn't use interruptible or killable or timeout down()
->   calls, hence an up() is the only thing that can wake up a process.
->   Hence the process can't get woken and killed and reaped while we try
->   to wake it up too.
-> 
-> - semaphore.c always updates the waiter list while under the spinlock,
->   so there's no other races. Specifically another process that races
->   with a quick console_lock/unlock while we've dropped the spinlock
->   already won't see our own waiter.
-> 
-> Note that we only have to break the recursion for the semaphore.lock
-> spinlock of the console_lock. Recursion within various scheduler
-> related locks is already prevented by the printk_safe_enter/exit pair
-> in __up_console_sem().
-> 
-> Also cc'ing John Ogness since perhaps his printk rework fixes this all
-> properly.
-> 
-> v2: Ditch attempt to fix console_trylock.
-> 
-> v3: Add a comment explaining why the taks we're waking won't
-> disappear (Chris), and improve commit message to address review
-> questions.
-> 
-> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: John Ogness <john.ogness@linutronix.de>
-> Cc: Chris Wilson <chris@chris-wilson.co.uk>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+On Tue, May 07, 2019 at 08:37:57PM +0200, David Hildenbrand wrote:
+>By converting start and size to page granularity, we actually ignore
+>unaligned parts within a page instead of properly bailing out with an
+>error.
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: David Hildenbrand <david@redhat.com>
+>Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Cc: Qian Cai <cai@lca.pw>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Arun KS <arunks@codeaurora.org>
+>Cc: Mathieu Malaterre <malat@debian.org>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
 
-I'm a bit nervous about that this is only safe for the precisely
-controlled conditions, but then again that it is called printk_safe
-should deter any other users.
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
 
-The logic checks out, and you convinced me that the dereference is
-protected, so
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
--Chris
+
+-- 
+Wei Yang
+Help you, Help me
