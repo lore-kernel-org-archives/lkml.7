@@ -4,62 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C45B7C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C81C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AE220656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA6F20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428334;
-	bh=0VqV0jJX90eYH8l9rKoIsmKTEX47Oti3YPtNJj6Ig/s=;
+	s=default; t=1557428344;
+	bh=6Q79zQeNf9CSpfNvdjj2pS0D70glEimSyw9XP29LeJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NydX3DtInGdyraCYw9TeZfnv/whVzVPWLgnDdvR+wJp497aD9xPfoQrjTLXyGIm1t
-	 NpVvTUyCMrvF783NYxQ08F7+WxjTJGllPtXqYUnkzDyKq4crzX5OSE7dwE+b/U1J8l
-	 CEerGQqaNVBECYOl7OPOw4Yhw4V5oQpdYuA/U5sw=
+	b=nUoYTarqyDiQDB3DV75c+HCsm5kjnl/d/KxXQ4iGlfH1qnoTUpBjR1mhxU4F+y/Og
+	 Gga6ILSIH7rM0YezXOtgom1I/iYtzEcUms67lEATLTjii06QiOOEN/jEqLn+dyGEdT
+	 jccveH9skl29Zy2bQuxte6dqKXzzVSND5ESctJ4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfEIS6x (ORCPT
+        id S1728765AbfEISwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:58:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47184 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbfEISwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:54 -0400
+        id S1728733AbfEISwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C95217D7;
-        Thu,  9 May 2019 18:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6347217D7;
+        Thu,  9 May 2019 18:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427973;
-        bh=0VqV0jJX90eYH8l9rKoIsmKTEX47Oti3YPtNJj6Ig/s=;
+        s=default; t=1557427956;
+        bh=6Q79zQeNf9CSpfNvdjj2pS0D70glEimSyw9XP29LeJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jPO1gznbFLZg9dNkyFJokq7xinXr5cdFzXX9P+EJ7xnmKdvNt2GKK0PkyEG4PfV1U
-         JcjwLbxXrWkMkrEb6Hv+HdDeO9Az3BfkkUFn4DwxNeKKDmxas86cQHQS8CusFeeTtm
-         u05a8v0mUkc2Y47430p46U4khQ5zzSEaY7BAzs5s=
+        b=llSooAlH1EAYtYhWY/3afR0ihe0s6dcGeEjsGJRgyFwJd1pBYxfIS5L/ATT+tmtqv
+         j6N85yIoEUD+Z358HwhAsrZCnyexm936w0Ty6q6DYKmcFIKFv4OM0dWcEhGNTsjkMx
+         xvjIeHEtI1/LDUsAbW8KKCWBPx1YoElfB7DY/dkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        NeilBrown <neilb@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Qiaowei Ren <qiaowei.ren@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 38/95] linux/kernel.h: Use parentheses around argument in u64_to_user_ptr()
-Date:   Thu,  9 May 2019 20:41:55 +0200
-Message-Id: <20190509181311.994204612@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Bart Van Assche <bvanassche@acm.org>,
+        James Smart <james.smart@broadcom.com>,
+        linux-nvme@lists.infradead.org,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>, Ming Lei <ming.lei@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 66/95] nvme: cancel request synchronously
+Date:   Thu,  9 May 2019 20:42:23 +0200
+Message-Id: <20190509181314.082604502@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -72,68 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0fe2c6479aab5723239b315ef1b552673f434a3 ]
+[ Upstream commit eb3afb75b57c28599af0dfa03a99579d410749e9 ]
 
-Use parentheses around uses of the argument in u64_to_user_ptr() to
-ensure that the cast doesn't apply to part of the argument.
+nvme_cancel_request() is used in error handler, and it is always
+reliable to cancel request synchronously, and avoids possible race
+in which request may be completed after real hw queue is destroyed.
 
-There are existing uses of the macro of the form
+One issue is reported by our customer on NVMe RDMA, in which freed ib
+queue pair may be used in nvme_rdma_complete_rq().
 
-  u64_to_user_ptr(A + B)
-
-which expands to
-
-  (void __user *)(uintptr_t)A + B
-
-(the cast applies to the first operand of the addition, the addition
-is a pointer addition). This happens to still work as intended, the
-semantic difference doesn't cause a difference in behavior.
-
-But I want to use u64_to_user_ptr() with a ternary operator in the
-argument, like so:
-
-  u64_to_user_ptr(A ? B : C)
-
-This currently doesn't work as intended.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Andrei Vagin <avagin@openvz.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: NeilBrown <neilb@suse.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qiaowei Ren <qiaowei.ren@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190329214652.258477-1-jannh@google.com
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: linux-nvme@lists.infradead.org
+Reviewed-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/kernel.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 8f0e68e250a76..fd827b2400596 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -73,8 +73,8 @@
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 6a9dd68c0f4fe..4c4413ad3ceb3 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -291,7 +291,7 @@ bool nvme_cancel_request(struct request *req, void *data, bool reserved)
+ 				"Cancelling I/O %d", req->tag);
  
- #define u64_to_user_ptr(x) (		\
- {					\
--	typecheck(u64, x);		\
--	(void __user *)(uintptr_t)x;	\
-+	typecheck(u64, (x));		\
-+	(void __user *)(uintptr_t)(x);	\
- }					\
- )
- 
+ 	nvme_req(req)->status = NVME_SC_ABORT_REQ;
+-	blk_mq_complete_request(req);
++	blk_mq_complete_request_sync(req);
+ 	return true;
+ }
+ EXPORT_SYMBOL_GPL(nvme_cancel_request);
 -- 
 2.20.1
 
