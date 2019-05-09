@@ -2,131 +2,124 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B895C04AB3
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25589C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16472183E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="y2nCTlnf"
+	by mail.kernel.org (Postfix) with ESMTP id D49442183F
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 23:32:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfEIXcT (ORCPT
+        id S1726865AbfEIXcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 19:32:19 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:45076 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726108AbfEIXcT (ORCPT
+        Thu, 9 May 2019 19:32:25 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:38430 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726108AbfEIXcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 19:32:19 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49NOFCS051217;
-        Thu, 9 May 2019 23:32:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=C9aIasraSha+Unahg2EAZJgXu4Vii1PBVVz7t26PHMo=;
- b=y2nCTlnf47trHDM7FlSPumjUEArfp40Mam9pSSNWxp9tuaJdDpHfRlBbsNprh6FslJfZ
- CvffXORALuUweL8ITV6SGhxWVWMt2j6NrHdSPkZHRCipnwSD3grZ15DUe+bjBfe5am5x
- SXCqanmEWrfk9VJwiMvC25XHGG7jzJ5zPOQdrVRqQR2/I/MnYgCPVdAPNy8tW/rq8+qW
- zmNbRVRI0WtRAy0cYaYpH9+07mv5C38mtNYXtZpE0xWroBvWiWhm4bTc0qSaeSW6kFI7
- 7M2N6W29+txJqiVcRhJ0MTLSmTxAHH1heZY68DbVfcRUPRsENUrC7pbw8x18yZp0yV76 +g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2s94b6e0e9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 23:32:07 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x49NVUVU125728;
-        Thu, 9 May 2019 23:32:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2s94ah2qat-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 09 May 2019 23:32:05 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x49NW3rL010577;
-        Thu, 9 May 2019 23:32:04 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 May 2019 16:32:03 -0700
-Subject: Re: [PATCH] hugetlbfs: always use address space in inode for resv_map
- pointer
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     yuyufen <yuyufen@huawei.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        stable@vger.kernel.org
-References: <20190416065058.GB11561@dhcp22.suse.cz>
- <20190419204435.16984-1-mike.kravetz@oracle.com>
- <fafe9985-7db1-b65c-523d-875ab4b3b3b8@huawei.com>
- <5d7dc0d5-7cd3-eb95-a1e7-9c68fe393647@oracle.com>
- <20190509161135.00b542e5b4d0996b5089ea02@linux-foundation.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <31754605-5425-a2aa-b16f-ad89772c27b9@oracle.com>
-Date:   Thu, 9 May 2019 16:32:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 19:32:24 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x49NUiJg006219
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 9 May 2019 19:30:45 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id AC36A420024; Thu,  9 May 2019 19:30:43 -0400 (EDT)
+Date:   Thu, 9 May 2019 19:30:43 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, dan.j.williams@intel.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190509233043.GC20877@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
+        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509161135.00b542e5b4d0996b5089ea02@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=735
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905090134
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=805 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905090134
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 4:11 PM, Andrew Morton wrote:
-> On Wed, 8 May 2019 13:16:09 -0700 Mike Kravetz <mike.kravetz@oracle.com> wrote:
+On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
 > 
->>> I think it is better to add fixes label, like:
->>> Fixes: 58b6e5e8f1ad ("hugetlbfs: fix memory leak for resv_map")
->>>
->>> Since the commit 58b6e5e8f1a has been merged to stable, this patch also be needed.
->>> https://www.spinics.net/lists/stable/msg298740.html
->>
->> It must have been the AI that decided 58b6e5e8f1a needed to go to stable.
+> The second item, arguably, does have significant overlap with kselftest.
+> Whether you are running short tests in a light weight UML environment or
+> higher level tests in an heavier VM the two could be using the same
+> framework for writing or defining in-kernel tests. It *may* also be valuable
+> for some people to be able to run all the UML tests in the heavy VM
+> environment along side other higher level tests.
 > 
-> grr.
+> Looking at the selftests tree in the repo, we already have similar items to
+> what Kunit is adding as I described in point (2) above. kselftest_harness.h
+> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
+> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
 > 
->> Even though this technically does not fix 58b6e5e8f1a, I'm OK with adding
->> the Fixes: to force this to go to the same stable trees.
+> However, the number of users of this harness appears to be quite small. Most
+> of the code in the selftests tree seems to be a random mismash of scripts
+> and userspace code so it's not hard to see it as something completely
+> different from the new Kunit:
 > 
-> Why are we bothering with any of this, given that
-> 
-> : Luckily, private_data is NULL for address spaces in all such cases
-> : today but, there is no guarantee this will continue.
-> 
-> ?
+> $ git grep --files-with-matches kselftest_harness.h *
 
-You are right.  For stable releases, I do not see any way for this to
-be an issue.  We are lucky today (and in the past).  The patch is there
-to guard against code changes which may cause this condition to change
-in the future.
+To the extent that we can unify how tests are written, I agree that
+this would be a good thing.  However, you should note that
+kselftest_harness.h is currently assums that it will be included in
+userspace programs.  This is most obviously seen if you look closely
+at the functions defined in the header files which makes calls to
+fork(), abort() and fprintf().
 
-Yufen Yu, do you see this actually fixing a problem in stable releases?
-I believe you originally said this is not a problem today, which would
-also imply older releases.  Just want to make sure I am not missing something.
--- 
-Mike Kravetz
+So Kunit can't reuse kselftest_harness.h unmodified.  And whether or
+not the actual implementation of the header file can be reused or
+refactored, making the unit tests use the same or similar syntax would
+be a good thing.
 
-> Even though 58b6e5e8f1ad was inappropriately backported, the above
-> still holds, so what problem does a backport of "hugetlbfs: always use
-> address space in inode for resv_map pointer" actually solve?
-> 
-> And yes, some review of this would be nice
+Cheers,
+
+						- Ted
