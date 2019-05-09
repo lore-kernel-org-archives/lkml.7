@@ -2,158 +2,80 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F7CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8064BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72D5D21773
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE9421479
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 08:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfEIIiP (ORCPT
+        id S1726533AbfEIInV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 04:38:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34736 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726448AbfEIIiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 04:38:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39F3EAC10;
-        Thu,  9 May 2019 08:38:13 +0000 (UTC)
-Date:   Thu, 9 May 2019 09:38:10 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        David Rientjes <rientjes@google.com>,
-        Zi Yan <zi.yan@cs.rutgers.edu>,
-        Stefan Priebe - Profihost AG <s.priebe@profihost.ag>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Revert "mm, thp: restore node-local hugepage
- allocations"
-Message-ID: <20190509083810.GH14242@suse.de>
-References: <20190503223146.2312-1-aarcange@redhat.com>
- <20190503223146.2312-3-aarcange@redhat.com>
+        Thu, 9 May 2019 04:43:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:34356 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725991AbfEIInU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 04:43:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D0A3374;
+        Thu,  9 May 2019 01:43:20 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78DEF3F575;
+        Thu,  9 May 2019 01:43:17 -0700 (PDT)
+Date:   Thu, 9 May 2019 09:43:11 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v8 04/16] sched/core: uclamp: Add system default clamps
+Message-ID: <20190509084311.clpvno6am7bxo5wz@e110439-lin>
+References: <20190402104153.25404-1-patrick.bellasi@arm.com>
+ <20190402104153.25404-5-patrick.bellasi@arm.com>
+ <20190508184202.GA32547@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503223146.2312-3-aarcange@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190508184202.GA32547@worktop.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 03, 2019 at 06:31:46PM -0400, Andrea Arcangeli wrote:
-> This reverts commit 2f0799a0ffc033bf3cc82d5032acc3ec633464c2.
+On 08-May 20:42, Peter Zijlstra wrote:
+> On Tue, Apr 02, 2019 at 11:41:40AM +0100, Patrick Bellasi wrote:
+> > Add a privileged interface to define a system default configuration via:
+> > 
+> >   /proc/sys/kernel/sched_uclamp_util_{min,max}
 > 
-> commit 2f0799a0ffc033bf3cc82d5032acc3ec633464c2 was rightfully applied
-> to avoid the risk of a severe regression that was reported by the
-> kernel test robot at the end of the merge window. Now we understood
-> the regression was a false positive and was caused by a significant
-> increase in fairness during a swap trashing benchmark. So it's safe to
-> re-apply the fix and continue improving the code from there. The
-> benchmark that reported the regression is very useful, but it provides
-> a meaningful result only when there is no significant alteration in
-> fairness during the workload. The removal of __GFP_THISNODE increased
-> fairness.
-> 
-> __GFP_THISNODE cannot be used in the generic page faults path for new
-> memory allocations under the MPOL_DEFAULT mempolicy, or the allocation
-> behavior significantly deviates from what the MPOL_DEFAULT semantics
-> are supposed to be for THP and 4k allocations alike.
-> 
-> Setting THP defrag to "always" or using MADV_HUGEPAGE (with THP defrag
-> set to "madvise") has never meant to provide an implicit MPOL_BIND on
-> the "current" node the task is running on, causing swap storms and
-> providing a much more aggressive behavior than even zone_reclaim_node
-> = 3.
-> 
-> Any workload who could have benefited from __GFP_THISNODE has now to
-> enable zone_reclaim_mode=1||2||3. __GFP_THISNODE implicitly provided
-> the zone_reclaim_mode behavior, but it only did so if THP was enabled:
-> if THP was disabled, there would have been no chance to get any 4k
-> page from the current node if the current node was full of pagecache,
-> which further shows how this __GFP_THISNODE was misplaced in
-> MADV_HUGEPAGE. MADV_HUGEPAGE has never been intended to provide any
-> zone_reclaim_mode semantics, in fact the two are orthogonal,
-> zone_reclaim_mode = 1|2|3 must work exactly the same with
-> MADV_HUGEPAGE set or not.
-> 
-> The performance characteristic of memory depends on the hardware
-> details. The numbers below are obtained on Naples/EPYC architecture
-> and the N/A projection extends them to show what we should aim for in
-> the future as a good THP NUMA locality default. The benchmark used
-> exercises random memory seeks (note: the cost of the page faults is
-> not part of the measurement).
-> 
-> D0 THP | D0 4k | D1 THP | D1 4k | D2 THP | D2 4k | D3 THP | D3 4k | ...
-> 0%     | +43%  | +45%   | +106% | +131%  | +224% | N/A    | N/A
-> 
-> D0 means distance zero (i.e. local memory), D1 means distance
-> one (i.e. intra socket memory), D2 means distance two (i.e. inter
-> socket memory), etc...
-> 
-> For the guest physical memory allocated by qemu and for guest mode kernel
-> the performance characteristic of RAM is more complex and an ideal
-> default could be:
-> 
-> D0 THP | D1 THP | D0 4k | D2 THP | D1 4k | D3 THP | D2 4k | D3 4k | ...
-> 0%     | +58%   | +101% | N/A    | +222% | N/A    | N/A   | N/A
-> 
-> NOTE: the N/A are projections and haven't been measured yet, the
-> measurement in this case is done on a 1950x with only two NUMA nodes.
-> The THP case here means THP was used both in the host and in the
-> guest.
-> 
-> After applying this commit the THP NUMA locality order that we'll get
-> out of MADV_HUGEPAGE is this:
-> 
-> D0 THP | D1 THP | D2 THP | D3 THP | ... | D0 4k | D1 4k | D2 4k | D3 4k | ...
-> 
-> Before this commit it was:
-> 
-> D0 THP | D0 4k | D1 4k | D2 4k | D3 4k | ...
-> 
-> Even if we ignore the breakage of large workloads that can't fit in a
-> single node that the __GFP_THISNODE implicit "current node" mbind
-> caused, the THP NUMA locality order provided by __GFP_THISNODE was
-> still not the one we shall aim for in the long term (i.e. the first
-> one at the top).
-> 
-> After this commit is applied, we can introduce a new allocator multi
-> order API and to replace those two alloc_pages_vmas calls in the page
-> fault path, with a single multi order call:
-> 
-> 	unsigned int order = (1 << HPAGE_PMD_ORDER) | (1 << 0);
-> 	page = alloc_pages_multi_order(..., &order);
-> 	if (!page)
-> 		goto out;
-> 	if (!(order & (1 << 0))) {
-> 		VM_WARN_ON(order != 1 << HPAGE_PMD_ORDER);
-> 		/* THP fault */
-> 	} else {
-> 		VM_WARN_ON(order != 1 << 0);
-> 		/* 4k fallback */
-> 	}
-> 
-> The page allocator logic has to be altered so that when it fails on
-> any zone with order 9, it has to try again with a order 0 before
-> falling back to the next zone in the zonelist.
-> 
-> After that we need to do more measurements and evaluate if adding an
-> opt-in feature for guest mode is worth it, to swap "DN 4k | DN+1 THP"
-> with "DN+1 THP | DN 4k" at every NUMA distance crossing.
-> 
-> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> Isn't the 'u' in "uclamp" already for util?
 
-Acked-by: Mel Gorman <mgorman@suse.de>
+Yes, right... I've just wanted to keep the same "uclamp" prefix used
+by all related kernel symbols. But, since that's user-space API we can
+certainly drop it and go for either:
+
+      /proc/sys/kernel/sched_clamp_util_{min,max}
+      /proc/sys/kernel/sched_util_clamp_{min,max}
+
+Preference?
 
 -- 
-Mel Gorman
-SUSE Labs
+#include <best/regards.h>
+
+Patrick Bellasi
