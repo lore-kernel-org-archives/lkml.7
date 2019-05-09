@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8D3C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF13C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A80C620656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47FA20656
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428443;
-	bh=TMZ6zPgSlmugN5V2TsBStkTQ1fYYai4lrVnTOz3IRrY=;
+	s=default; t=1557428456;
+	bh=PiO4JVTlllckNxCOroUiEq7Z+G49cXwehLEgPNZ8pus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dMT3nNkeh8OEQbgoRmFvcRe4r2X4EGKKz6TxX0DIALXgTs5CoyC/mhcDiiYKyYj6F
-	 9QGEXru2IWhgz12Kgd2E0I43WNFkZsYVig4Y8NM2IM9lbiT6Rt/Zs88umKJCfuOkSr
-	 MqGFdGrc1DEdKavIyEfWna7rzwa0C5BoUxLfcG7Q=
+	b=ONzxWlw9OlI0FQIE5TnFIbhnS+CmebGPm+otYBqA0PFEdmJ04VCF1fxzjLcGEdDpr
+	 KG78dCFjB/n/J3jSVczl8LKMU2fzqXG1fvDKRhhKdwajH6331ccuJmu6IKhqUyFqaC
+	 w9/GueWyQ+Cqt0JrHsCamHugVsTc08nrkgDXUUCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfEITAm (ORCPT
+        id S1728820AbfEITAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:00:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45286 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:00:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbfEISv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:29 -0400
+        id S1728011AbfEISvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70DD6217D7;
-        Thu,  9 May 2019 18:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E63F217D7;
+        Thu,  9 May 2019 18:51:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427888;
-        bh=TMZ6zPgSlmugN5V2TsBStkTQ1fYYai4lrVnTOz3IRrY=;
+        s=default; t=1557427880;
+        bh=PiO4JVTlllckNxCOroUiEq7Z+G49cXwehLEgPNZ8pus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kj3KMbVi8W/m1/uBF9N6M+l4LISiL4HydCM5Uyh0iqxkVRIl1N2JIf9yiXfiERbLE
-         h5rMzkKIkegYIgzme/6nqST+nocQWDY2EXzPRItF7/oQjMPJozBatLrKKVksRQaSJy
-         9bw20gRCVsHJGvs1HWICVxiVwf1+uFRuEAJZRDZU=
+        b=iKZv4pwxBWAPWGByrzkgrk58i23yu808qvZtZAXqwrpvAnCInnzqes3yPOKjTHuix
+         OOcI0c/IeRaRFkMDmdZ34STB6Ii4VLJcIrQo8wddMDlUv6AUUF4RkPKy5LPCw74+sV
+         rcaL4M+nHCFdUX52W0KcDunLxVf5QUrjh8IQZ8YU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kent Russell <kent.russell@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 42/95] drm/amdkfd: Add picasso pci id
-Date:   Thu,  9 May 2019 20:41:59 +0200
-Message-Id: <20190509181312.345494066@linuxfoundation.org>
+Subject: [PATCH 5.0 39/95] iov_iter: Fix build error without CONFIG_CRYPTO
+Date:   Thu,  9 May 2019 20:41:56 +0200
+Message-Id: <20190509181312.077306094@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,29 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e7ad88553aa1d48e950ca9a4934d246c1bee4be4 ]
+[ Upstream commit 27fad74a5a77fe2e1f876db7bf27efcf2ec304b2 ]
 
-Picasso is a new raven variant.
+If CONFIG_CRYPTO is not set or set to m,
+gcc building warn this:
 
-Reviewed-by: Kent Russell <kent.russell@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+lib/iov_iter.o: In function `hash_and_copy_to_iter':
+iov_iter.c:(.text+0x9129): undefined reference to `crypto_stats_get'
+iov_iter.c:(.text+0x9152): undefined reference to `crypto_stats_ahash_update'
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: d05f443554b3 ("iov_iter: introduce hash_and_copy_to_iter helper")
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_device.c | 1 +
- 1 file changed, 1 insertion(+)
+ lib/iov_iter.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_device.c b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-index 8be9677c0c07d..cf9a49f49d3a4 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_device.c
-@@ -320,6 +320,7 @@ static const struct kfd_deviceid supported_devices[] = {
- 	{ 0x9876, &carrizo_device_info },	/* Carrizo */
- 	{ 0x9877, &carrizo_device_info },	/* Carrizo */
- 	{ 0x15DD, &raven_device_info },		/* Raven */
-+	{ 0x15D8, &raven_device_info },		/* Raven */
- #endif
- 	{ 0x67A0, &hawaii_device_info },	/* Hawaii */
- 	{ 0x67A1, &hawaii_device_info },	/* Hawaii */
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index be4bd627caf06..a0d1cd88f903f 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1515,6 +1515,7 @@ EXPORT_SYMBOL(csum_and_copy_to_iter);
+ size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
+ 		struct iov_iter *i)
+ {
++#ifdef CONFIG_CRYPTO
+ 	struct ahash_request *hash = hashp;
+ 	struct scatterlist sg;
+ 	size_t copied;
+@@ -1524,6 +1525,9 @@ size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
+ 	ahash_request_set_crypt(hash, &sg, NULL, copied);
+ 	crypto_ahash_update(hash);
+ 	return copied;
++#else
++	return 0;
++#endif
+ }
+ EXPORT_SYMBOL(hash_and_copy_to_iter);
+ 
 -- 
 2.20.1
 
