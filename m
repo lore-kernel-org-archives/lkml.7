@@ -2,52 +2,52 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 858F8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864B7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDF72177E
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BE2204FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557427951;
-	bh=x/6DoZU6/oawNfhsfKZGZE1WvjtrrBpQkTWHMEsssKY=;
+	s=default; t=1557427955;
+	bh=dzBOdXs1SpdMzjFnP+RGYqtfEUngwD8kCrHTrI4Zbvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iML7mnyi2AV4bWAfosNk/nmxNWFfVZK/+1M6XGP9PL0FZHMvB83YH/TntHt6K/hye
-	 24Dfb7hWtAOh/s0fjXQNEtV+EOSqiehtqFEGC9mrPtvnQUcjXupSdVQk3qt70aV+n3
-	 Q0n+v2bRmoz5zQLNpJuIJS3YkauvHV4n3c6Ph7GI=
+	b=ICa58pCkWwfdW9ZVc27auFkAjOwkiiuWsMwKfkreF3siegEdstjJER08DbQkB5Q3a
+	 OAqWrrGr21csYW0Hv4KdRhnalRmAb9e5AS3BtvVtZslWsQf9JGF2yUuVo1sRhZJNvM
+	 4h+Y/RHttxi8aoRAnWgWRCWaIXVCnCNoTzt5KGOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfEISw3 (ORCPT
+        id S1728734AbfEISwe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:52:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbfEISw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:52:27 -0400
+        id S1728714AbfEISw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:52:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92F12183F;
-        Thu,  9 May 2019 18:52:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36FF12183E;
+        Thu,  9 May 2019 18:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427946;
-        bh=x/6DoZU6/oawNfhsfKZGZE1WvjtrrBpQkTWHMEsssKY=;
+        s=default; t=1557427948;
+        bh=dzBOdXs1SpdMzjFnP+RGYqtfEUngwD8kCrHTrI4Zbvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iyo7kLAEtHCtxd01dwmtg0BfcM+ZkbQQ+QWeuZnRXeS/iM5tPxsVhsMgbN2w3/C1/
-         EJZ7Vn+umKiw6QtvZIBL3PnXSgCbCdNe23YNPgMZ60InBFuRPYJ/+RCppMh9is5uYv
-         V0PIAi70ENonVe6SqXofW4bFQtFnkeK1B0M8K3j8=
+        b=YGhXL1qdqfjHx1c9YjzaDVIPiRavmpMQ7F188Exn96JznSZ1kroWggVhibEKLikSl
+         aPQNdN4jzvscCbGUFqQxRhOWzad+bAMuoDThuX0lTK+Rex4MDsXGhZcUdCcI8Txqhd
+         c4YdwUFZ354TFKbDKbfyVfMdMQ1aA5m75EGKog9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 62/95] ASoC: stm32: sai: fix master clock management
-Date:   Thu,  9 May 2019 20:42:19 +0200
-Message-Id: <20190509181313.818369796@linuxfoundation.org>
+Subject: [PATCH 5.0 63/95] ALSA: hda: Fix racy display power access
+Date:   Thu,  9 May 2019 20:42:20 +0200
+Message-Id: <20190509181313.889818220@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -60,135 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e37c2deafe7058cf7989c4c47bbf1140cc867d89 ]
+[ Upstream commit d7a181da2dfa3190487c446042ba01e07d851c74 ]
 
-When master clock is used, master clock rate is set exclusively.
-Parent clocks of master clock cannot be changed after a call to
-clk_set_rate_exclusive(). So the parent clock of SAI kernel clock
-must be set before.
-Ensure also that exclusive rate operations are balanced
-in STM32 SAI driver.
+snd_hdac_display_power() doesn't handle the concurrent calls carefully
+enough, and it may lead to the doubly get_power or put_power calls,
+when a runtime PM and an async work get called in racy way.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This patch addresses it by reusing the bus->lock mutex that has been
+used for protecting the link state change in ext bus code, so that it
+can protect against racy display state changes.  The initialization of
+bus->lock was moved from snd_hdac_ext_bus_init() to
+snd_hdac_bus_init() as well accordingly.
+
+Testcase: igt/i915_pm_rpm/module-reload #glk-dsi
+Reported-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Imre Deak <imre.deak@intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_sai_sub.c | 64 +++++++++++++++++++++++++----------
- 1 file changed, 47 insertions(+), 17 deletions(-)
+ sound/hda/ext/hdac_ext_bus.c | 1 -
+ sound/hda/hdac_bus.c         | 1 +
+ sound/hda/hdac_component.c   | 6 +++++-
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index bc69e68191ad1..1cf9df4b6f11c 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -70,6 +70,7 @@
- #define SAI_IEC60958_STATUS_BYTES	24
+diff --git a/sound/hda/ext/hdac_ext_bus.c b/sound/hda/ext/hdac_ext_bus.c
+index 9c37d9af3023f..ec7715c6b0c02 100644
+--- a/sound/hda/ext/hdac_ext_bus.c
++++ b/sound/hda/ext/hdac_ext_bus.c
+@@ -107,7 +107,6 @@ int snd_hdac_ext_bus_init(struct hdac_bus *bus, struct device *dev,
+ 	INIT_LIST_HEAD(&bus->hlink_list);
+ 	bus->idx = idx++;
  
- #define SAI_MCLK_NAME_LEN		32
-+#define SAI_RATE_11K			11025
- 
- /**
-  * struct stm32_sai_sub_data - private data of SAI sub block (block A or B)
-@@ -309,6 +310,25 @@ static int stm32_sai_set_clk_div(struct stm32_sai_sub_data *sai,
- 	return ret;
- }
- 
-+static int stm32_sai_set_parent_clock(struct stm32_sai_sub_data *sai,
-+				      unsigned int rate)
-+{
-+	struct platform_device *pdev = sai->pdev;
-+	struct clk *parent_clk = sai->pdata->clk_x8k;
-+	int ret;
-+
-+	if (!(rate % SAI_RATE_11K))
-+		parent_clk = sai->pdata->clk_x11k;
-+
-+	ret = clk_set_parent(sai->sai_ck, parent_clk);
-+	if (ret)
-+		dev_err(&pdev->dev, " Error %d setting sai_ck parent clock. %s",
-+			ret, ret == -EBUSY ?
-+			"Active stream rates conflict\n" : "\n");
-+
-+	return ret;
-+}
-+
- static long stm32_sai_mclk_round_rate(struct clk_hw *hw, unsigned long rate,
- 				      unsigned long *prate)
- {
-@@ -490,25 +510,29 @@ static int stm32_sai_set_sysclk(struct snd_soc_dai *cpu_dai,
- 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
- 	int ret;
- 
--	if (dir == SND_SOC_CLOCK_OUT) {
-+	if (dir == SND_SOC_CLOCK_OUT && sai->sai_mclk) {
- 		ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
- 					 SAI_XCR1_NODIV,
- 					 (unsigned int)~SAI_XCR1_NODIV);
- 		if (ret < 0)
- 			return ret;
- 
--		dev_dbg(cpu_dai->dev, "SAI MCLK frequency is %uHz\n", freq);
--		sai->mclk_rate = freq;
-+		/* If master clock is used, set parent clock now */
-+		ret = stm32_sai_set_parent_clock(sai, freq);
-+		if (ret)
-+			return ret;
- 
--		if (sai->sai_mclk) {
--			ret = clk_set_rate_exclusive(sai->sai_mclk,
--						     sai->mclk_rate);
--			if (ret) {
--				dev_err(cpu_dai->dev,
--					"Could not set mclk rate\n");
--				return ret;
--			}
-+		ret = clk_set_rate_exclusive(sai->sai_mclk, freq);
-+		if (ret) {
-+			dev_err(cpu_dai->dev,
-+				ret == -EBUSY ?
-+				"Active streams have incompatible rates" :
-+				"Could not set mclk rate\n");
-+			return ret;
- 		}
-+
-+		dev_dbg(cpu_dai->dev, "SAI MCLK frequency is %uHz\n", freq);
-+		sai->mclk_rate = freq;
- 	}
+-	mutex_init(&bus->lock);
+ 	bus->cmd_dma_state = true;
  
  	return 0;
-@@ -916,11 +940,13 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 	int cr1, mask, div = 0;
- 	int sai_clk_rate, mclk_ratio, den;
- 	unsigned int rate = params_rate(params);
-+	int ret;
+diff --git a/sound/hda/hdac_bus.c b/sound/hda/hdac_bus.c
+index 012305177f682..ad8eee08013fb 100644
+--- a/sound/hda/hdac_bus.c
++++ b/sound/hda/hdac_bus.c
+@@ -38,6 +38,7 @@ int snd_hdac_bus_init(struct hdac_bus *bus, struct device *dev,
+ 	INIT_WORK(&bus->unsol_work, snd_hdac_bus_process_unsol_events);
+ 	spin_lock_init(&bus->reg_lock);
+ 	mutex_init(&bus->cmd_mutex);
++	mutex_init(&bus->lock);
+ 	bus->irq = -1;
+ 	return 0;
+ }
+diff --git a/sound/hda/hdac_component.c b/sound/hda/hdac_component.c
+index a6d37b9d6413f..6b5caee61c6e0 100644
+--- a/sound/hda/hdac_component.c
++++ b/sound/hda/hdac_component.c
+@@ -69,13 +69,15 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
  
--	if (!(rate % 11025))
--		clk_set_parent(sai->sai_ck, sai->pdata->clk_x11k);
--	else
--		clk_set_parent(sai->sai_ck, sai->pdata->clk_x8k);
-+	if (!sai->sai_mclk) {
-+		ret = stm32_sai_set_parent_clock(sai, rate);
-+		if (ret)
-+			return ret;
-+	}
- 	sai_clk_rate = clk_get_rate(sai->sai_ck);
+ 	dev_dbg(bus->dev, "display power %s\n",
+ 		enable ? "enable" : "disable");
++
++	mutex_lock(&bus->lock);
+ 	if (enable)
+ 		set_bit(idx, &bus->display_power_status);
+ 	else
+ 		clear_bit(idx, &bus->display_power_status);
  
- 	if (STM_SAI_IS_F4(sai->pdata)) {
-@@ -1075,9 +1101,13 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
- 	regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, SAI_XCR1_NODIV,
- 			   SAI_XCR1_NODIV);
+ 	if (!acomp || !acomp->ops)
+-		return;
++		goto unlock;
  
--	clk_disable_unprepare(sai->sai_ck);
-+	/* Release mclk rate only if rate was actually set */
-+	if (sai->mclk_rate) {
-+		clk_rate_exclusive_put(sai->sai_mclk);
-+		sai->mclk_rate = 0;
-+	}
+ 	if (bus->display_power_status) {
+ 		if (!bus->display_power_active) {
+@@ -92,6 +94,8 @@ void snd_hdac_display_power(struct hdac_bus *bus, unsigned int idx, bool enable)
+ 			bus->display_power_active = false;
+ 		}
+ 	}
++ unlock:
++	mutex_unlock(&bus->lock);
+ }
+ EXPORT_SYMBOL_GPL(snd_hdac_display_power);
  
--	clk_rate_exclusive_put(sai->sai_mclk);
-+	clk_disable_unprepare(sai->sai_ck);
- 
- 	spin_lock_irqsave(&sai->irq_lock, flags);
- 	sai->substream = NULL;
 -- 
 2.20.1
 
