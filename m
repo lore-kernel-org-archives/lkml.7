@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8962C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAECC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77252204FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22F320578
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428095;
-	bh=BaAJelODdWM6J33FqK4AT3VkKhIgqJ7Apl5XTEcEHDE=;
+	s=default; t=1557428097;
+	bh=7wpS8JYjS9GcZiEDHPbPi/nxLw0FODqaTLwbfGZT1Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihvLw7pbHsmcCa5AuCpXXr/DDIHkcYBBkTU9RMMZajK/pmeMBWWmquKd4IiOt+502
-	 Rq0SaMZMPvZART6AIiFqtgcG0iHxI8gn/iG8RwC5EQldMOnX9Tth9NxKbta2tJOzXL
-	 9oue2VD4FJo82eOfEvFZn5aw7h9Ecgz+s9h+MwFQ=
+	b=yLl94NH6dt7iYEOkSLxIyFAhwyi1rUry5GY/GntuDIh920dbXTHjLdAZi6sUuvX98
+	 nVwbnj/E7BKdWAziItWganyTR5JVAdgosuDAZUoDEa1dMoFFrM8vM0HJF66OtjIDGN
+	 5XMVPGWkB63nXJijrdJ/cHtIVByusehgjEBKA4MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfEISyy (ORCPT
+        id S1728137AbfEISy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49880 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 14:54:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729132AbfEISyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:54:52 -0400
+        id S1727700AbfEISyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:54:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37C0C204FD;
-        Thu,  9 May 2019 18:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02E7217D7;
+        Thu,  9 May 2019 18:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557428091;
-        bh=BaAJelODdWM6J33FqK4AT3VkKhIgqJ7Apl5XTEcEHDE=;
+        s=default; t=1557428089;
+        bh=7wpS8JYjS9GcZiEDHPbPi/nxLw0FODqaTLwbfGZT1Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UJF4RUvVLPy4X8M7sf+o2etLc91TKsiFN/r6pIhcpDQGtp4tCusk7GKrRVjI9hX4t
-         ricAQ3qBHq6HAWsRJ4x1BW0djV3N4KKLW2KsARkHchjBUA5TK11F+YuCI3RYcMmgRb
-         Z20I5GxwZgtFRhz3iN2P8Wy3RMEC/WnLKQ4dGpUk=
+        b=bzqrS4j7rOc9PIn/4mfvjysD60U2HuBXDaIfLqwgLZx+pWVizhFIvWkJHktgdv2Ar
+         oBuIJGL4s6jFi4V2tKwLE3Y9I7zDzGpIpNk300VpWG3TjNerEsn+NcEK3lokujI7G6
+         p5iyWdLp8wSvElylzcnybhmyrXhaJEZWQdIsY10Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.1 22/30] Bluetooth: hidp: fix buffer overflow
-Date:   Thu,  9 May 2019 20:42:54 +0200
-Message-Id: <20190509181255.716544204@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qtran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.1 21/30] scsi: qla2xxx: Fix device staying in blocked state
+Date:   Thu,  9 May 2019 20:42:53 +0200
+Message-Id: <20190509181255.452950137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
 References: <20190509181250.417203112@linuxfoundation.org>
@@ -59,34 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <YangX92@hotmail.com>
+From: Quinn Tran <qtran@marvell.com>
 
-commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
+commit 2137490f2147a8d0799b72b9a1023efb012d40c7 upstream.
 
-Struct ca is copied from userspace. It is not checked whether the "name"
-field is NULL terminated, which allows local users to obtain potentially
-sensitive information from kernel stack memory, via a HIDPCONNADD command.
+This patch fixes issue reported by some of the customers, who discovered
+that after cable pull scenario the devices disappear and path seems to
+remain in blocked state. Once the device reappears, driver does not seem to
+update path to online. This issue appears because of the defer flag
+creating race condition where the same session reappears.  This patch fixes
+this issue by indicating SCSI-ML of device lost when
+qlt_free_session_done() is called from qlt_unreg_sess().
 
-This vulnerability is similar to CVE-2011-1079.
-
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
+Fixes: 41dc529a4602a ("qla2xxx: Improve RSCN handling in driver")
+Signed-off-by: Quinn Tran <qtran@marvell.com>
+Cc: stable@vger.kernel.org #4.19
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hidp/sock.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_target.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/bluetooth/hidp/sock.c
-+++ b/net/bluetooth/hidp/sock.c
-@@ -75,6 +75,7 @@ static int do_hidp_sock_ioctl(struct soc
- 			sockfd_put(csock);
- 			return err;
- 		}
-+		ca.name[sizeof(ca.name)-1] = 0;
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -980,6 +980,8 @@ void qlt_free_session_done(struct work_s
+ 		sess->send_els_logo);
  
- 		err = hidp_connection_add(&ca, csock, isock);
- 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
+ 	if (!IS_SW_RESV_ADDR(sess->d_id)) {
++		qla2x00_mark_device_lost(vha, sess, 0, 0);
++
+ 		if (sess->send_els_logo) {
+ 			qlt_port_logo_t logo;
+ 
+@@ -1160,8 +1162,6 @@ void qlt_unreg_sess(struct fc_port *sess
+ 	if (sess->se_sess)
+ 		vha->hw->tgt.tgt_ops->clear_nacl_from_fcport_map(sess);
+ 
+-	qla2x00_mark_device_lost(vha, sess, 0, 0);
+-
+ 	sess->deleted = QLA_SESS_DELETION_IN_PROGRESS;
+ 	sess->disc_state = DSC_DELETE_PEND;
+ 	sess->last_rscn_gen = sess->rscn_gen;
 
 
