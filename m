@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF13C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6020C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B47FA20656
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8840D2177E
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 19:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557428456;
-	bh=PiO4JVTlllckNxCOroUiEq7Z+G49cXwehLEgPNZ8pus=;
+	s=default; t=1557428467;
+	bh=Kwg4yaFslhIutCJAYEKJrQO/fw8f/IpuiNsONfVnzeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ONzxWlw9OlI0FQIE5TnFIbhnS+CmebGPm+otYBqA0PFEdmJ04VCF1fxzjLcGEdDpr
-	 KG78dCFjB/n/J3jSVczl8LKMU2fzqXG1fvDKRhhKdwajH6331ccuJmu6IKhqUyFqaC
-	 w9/GueWyQ+Cqt0JrHsCamHugVsTc08nrkgDXUUCw=
+	b=stDa2Vamp667h4RwLRbQ2O7nEMlIuUM4XvUhhobgvvgsGRLrazvMsrUC6hs7fik+w
+	 v7C0mHuPkLYm208C05J1ktMvNqsHIqVq9NDuCKvaKkVTSEKi9hf35N5xicLLmQnpoY
+	 cRjzLDI3VgYcTIJZRdRea7FXIciQUU/nRCy533TE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfEITAz (ORCPT
+        id S1728334AbfEITBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 15:00:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45110 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 15:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728011AbfEISvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:51:21 -0400
+        id S1727913AbfEISvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 14:51:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E63F217D7;
-        Thu,  9 May 2019 18:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4994F20578;
+        Thu,  9 May 2019 18:51:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557427880;
-        bh=PiO4JVTlllckNxCOroUiEq7Z+G49cXwehLEgPNZ8pus=;
+        s=default; t=1557427869;
+        bh=Kwg4yaFslhIutCJAYEKJrQO/fw8f/IpuiNsONfVnzeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iKZv4pwxBWAPWGByrzkgrk58i23yu808qvZtZAXqwrpvAnCInnzqes3yPOKjTHuix
-         OOcI0c/IeRaRFkMDmdZ34STB6Ii4VLJcIrQo8wddMDlUv6AUUF4RkPKy5LPCw74+sV
-         rcaL4M+nHCFdUX52W0KcDunLxVf5QUrjh8IQZ8YU=
+        b=nQRz+oBv1flIRBfsYS4v8DzAVu1QsqwcFpE2d6PTUfeRfu7MuUH0LfhDE2meM2x7f
+         rqzI/08sT0t2x6nkGEB8eiJc1t8WWwTYrQ7aBjETdr+ncFhKWH1GY3Gp7mh2UpyCWt
+         jg3w8cFqYj+x19MC82uADEeaSFeE2CPcQrbI65SQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org,
+        Philipp Puschmann <philipp.puschmann@emlix.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 39/95] iov_iter: Fix build error without CONFIG_CRYPTO
-Date:   Thu,  9 May 2019 20:41:56 +0200
-Message-Id: <20190509181312.077306094@linuxfoundation.org>
+Subject: [PATCH 5.0 08/95] ASoC: tlv320aic3x: fix reset gpio reference counting
+Date:   Thu,  9 May 2019 20:41:25 +0200
+Message-Id: <20190509181309.912685562@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
 References: <20190509181309.180685671@linuxfoundation.org>
@@ -61,47 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 27fad74a5a77fe2e1f876db7bf27efcf2ec304b2 ]
+[ Upstream commit 82ad759143ed77673db0d93d53c1cde7b99917ee ]
 
-If CONFIG_CRYPTO is not set or set to m,
-gcc building warn this:
+This patch fixes a bug that prevents freeing the reset gpio on unloading
+the module.
 
-lib/iov_iter.o: In function `hash_and_copy_to_iter':
-iov_iter.c:(.text+0x9129): undefined reference to `crypto_stats_get'
-iov_iter.c:(.text+0x9152): undefined reference to `crypto_stats_ahash_update'
+aic3x_i2c_probe is called when loading the module and it calls list_add
+with a probably uninitialized list entry aic3x->list (next = prev = NULL)).
+So even if list_del is called it does nothing and in the end the gpio_reset
+is not freed. Then a repeated module probing fails silently because
+gpio_request fails.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: d05f443554b3 ("iov_iter: introduce hash_and_copy_to_iter helper")
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+When moving INIT_LIST_HEAD to aic3x_i2c_probe we also have to move
+list_del to aic3x_i2c_remove because aic3x_remove may be called
+multiple times without aic3x_i2c_remove being called which leads to
+a NULL pointer dereference.
+
+Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/iov_iter.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/tlv320aic3x.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index be4bd627caf06..a0d1cd88f903f 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -1515,6 +1515,7 @@ EXPORT_SYMBOL(csum_and_copy_to_iter);
- size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
- 		struct iov_iter *i)
- {
-+#ifdef CONFIG_CRYPTO
- 	struct ahash_request *hash = hashp;
- 	struct scatterlist sg;
- 	size_t copied;
-@@ -1524,6 +1525,9 @@ size_t hash_and_copy_to_iter(const void *addr, size_t bytes, void *hashp,
- 	ahash_request_set_crypt(hash, &sg, NULL, copied);
- 	crypto_ahash_update(hash);
- 	return copied;
-+#else
-+	return 0;
-+#endif
- }
- EXPORT_SYMBOL(hash_and_copy_to_iter);
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index 6aa0edf8c5ef9..cea3ebecdb12b 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -1609,7 +1609,6 @@ static int aic3x_probe(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int ret, i;
  
+-	INIT_LIST_HEAD(&aic3x->list);
+ 	aic3x->component = component;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++) {
+@@ -1692,7 +1691,6 @@ static void aic3x_remove(struct snd_soc_component *component)
+ 	struct aic3x_priv *aic3x = snd_soc_component_get_drvdata(component);
+ 	int i;
+ 
+-	list_del(&aic3x->list);
+ 	for (i = 0; i < ARRAY_SIZE(aic3x->supplies); i++)
+ 		regulator_unregister_notifier(aic3x->supplies[i].consumer,
+ 					      &aic3x->disable_nb[i].nb);
+@@ -1890,6 +1888,7 @@ static int aic3x_i2c_probe(struct i2c_client *i2c,
+ 	if (ret != 0)
+ 		goto err_gpio;
+ 
++	INIT_LIST_HEAD(&aic3x->list);
+ 	list_add(&aic3x->list, &reset_list);
+ 
+ 	return 0;
+@@ -1906,6 +1905,8 @@ static int aic3x_i2c_remove(struct i2c_client *client)
+ {
+ 	struct aic3x_priv *aic3x = i2c_get_clientdata(client);
+ 
++	list_del(&aic3x->list);
++
+ 	if (gpio_is_valid(aic3x->gpio_reset) &&
+ 	    !aic3x_is_shared_reset(aic3x)) {
+ 		gpio_set_value(aic3x->gpio_reset, 0);
 -- 
 2.20.1
 
