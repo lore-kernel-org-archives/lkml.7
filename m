@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	T_DKIMWL_WL_HIGH,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD526C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252EFC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A702085A
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E285A2085A
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 14:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557411345;
-	bh=f79TibPQqB9YflXTE6MdGhUHy5WEZZV93b1du7QFJwE=;
+	s=default; t=1557411356;
+	bh=u6q0Pg2OL3Py+IxHhJLbr82hQI5NOVhVXSbkc/oe1uQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sGlmuVG4JM9JV07/bNDPgwNGUsHBLOGdkECot0+ayN1UYo/zVs6pjgOF68LZaBJmu
-	 HNdt2Ro7UK76KNyfgidc9XF/cB2V+Rq3So9CQpZ+ANBO64wzVs527fszTY3b4vd1wI
-	 GmZmI7MB31d/ITcbnhEHPnYUfElJHqd0yqIo93fI=
+	b=TMJ9fkuJpSE5d15uhlYJsPY95qQ+1TUrhr+VBgBSFcDO/g2elxxAGmKe54KqcZza1
+	 QPuEMDKDC7zMp3xthb0QI7RTA5TjjZRvlOdJmrAiPSX2SKbh5UE++oVjAWb2kk/ho/
+	 tqgcqKGM2B+e8wuuL5UD7xcyCIqdgOLz8OPAUL/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfEIOPo (ORCPT
+        id S1727083AbfEIOPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 10:15:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50488 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 10:15:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726810AbfEIOPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 10:15:21 -0400
+        id S1726791AbfEIOPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 10:15:17 -0400
 Received: from localhost (50-81-63-4.client.mchsi.com [50.81.63.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F37F2173C;
-        Thu,  9 May 2019 14:15:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09C102177B;
+        Thu,  9 May 2019 14:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557411320;
-        bh=f79TibPQqB9YflXTE6MdGhUHy5WEZZV93b1du7QFJwE=;
+        s=default; t=1557411316;
+        bh=u6q0Pg2OL3Py+IxHhJLbr82hQI5NOVhVXSbkc/oe1uQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LmxaHzxgHMhhfGT26Uh3Es6c8wPJj9cLSYnRW2j7ccJ0b2AEgtuZ2ZsXTM/K5HIWV
-         L7eIwDu0XxZbesRP3ChPzWQmZE7GxmtWKdgpdVQj/bocZMnDYfpXSPhqTUtO+U79mG
-         /YBdyF8708+oc1TfbzX+U3URRZZDdVEWQdr/f00E=
+        b=bYFroVDZauLesCkfkIsha6zyux2eyZYbGxVIXnMwELns5SdAWkCVxkDKrxn8eCL6/
+         S+t/QFge7JZwaEFlETzcbRt1FBYXKpdsbEbWymOAZDetqU9VNYOHpLbeUym+GIhkZ2
+         HbdDPcKfpqlF9EUYBnPrlqJpSvBMMa8wV9kK1P1s=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Frederick Lawler <fred@fredlawl.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -49,9 +49,9 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Sven Van Asbroeck <thesven73@gmail.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 10/10] PCI: pciehp: Remove pointless MY_NAME definition
-Date:   Thu,  9 May 2019 09:14:56 -0500
-Message-Id: <20190509141456.223614-11-helgaas@kernel.org>
+Subject: [PATCH 07/10] PCI: pciehp: Log messages with pci_dev, not pcie_device
+Date:   Thu,  9 May 2019 09:14:53 -0500
+Message-Id: <20190509141456.223614-8-helgaas@kernel.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190509141456.223614-1-helgaas@kernel.org>
 References: <20190509141456.223614-1-helgaas@kernel.org>
@@ -62,42 +62,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Frederick Lawler <fred@fredlawl.com>
 
-MY_NAME is only used once and offers no benefit, so remove it.
+Log messages with pci_dev, not pcie_device.  Factor out common message
+prefixes with dev_fmt().
 
+Example output change:
+
+  - pciehp 0000:00:06.0:pcie004: Slot(0) Powering on due to button press
+  + pcieport 0000:00:06.0: pciehp: Slot(0) Powering on due to button press
+
+Link: https://lore.kernel.org/lkml/20190503035946.23608-7-fred@fredlawl.com
+Signed-off-by: Frederick Lawler <fred@fredlawl.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/hotplug/pciehp.h     | 2 --
- drivers/pci/hotplug/pciehp_hpc.c | 2 +-
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/hotplug/pciehp.h      | 16 ++++++++--------
+ drivers/pci/hotplug/pciehp_core.c |  7 +++++--
+ drivers/pci/hotplug/pciehp_ctrl.c |  2 ++
+ drivers/pci/hotplug/pciehp_hpc.c  |  2 ++
+ drivers/pci/hotplug/pciehp_pci.c  |  2 ++
+ 5 files changed, 19 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/pci/hotplug/pciehp.h b/drivers/pci/hotplug/pciehp.h
-index c206fd9cd3d7..8c51a04b8083 100644
+index af5d9f92e6d5..2f0295b48d5d 100644
 --- a/drivers/pci/hotplug/pciehp.h
 +++ b/drivers/pci/hotplug/pciehp.h
-@@ -25,8 +25,6 @@
+@@ -35,22 +35,22 @@ extern int pciehp_poll_time;
+  * enable debug messages.
+  */
+ #define dbg(format, arg...)						\
+-	pr_debug("%s: " format, MY_NAME, ## arg);
++	pr_debug(format, ## arg);
+ #define err(format, arg...)						\
+-	printk(KERN_ERR "%s: " format, MY_NAME, ## arg)
++	pr_err(format, ## arg)
+ #define info(format, arg...)						\
+-	printk(KERN_INFO "%s: " format, MY_NAME, ## arg)
++	pr_info(format, ## arg)
+ #define warn(format, arg...)						\
+-	printk(KERN_WARNING "%s: " format, MY_NAME, ## arg)
++	pr_warn(format, ## arg)
  
- #include "../pcie/portdrv.h"
+ #define ctrl_dbg(ctrl, format, arg...)					\
+-	dev_dbg(&ctrl->pcie->device, format, ## arg)
++	pci_dbg(ctrl->pcie->port, format, ## arg)
+ #define ctrl_err(ctrl, format, arg...)					\
+-	dev_err(&ctrl->pcie->device, format, ## arg)
++	pci_err(ctrl->pcie->port, format, ## arg)
+ #define ctrl_info(ctrl, format, arg...)					\
+-	dev_info(&ctrl->pcie->device, format, ## arg)
++	pci_info(ctrl->pcie->port, format, ## arg)
+ #define ctrl_warn(ctrl, format, arg...)					\
+-	dev_warn(&ctrl->pcie->device, format, ## arg)
++	pci_warn(ctrl->pcie->port, format, ## arg)
  
--#define MY_NAME	"pciehp"
--
- extern bool pciehp_poll_mode;
- extern int pciehp_poll_time;
+ #define SLOT_NAME_SIZE 10
  
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 6ff204c435bf..b85b22880c50 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -17,6 +17,9 @@
+  *   Dely Sy <dely.l.sy@intel.com>"
+  */
+ 
++#define pr_fmt(fmt) "pciehp: " fmt
++#define dev_fmt pr_fmt
++
+ #include <linux/moduleparam.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+@@ -179,14 +182,14 @@ static int pciehp_probe(struct pcie_device *dev)
+ 
+ 	if (!dev->port->subordinate) {
+ 		/* Can happen if we run out of bus numbers during probe */
+-		dev_err(&dev->device,
++		pci_err(dev->port,
+ 			"Hotplug bridge without secondary bus, ignoring\n");
+ 		return -ENODEV;
+ 	}
+ 
+ 	ctrl = pcie_init(dev);
+ 	if (!ctrl) {
+-		dev_err(&dev->device, "Controller initialization failed\n");
++		pci_err(dev->port, "Controller initialization failed\n");
+ 		return -ENODEV;
+ 	}
+ 	set_service_data(dev, ctrl);
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 3f3df4c29f6e..bf81f977a751 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -13,6 +13,8 @@
+  *
+  */
+ 
++#define dev_fmt(fmt) "pciehp: " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/pm_runtime.h>
 diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 9ce93b1034bd..bd990e3371e3 100644
+index e121f1c06c21..913c7e66504f 100644
 --- a/drivers/pci/hotplug/pciehp_hpc.c
 +++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -48,7 +48,7 @@ static inline int pciehp_request_irq(struct controller *ctrl)
+@@ -12,6 +12,8 @@
+  * Send feedback to <greg@kroah.com>,<kristen.c.accardi@intel.com>
+  */
  
- 	/* Installs the interrupt handler */
- 	retval = request_threaded_irq(irq, pciehp_isr, pciehp_ist,
--				      IRQF_SHARED, MY_NAME, ctrl);
-+				      IRQF_SHARED, "pciehp", ctrl);
- 	if (retval)
- 		ctrl_err(ctrl, "Cannot get irq %d for the hotplug controller\n",
- 			 irq);
++#define dev_fmt(fmt) "pciehp: " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/jiffies.h>
+diff --git a/drivers/pci/hotplug/pciehp_pci.c b/drivers/pci/hotplug/pciehp_pci.c
+index b9c1396db6fe..d17f3bf36f70 100644
+--- a/drivers/pci/hotplug/pciehp_pci.c
++++ b/drivers/pci/hotplug/pciehp_pci.c
+@@ -13,6 +13,8 @@
+  *
+  */
+ 
++#define dev_fmt(fmt) "pciehp: " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+ #include <linux/pci.h>
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
