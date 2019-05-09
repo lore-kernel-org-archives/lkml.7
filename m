@@ -2,105 +2,160 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD90FC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27199C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942D9217D9
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:33:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="m7MZm5jn"
+	by mail.kernel.org (Postfix) with ESMTP id EF1ED217D9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 18:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfEISdv (ORCPT
+        id S1726842AbfEISd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 14:33:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33293 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726683AbfEISdu (ORCPT
+        Thu, 9 May 2019 14:33:59 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34447 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbfEISd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 14:33:50 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 66so3261015otq.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:33:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6LDuh9KBtjyZgSBqOPlt4ghOhYRTyR7+OimbX5fXjTc=;
-        b=m7MZm5jn+yUTyqYeKP+3U2AfIk2e/Jl7gRlj1d0vNElu89qzzwPGU4WFh2pRN3iGK8
-         6NkXYiIaZxmWqTWtDTsXMCjBrxg3Wi+ON8VLjl28KeXWmZ1yCAk7U2iA9U5wOLGpVrf6
-         4C4jvycCm53aEaILky7UnN3UKRuEHLH4DYCjk6kbWNpnMsPw3O4PTkZ34RDNe5jWnbck
-         UmNUnENCXk7ZL3MZ1rYS34gPy7dbedYHUod/vucgxDHzv2UGKYZZ9m/Ped5rsgK+BFk/
-         Fy+UM5SnDsH5pIswj8zYSyHMqUWESF+i8+t6ovRwRYGQ/c3kpcWuWIDJlTrTTBHJz/6S
-         zOfA==
+        Thu, 9 May 2019 14:33:58 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n19so1765800pfa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 11:33:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6LDuh9KBtjyZgSBqOPlt4ghOhYRTyR7+OimbX5fXjTc=;
-        b=JOiIxW4WrhU7bp6e6UYx6oe9CphRbsRJb9Tg9nVjYIS/s7rr2AY0H4yUf8jUIj5auJ
-         hSdOWvjf8robpuvVxYxAU9C0dPPPGoiRNGold0bDkfGGPzqWE5x3ioyZ+VJPcOLy1I0U
-         q9m4IM1rHdBjLHZuGnVd2jbC5FsY6lDgFHQXGb3OxCk7gIsqRBVkMFyLi61ASYEbT3Er
-         9q6f1BUeB1if/eVS6dFpez1bA0ncb+wN8+6dtroIxgmuqhW/LMyvSCb+TXgJu26xjnc+
-         3b6TLwezRvbf1BxFdFyAhcVS2bbMyuR75gDAb6YIT6LQoeXIn22kUeTCk8VuaMmIdBqW
-         P7uw==
-X-Gm-Message-State: APjAAAVJulb0vudRylngDB/YUyZtivaRCndBR+xo86YTT4eMbDlEO5Pd
-        fdvqtxqSWnYdTqXgURgMlzNzCg==
-X-Google-Smtp-Source: APXvYqyC+t5IsIZRkPqBYoKSelJuMnV/D1ZbE+b+3mQahrODmHmWzUUCjlIwBfKd2Oj/f6iFjJVnEg==
-X-Received: by 2002:a9d:7c88:: with SMTP id q8mr151513otn.167.1557426829720;
-        Thu, 09 May 2019 11:33:49 -0700 (PDT)
-Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id j1sm1034165otl.43.2019.05.09.11.33.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 11:33:49 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Roberto Sassu <roberto.sassu@huawei.com>, viro@zeniv.linux.org.uk
-Cc:     linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, hpa@zytor.com,
-        arnd@arndb.de, james.w.mcmechan@gmail.com
-References: <20190509112420.15671-1-roberto.sassu@huawei.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <fca8e601-1144-1bb8-c007-518651f624a5@landley.net>
-Date:   Thu, 9 May 2019 13:34:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yqiI+x42OXIbUvTBPZc5iTEkpFbz64YiBLYaRAWuA0c=;
+        b=Uze6NB/maBrywEP+0raPT+/Aql+qsMNEoxa4YcIX1Q0voy7yKJcitLShUXoR8zF1ym
+         ITf4USy/k1QrKuxOfGf2omUgapWCiKRqFA9tj8a5aWDHy2VtFuJlgkM6FUCKYKr5EBIM
+         1cxlu9sYwq8OoksYLtIX5L+3UN5brLU8//7UIJcBMKKgv0txTdmKpDSfRMTCQDS770YX
+         2RGq58utbgNnO4aak1Q6702JnGXuXC/UDYZsC2jxVIwg8p+1GLOAbomVMGOsgHR4IIad
+         dnbudrIo+rL/bIBm84gusWdgIvzntRxI2P4QAbQP6EnOJnz8yab+nzKPpP2zn7Zny9dz
+         XSWQ==
+X-Gm-Message-State: APjAAAVd9AR18yFoWNK/vKjIwambCxhuyOMdgNbTE991aORC5+PH26sh
+        tEEF1+D7HqagkjZ6nBA/BfE=
+X-Google-Smtp-Source: APXvYqyEc1uZevZKY+jNDHPdN0qC+8kcKlru+7ZgfAEEO+vBJPv7McdJDqNHLDhPTA7XqyJ/yigK1g==
+X-Received: by 2002:aa7:980e:: with SMTP id e14mr7485557pfl.142.1557426837664;
+        Thu, 09 May 2019 11:33:57 -0700 (PDT)
+Received: from sultan-box.localdomain ([2601:200:c001:5f40:7687:d078:2931:7298])
+        by smtp.gmail.com with ESMTPSA id o2sm7914179pgq.1.2019.05.09.11.33.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 11:33:56 -0700 (PDT)
+Date:   Thu, 9 May 2019 11:33:53 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190509183353.GA13018@sultan-box.localdomain>
+References: <20190318002949.mqknisgt7cmjmt7n@brauner.io>
+ <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
+ <20190507153154.GA5750@redhat.com>
+ <20190507163520.GA1131@sultan-box.localdomain>
+ <20190509155646.GB24526@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509112420.15671-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509155646.GB24526@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 6:24 AM, Roberto Sassu wrote:
-> This patch set aims at solving the following use case: appraise files from
-> the initial ram disk. To do that, IMA checks the signature/hash from the
-> security.ima xattr. Unfortunately, this use case cannot be implemented
-> currently, as the CPIO format does not support xattrs.
+On Thu, May 09, 2019 at 05:56:46PM +0200, Oleg Nesterov wrote:
+> Impossible ;) I bet lockdep should report the deadlock as soon as find_victims()
+> calls find_lock_task_mm() when you already have a locked victim.
+
+I hope you're not a betting man ;)
+
+With the following configured:
+CONFIG_DEBUG_RT_MUTEXES=y
+CONFIG_DEBUG_SPINLOCK=y
+# CONFIG_DEBUG_SPINLOCK_BITE_ON_BUG is not set
+CONFIG_DEBUG_SPINLOCK_PANIC_ON_BUG=y
+CONFIG_DEBUG_MUTEXES=y
+CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
+CONFIG_DEBUG_LOCK_ALLOC=y
+CONFIG_PROVE_LOCKING=y
+CONFIG_LOCKDEP=y
+CONFIG_LOCK_STAT=y
+CONFIG_DEBUG_LOCKDEP=y
+CONFIG_DEBUG_ATOMIC_SLEEP=y
+# CONFIG_DEBUG_LOCKING_API_SELFTESTS is not set
+# CONFIG_LOCK_TORTURE_TEST is not set
+
+And a printk added in vtsk_is_duplicate() to print when a duplicate is detected,
+and my phone's memory cut in half to make simple_lmk do something, this is what
+I observed:
+taimen:/ # dmesg | grep lockdep
+[    0.000000] \x09RCU lockdep checking is enabled.
+taimen:/ # dmesg | grep simple_lmk
+[   23.211091] simple_lmk: Killing android.carrier with adj 906 to free 37420 kiB
+[   23.211160] simple_lmk: Killing oadcastreceiver with adj 906 to free 36784 kiB
+[   23.248457] simple_lmk: Killing .apps.translate with adj 904 to free 45884 kiB
+[   23.248720] simple_lmk: Killing ndroid.settings with adj 904 to free 42868 kiB
+[   23.313417] simple_lmk: DUPLICATE VTSK!
+[   23.313440] simple_lmk: Killing ndroid.keychain with adj 906 to free 33680 kiB
+[   23.313513] simple_lmk: Killing com.whatsapp with adj 904 to free 51436 kiB
+[   34.646695] simple_lmk: DUPLICATE VTSK!
+[   34.646717] simple_lmk: Killing ndroid.apps.gcs with adj 906 to free 37956 kiB
+[   34.646792] simple_lmk: Killing droid.apps.maps with adj 904 to free 63600 kiB
+taimen:/ # dmesg | grep lockdep
+[    0.000000] \x09RCU lockdep checking is enabled.
+taimen:/ # 
+
+> As for https://github.com/kerneltoast/android_kernel_google_wahoo/commit/afc8c9bf2dbde95941253c168d1adb64cfa2e3ad
+> Well,
 > 
-> This proposal consists in marshaling pathnames and xattrs in a file called
-> .xattr-list. They are unmarshaled by the CPIO parser after all files have
-> been extracted.
+> 	mmdrop(mm);
+> 	simple_lmk_mm_freed(mm);
+> 
+> looks racy because mmdrop(mm) can free this mm_struct. Yes, simple_lmk_mm_freed()
+> does not dereference this pointer, but the same memory can be re-allocated as
+> another ->mm for the new task which can be found by find_victims(), and _in theory_
+> this all can happen in between, so the "victims[i].mm == mm" can be false positive.
+> 
+> And this also means that simple_lmk_mm_freed() should clear victims[i].mm when
+> it detects "victims[i].mm == mm", otherwise we have the same theoretical race,
+> victims_to_kill is only cleared when the last victim goes away.
 
-So it's in-band signalling that has a higher peak memory requirement.
+Fair point. Putting simple_lmk_mm_freed(mm) right before mmdrop(mm), and
+sprinkling in a cmpxchg in simple_lmk_mm_freed() should fix that up.
 
-> The difference with another proposal
-> (https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
-> included in an image without changing the image format, as opposed to
-> defining a new one. As seen from the discussion, if a new format has to be
-> defined, it should fix the issues of the existing format, which requires
-> more time.
+> Another nit... you can drop tasklist_lock right after the 1st "find_victims" loop.
 
-So you've explicitly chosen _not_ to address Y2038 while you're there.
+True!
 
-Rob
+> And it seems that you do not really need to walk the "victims" array twice after that,
+> you can do everything in a single loop, but this is cosmetic.
+
+Won't this result in potentially holding the task lock way longer than necessary
+for multiple tasks that aren't going to be killed?
+
+Thanks,
+Sultan
