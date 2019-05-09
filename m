@@ -2,174 +2,196 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 395D1C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A5CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FCF2173C
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88EDA2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 10:23:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F/nWylnn"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XttZHTbm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lXXXfurD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfEIKXZ (ORCPT
+        id S1726561AbfEIKX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 06:23:25 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33871 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725869AbfEIKXY (ORCPT
+        Thu, 9 May 2019 06:23:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40026 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfEIKXz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 06:23:24 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 459A3155A8;
-        Thu,  9 May 2019 06:23:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 09 May 2019 06:23:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=C5Kt50
-        Zn7uloNUav3T5eCOtcBzViQn5Dx3VKkV1Ch8s=; b=F/nWylnnH37S5lM3Fy+hFV
-        2wCHwWziMjN2LDAXU/y+BawQLnjsOJJxV5OSgSLohdRQADtRkXmkGQ5pHaRFw9Js
-        SC58CyYuW9/UgmT2jrncV9rj8FaVj2D40qA/kVPi1P0WLTrHv6CCWD4fG2+cyIfq
-        lbMEJT+fn9H4nW046wb6rxhM9zoSrs+90R4971GC5chArl46uHx+56eGYgEWNS3i
-        TuiH0IpxXwsdx0ZwjVvD69NE2uELlD/S38eNK/wYf45NE0YSqWphkdFRkbA19ySy
-        Zj+8i/13sD+77cSM6201c5Xu06IqU+f85nYtWdVfghLXF2IlfZxC0Rlyzv6opjzA
-        ==
-X-ME-Sender: <xms:l__TXCVwD4dMjurF0hRUWl9HwilfHUarTyyYAbZczzy87YurSeR-qg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeehgddvlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucfkphepuddtle
-    drieehrdeffedrudeftdenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehi
-    ughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:l__TXFfDtYIv9dK5oxaq2L2prlqYQh54Urr8jwjz4DQzgcW6VwwcDw>
-    <xmx:l__TXID6y60Qy24s0QTUzRFleU70cx5fqY-J2RKjTxT-bNVzus4NVg>
-    <xmx:l__TXAj60K9WP0Q70CGdQ0oh0PqTUatq1vHtVOxg-eRwIEWUHfxe6Q>
-    <xmx:mf_TXCSgT0h3J_gAMwQWKrDRvO2JHh-BZXkFuivuY-tKhMEMJYpsLA>
-Received: from localhost (bzq-109-65-33-130.red.bezeqint.net [109.65.33.130])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 518F91037C;
-        Thu,  9 May 2019 06:23:18 -0400 (EDT)
-Date:   Thu, 9 May 2019 13:23:15 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Laura Abbott <labbott@fedoraproject.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Simon Schricker <sschricker@suse.de>,
-        Borislav Petkov <bp@suse.de>, Hannes Reinecke <hare@suse.de>
-Subject: Re: [PATCH 2/2] PM / arch: x86: MSR_IA32_ENERGY_PERF_BIAS sysfs
- interface
-Message-ID: <20190509102315.GA31824@splinter>
-References: <1637073.gl2OfxWTjI@aspire.rjw.lan>
- <1762575.ER2xjzr9E1@aspire.rjw.lan>
+        Thu, 9 May 2019 06:23:55 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3995A608BA; Thu,  9 May 2019 10:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557397434;
+        bh=fOCCasTFcPN4u+bCRo8X34nAQlb0SNSv6Pk9TNTsCxc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XttZHTbmnbc+l7SpnzSxuo8uiPIK1OgjYDd8jwJlym9Zf9jU8ojy69mNH/9Z1tJhD
+         2pkyJCGSOG+XRDt9NoAGY+OUg2eDn1EahF+Utnpo7zWtqEKVXLL8c5GqsAZN/2wYu+
+         mccsL0qUFnhTgRcgYsFj7Ei/mT6LQfb8j6+/X12M=
+Received: from [10.206.25.51] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: aneela@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 987A3601D4;
+        Thu,  9 May 2019 10:23:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557397433;
+        bh=fOCCasTFcPN4u+bCRo8X34nAQlb0SNSv6Pk9TNTsCxc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=lXXXfurD19F0/J7tJrNEdOgoqpm2H83bjeEx7WikRgHbOeJ/7RomUAOzzD+uWwZRX
+         Afxm01Flp0rUQWplqGaRQFLhlTjEHuOoA9lT++tniGCMzmSml+wdoHjGciJKrR9MvR
+         e8mV5B+gU3nHjtW06svCn+/6HMsnhEafaLcqV5rk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 987A3601D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
+Subject: Re: [PATCH 1/5] net: qrtr: Move resume-tx transmission to recvmsg
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Chris Lew <clew@codeaurora.org>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190508060643.30936-1-bjorn.andersson@linaro.org>
+ <20190508060643.30936-2-bjorn.andersson@linaro.org>
+From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
+Message-ID: <07d0f972-ce8b-1938-579f-733b1547e745@codeaurora.org>
+Date:   Thu, 9 May 2019 15:53:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1762575.ER2xjzr9E1@aspire.rjw.lan>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190508060643.30936-2-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 11:20:17PM +0100, Rafael J. Wysocki wrote:
-> +static struct attribute *intel_epb_attrs[] = {
-> +	&dev_attr_energy_perf_bias.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group intel_epb_attr_group = {
-> +	.name = power_group_name,
-> +	.attrs =  intel_epb_attrs
-> +};
-> +
->  static int intel_epb_online(unsigned int cpu)
->  {
-> +	struct device *cpu_dev = get_cpu_device(cpu);
-> +
->  	intel_epb_restore();
-> +	if (!cpuhp_tasks_frozen)
-> +		sysfs_merge_group(&cpu_dev->kobj, &intel_epb_attr_group);
-> +
->  	return 0;
->  }
->  
->  static int intel_epb_offline(unsigned int cpu)
->  {
-> -	return intel_epb_save();
-> +	struct device *cpu_dev = get_cpu_device(cpu);
-> +
-> +	if (!cpuhp_tasks_frozen)
-> +		sysfs_unmerge_group(&cpu_dev->kobj, &intel_epb_attr_group);
-> +
-> +	intel_epb_save();
-> +	return 0;
->  }
 
-Hi,
-
-I just booted net-next and got the following NULL pointer dereference
-[1] during boot. I believe it is caused by this patch.
-
-CONFIG_PM is disabled in my config which means 'power_group_name' is
-defined as NULL. When I enable CONFIG_PM the issue is not reproduced.
-
-Thanks
-
-[1]
-[    1.230241] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[    1.231043] #PF: supervisor read access in kernel mode
-[    1.231043] #PF: error_code(0x0000) - not-present page
-[    1.231043] PGD 0 P4D 0
-[    1.231043] Oops: 0000 [#1] SMP
-[    1.231043] CPU: 0 PID: 12 Comm: cpuhp/0 Not tainted 5.1.0-custom-07273-g80f232121b69 #1392
-[    1.231043] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[    1.231043] RIP: 0010:strlen+0x0/0x20
-[    1.231043] Code: b5 20 75 eb c6 42 01 00 0f b6 10 f6 82 40 bf 4d b5 20 74 14 48 c7 c1 40 bf 4d b5 48 83 c0 01 0f b6 10 f6 04 11 20 75 f3 c3 90 <80> 3f 00 74 10 48 89 f8
-48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
-[    1.231043] RSP: 0000:ffffb587c0cd3dc8 EFLAGS: 00010246
-[    1.231043] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000100
-[    1.231043] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[    1.231043] RBP: 0000000000000000 R08: ffff8e6137a160c8 R09: 0000000000000000
-[    1.231043] R10: 0000000000000000 R11: ffff8e613652ec80 R12: 0000000000000000
-[    1.231043] R13: 0000000000000000 R14: ffff8e6137a160c8 R15: ffffffffb4690120
-[    1.231043] FS:  0000000000000000(0000) GS:ffff8e6137a00000(0000) knlGS:0000000000000000
-[    1.231043] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.231043] CR2: 0000000000000000 CR3: 0000000200409000 CR4: 00000000001006f0
-[    1.231043] Call Trace:
-[    1.231043]  kernfs_name_hash+0xd/0x80
-[    1.231043]  kernfs_find_ns+0x30/0xc0
-[    1.231043]  kernfs_find_and_get_ns+0x27/0x50
-[    1.231043]  sysfs_merge_group+0x2e/0x100
-[    1.231043]  ? __switch_to_asm+0x40/0x70
-[    1.231043]  intel_epb_online+0x2a/0x30
-[    1.231043]  cpuhp_invoke_callback+0x8f/0x550
-[    1.231043]  ? sort_range+0x20/0x20
-[    1.231043]  cpuhp_thread_fun+0x9b/0x100
-[    1.231043]  smpboot_thread_fn+0xc0/0x160
-[    1.231043]  kthread+0x10d/0x130
-[    1.231043]  ? __kthread_create_on_node+0x180/0x180
-[    1.231043]  ret_from_fork+0x35/0x40
-[    1.231043] CR2: 0000000000000000
-[    1.231043] ---[ end trace c8ea60276791261c ]---
-[    1.231043] RIP: 0010:strlen+0x0/0x20
-[    1.231043] Code: b5 20 75 eb c6 42 01 00 0f b6 10 f6 82 40 bf 4d b5 20 74 14 48 c7 c1 40 bf 4d b5 48 83 c0 01 0f b6 10 f6 04 11 20 75 f3 c3 90 <80> 3f 00 74 10 48 89 f8
-48 83 c0 01 80 38 00 75 f7 48 29 f8 c3 31
-[    1.231043] RSP: 0000:ffffb587c0cd3dc8 EFLAGS: 00010246
-[    1.231043] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000100
-[    1.231043] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-[    1.231043] RBP: 0000000000000000 R08: ffff8e6137a160c8 R09: 0000000000000000
-[    1.231043] R10: 0000000000000000 R11: ffff8e613652ec80 R12: 0000000000000000
-[    1.231043] R13: 0000000000000000 R14: ffff8e6137a160c8 R15: ffffffffb4690120
-[    1.231043] FS:  0000000000000000(0000) GS:ffff8e6137a00000(0000) knlGS:0000000000000000
-[    1.231043] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.231043] CR2: 0000000000000000 CR3: 0000000200409000 CR4: 00000000001006f0
+On 5/8/2019 11:36 AM, Bjorn Andersson wrote:
+> The confirm-rx bit is used to implement a per port flow control, in
+> order to make sure that no messages are dropped due to resource
+> exhaustion. Move the resume-tx transmission to recvmsg to only confirm
+> messages as they are consumed by the application.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>   net/qrtr/qrtr.c | 60 +++++++++++++++++++++++++++----------------------
+>   1 file changed, 33 insertions(+), 27 deletions(-)
+>
+> diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+> index dd0e97f4f6c0..07a35362fba2 100644
+> --- a/net/qrtr/qrtr.c
+> +++ b/net/qrtr/qrtr.c
+> @@ -369,22 +369,11 @@ static void qrtr_port_put(struct qrtr_sock *ipc);
+>   static void qrtr_node_rx_work(struct work_struct *work)
+>   {
+>   	struct qrtr_node *node = container_of(work, struct qrtr_node, work);
+> -	struct qrtr_ctrl_pkt *pkt;
+> -	struct sockaddr_qrtr dst;
+> -	struct sockaddr_qrtr src;
+>   	struct sk_buff *skb;
+>   
+>   	while ((skb = skb_dequeue(&node->rx_queue)) != NULL) {
+>   		struct qrtr_sock *ipc;
+> -		struct qrtr_cb *cb;
+> -		int confirm;
+> -
+> -		cb = (struct qrtr_cb *)skb->cb;
+> -		src.sq_node = cb->src_node;
+> -		src.sq_port = cb->src_port;
+> -		dst.sq_node = cb->dst_node;
+> -		dst.sq_port = cb->dst_port;
+> -		confirm = !!cb->confirm_rx;
+> +		struct qrtr_cb *cb = (struct qrtr_cb *)skb->cb;
+>   
+>   		qrtr_node_assign(node, cb->src_node);
+>   
+> @@ -397,20 +386,6 @@ static void qrtr_node_rx_work(struct work_struct *work)
+>   
+>   			qrtr_port_put(ipc);
+>   		}
+> -
+> -		if (confirm) {
+> -			skb = qrtr_alloc_ctrl_packet(&pkt);
+> -			if (!skb)
+> -				break;
+> -
+> -			pkt->cmd = cpu_to_le32(QRTR_TYPE_RESUME_TX);
+> -			pkt->client.node = cpu_to_le32(dst.sq_node);
+> -			pkt->client.port = cpu_to_le32(dst.sq_port);
+> -
+> -			if (qrtr_node_enqueue(node, skb, QRTR_TYPE_RESUME_TX,
+> -					      &dst, &src))
+> -				break;
+> -		}
+>   	}
+>   }
+>   
+> @@ -822,6 +797,34 @@ static int qrtr_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+>   	return rc;
+>   }
+>   
+> +static int qrtr_resume_tx(struct qrtr_cb *cb)
+This function name is adding some confusion with qrtr_tx_resume() in 
+next patch. can you please rename this function to qrtr_send_resume_tx().
+> +{
+> +	struct sockaddr_qrtr remote = { AF_QIPCRTR, cb->src_node, cb->src_port };
+> +	struct sockaddr_qrtr local = { AF_QIPCRTR, cb->dst_node, cb->dst_port };
+> +	struct qrtr_ctrl_pkt *pkt;
+> +	struct qrtr_node *node;
+> +	struct sk_buff *skb;
+> +	int ret;
+> +
+> +	node = qrtr_node_lookup(remote.sq_node);
+> +	if (!node)
+> +		return -EINVAL;
+> +
+> +	skb = qrtr_alloc_ctrl_packet(&pkt);
+> +	if (!skb)
+> +		return -ENOMEM;
+> +
+> +	pkt->cmd = cpu_to_le32(QRTR_TYPE_RESUME_TX);
+> +	pkt->client.node = cpu_to_le32(cb->dst_node);
+> +	pkt->client.port = cpu_to_le32(cb->dst_port);
+> +
+> +	ret = qrtr_node_enqueue(node, skb, QRTR_TYPE_RESUME_TX, &local, &remote);
+> +
+> +	qrtr_node_release(node);
+> +
+> +	return ret;
+> +}
+> +
+>   static int qrtr_recvmsg(struct socket *sock, struct msghdr *msg,
+>   			size_t size, int flags)
+>   {
+> @@ -844,6 +847,7 @@ static int qrtr_recvmsg(struct socket *sock, struct msghdr *msg,
+>   		release_sock(sk);
+>   		return rc;
+>   	}
+> +	cb = (struct qrtr_cb *)skb->cb;
+>   
+>   	copied = skb->len;
+>   	if (copied > size) {
+> @@ -857,7 +861,6 @@ static int qrtr_recvmsg(struct socket *sock, struct msghdr *msg,
+>   	rc = copied;
+>   
+>   	if (addr) {
+> -		cb = (struct qrtr_cb *)skb->cb;
+>   		addr->sq_family = AF_QIPCRTR;
+>   		addr->sq_node = cb->src_node;
+>   		addr->sq_port = cb->src_port;
+> @@ -865,6 +868,9 @@ static int qrtr_recvmsg(struct socket *sock, struct msghdr *msg,
+>   	}
+>   
+>   out:
+> +	if (cb->confirm_rx)
+> +		qrtr_resume_tx(cb);
+> +
+>   	skb_free_datagram(sk, skb);
+>   	release_sock(sk);
+>   
