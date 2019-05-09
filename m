@@ -2,89 +2,123 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E39EC04AB2
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D369C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E88721479
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB8E2173C
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 09:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDfRT5wB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726568AbfEIJYs (ORCPT
+        id S1726680AbfEIJYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 05:24:48 -0400
-Received: from foss.arm.com ([217.140.101.70]:35686 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfEIJYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 05:24:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 779D1374;
-        Thu,  9 May 2019 02:24:47 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 835003F575;
-        Thu,  9 May 2019 02:24:44 -0700 (PDT)
-Date:   Thu, 9 May 2019 10:24:42 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
-Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
- support utilization clamping
-Message-ID: <20190509092442.3avaelrsxd2l5dfl@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-7-patrick.bellasi@arm.com>
- <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
- <20190507111347.4ivnjwbymsf7i3e6@e110439-lin>
- <20190508194439.GF32547@worktop.programming.kicks-ass.net>
+        Thu, 9 May 2019 05:24:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43470 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfEIJYy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 05:24:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c6so996305pfa.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 02:24:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KNPNciYIU3+HXkk3DJ6VxArPy7nMFhtdtj0MwjhBgkw=;
+        b=CDfRT5wBnjjC6wGBkOnSkopnu77rpnWGpqCPZrQqv62cZJXdLPCaWeVGfh3HE5EH8Q
+         CwnnLXBpHdGr0/V+iLHmdfk5/vkTNu/gZRNFUHvja79j5MuNITfjzv6nnJxJtOOF7dhU
+         Wi+c8MIZGoirpwg+Z0Z74yz4XTCbVFmeXrEgui8S4u8TQA6QPX25UtsmrD1pc6/3834o
+         fGTLMMDBjNyIjh6IMge/VBRrv35YrOkQY9okwS8zPIjIx2qasuIQtHEzuhuD823k6L25
+         lUcRW1j5EmjGpr0gmfvV7w+a0eN3DrSxfTzkfhsm51cC5b2/Ekrrtui6MO/Xenr+Rey9
+         P4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KNPNciYIU3+HXkk3DJ6VxArPy7nMFhtdtj0MwjhBgkw=;
+        b=oHNPNJaT8jah6x7IeA/5qf/AoZw79VQPTmEbWYdP5W63EzXAZk+H68Elusi6Lljf2g
+         I8Gci8AX+AXDz2jz+n+8zqPJRk1WCs2/X+eNEfKeNfVKNW50j81vYS2hs8Z1pYhU1cjl
+         HAuFb7O8As5Opkb4bgGev3KayWE16upPG/FrVDcA6Bm+uPfVp5N990SZtXwtaQ5PmqHN
+         0sOjkIet2UgB5E14N3DN48cAF+vHotYq7h/5Vq6lRyx6PFp9fqZcjmQD7po7guDYj4Ts
+         0GwCtFWnoT75VNMWVgXu+7+M9+orfiSnXPZ6Iz3PmdQqjjHCtKUeVla+9L+mU8k3fHvc
+         vGHw==
+X-Gm-Message-State: APjAAAUx9w1WWsaY6wRdEDuIh/n941ykAhw631RgaPnEf2Z5mfK6Y2KP
+        ieTHT/Okq/U72y/M8PmBxfU=
+X-Google-Smtp-Source: APXvYqw1L1IzIicEJkRu7GcUhIlR2YBfCiQbwJF7MEhqA9gMYXmTgijivbCF8bEVfWAKV5SQ9killw==
+X-Received: by 2002:a65:5cca:: with SMTP id b10mr4031082pgt.444.1557393893986;
+        Thu, 09 May 2019 02:24:53 -0700 (PDT)
+Received: from localhost ([39.7.47.21])
+        by smtp.gmail.com with ESMTPSA id n7sm2364546pff.45.2019.05.09.02.24.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 02:24:53 -0700 (PDT)
+Date:   Thu, 9 May 2019 18:24:49 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Laurence Oberman <loberman@redhat.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Don Zickus <dzickus@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>
+Subject: Re: [PATCH 2/2] RFC: soft/hardlookup: taint kernel
+Message-ID: <20190509092449.GA10828@jagdpanzerIV>
+References: <20190502194208.3535-1-daniel.vetter@ffwll.ch>
+ <20190502194208.3535-2-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190508194439.GF32547@worktop.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190502194208.3535-2-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-May 21:44, Peter Zijlstra wrote:
-> On Tue, May 07, 2019 at 12:13:47PM +0100, Patrick Bellasi wrote:
-> > On 17-Apr 15:26, Suren Baghdasaryan wrote:
-> > > On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
-> 
-> > > > @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
-> > > >  #else /* CONFIG_UCLAMP_TASK */
-> > > >  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
-> > > >  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
-> > > > +static inline int uclamp_validate(struct task_struct *p,
-> > > > +                                 const struct sched_attr *attr)
-> > > > +{
-> > > > +       return -ENODEV;
-> > > 
-> > > ENOSYS might be more appropriate?
-> > 
-> > Yep, agree, thanks!
-> 
-> No, -ENOSYS (see the comment) is special in that it indicates the whole
-> system call is unavailable; that is most certainly not the case!
+On (05/02/19 21:42), Daniel Vetter wrote:
+[..]
+> @@ -469,6 +469,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>  		add_taint(TAINT_SOFTLOCKUP, LOCKDEP_STILL_OK);
+>  		if (softlockup_panic)
+>  			panic("softlockup: hung tasks");
+> +		else
+> +			add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+>  		__this_cpu_write(soft_watchdog_warn, true);
 
-Yep, noted. Thanks.
+Soft lockup sets TAINT_SOFTLOCKUP bit. Would it be enough for your CI?
 
--- 
-#include <best/regards.h>
+[..]
+> @@ -154,6 +154,8 @@ static void watchdog_overflow_callback(struct perf_event *event,
+>
+>  		if (hardlockup_panic)
+>  			nmi_panic(regs, "Hard LOCKUP");
+> +		else
+> +			add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
 
-Patrick Bellasi
+Maybe you can mirror what soft lockup does. Add a HARDLOCKUP taint bit
+
++++ b/include/linux/kernel.h
+@@ -571,7 +571,8 @@ extern enum system_states {
+ #define TAINT_LIVEPATCH                        15
+ #define TAINT_AUX                      16
+ #define TAINT_RANDSTRUCT               17
+-#define TAINT_FLAGS_COUNT              18
++#define TAINT_HARDLOCKUP               18
++#define TAINT_FLAGS_COUNT              19
+
+and then set TAINT_HARDLOCKUP in watchdog_overflow_callback().
+
+Just a small idea, I'll leave this to more experienced people.
+
+	-ss
