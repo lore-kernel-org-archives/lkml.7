@@ -2,270 +2,154 @@ Return-Path: <SRS0=2Nly=TJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E76C04AB1
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F015C04AB1
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233CF217D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="cjQ5WC8p"
+	by mail.kernel.org (Postfix) with ESMTP id 345C4217F9
+	for <linux-kernel@archiver.kernel.org>; Thu,  9 May 2019 17:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557423409;
+	bh=eTzfJottKm0SS6OzedgbfO7okzwd7v749TEXgwZAOZI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=k9om5ZfRBuuxRsAStkdl6IZvjpicgnwQQEMFWpL8xZ8JsmIIw0JZFSfIL6mAnf6qd
+	 7KF0USh5pF3bXzjBp4GWmmY8tBYZqSLheWGpzWfVigOuKgvng8/p5GoyfnVPRsiZJL
+	 4s+yASX0hnwT/N4v+VvkL2ibP4Cxd0Vv+a7FB3Ew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfEIRgh (ORCPT
+        id S1726824AbfEIRgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 13:36:37 -0400
-Received: from mail-eopbgr760050.outbound.protection.outlook.com ([40.107.76.50]:34403
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726576AbfEIRgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 13:36:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nmJlQHnyxWKpE2tFnlIITdB+xJYRJxRTmsD4Isj4Iu8=;
- b=cjQ5WC8pQdg83EDEcqTJPzKKCYvfHOuCcsKv5gLezQbUUJEExMdCDPD3O7VHruN6e5m1LdmCx68wSBIEJLIKCWJ/KQKSoWSyhh0vdh5fz5mcUYN3j9ZzPdcEUkbmmavWOlkFHwolCNVxFVdvn4oIkUvp7J7eJ+gM44MA03Bt2b8=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4247.namprd05.prod.outlook.com (20.176.252.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.4; Thu, 9 May 2019 17:36:29 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.006; Thu, 9 May 2019
- 17:36:29 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Will Deacon <will.deacon@arm.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        "jstancek@redhat.com" <jstancek@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aneesh.kumar@linux.vnet.ibm.com" <aneesh.kumar@linux.vnet.ibm.com>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        Mel Gorman <mgorman@suse.de>
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8A
-Date:   Thu, 9 May 2019 17:36:29 +0000
-Message-ID: <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190509103813.GP2589@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cdc4f936-48aa-49af-f768-08d6d4a4deed
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4247;
-x-ms-traffictypediagnostic: BYAPR05MB4247:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <BYAPR05MB424786746F70CE42FB017980D0330@BYAPR05MB4247.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2803;
-x-forefront-prvs: 003245E729
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(346002)(366004)(39860400002)(199004)(189003)(31014005)(53754006)(54534003)(71190400001)(99286004)(6916009)(86362001)(6506007)(102836004)(76176011)(7416002)(71200400001)(966005)(33656002)(82746002)(83716004)(45080400002)(478600001)(14454004)(4326008)(68736007)(6246003)(25786009)(36756003)(53936002)(66066001)(53546011)(66476007)(66946007)(66556008)(64756008)(66446008)(73956011)(76116006)(316002)(446003)(11346002)(486006)(476003)(26005)(186003)(2616005)(229853002)(6486002)(256004)(14444005)(5660300002)(6512007)(6306002)(6436002)(3846002)(6116002)(8676002)(81156014)(81166006)(8936002)(54906003)(7736002)(305945005)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4247;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ki/tjrBreloibQFmkhncPLsiKjP29Wy2yUcrtIRutaEDPAjs3C0WZGDPmidY0mXwqts/RYNhujDxbn9KXMT2sx4B67Xhx944WMjZAF65slU25DV7eEHpCA+MxLv0jGYm/LW97kaV0nZmMKLLVCqk802qz52JJglxcxmSLwK1UQaux9SGEeWs8WCApC0VuUECVhAp4rQ89kBsnSyVZFS9nNhI0DbiFdF1g6geZPCaA1pLOOdQKXnh7HPMl1MY328Q/Dh0Hx11zBrvao63X/ywKYTd7jKxVwjXyHuOFOsNFRWEmNwihUk01PQvOQbrvoDXIi1pZxfOVz6hK87JyMuGd00MGBR1Jtl1e2Vy1O55VXshPAiMs19JvBtXGB/ixLQ7TYKInrOe32YvG/yYFOUxfFGKF3aHYBiWxqMXlsNdNCk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E5E4CD6BAFEC2E4F9C0A9DBFDA3782F3@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 May 2019 13:36:47 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43057 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfEIRgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 13:36:46 -0400
+Received: by mail-qk1-f196.google.com with SMTP id z6so1120388qkl.10;
+        Thu, 09 May 2019 10:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=iom6SqE2pGkNK9Z5BBYeoQQuW8YcGD2ELbPKlGymboM=;
+        b=cs0FXI2lpYwghUSDOf097f2v6Rt4diQmigrD+c/Xo1713L8qT08oedAGfjEbWsJUYJ
+         Y4uKJTdVdNlH5L2MyZL/0C5q/QLyE+ubVYeRFqZX8QwccR9HwEcpxshclYF2cqqOMnBL
+         ArKHoK9IiybB9p/TBSc6izdky9KEgTCNrSG3YfvQ5t+M1AsJdSrAr23HIhrXJJ8a1+OZ
+         6DiXvnfAxygTWRdUtaronQth1170tRMp467SFEcmAwqwIOvJSO9k64YUc5qLMAbbjhDT
+         KLFHGOIbXHgb3WyyF+MGnwAIvJejG1ZOLF7KZ4/O+H7WoXMreTJzTS7OfgJbDsYUqCGA
+         9WDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=iom6SqE2pGkNK9Z5BBYeoQQuW8YcGD2ELbPKlGymboM=;
+        b=GlKDBxSwjK81S4HsifJV7Z4HC0FqGXQvlMOxVuQ94dbc1ZUQSzjuwu3i6GSnGl+/9v
+         xObkClwB1/JKWP64Nb82TfddP3CKFtZlBS3gbyweyTGCtrW/l1PKK/FvPmnIFmj6uk5/
+         QDTyRlDj88nYyAxyBYpgfhXg9L+SdPSUpCjJCgFYh/ITK/JNPUCCcH0fPYO5CK8Dk+Yx
+         EJ+Qifv1Sa6vmObEFtdJT3xCC8uJRMBrtFHaPc8qP4bUPhDgWnNFOPBV6n17hxQYiKly
+         vIDSIjOly0++xocrf/SfCBOtpI0gDpvYN9W2EJInExQAnfTBxdxlEHtAPqalrM1PRS02
+         P3vg==
+X-Gm-Message-State: APjAAAU3tPqi4muh1dui4m0EIsU0ftUUPgBJ+E3k1qtOs+0ocicdgRvh
+        fSrdyKn/iNLQKVSbVU15KiE=
+X-Google-Smtp-Source: APXvYqxjQ7swkRK1YRWZ4ss04zp7hmROFHao0gs+Me0/F62lHiaZreba66C0xaFRZCf49sR/6+o1Tw==
+X-Received: by 2002:a37:5945:: with SMTP id n66mr4312900qkb.295.1557423405211;
+        Thu, 09 May 2019 10:36:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::1:c346])
+        by smtp.gmail.com with ESMTPSA id f129sm1316130qkj.47.2019.05.09.10.36.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 10:36:44 -0700 (PDT)
+Date:   Thu, 9 May 2019 10:36:42 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        Roman Gushchin <guro@fb.com>, Oleg Nesterov <oleg@redhat.com>
+Subject: [GIT PULL] cgroup changes for v5.2-rc1
+Message-ID: <20190509173642.GA374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cdc4f936-48aa-49af-f768-08d6d4a4deed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2019 17:36:29.4858
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4247
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 9, 2019, at 3:38 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Thu, May 09, 2019 at 09:37:26AM +0100, Will Deacon wrote:
->> Hi all, [+Peter]
->=20
-> Right, mm/mmu_gather.c has a MAINTAINERS entry; use it.
->=20
-> Also added Nadav and Minchan who've poked at this issue before. And Mel,
-> because he loves these things :-)
->=20
->> Apologies for the delay; I'm attending a conference this week so it's tr=
-icky
->> to keep up with email.
->>=20
->> On Wed, May 08, 2019 at 05:34:49AM +0800, Yang Shi wrote:
->>> A few new fields were added to mmu_gather to make TLB flush smarter for
->>> huge page by telling what level of page table is changed.
->>>=20
->>> __tlb_reset_range() is used to reset all these page table state to
->>> unchanged, which is called by TLB flush for parallel mapping changes fo=
-r
->>> the same range under non-exclusive lock (i.e. read mmap_sem).  Before
->>> commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
->>> munmap"), MADV_DONTNEED is the only one who may do page zapping in
->>> parallel and it doesn't remove page tables.  But, the forementioned com=
-mit
->>> may do munmap() under read mmap_sem and free page tables.  This causes =
-a
->>> bug [1] reported by Jan Stancek since __tlb_reset_range() may pass the
->=20
-> Please don't _EVER_ refer to external sources to describe the actual bug
-> a patch is fixing. That is the primary purpose of the Changelog.
->=20
-> Worse, the email you reference does _NOT_ describe the actual problem.
-> Nor do you.
->=20
->>> wrong page table state to architecture specific TLB flush operations.
->>=20
->> Yikes. Is it actually safe to run free_pgtables() concurrently for a giv=
-en
->> mm?
->=20
-> Yeah.. sorta.. it's been a source of 'interesting' things. This really
-> isn't the first issue here.
->=20
-> Also, change_protection_range() is 'fun' too.
->=20
->>> So, removing __tlb_reset_range() sounds sane.  This may cause more TLB
->>> flush for MADV_DONTNEED, but it should be not called very often, hence
->>> the impact should be negligible.
->>>=20
->>> The original proposed fix came from Jan Stancek who mainly debugged thi=
-s
->>> issue, I just wrapped up everything together.
->>=20
->> I'm still paging the nested flush logic back in, but I have some comment=
-s on
->> the patch below.
->>=20
->>> [1] https://nam04.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Flore.kernel.org%2Flinux-mm%2F342bf1fd-f1bf-ed62-1127-e911b5032274%40linux.=
-alibaba.com%2FT%2F%23m7a2ab6c878d5a256560650e56189cfae4e73217f&amp;data=3D0=
-2%7C01%7Cnamit%40vmware.com%7C7be2f2b29b654aba7de308d6d46a7b93%7Cb39138ca3c=
-ee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C636929951176903247&amp;sdata=3DgGptCMeb9vW=
-4jXUnG53amgvrv8TB9F52JYBHmPeHFvs%3D&amp;reserved=3D0
->>>=20
->>> Reported-by: Jan Stancek <jstancek@redhat.com>
->>> Tested-by: Jan Stancek <jstancek@redhat.com>
->>> Cc: Will Deacon <will.deacon@arm.com>
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>> Signed-off-by: Jan Stancek <jstancek@redhat.com>
->>> ---
->>> mm/mmu_gather.c | 7 ++++---
->>> 1 file changed, 4 insertions(+), 3 deletions(-)
->>>=20
->>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>> index 99740e1..9fd5272 100644
->>> --- a/mm/mmu_gather.c
->>> +++ b/mm/mmu_gather.c
->>> @@ -249,11 +249,12 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>> 	 * flush by batching, a thread has stable TLB entry can fail to flush
->>=20
->> Urgh, we should rewrite this comment while we're here so that it makes s=
-ense...
->=20
-> Yeah, that's atrocious. We should put the actual race in there.
->=20
->>>  * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
->>> 	 * forcefully if we detect parallel PTE batching threads.
->>> +	 *
->>> +	 * munmap() may change mapping under non-excluse lock and also free
->>> +	 * page tables.  Do not call __tlb_reset_range() for it.
->>> 	 */
->>> -	if (mm_tlb_flush_nested(tlb->mm)) {
->>> -		__tlb_reset_range(tlb);
->>> +	if (mm_tlb_flush_nested(tlb->mm))
->>> 		__tlb_adjust_range(tlb, start, end - start);
->>> -	}
->>=20
->> I don't think we can elide the call __tlb_reset_range() entirely, since =
-I
->> think we do want to clear the freed_pXX bits to ensure that we walk the
->> range with the smallest mapping granule that we have. Otherwise couldn't=
- we
->> have a problem if we hit a PMD that had been cleared, but the TLB
->> invalidation for the PTEs that used to be linked below it was still pend=
-ing?
->=20
-> That's tlb->cleared_p*, and yes agreed. That is, right until some
-> architecture has level dependent TLBI instructions, at which point we'll
-> need to have them all set instead of cleared.
->=20
->> Perhaps we should just set fullmm if we see that here's a concurrent
->> unmapper rather than do a worst-case range invalidation. Do you have a f=
-eeling
->> for often the mm_tlb_flush_nested() triggers in practice?
->=20
-> Quite a bit for certain workloads I imagine, that was the whole point of
-> doing it.
->=20
-> Anyway; am I correct in understanding that the actual problem is that
-> we've cleared freed_tables and the ARM64 tlb_flush() will then not
-> invalidate the cache and badness happens?
->=20
-> Because so far nobody has actually provided a coherent description of
-> the actual problem we're trying to solve. But I'm thinking something
-> like the below ought to do.
->=20
->=20
-> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-> index 99740e1dd273..fe768f8d612e 100644
-> --- a/mm/mmu_gather.c
-> +++ b/mm/mmu_gather.c
-> @@ -244,15 +244,20 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
-> 		unsigned long start, unsigned long end)
-> {
-> 	/*
-> -	 * If there are parallel threads are doing PTE changes on same range
-> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
-> -	 * flush by batching, a thread has stable TLB entry can fail to flush
-> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
-> -	 * forcefully if we detect parallel PTE batching threads.
-> +	 * Sensible comment goes here..
-> 	 */
-> -	if (mm_tlb_flush_nested(tlb->mm)) {
-> -		__tlb_reset_range(tlb);
-> -		__tlb_adjust_range(tlb, start, end - start);
-> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->full_mm) {
-> +		/*
-> +		 * Since we're can't tell what we actually should have
-> +		 * flushed flush everything in the given range.
-> +		 */
-> +		tlb->start =3D start;
-> +		tlb->end =3D end;
-> +		tlb->freed_tables =3D 1;
-> +		tlb->cleared_ptes =3D 1;
-> +		tlb->cleared_pmds =3D 1;
-> +		tlb->cleared_puds =3D 1;
-> +		tlb->cleared_p4ds =3D 1;
-> 	}
->=20
-> 	tlb_flush_mmu(tlb);
+Hello, Linus.
 
-As a simple optimization, I think it is possible to hold multiple nesting
-counters in the mm, similar to tlb_flush_pending, for freed_tables,
-cleared_ptes, etc.
+This pull request includes Roman's cgroup2 freezer implementation.
+It's a separate machanism from cgroup1 freezer.  Instead of blocking
+user tasks in arbitrary uninterruptible sleeps, the new implementation
+extends jobctl stop - frozen tasks are trapped in jobctl stop until
+thawed and can be killed and ptraced.  Lots of thanks to Oleg for
+sheperding the effort.
 
-The first time you set tlb->freed_tables, you also atomically increase
-mm->tlb_flush_freed_tables. Then, in tlb_flush_mmu(), you just use
-mm->tlb_flush_freed_tables instead of tlb->freed_tables.
+Other than that, there are a few trivial changes.
 
+Thanks.
+
+The following changes since commit 145f47c7381d43c789cbad55d4dbfd28fc6c46a4:
+
+  Merge tag '5.1-rc3-smb3-fixes' of git://git.samba.org/sfrench/cifs-2.6 (2019-04-03 20:21:25 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.2
+
+for you to fetch changes up to f2b31bb598248c04721cb8485e6091a9feb045ac:
+
+  cgroup: never call do_group_exit() with task->frozen bit set (2019-05-09 07:56:47 -0700)
+
+----------------------------------------------------------------
+Fuqian Huang (1):
+      kernel: cgroup: fix misuse of %x
+
+Roman Gushchin (12):
+      cgroup: rename freezer.c into legacy_freezer.c
+      cgroup: implement __cgroup_task_count() helper
+      cgroup: protect cgroup->nr_(dying_)descendants by css_set_lock
+      cgroup: cgroup v2 freezer
+      kselftests: cgroup: don't fail on cg_kill_all() error in cg_destroy()
+      kselftests: cgroup: add freezer controller self-tests
+      cgroup: make TRACE_CGROUP_PATH irq-safe
+      cgroup: add tracing points for cgroup v2 freezer
+      cgroup: document cgroup v2 freezer interface
+      cgroup: prevent spurious transition into non-frozen state
+      cgroup: get rid of cgroup_freezer_frozen_exit()
+      cgroup: never call do_group_exit() with task->frozen bit set
+
+Shakeel Butt (1):
+      cgroup: remove extra cgroup_migrate_finish() call
+
+Shaokun Zhang (1):
+      cgroup: Remove unused cgrp variable
+
+ Documentation/admin-guide/cgroup-v2.rst       |  27 +
+ include/linux/cgroup-defs.h                   |  33 +
+ include/linux/cgroup.h                        |  43 ++
+ include/linux/sched.h                         |   2 +
+ include/linux/sched/jobctl.h                  |   2 +
+ include/trace/events/cgroup.h                 |  55 ++
+ kernel/cgroup/Makefile                        |   4 +-
+ kernel/cgroup/cgroup-internal.h               |   8 +-
+ kernel/cgroup/cgroup-v1.c                     |  16 -
+ kernel/cgroup/cgroup.c                        | 152 ++++-
+ kernel/cgroup/debug.c                         |   8 +-
+ kernel/cgroup/freezer.c                       | 639 +++++++------------
+ kernel/cgroup/legacy_freezer.c                | 481 +++++++++++++++
+ kernel/fork.c                                 |   2 +
+ kernel/signal.c                               |  66 +-
+ tools/testing/selftests/cgroup/.gitignore     |   1 +
+ tools/testing/selftests/cgroup/Makefile       |   2 +
+ tools/testing/selftests/cgroup/cgroup_util.c  |  58 +-
+ tools/testing/selftests/cgroup/cgroup_util.h  |   5 +
+ tools/testing/selftests/cgroup/test_freezer.c | 851 ++++++++++++++++++++++++++
+ 20 files changed, 2012 insertions(+), 443 deletions(-)
+ create mode 100644 kernel/cgroup/legacy_freezer.c
+ create mode 100644 tools/testing/selftests/cgroup/test_freezer.c
+
+-- 
+tejun
