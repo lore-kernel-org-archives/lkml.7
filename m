@@ -3,92 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB587C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 742D6C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8398B2184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F56821479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:15:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfEJJOp (ORCPT
+        id S1727352AbfEJJPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:14:45 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40576 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfEJJOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:14:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8840A78;
-        Fri, 10 May 2019 02:14:44 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C76B3F738;
-        Fri, 10 May 2019 02:14:43 -0700 (PDT)
-Date:   Fri, 10 May 2019 10:14:40 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 10 May 2019 05:15:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53908 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727281AbfEJJPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:15:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 491E3AE84;
+        Fri, 10 May 2019 09:15:38 +0000 (UTC)
+Date:   Fri, 10 May 2019 11:15:37 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-Message-ID: <20190510091440.2vbebpndrcxm7gin@e107158-lin.cambridge.arm.com>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
- <20190505115732.9844-5-qais.yousef@arm.com>
- <4971629f-70d2-9ee1-7509-5d0cfe9004ff@arm.com>
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
+Message-ID: <20190510091537.44e3aeb7gcrcob76@pathway.suse.cz>
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
+ <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
+ <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4971629f-70d2-9ee1-7509-5d0cfe9004ff@arm.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/10/19 10:51, Dietmar Eggemann wrote:
-> Hi Qais,
-> 
-> On 5/5/19 1:57 PM, Qais Yousef wrote:
-> 
-> [...]
-> 
-> > diff --git a/kernel/sched/sched_tracepoints.h b/kernel/sched/sched_tracepoints.h
-> > new file mode 100644
-> > index 000000000000..f4ded705118e
-> > --- /dev/null
-> > +++ b/kernel/sched/sched_tracepoints.h
-> > @@ -0,0 +1,39 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Scheduler tracepoints that are probe-able only and aren't exported ABI in
-> > + * tracefs.
-> > + */
-> > +
-> > +#include <trace/events/sched.h>
-> > +
-> > +#define SCHED_TP_PATH_LEN		64
-> > +
-> > +
-> > +static __always_inline void sched_tp_load_cfs_rq(struct cfs_rq *cfs_rq)
-> > +{
-> > +	if (trace_sched_load_rq_enabled()) {
-> > +		int cpu = cpu_of(rq_of(cfs_rq));
-> > +		char path[SCHED_TP_PATH_LEN];
-> > +
-> > +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
-> > +		trace_sched_load_rq(cpu, path, &cfs_rq->avg);
-> 
-> This will let a !CONFIG_SMP build fail.
+On Thu 2019-05-09 18:43:12, Daniel Vetter wrote:
+> One thing to keep in mind is that the kernel is already dying, and
+> things will come crashing down later on
 
-You're right. sched_avg is only defined if CONFIG_SMP. Fixed all three
-functions.
+This is important information. I havn't seen it mentioned earlier.
 
-Thanks!
+> (I've seen this only in dmesg
+> tails capture in pstore in our CI, i.e. the box died for good). I just
+> want to make sure that the useful information isn't overwritten by
+> more dmesg splats that happen as a consequence of us somehow trying to
+> run things on an offline cpu. Once console_unlock has completed in
+> your above backtrace and the important stuff has gone out I'm totally
+> fine with the kernel just dying. Pulling the wake_up_process out from
+> under the semaphore.lock is enough to prevent lockdep from dumping
+> more stuff while we're trying to print the important things,
 
---
-Qais Yousef
+With the more stuff you mean the lockdep splat? If yes, it might
+make sense to call debug_locks_off() earlier in panic().
+
+
+> and I think the untangling of the locking hiararchy is useful irrespective
+> of this lockdep splat. Plus Peter doesn't sound like he likes to roll
+> out more printk_deferred kind of things.
+>
+> But if you think I should do the printk_deferred thing too I can look
+> into that. Just not quite sure what that's supposed to look like now.
+
+Your patch might remove the particular lockdep splat. It might be
+worth it (Peter mentioned also an optimization effect). Anyway
+it will not prevent the deadlock.
+
+The only way to avoid the deadlock is to use printk_deferred()
+with the current printk() code.
+
+
+Finally, I have recently worked on similar problem with dying system.
+I sent the following patch for testing. I wonder if it might be
+acceptable upstream:
+
+
+From: Petr Mladek <pmladek@suse.com>
+Subject: sched/x86: Do not warn about offline CPUs when all are being stopped
+Patch-mainline: No, just for testing
+References: bsc#1104406
+
+The warning about rescheduling offline CPUs cause dealock when
+the CPUs need to get stopped using NMI. It might happen with
+logbuf_lock, locks used by console drivers, especially tty.
+But it might also be caused by a registered kernel message
+dumper, for example, pstore.
+
+The warning is pretty common when there is a high load and
+CPUs are being stopped by native_stop_other_cpus(). But
+they are not really useful in this context. And they scrolls
+the really important messages off the screen.
+
+We need to fix printk() in the long term. But disabling
+the message looks reasonable at least in the meantime.
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ arch/x86/kernel/smp.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -124,7 +124,8 @@ static bool smp_no_nmi_ipi = false;
+  */
+ static void native_smp_send_reschedule(int cpu)
+ {
+-	if (unlikely(cpu_is_offline(cpu))) {
++	if (unlikely(cpu_is_offline(cpu) &&
++		     atomic_read(&stopping_cpu) < 0)) {
+ 		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
+ 		return;
+ 	}
