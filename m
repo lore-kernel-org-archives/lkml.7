@@ -2,84 +2,93 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A96CC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7FAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6530A2182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ECD0208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557457057;
+	bh=P0E+vgw7gVRhrh8/UI9GOpgCdpeDnUgHcsc0wsgCABU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XCmiYDTs84Sk32QD8dSWijT87u8OFpukUSIUddbuAQO3mYCNu1nSTOJo2VUy00Tyb
+	 +URHLkFlFEGdjsTxlC1sj6lTEv5lVlaZRqflAwneS/FA1lhyK/MtfmCyvM+pgqtRdZ
+	 i84D0R05Za2r6aqb3UdKrS3zb3RKARJF+mwbU+nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfEJCyO (ORCPT
+        id S1727009AbfEJC5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 22:54:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58084 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726864AbfEJCyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 22:54:09 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E457EF57247D1671A9A1;
-        Fri, 10 May 2019 10:54:06 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 10 May 2019 10:53:57 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Miloslav Trmac <mitr@volny.cz>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        <linux-input@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH 2/3] Input: wistron_btns: avoid panic if ioreamp fails
-Date:   Fri, 10 May 2019 11:03:19 +0800
-Message-ID: <20190510030320.109154-2-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190510030320.109154-1-wangkefeng.wang@huawei.com>
-References: <20190510030320.109154-1-wangkefeng.wang@huawei.com>
+        Thu, 9 May 2019 22:57:36 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39973 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726882AbfEJC5g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 22:57:36 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 052E221C46;
+        Thu,  9 May 2019 22:57:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 09 May 2019 22:57:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=P0E+vg
+        w7gVRhrh8/UI9GOpgCdpeDnUgHcsc0wsgCABU=; b=hWfK03kaNW7Ohu10St/HLh
+        wuLsm4DJNPEP7VHvtse/oH/duT+siM0gUEPsKB9Ls2IzHjTZJntjWyWHbPa5Z4QK
+        /1pJF4xj5SymqPMXgnOtbeZWuPZTLfMnC4H3UDb9h+sQSnUJOYM3mlPjVQHifPBH
+        6zF1IOWBmGkgCmAxvGSrIRaoSlYLKOYwX52MQ4CUrH+9WtwjQ17Obh8KCIIVQtbc
+        K0D0ZjhQZBSRHfcs5wJUftuOsIM4vy2EJf57LJ6MUSJDFdX6uqR9QkFLYb+HdQ4V
+        6PgMcGGGpxIGgsFJblZXDJLayynxOGB7pDVxpums+6Jj7d6yDfkIttD8rYz8orqg
+        ==
+X-ME-Sender: <xms:nejUXFX_Q43KL53FLlaHUqufjQ6X-SFdIKyPKz5Js5pp3wwJoc4a7Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeeigdduieelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goteeftdduqddtudculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttder
+    tdforedvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehtohgsih
+    hnsehkvghrnhgvlhdrohhrgheqnecukfhppeduvdegrddujedurddvuddrhedvnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedt
+X-ME-Proxy: <xmx:nujUXH0ZhFTU65I-EcVfmRis3pett1tHFJ2l6YCOrz32guLO3gDt7Q>
+    <xmx:nujUXDoEpXskTuMcvuJUiwfrSe7urfxXcdnXbzaxt_2To1p1dpSRWg>
+    <xmx:nujUXOVWNqfmGgQ2ntI4yDMxAow3UMRKBRSLIOyFNbTNCk_wGe6o8Q>
+    <xmx:nujUXCTEKWE3S_HvjcmtNvgk3oSVx6Fl3ULiQZ3aZZj5TlSen4cKzA>
+Received: from localhost (124-171-21-52.dyn.iinet.net.au [124.171.21.52])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 43B6C10379;
+        Thu,  9 May 2019 22:57:33 -0400 (EDT)
+Date:   Fri, 10 May 2019 12:57:02 +1000
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] bridge: Fix error path for kobject_init_and_add()
+Message-ID: <20190510025702.GA10709@eros.localdomain>
+References: <20190510025212.10109-1-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510025212.10109-1-tobin@kernel.org>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If ioremap fails, NULL pointer dereference will happen and
-leading to a kernel panic when access the virtual address
-in check_signature().
+On Fri, May 10, 2019 at 12:52:12PM +1000, Tobin C. Harding wrote:
 
-Fix it by check the return value of ioremap.
+Please ignore - I forgot about netdev procedure and the merge window.
+My bad.
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Miloslav Trmac <mitr@volny.cz>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-input@vger.kernel.org
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- drivers/input/misc/wistron_btns.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Will re-send when you are open.
 
-diff --git a/drivers/input/misc/wistron_btns.c b/drivers/input/misc/wistron_btns.c
-index 43e67f546366..a82ec3d102b4 100644
---- a/drivers/input/misc/wistron_btns.c
-+++ b/drivers/input/misc/wistron_btns.c
-@@ -107,7 +107,10 @@ static int __init map_bios(void)
- 	ssize_t offset;
- 	u32 entry_point;
- 
--	base = ioremap(0xF0000, 0x10000); /* Can't fail */
-+	base = ioremap(0xF0000, 0x10000);
-+	if (!base)
-+		return -ENOMEM;
-+
- 	offset = locate_wistron_bios(base);
- 	if (offset < 0) {
- 		printk(KERN_ERR "wistron_btns: BIOS entry point not found\n");
--- 
-2.20.1
-
+thanks,
+Tobin.
