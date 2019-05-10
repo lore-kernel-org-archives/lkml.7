@@ -2,169 +2,174 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DE3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E976AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC6D20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D4820656
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TPWyj+bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfEJImU (ORCPT
+        id S1727073AbfEJIqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:42:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47044 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727053AbfEJImU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:42:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D6C62AF24;
-        Fri, 10 May 2019 08:42:17 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Petr Mladek <pmladek@suse.com>
-Subject: [PATCH] vsprintf: Do not break early boot with probing addresses
-Date:   Fri, 10 May 2019 10:42:13 +0200
-Message-Id: <20190510084213.22149-1-pmladek@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190510081635.GA4533@jagdpanzerIV>
-References: <20190510081635.GA4533@jagdpanzerIV>
+        Fri, 10 May 2019 04:46:02 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42423 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726991AbfEJIqC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 04:46:02 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 188so4386981ljf.9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 01:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/7KuvorsOq0kwSMfoZ0xez4TAmMJrwzjBA0BflDBnqY=;
+        b=TPWyj+bol6+mu2lUdOtyol+rc4oKet/7yxsgjy2WCz4O1ejvVYVf4Qla8ZDT7JLGi0
+         2aWJpC5bXLoFPXWWnsOfNp1HeVMQItieByh00FsRlsubNojZ/6uC8RJGKjgHi838G4PL
+         Um90YgU6IH8+wMqmdH7N/v4ebsC7GcrQDnbsGh0XtfW7G2M511RrQcwxuEH9EGkHtSxA
+         1H6LKMc0GVk7dPmjQnZMOL93pF431oQujTpU+Eil7CE7xHpZMJh8+TRjfK5rEG9hGeyD
+         Ld9StdnD2/Cmqq6utAL2iOx8qlz7oG1WRKLQofVozqwOwVunoB9KHuZzQ7s9tBcUQ6QR
+         e+3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/7KuvorsOq0kwSMfoZ0xez4TAmMJrwzjBA0BflDBnqY=;
+        b=Bx1FQrS8WcJH65TGqmZ0tmmahnM1Jc9TS67rNzI4qHWT1N+3PM9witRg/WymHqwsf7
+         ovTpxNMltkd/zUwexAF2MDn2jfNlcsa4pkSdahmYdku9TFvMGHi/aRt/BHggdhGT2zk0
+         9b/ayenN8Drl3CydB2bQz9fjPaquCMc7qUsW/ub/USCjQUohrMn7Gv957eIVF/cP3LMa
+         23eYX1pN5uMEFqC0OFazP54ngTImbjDr7cgsF2y2rFXxF8LoUwPq0Bw6ZmUesjzECLzM
+         3tGIc1E2z8zxVl85mBvBjd0kuQJQ2buNptSehxKKb2Ud5Lw03qqmcslRSxfeiSGnH1E3
+         9yIw==
+X-Gm-Message-State: APjAAAU9m2qss/299b5w3+27pSacNDSmszlTareRuS/VqfjNoe/EcELt
+        ahjkyjLmMJJ3ReWEIe80ViYk298/0m2bQUF3liB4bQ==
+X-Google-Smtp-Source: APXvYqzOkfL35cKRpi0Ajvx/JGvyBCRS5w99p+MDvxwaBRtvobjVmQLCI/d9t0a1ATWP6zOm0/Ery4ngcIIbAEY/hU4=
+X-Received: by 2002:a2e:9193:: with SMTP id f19mr4982668ljg.111.1557477960404;
+ Fri, 10 May 2019 01:46:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190509181252.616018683@linuxfoundation.org>
+In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 10 May 2019 14:15:49 +0530
+Message-ID: <CA+G9fYsXQS3vhfjmqnrN9yZqujKnvKugEVaKLVR0=3=N5A8dhA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/42] 4.14.118-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
-invalid pointers") broke boot on several architectures. The common
-pattern is that probe_kernel_read() is not working during early
-boot because userspace access framework is not ready.
+On Fri, 10 May 2019 at 00:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.118 release.
+> There are 42 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 11 May 2019 06:11:15 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.118-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-It is a generic problem. We have to avoid any complex external
-functions in vsprintf() code, especially in the common path.
-They might break printk() easily and are hard to debug.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Replace probe_kernel_read() with some simple checks for obvious
-problems.
+Summary
+------------------------------------------------------------------------
 
-Details:
+kernel: 4.14.118-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: fd7dbc6d8090b210573e19d5a50f7772ec4b1977
+git describe: v4.14.117-43-gfd7dbc6d8090
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.117-43-gfd7dbc6d8090
 
-1. Report on Power:
+No regressions (compared to build v4.14.117)
 
-Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
-CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+No fixes (compared to build v4.14.117)
 
-The problem is the combination of some new code called via printk(),
-check_pointer() which calls probe_kernel_read(). That then calls
-allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-(before we've patched features). With the JUMP_LABEL debug enabled that
-causes us to call printk() & dump_stack() and we end up recursing and
-overflowing the stack.
+Ran 23536 total tests in the following environments and test suites.
 
-Because it happens so early you don't get any output, just an apparently
-dead system.
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
 
-The stack trace (which you don't see) is something like:
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
 
-  ...
-  dump_stack+0xdc
-  probe_kernel_read+0x1a4
-  check_pointer+0x58
-  string+0x3c
-  vsnprintf+0x1bc
-  vscnprintf+0x20
-  printk_safe_log_store+0x7c
-  printk+0x40
-  dump_stack_print_info+0xbc
-  dump_stack+0x8
-  probe_kernel_read+0x1a4
-  probe_kernel_read+0x19c
-  check_pointer+0x58
-  string+0x3c
-  vsnprintf+0x1bc
-  vscnprintf+0x20
-  vprintk_store+0x6c
-  vprintk_emit+0xec
-  vprintk_func+0xd4
-  printk+0x40
-  cpufeatures_process_feature+0xc8
-  scan_cpufeatures_subnodes+0x380
-  of_scan_flat_dt_subnodes+0xb4
-  dt_cpu_ftrs_scan_callback+0x158
-  of_scan_flat_dt+0xf0
-  dt_cpu_ftrs_scan+0x3c
-  early_init_devtree+0x360
-  early_setup+0x9c
-
-2. Report on s390:
-
-vsnprintf invocations, are broken on s390. For example, the early boot
-output now looks like this where the first (efault) should be
-the linux_banner:
-
-[    0.099985] (efault)
-[    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-[    0.100066] setup: The maximum memory size is 8192MB
-[    0.100070] cma: Reserved 4 MiB at (efault)
-[    0.100100] numa: NUMA mode: (efault)
-
-The reason for this, is that the code assumes that
-probe_kernel_address() works very early. This however is not true on
-at least s390. Uaccess on KERNEL_DS works only after page tables have
-been setup on s390, which happens with setup_arch()->paging_init().
-
-Any probe_kernel_address() invocation before that will return -EFAULT.
-
-Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
-Signed-off-by: Petr Mladek <pmladek@suse.com>
----
- lib/vsprintf.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index 7b0a6140bfad..2f003cfe340e 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -628,19 +628,16 @@ static char *error_string(char *buf, char *end, const char *s,
- }
- 
- /*
-- * This is not a fool-proof test. 99% of the time that this will fault is
-- * due to a bad pointer, not one that crosses into bad memory. Just test
-- * the address to make sure it doesn't fault due to a poorly added printk
-- * during debugging.
-+ * Do not call any complex external code here. Nested printk()/vsprintf()
-+ * might cause infinite loops. Failures might break printk() and would
-+ * be hard to debug.
-  */
- static const char *check_pointer_msg(const void *ptr)
- {
--	char byte;
--
- 	if (!ptr)
- 		return "(null)";
- 
--	if (probe_kernel_address(ptr, byte))
-+	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
- 		return "(efault)";
- 
- 	return NULL;
--- 
-2.16.4
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
