@@ -2,151 +2,56 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77145C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF7EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C51020989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yHtmhqSg"
+	by mail.kernel.org (Postfix) with ESMTP id DA88920989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfEJMlO (ORCPT
+        id S1727510AbfEJMlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 08:41:14 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38298 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbfEJMlN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 08:41:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PaEjONaV4ijDf76gOJrIlqa3RKQO2ZCV9SzvcjnY5M0=; b=yHtmhqSgjr4d5cvy4Y4dw1EsF
-        z3vUHhM76TmVgxToU5nVl8LQ3pVtp+6snuWTKySSED8fZIg/zmOTrIwK/SOD1f6d7yaDSEdDNKICX
-        9/2nzHmmfa+f3okzZ1hhRojX9VJ6TPC8kF8Ma074li+ZW32rm8OIASznKAu/gh4AVw3xDh6N/QSW2
-        lax1Du0IO3CTJfRktTffqiSWGQ+YvpFSChEA4n6iZtP/9heSCSUAMK0HvUAZQqAzgqvKllH4e1s8W
-        Gh+uGdiKuw4+cbtTPoDlw3keRGhjc8ZqirzDu7ha6XZUBmqbIVLNHE2SLHTFFHt1v2vcsijXjssYB
-        WgsWcslsw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hP4pc-0005gz-8E; Fri, 10 May 2019 12:40:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B5D4A2029FD7A; Fri, 10 May 2019 14:40:54 +0200 (CEST)
-Date:   Fri, 10 May 2019 14:40:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190510124054.GV2589@hirez.programming.kicks-ass.net>
-References: <20190508115416.nblx7c2kocidpytm@treble>
- <20190508120416.GL2589@hirez.programming.kicks-ass.net>
- <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
- <20190509230106.3551b08553440d125e437f66@kernel.org>
- <20190509171416.GY2623@hirez.programming.kicks-ass.net>
- <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 May 2019 08:41:53 -0400
+Received: from mga02.intel.com ([134.134.136.20]:51358 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbfEJMlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 08:41:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 05:41:52 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.198])
+  by fmsmga007.fm.intel.com with ESMTP; 10 May 2019 05:41:49 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf intel-pt: Intel PT fixes
+Date:   Fri, 10 May 2019 15:41:40 +0300
+Message-Id: <20190510124143.27054-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 01:58:31PM +0900, Masami Hiramatsu wrote:
-> On Thu, 9 May 2019 19:14:16 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > --- a/arch/x86/kernel/kprobes/core.c
-> > > > +++ b/arch/x86/kernel/kprobes/core.c
-> > > > @@ -731,29 +731,8 @@ asm(
-> > > >  	".global kretprobe_trampoline\n"
-> > > >  	".type kretprobe_trampoline, @function\n"
-> > > >  	"kretprobe_trampoline:\n"
+Hi
 
-> > > Here, we need a gap for storing ret-ip, because kretprobe_trampoline is
-> > > the address which is returned from the target function. We have no 
-> > > "ret-ip" here at this point. So something like
-> > > 
-> > > +	"push $0\n"	/* This is a gap, will be filled with real return address*/
-> > 
-> > The trampoline already provides a gap, trampoline_handler() will need to
-> > use int3_emulate_push() if it wants to inject something on the return
-> > stack.
-> 
-> I guess you mean the int3 case. This trampoline is used as a return destination.
+Here are 3 non-urgent fixes for Intel PT.
 
-> When the target function is called, kretprobe interrupts the first instruction,
-> and replace the return address with this trampoline. When a "ret" instruction
-> is done, it returns to this trampoline. Thus the stack frame start with
-> previous context here. As you described above,
 
-I would prefer to change that to inject an extra return address, instead
-of replacing it. With the new exception stuff we can actually do that.
+Adrian Hunter (3):
+      perf intel-pt: Fix instructions sampling rate
+      perf intel-pt: Fix improved sample timestamp
+      perf intel-pt: Fix sample timestamp wrt non-taken branches
 
-So on entry we then go from:
+ .../perf/util/intel-pt-decoder/intel-pt-decoder.c  | 31 +++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 7 deletions(-)
 
-	<previous context>
-	RET-IP
 
-to
-
-	<previous context>
-	RET-IP
-	return-trampoline
-
-So when the function returns, it falls into the trampoline instead.
-
-> > > > +	 * On entry the stack looks like:
-> > > > +	 *
-> > > > +	 *   2*4(%esp) <previous context>
-> > > > +	 *   1*4(%esp) RET-IP
-> > > > +	 *   0*4(%esp) func
-> 
-> From this trampoline call, the stack looks like:
-> 
-> 	 *   1*4(%esp) <previous context>
-> 	 *   0*4(%esp) func
-> 
-> So we need one more push.
-
-And then the stack looks just right at this point.
-
-> > > > +	"push trampoline_handler\n"
-> > > > +	"jmp call_to_exception_trampoline\n"
-> > > >  	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
-> > > >  );
-> > > >  NOKPROBE_SYMBOL(kretprobe_trampoline);
+Regards
+Adrian
