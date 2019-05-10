@@ -2,30 +2,30 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01632C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94411C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C59D3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606BA217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfEJRgD (ORCPT
+        id S1728032AbfEJRgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:36:03 -0400
-Received: from foss.arm.com ([217.140.101.70]:53646 "EHLO foss.arm.com"
+        Fri, 10 May 2019 13:36:32 -0400
+Received: from foss.arm.com ([217.140.101.70]:53688 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfEJRgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:36:03 -0400
+        id S1727144AbfEJRgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:36:31 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D33F9A78;
-        Fri, 10 May 2019 10:36:02 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9578BA78;
+        Fri, 10 May 2019 10:36:30 -0700 (PDT)
 Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 756553F6C4;
-        Fri, 10 May 2019 10:36:00 -0700 (PDT)
-Date:   Fri, 10 May 2019 18:35:56 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26B163F6C4;
+        Fri, 10 May 2019 10:36:28 -0700 (PDT)
+Date:   Fri, 10 May 2019 18:36:24 +0100
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Fenghua Yu <fenghua.yu@intel.com>
 Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
@@ -39,10 +39,12 @@ Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Babu Moger" <babu.moger@amd.com>,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
         James Morse <James.Morse@arm.com>
-Subject: Re: [PATCH v7 00/13] selftests/resctrl: Add resctrl selftest
-Message-ID: <20190510183556.24c33f02@donnerap.cambridge.arm.com>
-In-Reply-To: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
+Subject: Re: [PATCH v7 02/13] selftests/resctrl: Add basic resctrl file
+ system operations and data
+Message-ID: <20190510183624.2c268548@donnerap.cambridge.arm.com>
+In-Reply-To: <1549767042-95827-3-git-send-email-fenghua.yu@intel.com>
 References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
+        <1549767042-95827-3-git-send-email-fenghua.yu@intel.com>
 Organization: ARM
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
@@ -53,185 +55,603 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 Feb 2019 18:50:29 -0800
+On Sat,  9 Feb 2019 18:50:31 -0800
 Fenghua Yu <fenghua.yu@intel.com> wrote:
 
-Hi Fenghua, Babu,
+Hi,
 
-> With more and more resctrl features are being added by Intel, AMD
-> and ARM, a test tool is becoming more and more useful to validate
-> that both hardware and software functionalities work as expected.
+some comments inline.
 
-That's very much appreciated! We decided to use that tool here to detect
-regressions in James' upcoming resctrl rework series. While doing so we
-spotted some shortcomings:
-- There is some unconditional x86 inline assembly which obviously breaks
-the build on ARM.
-- The result output is somewhat confusing, I find it hard to see whether a
-test succeeded or not, also it's not easily parseable by scripts.
-- There are some basic tests missing (does the filesystem exist? Is the
-mount point visible?)
-- Some tests create files in the current directory. This is somewhat
-confusing if you happen to be in some sysfs directory, for instance. I
-don't think we really need temporary files (pipes should cover most of the
-cases), but in case we do, we should create them in some /tmp directory,
-probably by using a glibc function for this.
-- There were some problems that newer GCC and clang complained about.
+> From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> 
+> The basic resctrl file system operations and data are added for future
+> usage by resctrl selftest tool.
+> 
+> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> Signed-off-by: Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+>  tools/testing/selftests/resctrl/Makefile    |  10 +
+>  tools/testing/selftests/resctrl/resctrl.h   |  48 +++
+>  tools/testing/selftests/resctrl/resctrlfs.c | 464 ++++++++++++++++++++++++++++
+>  3 files changed, 522 insertions(+)
+>  create mode 100644 tools/testing/selftests/resctrl/Makefile
+>  create mode 100644 tools/testing/selftests/resctrl/resctrl.h
+>  create mode 100644 tools/testing/selftests/resctrl/resctrlfs.c
+> 
+> diff --git a/tools/testing/selftests/resctrl/Makefile b/tools/testing/selftests/resctrl/Makefile
+> new file mode 100644
+> index 000000000000..bd5c5418961e
+> --- /dev/null
+> +++ b/tools/testing/selftests/resctrl/Makefile
+> @@ -0,0 +1,10 @@
+> +CC = gcc
 
-For now I didn't look too closely at the actual test algorithms, but
-decided to fix those things first. I replied to some of the smaller issues
-I spotted on the way in the individual patch mails.
+Changing this to
+CC = $(CROSS_COMPILE)gcc
+make this cross compileable.
 
-For the bigger things (new tests, result formatting) I just went ahead and
-fixed them in my own branch [1] (work in progress!). I went with TAP
-formatting, because this is both readable by humans and can be processed
-by the "prove" tool (or any other simple UNIX tool, for that matter).
+> +CFLAGS = -g -Wall
 
-I used this amended version to do some regression testing on James'
-resctrl rework series, which involved boot testing more than 100 patches,
-so automation is key here. The result looks like this:
-===================
-TAP version 13
-ok kernel supports resctrl filesystem
-ok resctrl mountpoint "/sys/fs/resctrl" exists
-# resctrl filesystem not mounted
-# Starting MBM BW change ...
-ok MBM: bw change # SKIP memory bandwidth not supported
-# Starting MBA Schemata Change ...
-ok MBA: change-schemata # SKIP memory bandwidth not supported
-# Starting CQM test ...
-ok mounting resctrl to "/sys/fs/resctrl"
-ok CQM: test # SKIP L3 not supported
-# Starting CAT test ...
-ok mounting resctrl to "/sys/fs/resctrl"
-cache size :31457280
-ok writing benchmark parameters to resctrl FS
-ok Write schema "L3:0=7fff" to resctrl FS
-ok cache difference more than 4 %
-# Percent diff=16
-# Number of bits: 15
-# Avg_llc_perf_miss: 306994
-# Allocated cache lines: 368640
-ok CAT: test
-1..11
-=================
+Can we add -O here? For once -O0 generates horrible code, but also -O
+tends to catch more bugs.
 
-Appreciate any feedback on this!
+> +
+> +*.o: *.c
+> +	$(CC) $(CFLAGS) -c *.c
+
+This is a built-in rule in make, so you can remove it here:
+https://www.gnu.org/software/make/manual/html_node/Catalogue-of-Rules.html#Catalogue-of-Rules
+
+> +
+> +.PHONY: clean
+> +
+> +clean:
+> +	$(RM) *.o *~
+> diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+> new file mode 100644
+> index 000000000000..2e112934d48a
+> --- /dev/null
+> +++ b/tools/testing/selftests/resctrl/resctrl.h
+> @@ -0,0 +1,48 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#define _GNU_SOURCE
+> +#ifndef RESCTRL_H
+> +#define RESCTRL_H
+> +#include <stdio.h>
+> +#include <errno.h>
+> +#include <sched.h>
+> +#include <stdlib.h>
+> +#include <unistd.h>
+> +#include <string.h>
+> +#include <signal.h>
+> +#include <dirent.h>
+> +#include <stdbool.h>
+> +#include <sys/stat.h>
+> +#include <sys/ioctl.h>
+> +#include <sys/mount.h>
+> +#include <sys/types.h>
+> +#include <asm/unistd.h>
+> +#include <linux/perf_event.h>
+> +
+> +#define RESCTRL_PATH		"/sys/fs/resctrl"
+> +#define PHYS_ID_PATH		"/sys/devices/system/cpu/cpu"
+> +
+> +#define PARENT_EXIT(err_msg)			\
+> +	do {					\
+> +		perror(err_msg);		\
+> +		kill(ppid, SIGKILL);		\
+> +		exit(EXIT_FAILURE);		\
+> +	} while (0)
+> +
+> +pid_t bm_pid, ppid;
+> +
+> +int remount_resctrlfs(bool mum_resctrlfs);
+> +int get_resource_id(int cpu_no, int *resource_id);
+> +int validate_bw_report_request(char *bw_report);
+> +int validate_resctrl_feature_request(char *resctrl_val);
+> +int taskset_benchmark(pid_t bm_pid, int cpu_no);
+> +void run_benchmark(int signum, siginfo_t *info, void *ucontext);
+> +int write_schemata(char *ctrlgrp, char *schemata, int cpu_no,
+> +		   char *resctrl_val);
+> +int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+> +			    char *resctrl_val);
+> +int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+> +		    int group_fd, unsigned long flags);
+> +int run_fill_buf(unsigned long span, int malloc_and_init_memory, int memflush,
+> +		 int op, char *resctrl_va);
+> +
+> +#endif /* RESCTRL_H */
+> diff --git a/tools/testing/selftests/resctrl/resctrlfs.c b/tools/testing/selftests/resctrl/resctrlfs.c
+> new file mode 100644
+> index 000000000000..5afcaa89f418
+> --- /dev/null
+> +++ b/tools/testing/selftests/resctrl/resctrlfs.c
+> @@ -0,0 +1,464 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Basic resctrl file system operations
+> + *
+> + * Copyright (C) 2018 Intel Corporation
+> + *
+> + * Authors:
+> + *    Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
+> + *    Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+> + *    Fenghua Yu <fenghua.yu@intel.com>
+> + */
+> +#include "resctrl.h"
+> +
+> +#define RESCTRL_MBM		"L3 monitoring detected"
+> +#define RESCTRL_MBA		"MB allocation detected"
+> +enum {
+> +	RESCTRL_FEATURE_MBM,
+> +	RESCTRL_FEATURE_MBA,
+> +	MAX_RESCTRL_FEATURES
+> +};
+> +
+> +/*
+> + * remount_resctrlfs - Remount resctrl FS at /sys/fs/resctrl
+> + * @mum_resctrlfs:	Should the resctrl FS be remounted?
+> + *
+> + * If not mounted, mount it.
+> + * If mounted and mum_resctrlfs then remount resctrl FS.
+> + * If mounted and !mum_resctrlfs then noop
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +int remount_resctrlfs(bool mum_resctrlfs)
+> +{
+> +	DIR *dp;
+> +	struct dirent *ep;
+> +	unsigned int count = 0;
+> +
+> +	/*
+> +	 * If kernel is built with CONFIG_RESCTRL, then /sys/fs/resctrl should
+> +	 * be present by default
+> +	 */
+> +	dp = opendir(RESCTRL_PATH);
+> +	if (dp) {
+> +		while ((ep = readdir(dp)) != NULL)
+> +			count++;
+> +		closedir(dp);
+> +	} else {
+> +		perror("Unable to read /sys/fs/resctrl");
+> +
+> +		return -1;
+> +	}
+> +
+> +	/*
+> +	 * If resctrl FS has more than two entries, it means that resctrl FS has
+> +	 * already been mounted. The two default entries are "." and "..", these
+> +	 * are present even when resctrl FS is not mounted
+> +	 */
+> +	if (count > 2) {
+> +		if (mum_resctrlfs) {
+> +			if (umount(RESCTRL_PATH) != 0) {
+> +				perror("Unable to umount resctrl");
+> +
+> +				return errno;
+> +			}
+> +			printf("Remount: done!\n");
+> +		} else {
+> +			printf("Mounted already. Not remounting!\n");
+> +
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	if (mount("resctrl", RESCTRL_PATH, "resctrl", 0, NULL) != 0) {
+
+Don't we need to consider mount options at some point? According to
+Documentation/x86/resctrl_ui.txt there is cdp, cdpl2 and mba_MBps, which
+we need to set to get certain features.
+
+> +		perror("Unable to mount resctrl FS at /sys/fs/resctrl");
+> +
+> +		return errno;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int umount_resctrlfs(void)
+> +{
+> +	if (umount(RESCTRL_PATH)) {
+> +		perror("Unable to umount resctrl");
+> +
+> +		return errno;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * get_resource_id - Get socket number/l3 id for a specified CPU
+> + * @cpu_no:	CPU number
+> + * @resource_id: Socket number or l3_id
+> + *
+> + * Return: >= 0 on success, < 0 on failure.
+> + */
+> +int get_resource_id(int cpu_no, int *resource_id)
+> +{
+> +	char phys_pkg_path[1024];
+> +	FILE *fp;
+> +
+> +	sprintf(phys_pkg_path, "%s%d/topology/physical_package_id",
+> +		PHYS_ID_PATH, cpu_no);
+> +	fp = fopen(phys_pkg_path, "r");
+> +	if (!fp) {
+> +		perror("Failed to open physical_package_id");
+> +
+> +		return -1;
+> +	}
+> +	if (fscanf(fp, "%d", resource_id) <= 0) {
+> +		perror("Could not get socket number or l3 id");
+> +		fclose(fp);
+> +
+> +		return -1;
+> +	}
+> +	fclose(fp);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * taskset_benchmark - Taskset PID (i.e. benchmark) to a specified cpu
+> + * @bm_pid:	PID that should be binded
+> + * @cpu_no:	CPU number at which the PID would be binded
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +int taskset_benchmark(pid_t bm_pid, int cpu_no)
+> +{
+> +	cpu_set_t my_set;
+> +
+> +	CPU_ZERO(&my_set);
+> +	CPU_SET(cpu_no, &my_set);
+> +
+> +	if (sched_setaffinity(bm_pid, sizeof(cpu_set_t), &my_set)) {
+> +		perror("Unable to taskset benchmark");
+> +
+> +		return -1;
+> +	}
+> +
+> +	printf("Taskset benchmark: done!\n");
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * run_benchmark - Run a specified benchmark or fill_buf (default benchmark)
+> + *		   in specified signal. Direct benchmark stdio to /dev/null.
+> + * @signum:	signal number
+> + * @info:	signal info
+> + * @ucontext:	user context in signal handling
+> + *
+> + * Return: void
+> + */
+> +void run_benchmark(int signum, siginfo_t *info, void *ucontext)
+> +{
+> +	unsigned long long span;
+> +	int operation, ret;
+> +	char **benchmark_cmd;
+> +	FILE *fp;
+> +
+> +	benchmark_cmd = info->si_ptr;
+> +
+> +	/*
+> +	 * Direct stdio of child to /dev/null, so that only parent writes to
+> +	 * stdio (console)
+> +	 */
+> +	fp = freopen("/dev/null", "w", stdout);
+> +	if (!fp)
+> +		PARENT_EXIT("Unable to direct benchmark status to /dev/null");
+> +
+> +	if (strcmp(benchmark_cmd[0], "fill_buf") == 0) {
+> +		/* Execute default fill_buf benchmark */
+> +		span = strtoul(benchmark_cmd[1], NULL, 10);
+> +		operation = atoi(benchmark_cmd[4]);
+> +		if (run_fill_buf(span, 1, 1, operation, NULL))
+> +			fprintf(stderr, "Error in running fill buffer\n");
+> +	} else {
+> +		/* Execute specified benchmark */
+> +		ret = execvp(benchmark_cmd[0], benchmark_cmd);
+> +		if (ret)
+> +			perror("wrong\n");
+> +	}
+> +
+> +	fclose(stdout);
+> +	PARENT_EXIT("Unable to run specified benchmark");
+> +}
+> +
+> +/*
+> + * create_grp - Create a group only if one doesn't exist
+> + * @grp_name:	Name of the group
+> + * @grp:	Full path and name of the group
+> + * @parent_grp:	Full path and name of the parent group
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +static int create_grp(const char *grp_name, char *grp, const char *parent_grp)
+> +{
+> +	int found_grp = 0;
+> +	struct dirent *ep;
+> +	DIR *dp;
+> +
+> +	/* Check if requested grp exists or not */
+> +	dp = opendir(parent_grp);
+> +	if (dp) {
+> +		while ((ep = readdir(dp)) != NULL) {
+> +			if (strcmp(ep->d_name, grp_name) == 0)
+> +				found_grp = 1;
+> +		}
+> +		closedir(dp);
+> +	} else {
+> +		perror("Unable to open resctrl for group");
+> +
+> +		return -1;
+> +	}
+> +
+> +	/* Requested grp doesn't exist, hence create it */
+> +	if (found_grp == 0) {
+> +		if (mkdir(grp, 0) == -1) {
+> +			perror("Unable to create group");
+> +
+> +			return -1;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int write_pid_to_tasks(char *tasks, pid_t pid)
+> +{
+> +	FILE *fp;
+> +
+> +	fp = fopen(tasks, "w");
+> +	if (!fp) {
+> +		perror("Failed to open tasks file");
+> +
+> +		return -1;
+> +	}
+> +	if (fprintf(fp, "%d\n", pid) < 0) {
+> +		perror("Failed to wr pid to tasks file");
+> +		fclose(fp);
+> +
+> +		return -1;
+> +	}
+> +	fclose(fp);
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * write_bm_pid_to_resctrl - Write a PID (i.e. benchmark) to resctrl FS
+> + * @bm_pid:		PID that should be written
+> + * @ctrlgrp:		Name of the control monitor group (con_mon grp)
+> + * @mongrp:		Name of the monitor group (mon grp)
+> + * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
+> + *
+> + * If a con_mon grp is requested, create it and write pid to it, otherwise
+> + * write pid to root con_mon grp.
+> + * If a mon grp is requested, create it and write pid to it, otherwise
+> + * pid is not written, this means that pid is in con_mon grp and hence
+> + * should consult con_mon grp's mon_data directory for results.
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +int write_bm_pid_to_resctrl(pid_t bm_pid, char *ctrlgrp, char *mongrp,
+> +			    char *resctrl_val)
+> +{
+> +	char controlgroup[256], monitorgroup[256], monitorgroup_p[256];
+> +	char tasks[256];
+> +	int ret;
+> +
+> +	if (ctrlgrp)
+> +		sprintf(controlgroup, "%s/%s", RESCTRL_PATH, ctrlgrp);
+> +	else
+> +		sprintf(controlgroup, "%s", RESCTRL_PATH);
+> +
+> +	/* Create control and monitoring group and write pid into it */
+> +	ret = create_grp(ctrlgrp, controlgroup, RESCTRL_PATH);
+> +	if (ret)
+> +		return ret;
+> +	sprintf(tasks, "%s/tasks", controlgroup);
+> +	ret = write_pid_to_tasks(tasks, bm_pid);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Create mon grp and write pid into it for "mbm" test */
+> +	if ((strcmp(resctrl_val, "mbm") == 0)) {
+> +		if (mongrp) {
+> +			sprintf(monitorgroup_p, "%s/mon_groups", controlgroup);
+> +			sprintf(monitorgroup, "%s/%s", monitorgroup_p, mongrp);
+> +			ret = create_grp(mongrp, monitorgroup, monitorgroup_p);
+> +			if (ret)
+> +				return ret;
+> +
+> +			sprintf(tasks, "%s/mon_groups/%s/tasks",
+> +				controlgroup, mongrp);
+> +			ret = write_pid_to_tasks(tasks, bm_pid);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	printf("Write benchmark to resctrl FS: done!\n");
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * write_schemata - Update schemata of a con_mon grp
+> + * @ctrlgrp:		Name of the con_mon grp
+> + * @schemata:		Schemata that should be updated to
+> + * @cpu_no:		CPU number that the benchmark PID is binded to
+> + * @resctrl_val:	Resctrl feature (Eg: mbm, mba.. etc)
+> + *
+> + * Update schemata of a con_mon grp *only* if requested resctrl feature is
+> + * allocation type
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +int write_schemata(char *ctrlgrp, char *schemata, int cpu_no, char *resctrl_val)
+> +{
+> +	char controlgroup[1024], schema[1024];
+> +	int resource_id;
+> +	FILE *fp;
+> +
+> +	if (strcmp(resctrl_val, "mba") == 0) {
+> +		if (!schemata) {
+> +			printf("Schemata empty, so not updating\n");
+> +
+> +			return 0;
+> +		}
+> +		if (get_resource_id(cpu_no, &resource_id) < 0) {
+> +			perror("Failed to get resource id");
+> +			return -1;
+> +		}
+> +
+> +		if (ctrlgrp)
+> +			sprintf(controlgroup, "%s/%s/schemata", RESCTRL_PATH,
+> +				ctrlgrp);
+> +		else
+> +			sprintf(controlgroup, "%s/schemata", RESCTRL_PATH);
+> +		sprintf(schema, "%s%d%c%s", "MB:", resource_id, '=', schemata);
+> +
+> +		fp = fopen(controlgroup, "w");
+> +		if (!fp) {
+> +			perror("Failed to open control group");
+> +
+> +			return -1;
+> +		}
+> +
+> +		if (fprintf(fp, "%s\n", schema) < 0) {
+> +			perror("Failed to write schemata in control group");
+> +			fclose(fp);
+> +
+> +			return -1;
+> +		}
+> +		fclose(fp);
+> +
+> +		printf("Write schemata to resctrl FS: done!\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * validate_resctrl_feature_request - Check if requested feature is valid.
+> + * @resctrl_val:	Requested feature
+> + *
+> + * Return: 0 on success, non-zero on failure
+> + */
+> +int validate_resctrl_feature_request(char *resctrl_val)
+> +{
+> +	int resctrl_features_supported[MAX_RESCTRL_FEATURES];
+> +	const char *resctrl_features_list[MAX_RESCTRL_FEATURES] = {
+> +			"mbm", "mba"};
+> +	int i, valid_resctrl_feature = -1;
+> +	char line[1024];
+> +	FILE *fp;
+> +
+> +	if (!resctrl_val) {
+> +		fprintf(stderr, "resctrl feature cannot be NULL\n");
+> +
+> +		return -1;
+> +	}
+> +
+> +	for (i = 0; i < MAX_RESCTRL_FEATURES; i++)
+> +		resctrl_features_supported[i] = 0;
+> +
+> +	/* Is the resctrl feature request valid? */
+> +	for (i = 0; i < MAX_RESCTRL_FEATURES; i++) {
+> +		if (strcmp(resctrl_features_list[i], resctrl_val) == 0)
+> +			valid_resctrl_feature = i;
+> +	}
+> +	if (valid_resctrl_feature == -1) {
+> +		fprintf(stderr, "Not a valid resctrl feature request\n");
+> +
+> +		return -1;
+> +	}
+> +
+> +	/* Enumerate resctrl features supported by this platform */
+> +	if (system("dmesg > dmesg") != 0) {
+> +		perror("Could not create custom dmesg file");
+
+This fails horribly if the local directory is not writable. Creating a
+pipe (similar to how we communicate between the benchmark processes) and
+reading from there avoid this.
+
+> +
+> +		return -1;
+> +	}
+> +
+> +	fp = fopen("dmesg", "r");
+> +	if (!fp) {
+> +		perror("Could not read custom created dmesg");
+> +
+> +		return -1;
+> +	}
+> +
+> +	while (fgets(line, 1024, fp)) {
+> +		if ((strstr(line, RESCTRL_MBM)) != NULL)
+> +			resctrl_features_supported[RESCTRL_FEATURE_MBM] = 1;
+
+In general this approach is not very reliable, as the beginning of the
+kernel log could have been overwritten already in the dmesg buffer.
+Also this is not the way we should detect features: I think the content
+of /sys/fs/resctrl/info should be used for that purpose.
 
 Cheers,
 Andre.
 
-[1] http://linux-arm.org/git?p=linux-ap.git;a=shortlog;h=refs/heads/resctrl-selftests-wip
-git://linux-arm.org/linux-ap.git    branch: resctrl-selftests-wip
+> +		if ((strstr(line, RESCTRL_MBA)) != NULL)
+> +			resctrl_features_supported[RESCTRL_FEATURE_MBA] = 1;
+> +	}
+> +	fclose(fp);
+> +
+> +	if (system("rm -rf dmesg") != 0)
+> +		perror("Unable to remove 'dmesg' file");
+> +
+> +	/* Is the resctrl feature request supported? */
+> +	if (!resctrl_features_supported[valid_resctrl_feature]) {
+> +		fprintf(stderr, "resctrl feature not supported!");
+> +
+> +		return -1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int validate_bw_report_request(char *bw_report)
+> +{
+> +	if (strcmp(bw_report, "reads") == 0)
+> +		return 0;
+> +	if (strcmp(bw_report, "writes") == 0)
+> +		return 0;
+> +	if (strcmp(bw_report, "nt-writes") == 0) {
+> +		strcpy(bw_report, "writes");
+> +		return 0;
+> +	}
+> +	if (strcmp(bw_report, "total") == 0)
+> +		return 0;
+> +
+> +	fprintf(stderr, "Requested iMC B/W report type unavailable\n");
+> +
+> +	return -1;
+> +}
+> +
+> +int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+> +		    int group_fd, unsigned long flags)
+> +{
+> +	int ret;
+> +
+> +	ret = syscall(__NR_perf_event_open, hw_event, pid, cpu,
+> +		      group_fd, flags);
+> +	return ret;
+> +}
 
-> We introduce resctrl selftest to cover resctrl features on both
-> X86 and ARM architectures. It first implements MBM (Memory Bandwidth
-> Monitoring), MBA (Memory Bandwidth Allocation), L3 CAT (Cache Allocation
-> Technology), and CQM (Cache QoS Monitoring)  tests. We can enhance
-> the selftest tool to include more functionality tests in future.
-> 
-> The tool has been tested on both Intel RDT and AMD QoS.
-> 
-> There is an existing resctrl test suite 'intel_cmt_cat'. But the major
-> purpose of the tool is to test Intel(R) RDT hardware via writing and
-> reading MSR registers. It does access resctrl file system; but the
-> functionalities are very limited. And it doesn't support automatic test
-> and a lot of manual verifications are involved.
-> 
-> So the selftest tool we are introducing here provides a convenient
-> tool which does automatic resctrl testing, is easily available in kernel
-> tree, and will be extended to AMD QoS and ARM MPAM.
-> 
-> The selftest tool is in tools/testing/selftests/resctrl in order to have
-> generic test code for all architectures.
-> 
-> Changelog:
-> v7:
-> - Fix a few warnings when compiling patches separately, pointed by Babu 
-> 
-> v6:
-> - Fix a benchmark reading optimized out issue in newer GCC.
-> - Fix a few coding style issues.
-> - Re-arrange code among patches to make cleaner code. No change in patches
-> structure.
-> 
-> v5:
-> - Based the v4 patches submitted by Fenghua Yu and added changes to support
->   AMD.
-> - Changed the function name get_sock_num to get_resource_id. Intel uses
->   socket number for schemata and AMD uses l3 index id. To generalize,
->   changed the function name to get_resource_id.
-> - Added the code to detect vendor.
-> - Disabled the few tests for AMD where the test results are not clear.
->   Also AMD does not have IMC.
-> - Fixed few compile issues.
-> - Some cleanup to make each patch independent.
-> - Tested the patches on AMD system. Fenghua, Need your help to test on
->   Intel box. Please feel free to change and resubmit if something
->    broken.
-> - Here is the link for previous version.
->   https://lore.kernel.org/lkml/1545438038-75107-1-git-send-email-fenghua.yu=
-> @intel.com/
-> 
-> v4:
-> - address comments from Balu and Randy
-> - Add CAT and CQM tests
-> 
-> v3:
-> - Change code based on comments from Babu Moger
-> - Remove some unnessary code and use pipe to communicate b/w processes
-> 
-> v2:
-> - Change code based on comments from Babu Moger
-> - Clean up other places.
-> 
-> Arshiya Hayatkhan Pathan (4):
->   selftests/resctrl: Add MBM test
->   selftests/resctrl: Add MBA test
->   selftests/resctrl: Add Cache QoS Monitoring (CQM) selftest
->   selftests/resctrl: Add Cache Allocation Technology (CAT) selftest
-> 
-> Babu Moger (3):
->   selftests/resctrl: Add vendor detection mechanism
->   selftests/resctrl: Use cache index3 id for AMD schemata masks
->   selftests/resctrl: Disable MBA and MBM tests for AMD
-> 
-> Fenghua Yu (2):
->   selftests/resctrl: Add README for resctrl tests
->   selftests/resctrl: Add the test in MAINTAINERS
-> 
-> Sai Praneeth Prakhya (4):
->   selftests/resctrl: Add basic resctrl file system operations and data
->   selftests/resctrl: Read memory bandwidth from perf IMC counter and
->     from resctrl file system
->   selftests/resctrl: Add callback to start a benchmark
->   selftests/resctrl: Add built in benchmark
-> 
->  MAINTAINERS                                     |   1 +
->  tools/testing/selftests/resctrl/Makefile        |  16 +
->  tools/testing/selftests/resctrl/README          |  54 ++
->  tools/testing/selftests/resctrl/cache.c         | 274 +++++++++
->  tools/testing/selftests/resctrl/cat_test.c      | 242 ++++++++
->  tools/testing/selftests/resctrl/cqm_test.c      | 173 ++++++
->  tools/testing/selftests/resctrl/fill_buf.c      | 210 +++++++
->  tools/testing/selftests/resctrl/mba_test.c      | 178 ++++++
->  tools/testing/selftests/resctrl/mbm_test.c      | 150 +++++
->  tools/testing/selftests/resctrl/resctrl.h       | 117 ++++
->  tools/testing/selftests/resctrl/resctrl_tests.c | 238 ++++++++
->  tools/testing/selftests/resctrl/resctrl_val.c   | 723 ++++++++++++++++++++++++
->  tools/testing/selftests/resctrl/resctrlfs.c     | 668 ++++++++++++++++++++++
->  13 files changed, 3044 insertions(+)
->  create mode 100644 tools/testing/selftests/resctrl/Makefile
->  create mode 100644 tools/testing/selftests/resctrl/README
->  create mode 100644 tools/testing/selftests/resctrl/cache.c
->  create mode 100644 tools/testing/selftests/resctrl/cat_test.c
->  create mode 100644 tools/testing/selftests/resctrl/cqm_test.c
->  create mode 100644 tools/testing/selftests/resctrl/fill_buf.c
->  create mode 100644 tools/testing/selftests/resctrl/mba_test.c
->  create mode 100644 tools/testing/selftests/resctrl/mbm_test.c
->  create mode 100644 tools/testing/selftests/resctrl/resctrl.h
->  create mode 100644 tools/testing/selftests/resctrl/resctrl_tests.c
->  create mode 100644 tools/testing/selftests/resctrl/resctrl_val.c
->  create mode 100644 tools/testing/selftests/resctrl/resctrlfs.c
-> 
+
 
