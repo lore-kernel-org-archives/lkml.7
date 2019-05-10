@@ -2,170 +2,136 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82346C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2566C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E7D217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:21:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="PTQbnLjW"
+	by mail.kernel.org (Postfix) with ESMTP id 87DD02177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbfEJOUv (ORCPT
+        id S1727958AbfEJOXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:20:51 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48950 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727891AbfEJOUs (ORCPT
+        Fri, 10 May 2019 10:23:21 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:47758 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727807AbfEJOXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:20:48 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AE1mfQ025399;
-        Fri, 10 May 2019 16:20:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version : content-type
- : content-transfer-encoding; s=STMicroelectronics;
- bh=/XRL/cLbUyuiOX7oZ//xMTlD4EbxIiDLjZE+ThQcnls=;
- b=PTQbnLjW+4cIwTlZRJQ7M0JJ7VWQbIjead4RnKIdGrVSe9FJJQ8PnLpnJSm/Qr32Czxg
- hgrSy9SitxnMH9jMvP0ClqBFdU2LVSPBfYufiyTj24AyQQ4NrGs5dWtTt4b2qcJlfIYt
- TPzmiyWddvuHizI++YI5XvYZj1ytzxVnKHzWs2oryLmk2vK0+8bmlMLqK4isEMLICTKM
- uUdjt+CCaOXjHzT/F4Anv9raBFZIU622NfqrtAdW5KXuFgMtA1/06K868iJleupRSndk
- S91rnNrtYH73E1HpwdqAfSbFHYAZn8Kzdf/kq6U+KWpmStGDdfMVFIAej9vaukOhGKr7 Xw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2scfv2s5w5-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 10 May 2019 16:20:35 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 958323D;
-        Fri, 10 May 2019 14:20:33 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 754F5113A;
-        Fri, 10 May 2019 14:20:33 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
- 2019 16:20:33 +0200
-Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May 2019 16:20:32
- +0200
-From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
-To:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 4/5] ARM: dts: stm32: move fixe regulators reg11 & reg18
-Date:   Fri, 10 May 2019 16:20:22 +0200
-Message-ID: <1557498023-10766-5-git-send-email-yannick.fertre@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
-References: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
+        Fri, 10 May 2019 10:23:20 -0400
+Received: (qmail 2214 invoked by uid 2102); 10 May 2019 10:23:19 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 10 May 2019 10:23:19 -0400
+Date:   Fri, 10 May 2019 10:23:19 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jim Lin <jilin@nvidia.com>
+cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
+        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
+        <keescook@chromium.org>, <nsaenzjulienne@suse.de>,
+        <jflat@chromium.org>, <malat@debian.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v9 2/2] usb: xhci: Add Clear_TT_Buffer
+In-Reply-To: <1557491070-24715-3-git-send-email-jilin@nvidia.com>
+Message-ID: <Pine.LNX.4.44L0.1905101019520.1516-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.201.23.97]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move regulators reg11 & reg18 from device-tree files stm32mp157c-ed1.dts
-& stm32mp157c-dk2.dts to file stm32mp157c.dtsi.
+On Fri, 10 May 2019, Jim Lin wrote:
 
-Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
----
- arch/arm/boot/dts/stm32mp157c-dk2.dts |  8 --------
- arch/arm/boot/dts/stm32mp157c-ed1.dts | 16 ----------------
- arch/arm/boot/dts/stm32mp157c.dtsi    | 16 ++++++++++++++++
- 3 files changed, 16 insertions(+), 24 deletions(-)
+> USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+> processing for full-/low-speed endpoints connected via a TT, the host
+> software must use the Clear_TT_Buffer request to the TT to ensure
+> that the buffer is not in the busy state".
+> 
+> In our case, a full-speed speaker (ConferenceCam) is behind a high-
+> speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+> request we may continue to get STALL with the folllowing requests,
+> like Set_Interface.
+> 
+> Here we update udev->devaddr in address_device callback function
+> (this USB device address is assigned by XHCI controller) and invoke
+> usb_hub_clear_tt_buffer() to send Clear_TT_Buffer request to the hub
+> of the device for the following Set_Interface requests to the device
+> to get ACK successfully.
+> 
+> Signed-off-by: Jim Lin <jilin@nvidia.com>
+> ---
+> v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
+>     , remove its claiming in xhci.h
+> v3: Add description for clearing_tt (xhci.h)
+> v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
+>     to protect for Clear_TT_Buffer to be run serially.
+>     Remove xhci_clear_tt_buffer_complete as it's not necessary.
+>     Same reason as the above.
+>     Extend usb_hub_clear_tt_buffer parameter
+> v5: Not extending usb_hub_clear_tt_buffer parameter
+>     Add description.
+> v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
+> v7: Add devaddr field in "struct usb_device"
+> v8: split as two patches
+> v9: no change
+> 
+>  drivers/usb/host/xhci-ring.c | 12 ++++++++++++
+>  drivers/usb/host/xhci.c      |  1 +
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+> index 9215a28dad40..739737faf752 100644
+> --- a/drivers/usb/host/xhci-ring.c
+> +++ b/drivers/usb/host/xhci-ring.c
+> @@ -1786,6 +1786,17 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
+>  	return NULL;
+>  }
+>  
+> +static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci, struct xhci_td *td)
+> +{
+> +	/*
+> +	 * As part of low/full-speed endpoint-halt processing
+> +	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
+> +	 */
+> +	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
+> +	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub))
+> +		usb_hub_clear_tt_buffer(td->urb);
+> +}
+> +
+>  static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
+>  		unsigned int slot_id, unsigned int ep_index,
+>  		unsigned int stream_id, struct xhci_td *td,
+> @@ -1804,6 +1815,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
+>  	if (reset_type == EP_HARD_RESET) {
+>  		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
+>  		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
+> +		xhci_clear_hub_tt_buffer(xhci, td);
+>  	}
+>  	xhci_ring_cmd_db(xhci);
+>  }
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-dk2.dts b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-index 20ea601..020ea0f 100644
---- a/arch/arm/boot/dts/stm32mp157c-dk2.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-dk2.dts
-@@ -11,14 +11,6 @@
- / {
- 	model = "STMicroelectronics STM32MP157C-DK2 Discovery Board";
- 	compatible = "st,stm32mp157c-dk2", "st,stm32mp157";
--
--	reg18: reg18 {
--		compatible = "regulator-fixed";
--		regulator-name = "reg18";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-always-on;
--	};
- };
- 
- &dsi {
-diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-index 62a8c78..f41189c 100644
---- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
-@@ -27,22 +27,6 @@
- 		serial0 = &uart4;
- 	};
- 
--	reg11: reg11 {
--		compatible = "regulator-fixed";
--		regulator-name = "reg11";
--		regulator-min-microvolt = <1100000>;
--		regulator-max-microvolt = <1100000>;
--		regulator-always-on;
--	};
--
--	reg18: reg18 {
--		compatible = "regulator-fixed";
--		regulator-name = "reg18";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-always-on;
--	};
--
- 	sd_switch: regulator-sd_switch {
- 		compatible = "regulator-gpio";
- 		regulator-name = "sd_switch";
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 6b14f1e..aaac51cd 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -11,6 +11,22 @@
- 	#address-cells = <1>;
- 	#size-cells = <1>;
- 
-+	reg11: reg11 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "reg11";
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1100000>;
-+		regulator-always-on;
-+	};
-+
-+	reg18: reg18 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "reg18";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.7.4
+How come there's no clear_tt_buffer_complete() callback?  Without it,
+xhci-hcd won't know when the TT buffer has been cleared, and so it
+won't know when to restart the endpoint ring for the halted endpoint.  
+
+Note: Restarting the endpoint ring before the TT buffer has been 
+cleared is not safe.
+
+Alan Stern
+
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index 7fa58c99f126..68b393e5a453 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -4096,6 +4096,7 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
+>  	/* Zero the input context control for later use */
+>  	ctrl_ctx->add_flags = 0;
+>  	ctrl_ctx->drop_flags = 0;
+> +	udev->devaddr = (u8)(le32_to_cpu(slot_ctx->dev_state) & DEV_ADDR_MASK);
+>  
+>  	xhci_dbg_trace(xhci, trace_xhci_dbg_address,
+>  		       "Internal device address = %d",
+> 
 
