@@ -2,166 +2,97 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0F7C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50219C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:09:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF440217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABF3217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:09:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfEJUDH (ORCPT
+        id S1727915AbfEJUJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:03:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
+        Fri, 10 May 2019 16:09:42 -0400
+Received: from fieldses.org ([173.255.197.46]:55510 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727700AbfEJUBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:01:09 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25812184B;
-        Fri, 10 May 2019 20:01:07 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hPBhZ-0006dO-To; Fri, 10 May 2019 16:01:05 -0400
-Message-Id: <20190510195606.537643615@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Fri, 10 May 2019 15:56:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 00/27] tools/lib/traceevent: Add man pages for most libtraceevent functions
+        id S1727657AbfEJUJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 16:09:42 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 19F5C63E; Fri, 10 May 2019 16:09:41 -0400 (EDT)
+Date:   Fri, 10 May 2019 16:09:41 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas =?utf-8?Q?Gr=C3=BCnbacher?= 
+        <andreas.gruenbacher@gmail.com>,
+        Patrick Plagwitz <Patrick_Plagwitz@web.de>,
+        "linux-unionfs@vger.kernel.org" <linux-unionfs@vger.kernel.org>,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] overlayfs: ignore empty NFSv4 ACLs in ext4 upperdir
+Message-ID: <20190510200941.GB5349@fieldses.org>
+References: <CAHpGcMKHjic6L+J0qvMYNG9hVCcDO1hEpx4BiEk0ZCKDV39BmA@mail.gmail.com>
+ <266c571f-e4e2-7c61-5ee2-8ece0c2d06e9@web.de>
+ <CAHpGcMKmtppfn7PVrGKEEtVphuLV=YQ2GDYKOqje4ZANhzSgDw@mail.gmail.com>
+ <CAHpGcMKjscfhmrAhwGes0ag2xTkbpFvCO6eiLL_rHz87XE-ZmA@mail.gmail.com>
+ <CAJfpegvRFGOc31gVuYzanzWJ=mYSgRgtAaPhYNxZwHin3Wc0Gw@mail.gmail.com>
+ <CAHc6FU4JQ28BFZE9_8A06gtkMvvKDzFmw9=ceNPYvnMXEimDMw@mail.gmail.com>
+ <20161206185806.GC31197@fieldses.org>
+ <87bm0l4nra.fsf@notabene.neil.brown.name>
+ <20190503153531.GJ12608@fieldses.org>
+ <87woj3157p.fsf@notabene.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87woj3157p.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to complete the libtraceevent into a proper library, Tzvetomir
-has been working on creating man pages for all the functions that
-are exported for use by applications that will use libtraceevent.
+On Tue, May 07, 2019 at 10:24:58AM +1000, NeilBrown wrote:
+> Interesting perspective .... though doesn't NFSv4 explicitly allow
+> client-side ACL enforcement in the case of delegations?
 
-In the process of writing these, we came across a few functions that
-need to be reworked, before we can post libtraceevent for distributions
-to share. These functions we will be working on and sending patches later
-on, with corresponding man pages for them. But for now, the man pages
-in this series are for functions we feel are fine as is.
+Not really.  What you're probably thinking of is the single ACE that the
+server can return on granting a delegation, that tells the client it can
+skip the ACCESS check for users matching that ACE.  It's unclear how
+useful that is.  It's currently unused by the Linux client and server.
 
-Arnaldo, please pull these patches into your queue.
+> Not sure how relevant that is....
+> 
+> It seems to me we have two options:
+>  1/ declare the NFSv4 doesn't work as a lower layer for overlayfs and
+>     recommend people use NFSv3, or
+>  2/ Modify overlayfs to work with NFSv4 by ignoring nfsv4 ACLs either
+>  2a/ always - and ignore all other acls and probably all system. xattrs,
+>  or
+>  2b/ based on a mount option that might be
+>       2bi/ general "noacl" or might be
+>       2bii/ explicit "noxattr=system.nfs4acl"
+>  
+> I think that continuing to discuss the miniature of the options isn't
+> going to help.  No solution is perfect - we just need to clearly
+> document the implications of whatever we come up with.
+> 
+> I lean towards 2a, but I be happy with with any '2' and '1' won't kill
+> me.
 
-Thanks!
+I guess I'd also lean towards 2a.
 
--- Steve
+I don't think it applies to posix acls, as overlayfs is capable of
+copying those up and evaluating them on its own.
+
+--b.
+
+> 
+> Do we have a vote?  Or does someone make an executive decision??
+> 
+> NeilBrown
 
 
-
-Tzvetomir Stoyanov (27):
-      tools lib traceevent: Remove hard coded install paths from pkg-config file
-      tools/lib/traceevent: Implement libtraceevent man pages
-      tools/lib/traceevent: Add support for man pages with multiple names
-      tools/lib/traceevent: libtraceevent man pages for tep_handler related APIs
-      tools/lib/traceevent: Man page for header_page APIs
-      tools/lib/traceevent: Man page for get/set cpus APIs
-      tools/lib/traceevent: Man page for file endian APIs
-      tools/lib/traceevent: Man page for host endian APIs
-      tools/lib/traceevent: Man page for page size APIs
-      tools/lib/traceevent: Man page for tep_strerror()
-      tools/lib/traceevent: Man pages for event handler APIs
-      tools/lib/traceevent: Man pages for function related libtraceevent APIs
-      tools/lib/traceevent: Man pages for registering print function
-      tools/lib/traceevent: Man page for tep_read_number()
-      tools/lib/traceevent: Man pages for event find APIs
-      tools/lib/traceevent: Man page for list events APIs
-      tools/lib/traceevent: Man pages for libtraceevent event get APIs
-      tools/lib/traceevent: Man pages find field APIs
-      tools/lib/traceevent: Man pages get field value APIs
-      tools/lib/traceevent: Man pages for print field APIs
-      tools/lib/traceevent: Man page for tep_read_number_field()
-      tools/lib/traceevent: Man pages for event fields APIs
-      tools/lib/traceevent: Man pages for event filter APIs
-      tools/lib/traceevent: Man pages for parse event APIs
-      tools/lib/traceevent: Man page for tep_parse_header_page()
-      tools/lib/traceevent: Man pages for APIs, used to extract common fields from a record
-      tools/lib/traceevent: Man pages for trace sequences APIs
-
-----
- tools/lib/traceevent/Documentation/Makefile        | 207 ++++++++++++++++++++
- tools/lib/traceevent/Documentation/asciidoc.conf   | 120 ++++++++++++
- .../Documentation/libtraceevent-commands.txt       | 153 +++++++++++++++
- .../Documentation/libtraceevent-cpus.txt           |  77 ++++++++
- .../Documentation/libtraceevent-endian_read.txt    |  78 ++++++++
- .../Documentation/libtraceevent-event_find.txt     | 103 ++++++++++
- .../Documentation/libtraceevent-event_get.txt      |  99 ++++++++++
- .../Documentation/libtraceevent-event_list.txt     | 122 ++++++++++++
- .../Documentation/libtraceevent-field_find.txt     | 118 ++++++++++++
- .../Documentation/libtraceevent-field_get_val.txt  | 122 ++++++++++++
- .../Documentation/libtraceevent-field_print.txt    | 126 +++++++++++++
- .../Documentation/libtraceevent-field_read.txt     |  81 ++++++++
- .../Documentation/libtraceevent-fields.txt         | 105 +++++++++++
- .../Documentation/libtraceevent-file_endian.txt    |  91 +++++++++
- .../Documentation/libtraceevent-filter.txt         | 209 +++++++++++++++++++++
- .../Documentation/libtraceevent-func_apis.txt      | 183 ++++++++++++++++++
- .../Documentation/libtraceevent-func_find.txt      |  88 +++++++++
- .../Documentation/libtraceevent-handle.txt         | 101 ++++++++++
- .../Documentation/libtraceevent-header_page.txt    | 102 ++++++++++
- .../Documentation/libtraceevent-host_endian.txt    | 104 ++++++++++
- .../Documentation/libtraceevent-long_size.txt      |  78 ++++++++
- .../Documentation/libtraceevent-page_size.txt      |  82 ++++++++
- .../Documentation/libtraceevent-parse_event.txt    |  90 +++++++++
- .../Documentation/libtraceevent-parse_head.txt     |  82 ++++++++
- .../Documentation/libtraceevent-record_parse.txt   | 137 ++++++++++++++
- .../libtraceevent-reg_event_handler.txt            | 156 +++++++++++++++
- .../Documentation/libtraceevent-reg_print_func.txt | 155 +++++++++++++++
- .../Documentation/libtraceevent-set_flag.txt       | 104 ++++++++++
- .../Documentation/libtraceevent-strerror.txt       |  85 +++++++++
- .../Documentation/libtraceevent-tseq.txt           | 158 ++++++++++++++++
- .../lib/traceevent/Documentation/libtraceevent.txt | 203 ++++++++++++++++++++
- .../lib/traceevent/Documentation/manpage-1.72.xsl  |  14 ++
- .../lib/traceevent/Documentation/manpage-base.xsl  |  35 ++++
- .../Documentation/manpage-bold-literal.xsl         |  17 ++
- .../traceevent/Documentation/manpage-normal.xsl    |  13 ++
- .../Documentation/manpage-suppress-sp.xsl          |  21 +++
- tools/lib/traceevent/Makefile                      |  46 ++++-
- tools/lib/traceevent/libtraceevent.pc.template     |   4 +-
- 38 files changed, 3863 insertions(+), 6 deletions(-)
- create mode 100644 tools/lib/traceevent/Documentation/Makefile
- create mode 100644 tools/lib/traceevent/Documentation/asciidoc.conf
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-commands.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_get.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_get_val.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_print.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-fields.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-filter.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-func_find.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-handle.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-long_size.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_event.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_event_handler.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-reg_print_func.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-set_flag.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-tseq.txt
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent.txt
- create mode 100644 tools/lib/traceevent/Documentation/manpage-1.72.xsl
- create mode 100644 tools/lib/traceevent/Documentation/manpage-base.xsl
- create mode 100644 tools/lib/traceevent/Documentation/manpage-bold-literal.xsl
- create mode 100644 tools/lib/traceevent/Documentation/manpage-normal.xsl
- create mode 100644 tools/lib/traceevent/Documentation/manpage-suppress-sp.xsl
