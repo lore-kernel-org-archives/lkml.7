@@ -2,124 +2,106 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB33C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD34C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F59A217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C901217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:31:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="itdBqCoK"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QnJPQ93y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfEJG3I (ORCPT
+        id S1726998AbfEJGbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:29:08 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35294 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfEJG3I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:29:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w12so6271449wrp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fXoP+f6QC17xzzktncyb1JK9XYTxg2n/Jos+hr8hflY=;
-        b=itdBqCoK1ajm7GqCEPGxrB4iEYXPleHImyaPAPsZtPsRwoWDRxpDa4NAhAIe/YjORU
-         oqeRSlllHu/LFz4qLzNU/BtIHxQjE+c0XLCAsitWX5oumvzfiN1VN8S2uYdJdes6QkyI
-         JMYBg7Ls0TpcMqP8QlutVJ1FpirHfsqDQd/dA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fXoP+f6QC17xzzktncyb1JK9XYTxg2n/Jos+hr8hflY=;
-        b=uCVThIky88t8BP5BrAQGUuNdyoodPcWmR9cA1Ykgv6fZYRSzvS5lwX7j3JX/wqc/5b
-         I1mkNUYaXhVVX54DNWG7njczdyFMw2ov11ax5wjr4QkGImwP4Wg+LrfxelST/btfjR6c
-         6Asr13IZFv2E9T9yAwWunMzYTIHMbzE6YxhQ8eZG+SuUz5lJ962Ydwj1eiZ8mnFDFOtj
-         TgETAjLXA7qnjs4V3Aa5La3SSRdGHfOPw5nx8eJ19PJlStUypdd8luKsyf+JWheI5lZd
-         MNYOPn9HBmHwp7FPWEzQWXd9gXRhhnOw1xNEFmGI8hHVrTnJsO6RnAyQy6OUUJMre79W
-         GoCw==
-X-Gm-Message-State: APjAAAVBc6UltPgbsPsOoNUX9Dl+d/GN+INMQg2CkfbhwbT4NPnt3KjR
-        QXSyjYmM5kBUn34KymhWGja0gw==
-X-Google-Smtp-Source: APXvYqyD/Ihm3RfEZqSrIUKTRP3K/yqwgsWS6ZBxR1ydlc2vrnLSWVZMYQ86kUm3VXj7Ytc6N2PrUQ==
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr6398927wrj.262.1557469746571;
-        Thu, 09 May 2019 23:29:06 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id n17sm3750263wrw.77.2019.05.09.23.29.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 23:29:05 -0700 (PDT)
-Date:   Fri, 10 May 2019 08:27:27 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
-Subject: Re: [PATCH 3/5] sbitmap: fix improper use of smp_mb__before_atomic()
-Message-ID: <20190510062727.GA4607@andrea>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-4-git-send-email-andrea.parri@amarulasolutions.com>
- <20190510034101.GC27944@ming.t460p>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510034101.GC27944@ming.t460p>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 10 May 2019 02:31:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:3605 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbfEJGbb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 02:31:31 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 450gN044zdz9v1GD;
+        Fri, 10 May 2019 08:31:28 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=QnJPQ93y; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 5RVjzFTZy1GP; Fri, 10 May 2019 08:31:28 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 450gN0334Cz9v1GC;
+        Fri, 10 May 2019 08:31:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557469888; bh=4JggaEKDb5wcArbI27Jxgc52P6X1TORgfQ6AS2Hpqwk=;
+        h=From:Subject:To:Cc:Date:From;
+        b=QnJPQ93yxEE6EnayQikQChVZCRkXoIeJiZUDR1Y60shyqnBi3jPffhNZOSX8MHtKY
+         dTDpHcTzhyXSBfsB4k7Ce2EgDsqX4i0w9npPT5CE9nEDqaLtiw/elIYZnrcOIyfnz8
+         3E+QN/feMgkGyALx3EMoqUPRRCzQrQbJorKS9HaU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 597528B7CF;
+        Fri, 10 May 2019 08:31:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id YwAGeELdQCyp; Fri, 10 May 2019 08:31:29 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 354198B756;
+        Fri, 10 May 2019 08:31:29 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 1C25766204; Fri, 10 May 2019 06:31:28 +0000 (UTC)
+Message-Id: <7b15f4a18ab2d9fb54559acbadf2cd83a7d147f7.1557469839.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/64: mark start_here_multiplatform as __ref
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 10 May 2019 06:31:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ming,
+Otherwise, the following warning is encountered:
 
-On Fri, May 10, 2019 at 11:41:02AM +0800, Ming Lei wrote:
-> On Mon, Apr 29, 2019 at 10:14:59PM +0200, Andrea Parri wrote:
-> > This barrier only applies to the read-modify-write operations; in
-> > particular, it does not apply to the atomic_set() primitive.
-> > 
-> > Replace the barrier with an smp_mb().
-> > 
-> > Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
-> > Cc: stable@vger.kernel.org
-> > Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
-> > Reported-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> > Cc: Jens Axboe <axboe@kernel.dk>
-> > Cc: Omar Sandoval <osandov@fb.com>
-> > Cc: linux-block@vger.kernel.org
-> > ---
-> >  lib/sbitmap.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/lib/sbitmap.c b/lib/sbitmap.c
-> > index 155fe38756ecf..4a7fc4915dfc6 100644
-> > --- a/lib/sbitmap.c
-> > +++ b/lib/sbitmap.c
-> > @@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_batch(struct sbitmap_queue *sbq,
-> >  		 * to ensure that the batch size is updated before the wait
-> >  		 * counts.
-> >  		 */
-> > -		smp_mb__before_atomic();
-> > +		smp_mb();
-> >  		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
-> >  			atomic_set(&sbq->ws[i].wait_cnt, 1);
-> >  	}
-> > -- 
-> > 2.7.4
-> > 
-> 
-> sbitmap_queue_update_wake_batch() won't be called in fast path, and
-> the fix is correct too, so:
-> 
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+WARNING: vmlinux.o(.text+0x3dc6): Section mismatch in reference from the variable start_here_multiplatform to the function .init.text:.early_setup()
+The function start_here_multiplatform() references
+the function __init .early_setup().
+This is often because start_here_multiplatform lacks a __init
+annotation or the annotation of .early_setup is wrong.
 
-Thank you for the review(s),
+Fixes: 56c46bba9bbf ("powerpc/64: Fix booting large kernels with STRICT_KERNEL_RWX")
+Cc: Russell Currey <ruscur@russell.cc>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_64.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
-  Andrea
+diff --git a/arch/powerpc/kernel/head_64.S b/arch/powerpc/kernel/head_64.S
+index 5321a11c2835..259be7f6d551 100644
+--- a/arch/powerpc/kernel/head_64.S
++++ b/arch/powerpc/kernel/head_64.S
+@@ -904,6 +904,7 @@ p_toc:	.8byte	__toc_start + 0x8000 - 0b
+ /*
+  * This is where the main kernel code starts.
+  */
++__REF
+ start_here_multiplatform:
+ 	/* set up the TOC */
+ 	bl      relative_toc
+@@ -979,6 +980,7 @@ start_here_multiplatform:
+ 	RFI
+ 	b	.	/* prevent speculative execution */
+ 
++	.previous
+ 	/* This is where all platforms converge execution */
+ 
+ start_here_common:
+-- 
+2.13.3
 
-
-> thanks,
-> Ming
