@@ -2,129 +2,140 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8724DC04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F87C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A4D2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D8E2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="y9+Lix1Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfEJO5G (ORCPT
+        id S1727549AbfEJPDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:57:06 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:49918 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbfEJO4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:56:52 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id E09702001BD;
-        Fri, 10 May 2019 16:56:50 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id DE5352001B1;
-        Fri, 10 May 2019 16:56:50 +0200 (CEST)
-Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 70B14205ED;
-        Fri, 10 May 2019 16:56:50 +0200 (CEST)
-From:   laurentiu.tudor@nxp.com
-To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, marex@denx.de
-Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [RFC PATCH 1/3] ohci-hcd: use genalloc for USB HCs with local memory
-Date:   Fri, 10 May 2019 17:56:44 +0300
-Message-Id: <20190510145646.10078-2-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190510145646.10078-1-laurentiu.tudor@nxp.com>
-References: <20190510145646.10078-1-laurentiu.tudor@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 10 May 2019 11:03:20 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:28940 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727346AbfEJPDT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:03:19 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AErgJP004964;
+        Fri, 10 May 2019 17:03:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=WEEddrwDkIHLSmRlPP82HL8Zh6nr2g7bNKK4fLQdDyM=;
+ b=y9+Lix1ZuXzL5a9DeIi/XePgAd7t9QEb1DElD58ROp5opc6t8id9Mh3aiFqHrUZRlWCG
+ 6QoABaK9EwTN9ic6cACvXC9QaBPqrV9c6DKUceqVH7lDJEo0Y6jQln+cWOB6TU+2EQ/g
+ e+XkNkYamNYwneMZ4ToZQ/xAFxDVsRc2rjW2P3G9Jdi8Zgkcw0nw9XUqlfdDRtQKDL3U
+ Ixyxk2Pn8gKIx29sOeopNOrj/n9sWPlKsw6JiRC6NxnDFj/GhX0YILSYAPyrqVWxVY5s
+ 5abTGLkevqZn7rnF9pOZksOjcREH2PYxQGj9k3VuUq2TWF1JzOpW6dgkqxJXT3v4VLru NA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4k49q-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 10 May 2019 17:03:09 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9473F34;
+        Fri, 10 May 2019 15:03:08 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7252B2AB8;
+        Fri, 10 May 2019 15:03:08 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
+ 2019 17:03:08 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May 2019 17:03:07
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/stm: dsi: check hardware version
+Date:   Fri, 10 May 2019 17:02:59 +0200
+Message-ID: <1557500579-19720-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Check version of DSI hardware IP. Only versions 1.30 & 1.31
+are supported.
 
-For HCs that have local memory, replace the current DMA API usage
-with a genalloc generic allocator to manage the mappings for these
-devices.
-This is in preparation for dropping the existing "coherent" dma
-mem declaration APIs. Current implementation was relying on a short
-circuit in the DMA API that in the end, was acting as an allocator
-for these type of devices.
-
-For context, see thread here: https://lkml.org/lkml/2019/4/22/357
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
 ---
- drivers/usb/host/ohci-hcd.c | 23 ++++++++++++++++++-----
- drivers/usb/host/ohci.h     |  3 +++
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-index 210181fd98d2..c739d55901b3 100644
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -40,6 +40,7 @@
- #include <linux/dmapool.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
-+#include <linux/genalloc.h>
+diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+index 22bd095..29105e9 100644
+--- a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
++++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
+@@ -227,7 +227,6 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+ 	u32 val;
  
- #include <asm/io.h>
- #include <asm/irq.h>
-@@ -505,8 +506,15 @@ static int ohci_init (struct ohci_hcd *ohci)
- 	timer_setup(&ohci->io_watchdog, io_watchdog_func, 0);
- 	ohci->prev_frame_no = IO_WATCHDOG_OFF;
+ 	/* Update lane capabilities according to hw version */
+-	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
+ 	dsi->lane_min_kbps = LANE_MIN_KBPS;
+ 	dsi->lane_max_kbps = LANE_MAX_KBPS;
+ 	if (dsi->hw_version == HWVER_131) {
+@@ -306,6 +305,7 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct dw_mipi_dsi_stm *dsi;
++	struct clk *pclk;
+ 	struct resource *res;
+ 	int ret;
  
--	ohci->hcca = dma_alloc_coherent (hcd->self.controller,
--			sizeof(*ohci->hcca), &ohci->hcca_dma, GFP_KERNEL);
-+	if (hcd->driver->flags & HCD_LOCAL_MEM)
-+		ohci->hcca = gen_pool_dma_alloc(ohci->localmem_pool,
-+						sizeof(*ohci->hcca),
-+						&ohci->hcca_dma);
-+	else
-+		ohci->hcca = dma_alloc_coherent(hcd->self.controller,
-+						sizeof(*ohci->hcca),
-+						&ohci->hcca_dma,
-+						GFP_KERNEL);
- 	if (!ohci->hcca)
- 		return -ENOMEM;
- 
-@@ -990,9 +998,14 @@ static void ohci_stop (struct usb_hcd *hcd)
- 	remove_debug_files (ohci);
- 	ohci_mem_cleanup (ohci);
- 	if (ohci->hcca) {
--		dma_free_coherent (hcd->self.controller,
--				sizeof *ohci->hcca,
--				ohci->hcca, ohci->hcca_dma);
-+		if (hcd->driver->flags & HCD_LOCAL_MEM)
-+			gen_pool_free(ohci->localmem_pool,
-+				      (unsigned long)ohci->hcca,
-+				      sizeof(*ohci->hcca));
-+		else
-+			dma_free_coherent(hcd->self.controller,
-+					  sizeof(*ohci->hcca),
-+					  ohci->hcca, ohci->hcca_dma);
- 		ohci->hcca = NULL;
- 		ohci->hcca_dma = 0;
+@@ -347,6 +347,28 @@ static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
+ 		goto err_clk_get;
  	}
-diff --git a/drivers/usb/host/ohci.h b/drivers/usb/host/ohci.h
-index ef4813bfc5bf..cd196172c6fd 100644
---- a/drivers/usb/host/ohci.h
-+++ b/drivers/usb/host/ohci.h
-@@ -367,6 +367,9 @@ struct ohci_hcd {
- 	 */
- 	struct ohci_regs __iomem *regs;
  
-+	/* allocator for HCs having local memory */
-+	struct gen_pool         *localmem_pool;
++	pclk = devm_clk_get(dev, "pclk");
++	if (IS_ERR(pclk)) {
++		ret = PTR_ERR(pclk);
++		DRM_ERROR("Unable to get peripheral clock: %d\n", ret);
++		goto err_dsi_probe;
++	}
 +
- 	/*
- 	 * main memory used to communicate with the HC (dma-consistent).
- 	 * hcd adds to schedule for a live hc any time, but removals finish
++	ret = clk_prepare_enable(pclk);
++	if (ret) {
++		DRM_ERROR("%s: Failed to enable peripheral clk\n", __func__);
++		goto err_dsi_probe;
++	}
++
++	dsi->hw_version = dsi_read(dsi, DSI_VERSION) & VERSION;
++	clk_disable_unprepare(pclk);
++
++	if (dsi->hw_version != HWVER_130 && dsi->hw_version != HWVER_131) {
++		ret = -ENODEV;
++		DRM_ERROR("bad dsi hardware version\n");
++		goto err_dsi_probe;
++	}
++
+ 	dw_mipi_dsi_stm_plat_data.base = dsi->base;
+ 	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
+ 
 -- 
-2.17.1
+2.7.4
 
