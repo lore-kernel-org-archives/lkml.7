@@ -2,131 +2,106 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0338AC46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172A7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64742177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VO6jPCKV"
+	by mail.kernel.org (Postfix) with ESMTP id E383F216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfEJPQc (ORCPT
+        id S1727614AbfEJPSc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:16:32 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40999 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727353AbfEJPQc (ORCPT
+        Fri, 10 May 2019 11:18:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:46037 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727353AbfEJPSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:16:32 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k8so5394672lja.8;
-        Fri, 10 May 2019 08:16:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=UovbodiAPH01A7Tcpc/52cdJYhzSVeuvrSUyXwSIGMY=;
-        b=VO6jPCKVOzfVew1boUYMZmskgf/NPM6AOJJgSWYT8GFFTi8BhTiuQNARiiL6Eox+ou
-         N+ZgQAn4i6pxl4IDUFQXnHwrsQGHRIAevMbQe4Cw+TilhZS8R83yYKmGZKNnkbPA79g4
-         II8RqwVOaX7tOFIUe5uu3S6CJifz7cnJTSZzd3pYC8eBISgoe6f3ovH/3FC9SbupqBYO
-         6GRy4u3z6jY6eX7gcfgY8UbzRsMaJXQK6YgpugtgWgDT/peEoG6/yxCTUHCdm2QShCiC
-         Gv3THVJUIOw/IprvmZk9fi8E0++qHqYfvlyeLCqksZC4VaNafDWtxVvUUDrTRTQumS0S
-         wWOQ==
+        Fri, 10 May 2019 11:18:31 -0400
+Received: from mail-pg1-f197.google.com ([209.85.215.197])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hP7Gy-0006xC-Ak
+        for linux-kernel@vger.kernel.org; Fri, 10 May 2019 15:17:20 +0000
+Received: by mail-pg1-f197.google.com with SMTP id e14so4241508pgg.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:17:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UovbodiAPH01A7Tcpc/52cdJYhzSVeuvrSUyXwSIGMY=;
-        b=iZBui+f/6cpLPse/AA4ORd1AkuvPagKRuENFSMUK0nnSNJ0Q6ywgMvkuL4z+6nAyg6
-         Xj9jKt543/i+43exDdn/XYP6lRC+8CHer7e3eD8EvukZwN7MhgOKpK/Cnvc2Uz/OtOdN
-         0XmIw0KqYKHCNuvWk/sEB0owI7+zlYHSVhxy6DTQIXibEezJe43loipN+KnQePx7WA3A
-         aBfhggwWKxi5H9u329k3gQdwq35f3QvEVRX+LYdPXG+6rVjTKpn9sfDmxk0CXlJpzIid
-         3RZEjDRBStbpOhfpohGPg4I+EfajTBi8SmGlcf45QCbDcB44+r4LA/OUCsbI5Xo8/WnM
-         Q7jw==
-X-Gm-Message-State: APjAAAV44eBvdUCqLfl0qys7mRSVqQ/juRXPytLXfYODyYiIzigRrNUa
-        ltnENjt5sJyir+Nr2AVLrKTDMG4QNl0=
-X-Google-Smtp-Source: APXvYqzjQ3HAbAY4NbU911V5cjC+7qK7izvPshyPKb7zQM66e0eMF385k1F5NRT8GAnsIpLCSa2s3w==
-X-Received: by 2002:a2e:8141:: with SMTP id t1mr6369926ljg.122.1557501389839;
-        Fri, 10 May 2019 08:16:29 -0700 (PDT)
-Received: from otyshchenko.kyiv.epam.com (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id k3sm1291830ljj.73.2019.05.10.08.16.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 10 May 2019 08:16:29 -0700 (PDT)
-From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, biju.das@bp.renesas.com,
-        geert@linux-m68k.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH V3] ARM: mach-shmobile: Don't init CNTVOFF if PSCI is available
-Date:   Fri, 10 May 2019 18:16:13 +0300
-Message-Id: <1557501373-24436-1-git-send-email-olekstysh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=9ksYfkmpkpH6va/jl6WUWe9ADNC1rlHcm4W2AWAcxsI=;
+        b=LSbUL39zqR45oXTqAnhlJs6NZXh7kMtkshRSedv1A1xUK+iXF2vaZfPcSerI9n//xE
+         gY2CymAppnm72FZXmBpaHIEdTSgJHzQvdBDZ6R/bo4BqcMUv2z/fL37wgbK9VjON3nOK
+         T8Vo0/XbTfRuClKN/OdrYD6/THorQZaIF8XQFAmUVRQvU8F+UAH+1Lo+UOTqZU8yOCpF
+         AyNo5AFq2EK/rJWz7juGo0zSiSF+1crY16bNYhKz8UO2hdqkaaRFzDGtRu6gg2pgnHK0
+         vpvYkK7SiX7xbv8cz4p/Mk/TqHcf+KgwHdtIK+EyS3Amwoqir7avS8j24Xfvjg5FDTLT
+         tDKQ==
+X-Gm-Message-State: APjAAAXhpGD3Syq4cEY2fJz2F5nkiSv8r2NZpEro+cEHzdXlHGV1wZf5
+        MITrjJ86tTiJoJFBm+9udvAufbQqJV7Au2brgnpOANbZ0vEJefnIsgmmtFzfTW9RaPegcl5yBEt
+        hTk/cR8r2O6Ej7vSc2W4BoN67zOOVRH4BgRMDVc5D+Q==
+X-Received: by 2002:a63:d408:: with SMTP id a8mr14221500pgh.184.1557501438679;
+        Fri, 10 May 2019 08:17:18 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyh/Bshj4Iu4LZ0+PAJP0YH+FOpi9SNU4iCGkiuMtOOEWfwyyXrJlCA2wUcsW2TXEFDfy/FnA==
+X-Received: by 2002:a63:d408:: with SMTP id a8mr14221469pgh.184.1557501438481;
+        Fri, 10 May 2019 08:17:18 -0700 (PDT)
+Received: from [192.168.1.220] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id s79sm11301512pfa.31.2019.05.10.08.17.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 08:17:17 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190510140209.GG9675@localhost.localdomain>
+Date:   Fri, 10 May 2019 23:18:52 +0800
+Cc:     "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "hch@lst.de" <hch@lst.de>, "axboe@fb.com" <axboe@fb.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "Busch, Keith" <keith.busch@intel.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <D2D197AF-0072-42AC-A844-8D6BC9677949@canonical.com>
+References: <20190509095601.GA19041@lst.de>
+ <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
+ <20190509103142.GA19550@lst.de>
+ <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
+ <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+ <20190509192807.GB9675@localhost.localdomain>
+ <7a002851c435481593f8629ec9193e40@AUSX13MPC101.AMER.DELL.COM>
+ <20190509215409.GD9675@localhost.localdomain>
+ <495d76c66aec41a8bfbbf527820f8eb9@AUSX13MPC101.AMER.DELL.COM>
+ <BC5EB1D0-8718-48B3-ACAB-F7E5571D821D@canonical.com>
+ <20190510140209.GG9675@localhost.localdomain>
+To:     Keith Busch <kbusch@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-If PSCI is available then most likely we are running on PSCI-enabled
-U-Boot which, we assume, has already taken care of resetting CNTVOFF
-before switching to non-secure mode and we don't need to.
 
-Please note, an extra check to prevent secure_cntvoff_init() from
-being called for secondary CPUs in headsmp-apmu.S is not needed,
-as SMP code for APMU based system is not executed if PSCI is in use.
+> On May 10, 2019, at 10:02 PM, Keith Busch <kbusch@kernel.org> wrote:
+> 
+> On Thu, May 09, 2019 at 11:05:42PM -0700, Kai-Heng Feng wrote:
+>> Yes, that’ what I was told by the NVMe vendor, so all I know is to impose a  
+>> memory barrier.
+>> If mb() shouldn’t be used here, what’s the correct variant to use in this  
+>> context?
+> 
+> I'm afraid the requirement is still not clear to me. AFAIK, all our
+> barriers routines ensure data is visible either between CPUs, or between
+> CPU and devices. The CPU never accesses HMB memory, so there must be some
+> other reasoning if this barrier is a real requirement for this device.
 
-Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Julien Grall <julien.grall@arm.com>
+Sure, I’ll ask vendor what that MemRd is for.
 
----
-   You can find previous discussions here:
-   [v1] https://lkml.org/lkml/2019/4/17/810
-   [v2] https://lkml.org/lkml/2019/5/3/338
-
-   Changes in v2:
-      - Clarify patch subject/description
-      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
-        by using psci_smp_available()
-      - Check whether we are running on top of Xen, by using xen_domain()
-
-   Changes in v3:
-      - Don't check for the presence of Xen
----
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index eea60b2..35dda21 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -18,6 +18,7 @@
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
- #include <asm/mach/arch.h>
-+#include <asm/psci.h>
- #include <asm/secure_cntvoff.h>
- #include "common.h"
- #include "rcar-gen2.h"
-@@ -63,7 +64,13 @@ void __init rcar_gen2_timer_init(void)
- 	void __iomem *base;
- 	u32 freq;
- 
--	secure_cntvoff_init();
-+	/*
-+	 * If PSCI is available then most likely we are running on PSCI-enabled
-+	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-+	 * before switching to non-secure mode and we don't need to.
-+	 */
-+	if (!psci_smp_available())
-+		secure_cntvoff_init();
- 
- 	if (of_machine_is_compatible("renesas,r8a7745") ||
- 	    of_machine_is_compatible("renesas,r8a77470") ||
--- 
-2.7.4
-
+Kai-Heng
