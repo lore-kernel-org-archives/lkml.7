@@ -2,109 +2,98 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F64CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E96FFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A109208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA65B208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:51:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQ92lVBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbfEJIvX (ORCPT
+        id S1727147AbfEJIv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:51:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40064 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726964AbfEJIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:51:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1BDCA78;
-        Fri, 10 May 2019 01:51:22 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0D053F575;
-        Fri, 10 May 2019 01:51:18 -0700 (PDT)
-Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
-To:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
-References: <20190505115732.9844-1-qais.yousef@arm.com>
- <20190505115732.9844-5-qais.yousef@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <4971629f-70d2-9ee1-7509-5d0cfe9004ff@arm.com>
-Date:   Fri, 10 May 2019 10:51:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 04:51:26 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38437 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfEJIvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 04:51:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j26so2691135pgl.5;
+        Fri, 10 May 2019 01:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gL9lx8kVDxGBvBDPY9ofQJR5Y2JHIPbQZd/gZRgawmg=;
+        b=OQ92lVBs9QTSEI+m13cYS13d0/0pR5CaNigXu41OihDpr1PXII9RPeev5oofTgQeT5
+         tzWHJPRVksgdeMEmBLdiSTmw4aZ99QBK202mO1y5D2SV0yiM3Cmc65kPoSn6WK9ve+i2
+         WzqzuZYDee8pllOGV+ZWYu7kIzym6K/megZTIsgn4boqc+YuBf7yXDKoLx9u+TaZWyV2
+         ZbcSMXOvVQc6P3GzOMmbTs9sYDxMgIgS1fnWySOEHFZm2HYcbj0hTfX34BxN7BqI5flW
+         pYyXsBrLLUrYXD7hLLP9GLtBgvme95OwYDZUyt+bOFS+sDESyDFsKE8SsSvIe509KoOj
+         CxcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gL9lx8kVDxGBvBDPY9ofQJR5Y2JHIPbQZd/gZRgawmg=;
+        b=qyF3t/6dQwu4AAD5N7q2T2UJMb/gmMBwSS38sUAhZ0uo9fAi0V6cn/30tgd3ql/N8I
+         xJjRd6wqCB/mPDro0iOvpf/75G3Mi6eP9FIQJJprQDRGlnEDIQJiSHIXKNq+h3h1McA/
+         flxvQWj/mXCp8dKQPK2ZQG9BADMeMPBacdIGtBQqufLG2raVwWbGxrYEa8FM1Ed37AYl
+         AcC53X3sq1O+ebWC4xYA9sOMVAC7eiHZG63Gyci7A09ljmJjUCeRjV1snNJ3O+32Q5uv
+         n0UK8qhaKNJTZZShCn59QBD7u6cdpFsicyVmaVfsXHD+gWPJVJxQTr3GBBTN8NimQ19r
+         Pr5w==
+X-Gm-Message-State: APjAAAVz30OIOzaLLPVlPp+uSbe/n+fw/hKPK234p4aofqVudwfUm0qY
+        acVxnLGUJ36rRuv7wYQ96n8=
+X-Google-Smtp-Source: APXvYqz73bpUIGnNQKzUcF4Kv0BOgEYh18rjzWzVuPqLZqaSK693aC3PMkYpkGDq0RRylFJyRjOoKw==
+X-Received: by 2002:a63:6f0b:: with SMTP id k11mr11887557pgc.342.1557478284993;
+        Fri, 10 May 2019 01:51:24 -0700 (PDT)
+Received: from localhost ([39.7.15.25])
+        by smtp.gmail.com with ESMTPSA id b63sm8458414pfj.54.2019.05.10.01.51.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 01:51:23 -0700 (PDT)
+Date:   Fri, 10 May 2019 17:51:21 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190510085121.GA17632@jagdpanzerIV>
+References: <20190510081635.GA4533@jagdpanzerIV>
+ <20190510084213.22149-1-pmladek@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20190505115732.9844-5-qais.yousef@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510084213.22149-1-pmladek@suse.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qais,
+On (05/10/19 10:42), Petr Mladek wrote:
+[..]
+> Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-On 5/5/19 1:57 PM, Qais Yousef wrote:
+FWIW
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-[...]
-
-> diff --git a/kernel/sched/sched_tracepoints.h b/kernel/sched/sched_tracepoints.h
-> new file mode 100644
-> index 000000000000..f4ded705118e
-> --- /dev/null
-> +++ b/kernel/sched/sched_tracepoints.h
-> @@ -0,0 +1,39 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Scheduler tracepoints that are probe-able only and aren't exported ABI in
-> + * tracefs.
-> + */
-> +
-> +#include <trace/events/sched.h>
-> +
-> +#define SCHED_TP_PATH_LEN		64
-> +
-> +
-> +static __always_inline void sched_tp_load_cfs_rq(struct cfs_rq *cfs_rq)
-> +{
-> +	if (trace_sched_load_rq_enabled()) {
-> +		int cpu = cpu_of(rq_of(cfs_rq));
-> +		char path[SCHED_TP_PATH_LEN];
-> +
-> +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
-> +		trace_sched_load_rq(cpu, path, &cfs_rq->avg);
-
-This will let a !CONFIG_SMP build fail.
-
-> +	}
-> +}
-> +
-> +static __always_inline void sched_tp_load_rt_rq(struct rq *rq)
-> +{
-> +	if (trace_sched_load_rq_enabled()) {
-> +		int cpu = cpu_of(rq);
-> +
-> +		trace_sched_load_rq(cpu, NULL, &rq->avg_rt);
-
-Same here.
-
-> +	}
-> +}
-> +
-> +static __always_inline void sched_tp_load_dl_rq(struct rq *rq)
-> +{
-> +	if (trace_sched_load_rq_enabled()) {
-> +		int cpu = cpu_of(rq);
-> +
-> +		trace_sched_load_rq(cpu, NULL, &rq->avg_dl);
-
-and here.
+	-ss
