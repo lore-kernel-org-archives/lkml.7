@@ -2,87 +2,114 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032C2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F25C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4AB7217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7C7E217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McuGjFId"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3MoHNACh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbfEJEc7 (ORCPT
+        id S1726998AbfEJEd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:32:59 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:39825 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfEJEc7 (ORCPT
+        Fri, 10 May 2019 00:33:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41634 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfEJEd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:32:59 -0400
-Received: by mail-lj1-f181.google.com with SMTP id q10so3904734ljc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wXqDyT54eG8GjQFqXbx6hw1gB6u+wOkPmPcMAUJsUa0=;
-        b=McuGjFId86StbKuSJ+yG6vZBhcf5x0htNqzcSco/SevsPlcGDmxOcy4FSf72jvpt0t
-         h6mRvr4jGUlhWOdxsusCRsNHl/8BJjPVxCa8j7oUHVwJZw8Yhwr+AC4ApaGsKOY5l0t7
-         0eGq3u+xp6nAYqMwSJRBqupNn/7EPARlhiCGxr+wBctmqoiRLoLU+cWJ+4PiNgi8vNIc
-         bmKw4R26qSSJVvaHcjuGUKp7o7BNKbhvfFcEHTVT6SKib3MUBACb/Ek0ZIea39l0pnnY
-         X0zcnyDLCv1Vh3oqigNKEkCmkR8Jo2w6NrAc1UfCOfE98c1FVc6baMdoG418kPCH7e3+
-         oDvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wXqDyT54eG8GjQFqXbx6hw1gB6u+wOkPmPcMAUJsUa0=;
-        b=LVSMuIjKnYXN2u4orNGIsJ+e8c7wyZZSRxTYZs+66qzl75TEndoDpkyNDoR3yTuTcI
-         dJLgrfXQpK/s6P81UIrlcRjbJywGcZWGYrrFcVcavGDVsZBEfbL6dNa5aT2CY18LQgvU
-         igrzxvRF6EmmS3qK2LBCydOANYB+770Vd+C7gx2xwmutnrVFqUxjCjC9iMxG8pQQnc5M
-         yng761446LWfdxW4rcXOuvfPwO5akk/12efqfwIA8xn8fXGyVc4N0eM33TxWWNabQdE3
-         +x0L6FJO46lr2op/bR9Ec+8YgjelyP/RJodtSUlA9tOsoORVFR3nv8biGMMnP8WSQv1k
-         9UHA==
-X-Gm-Message-State: APjAAAXCtDbRUb63zo66UD7Tuu3liC4i2CKo5+DxYEU0iikGuu1behdx
-        51GlJ7MM7Pe/D568Mn3W4peMZ9Oz
-X-Google-Smtp-Source: APXvYqywVbPJkk/7SIVcABr8gD3o+8qc6lWM0Ajw2WMxdqxLcLgWCHkY4EK+acReNIVkZJw8YZfUVQ==
-X-Received: by 2002:a2e:9583:: with SMTP id w3mr4480251ljh.150.1557462777485;
-        Thu, 09 May 2019 21:32:57 -0700 (PDT)
-Received: from rimwks ([2001:470:1f15:3d8:7285:c2ff:fe37:5722])
-        by smtp.gmail.com with ESMTPSA id h123sm959243lfe.65.2019.05.09.21.32.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 09 May 2019 21:32:56 -0700 (PDT)
-From:   Rozhuk Ivan <rozhuk.im@gmail.com>
-X-Google-Original-From: Rozhuk Ivan <Rozhuk.IM@gmail.com>
-Date:   Fri, 10 May 2019 07:32:49 +0300
-To:     ossobserver@redchan.it
-Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
-        freebsd-current@freebsd.org
-Subject: Re: Danish FreeBSD Developer hates jews collectively
-Message-ID: <20190510073249.73a17721@rimwks>
-In-Reply-To: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
-References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; amd64-portbld-freebsd12.0)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 10 May 2019 00:33:59 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4A4XiQJ043797;
+        Fri, 10 May 2019 04:33:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=DnWxQah1Do/p8EcIEEk2BiuTUT59Z4lUEvulq0K5mhc=;
+ b=3MoHNAChqFlsCkP77/nGN+VS1G0RkB6PQoQS+kDQ/kOn4FJ4PHSL8ImWCPRF0TZUaxZN
+ BximiYmSacqyiPejbpmU9fUjvyt0TDSdFtiKVZgoiqrWd3SyyNif8aLmiKUbqVhgrTL5
+ Ir4CSeL1kwItQL2RMBT/ymr9LsVxE0h8H22Yx0+Fx9YJgn/OZaAbz4d5dUN3+7dyDD0Y
+ ziU2h8VCQWJxM4zPLwd8FeQjAlR/Q3UO+iGbOvuJM1OBn45YxIGv2SCTarTje1af+jxc
+ eUQJUZJVJXDKK8TmWKfSRTqb9CMphOfxsAIep+8Ebvi8rT4suGjQdOH2H+60gY0JZIPq 5w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2s94bgep2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 04:33:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4A4XLbN157217;
+        Fri, 10 May 2019 04:33:43 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2schw0733d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 04:33:42 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4A4XbSt014833;
+        Fri, 10 May 2019 04:33:37 GMT
+Received: from dhcp-10-65-129-1.vpn.oracle.com (/10.65.129.1)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 May 2019 04:33:36 +0000
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <87tve3j9jf.fsf@yhuang-dev.intel.com>
+Date:   Thu, 9 May 2019 22:33:35 -0600
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
+        mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: 7bit
+Message-Id: <640160C2-4579-45FC-AABB-B60185A2348D@oracle.com>
+References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+ <87y33fjbvr.fsf@yhuang-dev.intel.com>
+ <1fb73973-f409-1411-423b-c48895d3dde8@linux.alibaba.com>
+ <87tve3j9jf.fsf@yhuang-dev.intel.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=582
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905100032
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=617 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905100032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 May 2019 18:03:04 +0000
-ossobserver@redchan.it wrote:
 
-> Background: Apparently a FreeBSD developer, a viking looking fellow,  
-> has been hiding a secret: just as many of his predecessors in the
-> Danish cities during WWII (collaborators); He has a disdain for "the
-> jews" collectively.
+
+> On May 9, 2019, at 9:03 PM, Huang, Ying <ying.huang@intel.com> wrote:
 > 
+> Yang Shi <yang.shi@linux.alibaba.com> writes:
+> 
+>> On 5/9/19 7:12 PM, Huang, Ying wrote:
+>>> 
+>>> How about to change this to
+>>> 
+>>> 
+>>>         nr_reclaimed += hpage_nr_pages(page);
+>> 
+>> Either is fine to me. Is this faster than "1 << compound_order(page)"?
+> 
+> I think the readability is a little better.  And this will become
+> 
+>        nr_reclaimed += 1
+> 
+> if CONFIG_TRANSPARENT_HUAGEPAGE is disabled.
 
-Who cares!?
+I find this more legible and self documenting, and it avoids the bit shift
+operation completely on the majority of systems where THP is not configured.
+
 
