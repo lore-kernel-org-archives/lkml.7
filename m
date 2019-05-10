@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-11.9 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA24C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4748C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46553217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE9F3217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbfEJUBL (ORCPT
+        id S1728097AbfEJUBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
+        Fri, 10 May 2019 16:01:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbfEJUBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:01:09 -0400
+        id S1728026AbfEJUBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 16:01:12 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32CC2218B0;
-        Fri, 10 May 2019 20:01:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FEE321841;
+        Fri, 10 May 2019 20:01:11 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hPBhb-0006hw-AY; Fri, 10 May 2019 16:01:07 -0400
-Message-Id: <20190510200107.218173559@goodmis.org>
+        id 1hPBhe-0006qC-Cz; Fri, 10 May 2019 16:01:10 -0400
+Message-Id: <20190510200110.284281830@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 10 May 2019 15:56:15 -0400
+Date:   Fri, 10 May 2019 15:56:32 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -38,7 +38,8 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 09/27] tools/lib/traceevent: Man page for page size APIs
+Subject: [PATCH 26/27] tools/lib/traceevent: Man pages for APIs, used to extract common
+ fields from a record
 References: <20190510195606.537643615@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -50,31 +51,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
 Create man pages for libtraceevent APIs:
-  tep_get_page_size()
-  tep_set_page_size()
+ tep_data_type(),
+ tep_data_pid(),
+ tep_data_preempt_count(),
+ tep_data_flags()
 
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-9-tstoyanov@vmware.com
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-26-tstoyanov@vmware.com
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+[ Fixed missing T in description of NOSUPPORT flag ]
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- .../Documentation/libtraceevent-page_size.txt | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+ .../libtraceevent-record_parse.txt            | 137 ++++++++++++++++++
+ 1 file changed, 137 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt b/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
 new file mode 100644
-index 000000000000..452c0cfa1822
+index 000000000000..e9a69116c78b
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
-@@ -0,0 +1,82 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-record_parse.txt
+@@ -0,0 +1,137 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_page_size, tep_set_page_size - Get / set the size of a memory page on
-+the machine, where the trace is generated
++tep_data_type, tep_data_pid,tep_data_preempt_count, tep_data_flags -
++Extract common fields from a record.
 +
 +SYNOPSIS
 +--------
@@ -82,40 +86,95 @@ index 000000000000..452c0cfa1822
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
++enum *trace_flag_type* {
++	_TRACE_FLAG_IRQS_OFF_,
++	_TRACE_FLAG_IRQS_NOSUPPORT_,
++	_TRACE_FLAG_NEED_RESCHED_,
++	_TRACE_FLAG_HARDIRQ_,
++	_TRACE_FLAG_SOFTIRQ_,
++};
++
++int *tep_data_type*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_pid*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_preempt_count*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++int *tep_data_flags*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_get_page_size()_ function returns the size of a memory page on
-+the machine, where the trace is generated. The _tep_ argument is trace
-+event parser context.
++This set of functions can be used to extract common fields from a record.
 +
-+The _tep_set_page_size()_ function stores in the _tep_ context the size of a
-+memory page on the machine, where the trace is generated.
-+The _tep_ argument is trace event parser context.
-+The _page_size_ argument is the size of a memory page, in bytes.
++The _tep_data_type()_ function gets the event id from the record _rec_.
++It reads the "common_type" field. The _tep_ argument is the trace event parser
++context.
++
++The _tep_data_pid()_ function gets the process id from the record _rec_.
++It reads the "common_pid" field. The _tep_ argument is the trace event parser
++context.
++
++The _tep_data_preempt_count()_ function gets the preemption count from the
++record _rec_. It reads the "common_preempt_count" field. The _tep_ argument is
++the trace event parser context.
++
++The _tep_data_flags()_ function gets the latency flags from the record _rec_.
++It reads the "common_flags" field. The _tep_ argument is the trace event parser
++context. Supported latency flags are:
++[verse]
++--
++	_TRACE_FLAG_IRQS_OFF_,		Interrupts are disabled.
++	_TRACE_FLAG_IRQS_NOSUPPORT_,	Reading IRQ flag is not supported by the architecture.
++	_TRACE_FLAG_NEED_RESCHED_,	Task needs rescheduling.
++	_TRACE_FLAG_HARDIRQ_,		Hard IRQ is running.
++	_TRACE_FLAG_SOFTIRQ_,		Soft IRQ is running.
++--
 +
 +RETURN VALUE
 +------------
-+The _tep_get_page_size()_ function returns size of the memory page, in bytes.
++The _tep_data_type()_ function returns an integer, representing the event id.
++
++The _tep_data_pid()_ function returns an integer, representing the process id
++
++The _tep_data_preempt_count()_ function returns an integer, representing the
++preemption count.
++
++The _tep_data_flags()_ function returns an integer, representing the latency
++flags. Look at the _trace_flag_type_ enum for supported flags.
++
++All these functions in case of an error return a negative integer.
 +
 +EXAMPLE
 +-------
 +[source,c]
 +--
-+#include <unistd.h>
 +#include <event-parse.h>
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	int page_size = getpagesize();
++void process_record(struct tep_record *record)
++{
++	int data;
 +
-+	tep_set_page_size(tep, page_size);
++	data = tep_data_type(tep, record);
++	if (data >= 0) {
++		/* Got the ID of the event */
++	}
 +
-+	printf("The page size for this machine is %d\n", tep_get_page_size(tep));
++	data = tep_data_pid(tep, record);
++	if (data >= 0) {
++		/* Got the process ID */
++	}
 +
++	data = tep_data_preempt_count(tep, record);
++	if (data >= 0) {
++		/* Got the preemption count */
++	}
++
++	data = tep_data_flags(tep, record);
++	if (data >= 0) {
++		/* Got the latency flags */
++	}
++}
++...
 +--
 +
 +FILES
