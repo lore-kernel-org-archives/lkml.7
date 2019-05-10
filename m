@@ -2,144 +2,188 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A02C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDC9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5EA52182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83DD82182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:34:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="YsbrPpzT"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qCun+QB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfEJB1Q (ORCPT
+        id S1726843AbfEJBeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 21:27:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37772 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfEJB1P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 21:27:15 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a12so5554724wrn.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 18:27:14 -0700 (PDT)
+        Thu, 9 May 2019 21:34:18 -0400
+Received: from mail-eopbgr800083.outbound.protection.outlook.com ([40.107.80.83]:63614
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726776AbfEJBeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 21:34:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=ftpViN5j8NFAV54qkkJMS7+epm3RTRKzoNYTV0PlOJg=;
-        b=YsbrPpzThe4ctLjXBEevMymgL7213QNtGRyA4NrhC/5eFu1pyt3lW/UZ9d17gTCDTe
-         cxjxY5wuZvYTvsPg63uXO6fb8U2qf2Z9W6szny5MPL+YlAgyy6ccdGA+ar7+cZFO9McZ
-         y41ypt9ziLd8y7qNcRXbWU2h/+PlgGG8U9JSGEoP9VByZ5Jyl2Z8f5aRP22ZUcSrvaRo
-         /yFeAYlKjku7bjVMt9rpSbt2hKQj3HXZ20RvInP61VxxC6RQan4LlMUzPdm3e7SIjr7A
-         UvGEb/rQyFNedzX+6b7nXTX7TtEWxDu6/K3yp8xoM/5TQBxrcICMrXxYsxTJTmtzLr2k
-         zc/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=ftpViN5j8NFAV54qkkJMS7+epm3RTRKzoNYTV0PlOJg=;
-        b=JCLV6AJu3A6MgI1+iqnPWepXWQAu1RO/cKtAzDxafK2e2Ediwo8KXF4bSK6nH7MWTn
-         ufthE3vsGBZudCgEwsWTMTj4dy8y4nS10NllfNPHuZULsbR2ZEsSK1cTHokz9f2n79RM
-         HRFR/32LDqC9//kGLqb/jcP64TnAhwYlN1gys52Mn+qmb5zG4Ukoynw35GNFg52PhDt8
-         juk+w1DDf7neoy1vC0rDfXteM4lCH9k7SOXHMpQfMzd6VQSvAbiCHJjVVYPPCa/aMB2+
-         VITajnbAylFdakT+1GT40X9gu19m9cTr9xOB/TZWJcfOgrUWeyJs2r53xZjvHfbsnnHs
-         82zg==
-X-Gm-Message-State: APjAAAUPQpwklmCwWAbqzf2XKfAjAIRYJKd1etQ3oxv56iRAshQrDr2J
-        uMiMPZAyVTvBzIuwXJ/ljqBswQdBq46dsw==
-X-Google-Smtp-Source: APXvYqyarNorOi0XwqzYDk1kJrd9ttGSJJRIcSk1u7eamncDsxys6dMt/bwjjnDvEdJygFoWQSRtPA==
-X-Received: by 2002:adf:83c6:: with SMTP id 64mr5627489wre.81.1557451634115;
-        Thu, 09 May 2019 18:27:14 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id x1sm493646wrp.35.2019.05.09.18.27.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 18:27:13 -0700 (PDT)
-Message-ID: <5cd4d371.1c69fb81.c575f.2868@mx.google.com>
-Date:   Thu, 09 May 2019 18:27:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SoN+FfYc4NdyyWXFTNn/3MZPAa1Ny6z2h145bQ0u6l4=;
+ b=qCun+QB0hcjIk8idFkI3haXG2G/wpAvuHV2wQN0+Cm3NN5WGWtA8WzN6DgLgZnkMNj6HO61CRH8Og7QW9WbIAbhSz7zXnB79O40xBo5eXVFD3XPQDbx8kqY6PXaQeNHg2GYs5WR+57uHIunSpnvNip/C9m+t58JLCELiHd2JNl0=
+Received: from MWHPR12CA0030.namprd12.prod.outlook.com (2603:10b6:301:2::16)
+ by DM6PR12MB2665.namprd12.prod.outlook.com (2603:10b6:5:4a::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 10 May
+ 2019 01:33:33 +0000
+Received: from CO1NAM03FT014.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e48::201) by MWHPR12CA0030.outlook.office365.com
+ (2603:10b6:301:2::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.21 via Frontend
+ Transport; Fri, 10 May 2019 01:33:33 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; embeddedor.com; dkim=none (message not signed)
+ header.d=none;embeddedor.com; dmarc=permerror action=none
+ header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXCHOV01.amd.com (165.204.84.17) by
+ CO1NAM03FT014.mail.protection.outlook.com (10.152.80.101) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1856.11 via Frontend Transport; Fri, 10 May 2019 01:33:33 +0000
+Received: from LinuxHost.amd.com (10.34.1.3) by SATLEXCHOV01.amd.com
+ (10.181.40.71) with Microsoft SMTP Server id 14.3.389.1; Thu, 9 May 2019
+ 20:33:32 -0500
+From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+CC:     <Alexander.Deucher@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ASoC: amd: Reporting accurate hw_ptr for acp3x dma
+Date:   Fri, 10 May 2019 07:11:07 +0530
+Message-ID: <1557452486-13396-1-git-send-email-Vijendar.Mukunda@amd.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.9.y
-X-Kernelci-Kernel: v4.9.174-29-g50bbfeb1e2a3
-In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
-References: <20190509181247.647767531@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 00/28] 4.9.175-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(428003)(189003)(199004)(47776003)(53416004)(54906003)(16586007)(316002)(4326008)(109986005)(486006)(426003)(2616005)(476003)(186003)(305945005)(126002)(26005)(336012)(77096007)(1671002)(68736007)(50226002)(8936002)(70586007)(70206006)(8676002)(48376002)(50466002)(81166006)(81156014)(53936002)(7696005)(51416003)(72206003)(36756003)(86362001)(5660300002)(356004)(6666004)(2906002)(478600001)(42413003)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2665;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ead55090-8df3-4548-1e53-08d6d4e783df
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328);SRVR:DM6PR12MB2665;
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2665:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB266531C05FF88C44052BF1EF970C0@DM6PR12MB2665.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
+X-Forefront-PRVS: 0033AAD26D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: eKIRp1zqbR7GVmsodxhdO8UlL+Q4q5pc6xk8PHXOgpdOLJizrO2/+EzquNevnGo/AnmGXkd9hR0FW9BJElc6wZIWsC2vE3OGU7gxNH6716iM+fxQiYGOmOqNwYkI/AeQwMExEgiwH4Gjp0Ni5jygFPDS2htkqZyUlJAFb/Ds7ww3yQiRCcoHM+RzyrHDIdPbnNFJ9VXZ0Xns+gZFcjh15UTNouowDFLaU2aEMOk8C9IVQYHW+bGKE35qA3HtuA2B9rkLKoPp8GyNanEwlz7JI9eTbYJ17g63sepkxmxM1PhQVb3IFf0ReQb/lC4ZG3NW7i1kG0YjRyYDTWl1LEMfDmG3RoMkYXFgmjunwvxIHIgXaH/Yj0kwBJwzaLBtCqLvz0Ck6SvFEaqgsz3K8boIfTDaGibZ9zP3aiKAZqy/Ago=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2019 01:33:33.1392
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ead55090-8df3-4548-1e53-08d6d4e783df
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXCHOV01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2665
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 112 boots: 0 failed, 107 passed with 2 offline,=
- 3 conflicts (v4.9.174-29-g50bbfeb1e2a3)
+From: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.174-29-g50bbfeb1e2a3/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.174-29-g50bbfeb1e2a3/
+acp3x dma pointer callback has issues in reporting hw_ptr.
+Modified logic to use linear position registers to
+retrieve accurate hw_ptr.
 
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.174-29-g50bbfeb1e2a3
-Git Commit: 50bbfeb1e2a357db99ff35681cfa95341b33103a
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 52 unique boards, 22 SoC families, 15 builds out of 197
-
-Boot Regressions Detected:
-
-arm:
-
-    omap2plus_defconfig:
-        gcc-8:
-          omap4-panda:
-              lab-baylibre: new failure (last pass: v4.9.174)
-
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxbb-p200:
-              lab-baylibre: new failure (last pass: v4.9.174)
-
-Offline Platforms:
-
-arm:
-
-    multi_v7_defconfig:
-        gcc-8
-            stih410-b2120: 1 offline lab
-            tegra20-iris-512: 1 offline lab
-
-Conflicting Boot Failures Detected: (These likely are not failures as other=
- labs are reporting PASS. Needs review.)
-
-arm:
-    omap2plus_defconfig:
-        omap4-panda:
-            lab-baylibre: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
-
-    davinci_all_defconfig:
-        da850-lcdk:
-            lab-baylibre: PASS (gcc-8)
-            lab-baylibre-seattle: FAIL (gcc-8)
-
-arm64:
-    defconfig:
-        meson-gxbb-p200:
-            lab-baylibre: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
-
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
 ---
-For more info write to <info@kernelci.org>
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 43 ++++++++++++++++++++++++++-----------
+ 1 file changed, 31 insertions(+), 12 deletions(-)
+
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index 9775bda..a4ade6b 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -32,6 +32,7 @@ struct i2s_stream_instance {
+ 	u16 channels;
+ 	u32 xfer_resolution;
+ 	struct page *pg;
++	u64 bytescount;
+ 	void __iomem *acp3x_base;
+ };
+ 
+@@ -317,6 +318,24 @@ static int acp3x_dma_open(struct snd_pcm_substream *substream)
+ 	return 0;
+ }
+ 
++static u64 acp_get_byte_count(struct i2s_stream_instance *rtd, int direction)
++{
++	u64 byte_count;
++
++	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
++		byte_count = rv_readl(rtd->acp3x_base +
++				      mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				       mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
++	} else {
++		byte_count = rv_readl(rtd->acp3x_base +
++				      mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
++		byte_count |= rv_readl(rtd->acp3x_base +
++				       mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
++	}
++	return byte_count;
++}
++
+ static int acp3x_dma_hw_params(struct snd_pcm_substream *substream,
+ 			       struct snd_pcm_hw_params *params)
+ {
+@@ -350,18 +369,17 @@ static int acp3x_dma_hw_params(struct snd_pcm_substream *substream,
+ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_pcm_substream *substream)
+ {
+ 	u32 pos = 0;
+-	struct i2s_stream_instance *rtd = substream->runtime->private_data;
+-
+-	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+-		pos = rv_readl(rtd->acp3x_base +
+-			       mmACP_BT_TX_LINKPOSITIONCNTR);
+-	else
+-		pos = rv_readl(rtd->acp3x_base +
+-			       mmACP_BT_RX_LINKPOSITIONCNTR);
+-
+-	if (pos >= MAX_BUFFER)
+-		pos = 0;
+-
++	u32 buffersize = 0;
++	u64 bytescount = 0;
++	struct i2s_stream_instance *rtd =
++		substream->runtime->private_data;
++
++	buffersize = frames_to_bytes(substream->runtime,
++				     substream->runtime->buffer_size);
++	bytescount = acp_get_byte_count(rtd, substream->stream);
++	if (bytescount > rtd->bytescount)
++		bytescount -= rtd->bytescount;
++	pos = do_div(bytescount, buffersize);
+ 	return bytes_to_frames(substream->runtime, pos);
+ }
+ 
+@@ -521,6 +539,7 @@ static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
+ 	case SNDRV_PCM_TRIGGER_START:
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++		rtd->bytescount = acp_get_byte_count(rtd, substream->stream);
+ 		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 			rv_writel(period_bytes, rtd->acp3x_base +
+ 				  mmACP_BT_TX_INTR_WATERMARK_SIZE);
+-- 
+2.7.4
+
