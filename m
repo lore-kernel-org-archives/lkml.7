@@ -2,120 +2,121 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAD3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83438C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C52A2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557478681;
-	bh=YwreLhFMGY0y8sZobflmXR/vXSn2zdZ4h2mD13MTPd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Okbh/ZnuUMZpO2oF6ayhE74/RY16aXqJD6XelDNEgT/VT9Gr5vIQaUJB45H2IujGK
-	 st77NHHHrjVXbKFh12T/TAm10d5CwFn0UVZGJPHiYSSmA7WjqUYvi6gKIc1QyXeQHt
-	 MRejGOl3kQGH7Pb4uBUE1whhKYI4gNCjCD7Hjj/Y=
+	by mail.kernel.org (Postfix) with ESMTP id 5365E2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qyZk1xIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfEJI6A (ORCPT
+        id S1727229AbfEJI6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfEJI6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:58:00 -0400
-Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EEF3216C4;
-        Fri, 10 May 2019 08:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557478679;
-        bh=YwreLhFMGY0y8sZobflmXR/vXSn2zdZ4h2mD13MTPd8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KOEAwUqLzgV/gAOrxwSR/1tohVZSJIfKaP0B+xM2T5041/meEHL4sqa3KJOZ9WfNt
-         FTSzfcXDpSj0K8irEpErJLabRtnkzaB/Wg72anO1vF2thZvIZmd95gabBaBav04yAB
-         XZnNWYV5FDXYaky2eFUedBr7vsgLJaUGpKMoxpNM=
-Date:   Fri, 10 May 2019 16:57:54 +0800
-From:   Guo Ren <guoren@kernel.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     tglx@linutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V2 5/7] dt-bindings: interrupt-controller: Update csky
- mpintc
-Message-ID: <20190510083546.GA27608@guoren-Inspiron-7460>
-References: <1550455483-11710-1-git-send-email-guoren@kernel.org>
- <1550455483-11710-5-git-send-email-guoren@kernel.org>
- <20190218142845.4ad56ec0@why.wild-wind.fr.eu.org>
+        Fri, 10 May 2019 04:58:06 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37956 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfEJI6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 04:58:05 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so2699304pgl.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 01:58:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BLA/WS5Qjqm8Gf8XgW/ZNYa77d8QFu73NkVZQ1zqGQY=;
+        b=qyZk1xIarN+LL7Yw/uwGUVrC6gC8xepRpmVXnEL3zEakG2gzcEq5xoEPojXLkh4Fin
+         E/XiWWXQMT+IQwQJVQ7PfG9NsMUm+X6U8RMEquYvekYCiP9rda5LcMkn6Q1KB/y1l/49
+         9QWFOIP3gQwb+V6MHxC6Am1vORFJEHQgMk1CHFofZT7QYx6Dq7Is7zAi2xVfxgvhIj+F
+         C2wi6/f6lQwOxjsnXHWAFbdPv4A4CeJZZENBvOoIag2fVVqbLBAPZhOqQGfYxZ9GyBvm
+         dMHrNNaF+tqmExPaENBYLW6cLZPJwvTDP4PIGXb+AHbhaGI+wn48np2l3slUqEHySiue
+         EGBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BLA/WS5Qjqm8Gf8XgW/ZNYa77d8QFu73NkVZQ1zqGQY=;
+        b=JNbnZZ4YsKWV9O01JQ/Cl85Oh9rbcux9FPhqIuryPLoP/XCEgMZJL9UWSIecEJHfq9
+         7cSfVZipTL7Ucuc/Tl/eRLp9wflrfSQGuGkdH0HQNUg5bjRvJs0es8ZVMtwyRge8W7//
+         A1Ips26c4Ss0FkVzC6OchAys1Dh/FuUzOZZv6o49tNiRwcYMrhfCIhUjt0IY2qfb9lrZ
+         cJD6zT2OGlMt2jzG9u42YAUAcOz5fdyUnS0ZArcAcesgrJvoXhKn/5sExNkBaeZVNTp3
+         OqQ1zp1Dp56Tvd1RIErBEF8mcaYRWoPpM6fpPVPebFEvLqgMO4ttexyuu1nO6HUlvkK+
+         HZIg==
+X-Gm-Message-State: APjAAAXeP99lPNNobVoSyBKNOOauwF/DHwKciLT/Y/AMMbXW9QRY1Rj3
+        TtldJLvqfRRVKoVM3d/EqZPe
+X-Google-Smtp-Source: APXvYqymnzbuCQoW7yHb+6xnA9h1PRjyRHtHXDt179pRmz2DNbtx7QzL2dYN0vStjrCF2l28D9OMyQ==
+X-Received: by 2002:aa7:8a53:: with SMTP id n19mr12107415pfa.11.1557478684213;
+        Fri, 10 May 2019 01:58:04 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:73c1:9991:95b6:5055:2390:bf9b])
+        by smtp.gmail.com with ESMTPSA id e16sm3032276pfj.77.2019.05.10.01.57.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 01:58:03 -0700 (PDT)
+Date:   Fri, 10 May 2019 14:27:56 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     p.zabel@pengutronix.de, robh+dt@kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com
+Subject: Re: [PATCH v2 0/4] Add reset controller support for BM1880 SoC
+Message-ID: <20190510085756.GA4974@Mani-XPS-13-9360>
+References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190218142845.4ad56ec0@why.wild-wind.fr.eu.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Marc,
-
-On Mon, Feb 18, 2019 at 02:28:45PM +0000, Marc Zyngier wrote:
-> On Mon, 18 Feb 2019 10:04:41 +0800
-> guoren@kernel.org wrote:
+On Wed, May 08, 2019 at 10:23:15PM +0530, Manivannan Sadhasivam wrote:
+> Hello,
 > 
-> > From: Guo Ren <ren_guo@c-sky.com>
-> > 
-> > Add trigger type and priority setting for csky,mpintc.
-> > 
-> > Changelog:
-> >  - change #interrupt-cells to <3>
-> > 
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > ---
-> >  .../bindings/interrupt-controller/csky,mpintc.txt   | 21 +++++++++++++++++----
-> >  1 file changed, 17 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > index ab921f1..dccd913 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > @@ -6,11 +6,18 @@ C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
-> >  SMP soc, and it also could be used in non-SMP system.
-> >  
-> >  Interrupt number definition:
-> > -
-> >    0-15  : software irq, and we use 15 as our IPI_IRQ.
-> >   16-31  : private  irq, and we use 16 as the co-processor timer.
-> >   31-1024: common irq for soc ip.
-> >  
-> > +Interrupt triger mode:
-> > + IRQ_TYPE_LEVEL_HIGH (default)
-> > + IRQ_TYPE_LEVEL_LOW
-> > + IRQ_TYPE_EDGE_RISING
-> > + IRQ_TYPE_EDGE_FALLING
-> > +
-> > +Interrupt priority range: 0-255
-> > +
-> >  =============================
-> >  intc node bindings definition
-> >  =============================
-> > @@ -26,15 +33,21 @@ intc node bindings definition
-> >  	- #interrupt-cells
-> >  		Usage: required
-> >  		Value type: <u32>
-> > -		Definition: must be <1>
-> > +		Definition: <3>
+> This patchset adds reset controller support for Bitmain BM1880 SoC.
+> BM1880 SoC has two reset controllers each controlling reset lines of
+> different peripherals. And the reset-simple driver has been reused here.
 > 
-> This seem to be invalidating all existing DTs. Is this an acceptable
-> thing to do? It will require an Ack from a DT maintainer.
-There is no DTs upstreamed and current implementation of driver could
-support old format which isn't mentioned here. We just give a complete
-format here.
 
-Best Regards
- Guo Ren
+Sorry, above information was wrong! Actually there is only one reset
+controller in this SoC. The other one (clk_rst) is a set of registers used
+for clock gating functionality (clarified by Bitmain Engineer), so I will
+remove it in next version.
+
+Thanks,
+Mani
+
+> This patchset has been tested on 96Boards Sophon Edge board.
+> 
+> Thanks,
+> Mani
+> 
+> Changes in v2:
+> 
+> As per review from Philipp:
+> 
+> * Reused reset_simple_active_low struct instead of a new one for bm1880
+> * Splitted the SPDX license change to a separate commit
+> * Added Reviewed-by tags from Rob and Philipp
+> 
+> Manivannan Sadhasivam (4):
+>   dt-bindings: reset: Add devicetree binding for BM1880 reset controller
+>   arm64: dts: bitmain: Add reset controller support for BM1880 SoC
+>   reset: Add reset controller support for BM1880 SoC
+>   reset: Switch to SPDX license identifier for reset-simple
+> 
+>  .../bindings/reset/bitmain,bm1880-reset.txt   |  18 +++
+>  arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  17 +++
+>  drivers/reset/Kconfig                         |   3 +-
+>  drivers/reset/reset-simple.c                  |   8 +-
+>  .../dt-bindings/reset/bitmain,bm1880-reset.h  | 106 ++++++++++++++++++
+>  5 files changed, 146 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
+>  create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
+> 
+> -- 
+> 2.17.1
+> 
