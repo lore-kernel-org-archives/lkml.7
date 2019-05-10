@@ -2,202 +2,123 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05195C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0779CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23CE20881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7AE220881
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:45:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K22DOVI+"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="dkS98jW/";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="boFvQMsu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfEJUnk (ORCPT
+        id S1728017AbfEJUpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:43:40 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33935 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727676AbfEJUnk (ORCPT
+        Fri, 10 May 2019 16:45:51 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53623 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727676AbfEJUpu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:43:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id n19so3824755pfa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 13:43:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=76iqXYIBsPCxt9x2ujTGlvZ4d7tv3+wnMgJVgNEYPRo=;
-        b=K22DOVI+qHBY9YLZq944p4n2eWAJWXK4KnM/2zE2DppF2J53cb8/mkXpAC+y26rdYM
-         sat3drmZu9hkhzqCptbaUuT+7vhLxKBCn6TH9Uj4d4NEJw3RFqV+XqSpLlPFLYgeuq5M
-         m7Rjy60BpcB9Fo7Sgh4toLHJJ3KpUqR0sXLwM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=76iqXYIBsPCxt9x2ujTGlvZ4d7tv3+wnMgJVgNEYPRo=;
-        b=uAdM0WnYCPM+zVt/ooAATtUv8nsGxDpNDzTsoC1QIhHBmFSEj5KbGSf80PoU4WHpjW
-         aKmDtYYky1v6uNVZ2PlpAk57fbxbcextoDuVghN0j4PikeKGh/BL2dQq4hlculkZcjTb
-         oFPsJ4wZmqJuLKJzeuHa4/UuSCSCZ3B1Bi0I1yaMIhwZlz3IqNPUY5phBMpaJVGf5VJN
-         p7BKOPo+7mcPy555MFjmBLtgOg7VET0xlw6z6c5j6H/uU021DQ2bQZmQACmSGQJk3zRg
-         Iwc8WwUtdRR1D06jYgFVNNX51SlGdgJkRrBPE4Z9kr+qUZNBf1zt7/QL4e9etQ04t3Ia
-         qGgQ==
-X-Gm-Message-State: APjAAAWA3HDLKGCzavloWnDQuhgWn+7udagNiuLlE6sf7lO+LYJcRGDM
-        YjKjoa1xOVZn8ETrR/uVyRvT4A==
-X-Google-Smtp-Source: APXvYqxbxUCNjMAkjwXwSrZQ6SbP9eqYYwQjMHEbvIeAftGSgjz6x0onni8QudYKGxKKLfXsyk8vWA==
-X-Received: by 2002:aa7:8f22:: with SMTP id y2mr4913414pfr.22.1557521019294;
-        Fri, 10 May 2019 13:43:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f7sm6787011pga.56.2019.05.10.13.43.38
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 13:43:38 -0700 (PDT)
-Date:   Fri, 10 May 2019 13:43:36 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] usercopy: Remove HARDENED_USERCOPY_PAGESPAN
-Message-ID: <201905101341.A17DDD7@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 10 May 2019 16:45:50 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2FF7821FE0;
+        Fri, 10 May 2019 16:45:47 -0400 (EDT)
+Received: from imap37 ([10.202.2.87])
+  by compute5.internal (MEProxy); Fri, 10 May 2019 16:45:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=vwhOJce3ZkxXuJH0oJfw/OIAX76yCZA
+        aJr+TAGwuShQ=; b=dkS98jW/JNiik0LeBJy03Ed1tMILgeWRVbWjhUUM502Qlyv
+        aXUgCG1MshcYlNzziwgHfMsf9WUvp3XAENPxfWbswRQe5ybYMVLrvlkew7zTWjCY
+        1S1ZdUw6arMeQJ9HRo2GXPqJvCDLdiJwB0Lqt+3PP//z8YXy8ZJ81+fMYTmBgSnT
+        NkuXYkgpD1sArHftABA6ydlIu8O+nhcn69GqU0ZSC21k25coQYZuXI5IdfVPDrVO
+        IUEIMRxc3FVzjYP4moiHNRZ1ZbRGOAWqY49Qh6fkQYiRd6UmDIpXrTkEX8SQlzxr
+        +XrZul/FBf1WsXey8JDfG+JJzUu6S/IcMBlIUiw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=vwhOJc
+        e3ZkxXuJH0oJfw/OIAX76yCZAaJr+TAGwuShQ=; b=boFvQMsuqRyKb0tSk0cher
+        wO0iQ5WsJNB51LCSbSoPyG18BXJtUuwGSf7fei1FM5GMO/6IA3KrYFGFiIS2IAQV
+        I/73a3Q/CDSWWsxWbLvgUmataZAncUZsof2vJRD+mvOVf0g/Sg4y6t+YVKXy2rEj
+        Ja7qHpCH5Qn+UOoGx6cs0LIQMkV97UQ2PDlLwBucDms3bDVf0M37cKAIxqDDYQdG
+        zrHFLZ8HAfU3dekS2hN5UhRN/6SNwg8ccJXrqeYkcX1V6DjdUy43UDI/mp/023As
+        AR4lmFrIyRZ+XK7ae9WSDWpO3/5p3Qps8vvSzft/F8mDC9dz1+T4wsdjzkuvepzA
+        ==
+X-ME-Sender: <xms:-uLVXPcrYOLSWMokSRsVZfHid3JjHXpoT7aSjKd-3rFXkphqq6INpg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeekgdduheegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
+    redtnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrdgttgen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:-uLVXKGVd4YgR3g4Pe_T50A7Nd91RQgUeeK0lHZ7g1GzqLfIv7tZLg>
+    <xmx:-uLVXGFs8ZfDpILRjitXWhQOD06igzn4oJKURYmso7QarGWSAWcePw>
+    <xmx:-uLVXDAbOa1EyUdR1PSdyYxOPKnUYzRa_s-Lk7ybVgp02azvivSuEg>
+    <xmx:--LVXNujsEtxLTa9jG0JaVPzBsOOvo-PVdW22zWSrOp0C7_5VlcdHA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 5BE8ADEC25; Fri, 10 May 2019 16:45:46 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
+Mime-Version: 1.0
+Message-Id: <f48e76f7-6b95-4cf0-82af-424119bb2eb4@www.fastmail.com>
+In-Reply-To: <a3db1384695bbaa051d93c18ac30175fb95165e3.camel@vmware.com>
+References: <20190510001747.8767-1-tobin@kernel.org>
+ <a3db1384695bbaa051d93c18ac30175fb95165e3.camel@vmware.com>
+Date:   Fri, 10 May 2019 16:45:45 -0400
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     "Thomas Hellstrom" <thellstrom@vmware.com>,
+        "Jonathan Corbet" <corbet@lwn.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "minyard@acm.org" <minyard@acm.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "Tobin C. Harding" <tobin@kernel.org>
+Subject: Re: [PATCH] docs: Move kref.txt to core-api/kref.rst
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This feature continues to cause more problems than it solves[1]. Its
-intention was to check the bounds of page-allocator allocations by using
-__GFP_COMP, for which we would need to find all missing __GFP_COMP
-markings. This work has been on hold and there is an argument[2]
-that such markings are not even the correct signal for checking for
-same-allocation pages. Instead of depending on BROKEN, this just removes
-it entirely. It can be trivially reverted if/when a better solution for
-tracking page allocator sizes is found.
-
-[1] https://www.mail-archive.com/linux-crypto@vger.kernel.org/msg37479.html
-[2] https://lkml.kernel.org/r/20190415022412.GA29714@bombadil.infradead.org
-
-Suggested-by: Eric Biggers <ebiggers@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- mm/usercopy.c    | 67 ------------------------------------------------
- security/Kconfig | 11 --------
- 2 files changed, 78 deletions(-)
-
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 14faadcedd06..15dc1bf03303 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -159,70 +159,6 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
- 		usercopy_abort("null address", NULL, to_user, ptr, n);
- }
- 
--/* Checks for allocs that are marked in some way as spanning multiple pages. */
--static inline void check_page_span(const void *ptr, unsigned long n,
--				   struct page *page, bool to_user)
--{
--#ifdef CONFIG_HARDENED_USERCOPY_PAGESPAN
--	const void *end = ptr + n - 1;
--	struct page *endpage;
--	bool is_reserved, is_cma;
--
--	/*
--	 * Sometimes the kernel data regions are not marked Reserved (see
--	 * check below). And sometimes [_sdata,_edata) does not cover
--	 * rodata and/or bss, so check each range explicitly.
--	 */
--
--	/* Allow reads of kernel rodata region (if not marked as Reserved). */
--	if (ptr >= (const void *)__start_rodata &&
--	    end <= (const void *)__end_rodata) {
--		if (!to_user)
--			usercopy_abort("rodata", NULL, to_user, 0, n);
--		return;
--	}
--
--	/* Allow kernel data region (if not marked as Reserved). */
--	if (ptr >= (const void *)_sdata && end <= (const void *)_edata)
--		return;
--
--	/* Allow kernel bss region (if not marked as Reserved). */
--	if (ptr >= (const void *)__bss_start &&
--	    end <= (const void *)__bss_stop)
--		return;
--
--	/* Is the object wholly within one base page? */
--	if (likely(((unsigned long)ptr & (unsigned long)PAGE_MASK) ==
--		   ((unsigned long)end & (unsigned long)PAGE_MASK)))
--		return;
--
--	/* Allow if fully inside the same compound (__GFP_COMP) page. */
--	endpage = virt_to_head_page(end);
--	if (likely(endpage == page))
--		return;
--
--	/*
--	 * Reject if range is entirely either Reserved (i.e. special or
--	 * device memory), or CMA. Otherwise, reject since the object spans
--	 * several independently allocated pages.
--	 */
--	is_reserved = PageReserved(page);
--	is_cma = is_migrate_cma_page(page);
--	if (!is_reserved && !is_cma)
--		usercopy_abort("spans multiple pages", NULL, to_user, 0, n);
--
--	for (ptr += PAGE_SIZE; ptr <= end; ptr += PAGE_SIZE) {
--		page = virt_to_head_page(ptr);
--		if (is_reserved && !PageReserved(page))
--			usercopy_abort("spans Reserved and non-Reserved pages",
--				       NULL, to_user, 0, n);
--		if (is_cma && !is_migrate_cma_page(page))
--			usercopy_abort("spans CMA and non-CMA pages", NULL,
--				       to_user, 0, n);
--	}
--#endif
--}
--
- static inline void check_heap_object(const void *ptr, unsigned long n,
- 				     bool to_user)
- {
-@@ -236,9 +172,6 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- 	if (PageSlab(page)) {
- 		/* Check slab allocator for flags and size. */
- 		__check_heap_object(ptr, n, page, to_user);
--	} else {
--		/* Verify object does not incorrectly span multiple pages. */
--		check_page_span(ptr, n, page, to_user);
- 	}
- }
- 
-diff --git a/security/Kconfig b/security/Kconfig
-index 353cfef71d4e..8392647f5a4c 100644
---- a/security/Kconfig
-+++ b/security/Kconfig
-@@ -176,17 +176,6 @@ config HARDENED_USERCOPY_FALLBACK
- 	  Booting with "slab_common.usercopy_fallback=Y/N" can change
- 	  this setting.
- 
--config HARDENED_USERCOPY_PAGESPAN
--	bool "Refuse to copy allocations that span multiple pages"
--	depends on HARDENED_USERCOPY
--	depends on EXPERT
--	help
--	  When a multi-page allocation is done without __GFP_COMP,
--	  hardened usercopy will reject attempts to copy it. There are,
--	  however, several cases of this in the kernel that have not all
--	  been removed. This config is intended to be used only while
--	  trying to find such users.
--
- config FORTIFY_SOURCE
- 	bool "Harden common str/mem functions against buffer overflows"
- 	depends on ARCH_HAS_FORTIFY_SOURCE
--- 
-2.17.1
 
 
--- 
-Kees Cook
+On Fri, May 10, 2019, at 20:51, Thomas Hellstrom wrote:
+> On Fri, 2019-05-10 at 10:17 +1000, Tobin C. Harding wrote:
+> > kref.txt is already written using correct ReStructuredText
+> > format.  This
+> > can be verified as follows
+> > 
+> > 	make cleandocs
+> > 	make htmldocs 2> pre.stderr
+> > 	mv Documentation/kref.txt Documentation/core-api/kref.rst
+> > 	// Add 'kref' to core-api/index.rst
+> > 	make cleandocs
+> > 	make htmldocs 2> post.stderr
+> > 	diff pre.stderr post.stderr
+> > 
+> > While doing the file move, fix the column width to be 72 characters
+> > wide
+> > as it is throughout the document.  This is whitespace only.  kref.txt
+> > is
+> > so cleanly written its a shame to have these few extra wide
+> > paragraphs.
+> > 
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> > 
+> > I'm always hesitant to do docs patches that seem obvious - is there
+> > some reason that this was not done previously?
+> 
+> Speaking for the two kref.txt paragraphs, the width being too large is
+> simply an oversight from my side. I wasn't aware of the restriction.
+
+I'm a stickler for the rules, often to peoples dismay :) AFAIK they say 80 characters for code and 72 for documentation is optimal.  I'm yet to understand why 72 was chosen.  Maybe because its the same length as the git commit long message but that doesn't explain where _that_ came from.  I read once that they used 72 characters on punch cards at times because the other 8 characters got mangled for some reason.  Anyways, its kinda anal and I only change it if it looks like doing so is not going to annoy people _too_ much or, like in this instance, if the file is super clean except for a small portion.  The rest of this file seems to use 72 so I thought it was worth the change.
+
+I'm open to being told otherwise.
+
+Hope this is interesting for you,
+Tobin.
