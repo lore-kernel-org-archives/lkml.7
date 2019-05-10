@@ -2,168 +2,126 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D731C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AA9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B6220989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0D120989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dsrwv0H2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbfEJK1k (ORCPT
+        id S1727581AbfEJK1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:27:40 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:49761 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727251AbfEJK1j (ORCPT
+        Fri, 10 May 2019 06:27:46 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43713 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbfEJK1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:27:39 -0400
-Received: from [IPv6:2001:983:e9a7:1:2dea:e21e:760a:b215] ([IPv6:2001:983:e9a7:1:2dea:e21e:760a:b215])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id P2kahcrOcsDWyP2kbhbvfu; Fri, 10 May 2019 12:27:37 +0200
-Subject: Re: [PATCH] media: v4l2-core: expose the device after it was
- registered.
-To:     xinwu <xinwu.liu@intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
-        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
-        sque@chromium.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1548146084-20445-1-git-send-email-xinwu.liu@intel.com>
- <20190122100311.isx57iktfpxawxjv@paasikivi.fi.intel.com>
- <85906cb2-5472-2c54-e854-136cba8e8d40@intel.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <4da2cb55-f91f-0b19-9aff-3b25a8abea1a@xs4all.nl>
-Date:   Fri, 10 May 2019 12:27:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 06:27:45 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t187so836241oie.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0uHZ1jppAcFBhTR/1pJQr4fDRVmFHkByLDGRo+AFRuU=;
+        b=dsrwv0H2Rfrc01YiHmjTjaNBThgH0Ls0D+S54kv0UogNbIoQQubjPK8qT7L0mF33CS
+         aYviEu/LNE9drmcPOAdswXb57a7sipQirjIlQ7Ynd6iOEeUmTl+PCZ+GBOOHxMXwo9/H
+         j4gtOzrnEtCf/6EINxveE8MFRW5uJt9rldnOcDpx4xbhTJdLV7YP/WUGh+m3XZLAcGc9
+         VEH6sMdw5imAeTPV6OEInKN7s7agTjKI9bFZXH+y+qga4ATyjX3DaKij5ONVkcQdV95p
+         PteDCGEucmeJdXRwmJxetOEP+cggWxt3r6pDiaF7DdvsmqnhTbIkbLBpggd06dK5/E3N
+         9y4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0uHZ1jppAcFBhTR/1pJQr4fDRVmFHkByLDGRo+AFRuU=;
+        b=gm/JURy7HiB1tezFm7BkFg5iOYQ5UDvvfb6FSXFDWNOBIqkUWCOIx/JE7GAKJyM8Y9
+         bnC7wA88rPMD2AUbtUGi7G+vc+J3DTs+ARXUWraS7KDvK9gD7lyz4YpukPwYMyW4IBP6
+         VT4ztuhUVUZZoPG8OtsWsOllL3qhQLst6pgIrzlfvzbIrzR6U5GqHg2NhbmHsr2ZsilL
+         p6mzNJpPggQivLArMp53Xrl7hSZIdBxP3mWB0+heee0G/AmhGtlbPVBrnJJo6lkVTWO1
+         A+Ti32dpxWvRNs0Zr5pF/z2pP+ZiOyzMZMrFMu1wKoLWbBlqWYtf1MZqZMLvHf/q8z4P
+         EfHw==
+X-Gm-Message-State: APjAAAWepG1lQsyVxbpGzMXjChggbX9A+zERjz1Z18FPkeMwB2MH9THq
+        OrYy2Hpo9NpOLWBqIiNRdnDRi/HTdk9AbJzRdbBGRA==
+X-Google-Smtp-Source: APXvYqzItdyzdcRLdkdQjbdb1r5m6MPSdjbNOyMVXP3tR2XNB/TjHeBcC5zqpfKlvhj2ObI953CDQuJHYFWf+OOgkMY=
+X-Received: by 2002:aca:43d5:: with SMTP id q204mr4737682oia.100.1557484064075;
+ Fri, 10 May 2019 03:27:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <85906cb2-5472-2c54-e854-136cba8e8d40@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfLg5Fn441PlVWM9qY41jX8Jk0ihuqripdXxRcFoCUBJs+x5smFIqQrwbAuMYrkgQWxwQVKuGYV37Q/BBBnhOvLtXMhwHY7gFOTeACjtpAwsENIAcwx0D
- WQtgbnCFJKDfNpNHlKgCUX5Eg7YNTgYvywO3QUr/06M0VBVcItrJYb7pMz+O+2fOTPK4xrnHOhwg0eZlDHMiacOsOJSLziEyNoYjMeVCs6cJ/1DF7Dv0swJg
- 6oALbZb070XRqXih89dpiInZpR+lImnllCseEg4Ij9pWlYgydkOj3ITRHh6p6vNdgvOv8iPzbIbIiBMOpEvek+mIzcziThhil6/GSjoz86YbJlib8j/1yzu9
- wFrBTaKMjLYXZbs/uaFdHyRTKZteqITHoDFVdxpurX5Fk17sDTtFRbABmY+wVdEpH/dDiI07JqYPve775hkI1Nh+TVy4iIG+0yD7mh0uX9fYJ/DRvCKPDXKA
- K6t1XXw2J9a5YOSQSwq8DEljgQu7/hpmvUtef/6Tr2YuiCqt9o7tx5lc24EE0n/E9/NWBb9dCEVUXpUWWnPqFa3cbTfx1VIgkQtMfA==
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <20190501230126.229218-7-brendanhiggins@google.com> <CAK7LNAQ+SRMn8UFjW1dZv_TrL0qjD2v2S=rXgtUpiA-urr1DDA@mail.gmail.com>
+In-Reply-To: <CAK7LNAQ+SRMn8UFjW1dZv_TrL0qjD2v2S=rXgtUpiA-urr1DDA@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 10 May 2019 03:27:33 -0700
+Message-ID: <CAFd5g47BNZ0gRz4SXb37XjyXF_LyNZrSmoqDbzaaCUrTg3O7Yg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/17] kbuild: enable building KUnit
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        "Cc: Shuah Khan" <shuah@kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Tim Bird <Tim.Bird@sony.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Knut Omang <knut.omang@oracle.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/24/19 8:11 AM, xinwu wrote:
-> Hi Sakari,
-> 
-> Thanks for your response.
-> 
-> 
-> On 2019年01月22日 18:03, Sakari Ailus wrote:
->> Hi Xinwu,
->>
->> On Tue, Jan 22, 2019 at 04:34:44PM +0800, Liu, Xinwu wrote:
->>> device_register exposes the device to userspace.
->>>
->>> Therefore, while the register process is ongoing, the userspace program
->>> will fail to open the device (ENODEV will be set to errno currently).
->>> The program in userspace must re-open the device to cover this case.
->>>
->>> It is more reasonable to expose the device after everythings ready.
->>>
->>> Signed-off-by: Liu, Xinwu <xinwu.liu@intel.com>
->>> ---
->>>   drivers/media/v4l2-core/v4l2-dev.c | 14 ++++++++------
->>>   1 file changed, 8 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
->>> index d7528f8..01e5cc9 100644
->>> --- a/drivers/media/v4l2-core/v4l2-dev.c
->>> +++ b/drivers/media/v4l2-core/v4l2-dev.c
->>> @@ -993,16 +993,11 @@ int __video_register_device(struct video_device *vdev,
->>>           goto cleanup;
->>>       }
->>>   -    /* Part 4: register the device with sysfs */
->>> +    /* Part 4: Prepare to register the device */
->>>       vdev->dev.class = &video_class;
->>>       vdev->dev.devt = MKDEV(VIDEO_MAJOR, vdev->minor);
->>>       vdev->dev.parent = vdev->dev_parent;
->>>       dev_set_name(&vdev->dev, "%s%d", name_base, vdev->num);
->>> -    ret = device_register(&vdev->dev);
->>> -    if (ret < 0) {
->>> -        pr_err("%s: device_register failed\n", __func__);
->>> -        goto cleanup;
->>> -    }
->>>       /* Register the release callback that will be called when the last
->>>          reference to the device goes away. */
->>>       vdev->dev.release = v4l2_device_release;
->>> @@ -1020,6 +1015,13 @@ int __video_register_device(struct video_device *vdev,
->>>       /* Part 6: Activate this minor. The char device can now be used. */
->>>       set_bit(V4L2_FL_REGISTERED, &vdev->flags);
->>>   +    /* Part 7: Register the device with sysfs */
->>> +    ret = device_register(&vdev->dev);
->>> +    if (ret < 0) {
->>> +        pr_err("%s: device_register failed\n", __func__);
->>> +        goto cleanup;
->> The error handling needs to reflect the change as well.
-> 
-> Yes, I think it need to clear the V4L2_FL_REGISTERED also.
->>
->> Speaking of which, the error handling appears to be somewhat broken here.
->> It should be fixed first before making changes to the registration order.
-> 
-> I guess you mean to call "put_device()" in this error handling.
->>
->> The problem the patch addresses is related to another problem: how to tell
->> the user space all devices in the media hardware complex have been
->> registered successfully. Order generally has been the node first, and only
->> then the entity. That suggests the order should probably be:
->>
->> 1. video_register_media_controller
->> 2. set_bit(V4L2_FL_REGISTERED)
->> 3. device_register
->>
->> I wonder what Hans thinks.
+> On Thu, May 2, 2019 at 8:03 AM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+> >
+> > Add KUnit to root Kconfig and Makefile allowing it to actually be built.
+> >
+> > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>
+> You need to make sure
+> to not break git-bisect'abililty.
+>
+>
+> With this commit, I see build error.
+>
+>   CC      kunit/test.o
+> kunit/test.c:11:10: fatal error: os.h: No such file or directory
+>  #include <os.h>
+>           ^~~~~~
+> compilation terminated.
+> make[1]: *** [scripts/Makefile.build;279: kunit/test.o] Error 1
+> make: *** [Makefile;1763: kunit/] Error 2
 
-Sorry for the late reply, I missed this question.
+Nice catch! That header shouldn't even be in there.
 
-The core problem is that video_register_device sets up all the internal
-data structures *and* creates the device node. This should really be split up
-(as is done in other subsystems) into an allocate that does everything except
-create the device node, and a register that actually does that last step.
-
-The lack of this separation means that a device that has to register multiple
-devices can't have a consistent valid state before it starts registering
-devices.
-
-Compare it to drivers/media/cec/cec-core.c where this is done a lot better.
-
-That said, it would be a huge job reworking this. Although it can be done
-by creating new functions separate from the existing ones. E.g.:
-
-int v4l2_dev_initialize(struct video_device *vdev);
-int v4l2_dev_register(struct video_device *vdev);
-
-v4l2_dev_initialize does everything except registering the device node. That's
-done by v4l2_dev_register. This way drivers can initialize everything first,
-ensuring a fully consistent state before actually registering the device nodes.
-
-I think this would be very nice to have.
-
-That said, for the current function I agree that the order should indeed be
-changed according to the proposal. It's just doesn't address the full problem.
-
-Regards,
-
-	Hans
-
-> 
-> Yes, that's my suggestion, thanks for the highlight. I also want to know if it's worth to make this change.
->>
->>> +    }
->>> +
->>>       return 0;
->>>     cleanup:
-> 
-
+Sorry about that. I will have it fixed in the next revision.
