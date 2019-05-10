@@ -2,87 +2,151 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38200C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77145C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFED22175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557491716;
-	bh=0ihxgez7etArzPMdt7Fob4yziLE29y2EEZW93s0R294=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ZS9FtWSXjOubBM1BJ5I3G8ZOdW0H5YfQvX0OWEdyON9b2sRnU64JwdcicsYv+VQDN
-	 SbDAaBxvMoISkANdO/LHiVAyzPBEMiy9O4EVUzbQEdQPt1skAdDHiIwrlHj6PexBpN
-	 rQOXSLQAiAnxZed/+7bvdfpPAUWjjcEvT5ifw6Vc=
+	by mail.kernel.org (Postfix) with ESMTP id 3C51020989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:41:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yHtmhqSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfEJMfP (ORCPT
+        id S1727483AbfEJMlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 08:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727656AbfEJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 08:35:14 -0400
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-1 tag
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557491713;
-        bh=0ihxgez7etArzPMdt7Fob4yziLE29y2EEZW93s0R294=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=0BBs7oqzZdzDhfsBqiQPfaEKLQYGHYa0llO/ydJ/nBuswWEQP6EOoTqZmB7PxVoWX
-         Wn16zvkr6I4APTv56U94gNWiYoSef8waG/b04cNKkcCrcGmFmNNpz25oHmV+yqoBk5
-         QrFXHT4HQ9trAfrCZmTuQD2C8NisfGZHaulzxSQQ=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <874l62v6u0.fsf@concordia.ellerman.id.au>
-References: <874l62v6u0.fsf@concordia.ellerman.id.au>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <874l62v6u0.fsf@concordia.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.2-1
-X-PR-Tracked-Commit-Id: 8150a153c013aa2dd1ffae43370b89ac1347a7fb
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b970afcfcabd63cd3832e95db096439c177c3592
-Message-Id: <155749171372.31662.8613188433450334678.pr-tracker-bot@kernel.org>
-Date:   Fri, 10 May 2019 12:35:13 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Julia.Lawall@lip6.fr, aik@ozlabs.ru, ajd@linux.ibm.com,
-        alastair@d-silva.org, andrew.donnellan@au1.ibm.com,
-        aneesh.kumar@linux.ibm.com, anju@linux.vnet.ibm.com,
-        anton@ozlabs.org, ben@decadent.org.uk, cai@lca.pw,
-        christophe.leroy@c-s.fr, clg@kaod.org, cmr@informatik.wtf,
-        colin.king@canonical.com, dja@axtens.net, dvyukov@google.com,
-        fbarrat@linux.ibm.com, ganeshgr@linux.ibm.com, hch@lst.de,
-        horia.geanta@nxp.com, jagdsh.linux@gmail.com, joe@perches.com,
-        joel@jms.id.au, laurentiu.tudor@nxp.com, leitao@debian.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        lkml@sdf.org, lukas.bulwahn@gmail.com, lvivier@redhat.com,
-        maddy@linux.vnet.ibm.com, mahesh@linux.vnet.ibm.com,
-        malat@debian.org, mikey@neuling.org, nathanl@linux.ibm.com,
-        ndesaulniers@google.com, nfont@linux.vnet.ibm.com,
-        npiggin@gmail.com, paulmck@linux.ibm.com,
-        ricklind@linux.vnet.ibm.com, ruscur@russell.cc,
-        sachinp@linux.vnet.ibm.com, sukadev@linux.vnet.ibm.com,
-        thuth@redhat.com, tobin@kernel.org, tsu.yubo@gmail.com,
-        valentin.schneider@arm.com, weiyongjun1@huawei.com,
-        wen.yang99@zte.com.cn, yuehaibing@huawei.com
+        Fri, 10 May 2019 08:41:14 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38298 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbfEJMlN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 08:41:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PaEjONaV4ijDf76gOJrIlqa3RKQO2ZCV9SzvcjnY5M0=; b=yHtmhqSgjr4d5cvy4Y4dw1EsF
+        z3vUHhM76TmVgxToU5nVl8LQ3pVtp+6snuWTKySSED8fZIg/zmOTrIwK/SOD1f6d7yaDSEdDNKICX
+        9/2nzHmmfa+f3okzZ1hhRojX9VJ6TPC8kF8Ma074li+ZW32rm8OIASznKAu/gh4AVw3xDh6N/QSW2
+        lax1Du0IO3CTJfRktTffqiSWGQ+YvpFSChEA4n6iZtP/9heSCSUAMK0HvUAZQqAzgqvKllH4e1s8W
+        Gh+uGdiKuw4+cbtTPoDlw3keRGhjc8ZqirzDu7ha6XZUBmqbIVLNHE2SLHTFFHt1v2vcsijXjssYB
+        WgsWcslsw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hP4pc-0005gz-8E; Fri, 10 May 2019 12:40:56 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B5D4A2029FD7A; Fri, 10 May 2019 14:40:54 +0200 (CEST)
+Date:   Fri, 10 May 2019 14:40:54 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-ID: <20190510124054.GV2589@hirez.programming.kicks-ass.net>
+References: <20190508115416.nblx7c2kocidpytm@treble>
+ <20190508120416.GL2589@hirez.programming.kicks-ass.net>
+ <20190508124248.u5ukpbhnh4wpiccq@treble>
+ <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+ <20190508184848.qerg3flv3ej3xsev@treble>
+ <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
+ <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+ <20190509230106.3551b08553440d125e437f66@kernel.org>
+ <20190509171416.GY2623@hirez.programming.kicks-ass.net>
+ <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 May 2019 22:20:55 +1000:
+On Fri, May 10, 2019 at 01:58:31PM +0900, Masami Hiramatsu wrote:
+> On Thu, 9 May 2019 19:14:16 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > --- a/arch/x86/kernel/kprobes/core.c
+> > > > +++ b/arch/x86/kernel/kprobes/core.c
+> > > > @@ -731,29 +731,8 @@ asm(
+> > > >  	".global kretprobe_trampoline\n"
+> > > >  	".type kretprobe_trampoline, @function\n"
+> > > >  	"kretprobe_trampoline:\n"
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-1
+> > > Here, we need a gap for storing ret-ip, because kretprobe_trampoline is
+> > > the address which is returned from the target function. We have no 
+> > > "ret-ip" here at this point. So something like
+> > > 
+> > > +	"push $0\n"	/* This is a gap, will be filled with real return address*/
+> > 
+> > The trampoline already provides a gap, trampoline_handler() will need to
+> > use int3_emulate_push() if it wants to inject something on the return
+> > stack.
+> 
+> I guess you mean the int3 case. This trampoline is used as a return destination.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b970afcfcabd63cd3832e95db096439c177c3592
+> When the target function is called, kretprobe interrupts the first instruction,
+> and replace the return address with this trampoline. When a "ret" instruction
+> is done, it returns to this trampoline. Thus the stack frame start with
+> previous context here. As you described above,
 
-Thank you!
+I would prefer to change that to inject an extra return address, instead
+of replacing it. With the new exception stuff we can actually do that.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+So on entry we then go from:
+
+	<previous context>
+	RET-IP
+
+to
+
+	<previous context>
+	RET-IP
+	return-trampoline
+
+So when the function returns, it falls into the trampoline instead.
+
+> > > > +	 * On entry the stack looks like:
+> > > > +	 *
+> > > > +	 *   2*4(%esp) <previous context>
+> > > > +	 *   1*4(%esp) RET-IP
+> > > > +	 *   0*4(%esp) func
+> 
+> From this trampoline call, the stack looks like:
+> 
+> 	 *   1*4(%esp) <previous context>
+> 	 *   0*4(%esp) func
+> 
+> So we need one more push.
+
+And then the stack looks just right at this point.
+
+> > > > +	"push trampoline_handler\n"
+> > > > +	"jmp call_to_exception_trampoline\n"
+> > > >  	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
+> > > >  );
+> > > >  NOKPROBE_SYMBOL(kretprobe_trampoline);
