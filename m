@@ -2,137 +2,131 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23BBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7CB4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822CC217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB524217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ahdEKFGH"
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="BHvgLVw/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfEJVqb (ORCPT
+        id S1728366AbfEJVqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:46:31 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36583 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbfEJVqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:46:30 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d21so3416126plr.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 14:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CypxHt1sI2HFVc20aRWi1Iy+wmFvcX4HUufWa3L5NtU=;
-        b=ahdEKFGH657NxRSXetF4YIdbDu+7xuiBUH3XkB/btnCaCBenwx8GQzU4L3s6XoXN9m
-         78C9R/U8CTGACerCOrt51OZm2VLdnMhrpw9L2n/RHvNedU3JvCr0y5L+Q/FL3WVjMgKc
-         ICqGlTDxiwzLZnSw1foolMZweNxWkafbp2t/FSvYwwBlAXglYUvUrqXGBfmgCMgH1SYq
-         hqAgMHmu8whHVWA0K8yzNj8lgiJhmlHQ9zy/GZl1/LQggLxbdEcyacIZQx/9LGqsm1cQ
-         4/+hmQuYbeTWUlnHZAAo4R1Nbgd3MJGTJrHNvmAhCNpC05wlq8F3NHMO/q+IbT0NHaHc
-         XzXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CypxHt1sI2HFVc20aRWi1Iy+wmFvcX4HUufWa3L5NtU=;
-        b=oLhGMHEwhjcPOo+FlF/owjqpxOuGGtjVUPOD+PnR2xnx86V7lj/nX0QX3oWAOf+UVF
-         gL+AkB7t8BgXKCH7dwXB6TRtvVOKtLOyF1CYFBjNYG2aUplFYrMdryLbvLXrfi+3lwVk
-         4HYDtV5DYb/1zvb7fC+AwIlQxR/8e0zQFaRFw99zmTLPA2hJAjosYFgKYX/tVRHvQT11
-         uzsPBGAi6k6HIaOjHCZ32oW4fCjxh/Mf1tcwncxYSzX2VAt/rptuIGTJKRwV7bpcFW38
-         vcmRZLpNkAlQSQdBV9uA+qWaoIfxkwAIduyBEc2KwLo9d+jQYeMWvRYnsfLZjbrZuEF8
-         SpUw==
-X-Gm-Message-State: APjAAAV44uKe5WzAvAQqujglBgmB+VFVG0hOrybWEMS372tZEybumy8G
-        dohJdh9xQgNofqd7W6A6SNg9QQ==
-X-Google-Smtp-Source: APXvYqwYK1LRY/zykcry4kocjMHlnViiLHRg4/Jq/d2FPkuTmkKravH6h5IBIcmuDxExL80HBy2BWg==
-X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr15506483plr.223.1557524788114;
-        Fri, 10 May 2019 14:46:28 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id v1sm9467395pff.81.2019.05.10.14.46.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 14:46:26 -0700 (PDT)
-Date:   Fri, 10 May 2019 14:46:22 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] platform/chrome: cros_ec_spi: Always add of_match_table
-Message-ID: <20190510214622.GA63153@google.com>
-References: <20190509181750.134960-1-evgreen@chromium.org>
+        Fri, 10 May 2019 17:46:40 -0400
+Received: from mail-eopbgr750132.outbound.protection.outlook.com ([40.107.75.132]:30426
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728286AbfEJVqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:46:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Get2beWjn+aU8qZx/fRGQtvU2z5gK/ZkXRx5u5kF5HI=;
+ b=BHvgLVw/8zgV4MfKnXVEKaPHlKHww9ojWTEthvU6NE7U3LeOJ1w//2JX9CYERf/4UpAWmc6OmhjgDc5zDBWPe5PPGUPueUWTQRejQAAu/YPgFzg0kwfZ54JDrwJfsU8UAzP5+9zyEjrmCxkEmMqis4/j4/R3iidqIPxjEJysv0c=
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3612.namprd06.prod.outlook.com (10.167.236.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.20; Fri, 10 May 2019 21:46:21 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876%2]) with mapi id 15.20.1878.022; Fri, 10 May 2019
+ 21:46:21 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Trent Piepho <tpiepho@impinj.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 4/5] net: phy: dp83867: Disable tx/rx delay when not
+ configured
+Thread-Topic: [PATCH 4/5] net: phy: dp83867: Disable tx/rx delay when not
+ configured
+Thread-Index: AQHVB3nJzyMtDMfr/E+ATF4/fU++zA==
+Date:   Fri, 10 May 2019 21:46:13 +0000
+Message-ID: <20190510214550.18657-4-tpiepho@impinj.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+In-Reply-To: <20190510214550.18657-1-tpiepho@impinj.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR05CA0044.namprd05.prod.outlook.com
+ (2603:10b6:a03:74::21) To MWHPR0601MB3708.namprd06.prod.outlook.com
+ (2603:10b6:301:7c::38)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tpiepho@impinj.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.14.5
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 71e00057-f3c0-4671-05b9-08d6d590eb9e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3612;
+x-ms-traffictypediagnostic: MWHPR0601MB3612:
+x-microsoft-antispam-prvs: <MWHPR0601MB361258E744755E651AEBD061D30C0@MWHPR0601MB3612.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0033AAD26D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39840400004)(136003)(189003)(199004)(316002)(3846002)(6116002)(86362001)(8676002)(81166006)(99286004)(66066001)(81156014)(478600001)(102836004)(25786009)(73956011)(76176011)(476003)(2616005)(68736007)(11346002)(66946007)(66476007)(66556008)(66446008)(64756008)(14454004)(50226002)(6506007)(446003)(486006)(8936002)(26005)(386003)(6666004)(186003)(4326008)(52116002)(256004)(14444005)(36756003)(305945005)(2906002)(1076003)(110136005)(6436002)(6486002)(6512007)(54906003)(71190400001)(2501003)(5660300002)(71200400001)(53936002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3612;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: impinj.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8wHeFSBsdO7oVR7INcpUN+xGSH2hRbvKl7ctP1Y71QxJGHOO9+WLOM1TvxCa1P07m26MhLWiImLDT6+ERZF9CfSdi6r6kCMqxXdj/TlFHp7nqOLwQmmU98QBtRXicYWswFzrf73Gw76z4Oi2RrurrkRKblFKgOFaKYw9mWAi9XAG+Bzb/qFOMLiNgFDCvSrY0mnwL6V332Yi4B/cj2fU12klZV2XvTo2YlsxlkXsu50DJkTklXM+n3TyHfUjMzjJBQc6fopvDcqIZKZE7lqqQ1S5XGmiePldiWjM+ODpu29cLJ2+ULfqu7XmbkSbHuDzUWFakqUpIq3iEu7VUG5ERmooMcFW2AlodhVnW6SpKbCexRqH3X9BMo7mnybuv8ek4awgtXn0XcEM76HTUbP6acPprSabxxp5q41eS7zvwxU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-In-Reply-To: <20190509181750.134960-1-evgreen@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71e00057-f3c0-4671-05b9-08d6d590eb9e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 21:46:13.0707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3612
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Evan,
-
-On Thu, May 09, 2019 at 11:17:50AM -0700, Evan Green wrote:
-> The Chrome OS EC driver attaches to devices using the of_match_table
-> even when ACPI is the underlying firmware. It does this using the
-> magic PRP0001 ACPI HID, which tells ACPI to go find an OF compatible
-> string under the hood and match on that.
->=20
-> The cros_ec_spi driver needs to provide the of_match_table regardless
-> of whether CONFIG_OF is enabled or not, since the table is used by
-> ACPI for PRP0001 devices.
->=20
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-
-Looks good to me.
-Reviewed-by: Benson Leung <bleung@chromium.org>
-
-I'll leave this to Enric to merge to our for-next.
-
-Thanks,
-Benson
-
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlzV8SsACgkQHwn1ewov
-5lgtdxAAixyvYNuxuXb3R0XUwoZr4OW17jwYk1zu4/Y4tsaMWY0ZS0RyInFygScC
-+70a6qG+DNtmPaHWOajFIlFjaGPpteaIizPUPzglGgqF6vy+901oenxEtqapcq+U
-c7kq0PZaRpRH789s8CYomzz7zMYxy+58lrBgGki+0tlRz44NMEKPR4N+wTo9zF0h
-Omj0cjKfiCUHsKAn/pe+oye+a9Xqj+CyyPByAobY0haTrDPtwgNrn5ma0SXxQDPz
-VlelhEMJxsVsxHJ394zhGNRYmiHMbG+PHbOMXCtndf9qO7lERa9PlvQObvjG9TSj
-56vf4fib3Mx3Oc32yLtBxDKvoDglpSO/WV6Yc0vsGTPLblgVU/Zi1oYchvT0mJsD
-CwlsFoLB5uWKpLOvwxw5VXY4WdlAuyHT2ja6nshIJBJgagEMzMllPlikHWE5RmFu
-v83EzzUS6Tzzs2cURsTRkPS6nV56EUANWJ8xI7rFzi/VVBCQD9FV1RrPXwIqIj0i
-7rThUyaP0tPjN0bX//2HqlLN7Nd0z437NsE9eSHi3wv0wQFyoEaI3+SA9fKod+Ww
-R416YDmZEeLNqPup1DOTQRyLxF7LkEBzhT2ptDInH+shOKADeJZRrKZ/+twOZz3C
-nSeiW4QnjpKLqV6C2yUp3kS2yX3+I+iEXePRNLr9A+lr0Ho6JSQ=
-=rt78
------END PGP SIGNATURE-----
-
---HlL+5n6rz5pIUxbD--
+VGhlIGNvZGUgd2FzIGFzc3VtaW5nIHRoZSByZXNldCBkZWZhdWx0IG9mIHRoZSBkZWxheSBjb250
+cm9sIHJlZ2lzdGVyCndhcyB0byBoYXZlIGRlbGF5IGRpc2FibGVkLiAgVGhpcyBpcyB3aGF0IHRo
+ZSBkYXRhc2hlZXQgc2hvd3MgYXMgdGhlCnJlZ2lzdGVyJ3MgaW5pdGlhbCB2YWx1ZS4gIEhvd2V2
+ZXIsIHRoYXQncyBub3QgYWN0dWFsbHkgdHJ1ZTogdGhlCmRlZmF1bHQgaXMgY29udHJvbGxlZCBi
+eSB0aGUgUEhZJ3MgcGluIHN0cmFwcGluZy4KCklmIHRoZSBpbnRlcmZhY2UgbW9kZSBpcyBzZWxl
+Y3RlZCBhcyBSWCBvciBUWCBkZWxheSBvbmx5LCBpbnN1cmUgdGhlCm90aGVyIGRpcmVjdGlvbidz
+IGRlbGF5IGlzIGRpc2FibGVkLgoKSWYgdGhlIGludGVyZmFjZSBtb2RlIGlzIGp1c3QgInJnbWlp
+Iiwgd2l0aCBuZWl0aGVyIFRYIG9yIFJYIGludGVybmFsCmRlbGF5LCBvbmUgbWlnaHQgZXhwZWN0
+IHRoYXQgdGhlIGRyaXZlciBzaG91bGQgZGlzYWJsZSBib3RoIGRlbGF5cy4gIEJ1dAp0aGlzIGlz
+IG5vdCB3aGF0IHRoZSBkcml2ZXIgZG9lcy4gIEl0IGxlYXZlcyB0aGUgc2V0dGluZyBhdCB0aGUg
+UEhZJ3MKc3RyYXBwaW5nJ3MgZGVmYXVsdC4gIEFuZCB0aGF0IGRlZmF1bHQsIGZvciBubyBwaW5z
+IHdpdGggc3RyYXBwaW5nCnJlc2lzdG9ycywgaXMgdG8gaGF2ZSBkZWxheSBlbmFibGVkIGFuZCAy
+LjAwIG5zLgoKUmF0aGVyIHRoYW4gY2hhbmdlIHRoaXMgYmVoYXZpb3IsIEkndmUga2VwdCBpdCB0
+aGUgc2FtZSBhbmQgZG9jdW1lbnRlZAppdC4gIE5vIGRlbGF5IHdpbGwgbW9zdCBsaWtlbHkgbm90
+IHdvcmsgYW5kIHdpbGwgYnJlYWsgZXRoZXJuZXQgb24gYW55CmJvYXJkIHVzaW5nICJyZ21paSIg
+bW9kZS4KCkNjOiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+CkNjOiBGbG9yaWFuIEZhaW5l
+bGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4KQ2M6IEhlaW5lciBLYWxsd2VpdCA8aGthbGx3ZWl0
+MUBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IFRyZW50IFBpZXBobyA8dHBpZXBob0BpbXBpbmou
+Y29tPgotLS0KIGRyaXZlcnMvbmV0L3BoeS9kcDgzODY3LmMgfCA2ICsrKysrKwogMSBmaWxlIGNo
+YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L3BoeS9kcDgz
+ODY3LmMgYi9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jCmluZGV4IDQyMDcyOWNkNjAyNS4uYTQ2
+Y2M5NDI3ZmIzIDEwMDY0NAotLS0gYS9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jCisrKyBiL2Ry
+aXZlcnMvbmV0L3BoeS9kcDgzODY3LmMKQEAgLTI1NiwxMCArMjU2LDE2IEBAIHN0YXRpYyBpbnQg
+ZHA4Mzg2N19jb25maWdfaW5pdChzdHJ1Y3QgcGh5X2RldmljZSAqcGh5ZGV2KQogCQkJcmV0dXJu
+IHJldDsKIAl9CiAKKwkvKiBJZiByZ21paSBtb2RlIHdpdGggbm8gaW50ZXJuYWwgZGVsYXkgaXMg
+c2VsZWN0ZWQsIHdlIGRvIE5PVCB1c2UKKwkgKiBhbGlnbmVkIG1vZGUgYXMgb25lIG1pZ2h0IGV4
+cGVjdC4gIEluc3RlYWQgd2UgdXNlIHRoZSBQSFkncyBkZWZhdWx0CisJICogYmFzZWQgb24gcGlu
+IHN0cmFwcGluZy4gIEFuZCB0aGUgIm1vZGUgMCIgZGVmYXVsdCBpcyB0byAqdXNlKgorCSAqIGlu
+dGVybmFsIGRlbGF5IHdpdGggYSB2YWx1ZSBvZiA3ICgyLjAwIG5zKS4KKwkgKi8KIAlpZiAoKHBo
+eWRldi0+aW50ZXJmYWNlID49IFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSV9JRCkgJiYKIAkgICAg
+KHBoeWRldi0+aW50ZXJmYWNlIDw9IFBIWV9JTlRFUkZBQ0VfTU9ERV9SR01JSV9SWElEKSkgewog
+CQl2YWwgPSBwaHlfcmVhZF9tbWQocGh5ZGV2LCBEUDgzODY3X0RFVkFERFIsIERQODM4NjdfUkdN
+SUlDVEwpOwogCisJCXZhbCAmPSB+KERQODM4NjdfUkdNSUlfVFhfQ0xLX0RFTEFZX0VOIHwgRFA4
+Mzg2N19SR01JSV9SWF9DTEtfREVMQVlfRU4pOwogCQlpZiAocGh5ZGV2LT5pbnRlcmZhY2UgPT0g
+UEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJX0lEKQogCQkJdmFsIHw9IChEUDgzODY3X1JHTUlJX1RY
+X0NMS19ERUxBWV9FTiB8IERQODM4NjdfUkdNSUlfUlhfQ0xLX0RFTEFZX0VOKTsKIAotLSAKMi4x
+NC41Cgo=
