@@ -2,136 +2,60 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A4DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EF6C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3AEB20989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QtaJmXuQ"
+	by mail.kernel.org (Postfix) with ESMTP id 5003320989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfEJKbS (ORCPT
+        id S1727512AbfEJKd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:31:18 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:61229 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727251AbfEJKbS (ORCPT
+        Fri, 10 May 2019 06:33:28 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53259 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbfEJKd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:31:18 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4AAV0nX025786;
-        Fri, 10 May 2019 19:31:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4AAV0nX025786
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557484261;
-        bh=3yJH+cglIjNQq6vK0eeyN++1KXd8VHZRN7FQJbPltS8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QtaJmXuQJy7hctD/ahVAN5XPHN224n6/gqws6nJ/VotVw6eA+8vTJU3kSagTwyS1q
-         DGlLyHog02uWurOxIIxKgcK7nayyO+bQha19Z/412N0ccdltUzKhcnlvU54r3rL2ZF
-         /7yd3DaXEV3ThV74ZGgPMcATUIr2d8phlFXtq9OT03ColTy+eKxoiuz5y1uKzLvpMZ
-         ALUOCKcCEOwtobtUg0Fk/k9pSf7fatmDB/w+cjz1n7pCZUkVL0J76Ro+TKCQTrlXnb
-         Xi83Kavt+o++04Nbfu9iLvu2nvO+HmNfTEUZUgWP/kFkOPfZVl7zyvl75HUdzL9IoH
-         xywoa2weFn44A==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id d128so3311706vsc.10;
-        Fri, 10 May 2019 03:31:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAXAtq4hLI7cHC/L5E2Mt7UahArg08a1UXZYvwt9dkkw4ZCcR3QR
-        XIzWfFmpO3xGvqSjUXI2sh4f1gSH31yf+4Diy3U=
-X-Google-Smtp-Source: APXvYqxQg+YuYHeAdyD+cmoEqdlV9x3SqXv2NvZ+DbME3bD71rpckfASo32QB3ghErivNtiJLmZIR4uDTrUdlUap+zw=
-X-Received: by 2002:a67:f109:: with SMTP id n9mr5064876vsk.181.1557484260150;
- Fri, 10 May 2019 03:31:00 -0700 (PDT)
+        Fri, 10 May 2019 06:33:27 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hP2q7-0004jE-1i; Fri, 10 May 2019 12:33:19 +0200
+Date:   Fri, 10 May 2019 12:33:18 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     minyard@acm.org
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>, tglx@linutronix.de,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Corey Minyard <cminyard@mvista.com>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190510103318.6cieoifz27eph4n5@linutronix.de>
+References: <20190509193320.21105-1-minyard@acm.org>
 MIME-Version: 1.0
-References: <20190501230126.229218-1-brendanhiggins@google.com>
- <20190501230126.229218-7-brendanhiggins@google.com> <CAK7LNAQ+SRMn8UFjW1dZv_TrL0qjD2v2S=rXgtUpiA-urr1DDA@mail.gmail.com>
- <CAFd5g47BNZ0gRz4SXb37XjyXF_LyNZrSmoqDbzaaCUrTg3O7Yg@mail.gmail.com>
-In-Reply-To: <CAFd5g47BNZ0gRz4SXb37XjyXF_LyNZrSmoqDbzaaCUrTg3O7Yg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 10 May 2019 19:30:24 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR3DW5UxtsTNtW6mtQic8cukJwJ18=KitC2HX+jO5eo4g@mail.gmail.com>
-Message-ID: <CAK7LNAR3DW5UxtsTNtW6mtQic8cukJwJ18=KitC2HX+jO5eo4g@mail.gmail.com>
-Subject: Re: [PATCH v2 06/17] kbuild: enable building KUnit
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        "Cc: Shuah Khan" <shuah@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Tim Bird <Tim.Bird@sony.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jeff Dike <jdike@addtoit.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Knut Omang <knut.omang@oracle.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190509193320.21105-1-minyard@acm.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 7:27 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> > On Thu, May 2, 2019 at 8:03 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > Add KUnit to root Kconfig and Makefile allowing it to actually be built.
-> > >
-> > > Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> >
-> > You need to make sure
-> > to not break git-bisect'abililty.
-> >
-> >
-> > With this commit, I see build error.
-> >
-> >   CC      kunit/test.o
-> > kunit/test.c:11:10: fatal error: os.h: No such file or directory
-> >  #include <os.h>
-> >           ^~~~~~
-> > compilation terminated.
-> > make[1]: *** [scripts/Makefile.build;279: kunit/test.o] Error 1
-> > make: *** [Makefile;1763: kunit/] Error 2
->
-> Nice catch! That header shouldn't even be in there.
->
-> Sorry about that. I will have it fixed in the next revision.
+On 2019-05-09 14:33:20 [-0500], minyard@acm.org wrote:
+> From: Corey Minyard <cminyard@mvista.com>
+> 
+> The function call do_wait_for_common() has a race condition that
+> can result in lockups waiting for completions.  Adding the thread
+> to (and removing the thread from) the wait queue for the completion
+> is done outside the do loop in that function.  However, if the thread
+> is woken up, the swake_up_locked() function will delete the entry
+> from the wait queue.  If that happens and another thread sneaks
+> in and decrements the done count in the completion to zero, the
+> loop will go around again, but the thread will no longer be in the
+> wait queue, so there is no way to wake it up.
 
+applied, thank you.
 
-BTW, I applied whole of this series
-to my kernel.org repository.
-
-0day bot started to report issues.
-I hope several reports reached you,
-and they are useful to fix your code.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Sebastian
