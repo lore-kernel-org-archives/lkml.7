@@ -2,254 +2,205 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78B6C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F589C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9E72182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F341E21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHERfb9Z"
+	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="umxrHH80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfEJCR7 (ORCPT
+        id S1726903AbfEJCVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 22:17:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33556 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbfEJCR7 (ORCPT
+        Thu, 9 May 2019 22:21:15 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:34633 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfEJCVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 22:17:59 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h17so2203034pgv.0;
-        Thu, 09 May 2019 19:17:58 -0700 (PDT)
+        Thu, 9 May 2019 22:21:14 -0400
+Received: by mail-it1-f194.google.com with SMTP id p18so6448444itm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 19:21:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7VYa/MEIVczpQRsw/RIk5RlJQFeInzCPJlDSn6sQGlg=;
-        b=JHERfb9ZyjPyresjl9aaDPqMeZKvF1FShLS/m/ky8TScHxGL7U+T41SIotnyVJS0fc
-         2FY9A5LmqWxn+vAlqbZExhT5ldiYywh3m5zOkftJHULEpCBDnkrYZRBvY8luW212ft+G
-         O/PuCodxHnAc/SfeVWA5WXoZxYTAb3XnFQ/qiBcwa2vu4bI4LgJ3AaCrxrQtlis8SZoI
-         GwDZVz2OGO4rxbWJ0nv7sFZYIWKpr0jL9TKhWMC5Ozz8O3C1vXN572tv7HwaPPeNvK1R
-         oOgAtAI3Ey6T4aktpOkNr65izSB/w+GrIhDbtTORx7rw4Zf+xDvBj2aaUxnX1tYEr/9H
-         3K1A==
+        d=konsulko.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4Tp3A1HqkaYqPPsTWL7+ahBUw9fqMa6q/M4oCRraR6I=;
+        b=umxrHH80RYhOBiTsV3B4M/Uxz4aTJ4aASrnbnYZ2YkvTegxriWRTYW+SIm+7Zsl+TF
+         mUe2veiyhK1Uc0+rjfEh1fqBxEAIzmiu0devtVTqPK5s2KBBzlhUCrWx2KRbgT+F9W4e
+         ivbhiGlUapMGm8J6hDw0Nk97aboVibHoboKvs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7VYa/MEIVczpQRsw/RIk5RlJQFeInzCPJlDSn6sQGlg=;
-        b=Kple7zYfpo3XmEp24s1fBDHipAsYKiuYnJE/o/5KmI6WJ+tRvc7AWLyTKb2poVuYOu
-         jy9RPmFMHuJPZgLXTqQ58c2PTPgWBqzC5jvM+AvDoE3zMLfC6pEjyUTTh9u+1pne8VMU
-         ZvTRtzPzk5IW0+TXxyAlL8DDakz5y2roRODxLE2NCOGXNTOkoJUGmuJyuahPZd02iwgY
-         71eZ8nWd8SF7QmNSZZZo+lQ/9udfY4GCT7ZPGiN4XxdeaIroyPU/f+fZruIpDYQBVu+z
-         lE8bwlEU+UsZNO9OVBcdnSi1pW41/u8TQNrQiDIoIDLoLQbEtQk8zAWmKmX5UVpG24F4
-         uZRQ==
-X-Gm-Message-State: APjAAAWsWNGa7x9nksZQ9NIqdC2hjOud6tE97Ib70gVPz+SnJe1yXIRe
-        2l99s6GpCuGej4NAhOQ5dMI=
-X-Google-Smtp-Source: APXvYqyN1LffL7F3Fkqy7BlJsuFNIt6pIHf7nT4kRmDNyze3slWFemEJt1HD2iYXKotUMa8gsivQAA==
-X-Received: by 2002:aa7:8b83:: with SMTP id r3mr10214828pfd.248.1557454677889;
-        Thu, 09 May 2019 19:17:57 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::b86c])
-        by smtp.gmail.com with ESMTPSA id l1sm4508118pgp.9.2019.05.09.19.17.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 19:17:57 -0700 (PDT)
-Date:   Thu, 9 May 2019 19:17:52 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.2-rc1
-Message-ID: <20190510021750.bxjda2wbuj3hdml7@ast-mbp>
-References: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
- <20190509222043.b4zn32kuohduzzzr@ast-mbp>
- <dd983d42-d148-372d-3e57-b97c313d58b9@linuxfoundation.org>
- <28072ca5-f7c8-f16d-6881-aec3e8b61ae8@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4Tp3A1HqkaYqPPsTWL7+ahBUw9fqMa6q/M4oCRraR6I=;
+        b=hJHF/9NvCf1uQJyumuVv+wuKxJZ98bZpGEHSAhfo5k/Y9MAC5lo0hxw9GmcBtiDI1r
+         3gkh4dQ3vSL81AtkMt6VVkbGeVtiybO+as3wYaYMR4IBNGoJT+PVhfUGQgtKVYHn6HlL
+         5Nel/vb9hYmIv+RDHHS3EhLgNf9noTxCNYKpWBa8pYXqJEdD1v05uqr8PqDtP4ug+JHK
+         8n0Fuzf/HgKOhY1Vte3B8LDMhNFSWZTSKiDLmXt4vrIePGy9vn24e3s68wdFGz9YmaB3
+         Wxbngjq4yWlVkuM6MDe+jpdGa+qcd9Cwl3KTCrL3ooZ8atXYB+HYKml1+kgt6Y8t0zjO
+         P85Q==
+X-Gm-Message-State: APjAAAW3tfUVcL+kPeBHTwj71dWgdsMg+Kvsxjg/cWASW7wJB1hfQj+M
+        WBfclUFausnPMuQlPESFXBdu7pSUiKh+f15JhuQTyrsi4/9sIxnz
+X-Google-Smtp-Source: APXvYqxcmQLKLzTB/D743xQIshga/tSYISns0c8/zehIacxiLCb0Yfy8T0iBU5X5Fdf4Ep+YwUfwff/c08VbjwKhtNo=
+X-Received: by 2002:a24:c545:: with SMTP id f66mr5619946itg.114.1557454873514;
+ Thu, 09 May 2019 19:21:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <28072ca5-f7c8-f16d-6881-aec3e8b61ae8@linuxfoundation.org>
-User-Agent: NeoMutt/20180223
+References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
+ <1557344128-690-3-git-send-email-eajames@linux.ibm.com> <CAJCx=gn0Yv+oP56HQQNm-9JbH2aoZuEQ-73b1grLTVNfbYsDsg@mail.gmail.com>
+ <5217daa3-4f43-0fce-5d1f-438f8c9e47bb@linux.vnet.ibm.com>
+In-Reply-To: <5217daa3-4f43-0fce-5d1f-438f8c9e47bb@linux.vnet.ibm.com>
+From:   Matt Ranostay <matt.ranostay@konsulko.com>
+Date:   Fri, 10 May 2019 10:21:02 +0800
+Message-ID: <CAJCx=gk3EwF_CTjVm=Ktx408iqcYUgZCSbZABXBSuGjfAjwXQw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] iio: dps310: Temperature measurement errata
+To:     Eddie James <eajames@linux.vnet.ibm.com>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>, joel@jms.id.au,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 07:42:09PM -0600, Shuah Khan wrote:
-> On 5/9/19 4:40 PM, Shuah Khan wrote:
-> > On 5/9/19 4:20 PM, Alexei Starovoitov wrote:
-> > > On Mon, May 06, 2019 at 10:56:56AM -0600, Shuah Khan wrote:
-> > > > Hi Linus,
-> > > > 
-> > > > Please pull the following Kselftest update for Linux 5.2-rc1
-> > > > 
-> > > > This Kselftest update for Linux 5.2-rc1 consists of
-> > > > 
-> > > > - fixes to seccomp test, and kselftest framework
-> > > > - cleanups to remove duplicate header defines
-> > > > - fixes to efivarfs "make clean" target
-> > > > - cgroup cleanup path
-> > > > - Moving the IMA kexec_load selftest to selftests/kexec work from
-> > > >    Mimi Johar and Petr Vorel
-> > > > - A framework to kselftest for writing kernel test modules addition
-> > > >    from Tobin C. Harding
-> > > > 
-> > > > diff is attached.
-> > > > 
-> > > > thanks,
-> > > > -- Shuah
-> > > > 
-> > > > 
-> > > > ----------------------------------------------------------------
-> > > > The following changes since commit
-> > > > 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
-> > > > 
-> > > >    Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
-> > > > 
-> > > > are available in the Git repository at:
-> > > > 
-> > > >    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
-> > > > tags/linux-kselftest-5.2-rc1
-> > > > 
-> > > > for you to fetch changes up to d917fb876f6eaeeea8a2b620d2a266ce26372f4d:
-> > > > 
-> > > >    selftests: build and run gpio when output directory is the src dir
-> > > > (2019-04-22 17:02:26 -0600)
-> > > > 
-> > > > ----------------------------------------------------------------
-> > > > linux-kselftest-5.2-rc1
-> > > > 
-> > > > This Kselftest update for Linux 5.2-rc1 consists of
-> > > > 
-> > > > - fixes to seccomp test, and kselftest framework
-> > > > - cleanups to remove duplicate header defines
-> > > > - fixes to efivarfs "make clean" target
-> > > > - cgroup cleanup path
-> > > > - Moving the IMA kexec_load selftest to selftests/kexec work from
-> > > >    Mimi Johar and Petr Vorel
-> > > > - A framework to kselftest for writing kernel test modules addition
-> > > >    from Tobin C. Harding
-> > > > 
-> > > > ----------------------------------------------------------------
-> > > > Kees Cook (3):
-> > > >        selftests/seccomp: Handle namespace failures gracefully
-> > > >        selftests/harness: Add 30 second timeout per test
-> > > >        selftests/ipc: Fix msgque compiler warnings
-> > > > 
-> > > > Mathieu Desnoyers (1):
-> > > >        rseq/selftests: Adapt number of threads to the number of
-> > > > detected cpus
-> > > > 
-> > > > Mimi Zohar (9):
-> > > >        selftests/kexec: move the IMA kexec_load selftest to
-> > > > selftests/kexec
-> > > >        selftests/kexec: cleanup the kexec selftest
-> > > >        selftests/kexec: define a set of common functions
-> > > >        selftests/kexec: define common logging functions
-> > > >        selftests/kexec: define "require_root_privileges"
-> > > >        selftests/kexec: kexec_file_load syscall test
-> > > >        selftests/kexec: check kexec_load and kexec_file_load are enabled
-> > > >        selftests/kexec: make kexec_load test independent of IMA
-> > > > being enabled
-> > > >        selftests/kexec: update get_secureboot_mode
-> > > > 
-> > > > Petr Vorel (1):
-> > > >        selftests/kexec: Add missing '=y' to config options
-> > > > 
-> > > > Po-Hsu Lin (1):
-> > > >        selftests/efivarfs: clean up test files from test_create*()
-> > > > 
-> > > > Roman Gushchin (1):
-> > > >        selftests: cgroup: fix cleanup path in
-> > > > test_memcg_subtree_control()
-> > > > 
-> > > > Sabyasachi Gupta (4):
-> > > >        selftest/x86/mpx-dig.c: Remove duplicate header
-> > > >        selftest/timers: Remove duplicate header
-> > > >        selftest/rseq: Remove duplicate header
-> > > >        selftest/gpio: Remove duplicate header
-> > > > 
-> > > > Shuah Khan (2):
-> > > >        selftests: fix headers_install circular dependency
-> > > 
-> > > Shuah,
-> > > 
-> > > the commit 8ce72dc32578 ("selftests: fix headers_install circular
-> > > dependency")
-> > > broke our build/test workflow, since it added:
-> > >    ifneq ($(KBUILD_OUTPUT),)
-> > >            OUTPUT := $(KBUILD_OUTPUT)
-> > >    else
-> > > 
-> > > which means that all of selftests/bpf artifacts are now going into
-> > > main build directory cluttering it with all sorts of .o, generated files
-> > > and executables.
-> > > The end result is humans and scripts can no longer find tests.
-> 
-> bpf build fails with the above commit. However, even without it, I am
-> seeing bpf objects going to tools/testing/selftests/bpf
-> 
-> I reverted the commit and ran your use-case:
-> 
-> export KBUILD_OUTPUT=/tmp/kselftest_bpf
-> cd tools/testing/selftests/bpf/
-> make
-> ./test_verifier
-> 
-> I see bpf objects in tools/testing/selftests/bpf/ and I can run the
-> test.
-> 
-> What am I missing? The only way ./test_verifier would work is if
-> test_verifier is in tools/testing/selftests/bpf/
+On Thu, May 9, 2019 at 11:17 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>
+>
+> On 5/8/19 10:09 PM, Matt Ranostay wrote:
+> > On Thu, May 9, 2019 at 3:36 AM Eddie James <eajames@linux.ibm.com> wrote:
+> >> From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+> >>
+> >> Add a manufacturer's suggested workaround to deal with early revisions
+> >> of chip that don't indicate correct temperature. Readings can be in the
+> >> ~60C range when they should be in the ~20's.
+> >>
+> >> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+> >> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> >> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> >> ---
+> >>   drivers/iio/pressure/dps310.c | 51 ++++++++++++++++++++++++++++++++++++++++++-
+> >>   1 file changed, 50 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
+> >> index 7afaa88..c42808e 100644
+> >> --- a/drivers/iio/pressure/dps310.c
+> >> +++ b/drivers/iio/pressure/dps310.c
+> >> @@ -221,6 +221,9 @@ static bool dps310_is_writeable_reg(struct device *dev, unsigned int reg)
+> >>          case DPS310_MEAS_CFG:
+> >>          case DPS310_CFG_REG:
+> >>          case DPS310_RESET:
+> >> +       case 0x0e:
+> >> +       case 0x0f:
+> >> +       case 0x62:
+> > What is with the magic values? Are they not documented to what they
+> > are, and hence not defining enum values for them?
+> >
+> > - Matt
+>
+>
+> Thats correct. These don't show up in the data sheet so I left them as
+> raw values. Chris, do you know what the source for these values was?
 
-That's the point. All artifacts should be in tools/testing/selftests/bpf/
-if 'make' was done there regardless of KBUILD_OUTPUT.
+Please at least make a comment in the code stating as much.
 
-> I am curious what you are actually seeing with this commit?
-> 
-> With the 8ce72dc32578
-> 
-> What I see is - if KBUILD_OUTPUT directory is missing, then the make
-> just fails and the following diff fixes that problem:
-
-KBUILD_OUTPUT is a valid dir where kernel build goes.
-
-> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-> index 098dd0065fb1..074ce7d26a9d 100644
-> --- a/tools/testing/selftests/lib.mk
-> +++ b/tools/testing/selftests/lib.mk
-> @@ -13,6 +13,7 @@ ifeq (0,$(MAKELEVEL))
->                 DEFAULT_INSTALL_HDR_PATH := 1
->         endif
->      endif
-> +$(shell mkdir -p $(OUTPUT))
-
-makefile should not create the dir this automatically.
-
->  endif
->  selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
-> 
-> 
-> Now when I run
-> 
-> cd tools/testing/selftests/bpf/
-> make
-> ./test_verifier
-> 
-> bpf objects end up in /tmp/kselftest_bpf
-> 
-> which is what should happen when KBUILD_OUPUT is set.
-
-No. KBUILD_OUPUT must be ignored while building selftests/bpf.
-Just like it's ignored when samples/bpf/ are build.
-People do 'cd samples/bpf; make; run stuff'
-and they do the same 'cd .../selftests/bpf; make; run'
-
+- Matt
+>
+> Thanks,
+>
+> Eddie
+>
+>
+> >
+> >>                  return true;
+> >>          default:
+> >>                  return false;
+> >> @@ -237,6 +240,7 @@ static bool dps310_is_volatile_reg(struct device *dev, unsigned int reg)
+> >>          case DPS310_TMP_B1:
+> >>          case DPS310_TMP_B2:
+> >>          case DPS310_MEAS_CFG:
+> >> +       case 0x32:
+> >>                  return true;
+> >>          default:
+> >>                  return false;
+> >> @@ -314,7 +318,7 @@ static int dps310_read_raw(struct iio_dev *iio,
+> >>          .writeable_reg = dps310_is_writeable_reg,
+> >>          .volatile_reg = dps310_is_volatile_reg,
+> >>          .cache_type = REGCACHE_RBTREE,
+> >> -       .max_register = 0x29,
+> >> +       .max_register = 0x62,
+> >>   };
+> >>
+> >>   static const struct iio_info dps310_info = {
+> >> @@ -322,6 +326,47 @@ static int dps310_read_raw(struct iio_dev *iio,
+> >>          .write_raw = dps310_write_raw,
+> >>   };
+> >>
+> >> +/*
+> >> + * Some verions of chip will read temperatures in the ~60C range when
+> >> + * its actually ~20C. This is the manufacturer recommended workaround
+> >> + * to correct the issue.
+> >> + */
+> >> +static int dps310_temp_workaround(struct dps310_data *data)
+> >> +{
+> >> +       int r, reg;
+> >> +
+> >> +       r = regmap_read(data->regmap, 0x32, &reg);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >> +       /*
+> >> +        * If bit 1 is set then the device is okay, and the workaround does not
+> >> +        * need to be applied
+> >> +        */
+> >> +       if (reg & BIT(1))
+> >> +               return 0;
+> >> +
+> >> +       r = regmap_write(data->regmap, 0x0e, 0xA5);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >> +       r = regmap_write(data->regmap, 0x0f, 0x96);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >> +       r = regmap_write(data->regmap, 0x62, 0x02);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >> +       r = regmap_write(data->regmap, 0x0e, 0x00);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >> +       r = regmap_write(data->regmap, 0x0f, 0x00);
+> >> +
+> >> +       return r;
+> >> +}
+> >> +
+> >>   static int dps310_probe(struct i2c_client *client,
+> >>                          const struct i2c_device_id *id)
+> >>   {
+> >> @@ -383,6 +428,10 @@ static int dps310_probe(struct i2c_client *client,
+> >>          if (r < 0)
+> >>                  goto err;
+> >>
+> >> +       r = dps310_temp_workaround(data);
+> >> +       if (r < 0)
+> >> +               return r;
+> >> +
+> >>          r = devm_iio_device_register(&client->dev, iio);
+> >>          if (r)
+> >>                  goto err;
+> >> --
+> >> 1.8.3.1
+> >>
+>
