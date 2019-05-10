@@ -2,145 +2,110 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C85CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F99C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:20:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D86A92175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A02F217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mEL2JpCF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfEJOTP (ORCPT
+        id S1727939AbfEJOUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:19:15 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:47712 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727825AbfEJOTP (ORCPT
+        Fri, 10 May 2019 10:20:47 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42043 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727247AbfEJOUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:19:15 -0400
-Received: (qmail 2193 invoked by uid 2102); 10 May 2019 10:19:14 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 10 May 2019 10:19:14 -0400
-Date:   Fri, 10 May 2019 10:19:14 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jim Lin <jilin@nvidia.com>
-cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
-        <kai.heng.feng@canonical.com>, <drinkcat@chromium.org>,
-        <keescook@chromium.org>, <nsaenzjulienne@suse.de>,
-        <jflat@chromium.org>, <malat@debian.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 1/2] usb: hub : Add devaddr in struct usb_device
-In-Reply-To: <1557491070-24715-2-git-send-email-jilin@nvidia.com>
-Message-ID: <Pine.LNX.4.44L0.1905101010100.1516-100000@iolanthe.rowland.org>
+        Fri, 10 May 2019 10:20:46 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AE1A8q018315;
+        Fri, 10 May 2019 16:20:30 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=SFxogR9JPF6xdKCGoAamjmYfeUtysrEoecdQ7E/pxnY=;
+ b=mEL2JpCF2XTXzAYSgFKO3ZZSG1AtAHEA3xHUV3AAztHXrLVyy5gNUe/YZG6XVi3GBobL
+ /CMniv9lTNLF/SoWjiCKqKaVpamyr/RM15PGCeglVxiSMum0h8TaGN0DnwFfMBPKokMp
+ JDHGqRXK0GfXCWc5y+jZSx6hFQOmtMcQa+HJoIDkbxL63gHT+ZDhnb4V+byBXEfT+USI
+ fKMCPAvj32RSQO6WFgDpUpMKUq8IggydLO1icYXcjqzmt2LEwdkRuuhedAbCClmLNZM1
+ nnWOR9f2ltj3T2piC8A7gYI5q5UfftWaRFI/usmAh5Cc5iPSFRx7kwqjdKECk7wWtGk9 pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2scbkaj2fs-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 10 May 2019 16:20:30 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D418C31;
+        Fri, 10 May 2019 14:20:29 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 81557113A;
+        Fri, 10 May 2019 14:20:29 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
+ (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
+ 2019 16:20:29 +0200
+Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May 2019 16:20:28
+ +0200
+From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
+To:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/5] Add supply property for DSI controller
+Date:   Fri, 10 May 2019 16:20:18 +0200
+Message-ID: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.23.97]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019, Jim Lin wrote:
+The DSI controller needs a new property that powers its physical layer.
+Binding has been updated to documented this property.
+Device tree of stm32mp157c soc.
+Move reg18 & reg11 to stm32mp157c device tree file.
+Remove property phy-dsi-supply property to stm32mp157c-dk2.dts file.
 
-> The Clear_TT_Buffer request sent to the hub includes the address of
-> the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
-> uses udev->devnum to set the address wValue. This won't work for
-> devices connected to xHC.
-> 
-> For other host controllers udev->devnum is the same as the address of
-> the usb device, chosen and set by usb core. With xHC the controller
-> hardware assigns the address, and won't be the same as devnum.
-> 
-> Here we add devaddr in "struct usb_device" for
-> usb_hub_clear_tt_buffer() to use.
-> 
-> Signed-off-by: Jim Lin <jilin@nvidia.com>
-> ---
-> v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
->     , remove its claiming in xhci.h
-> v3: Add description for clearing_tt (xhci.h)
-> v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
->     to protect for Clear_TT_Buffer to be run serially.
->     Remove xhci_clear_tt_buffer_complete as it's not necessary.
->     Same reason as the above.
->     Extend usb_hub_clear_tt_buffer parameter
-> v5: Not extending usb_hub_clear_tt_buffer parameter
->     Add description.
-> v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-> v7: Add devaddr field in "struct usb_device"
-> v8: split as two patches, change type from int to u8 for devaddr.
-> v9: Use pahole to find place to put devaddr in struct usb_device.
->     Remove space between type cast and variable.
->     hub.c changed from v8
->     clear->devinfo |= (u16) (udev->devaddr << 4);
->     to 
->     clear->devinfo |= ((u16)udev->devaddr) << 4;
->     to solve a problem if devaddr is larger than 16.
-> 
-> 
->  drivers/usb/core/hub.c | 4 +++-
->  include/linux/usb.h    | 2 ++
->  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-> index 15a2934dc29d..0d4b289be103 100644
-> --- a/drivers/usb/core/hub.c
-> +++ b/drivers/usb/core/hub.c
-> @@ -873,7 +873,7 @@ int usb_hub_clear_tt_buffer(struct urb *urb)
->  	/* info that CLEAR_TT_BUFFER needs */
->  	clear->tt = tt->multi ? udev->ttport : 1;
->  	clear->devinfo = usb_pipeendpoint (pipe);
-> -	clear->devinfo |= udev->devnum << 4;
-> +	clear->devinfo |= ((u16)udev->devaddr) << 4;
->  	clear->devinfo |= usb_pipecontrol(pipe)
->  			? (USB_ENDPOINT_XFER_CONTROL << 11)
->  			: (USB_ENDPOINT_XFER_BULK << 11);
-> @@ -2125,6 +2125,8 @@ static void update_devnum(struct usb_device *udev, int devnum)
->  	/* The address for a WUSB device is managed by wusbcore. */
->  	if (!udev->wusb)
->  		udev->devnum = devnum;
-> +	if (!udev->devaddr)
-> +		udev->devaddr = (u8)devnum;
 
-Whether or not to put a space after the ')' in a typecast is a matter 
-of personal choice; CodingStyle doesn't say anything about it.  Quite 
-often the space is present.  IIRC, that is how K&R does it.  But it 
-doesn't really matter.
+Changes in v2:
+- rename patch drm/stm: dsi: add support of an optional regulator
+- rework dw_mipi_dsi-stm probe sequence
 
->  }
->  
->  static void hub_free_dev(struct usb_device *udev)
-> diff --git a/include/linux/usb.h b/include/linux/usb.h
-> index 4229eb74bd2c..5641965e44a1 100644
-> --- a/include/linux/usb.h
-> +++ b/include/linux/usb.h
-> @@ -566,6 +566,7 @@ struct usb3_lpm_parameters {
->   * @tt: Transaction Translator info; used with low/full speed dev, highspeed hub
->   * @ttport: device port on that tt hub
->   * @toggle: one bit for each endpoint, with ([0] = IN, [1] = OUT) endpoints
-> + * @devaddr: device address, XHCI: assigned by HW, others: same as devnum
->   * @parent: our hub, unless we're the root
->   * @bus: bus we're part of
->   * @ep0: endpoint 0 data (default control pipe)
-> @@ -643,6 +644,7 @@ struct usb_device {
->  	int		ttport;
->  
->  	unsigned int toggle[2];
-> +	u8 devaddr;
+Yannick Fertré (5):
+  dt-bindings: display: stm32: add supply property to DSI controller
+  drm/stm: dsi: add support of an optional regulator
+  ARM: dts: stm32: add phy-dsi-supply property on stm32mp157c
+  ARM: dts: stm32: move fixe regulators reg11 & reg18
+  ARM: dts: stm32: remove phy-dsi-supply property on stm32mp157c-dk2
+    board
 
-This is another lousy place to put the new value.  A much better
-position would be immediately after "u8 level".
+ .../devicetree/bindings/display/st,stm32-ltdc.txt    |  3 +++
+ arch/arm/boot/dts/stm32mp157c-dk2.dts                |  9 ---------
+ arch/arm/boot/dts/stm32mp157c-ed1.dts                | 16 ----------------
+ arch/arm/boot/dts/stm32mp157c.dtsi                   | 17 +++++++++++++++++
+ drivers/gpu/drm/stm/dw_mipi_dsi-stm.c              | 45 +++++++++++++++++++---
+ 5 files changed, 40 insertions(+), 25 deletions(-)
 
->  	struct usb_device *parent;
->  	struct usb_bus *bus;
-
-You should move into this patch the code added to xhci.c to assign
-udev->devaddr.  Without it, this patch is incomplete: devaddr will not
-contain the correct value for devices on a USB-3 bus.  And it doesn't
-belong in the 2/2 patch -- that patch is all about making xhci-hcd call
-usb_clear_tt_buffer().
-
-Alan Stern
+--
+2.7.4
 
