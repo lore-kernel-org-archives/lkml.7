@@ -2,105 +2,138 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBA5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28038C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 590A7208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557510857;
-	bh=TPcYCKnbp3auhRg3X0Zai1KmfmkYrRP7IMwzQaXcZaQ=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=vcNJpH5aylQ3HMhJ3DJmZv0w1hHYvXP/VGvhwpAHhgnxu5LKFb0fjJ0bPx8jzUN8z
-	 emJ28usw71PG/ycRBjBQ254UkDxy3KxgT88PuN5QAwG3rNPTzY+jKdHW4FX/ETrDSq
-	 UO93evtVMqNJIMwP5IFHGViAmzhef1BN00Vgi6WU=
+	by mail.kernel.org (Postfix) with ESMTP id 04DF3208C3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfEJRyQ (ORCPT
+        id S1727847AbfEJRyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:54:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53264 "EHLO mail.kernel.org"
+        Fri, 10 May 2019 13:54:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:4530 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727551AbfEJRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:54:15 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E7F208C3;
-        Fri, 10 May 2019 17:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557510854;
-        bh=TPcYCKnbp3auhRg3X0Zai1KmfmkYrRP7IMwzQaXcZaQ=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=wUhYsGhmnx1usumemDEOYHTOVFf6PU8tbg2IXIe/iuDX/i15g95hkvlwKP8OoCIvt
-         1/2jeuMnBye7x16Uq8fCbTNqjvgSsSbr4FmmMzzJgWWKwMLUViybFcyKBAfHIqsUrf
-         aZaHWVX8DhSfZnWKf+JqWwF7NN0phV8g+WK6QZ9w=
-Content-Type: text/plain; charset="utf-8"
+        id S1727620AbfEJRyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:54:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 10:54:15 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.201.16]) ([10.7.201.16])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2019 10:54:15 -0700
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <20190419141732.GA2269@wind.enjellic.com>
+ <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
+ <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
+ <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
+ <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
+ <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
+ <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
+ <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+ <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+Date:   Fri, 10 May 2019 10:54:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org>
-References: <1557339895-21952-1-git-send-email-tdas@codeaurora.org> <1557339895-21952-4-git-send-email-tdas@codeaurora.org> <155742286525.14659.18081373668341127486@swboyd.mtv.corp.google.com> <07bcd2df-a786-ea52-8566-70f484248952@codeaurora.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v1 3/3] clk: qcom: rcg: update the DFS macro for RCG
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Message-ID: <155751085370.14659.7749105088997177801@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Fri, 10 May 2019 10:54:13 -0700
+In-Reply-To: <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-05-09 19:58:39)
-> Hello Stephen,
->=20
-> Thanks for the review.
->=20
-> On 5/9/2019 10:57 PM, Stephen Boyd wrote:
-> > Quoting Taniya Das (2019-05-08 11:24:55)
-> >> Update the init data name for each of the dynamic frequency switch
-> >> controlled clock associated with the RCG clock name, so that it can be
-> >> generated as per the hardware plan. Thus update the macro accordingly.
-> >>
-> >> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> >=20
-> > This patch doesn't make any sense to me.
-> >=20
-> >> ---
-> >>   drivers/clk/qcom/clk-rcg.h    |  2 +-
-> >>   drivers/clk/qcom/gcc-sdm845.c | 96 +++++++++++++++++++++------------=
-----------
-> >>   2 files changed, 49 insertions(+), 49 deletions(-)
-> >>
-> >> diff --git a/drivers/clk/qcom/clk-rcg.h b/drivers/clk/qcom/clk-rcg.h
-> >> index 5562f38..e40e8f8 100644
-> >> --- a/drivers/clk/qcom/clk-rcg.h
-> >> +++ b/drivers/clk/qcom/clk-rcg.h
-> >> @@ -171,7 +171,7 @@ struct clk_rcg_dfs_data {
-> >>   };
-> >>
-> >>   #define DEFINE_RCG_DFS(r) \
-> >> -       { .rcg =3D &r##_src, .init =3D &r##_init }
-> >> +       { .rcg =3D &r, .init =3D &r##_init }
-> >=20
-> > Why do we need to rename the init data?
-> >=20
->=20
-> We want to manage the init data as the clock source name, so that we=20
-> could manage to auto generate our code. So that we do not have to=20
-> re-name the clock init data manually if the DFS source names gets=20
-> updated at any point of time.
->=20
+On 5/10/19 10:37 AM, Jethro Beekman wrote:
+> It does assume a specific format, namely, that the memory layout
+> (including page types/permissions) of the enclave can be represented in
+> a "flat file" on disk, or at least that the enclave memory contents
+> consist of 4096-byte chunks in that file.
 
-Why is the clk name changing to not have a _src after the "root" of the
-clk name? As long as I can remember, RCGs have a "_src" postfix.
+I _think_ Cedric's point is that, to the kernel,
+/lib/x86_64-linux-gnu/libc.so.6 is a "flat file" because the kernel
+doesn't have any part in parsing the executable format of a shared library.
+
+I actually don't know how it works, though.  Do we just just trust that
+the userspace parsing of the .so format is correct?  Do we just assume
+that any part of a file passing IMA checks can be PROT_EXEC?
 
