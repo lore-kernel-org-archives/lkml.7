@@ -2,243 +2,239 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF9BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B13C20896
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:12:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="K6VPCzQI"
+	by mail.kernel.org (Postfix) with ESMTP id 1143B2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfEJPMe (ORCPT
+        id S1727692AbfEJPNk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:12:34 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44904 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfEJPMd (ORCPT
+        Fri, 10 May 2019 11:13:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45864 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727346AbfEJPNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:12:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f24so2554316qtk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3vTpPdYQ5vB7aevtIN60GjRAPGc+R9hv+e9/nZAALjQ=;
-        b=K6VPCzQI/rBj+Eb6z2HfWaRq3HMpBQMSJ2KLFIFvk9/9NUBOkSONit9B/HNmlZyeCT
-         SwDUUzUp3Piw7Baoq/baWcXhn9Dj5ltl7r26Uqh4xtPi0rV84wgygn0TXm2MJRfDXSzB
-         e4jMFJZOoZAtZArQVm2uVHDQtVn+R1oSwtA5g=
+        Fri, 10 May 2019 11:13:40 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hP7DN-0006cG-Uz
+        for linux-kernel@vger.kernel.org; Fri, 10 May 2019 15:13:38 +0000
+Received: by mail-pg1-f199.google.com with SMTP id 63so4221985pga.18
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:13:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3vTpPdYQ5vB7aevtIN60GjRAPGc+R9hv+e9/nZAALjQ=;
-        b=Z97MsxB7r5r3cuCHqU1LTZlVaB5wYXXGOB2NcPc4RnF/aRix0jvZmrlSdpv5mWMsMT
-         8OQp/wFdy9A15DgfkN9NEHjcqJfzUfj6P1mJydlRbaMNYZ7FFylVGtOgrQPPVVc/6Vn8
-         Tsn7jx5tLLt6JXwUPuPeb6PbhXKyL8MUl/oQVkuU2mGTVtz9VXsYfmoVdGSvzp/PBYgs
-         rTF4NV4mP+SVL1VcAXLcl+xz8fSpnw12u6KSGiL4JDx9BDXv+7LWdraX/mNeuR01CrzF
-         SpBVSKrPVjlJTzPCyzSiU+udbtGURFlH8/E8hvB4WwEiz7ct39UcLyOciIYse8JAccD3
-         NhDQ==
-X-Gm-Message-State: APjAAAU54ED4XadYXUC0/VxhY5H1qJe/NKruKdF6nHOXUDGsdoMSzApN
-        T74mWcihtsxjlDyQqDvQ/A+uag==
-X-Google-Smtp-Source: APXvYqyyK8yrNf9+l6Z9htdz7McGOQE80G+llNHB7Ogmh+fWCvcioERMwHmWm33Oq4Qd+du5x1u5zQ==
-X-Received: by 2002:aed:258a:: with SMTP id x10mr10100599qtc.380.1557501152047;
-        Fri, 10 May 2019 08:12:32 -0700 (PDT)
-Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
-        by smtp.gmail.com with ESMTPSA id u21sm3618175qtk.61.2019.05.10.08.12.30
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NmWASUs3KbA0AaXEm2yCaVhhAGbxqPp+fvrTyXt64uk=;
+        b=DBhhnneK8mut4s61QabWWwKrASB5ScfJ4PK1qSPgrf4Pr0HalteYjPla1wHNpuZVqe
+         /eZ5ynGixXv4VY7lAlhspAMwKN5rkKFYtAvYO6GMW5zaPCL5siWJLq2O6/I/mAd68ZhA
+         N+vhCiCNMPR/ri94yT3/44G4E+bGnjugKA49JGEbi0LixGYjgx7HyQuIREqEjRkzhbe/
+         ZDTMglhLw8pOQkAXVmmj8PBlJhRVfqr24uPn/8hcbXty1fS6coB037gWeqpqIInVkFol
+         9EVlULPK4aIEfdAeCvEtlIuUWD3Y9sH6hrbetnQ6+xFPx2aclBMKyt9hFOh/W3dvxmim
+         H/Wg==
+X-Gm-Message-State: APjAAAXlB6qU+RR7JaWRScOfcNy/6MsKvyayKPUMPsw1F5L5/HTfJQhp
+        zU5eMsWQAieoVxrpFPdXpk4NwTnckYbFNJsNGqZDESulO+g35HFudetolFP72zyHUju2oXsIV9+
+        243SbjcCO2+6rl+lQsWlbuQzNavF5joAwTifLSUYaSw==
+X-Received: by 2002:aa7:9242:: with SMTP id 2mr15164965pfp.230.1557501216535;
+        Fri, 10 May 2019 08:13:36 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxw5zxsqhG5LJGMPKVvE2BsNwPWG6uw9NXt/AOlH6TmHdYZv9RPBiVsLYlez6zOdIpxiCnFlQ==
+X-Received: by 2002:aa7:9242:: with SMTP id 2mr15164896pfp.230.1557501216170;
+        Fri, 10 May 2019 08:13:36 -0700 (PDT)
+Received: from [192.168.1.220] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 2sm11743129pgc.49.2019.05.10.08.13.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 08:12:31 -0700 (PDT)
-Date:   Fri, 10 May 2019 11:12:25 -0400
-From:   Julien Desfossez <jdesfossez@digitalocean.com>
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v2 12/17] sched: A quick and dirty cgroup tagging
- interface
-Message-ID: <20190510151225.GA13930@sinkpad>
-References: <cover.1556025155.git.vpillai@digitalocean.com>
- <b058b74f303fe40e5822925c90a5b0161c4a0a2d.1556025155.git.vpillai@digitalocean.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b058b74f303fe40e5822925c90a5b0161c4a0a2d.1556025155.git.vpillai@digitalocean.com>
-X-Mailer: Mutt 1.5.24 (2015-08-30)
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 10 May 2019 08:13:33 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+From:   Kai Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <CAJZ5v0jAcX-Q2twygKoKvmx2H6tneHWimmH+c2GsYitHK5-knw@mail.gmail.com>
+Date:   Fri, 10 May 2019 23:15:05 +0800
+Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <keith.busch@intel.com>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <54E4999C-DBE8-4FC1-8E82-17FEDFDA9CA6@canonical.com>
+References: <064701C3-2BD4-4D93-891D-B7FBB5040FC4@canonical.com>
+ <CAJZ5v0ggMwpJt=XWXu4gU51o8y4BpJ4KZ5RKzfk3+v8GGb-QbQ@mail.gmail.com>
+ <A4DD2E9F-054E-4D4B-9F77-D69040EBE120@canonical.com>
+ <20190509095601.GA19041@lst.de>
+ <225CF4F7-C8E1-4C66-B362-97E84596A54E@canonical.com>
+ <20190509103142.GA19550@lst.de>
+ <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
+ <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+ <20190509192807.GB9675@localhost.localdomain>
+ <7a002851c435481593f8629ec9193e40@AUSX13MPC101.AMER.DELL.COM>
+ <20190509215409.GD9675@localhost.localdomain>
+ <495d76c66aec41a8bfbbf527820f8eb9@AUSX13MPC101.AMER.DELL.COM>
+ <BC5EB1D0-8718-48B3-ACAB-F7E5571D821D@canonical.com>
+ <CAJZ5v0jAcX-Q2twygKoKvmx2H6tneHWimmH+c2GsYitHK5-knw@mail.gmail.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-Apr-2019 04:18:17 PM, Vineeth Remanan Pillai wrote:
-> From: Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> Marks all tasks in a cgroup as matching for core-scheduling.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  kernel/sched/core.c  | 62 ++++++++++++++++++++++++++++++++++++++++++++
->  kernel/sched/sched.h |  4 +++
->  2 files changed, 66 insertions(+)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 5066a1493acf..e5bdc1c4d8d7 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -6658,6 +6658,15 @@ static void sched_change_group(struct task_struct *tsk, int type)
->  	tg = container_of(task_css_check(tsk, cpu_cgrp_id, true),
->  			  struct task_group, css);
->  	tg = autogroup_task_group(tsk, tg);
-> +
-> +#ifdef CONFIG_SCHED_CORE
-> +	if ((unsigned long)tsk->sched_task_group == tsk->core_cookie)
-> +		tsk->core_cookie = 0UL;
-> +
-> +	if (tg->tagged /* && !tsk->core_cookie ? */)
-> +		tsk->core_cookie = (unsigned long)tg;
-> +#endif
-> +
->  	tsk->sched_task_group = tg;
->  
->  #ifdef CONFIG_FAIR_GROUP_SCHED
-> @@ -7117,6 +7126,43 @@ static u64 cpu_rt_period_read_uint(struct cgroup_subsys_state *css,
->  }
->  #endif /* CONFIG_RT_GROUP_SCHED */
->  
-> +#ifdef CONFIG_SCHED_CORE
-> +static u64 cpu_core_tag_read_u64(struct cgroup_subsys_state *css, struct cftype *cft)
-> +{
-> +	struct task_group *tg = css_tg(css);
-> +
-> +	return !!tg->tagged;
-> +}
-> +
-> +static int cpu_core_tag_write_u64(struct cgroup_subsys_state *css, struct cftype *cft, u64 val)
-> +{
-> +	struct task_group *tg = css_tg(css);
-> +	struct css_task_iter it;
-> +	struct task_struct *p;
-> +
-> +	if (val > 1)
-> +		return -ERANGE;
-> +
-> +	if (tg->tagged == !!val)
-> +		return 0;
-> +
-> +	tg->tagged = !!val;
-> +
-> +	if (!!val)
-> +		sched_core_get();
-> +
-> +	css_task_iter_start(css, 0, &it);
-> +	while ((p = css_task_iter_next(&it)))
-> +		p->core_cookie = !!val ? (unsigned long)tg : 0UL;
-> +	css_task_iter_end(&it);
-> +
-> +	if (!val)
-> +		sched_core_put();
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
->  static struct cftype cpu_legacy_files[] = {
->  #ifdef CONFIG_FAIR_GROUP_SCHED
->  	{
-> @@ -7152,6 +7198,14 @@ static struct cftype cpu_legacy_files[] = {
->  		.read_u64 = cpu_rt_period_read_uint,
->  		.write_u64 = cpu_rt_period_write_uint,
->  	},
-> +#endif
-> +#ifdef CONFIG_SCHED_CORE
-> +	{
-> +		.name = "tag",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.read_u64 = cpu_core_tag_read_u64,
-> +		.write_u64 = cpu_core_tag_write_u64,
-> +	},
->  #endif
->  	{ }	/* Terminate */
->  };
-> @@ -7319,6 +7373,14 @@ static struct cftype cpu_files[] = {
->  		.seq_show = cpu_max_show,
->  		.write = cpu_max_write,
->  	},
-> +#endif
-> +#ifdef CONFIG_SCHED_CORE
-> +	{
-> +		.name = "tag",
-> +		.flags = CFTYPE_NOT_ON_ROOT,
-> +		.read_u64 = cpu_core_tag_read_u64,
-> +		.write_u64 = cpu_core_tag_write_u64,
-> +	},
->  #endif
->  	{ }	/* terminate */
->  };
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 42dd620797d7..16fb236eab7b 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -363,6 +363,10 @@ struct cfs_bandwidth {
->  struct task_group {
->  	struct cgroup_subsys_state css;
->  
-> +#ifdef CONFIG_SCHED_CORE
-> +	int			tagged;
-> +#endif
-> +
->  #ifdef CONFIG_FAIR_GROUP_SCHED
->  	/* schedulable entities of this group on each CPU */
->  	struct sched_entity	**se;
-> -- 
-> 2.17.1
 
-Even though this may not be the definitive interface, a quick fix to
-remove the tag if it was set and the cgroup is getting removed.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 6dc072c..be981e3 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7190,6 +7190,18 @@ static int cpu_cgroup_css_online(struct cgroup_subsys_state *css)
+> On May 10, 2019, at 4:23 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> 
+> On Fri, May 10, 2019 at 8:08 AM Kai-Heng Feng
+> <kai.heng.feng@canonical.com> wrote:
+>> 
+>> at 06:19, <Mario.Limonciello@dell.com> <Mario.Limonciello@dell.com> wrote:
+>> 
+>>>> -----Original Message-----
+>>>> From: Keith Busch <kbusch@kernel.org>
+>>>> Sent: Thursday, May 9, 2019 4:54 PM
+>>>> To: Limonciello, Mario
+>>>> Cc: kai.heng.feng@canonical.com; hch@lst.de; axboe@fb.com;
+>>>> sagi@grimberg.me; rafael@kernel.org; linux-pm@vger.kernel.org;
+>>>> rafael.j.wysocki@intel.com; linux-kernel@vger.kernel.org; linux-
+>>>> nvme@lists.infradead.org; keith.busch@intel.com
+>>>> Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead
+>>>> of D3 on
+>>>> Suspend-to-Idle
+>>>> 
+>>>> 
+>>>> [EXTERNAL EMAIL]
+>>>> 
+>>>> On Thu, May 09, 2019 at 09:37:58PM +0000, Mario.Limonciello@dell.com
+>>>> wrote:
+>>>>>> +int nvme_set_power(struct nvme_ctrl *ctrl, unsigned npss)
+>>>>>> +{
+>>>>>> +  int ret;
+>>>>>> +
+>>>>>> +  mutex_lock(&ctrl->scan_lock);
+>>>>>> +  nvme_start_freeze(ctrl);
+>>>>>> +  nvme_wait_freeze(ctrl);
+>>>>>> +  ret = nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, npss, NULL, 0,
+>>>>>> +                          NULL);
+>>>>>> +  nvme_unfreeze(ctrl);
+>>>>>> +  mutex_unlock(&ctrl->scan_lock);
+>>>>>> +
+>>>>>> +  return ret;
+>>>>>> +}
+>>>>>> +EXPORT_SYMBOL_GPL(nvme_set_power);
+>>>>> 
+>>>>> I believe without memory barriers at the end disks with HMB this will
+>>>>> still kernel panic (Such as Toshiba BG3).
+>>>> 
+>>>> Well, the mutex has an implied memory barrier, but your HMB explanation
+>>>> doesn't make much sense to me anyway. The "mb()" in this thread's original
+>>>> patch is a CPU memory barrier, and the CPU had better not be accessing
+>>>> HMB memory. Is there something else going on here?
+>>> 
+>>> Kai Heng will need to speak up a bit in his time zone as he has this disk
+>>> on hand,
+>>> but what I recall from our discussion was that DMA operation MemRd after
+>>> resume was the source of the hang.
+>> 
+>> Yes, that’ what I was told by the NVMe vendor, so all I know is to impose a
+>> memory barrier.
+>> If mb() shouldn’t be used here, what’s the correct variant to use in this
+>> context?
+>> 
+>>> 
+>>>>> This still allows D3 which we found at least failed to go into deepest
+>>>>> state and
+>>>> blocked
+>>>>> platform s0ix for the following SSDs (maybe others):
+>>>>> Hynix PC601
+>>>>> LiteOn CL1
+>>>> 
+>>>> We usually write features to spec first, then quirk non-compliant
+>>>> devices after.
+>>> 
+>>> NVME spec doesn't talk about a relationship between SetFeatures w/
+>>> NVME_FEAT_POWER_MGMGT and D3 support, nor order of events.
+>>> 
+>>> This is why we opened a dialog with storage vendors, including
+>>> contrasting the behavior
+>>> of Microsoft Windows inbox NVME driver and Intel's Windows RST driver.
+>>> 
+>>> Those two I mention that come to mind immediately because they were most
+>>> recently
+>>> tested to fail.  Our discussion with storage vendors overwhelmingly
+>>> requested
+>>> that we don't use D3 under S2I because their current firmware
+>>> architecture won't
+>>> support it.
+>>> 
+>>> For example one vendor told us with current implementation that receiving
+>>> D3hot
+>>> after NVME shutdown will prevent being able to enter L1.2.  D3hot entry
+>>> was supported
+>>> by an IRQ handler that isn't serviced in NVME shutdown state.
+>>> 
+>>> Another vendor told us that with current implementation it's impossible
+>>> to transition
+>>> to PS4 (at least via APST) while L1.2 D3hot is active.
+>> 
+>> I tested the patch from Keith and it has two issues just as simply skipping
+>> nvme_dev_disable():
+>> 1) It consumes more power in S2I
+>> 2) System freeze after resume
+> 
+> Well, the Keith's patch doesn't prevent pci_pm_suspend_noirq() from
+> asking for D3 and both of the symptoms above may be consequences of
+> that in principle.
+
+Sorry, I should mention that I use a slightly modified drivers/nvme/host/pci.c:
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 3e4fb891a95a..ece428ce6876 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -18,6 +18,7 @@
+ #include <linux/mutex.h>
+ #include <linux/once.h>
+ #include <linux/pci.h>
++#include <linux/suspend.h>
+ #include <linux/t10-pi.h>
+ #include <linux/types.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+@@ -2833,6 +2834,11 @@ static int nvme_suspend(struct device *dev)
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct nvme_dev *ndev = pci_get_drvdata(pdev);
+ 
++       if (!pm_suspend_via_firmware()) {
++               nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
++               pci_save_state(pdev);
++       }
++
+        nvme_dev_disable(ndev, true);
         return 0;
  }
-
-+static void cpu_cgroup_css_offline(struct cgroup_subsys_state *css)
-+{
-+#ifdef CONFIG_SCHED_CORE
-+       struct task_group *tg = css_tg(css);
-+
-+       if (tg->tagged) {
-+               sched_core_put();
-+               tg->tagged = 0;
+@@ -2842,6 +2848,10 @@ static int nvme_resume(struct device *dev)
+        struct pci_dev *pdev = to_pci_dev(dev);
+        struct nvme_dev *ndev = pci_get_drvdata(pdev);
+ 
++       if (!pm_resume_via_firmware()) {
++               return nvme_set_power(&ndev->ctrl, 0);
 +       }
-+#endif
-+}
 +
- static void cpu_cgroup_css_released(struct cgroup_subsys_state *css)
- {
-        struct task_group *tg = css_tg(css);
-@@ -7832,6 +7844,7 @@ static struct cftype cpu_files[] = {
- struct cgroup_subsys cpu_cgrp_subsys = {
-        .css_alloc      = cpu_cgroup_css_alloc,
-        .css_online     = cpu_cgroup_css_online,
-+       .css_offline    = cpu_cgroup_css_offline,
-        .css_released   = cpu_cgroup_css_released,
-        .css_free       = cpu_cgroup_css_free,
-        .css_extra_stat_show = cpu_extra_stat_show,
+        nvme_reset_ctrl(&ndev->ctrl);
+        return 0;
+}
+
+Does pci_save_state() here enough to prevent the device enter to D3?
+
+Kai-Heng
 
