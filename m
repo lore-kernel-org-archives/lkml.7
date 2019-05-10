@@ -2,141 +2,77 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61785C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DF6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0B42182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557456792;
-	bh=wBMGXgv9SoYjblZiQdsjvBEVXSQZTsR7/wvVBPTeTb8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AnSTqANlml24RM5idBjCE1Rn1QONpHWeHQSVcUrIFWYECEN0h2K2pDQtjGzD4Zt0P
-	 jjnGd4k/DutKp9hnb3MFQ0gX+KaTu3y+Qn4eyHvZhcw9NCIGJcOLpLLYYkxu4Xsi2J
-	 iz5YSZr7wQidQFGJCY+B/XGI2eU8NJpnqiSO1lVc=
+	by mail.kernel.org (Postfix) with ESMTP id 9E5702182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:54:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfEJCxK (ORCPT
+        id S1727035AbfEJCyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 22:53:10 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:47099 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726864AbfEJCxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 22:53:10 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id D8AC623EFF;
-        Thu,  9 May 2019 22:53:08 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 09 May 2019 22:53:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=MB29zTtGAQv18AoG4
-        ME820wBqkJjcLFJN7yVzkW2rFI=; b=WN4qWqK/yNR+uhX+KfAFdDO6WybPAxf+U
-        UpZUGZhBWZGrbdMgbmOlC9F5Fxzb+xpT9ou2mOlO3jVeM7lOiUL/zkC8+shshAaq
-        nvtfW81iY22TiRQKjeLa6CWWk20VqgiALYxv84eEUL0kREiMzVpnqQnJghSAsmSZ
-        Zzl9EjFKSLsrzDQjwRtEsVUcpradsChjgrvtIIgIvqbAVBTbWGyP1LWo6EH/Zn1S
-        w8dPhluv6MkKAL38YAiC3iqO2ZXABYc3NfYdt+QqPAmjx4PhwFIn01FFOtqhFA1c
-        4nW3p6MBk7NhtqP1n24Nnn41ZHey1m4Ls1YdPmCYvolkej90nWJ6Q==
-X-ME-Sender: <xms:lOfUXMVQ2rp-LdlRVodFgLSqQV-_vSsLq6Pv_GQ5kLDW5mCii_Jtsw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeeigdduieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpedfvfhosghinhcu
-    vedrucfjrghrughinhhgfdcuoehtohgsihhnsehkvghrnhgvlhdrohhrgheqnecuffhomh
-    grihhnpehsohhluhhtihhonhdrnhgvthenucfkphepuddvgedrudejuddrvddurdehvden
-    ucfrrghrrghmpehmrghilhhfrhhomhepthhosghinheskhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:lOfUXOI9Zeo9qIkdE4RaCoPGvTLxDWbvg4BdRMbColhoVBRSTkD9Bg>
-    <xmx:lOfUXG3Tu1ntrd-ZoWt1cHv9D4T96E4xsQ_GA9AtlLmReFQagAbbIA>
-    <xmx:lOfUXM7HHatpUmi7N-IngGbP-GQZf5qoBSi1YK1Kz7adHK90b3lwlA>
-    <xmx:lOfUXM1wejLbwW8JMjmDVoDWRXFfBRdI9-_pt-RSiDGYHXDDLRrFCQ>
-Received: from eros.localdomain (124-171-21-52.dyn.iinet.net.au [124.171.21.52])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EB92B8005B;
-        Thu,  9 May 2019 22:53:04 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] bridge: Fix error path for kobject_init_and_add()
-Date:   Fri, 10 May 2019 12:52:12 +1000
-Message-Id: <20190510025212.10109-1-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Thu, 9 May 2019 22:54:09 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58080 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726896AbfEJCyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 22:54:09 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DCC6EBDE43C344F5926F;
+        Fri, 10 May 2019 10:54:06 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 10 May 2019 10:53:56 +0800
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        <linux-input@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH 1/3] Input: apanel: avoid panic if ioreamp fails
+Date:   Fri, 10 May 2019 11:03:18 +0800
+Message-ID: <20190510030320.109154-1-wangkefeng.wang@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently error return from kobject_init_and_add() is not followed by a
-call to kobject_put().  This means there is a memory leak.  We currently
-set p to NULL so that kfree() may be called on it as a noop, the code is
-arguably clearer if we move the kfree() up closer to where it is
-called (instead of after goto jump).
+If ioremap fails, NULL pointer dereference will happen and
+leading to a kernel panic when access the virtual address
+in check_signature().
 
-Remove a goto label 'err1' and jump to call to kobject_put() in error
-return from kobject_init_and_add() fixing the memory leak.  Re-name goto
-label 'put_back' to 'err1' now that we don't use err1, following current
-nomenclature (err1, err2 ...).  Move call to kfree out of the error
-code at bottom of function up to closer to where memory was allocated.
-Add comment to clarify call to kfree().
+Fix it by check the return value of ioremap.
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 ---
+ drivers/input/misc/apanel.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v1 was a part of a set.  I have dropped the other patch until I can work
-out a correct solution.
-
- net/bridge/br_if.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/net/bridge/br_if.c b/net/bridge/br_if.c
-index 41f0a696a65f..0cb0aa0313a8 100644
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -602,13 +602,15 @@ int br_add_if(struct net_bridge *br, struct net_device *dev,
- 	call_netdevice_notifiers(NETDEV_JOIN, dev);
+diff --git a/drivers/input/misc/apanel.c b/drivers/input/misc/apanel.c
+index c1e66f45d552..1c7262ad4b5b 100644
+--- a/drivers/input/misc/apanel.c
++++ b/drivers/input/misc/apanel.c
+@@ -259,7 +259,9 @@ static int __init apanel_init(void)
+ 	unsigned char i2c_addr;
+ 	int found = 0;
  
- 	err = dev_set_allmulti(dev, 1);
--	if (err)
--		goto put_back;
-+	if (err) {
-+		kfree(p);	/* kobject not yet init'd, manually free */
-+		goto err1;
-+	}
+-	bios = ioremap(0xF0000, 0x10000); /* Can't fail */
++	bios = ioremap(0xF0000, 0x10000);
++	if (!bios)
++		return -ENOMEM;
  
- 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
- 				   SYSFS_BRIDGE_PORT_ATTR);
- 	if (err)
--		goto err1;
-+		goto err2;
- 
- 	err = br_sysfs_addif(p);
- 	if (err)
-@@ -700,12 +702,9 @@ int br_add_if(struct net_bridge *br, struct net_device *dev,
- 	sysfs_remove_link(br->ifobj, p->dev->name);
- err2:
- 	kobject_put(&p->kobj);
--	p = NULL; /* kobject_put frees */
--err1:
- 	dev_set_allmulti(dev, -1);
--put_back:
-+err1:
- 	dev_put(dev);
--	kfree(p);
- 	return err;
- }
- 
+ 	p = bios_signature(bios);
+ 	if (!p) {
 -- 
-2.21.0
+2.20.1
 
