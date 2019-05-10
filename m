@@ -2,306 +2,119 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69541C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA362C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD67217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84B321479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ey4pb4Ed"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfEJQis (ORCPT
+        id S1727835AbfEJQkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727665AbfEJQim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:38:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 280302184B;
-        Fri, 10 May 2019 16:38:41 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.92)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1hP8Xg-0004mu-9U; Fri, 10 May 2019 12:38:40 -0400
-Message-Id: <20190510163840.181430755@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Fri, 10 May 2019 12:35:21 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>, Jiri Kosina <jkosina@suse.cz>
-Subject: [RFC][PATCH 2/2 v2] ftrace/x86: Remove mcount support
-References: <20190510163519.794235443@goodmis.org>
+        Fri, 10 May 2019 12:40:15 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61220 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727496AbfEJQkP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:40:15 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AGZtVj027928;
+        Fri, 10 May 2019 18:40:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=fDK2pUKnts0/2XyIv5cUGXTEXKWAR3aldEBvpXZ7VTI=;
+ b=Ey4pb4EdeDMM19KPcSg9nHnXTVOch4HpmrFb4ZCEyqyH3wCyY8dP8p1IrB2E7AqkIXHl
+ yV2MgQzE8VwAxHHStg2zN92vTKRPfFA4oDS5OoxaX5m+6vEON45nHPPftAyA5NXqXpcV
+ vjPCTKy4hYug8CrPW7JHZhHQDQh0ORBztG9qNWP2INF2BLBvsFHXmBP3Tvykzve60NNn
+ NkhCAvMULjlW1UhmG0wK0NY5Oz5+FQdyr+cUTtPnkpa+Z4z1wvlQpGrti+YNH8U+bXWa
+ qZCjTdsojVIlbbxRRURHSZG4OfhrawFMHv8sd2DBJIhP/86fY9sJyL30XYK+b9v7vUSS jg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2scdjpa6c6-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 10 May 2019 18:40:07 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3B3E834;
+        Fri, 10 May 2019 16:40:06 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 163C82CB4;
+        Fri, 10 May 2019 16:40:06 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May
+ 2019 18:40:05 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1347.000; Fri, 10 May 2019 18:40:05 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/stm: ltdc: remove clk_round_rate comment
+Thread-Topic: [PATCH] drm/stm: ltdc: remove clk_round_rate comment
+Thread-Index: AQHVB0GDvPb0BWdKa0uOjh9ZFPgpeqZkbf8A
+Date:   Fri, 10 May 2019 16:40:05 +0000
+Message-ID: <c84e4be5-ec3d-aa6a-9571-4c6d2877fa5f@st.com>
+References: <1557500600-19771-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1557500600-19771-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.47]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <10FDEE3B6C3BE84288DE873FAFE85886@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-
-There's two methods of enabling function tracing in Linux on x86. One is
-with just "gcc -pg" and the other is "gcc -pg -mfentry". The former will use
-calls to a special function "mcount" after the frame is set up in all C
-functions. The latter will add calls to a special function called "fentry"
-as the very first instruction of all C functions.
-
-At compile time, there is a check to see if gcc supports, -mfentry, and if
-it does, it will use that, because it is more versatile and less error prone
-for function tracing.
-
-Starting with v4.19, the minimum gcc supported to build the Linux kernel,
-was raised to version 4.6. That also happens to be the first gcc version to
-support -mfentry. Since on x86, using gcc versions from 4.6 and beyond will
-unconditionally enable the -mfentry, it will no longer use mcount as the
-method for inserting calls into the C functions of the kernel. This means
-that there is no point in continuing to maintain mcount in x86.
-
-Remove support for using mcount. This makes the code less complex, and will
-also allow it to be simplified in the future.
-
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- arch/x86/include/asm/ftrace.h    |  8 +++----
- arch/x86/include/asm/livepatch.h |  3 ---
- arch/x86/kernel/ftrace_32.S      | 36 +++++---------------------------
- arch/x86/kernel/ftrace_64.S      | 28 +------------------------
- 4 files changed, 9 insertions(+), 66 deletions(-)
-
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index cf350639e76d..287f1f7b2e52 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -3,12 +3,10 @@
- #define _ASM_X86_FTRACE_H
- 
- #ifdef CONFIG_FUNCTION_TRACER
--#ifdef CC_USING_FENTRY
--# define MCOUNT_ADDR		((unsigned long)(__fentry__))
--#else
--# define MCOUNT_ADDR		((unsigned long)(mcount))
--# define HAVE_FUNCTION_GRAPH_FP_TEST
-+#ifndef CC_USING_FENTRY
-+# error Compiler does not support fentry?
- #endif
-+# define MCOUNT_ADDR		((unsigned long)(__fentry__))
- #define MCOUNT_INSN_SIZE	5 /* sizeof mcount call */
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
-diff --git a/arch/x86/include/asm/livepatch.h b/arch/x86/include/asm/livepatch.h
-index ed80003ce3e2..2f2bdf0662f8 100644
---- a/arch/x86/include/asm/livepatch.h
-+++ b/arch/x86/include/asm/livepatch.h
-@@ -26,9 +26,6 @@
- 
- static inline int klp_check_compiler_support(void)
- {
--#ifndef CC_USING_FENTRY
--	return 1;
--#endif
- 	return 0;
- }
- 
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index 459e6b4a19bc..2ba914a34b06 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -10,20 +10,10 @@
- #include <asm/ftrace.h>
- #include <asm/nospec-branch.h>
- 
--#ifdef CC_USING_FENTRY
- # define function_hook	__fentry__
- EXPORT_SYMBOL(__fentry__)
--#else
--# define function_hook	mcount
--EXPORT_SYMBOL(mcount)
--#endif
--
--/* mcount uses a frame pointer even if CONFIG_FRAME_POINTER is not set */
--#if !defined(CC_USING_FENTRY) || defined(CONFIG_FRAME_POINTER)
--# define USING_FRAME_POINTER
--#endif
- 
--#ifdef USING_FRAME_POINTER
-+#ifdef CONFIG_FRAME_POINTER
- # define MCOUNT_FRAME			1	/* using frame = true  */
- #else
- # define MCOUNT_FRAME			0	/* using frame = false */
-@@ -35,8 +25,7 @@ END(function_hook)
- 
- ENTRY(ftrace_caller)
- 
--#ifdef USING_FRAME_POINTER
--# ifdef CC_USING_FENTRY
-+#ifdef CONFIG_FRAME_POINTER
- 	/*
- 	 * Frame pointers are of ip followed by bp.
- 	 * Since fentry is an immediate jump, we are left with
-@@ -47,7 +36,7 @@ ENTRY(ftrace_caller)
- 	pushl	%ebp
- 	movl	%esp, %ebp
- 	pushl	2*4(%esp)			/* function ip */
--# endif
-+
- 	/* For mcount, the function ip is directly above */
- 	pushl	%ebp
- 	movl	%esp, %ebp
-@@ -57,7 +46,7 @@ ENTRY(ftrace_caller)
- 	pushl	%edx
- 	pushl	$0				/* Pass NULL as regs pointer */
- 
--#ifdef USING_FRAME_POINTER
-+#ifdef CONFIG_FRAME_POINTER
- 	/* Load parent ebp into edx */
- 	movl	4*4(%esp), %edx
- #else
-@@ -80,13 +69,11 @@ ftrace_call:
- 	popl	%edx
- 	popl	%ecx
- 	popl	%eax
--#ifdef USING_FRAME_POINTER
-+#ifdef CONFIG_FRAME_POINTER
- 	popl	%ebp
--# ifdef CC_USING_FENTRY
- 	addl	$4,%esp				/* skip function ip */
- 	popl	%ebp				/* this is the orig bp */
- 	addl	$4, %esp			/* skip parent ip */
--# endif
- #endif
- .Lftrace_ret:
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-@@ -131,11 +118,7 @@ ENTRY(ftrace_regs_caller)
- 
- 	movl	12*4(%esp), %eax		/* Load ip (1st parameter) */
- 	subl	$MCOUNT_INSN_SIZE, %eax		/* Adjust ip */
--#ifdef CC_USING_FENTRY
- 	movl	15*4(%esp), %edx		/* Load parent ip (2nd parameter) */
--#else
--	movl	0x4(%ebp), %edx			/* Load parent ip (2nd parameter) */
--#endif
- 	movl	function_trace_op, %ecx		/* Save ftrace_pos in 3rd parameter */
- 	pushl	%esp				/* Save pt_regs as 4th parameter */
- 
-@@ -176,13 +159,8 @@ ENTRY(ftrace_graph_caller)
- 	pushl	%edx
- 	movl	3*4(%esp), %eax
- 	/* Even with frame pointers, fentry doesn't have one here */
--#ifdef CC_USING_FENTRY
- 	lea	4*4(%esp), %edx
- 	movl	$0, %ecx
--#else
--	lea	0x4(%ebp), %edx
--	movl	(%ebp), %ecx
--#endif
- 	subl	$MCOUNT_INSN_SIZE, %eax
- 	call	prepare_ftrace_return
- 	popl	%edx
-@@ -195,11 +173,7 @@ END(ftrace_graph_caller)
- return_to_handler:
- 	pushl	%eax
- 	pushl	%edx
--#ifdef CC_USING_FENTRY
- 	movl	$0, %eax
--#else
--	movl	%ebp, %eax
--#endif
- 	call	ftrace_return_to_handler
- 	movl	%eax, %ecx
- 	popl	%edx
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 75f2b36b41a6..10eb2760ef2c 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -13,22 +13,12 @@
- 	.code64
- 	.section .entry.text, "ax"
- 
--#ifdef CC_USING_FENTRY
- # define function_hook	__fentry__
- EXPORT_SYMBOL(__fentry__)
--#else
--# define function_hook	mcount
--EXPORT_SYMBOL(mcount)
--#endif
- 
- #ifdef CONFIG_FRAME_POINTER
--# ifdef CC_USING_FENTRY
- /* Save parent and function stack frames (rip and rbp) */
- #  define MCOUNT_FRAME_SIZE	(8+16*2)
--# else
--/* Save just function stack frame (rip and rbp) */
--#  define MCOUNT_FRAME_SIZE	(8+16)
--# endif
- #else
- /* No need to save a stack frame */
- # define MCOUNT_FRAME_SIZE	0
-@@ -75,17 +65,13 @@ EXPORT_SYMBOL(mcount)
- 	 * fentry is called before the stack frame is set up, where as mcount
- 	 * is called afterward.
- 	 */
--#ifdef CC_USING_FENTRY
-+
- 	/* Save the parent pointer (skip orig rbp and our return address) */
- 	pushq \added+8*2(%rsp)
- 	pushq %rbp
- 	movq %rsp, %rbp
- 	/* Save the return address (now skip orig rbp, rbp and parent) */
- 	pushq \added+8*3(%rsp)
--#else
--	/* Can't assume that rip is before this (unless added was zero) */
--	pushq \added+8(%rsp)
--#endif
- 	pushq %rbp
- 	movq %rsp, %rbp
- #endif /* CONFIG_FRAME_POINTER */
-@@ -113,12 +99,7 @@ EXPORT_SYMBOL(mcount)
- 	movq %rdx, RBP(%rsp)
- 
- 	/* Copy the parent address into %rsi (second parameter) */
--#ifdef CC_USING_FENTRY
- 	movq MCOUNT_REG_SIZE+8+\added(%rsp), %rsi
--#else
--	/* %rdx contains original %rbp */
--	movq 8(%rdx), %rsi
--#endif
- 
- 	 /* Move RIP to its proper location */
- 	movq MCOUNT_REG_SIZE+\added(%rsp), %rdi
-@@ -303,15 +284,8 @@ ENTRY(ftrace_graph_caller)
- 	/* Saves rbp into %rdx and fills first parameter  */
- 	save_mcount_regs
- 
--#ifdef CC_USING_FENTRY
- 	leaq MCOUNT_REG_SIZE+8(%rsp), %rsi
- 	movq $0, %rdx	/* No framepointers needed */
--#else
--	/* Save address of the return address of traced function */
--	leaq 8(%rdx), %rsi
--	/* ftrace does sanity checks against frame pointers */
--	movq (%rdx), %rdx
--#endif
- 	call	prepare_ftrace_return
- 
- 	restore_mcount_regs
--- 
-2.20.1
-
-
+RGVhciBZYW5uaWNrLA0KVGhhbmsgeW91IGZvciB5b3VyIHBhdGNoLA0KDQpJbiB5b3VyIHBhdGNo
+LCB5b3UgaGF2ZSByZW1vdmVkIGNsa19kaXNhYmxlKCkgJiBjbGtfZW5hYmxlKCkuDQpDb3VsZCB5
+b3UgcGxlYXNlIGRvdWJsZSBjb25maXJtID8NCg0KdGhhbmtzDQpQaGlsaXBwZSA6LSkNCg0KDQpP
+biA1LzEwLzE5IDU6MDMgUE0sIFlhbm5pY2sgRmVydHLDqSB3cm90ZToNCj4gQ2xrX3JvdW5kX3Jh
+dGUgcmV0dXJucyByb3VuZGVkIGNsb2NrIHdpdGhvdXQgY2hhbmdpbmcNCj4gdGhlIGhhcmR3YXJl
+IGluIGFueSB3YXkuDQo+IFRoaXMgZnVuY3Rpb24gY291bGRuJ3QgcmVwbGFjZSBzZXRfcmF0ZS9n
+ZXRfcmF0ZSBjYWxscy4NCj4gVG9kbyBjb21tZW50IGhhcyBiZWVuIHJlbW92ZWQgJiBhIG5ldyBs
+b2cgaW5zZXJ0ZWQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZYW5uaWNrIEZlcnRyw6kgPHlhbm5p
+Y2suZmVydHJlQHN0LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMg
+fCAxMCArKystLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgNyBk
+ZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+IGluZGV4IDk3OTEyZTIuLjJmOGFhMmUg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+IEBAIC01MDcsMjAgKzUwNywxNiBAQCBzdGF0aWMgYm9v
+bCBsdGRjX2NydGNfbW9kZV9maXh1cChzdHJ1Y3QgZHJtX2NydGMgKmNydGMsDQo+ICAgCXN0cnVj
+dCBsdGRjX2RldmljZSAqbGRldiA9IGNydGNfdG9fbHRkYyhjcnRjKTsNCj4gICAJaW50IHJhdGUg
+PSBtb2RlLT5jbG9jayAqIDEwMDA7DQo+ICAgDQo+IC0JLyoNCj4gLQkgKiBUT0RPIGNsa19yb3Vu
+ZF9yYXRlKCkgZG9lcyBub3Qgd29yayB5ZXQuIFdoZW4gcmVhZHksIGl0IGNhbg0KPiAtCSAqIGJl
+IHVzZWQgaW5zdGVhZCBvZiBjbGtfc2V0X3JhdGUoKSB0aGVuIGNsa19nZXRfcmF0ZSgpLg0KPiAt
+CSAqLw0KPiAtDQo+IC0JY2xrX2Rpc2FibGUobGRldi0+cGl4ZWxfY2xrKTsNCj4gICAJaWYgKGNs
+a19zZXRfcmF0ZShsZGV2LT5waXhlbF9jbGssIHJhdGUpIDwgMCkgew0KPiAgIAkJRFJNX0VSUk9S
+KCJDYW5ub3Qgc2V0IHJhdGUgKCVkSHopIGZvciBwaXhlbCBjbGtcbiIsIHJhdGUpOw0KPiAgIAkJ
+cmV0dXJuIGZhbHNlOw0KPiAgIAl9DQo+IC0JY2xrX2VuYWJsZShsZGV2LT5waXhlbF9jbGspOw0K
+PiAgIA0KPiAgIAlhZGp1c3RlZF9tb2RlLT5jbG9jayA9IGNsa19nZXRfcmF0ZShsZGV2LT5waXhl
+bF9jbGspIC8gMTAwMDsNCj4gICANCj4gKwlEUk1fREVCVUdfRFJJVkVSKCJyZXF1ZXN0ZWQgY2xv
+Y2sgJWRrSHosIGFkanVzdGVkIGNsb2NrICVka0h6XG4iLA0KPiArCQkJIG1vZGUtPmNsb2NrLCBh
+ZGp1c3RlZF9tb2RlLT5jbG9jayk7DQo+ICsNCj4gICAJcmV0dXJuIHRydWU7DQo+ICAgfQ0KPiAg
+IA0KPiA=
