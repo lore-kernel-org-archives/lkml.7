@@ -2,174 +2,174 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF9AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879852175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9850C2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="iVsglhas"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VGPaDZPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbfEJGVP (ORCPT
+        id S1727057AbfEJGVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:21:15 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:21908 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfEJGVO (ORCPT
+        Fri, 10 May 2019 02:21:36 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5013 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfEJGVg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:21:14 -0400
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x4A6L4l3009238
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:21:05 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4A6L4l3009238
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557469265;
-        bh=RfshYBEawlaUrELiRcm1azT4/5cCoz/xlPLRX8HpZ6I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iVsglhasHCMUQ2gTfrrTQ9SA+2qlLIJLIgGVSrvPFJCyyso0I6t8SKcqGsDj6Yx87
-         VMH36aRqji1lhQU4TsBO8+3Cv25iAzR/FhUu7KgB0T0Bq5nMjhfwTVOkgHaXaZ/i21
-         bb/TsUnKm75RMjKlLSDlLaCJAX5wB8lC/Lf1e6si5/mR9G7eYbhN3FAbj2YqWwVRRh
-         WclVbITM5CMzu2urKnMnyLP2WlnALR4CwuFuY38ci3ilr3/HBNg4eGf9vw1hwALU2g
-         fW4DAPi14b7emn6waDPmSaS3IV6I50VnJn5D1bLDCrq0h7ofj9dkKqlXIlF2CmtbVQ
-         3NALgOJXSgSZw==
-X-Nifty-SrcIP: [209.85.221.180]
-Received: by mail-vk1-f180.google.com with SMTP id o187so1210636vkg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:21:04 -0700 (PDT)
-X-Gm-Message-State: APjAAAV7ZyqZZLqmLAEUuwbCeuEseWOA6j8LdU7EYSNEt6KJCNRwZGGL
-        +yWpDq2tDxR0eQDKYuH73zbz+HQhljVxJVHEamM=
-X-Google-Smtp-Source: APXvYqwru5xCITeIP3IDzXSiJdp/KtT+NW5kB4jgvyTrzGgF89HhvyXc3U41UDxZXmkplPVI3cWbBuu0U8mXmBp2XCY=
-X-Received: by 2002:a1f:b297:: with SMTP id b145mr4163622vkf.74.1557469263784;
- Thu, 09 May 2019 23:21:03 -0700 (PDT)
+        Fri, 10 May 2019 02:21:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd518480000>; Thu, 09 May 2019 23:20:56 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 May 2019 23:21:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 May 2019 23:21:33 -0700
+Received: from [10.24.47.55] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
+ 2019 06:21:27 +0000
+Subject: RE: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Krishna Thota <kthota@nvidia.com>,
+        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+References: <20190424052004.6270-1-vidyas@nvidia.com>
+ <20190424052004.6270-4-vidyas@nvidia.com> <20190503110732.GC32400@ulmo>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <80616ff5-d7a5-84a4-a71b-569e340d128c@nvidia.com>
+Date:   Fri, 10 May 2019 11:51:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190507175912.GA11709@kroah.com> <CAHk-=wh=Uscp=yO1p===JjH3x9NS-ez+wrk64Z0pw7EGfWvVTA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh=Uscp=yO1p===JjH3x9NS-ez+wrk64Z0pw7EGfWvVTA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 10 May 2019 15:20:27 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQd5+-+fcmy3PMH1V6eDckXaeibv_vVgP5GX5L7j-2nEw@mail.gmail.com>
-Message-ID: <CAK7LNAQd5+-+fcmy3PMH1V6eDckXaeibv_vVgP5GX5L7j-2nEw@mail.gmail.com>
-Subject: Re: [GIT PULL] Driver core patches for 5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190503110732.GC32400@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557469257; bh=24uok8Emgfq8JqLYEmA9il4vmwDxuvY2qeXLWgy1Ux8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=VGPaDZPU6RodfRcYpWevyox/CweWPCBp2FZ9famAhFSxmUmLYCqoxomnKy3VUay8+
+         BzMmFoE5yCRMN4THPY6r8HObhAtdLkjZ1FFvmHhAh5NDKaq5SmDigH/E0+PxNknxjN
+         GAb9d7nnGvIWMUWovvD2NALS935C9Af05oRJyiGb+x0saF9s4ch+FkwJ8nOeM6UF5n
+         bbycgvMnkvjCQW2ElsYBymdx5+RWWDbQn2NuFwb6Hxk3tG0mTb1cT/u+bcyPH5ahrP
+         wOnRr+ELEdu/+/RZEAJuMkkjUhagK8PK5+gy2jJqkJxdjOf1B3F31MaTnpYKmsCmMI
+         WmQxUames0JFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
 
-On Fri, May 10, 2019 at 5:50 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> [ Ok, this may look irrelevant to people, but I actually notice this
-> because I do quick rebuilds *all* the time, so the 30s vs 41s
-> difference is actually something I reacted to and then tried to figure
-> out... ]
->
-> On Tue, May 7, 2019 at 10:59 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> -----Original Message-----
+> From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On
+> Behalf Of Thierry Reding
+> Sent: Friday, May 3, 2019 4:38 PM
+> To: Vidya Sagar <vidyas@nvidia.com>
+> Cc: lorenzo.pieralisi@arm.com; bhelgaas@google.com; robh+dt@kernel.org;
+> mark.rutland@arm.com; Jonathan Hunter <jonathanh@nvidia.com>;
+> kishon@ti.com; catalin.marinas@arm.com; will.deacon@arm.com;
+> jingoohan1@gmail.com; gustavo.pimentel@synopsys.com; Mikko Perttunen
+> <mperttunen@nvidia.com>; linux-pci@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Krishna Thota
+> <kthota@nvidia.com>; Manikanta Maddireddy <mmaddireddy@nvidia.com>;
+> sagar.tv@gmail.com
+> Subject: Re: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
+> 
+> On Wed, Apr 24, 2019 at 10:49:51AM +0530, Vidya Sagar wrote:
+> > Export pcie_bus_config to enable host controller drivers setting it to
+> > a specific configuration be able to build as loadable modules
 > >
-> > Joel Fernandes (Google) (2):
-> >       Provide in-kernel headers to make extending kernel easier
->
-> Joel and Masahiro,
->  this commit does annoying things. It's a small thing, but it ends up
-> grating on my kernel rebuild times, so I hope somebody can take a look
-> at it..
->
-> Try building a kernel with no changes, and it shouldn't re-link.
->
-> HOWEVER.
->
-> If you re-make the config in between, the kernel/kheaders_data.tar.xz
-> is re-generated too. I think it checks timestamps despite having that
-> "CHK" phase that should verify just contents.
->
-> I think the kernel/config_data.gz rules do the same thing, judging by
-> the output.
->
-> I use "make allmodconfig" to re-generate the same kernel config, which
-> triggers this. The difference between "nothing changed" and "rerun
-> 'make allmodconfig' and nothing _still_ should have changed" is quite
-> stark:
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> > Changes since [v4]:
+> > * None
+> >
+> > Changes since [v3]:
+> > * None
+> >
+> > Changes since [v2]:
+> > * None
+> >
+> > Changes since [v1]:
+> > * This is a new patch in v2 series
+> >
+> >  drivers/pci/pci.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> 
+> It doesn't look to me like this is something that host controller drivers are
+> supposed to change. This is set via the pci kernel command- line parameter,
+> meaning it's a way of tuning the system configuration.
+> Drivers should not be allowed to override this after the fact.
+> 
+> Why do we need to set this?
+Here is the reason I'm doing it.
+First things first, Tegra194 supports MPS up to 256 bytes.
+Assume there are two endpoints with MPS supported up to
+a) 128 bytes (Ex:- Realtek NIC with 8168 controller)
+b) 256 bytes (Ex:- Kingston NVMe drive)
+Now, leaving "pcie_bus_config" untouched in the driver sets it to
+PCIE_BUS_DEFAULT by default. With this setting, for both (a) and (b),
+MPS is set to 128, which means, even though Tegra194 supports 256 MPS, it is not
+set to 256 even in case of (b) thereby not using RP's 256 MPS feature.
+If I explicitly set pcie_bus_config=PCIE_BUS_PERFORMACE in the code, then 256 MPS is set when
+(b) is connected, but when (a) is connected, for root port MPS 256 is set and for
+endpoint MPS 128 is set, because of which root port tries to send packets with 256
+payload that breaks functionality of Realtek NIC card.
+The best option I've found out is that when I set 256 in PCI_EXP_DEVCTL of root port
+explicitly before link up and use pcie_bus_config=PCIE_BUS_SAFE, then, I get the best of both
+PCIE_BUS_DEFAULT and PCIE_BUS_PERFORMANCE i.e. with (a) connected, MPS is set to 128 in both RP
+and EP and with (b) connected, MPS is set to 256 in both RP and EP.
 
-Yeah, I have had this in my mind for a while.
+So, is it like, pcie_bus_config shouldn't be set to anything explicitly in the driver and depending on the
+platform and what is connected to root port, kernel parameter can be passed with appropriate setting?
 
-If you run "make *config" and it happens to be creating
-the exactly the same .config, Kconfig should not overwrite
-it at all.
-
-If you apply the following two,
-I hope you will get the behavior you like.
-
-https://patchwork.kernel.org/patch/10938255/
-https://patchwork.kernel.org/patch/10938253/
-
-(1/2 is just a cleanup because I am touching the
-same hunk.)
-
-Because I have not sent a Kconfig pull request yet
-in the current MW, I will consider to merge them.
-
-Thanks.
-
-
-> - nothing changed: rebuild in less than 30s
->
->     [torvalds@i7 linux]$ time make -j32
->       DESCEND  objtool
->       CALL    scripts/atomic/check-atomics.sh
->       CALL    scripts/checksyscalls.sh
->       CHK     include/generated/compile.h
->       CHK     kernel/kheaders_data.tar.xz
->       Building modules, stage 2.
->     Kernel: arch/x86/boot/bzImage is ready  (#9)
->       MODPOST 7282 modules
->
->     real        0m29.379s
->     user        1m50.586s
->     sys 0m41.047s
->
-> - do (the same) "make allmodconfig" in between, now rebuild time is
-> just over 41s:
->
->     [torvalds@i7 linux]$ make allmodconfig
->
->     [torvalds@i7 linux]$ time make -j32
->     scripts/kconfig/conf  --syncconfig Kconfig
->       DESCEND  objtool
->       CALL    scripts/atomic/check-atomics.sh
->       CALL    scripts/checksyscalls.sh
->       CHK     include/generated/compile.h
->       GZIP    kernel/config_data.gz
->       CHK     kernel/kheaders_data.tar.xz
->       CC [M]  kernel/configs.o
->       GEN     kernel/kheaders_data.tar.xz
->       CC [M]  kernel/kheaders.o
->       Building modules, stage 2.
->     Kernel: arch/x86/boot/bzImage is ready  (#9)
->       MODPOST 7282 modules
->       LD [M]  kernel/configs.ko
->       LD [M]  kernel/kheaders.ko
->
->     real        0m41.326s
->     user        2m17.822s
->     sys 0m54.561s
->
-> No, this isn't the end of the world, but if somebody sees a simple
-> solution to avoid that extra ten seconds, I'd appreciate it.
->
->                   Linus
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> Thierry
+> 
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
+> > f5ff01dc4b13..731f78508601 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -94,6 +94,7 @@ unsigned long pci_hotplug_mem_size =
+> > DEFAULT_HOTPLUG_MEM_SIZE;  unsigned long pci_hotplug_bus_size =
+> > DEFAULT_HOTPLUG_BUS_SIZE;
+> >
+> >  enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
+> > +EXPORT_SYMBOL_GPL(pcie_bus_config);
+> >
+> >  /*
+> >   * The default CLS is used if arch didn't set CLS explicitly and not
+> > --
+> > 2.17.1
+> >
