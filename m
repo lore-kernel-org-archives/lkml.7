@@ -4,66 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215BBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CFBC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E864920881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27C0216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:53:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AgQ7ISjc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="cFKNU0Oc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbfEJPxf (ORCPT
+        id S1727833AbfEJPxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:53:35 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39312 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbfEJPxe (ORCPT
+        Fri, 10 May 2019 11:53:36 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38170 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfEJPxd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:53:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w8so6050058wrl.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:53:33 -0700 (PDT)
+        Fri, 10 May 2019 11:53:33 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f2so8031243wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:53:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=o/ZrOKrVBiCPmSKNzKkVtl6ee0CJpkJsgmldCOTIdwo=;
-        b=AgQ7ISjcLMgxyeSNtilo9vaG226u/TyFK085WpRbybJu93anjOumklGMP++48zV6wz
-         4FI/78ShZkC5z26GPsWzhch6CjlZKcZfQ8CAVRGjK624SyJlhPWjmSMRcb6iJ4WLxOKu
-         sgwrR2WWtmnm42nw6iDsAbSB3PFyMYUIXfqnZsaikAf3DaQTRLbBhcYc7WeT+gtscOrD
-         rnd/+rDltSJyCM9Hh9KP268I/GVppUxmHa8DBcbnsYVnLyqH10XtAbQyQW55qsSUtuce
-         EbIFE+YDbuqUzGL5volDIAl91chm5apGQon07CKClUk97CMKR4RQodmM/29hhhTcPzkK
-         +Szg==
+        bh=3EP7z+/Y2988kk6BnMUMk36B6V5NCtniTm81fwS2Dbs=;
+        b=cFKNU0OcqMqoiGb6m1ldgJj9kCbZxCY5yi5zRW2m86v+sUh5A61vwHwpqkVX2pEEY5
+         49PmLzkcpQRVolhLvdPmOz6Xy4SkgFcvFZ44srHes/W92AcadceBhgPHxfjAhqC/lzIX
+         1UjyJ4MDmU9TlkoKjZjcH8hdm/nN+Gg0RznJ5LfVcZRHxJpvDA8ZGfcCDVJC2NuASqir
+         QOm+SMuND8jf8pv8Pk0o6NTMWLVorhWNqvxZYFPnwg9klVyu6Zy6l1Vbz0dHTegi6lRK
+         GnK89aVmmHSOWFoP3Mg2R7niF0PzggghPdOemyUS3bneafLw1dj48Xwb85KqOElPm9FE
+         7ohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=o/ZrOKrVBiCPmSKNzKkVtl6ee0CJpkJsgmldCOTIdwo=;
-        b=No0t7ZSipOdUJNz/k6I2wmdA+HTL23f1j3CsPsyki7c3yVEvOo3rhfRk7nkMfFYgGl
-         L/61bZgwq27DLSLHcIIBl80ls1gWFQmzHqgY1tRwCL7iEU0zdxFEasnOVQucO1wmgHNV
-         a6iA9y4iDqS99scmJWnndCLao5fG/np+UQxOqkHQhvcZcrhWTlCV+HfmtuivfpaUtloz
-         8F+5rfqzP+yKrlq7/uWUV1gtX2LDfhJVvohZf7J9i+rMBggnO8je6bbUwaxEDuMQY8a6
-         k1+4Aw7SrApCexDow4m7NXiBkqXbNPB3Q6p9gojnzlwP0LQVPzwFhH+GDNz7m7PMgS/C
-         Q8ag==
-X-Gm-Message-State: APjAAAXnZJeMi2t+QeEmOBluq4cr/Snms4hDTAk7nJqVq2V9cbs5yhdP
-        KjIRDiJGOh+aXvej4984kmnLSMf4ZPA=
-X-Google-Smtp-Source: APXvYqwrXeX4zkdcF+luK5aZ8i5L32YJZSkhlWj5pwMryd3fLogSEAt2LHeSq6RuguZbssX+EVNPHw==
-X-Received: by 2002:a5d:668f:: with SMTP id l15mr7959140wru.125.1557503612459;
-        Fri, 10 May 2019 08:53:32 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id u14sm5333860wrn.30.2019.05.10.08.53.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        bh=3EP7z+/Y2988kk6BnMUMk36B6V5NCtniTm81fwS2Dbs=;
+        b=Gat6uIxDfnqZL8nqVZFMg786hgdl4B6YuEd/CW/jOshjt62XJt5ppm/23lE9l7bNVn
+         iETsqP5dxCl0OIGMei0q9W/j8LV7O9RA7Hx/bqZVrxQxEOxOHy2Gb6dOFk/2OyUdHw3K
+         AoBkf4ghrnQTs5CcK4ewmKqHMXrK1Re6nwlIRejdM8IyBL9ffAFnmCXed8rSasrdhh9K
+         Ki4rywXDkRbEb0YYBlqW8obkGwV7ulyP/cg+ioB+qVo4vdHbWDbV54lkPn7q3guQ48IM
+         mht1CQtC6Z4dnbAKgUBWiz7Zo/38IR/NFBlgPEINnMgieVllHXQbGIxPf8+ahj5g+g6m
+         GWgg==
+X-Gm-Message-State: APjAAAVB8SVPvLV7BQ6hkEggNnA0FSWnbHz27iZUn3sHM/hDS9xoIsKc
+        RgyOTnoO3INFoDACP70gNMEU9gwkkE4=
+X-Google-Smtp-Source: APXvYqzh5gxUQdGkHLy2eVNCwryHDhyE+udqXnPcENAHefOjrlKuTk9eRsj7JcKr+/pK4merSPzd+g==
+X-Received: by 2002:a1c:20c9:: with SMTP id g192mr7438658wmg.76.1557503611487;
         Fri, 10 May 2019 08:53:31 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id u14sm5333860wrn.30.2019.05.10.08.53.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 08:53:30 -0700 (PDT)
 From:   Jerome Brunet <jbrunet@baylibre.com>
 To:     Kevin Hilman <khilman@baylibre.com>
 Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 2/2] arm64: dts: meson: u200: consistently order nodes
-Date:   Fri, 10 May 2019 17:53:27 +0200
-Message-Id: <20190510155327.5759-3-jbrunet@baylibre.com>
+Subject: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
+Date:   Fri, 10 May 2019 17:53:26 +0200
+Message-Id: <20190510155327.5759-2-jbrunet@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190510155327.5759-1-jbrunet@baylibre.com>
 References: <20190510155327.5759-1-jbrunet@baylibre.com>
@@ -78,101 +77,154 @@ Like order boards, order nodes by address then node names then aliases.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../boot/dts/amlogic/meson-g12a-u200.dts      | 50 ++++++++++---------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 92 +++++++++----------
+ 1 file changed, 46 insertions(+), 46 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index e91201809abf..7cc3e2d6a4f1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -16,13 +16,10 @@
- 	aliases {
- 		serial0 = &uart_AO;
- 	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--	memory@0 {
--		device_type = "memory";
--		reg = <0x0 0x0 0x0 0x40000000>;
--	};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+index 34b40587e5ef..61fb30047d7f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+@@ -14,10 +14,6 @@
+ 	compatible = "seirobotics,sei510", "amlogic,g12a";
+ 	model = "SEI Robotics SEI510";
  
- 	cvbs-connector {
- 		compatible = "composite-video-connector";
-@@ -34,15 +31,6 @@
+-	aliases {
+-		serial0 = &uart_AO;
+-	};
+-
+ 	adc_keys {
+ 		compatible = "adc-keys";
+ 		io-channels = <&saradc 0>;
+@@ -31,13 +27,8 @@
  		};
  	};
  
--	flash_1v8: regulator-flash_1v8 {
+-	ao_5v: regulator-ao_5v {
 -		compatible = "regulator-fixed";
--		regulator-name = "FLASH_1V8";
+-		regulator-name = "AO_5V";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		vin-supply = <&dc_in>;
+-		regulator-always-on;
++	aliases {
++		serial0 = &uart_AO;
+ 	};
+ 
+ 	chosen {
+@@ -54,23 +45,6 @@
+ 		};
+ 	};
+ 
+-	dc_in: regulator-dc_in {
+-		compatible = "regulator-fixed";
+-		regulator-name = "DC_IN";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-		regulator-always-on;
+-	};
+-
+-	emmc_1v8: regulator-emmc_1v8 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "EMMC_1V8";
 -		regulator-min-microvolt = <1800000>;
 -		regulator-max-microvolt = <1800000>;
--		vin-supply = <&vcc_3v3>;
+-		vin-supply = <&vddao_3v3>;
 -		regulator-always-on;
 -	};
 -
  	hdmi-connector {
  		compatible = "hdmi-connector";
  		type = "a";
-@@ -54,6 +42,20 @@
- 		};
+@@ -87,12 +61,30 @@
+ 		reg = <0x0 0x0 0x0 0x40000000>;
  	};
  
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x40000000>;
-+	};
-+
-+	flash_1v8: regulator-flash_1v8 {
+-	reserved-memory {
+-		/* TEE Reserved Memory */
+-		bl32_reserved: bl32@5000000 {
+-			reg = <0x0 0x05300000 0x0 0x2000000>;
+-			no-map;
+-		};
++	ao_5v: regulator-ao_5v {
 +		compatible = "regulator-fixed";
-+		regulator-name = "FLASH_1V8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_3v3>;
++		regulator-name = "AO_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
 +		regulator-always-on;
 +	};
 +
- 	main_12v: regulator-main_12v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "12V";
-@@ -62,6 +64,17 @@
- 		regulator-always-on;
- 	};
- 
-+	usb_pwr_en: regulator-usb_pwr_en {
++	dc_in: regulator-dc_in {
 +		compatible = "regulator-fixed";
-+		regulator-name = "USB_PWR_EN";
++		regulator-name = "DC_IN";
 +		regulator-min-microvolt = <5000000>;
 +		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc_5v>;
-+
-+		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
++		regulator-always-on;
 +	};
 +
- 	vcc_1v8: regulator-vcc_1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VCC_1V8";
-@@ -92,17 +105,6 @@
- 		enable-active-high;
++	emmc_1v8: regulator-emmc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
  	};
  
--	usb_pwr_en: regulator-usb_pwr_en {
--		compatible = "regulator-fixed";
--		regulator-name = "USB_PWR_EN";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		vin-supply = <&vcc_5v>;
+ 	vddao_3v3: regulator-vddao_3v3 {
+@@ -122,6 +114,14 @@
+ 		vin-supply = <&vddao_3v3>;
+ 		regulator-always-on;
+ 	};
++
++	reserved-memory {
++		/* TEE Reserved Memory */
++		bl32_reserved: bl32@5000000 {
++			reg = <0x0 0x05300000 0x0 0x2000000>;
++			no-map;
++		};
++	};
+ };
+ 
+ &cec_AO {
+@@ -144,6 +144,18 @@
+ 	};
+ };
+ 
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
+ &saradc {
+ 	status = "okay";
+ 	vref-supply = <&vddio_ao1v8>;
+@@ -161,18 +173,6 @@
+ 	};
+ };
+ 
+-&hdmi_tx {
+-	status = "okay";
+-	pinctrl-0 = <&hdmitx_hpd_pins>, <&hdmitx_ddc_pins>;
+-	pinctrl-names = "default";
+-};
 -
--		gpio = <&gpio GPIOH_6 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
+-&hdmi_tx_tmds_port {
+-	hdmi_tx_tmds_out: endpoint {
+-		remote-endpoint = <&hdmi_connector_in>;
 -	};
+-};
 -
- 	vddao_1v8: regulator-vddao_1v8 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "VDDAO_1V8";
+ &uart_AO {
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.20.1
 
