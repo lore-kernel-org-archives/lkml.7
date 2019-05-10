@@ -2,164 +2,120 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BB3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1188C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BB020881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E26C2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:58:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IiT+Y7M2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="1PUmmfN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfEJKxq (ORCPT
+        id S1727246AbfEJK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:53:46 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:52702 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbfEJKxp (ORCPT
+        Fri, 10 May 2019 06:58:17 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:42142 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727083AbfEJK6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:53:45 -0400
-Received: by mail-it1-f194.google.com with SMTP id q65so8627786itg.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6lmggy5LAhP6+/fqo3Cgjki+90sC2rjWaVQkUq7yfS0=;
-        b=IiT+Y7M2bPSekDVZ0GorTiBcC3mahvOegfQRIUpm047z/E7ZQiYTEDyK99JCx55xzr
-         IM2JqTWji/VnQeDAi8vHeZtehsL8/RZPpgt+97oinEPEz7LNZyirIW2pB99JSzwjzIHz
-         vX1MlDYQZbErxiPOntUk+nrtqfnBcBD61PQOtQMfi0ixxTtB5n9OphDCFNYmWIQaXa2M
-         554VgQPXpnXXfpRsDU/6EijWMNVV2DUYKmIbAAjAIbbfrtTeC2SB8DezrQ32Hfl9w3zJ
-         CK5Zg50oSTq5MpWNxvpIofT8hYBIUn1z8D/FoU39PfQx6sEy0q8ZpTqfCH/lr8EXWewq
-         pdiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6lmggy5LAhP6+/fqo3Cgjki+90sC2rjWaVQkUq7yfS0=;
-        b=fin6XGb64EjR3HYx0rw5xNlZLUqfeahY1ZrEqrl3MNxjMkMPmP0ySwgdcC81n3cZQ6
-         mboVwrLn2N01LGpXieefpdJ4zNvOQk2trSFXqObCN6DLLIzLeapJRLjjOoxC41i9jt4H
-         SJQ4hM/PqhldsU37u1vQzjhxZogsQGw2WV6KM9p+rn8M/q7KlAnG2tjToEtgvzsWMWI+
-         7eJA8ReNPU2FTeiCkJEF/AYLe3mGYXXcRsdFIsbbhRgSa9k8SXSMf0SFpbRoMNEoB2k7
-         ioWivNaRj6hnge303go45uPuwIaIa00Q95jriR+EH6Z9QVaQLaE5F0DeKLSSPU3/E0Hx
-         YGxg==
-X-Gm-Message-State: APjAAAVpOYCadrgd/yvh1aRl6bfQcRJ2TO9tpoEjnFLyCfp5vfe41i+l
-        tr5OAWrhxgBFrNrrDrMzhno9FyDojL2kWTKUm4St5g==
-X-Google-Smtp-Source: APXvYqxTVIOAjkyrwAL7YrZ7nLzxhjxM+ec7fq3I6p+KVlTYd7N4iUs5cYNvoNrLNhNTB27bq9BGwTunV2kQhIubAxY=
-X-Received: by 2002:a24:6c13:: with SMTP id w19mr238759itb.144.1557485624546;
- Fri, 10 May 2019 03:53:44 -0700 (PDT)
+        Fri, 10 May 2019 06:58:16 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4AAi5Gx145292;
+        Fri, 10 May 2019 10:58:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=x+Mr1a+VP3Fqs4y3NgBrTiFWV1HAIGfPLgZZGlNX8uU=;
+ b=1PUmmfN/O3qFc8wkC6D0KTbSMtbHsUcOVEFhCF5xquGa93Q3ri6k2YDApQbRWigcS8WG
+ NGVsYg/Q4gZEooV3HEWY/T9HTEWF5D0OMvSdQqsxUTysMJ9Y2sVP5uDnBttR84yb0O49
+ 136m5DXlwKO4gJfy8V2FLKBhUz7o5C4VKZiXyN9fvfsWkcYVSoyVWrlpe+IHZwPXYcsJ
+ 5XmbUVHkucwXjAfTBjkhIGcx4cZI9D3PE7OJOKUnVg6hbm103izBPYTWZfiYuZY+9USd
+ 7PiXYrYuQ3b5bL0Ys9wACCG8cvjNy8Otz5be4FcZ6E63K1YFAWDr0Ifpw9pOtJl6qg5u fA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2s94b6gax8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 10:58:04 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4AAv9VW010645;
+        Fri, 10 May 2019 10:58:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2schw0bw1u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 10:58:04 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4AAw1RV013526;
+        Fri, 10 May 2019 10:58:02 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 May 2019 03:58:00 -0700
+Date:   Fri, 10 May 2019 13:57:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tim Collier <osdevtc@gmail.com>,
+        Chris Opperman <eklikeroomys@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: wlan-ng: collect return status without variable
+Message-ID: <20190510105754.GA18105@kadam>
+References: <20190510023900.GA4390@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
- <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr>
-In-Reply-To: <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 10 May 2019 12:53:33 +0200
-Message-ID: <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
-Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
-To:     Nick Kossifidis <mick@ics.forth.gr>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510023900.GA4390@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905100077
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905100077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Kossifidis <mick@ics.forth.gr>
-Date: Fri, Apr 12, 2019 at 6:08 PM
-To: Arnd Bergmann
-Cc: Christoph Hellwig, Linus Torvalds, Andrew Morton, linux-arch,
-<mick@ics.forth.gr>, Linux Kernel Mailing List
+On Fri, May 10, 2019 at 08:09:00AM +0530, Hariprasad Kelam wrote:
+> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+> index 8a862f7..5dad5ac 100644
+> --- a/drivers/staging/wlan-ng/cfg80211.c
+> +++ b/drivers/staging/wlan-ng/cfg80211.c
+> @@ -231,17 +231,12 @@ static int prism2_set_default_key(struct wiphy *wiphy, struct net_device *dev,
+>  {
+>  	struct wlandevice *wlandev = dev->ml_priv;
+>  
+> -	int err = 0;
+> -	int result = 0;
+> -
+> -	result = prism2_domibset_uint32(wlandev,
+> -		DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> -		key_index);
+> -
+> -	if (result)
+> -		err = -EFAULT;
+> -
+> -	return err;
+> +	if (prism2_domibset_uint32(wlandev,
+> +				   DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> +				   key_index))
+> +		return -EFAULT;
+> +	else
+> +		return 0;
 
-> =CE=A3=CF=84=CE=B9=CF=82 2019-04-12 17:53, Arnd Bergmann =CE=AD=CE=B3=CF=
-=81=CE=B1=CF=88=CE=B5:
-> > On Fri, Apr 12, 2019 at 4:36 PM Christoph Hellwig <hch@lst.de> wrote:
-> >>
-> >> When removing some dead big endian checks in the RISC-V code Nick
-> >> suggested that we should have some generic sanity checks.  I don't
-> >> think
-> >> we should have thos inside the RISC-V code, but maybe it might make
-> >> sense to have these in the generic byteorder headers.  Note that these
-> >> are UAPI headers and some compilers might not actually define
-> >> __BYTE_ORDER__, so we first check that it actually exists.
-> >>
-> >> Suggested-by: Nick Kossifidis <mick@ics.forth.gr>
-> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Extra checking like this is good in general, but I'm not sure I see
-> > exactly what kind of issue one might expect to prevent with this:
-> >
-> > All architecture asm/byteorder.h headers either include the only
-> > possible option, or they check the compiler defined macros:
-> >
-> > arch/arc/include/uapi/asm/byteorder.h:#ifdef __BIG_ENDIAN__
-> > arch/arm/include/uapi/asm/byteorder.h:#ifdef __ARMEB__
-> > arch/arm64/include/uapi/asm/byteorder.h:#ifdef __AARCH64EB__
-> > arch/c6x/include/uapi/asm/byteorder.h:#ifdef _BIG_ENDIAN
-> > arch/microblaze/include/uapi/asm/byteorder.h:#ifdef __MICROBLAZEEL__
-> > arch/mips/include/uapi/asm/byteorder.h:#if defined(__MIPSEB__)
-> > arch/nds32/include/uapi/asm/byteorder.h:#ifdef __NDS32_EB__
-> > arch/powerpc/include/uapi/asm/byteorder.h:#ifdef __LITTLE_ENDIAN__
-> > arch/sh/include/uapi/asm/byteorder.h:#ifdef __LITTLE_ENDIAN__
-> > arch/xtensa/include/uapi/asm/byteorder.h:#ifdef __XTENSA_EL__
-> >
-> > Are you worried about toolchains that define those differently
-> > from what these headers expect? Did you encounter such a case?
-> >
-> >       Arnd
->
-> The following architectures just include the header file without
-> checking for any compiler macro:
->
-> alpha: little_endian.h
-> csky: little_endian.h
-> h8300: big_endian.h
-> hexagon: little_endian.h
-> ia64: little_endian.h
-> m68k: big_endian.h
-> nios2: little_endian.h
-> openrisc: big_endian.h
-> parisc: big_endian.h
-> riscv: little_endian.h
-> s390: big_endian.h
-> sparc: big_endian.h
-> unicore32: little_endian.h
-> x86: little_endian.h
->
-> Of those who do check for a compiler macro, they don't use the
-> generic macros (__ORDER_*_ENDIAN__) but arch-specific ones.
->
-> Only two architectures (mips and xtensa) that support both big
-> and little endian return an error in case the endianess can't be
-> determined, the rest will move on without including any
-> of *_endian.h files.
->
-> I think it's good to have a sanity check in-place for consistency.
+We should just preserve the error codes from prism2_domibset_uint32().
 
+	return prism2_domibset_uint32(dev->ml_priv,
+				DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+				key_index);
 
-Hi,
+regards,
+dan carpenter
 
-This broke our cross-builds from x86. I am using:
-
-$ powerpc64le-linux-gnu-gcc --version
-powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
-
-and it says that it's little-endian somehow:
-
-$ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
-#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
-
-Is it broke compiler? Or I always hold it wrong? Is there some
-additional flag I need to add?
-
-Thanks
