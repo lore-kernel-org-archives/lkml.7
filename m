@@ -2,96 +2,157 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75988C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7379EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4553B2053B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BA1D20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfEJP1O (ORCPT
+        id S1727691AbfEJP1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:27:14 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54393 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727194AbfEJP1O (ORCPT
+        Fri, 10 May 2019 11:27:52 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:59848 "EHLO
+        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfEJP1w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:27:14 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id D892D3C00C6;
-        Fri, 10 May 2019 17:27:10 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7FaUUjeoJ1rm; Fri, 10 May 2019 17:27:02 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id C1CA83C004C;
-        Fri, 10 May 2019 17:27:02 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.93.65) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
- 2019 17:27:02 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     <kieran.bingham@ideasonboard.com>, <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <michael@rodin.online>
-Subject: [PATCH] media: i2c: adv748x: initialize bit 7 of csi_tx_top_reg_1f
-Date:   Fri, 10 May 2019 17:26:53 +0200
-Message-ID: <1557502013-16158-1-git-send-email-mrodin@de.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 May 2019 11:27:52 -0400
+Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
+        by vmicros1.altlinux.org (Postfix) with ESMTP id AC07672CCD0;
+        Fri, 10 May 2019 18:27:49 +0300 (MSK)
+Received: by mua.local.altlinux.org (Postfix, from userid 508)
+        id 8CF577CCE09; Fri, 10 May 2019 18:27:49 +0300 (MSK)
+Date:   Fri, 10 May 2019 18:27:49 +0300
+From:   "Dmitry V. Levin" <ldv@altlinux.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Greentime Hu <greentime@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Eugene Syromyatnikov <esyr@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 1/7] nds32: fix asm/syscall.h
+Message-ID: <20190510152749.GA28558@altlinux.org>
+References: <20190510152640.GA28529@altlinux.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.72.93.65]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510152640.GA28529@altlinux.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to pages 188 and 193 of the "UG-747: ADV7481 Reference Manual"
-[1], the bit 7 (FRAMENUMBER_INTERLACED) of the register csi_tx_top_reg_1f
-"sets association of frame number in the FS and FE packets with the F bit
-in the EAV/SAV codes". EAV/SAV codes are defined in [2].
-According to [2]:
-F=0 for field 1
-F=1 for field 2
-The bit FRAMENUMBER_INTERLACED is not initialized anywhere in the current
-version of the adv748x driver and therefore it is always 0, which is the
-default value according to [1]. Therefore the current association of field
-number from EAV/SAV code with the frame number in CSI FS and FE packets is:
-field 1 (top field for PAL, bottom field for NTSC) -> CSI frame number 2
-field 2 (bottom field for PAL, top field for NTSC) -> CSI frame number 1
-But this breaks frame number based field detection of top/bottom fields
-in CSI receivers. Therefore it makes sense to initialize the
-FRAMENUMBER_INTERLACED bit to 1 so the association is as expected:
-field 1 -> frame number 1
-field 2 -> frame number 2
+All syscall_get_*() and syscall_set_*() functions must be defined
+as static inline as on all other architectures, otherwise asm/syscall.h
+cannot be included in more than one compilation unit.
 
-[1] https://www.analog.com/en/products/adv7481.html
-[2] https://www.itu.int/rec/R-REC-BT.656-5-200712-I/en
+This bug has to be fixed in order to extend the generic
+ptrace API with PTRACE_GET_SYSCALL_INFO request.
 
-Suggested-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Fixes: 1932fbe36e02 ("nds32: System calls handling")
+Acked-by: Greentime Hu <greentime@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: Eugene Syromyatnikov <esyr@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 ---
- drivers/media/i2c/adv748x/adv748x-core.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index f57cd77..4dd1a13 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -278,6 +278,9 @@ static int adv748x_power_up_tx(struct adv748x_csi2 *tx)
- 	usleep_range(1000, 1500);
- 	adv748x_write_check(state, page, 0x31, 0x80, &ret);
- 
-+	/* set bit 7 (FRAMENUMBER_INTERLACED) in csi_tx_top_reg_1f */
-+	adv748x_write_check(state, page, 0x1f, 0x80, &ret);
-+
- 	return ret;
+Notes:
+    v11: unchanged
+    v10: added Acked-by from https://lore.kernel.org/lkml/CAEbi=3dzY7ihDLu=LFnHs_2_5BdAFyi4663W5g1JC+=QaiR7kQ@mail.gmail.com/
+    v9: rebased to linux-next again due to syscall_get_arguments() signature change
+    v8: unchanged
+    v7: initial revision
+
+ arch/nds32/include/asm/syscall.h | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+
+diff --git a/arch/nds32/include/asm/syscall.h b/arch/nds32/include/asm/syscall.h
+index 174b8571d362..d08439a54034 100644
+--- a/arch/nds32/include/asm/syscall.h
++++ b/arch/nds32/include/asm/syscall.h
+@@ -26,7 +26,8 @@ struct pt_regs;
+  *
+  * It's only valid to call this when @task is known to be blocked.
+  */
+-int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
++static inline int
++syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	return regs->syscallno;
  }
- 
+@@ -47,7 +48,8 @@ int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+  * system call instruction.  This may not be the same as what the
+  * register state looked like at system call entry tracing.
+  */
+-void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
++static inline void
++syscall_rollback(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	regs->uregs[0] = regs->orig_r0;
+ }
+@@ -62,7 +64,8 @@ void syscall_rollback(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
++static inline long
++syscall_get_error(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	unsigned long error = regs->uregs[0];
+ 	return IS_ERR_VALUE(error) ? error : 0;
+@@ -79,7 +82,8 @@ long syscall_get_error(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
++static inline long
++syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
+ {
+ 	return regs->uregs[0];
+ }
+@@ -99,8 +103,9 @@ long syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
+  * It's only valid to call this when @task is stopped for tracing on exit
+  * from a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+-			      int error, long val)
++static inline void
++syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
++			 int error, long val)
+ {
+ 	regs->uregs[0] = (long)error ? error : val;
+ }
+@@ -118,8 +123,9 @@ void syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
+  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+ #define SYSCALL_MAX_ARGS 6
+-void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+-			   unsigned long *args)
++static inline void
++syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned long *args)
+ {
+ 	args[0] = regs->orig_r0;
+ 	args++;
+@@ -138,8 +144,9 @@ void syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
+  * It's only valid to call this when @task is stopped for tracing on
+  * entry to a system call, due to %TIF_SYSCALL_TRACE or %TIF_SYSCALL_AUDIT.
+  */
+-void syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
+-			   const unsigned long *args)
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      const unsigned long *args)
+ {
+ 	regs->orig_r0 = args[0];
+ 	args++;
 -- 
-2.7.4
-
+ldv
