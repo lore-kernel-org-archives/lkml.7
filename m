@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E1AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFA9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD35320882
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:37:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6210217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:37:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfEJRhX (ORCPT
+        id S1728011AbfEJRhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:37:23 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53736 "EHLO
+        Fri, 10 May 2019 13:37:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53768 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfEJRhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:37:22 -0400
+        id S1727144AbfEJRhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:37:35 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27111A78;
-        Fri, 10 May 2019 10:37:22 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1BA6A78;
+        Fri, 10 May 2019 10:37:34 -0700 (PDT)
 Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF3253F6C4;
-        Fri, 10 May 2019 10:37:19 -0700 (PDT)
-Date:   Fri, 10 May 2019 18:37:16 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8555B3F6C4;
+        Fri, 10 May 2019 10:37:32 -0700 (PDT)
+Date:   Fri, 10 May 2019 18:37:29 +0100
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Fenghua Yu <fenghua.yu@intel.com>
 Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
@@ -39,11 +39,11 @@ Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Babu Moger" <babu.moger@amd.com>,
         "linux-kernel" <linux-kernel@vger.kernel.org>,
         James Morse <James.Morse@arm.com>
-Subject: Re: [PATCH v7 05/13] selftests/resctrl: Add built in benchmark
-Message-ID: <20190510183716.762315c7@donnerap.cambridge.arm.com>
-In-Reply-To: <1549767042-95827-6-git-send-email-fenghua.yu@intel.com>
+Subject: Re: [PATCH v7 06/13] selftests/resctrl: Add MBM test
+Message-ID: <20190510183729.70936033@donnerap.cambridge.arm.com>
+In-Reply-To: <1549767042-95827-7-git-send-email-fenghua.yu@intel.com>
 References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
-        <1549767042-95827-6-git-send-email-fenghua.yu@intel.com>
+        <1549767042-95827-7-git-send-email-fenghua.yu@intel.com>
 Organization: ARM
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
@@ -54,38 +54,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  9 Feb 2019 18:50:34 -0800
+On Sat,  9 Feb 2019 18:50:35 -0800
 Fenghua Yu <fenghua.yu@intel.com> wrote:
 
 Hi,
 
-> From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> From: Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
 > 
-> Built-in benchmark fill_buf generates stressful memory bandwidth
-> and cache traffic.
+> MBM (Memory Bandwidth Monitoring) test is the first implemented selftest.
+> It starts a stressful memory bandwidth benchmark and assigns the
+> bandwidth pid in a resctrl monitoring group. Read and compare perf IMC
+> counter and MBM total bytes for the benchmark. The numbers should be
+> close enough to pass the test.
 > 
-> Later it will be used as a default benchmark by various resctrl tests
-> such as MBA (Memory Bandwidth Allocation) and MBM (Memory Bandwidth
-> Monitoring) tests.
+> Default benchmark is built-in fill_buf. But users can specify their
+> own benchmark by option "-b".
 > 
-> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+> We can add memory bandwidth monitoring for multiple processes in the
+> future.
+> 
 > Signed-off-by: Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
+> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
 > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 > Signed-off-by: Babu Moger <babu.moger@amd.com>
 > ---
->  tools/testing/selftests/resctrl/fill_buf.c | 204 +++++++++++++++++++++++++++++
->  1 file changed, 204 insertions(+)
->  create mode 100644 tools/testing/selftests/resctrl/fill_buf.c
+>  tools/testing/selftests/resctrl/Makefile        |   8 +-
+>  tools/testing/selftests/resctrl/mbm_test.c      | 149 ++++++++++++++++++++++++
+>  tools/testing/selftests/resctrl/resctrl.h       |   3 +
+>  tools/testing/selftests/resctrl/resctrl_tests.c | 114 ++++++++++++++++++
+>  tools/testing/selftests/resctrl/resctrl_val.c   |   2 +
+>  5 files changed, 275 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/resctrl/mbm_test.c
+>  create mode 100644 tools/testing/selftests/resctrl/resctrl_tests.c
 > 
-> diff --git a/tools/testing/selftests/resctrl/fill_buf.c b/tools/testing/selftests/resctrl/fill_buf.c
+> diff --git a/tools/testing/selftests/resctrl/Makefile b/tools/testing/selftests/resctrl/Makefile
+> index bd5c5418961e..eaa8b45de10d 100644
+> --- a/tools/testing/selftests/resctrl/Makefile
+> +++ b/tools/testing/selftests/resctrl/Makefile
+> @@ -1,10 +1,16 @@
+>  CC = gcc
+>  CFLAGS = -g -Wall
+>  
+> +all: resctrl_tests
+> +
+>  *.o: *.c
+>  	$(CC) $(CFLAGS) -c *.c
+>  
+> +resctrl_tests: *.o
+> +	$(CC) $(CFLAGS) -o resctrl_tests resctrl_tests.o resctrlfs.o \
+> +		 resctrl_val.o fill_buf.o mbm_test.o
+
+This is a somewhat non-standard way of specifying things in a Makefile.
+What about:
+
+OBJS = resctrl_tests.o resctrlfs.o resctrl_val.o fill_buf.o mbm_test.o
+resctrl_tests: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^
+
+> +
+>  .PHONY: clean
+>  
+>  clean:
+> -	$(RM) *.o *~
+> +	$(RM) *.o *~ resctrl_tests
+> diff --git a/tools/testing/selftests/resctrl/mbm_test.c b/tools/testing/selftests/resctrl/mbm_test.c
 > new file mode 100644
-> index 000000000000..792a5c40a32a
+> index 000000000000..dba981c562ff
 > --- /dev/null
-> +++ b/tools/testing/selftests/resctrl/fill_buf.c
-> @@ -0,0 +1,204 @@
+> +++ b/tools/testing/selftests/resctrl/mbm_test.c
+> @@ -0,0 +1,149 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * fill_buf benchmark
+> + * Memory Bandwidth Monitoring (MBM) test
 > + *
 > + * Copyright (C) 2018 Intel Corporation
 > + *
@@ -94,215 +134,304 @@ Hi,
 > + *    Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
 > + *    Fenghua Yu <fenghua.yu@intel.com>
 > + */
-> +#include <stdio.h>
-> +#include <unistd.h>
-> +#include <stdlib.h>
-> +#include <sys/types.h>
-> +#include <sys/wait.h>
-> +#include <inttypes.h>
-> +#include <malloc.h>
-> +#include <string.h>
-> +
 > +#include "resctrl.h"
 > +
-> +#define CL_SIZE			(64)
-> +#define PAGE_SIZE		(4 * 1024)
+> +#define RESULT_FILE_NAME	"result_mbm"
+> +#define MAX_DIFF		300
 
-This is not really true everywhere. I have definitely seen systems with
-cache line sizes of 32 and 128 bytes, also arm64 supports 64KB pages.
-There should be POSIX/glibc functions to read those values at runtime.
+What is that value? 300 MB/s? Is that some heuristic? Shouldn't that be
+relative, like in the other benchmarks?
 
-> +#define MB			(1024 * 1024)
+> +#define NUM_OF_RUNS		5
 > +
-> +static unsigned char *startptr;
-> +
-> +static void sb(void)
+> +static void
+> +show_bw_info(unsigned long *bw_imc, unsigned long *bw_resc, int span)
 > +{
-> +	asm volatile("sfence\n\t"
-> +		     : : : "memory");
+> +	unsigned long avg_bw_imc = 0, avg_bw_resc = 0;
 
-Please don't have inline x86 assembly without protecting this code on other architectures.
-#if defined(__i386) || defined(__x86_64)
-does the trick for me.
-But aren't there already defined function for those barriers somewhere?
+Why do you initialise those if they are overwritten below?
 
-> +}
+> +	unsigned long sum_bw_imc = 0, sum_bw_resc = 0;
+> +	long avg_diff = 0;
+
+Same here.
+
+> +	int runs;
 > +
-> +static void ctrl_handler(int signo)
-> +{
-> +	free(startptr);
-> +	printf("\nEnding\n");
-> +	sb();
-> +	exit(EXIT_SUCCESS);
-> +}
+> +	/*
+> +	 * Discard the first value which is inaccurate due to monitoring setup
+> +	 * transition phase.
+> +	 */
+> +	for (runs = 1; runs < NUM_OF_RUNS ; runs++) {
+> +		sum_bw_imc += bw_imc[runs];
+> +		sum_bw_resc += bw_resc[runs];
+> +	}
 > +
-> +static void cl_flush(void *p)
-> +{
-> +	asm volatile("clflush (%0)\n\t"
-> +		     : : "r"(p) : "memory");
+> +	avg_bw_imc = sum_bw_imc / 4;
+> +	avg_bw_resc = sum_bw_resc / 4;
+> +	avg_diff = avg_bw_resc - avg_bw_imc;
 
-Same comment about the usage of inline assembly here. This breaks compilation on arm/arm64.
-In general I am a bit suspicious about using this instruction in a benchmark here, since we have no guarantee that it has an effect on the performance. The CPU could speculatively fetch in data right after this instruction. Shouldn't we iterate multiple times over the benchmark and let the average remove the effect of a hot or cold caches?
+You could make avg_diff unsigned and use the labs() call already here.
 
 Cheers,
 Andre.
 
+> +
+> +	printf("\nSpan (MB): %d \t", span);
+> +	printf("avg_bw_imc: %lu\t", avg_bw_imc);
+> +	printf("avg_bw_resc: %lu\t", avg_bw_resc);
+> +	printf("avg_diff: %lu\t", labs(avg_diff));
+> +
+> +	if (labs(avg_diff) > MAX_DIFF)
+> +		printf(" failed\n");
+> +	else
+> +		printf(" passed\n");
 > +}
 > +
-> +static void mem_flush(void *p, size_t s)
+> +static int check_results(int span)
 > +{
-> +	char *cp = (char *)p;
-> +	size_t i = 0;
-> +
-> +	s = s / CL_SIZE; /* mem size in cache llines */
-> +
-> +	for (i = 0; i < s; i++)
-> +		cl_flush(&cp[i * CL_SIZE]);
-> +
-> +	sb();
-> +}
-> +
-> +static void *malloc_and_init_memory(size_t s)
-> +{
-> +	uint64_t *p64;
-> +	size_t s64;
-> +
-> +	void *p = memalign(PAGE_SIZE, s);
-> +
-> +	p64 = (uint64_t *)p;
-> +	s64 = s / sizeof(uint64_t);
-> +
-> +	while (s64 > 0) {
-> +		*p64 = (uint64_t)rand();
-> +		p64 += (CL_SIZE / sizeof(uint64_t));
-> +		s64 -= (CL_SIZE / sizeof(uint64_t));
-> +	}
-> +
-> +	return p;
-> +}
-> +
-> +static int fill_one_span_read(unsigned char *start_ptr, unsigned char *end_ptr)
-> +{
-> +	unsigned char sum, *p;
-> +
-> +	sum = 0;
-> +	p = start_ptr;
-> +	while (p < end_ptr) {
-> +		sum += *p;
-> +		p += (CL_SIZE / 2);
-> +	}
-> +
-> +	return sum;
-> +}
-> +
-> +static
-> +void fill_one_span_write(unsigned char *start_ptr, unsigned char *end_ptr)
-> +{
-> +	unsigned char *p;
-> +
-> +	p = start_ptr;
-> +	while (p < end_ptr) {
-> +		*p = '1';
-> +		p += (CL_SIZE / 2);
-> +	}
-> +}
-> +
-> +static int fill_cache_read(unsigned char *start_ptr, unsigned char *end_ptr,
-> +			   char *resctrl_val)
-> +{
-> +	int ret = 0;
+> +	unsigned long bw_imc[NUM_OF_RUNS], bw_resc[NUM_OF_RUNS];
+> +	char temp[1024], *token_array[8];
+> +	char output[] = RESULT_FILE_NAME;
+> +	int runs;
 > +	FILE *fp;
 > +
-> +	while (1)
-> +		ret = fill_one_span_read(start_ptr, end_ptr);
+> +	printf("\nChecking for pass/fail\n");
 > +
-> +	/* Consume read result so that reading memory is not optimized out. */
-> +	fp = fopen("/dev/null", "w");
-> +	if (!fp)
-> +		perror("Unable to write to /dev/null");
-> +	fprintf(fp, "Sum: %d ", ret);
+> +	fp = fopen(output, "r");
+> +	if (!fp) {
+> +		perror("Error in opening file\n");
+> +
+> +		return errno;
+> +	}
+> +
+> +	runs = 0;
+> +	while (fgets(temp, 1024, fp)) {
+> +		char *token = strtok(temp, ":\t");
+> +		int i = 0;
+> +
+> +		while (token) {
+> +			token_array[i++] = token;
+> +			token = strtok(NULL, ":\t");
+> +		}
+> +
+> +		bw_resc[runs] = strtoul(token_array[5], NULL, 0);
+> +		bw_imc[runs] = strtoul(token_array[3], NULL, 0);
+> +		runs++;
+> +	}
+> +
+> +	show_bw_info(bw_imc, bw_resc, span);
+> +
 > +	fclose(fp);
 > +
 > +	return 0;
 > +}
 > +
-> +static int fill_cache_write(unsigned char *start_ptr, unsigned char *end_ptr,
-> +			    char *resctrl_val)
+> +static int mbm_setup(int num, ...)
 > +{
-> +	while (1)
-> +		fill_one_span_write(start_ptr, end_ptr);
+> +	struct resctrl_val_param *p;
+> +	static int num_of_runs;
+> +	va_list param;
+> +	int ret = 0;
+> +
+> +	/* Run NUM_OF_RUNS times */
+> +	if (num_of_runs++ >= NUM_OF_RUNS)
+> +		return -1;
+> +
+> +	va_start(param, num);
+> +	p = va_arg(param, struct resctrl_val_param *);
+> +	va_end(param);
+> +
+> +	/* Set up shemata with 100% allocation on the first run. */
+> +	if (num_of_runs == 0)
+> +		ret = write_schemata(p->ctrlgrp, "100", p->cpu_no,
+> +				     p->resctrl_val);
+> +
+> +	return ret;
+> +}
+> +
+> +void mbm_test_cleanup(void)
+> +{
+> +	remove(RESULT_FILE_NAME);
+> +}
+> +
+> +int mbm_bw_change(int span, int cpu_no, char *bw_report, char **benchmark_cmd)
+> +{
+> +	struct resctrl_val_param param = {
+> +		.resctrl_val	= "mbm",
+> +		.ctrlgrp	= "c1",
+> +		.mongrp		= "m1",
+> +		.span		= span,
+> +		.cpu_no		= cpu_no,
+> +		.mum_resctrlfs	= 1,
+> +		.filename	= RESULT_FILE_NAME,
+> +		.bw_report	=  bw_report,
+> +		.setup		= mbm_setup
+> +	};
+> +	int ret;
+> +
+> +	remove(RESULT_FILE_NAME);
+> +
+> +	ret = validate_resctrl_feature_request("mbm");
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = resctrl_val(benchmark_cmd, &param);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = check_results(span);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mbm_test_cleanup();
 > +
 > +	return 0;
 > +}
+> diff --git a/tools/testing/selftests/resctrl/resctrl.h b/tools/testing/selftests/resctrl/resctrl.h
+> index c286790ba24d..7f7ea180478c 100644
+> --- a/tools/testing/selftests/resctrl/resctrl.h
+> +++ b/tools/testing/selftests/resctrl/resctrl.h
+> @@ -71,5 +71,8 @@ int perf_event_open(struct perf_event_attr *hw_event, pid_t pid, int cpu,
+>  int run_fill_buf(unsigned long span, int malloc_and_init_memory, int memflush,
+>  		 int op, char *resctrl_va);
+>  int resctrl_val(char **benchmark_cmd, struct resctrl_val_param *param);
+> +int mbm_bw_change(int span, int cpu_no, char *bw_report, char **benchmark_cmd);
+> +void tests_cleanup(void);
+> +void mbm_test_cleanup(void);
+>  
+>  #endif /* RESCTRL_H */
+> diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
+> new file mode 100644
+> index 000000000000..a51780d28ff1
+> --- /dev/null
+> +++ b/tools/testing/selftests/resctrl/resctrl_tests.c
+> @@ -0,0 +1,114 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Resctrl tests
+> + *
+> + * Copyright (C) 2018 Intel Corporation
+> + *
+> + * Authors:
+> + *    Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
+> + *    Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+> + *    Fenghua Yu <fenghua.yu@intel.com>
+> + */
+> +#include "resctrl.h"
 > +
-> +static int
-> +fill_cache(unsigned long long buf_size, int malloc_and_init, int memflush,
-> +	   int op, char *resctrl_val)
+> +#define BENCHMARK_ARGS		64
+> +#define BENCHMARK_ARG_SIZE	64
+> +
+> +static void cmd_help(void)
 > +{
-> +	unsigned char *start_ptr, *end_ptr;
-> +	unsigned long long i;
-> +	int ret;
+> +	printf("usage: resctrl_tests [-h] [-b \"benchmark_cmd [options]\"] [-t test list]\n");
+> +	printf("\t-b benchmark_cmd [options]: run specified benchmark\n");
+> +	printf("\t default benchmark is builtin fill_buf\n");
+> +	printf("\t-t test list: run tests specified in the test list, ");
+> +	printf("e.g. -t mbm,mba\n");
+> +	printf("\t-h: help\n");
+> +}
 > +
-> +	if (malloc_and_init)
-> +		start_ptr = malloc_and_init_memory(buf_size);
-> +	else
-> +		start_ptr = malloc(buf_size);
+> +void tests_cleanup(void)
+> +{
+> +	mbm_test_cleanup();
+> +}
 > +
-> +	if (!start_ptr)
-> +		return -1;
+> +int main(int argc, char **argv)
+> +{
+> +	char benchmark_cmd_area[BENCHMARK_ARGS][BENCHMARK_ARG_SIZE];
+> +	int res, c, cpu_no = 1, span = 250, argc_new = argc, i;
+> +	int ben_ind;
+> +	bool has_ben = false, mbm_test = true;
+> +	char *benchmark_cmd[BENCHMARK_ARGS];
+> +	char bw_report[64], bm_type[64];
 > +
-> +	startptr = start_ptr;
-> +	end_ptr = start_ptr + buf_size;
+> +	for (i = 0; i < argc; i++) {
+> +		if (strcmp(argv[i], "-b") == 0) {
+> +			ben_ind = i + 1;
+> +			argc_new = ben_ind - 1;
+> +			has_ben = 1;
+> +			break;
+> +		}
+> +	}
+> +
+> +	while ((c = getopt(argc_new, argv, "ht:b:")) != -1) {
+> +		char *token;
+> +
+> +		switch (c) {
+> +		case 't':
+> +			token = strtok(optarg, ",");
+> +
+> +			mbm_test = false;
+> +			while (token) {
+> +				if (!strcmp(token, "mbm")) {
+> +					mbm_test = true;
+> +				} else {
+> +					printf("invalid argument\n");
+> +
+> +					return -1;
+> +				}
+> +				token = strtok(NULL, ":\t");
+> +			}
+> +			break;
+> +		case 'h':
+> +			cmd_help();
+> +
+> +			return 0;
+> +		default:
+> +			printf("invalid argument\n");
+> +
+> +			return -1;
+> +		}
+> +	}
 > +
 > +	/*
-> +	 * It's better to touch the memory once to avoid any compiler
-> +	 * optimizations
+> +	 * We need root privileges to run because
+> +	 * 1. We write to resctrl FS
+> +	 * 2. We execute perf commands
 > +	 */
-> +	if (!malloc_and_init) {
-> +		for (i = 0; i < buf_size; i++)
-> +			*start_ptr++ = (unsigned char)rand();
+> +	if (geteuid() != 0) {
+> +		perror("Please run this program as root\n");
+> +
+> +		return errno;
 > +	}
 > +
-> +	start_ptr = startptr;
-> +
-> +	/* Flush the memory before using to avoid "cache hot pages" effect */
-> +	if (memflush)
-> +		mem_flush(start_ptr, buf_size);
-> +
-> +	if (op == 0)
-> +		ret = fill_cache_read(start_ptr, end_ptr, resctrl_val);
-> +	else
-> +		ret = fill_cache_write(start_ptr, end_ptr, resctrl_val);
-> +
-> +	if (ret) {
-> +		printf("\n Errror in fill cache read/write...\n");
-> +		return -1;
+> +	if (!has_ben) {
+> +		/* If no benchmark is given by "-b" argument, use fill_buf. */
+> +		for (i = 0; i < 5; i++)
+> +			benchmark_cmd[i] = benchmark_cmd_area[i];
+> +		strcpy(benchmark_cmd[0], "fill_buf");
+> +		sprintf(benchmark_cmd[1], "%d", span);
+> +		strcpy(benchmark_cmd[2], "1");
+> +		strcpy(benchmark_cmd[3], "1");
+> +		strcpy(benchmark_cmd[4], "0");
+> +		benchmark_cmd[5] = NULL;
 > +	}
 > +
-> +	free(startptr);
+> +	sprintf(bw_report, "reads");
+> +	sprintf(bm_type, "fill_buf");
 > +
-> +	return 0;
-> +}
-> +
-> +int run_fill_buf(unsigned long span, int malloc_and_init_memory,
-> +		 int memflush, int op, char *resctrl_val)
-> +{
-> +	unsigned long long cache_size = span;
-> +	int ret;
-> +
-> +	/* set up ctrl-c handler */
-> +	if (signal(SIGINT, ctrl_handler) == SIG_ERR)
-> +		printf("Failed to catch SIGINT!\n");
-> +	if (signal(SIGHUP, ctrl_handler) == SIG_ERR)
-> +		printf("Failed to catch SIGHUP!\n");
-> +
-> +	ret = fill_cache(cache_size, malloc_and_init_memory, memflush, op,
-> +			 resctrl_val);
-> +	if (ret) {
-> +		printf("\n Errror in fill cache\n");
-> +		return -1;
+> +	if (mbm_test) {
+> +		printf("\nMBM BW Change Starting..\n");
+> +		res = mbm_bw_change(span, cpu_no, bw_report, benchmark_cmd);
+> +		if (res)
+> +			printf("Error in running tests for mbm bw change!\n");
 > +	}
 > +
 > +	return 0;
 > +}
+> diff --git a/tools/testing/selftests/resctrl/resctrl_val.c b/tools/testing/selftests/resctrl/resctrl_val.c
+> index 43c15e382892..200a5b6756da 100644
+> --- a/tools/testing/selftests/resctrl/resctrl_val.c
+> +++ b/tools/testing/selftests/resctrl/resctrl_val.c
+> @@ -437,6 +437,8 @@ pid_t bm_pid, ppid;
+>  static void ctrlc_handler(int signum, siginfo_t *info, void *ptr)
+>  {
+>  	kill(bm_pid, SIGKILL);
+> +	umount_resctrlfs();
+> +	tests_cleanup();
+>  	printf("Ending\n\n");
+>  
+>  	exit(EXIT_SUCCESS);
 
