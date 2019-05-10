@@ -2,172 +2,188 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D824C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5698BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE892173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oTSHYknB"
+	by mail.kernel.org (Postfix) with ESMTP id 24E11217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfEJHnX (ORCPT
+        id S1727144AbfEJHpi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:43:23 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49704 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727084AbfEJHnX (ORCPT
+        Fri, 10 May 2019 03:45:38 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46039 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfEJHph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:43:23 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7gCkn028382;
-        Fri, 10 May 2019 09:43:06 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=8I2N6G3vO9y9aZ71WM6kdoKYNSOsW+23DY/TOYHKYeA=;
- b=oTSHYknBEu/ctOQkiI3lUJ+GlBPI+wnUXrAbpXXlVNUcxi4Lv2HqD3HZlnl5qWXPs/4T
- b1zI2oGg9K0/YnZeXfcBXRWrFnlvreqcag84iYulSNy4Y5wAs6chqbJm3olqxhvrwT7p
- hGEw2YRlJVlwiXp9MF4UeWtUgj9/vUh0k7EBrRPEAmlx6pvajYf0RlBIPSHWywx2T1+C
- TBH7Quc3fY97feXkyKND+uf8uOsEcaMHtCzWsPxIHUbZBAHs48Dr58IyAGrY0VR6CofJ
- aoBoE9MrVv0EQ38EH5gIYnbAT6IhLvjqTsB/IreO+x8krXLLB4nAf6TvKtzjqKjq5MZu Ag== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2scfv2pya9-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 10 May 2019 09:43:06 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 92B7D31;
-        Fri, 10 May 2019 07:43:04 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 73B2D15B0;
-        Fri, 10 May 2019 07:43:04 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May 2019 09:43:04
- +0200
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <alexandre.torgue@st.com>
-Subject: [PATCH] pinctrl: stm32: add lock mechanism for irqmux selection
-Date:   Fri, 10 May 2019 09:43:03 +0200
-Message-ID: <1557474183-19719-1-git-send-email-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 May 2019 03:45:37 -0400
+X-Originating-IP: 90.88.28.253
+Received: from xps13 (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 300EF2000F;
+        Fri, 10 May 2019 07:45:29 +0000 (UTC)
+Date:   Fri, 10 May 2019 09:45:28 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org,
+        computersforpeace@gmail.com, linux-mtd@lists.infradead.org,
+        juliensu@mxic.com.tw
+Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
+Message-ID: <20190510094528.6008e8da@xps13>
+In-Reply-To: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE3.st.com (10.75.127.3) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GPIOs are split between several banks (A, B, ...) and each bank can have
-up to 16 lines. Those GPIOs could be used as interrupt lines thanks to
-exti lines. As there are only 16 exti lines, a mux is used to select which
-gpio line is connected to which exti line. Mapping is done as follow:
+Hi Mason,
 
--A0, B0, C0.. -->exti_line_0 (X0 selected by mux_0)
--A1, B1, C1.. -->exti_line_1 (X1 selected by mux_1)
-...
+Mason Yang <masonccyang@mxic.com.tw> wrote on Fri, 10 May 2019 15:41:02
++0800:
 
-This patch adds a protection to avoid overriding on mux_n for exti_line_n.
+> Add a driver for Macronix NAND read retry.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+"Add support for Macronix NAND read retry."? This is not a "new driver".
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 2317ccf..99e4149 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -98,6 +98,8 @@ struct stm32_pinctrl {
- 	struct stm32_desc_pin *pins;
- 	u32 npins;
- 	u32 pkg;
-+	u16 irqmux_map;
-+	spinlock_t irqmux_lock;
- };
- 
- static inline int stm32_gpio_pin(int gpio)
-@@ -307,9 +309,53 @@ static int stm32_gpio_domain_activate(struct irq_domain *d,
- {
- 	struct stm32_gpio_bank *bank = d->host_data;
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
-+	unsigned long flags;
-+	int ret = 0;
-+
-+	/*
-+	 * gpio irq mux is shared between several banks, a lock has to be done
-+	 * to avoid overriding.
-+	 */
-+	spin_lock_irqsave(&pctl->irqmux_lock, flags);
-+	if (pctl->hwlock)
-+		ret = hwspin_lock_timeout(pctl->hwlock, HWSPINLOCK_TIMEOUT);
-+
-+	if (ret) {
-+		dev_err(pctl->dev, "Can't get hwspinlock\n");
-+		goto unlock;
-+	}
-+
-+	if (pctl->irqmux_map & BIT(irq_data->hwirq)) {
-+		dev_err(pctl->dev, "irq line %ld already requested.\n",
-+			irq_data->hwirq);
-+		ret = -EBUSY;
-+		if (pctl->hwlock)
-+			hwspin_unlock(pctl->hwlock);
-+		goto unlock;
-+	} else {
-+		pctl->irqmux_map |= BIT(irq_data->hwirq);
-+	}
- 
- 	regmap_field_write(pctl->irqmux[irq_data->hwirq], bank->bank_ioport_nr);
--	return 0;
-+
-+	if (pctl->hwlock)
-+		hwspin_unlock(pctl->hwlock);
-+
-+unlock:
-+	spin_unlock_irqrestore(&pctl->irqmux_lock, flags);
-+	return ret;
-+}
-+
-+static void stm32_gpio_domain_deactivate(struct irq_domain *d,
-+					 struct irq_data *irq_data)
-+{
-+	struct stm32_gpio_bank *bank = d->host_data;
-+	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&pctl->irqmux_lock, flags);
-+	pctl->irqmux_map &= ~BIT(irq_data->hwirq);
-+	spin_unlock_irqrestore(&pctl->irqmux_lock, flags);
- }
- 
- static int stm32_gpio_domain_alloc(struct irq_domain *d,
-@@ -338,6 +384,7 @@ static const struct irq_domain_ops stm32_gpio_domain_ops = {
- 	.alloc          = stm32_gpio_domain_alloc,
- 	.free           = irq_domain_free_irqs_common,
- 	.activate	= stm32_gpio_domain_activate,
-+	.deactivate	= stm32_gpio_domain_deactivate,
- };
- 
- /* Pinctrl functions */
-@@ -1290,6 +1337,8 @@ int stm32_pctl_probe(struct platform_device *pdev)
- 		pctl->hwlock = hwspin_lock_request_specific(hwlock_id);
- 	}
- 
-+	spin_lock_init(&pctl->irqmux_lock);
-+
- 	pctl->dev = dev;
- 	pctl->match_data = match->data;
- 
--- 
-2.7.4
+> 
+> Macronix NAND supports specfical read for data recovery and enabled
 
+
+Macronix NANDs support specific read operation for data recovery,
+which can be enabled with a SET_FEATURE.
+
+> Driver check byte 167 of Vendor Blocks in ONFI parameter page table
+
+         checks
+
+> to see if this high reliability function is support or not.
+
+                 high-reliability function? not sure it is English
+                 anyway.
+
+                                              supported
+
+> 
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> ---
+>  drivers/mtd/nand/raw/nand_macronix.c | 52 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+> 
+> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+> index 47d8cda..5cd1e5f 100644
+> --- a/drivers/mtd/nand/raw/nand_macronix.c
+> +++ b/drivers/mtd/nand/raw/nand_macronix.c
+> @@ -17,6 +17,57 @@
+>  
+>  #include "internals.h"
+>  
+> +#define MACRONIX_READ_RETRY_BIT BIT(0)
+> +#define MACRONIX_READ_RETRY_MODE 5
+> +
+> +struct nand_onfi_vendor_macronix {
+> +	u8 reserved[1];
+> +	u8 reliability_func;
+> +} __packed;
+> +
+> +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
+> +{
+> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
+
+                                                 0 is not needed here
+
+> +	int ret;
+> +
+> +	if (mode > MACRONIX_READ_RETRY_MODE)
+> +		mode = MACRONIX_READ_RETRY_MODE;
+> +
+> +	feature[0] = mode;
+> +	ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
+
+Don't you miss to select/deselect the target?
+
+> +	if (ret)
+> +		pr_err("set feature failed to read retry moded:%d\n", mode);
+
+                       "Failed to set read retry mode: %d\n"
+
+I think you can abort the operation with a negative return code in this
+case.
+
+> +
+> +	ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
+
+If the operation succeeded but the controller cannot get the feature
+you don't want to abort the operation. You should check if get_features
+is supported, if yes you can rely on the below test.
+
+> +	if (ret || feature[0] != mode)
+> +		pr_err("get feature failed to read retry moded:%d(%d)\n",
+> +		       mode, feature[0]);
+
+                       "Failed to verify read retry mode..."
+
+                Also return something negative here.
+
+> +
+> +	return ret;
+
+And if all went right, return 0 at the end.
+
+> +}
+> +
+> +static void macronix_nand_onfi_init(struct nand_chip *chip)
+> +{
+> +	struct nand_parameters *p = &chip->parameters;
+> +
+> +	if (p->onfi) {
+> +		struct nand_onfi_vendor_macronix *mxic =
+> +				(void *)p->onfi->vendor;
+
+Please put everything on the same line
+
+> +
+> +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
+> +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
+
+Why +1 here, I am missing something?
+
+> +			chip->setup_read_retry =
+> +				 macronix_nand_setup_read_retry;
+> +			if (p->supports_set_get_features) {
+> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
+> +					p->set_feature_list);
+> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
+> +					p->get_feature_list);
+
+Please use bitmap_set()
+
+> +			}
+> +		}
+> +	}
+> +}
+> +
+>  /*
+>   * Macronix AC series does not support using SET/GET_FEATURES to change
+>   * the timings unlike what is declared in the parameter page. Unflag
+> @@ -65,6 +116,7 @@ static int macronix_nand_init(struct nand_chip *chip)
+>  		chip->bbt_options |= NAND_BBT_SCAN2NDPAGE;
+>  
+>  	macronix_nand_fix_broken_get_timings(chip);
+> +	macronix_nand_onfi_init(chip);
+>  
+>  	return 0;
+>  }
+
+
+Thanks,
+Miquèl
