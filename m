@@ -2,79 +2,179 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E9DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0F2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3D420881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABB02085A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:12:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dl1ae2wH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfEJKIs (ORCPT
+        id S1727345AbfEJKM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:08:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39225 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfEJKIr (ORCPT
+        Fri, 10 May 2019 06:12:26 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34558 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727240AbfEJKMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:08:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hP2SJ-00013j-8B; Fri, 10 May 2019 10:08:43 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu: fix return of an uninitialized value in variable ret
-Date:   Fri, 10 May 2019 11:08:42 +0100
-Message-Id: <20190510100842.30458-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 May 2019 06:12:25 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w7so2638126plz.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:12:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=YEAAdnjFo5d+nFsQyBOaqPUBBRxUoX1ZF3WyvxMrBkU=;
+        b=dl1ae2wHT+zVPYcECGFIgL/JB+F87tAIPyE5pOOUzeAWOS8WhEZFvYwWwvDt6dQfgl
+         Sij0E5EcRupjwid6veCbXVlELd9V4px46nUA76L/Ai8p6ARnK8ST9zb5Ec8Pm85yVDbp
+         7e9ecxLxiR7+VeJkkfIEvNeqH2Udtv6W0KSgIjZ3p82GQFvga5A51plKiGWCVJ9Ku9PS
+         vaSndTfCi3RIhfoFOLxje1cSNTFWABYzd+t6143p8X2M48ByiV9Zr6hJdgDUO8KSnbOx
+         /Q9xTOyATyexqP+H41AZg6czlsQXGWjTK4FwgW74IdyATyMZFQDa1CL6t3ACjeCQi3zO
+         3q5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=YEAAdnjFo5d+nFsQyBOaqPUBBRxUoX1ZF3WyvxMrBkU=;
+        b=m0qj3Bk13u0+vSI+7mGvbhzM5zTAPFXGPulr13OPBnljgCHdOKGBtW2lq/P4qXeE5Z
+         1Nw0rqh3X+lb5EPZtiEkyD9zbp5doU2w4bymwXqsDcV0SY5wRZId3o7eoGEou9VSU3jV
+         xJXMKrvVopoe+2nCD753NQYOO9l1M/tRhEd6LtfnGhSlXZ3R2CSR6Bl5dbonQPxjpqeX
+         qODhdt+06tEG30zjlEQXYjnqQTfcGCyKhWC0m9g8SEjOqzxvzmoNL7VAbx/kCJ7yAgXl
+         VkoiGtTQPorKc3x5S6bwYRSaRsesdAgSTdCTiNCCFN7oJkE5j2POvA2iEcAaf5TSg+cV
+         ipgQ==
+X-Gm-Message-State: APjAAAWmJ27793TwAWmVJ57fDVerw59hJcZKqEDRTpAgO19UrTjPDrm5
+        HtfuCHMZtEF87cLfD5tFNDmWEQ==
+X-Google-Smtp-Source: APXvYqxKrnh807PzQYhRXIk7/R9rWTSh3mHRassJS1OSBIxgT137TWREOpor2e2oLQn4J3ONB28xVg==
+X-Received: by 2002:a17:902:d24:: with SMTP id 33mr11638563plu.148.1557483143830;
+        Fri, 10 May 2019 03:12:23 -0700 (PDT)
+Received: from localhost ([122.172.118.99])
+        by smtp.gmail.com with ESMTPSA id b14sm5970214pfi.92.2019.05.10.03.12.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 03:12:21 -0700 (PDT)
+Date:   Fri, 10 May 2019 15:42:19 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>
+Subject: Re: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+ zone node
+Message-ID: <20190510101219.oruzvzlk7mm6iahw@vireshk-i7>
+References: <20190423022507.34969-1-andy.tang@nxp.com>
+ <20190510031335.GD15856@dragon>
+ <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
+ <VI1PR04MB4333372C1DABD0E4C9DD7FE8F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <VI1PR04MB4333372C1DABD0E4C9DD7FE8F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 10-05-19, 08:47, Andy Tang wrote:
+> + Viresh for help.
+> 
+> > -----Original Message-----
+> > From: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Sent: 2019年5月10日 15:17
+> > To: Andy Tang <andy.tang@nxp.com>; Shawn Guo <shawnguo@kernel.org>
+> > Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-pm@vger.kernel.org; rui.zhang@intel.com; edubezval@gmail.com
+> > Subject: Re: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+> > zone node
+> > 
+> > Caution: EXT Email
+> > 
+> > On 10/05/2019 05:40, Andy Tang wrote:
+> > >> -----Original Message-----
+> > >> From: Shawn Guo <shawnguo@kernel.org>
+> > >> Sent: 2019年5月10日 11:14
+> > >> To: Andy Tang <andy.tang@nxp.com>
+> > >> Cc: Leo Li <leoyang.li@nxp.com>; robh+dt@kernel.org;
+> > >> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org;
+> > >> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > >> linux-pm@vger.kernel.org; daniel.lezcano@linaro.org;
+> > >> rui.zhang@intel.com; edubezval@gmail.com
+> > >> Subject: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more
+> > >> thermal zone node
+> > >>
+> > >> Caution: EXT Email
+> > >>
+> > >> On Tue, Apr 23, 2019 at 10:25:07AM +0800, Yuantian Tang wrote:
+> > >>> Ls1088a has 2 thermal sensors, core cluster and SoC platform. Core
+> > >>> cluster sensor is used to monitor the temperature of core and SoC
+> > >>> platform is for platform. The current dts only support the first sensor.
+> > >>> This patch adds the second sensor node to dts to enable it.
+> > >>>
+> > >>> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > >>> ---
+> > >>> v6:
+> > >>>         - add cooling device map to cpu0-7 in platform node.
+> > > I like to explain a little. I think it makes sense that multiple thermal zone
+> > map to same cooling device.
+> > > In this way, no matter which thermal zone raises a temp alarm, it can call
+> > cooling device to chill out.
+> > > I also asked cpufreq maintainer about the cooling map issue, he think it
+> > would be fine.
 
-In the case where is_enable is false and lo_base_addr is non-zero the
-variable ret has not been initialized and is being checked for non-zero
-and potentially garbage is being returned. Fix this by not returning
-ret but instead returning -EINVAL on the zero lo_base_addr case.
+Yes, you asked me and I said it should be okay.
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Fixes: a6ac0b44bab9 ("drm/amdgpu: add df perfmon regs and funcs for xgmi")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/amdgpu/df_v3_6.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+> > > I have tested and no issue found.
+> > >
+> > > Daniel, what's your thought?
+> > 
+> > If there are multiple thermal zones, they will be managed by different
+> > instances of a thermal governor. Each instances will act on the shared cooling
+> > device and will collide in their decisions:
+> > 
+> >  - If the sensors are closed, their behavior will be similar regarding the
+> > temperature. The governors may take the same decision for the cooling
+> > device. But in such case having just one thermal zone managed is enough.
+> > 
+> >  - If the sensors are not closed, their behavior will be different regarding the
+> > temperature. The governors will take different decision regarding the cooling
+> > device (one will decrease the freq, other will increase the freq).
+> > 
+> > As the thermal governors are not able to manage several thermal zones and
+> > there is one cooling device (the cpu cooling device), this setup won't work as
+> > expected IMO.
+> > 
+> > The setup making sense is having a thermal zone per 'cluster' and a cooling
+> > device per 'cluster'. That means the platform has one clock line per 'cluster'.
+> > The thermal management happens in a self-contained thermal zone (one
+> > cooling device - one governor - one thermal zone).
+> > 
+> > In the case of HMP, other combinations are possible to be optimal.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-index a5c3558869fb..8c09bf994acd 100644
---- a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-+++ b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
-@@ -398,10 +398,7 @@ static int df_v3_6_start_xgmi_link_cntr(struct amdgpu_device *adev,
- 				NULL);
- 
- 		if (lo_base_addr == 0)
--			ret = -EINVAL;
--
--		if (ret)
--			return ret;
-+			return -EINVAL;
- 
- 		lo_val = RREG32_PCIE(lo_base_addr);
- 
+But not sure how I missed the obvious, though I do remember thinking about this.
+
+So the problem is that the cpu_cooling driver will get requests in parallel to
+set different max frequencies and the last call will always win and may result
+in undesired outcome.
+
+Sorry about creating the confusion.
+
 -- 
-2.20.1
-
+viresh
