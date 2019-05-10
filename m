@@ -2,108 +2,67 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D77C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0046AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FC42184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C583A2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557456003;
+	bh=gwWdGm+lzGwS6EDLPFlG0owva6ZzrylLJimFAezPCh4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=mpsLwj+yO23LxIQAmlqMXcFDvABSQ2TiWmyke9SLCJKkzk//8QNz1Hy/Ev8ngqVI5
+	 NJkq203wX/W4czWCwHp56NFxBfIBZKS4S2COJ/1j0ixtywI/DitQyPcIU4/UK9HZb+
+	 Erjf8bpxhKjPuVYznUW6bidGw4/KfnR2np0cwPSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfEJCjz (ORCPT
+        id S1727043AbfEJCkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 22:39:55 -0400
-Received: from mga01.intel.com ([192.55.52.88]:22061 "EHLO mga01.intel.com"
+        Thu, 9 May 2019 22:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfEJCjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 22:39:55 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 19:39:54 -0700
-X-ExtLoop1: 1
-Received: from hao-dev.bj.intel.com (HELO localhost) ([10.238.157.65])
-  by orsmga008.jf.intel.com with ESMTP; 09 May 2019 19:39:52 -0700
-Date:   Fri, 10 May 2019 10:23:29 +0800
-From:   Wu Hao <hao.wu@intel.com>
-To:     Alan Tull <atull@kernel.org>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Luwei Kang <luwei.kang@intel.com>,
-        Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Subject: Re: [PATCH v2 17/18] fpga: dfl: fme: add global error reporting
- support
-Message-ID: <20190510022329.GA12617@hao-dev>
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
- <1556528151-17221-18-git-send-email-hao.wu@intel.com>
- <CANk1AXRpBe=8Jh+_ZMfARSdXZmrQaN3jc0AfxoX2nP5sLESv2A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANk1AXRpBe=8Jh+_ZMfARSdXZmrQaN3jc0AfxoX2nP5sLESv2A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        id S1726806AbfEJCkC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 22:40:02 -0400
+Subject: Re: [git pull] vfs.git braino fix
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557456002;
+        bh=gwWdGm+lzGwS6EDLPFlG0owva6ZzrylLJimFAezPCh4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=0fwkl7dH3wgkNAKMM5SVTPIpcZM0t5YwSQGD+hgq714tjlPqM9bsWoJeZOEZdSlf1
+         /Bjvhcr67YiD4r18AnmivwP/8IM056k+QG8WyZhmXZQucccp0W/gwFGFVldewEPGsU
+         XGVaNylsN62CzcFvxLViV8D7yU+uH/6PkmbCRTbo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190510023333.GS23075@ZenIV.linux.org.uk>
+References: <20190510023333.GS23075@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190510023333.GS23075@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
+X-PR-Tracked-Commit-Id: 05883eee857eab4693e7d13ebab06716475c5754
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8ea5b2abd07e2280a332bd9c1a7f4dd15b9b6c13
+Message-Id: <155745600207.30349.746499813986574941.pr-tracker-bot@kernel.org>
+Date:   Fri, 10 May 2019 02:40:02 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 11:27:36AM -0500, Alan Tull wrote:
-> On Mon, Apr 29, 2019 at 4:13 AM Wu Hao <hao.wu@intel.com> wrote:
-> 
-> Hi Hao,
-> 
-> The changes look good.  There's one easy to fix thing that Greg has
-> pointed out recently on another patch (below).
-> 
-> >
-> > This patch adds support for global error reporting for FPGA
-> > Management Engine (FME), it introduces sysfs interfaces to
-> > report different error detected by the hardware, and allow
-> > user to clear errors or inject error for testing purpose.
-> >
-> > Signed-off-by: Luwei Kang <luwei.kang@intel.com>
-> > Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
-> 
-> Acked-by: Alan Tull <atull@kernel.org>
-> 
-> > ---
-> > v2: fix issues found in sysfs doc.
-> >     fix returned error code issues for writable sysfs interfaces.
-> >     (use -EINVAL if input doesn't match error code)
-> >     reorder the sysfs groups in code.
-> 
-> > +static ssize_t revision_show(struct device *dev, struct device_attribute *attr,
-> > +                            char *buf)
-> > +{
-> > +       struct device *err_dev = dev->parent;
-> > +       void __iomem *base;
-> > +
-> > +       base = dfl_get_feature_ioaddr_by_id(err_dev, FME_FEATURE_ID_GLOBAL_ERR);
-> > +
-> > +       return scnprintf(buf, PAGE_SIZE, "%u\n", dfl_feature_revision(base));
-> 
-> Greg is discouraging use of scnprintf for sysfs attributes where it's
-> not needed [1].
-> 
-> Please fix this up the attributes added in this patchset.  Besides
-> that, looks good, I added my Ack.
+The pull request you sent on Fri, 10 May 2019 03:33:33 +0100:
 
-Sure, will fix them in the next patchset.
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git fixes
 
-thanks a lot!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8ea5b2abd07e2280a332bd9c1a7f4dd15b9b6c13
 
-Hao
+Thank you!
 
-> 
-> Alan
-> 
-> > +}
-> > +static DEVICE_ATTR_RO(revision);
-> 
-> [1] https://lkml.org/lkml/2019/4/25/1050
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
