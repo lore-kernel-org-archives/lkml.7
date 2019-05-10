@@ -2,89 +2,174 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F3EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E833FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD7120896
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA7C20896
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:56:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PVtCvoAB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfEJWyV (ORCPT
+        id S1728062AbfEJWzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:54:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:36053 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726862AbfEJWyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:54:20 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 15:54:20 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga005.fm.intel.com with ESMTP; 10 May 2019 15:54:20 -0700
-Date:   Fri, 10 May 2019 15:54:56 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-Message-ID: <20190510225456.GA13529@iweiny-DESK2.sc.intel.com>
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <20190510163612.GA23417@bombadil.infradead.org>
+        Fri, 10 May 2019 18:55:38 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36628 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfEJWzh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 18:55:37 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a8so7210306edx.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WVJrycbr/gzeELcTlNLGESPEZue/RmnlQ2sNJEpDNsY=;
+        b=PVtCvoABifhhpps7LQCxWpbe0cETkuW4407swtpW2wZNB0MYdMM0GxxDqv0HNnNodv
+         Ayg8e8drsN5+V97gaXJXhOaknixPfzkzvVcOPyIYII32yga6n2wAaMTThM8259KmS1TC
+         xSJrWL+MhMncjrmBTiAaJe/uJL9mtGHSfExT19YLks6SK0rDOxEamgcnb8LEhXqZNBD5
+         xaij2B4S8UQV1G46OCEPRl6wk8lJFCRFQ5z0okf/im6T3M/WNhhB1k+bGuD4HbdhzVXX
+         8V9EB9KSr9JsFhY3/whaTmkpEOdY5oRlYM0GdJtu+83RR0JobEEwXtgv42WNiUjIl3Gh
+         QibQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WVJrycbr/gzeELcTlNLGESPEZue/RmnlQ2sNJEpDNsY=;
+        b=gA7rdxwHyEa97Qpkf5bKnl8vORZroBUwvF1QTFSpQg6QQIGHXYBknHNrve4uGXIvAl
+         J0q2mMOmLLjZ/hwd3qNWA8L6Uivx3hgunTsSoINrTcbddpiGwvcYhjgUP1LChbmS0Q7K
+         2pZSumZ6MXW3dedCBEH9Jw6BK8nbL6czdlEpo1wdtl7u21KmSdujf92eEP0oWvCVoZ9l
+         Logly37eSMQ9Wn28HxdY07uaS7tilv0m2qrozX3ahTjl3mcQCfpur/xsimrfz45MDE/W
+         4WavvRmYuxddyG1wNYSpH/XuxZ7U9X6BZ61+ijQALGb50BUZcjkxDAUa+VXNTlQDcauV
+         qsNA==
+X-Gm-Message-State: APjAAAV3zlelU9g6sAQ/QOslSOQx46cn2u8AyztP1Vh8p/Nm1SJ70qaF
+        WhXssnYshoaN/m/ksp0VMrCTvQ==
+X-Google-Smtp-Source: APXvYqyFgIAUQN/iwwVHYrlE9ztkC5/Qr3cjj52DwUiZqwb23Y2z2EEJlTmPIu9Z3scX1Cu2fCPrLA==
+X-Received: by 2002:a17:906:f91:: with SMTP id q17mr10924134ejj.63.1557528934578;
+        Fri, 10 May 2019 15:55:34 -0700 (PDT)
+Received: from google.com ([2a00:79e0:1b:201:ee0a:cce3:df40:3ac5])
+        by smtp.gmail.com with ESMTPSA id b4sm1767070edf.7.2019.05.10.15.55.32
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 10 May 2019 15:55:33 -0700 (PDT)
+Date:   Sat, 11 May 2019 00:55:27 +0200
+From:   Jann Horn <jannh@google.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+Message-ID: <20190510225527.GA59914@google.com>
+References: <20190506165439.9155-1-cyphar@cyphar.com>
+ <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+ <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190510163612.GA23417@bombadil.infradead.org>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 09:36:12AM -0700, Matthew Wilcox wrote:
-> On Fri, May 10, 2019 at 10:12:40AM +0800, Huang, Ying wrote:
-> > > +		nr_reclaimed += (1 << compound_order(page));
-> > 
-> > How about to change this to
-> > 
-> > 
-> >         nr_reclaimed += hpage_nr_pages(page);
+On Fri, May 10, 2019 at 02:20:23PM -0700, Andy Lutomirski wrote:
+> On Fri, May 10, 2019 at 1:41 PM Jann Horn <jannh@google.com> wrote:
+> >
+> > On Tue, May 07, 2019 at 05:17:35AM +1000, Aleksa Sarai wrote:
+> > > On 2019-05-06, Jann Horn <jannh@google.com> wrote:
+> > > > In my opinion, CVE-2019-5736 points out two different problems:
+> > > >
+> > > > The big problem: The __ptrace_may_access() logic has a special-case
+> > > > short-circuit for "introspection" that you can't opt out of; this
+> > > > makes it possible to open things in procfs that are related to the
+> > > > current process even if the credentials of the process wouldn't permit
+> > > > accessing another process like it. I think the proper fix to deal with
+> > > > this would be to add a prctl() flag for "set whether introspection is
+> > > > allowed for this process", and if userspace has manually un-set that
+> > > > flag, any introspection special-case logic would be skipped.
+> > >
+> > > We could do PR_SET_DUMPABLE=3 for this, I guess?
+> >
+> > Hmm... I'd make it a new prctl() command, since introspection is
+> > somewhat orthogonal to dumpability. Also, dumpability is per-mm, and I
+> > think the introspection flag should be per-thread.
 > 
-> Please don't.  That embeds the knowledge that we can only swap out either 
-> normal pages or THP sized pages.  I'm trying to make the VM capable of 
-> supporting arbitrary-order pages, and this would be just one more place
-> to fix.
-> 
-> I'm sympathetic to the "self documenting" argument.  My current tree has
-> a patch in it:
-> 
->     mm: Introduce compound_nr
->     
->     Replace 1 << compound_order(page) with compound_nr(page).  Minor
->     improvements in readability.
-> 
-> It goes along with this patch:
-> 
->     mm: Introduce page_size()
-> 
->     It's unnecessarily hard to find out the size of a potentially huge page.
->     Replace 'PAGE_SIZE << compound_order(page)' with page_size(page).
-> 
-> Better suggestions on naming gratefully received.  I'm more happy with 
-> page_size() than I am with compound_nr().  page_nr() gives the wrong
-> impression; page_count() isn't great either.
+> I've lost track of the context here, but it seems to me that
+> mitigating attacks involving accidental following of /proc links
+> shouldn't depend on dumpability.  What's the actual problem this is
+> trying to solve again?
 
-Stupid question : what does 'nr' stand for?
+The one actual security problem that I've seen related to this is
+CVE-2019-5736. There is a write-up of it at
+<https://blog.dragonsector.pl/2019/02/cve-2019-5736-escape-from-docker-and.html>
+under "Successful approach", but it goes more or less as follows:
 
-Ira
+A container is running that doesn't use user namespaces (because for
+some reason I don't understand, apparently some people still do that).
+An evil process is running inside the container with UID 0 (as in,
+GLOBAL_ROOT_UID); so if the evil process inside the container was able
+to reach root-owned files on the host filesystem, it could write into
+them.
 
+The container engine wants to spawn a new process inside the container.
+It forks off a child that joins the container's namespaces (including
+PID and mount namespaces), and then the child calls execve() on some
+path in the container.
+The attacker replaces the executable in the container with a symlink
+to /proc/self/exe and replaces a library inside the container with a
+malicious one.
+When the container engine calls execve(), intending to run an executable
+inside the container, it instead goes through ptrace_may_access() using
+the introspection short-circuit and re-executes its own executable
+through the jumped symlink /proc/self/exe (which is normally unreachable
+for the container). After the execve(), the process loads an evil
+library from inside the container and is under the control of the
+container.
+Now the container controls a process whose /proc/self/exe is a jumped
+symlink to a host executable, and the container can write into it.
+
+Some container engines are now using an extremely ugly hack to work
+around this - whenever they want to enter a container, they copy the
+host binary into a new memfd and execute that to avoid exposing the
+original host binary to containers:
+<https://github.com/opencontainers/runc/commit/0a8e4117e7f715d5fbeef398405813ce8e88558b>
+
+
+In my opinion, the problems here are:
+
+ - Apparently some people run untrusted containers without user
+   namespaces. It would be really nice if people could not do that.
+   (Probably the biggest problem here.)
+ - ptrace_may_access() has a short-circuit that permits a process to
+   unintentionally look at itself even if it has dropped privileges -
+   here, it permits the execve("/proc/self/exe", ...) that would
+   normally be blocked by the check for CAP_SYS_PTRACE if the process
+   is nondumpable.
+ - You can use /proc/*/exe to get a writable fd.
