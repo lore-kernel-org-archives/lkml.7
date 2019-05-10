@@ -2,127 +2,111 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2205C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C63C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD192173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42732175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:24:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FlmlGncg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="NBtYDEpM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbfEJMXt (ORCPT
+        id S1727398AbfEJMYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 08:23:49 -0400
-Received: from mail-eopbgr50076.outbound.protection.outlook.com ([40.107.5.76]:57678
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727071AbfEJMXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 08:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=47VyM5IIrni7gGQiqmFicQJhymnzHX6UsANSagCiw8I=;
- b=FlmlGncgysB636DPY3KuGJ181FGRwPb286kyDYNb8fKVomqecO6KXO/TP1XNGGivSs5k2Dn13UhLtuZoEwL2QXx3cXwojcf6vPLfqC1JEHobskVLd7t8t+cPNZ9NQj3RYpGzC4YOdLtCe2nfI+P0GwEMy/9/QpnjKH2pq1HmvNY=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3676.eurprd04.prod.outlook.com (52.134.70.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Fri, 10 May 2019 12:23:42 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1878.022; Fri, 10 May 2019
- 12:23:42 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH RESEND] ARM: imx_v6_v7_defconfig: Enable
- CONFIG_THERMAL_STATISTICS
-Thread-Topic: [PATCH RESEND] ARM: imx_v6_v7_defconfig: Enable
- CONFIG_THERMAL_STATISTICS
-Thread-Index: AQHVBys0pgK+lXcoZEiiNPClktUsIw==
-Date:   Fri, 10 May 2019 12:23:42 +0000
-Message-ID: <1557490722-21657-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK0P153CA0041.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:17::29) To DB3PR0402MB3916.eurprd04.prod.outlook.com
- (2603:10a6:8:10::18)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 31c58436-945e-44dd-1554-08d6d54256f0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3676;
-x-ms-traffictypediagnostic: DB3PR0402MB3676:
-x-microsoft-antispam-prvs: <DB3PR0402MB367666D21B105115E2E74F3BF50C0@DB3PR0402MB3676.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3826;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(39860400002)(396003)(366004)(199004)(189003)(7416002)(53936002)(4744005)(81156014)(36756003)(6512007)(186003)(2906002)(6116002)(14454004)(3846002)(6506007)(386003)(256004)(486006)(5660300002)(2501003)(2616005)(476003)(102836004)(26005)(66066001)(99286004)(8936002)(110136005)(50226002)(68736007)(478600001)(52116002)(2201001)(81166006)(8676002)(25786009)(6486002)(6436002)(305945005)(4326008)(7736002)(73956011)(316002)(71190400001)(71200400001)(66946007)(66476007)(66556008)(64756008)(66446008)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3676;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wT2IXin/uio7WxC3PLP0a/XEPawSTJ9v0ohdbJ5lPc7bfw7CsJtqHtVR8LzcdWndpJBLLoI+hKUvhWWNh4L7FuvsGtANGaj7uK6350B/70oFOmhfqDkKnCDVb2Ltg30ogiNmZ9tNyL718uBubq4JmxkV7rGu4+QjRhZLIIoM9oRRiKUmr3LICeuBsSXpcutNr5JpcUgg8EWtbxtT/ys31dDd368YEuPDiZqp8gvT40/R+6y4zwu/3PRn+n8hmEVTd+YKSV+/r6yLgG2ed2TFxvGYIMbY0fuKn+qL5l4tikkHFkQDs/4TqrCCygAhY19O8iTAd7or5EhXbzu8QaUM1yw3GhqiJMuuuQq9399PJYjPSphl+7i8Gfa5/e+KnRlf5KaHSBURwRTVOADU2n6DhmbnTc2UsvEsdL25JH5p5BM=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <7C0940655F6B3F449B316FA894F688D8@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 May 2019 08:24:36 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9759 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfEJMYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 08:24:36 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd56d8b0001>; Fri, 10 May 2019 05:24:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 May 2019 05:24:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 May 2019 05:24:35 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
+ 2019 12:24:34 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 10 May 2019 12:24:35 +0000
+Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cd56d810003>; Fri, 10 May 2019 05:24:34 -0700
+From:   Jim Lin <jilin@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
+        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
+        <drinkcat@chromium.org>, <keescook@chromium.org>,
+        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jim Lin <jilin@nvidia.com>
+Subject: [PATCH v9 0/2] usb: xhci: Add Clear_TT_Buffer
+Date:   Fri, 10 May 2019 20:24:28 +0800
+Message-ID: <1557491070-24715-1-git-send-email-jilin@nvidia.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31c58436-945e-44dd-1554-08d6d54256f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 12:23:42.6789
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3676
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557491083; bh=W9dcbuG6GvRBKzctoW3lXO7VaO6IJQzTilLnXCzPnKA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=NBtYDEpMRj+n+fDRL9vsUv4l/1vhehhrdTQV1iQ1p9vHlQ8DPP060RLGJvbUiQRQw
+         lqrg37nNVDNs3cZGYnF+dfLZ3d6FoOVAb5r/f28k+dd6g+rxXZ2vogeaLt2dtuf0Xw
+         E40R+g74bk4YLr17YH4m/NP2WmfXWzq9s9T+1aXWdGHzMHnLjLltKPEYXe2OSwwUlv
+         qFXshetdSAMVqU1/9a6Aanlzw96cW9uaEw+zsSbHgTIx8iHPxGn4Az7AK2vbelskz9
+         hps4L8YTU5x5rw5Te0uee+TVsAbtOwhkOv41m3EUXPLIQ3V4zWzk93BBaYT9IGtl1W
+         UaGpx66LiZuyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable CONFIG_THERMAL_STATISTICS to extend the sysfs interface
-for thermal cooling devices and expose some useful statistics.
+USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+processing for full-/low-speed endpoints connected via a TT, the host
+software must use the Clear_TT_Buffer request to the TT to ensure
+that the buffer is not in the busy state".
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-no change, just fix the base64 encoding issue.
----
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+In our case, a full-speed speaker (ConferenceCam) is behind a high-
+speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+request we may continue to get STALL with the folllowing requests,
+like Set_Interface.
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6=
-_v7_defconfig
-index 765003a..ea387cb 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -225,6 +225,7 @@ CONFIG_POWER_SUPPLY=3Dy
- CONFIG_SENSORS_MC13783_ADC=3Dy
- CONFIG_SENSORS_GPIO_FAN=3Dy
- CONFIG_SENSORS_IIO_HWMON=3Dy
-+CONFIG_THERMAL_STATISTICS=3Dy
- CONFIG_THERMAL_WRITABLE_TRIPS=3Dy
- CONFIG_CPU_THERMAL=3Dy
- CONFIG_IMX_THERMAL=3Dy
---=20
-2.7.4
+Solution is to invoke usb_hub_clear_tt_buffer() to send
+Clear_TT_Buffer request to the hub of the device for the following
+Set_Interface requests to the device to get ACK successfully.
+
+The Clear_TT_Buffer request sent to the hub includes the address of
+the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
+uses udev->devnum to set the address wValue. This won't work for
+devices connected to xHC.
+
+For other host controllers udev->devnum is the same as the address of
+the usb device, chosen and set by usb core. With xHC the controller
+hardware assigns the address, and won't be the same as devnum.
+
+Here we have two patches.
+One is to add devaddr in struct usb_device for
+usb_hub_clear_tt_buffer() to use.
+Another is to update devaddr in XHCI address_device callback
+function and invoke usb_hub_clear_tt_buffer() for halt processing.
+ 
+Signed-off-by: Jim Lin <jilin@nvidia.com>
+
+Jim Lin (2):
+  usb: hub : Add devaddr in struct usb_device
+  usb: xhci: Add Clear_TT_Buffer
+
+ drivers/usb/core/hub.c       |  4 +++-
+ drivers/usb/host/xhci-ring.c | 12 ++++++++++++
+ drivers/usb/host/xhci.c      |  1 +
+ include/linux/usb.h          |  2 ++
+ 4 files changed, 18 insertions(+), 1 deletion(-)
+
+-- 
+2.1.4
 
