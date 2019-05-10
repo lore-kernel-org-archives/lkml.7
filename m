@@ -2,82 +2,111 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F31C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA280C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA0F21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB02D21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557499129;
+	bh=6yauO5hMgJ1pu4sEEtHoydRbhdI8t/oIg7ijcyiAK1o=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=AVibHTKhESnVBQpuHd0o86DtrZ4iGTdDPKa7jYODhUWr0zKhWZGBu59aSFMKjEIHq
+	 WKT4sA7mw5nRza/sLxGp9/WBQhTqF9jJ3LLhCujFI8xbxlBiQO2Ted5ZbIx1m+VesC
+	 M1P9c19T1P6LjXYVDWCyGXL9qHFrRZznUs4xosoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfEJOiU (ORCPT
+        id S1727928AbfEJOis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:38:20 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39797 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfEJOiT (ORCPT
+        Fri, 10 May 2019 10:38:48 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44159 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfEJOis (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:38:19 -0400
-X-Originating-IP: 109.213.220.252
-Received: from localhost (alyon-652-1-77-252.w109-213.abo.wanadoo.fr [109.213.220.252])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3ACD9FF809;
-        Fri, 10 May 2019 14:38:17 +0000 (UTC)
-Date:   Fri, 10 May 2019 16:38:16 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Olof Johansson <olof@lixom.net>
-Subject: Re: [GIT PULL] RTC for 5.2
-Message-ID: <20190510143816.GB7622@piout.net>
-References: <20190509210340.GA23061@piout.net>
+        Fri, 10 May 2019 10:38:48 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f24so2413152qtk.11;
+        Fri, 10 May 2019 07:38:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=WoMLIF2rg0EeY68QM7oBQC2dx49t05CQYIl4Q/tdJ2Q=;
+        b=TRme1k96RXNmQtVQ4Fi6xRyhQkUJYa3bKwk7TNljQtA2hMnYAvr3WQ6QLBvsCdjvwA
+         h67rtZkyMdb79TW16DEZmd66ANjdyH5anDJqLXKVtgPxa3wau7B7W6pGjkUWjPSN2jvr
+         Jy4Gh8r2IvKeFhJjLqpt+n7ElpPsaSXSPRh0LUBUIMAbsNJ8Oc4yG54kSU0Gp7ptkQIH
+         PlChm/iqdgoKWcfUj9jmc2Fmcjaz/R5LN4IgD4r9pvDpTPKyakCabhymOkVpdO93Yj0A
+         Wsoz1wFoqQf+HADKfUpzhzeWNcavwz/giyhQNbVevuyl5/o7MLRGKWUFyChWanVl0+fs
+         uVVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=WoMLIF2rg0EeY68QM7oBQC2dx49t05CQYIl4Q/tdJ2Q=;
+        b=PbmcORmyLa3e0G6SgqwHQsRg4jpgWmadknHk0Ek38lC2jH1BPIcY8tGT2ppP2dI9kL
+         1VY7ah+awgQ+H0Ha/oc1YalA8gk6XBrgnjl5hZt/23+F6v0sSO716zznjFjxJCYw1mip
+         jzbTkEBBkO3qM6mspNDk1XD7CM8IO+BJd26ZoqnUfCxmcbLzafBEhHdKtNgHhCNmwLa+
+         VySSysfUunmjpshMESPiWg7TF/eFaYmsemnjixQ06ab9HJwWbRnedkN5UDRtorGOkN8J
+         yCzXMWUk7Zypa4qkPjjC0Y9XSEbVRtyxG+DgeiaEF497ouS1XhhxBRkyrSitzuinaKVX
+         BXUw==
+X-Gm-Message-State: APjAAAU5k5IJwq3j61u5F//z1RFvD9L1oFb6EPebkl2GyF45Vyo4+yWa
+        PqrmNJ80+x/7ElHe+UF1b10=
+X-Google-Smtp-Source: APXvYqyYCRH+z2nYziTtLQ54DJGxDIAz3C/XuwwfNqvBW0Qd8I09xX9NBwpNG60R6M/slVAyevh9Vw==
+X-Received: by 2002:a0c:d00d:: with SMTP id u13mr6563664qvg.147.1557499127113;
+        Fri, 10 May 2019 07:38:47 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::8fe7])
+        by smtp.gmail.com with ESMTPSA id a7sm2610983qkl.60.2019.05.10.07.38.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 07:38:46 -0700 (PDT)
+Date:   Fri, 10 May 2019 07:38:43 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <jbacik@fb.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH block/for-5.2-fixes] blkcg: update blkcg_print_stat() to
+ handle larger outputs
+Message-ID: <20190510143817.GB374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190509210340.GA23061@piout.net>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2019 23:03:40+0200, Alexandre Belloni wrote:
-> Hello Linus,
-> 
-> A huge series from me this cycle. I went through many drivers to set the
-> date and time range supported by the RTC which helps solving HW
-> limitation when the time comes (as early as next year for some). This
-> time, I focused on drivers using .set_mms and .set_mmss64, allowing me
-> to remove those callbacks. About a third of the patches got reviews, I
-> actually own the RTCs and I tested another third and the remaining one
-> are unlikely to cause any issues.
-> 
-> Other than that, a single new driver and the usual fixes here and there.
-> 
-> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-> 
->   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
-> 
-> for you to fetch changes up to dacb6a4035a010e41abaf81c1cfe2beadfb05ec8:
-> 
->   rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP (2019-05-08 22:14:36 +0200)
-> 
+Depending on the number of devices, blkcg stats can go over the
+default seqfile buf size.  seqfile normally retries with a larger
+buffer but since the ->pd_stat() addition, blkcg_print_stat() doesn't
+tell seqfile that overflow has happened and the output gets printed
+truncated.  Fix it by calling seq_commit() w/ -1 on possible
+overflows.
 
-I forgot to mention that you will have a non trivial conflict that is
-properly resolved in linux-next when you will pull arm-soc.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
+Cc: stable@vger.kernel.org # v4.19+
+Cc: Josef Bacik <jbacik@fb.com>
+---
+ block/blk-cgroup.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-There is no need to check the return value of tm2bcd() after
-35118b7a4ea0 ("rtc: omap: let the core handle range")
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--- a/block/blk-cgroup.c
++++ b/block/blk-cgroup.c
+@@ -1005,8 +1005,12 @@ static int blkcg_print_stat(struct seq_f
+ 		}
+ next:
+ 		if (has_stats) {
+-			off += scnprintf(buf+off, size-off, "\n");
+-			seq_commit(sf, off);
++			if (off < size - 1) {
++				off += scnprintf(buf+off, size-off, "\n");
++				seq_commit(sf, off);
++			} else {
++				seq_commit(sf, -1);
++			}
+ 		}
+ 	}
+ 
