@@ -2,171 +2,129 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D88AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FC3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0752175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C551217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:14:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="taCcs/K6"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="OBoy5jFw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfEJGNP (ORCPT
+        id S1726921AbfEJGOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:13:15 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:49735 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfEJGNP (ORCPT
+        Fri, 10 May 2019 02:14:06 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36671 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfEJGOF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:13:15 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x4A6C8eU029885;
-        Fri, 10 May 2019 15:12:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x4A6C8eU029885
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557468730;
-        bh=Zz5IFdzVMzJDlwRPqiFlRYTAt3VGP5hkTJyDL3fFG1U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=taCcs/K6j9GCIzR4TXiWlEwzuDBA7PJsUpoHNoSZW7DhpqNQ03j1oSrzmV3M10s8X
-         Nn1f4EOsAI2/fFcX0yQruU5wcVLkIZ9Fc1Zn3Wl2icRv4QikUNAmLgdQNOpIHPTCnB
-         pgIa8h7I3qOWU6zt9Trg3RktjLu7F2CSPsHUK1i4hZOPoy/GGh7bEJG9KgWa4eECRt
-         RRonuBVrsJTx5yiRMNKawa8U2DsYVT6UD0EmpisLLr/ckaC3wP5Bmi5CEJC8v9BXgI
-         b1+JFDEA8C0c8OlOBG21n8E8Ktty3799t1V+1S7mlYoTIXWf2V10Yr0LrMtvfSfKmD
-         vI/fBduZV8A6A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kconfig: do not write .config if the content is the same
-Date:   Fri, 10 May 2019 15:12:05 +0900
-Message-Id: <20190510061205.28753-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190510061205.28753-1-yamada.masahiro@socionext.com>
-References: <20190510061205.28753-1-yamada.masahiro@socionext.com>
+        Fri, 10 May 2019 02:14:05 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y10so3284037lfl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wcoCn9aET8ENDUMb5kZFQY4rPTMs5oVxV7wArQjOIBo=;
+        b=OBoy5jFwq7rwO6rQvfRJjzjUxv5hh15DMppI5VJRgrtBPPvNHy3xN3DS9UhKYbdjg2
+         x4th2Lp7uXVK/Q+3WelH6KnB3Xzx5iDF0au91UTqihiFLCAIk9+ctrLUnNOF6paggLUR
+         iehK957Lt3Jw4wMEOGI1tIRKyCMykJlJy6Hug=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wcoCn9aET8ENDUMb5kZFQY4rPTMs5oVxV7wArQjOIBo=;
+        b=pFOOi3mhbNoUSawlVGyRd870cXJtb63o543rXPd/KMto17+9F4lPvsFPHy7WSEXZ3R
+         ztSjIqiFHWSHQYiVrr5h2m4x12ThzBgl2YNr3FAyTPRcm4TKZ2IFNX4KDc1kTEHOSVPw
+         OfVvBudfkLFfwBGhb69Pnzg+BowcPrS1lXCeARBpsWTIIippgTgt9cUv3iDlqEHh+Fg/
+         Q9P9EnzsthEUcOtr1XqrAXonoRDuUWne/fnaY8TmiZmAETRV2kTPJM2a1b1AeXAVpFuy
+         bRRo7F6hvo6RGT6Ae/y+Xty65pbIm6Zd85JJNicAaLfvXqY5KWjNbKms9bAPXzyRdspI
+         Lt+w==
+X-Gm-Message-State: APjAAAWRA9YAuualRe3ut6of2OpTw3pXVJjLpe1dATI75oUfyyEhM6pM
+        2lILIdwC/8wT8Iz2/1ukM3nIiw==
+X-Google-Smtp-Source: APXvYqxjq3SwLXsYD1FL12FSPs1z8AbTUxVH50KLsWdg3JeNkzbWs8UtasTLQvTkgAAB7vhwEhVrpA==
+X-Received: by 2002:ac2:43cf:: with SMTP id u15mr4755854lfl.67.1557468843494;
+        Thu, 09 May 2019 23:14:03 -0700 (PDT)
+Received: from [172.16.11.26] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id f4sm1025869ljm.80.2019.05.09.23.14.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 23:14:02 -0700 (PDT)
+Subject: Re: [PATCH] arm64: add support for rng-seed
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Architecture Mailman List <boot-architecture@lists.linaro.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190507045433.542-1-hsinyi@chromium.org>
+ <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
+ <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
+ <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
+ <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
+ <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
+ <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <36fab640-b98e-9781-f96f-0ed988a71077@rasmusvillemoes.dk>
+Date:   Fri, 10 May 2019 08:14:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kconfig updates the .config when it exits even if its content is
-exactly the same as before. Since its timestamp becomes newer than
-that of other build artifacts, additional processing is invoked,
-which is annoying.
+On 09/05/2019 10.00, Hsin-Yi Wang wrote:
+>>>> Why do you need to clear it? That wasn't necessary for kaslr-seed.
+>>> I think it's for security purpose. If we know the random seed, it's
+>>> more likely we can predict randomness.
+>>> Currently on arm64, kaslr-seed will be wiped out (in
+>>> arch/arm64/kernel/kaslr.c#get_kaslr_seed(), it's set to 0) so we can't
+>>> read from sysfs (eg. /sys/firmware/devicetree/.../kaslr-seed)
+>>> I'm not sure on other arch if it will be wiped out.
+>>
+>> The difference is if I have the kaslr seed, I can calculate the kernel
+>> base address.
+>>
+>> In your case, you are feeding an RNG which continually has entropy
+>> added to it. I can't see that knowing one piece of the entropy data is
+>> a security hole. It looks more like you've just copied what what done
+>> for kaslr-seed.
+> +Kees who can probably explain this better.
+> 
+> This early added entropy is also going to be used for stack canary. At
+> the time it's created there's not be much entropy (before
+> boot_init_stack_canary(), there's only add_latent_entropy() and
+> command_line).
 
-- syncconfig is invoked to update include/config/auto.conf, etc.
+So, why not just have the bootloader add whatever entropy it has via the
+commandline, which already gets mixed in? That requires no kernel
+changes, and works for all architectures.
 
-- kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
-  then vmlinux is relinked as well.
+If anything, perhaps instead of just adding gobbledygook=abc123, make an
+official command line parameter (there was talk about this at some
+point), and have the kernel overwrite the value with xxx so it's not
+visible in /proc/cmdline.
 
-If the .config is not changed at all, we do not have to even
-touch it. Just bail out showing "No change to .config".
-
-  $ make allmodconfig
-  scripts/kconfig/conf  --allmodconfig Kconfig
-  #
-  # configuration written to .config
-  #
-  $ make allmodconfig
-  scripts/kconfig/conf  --allmodconfig Kconfig
-  #
-  # No change to .config
-  #
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- scripts/kconfig/confdata.c | 54 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
-
-diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
-index 9fd6430c93d2..399973e35533 100644
---- a/scripts/kconfig/confdata.c
-+++ b/scripts/kconfig/confdata.c
-@@ -3,6 +3,7 @@
-  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
-  */
- 
-+#include <sys/mman.h>
- #include <sys/stat.h>
- #include <ctype.h>
- #include <errno.h>
-@@ -36,6 +37,52 @@ static bool is_dir(const char *path)
- 	return S_ISDIR(st.st_mode);
- }
- 
-+/* return true if the given two files are the same, false otherwise */
-+static bool is_same(const char *file1, const char *file2)
-+{
-+	int fd1, fd2;
-+	struct stat st1, st2;
-+	void *map1, *map2;
-+	bool ret = false;
-+
-+	fd1 = open(file1, O_RDONLY);
-+	if (fd1 < 0)
-+		return ret;
-+
-+	fd2 = open(file2, O_RDONLY);
-+	if (fd2 < 0)
-+		goto close1;
-+
-+	ret = fstat(fd1, &st1);
-+	if (ret)
-+		goto close2;
-+	ret = fstat(fd2, &st2);
-+	if (ret)
-+		goto close2;
-+
-+	if (st1.st_size != st2.st_size)
-+		goto close2;
-+
-+	map1 = mmap(NULL, st1.st_size, PROT_READ, MAP_PRIVATE, fd1, 0);
-+	if (map1 == MAP_FAILED)
-+		goto close2;
-+
-+	map2 = mmap(NULL, st2.st_size, PROT_READ, MAP_PRIVATE, fd2, 0);
-+	if (map2 == MAP_FAILED)
-+		goto close2;
-+
-+	if (bcmp(map1, map2, st1.st_size))
-+		goto close2;
-+
-+	ret = true;
-+close2:
-+	close(fd2);
-+close1:
-+	close(fd1);
-+
-+	return ret;
-+}
-+
- /*
-  * Create the parent directory of the given path.
-  *
-@@ -888,6 +935,13 @@ int conf_write(const char *name)
- 	fclose(out);
- 
- 	if (*tmpname) {
-+		if (is_same(name, tmpname)) {
-+			conf_message("No change to %s", name);
-+			unlink(tmpname);
-+			sym_set_change_count(0);
-+			return 0;
-+		}
-+
- 		snprintf(oldname, sizeof(oldname), "%s.old", name);
- 		rename(name, oldname);
- 		if (rename(tmpname, name))
--- 
-2.17.1
-
+Rasmus
