@@ -2,51 +2,49 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6467FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638CCC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357D02173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374702173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="lhNNj13P"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a3QCQoY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbfEJHmq (ORCPT
+        id S1727249AbfEJHmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:42:46 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:5118 "EHLO
+        Fri, 10 May 2019 03:42:50 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10722 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727159AbfEJHmo (ORCPT
+        by vger.kernel.org with ESMTP id S1727010AbfEJHmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:42:44 -0400
+        Fri, 10 May 2019 03:42:43 -0400
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7cWJe028672;
-        Fri, 10 May 2019 09:42:38 +0200
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7cYSq028701;
+        Fri, 10 May 2019 09:42:37 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Q4CttDSeHlGs3NyMtzY/R45bn2jdu2ftuKzuZpOJ83E=;
- b=lhNNj13PJ8w6uEjIvetr4ONcJ5zGcFiLzeeEtym0o5IxMHTBS2FCLdhS2GbTtLYck3CL
- hXMv1hp2RwH0N8GXywkZPgbhNgLrQddNjHYhKL9jea1id2YGjfbNfIqH6jpSxicGn6bS
- XZzk/JxOpheseE5PiRMuges+urbv3NZji9r3RaDmkJauOhEaAAHWVDkz1iMBRmqARBtL
- jmm7lzlCvbAoxEmZTw/8btxLzwOmgtE4tIp8xX3xK9nnti2sisZBtMXV21pN/4lxU4ry
- W5KjYrVDYpeHwOPUskASybPKzyDenH1tliEuBQyvV98pW2czd3e/x2LZ4gH4tPXmWOu6 ZA== 
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=N1v+zxTZE44tr6xZHlbxMHCvWy6h3ciCGaY/rbHViTk=;
+ b=a3QCQoY3R8nEO8Y32dWwA5wH5/dpmNaO2RWr6VTmU7jIFh7vyzTNByjPUx4/8sSFFo0v
+ dUAUkMCoQ7Abuptg4YLoUf7Icw2NDODJs4UH/o7Sy+whdv7qTsWtYUJvBQgkz0BYx2kl
+ yih3y6T17fxLnL96mLWfALBw7a/4WvR9ANOzySz1AZgK6NdWOiUFodUIepPWGnFuwoZw
+ PowJnbuKFkqqrGk+c+oFRxSf79vCD3VmlIaHsVPsjCDda7jWNU06NduMlwo5R8vThEIM
+ UspZc+xoPOeUAJ5XTEARNg+F0eSZ26/Vy9nqcOFPiLDgQUDYnyPhabkKjyc94GYy6sZU KA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4gpn7-1
+        by mx08-00178001.pphosted.com with ESMTP id 2sc9s4gpn3-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 10 May 2019 09:42:38 +0200
+        Fri, 10 May 2019 09:42:37 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69EEC3A;
-        Fri, 10 May 2019 07:42:37 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07FFA3A;
+        Fri, 10 May 2019 07:42:35 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 44F6315AB;
-        Fri, 10 May 2019 07:42:37 +0000 (GMT)
-Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May 2019 09:42:36
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B752A15AD;
+        Fri, 10 May 2019 07:42:35 +0000 (GMT)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May 2019 09:42:35
  +0200
 From:   Alexandre Torgue <alexandre.torgue@st.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -55,16 +53,14 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <alexandre.torgue@st.com>
-Subject: [PATCH 2/2] pinctrl: stm32: Enable suspend/resume for stm32mp157c SoC
-Date:   Fri, 10 May 2019 09:42:30 +0200
-Message-ID: <1557474150-19618-3-git-send-email-alexandre.torgue@st.com>
+Subject: [PATCH 0/2] pinctrl: stm32: add suspend/resume management
+Date:   Fri, 10 May 2019 09:42:28 +0200
+Message-ID: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
-References: <1557474150-19618-1-git-send-email-alexandre.torgue@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
  signatures=0
@@ -73,31 +69,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apply suspend/resume management for stm32mp157c MPU.
+During power sequence, GPIO hardware registers could be lost if the power
+supply is switched off. Each device using pinctrl API is in charge of
+managing pins during suspend/resume sequences. But for pins used as gpio or
+irq stm32 pinctrl driver has to save the hardware configuration.
+Each register will be saved at runtime and restored during resume sequence.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+Regards
+Alex
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32mp157.c b/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-index 320544f..2ccb99d 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32mp157.c
-@@ -2342,11 +2342,16 @@ static const struct of_device_id stm32mp157_pctrl_match[] = {
- 	{ }
- };
- 
-+static const struct dev_pm_ops stm32_pinctrl_dev_pm_ops = {
-+	 SET_LATE_SYSTEM_SLEEP_PM_OPS(NULL, stm32_pinctrl_resume)
-+};
-+
- static struct platform_driver stm32mp157_pinctrl_driver = {
- 	.probe = stm32_pctl_probe,
- 	.driver = {
- 		.name = "stm32mp157-pinctrl",
- 		.of_match_table = stm32mp157_pctrl_match,
-+		.pm = &stm32_pinctrl_dev_pm_ops,
- 	},
- };
- 
+
+Alexandre Torgue (2):
+  pinctrl: stm32: add suspend/resume management
+  pinctrl: stm32: Enable suspend/resume for stm32mp157c SoC
+
+ drivers/pinctrl/stm32/pinctrl-stm32.c      | 132 +++++++++++++++++++++++++++++
+ drivers/pinctrl/stm32/pinctrl-stm32.h      |   2 +
+ drivers/pinctrl/stm32/pinctrl-stm32mp157.c |   5 ++
+ 3 files changed, 139 insertions(+)
+
 -- 
 2.7.4
 
