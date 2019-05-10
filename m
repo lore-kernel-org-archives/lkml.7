@@ -2,112 +2,99 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF55AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C058C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C13262089E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:37:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8E6205C9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:37:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfEJNhN (ORCPT
+        id S1727825AbfEJNhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:37:13 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:38899 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbfEJNhM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:37:12 -0400
-X-Originating-IP: 90.88.28.253
-Received: from windsurf.home (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
-        (Authenticated sender: thomas.petazzoni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 939B11C001A;
-        Fri, 10 May 2019 13:37:05 +0000 (UTC)
-Date:   Fri, 10 May 2019 15:37:04 +0200
-From:   Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
-        linux-mtd@lists.infradead.org, juliensu@mxic.com.tw
-Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190510153704.33de9568@windsurf.home>
-In-Reply-To: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Fri, 10 May 2019 09:37:21 -0400
+Received: from mga09.intel.com ([134.134.136.24]:39945 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727258AbfEJNhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 09:37:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 06:37:20 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 10 May 2019 06:37:19 -0700
+Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
+        by linux.intel.com (Postfix) with ESMTP id 700A5580482;
+        Fri, 10 May 2019 06:37:18 -0700 (PDT)
+Subject: Re: [PATCH V2] ASoC: SOF: Fix build error with
+ CONFIG_SND_SOC_SOF_NOCODEC=m
+To:     YueHaibing <yuehaibing@huawei.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        rdunlap@infradead.org
+Cc:     linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+References: <20190510023657.8960-1-yuehaibing@huawei.com>
+ <20190510132940.28184-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9284cd65-98e3-5f7e-1427-8245dd84edcd@linux.intel.com>
+Date:   Fri, 10 May 2019 08:36:56 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190510132940.28184-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 5/10/19 8:29 AM, YueHaibing wrote:
+> Fix gcc build error while CONFIG_SND_SOC_SOF_NOCODEC=m
+> 
+> sound/soc/sof/core.o: In function `snd_sof_device_probe':
+> core.c:(.text+0x4af): undefined reference to `sof_nocodec_setup'
+> 
+> Change IS_ENABLED to IS_REACHABLE to fix this.
 
-Some purely cosmetic suggestions below.
+this just hides the issue instead of fixing it.
+please send the config+sha1 so that we can check.
 
-On Fri, 10 May 2019 15:41:02 +0800
-Mason Yang <masonccyang@mxic.com.tw> wrote:
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Suggested-by: Takashi Iwai <tiwai@suse.de>
+> Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> V2: use IS_REACHABLE
+> ---
+>   sound/soc/sof/core.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+> index 32105e0..38e22f4 100644
+> --- a/sound/soc/sof/core.c
+> +++ b/sound/soc/sof/core.c
+> @@ -259,7 +259,7 @@ int snd_sof_create_page_table(struct snd_sof_dev *sdev,
+>   static int sof_machine_check(struct snd_sof_dev *sdev)
+>   {
+>   	struct snd_sof_pdata *plat_data = sdev->pdata;
+> -#if IS_ENABLED(CONFIG_SND_SOC_SOF_NOCODEC)
+> +#if IS_REACHABLE(CONFIG_SND_SOC_SOF_NOCODEC)
+>   	struct snd_soc_acpi_mach *machine;
+>   	int ret;
+>   #endif
+> @@ -267,7 +267,7 @@ static int sof_machine_check(struct snd_sof_dev *sdev)
+>   	if (plat_data->machine)
+>   		return 0;
+>   
+> -#if !IS_ENABLED(CONFIG_SND_SOC_SOF_NOCODEC)
+> +#if !IS_REACHABLE(CONFIG_SND_SOC_SOF_NOCODEC)
+>   	dev_err(sdev->dev, "error: no matching ASoC machine driver found - aborting probe\n");
+>   	return -ENODEV;
+>   #else
+> 
 
-> +	if (ret)
-> +		pr_err("set feature failed to read retry moded:%d\n", mode);  
-
-I don't know what is the policy in the MTD/NAND subsystem, but
-shouldn't you be using dev_err() instead of pr_err() here to have a
-nice prefix for the message ?
-
-		dev_err(&nand_to_mtd(chip)->dev, "set feature ..", mode);
-
-> +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> +{
-> +	struct nand_parameters *p = &chip->parameters;
-> +
-> +	if (p->onfi) {
-
-Change to:
-
-	if (!p->onfi)
-		return;
-
-This way the rest of the function can save one level of indentation.
-
-> +		struct nand_onfi_vendor_macronix *mxic =
-> +				(void *)p->onfi->vendor;
-> +
-> +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
-
-Change to:
-
-	if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT == 0)
-		return;
-
-And the rest of the function can save one level of indentation.
-
-> +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
-> +			chip->setup_read_retry =
-> +				 macronix_nand_setup_read_retry;
-> +			if (p->supports_set_get_features) {
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->set_feature_list);
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->get_feature_list);
-> +			}
-
-Which will require less wrapping in those lines that are already at the
-third indentation level.
-
-To me, it is also more logical: we exclude the cases we are not
-interested in and return early, and then if we are still in the case we
-are interested, we handle it.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
