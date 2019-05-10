@@ -2,87 +2,116 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495F2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF91BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16CA82070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E58D2070D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:56:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="P/BIaBim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfEJQyZ (ORCPT
+        id S1727915AbfEJQ4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:54:25 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:44968 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727771AbfEJQyZ (ORCPT
+        Fri, 10 May 2019 12:56:18 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:55003 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfEJQ4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:54:25 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TRMMEdW_1557507254;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRMMEdW_1557507254)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 May 2019 00:54:17 +0800
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Huang, Ying" <ying.huang@intel.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
+        Fri, 10 May 2019 12:56:18 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x4AGu96I012443;
+        Sat, 11 May 2019 01:56:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x4AGu96I012443
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557507369;
+        bh=vV6AZLFWCpm5ofhYbSPY345ZhBfp1+z8iHNyDEEWI+M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=P/BIaBimtCs7VjFAcmU0akw0CAvgVKPYU3j3/Q/qGjJtqNN6lOj3FW6uasKpsI7Ta
+         lokvICLw6gZXjPIXF6tP7pCf5Juwl5n+3JZh6PpTjjc4Sta1oyrmD682igq6Da6Xyo
+         X0kmrcg2cQ71sp4EZB8pA6SzgEurGvPOTuM2lFIRwrtk9rYlReFqkcPLBhA1QM2jTk
+         gxEVHRmfboWs/r+iORKk9nxnpkXEy2WbJu/tvepUVvphcK7bQVO3vcIAX0cBnVLdIh
+         izwAt5sBCV3RECayN8xjm5TFEz6qysSv5NipN72xnHnCklPM6cv4bQ4uKLc+tqeTLk
+         2wqT++JW2U0Bg==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         linux-kernel@vger.kernel.org
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <20190510163612.GA23417@bombadil.infradead.org>
- <3a919cba-fefe-d78e-313a-8f0d81a4a75d@linux.alibaba.com>
- <20190510165207.GB3162@bombadil.infradead.org>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <72fb1554-4cda-27f4-8c09-038ab3350ff8@linux.alibaba.com>
-Date:   Fri, 10 May 2019 09:54:11 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190510165207.GB3162@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Subject: [PATCH] kconfig: make parent directories for the saved .config as needed
+Date:   Sat, 11 May 2019 01:56:01 +0900
+Message-Id: <1557507361-7418-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With menuconfig / nconfig, users can input any file path from the
+"Save" menu, but it fails if the parent directory does not exist.
 
+Why not create the parent directory automatically. I think this is
+a user-friendly behavior.
 
-On 5/10/19 9:52 AM, Matthew Wilcox wrote:
-> On Fri, May 10, 2019 at 09:50:04AM -0700, Yang Shi wrote:
->> On 5/10/19 9:36 AM, Matthew Wilcox wrote:
->>> On Fri, May 10, 2019 at 10:12:40AM +0800, Huang, Ying wrote:
->>>>> +		nr_reclaimed += (1 << compound_order(page));
->>>> How about to change this to
->>>>
->>>>           nr_reclaimed += hpage_nr_pages(page);
->>> Please don't.  That embeds the knowledge that we can only swap out either
->>> normal pages or THP sized pages.  I'm trying to make the VM capable of
->>> supporting arbitrary-order pages, and this would be just one more place
->>> to fix.
->>>
->>> I'm sympathetic to the "self documenting" argument.  My current tree has
->>> a patch in it:
->>>
->>>       mm: Introduce compound_nr
->>>       Replace 1 << compound_order(page) with compound_nr(page).  Minor
->>>       improvements in readability.
->>>
->>> It goes along with this patch:
->>>
->>>       mm: Introduce page_size()
->>>
->>>       It's unnecessarily hard to find out the size of a potentially huge page.
->>>       Replace 'PAGE_SIZE << compound_order(page)' with page_size(page).
->> So you prefer keeping using  "1 << compound_order" as v1 did? Then you will
->> convert all "1 << compound_order" to compound_nr?
-> Yes.  Please, let's merge v1 and ignore v2.
+I changed the error messages in menuconfig / nconfig.
 
-Fine to me. I think Andrew will take care of it, Andrew?
+"Nonexistent directory" is no longer the most likely reason of the
+failure. Perhaps, the user specified the existing directory, or
+attempted to write to the location without write permission.
 
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ scripts/kconfig/confdata.c | 3 +++
+ scripts/kconfig/mconf.c    | 2 +-
+ scripts/kconfig/nconf.c    | 3 +--
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/kconfig/confdata.c b/scripts/kconfig/confdata.c
+index 431b805..b7bdd96 100644
+--- a/scripts/kconfig/confdata.c
++++ b/scripts/kconfig/confdata.c
+@@ -881,6 +881,9 @@ int conf_write(const char *name)
+ 		return -1;
+ 	}
+ 
++	if (make_parent_dir(name))
++		return -1;
++
+ 	env = getenv("KCONFIG_OVERWRITECONFIG");
+ 	if (env && *env) {
+ 		*tmpname = 0;
+diff --git a/scripts/kconfig/mconf.c b/scripts/kconfig/mconf.c
+index 5f8c82a..694091f 100644
+--- a/scripts/kconfig/mconf.c
++++ b/scripts/kconfig/mconf.c
+@@ -936,7 +936,7 @@ static void conf_save(void)
+ 				set_config_filename(dialog_input_result);
+ 				return;
+ 			}
+-			show_textbox(NULL, "Can't create file!  Probably a nonexistent directory.", 5, 60);
++			show_textbox(NULL, "Can't create file!", 5, 60);
+ 			break;
+ 		case 1:
+ 			show_helptext("Save Alternate Configuration", save_config_help);
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index ac92c0d..cbafe3b 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1438,8 +1438,7 @@ static void conf_save(void)
+ 				set_config_filename(dialog_input_result);
+ 				return;
+ 			}
+-			btn_dialog(main_window, "Can't create file! "
+-				"Probably a nonexistent directory.",
++			btn_dialog(main_window, "Can't create file!",
+ 				1, "<OK>");
+ 			break;
+ 		case 1:
+-- 
+2.7.4
 
