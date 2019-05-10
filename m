@@ -2,78 +2,147 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_HIGH,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FC6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED3C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CC2F2182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557458984;
-	bh=ubGfRjTtDMEutzD5VqoWgK8VhK2vlpDqI8+UnRha5SI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z2RCaNcpGgJptLY5s+4pmve/VDkVc9Dykjvh/sLCSPWh8AooI3YHYGbhCzYRagpfi
-	 GCuUSul3RpL6OREJqumduzY/MRzTqA6K811z9JoZhlsxJC1EqtEcen3SYiDTBwsCBC
-	 wwwqhZPglFPi+lazCwk1/Eo/vobuBZ0YwMLTKBIU=
+	by mail.kernel.org (Postfix) with ESMTP id 449052084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eWgPmiy8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IwYvbwHy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbfEJD3n (ORCPT
+        id S1727052AbfEJDbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 23:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfEJD3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 23:29:43 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Thu, 9 May 2019 23:31:21 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59128 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfEJDbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 23:31:20 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F07C4607EB; Fri, 10 May 2019 03:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557459080;
+        bh=ZdJ/UhXjQBUu2fWsqDO0l9IHAfnLU9pcY6tmqkKnt/I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eWgPmiy8q3KCGwv+cC+BJ7tbr7F/+kB1ksNKBz6GrsHwUjWYXd5wKBhOh2Sb7xdAn
+         9rjvXMrwFP+bmTzdMaObGYXHy1gONAKqfZZJlGe3JGN1Mwqm/fxaOME19CTHy6Sv29
+         TlpaS/Eoa/rRkGm/GXMywKmgCBnXRvSk1pkhcGVY=
+Received: from [10.204.78.109] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A3D52084A;
-        Fri, 10 May 2019 03:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557458982;
-        bh=ubGfRjTtDMEutzD5VqoWgK8VhK2vlpDqI8+UnRha5SI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lfEVBJIPxj5OqTJIYVykGxHqfqsiW4IffIXD4X/iesRS7gg14kkT95ElXmWpLuJrE
-         dKBQEeUCE4PLO/t8hgW942KJ0TQeAbyyYp4faHLc2BZiECtanuh9GS9nnrqpqa3nGa
-         flImr4Vb4LVaOoa8LfdsNx98mHJWMCdp4NwWuVFg=
-Date:   Fri, 10 May 2019 11:29:18 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] ARM: imx_v6_v7_defconfig: Enable
- CONFIG_THERMAL_STATISTICS
-Message-ID: <20190510032917.GG15856@dragon>
-References: <1556076113-4593-1-git-send-email-Anson.Huang@nxp.com>
+        (Authenticated sender: gkohli@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86DDC60592;
+        Fri, 10 May 2019 03:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557459079;
+        bh=ZdJ/UhXjQBUu2fWsqDO0l9IHAfnLU9pcY6tmqkKnt/I=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=IwYvbwHyjQBccR78yGpBpQQhaLwWMAnjUYY0tes3ePguKuTyPPWPHW6vzlJ7d83bU
+         NTaVcZY5ldVw0WtlZK1QYHmZFcPUKeWf8CiqCGJbHYdCGIX5SscsO0jl/DsjGCQ7ng
+         8dQREHYyuK6fINknqSgt3oi3olZm5JrEyFriRmKY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86DDC60592
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
+ directory
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Muchun Song <smuchun@gmail.com>
+Cc:     rafael@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+        zhaowuyun@wingtech.com, linux-arm-msm@vger.kernel.org
+References: <20190423143258.96706-1-smuchun@gmail.com>
+ <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
+ <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
+ <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
+ <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
+ <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
+ <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+ <20190504153440.GB19654@kroah.com>
+ <e79201c2-a00b-d226-adc2-62769ae1ad81@codeaurora.org>
+ <73b783e634551420dfa249816514fb31ed3487b6.camel@kernel.crashing.org>
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+Message-ID: <6d755534-714b-5d04-3280-b27fd8a1df1b@codeaurora.org>
+Date:   Fri, 10 May 2019 09:01:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556076113-4593-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <73b783e634551420dfa249816514fb31ed3487b6.camel@kernel.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 03:27:13AM +0000, Anson Huang wrote:
-> Enable CONFIG_THERMAL_STATISTICS to extend the sysfs interface
-> for thermal cooling devices and expose some useful statistics.
+Thanks for the comment, will check the patch and update.
+
+Regards
+Gaurav
+
+On 5/10/2019 4:52 AM, Benjamin Herrenschmidt wrote:
+> On Thu, 2019-05-09 at 20:08 +0530, Gaurav Kohli wrote:
+>> Hi ,
+>>
+>> Last patch will serialize the addition of child to parent directory,
+>> won't it affect performance.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> I doubt this is a significant issue, and there's already a global lock
+> taken once or twice in that path, the fix is purely to make sure that
+> the some locked section is used both for the lookup and the addition as
+> the bug comes from the window in between those two operations allowing
+> the object to be removed after it was "found".
+> 
+> Cheers,
+> Ben.
+>   
+>>
+>> Regards
+>> Gaurav
+>>
+>> On 5/4/2019 9:04 PM, Greg KH wrote:
+>>> On Sat, May 04, 2019 at 10:47:07PM +0800, Muchun Song wrote:
+>>>> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四
+>>>> 下午2:25写道：
+>>>>
+>>>>>>> The basic idea yes, the whole bool *locked is horrid
+>>>>>>> though.
+>>>>>>> Wouldn't it
+>>>>>>> work to have a get_device_parent_locked that always returns
+>>>>>>> with
+>>>>>>> the mutex held,
+>>>>>>> or just move the mutex to the caller or something simpler
+>>>>>>> like this
+>>>>>>> ?
+>>>>>>>
+>>>>>>
+>>>>>> Greg and Rafael, do you have any suggestions for this? Or you
+>>>>>> also
+>>>>>> agree with Ben?
+>>>>>
+>>>>> Ping guys ? This is worth fixing...
+>>>>
+>>>> I also agree with you. But Greg and Rafael seem to be high
+>>>> latency right now.
+>>>
+>>> It's in my list of patches to get to, sorry, hopefully will dig out
+>>> of
+>>> that next week with the buffer that the merge window provides me.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>
+>>
+> 
 
-I don't apply patch using base64 encoding.
-
-Shawn
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
