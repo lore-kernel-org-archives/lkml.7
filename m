@@ -2,226 +2,232 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0304CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:52:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54006C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EE4217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:52:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557474738;
-	bh=RWCk7FWLQCkznFj94llF4rlXPE3luZml0sl2ajMBiCc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZMucHrhbS71CXARrmM2QB1jnv3zkPtMfAFXXA0JXtaQnJfR5zHxhzJHBdjLnWy8C5
-	 tZxKYQyOR77BFPgkW7q6JYlv4VDD9lhEwwckwPArgqMvjS4bsBN5UtFYOTbQ5rrU2N
-	 n193d4oxz6FV0MlPLmODd0FlqQFOmXWrWNGXEKXA=
+	by mail.kernel.org (Postfix) with ESMTP id 1A4E0217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:59:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="N9kTZopR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbfEJHwR (ORCPT
+        id S1727049AbfEJH7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:52:17 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37184 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbfEJHwR (ORCPT
+        Fri, 10 May 2019 03:59:23 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:45881 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbfEJH7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:52:17 -0400
-Received: by mail-oi1-f196.google.com with SMTP id 143so3894864oii.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3oslHu1NscZhc+DysTmTMjmvChYt+BCh0Sxf/JECV2E=;
-        b=VakV7+ROmGY/JpBtHSUpP55g9YKTlJuGD63qbt3Q77zClaBoDzTRaje+GF9uwm8sFM
-         Qw12yuC8cf5pR6QoQq1sQqFu/wgPRUemPQa935e1lq9d8AcvAOuCyFsagI8e0z1Oz+TZ
-         RedtiYm4zUYpMjX8wHGWJGUechkul2AgfqUM9jqXZHZgRZTlfONM6nVORcWTlAhjfIR4
-         F4b2tN8A8t4uIayYCVVcECqSF/nb44GbYz0ZEhA56pnhSn+Bj6OHRiixXc5ot16HW/d7
-         QGCyvzucA0LPqAI/KWixrXeo/g3FHcqq1RhpjlpBGHQXcXiTgrVC8LpQxP+z4yOdFULb
-         GRgg==
-X-Gm-Message-State: APjAAAVlHqUqrnKKTaq2rRPVQuTlVBLUtG/XoKPNz//FFQLO5r4liARq
-        6Ip1xKD4WOXhXx8jVGNyATazYCnkPPR2/x3v/Jg=
-X-Google-Smtp-Source: APXvYqx6sQbx42NfJ53mCPa9gdt6t00k9w4a++pgteLGKNbfYpTCIys1an0LGqXpUfq96FAjXEXfc5qeFvezSrCCP0c=
-X-Received: by 2002:aca:f4c3:: with SMTP id s186mr4016815oih.68.1557474736378;
- Fri, 10 May 2019 00:52:16 -0700 (PDT)
+        Fri, 10 May 2019 03:59:23 -0400
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x4A7x9Dw010247
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 16:59:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4A7x9Dw010247
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557475150;
+        bh=+bD1W2W15drvCLRFZeUTvXsYCA2Xi5m+SSwd/mVTuT0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=N9kTZopRmsb9NQlMokW1vT7Mz0rnD34Xtn/wJhGOocIAp4hHexgzuZhQlMx0B8kEv
+         f/9wdvrcfjuU/HRgypBK0QHWyrk6CgxNZl3TkcNLLJOofUWybBp1iEborXTWZov43c
+         +egxYt4SsJ0S+bPfUIPhfSV3K3JqeKodoMrb8N1zcAw1FR2tAlDntpfn328zzVV6yN
+         7MofcP7QTOa4CZkkPOfV8pF1cO7hT8w7t72NHYyVInXL0bAWcX+d2ybbSG/woekN20
+         KJolCumAkTmpf0AAIGQGpfki4plOG6CzSCNZBpOVCo3GufI5dw031bvn5I3nuAEUW6
+         HyaOsypf9L26w==
+X-Nifty-SrcIP: [209.85.160.178]
+Received: by mail-qt1-f178.google.com with SMTP id y42so5574642qtk.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:59:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAXImR2qr8/mDcfcI8HXdZl91FbIgdOXUhPDM83fQUuJMBDv9O3d
+        ycE6dnkXb0xzEqMDgb/I3oWVvIKrUoDDmWFWmoc=
+X-Google-Smtp-Source: APXvYqxR/y9mdwfjln5IazpTwuayxFQpmKQ4y2FElg9yLLj7BoKzH1SffHp1m4IpRnDZmUOa0fzOSx2NcUPZOPzb2Wo=
+X-Received: by 2002:ac8:1003:: with SMTP id z3mr8233628qti.261.1557475148599;
+ Fri, 10 May 2019 00:59:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190430233803.GB10777@eros.localdomain> <CAJZ5v0g34RZmugeBm63UT3XRvUmdJtvCAjcowdwDffrRorrscQ@mail.gmail.com>
- <20190510023538.GA10356@eros.localdomain>
-In-Reply-To: <20190510023538.GA10356@eros.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 10 May 2019 09:52:03 +0200
-Message-ID: <CAJZ5v0jMnDnNLP8JO8-wQn+CxZtxn_4TAQn24SKABm5qGdKaWA@mail.gmail.com>
-Subject: Re: kobject_init_and_add() confusion
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190507175912.GA11709@kroah.com> <CAHk-=wh=Uscp=yO1p===JjH3x9NS-ez+wrk64Z0pw7EGfWvVTA@mail.gmail.com>
+ <20190510023659.GA219679@google.com>
+In-Reply-To: <20190510023659.GA219679@google.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 10 May 2019 16:58:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATXXH++opsHGYc0Q-J_D7TxzDD4Y0vrEEss++m8HTi5dg@mail.gmail.com>
+Message-ID: <CAK7LNATXXH++opsHGYc0Q-J_D7TxzDD4Y0vrEEss++m8HTi5dg@mail.gmail.com>
+Subject: Re: [GIT PULL] Driver core patches for 5.2-rc1
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 4:36 AM Tobin C. Harding <me@tobin.cc> wrote:
+Hi Joel,
+
+On Fri, May 10, 2019 at 11:38 AM Joel Fernandes <joel@joelfernandes.org> wrote:
 >
-> On Wed, May 01, 2019 at 09:54:16AM +0200, Rafael J. Wysocki wrote:
-> > On Wed, May 1, 2019 at 1:38 AM Tobin C. Harding <me@tobin.cc> wrote:
-> > >
-> > > Hi,
-> > >
-> > > Looks like I've created a bit of confusion trying to fix memleaks in
-> > > calls to kobject_init_and_add().  Its spread over various patches and
-> > > mailing lists so I'm starting a new thread and CC'ing anyone that
-> > > commented on one of those patches.
-> > >
-> > > If there is a better way to go about this discussion please do tell me.
-> > >
-> > > The problem
-> > > -----------
-> > >
-> > > Calls to kobject_init_and_add() are leaking memory throughout the kernel
-> > > because of how the error paths are handled.
-> > >
-> > > The solution
-> > > ------------
-> > >
-> > > Write the error path code correctly.
-> > >
-> > > Example
-> > > -------
-> > >
-> > > We have samples/kobject/kobject-example.c but it uses
-> > > kobject_create_and_add().  I thought of adding another example file here
-> > > but could not think of how to do it off the top of my head without being
-> > > super contrived.  Can add this to the TODO list if it will help.
-> > >
-> > > Here is an attempted canonical usage of kobject_init_and_add() typical
-> > > of the code that currently is getting it wrong.  This is the second time
-> > > I've written this and the first time it was wrong even after review (you
-> > > know who you are, you are definitely buying the next round of drinks :)
-> > >
-> > >
-> > > Assumes we have an object in memory already that has the kobject
-> > > embedded in it. Variable 'kobj' below would typically be &ptr->kobj
-> > >
-> > >
-> > >         void fn(void)
-> > >         {
-> > >                 int ret;
-> > >
-> > >                 ret = kobject_init_and_add(kobj, ktype, NULL, "foo");
-> > >                 if (ret) {
-> > >                         /*
-> > >                          * This means kobject_init() has succeeded
-> > >                          * but kobject_add() failed.
-> > >                          */
-> > >                         goto err_put;
-> > >                 }
-> > >
-> > >                 ret = some_init_fn();
-> > >                 if (ret) {
-> > >                         /*
-> > >                          * We need to wind back kobject_add() AND kobject_put().
+> On Thu, May 09, 2019 at 01:47:54PM -0700, Linus Torvalds wrote:
+> > [ Ok, this may look irrelevant to people, but I actually notice this
+> > because I do quick rebuilds *all* the time, so the 30s vs 41s
+> > difference is actually something I reacted to and then tried to figure
+> > out... ]
 > >
-> > kobject_add() and kobject_init() I suppose?
+> > On Tue, May 7, 2019 at 10:59 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > Joel Fernandes (Google) (2):
+> > >       Provide in-kernel headers to make extending kernel easier
 > >
-> > >                          * kobject_add() incremented the refcount in
-> > >                          * kobj->parent, that needs to be decremented THEN we need
-> > >                          * the call to kobject_put() to decrement the refcount of kobj.
-> > >                          */
+> > Joel and Masahiro,
+> >  this commit does annoying things. It's a small thing, but it ends up
+> > grating on my kernel rebuild times, so I hope somebody can take a look
+> > at it..
 > >
-> > So actually, if you look at kobject_cleanup(), it calls kobject_del()
-> > if kobj->state_in_sysfs is set.
+> > Try building a kernel with no changes, and it shouldn't re-link.
 > >
-> > Now, if you look at kobject_add_internal(), it sets
-> > kobj->state_in_sysfs when about to return 0 (success).
+> > HOWEVER.
 > >
-> > Therefore calling kobject_put() without the preceding kobject_del() is
-> > not a bug technically, even though it will trigger the "auto cleanup
-> > kobject_del" message with debug enabled.
+> > If you re-make the config in between, the kernel/kheaders_data.tar.xz
+> > is re-generated too. I think it checks timestamps despite having that
+> > "CHK" phase that should verify just contents.
 > >
-> > >                         goto err_del;
-> > >                 }
-> > >
-> > >                 ret = some_other_init_fn();
-> > >                 if (ret)
-> > >                         goto other_err;
-> > >
-> > >                 kobject_uevent(kobj, KOBJ_ADD);
-> > >                 return 0;
-> > >
-> > >         other_err:
-> > >                 other_clean_up_fn();
-> > >         err_del:
-> > >                 kobject_del(kobj);
-> > >         err_put:
-> > >                 kobject_put(kobj);
-> > >
-> > >                 return ret;
-> > >         }
-> > >
-> > >
-> > > Have I got this correct?
-> > >
-> > > TODO
-> > > ----
-> > >
-> > > - Fix all the callsites to kobject_init_and_add()
-> > > - Further clarify the function docstring for kobject_init_and_add() [perhaps]
-> > > - Add a section to Documentation/kobject.txt [optional]
-> > > - Add a sample usage file under samples/kobject [optional]
+> > I think the kernel/config_data.gz rules do the same thing, judging by
+> > the output.
 > >
-> > The plan sounds good to me, but there is one thing to note IMO:
-> > kobject_cleanup() invokes the ->release() callback for the ktype, so
-> > these callbacks need to be able to cope with kobjects after a failing
-> > kobject_add() which may not be entirely obvious to developers
-> > introducing them ATM.
+> > I use "make allmodconfig" to re-generate the same kernel config, which
+> > triggers this. The difference between "nothing changed" and "rerun
+> > 'make allmodconfig' and nothing _still_ should have changed" is quite
+> > stark:
+> [snip]
+> > No, this isn't the end of the world, but if somebody sees a simple
+> > solution to avoid that extra ten seconds, I'd appreciate it.
 >
-> It has taken a while for this to soak in.  This is actually quite an
-> insidious issue.  If I give an example and perhaps we can come to a
-> solution.  This example is based on the code (and assumptions) in
-> mm/slub.c
+> Hi Linus,
+> The following patch should fix the issue. The patch depends on [1] though. So
+> that will have to be pulled first (which I believe Greg is going to pull soon
+> since it is in his pipeline, and Steven Rostedt already Acked it)
+> [1] https://lore.kernel.org/patchwork/patch/1070199/
 >
-> If a developer has an object that they wish to add to sysfs they go
-> ahead and embed a kobject in it.  Correctly set up a ktype including
-> release function that just frees the object (using container of).  Now
-> assume that the object is already set up and in use when we go to set up
-> the sysfs entry.  If kobject_init_and_add() fails and we correctly call
-> kobject_put() the containing object will be free'd.  Yet the calling
-> code may not be done with the object, more to the point just because
-> sysfs setup fails the object is now unusable.  Besides the interesting
-> theoretical discussion this means we cannot just go and willy-nilly add
-> calls to kobject_put() in the error path of kobject_init_and_add() if
-> the original code was not written under the assumption that the release
-> method could be called during the error path (I have found 2 places at
-> least where behaviour of calling the release method is non-trivial to
-> ascertain).
-
-Well, generally speaking, you can add kobject_put() somewhere only if
-invoking the ->release() callback for the ktype of the kobject in
-question is safe at that point.
-
-Now, it may be unsafe for two reasons: there may be active references
-to the memory that would be freed by ->release() along with the
-kobject (as you said above) or the code in ->release() may have
-assumed some initialization to take place before it runs and so
-->release() should not be invoked before completing that
-initialization.
-
-> I guess, as Greg said, its just a matter that reference counting within
-> the kernel is a hard problem.  So we fix the easy ones and then look a
-> bit harder at the hard ones ...
+> For the below patch which fixes this issue, I have tested it and it fixes the
+> allmodconfig issue. Could you try it out as well? As mentioned above, the
+> patch at [1] should be applied first. Thanks a lot and let me know how it goes.
 >
-> Any better suggestion?
+> (I am going to be on a long haul flight shortly so I may not be available for
+> next 24-48 hours but will be there after, thanks).
+> ---8<-----------------------
+>
+> From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> Subject: [PATCH] gen_kheaders: Do not regenerate archive if config is not
+>  changed
+>
+> Linus reported that allmodconfig config was causing the kheaders archive
+> to be regenerated even though the config is the same. This is due to the
+> fact that the generated config header files are rewritten even if they
+> were the same from a previous run.
 
-Well, I would say we fix all of them, but we are careful enough to
-understand what's going on.
 
-And the more complex cases will take more work (and time) to fix.  As
-always. :-)
+I will fix the root cause in Kconfig anyway.
+
+
+This patch is still useful in case
+"one of Kconfig files is changed,
+but the resulted configuration is still the same"
+
+$ touch Kconfig
+$ make -j8
+
+
+But, you should simplify the code.
+
+
+> To fix the issue, we ignore changes to these files and use md5sum on
+> auto.conf to determine if the config really changed. And regenerate the
+> header archive if it has.
+
+
+Nope. This is really unnecessary.
+
+When CONFIG_FOO_BAR is changed, include/config/foo/bar.h
+should have already been touched by Kconfig,
+so the change of the kernel configuration
+is correctly detected.
+
+If you want to know the this Kbuild magic,
+read the comment block of scripts/basic/fixdep.c
+
+
+Please remove config_md5 and correct the commit log.
+
+Thanks.
+
+
+
+
+> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> ---
+>  kernel/gen_kheaders.sh | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/gen_kheaders.sh b/kernel/gen_kheaders.sh
+> index 581b83534587..f621242037f4 100755
+> --- a/kernel/gen_kheaders.sh
+> +++ b/kernel/gen_kheaders.sh
+> @@ -33,7 +33,7 @@ arch/$SRCARCH/include/
+>  # Uncomment it for debugging.
+>  # iter=1
+>  # if [ ! -f /tmp/iter ]; then echo 1 > /tmp/iter;
+> -# else;        iter=$(($(cat /tmp/iter) + 1)); fi
+> +# else         iter=$(($(cat /tmp/iter) + 1)); fi
+>  # find $src_file_list -type f | xargs ls -lR > /tmp/src-ls-$iter
+>  # find $obj_file_list -type f | xargs ls -lR > /tmp/obj-ls-$iter
+>
+> @@ -43,16 +43,27 @@ arch/$SRCARCH/include/
+>  pushd $kroot > /dev/null
+>  src_files_md5="$(find $src_file_list -type f                       |
+>                 grep -v "include/generated/compile.h"              |
+> +               grep -v "include/generated/autoconf.h"             |
+> +               grep -v "include/config/auto.conf"                 |
+> +               grep -v "include/config/auto.conf.cmd"             |
+> +               grep -v "include/config/tristate.conf"             |
+>                 xargs ls -lR | md5sum | cut -d ' ' -f1)"
+>  popd > /dev/null
+>  obj_files_md5="$(find $obj_file_list -type f                       |
+>                 grep -v "include/generated/compile.h"              |
+> +               grep -v "include/generated/autoconf.h"             |
+> +               grep -v "include/config/auto.conf"                 |
+> +               grep -v "include/config/auto.conf.cmd"             |
+> +               grep -v "include/config/tristate.conf"             |
+>                 xargs ls -lR | md5sum | cut -d ' ' -f1)"
+>
+> +config_md5="$(md5sum include/config/auto.conf | cut -d ' ' -f1)"
+> +
+>  if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
+>  if [ -f kernel/kheaders.md5 ] &&
+>         [ "$(cat kernel/kheaders.md5|head -1)" == "$src_files_md5" ] &&
+>         [ "$(cat kernel/kheaders.md5|head -2|tail -1)" == "$obj_files_md5" ] &&
+> +       [ "$(cat kernel/kheaders.md5|head -3|tail -1)" == "$config_md5" ] &&
+>         [ "$(cat kernel/kheaders.md5|tail -1)" == "$tarfile_md5" ]; then
+>                 exit
+>  fi
+> @@ -82,8 +93,9 @@ find $cpio_dir -type f -print0 |
+>
+>  tar -Jcf $tarfile -C $cpio_dir/ . > /dev/null
+>
+> -echo "$src_files_md5" > kernel/kheaders.md5
+> +echo "$src_files_md5" >  kernel/kheaders.md5
+>  echo "$obj_files_md5" >> kernel/kheaders.md5
+> +echo "$config_md5"    >> kernel/kheaders.md5
+>  echo "$(md5sum $tarfile | cut -d ' ' -f1)" >> kernel/kheaders.md5
+>
+>  rm -rf $cpio_dir
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
+
+
+--
+Best Regards
+Masahiro Yamada
