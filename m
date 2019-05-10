@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-11.9 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED633C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F47EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A1C217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0615821883
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfEJUBe (ORCPT
+        id S1728032AbfEJUBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55118 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbfEJUBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 May 2019 16:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727679AbfEJUBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 16:01:08 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AFE621855;
-        Fri, 10 May 2019 20:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D065521841;
+        Fri, 10 May 2019 20:01:07 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hPBhe-0006pi-6f; Fri, 10 May 2019 16:01:10 -0400
-Message-Id: <20190510200110.093108279@goodmis.org>
+        id 1hPBha-0006fv-MT; Fri, 10 May 2019 16:01:06 -0400
+Message-Id: <20190510200106.583928896@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Fri, 10 May 2019 15:56:31 -0400
+Date:   Fri, 10 May 2019 15:56:11 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -38,7 +38,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Subject: [PATCH 25/27] tools/lib/traceevent: Man page for tep_parse_header_page()
+Subject: [PATCH 05/27] tools/lib/traceevent: Man page for header_page APIs
 References: <20190510195606.537643615@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -49,29 +49,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man page for tep_parse_header_page() libtraceevent API.
+Create a man page for libtraceevent APIs:
+  tep_get_header_page_size(),
+  tep_get_header_timestamp_size(),
+  tep_is_old_format()
 
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-25-tstoyanov@vmware.com
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-5-tstoyanov@vmware.com
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- .../libtraceevent-parse_head.txt              | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
+ .../libtraceevent-header_page.txt             | 102 ++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt b/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
 new file mode 100644
-index 000000000000..c90f16c7d8e6
+index 000000000000..615d117dc39f
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-parse_head.txt
-@@ -0,0 +1,82 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
+@@ -0,0 +1,102 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_parse_header_page - Parses the data stored in the header page.
++tep_get_header_page_size, tep_get_header_timestamp_size, tep_is_old_format -
++Get the data stored in the header page, in kernel context.
 +
 +SYNOPSIS
 +--------
@@ -79,25 +83,38 @@ index 000000000000..c90f16c7d8e6
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_parse_header_page*(struct tep_handle pass:[*]_tep_, char pass:[*]_buf_, unsigned long _size_, int _long_size_);
++int *tep_get_header_page_size*(struct tep_handle pass:[*]_tep_);
++int *tep_get_header_timestamp_size*(struct tep_handle pass:[*]_tep_);
++bool *tep_is_old_format*(struct tep_handle pass:[*]_tep_);
 +--
-+
 +DESCRIPTION
 +-----------
-+The _tep_parse_header_page()_ function parses the header page data from _buf_,
-+and initializes the _tep_, trace event parser context, with it. The buffer
-+_buf_ is with _size_, and is supposed to be copied from
-+tracefs/events/header_page.
++These functions retrieve information from kernel context, stored in tracefs
++events/header_page. Old kernels do not have header page info, so default values
++from user space context are used.
 +
-+Some old kernels do not have header page info, in this case the
-+_tep_parse_header_page()_ function  can be called with _size_ equal to 0. The
-+_tep_ context is initialized with default values. The _long_size_ can be used in
-+this use case, to set the size of a long integer to be used.
++The _tep_get_header_page_size()_ function returns the size of a long integer,
++in kernel context. The _tep_ argument is trace event parser context.
++This information is retrieved from tracefs events/header_page, "commit" field.
++
++The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
++in kernel context. The _tep_ argument is trace event parser context. This
++information is retrieved from tracefs events/header_page, "timestamp" field.
++
++The _tep_is_old_format()_ function returns true if the kernel predates
++the addition of events/header_page, otherwise it returns false.
 +
 +RETURN VALUE
 +------------
-+The _tep_parse_header_page()_ function returns 0 in case of success, or -1
-+in case of an error.
++The _tep_get_header_page_size()_ function returns the size of a long integer,
++in bytes.
++
++The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
++in bytes.
++
++The _tep_is_old_format()_ function returns true, if an old kernel is used to
++generate the tracing data, which has no event/header_page. If the kernel is new,
++or _tep_ is NULL, false is returned.
 +
 +EXAMPLE
 +-------
@@ -107,12 +124,18 @@ index 000000000000..c90f16c7d8e6
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+char *buf;
-+int size;
-+buf = read_file("/sys/kernel/tracing/events/header_page", &size);
-+if (tep_parse_header_page(tep, buf, size, sizeof(unsigned long)) != 0) {
-+	/* Failed to parse the header page */
-+}
++	int longsize;
++	int timesize;
++	bool old;
++
++	longsize = tep_get_header_page_size(tep);
++	timesize = tep_get_header_timestamp_size(tep);
++	old = tep_is_old_format(tep);
++
++	printf ("%s kernel is used to generate the tracing data.\n",
++		old?"Old":"New");
++	printf("The size of a long integer is %d bytes.\n", longsize);
++	printf("The timestamps size is %d bytes.\n", timesize);
 +...
 +--
 +
