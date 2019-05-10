@@ -2,123 +2,107 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E2FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672BB21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1B7217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1dJasqS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="le54B0iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfEJRXP (ORCPT
+        id S1727922AbfEJRXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:23:15 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39191 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbfEJRXO (ORCPT
+        Fri, 10 May 2019 13:23:43 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41898 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfEJRXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:23:14 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w22so3323863pgi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 10:23:14 -0700 (PDT)
+        Fri, 10 May 2019 13:23:43 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f12so1110854plt.8;
+        Fri, 10 May 2019 10:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wKTqfFOYYmSMRtaxYzh3rDlijcoMoye7aE2PTxLgk+M=;
-        b=t1dJasqSSqrY0/mFV00RuccD2sYzP9oFsunitbSpAuSt1fNb9B4gI6obiOEsrvCosV
-         XetVN/B4ciIH1wZX1get32F9AQd8t2a9d3gDP6AsPv3LB7INIxqdRgULFZOg05v8SUV2
-         KWoVRoYp6OlQIjeJLPPgstr3MrvBzHD8WilxhrUTrcyH4jaP8+SgYt9Pp++Gkn017VTz
-         QVFigekAt09Z0tBuJPkW4jcL2JtPYquudkMRHyi5UNokSas+Y3ob+mQxcPk1CLxOGQZw
-         jtnaKMmOT+VLV+ndXd/zaRkkQpu4bTgVytF0r6ZcaddFPo5gAeOqVEYO0OBPU4HQwaVd
-         Y4gQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=r2qYqMWhJNEgscWQZ+ZT3SiWAu7rASUf9bzScRY/XLI=;
+        b=le54B0iustfb6VbkOBLy4evBUrDnke/px5zo1SwVa1y091/mn1idWWuXGbvrtQl5UA
+         Sg38cbzucJo5fVDiyFuX6ZQOLOZYYbOs2Xw04nqZf6WGOYzs6c2/n0NjGrI63On4xxf8
+         s5TfNrW2YdsuzDyN74TmZelp4lzVuy4VyJOmrT5Y8CC3Fn93V29ApawUGoG2u7q/+rlM
+         przMd8g6wPTtU+1VyHVRr0INwxxudIzLmHA/193ZMn+tvXY0W/erDpLiYP0dtB/PrQOC
+         HqNA1HXqCz/tZmZIX/ph4aAbTdoTfZ3nAK13wBcDkUCYymy0GEEAibPCzAxOCzAIEPLe
+         3JDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wKTqfFOYYmSMRtaxYzh3rDlijcoMoye7aE2PTxLgk+M=;
-        b=fkkpfIJcL0itplV05cxX6d7CKyMVubopIKxyW/l99UnSu5upKhp+QdYzTyn9SzM43F
-         jmpG79vkeOghNd5psl0BEe7om2VCsyV5bpsmFKL7WHN+9JWBjuXU3BQp4LZlhM2G1HzQ
-         Vyk1tagoRhzVzfIG4cGIbTi2pIXWbzf/jGRqPDcQYWsngFQ0PuWG0WZ1chRzvY+NS+8s
-         gKh3FyxWorzXhFZLDKM4X3QQil0qtoytNL6BYn+N5tsaQvSsuj3qAz1XzxQKUW65cdAk
-         oxb9w94sQpuRyg+ac0zLxYtgDlGhqCpCgYqn04n77oaqCTtT0VT0CuE9MKk2L35wJ+oO
-         CMFQ==
-X-Gm-Message-State: APjAAAVSDKf9tuZgTh+hvmQ2TIpBBdUUG2S+9+BWDl4wBwLIXtH/xuXQ
-        K07aHeJWWcgY/4hj12/4WqA=
-X-Google-Smtp-Source: APXvYqz/c5oedmTv7OXut2ZRscRfwnPG32MfuwyJponuIrspwqX1LA8WYBs8p7OnuJHVzPSao12rNA==
-X-Received: by 2002:aa7:9206:: with SMTP id 6mr15840843pfo.71.1557508993973;
-        Fri, 10 May 2019 10:23:13 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id z9sm6220113pga.92.2019.05.10.10.23.10
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=r2qYqMWhJNEgscWQZ+ZT3SiWAu7rASUf9bzScRY/XLI=;
+        b=i9mUV7xwl9KpO1CyB5216PtCuk9Psn0dmxuWvDylrDn5XIfChwWwgoSwcHpcyeXAMj
+         hXEQwEVy2AUM9jBs17ce19fH35x92yEbL2rOYxWN40CLwy/p/RPmEyWQnjV+LOMUSKyA
+         SY+F8NgEtH2RlWNOqSQ45yo7V1HU1F9ANEEzzZlU7bifM4c9rEyFzwj5I+EKkDT8QigF
+         1zm88Tqn87Zj1zk4UZsu6zmxbQGYnW109uEsuy9JaRKD9E7zvCYb9a3+ULSQ7twMk586
+         v4ckXjZI1tj8DMBF1nacNJzeMm66Dm4muFMETDxI7qA/kVFM74ZTDRNi/xf1WExdteZY
+         kDyA==
+X-Gm-Message-State: APjAAAVoEbZFK9/ah62xex6uh5Ws7hg1bSL8Bs7mRLpgJDxIOeiF7vqH
+        Da9jWC1uDK/MtqW5aBXSjyeyAPj56Dg=
+X-Google-Smtp-Source: APXvYqy8zqWRIdv00NPHtPelyq6cYIQi5Pq0I/swLvi7NnowRY6ehnDU7HWzDvuxJ3zSf29AYxsGtg==
+X-Received: by 2002:a17:902:324:: with SMTP id 33mr14823495pld.284.1557509021629;
+        Fri, 10 May 2019 10:23:41 -0700 (PDT)
+Received: from [192.168.1.7] ([117.248.70.207])
+        by smtp.gmail.com with ESMTPSA id d5sm6105029pgb.33.2019.05.10.10.23.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 10:23:12 -0700 (PDT)
-Date:   Fri, 10 May 2019 22:53:08 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tim Collier <osdevtc@gmail.com>,
-        Chris Opperman <eklikeroomys@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: wlan-ng: collect return status without variable
-Message-ID: <20190510172308.GA3075@hari-Inspiron-1545>
-References: <20190510023900.GA4390@hari-Inspiron-1545>
- <20190510105754.GA18105@kadam>
+        Fri, 10 May 2019 10:23:40 -0700 (PDT)
+Subject: Re: [PATCH 5.1 00/30] 5.1.1-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190509181250.417203112@linuxfoundation.org>
+From:   Vandana BN <bnvandana@gmail.com>
+Message-ID: <23f8e6bb-f8b6-335c-0148-2c4903159eb4@gmail.com>
+Date:   Fri, 10 May 2019 22:53:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510105754.GA18105@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190509181250.417203112@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 01:57:54PM +0300, Dan Carpenter wrote:
-> On Fri, May 10, 2019 at 08:09:00AM +0530, Hariprasad Kelam wrote:
-> > diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
-> > index 8a862f7..5dad5ac 100644
-> > --- a/drivers/staging/wlan-ng/cfg80211.c
-> > +++ b/drivers/staging/wlan-ng/cfg80211.c
-> > @@ -231,17 +231,12 @@ static int prism2_set_default_key(struct wiphy *wiphy, struct net_device *dev,
-> >  {
-> >  	struct wlandevice *wlandev = dev->ml_priv;
-> >  
-> > -	int err = 0;
-> > -	int result = 0;
-> > -
-> > -	result = prism2_domibset_uint32(wlandev,
-> > -		DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
-> > -		key_index);
-> > -
-> > -	if (result)
-> > -		err = -EFAULT;
-> > -
-> > -	return err;
-> > +	if (prism2_domibset_uint32(wlandev,
-> > +				   DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
-> > +				   key_index))
-> > +		return -EFAULT;
-> > +	else
-> > +		return 0;
-> 
-> We should just preserve the error codes from prism2_domibset_uint32().
-> 
-> 	return prism2_domibset_uint32(dev->ml_priv,
-> 				DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
-> 				key_index);
+
+On 10/05/19 12:12 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.1 release.
+> There are 30 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-   prism2_domibset_uint32 function can return  -ENODEV,-EPERM,-EBUSY if
-   fail  case.
+> Responses should be made by Sat 11 May 2019 06:11:35 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.1-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-   If we observe the pattern of calling this function,we can find
-   
-   "return -EFAULT on failure and 0 on success".
+Compiled , booted and no regressions on my system.
 
-   Due to this we  can not collect return status directly.
-> regards,
-> dan carpenter
-> 
+Thanks,
+
+Vandana.
+
