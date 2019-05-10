@@ -7,149 +7,77 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78502C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F41CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4734E20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9E920850
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:35:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCovYDX9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1b9PSNP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfEJU2Q (ORCPT
+        id S1727922AbfEJUfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:28:16 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43188 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbfEJU2P (ORCPT
+        Fri, 10 May 2019 16:35:09 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37343 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727762AbfEJUfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:28:15 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so9162175wro.10;
-        Fri, 10 May 2019 13:28:14 -0700 (PDT)
+        Fri, 10 May 2019 16:35:09 -0400
+Received: by mail-it1-f195.google.com with SMTP id l7so11317724ite.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 13:35:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4oo9VpI9u4DIMN55RUb50fL1HXNAqX7lB/VYU3Tw7LE=;
-        b=VCovYDX9Wyzos5C0L+I7uw39UNUJzRUKzQBCqQJAMJ83uORcI0Qfne601d/zy5yvJi
-         Lvv5uNXffTJUEoLAXaU8OLDNyMOIOwDPUJnOk5SG1vof7Xz9KJOT+jygJoL8KC7PnFdB
-         yjtRX/k3jJl83o6DjV5VwztTekgeAU9/s7iEkpUuNQzb/wrVCCWBTkldLsE+e1FR/uoL
-         8L+/Y+Pl2QebH2nBirtO+GZMBW77oWZy9jrMnEIIDTfx2b6V7bbYO/4g6dreoaPa1nNQ
-         6qW+bjAsjs3ubp7YK+CkOoa/2twou6Qs7YvdkZGmfcSCXgTIovaYxc6haxVWUtPuyUT4
-         YhnQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hL++2fQtVcBcemd3HMY6tCiADu4XC0og1WjDAbLOUQM=;
+        b=E1b9PSNPBbhgMZMTVNXTGlJqb6S/p+8s+/bVnewxr9ELVRjAaaOPHPYdTrzxApIozC
+         3t4jfPjPMnx4jeJ+hM2N8+85nlc0z1lyKDDzz43TVzU2SxMfyufYM9mIqgUufcbSYmbn
+         7iJIKtvM6VssLd/K1frs/EFopOK1/Ne2lKs1S91PkYwsfOc2PMxdKUxpCkUGBOJNukId
+         VWAln6lgv1bTkpNN/jLzUq7b0krgG+86+WmXJ2St7u7I6cDfSNppya2YLhf6Aq/DydJV
+         s2OQ6FsQMOQu9OJd+//B/EvYhUe3atds/biREjrf28hPsnvpyUUc1u4soVwv/vxFscD1
+         h8vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4oo9VpI9u4DIMN55RUb50fL1HXNAqX7lB/VYU3Tw7LE=;
-        b=Yt19bEqMRaUSbl7mf2mKihNWfIL6KWoitzeOkD2OELYA4P3ItIJGWZjiLM4Q0vABnn
-         vIrJeRfjRQ5waH2nvdPXZXyNXvAPoJm3PhEvx+hr+mj1exQWFy1bA6FjVsORS29XPG1s
-         iTls9QmdeYXZ6+SQZbce8rNRxIxfD9+ZjtPDavN/KhwlQcleoHaOfpMzAS0Ufk6+bcbC
-         L8zsp7/RiA9ki0D+DTs4T3dQAtc/+gZDPbuL50RBflyBHTcSXI8Unww6GVYKHZJ8juZL
-         UvKh1XuJl1DTyU8xlaNLVMvk/vlBnpcNF2gXje67T9z6nhO2Io/yLf61gUGv9TC3zU5Q
-         IeFg==
-X-Gm-Message-State: APjAAAVJ/pDYg0k04FDAhTKm9s0vdW8Il2wzEv5iMOXobq0PZUpp6ivg
-        icp5It5TrfqzKNMbF7qnWVEiBJvLvNo=
-X-Google-Smtp-Source: APXvYqwuNzEseRsIWDyW2EXkfd43eSF011BcsKgSqhJXIIeU2zzYr3MHuKXEFr6WTOCTb/CoO5Mpbg==
-X-Received: by 2002:adf:f788:: with SMTP id q8mr9183954wrp.181.1557520093304;
-        Fri, 10 May 2019 13:28:13 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:b86d:cacd:ffb5:67a5? (p200300EA8BD45700B86DCACDFFB567A5.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:b86d:cacd:ffb5:67a5])
-        by smtp.googlemail.com with ESMTPSA id a15sm9528424wru.88.2019.05.10.13.28.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 13:28:12 -0700 (PDT)
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-To:     Vicente Bergas <vicencb@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
-Date:   Fri, 10 May 2019 22:28:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hL++2fQtVcBcemd3HMY6tCiADu4XC0og1WjDAbLOUQM=;
+        b=liiefnbhPkoBaV67Ob4pQ8/361x9Pzwu19hkv54YlN+Vh/GbrVjkTAYMHocto5E1aA
+         VlhYqzys0WTBO3qkk4lMKnyzI7zab4WEkcj/Mlwamf1VgtwU4AgdhRNBVD3DPQiuyIn2
+         pbXz1QRAbiqCckyPRioa6SNxVobeHa9VKliGInkiL1b/MD6Q49oknkEbaoTMcH7T+FZa
+         NoVXE9am+XcGANdEw9uAkiDZxZuLbQc5PxhhIFWK8bw9Wa26R02xNqfEDvshulG5qieW
+         BBVLUNVmXVMyaLFRRlmXVDP+7BcZQomqXP6z0/9iXsZuWK4E2Zgft44sNyzxvBJ9fAMr
+         qPcw==
+X-Gm-Message-State: APjAAAVWai1J3Ih6KolOVRLpsGJWrHQacgz7kiIh1gaVPKO57tpz5jb8
+        gJRlwFY4miv3I0h/9KF7TchkfYHW65IxlQ+sQGx1zA==
+X-Google-Smtp-Source: APXvYqxlErmY8vWfOnLWWMSub/Y/z3/XiSVXzHpmCbXvbQ84l8sjIZ/uqt0ZuRjJvLGzx6VVhTRWg1bKtkBMBG15sNs=
+X-Received: by 2002:a24:f946:: with SMTP id l67mr8837449ith.43.1557520508599;
+ Fri, 10 May 2019 13:35:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190510193833.1051-1-bnvandana@gmail.com>
+In-Reply-To: <20190510193833.1051-1-bnvandana@gmail.com>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Fri, 10 May 2019 22:34:57 +0200
+Message-ID: <CAKXUXMzJCmSZqJ+VFxEOgf_HNgKfPfKS7OECw_RzSxVrDZpCGw@mail.gmail.com>
+Subject: Re: [Linux-kernel-mentees] [PATCH] Staging: kpc2000: kpc_dma: resolve
+ checkpath errors and warnings
+To:     Vandana BN <bnvandana@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.05.2019 17:05, Vicente Bergas wrote:
-> Hello,
-> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
-> pointer dereference.
-> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
->  net: phy: realtek: Add rtl8211e rx/tx delays config
-> which uncovered a bug in phy-core when attempting to call
->  phydev->drv->read_page
-> which can be null.
-> The patch to drivers/net/phy/phy-core.c below fixes the kernel null pointer
-> dereference. After applying the patch, there is still no network. I have
-> also tested the patch to drivers/net/phy/realtek.c, but no success. The
-> system hangs forever while initializing eth0.
-> 
-> Any suggestions?
-> 
-The page operation callbacks are missing in the RTL8211E driver.
-I just submitted a fix adding these callbacks to few Realtek PHY drivers
-including RTl8211E. This should fix the issue.
-Nevertheless your proposed patch looks good to me, just one small change
-would be needed and it should be splitted.
+On Fri, May 10, 2019 at 9:39 PM Vandana BN <bnvandana@gmail.com> wrote:
+>
+> This patch resolves coding style errors and warnings reported by chechpatch
+>
 
-The change to phy-core I would consider a fix and it should be fine to
-submit it to net (net-next is closed currently).
+I did not look at the patch in detail, but you might want to also
+consider to replace the CamlCase (function) names by names in
+lower-case with underscores. That is the common style in the kernel.
 
-Adding the warning to the Realtek driver is fine, but this would be
-something for net-next once it's open again.
-
-> Regards,
->  Vicenç.
-> 
-Heiner
-
-> --- a/drivers/net/phy/phy-core.c
-> +++ b/drivers/net/phy/phy-core.c
-> @@ -648,11 +648,17 @@
-> 
-> static int __phy_read_page(struct phy_device *phydev)
-> {
-> +    if (!phydev->drv->read_page)
-> +        return -EOPNOTSUPP;
-> +   
->     return phydev->drv->read_page(phydev);
-> }
-> 
-> static int __phy_write_page(struct phy_device *phydev, int page)
-> {
-> +    if (!phydev->drv->write_page)
-> +        return -EOPNOTSUPP;
-> +
->     return phydev->drv->write_page(phydev, page);
-> }
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -214,8 +214,10 @@
->      * for details).
->      */
->     oldpage = phy_select_page(phydev, 0x7);
-> -    if (oldpage < 0)
-> -        goto err_restore_page;
-> +    if (oldpage < 0) {
-> +        dev_warn(&phydev->mdio.dev, "Unable to set rgmii delays\n");
-
-Here phydev_warn() should be used.
-
-> +        return 0;
-> +    }
-> 
->     ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
->     if (ret)
-> 
-> 
-
+Lukas
