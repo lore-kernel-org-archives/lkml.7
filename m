@@ -2,103 +2,176 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C043C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049B9C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA63217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CB6217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:34:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="e0ZX4Jpi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wsf8MuEL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfEJGcn (ORCPT
+        id S1727026AbfEJGer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:32:43 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50234 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbfEJGcm (ORCPT
+        Fri, 10 May 2019 02:34:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37197 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfEJGer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:32:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f204so619275wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:32:41 -0700 (PDT)
+        Fri, 10 May 2019 02:34:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id n4so4103930ljg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5aFXxfy77Ic34QWQ5GyVYlUA7W7TfPuD7q4ka2XVqr0=;
-        b=e0ZX4JpibBrisiBzW5fDSI4DF9+D/cUR4XX40zQgHn7PJLeRee2ODl9CwEjegfnu9Q
-         S3E0LdTX5shnBKw/c5Uvb4WINrFHwLJy3KkmhKVZvq6yU7IDY3QbdcKrakU+MYmCLLwu
-         /3aGbM8Iv4b3eVJCtzHKm7132wqfzhzpibwlg=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BAEbwR8QRpMgjcJjAAVA2B4jt0AWF7IWj+Gsp1Up3jA=;
+        b=Wsf8MuELCRvBk4EVLunFK6oxmiTHv+0fZJHzT6xl7314UO2UmnFYBAkAwD3hwAMsxz
+         ZltavBvKemX/EUKsoR5C5SDVYsvL7fBL7dK1ZCSNKgE09ewByoK1OV6z70piqM/MQr/U
+         lyrX2hGJ2L/HLv8zZH3xYJ/pBvGgux9dHxVgCbSQ/GE/NhBokzVq0ciAdfUCImhbuDvy
+         D32QesRuRowtkVkZGgahXPYBFRvofvEN1uCnz1YtmNzb+cJ5kBdRFH48dY2JyudGl8l/
+         G6WtyPCF4HlUFlgTzL9V8F/zg242xGWA3agoqm+J7fI2vyN0UD/6RqVmvNgHOcIOnhMS
+         pnKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5aFXxfy77Ic34QWQ5GyVYlUA7W7TfPuD7q4ka2XVqr0=;
-        b=VB7MdQmZoc3uJytEY47DwbzewkjahM0vIQq+r+mknl66QOSHHZHuDoHS8Hlbu2Wi9w
-         vZZR7FarqRNGCg6JfYROXUoJKmhu5awX1vTGpqH9twP64gdZLoM2gU1WcdFQGHMWPG4d
-         Ycx+QfXbMicdnyVFKhln4hKccgWmMprL3Imeqpwk/7pYAJn3d6ACjsW2OjGVcHWzIHYU
-         3ILQU/EK91jvG44bUQVoCM38cFVB8BlEHmorrFU5WZ3Yp7AimCGRZnYnMFJ85fmSdIRu
-         iKu04L1QcYTpuqLi2zdZabLI3WRTbgO957GT5jYOXeubOCDtJMun+XV1rG/yG7O4PFaw
-         /tJA==
-X-Gm-Message-State: APjAAAVSrb45Vs4coP+angW5EVnfbQmpxH3jGHAs29vs84Yk5pnkm3/N
-        u6LiREF/2reO3JXbKr2j8b92Qw==
-X-Google-Smtp-Source: APXvYqzy1xJJdTFH2o8HtuPJUDy8LO0XXT9dLr9SIccg7b0Y35dFsFQf2Gz0PeZb1/AqBFwhYfn+xw==
-X-Received: by 2002:a05:600c:2291:: with SMTP id 17mr5509469wmf.132.1557469961097;
-        Thu, 09 May 2019 23:32:41 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id f2sm10470036wmh.3.2019.05.09.23.32.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 23:32:40 -0700 (PDT)
-Date:   Fri, 10 May 2019 08:32:34 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: Question about sched_setaffinity()
-Message-ID: <20190510063234.GA4865@andrea>
-References: <20190430105129.GA3923@linux.ibm.com>
- <20190430115551.GT2623@hirez.programming.kicks-ass.net>
- <20190501191213.GX3923@linux.ibm.com>
- <20190501151655.51469a4c@gandalf.local.home>
- <20190501202713.GY3923@linux.ibm.com>
- <20190507221613.GA11057@linux.ibm.com>
- <20190509173654.GA23530@linux.ibm.com>
- <20190509214025.GA5385@andrea>
- <20190509215505.GB5820@andrea>
- <20190509221730.GM3923@linux.ibm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BAEbwR8QRpMgjcJjAAVA2B4jt0AWF7IWj+Gsp1Up3jA=;
+        b=dKElElJMVlrX6bNGLZd0ftNlzSgxrKuPczQnALkDLLT141bJ516nRaOStSrFhu75Hb
+         EAUXhvBs077qMfEpF2lDEuovIUDBvsYJEdCPXQetiNLx78fv9Qgcyz84TmK1EP4Rqjte
+         9yeIWBRiD/Q1ijtY+HdL/RxUpd5Ng9jhuUgum0IQxUbQe1JaLYqIsp6SvLPdgSlMgmDv
+         LJSEAlzWbKSQLy2KqvdhefE078spBSxDwOjYY6G/mHcqDb4OvUL+VnQVKdXA31GMFbJP
+         5tGo/9l0lmZcE3IYywGvnw9gUPF3UzrFteed9LgUpG9+JmtotYBQWaxr+KtFIvz5t1wy
+         Zi5w==
+X-Gm-Message-State: APjAAAXnkLtywQKLc+MI33uphXycJdGgWxzCAHCdcSRJxi+Q/rxLyl47
+        KnVfbvgMvOqG2fQ0pcBdWfyEf9W0+b1PpX3FjjFfqw==
+X-Google-Smtp-Source: APXvYqyqSG7veyoUigRuOnafdOxwB/aTbJK1YNxE3BCd2WT2SrMTyti3XYmHl5WYfP0Op6ThILiyoK/xNS1L9TPpMVA=
+X-Received: by 2002:a2e:9193:: with SMTP id f19mr4600756ljg.111.1557470084980;
+ Thu, 09 May 2019 23:34:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509221730.GM3923@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190509181301.719249738@linuxfoundation.org>
+In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 10 May 2019 12:04:33 +0530
+Message-ID: <CA+G9fYsJQsTaeFGpHqO2EH=67TfXB5KaUTWcfuk=88Ma+bL07Q@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/66] 4.19.42-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > Adding some "sched" folks in Cc: hopefully, they can shed some light
-> > > about this.
-> > 
-> > +Thomas, +Sebastian
-> > 
-> > Thread starts here:
-> > 
-> > http://lkml.kernel.org/r/20190427180246.GA15502@linux.ibm.com
-> 
-> Peter Zijlstra kindly volunteered over IRC to look at this more closely
-> tomorrow (well, today, his time).  It is quite strange, though!  ;-)
+On Fri, 10 May 2019 at 00:35, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.42 release.
+> There are 66 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat 11 May 2019 06:11:18 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.42-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Sounds good!  ;-)
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thanx,
-  Andrea
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.19.42-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 82fd2fd59cffa3045f205da555c0defe8bb35912
+git describe: v4.19.41-67-g82fd2fd59cff
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.41-67-g82fd2fd59cff
+
+No regressions (compared to build v4.19.41)
+
+No fixes (compared to build v4.19.41)
+
+Ran 24988 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
