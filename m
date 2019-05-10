@@ -4,57 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EAC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99578C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390F22175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4B52175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ly8BsxX3"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wb2zQMJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfEJKPo (ORCPT
+        id S1727667AbfEJKQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:15:44 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47625 "EHLO
+        Fri, 10 May 2019 06:16:27 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47693 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbfEJKPm (ORCPT
+        with ESMTP id S1727547AbfEJKPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:15:42 -0400
+        Fri, 10 May 2019 06:15:44 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A38E2891AC;
-        Fri, 10 May 2019 22:15:40 +1200 (NZST)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4F167891B0;
+        Fri, 10 May 2019 22:15:41 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1557483340;
-        bh=rC/ldNBQ62uARFK7cDeSAl/BYe+4iwU1kkx4L4JMo3U=;
+        s=mail181024; t=1557483341;
+        bh=v9Aw/YaE6GdbUbtrxy0F2tvVWbTIe52/yaBuyQsceOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ly8BsxX38zvGDEoQoIgcRh3LZBoKZdk7xd6v6vOL6r5vqMUoglrP9bWx4nMpt/2DK
-         l29DLSNMzVQBQf1BFuK/BtsL1mx7Wr4IPJC4299aRdKx4nvp94iQHlQ34FPFuLClwx
-         NpHXaGJFM0QFCmXIONxzK+hlWR5d232+swdHbDlAByhcpvvO+CzeXQDEKXgMZIoAkn
-         HdFKOEgsljYSyKN1ilr2NG4vH1mNCt3kkbkI2KGlbzyCr7fdfROHtGQi3ChFpo1F3a
-         gpUdm6Mie1cmqMvQxkhpyvU/jt5umsIhDZtYxym9+HgfI6AKAkvBSIU2BXV7mJ/j7s
-         ahb66yw3rUk7Q==
+        b=wb2zQMJieaPnL/5Jpr6mqs1Owe21amgzlyuUkdTX0d9kkMmbOdzlVnwgfGdVHk+BM
+         518LQ1vOSalblu+bDNvgQYiNFzUOXte4HGGywCR4C+m4OvafK3w7j0uv9uh5vKl9Si
+         x/4lksomABVYvJ8vVh8sHBdxz1H5SkQU5ATGVe7D2IPJ2V3k/KJAk8WOMucBCzHQMj
+         NKLjqznwLCm3CTtjdP/dY3uGEWrHjpZlpaKYNB7w1JLBdY37920z4blX9YajE2JfmE
+         Oz05pAVG4dKiskt2xquRPQ4JJGyMWYYB2Cqg+lmGIOyBgRlEj2ZNIQiIWoPu55QSY9
+         fkplyi7w3zf7g==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cd54f4d0001>; Fri, 10 May 2019 22:15:41 +1200
+        id <B5cd54f4c0002>; Fri, 10 May 2019 22:15:41 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 49F3413EF9E;
-        Fri, 10 May 2019 22:15:40 +1200 (NZST)
+        by smtp (Postfix) with ESMTP id D1D8A13EF8C;
+        Fri, 10 May 2019 22:15:39 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id D2F681E1D5B; Fri, 10 May 2019 22:15:39 +1200 (NZST)
+        id 66CA71E1D5B; Fri, 10 May 2019 22:15:39 +1200 (NZST)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
 To:     linux@armlinux.org.uk, bp@alien8.de, mark.rutland@arm.com,
         robh+dt@kernel.org, mchehab@kernel.org, james.morse@arm.com,
         jlu@pengutronix.de, gregory.clement@bootlin.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@free-electrons.com>,
         Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v8 6/9] ARM: l2x0: add marvell,ecc-enable property for aurora
-Date:   Fri, 10 May 2019 22:15:33 +1200
-Message-Id: <20190510101536.6724-7-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v8 2/9] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+Date:   Fri, 10 May 2019 22:15:29 +1200
+Message-Id: <20190510101536.6724-3-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 References: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
@@ -66,39 +67,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The aurora cache on the Marvell Armada-XP SoC supports ECC protection
-for the L2 data arrays. Add a "marvell,ecc-enable" device tree property
-which can be used to enable this.
+From: Jan Luebbe <jlu@pengutronix.de>
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-[jlu@pengutronix.de: use aurora specific define AURORA_ACR_ECC_EN]
+The macro name is too generic, so add a AURORA_ prefix.
+
 Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
+ arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
+ arch/arm/mm/cache-l2x0.c                        | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Notes:
-    Changes in v7:
-    - remove marvell,ecc-disable
-
- arch/arm/mm/cache-l2x0.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
+diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/i=
+nclude/asm/hardware/cache-aurora-l2.h
+index c86124769831..dc5c479ec4c3 100644
+--- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
++++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
+@@ -41,7 +41,7 @@
+ #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
+ 	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
+=20
+-#define MAX_RANGE_SIZE		1024
++#define AURORA_MAX_RANGE_SIZE	1024
+=20
+ #define AURORA_WAY_SIZE_SHIFT	2
+=20
 diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index b70bee74750d..e5380f7b14a5 100644
+index a00d6f7fd34c..7d2d2a3c67d0 100644
 --- a/arch/arm/mm/cache-l2x0.c
 +++ b/arch/arm/mm/cache-l2x0.c
-@@ -1505,6 +1505,11 @@ static void __init aurora_of_parse(const struct de=
-vice_node *np,
- 		mask |=3D AURORA_ACR_FORCE_WRITE_POLICY_MASK;
- 	}
+@@ -1364,8 +1364,8 @@ static unsigned long aurora_range_end(unsigned long=
+ start, unsigned long end)
+ 	 * since cache range operations stall the CPU pipeline
+ 	 * until completion.
+ 	 */
+-	if (end > start + MAX_RANGE_SIZE)
+-		end =3D start + MAX_RANGE_SIZE;
++	if (end > start + AURORA_MAX_RANGE_SIZE)
++		end =3D start + AURORA_MAX_RANGE_SIZE;
 =20
-+	if (of_property_read_bool(np, "marvell,ecc-enable")) {
-+		mask |=3D AURORA_ACR_ECC_EN;
-+		val |=3D AURORA_ACR_ECC_EN;
-+	}
-+
- 	if (of_property_read_bool(np, "arm,parity-enable")) {
- 		mask |=3D AURORA_ACR_PARITY_EN;
- 		val |=3D AURORA_ACR_PARITY_EN;
+ 	/*
+ 	 * Cache range operations can't straddle a page boundary.
 --=20
 2.21.0
 
