@@ -2,85 +2,126 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0508DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE81C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDEE020989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC520989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuXvBtYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfEJJpR (ORCPT
+        id S1727256AbfEJJsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:45:17 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3008 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727048AbfEJJpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:45:17 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 642C15B17988DADC3274;
-        Fri, 10 May 2019 17:45:15 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 10 May 2019 17:45:15 +0800
-Received: from [10.134.22.195] (10.134.22.195) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Fri, 10 May 2019 17:45:14 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: don't clear CP_QUOTA_NEED_FSCK_FLAG
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190212023343.52215-1-jaegeuk@kernel.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <5ee36ad7-9fe9-adcf-0974-5c17fa8d50ee@huawei.com>
-Date:   Fri, 10 May 2019 17:45:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 10 May 2019 05:48:25 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46531 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbfEJJsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:48:25 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f37so4543038edb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 02:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=BmS+YypmTH70NsRGDtlhScKeOjsqeldkuJn7h8AAN6c=;
+        b=cuXvBtYbowHAlEPUTiQUTRleTW6shxpAvzPebDGFO0ru7nxN3G+8tX+gUwr6KqEZYh
+         8zXUQqcbGWyQxwp6TzfrFzJzlF/NHyVOcY31l5WmzJgU/dSONGbTjqeQZX0L2gjOjJTo
+         geF4IZHqzOpNZszfVl6YIgnEWnWVDvZfWHOjSz62tYxRSN7vo7+qK9BnTfj8hFT+k3pC
+         0lw98VmvoYUNn6WUBzNs14DSSKHyabeDHgGhpiYiJbwxHIiOvrsrijzuep35p/Vsx6h9
+         UzxcMhhAeUvHvTtRNm/W6OP+kjCBRz/ETg+XoRMrKzrEDtgjib9J9mSDngZkDbS+8BBm
+         SrqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=BmS+YypmTH70NsRGDtlhScKeOjsqeldkuJn7h8AAN6c=;
+        b=PpCVzQ+ep6LlV+/wxrHa2a//dkvyQHTPyTqP7ft8XAvcO1TCbfghUtujsCdh8ZdrJg
+         LbvDXidXwDA81xP5OISVwUyb6XDNStK1A9XYEfgWNslgHqfeBrtkkXU3UqFL9J0zvcYU
+         zfPM2XtS+j75bRICnUBS5gX+oWIIy5mBF5Pir4iEVnUyP8yzqyKWlQGXLMvuIydHMSoK
+         3PjrbjNxV62A89Lq5jLfTvleo3lTKSUSoXjbgEBJ85UnL363dU2s4fglMQyCFZjpg7vJ
+         wNanossVkr0QNrO+4K43Cfd9Yp3berhMSwEG6Fz6fNYERQrTAmmwPPmVML0/LG23a37L
+         vkdg==
+X-Gm-Message-State: APjAAAXFagEuGOQj2gEaryx5nsgQQUhFxyvCAjZ6HlYzGicDLRyU9via
+        Y5VmOwmH5xEsY/7K7X0GF+i5ZppTzU8=
+X-Google-Smtp-Source: APXvYqyjzXIRVVWmITXFTDZUL5xGIiCwXuBtZWZd4wR+9isCZ0p2Yrs1EyP5Mecs+ps1R8B6u1NRNg==
+X-Received: by 2002:a50:d2d4:: with SMTP id q20mr9928677edg.120.1557481703345;
+        Fri, 10 May 2019 02:48:23 -0700 (PDT)
+Received: from [192.168.178.43] ([88.130.159.71])
+        by smtp.gmail.com with ESMTPSA id o34sm1289914eda.97.2019.05.10.02.48.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 02:48:22 -0700 (PDT)
+Date:   Fri, 10 May 2019 09:44:53 +0000 (UTC)
+From:   Roderick <hruodr@gmail.com>
+To:     Poul-Henning Kamp <phk@phk.freebsd.dk>
+cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
+        freebsd-current@freebsd.org
+Subject: Re: Danish FreeBSD Developer hates jews collectively
+In-Reply-To: <2052.1557444762@critter.freebsd.dk>
+Message-ID: <alpine.BSF.2.21.9999.1905100843270.999@fbsd.local>
+References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it> <2052.1557444762@critter.freebsd.dk>
+User-Agent: Alpine 2.21.9999 (BSF 287 2018-06-16)
 MIME-Version: 1.0
-In-Reply-To: <20190212023343.52215-1-jaegeuk@kernel.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-ClientProxiedBy: dggeme707-chm.china.huawei.com (10.1.199.103) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/2/12 10:33, Jaegeuk Kim wrote:
-> If we met this once, let fsck.f2fs clear this only.
-> Note that, this addresses all the subtle fault injection test.
-> 
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
->  fs/f2fs/checkpoint.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index 03fea4efd64b..10a3ada28715 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -1267,8 +1267,6 @@ static void update_ckpt_flags(struct f2fs_sb_info *sbi, struct cp_control *cpc)
->  
->  	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
->  		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
-> -	else
-> -		__clear_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
 
-Jaegeuk,
+Dear Poul-Henning!
 
-Will below commit fix this issue? Not sure, but just want to check that.. :)
+I do get your point. I do not think you are an antesimite. I would think
+the opposite: most antisemites hide behind their israel-friendliness.
 
-f2fs-tools: fix to check total valid block count before block allocation
+I appreciate your involvement on what is happenning in the near east.
+From the end of WWI the situation of the palestinians got only worse
+and worser, and with the last developements, faster.
 
-Thanks,
+You got it, it was not a skilled use of twitter, but unfortunately
+not only that: you made some errors. It is perhaps not your guilt,
+because these errors are promoted by the israeli propaganda.
 
->  
->  	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
->  		__set_ckpt_flags(ckpt, CP_QUOTA_NEED_FSCK_FLAG);
-> 
+From the very beginning there was jewish oposition to the zionist
+enterprise, due to different reasons, from so called secular jews
+and from religious ones. Many as radical as the most radical
+palestinian. In the internet era this should be clear to you:
+I suppose you are new in the thema. This is why one cannot
+use the word "jews" to name a party in the conflict, unless in a
+very restricted context. The AIPAC is not a jewish political lobbying
+organization, but a zionist one, a israeli one.
+
+The zionist propaganda always told that all jews are behind israel,
+that they represent all jews, it equates zionist with jewish, and
+opposition to zionism with antisemitism. It seems you fell in their
+trap.
+
+The other error is perhaps to consider jews as a religious group,
+that they freely chose to be that: it is irrelevant in the context
+of the conflict. Arabs see them as a religious group, but zionists,
+antisemites and perhaps most europeans see them as a people.
+But even among them there are discussions about it (Shlomo Sand). I
+once met a very anti-israel jew that very proudly considered her
+ethnicity as "ashkenazy". How they define their collective identity
+is mainly their issue.
+
+As said, I appreciate your involvement, but I think you were also
+not prudent. While these guys kill without scrupples in the near east,
+hidden behind heavy weapons, elsewhere their favourite weapon even
+against the most weak opposition is diffamation.
+
+Best regards
+Rodrigo
+
+
+On Thu, 9 May 2019, Poul-Henning Kamp wrote:
+
+>
+> You forgot to include this link:
+>
+> 	http://phk.freebsd.dk/sagas/israel/
