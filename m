@@ -2,119 +2,118 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B0EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A675AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88AA216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E6021479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FaFvhIpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfEJNxq convert rfc822-to-8bit (ORCPT
+        id S1727740AbfEJNyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:53:46 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:54965 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfEJNxq (ORCPT
+        Fri, 10 May 2019 09:54:14 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:36509 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727249AbfEJNyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:53:46 -0400
-X-Originating-IP: 90.88.28.253
-Received: from xps13 (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id D5D0A240011;
-        Fri, 10 May 2019 13:53:41 +0000 (UTC)
-Date:   Fri, 10 May 2019 15:53:40 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Mason Yang <masonccyang@mxic.com.tw>, bbrezillon@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
-        linux-mtd@lists.infradead.org, juliensu@mxic.com.tw
-Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190510155340.1130487f@xps13>
-In-Reply-To: <20190510153704.33de9568@windsurf.home>
-References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190510153704.33de9568@windsurf.home>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 10 May 2019 09:54:13 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x4ADrpuo019896;
+        Fri, 10 May 2019 22:53:51 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4ADrpuo019896
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557496431;
+        bh=fCZyYc7lUxOhLrTG7ucal3L6rAGhMTDpi2n2QdqKTdI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FaFvhIpvVy7uXca8x+5s7hB+aTwlru3OpLG6nDSZp/4dx9WMDCpz4TKe3jx5INTMv
+         fcO56dBh9WZq8HA6hRaHCNQPQajNxWcHmm3o+foF4+Jh7eYj1IoXjdveCKbbfNfPjB
+         St/TpCHLfQYlCUv3ninPb8HPMEwl8wrM+Cn8GAXeinMgIvH2XM4VkXb6gLCJh5w/Tr
+         2G+aymrzHxo1y/5mduRtWM0ZqBZM2Iz34496SZJU0JfzUfOOnGQjO39/FLiUIKhTYO
+         vLM3Ru4g5jtEYCcYLTgyVxQ8F7SxND0UYZlr7XbaIhD+kTULuIx00DmuCj9UO4KZe5
+         /1XZM3z+2u/kg==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id c76so3671577vsd.3;
+        Fri, 10 May 2019 06:53:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAVzhMsdL7YJ7RPKoWHM5GJ88xiMgbJq5eZUaUBEo8sixIfB8pDB
+        G9sCKy3G5mvdyBG3zeMtqcjE7ytS9gtKMulnr2c=
+X-Google-Smtp-Source: APXvYqxrG5kYfgTx+VylEbc4eQ4VMLIbvXqQT7ZPVtEHSqc3JTmEQf82nxFi2KVRZbVGhm+jOD5G/BPS2dkPAopIKjA=
+X-Received: by 2002:a67:db8b:: with SMTP id f11mr5993687vsk.155.1557496430324;
+ Fri, 10 May 2019 06:53:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20190509064455.1173-1-yamada.masahiro@socionext.com> <CA+icZUX_AgZdH5Z+1+k+oVdYSo7vqzeJsGPndb_Sa8VOSk_yOg@mail.gmail.com>
+In-Reply-To: <CA+icZUX_AgZdH5Z+1+k+oVdYSo7vqzeJsGPndb_Sa8VOSk_yOg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 10 May 2019 22:53:14 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAS+FQqQZ0RfW8e6mxabUOq9YVk=eEEztmN-+BHnTmDa_w@mail.gmail.com>
+Message-ID: <CAK7LNAS+FQqQZ0RfW8e6mxabUOq9YVk=eEEztmN-+BHnTmDa_w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+On Thu, May 9, 2019 at 4:06 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
+>
+> On Thu, May 9, 2019 at 8:45 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > We do not support old Clang versions. Upgrade your clang version
+> > if any of these flags is unsupported.
+> >
+> > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
+> > except -fcatch-undefined-behavior.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Looks good to me.
+>
+> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> Just as sidenote:
+> I experimented with a snapshot version of clang-9 and lld-9 and could
+> build, link and boot on bare-metal with '-mglobal-merge' on
+> Debian/buster AMD64.
 
-Thomas Petazzoni <thomas.petazzoni@bootlin.com> wrote on Fri, 10 May
-2019 15:37:04 +0200:
 
-> Hello,
-> 
-> Some purely cosmetic suggestions below.
-> 
-> On Fri, 10 May 2019 15:41:02 +0800
-> Mason Yang <masonccyang@mxic.com.tw> wrote:
-> 
-> > +	if (ret)
-> > +		pr_err("set feature failed to read retry moded:%d\n", mode);    
-> 
-> I don't know what is the policy in the MTD/NAND subsystem, but
-> shouldn't you be using dev_err() instead of pr_err() here to have a
-> nice prefix for the message ?
-> 
-> 		dev_err(&nand_to_mtd(chip)->dev, "set feature ..", mode);
+The comment says
+ # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+ # source of a reference will be _MergedGlobals and not on of the
+whitelisted names.
+ # See modpost pattern 2
 
-Indeed. You can even dereference an mtd_info object first, then use
-mtd->dev.
+So, it seems it is just a matter of modpost,
+but I am not sure enough.
 
-> 
-> > +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> > +{
-> > +	struct nand_parameters *p = &chip->parameters;
-> > +
-> > +	if (p->onfi) {  
-> 
-> Change to:
-> 
-> 	if (!p->onfi)
-> 		return;
-> 
-> This way the rest of the function can save one level of indentation.
-> 
-> > +		struct nand_onfi_vendor_macronix *mxic =
-> > +				(void *)p->onfi->vendor;
-> > +
-> > +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {  
-> 
-> Change to:
-> 
-> 	if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT == 0)
-> 		return;
-> 
-> And the rest of the function can save one level of indentation.
-> 
-> > +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
-> > +			chip->setup_read_retry =
-> > +				 macronix_nand_setup_read_retry;
-> > +			if (p->supports_set_get_features) {
-> > +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> > +					p->set_feature_list);
-> > +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> > +					p->get_feature_list);
-> > +			}  
-> 
-> Which will require less wrapping in those lines that are already at the
-> third indentation level.
-> 
-> To me, it is also more logical: we exclude the cases we are not
-> interested in and return early, and then if we are still in the case we
-> are interested, we handle it.
+This flag has been here since the initial support.
+(61163efae02040f66a95c8ed17f4407951ba58fa)
 
-I definitely agree with these cosmetic changes.
 
-Thanks,
-Miquèl
+Perhaps, we should review clang flags one by one again?
+
+
+
+
+> But forgot to document in [1].
+>
+> [1] https://github.com/ClangBuiltLinux/linux/issues/431
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
