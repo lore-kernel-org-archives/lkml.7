@@ -6,127 +6,139 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFBAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CDAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B45DF217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF42C2173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uR/72ikB"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZbMxX3MK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfEJHvW (ORCPT
+        id S1727065AbfEJHwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:51:22 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726899AbfEJHvW (ORCPT
+        Fri, 10 May 2019 03:52:00 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39725 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbfEJHwA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:51:22 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7ke2e019336;
-        Fri, 10 May 2019 09:51:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=nmDxg4+93XGhQH+CBc6pkLSbg19CIe1swFbFgCL8ynY=;
- b=uR/72ikBnHLXDX5yi8jl/nbg4R6bAWIlVXcz+WyWuipKJP7UA4+VROg3MFgElPvXKUu+
- PrAexkTBVIP4hZvUSn3QFTiBL/0r8aRlUL33o9THxXKlkhyz5LuG668SvRR2d77uRgYR
- M/rENVvB5J8brAwKB4ZCsUnECND3xm58KDJtaUdq4jzUIj+R90IbaWrTd51J6ZryrrdQ
- OEDsDGHUo3K8vAu7mCrb8bwT1NIpnrAZyXoj7ylz1ceOibnGzdXqbSCOlkxgiaGKw7Hp
- G1CYGHSnbQ1RR4cAl9bndfPzGH7buA5hNwhCCSQAnJ/wXMwyg6CBKYzauGASOmzG6XEN LQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2scdjp7fum-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 10 May 2019 09:51:04 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9800A3D;
-        Fri, 10 May 2019 07:51:03 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10EFC15CE;
-        Fri, 10 May 2019 07:51:02 +0000 (GMT)
-Received: from [10.48.0.167] (10.75.127.44) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May
- 2019 09:51:02 +0200
-Subject: Re: [RESEND PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
-To:     <thierry.reding@gmail.com>
-CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
-        <tduszyns@gmail.com>, <mark.rutland@arm.com>,
-        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Loic PALLARDY <loic.pallardy@st.com>,
-        Mark Brown <broonie@kernel.org>
-References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
-Date:   Fri, 10 May 2019 09:51:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 03:52:00 -0400
+Received: by mail-it1-f194.google.com with SMTP id 9so489915itf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bb+vyJ2l2JyKWoFlPq1nHRAbP2mdN5kXUD5ewhMbnn8=;
+        b=ZbMxX3MKqmdfjEtLjPb6AIYZUKmckX5fhBu1Np3jWVfzdBwLml/8MtAA98LAuk5eVa
+         CO+jAczip8dABiK05qRCe/BFFNNLq4gqQmZOelR55RYGn2zHNl/v2THzyk/G585xF1E5
+         uGHwq5WIOtP7mmksLzUClSUXAAFQ9FYNn7dCI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bb+vyJ2l2JyKWoFlPq1nHRAbP2mdN5kXUD5ewhMbnn8=;
+        b=hM68atDUYyxBx3IVJZ+Bvbq3U8hNCcdXJQFPljdgefRDefSGqSI6pn3ztjEpUmAWEQ
+         nmn76NYKcucZ32ZIdDqyapzyAvdyi5GEExy6icjIlc5fWzVmxPBHoVePegtN653C8e4Z
+         0aD7mzQm7RLVfpPjjN6m3HqPBH+fYYoo1EidI7NQk33IELyoKPm7GHBZnw45711jZG9+
+         F6cIMXZ+u3x0z52NtBjgjyc42i6ZNi1uwRfzAkkUSRLI2mw8L/8wjMkjcH+5nvjbYeM8
+         MyQLP0BMC9lh9nXbz34HR7y9vzXPyu/rG8kRND3kV366871jIlZAqmYImfMsVDEtHqcN
+         t0sQ==
+X-Gm-Message-State: APjAAAWK4NdmJ03T9iIZmpYgiNNf/W8ckQGgzqmvhvNhchFXu73XiNai
+        bSAHoOqSxA43mFazTihmzdbXDJe0rp1sCrYVpBqvkg==
+X-Google-Smtp-Source: APXvYqzQcVYeTWjHA1GWGzWT8t1uQvHdWafbFrs+4Z6lMpSEOoB6AeGNhvySvnNsjv4Ja2SRnIzC+n5UdJycZzPB+WQ=
+X-Received: by 2002:a24:7897:: with SMTP id p145mr6524450itc.117.1557474719408;
+ Fri, 10 May 2019 00:51:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
+ <20190509200633.19678-1-daniel.vetter@ffwll.ch> <20190510055053.GA9864@jagdpanzerIV>
+In-Reply-To: <20190510055053.GA9864@jagdpanzerIV>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Fri, 10 May 2019 09:51:48 +0200
+Message-ID: <CAKMK7uG2mLg=FDb_4oiXLY7y85WOrCoe4+VrXScuLD0bRuvBNA@mail.gmail.com>
+Subject: Re: [PATCH] kernel/locking/semaphore: use wake_q in up()
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/18/19 11:37 AM, Fabrice Gasnier wrote:
-> This patch series adds power management support for STM32 LP Timer:
-> - PWM driver
-> - Document the pinctrl states for sleep mode
-> 
-> It also adds device link between the PWM consumer and the PWM provider.
-> This allows proper sequencing for suspend/resume (e.g. user will likely
-> do a pwm_disable() before the PWM provider suspend executes), see [1].
-> 
-> [1] https://lkml.org/lkml/2019/2/5/770
-> 
+On Fri, May 10, 2019 at 7:50 AM Sergey Senozhatsky
+<sergey.senozhatsky.work@gmail.com> wrote:
+>
+> On (05/09/19 22:06), Daniel Vetter wrote:
+> [..]
+> > +/* Functions for the contended case */
+> > +
+> > +struct semaphore_waiter {
+> > +     struct list_head list;
+> > +     struct task_struct *task;
+> > +     bool up;
+> > +};
+> > +
+> >  /**
+> >   * up - release the semaphore
+> >   * @sem: the semaphore to release
+> > @@ -179,24 +187,25 @@ EXPORT_SYMBOL(down_timeout);
+> >  void up(struct semaphore *sem)
+> >  {
+> >       unsigned long flags;
+> > +     struct semaphore_waiter *waiter;
+> > +     DEFINE_WAKE_Q(wake_q);
+> >
+> >       raw_spin_lock_irqsave(&sem->lock, flags);
+> > -     if (likely(list_empty(&sem->wait_list)))
+> > +     if (likely(list_empty(&sem->wait_list))) {
+> >               sem->count++;
+> > -     else
+> > -             __up(sem);
+> > +     } else {
+> > +             waiter =  list_first_entry(&sem->wait_list,
+> > +                                        struct semaphore_waiter, list);
+> > +             list_del(&waiter->list);
+> > +             waiter->up = true;
+> > +             wake_q_add(&wake_q, waiter->task);
+> > +     }
+> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
+>
+> So the new code still can printk/WARN under sem->lock in some buggy
+> cases.
+>
+> E.g.
+>         wake_q_add()
+>          get_task_struct()
+>           refcount_inc_checked()
+>            WARN_ONCE()
+>
+> Are we fine with that?
 
-Hi Thierry,
+Hm not great. It's not as bad as the one I'm trying to fix (or not the
+same at least), because with the wake up chain we have a few locks in
+there. Which allows lockdep to connect the loop and complain, even
+when we never actually hit that specific recursion. I.e. once hitting
+a WARN_ON from try_to_wake_up is enough, plus a totally separate
+callchain can then close the semaphore.lock->scheduler locks part.
+Your chain only goes boom if it happens from the console_lock's up.
 
-Please let me know if you have some more comments on this series. It's
-been under review since quite some time now.
-
-Thanks in advance,
-Best Regards,
-Fabrice
-
-> ---
-> resend v5:
-> - update collected acks
-> 
-> Changes in v5:
-> - improve a warning message, fix a style issue.
-> 
-> Changes in v4:
-> - improve error handling when adding the PWM consumer device link.
-> 
-> Changes in v3:
-> - Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
-> 
-> Changes in v2:
-> - Don't disable PWM channel in PWM provider: rather refuse to suspend
->   and report an error as suggested by Uwe and Thierry.
-> - Add patch 3/3 to propose device link addition.
-> - No updates for STM32 LP Timer IIO driver. Patches can be send separately.
-> 
-> Fabrice Gasnier (3):
->   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
->   pwm: stm32-lp: Add power management support
->   pwm: core: add consumer device link
-> 
->  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
->  drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
->  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
->  include/linux/pwm.h                                |  6 ++-
->  4 files changed, 82 insertions(+), 8 deletions(-)
-> 
+wake_q_add_safe would be an option, but then we somehow need to
+arrange for down to call get_task_struct(current) and releasing that,
+but only if there's no waker who needs that task ref. Sounds tricky
+... Also not sure we want to stuff that trickery into the generic
+semaphore code.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
