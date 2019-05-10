@@ -2,262 +2,97 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B157C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B976C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E01820578
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544E1217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfEJPaB (ORCPT
+        id S1727623AbfEJPa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:30:01 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36180 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfEJPaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:30:00 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 08:30:00 -0700
-X-ExtLoop1: 1
-Received: from sjmeyer-mobl.amr.corp.intel.com (HELO [10.254.97.194]) ([10.254.97.194])
-  by fmsmga001.fm.intel.com with ESMTP; 10 May 2019 08:29:58 -0700
-Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Fix build error with
- CONFIG_SND_SOC_SOF_NOCODEC=m
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     alsa-devel@alsa-project.org, rdunlap@infradead.org,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
-        lgirdwood@gmail.com, broonie@kernel.org
-References: <20190510023657.8960-1-yuehaibing@huawei.com>
- <s5h7eayn5or.wl-tiwai@suse.de>
- <73c6dd27-895a-adba-a4ef-2992266fcc48@linux.intel.com>
- <s5hlfzempf0.wl-tiwai@suse.de>
- <1e7e1908-a813-6c9b-5b88-122864d3a372@linux.intel.com>
- <s5hbm0amnpl.wl-tiwai@suse.de> <s5h8svemn0u.wl-tiwai@suse.de>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <00aa3055-0b97-3ac4-f588-3665bfcb5811@linux.intel.com>
-Date:   Fri, 10 May 2019 10:29:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 11:30:57 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54416 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfEJPa4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:30:56 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A1AC63C00D1;
+        Fri, 10 May 2019 17:30:54 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9nHt6qMwHxly; Fri, 10 May 2019 17:30:47 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 91B4A3C004C;
+        Fri, 10 May 2019 17:30:47 +0200 (CEST)
+Received: from vmlxhi-121.adit-jv.com (10.72.93.65) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
+ 2019 17:30:47 +0200
+From:   Michael Rodin <mrodin@de.adit-jv.com>
+To:     <kieran.bingham@ideasonboard.com>, <mchehab@kernel.org>,
+        <linux-media@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
+        <mrodin@de.adit-jv.com>
+Subject: [PATCH] media: i2c: adv748x: initialize bit 7 of csi_tx_top_reg_1f
+Date:   Fri, 10 May 2019 17:30:40 +0200
+Message-ID: <1557502240-16274-1-git-send-email-mrodin@de.adit-jv.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <s5h8svemn0u.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.72.93.65]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to pages 188 and 193 of the "UG-747: ADV7481 Reference Manual"
+[1], the bit 7 (FRAMENUMBER_INTERLACED) of the register csi_tx_top_reg_1f
+"sets association of frame number in the FS and FE packets with the F bit
+in the EAV/SAV codes". EAV/SAV codes are defined in [2].
+According to [2]:
+F=0 for field 1
+F=1 for field 2
+The bit FRAMENUMBER_INTERLACED is not initialized anywhere in the current
+version of the adv748x driver and therefore it is always 0, which is the
+default value according to [1]. Therefore the current association of field
+number from EAV/SAV code with the frame number in CSI FS and FE packets is:
+field 1 (top field for PAL, bottom field for NTSC) -> CSI frame number 2
+field 2 (bottom field for PAL, top field for NTSC) -> CSI frame number 1
+But this breaks frame number based field detection of top/bottom fields
+in CSI receivers. Therefore it makes sense to initialize the
+FRAMENUMBER_INTERLACED bit to 1 so the association is as expected:
+field 1 -> frame number 1
+field 2 -> frame number 2
 
+[1] https://www.analog.com/en/products/adv7481.html
+[2] https://www.itu.int/rec/R-REC-BT.656-5-200712-I/en
 
-On 5/10/19 8:56 AM, Takashi Iwai wrote:
-> On Fri, 10 May 2019 15:41:10 +0200,
-> Takashi Iwai wrote:
->>
->> On Fri, 10 May 2019 15:34:03 +0200,
->> Pierre-Louis Bossart wrote:
->>>
->>> On 5/10/19 8:04 AM, Takashi Iwai wrote:
->>>> On Fri, 10 May 2019 14:56:29 +0200,
->>>> Pierre-Louis Bossart wrote:
->>>>>
->>>>> On 5/10/19 2:12 AM, Takashi Iwai wrote:
->>>>>> On Fri, 10 May 2019 04:36:57 +0200,
->>>>>> YueHaibing wrote:
->>>>>>>
->>>>>>> Fix gcc build error while CONFIG_SND_SOC_SOF_NOCODEC=m
->>>>>>>
->>>>>>> sound/soc/sof/core.o: In function `snd_sof_device_probe':
->>>>>>> core.c:(.text+0x4af): undefined reference to `sof_nocodec_setup'
->>>>>>>
->>>>>>> Change SND_SOC_SOF_NOCODEC to bool to fix this.
->>>>>>>
->>>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>>>>>> Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
->>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>>>>>
->>>>>> This change would break things severely.  This won't allow to build it
->>>>>> as a module any longer.
->>>>>
->>>>> Isn't this fixed already?
->>>>> See the patch  'ASoC: SOF: core: fix undefined nocodec reference' and
->>>>> Takashi's follow-up to fix the unused variable warning.
->>>>
->>>> Possibly the problem still persists although I haven't seen through my
->>>> local build tests with randconfig.  You can set SND_SOC_SOF=y and
->>>> SND_SOC_NOCODEC=m, i.e. built-in sof-core while nocodec is a module.
->>>
->>> YueHiabing, can you share the config and SHA1 so that we can double check?
->>>
->>> If the problem persists, we can do something like
->>>
->>> config SND_SOF_NOCODEC_SUPPORT
->>> 	bool "SOF nocodec mode support"
->>>
->>> config SND_SOF_NOCODEC
->>> 	tristate
->>>
->>> confir SND_SOC_SOF
->>> 	tristate
->>> 	select SND_SOF_NOCODEC if SND_SOF_NOCODEC_SUPPORT
->>>
->>> that way you propagate the required dependencies
->>
->> Yes, that would work.  OTOH, I see no merit to build an extra module
->> for nocodec.  nocodec.c can be built together with sof-core stuff.
+Suggested-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+---
+ drivers/media/i2c/adv748x/adv748x-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-the module has its benefits. Today nocodec includes all possible DAIs, I 
-wanted to add module parameters to restrict things a bit for 
-tests/debug. It'll be e.g. very helpful for SoundWire to avoid exposing 
-the SSP DAIs.
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index f57cd77..4dd1a13 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -278,6 +278,9 @@ static int adv748x_power_up_tx(struct adv748x_csi2 *tx)
+ 	usleep_range(1000, 1500);
+ 	adv748x_write_check(state, page, 0x31, 0x80, &ret);
+ 
++	/* set bit 7 (FRAMENUMBER_INTERLACED) in csi_tx_top_reg_1f */
++	adv748x_write_check(state, page, 0x1f, 0x80, &ret);
++
+ 	return ret;
+ }
+ 
+-- 
+2.7.4
 
-Also nocodec is incompatible with hdaudio/hdmi support at the moment, we 
-had all sorts of issues with suspend/resume.
-
-> 
-> I mean a patch like below.
-> 
-> 
-> Takashi
-> 
-> diff --git a/include/sound/sof.h b/include/sound/sof.h
-> index 4640566b54fe..1af70800f6dc 100644
-> --- a/include/sound/sof.h
-> +++ b/include/sound/sof.h
-> @@ -92,9 +92,4 @@ struct sof_dev_desc {
->   	const struct sof_arch_ops *arch_ops;
->   };
->   
-> -int sof_nocodec_setup(struct device *dev,
-> -		      struct snd_sof_pdata *sof_pdata,
-> -		      struct snd_soc_acpi_mach *mach,
-> -		      const struct sof_dev_desc *desc,
-> -		      const struct snd_sof_dsp_ops *ops);
->   #endif
-> diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
-> index b204c65698f9..9c280c977d55 100644
-> --- a/sound/soc/sof/Kconfig
-> +++ b/sound/soc/sof/Kconfig
-> @@ -44,7 +44,7 @@ config SND_SOC_SOF_OPTIONS
->   if SND_SOC_SOF_OPTIONS
->   
->   config SND_SOC_SOF_NOCODEC
-> -	tristate "SOF nocodec mode Support"
-> +	bool "SOF nocodec mode Support"
->   	help
->   	  This adds support for a dummy/nocodec machine driver fallback
->   	  option if no known codec is detected. This is typically only
-> diff --git a/sound/soc/sof/Makefile b/sound/soc/sof/Makefile
-> index 8f14c9d2950b..09222be6d1b8 100644
-> --- a/sound/soc/sof/Makefile
-> +++ b/sound/soc/sof/Makefile
-> @@ -2,14 +2,12 @@
->   
->   snd-sof-objs := core.o ops.o loader.o ipc.o pcm.o pm.o debug.o topology.o\
->   		control.o trace.o utils.o
-> +snd-sof-$(CONFIG_SND_SOC_SOF_NOCODEC) += nocodec.o
->   
->   snd-sof-pci-objs := sof-pci-dev.o
->   snd-sof-acpi-objs := sof-acpi-dev.o
-> -snd-sof-nocodec-objs := nocodec.o
->   
->   obj-$(CONFIG_SND_SOC_SOF) += snd-sof.o
-> -obj-$(CONFIG_SND_SOC_SOF_NOCODEC) += snd-sof-nocodec.o
-> -
->   
->   obj-$(CONFIG_SND_SOC_SOF_ACPI) += sof-acpi-dev.o
->   obj-$(CONFIG_SND_SOC_SOF_PCI) += sof-pci-dev.o
-> diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
-> index 32105e0fabe8..744f7f465173 100644
-> --- a/sound/soc/sof/core.c
-> +++ b/sound/soc/sof/core.c
-> @@ -502,6 +502,18 @@ int snd_sof_device_remove(struct device *dev)
->   }
->   EXPORT_SYMBOL(snd_sof_device_remove);
->   
-> +static int __init snd_sof_init(void)
-> +{
-> +	return platform_driver_register(&sof_nocodec_audio);
-> +}
-> +module_init(snd_sof_init);
-> +
-> +static void __exit snd_sof_exit(void)
-> +{
-> +	platform_driver_unregister(&sof_nocodec_audio);
-> +}
-> +module_exit(snd_sof_exit);
-> +
->   MODULE_AUTHOR("Liam Girdwood");
->   MODULE_DESCRIPTION("Sound Open Firmware (SOF) Core");
->   MODULE_LICENSE("Dual BSD/GPL");
-> diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
-> index f84b4344dcc3..11811591bd81 100644
-> --- a/sound/soc/sof/nocodec.c
-> +++ b/sound/soc/sof/nocodec.c
-> @@ -8,7 +8,6 @@
->   // Author: Liam Girdwood <liam.r.girdwood@linux.intel.com>
->   //
->   
-> -#include <linux/module.h>
->   #include <sound/sof.h>
->   #include "sof-priv.h"
->   
-> @@ -77,7 +76,6 @@ int sof_nocodec_setup(struct device *dev,
->   				    &sof_nocodec_card);
->   	return ret;
->   }
-> -EXPORT_SYMBOL(sof_nocodec_setup);
->   
->   static int sof_nocodec_probe(struct platform_device *pdev)
->   {
-> @@ -93,7 +91,7 @@ static int sof_nocodec_remove(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> -static struct platform_driver sof_nocodec_audio = {
-> +struct platform_driver sof_nocodec_audio = {
->   	.probe = sof_nocodec_probe,
->   	.remove = sof_nocodec_remove,
->   	.driver = {
-> @@ -101,9 +99,3 @@ static struct platform_driver sof_nocodec_audio = {
->   		.pm = &snd_soc_pm_ops,
->   	},
->   };
-> -module_platform_driver(sof_nocodec_audio)
-> -
-> -MODULE_DESCRIPTION("ASoC sof nocodec");
-> -MODULE_AUTHOR("Liam Girdwood");
-> -MODULE_LICENSE("Dual BSD/GPL");
-> -MODULE_ALIAS("platform:sof-nocodec");
-> diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
-> index 1e85d6f9c5c3..3ae55d15820f 100644
-> --- a/sound/soc/sof/sof-priv.h
-> +++ b/sound/soc/sof/sof-priv.h
-> @@ -559,6 +559,17 @@ int snd_sof_init_trace_ipc(struct snd_sof_dev *sdev);
->    */
->   extern struct snd_compr_ops sof_compressed_ops;
->   
-> +/*
-> + * nocodec platform binding
-> + */
-> +extern struct platform_driver sof_nocodec_audio;
-> +
-> +int sof_nocodec_setup(struct device *dev,
-> +		      struct snd_sof_pdata *sof_pdata,
-> +		      struct snd_soc_acpi_mach *mach,
-> +		      const struct sof_dev_desc *desc,
-> +		      const struct snd_sof_dsp_ops *ops);
-> +
->   /*
->    * Kcontrols.
->    */
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
-> 
