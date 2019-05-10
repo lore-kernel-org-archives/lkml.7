@@ -2,110 +2,86 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AC5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D6CC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8376C2182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="jh7GXP40"
+	by mail.kernel.org (Postfix) with ESMTP id 0FC4B2182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfEJVqo (ORCPT
+        id S1728402AbfEJVqr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:46:44 -0400
-Received: from mail-eopbgr750132.outbound.protection.outlook.com ([40.107.75.132]:30426
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728334AbfEJVql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:46:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjdmfY60dehYc54IaSB/mYOsRDkVbiibmDFu3cfNOLQ=;
- b=jh7GXP40IYEvq8UUo0WK+O4G32DiQFRrLvjBqgUh5sB9V69afzhBVEpvE6/f65LX6QqeLBy/lFkpRUVN7zvXGJ1wn1guEejpRVsgV3Gc0+sMJ96EFcOvFnGFZ54BHNoRnADjUUW3fWnjK6xO3xIQePKBaHrTk17nv0ixH7j8MTw=
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3612.namprd06.prod.outlook.com (10.167.236.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Fri, 10 May 2019 21:46:21 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::b496:85ab:4cb0:5876]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::b496:85ab:4cb0:5876%2]) with mapi id 15.20.1878.022; Fri, 10 May 2019
- 21:46:21 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Trent Piepho <tpiepho@impinj.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
- unsigned properties
-Thread-Topic: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
- unsigned properties
-Thread-Index: AQHVB3nKLczzbyv1Ekyx8+zOFp2aoA==
-Date:   Fri, 10 May 2019 21:46:13 +0000
-Message-ID: <20190510214550.18657-5-tpiepho@impinj.com>
-References: <20190510214550.18657-1-tpiepho@impinj.com>
-In-Reply-To: <20190510214550.18657-1-tpiepho@impinj.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:a03:74::21) To MWHPR0601MB3708.namprd06.prod.outlook.com
- (2603:10b6:301:7c::38)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tpiepho@impinj.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.14.5
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 753524a0-763b-4553-3017-08d6d590ec40
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3612;
-x-ms-traffictypediagnostic: MWHPR0601MB3612:
-x-microsoft-antispam-prvs: <MWHPR0601MB361253D160F8D5098A194F37D30C0@MWHPR0601MB3612.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2958;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39840400004)(136003)(189003)(199004)(316002)(3846002)(6116002)(86362001)(8676002)(81166006)(99286004)(66066001)(81156014)(478600001)(102836004)(25786009)(73956011)(76176011)(476003)(2616005)(68736007)(11346002)(66946007)(66476007)(66556008)(66446008)(64756008)(14454004)(50226002)(6506007)(446003)(486006)(8936002)(26005)(386003)(6666004)(186003)(4326008)(52116002)(256004)(36756003)(305945005)(2906002)(1076003)(110136005)(6436002)(6486002)(6512007)(54906003)(71190400001)(2501003)(5660300002)(71200400001)(53936002)(7736002)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3612;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: impinj.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7Zy2MtzkM/p7p3p6CSygGDj3AiIrzSfrze58eqM+iW48FIogJRuXPLMxVrMctw9Y6rORLp7XsafOkPnbtq6ciRRhUEr0VjN9vywrC9ncW9UfmK/fjL9DeZkkasGr7EA98oTlD4Gsd3+N6r1HHjSzBWQ9Akmvj3AHiYwyyT9N7IM3WAKl6kCRUBDrwmwKVygGCqXU44mGkCrlPJDCNAluaTUr0y7e7pLx38Glxuz7VQt+qQpf7wvlLztm/J6PeobqKxTYjSNA2vX/UKQruuN7tuep7AgbiJEEz9J1sYKlfX5YBwlg7X9OmEk8br4XprfTkUviO3KCylemglkX/5elIhWHF6W0njyLRETPPbDr1GWZHn5vN6J5YKAvaRiFopZ/4yS1uylfpssi2q35N/0k6+TibyAR2PDgbnZUSqJoS5o=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 10 May 2019 17:46:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728334AbfEJVqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:46:45 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40DD7217F9;
+        Fri, 10 May 2019 21:46:44 +0000 (UTC)
+Date:   Fri, 10 May 2019 17:46:42 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 2/4] powerpc/stackprotector: work around stack-guard
+ init from atomic
+Message-ID: <20190510174642.46e357f6@gandalf.local.home>
+In-Reply-To: <20190327183310.1015-2-bigeasy@linutronix.de>
+References: <20190320171511.icjhdlulgal2yeho@linutronix.de>
+        <20190327183310.1015-1-bigeasy@linutronix.de>
+        <20190327183310.1015-2-bigeasy@linutronix.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 753524a0-763b-4553-3017-08d6d590ec40
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 21:46:13.9923
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3612
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIHZhcmlhYmxlcyB1c2VkIHRvIHN0b3JlIHUzMiBEVCBwcm9wZXJ0aWVzIHdlcmUgc2lnbmVk
-IGludHMuICBUaGlzCmRvZXNuJ3Qgd29yayBwcm9wZXJseSBpZiB0aGUgdmFsdWUgb2YgdGhlIHBy
-b3BlcnR5IHdlcmUgdG8gb3ZlcmZsb3cuClVzZSB1bnNpZ25lZCB2YXJpYWJsZXMgc28gdGhpcyBk
-b2Vzbid0IGhhcHBlbi4KCkNjOiBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+CkNjOiBGbG9y
-aWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4KQ2M6IEhlaW5lciBLYWxsd2VpdCA8
-aGthbGx3ZWl0MUBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IFRyZW50IFBpZXBobyA8dHBpZXBo
-b0BpbXBpbmouY29tPgotLS0KIGRyaXZlcnMvbmV0L3BoeS9kcDgzODY3LmMgfCA2ICsrKy0tLQog
-MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jIGIvZHJpdmVycy9uZXQvcGh5L2RwODM4Njcu
-YwppbmRleCBhNDZjYzk0MjdmYjMuLmVkZDllMjc0MjVlOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9u
-ZXQvcGh5L2RwODM4NjcuYworKysgYi9kcml2ZXJzL25ldC9waHkvZHA4Mzg2Ny5jCkBAIC04Miw5
-ICs4Miw5IEBAIGVudW0gewogfTsKIAogc3RydWN0IGRwODM4NjdfcHJpdmF0ZSB7Ci0JaW50IHJ4
-X2lkX2RlbGF5OwotCWludCB0eF9pZF9kZWxheTsKLQlpbnQgZmlmb19kZXB0aDsKKwl1MzIgcnhf
-aWRfZGVsYXk7CisJdTMyIHR4X2lkX2RlbGF5OworCXUzMiBmaWZvX2RlcHRoOwogCWludCBpb19p
-bXBlZGFuY2U7CiAJaW50IHBvcnRfbWlycm9yaW5nOwogCWJvb2wgcnhjdHJsX3N0cmFwX3F1aXJr
-OwotLSAKMi4xNC41Cgo=
+On Wed, 27 Mar 2019 19:33:08 +0100
+Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+
+> This is invoked from the secondary CPU in atomic context. On x86 we use
+> tsc instead. On Power we XOR it against mftb() so lets use stack address
+> as the initial value.
+> 
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Hi Sebastian,
+
+in your repo, you marked this as stable-rt, but this code was added in
+4.20, and the next -rt is at 4.19.
+
+-- Steve
+
+
+
+> ---
+>  arch/powerpc/include/asm/stackprotector.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/powerpc/include/asm/stackprotector.h b/arch/powerpc/include/asm/stackprotector.h
+> index 1c8460e235838..e764eb4b6c284 100644
+> --- a/arch/powerpc/include/asm/stackprotector.h
+> +++ b/arch/powerpc/include/asm/stackprotector.h
+> @@ -24,7 +24,11 @@ static __always_inline void boot_init_stack_canary(void)
+>  	unsigned long canary;
+>  
+>  	/* Try to get a semi random initial value. */
+> +#ifdef CONFIG_PREEMPT_RT_FULL
+> +	canary = (unsigned long)&canary;
+> +#else
+>  	canary = get_random_canary();
+> +#endif
+>  	canary ^= mftb();
+>  	canary ^= LINUX_VERSION_CODE;
+>  	canary &= CANARY_MASK;
+
