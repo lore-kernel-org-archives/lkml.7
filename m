@@ -2,90 +2,124 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B032C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CACC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2327F217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A698E217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fuMNIjVG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFGOE2Nw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfEJE1a (ORCPT
+        id S1726930AbfEJEcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:27:30 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34992 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfEJE13 (ORCPT
+        Fri, 10 May 2019 00:32:06 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43684 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfEJEcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:27:29 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a39so4343567qtk.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:27:29 -0700 (PDT)
+        Fri, 10 May 2019 00:32:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id n8so2192650plp.10;
+        Thu, 09 May 2019 21:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ngq08Wlyg2H31lwwSV/j8xQrFKwzvO2qP6ztkd7Nr28=;
-        b=fuMNIjVG7c7hl9TqmLZaCgk9uw8zCqNkHPHTQf2dgfrBbILw0WaZg9/92di/69XTYw
-         mEL0Bk2U3l/9dTL8S03K1TeKwNrvGPhaqPYYhh6U9R3UWp9e00qH5XiAYyvKTbK2nCU3
-         sS43C8EHGgEYjTPYiSnIPhJod4FG7Rk+TYhGI=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xvneL+tleAZug+cm73ok0sRVVSDLg417J9gTpEjzm0Y=;
+        b=OFGOE2NwOn/bcY8miPOcXwpkHA80Ku8G4fyzOGykVhmR/QDaMsnCcwbIDimS7JTF5x
+         gvMg+htASqUGwslWKLMbU1xXdsQaVUcA/xPqXJ0j45BYvpJ3onYF5mDvzaoz3gA3C77B
+         ++l12pVN+QFnZjgx39cid1yMH+P3KT0xaTRuupjJwhqpQ78pa3bVqh+Gj22blHzFubzH
+         YtdQ7BQvuXX8czCJXHl9ref8MygU9ec9G0beZY9SNC55RzYgkGmMTDmHFBliUjOnie/Y
+         rT9nhRDFk346t/w2nxRdrAq6xrkYiBzWcghocJe6EOAGwJeDfMlTeLC4nNAuKqMZeMcw
+         bPpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ngq08Wlyg2H31lwwSV/j8xQrFKwzvO2qP6ztkd7Nr28=;
-        b=mSRcN6fclEy/t45Dn928KX+4kPI7RtKDgHHzyO80pG07rdmdny+wblTNBbmBYnWFnv
-         UoLwkeqqcgwwMrGVQH7dCgzYruVoS0k9FBEp9lHl7TYpXxfRPWZMxgFIBtLOpriI0lji
-         YGSidzp2d49C8bFJl5K3kS7ST16URXRuKUqJ2iHuQam2uxDsCsEE3QQgCbyI8PNOenuN
-         Ma8BSrLHQEL/76Q8ISLNv0N/SLJj6F3dcB02PHY2PbdeeMQTJ0C+RB9H9SNfIsV2Dy2l
-         Ze4mM4HntubbNytroodEVtm9kr81/Y1uqK9YyvEGP4/ffHExcMf4N9GO61PjY49lo04A
-         UTMA==
-X-Gm-Message-State: APjAAAWStOs4jO2CVAGnpsqPTyQaP+H7bCghZAzHoeJdzwvU5wf0rCgA
-        utaO6c2cYXDGZ1AEIJVtaStrHbrIMkSzX4UScefaOw==
-X-Google-Smtp-Source: APXvYqwwzIn/YJ/0P0Vb+0s8M37PUufsc0Gp9hafSnPJ9qzKi2oOspaUm7VkSvnkEjICaSYyxOJsDM038OFvfuU0Nho=
-X-Received: by 2002:a0c:d985:: with SMTP id y5mr7230641qvj.80.1557462448871;
- Thu, 09 May 2019 21:27:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xvneL+tleAZug+cm73ok0sRVVSDLg417J9gTpEjzm0Y=;
+        b=Y0UEUUxtaCQH2cnMxENfztawyFlKdgExduujyJU56aewSxayhN6h2+Iik42pZ4fYfL
+         G0USklTwMFTE7STym7HUymEKZ51r+7KgYpQUhl96Poao7bgbSIx+gaie83KPEenjx2i/
+         u4fCjXrxKqHoJnIpD/9lYMHtE/dTxHElFr/wl5UnIvlIydVIgF7vTwTuA0fuei6V+www
+         9MQrgRc6sqiPzieAZ9uWCMSpjV5GU63lnIysNmRiQ1x1fL5Z1WI6UC0GdV+UbrZWVZFu
+         7oWzQ4bYZnr+1U383eFNEKF4Y85JTOfw3n5h729ZM9fRvBhR7bLq9++uMTQa5Lx4icr7
+         hJtQ==
+X-Gm-Message-State: APjAAAX6vavaKS69kYb9/SY2+CDXGY43dwl+lDR2ITe7EpIbVcCsCRPz
+        iBW8A0K2e2ZGorGmiM7w1zY=
+X-Google-Smtp-Source: APXvYqzCVqQG81jyDsA4pwg3oVltor0yDbhImtQRMizI91ol50Lus0a+020M12H8AeI0dti/GS3zRA==
+X-Received: by 2002:a17:902:10c:: with SMTP id 12mr10524545plb.61.1557462725544;
+        Thu, 09 May 2019 21:32:05 -0700 (PDT)
+Received: from localhost ([39.7.15.25])
+        by smtp.gmail.com with ESMTPSA id y17sm5555133pfb.161.2019.05.09.21.32.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 21:32:03 -0700 (PDT)
+Date:   Fri, 10 May 2019 13:32:00 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190510043200.GC15652@jagdpanzerIV>
+References: <20190509121923.8339-1-pmladek@suse.com>
 MIME-Version: 1.0
-References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-Date:   Fri, 10 May 2019 12:27:02 +0800
-Message-ID: <CAJMQK-i-0RgdQEniqaKubdjF-dpd1JOCWy7DOPDfN33EqgL5iA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: add support for rng-seed
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 3:47 AM Rob Herring <robh+dt@kernel.org> wrote:
+On (05/09/19 14:19), Petr Mladek wrote:
+> 1. Report on Power:
+> 
+> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+> 
+> The problem is the combination of some new code called via printk(),
+> check_pointer() which calls probe_kernel_read(). That then calls
+> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+> (before we've patched features). With the JUMP_LABEL debug enabled that
+> causes us to call printk() & dump_stack() and we end up recursing and
+> overflowing the stack.
 
-> >  Documentation/devicetree/bindings/chosen.txt | 14 +++++++++
->
-> Actually, this file has been converted to json-schema and lives
-> here[1]. I need to remove this one (or leave it with a reference to
-> the new one).
->
+Hmm... hmm... PPC does an .opd-based symbol dereference, which
+eventually probe_kernel_read()-s. So early printk(%pS) will do
 
-Hi Rob,
-I can't find where the new document is. Can you help point it again? Thanks.
+	printk(%pS)
+	 dereference_function_descriptor()
+	  probe_kernel_address()
+	   dump_stack()
+	    printk(%pS)
+	     dereference_function_descriptor()
+	      probe_kernel_address()
+	       dump_stack()
+	        printk(%pS)
+	         ...
+
+I'd say... that it's not vsprintf that we want to fix, it's
+the idea that probe_kernel_address() can dump_stack() on any
+platform. On some archs probe_kernel_address()->dump_stack()
+is going nowhere:
+ dump_stack() does probe_kernel_address(), which calls dump_stack(),
+ which calls printk(%pS)->probe_kernel_address() again and again,
+ and again.
+
+	-ss
