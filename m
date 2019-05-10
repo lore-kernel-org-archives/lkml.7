@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B4BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB9EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E17217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DCE2182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8EBxrb4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="omYrEmCu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfEJVu0 (ORCPT
+        id S1728331AbfEJVub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:50:26 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42872 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728160AbfEJVu0 (ORCPT
+        Fri, 10 May 2019 17:50:31 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35292 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728263AbfEJVub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:50:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 13so3882878pfw.9;
-        Fri, 10 May 2019 14:50:25 -0700 (PDT)
+        Fri, 10 May 2019 17:50:31 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h1so3620057pgs.2;
+        Fri, 10 May 2019 14:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ILFENIjP3pNWcBKSRP9eS47C60iumECdMiBouSjU6so=;
-        b=I8EBxrb4hQF/HSjVAZ0eX7cqdImmzwpA3qZcWlY5J2qRLntWR6PFM5K78S3hQJZfJS
-         kxG157XHFOBnJa/z2didiEjDqhpbMxmPCHOuUo7T2HCmcNED9Z9IKsopKIrbLIHxXNJz
-         ILpQQs1NFcRsLNrJy1iTllpA2zyb2LQ/B8bTQaqK5C2GwbaxTk52zsz2A65Ms7ORJnVS
-         tf+2X8dszuwdO/2iTA+QIxc441zuMjN9umjxNCZZeSoDzQpkK5hqe5q3hrPT9r1Pa9B6
-         Fz+kIRQilBs0OWeOwyp0ac9tHtav93sXvMT/u8+CYvwPW8MgsIhu5tF5vvL5TTnAad2x
-         hTww==
+        bh=vh+f8bdLjY+HSfSVBVy8Lc/Hv+xFPxT6P6Duza4D9HA=;
+        b=omYrEmCuTYEVBNisnGOHilpKCLVfZ+0EPVJMDoMTGG90EaJJGG5ZfJu5TpCnP0Hywz
+         gpqzqzH9atDhKc6Q4rlfbIZB0DMfiHEguD/SVBi99iTyiMPzei8yoSevgtLeddyapn5A
+         ogzmfWIFReFw4ahsfIv0FdjKh8NFCYdFqdhbfQ2yzzoyz9lMQ5nF6xN8EVZ8IsgdxZ/F
+         IdRoaUf382n14/rEHtu8oOOThHUSarlltwi3c6tkC1JFAA6CuMfK5x4pnFxIS/he1cKM
+         d7rddkUdvk3HUY/d4oYSrEcBbrxlIquK9ZthylldTvQmK+QiKcWN9fNGyfzM/JKHl2/X
+         2xvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ILFENIjP3pNWcBKSRP9eS47C60iumECdMiBouSjU6so=;
-        b=S0w6BIJ2pzJVwnvynDPU+I+7Tb8wkK03r9rhD4WbnKJBHHesd8w/ameVGPlVhn44Xa
-         FeTCKaD4tFKOs6kgdmAYJ5vHu//Qy+jKYJVnY3pf7NOXMmSKR21hOBrhkh8B4FfgQobY
-         tnQ4DZCVAwY2ion5FEsWh2hgflZkzyv8t2hLH5N+XSINH7nQLX/+YaaBsziU34f7ET1o
-         K+QEBXgOMipUje8gOxDmDkBxxbDbCN6EvX/YEK81EwFSxmFLj9orvQUBI1og2qV1db0R
-         wFAgb3oTj+cPCY5Rjq+WuEWEibhjgo1yarM4RXn+cKn/XsQshPraaDf+fJPr3ZLOv66r
-         AX0g==
-X-Gm-Message-State: APjAAAXgXIcilnMcpJETwDChgRYiUDCCfDO7P1IWt/r6eXzswVApyEDn
-        bx0tol48whfC47BNPzNfxOLMsv/0
-X-Google-Smtp-Source: APXvYqzaJ6rfIHRoopXu6KSUaSoTGT0Dcukd0y1BznTi/uh/wLgpQfhBydkA1OoqzeaoXG8sz0DNLA==
-X-Received: by 2002:a65:500d:: with SMTP id f13mr17052699pgo.250.1557525024766;
-        Fri, 10 May 2019 14:50:24 -0700 (PDT)
+        bh=vh+f8bdLjY+HSfSVBVy8Lc/Hv+xFPxT6P6Duza4D9HA=;
+        b=QxoPJ8BEZ53FsJgoy8qLqxnaFnrJrNEg7700GvGQepRQGB/3sXvedd2hkx3sayG0Yo
+         GC6vV07krUtfkzNSh1GYpzUrvyZrgoJ2++dwNdSK2sHpJ5Sy2E+jw+ycPvJoX00ssqgY
+         GMc1uqMkmhdIPkWIZ3ShfAbtfNUYpRnXu+uQeWtSDzQK/61R2lhJq3Cx3e8k6BhHB3Te
+         lc5AqIEqtQSvnnZgDQbDoeR1uSZiOg8h1klSexaPLevsUziKNeG8BjJyJGIn48GUA2fp
+         hoQ7DetKttXqCHTdGhNJbXkPNfLXGN86jcl0LQ55nl3PF3swLkGa640KZj09F2sBtBhN
+         II1w==
+X-Gm-Message-State: APjAAAWB8Fgx77UBX8lqeKeLEc1XRaXzraz9cVsgO/KHv1XsVl+iZR9G
+        zjmOzc0mvYEPwXLE6ptBKbupj+5L
+X-Google-Smtp-Source: APXvYqzE7NoboN7QVvd/ywIi5lUSyJOY0NhNdqiN0TZU9lVJ1dRqAEx1Kxl+t7vOG51zJKs4LpkCxg==
+X-Received: by 2002:a65:5682:: with SMTP id v2mr16603512pgs.100.1557525029703;
+        Fri, 10 May 2019 14:50:29 -0700 (PDT)
 Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
-        by smtp.googlemail.com with ESMTPSA id e14sm1524108pff.60.2019.05.10.14.50.23
+        by smtp.googlemail.com with ESMTPSA id e14sm1524108pff.60.2019.05.10.14.50.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 14:50:23 -0700 (PDT)
+        Fri, 10 May 2019 14:50:28 -0700 (PDT)
 From:   Steve Longerbeam <slongerbeam@gmail.com>
 To:     linux-media@vger.kernel.org
 Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
         devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
         linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
         / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 1/9] Revert "media: staging/imx: add media device to capture register"
-Date:   Fri, 10 May 2019 14:50:04 -0700
-Message-Id: <20190510215012.13881-2-slongerbeam@gmail.com>
+Subject: [PATCH v5 3/9] media: staging/imx: Pass device to alloc/free_dma_buf
+Date:   Fri, 10 May 2019 14:50:06 -0700
+Message-Id: <20190510215012.13881-4-slongerbeam@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190510215012.13881-1-slongerbeam@gmail.com>
 References: <20190510215012.13881-1-slongerbeam@gmail.com>
@@ -81,98 +81,199 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The imx6-specific subdevs that register a capture device will no
-longer hold a reference to the media device, so this commit must be
-reverted.
-
-This reverts commit 16204b8a1c1af77725533b77936e6c73953486ae.
+Allocate and free a DMA coherent buffer in imx_media_alloc/free_dma_buf()
+from the given device. This allows DMA alloc and free using a device
+that is backed by real hardware, which for the imx5/6/7 CSI is the CSI
+unit, and for the internal IPU sub-devices, is the parent IPU.
 
 Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
- drivers/staging/media/imx/imx-ic-prpencvf.c   | 2 +-
- drivers/staging/media/imx/imx-media-capture.c | 6 +++---
- drivers/staging/media/imx/imx-media-csi.c     | 2 +-
- drivers/staging/media/imx/imx-media.h         | 3 +--
- drivers/staging/media/imx/imx7-media-csi.c    | 2 +-
- 5 files changed, 7 insertions(+), 8 deletions(-)
+ drivers/staging/media/imx/imx-ic-prpencvf.c | 18 +++++++++---------
+ drivers/staging/media/imx/imx-media-csi.c   |  6 +++---
+ drivers/staging/media/imx/imx-media-utils.c | 13 ++++++-------
+ drivers/staging/media/imx/imx-media.h       |  4 ++--
+ drivers/staging/media/imx/imx7-media-csi.c  |  4 ++--
+ 5 files changed, 22 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
-index 3ca1422f6154..5c8e6ad8c025 100644
+index 069cce512280..ddcd87a17c71 100644
 --- a/drivers/staging/media/imx/imx-ic-prpencvf.c
 +++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -1270,7 +1270,7 @@ static int prp_registered(struct v4l2_subdev *sd)
- 	if (ret)
- 		return ret;
+@@ -464,13 +464,13 @@ static int prp_setup_rotation(struct prp_priv *priv)
+ 	incc = priv->cc[PRPENCVF_SINK_PAD];
+ 	outcc = vdev->cc;
  
--	ret = imx_media_capture_device_register(priv->md, priv->vdev);
-+	ret = imx_media_capture_device_register(priv->vdev);
- 	if (ret)
+-	ret = imx_media_alloc_dma_buf(ic_priv->md, &priv->rot_buf[0],
++	ret = imx_media_alloc_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[0],
+ 				      outfmt->sizeimage);
+ 	if (ret) {
+ 		v4l2_err(&ic_priv->sd, "failed to alloc rot_buf[0], %d\n", ret);
  		return ret;
- 
-diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
-index 7688238a3396..9703c85b19c4 100644
---- a/drivers/staging/media/imx/imx-media-capture.c
-+++ b/drivers/staging/media/imx/imx-media-capture.c
-@@ -706,8 +706,7 @@ void imx_media_capture_device_error(struct imx_media_video_dev *vdev)
+ 	}
+-	ret = imx_media_alloc_dma_buf(ic_priv->md, &priv->rot_buf[1],
++	ret = imx_media_alloc_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[1],
+ 				      outfmt->sizeimage);
+ 	if (ret) {
+ 		v4l2_err(&ic_priv->sd, "failed to alloc rot_buf[1], %d\n", ret);
+@@ -543,9 +543,9 @@ static int prp_setup_rotation(struct prp_priv *priv)
+ unsetup_vb2:
+ 	prp_unsetup_vb2_buf(priv, VB2_BUF_STATE_QUEUED);
+ free_rot1:
+-	imx_media_free_dma_buf(ic_priv->md, &priv->rot_buf[1]);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[1]);
+ free_rot0:
+-	imx_media_free_dma_buf(ic_priv->md, &priv->rot_buf[0]);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[0]);
+ 	return ret;
  }
- EXPORT_SYMBOL_GPL(imx_media_capture_device_error);
  
--int imx_media_capture_device_register(struct imx_media_dev *md,
--				      struct imx_media_video_dev *vdev)
-+int imx_media_capture_device_register(struct imx_media_video_dev *vdev)
- {
- 	struct capture_priv *priv = to_capture_priv(vdev);
- 	struct v4l2_subdev *sd = priv->src_sd;
-@@ -716,7 +715,8 @@ int imx_media_capture_device_register(struct imx_media_dev *md,
- 	struct v4l2_subdev_format fmt_src;
- 	int ret;
+@@ -563,8 +563,8 @@ static void prp_unsetup_rotation(struct prp_priv *priv)
  
--	priv->md = md;
-+	/* get media device */
-+	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
+ 	ipu_ic_disable(priv->ic);
  
- 	vfd->v4l2_dev = sd->v4l2_dev;
+-	imx_media_free_dma_buf(ic_priv->md, &priv->rot_buf[0]);
+-	imx_media_free_dma_buf(ic_priv->md, &priv->rot_buf[1]);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[0]);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[1]);
+ }
  
+ static int prp_setup_norotation(struct prp_priv *priv)
+@@ -656,7 +656,7 @@ static int prp_start(struct prp_priv *priv)
+ 
+ 	outfmt = &vdev->fmt.fmt.pix;
+ 
+-	ret = imx_media_alloc_dma_buf(ic_priv->md, &priv->underrun_buf,
++	ret = imx_media_alloc_dma_buf(ic_priv->ipu_dev, &priv->underrun_buf,
+ 				      outfmt->sizeimage);
+ 	if (ret)
+ 		goto out_put_ipu;
+@@ -726,7 +726,7 @@ static int prp_start(struct prp_priv *priv)
+ out_unsetup:
+ 	prp_unsetup(priv, VB2_BUF_STATE_QUEUED);
+ out_free_underrun:
+-	imx_media_free_dma_buf(ic_priv->md, &priv->underrun_buf);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->underrun_buf);
+ out_put_ipu:
+ 	prp_put_ipu_resources(priv);
+ 	return ret;
+@@ -763,7 +763,7 @@ static void prp_stop(struct prp_priv *priv)
+ 
+ 	prp_unsetup(priv, VB2_BUF_STATE_ERROR);
+ 
+-	imx_media_free_dma_buf(ic_priv->md, &priv->underrun_buf);
++	imx_media_free_dma_buf(ic_priv->ipu_dev, &priv->underrun_buf);
+ 
+ 	/* cancel the EOF timeout timer */
+ 	del_timer_sync(&priv->eof_timeout_timer);
 diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index c33d714ed953..41965d8b56c4 100644
+index 93b107eab5f5..ea3d13103c91 100644
 --- a/drivers/staging/media/imx/imx-media-csi.c
 +++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -1816,7 +1816,7 @@ static int csi_registered(struct v4l2_subdev *sd)
- 	if (ret)
- 		goto free_fim;
+@@ -612,7 +612,7 @@ static int csi_idmac_start(struct csi_priv *priv)
  
--	ret = imx_media_capture_device_register(priv->md, priv->vdev);
-+	ret = imx_media_capture_device_register(priv->vdev);
+ 	outfmt = &vdev->fmt.fmt.pix;
+ 
+-	ret = imx_media_alloc_dma_buf(priv->md, &priv->underrun_buf,
++	ret = imx_media_alloc_dma_buf(priv->dev, &priv->underrun_buf,
+ 				      outfmt->sizeimage);
  	if (ret)
- 		goto free_fim;
+ 		goto out_put_ipu;
+@@ -666,7 +666,7 @@ static int csi_idmac_start(struct csi_priv *priv)
+ out_unsetup:
+ 	csi_idmac_unsetup(priv, VB2_BUF_STATE_QUEUED);
+ out_free_dma_buf:
+-	imx_media_free_dma_buf(priv->md, &priv->underrun_buf);
++	imx_media_free_dma_buf(priv->dev, &priv->underrun_buf);
+ out_put_ipu:
+ 	csi_idmac_put_ipu_resources(priv);
+ 	return ret;
+@@ -698,7 +698,7 @@ static void csi_idmac_stop(struct csi_priv *priv)
+ 
+ 	csi_idmac_unsetup(priv, VB2_BUF_STATE_ERROR);
+ 
+-	imx_media_free_dma_buf(priv->md, &priv->underrun_buf);
++	imx_media_free_dma_buf(priv->dev, &priv->underrun_buf);
+ 
+ 	/* cancel the EOF timeout timer */
+ 	del_timer_sync(&priv->eof_timeout_timer);
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 1c63a2765a81..c52aa59acd05 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -679,29 +679,28 @@ int imx_media_ipu_image_to_mbus_fmt(struct v4l2_mbus_framefmt *mbus,
+ }
+ EXPORT_SYMBOL_GPL(imx_media_ipu_image_to_mbus_fmt);
+ 
+-void imx_media_free_dma_buf(struct imx_media_dev *imxmd,
++void imx_media_free_dma_buf(struct device *dev,
+ 			    struct imx_media_dma_buf *buf)
+ {
+ 	if (buf->virt)
+-		dma_free_coherent(imxmd->md.dev, buf->len,
+-				  buf->virt, buf->phys);
++		dma_free_coherent(dev, buf->len, buf->virt, buf->phys);
+ 
+ 	buf->virt = NULL;
+ 	buf->phys = 0;
+ }
+ EXPORT_SYMBOL_GPL(imx_media_free_dma_buf);
+ 
+-int imx_media_alloc_dma_buf(struct imx_media_dev *imxmd,
++int imx_media_alloc_dma_buf(struct device *dev,
+ 			    struct imx_media_dma_buf *buf,
+ 			    int size)
+ {
+-	imx_media_free_dma_buf(imxmd, buf);
++	imx_media_free_dma_buf(dev, buf);
+ 
+ 	buf->len = PAGE_ALIGN(size);
+-	buf->virt = dma_alloc_coherent(imxmd->md.dev, buf->len, &buf->phys,
++	buf->virt = dma_alloc_coherent(dev, buf->len, &buf->phys,
+ 				       GFP_DMA | GFP_KERNEL);
+ 	if (!buf->virt) {
+-		dev_err(imxmd->md.dev, "failed to alloc dma buffer\n");
++		dev_err(dev, "%s: failed\n", __func__);
+ 		return -ENOMEM;
+ 	}
  
 diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index fc5d969ded79..dd603a6b3a70 100644
+index fadde3435cb7..ba2d75bcc4c9 100644
 --- a/drivers/staging/media/imx/imx-media.h
 +++ b/drivers/staging/media/imx/imx-media.h
-@@ -272,8 +272,7 @@ int imx_media_of_add_csi(struct imx_media_dev *imxmd,
- struct imx_media_video_dev *
- imx_media_capture_device_init(struct v4l2_subdev *src_sd, int pad);
- void imx_media_capture_device_remove(struct imx_media_video_dev *vdev);
--int imx_media_capture_device_register(struct imx_media_dev *md,
--				      struct imx_media_video_dev *vdev);
-+int imx_media_capture_device_register(struct imx_media_video_dev *vdev);
- void imx_media_capture_device_unregister(struct imx_media_video_dev *vdev);
- struct imx_media_buffer *
- imx_media_capture_device_next_buf(struct imx_media_video_dev *vdev);
+@@ -208,9 +208,9 @@ struct imx_media_dma_buf {
+ 	unsigned long  len;
+ };
+ 
+-void imx_media_free_dma_buf(struct imx_media_dev *imxmd,
++void imx_media_free_dma_buf(struct device *dev,
+ 			    struct imx_media_dma_buf *buf);
+-int imx_media_alloc_dma_buf(struct imx_media_dev *imxmd,
++int imx_media_alloc_dma_buf(struct device *dev,
+ 			    struct imx_media_dma_buf *buf,
+ 			    int size);
+ 
 diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
-index a708a0340eb1..18eb5d3ecf10 100644
+index 95f3808762b4..96d01d8af874 100644
 --- a/drivers/staging/media/imx/imx7-media-csi.c
 +++ b/drivers/staging/media/imx/imx7-media-csi.c
-@@ -1126,7 +1126,7 @@ static int imx7_csi_registered(struct v4l2_subdev *sd)
- 	if (ret < 0)
- 		return ret;
+@@ -714,7 +714,7 @@ static int imx7_csi_dma_start(struct imx7_csi *csi)
+ 	struct v4l2_pix_format *out_pix = &vdev->fmt.fmt.pix;
+ 	int ret;
  
--	ret = imx_media_capture_device_register(csi->imxmd, csi->vdev);
-+	ret = imx_media_capture_device_register(csi->vdev);
- 	if (ret < 0)
- 		return ret;
+-	ret = imx_media_alloc_dma_buf(csi->imxmd, &csi->underrun_buf,
++	ret = imx_media_alloc_dma_buf(csi->dev, &csi->underrun_buf,
+ 				      out_pix->sizeimage);
+ 	if (ret < 0) {
+ 		v4l2_warn(&csi->sd, "consider increasing the CMA area\n");
+@@ -754,7 +754,7 @@ static void imx7_csi_dma_stop(struct imx7_csi *csi)
  
+ 	imx7_csi_dma_unsetup_vb2_buf(csi, VB2_BUF_STATE_ERROR);
+ 
+-	imx_media_free_dma_buf(csi->imxmd, &csi->underrun_buf);
++	imx_media_free_dma_buf(csi->dev, &csi->underrun_buf);
+ }
+ 
+ static int imx7_csi_configure(struct imx7_csi *csi)
 -- 
 2.17.1
 
