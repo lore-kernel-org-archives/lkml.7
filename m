@@ -2,152 +2,104 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A00AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC96C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD496208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:54:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpi+7QDu"
+	by mail.kernel.org (Postfix) with ESMTP id A5F33217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:57:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbfEJRyZ (ORCPT
+        id S1727803AbfEJR5N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:54:25 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46146 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfEJRyY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:54:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so3592729pfm.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 10:54:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I1itVqm/8wQC9SNWjeDa4dzSfWDqGRFaqod6eNBqWDE=;
-        b=vpi+7QDuHFbrhBBUyCBfSRPp4e/b18thnFfQ8bcFdB7+QYft6hvk/wzwmMbGMpNFAu
-         GodCgjxLULgCoExsd5PcNVG2XmpdO7y7RawmiDS2wwQLIyHAdVMvyLNvAEsl7rmZrne0
-         An8KJ8pFXq6AL9lBK2f996oSXS6Xtq0n7sBdak8TFvfS1fnLLeEopXok2YbfF+F3qbPF
-         i0HfP7omSqy2J2dzOFYpktJe1eppSYU4mLHoVldyHBicYpGZWAtaAWCK9NgM6Syc4BiA
-         PPCgbPV+ewXX4uCbfDhmIml5lZk8dQO4djXjpd/cHh0McCqcAU4Jy0PtE+qAa+IUybZJ
-         VMKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I1itVqm/8wQC9SNWjeDa4dzSfWDqGRFaqod6eNBqWDE=;
-        b=MinhzwbNbXHHU/TH4tp6iS6hirSjACVjiOFg8f/uGaBN415kzPJzpRrW/Vr4zpSBLi
-         LVQMx4qyM6N/xCfMdUoaKB1uo1KNjRR203ERICrmZg669pVaf1SdwwV4c2U6TnZkNKXg
-         hUtzwes9NHta5tygVoGO/4a73p945d1BGBK2LbF/WzABIxXp9mqV3sWJIMd3OIAd1lNj
-         cU6Qa4HF0q7vgJhK06n/HBHII/PFObsQj21dqOClamXYs/lyfr1ykyAw3cfTLZKlwUJh
-         23dL7Xr9FjWo3X1/G2r5wAMe5MuoOVbowjRl+YFelGFmHRVn+iYoLLUThZPLA3sNiBK3
-         CBGA==
-X-Gm-Message-State: APjAAAV+IPI1lIbRRmV64ITWP96pfeeexBuxSiQU2/uTtsYfKBo2PNT4
-        KLvAasojoW53Jucm9R4YBlf+ts3h5q3rfWGUPV2UPrdB
-X-Google-Smtp-Source: APXvYqzP8m3pUBu8UMfj1TGUem0MHgkYl98JB8CBT7FbIBwDvJmFqEL/4/iSOqEP7vpWgLOmbZ7LAxZ9mHAlN3Sy0r4=
-X-Received: by 2002:aa7:8096:: with SMTP id v22mr16300080pff.94.1557510862969;
- Fri, 10 May 2019 10:54:22 -0700 (PDT)
+        Fri, 10 May 2019 13:57:13 -0400
+Received: from mga12.intel.com ([192.55.52.136]:18909 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727562AbfEJR5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:57:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 10:57:12 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 10 May 2019 10:57:12 -0700
+Received: from khbyers-mobl2.amr.corp.intel.com (unknown [10.251.29.37])
+        by linux.intel.com (Postfix) with ESMTP id CC36C580482;
+        Fri, 10 May 2019 10:57:11 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Fix build error with
+ CONFIG_SND_SOC_SOF_NOCODEC=m
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     alsa-devel@alsa-project.org, rdunlap@infradead.org,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+References: <20190510023657.8960-1-yuehaibing@huawei.com>
+ <s5h7eayn5or.wl-tiwai@suse.de>
+ <73c6dd27-895a-adba-a4ef-2992266fcc48@linux.intel.com>
+ <s5hlfzempf0.wl-tiwai@suse.de>
+ <1e7e1908-a813-6c9b-5b88-122864d3a372@linux.intel.com>
+ <s5hbm0amnpl.wl-tiwai@suse.de> <s5h8svemn0u.wl-tiwai@suse.de>
+ <00aa3055-0b97-3ac4-f588-3665bfcb5811@linux.intel.com>
+ <s5h1s16memr.wl-tiwai@suse.de>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <75c3efb7-8057-0d4c-a53d-45f4527d90a1@linux.intel.com>
+Date:   Fri, 10 May 2019 12:56:51 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1557497409-18037-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1557497409-18037-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 10 May 2019 10:54:11 -0700
-Message-ID: <CAKwvOdmaBopTduxoicj204pkr=+Xbapcqx2JMctNxd0MeHonog@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: add all Clang-specific flags unconditionally
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <s5h1s16memr.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 7:10 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> We do not support old Clang versions. Upgrade your clang version
-> if any of these flags is unsupported.
->
-> Let's add all flags within ifdef CONFIG_CC_IS_CLANG unconditionally.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Ack
+>>>> Yes, that would work.  OTOH, I see no merit to build an extra module
+>>>> for nocodec.  nocodec.c can be built together with sof-core stuff.
+>>
+>> the module has its benefits. Today nocodec includes all possible DAIs,
+>> I wanted to add module parameters to restrict things a bit for
+>> tests/debug. It'll be e.g. very helpful for SoundWire to avoid
+>> exposing the SSP DAIs.
+>>
+>> Also nocodec is incompatible with hdaudio/hdmi support at the moment,
+>> we had all sorts of issues with suspend/resume.
+> 
+> Well, in the case of SOF, the core code calls directly
+> soc_nocodec_setup(), hence it's rather a direct link.  So it makes
+> little sense to make the nocodec code split from sof-core, unless the
+> nocodec code is used / linked by components other than SOF.  I doubt
+> the possibility because the current DAI is clearly only for SOF...
+> 
+> The module option can be still be there; it'll be applied just to
+> sof-core instead of sof-nocodec.
 
-> ---
->
-> Changes in v2:
->   - Rebase on top of Nathan's patch
->      https://patchwork.kernel.org/patch/10937055/
->
->  Makefile                   | 10 +++++-----
->  scripts/Makefile.extrawarn | 12 ++++++------
->  2 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 914a3ad..1152fc4 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
->  KBUILD_CFLAGS += $(stackp-flags-y)
->
->  ifdef CONFIG_CC_IS_CLANG
-> -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
-> +KBUILD_CPPFLAGS += -Qunused-arguments
-> +KBUILD_CFLAGS += -Wno-format-invalid-specifier
-> +KBUILD_CFLAGS += -Wno-gnu
->  # Quiet clang warning: comparison of unsigned expression < 0 is always false
-> -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
-> +KBUILD_CFLAGS += -Wno-tautological-compare
->  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
->  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
->  # See modpost pattern 2
-> -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
-> +KBUILD_CFLAGS += -mno-global-merge
->  else
->
->  # These warnings generated too much noise in a regular build.
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 768306a..523c4ca 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -66,11 +66,11 @@ KBUILD_CFLAGS += $(warning)
->  else
->
->  ifdef CONFIG_CC_IS_CLANG
-> -KBUILD_CFLAGS += $(call cc-disable-warning, initializer-overrides)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, unused-value)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, format)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
-> -KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
-> +KBUILD_CFLAGS += -Wno-initializer-overrides
-> +KBUILD_CFLAGS += -Wno-unused-value
-> +KBUILD_CFLAGS += -Wno-format
-> +KBUILD_CFLAGS += -Wno-sign-compare
-> +KBUILD_CFLAGS += -Wno-format-zero-length
-> +KBUILD_CFLAGS += -Wno-uninitialized
->  endif
->  endif
-> --
-> 2.7.4
->
+I see your point and this SOF core/nocodec dependency is a conceptual 
+miss on our side. Thanks for bringing our attention on this.
+
+The core is really supposed to be about the DSP side of things. It 
+shouldn't be burdened with machine driver stuff, but it unfortunately is 
+at two levels.
+
+Initially the nocodec code was handled at the soc-acpi-dev or 
+soc-pci-dev level, and it's still there that the FORCE_CODEC mode is 
+handled, along with the calls to check the codec ACPI IDs. Now when we 
+enabled the HDaudio case, we somehow ended-up moving parts of the 
+nocodec support in the SOF core to simplify our life but created a 
+dependency that wasn't intentional at all. we collectively missed it 
+while we were struggling with nocodec/hdaudio compatibility.
+
+The second issue is that we create a platform_device for the machine 
+driver in the SOF core. This is a shortcut that we took and that works 
+for Intel, but for DeviceTree-based platforms this will have to change.
+
+So long story short, I'd rather have a simple Kconfig fix to avoid 
+compilation issues for now and revisit all the machine driver support, 
+e.g. when the i.MX patches show up, than strengthen a dependency that we 
+introduced by accident rather than by design.
 
 
--- 
-Thanks,
-~Nick Desaulniers
