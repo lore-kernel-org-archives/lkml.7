@@ -2,207 +2,164 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA75AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BB3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D78F2070D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BB020881
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:53:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IiT+Y7M2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbfEJKw1 (ORCPT
+        id S1727083AbfEJKxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:52:27 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:42928 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727052AbfEJKw1 (ORCPT
+        Fri, 10 May 2019 06:53:46 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52702 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbfEJKxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:52:27 -0400
-X-UUID: 17bea0a1c21f45119a397af1d04aa859-20190510
-X-UUID: 17bea0a1c21f45119a397af1d04aa859-20190510
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <michael.kao@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 816556657; Fri, 10 May 2019 18:52:19 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 10 May 2019 18:52:17 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 10 May 2019 18:52:17 +0800
-Message-ID: <1557485537.29634.27.camel@mtksdccf07>
-Subject: Re: [PATCH 1/8] arm64: dts: mt8183: add thermal zone node
-From:   Michael Kao <michael.kao@mediatek.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CC:     Matthias Kaehlcke <mka@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>, <fan.chen@mediatek.com>,
-        <jamesjj.liao@mediatek.com>, <dawei.chien@mediatek.com>,
-        <louis.yu@mediatek.com>, <roger.lu@mediatek.com>,
-        Zhang Rui <rui.zhang@intel.com>, <hsinyi@chromium.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-pm@vger.kernel.org>
-Date:   Fri, 10 May 2019 18:52:17 +0800
-In-Reply-To: <1557318215.29634.7.camel@mtksdccf07>
-References: <1556793795-25204-1-git-send-email-michael.kao@mediatek.com>
-         <1556793795-25204-2-git-send-email-michael.kao@mediatek.com>
-         <CAJMQK-isJf6f+OubbCdoXs8L2cup=rm3Z8Mr7Q26QshMP-0wxA@mail.gmail.com>
-         <20190503164651.GB40515@google.com>
-         <c6cf6170-331d-8ffc-d272-e5d8ee648eda@linaro.org>
-         <1557318215.29634.7.camel@mtksdccf07>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Fri, 10 May 2019 06:53:45 -0400
+Received: by mail-it1-f194.google.com with SMTP id q65so8627786itg.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=6lmggy5LAhP6+/fqo3Cgjki+90sC2rjWaVQkUq7yfS0=;
+        b=IiT+Y7M2bPSekDVZ0GorTiBcC3mahvOegfQRIUpm047z/E7ZQiYTEDyK99JCx55xzr
+         IM2JqTWji/VnQeDAi8vHeZtehsL8/RZPpgt+97oinEPEz7LNZyirIW2pB99JSzwjzIHz
+         vX1MlDYQZbErxiPOntUk+nrtqfnBcBD61PQOtQMfi0ixxTtB5n9OphDCFNYmWIQaXa2M
+         554VgQPXpnXXfpRsDU/6EijWMNVV2DUYKmIbAAjAIbbfrtTeC2SB8DezrQ32Hfl9w3zJ
+         CK5Zg50oSTq5MpWNxvpIofT8hYBIUn1z8D/FoU39PfQx6sEy0q8ZpTqfCH/lr8EXWewq
+         pdiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6lmggy5LAhP6+/fqo3Cgjki+90sC2rjWaVQkUq7yfS0=;
+        b=fin6XGb64EjR3HYx0rw5xNlZLUqfeahY1ZrEqrl3MNxjMkMPmP0ySwgdcC81n3cZQ6
+         mboVwrLn2N01LGpXieefpdJ4zNvOQk2trSFXqObCN6DLLIzLeapJRLjjOoxC41i9jt4H
+         SJQ4hM/PqhldsU37u1vQzjhxZogsQGw2WV6KM9p+rn8M/q7KlAnG2tjToEtgvzsWMWI+
+         7eJA8ReNPU2FTeiCkJEF/AYLe3mGYXXcRsdFIsbbhRgSa9k8SXSMf0SFpbRoMNEoB2k7
+         ioWivNaRj6hnge303go45uPuwIaIa00Q95jriR+EH6Z9QVaQLaE5F0DeKLSSPU3/E0Hx
+         YGxg==
+X-Gm-Message-State: APjAAAVpOYCadrgd/yvh1aRl6bfQcRJ2TO9tpoEjnFLyCfp5vfe41i+l
+        tr5OAWrhxgBFrNrrDrMzhno9FyDojL2kWTKUm4St5g==
+X-Google-Smtp-Source: APXvYqxTVIOAjkyrwAL7YrZ7nLzxhjxM+ec7fq3I6p+KVlTYd7N4iUs5cYNvoNrLNhNTB27bq9BGwTunV2kQhIubAxY=
+X-Received: by 2002:a24:6c13:: with SMTP id w19mr238759itb.144.1557485624546;
+ Fri, 10 May 2019 03:53:44 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: A4A157953A4D2C6FE6E207CD9DAB29D1F5B9618804D49103BC12AA9BB5CBB1172000:8
-X-MTK:  N
+References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
+ <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr>
+In-Reply-To: <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 10 May 2019 12:53:33 +0200
+Message-ID: <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
+Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
+To:     Nick Kossifidis <mick@ics.forth.gr>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-08 at 20:23 +0800, Michael Kao wrote:
-> On Mon, 2019-05-06 at 12:43 +0200, Daniel Lezcano wrote:
-> > On 03/05/2019 18:46, Matthias Kaehlcke wrote:
-> > > Hi,
-> > > 
-> > > On Fri, May 03, 2019 at 04:03:58PM +0800, Hsin-Yi Wang wrote:
-> > >> On Thu, May 2, 2019 at 10:43 AM michael.kao <michael.kao@mediatek.com> wrote:
-> > >>>
-> > >>> Add thermal zone node to Mediatek MT8183 dts file.
-> > >>>
-> > >>> Signed-off-by: Michael Kao <michael.kao@mediatek.com>
-> > >>> ---
-> > >>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 64 ++++++++++++++++++++++++++++++++
-> > >>>  1 file changed, 64 insertions(+)
-> > >>>
-> > >>> diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > >>> index 926df75..b92116f 100644
-> > >>> --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > >>> +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > >>> @@ -334,6 +334,67 @@
-> > >>>                         status = "disabled";
-> > >>>                 };
-> > >>>
-> > >>> +               thermal: thermal@1100b000 {
-> > >>> +                       #thermal-sensor-cells = <1>;
-> > >>> +                       compatible = "mediatek,mt8183-thermal";
-> > >>> +                       reg = <0 0x1100b000 0 0x1000>;
-> > >>> +                       interrupts = <0 76 IRQ_TYPE_LEVEL_LOW>;
-> > >>> +                       clocks = <&infracfg CLK_INFRA_THERM>,
-> > >>> +                                <&infracfg CLK_INFRA_AUXADC>;
-> > >>> +                       clock-names = "therm", "auxadc";
-> > >>> +                       resets = <&infracfg  MT8183_INFRACFG_AO_THERM_SW_RST>;
-> > >>> +                       mediatek,auxadc = <&auxadc>;
-> > >>> +                       mediatek,apmixedsys = <&apmixedsys>;
-> > >>> +                       mediatek,hw-reset-temp = <117000>;
-> > >>> +                       nvmem-cells = <&thermal_calibration>;
-> > >>> +                       nvmem-cell-names = "calibration-data";
-> > >>> +               };
-> > >>> +
-> > >>> +               thermal-zones {
-> > >>> +                       cpu_thermal: cpu_thermal {
-> > >>> +                               polling-delay-passive = <1000>;
-> > >>> +                               polling-delay = <1000>;
-> > >>> +
-> > >>> +                               thermal-sensors = <&thermal 0>;
-> > >>> +                               sustainable-power = <1500>;
-> > >>> +                       };
-> > >>> +
-> > >>> +                       tzts1: tzts1 {
-> > >>> +                               polling-delay-passive = <1000>;
-> > >>> +                               polling-delay = <1000>;
-> > >>> +                               thermal-sensors = <&thermal 1>;
-> > >> Is sustainable-power required for tzts? Though it's an optional
-> > >> property, kernel would have warning:
-> > >> [    0.631556] thermal thermal_zone1: power_allocator:
-> > >> sustainable_power will be estimated
-> > >> [    0.639586] thermal thermal_zone2: power_allocator:
-> > >> sustainable_power will be estimated
-> > >> [    0.647611] thermal thermal_zone3: power_allocator:
-> > >> sustainable_power will be estimated
-> > >> [    0.655635] thermal thermal_zone4: power_allocator:
-> > >> sustainable_power will be estimated
-> > >> [    0.663658] thermal thermal_zone5: power_allocator:
-> > >> sustainable_power will be estimated
-> > >> if no sustainable-power assigned.
-> > > 
-> > > The property is indeed optional, if it isn't specified IPA will use
-> > > the sum of the minimum power of all 'power actors' of the zone as
-> > > estimate (see estimate_sustainable_power()). This may lead to overly
-> > > agressive throttling, since the nominal sustainable power will always
-> > > be <= the requested power.
-> > > 
-> > > In my understanding the sustainable power may varies between devices,
-> > > even for the same SoC. One could have all the hardware crammed into a
-> > > tiny plastic enclosure (e.g. ASUS Chromebit), another might have a
-> > > laptop form factor and a metal enclosure (e.g. ASUS C201). Both
-> > > examples are based on an Rockchip rk3288, but they have completely
-> > > different thermal behavior, and would likely have different values for
-> > > 'sustainable-power'.
-> > > 
-> > > In this sense I tend to consider 'sustainable-power' more a device,
-> > > than a SoC property. You could specify a 'reasonable' value as a
-> > > starting point, but it will likely not be optimal for all or even most
-> > > devices. The warning might even be useful for device makers by
-> > > indicating them that there is room for tweaking.
-> > 
-> > 
-> > The sustainable power is the power dissipated by the devices belonging
-> > to the thermal zone at the given trip temperature.
-> > 
-> > With the power numbers and the cooling devices, the IPA will change the
-> > states of the cooling devices to leverage the dissipated power to the
-> > sustainable power.
-> > 
-> > The contribution is the cooling effect of the cooling device.
-> > 
-> > However, the IPA is limited to one thermal zone and the cooling device
-> > is the cpu cooling device. There is the devfreq cooling device but as
-> > the graphic driver is not upstream, it is found in the android tree only
-> > for the moment.
-> > 
-> > As you mentioned the sustainable power can vary depending on the form
-> > factor and the production process for the same SoC (they can go to
-> > higher frequencies thus dissipate more power). That is the reason why we
-> > split the DT per SoC and we override the values on a per SoC version basis.
-> > 
-> > You can have a look the rk3399.dtsi and their variant for experimental
-> > board (*-rock960.dts) and the chromebook version (*-gru-kevin.dts).
-> > 
-> > Do you want a empiric procedure to find out the sustainable power ?
-> > 
-> > 
-> > 
-> OK, I will add the cooling map. But the tzts1 ~ tzts6 don't need to binding cooler.
-> The "cpu_thermal" is max value of tzts1 ~tzts6. And cpu_thermal bind
-> cooler with IPA. tzts1~6 don't need to add cooler. So, do I just add
-> cooling map without any binding any cooling-cell?
-> 
-> I think thermal framework will add estimated sustainable power. Maybe I
-> should add by myself. What's procedure do you recommend to find
-> sustainable power?
-> 
-The tzts1~6 are just thermal sensor in the 8183 SoC,
-The purpose of adding the six thermal is to support svs driver to read
-thermal sensor in the SoC.
-https://patchwork.kernel.org/patch/10923289/
+From: Nick Kossifidis <mick@ics.forth.gr>
+Date: Fri, Apr 12, 2019 at 6:08 PM
+To: Arnd Bergmann
+Cc: Christoph Hellwig, Linus Torvalds, Andrew Morton, linux-arch,
+<mick@ics.forth.gr>, Linux Kernel Mailing List
 
-The IPA cooling SoC will be applied by cpu_thermal which is the max
-sensor value of tzts1~6.
-In Document/devicetree/binding/thermal/thermal.txt, I find the statement
-that the trip and cooling-map is required for thermal zone.
-If we don't set trip and cooling map, it will set disable mode
-"tz->mode = THERMAL_DEVICE_DISABLED"
-in the drivers/thermal/of-thermal.c
-But it still work to read the temperature of thermal zone.
-And we don't need to let these thermal zone to bind cooler.
-So, we use these way to provide temperature node for svs to read
-temperature by thermal_zone_get_zone_by_name only.
+> =CE=A3=CF=84=CE=B9=CF=82 2019-04-12 17:53, Arnd Bergmann =CE=AD=CE=B3=CF=
+=81=CE=B1=CF=88=CE=B5:
+> > On Fri, Apr 12, 2019 at 4:36 PM Christoph Hellwig <hch@lst.de> wrote:
+> >>
+> >> When removing some dead big endian checks in the RISC-V code Nick
+> >> suggested that we should have some generic sanity checks.  I don't
+> >> think
+> >> we should have thos inside the RISC-V code, but maybe it might make
+> >> sense to have these in the generic byteorder headers.  Note that these
+> >> are UAPI headers and some compilers might not actually define
+> >> __BYTE_ORDER__, so we first check that it actually exists.
+> >>
+> >> Suggested-by: Nick Kossifidis <mick@ics.forth.gr>
+> >> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Extra checking like this is good in general, but I'm not sure I see
+> > exactly what kind of issue one might expect to prevent with this:
+> >
+> > All architecture asm/byteorder.h headers either include the only
+> > possible option, or they check the compiler defined macros:
+> >
+> > arch/arc/include/uapi/asm/byteorder.h:#ifdef __BIG_ENDIAN__
+> > arch/arm/include/uapi/asm/byteorder.h:#ifdef __ARMEB__
+> > arch/arm64/include/uapi/asm/byteorder.h:#ifdef __AARCH64EB__
+> > arch/c6x/include/uapi/asm/byteorder.h:#ifdef _BIG_ENDIAN
+> > arch/microblaze/include/uapi/asm/byteorder.h:#ifdef __MICROBLAZEEL__
+> > arch/mips/include/uapi/asm/byteorder.h:#if defined(__MIPSEB__)
+> > arch/nds32/include/uapi/asm/byteorder.h:#ifdef __NDS32_EB__
+> > arch/powerpc/include/uapi/asm/byteorder.h:#ifdef __LITTLE_ENDIAN__
+> > arch/sh/include/uapi/asm/byteorder.h:#ifdef __LITTLE_ENDIAN__
+> > arch/xtensa/include/uapi/asm/byteorder.h:#ifdef __XTENSA_EL__
+> >
+> > Are you worried about toolchains that define those differently
+> > from what these headers expect? Did you encounter such a case?
+> >
+> >       Arnd
+>
+> The following architectures just include the header file without
+> checking for any compiler macro:
+>
+> alpha: little_endian.h
+> csky: little_endian.h
+> h8300: big_endian.h
+> hexagon: little_endian.h
+> ia64: little_endian.h
+> m68k: big_endian.h
+> nios2: little_endian.h
+> openrisc: big_endian.h
+> parisc: big_endian.h
+> riscv: little_endian.h
+> s390: big_endian.h
+> sparc: big_endian.h
+> unicore32: little_endian.h
+> x86: little_endian.h
+>
+> Of those who do check for a compiler macro, they don't use the
+> generic macros (__ORDER_*_ENDIAN__) but arch-specific ones.
+>
+> Only two architectures (mips and xtensa) that support both big
+> and little endian return an error in case the endianess can't be
+> determined, the rest will move on without including any
+> of *_endian.h files.
+>
+> I think it's good to have a sanity check in-place for consistency.
 
+
+Hi,
+
+This broke our cross-builds from x86. I am using:
+
+$ powerpc64le-linux-gnu-gcc --version
+powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
+
+and it says that it's little-endian somehow:
+
+$ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
+#define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+
+Is it broke compiler? Or I always hold it wrong? Is there some
+additional flag I need to add?
+
+Thanks
