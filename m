@@ -2,258 +2,105 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29833C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE06CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C59217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557452535;
-	bh=cFrtploylTJ7D2a1X3krEnJPSVtcXCsr2Vhw1CjLgj8=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=OleOa7i0YTRNnQgVd6Iy4laW1hp7aSPCgMnaX9xT4/uIZWgKpM83aJvYgPzj6OTth
-	 fpZ+fevdjuRU3rWE6ig+BvXMRDrEK7LeIMA7ERKRmg8ehq4FZahsjImDK7EtBTFg2Y
-	 XOQ8CEUBLJMEO/s+MKdzxB4iZTql5MYbev4+gydI=
+	by mail.kernel.org (Postfix) with ESMTP id BC9712084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:12:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEJBmN (ORCPT
+        id S1726870AbfEJCMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 21:42:13 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33762 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfEJBmM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 21:42:12 -0400
-Received: by mail-io1-f67.google.com with SMTP id z4so3269872iol.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 18:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YjvQjrdVS12KY32f62rBMl2y5YxKM5lRaU2cGrqTrlY=;
-        b=iQXPM6HlBuCAcDh6qqvlr1iMhuawK9DDIaZJgwlFecOZTdaFhUEEopeiLjTqGdYcey
-         Ei+XzihcT61RgeaYzQI8ihN+pomcyT6VgWelpRhqjGfxYGBOnwKt2lEKYPta21DiotKo
-         tEMsFOnNMbCGKNObds/QESqwLjvSTa0J4C/wc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YjvQjrdVS12KY32f62rBMl2y5YxKM5lRaU2cGrqTrlY=;
-        b=eA+mR8gDhb9Ft4IzfWthLFHEpHKvOkSMPKytC1iH5PwKfrvAebJYWb9eCKXNsQCNBG
-         Ib6Ix5FaEXdulGOCJKFX9iTZULaGkpNWi08o/71X4K33QpvqgAgqHIvBCflsShpBp9bw
-         7k0cWxciJU6bKhfml8ANadHhuwTq0Mx4pydvKsQ9Y3PghLmlZrYmqKi+vif6tKfD7jn5
-         sGsYpBMzcY8iKDlHuDwqSvjSAW/Kcd3fxsNWj80T6qxpBhtPvEbAQ/DxU5C4SG2FLOB/
-         6KjHWpDMUnbsJhevw7iYM4SYiqppX3RdVPcF2Kz93KAoLTL0XsfewAsPucO8RmJTw8UF
-         Stfw==
-X-Gm-Message-State: APjAAAVPoRHqxPJaIpsKk+LjO8RKVSSV3DB3tJCBJcG/dNXawNRB5m9H
-        nqnFC7B3sGdTH6leZgRBdRv6uQ==
-X-Google-Smtp-Source: APXvYqzYZc7zA5KXM4nSFp5KXYZWaf+8QXVrppBmQYFU7NPIxJ+f773wIi+yyx89xJfucyYfyuz+4A==
-X-Received: by 2002:a5d:9d4f:: with SMTP id k15mr5260994iok.100.1557452531643;
-        Thu, 09 May 2019 18:42:11 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m25sm1796887iti.24.2019.05.09.18.42.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 18:42:10 -0700 (PDT)
-Subject: Re: [GIT PULL] Kselftest update for Linux 5.2-rc1
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, Shuah Khan <skhan@linuxfoundation.org>
-References: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
- <20190509222043.b4zn32kuohduzzzr@ast-mbp>
- <dd983d42-d148-372d-3e57-b97c313d58b9@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <28072ca5-f7c8-f16d-6881-aec3e8b61ae8@linuxfoundation.org>
-Date:   Thu, 9 May 2019 19:42:09 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 22:12:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11575 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726799AbfEJCMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 22:12:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 19:12:42 -0700
+X-ExtLoop1: 1
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by fmsmga007.fm.intel.com with ESMTP; 09 May 2019 19:12:40 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     <hannes@cmpxchg.org>, <mhocko@suse.com>,
+        <mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
+        <hughd@google.com>, <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
+References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+Date:   Fri, 10 May 2019 10:12:40 +0800
+In-Reply-To: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+        (Yang Shi's message of "Fri, 10 May 2019 08:16:32 +0800")
+Message-ID: <87y33fjbvr.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <dd983d42-d148-372d-3e57-b97c313d58b9@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/9/19 4:40 PM, Shuah Khan wrote:
-> On 5/9/19 4:20 PM, Alexei Starovoitov wrote:
->> On Mon, May 06, 2019 at 10:56:56AM -0600, Shuah Khan wrote:
->>> Hi Linus,
->>>
->>> Please pull the following Kselftest update for Linux 5.2-rc1
->>>
->>> This Kselftest update for Linux 5.2-rc1 consists of
->>>
->>> - fixes to seccomp test, and kselftest framework
->>> - cleanups to remove duplicate header defines
->>> - fixes to efivarfs "make clean" target
->>> - cgroup cleanup path
->>> - Moving the IMA kexec_load selftest to selftests/kexec work from
->>>    Mimi Johar and Petr Vorel
->>> - A framework to kselftest for writing kernel test modules addition
->>>    from Tobin C. Harding
->>>
->>> diff is attached.
->>>
->>> thanks,
->>> -- Shuah
->>>
->>>
->>> ----------------------------------------------------------------
->>> The following changes since commit 
->>> 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
->>>
->>>    Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
->>>
->>> are available in the Git repository at:
->>>
->>>    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
->>> tags/linux-kselftest-5.2-rc1
->>>
->>> for you to fetch changes up to d917fb876f6eaeeea8a2b620d2a266ce26372f4d:
->>>
->>>    selftests: build and run gpio when output directory is the src dir
->>> (2019-04-22 17:02:26 -0600)
->>>
->>> ----------------------------------------------------------------
->>> linux-kselftest-5.2-rc1
->>>
->>> This Kselftest update for Linux 5.2-rc1 consists of
->>>
->>> - fixes to seccomp test, and kselftest framework
->>> - cleanups to remove duplicate header defines
->>> - fixes to efivarfs "make clean" target
->>> - cgroup cleanup path
->>> - Moving the IMA kexec_load selftest to selftests/kexec work from
->>>    Mimi Johar and Petr Vorel
->>> - A framework to kselftest for writing kernel test modules addition
->>>    from Tobin C. Harding
->>>
->>> ----------------------------------------------------------------
->>> Kees Cook (3):
->>>        selftests/seccomp: Handle namespace failures gracefully
->>>        selftests/harness: Add 30 second timeout per test
->>>        selftests/ipc: Fix msgque compiler warnings
->>>
->>> Mathieu Desnoyers (1):
->>>        rseq/selftests: Adapt number of threads to the number of 
->>> detected cpus
->>>
->>> Mimi Zohar (9):
->>>        selftests/kexec: move the IMA kexec_load selftest to 
->>> selftests/kexec
->>>        selftests/kexec: cleanup the kexec selftest
->>>        selftests/kexec: define a set of common functions
->>>        selftests/kexec: define common logging functions
->>>        selftests/kexec: define "require_root_privileges"
->>>        selftests/kexec: kexec_file_load syscall test
->>>        selftests/kexec: check kexec_load and kexec_file_load are enabled
->>>        selftests/kexec: make kexec_load test independent of IMA being 
->>> enabled
->>>        selftests/kexec: update get_secureboot_mode
->>>
->>> Petr Vorel (1):
->>>        selftests/kexec: Add missing '=y' to config options
->>>
->>> Po-Hsu Lin (1):
->>>        selftests/efivarfs: clean up test files from test_create*()
->>>
->>> Roman Gushchin (1):
->>>        selftests: cgroup: fix cleanup path in 
->>> test_memcg_subtree_control()
->>>
->>> Sabyasachi Gupta (4):
->>>        selftest/x86/mpx-dig.c: Remove duplicate header
->>>        selftest/timers: Remove duplicate header
->>>        selftest/rseq: Remove duplicate header
->>>        selftest/gpio: Remove duplicate header
->>>
->>> Shuah Khan (2):
->>>        selftests: fix headers_install circular dependency
->>
->> Shuah,
->>
->> the commit 8ce72dc32578 ("selftests: fix headers_install circular 
->> dependency")
->> broke our build/test workflow, since it added:
->>    ifneq ($(KBUILD_OUTPUT),)
->>            OUTPUT := $(KBUILD_OUTPUT)
->>    else
->>
->> which means that all of selftests/bpf artifacts are now going into
->> main build directory cluttering it with all sorts of .o, generated files
->> and executables.
->> The end result is humans and scripts can no longer find tests.
+Yang Shi <yang.shi@linux.alibaba.com> writes:
 
-bpf build fails with the above commit. However, even without it, I am
-seeing bpf objects going to tools/testing/selftests/bpf
+> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+> still gets inc'ed by one even though a whole THP (512 pages) gets
+> swapped out.
+>
+> This doesn't make too much sense to memory reclaim.  For example, direct
+> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+> direct reclaim may just waste time to reclaim more pages,
+> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>
+> This change may result in more reclaimed pages than scanned pages showed
+> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
+>
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> I'm not quite sure if it was the intended behavior or just omission. I tried
+> to dig into the review history, but didn't find any clue. I may miss some
+> discussion.
+>
+>  mm/vmscan.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index fd9de50..7e026ec 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  
+>  		unlock_page(page);
+>  free_it:
+> -		nr_reclaimed++;
+> +		/* 
+> +		 * THP may get swapped out in a whole, need account
+> +		 * all base pages.
+> +		 */
+> +		nr_reclaimed += (1 << compound_order(page));
+>  
+>  		/*
+>  		 * Is there need to periodically free_page_list? It would
 
-I reverted the commit and ran your use-case:
+Good catch!  Thanks!
 
-export KBUILD_OUTPUT=/tmp/kselftest_bpf
-cd tools/testing/selftests/bpf/
-make
-./test_verifier
-
-I see bpf objects in tools/testing/selftests/bpf/ and I can run the
-test.
-
-What am I missing? The only way ./test_verifier would work is if
-test_verifier is in tools/testing/selftests/bpf/
-
-I am curious what you are actually seeing with this commit?
-
-With the 8ce72dc32578
-
-What I see is - if KBUILD_OUTPUT directory is missing, then the make
-just fails and the following diff fixes that problem:
-
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 098dd0065fb1..074ce7d26a9d 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -13,6 +13,7 @@ ifeq (0,$(MAKELEVEL))
-                 DEFAULT_INSTALL_HDR_PATH := 1
-         endif
-      endif
-+$(shell mkdir -p $(OUTPUT))
-  endif
-  selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
+How about to change this to
 
 
-Now when I run
+        nr_reclaimed += hpage_nr_pages(page);
 
-cd tools/testing/selftests/bpf/
-make
-./test_verifier
-
-bpf objects end up in /tmp/kselftest_bpf
-
-which is what should happen when KBUILD_OUPUT is set.
-
-But now ./test_verifier won't work, because it isn't in the
-cd tools/testing/selftests/bpf/
-
-Could it be that with  commit 8ce72dc32578, bpf objects are ending
-up in the KBUILD_OUPUT dir and ./test_verifier won't work because
-your workflow is looking for it in tools/testing/selftests/bpf/?
-
-If this is the case, then the workfolow will be to run the
-test_verifier from KBUILD_OUPUT dir.
-
-I am trying understand the problem so I can fix it. I know I need
-the above diff.
-
-
-thanks,
--- Shuah
-
-
+Best Regards,
+Huang, Ying
