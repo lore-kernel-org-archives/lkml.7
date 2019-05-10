@@ -2,88 +2,74 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DCBC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C461FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5DA82177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D6632175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfEJOyF (ORCPT
+        id S1727524AbfEJO4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:54:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59484 "EHLO mail.kernel.org"
+        Fri, 10 May 2019 10:56:52 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49870 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbfEJOyF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:54:05 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A202175B;
-        Fri, 10 May 2019 14:54:02 +0000 (UTC)
-Date:   Fri, 10 May 2019 10:54:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190510105400.0d267e9f@gandalf.local.home>
-In-Reply-To: <20190510121720.GT2589@hirez.programming.kicks-ass.net>
-References: <20190508115416.nblx7c2kocidpytm@treble>
-        <20190508120416.GL2589@hirez.programming.kicks-ass.net>
-        <20190508124248.u5ukpbhnh4wpiccq@treble>
-        <20190508153907.GM2589@hirez.programming.kicks-ass.net>
-        <20190508184848.qerg3flv3ej3xsev@treble>
-        <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
-        <20190509081431.GO2589@hirez.programming.kicks-ass.net>
-        <81170F0B-A2BB-4CD6-A1B5-5E7E0DDBC282@amacapital.net>
-        <20190509174316.pzuakeu657g3fnlm@home.goodmis.org>
-        <20190510122103.5a7bc5416b7af96b27d4fab4@kernel.org>
-        <20190510121720.GT2589@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727258AbfEJO4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 10:56:52 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D4ED200202;
+        Fri, 10 May 2019 16:56:50 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 609292001B1;
+        Fri, 10 May 2019 16:56:50 +0200 (CEST)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id DD78C205ED;
+        Fri, 10 May 2019 16:56:49 +0200 (CEST)
+From:   laurentiu.tudor@nxp.com
+To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de
+Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [RFC PATCH 0/3] prerequisites for device reserved local mem rework
+Date:   Fri, 10 May 2019 17:56:43 +0300
+Message-Id: <20190510145646.10078-1-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 14:17:20 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-> But both ftrace and retprobes are at C function call boundaries.
-> Preserving flags doesn't make sense.
+For HCs that have local memory, replace the current DMA API usage
+with a genalloc generic allocator to manage the mappings for these
+devices.
+This is in preparation for dropping the existing "coherent" dma
+mem declaration APIs. Current implementation was relying on a short
+circuit in the DMA API that in the end, was acting as an allocator
+for these type of devices.
 
-I agree, but I did it just because of my OCD and being complete in
-"emulating an int3" for ftrace_regs_caller ;-)
+Only compiled tested, so any volunteers willing to test are most welcome.
 
-Yeah, we can remove the popfl from the ftrace trampoline.
+Thank you!
 
--- Steve
+For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+
+Laurentiu Tudor (3):
+  ohci-hcd: use genalloc for USB HCs with local memory
+  usb: host: ohci-sm501: init genalloc for local memory
+  usb: host: ohci-tmio: init genalloc for local memory
+
+ drivers/usb/host/ohci-hcd.c   | 21 +++++++++---
+ drivers/usb/host/ohci-sm501.c | 63 +++++++++++++++++++----------------
+ drivers/usb/host/ohci-tmio.c  | 23 ++++++++-----
+ drivers/usb/host/ohci.h       |  3 ++
+ 4 files changed, 69 insertions(+), 41 deletions(-)
+
+-- 
+2.17.1
+
