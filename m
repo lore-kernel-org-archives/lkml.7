@@ -2,133 +2,84 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AD0C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9D9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EAC2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682E9217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:04:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728027AbfEJSDX (ORCPT
+        id S1727988AbfEJSEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 14:03:23 -0400
-Received: from mx.ewheeler.net ([66.155.3.69]:53094 "EHLO mx.ewheeler.net"
+        Fri, 10 May 2019 14:04:14 -0400
+Received: from mga09.intel.com ([134.134.136.24]:58470 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfEJSDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 14:03:23 -0400
-X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 14:03:22 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 6279AA0692;
-        Fri, 10 May 2019 17:56:53 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id KZQof3t99O87; Fri, 10 May 2019 17:56:52 +0000 (UTC)
-Received: from el7-dev.ewi (unknown [209.180.175.76])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id 359B3A067D;
-        Fri, 10 May 2019 17:56:52 +0000 (UTC)
-From:   Eric Wheeler <stable@lists.ewheeler.net>
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org (open list:BFQ I/O SCHEDULER),
-        linux-kernel@vger.kernel.org (open list)
-Cc:     Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
-Subject: [PATCH] bfq: backport: update internal depth state when queue depth changes
-Date:   Fri, 10 May 2019 10:56:32 -0700
-Message-Id: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
-X-Mailer: git-send-email 1.8.3.1
+        id S1727762AbfEJSEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 14:04:14 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 11:04:13 -0700
+X-ExtLoop1: 1
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 10 May 2019 11:04:09 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hP9sP-0005o5-GU; Sat, 11 May 2019 02:04:09 +0800
+Date:   Sat, 11 May 2019 02:03:47 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     kbuild-all@01.org, Sebastian Reichel <sre@kernel.org>,
+        Enric Balletbo Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <linux@roeck-us.net>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] power: supply: fix semicolon.cocci warnings
+Message-ID: <20190510180347.GA130528@lkp-kbuild21>
+References: <201905110244.kMA51f4E%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201905110244.kMA51f4E%lkp@intel.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: kbuild test robot <lkp@intel.com>
 
-commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
+drivers/power/supply/ucs1002_power.c:339:2-3: Unneeded semicolon
 
-A previous commit moved the shallow depth and BFQ depth map calculations
-to be done at init time, moving it outside of the hotter IO path. This
-potentially causes hangs if the users changes the depth of the scheduler
-map, by writing to the 'nr_requests' sysfs file for that device.
 
-Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
-the depth changes, so that the scheduler can update its internal state.
+ Remove unneeded semicolon.
 
-Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
-Tested-by: Kai Krakow <kai@kaishome.de>
-Reported-by: Paolo Valente <paolo.valente@linaro.org>
-Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: stable@vger.kernel.org
+Generated by: scripts/coccinelle/misc/semicolon.cocci
+
+Fixes: 9a2688e42638 ("power: supply: Add driver for Microchip UCS1002")
+CC: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
- block/bfq-iosched.c      | 8 +++++++-
- block/blk-mq.c           | 2 ++
- include/linux/elevator.h | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 653100f..0f7cdbc 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5223,7 +5223,7 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
- 	return min_shallow;
- }
- 
--static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
- {
- 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
- 	struct blk_mq_tags *tags = hctx->sched_tags;
-@@ -5231,6 +5231,11 @@ static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
- 
- 	min_shallow = bfq_update_depths(bfqd, &tags->bitmap_tags);
- 	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, min_shallow);
-+}
-+
-+static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+{
-+	bfq_depth_updated(hctx);
- 	return 0;
- }
- 
-@@ -5653,6 +5658,7 @@ static ssize_t bfq_low_latency_store(struct elevator_queue *e,
- 		.requests_merged	= bfq_requests_merged,
- 		.request_merged		= bfq_request_merged,
- 		.has_work		= bfq_has_work,
-+		.depth_updated		= bfq_depth_updated,
- 		.init_hctx		= bfq_init_hctx,
- 		.init_sched		= bfq_init_queue,
- 		.exit_sched		= bfq_exit_queue,
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index e3c39ea..7a57368 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2878,6 +2878,8 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
- 		}
- 		if (ret)
- 			break;
-+		if (q->elevator && q->elevator->type->ops.mq.depth_updated)
-+			q->elevator->type->ops.mq.depth_updated(hctx);
- 	}
- 
- 	if (!ret)
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index a02deea..a2bf4a6 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -99,6 +99,7 @@ struct elevator_mq_ops {
- 	void (*exit_sched)(struct elevator_queue *);
- 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
- 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
-+	void (*depth_updated)(struct blk_mq_hw_ctx *);
- 
- 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
- 	bool (*bio_merge)(struct blk_mq_hw_ctx *, struct bio *);
--- 
-1.8.3.1
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+head:   c8f3c9fe83cafc94679007b9c0083ee25d5735e0
+commit: 9a2688e42638f2e057dbdfce82e221b38bfba0a7 [42/44] power: supply: Add driver for Microchip UCS1002
 
+ ucs1002_power.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/power/supply/ucs1002_power.c
++++ b/drivers/power/supply/ucs1002_power.c
+@@ -336,7 +336,7 @@ static int ucs1002_get_usb_type(struct u
+ 	case F_ACTIVE_MODE_BC12_CDP:
+ 		type = POWER_SUPPLY_USB_TYPE_CDP;
+ 		break;
+-	};
++	}
+ 
+ 	val->intval = type;
+ 
