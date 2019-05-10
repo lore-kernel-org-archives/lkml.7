@@ -2,118 +2,240 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A675AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297A0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E6021479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:54:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="FaFvhIpv"
+	by mail.kernel.org (Postfix) with ESMTP id 00E7D21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfEJNyO (ORCPT
+        id S1727767AbfEJN4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:54:14 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:36509 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727249AbfEJNyN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:54:13 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x4ADrpuo019896;
-        Fri, 10 May 2019 22:53:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4ADrpuo019896
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557496431;
-        bh=fCZyYc7lUxOhLrTG7ucal3L6rAGhMTDpi2n2QdqKTdI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FaFvhIpvVy7uXca8x+5s7hB+aTwlru3OpLG6nDSZp/4dx9WMDCpz4TKe3jx5INTMv
-         fcO56dBh9WZq8HA6hRaHCNQPQajNxWcHmm3o+foF4+Jh7eYj1IoXjdveCKbbfNfPjB
-         St/TpCHLfQYlCUv3ninPb8HPMEwl8wrM+Cn8GAXeinMgIvH2XM4VkXb6gLCJh5w/Tr
-         2G+aymrzHxo1y/5mduRtWM0ZqBZM2Iz34496SZJU0JfzUfOOnGQjO39/FLiUIKhTYO
-         vLM3Ru4g5jtEYCcYLTgyVxQ8F7SxND0UYZlr7XbaIhD+kTULuIx00DmuCj9UO4KZe5
-         /1XZM3z+2u/kg==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id c76so3671577vsd.3;
-        Fri, 10 May 2019 06:53:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAVzhMsdL7YJ7RPKoWHM5GJ88xiMgbJq5eZUaUBEo8sixIfB8pDB
-        G9sCKy3G5mvdyBG3zeMtqcjE7ytS9gtKMulnr2c=
-X-Google-Smtp-Source: APXvYqxrG5kYfgTx+VylEbc4eQ4VMLIbvXqQT7ZPVtEHSqc3JTmEQf82nxFi2KVRZbVGhm+jOD5G/BPS2dkPAopIKjA=
-X-Received: by 2002:a67:db8b:: with SMTP id f11mr5993687vsk.155.1557496430324;
- Fri, 10 May 2019 06:53:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509064455.1173-1-yamada.masahiro@socionext.com> <CA+icZUX_AgZdH5Z+1+k+oVdYSo7vqzeJsGPndb_Sa8VOSk_yOg@mail.gmail.com>
-In-Reply-To: <CA+icZUX_AgZdH5Z+1+k+oVdYSo7vqzeJsGPndb_Sa8VOSk_yOg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 10 May 2019 22:53:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS+FQqQZ0RfW8e6mxabUOq9YVk=eEEztmN-+BHnTmDa_w@mail.gmail.com>
-Message-ID: <CAK7LNAS+FQqQZ0RfW8e6mxabUOq9YVk=eEEztmN-+BHnTmDa_w@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add most of Clang-specific flags unconditionally
-To:     Sedat Dilek <sedat.dilek@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 May 2019 09:56:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49380 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727249AbfEJN4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 09:56:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B6665AC8A;
+        Fri, 10 May 2019 13:56:01 +0000 (UTC)
+Date:   Fri, 10 May 2019 15:56:01 +0200
+Message-ID: <s5h8svemn0u.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        rdunlap@infradead.org, YueHaibing <yuehaibing@huawei.com>,
+        lgirdwood@gmail.com, broonie@kernel.org
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Fix build error with CONFIG_SND_SOC_SOF_NOCODEC=m
+In-Reply-To: <s5hbm0amnpl.wl-tiwai@suse.de>
+References: <20190510023657.8960-1-yuehaibing@huawei.com>
+        <s5h7eayn5or.wl-tiwai@suse.de>
+        <73c6dd27-895a-adba-a4ef-2992266fcc48@linux.intel.com>
+        <s5hlfzempf0.wl-tiwai@suse.de>
+        <1e7e1908-a813-6c9b-5b88-122864d3a372@linux.intel.com>
+        <s5hbm0amnpl.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:06 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> On Thu, May 9, 2019 at 8:45 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > We do not support old Clang versions. Upgrade your clang version
-> > if any of these flags is unsupported.
-> >
-> > Let's add flags within ifdef CONFIG_CC_IS_CLANG unconditionally,
-> > except -fcatch-undefined-behavior.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Looks good to me.
->
-> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
->
-> Just as sidenote:
-> I experimented with a snapshot version of clang-9 and lld-9 and could
-> build, link and boot on bare-metal with '-mglobal-merge' on
-> Debian/buster AMD64.
+On Fri, 10 May 2019 15:41:10 +0200,
+Takashi Iwai wrote:
+> 
+> On Fri, 10 May 2019 15:34:03 +0200,
+> Pierre-Louis Bossart wrote:
+> > 
+> > On 5/10/19 8:04 AM, Takashi Iwai wrote:
+> > > On Fri, 10 May 2019 14:56:29 +0200,
+> > > Pierre-Louis Bossart wrote:
+> > >>
+> > >> On 5/10/19 2:12 AM, Takashi Iwai wrote:
+> > >>> On Fri, 10 May 2019 04:36:57 +0200,
+> > >>> YueHaibing wrote:
+> > >>>>
+> > >>>> Fix gcc build error while CONFIG_SND_SOC_SOF_NOCODEC=m
+> > >>>>
+> > >>>> sound/soc/sof/core.o: In function `snd_sof_device_probe':
+> > >>>> core.c:(.text+0x4af): undefined reference to `sof_nocodec_setup'
+> > >>>>
+> > >>>> Change SND_SOC_SOF_NOCODEC to bool to fix this.
+> > >>>>
+> > >>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+> > >>>> Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
+> > >>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > >>>
+> > >>> This change would break things severely.  This won't allow to build it
+> > >>> as a module any longer.
+> > >>
+> > >> Isn't this fixed already?
+> > >> See the patch  'ASoC: SOF: core: fix undefined nocodec reference' and
+> > >> Takashi's follow-up to fix the unused variable warning.
+> > >
+> > > Possibly the problem still persists although I haven't seen through my
+> > > local build tests with randconfig.  You can set SND_SOC_SOF=y and
+> > > SND_SOC_NOCODEC=m, i.e. built-in sof-core while nocodec is a module.
+> > 
+> > YueHiabing, can you share the config and SHA1 so that we can double check?
+> > 
+> > If the problem persists, we can do something like
+> > 
+> > config SND_SOF_NOCODEC_SUPPORT
+> > 	bool "SOF nocodec mode support"
+> > 
+> > config SND_SOF_NOCODEC
+> > 	tristate
+> > 
+> > confir SND_SOC_SOF
+> > 	tristate
+> > 	select SND_SOF_NOCODEC if SND_SOF_NOCODEC_SUPPORT
+> > 
+> > that way you propagate the required dependencies
+> 
+> Yes, that would work.  OTOH, I see no merit to build an extra module
+> for nocodec.  nocodec.c can be built together with sof-core stuff.
+
+I mean a patch like below.
 
 
-The comment says
- # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
- # source of a reference will be _MergedGlobals and not on of the
-whitelisted names.
- # See modpost pattern 2
+Takashi
 
-So, it seems it is just a matter of modpost,
-but I am not sure enough.
-
-This flag has been here since the initial support.
-(61163efae02040f66a95c8ed17f4407951ba58fa)
-
-
-Perhaps, we should review clang flags one by one again?
-
-
-
-
-> But forgot to document in [1].
->
-> [1] https://github.com/ClangBuiltLinux/linux/issues/431
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+diff --git a/include/sound/sof.h b/include/sound/sof.h
+index 4640566b54fe..1af70800f6dc 100644
+--- a/include/sound/sof.h
++++ b/include/sound/sof.h
+@@ -92,9 +92,4 @@ struct sof_dev_desc {
+ 	const struct sof_arch_ops *arch_ops;
+ };
+ 
+-int sof_nocodec_setup(struct device *dev,
+-		      struct snd_sof_pdata *sof_pdata,
+-		      struct snd_soc_acpi_mach *mach,
+-		      const struct sof_dev_desc *desc,
+-		      const struct snd_sof_dsp_ops *ops);
+ #endif
+diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+index b204c65698f9..9c280c977d55 100644
+--- a/sound/soc/sof/Kconfig
++++ b/sound/soc/sof/Kconfig
+@@ -44,7 +44,7 @@ config SND_SOC_SOF_OPTIONS
+ if SND_SOC_SOF_OPTIONS
+ 
+ config SND_SOC_SOF_NOCODEC
+-	tristate "SOF nocodec mode Support"
++	bool "SOF nocodec mode Support"
+ 	help
+ 	  This adds support for a dummy/nocodec machine driver fallback
+ 	  option if no known codec is detected. This is typically only
+diff --git a/sound/soc/sof/Makefile b/sound/soc/sof/Makefile
+index 8f14c9d2950b..09222be6d1b8 100644
+--- a/sound/soc/sof/Makefile
++++ b/sound/soc/sof/Makefile
+@@ -2,14 +2,12 @@
+ 
+ snd-sof-objs := core.o ops.o loader.o ipc.o pcm.o pm.o debug.o topology.o\
+ 		control.o trace.o utils.o
++snd-sof-$(CONFIG_SND_SOC_SOF_NOCODEC) += nocodec.o
+ 
+ snd-sof-pci-objs := sof-pci-dev.o
+ snd-sof-acpi-objs := sof-acpi-dev.o
+-snd-sof-nocodec-objs := nocodec.o
+ 
+ obj-$(CONFIG_SND_SOC_SOF) += snd-sof.o
+-obj-$(CONFIG_SND_SOC_SOF_NOCODEC) += snd-sof-nocodec.o
+-
+ 
+ obj-$(CONFIG_SND_SOC_SOF_ACPI) += sof-acpi-dev.o
+ obj-$(CONFIG_SND_SOC_SOF_PCI) += sof-pci-dev.o
+diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+index 32105e0fabe8..744f7f465173 100644
+--- a/sound/soc/sof/core.c
++++ b/sound/soc/sof/core.c
+@@ -502,6 +502,18 @@ int snd_sof_device_remove(struct device *dev)
+ }
+ EXPORT_SYMBOL(snd_sof_device_remove);
+ 
++static int __init snd_sof_init(void)
++{
++	return platform_driver_register(&sof_nocodec_audio);
++}
++module_init(snd_sof_init);
++
++static void __exit snd_sof_exit(void)
++{
++	platform_driver_unregister(&sof_nocodec_audio);
++}
++module_exit(snd_sof_exit);
++
+ MODULE_AUTHOR("Liam Girdwood");
+ MODULE_DESCRIPTION("Sound Open Firmware (SOF) Core");
+ MODULE_LICENSE("Dual BSD/GPL");
+diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+index f84b4344dcc3..11811591bd81 100644
+--- a/sound/soc/sof/nocodec.c
++++ b/sound/soc/sof/nocodec.c
+@@ -8,7 +8,6 @@
+ // Author: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+ //
+ 
+-#include <linux/module.h>
+ #include <sound/sof.h>
+ #include "sof-priv.h"
+ 
+@@ -77,7 +76,6 @@ int sof_nocodec_setup(struct device *dev,
+ 				    &sof_nocodec_card);
+ 	return ret;
+ }
+-EXPORT_SYMBOL(sof_nocodec_setup);
+ 
+ static int sof_nocodec_probe(struct platform_device *pdev)
+ {
+@@ -93,7 +91,7 @@ static int sof_nocodec_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static struct platform_driver sof_nocodec_audio = {
++struct platform_driver sof_nocodec_audio = {
+ 	.probe = sof_nocodec_probe,
+ 	.remove = sof_nocodec_remove,
+ 	.driver = {
+@@ -101,9 +99,3 @@ static struct platform_driver sof_nocodec_audio = {
+ 		.pm = &snd_soc_pm_ops,
+ 	},
+ };
+-module_platform_driver(sof_nocodec_audio)
+-
+-MODULE_DESCRIPTION("ASoC sof nocodec");
+-MODULE_AUTHOR("Liam Girdwood");
+-MODULE_LICENSE("Dual BSD/GPL");
+-MODULE_ALIAS("platform:sof-nocodec");
+diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
+index 1e85d6f9c5c3..3ae55d15820f 100644
+--- a/sound/soc/sof/sof-priv.h
++++ b/sound/soc/sof/sof-priv.h
+@@ -559,6 +559,17 @@ int snd_sof_init_trace_ipc(struct snd_sof_dev *sdev);
+  */
+ extern struct snd_compr_ops sof_compressed_ops;
+ 
++/*
++ * nocodec platform binding
++ */
++extern struct platform_driver sof_nocodec_audio;
++
++int sof_nocodec_setup(struct device *dev,
++		      struct snd_sof_pdata *sof_pdata,
++		      struct snd_soc_acpi_mach *mach,
++		      const struct sof_dev_desc *desc,
++		      const struct snd_sof_dsp_ops *ops);
++
+ /*
+  * Kcontrols.
+  */
