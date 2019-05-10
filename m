@@ -2,153 +2,125 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0A1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6541C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2828216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:02:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lTC241SC"
+	by mail.kernel.org (Postfix) with ESMTP id B28D520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfEJJCg (ORCPT
+        id S1727189AbfEJJI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:02:36 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:14057 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727173AbfEJJC3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:02:29 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd53dfe0000>; Fri, 10 May 2019 02:01:50 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 10 May 2019 02:02:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 10 May 2019 02:02:27 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
- 2019 09:02:27 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
- 2019 09:02:27 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 10 May 2019 09:02:26 +0000
-Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cd53e210000>; Fri, 10 May 2019 02:02:26 -0700
-From:   Jim Lin <jilin@nvidia.com>
-To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
-        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
-        <drinkcat@chromium.org>, <keescook@chromium.org>,
-        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jim Lin <jilin@nvidia.com>
-Subject: [PATCH v8 2/2] usb: xhci: Add Clear_TT_Buffer support
-Date:   Fri, 10 May 2019 17:02:17 +0800
-Message-ID: <1557478937-30486-3-git-send-email-jilin@nvidia.com>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1557478937-30486-1-git-send-email-jilin@nvidia.com>
-References: <1557478937-30486-1-git-send-email-jilin@nvidia.com>
+        Fri, 10 May 2019 05:08:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51790 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726992AbfEJJI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:08:56 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23BC3C058CAF;
+        Fri, 10 May 2019 09:08:55 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C3A35D962;
+        Fri, 10 May 2019 09:08:40 +0000 (UTC)
+Date:   Fri, 10 May 2019 11:08:38 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190510110838.2df4c4d0.cohuck@redhat.com>
+In-Reply-To: <20190509164825.GG2868@work-vm>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+        <20190506014904.3621-1-yan.y.zhao@intel.com>
+        <20190507151826.502be009@x1.home>
+        <20190509173839.2b9b2b46.cohuck@redhat.com>
+        <20190509154857.GF2868@work-vm>
+        <20190509175404.512ae7aa.cohuck@redhat.com>
+        <20190509164825.GG2868@work-vm>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557478910; bh=6KvCGIA3DsfNZQ5OldjPXEU/o9P9J+I/XJEfrIShoHI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=lTC241SCoyjpWbO90T1k2+KAPbF/zTO5V9fw1JFBHXGIhTkXzPLwhclHyyHfxDqxe
-         bnYPZbIw52ZlPuTWx6u060aysfhui4AFMR193iSGrKEZ3fdubnrsMQDSknt1ZwUOXl
-         aveHSxcn6uk6m5QDUzSY1tA/ap+zQkVPy4kXrevoiapamcChLuRZa65cxTI8JTGV4Y
-         rRamyLz/5RODB1Djy2N1rdpmqRN+Zg/wI85YN5jbqlZIY3hN0UYvZQn68D76AuR8Yb
-         Etdcl/JYKfpy6pD3kUNTVBbS+G8pUyCuRrwmiv+FhL/PMfxXayG4n3KkJ+GATNf6/u
-         ffmEYZepW7mjQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 10 May 2019 09:08:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
-processing for full-/low-speed endpoints connected via a TT, the host
-software must use the Clear_TT_Buffer request to the TT to ensure
-that the buffer is not in the busy state".
+On Thu, 9 May 2019 17:48:26 +0100
+"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
 
-In our case, a full-speed speaker (ConferenceCam) is behind a high-
-speed hub (ConferenceCam Connect), sometimes once we get STALL on a
-request we may continue to get STALL with the folllowing requests,
-like Set_Interface.
+> * Cornelia Huck (cohuck@redhat.com) wrote:
+> > On Thu, 9 May 2019 16:48:57 +0100
+> > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> >   
+> > > * Cornelia Huck (cohuck@redhat.com) wrote:  
+> > > > On Tue, 7 May 2019 15:18:26 -0600
+> > > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > > >     
+> > > > > On Sun,  5 May 2019 21:49:04 -0400
+> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:    
+> > > >     
+> > > > > > +  Errno:
+> > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+> > > > > > +  devices, it should not register version attribute for this mdev device. But if
+> > > > > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > > > > +  -ENODEV on access to this mdev device's version attribute.
+> > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > > > > +  incompatible mdev devices's version strings to its version attribute should
+> > > > > > +  return -EINVAL;      
+> > > > > 
+> > > > > I think it's best not to define the specific errno returned for a
+> > > > > specific situation, let the vendor driver decide, userspace simply
+> > > > > needs to know that an errno on read indicates the device does not
+> > > > > support migration version comparison and that an errno on write
+> > > > > indicates the devices are incompatible or the target doesn't support
+> > > > > migration versions.    
+> > > > 
+> > > > I think I have to disagree here: It's probably valuable to have an
+> > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
+> > > > those two particular devices'. Userspace might want to do different
+> > > > things (e.g. trying with different device pairs).    
+> > > 
+> > > Trying to stuff these things down an errno seems a bad idea; we can't
+> > > get much information that way.  
+> > 
+> > So, what would be a reasonable approach? Userspace should first read
+> > the version attributes on both devices (to find out whether migration
+> > is supported at all), and only then figure out via writing whether they
+> > are compatible?
+> > 
+> > (Or just go ahead and try, if it does not care about the reason.)  
+> 
+> Well, I'm OK with something like writing to test whether it's
+> compatible, it's just we need a better way of saying 'no'.
+> I'm not sure if that involves reading back from somewhere after
+> the write or what.
 
-Here we update udev->devaddr in address_device callback function
-(this USB device address is assigned by XHCI controller) and invoke
-usb_hub_clear_tt_buffer() to send Clear_TT_Buffer request to the hub
-of the device for the following Set_Interface requests to the device
-to get ACK successfully.
+Hm, so I basically see two ways of doing that:
+- standardize on some error codes... problem: error codes can be hard
+  to fit to reasons
+- make the error available in some attribute that can be read
 
-Signed-off-by: Jim Lin <jilin@nvidia.com>
----
-v2: xhci_clear_tt_buffer_complete: add static, shorter indentation
-    , remove its claiming in xhci.h
-v3: Add description for clearing_tt (xhci.h)
-v4: Remove clearing_tt flag because hub_tt_work has hub->tt.lock
-    to protect for Clear_TT_Buffer to be run serially.
-    Remove xhci_clear_tt_buffer_complete as it's not necessary.
-    Same reason as the above.
-    Extend usb_hub_clear_tt_buffer parameter
-v5: Not extending usb_hub_clear_tt_buffer parameter
-    Add description.
-v6: Remove unused parameter slot_id from xhci_clear_hub_tt_buffer
-v7: Add devaddr field in "struct usb_device"
-v8: split as two patches
+I'm not sure how we can serialize the readback with the last write,
+though (this looks inherently racy).
 
- drivers/usb/host/xhci-ring.c | 12 ++++++++++++
- drivers/usb/host/xhci.c      |  1 +
- 2 files changed, 13 insertions(+)
-
-diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-index 9215a28dad40..739737faf752 100644
---- a/drivers/usb/host/xhci-ring.c
-+++ b/drivers/usb/host/xhci-ring.c
-@@ -1786,6 +1786,17 @@ struct xhci_segment *trb_in_td(struct xhci_hcd *xhci,
- 	return NULL;
- }
- 
-+static void xhci_clear_hub_tt_buffer(struct xhci_hcd *xhci, struct xhci_td *td)
-+{
-+	/*
-+	 * As part of low/full-speed endpoint-halt processing
-+	 * we must clear the TT buffer (USB 2.0 specification 11.17.5).
-+	 */
-+	if (td->urb->dev->tt && !usb_pipeint(td->urb->pipe) &&
-+	    (td->urb->dev->tt->hub != xhci_to_hcd(xhci)->self.root_hub))
-+		usb_hub_clear_tt_buffer(td->urb);
-+}
-+
- static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 		unsigned int slot_id, unsigned int ep_index,
- 		unsigned int stream_id, struct xhci_td *td,
-@@ -1804,6 +1815,7 @@ static void xhci_cleanup_halted_endpoint(struct xhci_hcd *xhci,
- 	if (reset_type == EP_HARD_RESET) {
- 		ep->ep_state |= EP_HARD_CLEAR_TOGGLE;
- 		xhci_cleanup_stalled_ring(xhci, ep_index, stream_id, td);
-+		xhci_clear_hub_tt_buffer(xhci, td);
- 	}
- 	xhci_ring_cmd_db(xhci);
- }
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 7fa58c99f126..68b393e5a453 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4096,6 +4096,7 @@ static int xhci_setup_device(struct usb_hcd *hcd, struct usb_device *udev,
- 	/* Zero the input context control for later use */
- 	ctrl_ctx->add_flags = 0;
- 	ctrl_ctx->drop_flags = 0;
-+	udev->devaddr = (u8)(le32_to_cpu(slot_ctx->dev_state) & DEV_ADDR_MASK);
- 
- 	xhci_dbg_trace(xhci, trace_xhci_dbg_address,
- 		       "Internal device address = %d",
--- 
-2.1.4
-
+How important is detailed error reporting here?
