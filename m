@@ -2,105 +2,113 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EAAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2AAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4499217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D1A217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UEfBh7LH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tJDg3KFb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfEJWpT (ORCPT
+        id S1728194AbfEJWpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:45:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:42198 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727917AbfEJWpT (ORCPT
+        Fri, 10 May 2019 18:45:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:46930 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfEJWpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:45:19 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 145so3657833pgg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:45:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=d97YmyA/3LiD+Mv8la+sVqazB0Wi/v83PJRamaL8IZA=;
-        b=UEfBh7LHUprotWgJPz47HT61WOt99NIYruH7UVlYWzGp4leqNw7BqhT7vDvqv9kY05
-         FKyz/tgBrTPfjkcCh+21RVlmTBikMUeRlhdmfQi2wjrPwKMwMcKuqBtLEZeGcfxg905Q
-         kUq7k+hsUcLNGqIkhh0wrUlGl7hetNo3FVVXHaKarX2zcWMGTqkRnOvAKXvkvW4ZFFKV
-         WBPXBZAr93pQ3oHpHnxaTB2Dg0sPKef+ipSQ4xkc9mMH5hymm66nUugkVooCXyVjAtFl
-         WXsorAy2Z+x+GyF+wCZ8MmIxQvXHD4VC84TEeCHm9ezcB3cYMYi3E58GHtX/yygFUdaJ
-         5mVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=d97YmyA/3LiD+Mv8la+sVqazB0Wi/v83PJRamaL8IZA=;
-        b=j6zsBTpQ7NLWp5uyelvtw+YkdLjTFE6WFfIrFw/VTvXUZ+zCpb3sFV0SnnQRVMSx5B
-         w40tjF4DJSMEiEHF5lAJFr7dbtKhSrjwVZ1dcZZj3mj0hh9JnEgBEjijDB4DyVfrM7ZU
-         kw60pUI0Qi7b009p79Yf5Rle8sMwCSueS+rIVLGWWLyd2lEeOULfkz1F297aWC7YIMPa
-         ViLD9vhozNKfLrATlDXW1FTTYA+DYWtQpcwDm05hHtxpHqfFc78jSXheXlg5NNgbSK1l
-         yOVBbCilO4LRQMCFIYN4oC7TTfyDT6LF8Nhs5+s1zvm292hZevaYPxRJiswQPk6DBQYU
-         EnVw==
-X-Gm-Message-State: APjAAAWkiaUhzvpqgU7h3xLwuP6UXwuUuqWF7gVGXNPb0IWmDrouh4o+
-        3tsr6JRNWUgDYkNdOxMJDhfVfQ==
-X-Google-Smtp-Source: APXvYqxp0q0ql6/xwfvXB+jKs9bE8hhgTE2r8MIvm/sZG0/ChzNNxXC/9dZEpANHwGlx3k2JIC4I9Q==
-X-Received: by 2002:a62:56d9:: with SMTP id h86mr18128439pfj.195.1557528318502;
-        Fri, 10 May 2019 15:45:18 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
-        by smtp.googlemail.com with ESMTPSA id i3sm8675360pfa.90.2019.05.10.15.45.16
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 15:45:17 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
-In-Reply-To: <20190510164940.13496-6-jbrunet@baylibre.com>
-References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-6-jbrunet@baylibre.com>
-Date:   Fri, 10 May 2019 15:45:16 -0700
-Message-ID: <7ho94ac4jn.fsf@baylibre.com>
+        Fri, 10 May 2019 18:45:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4AMiYvu139156;
+        Fri, 10 May 2019 22:45:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=bf8P4q788pObPSRhE2yikT3tYYSQpmCfY0xoTw+mRbc=;
+ b=tJDg3KFbDYIWEVqN4zRx/qTj/SM3kNWXyLq8DekKk43DPTy4EJHOJoil4dQOslSkD0Fq
+ 8iunHzoBxOxSlelf6JLFmdzQj8nXkCwduTFP+mohuZ+4V+/7WVXDuCxhJrPY1cft9uTr
+ VA5djX2Z2BfHHiFh2M0+dgE6PGwYX3rNP04HmZlOrNHmOWNZXxfBJumAOJDD5eVF04g6
+ XPVd8mPBJD+Ad9RnRpO5yydcWexPYUKDqDWwZvF7uDkbGFCegZTnQpN+9FxA5Ch0syFd
+ ikPpnIjYazDAUp4v/QAMiW7CUYHo9JQkntMVr4FFPQkiTysvRcYATetsKTdoJc9xBSWY Xg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2s94bgkuj5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 22:45:12 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4AMhSbp190646;
+        Fri, 10 May 2019 22:45:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2s94ahm8f7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 22:45:11 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4AMj5kX031257;
+        Fri, 10 May 2019 22:45:05 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 10 May 2019 15:45:05 -0700
+Subject: Re: [PATCH, RFC 2/2] Implement sharing/unsharing of PMDs for FS/DAX
+To:     Larry Bassel <larry.bassel@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
+ <1557417933-15701-3-git-send-email-larry.bassel@oracle.com>
+ <20190509164914.GA3862@bombadil.infradead.org>
+ <20190510161607.GB27674@ubuette>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <af218b46-ece3-1189-e43c-209ec5cf1022@oracle.com>
+Date:   Fri, 10 May 2019 15:45:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190510161607.GB27674@ubuette>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9253 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905100144
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9253 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905100144
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On 5/10/19 9:16 AM, Larry Bassel wrote:
+> On 09 May 19 09:49, Matthew Wilcox wrote:
+>> On Thu, May 09, 2019 at 09:05:33AM -0700, Larry Bassel wrote:
+>>> This is based on (but somewhat different from) what hugetlbfs
+>>> does to share/unshare page tables.
+>>
+>> Wow, that worked out far more cleanly than I was expecting to see.
+> 
+> Yes, I was pleasantly surprised. As I've mentioned already, I 
+> think this is at least partially due to the nature of DAX.
 
-> Enable the network interface of the SEI510 which use the internal PHY.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+I have not looked in detail to make sure this is indeed all the places you
+need to hook and special case for sharing/unsharing.  Since this scheme is
+somewhat like that used for hugetlb, I just wanted to point out some nasty
+bugs related to hugetlb PMD sharing that were fixed last year.
 
-I tried testing this series on SEI510, but I must still be missing some
-defconfig options, as the default defconfig doesn't lead to a working
-interface.
+5e41540c8a0f hugetlbfs: fix kernel BUG at fs/hugetlbfs/inode.c:444!
+dff11abe280b hugetlb: take PMD sharing into account when flushing tlb/caches
+017b1660df89 mm: migration: fix migration of huge PMD shared pages
 
-
-I tried adding this kconfig fragment[1], and the dwmac probes/inits but
-I must still be missing something, as the dwmac is still failing to find
-a PHY.  Boot log: https://termbin.com/ivf3
-
-I have the same result testing on the u200.
-
-Kevin
-
-[1] amlogic network kconfig fragment
-CONFIG_STMMAC_ETH=y
-
-# following are needed, but automatically enabled if above is set
-#CONFIG_STMMAC_PLATFORM=m
-#CONFIG_DWMAC_MESON=m
-
-CONFIG_PHYLIB=y
-CONFIG_MICREL_PHY=y
-CONFIG_REALTEK_PHY=y
-
-CONFIG_MDIO_BUS_MUX_MESON_G12A=y
-CONFIG_MESON_GXL_PHY=y
+The common issue in these is that when unmapping a page with a shared PMD
+mapping you need to flush the entire shared range and not just the unmapped
+page.  The above changes were hugetlb specific.  I do not know if any of
+this applies in the case of DAX.
+-- 
+Mike Kravetz
