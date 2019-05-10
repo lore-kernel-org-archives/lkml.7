@@ -2,177 +2,185 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE9BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E19EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862FE217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CW3FW1Qa"
+	by mail.kernel.org (Postfix) with ESMTP id 05DE8217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557528035;
+	bh=sjg797I3Ege8CH2yMEKO3LN7YMxSK0+Tf/Ul0+K1ZmU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v/M22wz+DDyXQteha38jgOtO3689nYwquZdjt8tjjJ2g1ChBegoS1/eejPXIiebmn
+	 exwQYZhVd2Z9nd0AkMkWVq44ULkTSunNjqv94zjH9n9fQmiUy57tMg2Hwund965mb0
+	 RqggabEOnLiywjXeXppXZL4+w2U6Iv7Toygubeo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728262AbfEJWjv (ORCPT
+        id S1728268AbfEJWke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:39:51 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43244 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727961AbfEJWjs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:39:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c6so3923161pfa.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9SfaLLvXepQRjPBSTX7ofFVM9xFaCs9uEAd6y7Vf/jI=;
-        b=CW3FW1QaMndV6cwwyiyNA8R53BhYSKmW1OSkoFcainmLy819+8sTqcbkORQZyJkm+j
-         Xv2ZITvIK9F7I695Ipiy4gQ1xDUxh0NYNr8Kjztz40o19XH6MbspMyOdaQVO0Y1twGp7
-         hRTBhLibmNvg9nBN/yrN6K3nY6blDcUvKTMQM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9SfaLLvXepQRjPBSTX7ofFVM9xFaCs9uEAd6y7Vf/jI=;
-        b=A78dcjeYJ69tJSj5RT6zIPzaQP1XiBrhDI5XhrkB2pUoz1jWoRRnmuKO6B6xEl8H4C
-         uQ6Ywb046GHQTzgmPDo/Xp8Ax4YQJaVyfGXHNP/XHxL4wWnkeecRDuyIMO3tRxvJsv/K
-         7F6oaqgq9nmn47YzS/bZS6LsyfOYRFRO57E5AZFWUYM2r4IecrRsYfM5L49EQnBe8l0e
-         wAW9BKImuBjTJvXLoeXs7gQuMXbsGU01xkPbC4RjhmVG7PoEycbWBbsJTlZpHv363NqF
-         JiK+fKx0rsvRHFqDS735Agr9ftazuoJNs4GiCWA4InPdsjQFZCJg4EuP0scd/6h8tZcI
-         33QQ==
-X-Gm-Message-State: APjAAAUBESPKlJHFEhx63gOXyDP8rQWgBmrYVcUzzqU0h0/vUo2AFpWB
-        3deYCnvnJf0RUS5Wv2PohGbUiA==
-X-Google-Smtp-Source: APXvYqyRgDz+Yrd5PgXej0kYFwSP00cOYoCC+OFOn+fT0I0FzCSLjsERw1RyZahadf+YpZ58Uxujag==
-X-Received: by 2002:aa7:8a53:: with SMTP id n19mr17229422pfa.11.1557527988266;
-        Fri, 10 May 2019 15:39:48 -0700 (PDT)
-Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
-        by smtp.gmail.com with ESMTPSA id u66sm13300540pfa.36.2019.05.10.15.39.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 10 May 2019 15:39:47 -0700 (PDT)
-From:   Evan Green <evgreen@chromium.org>
-To:     Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Naveen M <naveen.m@intel.com>,
-        Sathya Prakash <sathya.prakash.m.r@intel.com>,
-        Ben Zhang <benzh@chromium.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Rakesh Ughreja <rakesh.a.ughreja@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Jie Yang <yang.jie@linux.intel.com>
-Subject: [PATCH v3 2/2] ASoC: Intel: Skylake: Add Cometlake PCI IDs
-Date:   Fri, 10 May 2019 15:39:29 -0700
-Message-Id: <20190510223929.165569-3-evgreen@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190510223929.165569-1-evgreen@chromium.org>
-References: <20190510223929.165569-1-evgreen@chromium.org>
+        Fri, 10 May 2019 18:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbfEJWkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 18:40:33 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A45FB217D6;
+        Fri, 10 May 2019 22:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557528031;
+        bh=sjg797I3Ege8CH2yMEKO3LN7YMxSK0+Tf/Ul0+K1ZmU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2BQZd867VQk7T/6xVDuphNMg8PT5izoOPVjRH879mo5UuHee3+ME5We5UOp8oRApd
+         iNSg0CMTjRLx+00A9EkpzztyQHHRMInm04SGcjFY0N6Ai1ssRwJbeHEvYjgtLq3o/8
+         Wx03509gNXFgIf1KQaGDcBNEhhyg+soHiT3IF6pM=
+Received: by mail-qk1-f175.google.com with SMTP id c1so3365531qkk.4;
+        Fri, 10 May 2019 15:40:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAW4lI9YZcdBQOHTUO12vKApasFtUEa37qKOlUhFHw63XY3DrNho
+        Z4MY0Q3mcIdVCFavI5lHXsb3A24Yv0TtGLIEow==
+X-Google-Smtp-Source: APXvYqzfUsXjKG+F9pb5KnYx61JOP50q/a8ljf0lZ3E6IZXXHNgJGxcJf1n0r9rKoC1VBQNTKS7hmCXklLDer5hjE7Q=
+X-Received: by 2002:a37:c42:: with SMTP id 63mr10276099qkm.326.1557528030863;
+ Fri, 10 May 2019 15:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190507203749.3384-1-ilina@codeaurora.org> <20190507203749.3384-5-ilina@codeaurora.org>
+In-Reply-To: <20190507203749.3384-5-ilina@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 10 May 2019 17:40:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKXN2ye49HGEf+vLD0xaysp6kDqsZfFXX9BssK+TUh5SA@mail.gmail.com>
+Message-ID: <CAL_JsqKXN2ye49HGEf+vLD0xaysp6kDqsZfFXX9BssK+TUh5SA@mail.gmail.com>
+Subject: Re: [PATCH v5 04/11] of: irq: document properties for wakeup
+ interrupt parent
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCI IDs for Intel CometLake platforms, which from a software
-point of view are extremely similar to Cannonlake platforms.
+On Tue, May 7, 2019 at 3:41 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>
+> Some interrupt controllers in a SoC, are always powered on and have a
+> select interrupts routed to them, so that they can wakeup the SoC from
+> suspend. Add wakeup-parent DT property to refer to these interrupt
+> controllers.
+>
+> If the interrupts routed to the wakeup parent are not sequential, than a
+> map needs to exist to associate the same interrupt line on multiple
+> interrupt controllers. Providing this map in every driver is cumbersome.
+> Let's add this in the device tree and document the properties to map the
+> interrupt specifiers
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+> Changes in v5:
+>         - Update documentation to describe masks in the example
+> Changes in v4:
+>         - Added this documentation
+> ---
+>  .../interrupt-controller/interrupts.txt       | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> index 8a3c40829899..e3e43f5d5566 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> @@ -108,3 +108,57 @@ commonly used:
+>                         sensitivity = <7>;
+>                 };
+>         };
+> +
+> +3) Interrupt wakeup parent
+> +--------------------------
+> +
+> +Some interrupt controllers in a SoC, are always powered on and have a select
+> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
+> +interrupt controllers do not fall into the category of a parent interrupt
+> +controller and can be specified by the "wakeup-parent" property and contain a
+> +single phandle referring to the wakeup capable interrupt controller.
+> +
+> +   Example:
+> +       wakeup-parent = <&pdc_intc>;
+> +
+> +
+> +4) Interrupt mapping
+> +--------------------
+> +
+> +Sometimes interrupts may be detected by more than one interrupt controller
+> +(depending on which controller is active). The interrupt controllers may not
+> +be in hierarchy and therefore the interrupt controller driver is required to
+> +establish the relationship between the same interrupt at different interrupt
+> +controllers. If these interrupts are not sequential then a map needs to be
+> +specified to help identify these interrupts.
+> +
+> +Mapping the interrupt specifiers in the device tree can be done using the
+> +"irqdomain-map" property. The property contains interrupt specifier at the
+> +current interrupt controller followed by the interrupt specifier at the mapped
+> +interrupt controller.
+> +
+> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+I'm wondering why we need a new map property rather than just using
+interrupt-map? Contrary to what Linus said, it is not PCI only.
 
-Changes in v3:
-- Don't select CML_* in SND_SOC_INTEL_SKYLAKE (Pierre-Louis)
+It would be an extension of the current behavior. It's generally used
+to map each interrupt to different parents or swizzle the routing (in
+the PCI case). Generally, a node would be either an
+'interrupt-controller' or an 'interrupt-map' node. The interrupt
+parsing code (for the kernel at least) prioritizes
+'interrupt-controller' path, so adding 'interrupt-map' could be done
+without changing behavior.
 
-Changes in v2:
-- Add 0x06c8 for CML-H (Pierre-Louis)
+Another concern I have with this is it only solves the problem of an
+IRQ routed to multiple parents for the case of 2 parents. What happens
+when we have an IRQ routed to 3 different parents? Maybe the solution
+is the incoming-interrupt-specifier can be listed more than once. Marc
+already expressed concerns with the scalability of interrupt-map
+property, so that's maybe not an ideal solution.
 
- sound/soc/intel/Kconfig                | 16 ++++++++++++++++
- sound/soc/intel/skylake/skl-messages.c | 16 ++++++++++++++++
- sound/soc/intel/skylake/skl.c          | 10 ++++++++++
- 3 files changed, 42 insertions(+)
+> +
+> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
+> +be provided to help interpret the valid bits of the incoming and mapped
+> +interrupt specifiers respectively.
+> +
+> +   Example:
+> +       intc: interrupt-controller@17a00000 {
+> +               #interrupt-cells = <3>;
 
-diff --git a/sound/soc/intel/Kconfig b/sound/soc/intel/Kconfig
-index fc1396adde71..b089ed3bf77f 100644
---- a/sound/soc/intel/Kconfig
-+++ b/sound/soc/intel/Kconfig
-@@ -165,6 +165,22 @@ config SND_SOC_INTEL_CFL
- 	  If you have a Intel CoffeeLake platform with the DSP
- 	  enabled in the BIOS then enable this option by saying Y or m.
- 
-+config SND_SOC_INTEL_CML_H
-+	tristate "CometLake-H Platforms"
-+	depends on PCI && ACPI
-+	select SND_SOC_INTEL_SKYLAKE_FAMILY
-+	help
-+	  If you have a Intel CometLake-H platform with the DSP
-+	  enabled in the BIOS then enable this option by saying Y or m.
-+
-+config SND_SOC_INTEL_CML_LP
-+	tristate "CometLake-LP Platforms"
-+	depends on PCI && ACPI
-+	select SND_SOC_INTEL_SKYLAKE_FAMILY
-+	help
-+	  If you have a Intel CometLake-LP platform with the DSP
-+	  enabled in the BIOS then enable this option by saying Y or m.
-+
- config SND_SOC_INTEL_SKYLAKE_FAMILY
- 	tristate
- 	select SND_SOC_INTEL_SKYLAKE_COMMON
-diff --git a/sound/soc/intel/skylake/skl-messages.c b/sound/soc/intel/skylake/skl-messages.c
-index 4bf70b4429f0..df01dc952521 100644
---- a/sound/soc/intel/skylake/skl-messages.c
-+++ b/sound/soc/intel/skylake/skl-messages.c
-@@ -255,6 +255,22 @@ static const struct skl_dsp_ops dsp_ops[] = {
- 		.init_fw = cnl_sst_init_fw,
- 		.cleanup = cnl_sst_dsp_cleanup
- 	},
-+	{
-+		.id = 0x02c8,
-+		.num_cores = 4,
-+		.loader_ops = bxt_get_loader_ops,
-+		.init = cnl_sst_dsp_init,
-+		.init_fw = cnl_sst_init_fw,
-+		.cleanup = cnl_sst_dsp_cleanup
-+	},
-+	{
-+		.id = 0x06c8,
-+		.num_cores = 4,
-+		.loader_ops = bxt_get_loader_ops,
-+		.init = cnl_sst_dsp_init,
-+		.init_fw = cnl_sst_init_fw,
-+		.cleanup = cnl_sst_dsp_cleanup
-+	},
- };
- 
- const struct skl_dsp_ops *skl_get_dsp_ops(int pci_id)
-diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-index 4ed5b7e17d44..f864f7b3df3a 100644
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@ -1166,6 +1166,16 @@ static const struct pci_device_id skl_ids[] = {
- 	/* CFL */
- 	{ PCI_DEVICE(0x8086, 0xa348),
- 		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
-+#endif
-+#if IS_ENABLED(CONFIG_SND_SOC_INTEL_CML_LP)
-+	/* CML-LP */
-+	{ PCI_DEVICE(0x8086, 0x02c8),
-+		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
-+#endif
-+#if IS_ENABLED(CONFIG_SND_SOC_INTEL_CML_H)
-+	/* CML-H */
-+	{ PCI_DEVICE(0x8086, 0x06c8),
-+		.driver_data = (unsigned long)&snd_soc_acpi_intel_cnl_machines},
- #endif
- 	{ 0, }
- };
--- 
-2.20.1
+The phandle doesn't count as a cell, so this should be 2.
 
+> +       };
+> +
+> +       pinctrl@3400000 {
+> +               #interrupt-cells = <2>;
+> +               irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
+> +               irqdomain-map-mask = <0xff 0>;
+> +               irqdomain-map-pass-thru = <0 0xff>;
+> +       };
+> +
+> +In the above example, the input interrupt specifier map-mask <0xff 0> applied
+> +on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
+> +input interrupt 22, 24 etc. The second argument being irq type is immaterial
+> +from the map and is used from the incoming request instead. The pass-thru
+> +specifier parses the output interrupt specifier from the rest of the unparsed
+> +argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
+> +interrupt 36, 37 etc.
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
