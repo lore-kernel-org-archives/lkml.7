@@ -2,92 +2,185 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742E0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F7B3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1FF217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA2F2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:12:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OIZo/VXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfEJNKo (ORCPT
+        id S1727587AbfEJNM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:10:44 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42980 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727465AbfEJNKo (ORCPT
+        Fri, 10 May 2019 09:12:58 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44260 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727493AbfEJNM5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:10:44 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hP5IO-0005L9-As; Fri, 10 May 2019 13:10:40 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: logitech-dj: make const array template static
-Date:   Fri, 10 May 2019 14:10:39 +0100
-Message-Id: <20190510131039.4675-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 10 May 2019 09:12:57 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190510131256euoutp028c266755a156ebf9a0289cf3a29afe5f~dVIUGPeWQ1435114351euoutp020
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 13:12:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190510131256euoutp028c266755a156ebf9a0289cf3a29afe5f~dVIUGPeWQ1435114351euoutp020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557493976;
+        bh=j5HYaAoYE8H3ysc4iIL7WLxLaS/SspmuDmBrz/8NW1o=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=OIZo/VXwF121fsfuAWfDygFwj/mr9SkTn30FQH+oYy/sPESqQ3g5z/zCulxeIRPBQ
+         EuB03HmxYY/hYFR8KRSApF+H86l1ysmk01cwNeUbl0xkp1ot5rb7uahloYgObjrR45
+         c3UO7YimfqbCsf1RsAVk3EF9JtYTnWSLHZGUS16Q=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190510131255eucas1p1b1e2d76f60bc4dbde6a9b6f495e37cfe~dVITWlwPZ3127531275eucas1p1m;
+        Fri, 10 May 2019 13:12:55 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 94.8B.04377.7D875DC5; Fri, 10
+        May 2019 14:12:55 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190510131254eucas1p1fcf8dbeffa10d59a44108c3820efb01a~dVISjTEZP0116601166eucas1p1j;
+        Fri, 10 May 2019 13:12:54 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190510131254eusmtrp113c2899e2188b15d97970140148781ed~dVISVEKyk1895118951eusmtrp1H;
+        Fri, 10 May 2019 13:12:54 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-0b-5cd578d74831
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 81.47.04140.6D875DC5; Fri, 10
+        May 2019 14:12:54 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190510131253eusmtip25866cbb1e621a84176e0e205134e59ea~dVIReyyHG3162231622eusmtip2v;
+        Fri, 10 May 2019 13:12:53 +0000 (GMT)
+Subject: Re: [PATCH v7 07/13] dt-bindings: memory-controllers: add
+ Exynos5422 DMC device description
+To:     Rob Herring <robh@kernel.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, Kukjin Kim <kgene@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Thierry Reding <treding@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>, willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <c9b4759e-e15b-9c5d-63d0-9db06a4c361a@partner.samsung.com>
+Date:   Fri, 10 May 2019 15:12:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJSbi5jNZSRhiE-h74DdbsgM7O+tqP9HOf037pyN7TbFA@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se1BMURzHO3vv3XtrbE4b+k0axmK88xyd8X5bjfEYj/FosHT10G7ZK0rN
+        WPQSiRCt3oyaPKJCmoZRS/TYakiNrBpbI7QNSoY8r1uj/z7n/L7f8/t+Zw5HKTsYV85Pt4/X
+        6zQBKrkDfefxN/Ok+pA6rymZDc7k1oVchtR3vWVImsnMkKufrIicKU+RkcrjWhJv/UCR6uqb
+        LKk60s6SZ0XJctIZZ0LkQvV9GblusrCk8XC2nPwuLmRJaXs0Qx489ySNPY6k+8kbtMBZ3f0l
+        gVZfNNTS6ntGC6vOyzkmV8cd7ZCrTxbkIHV+RZi6M2/YGm6LwxxvPsBvP6+fPG+Hg68lNQYF
+        vRgYcv/sJdaAigbEInsO8Ax4WPlULrISZyP4aZoaixz+cheCms9mJB06ESS3NFN9jk9Neaw0
+        yEJgaYxEkt2GwPxxvsjOeDeUXH7JijwIj4CeqERGNFA4Uw6thnxZLOI4OXaHwpy9okaBl8EV
+        q40Rmcaj4bXFJBN5MN4ETY9vMpLGCZ4mtdAi2+O18DUh9Z+Gwi7wsiWtl4fDXVsyJe4CnMHB
+        6fpTjJR6CbwuvNTbwBnelxWwErtBxZkTtMQCGOIykMThYI1P6dXMhtKyWkbMTOFxkFs0WUTA
+        CyHXvF5CR2iwOUkJHCHhznlKulZATJRSemMsFJyokUk8BLKuJbKnkMrYr5exXxdjvy7G/2vT
+        EZ2DXPhgQevDC9N0/AF3QaMVgnU+7rsCtXno7y+s+FXWVYiKfuwsQZhDqgEKvKvOS8lo9guh
+        2hIEHKUapNBPfO6lVHhrQg/y+sDt+uAAXihBQzla5aIIs2veqsQ+mn38Hp4P4vV9Uxln72pA
+        o7q/Ky+Hq26Xr5ob066aELkzfSlvazD6D1y3yKP4qktbboTv8oji2ujW2c0b7HxnbZqVHZm6
+        +NXIpStqNmy78dHjblNAfkOHdXVQ2O7UIc18nVv4ykeHNg+98uhQe1LPBNe2tvdupZrppoet
+        Vefi/D5kPjif5DRzTLR//ned1XPYxndZ3ipa8NVMHU/pBc0fTHEJ74EDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpmleLIzCtJLcpLzFFi42I5/e/4Pd1rFVdjDM5Ml7XYOGM9q8X1L89Z
+        LeYfOcdqsfrjY0aLyafmMlmc6c616H/8mtni/PkN7BZnm96wW1zeNYfN4nPvEUaLGef3MVms
+        PXKX3eJ24wo2i/97drBbHH7Tzmqx/4qXxe3ffBbfTjxidBD2+PZ1EovH7IaLLB47Z91l99i0
+        qpPNo7f5HZtH35ZVjB6bT1d7fN4kF8ARpWdTlF9akqqQkV9cYqsUbWhhpGdoaaFnZGKpZ2hs
+        HmtlZKqkb2eTkpqTWZZapG+XoJdxd14HY8E1/op9UxazNzDu4uli5OSQEDCR+Hh/E3sXIxeH
+        kMBSRomfSzexQCTEJCbt284OYQtL/LnWxQZR9JpRonHZe0aQhLBAmsSNJVPZQGwRAUWJ323T
+        WEFsZoFlbBJzb+eA2EICp5klLk3x7WLk4GAT0JPYsaoQJMwr4Cax7PFbsHIWAVWJe3ePMIHY
+        ogIREmfer2CBqBGUODnzCZjNKRAo8X3SPCaI8WYS8zY/ZIawxSVuPZkPFZeX2P52DvMERqFZ
+        SNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nzi430ihNzi0vz0vWS83M3MQITwLZjP7fsYOx6F3yI
+        UYCDUYmHVyD5aowQa2JZcWXuIUYJDmYlEd4inSsxQrwpiZVVqUX58UWlOanFhxhNgZ6byCwl
+        mpwPTE55JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY1XR1Fh10
+        fHj2UJeTJet79sInxZPk/XXWfZRn0bFZ8H/yBacP33j8eTevjQp4fKjl7nXvD0sOvxe4f/f6
+        U75zAp/mpV2+bRRblGHw0qn9jrPE0mshm0/b3At5JrZ+2S73czP63L0i/m/tfasZtFAt9uLb
+        ZzUPDzelq0pv/nP+oOyTeefuPZvj7KTEUpyRaKjFXFScCAAe9Pq2FgMAAA==
+X-CMS-MailID: 20190510131254eucas1p1fcf8dbeffa10d59a44108c3820efb01a
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-RootMTR: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc
+References: <1557155521-30949-1-git-send-email-l.luba@partner.samsung.com>
+        <CGME20190506151215eucas1p2c57147edac5671c5ec9a223efb6b4adc@eucas1p2.samsung.com>
+        <1557155521-30949-8-git-send-email-l.luba@partner.samsung.com>
+        <20190507170422.GA25179@bogus>
+        <CAJKOXPdacKBrKeCyCaE7VS8-NOR4Oo27XY7rx20P2ORY2vBBSg@mail.gmail.com>
+        <ab489925-040c-815c-2aef-50ed0ee6cd6c@partner.samsung.com>
+        <CAL_JsqJSbi5jNZSRhiE-h74DdbsgM7O+tqP9HOf037pyN7TbFA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Rob,
 
-Don't populate the array template  on the stack but instead make it
-static. Makes the object code smaller by 10 bytes. Also reformat
-the declaration.
+On 5/8/19 10:35 PM, Rob Herring wrote:
+> On Wed, May 8, 2019 at 4:45 AM Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>>
+>> On 5/8/19 9:19 AM, Krzysztof Kozlowski wrote:
+>>> On Tue, 7 May 2019 at 19:04, Rob Herring <robh@kernel.org> wrote:
+>>>>> +- devfreq-events : phandles of the PPMU events used by the controller.
+>>>>> +- samsung,syscon-chipid : phandle of the ChipID used by the controller.
+>>>>> +- samsung,syscon-clk : phandle of the clock register set used by the controller.
+>>>>
+>>>> Looks like a hack. Can't you get this from the clocks property? What is
+>>>> this for?
+>>>
+>>> Hi Rob,
+>>>
+>>> Lukasz uses these two syscon regmaps to read certain registers. For
+>>> chipid he reads it to check the size of attached memory (only 2 GB
+>>> version is supported). This indeed looks like a hack. However the
+>>> second regmap (clk) is needed to get the timing data from registers
+>>> from DMC clock driver address space. These are registers with memory
+>>> timing so their data is not exposed anyway in common clk framework.
+> 
+> Okay, please just explain what your accessing. Consider adding the
+> offset as a cell in case stuff moves around on another chip.
+Good point. I will also have to regmap the registers and not take from
+'clock' device.
+> 
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>
+>> Thank you Krzysztof for a fast response. I have also responded to Rob.
+>> I wouldn't call accessing chipid registers as a hack, though. The DMC
+>> registers do not contain information about the memory chip since it is
+>> in phase of production the board not the chip. Thus, chipid regs (which
+>> loads from e-fuses) are best place to put information about memory
+>> type/size.
+> 
+> For efuses, we have a binding (nvmem). Maybe you should use it.
+I don't know about the design of a planned 'chipid' driver, which going
+to be sent to LKML in near future. Thank you for this information,
+I will talk with Bartek.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  29376	   9360	    128	  38864	   97d0	drivers/hid/hid-logitech-dj.o
-
-After:
-   text	   data	    bss	    dec	    hex	filename
-  29270	   9456	    128	  38854	   97c6	drivers/hid/hid-logitech-dj.o
-
-(gcc version 8.3.0, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/hid/hid-logitech-dj.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
-index b1e894618eed..72d0ab05401f 100644
---- a/drivers/hid/hid-logitech-dj.c
-+++ b/drivers/hid/hid-logitech-dj.c
-@@ -1111,12 +1111,14 @@ static int logi_dj_recv_send_report(struct dj_receiver_dev *djrcv_dev,
- 
- static int logi_dj_recv_query_hidpp_devices(struct dj_receiver_dev *djrcv_dev)
- {
--	const u8 template[] = {REPORT_ID_HIDPP_SHORT,
--			       HIDPP_RECEIVER_INDEX,
--			       HIDPP_SET_REGISTER,
--			       HIDPP_REG_CONNECTION_STATE,
--			       HIDPP_FAKE_DEVICE_ARRIVAL,
--			       0x00, 0x00};
-+	static const u8 template[] = {
-+		REPORT_ID_HIDPP_SHORT,
-+		HIDPP_RECEIVER_INDEX,
-+		HIDPP_SET_REGISTER,
-+		HIDPP_REG_CONNECTION_STATE,
-+		HIDPP_FAKE_DEVICE_ARRIVAL,
-+		0x00, 0x00
-+	};
- 	u8 *hidpp_report;
- 	int retval;
- 
--- 
-2.20.1
-
+Regards,
+Lukasz
+> 
+> Rob
+> 
+> 
