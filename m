@@ -2,188 +2,258 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	T_DKIMWL_WL_HIGH autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDC9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29833C04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DD82182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:34:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qCun+QB0"
+	by mail.kernel.org (Postfix) with ESMTP id E4C59217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 01:42:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557452535;
+	bh=cFrtploylTJ7D2a1X3krEnJPSVtcXCsr2Vhw1CjLgj8=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=OleOa7i0YTRNnQgVd6Iy4laW1hp7aSPCgMnaX9xT4/uIZWgKpM83aJvYgPzj6OTth
+	 fpZ+fevdjuRU3rWE6ig+BvXMRDrEK7LeIMA7ERKRmg8ehq4FZahsjImDK7EtBTFg2Y
+	 XOQ8CEUBLJMEO/s+MKdzxB4iZTql5MYbev4+gydI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfEJBeS (ORCPT
+        id S1726857AbfEJBmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 21:34:18 -0400
-Received: from mail-eopbgr800083.outbound.protection.outlook.com ([40.107.80.83]:63614
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726776AbfEJBeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 21:34:17 -0400
+        Thu, 9 May 2019 21:42:13 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33762 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfEJBmM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 21:42:12 -0400
+Received: by mail-io1-f67.google.com with SMTP id z4so3269872iol.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 18:42:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SoN+FfYc4NdyyWXFTNn/3MZPAa1Ny6z2h145bQ0u6l4=;
- b=qCun+QB0hcjIk8idFkI3haXG2G/wpAvuHV2wQN0+Cm3NN5WGWtA8WzN6DgLgZnkMNj6HO61CRH8Og7QW9WbIAbhSz7zXnB79O40xBo5eXVFD3XPQDbx8kqY6PXaQeNHg2GYs5WR+57uHIunSpnvNip/C9m+t58JLCELiHd2JNl0=
-Received: from MWHPR12CA0030.namprd12.prod.outlook.com (2603:10b6:301:2::16)
- by DM6PR12MB2665.namprd12.prod.outlook.com (2603:10b6:5:4a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 10 May
- 2019 01:33:33 +0000
-Received: from CO1NAM03FT014.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e48::201) by MWHPR12CA0030.outlook.office365.com
- (2603:10b6:301:2::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.21 via Frontend
- Transport; Fri, 10 May 2019 01:33:33 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; embeddedor.com; dkim=none (message not signed)
- header.d=none;embeddedor.com; dmarc=permerror action=none
- header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXCHOV01.amd.com (165.204.84.17) by
- CO1NAM03FT014.mail.protection.outlook.com (10.152.80.101) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1856.11 via Frontend Transport; Fri, 10 May 2019 01:33:33 +0000
-Received: from LinuxHost.amd.com (10.34.1.3) by SATLEXCHOV01.amd.com
- (10.181.40.71) with Microsoft SMTP Server id 14.3.389.1; Thu, 9 May 2019
- 20:33:32 -0500
-From:   Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-CC:     <Alexander.Deucher@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: Reporting accurate hw_ptr for acp3x dma
-Date:   Fri, 10 May 2019 07:11:07 +0530
-Message-ID: <1557452486-13396-1-git-send-email-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.7.4
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YjvQjrdVS12KY32f62rBMl2y5YxKM5lRaU2cGrqTrlY=;
+        b=iQXPM6HlBuCAcDh6qqvlr1iMhuawK9DDIaZJgwlFecOZTdaFhUEEopeiLjTqGdYcey
+         Ei+XzihcT61RgeaYzQI8ihN+pomcyT6VgWelpRhqjGfxYGBOnwKt2lEKYPta21DiotKo
+         tEMsFOnNMbCGKNObds/QESqwLjvSTa0J4C/wc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YjvQjrdVS12KY32f62rBMl2y5YxKM5lRaU2cGrqTrlY=;
+        b=eA+mR8gDhb9Ft4IzfWthLFHEpHKvOkSMPKytC1iH5PwKfrvAebJYWb9eCKXNsQCNBG
+         Ib6Ix5FaEXdulGOCJKFX9iTZULaGkpNWi08o/71X4K33QpvqgAgqHIvBCflsShpBp9bw
+         7k0cWxciJU6bKhfml8ANadHhuwTq0Mx4pydvKsQ9Y3PghLmlZrYmqKi+vif6tKfD7jn5
+         sGsYpBMzcY8iKDlHuDwqSvjSAW/Kcd3fxsNWj80T6qxpBhtPvEbAQ/DxU5C4SG2FLOB/
+         6KjHWpDMUnbsJhevw7iYM4SYiqppX3RdVPcF2Kz93KAoLTL0XsfewAsPucO8RmJTw8UF
+         Stfw==
+X-Gm-Message-State: APjAAAVPoRHqxPJaIpsKk+LjO8RKVSSV3DB3tJCBJcG/dNXawNRB5m9H
+        nqnFC7B3sGdTH6leZgRBdRv6uQ==
+X-Google-Smtp-Source: APXvYqzYZc7zA5KXM4nSFp5KXYZWaf+8QXVrppBmQYFU7NPIxJ+f773wIi+yyx89xJfucyYfyuz+4A==
+X-Received: by 2002:a5d:9d4f:: with SMTP id k15mr5260994iok.100.1557452531643;
+        Thu, 09 May 2019 18:42:11 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m25sm1796887iti.24.2019.05.09.18.42.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 18:42:10 -0700 (PDT)
+Subject: Re: [GIT PULL] Kselftest update for Linux 5.2-rc1
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        shuah <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, Shuah Khan <skhan@linuxfoundation.org>
+References: <9b434125-44b6-0e83-4f70-d1fd28752407@linuxfoundation.org>
+ <20190509222043.b4zn32kuohduzzzr@ast-mbp>
+ <dd983d42-d148-372d-3e57-b97c313d58b9@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <28072ca5-f7c8-f16d-6881-aec3e8b61ae8@linuxfoundation.org>
+Date:   Thu, 9 May 2019 19:42:09 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(39860400002)(2980300002)(428003)(189003)(199004)(47776003)(53416004)(54906003)(16586007)(316002)(4326008)(109986005)(486006)(426003)(2616005)(476003)(186003)(305945005)(126002)(26005)(336012)(77096007)(1671002)(68736007)(50226002)(8936002)(70586007)(70206006)(8676002)(48376002)(50466002)(81166006)(81156014)(53936002)(7696005)(51416003)(72206003)(36756003)(86362001)(5660300002)(356004)(6666004)(2906002)(478600001)(42413003)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB2665;H:SATLEXCHOV01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ead55090-8df3-4548-1e53-08d6d4e783df
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328);SRVR:DM6PR12MB2665;
-X-MS-TrafficTypeDiagnostic: DM6PR12MB2665:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB266531C05FF88C44052BF1EF970C0@DM6PR12MB2665.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
-X-Forefront-PRVS: 0033AAD26D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: eKIRp1zqbR7GVmsodxhdO8UlL+Q4q5pc6xk8PHXOgpdOLJizrO2/+EzquNevnGo/AnmGXkd9hR0FW9BJElc6wZIWsC2vE3OGU7gxNH6716iM+fxQiYGOmOqNwYkI/AeQwMExEgiwH4Gjp0Ni5jygFPDS2htkqZyUlJAFb/Ds7ww3yQiRCcoHM+RzyrHDIdPbnNFJ9VXZ0Xns+gZFcjh15UTNouowDFLaU2aEMOk8C9IVQYHW+bGKE35qA3HtuA2B9rkLKoPp8GyNanEwlz7JI9eTbYJ17g63sepkxmxM1PhQVb3IFf0ReQb/lC4ZG3NW7i1kG0YjRyYDTWl1LEMfDmG3RoMkYXFgmjunwvxIHIgXaH/Yj0kwBJwzaLBtCqLvz0Ck6SvFEaqgsz3K8boIfTDaGibZ9zP3aiKAZqy/Ago=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2019 01:33:33.1392
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ead55090-8df3-4548-1e53-08d6d4e783df
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXCHOV01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2665
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <dd983d42-d148-372d-3e57-b97c313d58b9@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+On 5/9/19 4:40 PM, Shuah Khan wrote:
+> On 5/9/19 4:20 PM, Alexei Starovoitov wrote:
+>> On Mon, May 06, 2019 at 10:56:56AM -0600, Shuah Khan wrote:
+>>> Hi Linus,
+>>>
+>>> Please pull the following Kselftest update for Linux 5.2-rc1
+>>>
+>>> This Kselftest update for Linux 5.2-rc1 consists of
+>>>
+>>> - fixes to seccomp test, and kselftest framework
+>>> - cleanups to remove duplicate header defines
+>>> - fixes to efivarfs "make clean" target
+>>> - cgroup cleanup path
+>>> - Moving the IMA kexec_load selftest to selftests/kexec work from
+>>>    Mimi Johar and Petr Vorel
+>>> - A framework to kselftest for writing kernel test modules addition
+>>>    from Tobin C. Harding
+>>>
+>>> diff is attached.
+>>>
+>>> thanks,
+>>> -- Shuah
+>>>
+>>>
+>>> ----------------------------------------------------------------
+>>> The following changes since commit 
+>>> 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
+>>>
+>>>    Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
+>>>
+>>> are available in the Git repository at:
+>>>
+>>>    git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+>>> tags/linux-kselftest-5.2-rc1
+>>>
+>>> for you to fetch changes up to d917fb876f6eaeeea8a2b620d2a266ce26372f4d:
+>>>
+>>>    selftests: build and run gpio when output directory is the src dir
+>>> (2019-04-22 17:02:26 -0600)
+>>>
+>>> ----------------------------------------------------------------
+>>> linux-kselftest-5.2-rc1
+>>>
+>>> This Kselftest update for Linux 5.2-rc1 consists of
+>>>
+>>> - fixes to seccomp test, and kselftest framework
+>>> - cleanups to remove duplicate header defines
+>>> - fixes to efivarfs "make clean" target
+>>> - cgroup cleanup path
+>>> - Moving the IMA kexec_load selftest to selftests/kexec work from
+>>>    Mimi Johar and Petr Vorel
+>>> - A framework to kselftest for writing kernel test modules addition
+>>>    from Tobin C. Harding
+>>>
+>>> ----------------------------------------------------------------
+>>> Kees Cook (3):
+>>>        selftests/seccomp: Handle namespace failures gracefully
+>>>        selftests/harness: Add 30 second timeout per test
+>>>        selftests/ipc: Fix msgque compiler warnings
+>>>
+>>> Mathieu Desnoyers (1):
+>>>        rseq/selftests: Adapt number of threads to the number of 
+>>> detected cpus
+>>>
+>>> Mimi Zohar (9):
+>>>        selftests/kexec: move the IMA kexec_load selftest to 
+>>> selftests/kexec
+>>>        selftests/kexec: cleanup the kexec selftest
+>>>        selftests/kexec: define a set of common functions
+>>>        selftests/kexec: define common logging functions
+>>>        selftests/kexec: define "require_root_privileges"
+>>>        selftests/kexec: kexec_file_load syscall test
+>>>        selftests/kexec: check kexec_load and kexec_file_load are enabled
+>>>        selftests/kexec: make kexec_load test independent of IMA being 
+>>> enabled
+>>>        selftests/kexec: update get_secureboot_mode
+>>>
+>>> Petr Vorel (1):
+>>>        selftests/kexec: Add missing '=y' to config options
+>>>
+>>> Po-Hsu Lin (1):
+>>>        selftests/efivarfs: clean up test files from test_create*()
+>>>
+>>> Roman Gushchin (1):
+>>>        selftests: cgroup: fix cleanup path in 
+>>> test_memcg_subtree_control()
+>>>
+>>> Sabyasachi Gupta (4):
+>>>        selftest/x86/mpx-dig.c: Remove duplicate header
+>>>        selftest/timers: Remove duplicate header
+>>>        selftest/rseq: Remove duplicate header
+>>>        selftest/gpio: Remove duplicate header
+>>>
+>>> Shuah Khan (2):
+>>>        selftests: fix headers_install circular dependency
+>>
+>> Shuah,
+>>
+>> the commit 8ce72dc32578 ("selftests: fix headers_install circular 
+>> dependency")
+>> broke our build/test workflow, since it added:
+>>    ifneq ($(KBUILD_OUTPUT),)
+>>            OUTPUT := $(KBUILD_OUTPUT)
+>>    else
+>>
+>> which means that all of selftests/bpf artifacts are now going into
+>> main build directory cluttering it with all sorts of .o, generated files
+>> and executables.
+>> The end result is humans and scripts can no longer find tests.
 
-acp3x dma pointer callback has issues in reporting hw_ptr.
-Modified logic to use linear position registers to
-retrieve accurate hw_ptr.
+bpf build fails with the above commit. However, even without it, I am
+seeing bpf objects going to tools/testing/selftests/bpf
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/raven/acp3x-pcm-dma.c | 43 ++++++++++++++++++++++++++-----------
- 1 file changed, 31 insertions(+), 12 deletions(-)
+I reverted the commit and ran your use-case:
 
-diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-index 9775bda..a4ade6b 100644
---- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-+++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-@@ -32,6 +32,7 @@ struct i2s_stream_instance {
- 	u16 channels;
- 	u32 xfer_resolution;
- 	struct page *pg;
-+	u64 bytescount;
- 	void __iomem *acp3x_base;
- };
- 
-@@ -317,6 +318,24 @@ static int acp3x_dma_open(struct snd_pcm_substream *substream)
- 	return 0;
- }
- 
-+static u64 acp_get_byte_count(struct i2s_stream_instance *rtd, int direction)
-+{
-+	u64 byte_count;
-+
-+	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-+		byte_count = rv_readl(rtd->acp3x_base +
-+				      mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
-+		byte_count |= rv_readl(rtd->acp3x_base +
-+				       mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
-+	} else {
-+		byte_count = rv_readl(rtd->acp3x_base +
-+				      mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
-+		byte_count |= rv_readl(rtd->acp3x_base +
-+				       mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
-+	}
-+	return byte_count;
-+}
-+
- static int acp3x_dma_hw_params(struct snd_pcm_substream *substream,
- 			       struct snd_pcm_hw_params *params)
- {
-@@ -350,18 +369,17 @@ static int acp3x_dma_hw_params(struct snd_pcm_substream *substream,
- static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_pcm_substream *substream)
- {
- 	u32 pos = 0;
--	struct i2s_stream_instance *rtd = substream->runtime->private_data;
--
--	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
--		pos = rv_readl(rtd->acp3x_base +
--			       mmACP_BT_TX_LINKPOSITIONCNTR);
--	else
--		pos = rv_readl(rtd->acp3x_base +
--			       mmACP_BT_RX_LINKPOSITIONCNTR);
--
--	if (pos >= MAX_BUFFER)
--		pos = 0;
--
-+	u32 buffersize = 0;
-+	u64 bytescount = 0;
-+	struct i2s_stream_instance *rtd =
-+		substream->runtime->private_data;
-+
-+	buffersize = frames_to_bytes(substream->runtime,
-+				     substream->runtime->buffer_size);
-+	bytescount = acp_get_byte_count(rtd, substream->stream);
-+	if (bytescount > rtd->bytescount)
-+		bytescount -= rtd->bytescount;
-+	pos = do_div(bytescount, buffersize);
- 	return bytes_to_frames(substream->runtime, pos);
- }
- 
-@@ -521,6 +539,7 @@ static int acp3x_dai_i2s_trigger(struct snd_pcm_substream *substream,
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		rtd->bytescount = acp_get_byte_count(rtd, substream->stream);
- 		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 			rv_writel(period_bytes, rtd->acp3x_base +
- 				  mmACP_BT_TX_INTR_WATERMARK_SIZE);
--- 
-2.7.4
+export KBUILD_OUTPUT=/tmp/kselftest_bpf
+cd tools/testing/selftests/bpf/
+make
+./test_verifier
+
+I see bpf objects in tools/testing/selftests/bpf/ and I can run the
+test.
+
+What am I missing? The only way ./test_verifier would work is if
+test_verifier is in tools/testing/selftests/bpf/
+
+I am curious what you are actually seeing with this commit?
+
+With the 8ce72dc32578
+
+What I see is - if KBUILD_OUTPUT directory is missing, then the make
+just fails and the following diff fixes that problem:
+
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 098dd0065fb1..074ce7d26a9d 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -13,6 +13,7 @@ ifeq (0,$(MAKELEVEL))
+                 DEFAULT_INSTALL_HDR_PATH := 1
+         endif
+      endif
++$(shell mkdir -p $(OUTPUT))
+  endif
+  selfdir = $(realpath $(dir $(filter %/lib.mk,$(MAKEFILE_LIST))))
+
+
+Now when I run
+
+cd tools/testing/selftests/bpf/
+make
+./test_verifier
+
+bpf objects end up in /tmp/kselftest_bpf
+
+which is what should happen when KBUILD_OUPUT is set.
+
+But now ./test_verifier won't work, because it isn't in the
+cd tools/testing/selftests/bpf/
+
+Could it be that with  commit 8ce72dc32578, bpf objects are ending
+up in the KBUILD_OUPUT dir and ./test_verifier won't work because
+your workflow is looking for it in tools/testing/selftests/bpf/?
+
+If this is the case, then the workfolow will be to run the
+test_verifier from KBUILD_OUPUT dir.
+
+I am trying understand the problem so I can fix it. I know I need
+the above diff.
+
+
+thanks,
+-- Shuah
+
 
