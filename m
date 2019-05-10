@@ -6,38 +6,37 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33232C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B7B1C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040A020578
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D574B217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfEJP2G (ORCPT
+        id S1727742AbfEJP2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:28:06 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:60108 "EHLO
+        Fri, 10 May 2019 11:28:16 -0400
+Received: from vmicros1.altlinux.org ([194.107.17.57]:60268 "EHLO
         vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfEJP2F (ORCPT
+        with ESMTP id S1727144AbfEJP2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:28:05 -0400
+        Fri, 10 May 2019 11:28:15 -0400
 Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 6BB4872CCD3;
-        Fri, 10 May 2019 18:28:03 +0300 (MSK)
+        by vmicros1.altlinux.org (Postfix) with ESMTP id 76C5572CCD0;
+        Fri, 10 May 2019 18:28:13 +0300 (MSK)
 Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 5AEC97CCE09; Fri, 10 May 2019 18:28:03 +0300 (MSK)
-Date:   Fri, 10 May 2019 18:28:03 +0300
+        id 4B2F97CCE09; Fri, 10 May 2019 18:28:13 +0300 (MSK)
+Date:   Fri, 10 May 2019 18:28:13 +0300
 From:   "Dmitry V. Levin" <ldv@altlinux.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Paul Burton <paul.burton@mips.com>,
+Cc:     Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <jejb@parisc-linux.org>,
         Elvira Khabirova <lineprinter@altlinux.org>,
         Eugene Syromyatnikov <esyr@redhat.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
         Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v11 3/7] mips: define syscall_get_error()
-Message-ID: <20190510152803.GC28558@altlinux.org>
+        Andy Lutomirski <luto@kernel.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v11 4/7] parisc: define syscall_get_error()
+Message-ID: <20190510152812.GD28558@altlinux.org>
 References: <20190510152640.GA28529@altlinux.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,14 +53,13 @@ syscall_get_arguments(), syscall_get_return_value(), and
 syscall_get_arch() functions in order to extend the generic
 ptrace API with PTRACE_GET_SYSCALL_INFO request.
 
-Acked-by: Paul Burton <paul.burton@mips.com>
+Acked-by: Helge Deller <deller@gmx.de> # parisc
+Cc: James E.J. Bottomley <jejb@parisc-linux.org>
 Cc: Elvira Khabirova <lineprinter@altlinux.org>
 Cc: Eugene Syromyatnikov <esyr@redhat.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
 Cc: Oleg Nesterov <oleg@redhat.com>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: linux-mips@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
 Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
 ---
 
@@ -69,30 +67,31 @@ Notes:
     v11: unchanged
     v10: unchanged
     v9: unchanged
-    v8: unchanged
-    v7: added Acked-by from https://lore.kernel.org/lkml/20181213190015.olf6vhuimjl4jixs@pburton-laptop/
+    v8: added Acked-by from https://lore.kernel.org/lkml/1abba4b1-82ef-c23c-c59e-5562dcb5b1bb@gmx.de/
+    v7: unchanged
     v6: unchanged
     v5: initial revision
 
- arch/mips/include/asm/syscall.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/parisc/include/asm/syscall.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/mips/include/asm/syscall.h b/arch/mips/include/asm/syscall.h
-index acf80ae0a430..83bb439597d8 100644
---- a/arch/mips/include/asm/syscall.h
-+++ b/arch/mips/include/asm/syscall.h
-@@ -89,6 +89,12 @@ static inline unsigned long mips_get_syscall_arg(unsigned long *arg,
- 	unreachable();
+diff --git a/arch/parisc/include/asm/syscall.h b/arch/parisc/include/asm/syscall.h
+index 80757e43cf2c..00b127a5e09b 100644
+--- a/arch/parisc/include/asm/syscall.h
++++ b/arch/parisc/include/asm/syscall.h
+@@ -29,6 +29,13 @@ static inline void syscall_get_arguments(struct task_struct *tsk,
+ 	args[0] = regs->gr[26];
  }
  
 +static inline long syscall_get_error(struct task_struct *task,
 +				     struct pt_regs *regs)
 +{
-+	return regs->regs[7] ? -regs->regs[2] : 0;
++	unsigned long error = regs->gr[28];
++	return IS_ERR_VALUE(error) ? error : 0;
 +}
 +
  static inline long syscall_get_return_value(struct task_struct *task,
- 					    struct pt_regs *regs)
+ 						struct pt_regs *regs)
  {
 -- 
 ldv
