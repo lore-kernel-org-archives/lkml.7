@@ -2,127 +2,110 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 808A8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4A0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BAD21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uGTioTFA"
+	by mail.kernel.org (Postfix) with ESMTP id E01F421479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557523241;
+	bh=eVSDLxFRJtNqvSdy6nzYE0dpoYEOh2L4bbdtCHYcgX4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TdaFeQOsFEAtm/cuLUJxndvxFB7omzKWAzn2CqRPdyfRyfWGnHBWaRKO3i7bc+m3j
+	 Q2XUiO+M2Xv8xW+D7oQfMSPKRfWVmQgULSBzK7ofM/oKhdKMyoQfVO4qg48sqHu1Hw
+	 ViXKLu881wrgp/P2/qRYStbaZlOn1jj6V9h5QDHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfEJVS6 (ORCPT
+        id S1728120AbfEJVUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:18:58 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40900 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfEJVS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:18:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so9286465wre.7;
-        Fri, 10 May 2019 14:18:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=bYllTi8jpDtNJjUd5zBBxw0HJVYPX6WhjtOSbLVC9b8=;
-        b=uGTioTFAOlBRUIV9IXvNX/QeqP63v4+loXn+2+k/hmbMtFdvpylHSwf3J4H+Gra4+7
-         pnYUYPEKjnBduDg3UbHxBv1uUKRcoxMJIvRx7NOVyS9Tjyi8icSTkE1RnXQwTUMh7yWm
-         E7D5DQFNcQDGZX6E2Ig0XHuunIry7ODDjuXQ1a0uLwCM/SGcYOveguQRUds+9oU+IoOP
-         RzuAmkRGzkj+TURvEdP3Hoxb7Yxu7vQCz2W2n0YraqRIWQ+clLN92y1sipnZX7KC+ub5
-         V/lGYWYDn6CWw5pYU0ubfQUTDFo3qe4z018qv7GShty/pZFxRjSC3VZesnkIVg9A0+xW
-         8I/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=bYllTi8jpDtNJjUd5zBBxw0HJVYPX6WhjtOSbLVC9b8=;
-        b=hsBNGAldOXHrLOuciPXQOdMwsRd5RIUD9HYsnBMdzf8geHgm12XwvPcAOmgLG9Xro5
-         hfActVKom5Z37/30VLHEEH5Jv5G7H6c5cqFKJcn+MBUz5uuumLAHl4clHyEtwC2qXAAN
-         hl8FaOp2uupMwOaNoCCyrpY/4bSVyV2+vqgErKcbi9KOV8BZzkJL77A5l5zuSdzE9DN8
-         9x/qQmKneNrAq62sX9RlY6voafU0VSC9WMijEBGsa/7p1cST//6+e6CVZjeszfTr4s/P
-         TA9aLKjWPdtnA6HsUnqkG3iBsEpaXVonCfz4z6s6HRYuF/IGv0LI7dmTB7IhHaWlJC8Z
-         znsg==
-X-Gm-Message-State: APjAAAU7UXnSnwFOlpDNFVpRH/ZeLa8RKdkrzgb4ZZCjCxpLd/pSE5jX
-        0y887P2MVg26SusUlG24ifxz/C1IxP+6eA==
-X-Google-Smtp-Source: APXvYqxdKLKEcgkJmKn3wJW070jw9Ue+FcwQ6Lk76nd2n+zLdpS24Y7Za/Ng9w80gjOMRSU9OqW0LQ==
-X-Received: by 2002:a5d:4e8d:: with SMTP id e13mr1852856wru.299.1557523135851;
-        Fri, 10 May 2019 14:18:55 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id l18sm3451729wrv.38.2019.05.10.14.18.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 14:18:55 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Date:   Fri, 10 May 2019 23:18:54 +0200
+        Fri, 10 May 2019 17:20:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727835AbfEJVUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:20:39 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E24F42182B
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 21:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557523238;
+        bh=eVSDLxFRJtNqvSdy6nzYE0dpoYEOh2L4bbdtCHYcgX4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0fS3cTmHczG1ssOc5teJdrM/TgWQ6nVTFhgCqAq8ASGKhIkMVg92wafAOLYiI3MWl
+         INOHmViBS9cNEKaDJzcRJl2lEH3LwAKUHnacjQ8LBm+I8aoDSG2JbRqJtx70KX/w7K
+         pTHZRqYnAaT5e2/zJ0Nn7aMXre7H8IOi3HsAkp+Y=
+Received: by mail-wm1-f48.google.com with SMTP id j187so8744601wmj.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 14:20:37 -0700 (PDT)
+X-Gm-Message-State: APjAAAXZCCZ5cgRkj16u3f9wrHOpzFoVWpFjBKughG8zs+ApPZn09/P+
+        PV7bXuu1Wg0vVXQAri5O+8uSV8Yl20xI8S9tKjH1Mg==
+X-Google-Smtp-Source: APXvYqxmLWOSJzfnM1hN1P+7VEpgHvDb4cHKF5KSb97t7Bb1E5U/runa9boZbrE+HP301qSI8wrEMedzUhCobT/8uJY=
+X-Received: by 2002:a7b:cb58:: with SMTP id v24mr8095092wmj.107.1557523234745;
+ Fri, 10 May 2019 14:20:34 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <e9265e58-1038-4194-a8de-f52f5bc3a7d8@gmail.com>
-In-Reply-To: <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
- <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <20190506165439.9155-1-cyphar@cyphar.com> <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin> <20190510204141.GB253532@google.com>
+In-Reply-To: <20190510204141.GB253532@google.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 10 May 2019 14:20:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+Message-ID: <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+To:     Jann Horn <jannh@google.com>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
-> On 10.05.2019 17:05, Vicente Bergas wrote:
->> Hello,
->> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
->> pointer dereference.
->> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
->>  net: phy: realtek: Add rtl8211e rx/tx delays config ...
-> The page operation callbacks are missing in the RTL8211E driver.
-> I just submitted a fix adding these callbacks to few Realtek PHY drivers
-> including RTl8211E. This should fix the issue.
-
-Thanks for fixing it so fast!
-
-> Nevertheless your proposed patch looks good to me, just one small change
-> would be needed and it should be splitted.
-
-The diff on the first mail was just to show which steps i did to debug the
-issue, it was not intended to be applied.
-
-Regards,
-  Vicen=C3=A7.
-
-> The change to phy-core I would consider a fix and it should be fine to
-> submit it to net (net-next is closed currently).
+On Fri, May 10, 2019 at 1:41 PM Jann Horn <jannh@google.com> wrote:
 >
-> Adding the warning to the Realtek driver is fine, but this would be
-> something for net-next once it's open again.
+> On Tue, May 07, 2019 at 05:17:35AM +1000, Aleksa Sarai wrote:
+> > On 2019-05-06, Jann Horn <jannh@google.com> wrote:
+> > > In my opinion, CVE-2019-5736 points out two different problems:
+> > >
+> > > The big problem: The __ptrace_may_access() logic has a special-case
+> > > short-circuit for "introspection" that you can't opt out of; this
+> > > makes it possible to open things in procfs that are related to the
+> > > current process even if the credentials of the process wouldn't permit
+> > > accessing another process like it. I think the proper fix to deal with
+> > > this would be to add a prctl() flag for "set whether introspection is
+> > > allowed for this process", and if userspace has manually un-set that
+> > > flag, any introspection special-case logic would be skipped.
+> >
+> > We could do PR_SET_DUMPABLE=3 for this, I guess?
 >
->> Regards,
->>  Vicen=C3=A7.
->>=20
-> Heiner
->
->> --- a/drivers/net/phy/phy-core.c
->> +++ b/drivers/net/phy/phy-core.c
->> @@ -648,11 +648,17 @@
->>=20
->> static int __phy_read_page(struct phy_device *phydev)
->> { ...
->
-> Here phydev_warn() should be used.
->
->> +        return 0;
->> +    }
->>=20
->>     ret =3D phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
->>     if (ret)
+> Hmm... I'd make it a new prctl() command, since introspection is
+> somewhat orthogonal to dumpability. Also, dumpability is per-mm, and I
+> think the introspection flag should be per-thread.
 
+I've lost track of the context here, but it seems to me that
+mitigating attacks involving accidental following of /proc links
+shouldn't depend on dumpability.  What's the actual problem this is
+trying to solve again?
