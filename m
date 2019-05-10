@@ -2,104 +2,120 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3B2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280C4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4AE2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pi676OP1"
+	by mail.kernel.org (Postfix) with ESMTP id 0095420850
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfEJIQl (ORCPT
+        id S1727100AbfEJIXK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:16:41 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44720 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbfEJIQk (ORCPT
+        Fri, 10 May 2019 04:23:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35046 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727048AbfEJIXK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:16:40 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z16so2633034pgv.11;
-        Fri, 10 May 2019 01:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tmrArLlqX0+g8dO65H9KErVBV4iwBC4vplgVby2I7tY=;
-        b=pi676OP1FRhqbBbpb7fOeUNTiVaJG652h+lbTMGFhbLW2aHAPornrN8wTMZXVlgNxl
-         W4BB6oJI8eT5ewIiyVGrzKYVuW9DRSSPWxGnbWSW+Ndedu6GJoUyQ3y/PgWW77qlcw6G
-         2K3ngsOj1EzudIqLQY3Pv3bW/Uo8QOE0RKDM/G2n2MKLlvq5G32CQmiJ4tJt1eVKKfw2
-         FJNt9YkI8VdNggOxd10ie4KY7+2hyQwHe618/y9gJGoXaaVC7tu0mkaM1DcSD7DR1e/1
-         pQQgGtrSt/riF+FkuY9LeHLXQkZAa87ftpIW1dZnvIkh0uDIpIWMkZzfDlrKxKmq2uc4
-         zYdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tmrArLlqX0+g8dO65H9KErVBV4iwBC4vplgVby2I7tY=;
-        b=DqjzEFB4qwr/2GvaPg1eEUKtEJ1st/L4oNasNNHK+x81owz4TjRps+D0e67CG7n9z6
-         NnU30/IYvZqlY+yJ2TZ6TcPruEqeQTFUpXuohZmy0lYqjmnBpNVeHC4YI40Bu65d6pIS
-         ZF8P/l3im755kbk1hxW3VOlL0D/AIRcJ+rMk1eZLe9y+Ve47cfDcDZqgiuLhZTdw86C5
-         Ega4M3XRNIx8LSmEcZ4I3IWMPlqs6KczWW7PNVVbaTXAPXU44lO9qU7nUzeMbjdNhR5t
-         ypWgze77luaGW32FXLGHSY6sYkjspPEi/ldYLyiBs/UIqYsYjAQeUnznOV+4RkGWv/Yz
-         TPUg==
-X-Gm-Message-State: APjAAAVlYISH7+gofqkqdnkgxYj8nx0esH1vXv8CQUMkNRHX1UYEgtML
-        ZG9td1l8tSs4ymAY12bDrEs=
-X-Google-Smtp-Source: APXvYqwOHP1arI/G1HtdqJ0tQ0k3aIkPVbkmDhzh/AFABpPSUF5dUQqIu8sQTWKyE8OeI4KXFIElPQ==
-X-Received: by 2002:a63:246:: with SMTP id 67mr11946180pgc.145.1557476199809;
-        Fri, 10 May 2019 01:16:39 -0700 (PDT)
-Received: from localhost ([39.7.15.25])
-        by smtp.gmail.com with ESMTPSA id h1sm8999019pfq.3.2019.05.10.01.16.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 01:16:38 -0700 (PDT)
-Date:   Fri, 10 May 2019 17:16:35 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190510081635.GA4533@jagdpanzerIV>
-References: <20190509121923.8339-1-pmladek@suse.com>
- <20190510043200.GC15652@jagdpanzerIV>
- <CAHk-=wiP+hwSqEW0dM6AYNWUR7jXDkeueq69et6ahfUgV7hC3w@mail.gmail.com>
- <20190510050709.GA1831@jagdpanzerIV>
- <20190510080602.mdfk54f6lpyg6unw@pathway.suse.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510080602.mdfk54f6lpyg6unw@pathway.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 10 May 2019 04:23:10 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A8N3x5072876
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 04:23:08 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sd5hegjtf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 04:23:07 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 10 May 2019 09:22:41 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 10 May 2019 09:22:37 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4A8Mala63176922
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 08:22:36 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 324D7AE051;
+        Fri, 10 May 2019 08:22:36 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9DC01AE045;
+        Fri, 10 May 2019 08:22:35 +0000 (GMT)
+Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.187.238])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 May 2019 08:22:35 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     sebott@linux.vnet.ibm.com
+Cc:     gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Subject: [PATCH 0/4] Retrieving zPCI specific info with VFIO
+Date:   Fri, 10 May 2019 10:22:31 +0200
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19051008-0008-0000-0000-000002E53737
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051008-0009-0000-0000-00002251C19D
+Message-Id: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=597 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905100059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/10/19 10:06), Petr Mladek wrote:
-[..]
-> I am going to send a patch replacing probe_kernel_address() with
-> a simple check:
-> 
-> 	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
-> 		return "(efault)";
+Using the PCI VFIO interface allows userland, a.k.a. QEMU, to retrieve
+ZPCI specific information without knowing Z specific identifiers
+like the function ID or the function handle of the zPCI function
+hidden behind the PCI interface. 
+  
+By using the VFIO_IOMMU_GET_INFO ioctl we enter the vfio_iommu_type1
+ioctl callback and can insert there the treatment for a new Z specific
+capability.
+  
+Once in vfio_iommu_type1 we can retrieve the real iommu device,
+s390_iommu and call the get_attr iommu operation's callback
+in which we can retrieve the zdev device and start clp operations
+to retrieve Z specific values the guest driver is concerned with.
+ 
+To share the code with arch/s390/pci/pci_clp.c the original functions
+in pci_clp.c to query PCI functions and PCI functions group are
+modified so that they can be exported.
 
-I'm OK with this.
-Probing ptrs was a good idea, it just didn't work out.
+A new function clp_query_pci() replaces clp_query_pci_fn() and
+the previous calls to clp_query_pci_fn() and clp_query_pci_fngrp()
+are replaced with calls to zdev_query_pci_fn() and zdev_query_pci_fngrp()
+using a zdev pointer as argument.
 
-	-ss
+These two functions are exported to be used from out of the s390_iommu
+code.
+
+Pierre Morel (4):
+  s390: pci: Exporting access to CLP PCI function and PCI group
+  vfio: vfio_iommu_type1: Define VFIO_IOMMU_INFO_CAPABILITIES
+  s390: iommu: Adding get attributes for s390_iommu
+  vfio: vfio_iommu_type1: implement VFIO_IOMMU_INFO_CAPABILITIES
+
+ arch/s390/include/asm/pci.h     |  3 ++
+ arch/s390/pci/pci_clp.c         | 72 ++++++++++++++++---------------
+ drivers/iommu/s390-iommu.c      | 77 +++++++++++++++++++++++++++++++++
+ drivers/vfio/vfio_iommu_type1.c | 95 ++++++++++++++++++++++++++++++++++++++++-
+ include/linux/iommu.h           |  4 ++
+ include/uapi/linux/vfio.h       | 10 +++++
+ 6 files changed, 226 insertions(+), 35 deletions(-)
+
+-- 
+2.7.4
+
