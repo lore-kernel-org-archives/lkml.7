@@ -2,151 +2,113 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9CEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFA9C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B93820989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 826D220989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbrZi8/d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbfEJJsy (ORCPT
+        id S1727315AbfEJJvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:48:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727145AbfEJJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:48:54 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B8AC85376;
-        Fri, 10 May 2019 09:48:53 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 766EF600C7;
-        Fri, 10 May 2019 09:48:40 +0000 (UTC)
-Date:   Fri, 10 May 2019 11:48:38 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190510114838.7e16c3d6.cohuck@redhat.com>
-In-Reply-To: <20190510093608.GD2854@work-vm>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-        <20190507151826.502be009@x1.home>
-        <20190509173839.2b9b2b46.cohuck@redhat.com>
-        <20190509154857.GF2868@work-vm>
-        <20190509175404.512ae7aa.cohuck@redhat.com>
-        <20190509164825.GG2868@work-vm>
-        <20190510110838.2df4c4d0.cohuck@redhat.com>
-        <20190510093608.GD2854@work-vm>
-Organization: Red Hat GmbH
+        Fri, 10 May 2019 05:51:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41345 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfEJJvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:51:46 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f12so574432plt.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 02:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WijcaE3HINJiVGwwC+CuKRETdmWZ9/FSRZJjUi9mXvc=;
+        b=RbrZi8/drM2Z3J/7bvD3it5wOe9OYIlwzWVRzah1vdnnjxnw1pWiT/EL8ywiDx3/3T
+         hD1SX5GOJw5pmnlOEg4AsFB1RD6woBtAxX3cum9CFIgoVoKKP5prptRtsK9i/JMy8usn
+         fK60N3wYQVvUGMog9NsnQCcdq4IpAix4ac+Ub0p0aKJk+llvHfg1JRivPbfsbFP3mHc6
+         2oNzJaNR8blxqsAmqjodFCeUw/lyYhYidkRDek7P7OO1vjxp/OHIsHDz5zYhJCZMCARl
+         QY/29FW2x9TeGDjMsokEi7yX7N6TbnrD5isB1wqHa30PlHXxddA10WZFfcb2M72MPpKv
+         W6sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WijcaE3HINJiVGwwC+CuKRETdmWZ9/FSRZJjUi9mXvc=;
+        b=bJbx7bUW1ueFxiJcpoUmO0LxNi/HvmtFHBNzDbd2FAcJ4DXfOLjBZmyMD9CeIJhlJz
+         UwCn5h1T6uOGT5fkJMjyzQvcrpDaYcx+5tBvh7TMg3U55oRT9xCpzWQDhRysYOIPcxTu
+         QXTSrg1d7MIeuWRYg1s1rTG+MR1s3TsFwksXv39J3/UDQ/BjELC31sNq/ykizGDiog0g
+         JHjRtAx6Onn4+QeTregiNBO7TWGWpkesFdTb2vuvzc2OWKKkIFdwYX6+fFZrZPYD8bkN
+         MS6tymlX4W6kmbDnU0QrlAPLQXe7JvsdfrhvXopTqVs6hZYNBMVMSBlWoiR4z0ZlRnsf
+         60NA==
+X-Gm-Message-State: APjAAAXatChjknYYhfhUMYgEwqVOoXQb8PBClwm1Q2iEtNZQWjR+F4qk
+        QV15vOzDvdr6wucCvGB1H9k=
+X-Google-Smtp-Source: APXvYqwVWxL8kHDRGOAqch3VmtI11JCYWCJUvbPGv/TKxmR4JMfuugbUzDmjDo0v0wtIrw042BKPog==
+X-Received: by 2002:a17:902:2cc1:: with SMTP id n59mr12098147plb.22.1557481905657;
+        Fri, 10 May 2019 02:51:45 -0700 (PDT)
+Received: from localhost ([39.7.15.25])
+        by smtp.gmail.com with ESMTPSA id s6sm6368853pfb.128.2019.05.10.02.51.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 02:51:44 -0700 (PDT)
+Date:   Fri, 10 May 2019 18:51:41 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
+Message-ID: <20190510095141.GA32171@jagdpanzerIV>
+References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
+ <20190509145620.2pjqko7copbxuzth@pathway.suse.cz>
+ <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
+ <20190510091537.44e3aeb7gcrcob76@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 10 May 2019 09:48:53 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510091537.44e3aeb7gcrcob76@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 10:36:09 +0100
-"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-
-> * Cornelia Huck (cohuck@redhat.com) wrote:
-> > On Thu, 9 May 2019 17:48:26 +0100
-> > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> >   
-> > > * Cornelia Huck (cohuck@redhat.com) wrote:  
-> > > > On Thu, 9 May 2019 16:48:57 +0100
-> > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> > > >     
-> > > > > * Cornelia Huck (cohuck@redhat.com) wrote:    
-> > > > > > On Tue, 7 May 2019 15:18:26 -0600
-> > > > > > Alex Williamson <alex.williamson@redhat.com> wrote:
-> > > > > >       
-> > > > > > > On Sun,  5 May 2019 21:49:04 -0400
-> > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:      
-> > > > > >       
-> > > > > > > > +  Errno:
-> > > > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > > > > > > > +  devices, it should not register version attribute for this mdev device. But if
-> > > > > > > > +  a vendor driver has already registered version attribute and it wants to claim
-> > > > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > > > > > > > +  -ENODEV on access to this mdev device's version attribute.
-> > > > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > > > > > > > +  incompatible mdev devices's version strings to its version attribute should
-> > > > > > > > +  return -EINVAL;        
-> > > > > > > 
-> > > > > > > I think it's best not to define the specific errno returned for a
-> > > > > > > specific situation, let the vendor driver decide, userspace simply
-> > > > > > > needs to know that an errno on read indicates the device does not
-> > > > > > > support migration version comparison and that an errno on write
-> > > > > > > indicates the devices are incompatible or the target doesn't support
-> > > > > > > migration versions.      
-> > > > > > 
-> > > > > > I think I have to disagree here: It's probably valuable to have an
-> > > > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
-> > > > > > those two particular devices'. Userspace might want to do different
-> > > > > > things (e.g. trying with different device pairs).      
-> > > > > 
-> > > > > Trying to stuff these things down an errno seems a bad idea; we can't
-> > > > > get much information that way.    
-> > > > 
-> > > > So, what would be a reasonable approach? Userspace should first read
-> > > > the version attributes on both devices (to find out whether migration
-> > > > is supported at all), and only then figure out via writing whether they
-> > > > are compatible?
-> > > > 
-> > > > (Or just go ahead and try, if it does not care about the reason.)    
-> > > 
-> > > Well, I'm OK with something like writing to test whether it's
-> > > compatible, it's just we need a better way of saying 'no'.
-> > > I'm not sure if that involves reading back from somewhere after
-> > > the write or what.  
-> > 
-> > Hm, so I basically see two ways of doing that:
-> > - standardize on some error codes... problem: error codes can be hard
-> >   to fit to reasons
-> > - make the error available in some attribute that can be read
-> > 
-> > I'm not sure how we can serialize the readback with the last write,
-> > though (this looks inherently racy).
-> > 
-> > How important is detailed error reporting here?  
+On (05/10/19 11:15), Petr Mladek wrote:
+[..]
+>  arch/x86/kernel/smp.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> I think we need something, otherwise we're just going to get vague
-> user reports of 'but my VM doesn't migrate'; I'd like the error to be
-> good enough to point most users to something they can understand
-> (e.g. wrong card family/too old a driver etc).
+> --- a/arch/x86/kernel/smp.c
+> +++ b/arch/x86/kernel/smp.c
+> @@ -124,7 +124,8 @@ static bool smp_no_nmi_ipi = false;
+>   */
+>  static void native_smp_send_reschedule(int cpu)
+>  {
+> -	if (unlikely(cpu_is_offline(cpu))) {
+> +	if (unlikely(cpu_is_offline(cpu) &&
+> +		     atomic_read(&stopping_cpu) < 0)) {
+>  		WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
+>  		return;
+>  	}
 
-Ok, that sounds like a reasonable point. Not that I have a better idea
-how to achieve that, though... we could also log a more verbose error
-message to the kernel log, but that's not necessarily where a user will
-look first.
+I think we need to remove CPU which we IPI_STOP from
+idle_cpus_mask. So then scheduler won't pick up stopped
+CPUs (cpumask_first(nohz.idle_cpus_mask)) and attempt
+rescheduling to them. It seems that currently
+native_stop_other_cpus() doesn't do that.
 
-Ideally, we'd want to have the user space program setting up things
-querying the general compatibility for migration (so that it becomes
-their problem on how to alert the user to problems :), but I'm not sure
-how to eliminate the race between asking the vendor driver for
-compatibility and getting the result of that operation.
-
-Unless we introduce an interface that can retrieve _all_ results
-together with the written value? Or is that not going to be much of a
-problem in practice?
+	-ss
