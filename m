@@ -2,90 +2,69 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FABC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDF7C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09B902177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:36:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aa7n+JxO"
+	by mail.kernel.org (Postfix) with ESMTP id 41E0C216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfEJQgV (ORCPT
+        id S1727772AbfEJQil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:36:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51372 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfEJQgV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:36:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=b/JhnmzdXvcZzBwouxXoQxGy1LUWG9vrwQ6s+nGq3oI=; b=aa7n+JxOP4GJyt+6e9t186rvV
-        ZLNOAx0QcDgAMax2GMB3YAFR2nvjovRMNFHsqMoqrw7bksP5Q8t57AlEyhctFD8PzdKtfIZxNHlhk
-        BrX2diNGkIneThNr0j/li+YDar0K9CwzwSzMjRNI7W+Txv4AWT/oCeGKEGoBxCafblJbgmvzstPVA
-        30TskXHyRLMWWBNBqfYi9PHfso3dkPLNR5XffHnIz7m43cbLaBTst9Kf/A9/zzwKrOG2FJqqc30DE
-        YXtWqLHH6vgBfoqm12GBjjebNEbUh6DPDhKHlp48pY78sCZhOkd4aV3aHiXiSQcBrDo9Uyo4bZNRj
-        uw3aSHlXQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hP8VJ-0007RN-1p; Fri, 10 May 2019 16:36:13 +0000
-Date:   Fri, 10 May 2019 09:36:12 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-Message-ID: <20190510163612.GA23417@bombadil.infradead.org>
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y33fjbvr.fsf@yhuang-dev.intel.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+        Fri, 10 May 2019 12:38:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727496AbfEJQil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:38:41 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D817021479;
+        Fri, 10 May 2019 16:38:40 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1hP8Xf-0004lt-VX; Fri, 10 May 2019 12:38:39 -0400
+Message-Id: <20190510163519.794235443@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Fri, 10 May 2019 12:35:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: [RFC][PATCH 0/2 v2] tracing/x86_32: Remove non DYNAMIC_FTRACE and mcount support
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 10:12:40AM +0800, Huang, Ying wrote:
-> > +		nr_reclaimed += (1 << compound_order(page));
-> 
-> How about to change this to
-> 
-> 
->         nr_reclaimed += hpage_nr_pages(page);
+There's no need to support either DYNAMIC_FTRACE=n or mcount (non fentry)
+in x86_32. As the static tracing (DYNAMIC_FTRACE=n) does not support
+fentry, we can just remove it, as the static tracing is only around to
+test the static tracing in generic code as other architectures have it
+but not DYNAMIC_FTRACE.
 
-Please don't.  That embeds the knowledge that we can only swap out either 
-normal pages or THP sized pages.  I'm trying to make the VM capable of 
-supporting arbitrary-order pages, and this would be just one more place
-to fix.
+This will allow also allow us to remove klp_check_compiler_support()
+in later patches.
 
-I'm sympathetic to the "self documenting" argument.  My current tree has
-a patch in it:
+Steven Rostedt (VMware) (2):
+      ftrace/x86_32: Remove support for non DYNAMIC_FTRACE
+      ftrace/x86: Remove mcount support
 
-    mm: Introduce compound_nr
-    
-    Replace 1 << compound_order(page) with compound_nr(page).  Minor
-    improvements in readability.
-
-It goes along with this patch:
-
-    mm: Introduce page_size()
-
-    It's unnecessarily hard to find out the size of a potentially huge page.
-    Replace 'PAGE_SIZE << compound_order(page)' with page_size(page).
-
-Better suggestions on naming gratefully received.  I'm more happy with 
-page_size() than I am with compound_nr().  page_nr() gives the wrong
-impression; page_count() isn't great either.
+----
+ arch/x86/Kconfig                 | 11 ++++++
+ arch/x86/include/asm/ftrace.h    |  8 ++---
+ arch/x86/include/asm/livepatch.h |  3 --
+ arch/x86/kernel/ftrace_32.S      | 75 +++-------------------------------------
+ arch/x86/kernel/ftrace_64.S      | 28 +--------------
+ 5 files changed, 20 insertions(+), 105 deletions(-)
