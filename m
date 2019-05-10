@@ -2,93 +2,62 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B177C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B104C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169DE21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B59216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfEJQll (ORCPT
+        id S1727795AbfEJQnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:41:41 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13840 "EHLO mga12.intel.com"
+        Fri, 10 May 2019 12:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfEJQlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:41:40 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 09:41:40 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga004.fm.intel.com with ESMTP; 10 May 2019 09:41:35 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hP8aU-0005ve-6P; Fri, 10 May 2019 19:41:34 +0300
-Date:   Fri, 10 May 2019 19:41:34 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190510164134.GH9224@smile.fi.intel.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
+        id S1727496AbfEJQnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:43:18 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0680D21479;
+        Fri, 10 May 2019 16:43:16 +0000 (UTC)
+Date:   Fri, 10 May 2019 12:43:15 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [RFC][PATCH 0/2 v2] tracing/x86_32: Remove non DYNAMIC_FTRACE
+ and mcount support
+Message-ID: <20190510124315.3df0d4bb@gandalf.local.home>
+In-Reply-To: <20190510163519.794235443@goodmis.org>
+References: <20190510163519.794235443@goodmis.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510122401.21a598f6@gandalf.local.home>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 12:24:01PM -0400, Steven Rostedt wrote:
-> On Fri, 10 May 2019 10:42:13 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> 
-> >  static const char *check_pointer_msg(const void *ptr)
-> >  {
-> > -	char byte;
-> > -
-> >  	if (!ptr)
-> >  		return "(null)";
-> >  
-> > -	if (probe_kernel_address(ptr, byte))
-> > +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
-> >  		return "(efault)";
-> >  
-> 
-> 
-> 	< PAGE_SIZE ?
-> 
-> do you mean: < TASK_SIZE ?
+On Fri, 10 May 2019 12:35:19 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Original code used PAGE_SIZE. If it needs to be changed, that it might be a
-separate explanation / patch.
+> This will allow also allow us to remove klp_check_compiler_support()
 
--- 
-With Best Regards,
-Andy Shevchenko
+One writes sentences like the above when someone walks in and asks a
+question in the middle of writing a sentence.
 
-
+-- Steve
