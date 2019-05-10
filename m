@@ -2,1269 +2,1550 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A127BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF146C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40700217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:39:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QFLs8/sy"
+	by mail.kernel.org (Postfix) with ESMTP id 386B9217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557517224;
+	bh=GyLRaUYh2a7xXHL/9WwhDQck71Sh32j+ncAAVmkq1Ts=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=Otunsip/hE+AcjqG5s6yioauS0MxHG4928ESN271ryNnjTNCdEeQFjw2kOlkkgoaB
+	 4FfOTGl2ZakxQl9EnHR8aJI2VVQaGo0gOPHURfHTvZUadeOPs1beaESo5IJza0jY3V
+	 ykQoFiLpSriACwX4Kw1omLwG8jSwwsv2x1Sc/iAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfEJTjj (ORCPT
+        id S1727885AbfEJTkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 15:39:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34187 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfEJTji (ORCPT
+        Fri, 10 May 2019 15:40:23 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45736 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbfEJTkW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 15:39:38 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n19so3755284pfa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 12:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kVizBYwaHURYSI0KhoB4+NwZaALLEJ9C+B4am8PZevc=;
-        b=QFLs8/syjoDsPtDfMoG0kuoig+UTmIcF46TtuS3tBaIMH7hbLQAbXHGFn0Wy5cCIIn
-         Vue6kJ+hsAkrDj1DOcgW92SiPHK9+qlZVzc5sYL0ufLADoF9qjbnWGELGNBF9FZ5aSsD
-         pO9BwWZTyQnmoSHj4FJJk5fCVciXdBWsS3hSd6fgm6dvmcPuEiVd/5xAvuYrV3rGS6ud
-         eA8D6rm8E4HwsBkn8RWlQ0qjFmgxHZvWUakQI5RwbLz2wc8Y6g76Cq9CDbds+EtLfUvG
-         9IeXYgOxRztvZmlwFWcZfN+CBVi8Pny87R0tPzu0kCqY1NHtzY0l0+dU+IAQ2ZEFc5Rt
-         oO/w==
+        Fri, 10 May 2019 15:40:22 -0400
+Received: by mail-oi1-f193.google.com with SMTP id u3so5339948oic.12;
+        Fri, 10 May 2019 12:40:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kVizBYwaHURYSI0KhoB4+NwZaALLEJ9C+B4am8PZevc=;
-        b=fKiMW49d/qGqkOh/+N7oN6GcdaLtO3gUw7uEHu3ccaDE26p1Np8VyRP88MEEke3BEl
-         mWPm+onen+4FOa+DsxCvKi63K5jFbxgcasd5vIG9uVFZ3+e2haZum8q4CQp/jX3jbz6e
-         20MDEi76FT8VRbuyTFyBA5fAqUmBtzm8MtcuC/rbHd1PIDuKzHcNsOXUsdsCn+CReiJJ
-         n2w0Y+WrgtRReBRFdAQKbbYdmrKIVlPRjxYwicSPpKNlKpFCRby+QXHPvunefV+dcmTV
-         f49Pam8hJIibKsk1jBlrDAS62CFxIxk3AM10xA39EtE2OeEaVB327cMO/giGE8OXO4V9
-         hhSA==
-X-Gm-Message-State: APjAAAUQEDImjxK08r33j3dxLLXLboWoJ/pJFEpkqdR6sKPAQLHrdWiO
-        ndUDv6ndilcPgCyjDicj5xU=
-X-Google-Smtp-Source: APXvYqwRvBHLrVJVpOHAE08tAexPNq2tdLFBgTpKPQaQ7x9AE9UPEyPWHGRMiW65KehQlxHclF/VNQ==
-X-Received: by 2002:a62:d44a:: with SMTP id u10mr16411638pfl.227.1557517176434;
-        Fri, 10 May 2019 12:39:36 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.70.207])
-        by smtp.gmail.com with ESMTPSA id k14sm14179789pfj.171.2019.05.10.12.39.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 12:39:35 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH] Staging: kpc2000: kpc_dma: resolve checkpath errors and warnings
-Date:   Sat, 11 May 2019 01:08:33 +0530
-Message-Id: <20190510193833.1051-1-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ql94wJIYm9OXOKywkUeRhZdTGBvAm+fyP1vA9Ds/QgA=;
+        b=aLnbz8DEGDJfZ650IgAPaXbxxWPtWyZeLAd9bpnv4A/K0DDjKahhasDrMtqWX0mdXB
+         Re0kCo3eW+A4tAuqESY0PScGwUz8NiYh8qGpRh0dT2N5ZC0nqod78W4waRlnUTb4siU3
+         o88a+MzkBpHwrdDGC046Js4WdmfK4OkBI86DJYHSo7BOC7EWLZfQUBDOmd4oDynUakVm
+         uWzLTM2XMgO9fVrBcv2/QOA9pt/Fx0KgvtJAexwnUQx3C5Ry+v3XPAPhxWB5QwP3ApxP
+         Fuzf+JM93wKZYAdI9dq6iMENXznUSNBdT093/gBiOq5IWjvRsV/kJzblTa+3PZNcjVwe
+         uqTw==
+X-Gm-Message-State: APjAAAW99BkYVUXwBwdkRhPYCykagesx/WY7+aJ86WP3qXqv2CxsZvVG
+        zOce+ynnQY57qqQyRsmKQ2g17QE=
+X-Google-Smtp-Source: APXvYqxESV+qDQRZFGENN9AHivydfGgaXNT2YxZB35lwYuy9xSg8A6sSPBq8lw1BtVZTmYky8szOeg==
+X-Received: by 2002:aca:df44:: with SMTP id w65mr5873205oig.66.1557517220218;
+        Fri, 10 May 2019 12:40:20 -0700 (PDT)
+Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.googlemail.com with ESMTPSA id a60sm2426438otb.56.2019.05.10.12.40.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 10 May 2019 12:40:19 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: Convert vendor prefixes to json-schema
+Date:   Fri, 10 May 2019 14:40:18 -0500
+Message-Id: <20190510194018.28206-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch resolves coding style errors and warnings reported by chechpatch
+Convert the vendor prefix registry to a schema. This will enable checking
+that new vendor prefixes are added (in addition to the less than perfect
+checkpatch.pl check) and will also check against adding other prefixes
+which are not vendors.
 
-ERROR: "(foo*)" should be "(foo *)"
-ERROR: trailing whitespace
-ERROR: space required before the open brace '{'
-ERROR: "foo * bar" should be "foo *bar"
-ERROR: space prohibited after that '!' (ctx:BxW)
-ERROR: space prohibited after that open parenthesis '('
-ERROR: switch and case should be at the same indent
-ERROR: trailing statements should be on next line
-ERROR: Macros with complex values should be enclosed in parentheses
-ERROR: "foo __init  bar" should be "foo __init bar"
-ERROR: "foo __exit  bar" should be "foo __exit bar"
-WARNING: Missing a blank line after declarations
-WARNING: Prefer using '"%s...", __func__' to using function's name, in a string
-WARNING: braces {} are not necessary for any arm of this statement
-WARNING: unnecessary cast may hide bugs
-WARNING: braces {} are not necessary for single statement
-WARNING: struct file_operations should normally be const
-WARNING: labels should not be indented
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
+Converted vendor-prefixes.txt using the following sed script:
+
+sed -e 's/\([a-zA-Z0-9\-]*\)[[:space:]]*\([a-zA-Z0-9].*\)/  "^\1,\.\*\":\n    description: \2/'
+
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/staging/kpc2000/kpc_dma/dma.c         | 137 +++++------
- drivers/staging/kpc2000/kpc_dma/fileops.c     | 220 +++++++++---------
- .../staging/kpc2000/kpc_dma/kpc_dma_driver.c  | 121 +++++-----
- .../staging/kpc2000/kpc_dma/kpc_dma_driver.h  |  32 +--
- 4 files changed, 265 insertions(+), 245 deletions(-)
+As vendor prefix updates come in via multiple trees, I plan to merge 
+this before -rc1 to avoid cross tree conflicts.
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/dma.c b/drivers/staging/kpc2000/kpc_dma/dma.c
-index 6959bac11388..e7967f3089c2 100644
---- a/drivers/staging/kpc2000/kpc_dma/dma.c
-+++ b/drivers/staging/kpc2000/kpc_dma/dma.c
-@@ -14,11 +14,11 @@
- static
- irqreturn_t  ndd_irq_handler(int irq, void *dev_id)
- {
--	struct kpc_dma_device *ldev = (struct kpc_dma_device*)dev_id;
--	
-+	struct kpc_dma_device *ldev = (struct kpc_dma_device *)dev_id;
-+
- 	if ((GetEngineControl(ldev) & ENG_CTL_IRQ_ACTIVE) || (ldev->desc_completed->MyDMAAddr != GetEngineCompletePtr(ldev)))
- 		schedule_work(&ldev->irq_work);
--	
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -28,42 +28,42 @@ void  ndd_irq_worker(struct work_struct *ws)
- 	struct kpc_dma_descriptor *cur;
- 	struct kpc_dma_device *eng = container_of(ws, struct kpc_dma_device, irq_work);
- 	lock_engine(eng);
--	
-+
- 	if (GetEngineCompletePtr(eng) == 0)
- 		goto out;
--	
-+
- 	if (eng->desc_completed->MyDMAAddr == GetEngineCompletePtr(eng))
- 		goto out;
--	
-+
- 	cur = eng->desc_completed;
- 	do {
- 		cur = cur->Next;
- 		dev_dbg(&eng->pldev->dev, "Handling completed descriptor %p (acd = %p)\n", cur, cur->acd);
- 		BUG_ON(cur == eng->desc_next); // Ordering failure.
--		
--		if (cur->DescControlFlags & DMA_DESC_CTL_SOP){
-+
-+		if (cur->DescControlFlags & DMA_DESC_CTL_SOP) {
- 			eng->accumulated_bytes = 0;
- 			eng->accumulated_flags = 0;
- 		}
--		
-+
- 		eng->accumulated_bytes += cur->DescByteCount;
- 		if (cur->DescStatusFlags & DMA_DESC_STS_ERROR)
- 			eng->accumulated_flags |= ACD_FLAG_ENG_ACCUM_ERROR;
--		
-+
- 		if (cur->DescStatusFlags & DMA_DESC_STS_SHORT)
- 			eng->accumulated_flags |= ACD_FLAG_ENG_ACCUM_SHORT;
--		
--		if (cur->DescControlFlags & DMA_DESC_CTL_EOP){
-+
-+		if (cur->DescControlFlags & DMA_DESC_CTL_EOP) {
- 			if (cur->acd)
- 				transfer_complete_cb(cur->acd, eng->accumulated_bytes, eng->accumulated_flags | ACD_FLAG_DONE);
- 		}
--		
-+
- 		eng->desc_completed = cur;
- 	} while (cur->MyDMAAddr != GetEngineCompletePtr(eng));
--	
-+
-  out:
- 	SetClearEngineControl(eng, ENG_CTL_IRQ_ACTIVE, 0);
--	
-+
- 	unlock_engine(eng);
- }
- 
-@@ -73,171 +73,172 @@ void  start_dma_engine(struct kpc_dma_device *eng)
- {
- 	eng->desc_next       = eng->desc_pool_first;
- 	eng->desc_completed  = eng->desc_pool_last;
--	
-+
- 	// Setup the engine pointer registers
- 	SetEngineNextPtr(eng, eng->desc_pool_first);
- 	SetEngineSWPtr(eng, eng->desc_pool_first);
- 	ClearEngineCompletePtr(eng);
--	
-+
- 	WriteEngineControl(eng, ENG_CTL_DMA_ENABLE | ENG_CTL_IRQ_ENABLE);
- }
- 
- int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
- {
- 	u32 caps;
--	struct kpc_dma_descriptor * cur;
--	struct kpc_dma_descriptor * next;
-+	struct kpc_dma_descriptor *cur;
-+	struct kpc_dma_descriptor *next;
- 	dma_addr_t next_handle;
- 	dma_addr_t head_handle;
- 	unsigned int i;
- 	int rv;
-+
- 	dev_dbg(&eng->pldev->dev, "Setting up DMA engine [%p]\n", eng);
--	
-+
- 	caps = GetEngineCapabilities(eng);
--	
--	if (WARN(!(caps & ENG_CAP_PRESENT), "setup_dma_engine() called for DMA Engine at %p which isn't present in hardware!\n", eng))
-+
-+	if (WARN(!(caps & ENG_CAP_PRESENT), "%s() called for DMA Engine at  %p which isn't present in hardware!\n", __func__, eng))
- 		return -ENXIO;
--	
--	if (caps & ENG_CAP_DIRECTION){
-+
-+	if (caps & ENG_CAP_DIRECTION)
- 		eng->dir = DMA_FROM_DEVICE;
--	} else {
-+	else
- 		eng->dir = DMA_TO_DEVICE;
--	}
--	
-+
- 	eng->desc_pool_cnt = desc_cnt;
- 	eng->desc_pool = dma_pool_create("KPC DMA Descriptors", &eng->pldev->dev, sizeof(struct kpc_dma_descriptor), DMA_DESC_ALIGNMENT, 4096);
--	
-+
- 	eng->desc_pool_first = dma_pool_alloc(eng->desc_pool, GFP_KERNEL | GFP_DMA, &head_handle);
--	if (!eng->desc_pool_first){
--		dev_err(&eng->pldev->dev, "setup_dma_engine: couldn't allocate desc_pool_first!\n");
-+	if (!eng->desc_pool_first) {
-+		dev_err(&eng->pldev->dev, "%s: couldn't allocate desc_pool_first!\n", __func__);
- 		dma_pool_destroy(eng->desc_pool);
- 		return -ENOMEM;
- 	}
--	
-+
- 	eng->desc_pool_first->MyDMAAddr = head_handle;
- 	clear_desc(eng->desc_pool_first);
--	
-+
- 	cur = eng->desc_pool_first;
--	for (i = 1 ; i < eng->desc_pool_cnt ; i++){
-+	for (i = 1 ; i < eng->desc_pool_cnt ; i++) {
- 		next = dma_pool_alloc(eng->desc_pool, GFP_KERNEL | GFP_DMA, &next_handle);
--		if (next == NULL)
-+		if (!next)
- 			goto done_alloc;
--		
-+
- 		clear_desc(next);
- 		next->MyDMAAddr = next_handle;
--		
-+
- 		cur->DescNextDescPtr = next_handle;
- 		cur->Next = next;
- 		cur = next;
- 	}
--	
-+
-  done_alloc:
- 	// Link the last descriptor back to the first, so it's a circular linked list
- 	cur->Next = eng->desc_pool_first;
- 	cur->DescNextDescPtr = eng->desc_pool_first->MyDMAAddr;
--	
-+
- 	eng->desc_pool_last = cur;
- 	eng->desc_completed = eng->desc_pool_last;
--	
-+
- 	// Setup work queue
- 	INIT_WORK(&eng->irq_work, ndd_irq_worker);
--	
-+
- 	// Grab IRQ line
- 	rv = request_irq(eng->irq, ndd_irq_handler, IRQF_SHARED, KP_DRIVER_NAME_DMA_CONTROLLER, eng);
--	if (rv){
--		dev_err(&eng->pldev->dev, "setup_dma_engine: failed to request_irq: %d\n", rv);
-+	if (rv) {
-+		dev_err(&eng->pldev->dev, "%s: failed to request_irq: %d\n", __func__, rv);
- 		return rv;
- 	}
--	
-+
- 	// Turn on the engine!
- 	start_dma_engine(eng);
- 	unlock_engine(eng);
--	
-+
- 	return 0;
- }
- 
- void  stop_dma_engine(struct kpc_dma_device *eng)
- {
- 	unsigned long timeout;
-+
- 	dev_dbg(&eng->pldev->dev, "Destroying DMA engine [%p]\n", eng);
--	
- 	// Disable the descriptor engine
- 	WriteEngineControl(eng, 0);
--	
-+
- 	// Wait for descriptor engine to finish current operaion
- 	timeout = jiffies + (HZ / 2);
--	while (GetEngineControl(eng) & ENG_CTL_DMA_RUNNING){
--		if (time_after(jiffies, timeout)){
-+	while (GetEngineControl(eng) & ENG_CTL_DMA_RUNNING) {
-+		if (time_after(jiffies, timeout)) {
- 			dev_crit(&eng->pldev->dev, "DMA_RUNNING still asserted!\n");
- 			break;
- 		}
- 	}
--	
-+
- 	// Request a reset
- 	WriteEngineControl(eng, ENG_CTL_DMA_RESET_REQUEST);
--	
-+
- 	// Wait for reset request to be processed
- 	timeout = jiffies + (HZ / 2);
--	while (GetEngineControl(eng) & (ENG_CTL_DMA_RUNNING | ENG_CTL_DMA_RESET_REQUEST)){
--		if (time_after(jiffies, timeout)){
-+	while (GetEngineControl(eng) & (ENG_CTL_DMA_RUNNING | ENG_CTL_DMA_RESET_REQUEST)) {
-+		if (time_after(jiffies, timeout)) {
- 			dev_crit(&eng->pldev->dev, "ENG_CTL_DMA_RESET_REQUEST still asserted!\n");
- 			break;
- 		}
- 	}
--	
-+
- 	// Request a reset
- 	WriteEngineControl(eng, ENG_CTL_DMA_RESET);
--	
-+
- 	// And wait for reset to complete
- 	timeout = jiffies + (HZ / 2);
--	while (GetEngineControl(eng) & ENG_CTL_DMA_RESET){
--		if (time_after(jiffies, timeout)){
-+	while (GetEngineControl(eng) & ENG_CTL_DMA_RESET) {
-+		if (time_after(jiffies, timeout)) {
- 			dev_crit(&eng->pldev->dev, "DMA_RESET still asserted!\n");
- 			break;
- 		}
- 	}
--	
-+
- 	// Clear any persistent bits just to make sure there is no residue from the reset
- 	SetClearEngineControl(eng, (ENG_CTL_IRQ_ACTIVE | ENG_CTL_DESC_COMPLETE | ENG_CTL_DESC_ALIGN_ERR | ENG_CTL_DESC_FETCH_ERR | ENG_CTL_SW_ABORT_ERR | ENG_CTL_DESC_CHAIN_END | ENG_CTL_DMA_WAITING_PERSIST), 0);
--	
-+
- 	// Reset performance counters
--	
-+
- 	// Completely disable the engine
- 	WriteEngineControl(eng, 0);
- }
- 
- void  destroy_dma_engine(struct kpc_dma_device *eng)
- {
--	struct kpc_dma_descriptor * cur;
-+	struct kpc_dma_descriptor *cur;
- 	dma_addr_t cur_handle;
- 	unsigned int i;
--	
-+
- 	stop_dma_engine(eng);
--	
-+
- 	cur = eng->desc_pool_first;
- 	cur_handle = eng->desc_pool_first->MyDMAAddr;
--	
--	for (i = 0 ; i < eng->desc_pool_cnt ; i++){
-+
-+	for (i = 0 ; i < eng->desc_pool_cnt ; i++) {
- 		struct kpc_dma_descriptor *next = cur->Next;
- 		dma_addr_t next_handle = cur->DescNextDescPtr;
-+
- 		dma_pool_free(eng->desc_pool, cur, cur_handle);
- 		cur_handle = next_handle;
- 		cur = next;
- 	}
--	
-+
- 	dma_pool_destroy(eng->desc_pool);
--	
-+
- 	free_irq(eng->irq, eng);
- }
- 
- 
+ .../devicetree/bindings/vendor-prefixes.txt   | 476 ---------
+ .../devicetree/bindings/vendor-prefixes.yaml  | 975 ++++++++++++++++++
+ 2 files changed, 975 insertions(+), 476 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/vendor-prefixes.txt
+ create mode 100644 Documentation/devicetree/bindings/vendor-prefixes.yaml
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+deleted file mode 100644
+index e9034a6c003a..000000000000
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ /dev/null
+@@ -1,476 +0,0 @@
+-Device tree binding vendor prefix registry.  Keep list in alphabetical order.
 -
- /**********  Helper Functions  **********/
- int  count_descriptors_available(struct kpc_dma_device *eng)
- {
- 	u32 count = 0;
- 	struct kpc_dma_descriptor *cur = eng->desc_next;
--	while (cur != eng->desc_completed){
-+
-+	while (cur != eng->desc_completed) {
- 		BUG_ON(cur == NULL);
- 		count++;
- 		cur = cur->Next;
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index 5741d2b49a7d..db38f9c8e12a 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -21,6 +21,7 @@ unsigned int  count_pages(unsigned long iov_base, size_t iov_len)
- {
- 	unsigned long first = (iov_base             & PAGE_MASK) >> PAGE_SHIFT;
- 	unsigned long last  = ((iov_base+iov_len-1) & PAGE_MASK) >> PAGE_SHIFT;
-+
- 	return last - first + 1;
- }
- 
-@@ -28,7 +29,9 @@ static inline
- unsigned int  count_parts_for_sge(struct scatterlist *sg)
- {
- 	unsigned int sg_length = sg_dma_len(sg);
-+
- 	sg_length += (0x80000-1);
-+
- 	return (sg_length / 0x80000);
- }
- 
-@@ -50,20 +53,20 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 	u64 card_addr;
- 	u64 dma_addr;
- 	u64 user_ctl;
--	
-+
- 	BUG_ON(priv == NULL);
- 	ldev = priv->ldev;
- 	BUG_ON(ldev == NULL);
--	
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", priv, kcb, (void*)iov_base, iov_len, ldev);
--	
--	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
--	if (!acd){
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", __func__, priv, kcb, (void *)iov_base, iov_len, ldev);
-+
-+	acd = kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
-+	if (!acd) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
- 		return -ENOMEM;
- 	}
- 	memset(acd, 0x66, sizeof(struct aio_cb_data));
--	
-+
- 	acd->priv = priv;
- 	acd->ldev = priv->ldev;
- 	acd->cpl = &done;
-@@ -71,55 +74,55 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 	acd->kcb = kcb;
- 	acd->len = iov_len;
- 	acd->page_count = count_pages(iov_base, iov_len);
--	
-+
- 	// Allocate an array of page pointers
- 	acd->user_pages = kzalloc(sizeof(struct page *) * acd->page_count, GFP_KERNEL);
--	if (!acd->user_pages){
-+	if (!acd->user_pages) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the page pointers\n");
- 		rv = -ENOMEM;
- 		goto err_alloc_userpages;
- 	}
--	
-+
- 	// Lock the user buffer pages in memory, and hold on to the page pointers (for the sglist)
- 	down_read(&current->mm->mmap_sem);      /*  get memory map semaphore */
- 	rv = get_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE | FOLL_GET, acd->user_pages, NULL);
- 	up_read(&current->mm->mmap_sem);        /*  release the semaphore */
--	if (rv != acd->page_count){
-+	if (rv != acd->page_count) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't get_user_pages (%ld)\n", rv);
- 		goto err_get_user_pages;
- 	}
--	
-+
- 	// Allocate and setup the sg_table (scatterlist entries)
- 	rv = sg_alloc_table_from_pages(&acd->sgt, acd->user_pages, acd->page_count, iov_base & (PAGE_SIZE-1), iov_len, GFP_KERNEL);
--	if (rv){
-+	if (rv) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't alloc sg_table (%ld)\n", rv);
- 		goto err_alloc_sg_table;
- 	}
--	
-+
- 	// Setup the DMA mapping for all the sg entries
- 	acd->mapped_entry_count = dma_map_sg(&ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, ldev->dir);
--	if (acd->mapped_entry_count <= 0){
-+	if (acd->mapped_entry_count <= 0) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't dma_map_sg (%d)\n", acd->mapped_entry_count);
- 		goto err_dma_map_sg;
- 	}
- 
- 	// Calculate how many descriptors are actually needed for this transfer.
--	for_each_sg(acd->sgt.sgl, sg, acd->mapped_entry_count, i){
-+	for_each_sg(acd->sgt.sgl, sg, acd->mapped_entry_count, i) {
- 		desc_needed += count_parts_for_sge(sg);
- 	}
--	
-+
- 	lock_engine(ldev);
--	
-+
- 	// Figoure out how many descriptors are available and return an error if there aren't enough
- 	num_descrs_avail = count_descriptors_available(ldev);
- 	dev_dbg(&priv->ldev->pldev->dev, "    mapped_entry_count = %d    num_descrs_needed = %d    num_descrs_avail = %d\n", acd->mapped_entry_count, desc_needed, num_descrs_avail);
--	if (desc_needed >= ldev->desc_pool_cnt){
-+	if (desc_needed >= ldev->desc_pool_cnt) {
- 		dev_warn(&priv->ldev->pldev->dev, "    mapped_entry_count = %d    num_descrs_needed = %d    num_descrs_avail = %d    TOO MANY to ever complete!\n", acd->mapped_entry_count, desc_needed, num_descrs_avail);
- 		rv = -EAGAIN;
- 		unlock_engine(ldev);
- 		goto err_descr_too_many;
- 	}
--	if (desc_needed > num_descrs_avail){
-+	if (desc_needed > num_descrs_avail) {
- 		dev_warn(&priv->ldev->pldev->dev, "    mapped_entry_count = %d    num_descrs_needed = %d    num_descrs_avail = %d    Too many to complete right now.\n", acd->mapped_entry_count, desc_needed, num_descrs_avail);
- 		rv = -EMSGSIZE;
- 		unlock_engine(ldev);
-@@ -129,69 +132,69 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 	// Loop through all the sg table entries and fill out a descriptor for each one.
- 	desc = ldev->desc_next;
- 	card_addr = acd->priv->card_addr;
--	for_each_sg(acd->sgt.sgl, sg, acd->mapped_entry_count, i){
-+	for_each_sg(acd->sgt.sgl, sg, acd->mapped_entry_count, i) {
- 		pcnt = count_parts_for_sge(sg);
--		for (p = 0 ; p < pcnt ; p++){
-+		for (p = 0 ; p < pcnt ; p++) {
- 			// Fill out the descriptor
- 			BUG_ON(desc == NULL);
- 			clear_desc(desc);
--			if (p != pcnt-1){
-+			if (p != pcnt-1) {
- 				desc->DescByteCount = 0x80000;
- 			} else {
- 				desc->DescByteCount = sg_dma_len(sg) - (p * 0x80000);
- 			}
- 			desc->DescBufferByteCount = desc->DescByteCount;
--			
-+
- 			desc->DescControlFlags |= DMA_DESC_CTL_IRQONERR;
- 			if (i == 0 && p == 0)
- 				desc->DescControlFlags |= DMA_DESC_CTL_SOP;
- 			if (i == acd->mapped_entry_count-1 && p == pcnt-1)
- 				desc->DescControlFlags |= DMA_DESC_CTL_EOP | DMA_DESC_CTL_IRQONDONE;
--			
-+
- 			desc->DescCardAddrLS = (card_addr & 0xFFFFFFFF);
- 			desc->DescCardAddrMS = (card_addr >> 32) & 0xF;
- 			card_addr += desc->DescByteCount;
--			
-+
- 			dma_addr  = sg_dma_address(sg) + (p * 0x80000);
- 			desc->DescSystemAddrLS = (dma_addr & 0x00000000FFFFFFFF) >>  0;
- 			desc->DescSystemAddrMS = (dma_addr & 0xFFFFFFFF00000000) >> 32;
--			
-+
- 			user_ctl = acd->priv->user_ctl;
--			if (i == acd->mapped_entry_count-1 && p == pcnt-1){
-+			if (i == acd->mapped_entry_count-1 && p == pcnt-1) {
- 				user_ctl = acd->priv->user_ctl_last;
- 			}
- 			desc->DescUserControlLS = (user_ctl & 0x00000000FFFFFFFF) >>  0;
- 			desc->DescUserControlMS = (user_ctl & 0xFFFFFFFF00000000) >> 32;
--			
-+
- 			if (i == acd->mapped_entry_count-1 && p == pcnt-1)
- 				desc->acd = acd;
--			
-+
- 			dev_dbg(&priv->ldev->pldev->dev, "  Filled descriptor %p (acd = %p)\n", desc, desc->acd);
--			
-+
- 			ldev->desc_next = desc->Next;
- 			desc = desc->Next;
- 		}
- 	}
--	
-+
- 	// Send the filled descriptors off to the hardware to process!
- 	SetEngineSWPtr(ldev, ldev->desc_next);
--	
-+
- 	unlock_engine(ldev);
--	
-+
- 	// If this is a synchronous kiocb, we need to put the calling process to sleep until the transfer is complete
--	if (kcb == NULL || is_sync_kiocb(kcb)){
-+	if (kcb == NULL || is_sync_kiocb(kcb)) {
- 		rv = wait_for_completion_interruptible(&done);
- 		// If the user aborted (rv == -ERESTARTSYS), we're no longer responsible for cleaning up the acd
--		if (rv == -ERESTARTSYS){
-+		if (rv == -ERESTARTSYS)
- 			acd->cpl = NULL;
--		}
--		if (rv == 0){
-+
-+		if (rv == 0) {
- 			rv = acd->len;
- 			kfree(acd);
- 		}
- 		return rv;
- 	}
--	
-+
- 	return -EIOCBQUEUED;
- 
-  err_descr_too_many:
-@@ -200,49 +203,48 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 	sg_free_table(&acd->sgt);
-  err_dma_map_sg:
-  err_alloc_sg_table:
--	for (i = 0 ; i < acd->page_count ; i++){
-+	for (i = 0 ; i < acd->page_count ; i++) {
- 		put_page(acd->user_pages[i]);
- 	}
-  err_get_user_pages:
- 	kfree(acd->user_pages);
-  err_alloc_userpages:
- 	kfree(acd);
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer returning with error %ld\n", rv);
-+	dev_dbg(&priv->ldev->pldev->dev, "%s returning with error %ld\n", __func__, rv);
- 	return rv;
- }
- 
- void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
- {
- 	unsigned int i;
--	
-+
- 	BUG_ON(acd == NULL);
- 	BUG_ON(acd->user_pages == NULL);
- 	BUG_ON(acd->sgt.sgl == NULL);
- 	BUG_ON(acd->ldev == NULL);
- 	BUG_ON(acd->ldev->pldev == NULL);
--	
--	dev_dbg(&acd->ldev->pldev->dev, "transfer_complete_cb(acd = [%p])\n", acd);
--	
--	for (i = 0 ; i < acd->page_count ; i++){
--		if (!PageReserved(acd->user_pages[i])){
-+
-+	dev_dbg(&acd->ldev->pldev->dev, "%s(acd = [%p])\n", __func__, acd);
-+
-+	for (i = 0 ; i < acd->page_count ; i++) {
-+		if (!PageReserved(acd->user_pages[i]))
- 			set_page_dirty(acd->user_pages[i]);
--		}
- 	}
--	
-+
- 	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
--	
--	for (i = 0 ; i < acd->page_count ; i++){
-+
-+	for (i = 0 ; i < acd->page_count ; i++) {
- 		put_page(acd->user_pages[i]);
- 	}
--	
-+
- 	sg_free_table(&acd->sgt);
--	
-+
- 	kfree(acd->user_pages);
--	
-+
- 	acd->flags = flags;
--	
--	if (acd->kcb == NULL || is_sync_kiocb(acd->kcb)){
--		if (acd->cpl){
-+
-+	if (acd->kcb == NULL || is_sync_kiocb(acd->kcb)) {
-+		if (acd->cpl) {
- 			complete(acd->cpl);
- 		} else {
- 			// There's no completion, so we're responsible for cleaning up the acd
-@@ -262,22 +264,23 @@ int  kpc_dma_open(struct inode *inode, struct file *filp)
- {
- 	struct dev_private_data *priv;
- 	struct kpc_dma_device *ldev = kpc_dma_lookup_device(iminor(inode));
-+
- 	if (ldev == NULL)
- 		return -ENODEV;
--	
--	if (! atomic_dec_and_test(&ldev->open_count)){
-+
-+	if (!atomic_dec_and_test(&ldev->open_count)) {
- 		atomic_inc(&ldev->open_count);
- 		return -EBUSY; /* already open */
- 	}
--	
-+
- 	priv = kzalloc(sizeof(struct dev_private_data), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
--	
-+
- 	priv->ldev = ldev;
- 	filp->private_data = priv;
--	
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_open(inode = [%p], filp = [%p]) priv = [%p] ldev = [%p]\n", inode, filp, priv, priv->ldev);
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(inode = [%p], filp = [%p]) priv = [%p] ldev = [%p]\n", __func__, inode, filp, priv, priv->ldev);
- 	return 0;
- }
- 
-@@ -287,30 +290,30 @@ int  kpc_dma_close(struct inode *inode, struct file *filp)
- 	struct kpc_dma_descriptor *cur;
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
- 	struct kpc_dma_device *eng = priv->ldev;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_close(inode = [%p], filp = [%p]) priv = [%p], ldev = [%p]\n", inode, filp, priv, priv->ldev);
--	
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(inode = [%p], filp = [%p]) priv = [%p], ldev = [%p]\n", __func__, inode, filp, priv, priv->ldev);
-+
- 	lock_engine(eng);
--	
-+
- 	stop_dma_engine(eng);
--	
-+
- 	cur = eng->desc_completed->Next;
--	while (cur != eng->desc_next){
-+	while (cur != eng->desc_next) {
- 		dev_dbg(&eng->pldev->dev, "Aborting descriptor %p (acd = %p)\n", cur, cur->acd);
--		if (cur->DescControlFlags & DMA_DESC_CTL_EOP){
-+		if (cur->DescControlFlags & DMA_DESC_CTL_EOP) {
- 			if (cur->acd)
- 				transfer_complete_cb(cur->acd, 0, ACD_FLAG_ABORT);
- 		}
--		
-+
- 		clear_desc(cur);
- 		eng->desc_completed = cur;
--		
- 		cur = cur->Next;
- 	}
--	
-+
- 	start_dma_engine(eng);
--	
-+
- 	unlock_engine(eng);
--	
-+
- 	atomic_inc(&priv->ldev->open_count); /* release the device */
- 	kfree(priv);
- 	return 0;
-@@ -321,7 +324,8 @@ static
- int  kpc_dma_aio_cancel(struct kiocb *kcb)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_cancel(kcb = [%p]) priv = [%p], ldev = [%p]\n", kcb, priv, priv->ldev);
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p]) priv = [%p], ldev = [%p]\n", __func__, kcb, priv, priv->ldev);
- 	return 0;
- }
- 
-@@ -329,16 +333,17 @@ static
- ssize_t   kpc_dma_aio_read(struct kiocb *kcb, const struct iovec *iov, unsigned long iov_count, loff_t pos)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_read(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
--	
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", __func__, kcb, iov, iov_count, pos, priv, priv->ldev);
-+
- 	if (priv->ldev->dir != DMA_FROM_DEVICE)
- 		return -EMEDIUMTYPE;
--	
--	if (iov_count != 1){
--		dev_err(&priv->ldev->pldev->dev, "kpc_dma_aio_read() called with iov_count > 1!\n");
-+
-+	if (iov_count != 1) {
-+		dev_err(&priv->ldev->pldev->dev, "%s() called with iov_count > 1!\n", __func__);
- 		return -EFAULT;
- 	}
--	
-+
- 	if (!is_sync_kiocb(kcb))
- 		kiocb_set_cancel_fn(kcb, kpc_dma_aio_cancel);
- 	return kpc_dma_transfer(priv, kcb, (unsigned long)iov->iov_base, iov->iov_len);
-@@ -348,16 +353,17 @@ static
- ssize_t  kpc_dma_aio_write(struct kiocb *kcb, const struct iovec *iov, unsigned long iov_count, loff_t pos)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_write(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
--	
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", __func__, kcb, iov, iov_count, pos, priv, priv->ldev);
-+
- 	if (priv->ldev->dir != DMA_TO_DEVICE)
- 		return -EMEDIUMTYPE;
--	
--	if (iov_count != 1){
--		dev_err(&priv->ldev->pldev->dev, "kpc_dma_aio_write() called with iov_count > 1!\n");
-+
-+	if (iov_count != 1) {
-+		dev_err(&priv->ldev->pldev->dev, "%s() called with iov_count > 1!\n", __func__);
- 		return -EFAULT;
- 	}
--	
-+
- 	if (!is_sync_kiocb(kcb))
- 		kiocb_set_cancel_fn(kcb, kpc_dma_aio_cancel);
- 	return kpc_dma_transfer(priv, kcb, (unsigned long)iov->iov_base, iov->iov_len);
-@@ -365,14 +371,15 @@ ssize_t  kpc_dma_aio_write(struct kiocb *kcb, const struct iovec *iov, unsigned
- #endif
- 
- static
--ssize_t  kpc_dma_read( struct file *filp,       char __user *user_buf, size_t count, loff_t *ppos)
-+ssize_t  kpc_dma_read(struct file *filp,       char __user *user_buf, size_t count, loff_t *ppos)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_read(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
--	
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", __func__, filp, user_buf, count, ppos, priv, priv->ldev);
-+
- 	if (priv->ldev->dir != DMA_FROM_DEVICE)
- 		return -EMEDIUMTYPE;
--	
-+
- 	return kpc_dma_transfer(priv, (struct kiocb *)NULL, (unsigned long)user_buf, count);
- }
- 
-@@ -380,11 +387,12 @@ static
- ssize_t  kpc_dma_write(struct file *filp, const char __user *user_buf, size_t count, loff_t *ppos)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_write(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
--	
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", __func__, filp, user_buf, count, ppos, priv, priv->ldev);
-+
- 	if (priv->ldev->dir != DMA_TO_DEVICE)
- 		return -EMEDIUMTYPE;
--	
-+
- 	return kpc_dma_transfer(priv, (struct kiocb *)NULL, (unsigned long)user_buf, count);
- }
- 
-@@ -392,20 +400,24 @@ static
- long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioctl_param)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
--	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_ioctl(filp = [%p], ioctl_num = 0x%x, ioctl_param = 0x%lx) priv = [%p], ldev = [%p]\n", filp, ioctl_num, ioctl_param, priv, priv->ldev);
--	
--	switch (ioctl_num){
--		case KND_IOCTL_SET_CARD_ADDR:           priv->card_addr  = ioctl_param; return priv->card_addr; 
--		case KND_IOCTL_SET_USER_CTL:            priv->user_ctl   = ioctl_param; return priv->user_ctl; 
--		case KND_IOCTL_SET_USER_CTL_LAST:       priv->user_ctl_last = ioctl_param; return priv->user_ctl_last; 
--		case KND_IOCTL_GET_USER_STS:            return priv->user_sts;
-+
-+	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], ioctl_num = 0x%x, ioctl_param = 0x%lx) priv = [%p], ldev = [%p]\n", __func__, filp, ioctl_num, ioctl_param, priv, priv->ldev);
-+
-+	switch (ioctl_num) {
-+	case KND_IOCTL_SET_CARD_ADDR:
-+		priv->card_addr  = ioctl_param; return priv->card_addr;
-+	case KND_IOCTL_SET_USER_CTL:
-+		priv->user_ctl   = ioctl_param; return priv->user_ctl;
-+	case KND_IOCTL_SET_USER_CTL_LAST:
-+		priv->user_ctl_last = ioctl_param; return priv->user_ctl_last;
-+	case KND_IOCTL_GET_USER_STS:
-+		return priv->user_sts;
- 	}
--	
-+
- 	return -ENOTTY;
- }
- 
+-This isn't an exhaustive list, but you should add new prefixes to it before
+-using them to avoid name-space collisions.
 -
--struct file_operations  kpc_dma_fops = {
-+const struct file_operations  kpc_dma_fops = {
- 	.owner      = THIS_MODULE,
- 	.open           = kpc_dma_open,
- 	.release        = kpc_dma_close,
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-index aeae58d9bc18..bbbd617b0e71 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-@@ -14,36 +14,35 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Matt.Sickler@daktronics.com");
- 
- #define KPC_DMA_CHAR_MAJOR    UNNAMED_MAJOR
--#define KPC_DMA_NUM_MINORS    1 << MINORBITS
-+#define KPC_DMA_NUM_MINORS    (1 << MINORBITS)
- static DEFINE_MUTEX(kpc_dma_mtx);
- static int assigned_major_num;
- static LIST_HEAD(kpc_dma_list);
- 
--
- /**********  kpc_dma_list list management  **********/
--struct kpc_dma_device *  kpc_dma_lookup_device(int minor)
-+struct kpc_dma_device *kpc_dma_lookup_device(int minor)
- {
- 	struct kpc_dma_device *c;
+-abilis	Abilis Systems
+-abracon	Abracon Corporation
+-actions	Actions Semiconductor Co., Ltd.
+-active-semi	Active-Semi International Inc
+-ad	Avionic Design GmbH
+-adafruit	Adafruit Industries, LLC
+-adapteva	Adapteva, Inc.
+-adaptrum	Adaptrum, Inc.
+-adh	AD Holdings Plc.
+-adi	Analog Devices, Inc.
+-advantech	Advantech Corporation
+-aeroflexgaisler	Aeroflex Gaisler AB
+-al	Annapurna Labs
+-allo	Allo.com
+-allwinner	Allwinner Technology Co., Ltd.
+-alphascale	AlphaScale Integrated Circuits Systems, Inc.
+-altr	Altera Corp.
+-amarula	Amarula Solutions
+-amazon	Amazon.com, Inc.
+-amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
+-amd	Advanced Micro Devices (AMD), Inc.
+-amediatech	Shenzhen Amediatech Technology Co., Ltd
+-amlogic	Amlogic, Inc.
+-ampire	Ampire Co., Ltd.
+-ams	AMS AG
+-amstaos	AMS-Taos Inc.
+-analogix	Analogix Semiconductor, Inc.
+-andestech	Andes Technology Corporation
+-apm	Applied Micro Circuits Corporation (APM)
+-aptina	Aptina Imaging
+-arasan	Arasan Chip Systems
+-archermind ArcherMind Technology (Nanjing) Co., Ltd.
+-arctic	Arctic Sand
+-arcx	arcx Inc. / Archronix Inc.
+-aries	Aries Embedded GmbH
+-arm	ARM Ltd.
+-armadeus	ARMadeus Systems SARL
+-arrow	Arrow Electronics
+-artesyn	Artesyn Embedded Technologies Inc.
+-asahi-kasei	Asahi Kasei Corp.
+-aspeed	ASPEED Technology Inc.
+-asus	AsusTek Computer Inc.
+-atlas	Atlas Scientific LLC
+-atmel	Atmel Corporation
+-auo	AU Optronics Corporation
+-auvidea Auvidea GmbH
+-avago	Avago Technologies
+-avia	avia semiconductor
+-avic	Shanghai AVIC Optoelectronics Co., Ltd.
+-avnet	Avnet, Inc.
+-axentia	Axentia Technologies AB
+-axis	Axis Communications AB
+-azoteq	Azoteq (Pty) Ltd
+-azw     Shenzhen AZW Technology Co., Ltd.
+-bananapi BIPAI KEJI LIMITED
+-bhf	Beckhoff Automation GmbH & Co. KG
+-bitmain	Bitmain Technologies
+-boe	BOE Technology Group Co., Ltd.
+-bosch	Bosch Sensortec GmbH
+-boundary	Boundary Devices Inc.
+-brcm	Broadcom Corporation
+-buffalo	Buffalo, Inc.
+-bticino Bticino International
+-calxeda	Calxeda
+-capella	Capella Microsystems, Inc
+-cascoda	Cascoda, Ltd.
+-catalyst	Catalyst Semiconductor, Inc.
+-cavium	Cavium, Inc.
+-cdns	Cadence Design Systems Inc.
+-cdtech	CDTech(H.K.) Electronics Limited
+-ceva	Ceva, Inc.
+-chipidea	Chipidea, Inc
+-chipone		ChipOne
+-chipspark	ChipSPARK
+-chrp	Common Hardware Reference Platform
+-chunghwa	Chunghwa Picture Tubes Ltd.
+-ciaa	Computadora Industrial Abierta Argentina
+-cirrus	Cirrus Logic, Inc.
+-cloudengines	Cloud Engines, Inc.
+-cnm	Chips&Media, Inc.
+-cnxt	Conexant Systems, Inc.
+-compulab	CompuLab Ltd.
+-cortina	Cortina Systems, Inc.
+-cosmic	Cosmic Circuits
+-crane	Crane Connectivity Solutions
+-creative	Creative Technology Ltd
+-crystalfontz	Crystalfontz America, Inc.
+-csky	Hangzhou C-SKY Microsystems Co., Ltd
+-cubietech	Cubietech, Ltd.
+-cypress	Cypress Semiconductor Corporation
+-cznic	CZ.NIC, z.s.p.o.
+-dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+-dataimage	DataImage, Inc.
+-davicom	DAVICOM Semiconductor, Inc.
+-delta	Delta Electronics, Inc.
+-denx	Denx Software Engineering
+-devantech	Devantech, Ltd.
+-dh	DH electronics GmbH
+-digi	Digi International Inc.
+-digilent	Diglent, Inc.
+-dioo	Dioo Microcircuit Co., Ltd
+-dlc	DLC Display Co., Ltd.
+-dlg	Dialog Semiconductor
+-dlink	D-Link Corporation
+-dmo	Data Modul AG
+-domintech	Domintech Co., Ltd.
+-dongwoon	Dongwoon Anatech
+-dptechnics	DPTechnics
+-dragino	Dragino Technology Co., Limited
+-ea	Embedded Artists AB
+-ebs-systart EBS-SYSTART GmbH
+-ebv	EBV Elektronik
+-eckelmann	Eckelmann AG
+-edt	Emerging Display Technologies
+-eeti	eGalax_eMPIA Technology Inc
+-elan	Elan Microelectronic Corp.
+-elgin	Elgin S/A.
+-embest	Shenzhen Embest Technology Co., Ltd.
+-emlid	Emlid, Ltd.
+-emmicro	EM Microelectronic
+-emtrion	emtrion GmbH
+-endless	Endless Mobile, Inc.
+-energymicro	Silicon Laboratories (formerly Energy Micro AS)
+-engicam	Engicam S.r.l.
+-epcos	EPCOS AG
+-epfl	Ecole Polytechnique Fédérale de Lausanne
+-epson	Seiko Epson Corp.
+-est	ESTeem Wireless Modems
+-ettus	NI Ettus Research
+-eukrea  Eukréa Electromatique
+-everest	Everest Semiconductor Co. Ltd.
+-everspin	Everspin Technologies, Inc.
+-exar	Exar Corporation
+-excito	Excito
+-ezchip	EZchip Semiconductor
+-facebook	Facebook
+-fairphone	Fairphone B.V.
+-faraday	Faraday Technology Corporation
+-fastrax	Fastrax Oy
+-fcs	Fairchild Semiconductor
+-feiyang	Shenzhen Fly Young Technology Co.,LTD.
+-firefly	Firefly
+-focaltech	FocalTech Systems Co.,Ltd
+-friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
+-fsl	Freescale Semiconductor
+-fujitsu	Fujitsu Ltd.
+-gateworks	Gateworks Corporation
+-gcw Game Consoles Worldwide
+-ge	General Electric Company
+-geekbuying	GeekBuying
+-gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+-GEFanuc	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+-geniatech	Geniatech, Inc.
+-giantec	Giantec Semiconductor, Inc.
+-giantplus	Giantplus Technology Co., Ltd.
+-globalscale	Globalscale Technologies, Inc.
+-globaltop	GlobalTop Technology, Inc.
+-gmt	Global Mixed-mode Technology, Inc.
+-goodix	Shenzhen Huiding Technology Co., Ltd.
+-google	Google, Inc.
+-grinn	Grinn
+-grmn	Garmin Limited
+-gumstix	Gumstix, Inc.
+-gw	Gateworks Corporation
+-hannstar	HannStar Display Corporation
+-haoyu	Haoyu Microelectronic Co. Ltd.
+-hardkernel	Hardkernel Co., Ltd
+-hideep	HiDeep Inc.
+-himax	Himax Technologies, Inc.
+-hisilicon	Hisilicon Limited.
+-hit	Hitachi Ltd.
+-hitex	Hitex Development Tools
+-holt	Holt Integrated Circuits, Inc.
+-honeywell	Honeywell
+-hp	Hewlett Packard
+-holtek	Holtek Semiconductor, Inc.
+-hwacom	HwaCom Systems Inc.
+-i2se	I2SE GmbH
+-ibm	International Business Machines (IBM)
+-icplus	IC Plus Corp.
+-idt	Integrated Device Technologies, Inc.
+-ifi	Ingenieurburo Fur Ic-Technologie (I/F/I)
+-ilitek	ILI Technology Corporation (ILITEK)
+-img	Imagination Technologies Ltd.
+-infineon Infineon Technologies
+-inforce	Inforce Computing
+-ingenic	Ingenic Semiconductor
+-innolux	Innolux Corporation
+-inside-secure	INSIDE Secure
+-intel	Intel Corporation
+-intercontrol	Inter Control Group
+-invensense	InvenSense Inc.
+-inversepath	Inverse Path
+-iom	Iomega Corporation
+-isee	ISEE 2007 S.L.
+-isil	Intersil
+-issi	Integrated Silicon Solutions Inc.
+-itead	ITEAD Intelligent Systems Co.Ltd
+-iwave  iWave Systems Technologies Pvt. Ltd.
+-jdi	Japan Display Inc.
+-jedec	JEDEC Solid State Technology Association
+-jianda	Jiandangjing Technology Co., Ltd.
+-karo	Ka-Ro electronics GmbH
+-keithkoep	Keith & Koep GmbH
+-keymile	Keymile GmbH
+-khadas	Khadas
+-kiebackpeter    Kieback & Peter GmbH
+-kinetic Kinetic Technologies
+-kingdisplay	King & Display Technology Co., Ltd.
+-kingnovel	Kingnovel Technology Co., Ltd.
+-kionix	Kionix, Inc.
+-kobo	Rakuten Kobo Inc.
+-koe	Kaohsiung Opto-Electronics Inc.
+-kosagi	Sutajio Ko-Usagi PTE Ltd.
+-kyo	Kyocera Corporation
+-lacie	LaCie
+-laird	Laird PLC
+-lantiq	Lantiq Semiconductor
+-lattice	Lattice Semiconductor
+-lego	LEGO Systems A/S
+-lemaker	Shenzhen LeMaker Technology Co., Ltd.
+-lenovo	Lenovo Group Ltd.
+-lg	LG Corporation
+-libretech	Shenzhen Libre Technology Co., Ltd
+-licheepi	Lichee Pi
+-linaro	Linaro Limited
+-linksys	Belkin International, Inc. (Linksys)
+-linux	Linux-specific binding
+-linx	Linx Technologies
+-lltc	Linear Technology Corporation
+-logicpd	Logic PD, Inc.
+-lsi	LSI Corp. (LSI Logic)
+-lwn	Liebherr-Werk Nenzing GmbH
+-macnica	Macnica Americas
+-marvell	Marvell Technology Group Ltd.
+-maxbotix	MaxBotix Inc.
+-maxim	Maxim Integrated Products
+-mbvl	Mobiveil Inc.
+-mcube	mCube
+-meas	Measurement Specialties
+-mediatek	MediaTek Inc.
+-megachips	MegaChips
+-mele	Shenzhen MeLE Digital Technology Ltd.
+-melexis	Melexis N.V.
+-melfas	MELFAS Inc.
+-mellanox	Mellanox Technologies
+-memsic	MEMSIC Inc.
+-menlo	Menlo Systems GmbH
+-merrii	Merrii Technology Co., Ltd.
+-micrel	Micrel Inc.
+-microchip	Microchip Technology Inc.
+-microcrystal	Micro Crystal AG
+-micron	Micron Technology Inc.
+-mikroe		MikroElektronika d.o.o.
+-minix	MINIX Technology Ltd.
+-miramems	MiraMEMS Sensing Technology Co., Ltd.
+-mitsubishi	Mitsubishi Electric Corporation
+-mosaixtech	Mosaix Technologies, Inc.
+-motorola	Motorola, Inc.
+-moxa	Moxa Inc.
+-mpl	MPL AG
+-mqmaker	mqmaker Inc.
+-mscc	Microsemi Corporation
+-msi	Micro-Star International Co. Ltd.
+-mti	Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
+-multi-inno	Multi-Inno Technology Co.,Ltd
+-mundoreader	Mundo Reader S.L.
+-murata	Murata Manufacturing Co., Ltd.
+-mxicy	Macronix International Co., Ltd.
+-myir	MYIR Tech Limited
+-national	National Semiconductor
+-nec	NEC LCD Technologies, Ltd.
+-neonode		Neonode Inc.
+-netgear	NETGEAR
+-netlogic	Broadcom Corporation (formerly NetLogic Microsystems)
+-netron-dy	Netron DY
+-netxeon		Shenzhen Netxeon Technology CO., LTD
+-nexbox	Nexbox
+-nextthing	Next Thing Co.
+-newhaven	Newhaven Display International
+-ni	National Instruments
+-nintendo	Nintendo
+-nlt	NLT Technologies, Ltd.
+-nokia	Nokia
+-nordic	Nordic Semiconductor
+-novtech NovTech, Inc.
+-nutsboard	NutsBoard
+-nuvoton	Nuvoton Technology Corporation
+-nvd	New Vision Display
+-nvidia	NVIDIA
+-nxp	NXP Semiconductors
+-oceanic	Oceanic Systems (UK) Ltd.
+-okaya	Okaya Electric America, Inc.
+-oki	Oki Electric Industry Co., Ltd.
+-olimex	OLIMEX Ltd.
+-olpc	One Laptop Per Child
+-onion	Onion Corporation
+-onnn	ON Semiconductor Corp.
+-ontat	On Tat Industrial Company
+-opalkelly	Opal Kelly Incorporated
+-opencores	OpenCores.org
+-openrisc	OpenRISC.io
+-option	Option NV
+-oranth	Shenzhen Oranth Technology Co., Ltd.
+-ORCL	Oracle Corporation
+-orisetech	Orise Technology
+-ortustech	Ortus Technology Co., Ltd.
+-osddisplays	OSD Displays
+-ovti	OmniVision Technologies
+-oxsemi	Oxford Semiconductor, Ltd.
+-panasonic	Panasonic Corporation
+-parade	Parade Technologies Inc.
+-pda	Precision Design Associates, Inc.
+-pericom	Pericom Technology Inc.
+-pervasive	Pervasive Displays, Inc.
+-phicomm PHICOMM Co., Ltd.
+-phytec	PHYTEC Messtechnik GmbH
+-picochip	Picochip Ltd
+-pine64	Pine64
+-pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+-plantower Plantower Co., Ltd
+-plathome	Plat'Home Co., Ltd.
+-plda	PLDA
+-plx	Broadcom Corporation (formerly PLX Technology)
+-pni	PNI Sensor Corporation
+-portwell	Portwell Inc.
+-poslab	Poslab Technology Co., Ltd.
+-powervr	PowerVR (deprecated, use img)
+-probox2	PROBOX2 (by W2COMP Co., Ltd.)
+-pulsedlight	PulsedLight, Inc
+-qca	Qualcomm Atheros, Inc.
+-qcom	Qualcomm Technologies, Inc
+-qemu	QEMU, a generic and open source machine emulator and virtualizer
+-qi	Qi Hardware
+-qiaodian	QiaoDian XianShi Corporation
+-qnap	QNAP Systems, Inc.
+-radxa	Radxa
+-raidsonic	RaidSonic Technology GmbH
+-ralink	Mediatek/Ralink Technology Corp.
+-ramtron	Ramtron International
+-raspberrypi	Raspberry Pi Foundation
+-raydium	Raydium Semiconductor Corp.
+-rda	Unisoc Communications, Inc.
+-realtek Realtek Semiconductor Corp.
+-renesas	Renesas Electronics Corporation
+-richtek	Richtek Technology Corporation
+-ricoh	Ricoh Co. Ltd.
+-rikomagic	Rikomagic Tech Corp. Ltd
+-riscv	RISC-V Foundation
+-rockchip	Fuzhou Rockchip Electronics Co., Ltd
+-rocktech	ROCKTECH DISPLAYS LIMITED
+-rohm	ROHM Semiconductor Co., Ltd
+-ronbo   Ronbo Electronics
+-roofull	Shenzhen Roofull Technology Co, Ltd
+-samsung	Samsung Semiconductor
+-samtec	Samtec/Softing company
+-sancloud	Sancloud Ltd
+-sandisk	Sandisk Corporation
+-sbs	Smart Battery System
+-schindler	Schindler
+-seagate	Seagate Technology PLC
+-seirobotics	Shenzhen SEI Robotics Co., Ltd
+-semtech	Semtech Corporation
+-sensirion	Sensirion AG
+-sff	Small Form Factor Committee
+-sgd	Solomon Goldentek Display Corporation
+-sgx	SGX Sensortech
+-sharp	Sharp Corporation
+-shimafuji	Shimafuji Electric, Inc.
+-si-en	Si-En Technology Ltd.
+-si-linux	Silicon Linux Corporation
+-sifive	SiFive, Inc.
+-sigma	Sigma Designs, Inc.
+-sii	Seiko Instruments, Inc.
+-sil	Silicon Image
+-silabs	Silicon Laboratories
+-silead	Silead Inc.
+-silergy	Silergy Corp.
+-siliconmitus	Silicon Mitus, Inc.
+-simtek
+-sirf	SiRF Technology, Inc.
+-sis	Silicon Integrated Systems Corp.
+-sitronix	Sitronix Technology Corporation
+-skyworks	Skyworks Solutions, Inc.
+-smsc	Standard Microsystems Corporation
+-snps	Synopsys, Inc.
+-socionext	Socionext Inc.
+-solidrun	SolidRun
+-solomon        Solomon Systech Limited
+-sony	Sony Corporation
+-spansion	Spansion Inc.
+-sprd	Spreadtrum Communications Inc.
+-sst	Silicon Storage Technology, Inc.
+-st	STMicroelectronics
+-starry	Starry Electronic Technology (ShenZhen) Co., LTD
+-startek	Startek
+-ste	ST-Ericsson
+-stericsson	ST-Ericsson
+-summit	Summit microelectronics
+-sunchip	Shenzhen Sunchip Technology Co., Ltd
+-SUNW	Sun Microsystems, Inc
+-swir	Sierra Wireless
+-syna	Synaptics Inc.
+-synology	Synology, Inc.
+-tbs	TBS Technologies
+-tbs-biometrics	Touchless Biometric Systems AG
+-tcg	Trusted Computing Group
+-tcl	Toby Churchill Ltd.
+-technexion	TechNexion
+-technologic	Technologic Systems
+-tempo	Tempo Semiconductor
+-techstar	Shenzhen Techstar Electronics Co., Ltd.
+-terasic	Terasic Inc.
+-thine	THine Electronics, Inc.
+-ti	Texas Instruments
+-tianma	Tianma Micro-electronics Co., Ltd.
+-tlm	Trusted Logic Mobility
+-tmt	Tecon Microprocessor Technologies, LLC.
+-topeet  Topeet
+-toradex	Toradex AG
+-toshiba	Toshiba Corporation
+-toumaz	Toumaz
+-tpk	TPK U.S.A. LLC
+-tplink	TP-LINK Technologies Co., Ltd.
+-tpo	TPO
+-tq	TQ Systems GmbH
+-tronfy	Tronfy
+-tronsmart	Tronsmart
+-truly	Truly Semiconductors Limited
+-tsd	Theobroma Systems Design und Consulting GmbH
+-tyan	Tyan Computer Corporation
+-u-blox	u-blox
+-ucrobotics	uCRobotics
+-ubnt	Ubiquiti Networks
+-udoo	Udoo
+-uniwest	United Western Technologies Corp (UniWest)
+-upisemi	uPI Semiconductor Corp.
+-urt	United Radiant Technology Corporation
+-usi	Universal Scientific Industrial Co., Ltd.
+-v3	V3 Semiconductor
+-vamrs	Vamrs Ltd.
+-variscite	Variscite Ltd.
+-via	VIA Technologies, Inc.
+-virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+-vishay	Vishay Intertechnology, Inc
+-vitesse	Vitesse Semiconductor Corporation
+-vivante	Vivante Corporation
+-vocore VoCore Studio
+-voipac	Voipac Technologies s.r.o.
+-vot	Vision Optical Technology Co., Ltd.
+-wd	Western Digital Corp.
+-wetek	WeTek Electronics, limited.
+-wexler	Wexler
+-whwave  Shenzhen whwave Electronics, Inc.
+-wi2wi	Wi2Wi, Inc.
+-winbond Winbond Electronics corp.
+-winstar	Winstar Display Corp.
+-wlf	Wolfson Microelectronics
+-wm	Wondermedia Technologies, Inc.
+-x-powers	X-Powers
+-xes	Extreme Engineering Solutions (X-ES)
+-xillybus	Xillybus Ltd.
+-xlnx	Xilinx
+-xunlong	Shenzhen Xunlong Software CO.,Limited
+-ysoft	Y Soft Corporation a.s.
+-zarlink	Zarlink Semiconductor
+-zeitec	ZEITEC Semiconductor Co., LTD.
+-zidoo	Shenzhen Zidoo Technology Co., Ltd.
+-zii	Zodiac Inflight Innovations
+-zte	ZTE Corp.
+-zyxel	ZyXEL Communications Corp.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+new file mode 100644
+index 000000000000..be037fb2cada
+--- /dev/null
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -0,0 +1,975 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/vendor-prefixes.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	mutex_lock(&kpc_dma_mtx);
- 	list_for_each_entry(c, &kpc_dma_list, list) {
--		if (c->pldev->id == minor) {
-+		if (c->pldev->id == minor)
- 			goto out;
--		}
- 	}
- 	c = NULL; // not-found case
--  out:
-+out:
- 	mutex_unlock(&kpc_dma_mtx);
- 	return c;
- }
- 
--void  kpc_dma_add_device(struct kpc_dma_device * ldev)
-+void  kpc_dma_add_device(struct kpc_dma_device *ldev)
- {
- 	mutex_lock(&kpc_dma_mtx);
- 	list_add(&ldev->list, &kpc_dma_list);
- 	mutex_unlock(&kpc_dma_mtx);
- }
- 
--void kpc_dma_del_device(struct kpc_dma_device * ldev)
-+void kpc_dma_del_device(struct kpc_dma_device *ldev)
- {
- 	mutex_lock(&kpc_dma_mtx);
- 	list_del(&ldev->list);
-@@ -55,11 +54,14 @@ static ssize_t  show_engine_regs(struct device *dev, struct device_attribute *at
- {
- 	struct kpc_dma_device *ldev;
- 	struct platform_device *pldev = to_platform_device(dev);
--	if (!pldev) return 0;
++title: Devicetree Vendor Prefix Registry
 +
-+	if (!pldev)
-+		return 0;
- 	ldev = platform_get_drvdata(pldev);
--	if (!ldev) return 0;
--	
--	return scnprintf(buf, PAGE_SIZE, 
-+	if (!ldev)
-+		return 0;
++maintainers:
++  - Rob Herring <robh@kernel.org>
 +
-+	return scnprintf(buf, PAGE_SIZE,
- 		"EngineControlStatus      = 0x%08x\n"
- 		"RegNextDescPtr           = 0x%08x\n"
- 		"RegSWDescPtr             = 0x%08x\n"
-@@ -80,14 +82,13 @@ static ssize_t  show_engine_regs(struct device *dev, struct device_attribute *at
- }
- DEVICE_ATTR(engine_regs, 0444, show_engine_regs, NULL);
- 
--static const struct attribute *  ndd_attr_list[] = {
-+static const struct attribute *ndd_attr_list[] = {
- 	&dev_attr_engine_regs.attr,
- 	NULL,
- };
- 
- struct class *kpc_dma_class;
- 
--
- /**********  Platform Driver Functions  **********/
- static
- int  kpc_dma_probe(struct platform_device *pldev)
-@@ -95,73 +96,73 @@ int  kpc_dma_probe(struct platform_device *pldev)
- 	struct resource *r = NULL;
- 	int rv = 0;
- 	dev_t dev;
--	
++select: true
 +
- 	struct kpc_dma_device *ldev = kzalloc(sizeof(struct kpc_dma_device), GFP_KERNEL);
--	if (!ldev){
--		dev_err(&pldev->dev, "kpc_dma_probe: unable to kzalloc space for kpc_dma_device\n");
-+	if (!ldev) {
-+		dev_err(&pldev->dev, "%s: unable to kzalloc space for kpc_dma_device\n", __func__);
- 		rv = -ENOMEM;
- 		goto err_rv;
- 	}
--	
--	dev_dbg(&pldev->dev, "kpc_dma_probe(pldev = [%p]) ldev = [%p]\n", pldev, ldev);
--	
++properties: {}
 +
-+	dev_dbg(&pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
++patternProperties:
++  # Prefixes which are not vendors, but followed the pattern
++  # DO NOT ADD NEW PROPERTIES TO THIS LIST
++  "^(at25|devbus|dmacap|dsa|exynos|gpio-fan|gpio|gpmc|hdmi|i2c-gpio),.*": true
++  "^(m25p|max8952|max8997|max8998|mpmc|pinctrl-single|#pinctrl-single),.*": true
++  "^(pl022|pxa-mmc|rcar_sound|rotary-encoder|s5m8767|sdhci),.*": true
++  "^(simple-audio-card|simple-graph-card|st-plgpio|st-spics|ts),.*": true
 +
- 	INIT_LIST_HEAD(&ldev->list);
--	
++  # Keep list in alphabetical order.
++  "^abilis,.*":
++    description: Abilis Systems
++  "^abracon,.*":
++    description: Abracon Corporation
++  "^actions,.*":
++    description: Actions Semiconductor Co., Ltd.
++  "^active-semi,.*":
++    description: Active-Semi International Inc
++  "^ad,.*":
++    description: Avionic Design GmbH
++  "^adafruit,.*":
++    description: Adafruit Industries, LLC
++  "^adapteva,.*":
++    description: Adapteva, Inc.
++  "^adaptrum,.*":
++    description: Adaptrum, Inc.
++  "^adh,.*":
++    description: AD Holdings Plc.
++  "^adi,.*":
++    description: Analog Devices, Inc.
++  "^advantech,.*":
++    description: Advantech Corporation
++  "^aeroflexgaisler,.*":
++    description: Aeroflex Gaisler AB
++  "^al,.*":
++    description: Annapurna Labs
++  "^allo,.*":
++    description: Allo.com
++  "^allwinner,.*":
++    description: Allwinner Technology Co., Ltd.
++  "^alphascale,.*":
++    description: AlphaScale Integrated Circuits Systems, Inc.
++  "^altr,.*":
++    description: Altera Corp.
++  "^amarula,.*":
++    description: Amarula Solutions
++  "^amazon,.*":
++    description: Amazon.com, Inc.
++  "^amcc,.*":
++    description: Applied Micro Circuits Corporation (APM, formally AMCC)
++  "^amd,.*":
++    description: Advanced Micro Devices (AMD), Inc.
++  "^amediatech,.*":
++    description: Shenzhen Amediatech Technology Co., Ltd
++  "^amlogic,.*":
++    description: Amlogic, Inc.
++  "^ampire,.*":
++    description: Ampire Co., Ltd.
++  "^ams,.*":
++    description: AMS AG
++  "^amstaos,.*":
++    description: AMS-Taos Inc.
++  "^analogix,.*":
++    description: Analogix Semiconductor, Inc.
++  "^andestech,.*":
++    description: Andes Technology Corporation
++  "^apm,.*":
++    description: Applied Micro Circuits Corporation (APM)
++  "^aptina,.*":
++    description: Aptina Imaging
++  "^arasan,.*":
++    description: Arasan Chip Systems
++  "^archermind,.*":
++    description: ArcherMind Technology (Nanjing) Co., Ltd.
++  "^arctic,.*":
++    description: Arctic Sand
++  "^arcx,.*":
++    description: arcx Inc. / Archronix Inc.
++  "^aries,.*":
++    description: Aries Embedded GmbH
++  "^arm,.*":
++    description: ARM Ltd.
++  "^armadeus,.*":
++    description: ARMadeus Systems SARL
++  "^arrow,.*":
++    description: Arrow Electronics
++  "^artesyn,.*":
++    description: Artesyn Embedded Technologies Inc.
++  "^asahi-kasei,.*":
++    description: Asahi Kasei Corp.
++  "^aspeed,.*":
++    description: ASPEED Technology Inc.
++  "^asus,.*":
++    description: AsusTek Computer Inc.
++  "^atlas,.*":
++    description: Atlas Scientific LLC
++  "^atmel,.*":
++    description: Atmel Corporation
++  "^auo,.*":
++    description: AU Optronics Corporation
++  "^auvidea,.*":
++    description: Auvidea GmbH
++  "^avago,.*":
++    description: Avago Technologies
++  "^avia,.*":
++    description: avia semiconductor
++  "^avic,.*":
++    description: Shanghai AVIC Optoelectronics Co., Ltd.
++  "^avnet,.*":
++    description: Avnet, Inc.
++  "^axentia,.*":
++    description: Axentia Technologies AB
++  "^axis,.*":
++    description: Axis Communications AB
++  "^azoteq,.*":
++    description: Azoteq (Pty) Ltd
++  "^azw,.*":
++    description: Shenzhen AZW Technology Co., Ltd.
++  "^bananapi,.*":
++    description: BIPAI KEJI LIMITED
++  "^bhf,.*":
++    description: Beckhoff Automation GmbH & Co. KG
++  "^bitmain,.*":
++    description: Bitmain Technologies
++  "^boe,.*":
++    description: BOE Technology Group Co., Ltd.
++  "^bosch,.*":
++    description: Bosch Sensortec GmbH
++  "^boundary,.*":
++    description: Boundary Devices Inc.
++  "^brcm,.*":
++    description: Broadcom Corporation
++  "^buffalo,.*":
++    description: Buffalo, Inc.
++  "^bticino,.*":
++    description: Bticino International
++  "^calxeda,.*":
++    description: Calxeda
++  "^capella,.*":
++    description: Capella Microsystems, Inc
++  "^cascoda,.*":
++    description: Cascoda, Ltd.
++  "^catalyst,.*":
++    description: Catalyst Semiconductor, Inc.
++  "^cavium,.*":
++    description: Cavium, Inc.
++  "^cdns,.*":
++    description: Cadence Design Systems Inc.
++  "^cdtech,.*":
++    description: CDTech(H.K.) Electronics Limited
++  "^ceva,.*":
++    description: Ceva, Inc.
++  "^chipidea,.*":
++    description: Chipidea, Inc
++  "^chipone,.*":
++    description: ChipOne
++  "^chipspark,.*":
++    description: ChipSPARK
++  "^chrp,.*":
++    description: Common Hardware Reference Platform
++  "^chunghwa,.*":
++    description: Chunghwa Picture Tubes Ltd.
++  "^ciaa,.*":
++    description: Computadora Industrial Abierta Argentina
++  "^cirrus,.*":
++    description: Cirrus Logic, Inc.
++  "^cloudengines,.*":
++    description: Cloud Engines, Inc.
++  "^cnm,.*":
++    description: Chips&Media, Inc.
++  "^cnxt,.*":
++    description: Conexant Systems, Inc.
++  "^compulab,.*":
++    description: CompuLab Ltd.
++  "^cortina,.*":
++    description: Cortina Systems, Inc.
++  "^cosmic,.*":
++    description: Cosmic Circuits
++  "^crane,.*":
++    description: Crane Connectivity Solutions
++  "^creative,.*":
++    description: Creative Technology Ltd
++  "^crystalfontz,.*":
++    description: Crystalfontz America, Inc.
++  "^csky,.*":
++    description: Hangzhou C-SKY Microsystems Co., Ltd
++  "^cubietech,.*":
++    description: Cubietech, Ltd.
++  "^cypress,.*":
++    description: Cypress Semiconductor Corporation
++  "^cznic,.*":
++    description: CZ.NIC, z.s.p.o.
++  "^dallas,.*":
++    description: Maxim Integrated Products (formerly Dallas Semiconductor)
++  "^dataimage,.*":
++    description: DataImage, Inc.
++  "^davicom,.*":
++    description: DAVICOM Semiconductor, Inc.
++  "^delta,.*":
++    description: Delta Electronics, Inc.
++  "^denx,.*":
++    description: Denx Software Engineering
++  "^devantech,.*":
++    description: Devantech, Ltd.
++  "^dh,.*":
++    description: DH electronics GmbH
++  "^digi,.*":
++    description: Digi International Inc.
++  "^digilent,.*":
++    description: Diglent, Inc.
++  "^dioo,.*":
++    description: Dioo Microcircuit Co., Ltd
++  "^dlc,.*":
++    description: DLC Display Co., Ltd.
++  "^dlg,.*":
++    description: Dialog Semiconductor
++  "^dlink,.*":
++    description: D-Link Corporation
++  "^dmo,.*":
++    description: Data Modul AG
++  "^domintech,.*":
++    description: Domintech Co., Ltd.
++  "^dongwoon,.*":
++    description: Dongwoon Anatech
++  "^dptechnics,.*":
++    description: DPTechnics
++  "^dragino,.*":
++    description: Dragino Technology Co., Limited
++  "^ea,.*":
++    description: Embedded Artists AB
++  "^ebs-systart,.*":
++    description: EBS-SYSTART GmbH
++  "^ebv,.*":
++    description: EBV Elektronik
++  "^eckelmann,.*":
++    description: Eckelmann AG
++  "^edt,.*":
++    description: Emerging Display Technologies
++  "^eeti,.*":
++    description: eGalax_eMPIA Technology Inc
++  "^elan,.*":
++    description: Elan Microelectronic Corp.
++  "^elgin,.*":
++    description: Elgin S/A.
++  "^embest,.*":
++    description: Shenzhen Embest Technology Co., Ltd.
++  "^emlid,.*":
++    description: Emlid, Ltd.
++  "^emmicro,.*":
++    description: EM Microelectronic
++  "^emtrion,.*":
++    description: emtrion GmbH
++  "^endless,.*":
++    description: Endless Mobile, Inc.
++  "^energymicro,.*":
++    description: Silicon Laboratories (formerly Energy Micro AS)
++  "^engicam,.*":
++    description: Engicam S.r.l.
++  "^epcos,.*":
++    description: EPCOS AG
++  "^epfl,.*":
++    description: Ecole Polytechnique Fédérale de Lausanne
++  "^epson,.*":
++    description: Seiko Epson Corp.
++  "^est,.*":
++    description: ESTeem Wireless Modems
++  "^ettus,.*":
++    description: NI Ettus Research
++  "^eukrea,.*":
++    description: Eukréa Electromatique
++  "^everest,.*":
++    description: Everest Semiconductor Co. Ltd.
++  "^everspin,.*":
++    description: Everspin Technologies, Inc.
++  "^exar,.*":
++    description: Exar Corporation
++  "^excito,.*":
++    description: Excito
++  "^ezchip,.*":
++    description: EZchip Semiconductor
++  "^facebook,.*":
++    description: Facebook
++  "^fairphone,.*":
++    description: Fairphone B.V.
++  "^faraday,.*":
++    description: Faraday Technology Corporation
++  "^fastrax,.*":
++    description: Fastrax Oy
++  "^fcs,.*":
++    description: Fairchild Semiconductor
++  "^feiyang,.*":
++    description: Shenzhen Fly Young Technology Co.,LTD.
++  "^firefly,.*":
++    description: Firefly
++  "^focaltech,.*":
++    description: FocalTech Systems Co.,Ltd
++  "^friendlyarm,.*":
++    description: Guangzhou FriendlyARM Computer Tech Co., Ltd
++  "^fsl,.*":
++    description: Freescale Semiconductor
++  "^fujitsu,.*":
++    description: Fujitsu Ltd.
++  "^gateworks,.*":
++    description: Gateworks Corporation
++  "^gcw,.*":
++    description: Game Consoles Worldwide
++  "^ge,.*":
++    description: General Electric Company
++  "^geekbuying,.*":
++    description: GeekBuying
++  "^gef,.*":
++    description: GE Fanuc Intelligent Platforms Embedded Systems, Inc.
++  "^GEFanuc,.*":
++    description: GE Fanuc Intelligent Platforms Embedded Systems, Inc.
++  "^geniatech,.*":
++    description: Geniatech, Inc.
++  "^giantec,.*":
++    description: Giantec Semiconductor, Inc.
++  "^giantplus,.*":
++    description: Giantplus Technology Co., Ltd.
++  "^globalscale,.*":
++    description: Globalscale Technologies, Inc.
++  "^globaltop,.*":
++    description: GlobalTop Technology, Inc.
++  "^gmt,.*":
++    description: Global Mixed-mode Technology, Inc.
++  "^goodix,.*":
++    description: Shenzhen Huiding Technology Co., Ltd.
++  "^google,.*":
++    description: Google, Inc.
++  "^grinn,.*":
++    description: Grinn
++  "^grmn,.*":
++    description: Garmin Limited
++  "^gumstix,.*":
++    description: Gumstix, Inc.
++  "^gw,.*":
++    description: Gateworks Corporation
++  "^hannstar,.*":
++    description: HannStar Display Corporation
++  "^haoyu,.*":
++    description: Haoyu Microelectronic Co. Ltd.
++  "^hardkernel,.*":
++    description: Hardkernel Co., Ltd
++  "^hideep,.*":
++    description: HiDeep Inc.
++  "^himax,.*":
++    description: Himax Technologies, Inc.
++  "^hisilicon,.*":
++    description: Hisilicon Limited.
++  "^hit,.*":
++    description: Hitachi Ltd.
++  "^hitex,.*":
++    description: Hitex Development Tools
++  "^holt,.*":
++    description: Holt Integrated Circuits, Inc.
++  "^honeywell,.*":
++    description: Honeywell
++  "^hp,.*":
++    description: Hewlett Packard
++  "^holtek,.*":
++    description: Holtek Semiconductor, Inc.
++  "^hwacom,.*":
++    description: HwaCom Systems Inc.
++  "^i2se,.*":
++    description: I2SE GmbH
++  "^ibm,.*":
++    description: International Business Machines (IBM)
++  "^icplus,.*":
++    description: IC Plus Corp.
++  "^idt,.*":
++    description: Integrated Device Technologies, Inc.
++  "^ifi,.*":
++    description: Ingenieurburo Fur Ic-Technologie (I/F/I)
++  "^ilitek,.*":
++    description: ILI Technology Corporation (ILITEK)
++  "^img,.*":
++    description: Imagination Technologies Ltd.
++  "^infineon,.*":
++    description: Infineon Technologies
++  "^inforce,.*":
++    description: Inforce Computing
++  "^ingenic,.*":
++    description: Ingenic Semiconductor
++  "^innolux,.*":
++    description: Innolux Corporation
++  "^inside-secure,.*":
++    description: INSIDE Secure
++  "^intel,.*":
++    description: Intel Corporation
++  "^intercontrol,.*":
++    description: Inter Control Group
++  "^invensense,.*":
++    description: InvenSense Inc.
++  "^inversepath,.*":
++    description: Inverse Path
++  "^iom,.*":
++    description: Iomega Corporation
++  "^isee,.*":
++    description: ISEE 2007 S.L.
++  "^isil,.*":
++    description: Intersil
++  "^issi,.*":
++    description: Integrated Silicon Solutions Inc.
++  "^itead,.*":
++    description: ITEAD Intelligent Systems Co.Ltd
++  "^iwave,.*":
++    description: iWave Systems Technologies Pvt. Ltd.
++  "^jdi,.*":
++    description: Japan Display Inc.
++  "^jedec,.*":
++    description: JEDEC Solid State Technology Association
++  "^jianda,.*":
++    description: Jiandangjing Technology Co., Ltd.
++  "^karo,.*":
++    description: Ka-Ro electronics GmbH
++  "^keithkoep,.*":
++    description: Keith & Koep GmbH
++  "^keymile,.*":
++    description: Keymile GmbH
++  "^khadas,.*":
++    description: Khadas
++  "^kiebackpeter,.*":
++    description: Kieback & Peter GmbH
++  "^kinetic,.*":
++    description: Kinetic Technologies
++  "^kingdisplay,.*":
++    description: King & Display Technology Co., Ltd.
++  "^kingnovel,.*":
++    description: Kingnovel Technology Co., Ltd.
++  "^kionix,.*":
++    description: Kionix, Inc.
++  "^kobo,.*":
++    description: Rakuten Kobo Inc.
++  "^koe,.*":
++    description: Kaohsiung Opto-Electronics Inc.
++  "^kosagi,.*":
++    description: Sutajio Ko-Usagi PTE Ltd.
++  "^kyo,.*":
++    description: Kyocera Corporation
++  "^lacie,.*":
++    description: LaCie
++  "^laird,.*":
++    description: Laird PLC
++  "^lantiq,.*":
++    description: Lantiq Semiconductor
++  "^lattice,.*":
++    description: Lattice Semiconductor
++  "^lego,.*":
++    description: LEGO Systems A/S
++  "^lemaker,.*":
++    description: Shenzhen LeMaker Technology Co., Ltd.
++  "^lenovo,.*":
++    description: Lenovo Group Ltd.
++  "^lg,.*":
++    description: LG Corporation
++  "^libretech,.*":
++    description: Shenzhen Libre Technology Co., Ltd
++  "^licheepi,.*":
++    description: Lichee Pi
++  "^linaro,.*":
++    description: Linaro Limited
++  "^linksys,.*":
++    description: Belkin International, Inc. (Linksys)
++  "^linux,.*":
++    description: Linux-specific binding
++  "^linx,.*":
++    description: Linx Technologies
++  "^lltc,.*":
++    description: Linear Technology Corporation
++  "^logicpd,.*":
++    description: Logic PD, Inc.
++  "^lsi,.*":
++    description: LSI Corp. (LSI Logic)
++  "^lwn,.*":
++    description: Liebherr-Werk Nenzing GmbH
++  "^macnica,.*":
++    description: Macnica Americas
++  "^marvell,.*":
++    description: Marvell Technology Group Ltd.
++  "^maxbotix,.*":
++    description: MaxBotix Inc.
++  "^maxim,.*":
++    description: Maxim Integrated Products
++  "^mbvl,.*":
++    description: Mobiveil Inc.
++  "^mcube,.*":
++    description: mCube
++  "^meas,.*":
++    description: Measurement Specialties
++  "^mediatek,.*":
++    description: MediaTek Inc.
++  "^megachips,.*":
++    description: MegaChips
++  "^mele,.*":
++    description: Shenzhen MeLE Digital Technology Ltd.
++  "^melexis,.*":
++    description: Melexis N.V.
++  "^melfas,.*":
++    description: MELFAS Inc.
++  "^mellanox,.*":
++    description: Mellanox Technologies
++  "^memsic,.*":
++    description: MEMSIC Inc.
++  "^menlo,.*":
++    description: Menlo Systems GmbH
++  "^merrii,.*":
++    description: Merrii Technology Co., Ltd.
++  "^micrel,.*":
++    description: Micrel Inc.
++  "^microchip,.*":
++    description: Microchip Technology Inc.
++  "^microcrystal,.*":
++    description: Micro Crystal AG
++  "^micron,.*":
++    description: Micron Technology Inc.
++  "^mikroe,.*":
++    description: MikroElektronika d.o.o.
++  "^minix,.*":
++    description: MINIX Technology Ltd.
++  "^miramems,.*":
++    description: MiraMEMS Sensing Technology Co., Ltd.
++  "^mitsubishi,.*":
++    description: Mitsubishi Electric Corporation
++  "^mosaixtech,.*":
++    description: Mosaix Technologies, Inc.
++  "^motorola,.*":
++    description: Motorola, Inc.
++  "^moxa,.*":
++    description: Moxa Inc.
++  "^mpl,.*":
++    description: MPL AG
++  "^mqmaker,.*":
++    description: mqmaker Inc.
++  "^mscc,.*":
++    description: Microsemi Corporation
++  "^msi,.*":
++    description: Micro-Star International Co. Ltd.
++  "^mti,.*":
++    description: Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
++  "^multi-inno,.*":
++    description: Multi-Inno Technology Co.,Ltd
++  "^mundoreader,.*":
++    description: Mundo Reader S.L.
++  "^murata,.*":
++    description: Murata Manufacturing Co., Ltd.
++  "^mxicy,.*":
++    description: Macronix International Co., Ltd.
++  "^myir,.*":
++    description: MYIR Tech Limited
++  "^national,.*":
++    description: National Semiconductor
++  "^nec,.*":
++    description: NEC LCD Technologies, Ltd.
++  "^neonode,.*":
++    description: Neonode Inc.
++  "^netgear,.*":
++    description: NETGEAR
++  "^netlogic,.*":
++    description: Broadcom Corporation (formerly NetLogic Microsystems)
++  "^netron-dy,.*":
++    description: Netron DY
++  "^netxeon,.*":
++    description: Shenzhen Netxeon Technology CO., LTD
++  "^nexbox,.*":
++    description: Nexbox
++  "^nextthing,.*":
++    description: Next Thing Co.
++  "^newhaven,.*":
++    description: Newhaven Display International
++  "^ni,.*":
++    description: National Instruments
++  "^nintendo,.*":
++    description: Nintendo
++  "^nlt,.*":
++    description: NLT Technologies, Ltd.
++  "^nokia,.*":
++    description: Nokia
++  "^nordic,.*":
++    description: Nordic Semiconductor
++  "^novtech,.*":
++    description: NovTech, Inc.
++  "^nutsboard,.*":
++    description: NutsBoard
++  "^nuvoton,.*":
++    description: Nuvoton Technology Corporation
++  "^nvd,.*":
++    description: New Vision Display
++  "^nvidia,.*":
++    description: NVIDIA
++  "^nxp,.*":
++    description: NXP Semiconductors
++  "^oceanic,.*":
++    description: Oceanic Systems (UK) Ltd.
++  "^okaya,.*":
++    description: Okaya Electric America, Inc.
++  "^oki,.*":
++    description: Oki Electric Industry Co., Ltd.
++  "^olimex,.*":
++    description: OLIMEX Ltd.
++  "^olpc,.*":
++    description: One Laptop Per Child
++  "^onion,.*":
++    description: Onion Corporation
++  "^onnn,.*":
++    description: ON Semiconductor Corp.
++  "^ontat,.*":
++    description: On Tat Industrial Company
++  "^opalkelly,.*":
++    description: Opal Kelly Incorporated
++  "^opencores,.*":
++    description: OpenCores.org
++  "^openrisc,.*":
++    description: OpenRISC.io
++  "^option,.*":
++    description: Option NV
++  "^oranth,.*":
++    description: Shenzhen Oranth Technology Co., Ltd.
++  "^ORCL,.*":
++    description: Oracle Corporation
++  "^orisetech,.*":
++    description: Orise Technology
++  "^ortustech,.*":
++    description: Ortus Technology Co., Ltd.
++  "^osddisplays,.*":
++    description: OSD Displays
++  "^ovti,.*":
++    description: OmniVision Technologies
++  "^oxsemi,.*":
++    description: Oxford Semiconductor, Ltd.
++  "^panasonic,.*":
++    description: Panasonic Corporation
++  "^parade,.*":
++    description: Parade Technologies Inc.
++  "^pda,.*":
++    description: Precision Design Associates, Inc.
++  "^pericom,.*":
++    description: Pericom Technology Inc.
++  "^pervasive,.*":
++    description: Pervasive Displays, Inc.
++  "^phicomm,.*":
++    description: PHICOMM Co., Ltd.
++  "^phytec,.*":
++    description: PHYTEC Messtechnik GmbH
++  "^picochip,.*":
++    description: Picochip Ltd
++  "^pine64,.*":
++    description: Pine64
++  "^pixcir,.*":
++    description: PIXCIR MICROELECTRONICS Co., Ltd
++  "^plantower,.*":
++    description: Plantower Co., Ltd
++  "^plathome,.*":
++    description: Plat'Home Co., Ltd.
++  "^plda,.*":
++    description: PLDA
++  "^plx,.*":
++    description: Broadcom Corporation (formerly PLX Technology)
++  "^pni,.*":
++    description: PNI Sensor Corporation
++  "^portwell,.*":
++    description: Portwell Inc.
++  "^poslab,.*":
++    description: Poslab Technology Co., Ltd.
++  "^powervr,.*":
++    description: PowerVR (deprecated, use img)
++  "^probox2,.*":
++    description: PROBOX2 (by W2COMP Co., Ltd.)
++  "^pulsedlight,.*":
++    description: PulsedLight, Inc
++  "^qca,.*":
++    description: Qualcomm Atheros, Inc.
++  "^qcom,.*":
++    description: Qualcomm Technologies, Inc
++  "^qemu,.*":
++    description: QEMU, a generic and open source machine emulator and virtualizer
++  "^qi,.*":
++    description: Qi Hardware
++  "^qiaodian,.*":
++    description: QiaoDian XianShi Corporation
++  "^qnap,.*":
++    description: QNAP Systems, Inc.
++  "^radxa,.*":
++    description: Radxa
++  "^raidsonic,.*":
++    description: RaidSonic Technology GmbH
++  "^ralink,.*":
++    description: Mediatek/Ralink Technology Corp.
++  "^ramtron,.*":
++    description: Ramtron International
++  "^raspberrypi,.*":
++    description: Raspberry Pi Foundation
++  "^raydium,.*":
++    description: Raydium Semiconductor Corp.
++  "^rda,.*":
++    description: Unisoc Communications, Inc.
++  "^realtek,.*":
++    description: Realtek Semiconductor Corp.
++  "^renesas,.*":
++    description: Renesas Electronics Corporation
++  "^richtek,.*":
++    description: Richtek Technology Corporation
++  "^ricoh,.*":
++    description: Ricoh Co. Ltd.
++  "^rikomagic,.*":
++    description: Rikomagic Tech Corp. Ltd
++  "^riscv,.*":
++    description: RISC-V Foundation
++  "^rockchip,.*":
++    description: Fuzhou Rockchip Electronics Co., Ltd
++  "^rocktech,.*":
++    description: ROCKTECH DISPLAYS LIMITED
++  "^rohm,.*":
++    description: ROHM Semiconductor Co., Ltd
++  "^ronbo,.*":
++    description: Ronbo Electronics
++  "^roofull,.*":
++    description: Shenzhen Roofull Technology Co, Ltd
++  "^samsung,.*":
++    description: Samsung Semiconductor
++  "^samtec,.*":
++    description: Samtec/Softing company
++  "^sancloud,.*":
++    description: Sancloud Ltd
++  "^sandisk,.*":
++    description: Sandisk Corporation
++  "^sbs,.*":
++    description: Smart Battery System
++  "^schindler,.*":
++    description: Schindler
++  "^seagate,.*":
++    description: Seagate Technology PLC
++  "^seirobotics,.*":
++    description: Shenzhen SEI Robotics Co., Ltd
++  "^semtech,.*":
++    description: Semtech Corporation
++  "^sensirion,.*":
++    description: Sensirion AG
++  "^sff,.*":
++    description: Small Form Factor Committee
++  "^sgd,.*":
++    description: Solomon Goldentek Display Corporation
++  "^sgx,.*":
++    description: SGX Sensortech
++  "^sharp,.*":
++    description: Sharp Corporation
++  "^shimafuji,.*":
++    description: Shimafuji Electric, Inc.
++  "^si-en,.*":
++    description: Si-En Technology Ltd.
++  "^si-linux,.*":
++    description: Silicon Linux Corporation
++  "^sifive,.*":
++    description: SiFive, Inc.
++  "^sigma,.*":
++    description: Sigma Designs, Inc.
++  "^sii,.*":
++    description: Seiko Instruments, Inc.
++  "^sil,.*":
++    description: Silicon Image
++  "^silabs,.*":
++    description: Silicon Laboratories
++  "^silead,.*":
++    description: Silead Inc.
++  "^silergy,.*":
++    description: Silergy Corp.
++  "^siliconmitus,.*":
++    description: Silicon Mitus, Inc.
++  "^simte,.*":
++    description: k
++  "^sirf,.*":
++    description: SiRF Technology, Inc.
++  "^sis,.*":
++    description: Silicon Integrated Systems Corp.
++  "^sitronix,.*":
++    description: Sitronix Technology Corporation
++  "^skyworks,.*":
++    description: Skyworks Solutions, Inc.
++  "^smsc,.*":
++    description: Standard Microsystems Corporation
++  "^snps,.*":
++    description: Synopsys, Inc.
++  "^socionext,.*":
++    description: Socionext Inc.
++  "^solidrun,.*":
++    description: SolidRun
++  "^solomon,.*":
++    description: Solomon Systech Limited
++  "^sony,.*":
++    description: Sony Corporation
++  "^spansion,.*":
++    description: Spansion Inc.
++  "^sprd,.*":
++    description: Spreadtrum Communications Inc.
++  "^sst,.*":
++    description: Silicon Storage Technology, Inc.
++  "^st,.*":
++    description: STMicroelectronics
++  "^starry,.*":
++    description: Starry Electronic Technology (ShenZhen) Co., LTD
++  "^startek,.*":
++    description: Startek
++  "^ste,.*":
++    description: ST-Ericsson
++  "^stericsson,.*":
++    description: ST-Ericsson
++  "^summit,.*":
++    description: Summit microelectronics
++  "^sunchip,.*":
++    description: Shenzhen Sunchip Technology Co., Ltd
++  "^SUNW,.*":
++    description: Sun Microsystems, Inc
++  "^swir,.*":
++    description: Sierra Wireless
++  "^syna,.*":
++    description: Synaptics Inc.
++  "^synology,.*":
++    description: Synology, Inc.
++  "^tbs,.*":
++    description: TBS Technologies
++  "^tbs-biometrics,.*":
++    description: Touchless Biometric Systems AG
++  "^tcg,.*":
++    description: Trusted Computing Group
++  "^tcl,.*":
++    description: Toby Churchill Ltd.
++  "^technexion,.*":
++    description: TechNexion
++  "^technologic,.*":
++    description: Technologic Systems
++  "^tempo,.*":
++    description: Tempo Semiconductor
++  "^techstar,.*":
++    description: Shenzhen Techstar Electronics Co., Ltd.
++  "^terasic,.*":
++    description: Terasic Inc.
++  "^thine,.*":
++    description: THine Electronics, Inc.
++  "^ti,.*":
++    description: Texas Instruments
++  "^tianma,.*":
++    description: Tianma Micro-electronics Co., Ltd.
++  "^tlm,.*":
++    description: Trusted Logic Mobility
++  "^tmt,.*":
++    description: Tecon Microprocessor Technologies, LLC.
++  "^topeet,.*":
++    description: Topeet
++  "^toradex,.*":
++    description: Toradex AG
++  "^toshiba,.*":
++    description: Toshiba Corporation
++  "^toumaz,.*":
++    description: Toumaz
++  "^tpk,.*":
++    description: TPK U.S.A. LLC
++  "^tplink,.*":
++    description: TP-LINK Technologies Co., Ltd.
++  "^tpo,.*":
++    description: TPO
++  "^tq,.*":
++    description: TQ Systems GmbH
++  "^tronfy,.*":
++    description: Tronfy
++  "^tronsmart,.*":
++    description: Tronsmart
++  "^truly,.*":
++    description: Truly Semiconductors Limited
++  "^tsd,.*":
++    description: Theobroma Systems Design und Consulting GmbH
++  "^tyan,.*":
++    description: Tyan Computer Corporation
++  "^u-blox,.*":
++    description: u-blox
++  "^ucrobotics,.*":
++    description: uCRobotics
++  "^ubnt,.*":
++    description: Ubiquiti Networks
++  "^udoo,.*":
++    description: Udoo
++  "^uniwest,.*":
++    description: United Western Technologies Corp (UniWest)
++  "^upisemi,.*":
++    description: uPI Semiconductor Corp.
++  "^urt,.*":
++    description: United Radiant Technology Corporation
++  "^usi,.*":
++    description: Universal Scientific Industrial Co., Ltd.
++  "^v3,.*":
++    description: V3 Semiconductor
++  "^vamrs,.*":
++    description: Vamrs Ltd.
++  "^variscite,.*":
++    description: Variscite Ltd.
++  "^via,.*":
++    description: VIA Technologies, Inc.
++  "^virtio,.*":
++    description: Virtual I/O Device Specification, developed by the OASIS consortium
++  "^vishay,.*":
++    description: Vishay Intertechnology, Inc
++  "^vitesse,.*":
++    description: Vitesse Semiconductor Corporation
++  "^vivante,.*":
++    description: Vivante Corporation
++  "^vocore,.*":
++    description: VoCore Studio
++  "^voipac,.*":
++    description: Voipac Technologies s.r.o.
++  "^vot,.*":
++    description: Vision Optical Technology Co., Ltd.
++  "^wd,.*":
++    description: Western Digital Corp.
++  "^wetek,.*":
++    description: WeTek Electronics, limited.
++  "^wexler,.*":
++    description: Wexler
++  "^whwave,.*":
++    description: Shenzhen whwave Electronics, Inc.
++  "^wi2wi,.*":
++    description: Wi2Wi, Inc.
++  "^winbond,.*":
++    description: Winbond Electronics corp.
++  "^winstar,.*":
++    description: Winstar Display Corp.
++  "^wlf,.*":
++    description: Wolfson Microelectronics
++  "^wm,.*":
++    description: Wondermedia Technologies, Inc.
++  "^x-powers,.*":
++    description: X-Powers
++  "^xes,.*":
++    description: Extreme Engineering Solutions (X-ES)
++  "^xillybus,.*":
++    description: Xillybus Ltd.
++  "^xlnx,.*":
++    description: Xilinx
++  "^xunlong,.*":
++    description: Shenzhen Xunlong Software CO.,Limited
++  "^ysoft,.*":
++    description: Y Soft Corporation a.s.
++  "^zarlink,.*":
++    description: Zarlink Semiconductor
++  "^zeitec,.*":
++    description: ZEITEC Semiconductor Co., LTD.
++  "^zidoo,.*":
++    description: Shenzhen Zidoo Technology Co., Ltd.
++  "^zii,.*":
++    description: Zodiac Inflight Innovations
++  "^zte,.*":
++    description: ZTE Corp.
++  "^zyxel,.*":
++    description: ZyXEL Communications Corp.
 +
- 	ldev->pldev = pldev;
- 	platform_set_drvdata(pldev, ldev);
- 	atomic_set(&ldev->open_count, 1);
--	
++  # Normal property name match without a comma
++  # These should catch all node/property names without a prefix
++  "^[a-zA-Z0-9#][a-zA-Z0-9+\\-._@]{0,63}$": true
++  "^[a-zA-Z0-9+\\-._]*@[0-9a-zA-Z,]*$": true
 +
- 	mutex_init(&ldev->sem);
- 	lock_engine(ldev);
--	
++additionalProperties: false
 +
- 	// Get Engine regs resource
- 	r = platform_get_resource(pldev, IORESOURCE_MEM, 0);
--	if (!r){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: didn't get the engine regs resource!\n");
-+	if (!r) {
-+		dev_err(&ldev->pldev->dev, "%s: didn't get the engine regs resource!\n", __func__);
- 		rv = -ENXIO;
- 		goto err_kfree;
- 	}
- 	ldev->eng_regs = ioremap_nocache(r->start, resource_size(r));
--	if (!ldev->eng_regs){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: failed to ioremap engine regs!\n");
-+	if (!ldev->eng_regs) {
-+		dev_err(&ldev->pldev->dev, "%s: failed to ioremap engine regs!\n", __func__);
- 		rv = -ENXIO;
- 		goto err_kfree;
- 	}
--	
-+
- 	r = platform_get_resource(pldev, IORESOURCE_IRQ, 0);
--	if (!r){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: didn't get the IRQ resource!\n");
-+	if (!r) {
-+		dev_err(&ldev->pldev->dev, "%s: didn't get the IRQ resource!\n", __func__);
- 		rv = -ENXIO;
- 		goto err_kfree;
- 	}
- 	ldev->irq = r->start;
--	
-+
- 	// Setup miscdev struct
- 	dev = MKDEV(assigned_major_num, pldev->id);
- 	ldev->kpc_dma_dev = device_create(kpc_dma_class, &pldev->dev, dev, ldev, "kpc_dma%d", pldev->id);
--	if (IS_ERR(ldev->kpc_dma_dev)){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: device_create failed: %d\n", rv);
-+	if (IS_ERR(ldev->kpc_dma_dev)) {
-+		dev_err(&ldev->pldev->dev, "%s: device_create failed: %d\n", __func__, rv);
- 		goto err_kfree;
- 	}
--	
-+
- 	// Setup the DMA engine
- 	rv = setup_dma_engine(ldev, 30);
--	if (rv){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: failed to setup_dma_engine: %d\n", rv);
-+	if (rv) {
-+		dev_err(&ldev->pldev->dev, "%s: failed to setup_dma_engine: %d\n", __func__, rv);
- 		goto err_misc_dereg;
- 	}
--	
-+
- 	// Setup the sysfs files
- 	rv = sysfs_create_files(&(ldev->pldev->dev.kobj), ndd_attr_list);
--	if (rv){
--		dev_err(&ldev->pldev->dev, "kpc_dma_probe: Failed to add sysfs files: %d\n", rv);
-+	if (rv) {
-+		dev_err(&ldev->pldev->dev, "%s: Failed to add sysfs files: %d\n", __func__, rv);
- 		goto err_destroy_eng;
- 	}
--	
-+
- 	kpc_dma_add_device(ldev);
--	
-+
- 	return 0;
--	
-+
-  err_destroy_eng:
- 	destroy_dma_engine(ldev);
-  err_misc_dereg:
-@@ -176,22 +177,22 @@ static
- int  kpc_dma_remove(struct platform_device *pldev)
- {
- 	struct kpc_dma_device *ldev = platform_get_drvdata(pldev);
-+
- 	if (!ldev)
- 		return -ENXIO;
--	
--	dev_dbg(&ldev->pldev->dev, "kpc_dma_remove(pldev = [%p]) ldev = [%p]\n", pldev, ldev);
--	
-+
-+	dev_dbg(&ldev->pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
-+
- 	lock_engine(ldev);
- 	sysfs_remove_files(&(ldev->pldev->dev.kobj), ndd_attr_list);
- 	destroy_dma_engine(ldev);
- 	kpc_dma_del_device(ldev);
- 	device_destroy(kpc_dma_class, MKDEV(assigned_major_num, ldev->pldev->id));
- 	kfree(ldev);
--	
-+
- 	return 0;
- }
- 
--
- /**********  Driver Functions  **********/
- struct platform_driver kpc_dma_plat_driver_i = {
- 	.probe        = kpc_dma_probe,
-@@ -203,43 +204,43 @@ struct platform_driver kpc_dma_plat_driver_i = {
- };
- 
- static
--int __init  kpc_dma_driver_init(void)
-+int __init kpc_dma_driver_init(void)
- {
- 	int err;
--	
-+
- 	err = __register_chrdev(KPC_DMA_CHAR_MAJOR, 0, KPC_DMA_NUM_MINORS, "kpc_dma", &kpc_dma_fops);
--	if (err < 0){
-+	if (err < 0) {
- 		pr_err("Can't allocate a major number (%d) for kpc_dma (err = %d)\n", KPC_DMA_CHAR_MAJOR, err);
- 		goto fail_chrdev_register;
- 	}
- 	assigned_major_num = err;
--	
-+
- 	kpc_dma_class = class_create(THIS_MODULE, "kpc_dma");
- 	err = PTR_ERR(kpc_dma_class);
--	if (IS_ERR(kpc_dma_class)){
-+	if (IS_ERR(kpc_dma_class)) {
- 		pr_err("Can't create class kpc_dma (err = %d)\n", err);
- 		goto fail_class_create;
- 	}
--	
-+
- 	err = platform_driver_register(&kpc_dma_plat_driver_i);
--	if (err){
-+	if (err) {
- 		pr_err("Can't register platform driver for kpc_dma (err = %d)\n", err);
- 		goto fail_platdriver_register;
- 	}
--	
-+
- 	return err;
--	
--  fail_platdriver_register:
-+
-+fail_platdriver_register:
- 	class_destroy(kpc_dma_class);
--  fail_class_create:
-+fail_class_create:
- 	__unregister_chrdev(KPC_DMA_CHAR_MAJOR, 0, KPC_DMA_NUM_MINORS, "kpc_dma");
--  fail_chrdev_register:
-+fail_chrdev_register:
- 	return err;
- }
- module_init(kpc_dma_driver_init);
- 
- static
--void __exit  kpc_dma_driver_exit(void)
-+void __exit kpc_dma_driver_exit(void)
- {
- 	platform_driver_unregister(&kpc_dma_plat_driver_i);
- 	class_destroy(kpc_dma_class);
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-index ef913b7496e6..89925af7b81e 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-@@ -27,23 +27,23 @@ struct kpc_dma_device {
- 	struct device              *kpc_dma_dev;
- 	struct kobject              kobj;
- 	char                        name[16];
--	
-+
- 	int                         dir; // DMA_FROM_DEVICE || DMA_TO_DEVICE
- 	struct mutex                sem;
- 	unsigned int                irq;
- 	struct work_struct          irq_work;
--	
-+
- 	atomic_t                    open_count;
--	
-+
- 	size_t                      accumulated_bytes;
- 	u32                         accumulated_flags;
--	
-+
- 	// Descriptor "Pool" housekeeping
- 	u32                         desc_pool_cnt;
- 	struct dma_pool            *desc_pool;
- 	struct kpc_dma_descriptor  *desc_pool_first;
- 	struct kpc_dma_descriptor  *desc_pool_last;
--	
-+
- 	struct kpc_dma_descriptor  *desc_next;
- 	struct kpc_dma_descriptor  *desc_completed;
- };
-@@ -56,9 +56,9 @@ struct dev_private_data {
- 	u64                         user_sts;
- };
- 
--struct kpc_dma_device *  kpc_dma_lookup_device(int minor);
-+struct kpc_dma_device *kpc_dma_lookup_device(int minor);
- 
--extern struct file_operations  kpc_dma_fops;
-+extern const struct file_operations  kpc_dma_fops;
- 
- #define ENG_CAP_PRESENT                 0x00000001
- #define ENG_CAP_DIRECTION               0x00000002
-@@ -90,7 +90,7 @@ struct aio_cb_data {
- 	unsigned char       flags;
- 	struct kiocb       *kcb;
- 	size_t              len;
--	
-+
- 	unsigned int        page_count;
- 	struct page       **user_pages;
- 	struct sg_table     sgt;
-@@ -119,12 +119,13 @@ struct kpc_dma_descriptor {
- 		volatile u32  DescSystemAddrLS;
- 		volatile u32  DescSystemAddrMS;
- 		volatile u32  DescNextDescPtr;
--		
-+
- 		dma_addr_t    MyDMAAddr;
- 		struct kpc_dma_descriptor   *Next;
--		
-+
- 		struct aio_cb_data  *acd;
- } __attribute__((packed));
-+
- // DescControlFlags:
- #define DMA_DESC_CTL_SOP            BIT(7)
- #define DMA_DESC_CTL_EOP            BIT(6)
-@@ -157,35 +158,41 @@ void  WriteEngineControl(struct kpc_dma_device *eng, u32 value)
- {
- 	writel(value, eng->eng_regs + 1);
- }
-+
- static inline
- u32  GetEngineControl(struct kpc_dma_device *eng)
- {
- 	return readl(eng->eng_regs + 1);
- }
-+
- static inline
- void  SetClearEngineControl(struct kpc_dma_device *eng, u32 set_bits, u32 clear_bits)
- {
- 	u32 val = GetEngineControl(eng);
-+
- 	val |= set_bits;
- 	val &= ~clear_bits;
- 	WriteEngineControl(eng, val);
- }
- 
- static inline
--void  SetEngineNextPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor * desc)
-+void  SetEngineNextPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor *desc)
- {
- 	writel(desc->MyDMAAddr, eng->eng_regs + 2);
- }
-+
- static inline
--void  SetEngineSWPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor * desc)
-+void  SetEngineSWPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor *desc)
- {
- 	writel(desc->MyDMAAddr, eng->eng_regs + 3);
- }
-+
- static inline
- void  ClearEngineCompletePtr(struct kpc_dma_device *eng)
- {
- 	writel(0, eng->eng_regs + 4);
- }
-+
- static inline
- u32  GetEngineCompletePtr(struct kpc_dma_device *eng)
- {
-@@ -206,7 +213,6 @@ void  unlock_engine(struct kpc_dma_device *eng)
- 	mutex_unlock(&eng->sem);
- }
- 
--
- /// Shared Functions
- void  start_dma_engine(struct kpc_dma_device *eng);
- int   setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt);
++...
 -- 
-2.17.1
+2.20.1
 
