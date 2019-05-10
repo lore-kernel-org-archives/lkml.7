@@ -2,137 +2,98 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F52C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE8FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C1D217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:10:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QV72T8OM"
+	by mail.kernel.org (Postfix) with ESMTP id 05DD5217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfEJUKo (ORCPT
+        id S1728036AbfEJULs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:10:44 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44873 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727984AbfEJUKm (ORCPT
+        Fri, 10 May 2019 16:11:48 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40221 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727676AbfEJULr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:10:42 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so6666474edm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 13:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=lt6uPVHRTb6qycTyfS8wkIJ7UlOCcAUHHaR/0rJBxrQ=;
-        b=QV72T8OMOUUuvtH5oPeL7SVsQpebI/2757iB7nfbi1QgQeFEOr2Pzznb+d2dTeQJaB
-         75txDSZZkqVnX5uQQsVZIGR7r1ncJFMx40HiqBczLATKX+lLzoAyQ1V+YExXXPTkrUaN
-         X1M2+twWwnDTuIqBKLxkHrxqOmrDznz1TXYRI9Lc0vSRp6S2FI2NSwJhVeLJM4hzPC8X
-         QJhJL217BpKHtcGFYN/Evmo/EX1PKkh85bbGMdRJ93FXIygL7dHcx843s3QZlSHEfmn4
-         R+NqS8iRGL49r2mAQfDtJGZi2y12ooafACxZWAizNtF2SobCC1chFXd0fWimueXDK9Gs
-         FtoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lt6uPVHRTb6qycTyfS8wkIJ7UlOCcAUHHaR/0rJBxrQ=;
-        b=XIEcsMJHip4E5kTIfkjoySlwUNlXlWP5tax7G89G1bRRjfdJ5EZtEpQ612cG9NFCaQ
-         7Wp0nfFON31bFKt+1EmaOfbq0MT+y6BAOLwDzRJqiJUrluyUUO8DO+qngK6SeTMn5zwv
-         mwKeJCJfQkN0SJbjZw1gZSboayLFnUH5RmP4HEksj7v3G/669lP6qTsi33MecrBdVmoD
-         NVvpkWjPrM3jh7T/9HAMplAz357zHHdo/NqwVRjD3ZrBX9PGBrS7YnCMfYWJm7sutv91
-         SxZi/2d5WM2IXl3GDCLOemRKW0V8qf70noa14bBejdCZfHTFiw4Z5vwlw6HYm5FkZEtJ
-         Xuyw==
-X-Gm-Message-State: APjAAAVnOVAiM1UGVpTQQ+AMh5nX2WalHp5uTvp1qDJwcyA48eTunK0U
-        3xxLo6+uQsHePOVWMekYD9nXQw==
-X-Google-Smtp-Source: APXvYqzUgNqtgrYldPEctqQFjJcqlqIpZBpRrpOZjmBasE/wUyTEH0k9GdgYn5cen2XiV7pz/Q0joQ==
-X-Received: by 2002:a50:982f:: with SMTP id g44mr13613170edb.278.1557519040152;
-        Fri, 10 May 2019 13:10:40 -0700 (PDT)
-Received: from google.com ([2a00:79e0:1b:201:ee0a:cce3:df40:3ac5])
-        by smtp.gmail.com with ESMTPSA id k37sm1719073edb.11.2019.05.10.13.10.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 13:10:38 -0700 (PDT)
-Date:   Fri, 10 May 2019 22:10:32 +0200
-From:   Jann Horn <jannh@google.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-Message-ID: <20190510201032.GA253532@google.com>
-References: <20190506165439.9155-1-cyphar@cyphar.com>
- <20190506165439.9155-6-cyphar@cyphar.com>
- <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
- <87o94d6aql.fsf@xmission.com>
+        Fri, 10 May 2019 16:11:47 -0400
+X-Originating-IP: 90.66.53.80
+Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id F2EA7C0002;
+        Fri, 10 May 2019 20:11:43 +0000 (UTC)
+Date:   Fri, 10 May 2019 22:11:43 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu.Beznea@microchip.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] clk: at91: sckc: sama5d4 has no bypass support
+Message-ID: <20190510201143.GC7622@piout.net>
+References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
+ <1557487388-32098-2-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87o94d6aql.fsf@xmission.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557487388-32098-2-git-send-email-claudiu.beznea@microchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 07:38:58PM -0500, Eric W. Biederman wrote:
-> Jann Horn <jannh@google.com> writes:
-> > In my opinion, CVE-2019-5736 points out two different problems:
-> >
-> > The big problem: The __ptrace_may_access() logic has a special-case
-> > short-circuit for "introspection" that you can't opt out of;
+On 10/05/2019 11:23:27+0000, Claudiu.Beznea@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> Once upon a time in a galaxy far far away I fixed a bug where we missing
-> ptrace_may_access checks on various proc files and systems using selinux
-> stopped working.  At the time selinux did not allow ptrace like access
-> to yourself.  The "introspection" special case was the quick and simple
-> work-around.
+> The slow clock of SAMA5D4 has no bypass support thus remove it.
 > 
-> There is nothing fundamental in having the "introspection" special case
-> except that various lsms have probably grown to depend upon it being
-> there.  I expect without difficulty we could move the check down
-> into the various lsms.  Which would get that check out of the core
-> kernel code.
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Oh, if that's an option, that would be great, I think.
+> ---
+>  drivers/clk/at91/sckc.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
+> index e76b1d64e905..6c55a7a86f79 100644
+> --- a/drivers/clk/at91/sckc.c
+> +++ b/drivers/clk/at91/sckc.c
+> @@ -429,7 +429,6 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  	struct clk_init_data init;
+>  	const char *xtal_name;
+>  	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
+> -	bool bypass;
+>  	int ret;
+>  
+>  	if (!regbase)
+> @@ -443,8 +442,6 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  
+>  	xtal_name = of_clk_get_parent_name(np, 0);
+>  
+> -	bypass = of_property_read_bool(np, "atmel,osc-bypass");
+> -
+>  	osc = kzalloc(sizeof(*osc), GFP_KERNEL);
+>  	if (!osc)
+>  		return;
+> @@ -459,9 +456,6 @@ static void __init of_sama5d4_sckc_setup(struct device_node *np)
+>  	osc->sckcr = regbase;
+>  	osc->startup_usec = 1200000;
+>  
+> -	if (bypass)
+> -		writel((readl(regbase) | AT91_SCKC_OSC32BYP), regbase);
+> -
+>  	hw = &osc->hw;
+>  	ret = clk_hw_register(NULL, &osc->hw);
+>  	if (ret) {
+> -- 
+> 2.7.4
+> 
 
-
-But this means, for example, that a non-root, non-dumpable process can't
-open /proc/self/maps anymore, or open /proc/self/fd/*, and things like
-that, without making itself dumpable. I would be surprised if there is
-no code out there that relies on that.
-
-From what I can tell, without the introspection special case,
-introspection would fail in the following cases (assuming that the
-process is not capable and isn't using sys_setfs[ug]id()):
-
- - ruid/euid/suid are not all the same
- - rgid/egid/sgid are not all the same
- - process is not dumpable
-
-I think that there probably should be some way for a non-dumpable
-process to look at its own procfs entries? If we could start from a
-clean slate, I'd propose an opt-in flag to openat() for that, but
-since we don't have a clean slate, I'd be afraid of breaking things
-with that. But maybe I'm just being overly careful here?
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
