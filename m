@@ -2,97 +2,87 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B976C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E6FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 544E1217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3902175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfEJPa5 (ORCPT
+        id S1727554AbfEJPg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:30:57 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54416 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfEJPa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:30:56 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id A1AC63C00D1;
-        Fri, 10 May 2019 17:30:54 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9nHt6qMwHxly; Fri, 10 May 2019 17:30:47 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 10 May 2019 11:36:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:27909 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727374AbfEJPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:36:57 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 91B4A3C004C;
-        Fri, 10 May 2019 17:30:47 +0200 (CEST)
-Received: from vmlxhi-121.adit-jv.com (10.72.93.65) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
- 2019 17:30:47 +0200
-From:   Michael Rodin <mrodin@de.adit-jv.com>
-To:     <kieran.bingham@ideasonboard.com>, <mchehab@kernel.org>,
-        <linux-media@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <michael@rodin.online>,
-        <mrodin@de.adit-jv.com>
-Subject: [PATCH] media: i2c: adv748x: initialize bit 7 of csi_tx_top_reg_1f
-Date:   Fri, 10 May 2019 17:30:40 +0200
-Message-ID: <1557502240-16274-1-git-send-email-mrodin@de.adit-jv.com>
-X-Mailer: git-send-email 2.7.4
+        by mx1.redhat.com (Postfix) with ESMTPS id 7872A30821B5;
+        Fri, 10 May 2019 15:36:56 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 71B9C1001DF3;
+        Fri, 10 May 2019 15:36:50 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 10 May 2019 17:36:54 +0200 (CEST)
+Date:   Fri, 10 May 2019 17:36:47 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, arnd@arndb.de, arunks@codeaurora.org,
+        cyphar@cyphar.com, dhowells@redhat.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, guro@fb.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, mhocko@suse.com,
+        mingo@kernel.org, mtk.manpages@gmail.com, namit@vmware.com,
+        peterz@infradead.org, riel@surriel.com, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        wad@chromium.org,
+        syzbot+3286e58549edc479faae@syzkaller.appspotmail.com
+Subject: Re: [PATCH] fork: do not release lock that wasn't taken
+Message-ID: <20190510153647.GB21421@redhat.com>
+References: <20190510104913.27143-1-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.72.93.65]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510104913.27143-1-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 10 May 2019 15:36:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to pages 188 and 193 of the "UG-747: ADV7481 Reference Manual"
-[1], the bit 7 (FRAMENUMBER_INTERLACED) of the register csi_tx_top_reg_1f
-"sets association of frame number in the FS and FE packets with the F bit
-in the EAV/SAV codes". EAV/SAV codes are defined in [2].
-According to [2]:
-F=0 for field 1
-F=1 for field 2
-The bit FRAMENUMBER_INTERLACED is not initialized anywhere in the current
-version of the adv748x driver and therefore it is always 0, which is the
-default value according to [1]. Therefore the current association of field
-number from EAV/SAV code with the frame number in CSI FS and FE packets is:
-field 1 (top field for PAL, bottom field for NTSC) -> CSI frame number 2
-field 2 (bottom field for PAL, top field for NTSC) -> CSI frame number 1
-But this breaks frame number based field detection of top/bottom fields
-in CSI receivers. Therefore it makes sense to initialize the
-FRAMENUMBER_INTERLACED bit to 1 so the association is as expected:
-field 1 -> frame number 1
-field 2 -> frame number 2
+On 05/10, Christian Brauner wrote:
+>
+> @@ -2102,7 +2102,7 @@ static __latent_entropy struct task_struct *copy_process(
+>  	 */
+>  	retval = cgroup_can_fork(p);
+>  	if (retval)
+> -		goto bad_fork_put_pidfd;
+> +		goto bad_fork_cgroup_threadgroup_change_end;
+>
+>  	/*
+>  	 * From this point on we must avoid any synchronous user-space
+> @@ -2217,11 +2217,12 @@ static __latent_entropy struct task_struct *copy_process(
+>  	spin_unlock(&current->sighand->siglock);
+>  	write_unlock_irq(&tasklist_lock);
+>  	cgroup_cancel_fork(p);
+> +bad_fork_cgroup_threadgroup_change_end:
+> +	cgroup_threadgroup_change_end(current);
+>  bad_fork_put_pidfd:
+>  	if (clone_flags & CLONE_PIDFD)
+>  		ksys_close(pidfd);
+>  bad_fork_free_pid:
+> -	cgroup_threadgroup_change_end(current);
+>  	if (pid != &init_struct_pid)
+>  		free_pid(pid);
+>  bad_fork_cleanup_thread:
 
-[1] https://www.analog.com/en/products/adv7481.html
-[2] https://www.itu.int/rec/R-REC-BT.656-5-200712-I/en
-
-Suggested-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
----
- drivers/media/i2c/adv748x/adv748x-core.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index f57cd77..4dd1a13 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -278,6 +278,9 @@ static int adv748x_power_up_tx(struct adv748x_csi2 *tx)
- 	usleep_range(1000, 1500);
- 	adv748x_write_check(state, page, 0x31, 0x80, &ret);
- 
-+	/* set bit 7 (FRAMENUMBER_INTERLACED) in csi_tx_top_reg_1f */
-+	adv748x_write_check(state, page, 0x1f, 0x80, &ret);
-+
- 	return ret;
- }
- 
--- 
-2.7.4
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
 
