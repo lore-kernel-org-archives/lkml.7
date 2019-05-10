@@ -2,205 +2,241 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A7CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C66BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C18920881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB92920989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mUoEymcb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbfEJKVj (ORCPT
+        id S1727502AbfEJKXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:21:39 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42628 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727425AbfEJKVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:21:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7E7CA78;
-        Fri, 10 May 2019 03:21:37 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC863F738;
-        Fri, 10 May 2019 03:21:35 -0700 (PDT)
-Subject: Re: [PATCH 1/4] s390: pci: Exporting access to CLP PCI function and
- PCI group
-To:     Pierre Morel <pmorel@linux.ibm.com>, sebott@linux.vnet.ibm.com
-Cc:     linux-s390@vger.kernel.org, pasic@linux.vnet.ibm.com,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, walling@linux.ibm.com,
-        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        iommu@lists.linux-foundation.org, schwidefsky@de.ibm.com,
-        gerald.schaefer@de.ibm.com
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
- <1557476555-20256-2-git-send-email-pmorel@linux.ibm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a06ffd83-5fde-8c6e-b25b-bd4163d4cd5f@arm.com>
-Date:   Fri, 10 May 2019 11:21:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 06:23:42 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:46928 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfEJKXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 06:23:40 -0400
+Received: by mail-ot1-f68.google.com with SMTP id v17so5048719otp.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:23:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UHZYQrU2k5/EmOsBUpLtRRAaPrXBX3oybz/yjY48P7E=;
+        b=mUoEymcb6cW/ydz7Iyie0dwZ+NVLPbtI06YvlAIyAo0qEMmXbIXsBm02Wb6XedhbeS
+         NtsEinZHqp2mICIzcuc3v7HkE2cu4v8XAHbmhFvE5oc4iSYD3quuD3/f9XeWQqWjA8PX
+         4ch+alAHSa7l+AantV05f+cM4GfuoFANXK6LWouAB4zg/LXsPHDaqHYxV0wzMhLip7Qy
+         avCBDHinoX4lMPC9byXFSFYphBHisRSJIehBaUCJimb+UyOuv12o3ArJlKv+Mq6D1b2p
+         80OBMvpb9Hc8BL/1jAp1kZ+sk5DlNzRdsXTQ61TPj2or2Uz3h4BIOavZhzMjkXLR7QfO
+         XZ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UHZYQrU2k5/EmOsBUpLtRRAaPrXBX3oybz/yjY48P7E=;
+        b=XRx07RS+xqszYE8v8uoKdKlZp/9ToDS1h337H0nRPiX1e6mptIlk7Kz9bTa2LH5Yuc
+         ekLOkt18vKvQnRdWF1R/pu80OOKGqILevDe036+Z7FTdk8XfWhJRmKp3Nz/75mpS2N4/
+         V1D/AMK1PiVmExAG8l7ZG9z5ccxKq/inZE2qM/3pbVuyvvmlFBtZq7u3w6qlhH7+jxs1
+         oVWINdjbtvx6gV1ot3w60wo2c5M0KD7kozLDdEBfyC4UnHs2dhubIk4WYs1AReBngkuP
+         3h+JO6mmBbO8K9idZm7z7Rj2/DnotNv/TAbiiPnsPwWHO41GnDrTDn2ValOoXHy0gRlG
+         GpUQ==
+X-Gm-Message-State: APjAAAVpRCjf4V+KJxU+DzWvhVLx4iFpOTOvo4x7I6BCUrJW9q3eELr5
+        Sdwc8FIlnVLvrdAQirBPqpfVcnjTXy4BIUPDrBfetA==
+X-Google-Smtp-Source: APXvYqxyQguW/ut/M65VYn2cEyGSrBlsl9R9jDYGIHFrZ64T6ZIbe+20m1MzAOYQ8+zaL7BJr7rJs9TKrOuqlNGOpGY=
+X-Received: by 2002:a9d:640f:: with SMTP id h15mr618394otl.338.1557483818281;
+ Fri, 10 May 2019 03:23:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1557476555-20256-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu> <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu> <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu> <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com> <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com> <20190509233043.GC20877@mit.edu>
+ <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com> <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
+ <a1b88d5add15d43de0468c32d9a2427629337abb.camel@oracle.com> <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
+In-Reply-To: <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 10 May 2019 03:23:26 -0700
+Message-ID: <CAFd5g47Fvafwgh15JNfxSBRf5qqG2z+V+XGAB2cJtNnHFTiFfQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Knut Omang <knut.omang@oracle.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        "Bird, Timothy" <Tim.Bird@sony.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jeff Dike <jdike@addtoit.com>, Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 09:22, Pierre Morel wrote:
-> For the generic implementation of VFIO PCI we need to retrieve
-> the hardware configuration for the PCI functions and the
-> PCI function groups.
-> 
-> We modify the internal function using CLP Query PCI function and
-> CLP query PCI function group so that they can be called from
-> outside the S390 architecture PCI code and prefix the two
-> functions with "zdev" to make clear that they can be called
-> knowing only the associated zdevice.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> ---
->   arch/s390/include/asm/pci.h |  3 ++
->   arch/s390/pci/pci_clp.c     | 72 ++++++++++++++++++++++++---------------------
->   2 files changed, 41 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index 305befd..e66b246 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -261,4 +261,7 @@ cpumask_of_pcibus(const struct pci_bus *bus)
->   
->   #endif /* CONFIG_NUMA */
->   
-> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
-> +			 struct clp_req_rsp_query_pci_grp *rrb);
-> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb);
->   #endif
-> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> index 3a36b07..4ae5d77 100644
-> --- a/arch/s390/pci/pci_clp.c
-> +++ b/arch/s390/pci/pci_clp.c
-> @@ -113,32 +113,18 @@ static void clp_store_query_pci_fngrp(struct zpci_dev *zdev,
->   	}
->   }
->   
-> -static int clp_query_pci_fngrp(struct zpci_dev *zdev, u8 pfgid)
-> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
-> +			 struct clp_req_rsp_query_pci_grp *rrb)
->   {
-> -	struct clp_req_rsp_query_pci_grp *rrb;
-> -	int rc;
-> -
-> -	rrb = clp_alloc_block(GFP_KERNEL);
-> -	if (!rrb)
-> -		return -ENOMEM;
-> -
->   	memset(rrb, 0, sizeof(*rrb));
->   	rrb->request.hdr.len = sizeof(rrb->request);
->   	rrb->request.hdr.cmd = CLP_QUERY_PCI_FNGRP;
->   	rrb->response.hdr.len = sizeof(rrb->response);
-> -	rrb->request.pfgid = pfgid;
-> +	rrb->request.pfgid = zdev->pfgid;
->   
-> -	rc = clp_req(rrb, CLP_LPS_PCI);
-> -	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK)
-> -		clp_store_query_pci_fngrp(zdev, &rrb->response);
-> -	else {
-> -		zpci_err("Q PCI FGRP:\n");
-> -		zpci_err_clp(rrb->response.hdr.rsp, rc);
-> -		rc = -EIO;
-> -	}
-> -	clp_free_block(rrb);
-> -	return rc;
-> +	return clp_req(rrb, CLP_LPS_PCI);
->   }
-> +EXPORT_SYMBOL(zdev_query_pci_fngrp);
+> On Fri, May 10, 2019 at 7:49 AM Knut Omang <knut.omang@oracle.com> wrote:
+> >
+> > On Thu, 2019-05-09 at 22:18 -0700, Frank Rowand wrote:
+> > > On 5/9/19 4:40 PM, Logan Gunthorpe wrote:
+> > > >
+> > > >
+> > > > On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
+> > > >> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
+> > > >>>
+> > > >>> The second item, arguably, does have significant overlap with kselftest.
+> > > >>> Whether you are running short tests in a light weight UML environment or
+> > > >>> higher level tests in an heavier VM the two could be using the same
+> > > >>> framework for writing or defining in-kernel tests. It *may* also be valuable
+> > > >>> for some people to be able to run all the UML tests in the heavy VM
+> > > >>> environment along side other higher level tests.
+> > > >>>
+> > > >>> Looking at the selftests tree in the repo, we already have similar items to
+> > > >>> what Kunit is adding as I described in point (2) above. kselftest_harness.h
+> > > >>> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
+> > > >>> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
+> > > >>>
+> > > >>> However, the number of users of this harness appears to be quite small. Most
+> > > >>> of the code in the selftests tree seems to be a random mismash of scripts
+> > > >>> and userspace code so it's not hard to see it as something completely
+> > > >>> different from the new Kunit:
+> > > >>>
+> > > >>> $ git grep --files-with-matches kselftest_harness.h *
+> > > >>
+> > > >> To the extent that we can unify how tests are written, I agree that
+> > > >> this would be a good thing.  However, you should note that
+> > > >> kselftest_harness.h is currently assums that it will be included in
+> > > >> userspace programs.  This is most obviously seen if you look closely
+> > > >> at the functions defined in the header files which makes calls to
+> > > >> fork(), abort() and fprintf().
+> > > >
+> > > > Ah, yes. I obviously did not dig deep enough. Using kunit for
+> > > > in-kernel tests and kselftest_harness for userspace tests seems like
+> > > > a sensible line to draw to me. Trying to unify kernel and userspace
+> > > > here sounds like it could be difficult so it's probably not worth
+> > > > forcing the issue unless someone wants to do some really fancy work
+> > > > to get it done.
+> > > >
+> > > > Based on some of the other commenters, I was under the impression
+> > > > that kselftests had in-kernel tests but I'm not sure where or if they
+> > > > exist.
+> > >
+> > > YES, kselftest has in-kernel tests.  (Excuse the shouting...)
+> > >
+> > > Here is a likely list of them in the kernel source tree:
+> > >
+> > > $ grep module_init lib/test_*.c
+> > > lib/test_bitfield.c:module_init(test_bitfields)
+> > > lib/test_bitmap.c:module_init(test_bitmap_init);
+> > > lib/test_bpf.c:module_init(test_bpf_init);
+> > > lib/test_debug_virtual.c:module_init(test_debug_virtual_init);
+> > > lib/test_firmware.c:module_init(test_firmware_init);
+> > > lib/test_hash.c:module_init(test_hash_init);  /* Does everything */
+> > > lib/test_hexdump.c:module_init(test_hexdump_init);
+> > > lib/test_ida.c:module_init(ida_checks);
+> > > lib/test_kasan.c:module_init(kmalloc_tests_init);
+> > > lib/test_list_sort.c:module_init(list_sort_test);
+> > > lib/test_memcat_p.c:module_init(test_memcat_p_init);
+> > > lib/test_module.c:static int __init test_module_init(void)
+> > > lib/test_module.c:module_init(test_module_init);
+> > > lib/test_objagg.c:module_init(test_objagg_init);
+> > > lib/test_overflow.c:static int __init test_module_init(void)
+> > > lib/test_overflow.c:module_init(test_module_init);
+> > > lib/test_parman.c:module_init(test_parman_init);
+> > > lib/test_printf.c:module_init(test_printf_init);
+> > > lib/test_rhashtable.c:module_init(test_rht_init);
+> > > lib/test_siphash.c:module_init(siphash_test_init);
+> > > lib/test_sort.c:module_init(test_sort_init);
+> > > lib/test_stackinit.c:module_init(test_stackinit_init);
+> > > lib/test_static_key_base.c:module_init(test_static_key_base_init);
+> > > lib/test_static_keys.c:module_init(test_static_key_init);
+> > > lib/test_string.c:module_init(string_selftest_init);
+> > > lib/test_ubsan.c:module_init(test_ubsan_init);
+> > > lib/test_user_copy.c:module_init(test_user_copy_init);
+> > > lib/test_uuid.c:module_init(test_uuid_init);
+> > > lib/test_vmalloc.c:module_init(vmalloc_test_init)
+> > > lib/test_xarray.c:module_init(xarray_checks);
+> > >
+> > >
+> > > > If they do exists, it seems like it would make sense to
+> > > > convert those to kunit and have Kunit tests run-able in a VM or
+> > > > baremetal instance.
+> > >
+> > > They already run in a VM.
+> > >
+> > > They already run on bare metal.
+> > >
+> > > They already run in UML.
+> > >
+> > > This is not to say that KUnit does not make sense.  But I'm still trying
+> > > to get a better description of the KUnit features (and there are
+> > > some).
+> >
+> > FYI, I have a master student who looks at converting some of these to KTF, such as for
+> > instance the XArray tests, which lended themselves quite good to a semi-automated
+> > conversion.
+> >
+> > The result is also a somewhat more compact code as well as the flexibility
+> > provided by the Googletest executor and the KTF frameworks, such as running selected
+> > tests, output formatting, debugging features etc.
+>
+> So is KTF already in upstream? Or is the plan to unify the KTF and
 
-AFAICS it's only the IOMMU driver itself which needs to call these. That 
-can't be built as a module, so you shouldn't need explicit exports - the 
-header declaration is enough.
+I am not certain about KTF's upstream plans, but I assume that Knut
+would have CC'ed me on the thread if he had started working on it.
 
-Robin.
+> Kunit in-kernel test harnesses? Because there's tons of these
 
->   static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->   				  struct clp_rsp_query_pci *response)
-> @@ -174,32 +160,50 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->   	return 0;
->   }
->   
-> -static int clp_query_pci_fn(struct zpci_dev *zdev, u32 fh)
-> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb)
-> +{
-> +
-> +	memset(rrb, 0, sizeof(*rrb));
-> +	rrb->request.hdr.len = sizeof(rrb->request);
-> +	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
-> +	rrb->response.hdr.len = sizeof(rrb->response);
-> +	rrb->request.fh = zdev->fh;
-> +
-> +	return clp_req(rrb, CLP_LPS_PCI);
-> +}
-> +EXPORT_SYMBOL(zdev_query_pci_fn);
-> +
-> +static int clp_query_pci(struct zpci_dev *zdev)
->   {
->   	struct clp_req_rsp_query_pci *rrb;
-> +	struct clp_req_rsp_query_pci_grp *grrb;
->   	int rc;
->   
->   	rrb = clp_alloc_block(GFP_KERNEL);
->   	if (!rrb)
->   		return -ENOMEM;
->   
-> -	memset(rrb, 0, sizeof(*rrb));
-> -	rrb->request.hdr.len = sizeof(rrb->request);
-> -	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
-> -	rrb->response.hdr.len = sizeof(rrb->response);
-> -	rrb->request.fh = fh;
-> -
-> -	rc = clp_req(rrb, CLP_LPS_PCI);
-> -	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK) {
-> -		rc = clp_store_query_pci_fn(zdev, &rrb->response);
-> -		if (rc)
-> -			goto out;
-> -		rc = clp_query_pci_fngrp(zdev, rrb->response.pfgid);
-> -	} else {
-> +	rc = zdev_query_pci_fn(zdev, rrb);
-> +	if (rc || rrb->response.hdr.rsp != CLP_RC_OK) {
->   		zpci_err("Q PCI FN:\n");
->   		zpci_err_clp(rrb->response.hdr.rsp, rc);
->   		rc = -EIO;
-> +		goto out;
->   	}
-> +	rc = clp_store_query_pci_fn(zdev, &rrb->response);
-> +	if (rc)
-> +		goto out;
-> +
-> +	grrb = (struct clp_req_rsp_query_pci_grp *)rrb;
-> +	rc = zdev_query_pci_fngrp(zdev, grrb);
-> +	if (rc || grrb->response.hdr.rsp != CLP_RC_OK) {
-> +		zpci_err("Q PCI FGRP:\n");
-> +		zpci_err_clp(grrb->response.hdr.rsp, rc);
-> +		rc = -EIO;
-> +		goto out;
-> +	}
-> +	clp_store_query_pci_fngrp(zdev, &grrb->response);
-> +
->   out:
->   	clp_free_block(rrb);
->   	return rc;
-> @@ -219,7 +223,7 @@ int clp_add_pci_device(u32 fid, u32 fh, int configured)
->   	zdev->fid = fid;
->   
->   	/* Query function properties and update zdev */
-> -	rc = clp_query_pci_fn(zdev, fh);
-> +	rc = clp_query_pci(zdev);
->   	if (rc)
->   		goto error;
->   
-> 
+No, no plan. Knut and I talked about this a good while ago and it
+seemed that we had pretty fundamentally different approaches both in
+terms of implementation and end goal. Combining them seemed pretty
+infeasible, at least from a technical perspective. Anyway, I am sure
+Knut would like to give him perspective on the matter and I don't want
+to say too much without first giving him a chance to chime in on the
+matter.
+
+Nevertheless, I hope you don't see resolving this as a condition for
+accepting this patchset. I had several rounds of RFC on KUnit, and no
+one had previously brought this up.
+
+> in-kernel unit tests already, and every merge we get more (Frank's
+> list didn't even look into drivers or anywhere else, e.g. it's missing
+> the locking self tests I worked on in the past), and a more structured
+> approach would really be good.
+
+Well, that's what I am trying to do. I hope you like it!
+
+Cheers!
