@@ -2,77 +2,75 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BA7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2FFC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD9420881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:49:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC44320881
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727631AbfEJPtQ (ORCPT
+        id S1727670AbfEJPt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:49:16 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:52822 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726930AbfEJPtP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:49:15 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TRMCMo-_1557503341;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRMCMo-_1557503341)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 May 2019 23:49:04 +0800
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     William Kucharski <william.kucharski@oracle.com>,
-        "Huang, Ying" <ying.huang@intel.com>
-Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <1fb73973-f409-1411-423b-c48895d3dde8@linux.alibaba.com>
- <87tve3j9jf.fsf@yhuang-dev.intel.com>
- <640160C2-4579-45FC-AABB-B60185A2348D@oracle.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <b8930783-ec73-7330-903f-93a81efb2cd3@linux.alibaba.com>
-Date:   Fri, 10 May 2019 08:48:58 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 10 May 2019 11:49:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:53257 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726930AbfEJPt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:49:26 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 19EC3227A81; Fri, 10 May 2019 17:49:05 +0200 (CEST)
+Date:   Fri, 10 May 2019 17:49:04 +0200
+From:   "hch@lst.de" <hch@lst.de>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
+        "hch@lst.de" <hch@lst.de>, "axboe@fb.com" <axboe@fb.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "Busch, Keith" <keith.busch@intel.com>
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of
+ D3 on Suspend-to-Idle
+Message-ID: <20190510154904.GA31649@lst.de>
+References: <20190509103142.GA19550@lst.de> <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com> <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM> <20190509192807.GB9675@localhost.localdomain> <7a002851c435481593f8629ec9193e40@AUSX13MPC101.AMER.DELL.COM> <20190509215409.GD9675@localhost.localdomain> <495d76c66aec41a8bfbbf527820f8eb9@AUSX13MPC101.AMER.DELL.COM> <BC5EB1D0-8718-48B3-ACAB-F7E5571D821D@canonical.com> <20190510140209.GG9675@localhost.localdomain> <D2D197AF-0072-42AC-A844-8D6BC9677949@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <640160C2-4579-45FC-AABB-B60185A2348D@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D2D197AF-0072-42AC-A844-8D6BC9677949@canonical.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 10, 2019 at 11:18:52PM +0800, Kai Heng Feng wrote:
+> > I'm afraid the requirement is still not clear to me. AFAIK, all our
+> > barriers routines ensure data is visible either between CPUs, or between
+> > CPU and devices. The CPU never accesses HMB memory, so there must be some
+> > other reasoning if this barrier is a real requirement for this device.
+> 
+> Sure, I’ll ask vendor what that MemRd is for.
 
+I'd like to understand this bug, but this thread leaves me a little
+confused.  So we have a NVMe driver with HMB.
 
-On 5/9/19 9:33 PM, William Kucharski wrote:
->
->> On May 9, 2019, at 9:03 PM, Huang, Ying <ying.huang@intel.com> wrote:
->>
->> Yang Shi <yang.shi@linux.alibaba.com> writes:
->>
->>> On 5/9/19 7:12 PM, Huang, Ying wrote:
->>>> How about to change this to
->>>>
->>>>
->>>>          nr_reclaimed += hpage_nr_pages(page);
->>> Either is fine to me. Is this faster than "1 << compound_order(page)"?
->> I think the readability is a little better.  And this will become
->>
->>         nr_reclaimed += 1
->>
->> if CONFIG_TRANSPARENT_HUAGEPAGE is disabled.
-> I find this more legible and self documenting, and it avoids the bit shift
-> operation completely on the majority of systems where THP is not configured.
+Something crashes - the kernel or the firmware?
+When does it crash?  suspend or resume?
 
-Yes, I do agree. Thanks for the suggestion.
->
+That crash seems to be related to a related to a PCIe TLP that reads
+memory from the host, probably due to the HMB.
 
+But a device with a HMB has been told that it can access that memory
+at any time.  So if in any given suspend state TLP to access RAM are
+not allowed we'll have to tell the device to stop using the HMB.
+
+So: what power states do not allow the device to DMA to / from host
+memory?  How do we find out we are about to enter those from the
+pm methods?  We'll then need to disable the HMB, which might suck
+in terms of latency.
