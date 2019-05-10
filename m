@@ -6,121 +6,195 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6541C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D3DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28D520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D349620850
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfEJJI4 (ORCPT
+        id S1727192AbfEJJMp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:08:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51790 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfEJJI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:08:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 23BC3C058CAF;
-        Fri, 10 May 2019 09:08:55 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C3A35D962;
-        Fri, 10 May 2019 09:08:40 +0000 (UTC)
-Date:   Fri, 10 May 2019 11:08:38 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
-        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
-        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
-        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
-        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
-        changpeng.liu@intel.com, Ken.Xue@amd.com,
-        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
-        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190510110838.2df4c4d0.cohuck@redhat.com>
-In-Reply-To: <20190509164825.GG2868@work-vm>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-        <20190507151826.502be009@x1.home>
-        <20190509173839.2b9b2b46.cohuck@redhat.com>
-        <20190509154857.GF2868@work-vm>
-        <20190509175404.512ae7aa.cohuck@redhat.com>
-        <20190509164825.GG2868@work-vm>
-Organization: Red Hat GmbH
+        Fri, 10 May 2019 05:12:45 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:54219 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726992AbfEJJMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:12:44 -0400
+X-Originating-IP: 90.88.28.253
+Received: from xps13 (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id BCECA6000B;
+        Fri, 10 May 2019 09:12:37 +0000 (UTC)
+Date:   Fri, 10 May 2019 11:12:36 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, richard@nod.at
+Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
+Message-ID: <20190510111121.54f42e70@xps13>
+In-Reply-To: <OF5E2BF75D.98A43E33-ON482583F6.002E7A65-482583F6.0030A2DE@mxic.com.tw>
+References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
+        <20190510094528.6008e8da@xps13>
+        <OF5E2BF75D.98A43E33-ON482583F6.002E7A65-482583F6.0030A2DE@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 10 May 2019 09:08:55 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 17:48:26 +0100
-"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+Hi Mason,
 
-> * Cornelia Huck (cohuck@redhat.com) wrote:
-> > On Thu, 9 May 2019 16:48:57 +0100
-> > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> >   
-> > > * Cornelia Huck (cohuck@redhat.com) wrote:  
-> > > > On Tue, 7 May 2019 15:18:26 -0600
-> > > > Alex Williamson <alex.williamson@redhat.com> wrote:
-> > > >     
-> > > > > On Sun,  5 May 2019 21:49:04 -0400
-> > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:    
-> > > >     
-> > > > > > +  Errno:
-> > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > > > > > +  devices, it should not register version attribute for this mdev device. But if
-> > > > > > +  a vendor driver has already registered version attribute and it wants to claim
-> > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > > > > > +  -ENODEV on access to this mdev device's version attribute.
-> > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > > > > > +  incompatible mdev devices's version strings to its version attribute should
-> > > > > > +  return -EINVAL;      
-> > > > > 
-> > > > > I think it's best not to define the specific errno returned for a
-> > > > > specific situation, let the vendor driver decide, userspace simply
-> > > > > needs to know that an errno on read indicates the device does not
-> > > > > support migration version comparison and that an errno on write
-> > > > > indicates the devices are incompatible or the target doesn't support
-> > > > > migration versions.    
-> > > > 
-> > > > I think I have to disagree here: It's probably valuable to have an
-> > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
-> > > > those two particular devices'. Userspace might want to do different
-> > > > things (e.g. trying with different device pairs).    
-> > > 
-> > > Trying to stuff these things down an errno seems a bad idea; we can't
-> > > get much information that way.  
-> > 
-> > So, what would be a reasonable approach? Userspace should first read
-> > the version attributes on both devices (to find out whether migration
-> > is supported at all), and only then figure out via writing whether they
-> > are compatible?
-> > 
-> > (Or just go ahead and try, if it does not care about the reason.)  
+masonccyang@mxic.com.tw wrote on Fri, 10 May 2019 16:51:20 +0800:
+
+> Hi Miquel,
 > 
-> Well, I'm OK with something like writing to test whether it's
-> compatible, it's just we need a better way of saying 'no'.
-> I'm not sure if that involves reading back from somewhere after
-> the write or what.
+> 
+> > > Add a driver for Macronix NAND read retry.  
+> > 
+> > "Add support for Macronix NAND read retry."? This is not a "new driver".
+> >   
+> > > 
+> > > Macronix NAND supports specfical read for data recovery and enabled  
+> > 
+> > 
+> > Macronix NANDs support specific read operation for data recovery,
+> > which can be enabled with a SET_FEATURE.
+> >   
+> > > Driver check byte 167 of Vendor Blocks in ONFI parameter page table  
+> > 
+> >          checks
+> >   
+> > > to see if this high reliability function is support or not.  
+> > 
+> >                  high-reliability function? not sure it is English
+> >                  anyway.
+> > 
+> >                                               supported
+> >   
+> 
+> okay, thanks for your review, will patch it to:
+> ------------------------------------------------------------------------
+> Add support for Macronix NAND read retry.
+> 
+> Macronix NANDs support specific read operation for data recovery,
+> which can be enabled with a SET_FEATURE.
+> Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
+> to see if this high-reliability function is supported.
+> -------------------------------------------------------------------------
 
-Hm, so I basically see two ways of doing that:
-- standardize on some error codes... problem: error codes can be hard
-  to fit to reasons
-- make the error available in some attribute that can be read
+Fine by me.
 
-I'm not sure how we can serialize the readback with the last write,
-though (this looks inherently racy).
+[...]
 
-How important is detailed error reporting here?
+> > > +   int ret;
+> > > +
+> > > +   if (mode > MACRONIX_READ_RETRY_MODE)
+> > > +      mode = MACRONIX_READ_RETRY_MODE;
+> > > +
+> > > +   feature[0] = mode;
+> > > +   ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY,   
+> feature);
+> > 
+> > Don't you miss to select/deselect the target?  
+> 
+> nand_select_target() and nand_deselect_target() are already in 
+> nand_do_read_ops().
+
+Right
+
+> 
+> >   
+> > > +   if (ret)
+> > > +      pr_err("set feature failed to read retry moded:%d\n", mode);  
+> > 
+> >                        "Failed to set read retry mode: %d\n"
+> > 
+> > I think you can abort the operation with a negative return code in this
+> > case.
+> >   
+> 
+> After set feature operation, this NAND device need a get feature command 
+
+You need to add a comment for this.
+
+> or
+> SW reset command to exit read retry mode.
+> Therefore, set features command followed by get feature command is needed.
+
+In this case you must check first that both set and get are supported.
+
+> 
+> > > +
+> > > +   ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY,   
+> feature);
+> > 
+> > If the operation succeeded but the controller cannot get the feature
+> > you don't want to abort the operation. You should check if get_features
+> > is supported, if yes you can rely on the below test.
+> >   
+> 
+> I thought it has been check in macronix_nand_onfi_init() and set by
+> set_bit(ONFI_FEATURE_ADDR_READ_RETRY, p->get_feature_list);
+
+You only checked that the operation can be done, you cannot know in
+advance if it will actually succeed.
+
+> 
+> right ?
+> 
+> > > +   if (ret || feature[0] != mode)
+> > > +      pr_err("get feature failed to read retry moded:%d(%d)\n",
+> > > +             mode, feature[0]);  
+> > 
+> >                        "Failed to verify read retry mode..."
+> > 
+> >                 Also return something negative here.
+> >   
+> > > +
+> > > +   return ret;  
+> > 
+> > And if all went right, return 0 at the end.
+> >   
+> > > +}
+> > > +
+> > > +static void macronix_nand_onfi_init(struct nand_chip *chip)
+> > > +{
+> > > +   struct nand_parameters *p = &chip->parameters;
+> > > +
+> > > +   if (p->onfi) {
+> > > +      struct nand_onfi_vendor_macronix *mxic =
+> > > +            (void *)p->onfi->vendor;  
+> > 
+> > Please put everything on the same line  
+> 
+> It will over 80 char.
+
+I know, that's fine here.
+
+> 
+> >   
+> > > +
+> > > +      if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
+> > > +         chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;  
+> > 
+> > Why +1 here, I am missing something?  
+> 
+>  
+> Without + 1, read retry mode is up to 4 rather than 5.
+> But this NAND device support read retry mode up to 5.
+> 
+
+If there are 5 modes, you need to set 5 to chip->read_retries, not 6.
+
+If only 4 modes are used, there is probably a bug in the core that
+must be fixed, please do not workaround it in the driver!
+
+
+Thanks,
+Miquèl
