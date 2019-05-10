@@ -2,112 +2,89 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B62BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E189CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDCA621479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC2421479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfEJT3f convert rfc822-to-8bit (ORCPT
+        id S1728023AbfEJTfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 15:29:35 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20934 "EHLO mga07.intel.com"
+        Fri, 10 May 2019 15:35:44 -0400
+Received: from mutluit.com ([82.211.8.197]:38382 "EHLO mutluit.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727779AbfEJT3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 15:29:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 12:29:34 -0700
-X-ExtLoop1: 1
-Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
-  by orsmga007.jf.intel.com with ESMTP; 10 May 2019 12:29:34 -0700
-Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
- ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 10 May 2019 12:29:34 -0700
-Received: from orsmsx106.amr.corp.intel.com ([169.254.1.121]) by
- ORSMSX159.amr.corp.intel.com ([169.254.11.86]) with mapi id 14.03.0415.000;
- Fri, 10 May 2019 12:29:33 -0700
-From:   "Yu, Fenghua" <fenghua.yu@intel.com>
-To:     Andre Przywara <andre.przywara@arm.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Chatre, Reinette" <reinette.chatre@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Shen, Xiaochen" <xiaochen.shen@intel.com>,
-        "Pathan, Arshiya Hayatkhan" <arshiya.hayatkhan.pathan@intel.com>,
-        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        Babu Moger <babu.moger@amd.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        James Morse <James.Morse@arm.com>
-Subject: RE: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests
- for AMD
-Thread-Topic: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests
- for AMD
-Thread-Index: AQHVB1dvBTxRScZUuEe/0MxFRkWs3KZkvcvg
-Date:   Fri, 10 May 2019 19:29:34 +0000
-Message-ID: <3E5A0FA7E9CA944F9D5414FEC6C712209D8A3C19@ORSMSX106.amr.corp.intel.com>
-References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
-        <1549767042-95827-13-git-send-email-fenghua.yu@intel.com>
- <20190510184011.210794fc@donnerap.cambridge.arm.com>
-In-Reply-To: <20190510184011.210794fc@donnerap.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        id S1727879AbfEJTfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 15:35:43 -0400
+X-Greylist: delayed 494 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 15:35:42 EDT
+Received: from c22-local.mutluit.com (ip4d1674dc.dynamic.kabel-deutschland.de [77.22.116.220]:31668)
+        by mutluit.com (s2.mutluit.com [82.211.8.197]:25) with ESMTP ([XMail 1.27 ESMTP Server])
+        id <S16FAC33> for <linux-kernel@vger.kernel.org> from <um@mutluit.com>;
+        Fri, 10 May 2019 15:27:26 -0400
+From:   Uenal Mutlu <um@mutluit.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-ide@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Uenal Mutlu <um@mutluit.com>, linux-sunxi@googlegroups.com,
+        u-boot@lists.denx.de, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Pablo Greco <pgreco@centosproject.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Oliver Schinagl <oliver@schinagl.nl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        FUKAUMI Naoki <naobsd@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [RFC PATCH] drivers: ata: ahci_sunxi: Increased SATA/AHCI DMA TX/RX FIFOs
+Date:   Fri, 10 May 2019 21:25:50 +0200
+Message-Id: <20190510192550.17458-1-um@mutluit.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Friday, May 10, 2019 10:40 AM
-> Andre Przywara [mailto:andre.przywara@arm.com] wrote:
-> To: Yu, Fenghua <fenghua.yu@intel.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>; Ingo Molnar
-> <mingo@redhat.com>; Borislav Petkov <bp@alien8.de>; H Peter Anvin
-> <hpa@zytor.com>; Luck, Tony <tony.luck@intel.com>; Chatre, Reinette
-> <reinette.chatre@intel.com>; Shankar, Ravi V <ravi.v.shankar@intel.com>;
-> Shen, Xiaochen <xiaochen.shen@intel.com>; Pathan, Arshiya Hayatkhan
-> <arshiya.hayatkhan.pathan@intel.com>; Prakhya, Sai Praneeth
-> <sai.praneeth.prakhya@intel.com>; Babu Moger <babu.moger@amd.com>;
-> linux-kernel <linux-kernel@vger.kernel.org>; James Morse
-> <James.Morse@arm.com>
-> Subject: Re: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests
-> for AMD
-> 
-> On Sat,  9 Feb 2019 18:50:41 -0800
-> Fenghua Yu <fenghua.yu@intel.com> wrote:
-> 
-> Hi,
-> 
-> > From: Babu Moger <babu.moger@amd.com>
-> >
-> > For now, disable MBA and MBM tests for AMD. Deciding test pass/fail is
-> > not clear right now. We can enable when we have some clarity.
-> 
-> I don't think this is the right way. The availability of features should be
-> queryable, for instance by looking into /sys/fs/resctrl/info. Checking for a
-> certain vendor to skip tests just sounds wrong to me, and is definitely not
-> scalable or future proof.
-> 
-> We should really check the availability of a feature, then skip the whole
-> subsystem test in resctrl_tests.c.
+Increasing the SATA/AHCI DMA TX/RX FIFOs (P0DMACR.TXTS and .RXTS) from
+default 0x0 each to 0x3 each gives a write performance boost of 120MB/s
+from lame 36MB/s to 45MB/s previously. Read performance is about 200MB/s
+[tested on SSD using dd bs=4K count=512K].
 
-Babu may correct if I'm wrong: AMD does support the MBA and MBM features. So if querying the info directory, the features are there. But AMD doesn't want to support the testing for the features in the current patch set. They may support the testing in the future.
+Tested on the Banana Pi R1 (aka Lamobo R1) and Banana Pi M1 SBCs
+with Allwinner A20 32bit-SoCs (ARMv7-a / arm-linux-gnueabihf).
+These devices are RaspberryPi-like small devices.
 
-Thanks.
+RFC: Since more than about 25 similar SBC/SoC models do use the
+ahci_sunxi driver, users are encouraged to test it on all the
+affected boards and give feedback.
 
--Fenghua
+List of the affected sunxi and other boards and SoCs with SATA using
+the ahci_sunxi driver:
+  $ grep -i -e "^&ahci" arch/arm/boot/dts/sun*dts
+  and http://linux-sunxi.org/Category:Devices_with_SATA_port
+
+Signed-off-by: Uenal Mutlu <um@mutluit.com>
+---
+ drivers/ata/ahci_sunxi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/ata/ahci_sunxi.c b/drivers/ata/ahci_sunxi.c
+index 911710643305..257986431c79 100644
+--- a/drivers/ata/ahci_sunxi.c
++++ b/drivers/ata/ahci_sunxi.c
+@@ -158,7 +158,7 @@ static void ahci_sunxi_start_engine(struct ata_port *ap)
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
+ 
+ 	/* Setup DMA before DMA start */
+-	sunxi_clrsetbits(hpriv->mmio + AHCI_P0DMACR, 0x0000ff00, 0x00004400);
++	sunxi_clrsetbits(hpriv->mmio + AHCI_P0DMACR, 0x0000ffff, 0x00004433);
+ 
+ 	/* Start DMA */
+ 	sunxi_setbits(port_mmio + PORT_CMD, PORT_CMD_START);
+-- 
+2.11.0
+
