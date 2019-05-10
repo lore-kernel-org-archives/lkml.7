@@ -2,130 +2,120 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2826FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E99FB217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MLfJXEMd"
+	by mail.kernel.org (Postfix) with ESMTP id 3CB1F2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfEJHXS (ORCPT
+        id S1727265AbfEJHZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:23:18 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32995 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727184AbfEJHXS (ORCPT
+        Fri, 10 May 2019 03:25:00 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44310 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfEJHZA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:23:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c66so652028wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
-        b=MLfJXEMdZmKpvWHQlqIzfyImp6Wy+KcsU0p5YvE1otyh3zIOF+I1vvQ/PJnC4diJpY
-         sh7j6UBJ/0TsdJxDPFx15teFeEEP0QzxEIQEcUOhHwljvJCS2Tjkf/2mrXiP9/ZgNwHe
-         CH4EkBxMqLQgUUoLVvHev0mv2XVIeQZeRZWtqthsJGrx+ZQjGkna1+4trW4eI+KMpWg/
-         NqQgmANFTSZNHuEBAXzpXICTBex/HmPLIEN8E0Q2umUFYZfV9vf8qRqgiXOYJdB/lK+T
-         nasc2eF4kXFxaiNB/WjJeNwU3qb9R9VMtLpc1FhwexCo5vE8Uqiyx1kEp0G2RSSP1FIm
-         NJ6A==
+        Fri, 10 May 2019 03:25:00 -0400
+Received: by mail-vs1-f67.google.com with SMTP id j184so3026470vsd.11;
+        Fri, 10 May 2019 00:24:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6IJvqYq4JZWD5aTcjw2ROgUsvIuulKVOwmPtVdRwUBw=;
-        b=CdRqsKee7HaJmn6I6wiIO1JOSvWXygcp3AV3TzMyioQg+uHugc/ZP8DSmJjnpe9kNm
-         4LTEjvYZJMLTNV8yc45wBdoTSuCc1Izbe2+kZUlXf9SShc9W7QlvPHg3GzVDkWpemCUh
-         hQJiyRvJB6DwdMK2IIz+XFYoLAq5nFhuU2TTpwfU11y3TNXq4gcfL2SZJ1ZZd91ySHjj
-         RtEaJc/WcHnBhrGodatMivnXGjD4xhQoeSiah3vpxEmALM0HOpZi8lqyI7u+0WKYVpxV
-         oM2UMEhyOWygt0vOyJDmgDiMjeiWAGgHTXUeDyVd83iTvJLyP858GTpjLrG8LlYFlIjb
-         bFiQ==
-X-Gm-Message-State: APjAAAUwtSk04J1Sog13RQ6oTPLZqfnZAmWCktXsrhUYy3MUOnEPbeJQ
-        6lt8ZE+CAim42D2rveZ+ckstvg==
-X-Google-Smtp-Source: APXvYqwFI/XoRqh3l4hbVHQYN4vuu2sgvGQIfc1CDZPFb5/hfW20fNRJaFM/GapMBIrdKush+zwVEw==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr5638463wmc.49.1557472996594;
-        Fri, 10 May 2019 00:23:16 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id n14sm1748514wrt.79.2019.05.10.00.23.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 00:23:16 -0700 (PDT)
-Date:   Fri, 10 May 2019 08:23:14 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [GIT PULL] Immutable branch between MFD and Pinctrl due for the v5.2
- merge window
-Message-ID: <20190510072314.GC7321@dell>
-References: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nIS0O0pcdTP5yqoW/Nfw3hhc4RbpJndS6/mlXFNPnnw=;
+        b=QCRgUAQ/qt1kTvhCm+Si8Xqvj84UNfWlhP9QqMOEf+y+HgoFD3lt3T85iYWbifP302
+         q+DRXki1pkA9LL3gVWcqVAHf+W8SPFcrtOxaVSr/eHA17K/P0PkhRTRi1fsT7FrMQFaC
+         Wtw1Yx7k66U/NXn9nquc1lSX7g2hJgdqD+GYjbTu2T5bhXzM8rU/FoUOEmbDbnd+/Ybr
+         GNXWiBlL3wTUvFJB3U0Qbjt8TpkmheV4c6mXzc2r4wjHtVxd99jT7+NDxgQWjzkegTKr
+         GBy94o6Lr3kR8S0R8FriQdGub0XZMc1j6NmyietXsvzRnvAb6WkzXCt7Zty3skWgkeOI
+         cxgg==
+X-Gm-Message-State: APjAAAWl6ueCr7aZyP/n9EFrq5aQF1X/YjVb04EKiFh8lZWU/1mP0MS8
+        I+kdYkUHfZ3O8Dn3YfeI+tXP0a0WRPNMdl6f8JM=
+X-Google-Smtp-Source: APXvYqyouUuMIh4F1k3kkwPX+coDmDYbA8nvK4I2H2QmYxd4iySsSLR2uiUFMg1eRBXxjqpMGN5J0y8wMMr+PzHmsOs=
+X-Received: by 2002:a67:fdd4:: with SMTP id l20mr1875398vsq.63.1557473099187;
+ Fri, 10 May 2019 00:24:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557392336-28239-1-git-send-email-amelie.delaunay@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190510061205.28753-1-yamada.masahiro@socionext.com>
+ <20190510061205.28753-2-yamada.masahiro@socionext.com> <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
+ <20190510070354.GA2193@ravnborg.org>
+In-Reply-To: <20190510070354.GA2193@ravnborg.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 10 May 2019 09:24:46 +0200
+Message-ID: <CAMuHMdXqJX_35WJDx_H4y39+sED5MeYeQVnqWXmStUTsfX1C2A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kconfig: do not write .config if the content is the same
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+Hi Sam,
 
-The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
+On Fri, May 10, 2019 at 9:03 AM Sam Ravnborg <sam@ravnborg.org> wrote:
+> On Fri, May 10, 2019 at 08:46:35AM +0200, Geert Uytterhoeven wrote:
+> > On Fri, May 10, 2019 at 8:14 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> > > Kconfig updates the .config when it exits even if its content is
+> > > exactly the same as before. Since its timestamp becomes newer than
+> > > that of other build artifacts, additional processing is invoked,
+> > > which is annoying.
+> > >
+> > > - syncconfig is invoked to update include/config/auto.conf, etc.
+> > >
+> > > - kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
+> > >   then vmlinux is relinked as well.
+> > >
+> > > If the .config is not changed at all, we do not have to even
+> > > touch it. Just bail out showing "No change to .config".
 
-  Linux 5.1 (2019-05-05 17:42:58 -0700)
+> > This causes a semantic change for the meaning of ".config.old", which is
+> > no longer updated if .config has not changed.
+> > Hence its contents may no longer correspond to the previous config, but to
+> > an arbitrary older version.
+> This semantic change is good.
+> So we now have a .config.old that correspond to the state before
+> the last change. Also after several kernel builds.
+>
+> > > My workflow involves always running my own script "linux-oldconfig",
+> > instead of "make oldconfig", so I immediately see what has changed:
+> >
+> >     $ cat $(type -p linux-oldconfig)
+> >     #!/bin/bash
+> >     make ${0#*/linux-} && colordiff -u .config{.old,}
+> So scripts relying on the old (broken) behaviour will no longer work.
+> The new behaviour is better as it is usefaul in many typical situations.
+>
+> Hacking, hack. What did I change in the config?
 
-are available in the Git repository at:
+I agree both semantics have their merits.
+Sometimes I also wanted to see the last real change...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-pinctrl-v5.2
+No worries, updating my script, so it works with both semantics:
 
-for you to fetch changes up to 1490d9f841b186664f9d3ca213dcfa4464a60680:
+    $ cat $(type -p linux-oldconfig)
+    #!/bin/bash
+    cp -a .config .config.orig
+    make ${0#*/linux-} && colordiff -u .config{.orig,}
 
-  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver (2019-05-10 08:21:31 +0100)
+Gr{oetje,eeting}s,
 
-----------------------------------------------------------------
-Immutable branch between MFD and Pinctrl due for the v5.2 merge window
-
-----------------------------------------------------------------
-Amelie Delaunay (4):
-      dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
-      mfd: Add ST Multi-Function eXpander (STMFX) core driver
-      dt-bindings: pinctrl: document the STMFX pinctrl bindings
-      pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
-
- Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
- .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
- drivers/mfd/Kconfig                                |  13 +
- drivers/mfd/Makefile                               |   2 +-
- drivers/mfd/stmfx.c                                | 545 ++++++++++++++
- drivers/pinctrl/Kconfig                            |  12 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-stmfx.c                    | 820 +++++++++++++++++++++
- include/linux/mfd/stmfx.h                          | 123 ++++
- 9 files changed, 1659 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
- create mode 100644 drivers/mfd/stmfx.c
- create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
- create mode 100644 include/linux/mfd/stmfx.h
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
