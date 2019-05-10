@@ -2,98 +2,168 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0D7C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D731C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4C620989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:26:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XVwFUIhN"
+	by mail.kernel.org (Postfix) with ESMTP id 60B6220989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfEJK0j (ORCPT
+        id S1727551AbfEJK1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:26:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38497 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727302AbfEJK0j (ORCPT
+        Fri, 10 May 2019 06:27:40 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:49761 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727251AbfEJK1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:26:39 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j26so2819639pgl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:26:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6KX7bhkHg3YMiIW9gA14W3R58YbYmx+bP30Xm0xrams=;
-        b=XVwFUIhNnY7Vr6G0aenGbpxQIFAnTaqlTy+WW9vXqYfZ7BsFK1craSiGjLjskBZ086
-         jbqTXWZM8AX8P9X1zYSTEC4ojR013LY0fP2JjGdngkSA9Erk90Twz5nYPz+6kf6zxhgA
-         nB66O3jG2lSN9twe6lwecwgoTtcSgzMStOdJA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6KX7bhkHg3YMiIW9gA14W3R58YbYmx+bP30Xm0xrams=;
-        b=eYWTFzuQpfDvPoxunxkzFmCRRf5JPuD066alU9o6NUtpR155N8sFL1UFKfjjbEkHDk
-         /b8Kjr3YeGu0PFpJ58BtEvlUVQ+8px7LRFIPvLHdoBa71Alt8zo4OqoEFldUs3e+8eCo
-         rjDE41RsYDy6j3EtjTHFmaOKThgIOi4rTl9bTQ+U6GFlz0QeCQUrSizch7I803/aQIy1
-         Uc+Cj2wwQsFvPRE9MIAHpMaHV20zKQ5Mge+j4NKdSNrla6f7Z6X/faorQeUdFewO5TxA
-         /inQh/JNqksqMvTGTfxrPdxukKFhSxEae1c+5l8LXJzjLCQz2nhhznD/oFHv0shelxNp
-         gnqg==
-X-Gm-Message-State: APjAAAWUGU8YCFPCp6OoauifdTEcbgQU6zYeZBKPXk26sfE577IPRTbo
-        eHOKQwZ8xSQoe58pZRncbX8+yGvgPuXCgA==
-X-Google-Smtp-Source: APXvYqxZydM/ao+0NNXc/nuBz/ZksXOF4YpflsZ26aodWr5g6Jq82oUw3d+UMo0H41Xf5RHg+UTInw==
-X-Received: by 2002:a63:2943:: with SMTP id p64mr12654828pgp.151.1557483998262;
-        Fri, 10 May 2019 03:26:38 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:6cc8:36d1:3ceb:a986])
-        by smtp.gmail.com with ESMTPSA id u75sm15317797pfa.138.2019.05.10.03.26.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 03:26:37 -0700 (PDT)
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, dgreid@chromium.org,
-        cychiang@chromium.org
-Subject: [PATCH] ASoC: max98090: remove 24-bit format support
-Date:   Fri, 10 May 2019 18:25:59 +0800
-Message-Id: <20190510102559.76137-1-yuhsuan@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+        Fri, 10 May 2019 06:27:39 -0400
+Received: from [IPv6:2001:983:e9a7:1:2dea:e21e:760a:b215] ([IPv6:2001:983:e9a7:1:2dea:e21e:760a:b215])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id P2kahcrOcsDWyP2kbhbvfu; Fri, 10 May 2019 12:27:37 +0200
+Subject: Re: [PATCH] media: v4l2-core: expose the device after it was
+ registered.
+To:     xinwu <xinwu.liu@intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     mchehab@kernel.org, hans.verkuil@cisco.com,
+        niklas.soderlund+renesas@ragnatech.se, ezequiel@collabora.com,
+        sque@chromium.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1548146084-20445-1-git-send-email-xinwu.liu@intel.com>
+ <20190122100311.isx57iktfpxawxjv@paasikivi.fi.intel.com>
+ <85906cb2-5472-2c54-e854-136cba8e8d40@intel.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4da2cb55-f91f-0b19-9aff-3b25a8abea1a@xs4all.nl>
+Date:   Fri, 10 May 2019 12:27:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <85906cb2-5472-2c54-e854-136cba8e8d40@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfLg5Fn441PlVWM9qY41jX8Jk0ihuqripdXxRcFoCUBJs+x5smFIqQrwbAuMYrkgQWxwQVKuGYV37Q/BBBnhOvLtXMhwHY7gFOTeACjtpAwsENIAcwx0D
+ WQtgbnCFJKDfNpNHlKgCUX5Eg7YNTgYvywO3QUr/06M0VBVcItrJYb7pMz+O+2fOTPK4xrnHOhwg0eZlDHMiacOsOJSLziEyNoYjMeVCs6cJ/1DF7Dv0swJg
+ 6oALbZb070XRqXih89dpiInZpR+lImnllCseEg4Ij9pWlYgydkOj3ITRHh6p6vNdgvOv8iPzbIbIiBMOpEvek+mIzcziThhil6/GSjoz86YbJlib8j/1yzu9
+ wFrBTaKMjLYXZbs/uaFdHyRTKZteqITHoDFVdxpurX5Fk17sDTtFRbABmY+wVdEpH/dDiI07JqYPve775hkI1Nh+TVy4iIG+0yD7mh0uX9fYJ/DRvCKPDXKA
+ K6t1XXw2J9a5YOSQSwq8DEljgQu7/hpmvUtef/6Tr2YuiCqt9o7tx5lc24EE0n/E9/NWBb9dCEVUXpUWWnPqFa3cbTfx1VIgkQtMfA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove 24-bit format support because it doesn't work now. We can revert
-this change after it really supports.
-(https://patchwork.kernel.org/patch/10783561/)
+On 1/24/19 8:11 AM, xinwu wrote:
+> Hi Sakari,
+> 
+> Thanks for your response.
+> 
+> 
+> On 2019年01月22日 18:03, Sakari Ailus wrote:
+>> Hi Xinwu,
+>>
+>> On Tue, Jan 22, 2019 at 04:34:44PM +0800, Liu, Xinwu wrote:
+>>> device_register exposes the device to userspace.
+>>>
+>>> Therefore, while the register process is ongoing, the userspace program
+>>> will fail to open the device (ENODEV will be set to errno currently).
+>>> The program in userspace must re-open the device to cover this case.
+>>>
+>>> It is more reasonable to expose the device after everythings ready.
+>>>
+>>> Signed-off-by: Liu, Xinwu <xinwu.liu@intel.com>
+>>> ---
+>>>   drivers/media/v4l2-core/v4l2-dev.c | 14 ++++++++------
+>>>   1 file changed, 8 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
+>>> index d7528f8..01e5cc9 100644
+>>> --- a/drivers/media/v4l2-core/v4l2-dev.c
+>>> +++ b/drivers/media/v4l2-core/v4l2-dev.c
+>>> @@ -993,16 +993,11 @@ int __video_register_device(struct video_device *vdev,
+>>>           goto cleanup;
+>>>       }
+>>>   -    /* Part 4: register the device with sysfs */
+>>> +    /* Part 4: Prepare to register the device */
+>>>       vdev->dev.class = &video_class;
+>>>       vdev->dev.devt = MKDEV(VIDEO_MAJOR, vdev->minor);
+>>>       vdev->dev.parent = vdev->dev_parent;
+>>>       dev_set_name(&vdev->dev, "%s%d", name_base, vdev->num);
+>>> -    ret = device_register(&vdev->dev);
+>>> -    if (ret < 0) {
+>>> -        pr_err("%s: device_register failed\n", __func__);
+>>> -        goto cleanup;
+>>> -    }
+>>>       /* Register the release callback that will be called when the last
+>>>          reference to the device goes away. */
+>>>       vdev->dev.release = v4l2_device_release;
+>>> @@ -1020,6 +1015,13 @@ int __video_register_device(struct video_device *vdev,
+>>>       /* Part 6: Activate this minor. The char device can now be used. */
+>>>       set_bit(V4L2_FL_REGISTERED, &vdev->flags);
+>>>   +    /* Part 7: Register the device with sysfs */
+>>> +    ret = device_register(&vdev->dev);
+>>> +    if (ret < 0) {
+>>> +        pr_err("%s: device_register failed\n", __func__);
+>>> +        goto cleanup;
+>> The error handling needs to reflect the change as well.
+> 
+> Yes, I think it need to clear the V4L2_FL_REGISTERED also.
+>>
+>> Speaking of which, the error handling appears to be somewhat broken here.
+>> It should be fixed first before making changes to the registration order.
+> 
+> I guess you mean to call "put_device()" in this error handling.
+>>
+>> The problem the patch addresses is related to another problem: how to tell
+>> the user space all devices in the media hardware complex have been
+>> registered successfully. Order generally has been the node first, and only
+>> then the entity. That suggests the order should probably be:
+>>
+>> 1. video_register_media_controller
+>> 2. set_bit(V4L2_FL_REGISTERED)
+>> 3. device_register
+>>
+>> I wonder what Hans thinks.
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
----
- sound/soc/codecs/max98090.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for the late reply, I missed this question.
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 7619ea31ab50..b25b7efa9118 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -2313,7 +2313,7 @@ int max98090_mic_detect(struct snd_soc_component *component,
- EXPORT_SYMBOL_GPL(max98090_mic_detect);
- 
- #define MAX98090_RATES SNDRV_PCM_RATE_8000_96000
--#define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
-+#define MAX98090_FORMATS SNDRV_PCM_FMTBIT_S16_LE
- 
- static const struct snd_soc_dai_ops max98090_dai_ops = {
- 	.set_sysclk = max98090_dai_set_sysclk,
--- 
-2.21.0.1020.gf2820cf01a-goog
+The core problem is that video_register_device sets up all the internal
+data structures *and* creates the device node. This should really be split up
+(as is done in other subsystems) into an allocate that does everything except
+create the device node, and a register that actually does that last step.
+
+The lack of this separation means that a device that has to register multiple
+devices can't have a consistent valid state before it starts registering
+devices.
+
+Compare it to drivers/media/cec/cec-core.c where this is done a lot better.
+
+That said, it would be a huge job reworking this. Although it can be done
+by creating new functions separate from the existing ones. E.g.:
+
+int v4l2_dev_initialize(struct video_device *vdev);
+int v4l2_dev_register(struct video_device *vdev);
+
+v4l2_dev_initialize does everything except registering the device node. That's
+done by v4l2_dev_register. This way drivers can initialize everything first,
+ensuring a fully consistent state before actually registering the device nodes.
+
+I think this would be very nice to have.
+
+That said, for the current function I agree that the order should indeed be
+changed according to the proposal. It's just doesn't address the full problem.
+
+Regards,
+
+	Hans
+
+> 
+> Yes, that's my suggestion, thanks for the highlight. I also want to know if it's worth to make this change.
+>>
+>>> +    }
+>>> +
+>>>       return 0;
+>>>     cleanup:
+> 
 
