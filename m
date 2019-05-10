@@ -2,175 +2,117 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1513FC46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F875C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCF62177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:31:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nmIHe/8t"
+	by mail.kernel.org (Postfix) with ESMTP id 681552175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfEJLb0 (ORCPT
+        id S1727301AbfEJLcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 07:31:26 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:33927 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfEJLbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 07:31:25 -0400
-Received: by mail-ua1-f68.google.com with SMTP id f9so2023867ual.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 04:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2cC/Zcxg1JnQkjFL1bdDhsa/0fTeyhKMuLV2nPc0e84=;
-        b=nmIHe/8tgbvqwCu/r/3f/ME9uxWQ9OJMDaCD2DrtbOIslLYcnb3rWqonJnBoXggPSO
-         pFRB/9Hy5C7PRugIsMV0s4QwhrSBc6hkLxxfjRViMgXFic55liP1ItoCIqwmlndiwUEZ
-         72uUYdxpGEpCvYqufU2nECO2hX8YwpOdZ3tDo3f5WRIRdTBVwm0M6aHY+6RASMi4RTZN
-         0dM5kXoud1qIjPOVCL+zYVUSgUTm+0gp+hOc9STM1QAK7mKyoIaXb7Kn/hCGE3WsXeuM
-         ItNn2/EJSojKLEsMqPS2+vQ5DtI09GO6qpGPqekfjt6f6K+bj/kr52wNs0Psa+bRLj06
-         mCLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2cC/Zcxg1JnQkjFL1bdDhsa/0fTeyhKMuLV2nPc0e84=;
-        b=A6LW5Ns33Nj8Z7Lk9xf9eotofdXmc5Y/V4SZun3OkeNHt0mDtpNs7Jx1ZEqQ86JAbo
-         umqBML44ME8NM0+CD40TIYQmhPV9piU7Czr9/GfsK0o+YcDGh4Cnb1/0MCRY0Kg69J77
-         9x+stFzFv2Y6+DCsmgkQWhX0y1WL4YbJxyBjFBs8NN5Xz909+iU1+XgrRtmNL5OBvfTr
-         pUX9SqFeBvBWd1B/ZXLAQpXaqHmSXc+CFUw6mKhHrYXaR+pB4LN+CLethGMRoc3DsSob
-         pW4zFp/cen4F4k++qhCVMYoqbitBVC93Ejo/JstnSA9Dz6S+sIiHQQeN4yP93wJXSJkf
-         Barg==
-X-Gm-Message-State: APjAAAXLScTgebXQUnChv+GG4VCoN6u31Tc12L3FFs/BYOEskYNRJ1Gj
-        ECQj9WMb42YVffMgNSnCYwDjiFV4/GHyoNceX59eOw==
-X-Google-Smtp-Source: APXvYqxlmQTVHS5UbjDpMkORWrJ3pcVnn1nCoE4a/WT5pDdUwaL6TEOyk7y7MweHAjc7AIIpZkKo60QHlscBksDXwLM=
-X-Received: by 2002:ab0:4782:: with SMTP id v2mr1131666uac.94.1557487884393;
- Fri, 10 May 2019 04:31:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190506193115.20909-1-niklas.cassel@linaro.org>
- <20190507053547.GE16052@vkoul-mobl> <20190507065555.GB2085@tuxbook-pro>
-In-Reply-To: <20190507065555.GB2085@tuxbook-pro>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 10 May 2019 17:01:12 +0530
-Message-ID: <CAHLCerMnXdPvDNpdoJNix9JMzztB+bNnENW064=qGEwhqnicFQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Lina Iyer <lina.iyer@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 May 2019 07:32:32 -0400
+Received: from foss.arm.com ([217.140.101.70]:44472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbfEJLcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 07:32:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A725C374;
+        Fri, 10 May 2019 04:32:31 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A33EB3F6C4;
+        Fri, 10 May 2019 04:32:29 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>
+Subject: [PATCH v2 0/7] Add new tracepoints required for EAS testing
+Date:   Fri, 10 May 2019 12:30:06 +0100
+Message-Id: <20190510113013.1193-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 12:25 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Mon 06 May 22:35 PDT 2019, Vinod Koul wrote:
->
-> > On 06-05-19, 21:31, Niklas Cassel wrote:
-> > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > >
-> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > @@ -31,6 +31,7 @@
-> > >                     reg = <0x100>;
-> > >                     enable-method = "psci";
-> > >                     next-level-cache = <&L2_0>;
-> > > +                   cpu-idle-states = <&CPU_PC>;
-> > >             };
-> > >
-> > >             CPU1: cpu@101 {
-> > > @@ -39,6 +40,7 @@
-> > >                     reg = <0x101>;
-> > >                     enable-method = "psci";
-> > >                     next-level-cache = <&L2_0>;
-> > > +                   cpu-idle-states = <&CPU_PC>;
-> > >             };
-> > >
-> > >             CPU2: cpu@102 {
-> > > @@ -47,6 +49,7 @@
-> > >                     reg = <0x102>;
-> > >                     enable-method = "psci";
-> > >                     next-level-cache = <&L2_0>;
-> > > +                   cpu-idle-states = <&CPU_PC>;
-> > >             };
-> > >
-> > >             CPU3: cpu@103 {
-> > > @@ -55,12 +58,24 @@
-> > >                     reg = <0x103>;
-> > >                     enable-method = "psci";
-> > >                     next-level-cache = <&L2_0>;
-> > > +                   cpu-idle-states = <&CPU_PC>;
-> > >             };
-> > >
-> > >             L2_0: l2-cache {
-> > >                     compatible = "cache";
-> > >                     cache-level = <2>;
-> > >             };
-> > > +
-> > > +           idle-states {
-> >
-> > Since we are trying to sort the file per address and
-> > alphabetically, it would be great if this can be moved before l2-cache
-> > :)
-> >
->
-> Picked up, with the order adjusted.
->
-> > Other than that this lgtm
-> >
->
-> I presume that lgtm == Reviewed-by...
->
-> Thanks,
-> Bjorn
+Changes in v2:
+	- Add include guards to the newly added headers
+	- Rename tracepoints:
+		sched_load_rq -> pelt_rq
+		sched_load_se -> pelt_se
+	- Rename helper functions: s/sched_tp/sched_trace/
+	- Make sched_trace*() less fat by reducing path size to 20 bytes from
+	  64.
+	- Fix compilation error when building on UP
 
-Hi Bjorn,
 
-Please drop this patch and check the one I've sent as part of the qcom
-cpuidle series?
+The following patches add the bare minimum tracepoints required to perform EAS
+testing in Lisa[1].
 
-Regards,
-Amit
+The new tracepoints are bare in a sense that they don't export any info in
+tracefs, hence shouldn't introduce any ABI. The intended way to use them is by
+loading a module that will probe the tracepoints and extract the info required
+for userspace testing.
 
-> > > +                   CPU_PC: pc {
-> > > +                           compatible = "arm,idle-state";
-> > > +                           arm,psci-suspend-param = <0x40000003>;
-> > > +                           entry-latency-us = <125>;
-> > > +                           exit-latency-us = <180>;
-> > > +                           min-residency-us = <595>;
-> > > +                           local-timer-stop;
-> > > +                   };
-> > > +           };
-> > >     };
-> > >
-> > >     firmware {
-> > > --
-> > > 2.21.0
-> >
-> > --
-> > ~Vinod
+It is done in this way because adding new TRACE_EVENTS() is no longer accepted
+AFAIU.
+
+The tracepoints are focused around tracking PELT signals which is what EAS uses
+to make its decision, hence knowing the value of PELT as it changes allows
+verifying that EAS is doing the right thing based on synthetic tests that
+simulate different scenarios.
+
+Beside EAS, the new tracepoints can help investigate CFS load balancer and CFS
+taskgroup handling as they are both based on PELT signals too.
+
+The first 2 patches do a bit of code shuffling to expose some required
+functions.
+
+Patch 3 adds a new cfs helper function.
+
+Patches 4-6 add the new tracepoints.
+
+Patch 7 exports the tracepoints so that out of tree modules can probe the new
+tracepoints with least amount of effort - which extends the usefulness of the
+tracepoints since creating a module to probe them is the only way to access
+them.
+
+An example module that uses these tracepoints is available in [2].
+
+[1] https://github.com/ARM-software/lisa
+[2] https://github.com/qais-yousef/tracepoints-helpers/blob/master/lisa_tp/lisa_tp.c
+
+Qais Yousef (7):
+  sched: autogroup: Make autogroup_path() always available
+  sched: fair: move helper functions into fair.h
+  sched: fair.h: add a new cfs_rq_tg_path()
+  sched: Add pelt_rq tracepoint
+  sched: Add pelt_se tracepoint
+  sched: Add sched_overutilized tracepoint
+  sched: export the newly added tracepoints
+
+ include/trace/events/sched.h     |  17 +++
+ kernel/sched/autogroup.c         |   2 -
+ kernel/sched/core.c              |   8 ++
+ kernel/sched/fair.c              | 212 ++----------------------------
+ kernel/sched/fair.h              | 219 +++++++++++++++++++++++++++++++
+ kernel/sched/pelt.c              |   6 +
+ kernel/sched/sched.h             |   1 +
+ kernel/sched/sched_tracepoints.h |  63 +++++++++
+ 8 files changed, 328 insertions(+), 200 deletions(-)
+ create mode 100644 kernel/sched/fair.h
+ create mode 100644 kernel/sched/sched_tracepoints.h
+
+-- 
+2.17.1
+
