@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECFEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C063DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45369217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9252D217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oF4X8RnG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wPfwc2D5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfEJEee (ORCPT
+        id S1727164AbfEJEeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:34:34 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33196 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfEJEeb (ORCPT
+        Fri, 10 May 2019 00:34:36 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41832 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727152AbfEJEee (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:34:31 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h17so2364699pgv.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:34:30 -0700 (PDT)
+        Fri, 10 May 2019 00:34:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id l132so2498960pfc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:34:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=dq0IfhIwE0oJzF2M3hbnPUu/0PRVMLml8CA0YPhM3BQ=;
-        b=oF4X8RnGi9iBZU3SfMGMa31yXLsb1FU8OPudWFd5Y7SgOeplISwKrM1bN+PBWwFj4V
-         TjphKAwGQbCOgxtedE2O8zrVJcmfIomb9EFzv8vXWXC+SR9PnNgrvIH7lXER1eCSLifw
-         n1Rnusg9gDhPVp9onVt5uwwyPcbE0m3msUpBEaMX4CjF3b2wcfXeIZNo2Zlass1tJozA
-         Ky+1BGXx3clBBpmrMqUY7fCLf4jQWxtAf28p1EDfmod6H5CiDfek7ckDbMeis7QV/vK2
-         at4gwvCIs+d3uKsw7qYlt1hqv9aEJ57SFAPRSEdBrd8lo9nKC3ZDuPnRqTaWNyrjYEwm
-         XmcQ==
+        bh=iX3tMXHfmXAFXgezY0ndg+xouFZG1EouvpxfWVnQyEI=;
+        b=wPfwc2D5OF/jIrQh6ZiDhbghVvEWi/KSKgRlbqnjQdVSy1tBYJ/ow053Yrs0CJfGRH
+         0LybhQkgMUqXokj+6NjwjduqZqgutOyy0QX9GcL8zyspz4T+Bt9pGDhSF57RQaNGLY+M
+         cVLmvrlpp7Qz1hO6bALHejmw8tpzUXStqxX3W1Iip0hFVhB4z1p/1FS0J4Cy+nTbGJtP
+         lfaDV6tyBANfmTO3J8s0WwMFJEI3NfTxbXYbcKnwoJORsYhUVtHglzjpo6wJDiaxm/g6
+         Ajqb+Thj3C1/9Mn4zOaHND+I0qL1LYR3KXR5tkXTclDP4XRG/JML+XFhOFPhBrCsdjtw
+         Duow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=dq0IfhIwE0oJzF2M3hbnPUu/0PRVMLml8CA0YPhM3BQ=;
-        b=uidcnurAQl0pnCGZ91Rn6BO18Q9q0fgw4MU5QcAKMaO6wirXb7mlJTAyxZ6QFO118U
-         M5o0Lw/UtyLPJLFd9W1QGsM4KrHdmjxBvjtxZ0n1s2cXHM/gCOhK0XooEM2PNEtlAM5k
-         NqoTUz8adQ0vDrpNkB6IivQTx44mtyoHGmKOomYI7bTfLh5nIuW5vSmgp6ElS5t+7Jxn
-         1kyhtpY2HhJHQ58ULl6ZNk4i5D37fAjNIMvw0lVCa09p/L3Ksg21TU1N7CKng0lcYpg8
-         dwdR0T05t2rHL0f/rXN/stBniPINa1Ij7I8j/gsjpWmCI/Jsq1QbuhlS9H9kNRpS+BY4
-         27Dw==
-X-Gm-Message-State: APjAAAW/69Q9dwEvw1EUHhR5iDOKi2W/z2+GYQY0u6u0siu1s/+AV5m0
-        0Tvohhm5ij2qFqe4D4GSu/mTZg==
-X-Google-Smtp-Source: APXvYqx8k83eUfp5LYdEv3Mnt7OktxsjQpg4XQyaqaHpUaOb1y2LuBte//YaeEQ0T5ElHTkAAvbzqw==
-X-Received: by 2002:a63:309:: with SMTP id 9mr11132618pgd.49.1557462870512;
-        Thu, 09 May 2019 21:34:30 -0700 (PDT)
+        bh=iX3tMXHfmXAFXgezY0ndg+xouFZG1EouvpxfWVnQyEI=;
+        b=f+xCX6GOCpw7bgfrMXgQ0+d6RR5H0w7fOTsdVDDTgBWoVB2c/hlqj3VH9aF+jIGF0e
+         rMRIoJBMeDhngYZWOkHM8tO8QDempuE9ODXM7JLSDRaqK3bXS/vd09y28j+zg3aCUVhw
+         P6TuA8RfF4x3khBdscM9IUX4D0TC/9zeLPrfJ72714pHBn2qAduBs7dGXuE5jPFiTO5I
+         Iu3+eo5ncJBc0wXsYJ1/3M+eMF8GORv/Uv6vtg9UCw/LFJL5KhYNPePQV/iteQ/HtwZY
+         O1VKPqS7o6w9W/+9Pdl6PddK6pAvDH6KEXeDUKAt6s1gqsRigFduRMpFH8DF1mZgO+gO
+         KelA==
+X-Gm-Message-State: APjAAAUIBas2ARNrUCsQsRGGrXxXItoEbtOlBBCLA0wi7fgGk6VECATN
+        HbXDf+njsU4bLdRyMRCKjxI+JQ==
+X-Google-Smtp-Source: APXvYqz+VCrGwz0F1OeNQEiRJZyZwGUfV3b04q0MFLWKiNqRgZb4ye/bbEOX7ZRjTy+HIpkkBqHGmw==
+X-Received: by 2002:a63:ed03:: with SMTP id d3mr11006230pgi.7.1557462873882;
+        Thu, 09 May 2019 21:34:33 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s17sm4785317pfm.149.2019.05.09.21.34.29
+        by smtp.gmail.com with ESMTPSA id s17sm4785317pfm.149.2019.05.09.21.34.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 21:34:30 -0700 (PDT)
+        Thu, 09 May 2019 21:34:33 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         David Brown <david.brown@linaro.org>
@@ -62,9 +62,9 @@ Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 5/8] arm64: dts: qcom: qcs404: Fully describe the CDSP
-Date:   Thu,  9 May 2019 21:34:18 -0700
-Message-Id: <20190510043421.31393-6-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 8/8] arm64: dts: qcom: qcs404: Add fastrpc nodes
+Date:   Thu,  9 May 2019 21:34:21 -0700
+Message-Id: <20190510043421.31393-9-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190510043421.31393-1-bjorn.andersson@linaro.org>
 References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
@@ -73,116 +73,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add all the properties needed to describe the CDSP for both the
-Trustzone and non-Trustzone based remoteproc case, allowing any child
-devices to be described once by just overriding the compatible to match
-the firmware available on the board.
+From: Thierry Escande <thierry.escande@linaro.org>
 
+The ADSP fastrpc provides 3 context banks and are assigned to IOMMU
+context banks 23, 24 and 25; using SIDs 0x804, 0x805 and 0x806.  The
+CDSP fastrpc provides 5 context banks and are assigned to IOMMU context
+banks 5, 6, 7, 8 and 9; using SIDs 0x1001 through 0x1005. Add these to
+their respective remoteproc.
+
+The lower 4 bits of the SID is used to identify the context bank when
+communicating with the fastrpc firmware, so this gives the reg values.
+
+Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
+[bjorn: Added SMMU linkage and extend commit message]
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 82 +++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 31 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 66 ++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index 3eb6089c8024..896f95817f23 100644
+index fcde4f0334c2..858a53160564 100644
 --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
 +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -113,37 +113,6 @@
+@@ -243,6 +243,45 @@
+ 				mboxes = <&apcs_glb 12>;
+ 
+ 				label = "cdsp";
++
++				fastrpc_cdsp: fastrpc {
++					compatible = "qcom,fastrpc";
++					qcom,glink-channels = "fastrpcglink-apps-dsp";
++					label = "cdsp";
++
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					cb@1 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <1>;
++						iommus = <&apps_iommu 5>;
++					};
++
++					cb@2 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <2>;
++						iommus = <&apps_iommu 6>;
++					};
++
++					cb@3 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <3>;
++						iommus = <&apps_iommu 7>;
++					};
++
++					cb@4 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <4>;
++						iommus = <&apps_iommu 8>;
++					};
++
++					cb@5 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <5>;
++						iommus = <&apps_iommu 9>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -928,6 +967,33 @@
+ 				mboxes = <&apcs_glb 8>;
+ 
+ 				label = "adsp";
++
++				fastrpc_adsp: fastrpc {
++					compatible = "qcom,fastrpc";
++					qcom,glink-channels = "fastrpcglink-apps-dsp";
++					label = "adsp";
++
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					cb@4 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <4>;
++						iommus = <&apps_iommu 23>;
++					};
++
++					cb@5 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <5>;
++						iommus = <&apps_iommu 24>;
++					};
++
++					cb@6 {
++						compatible = "qcom,fastrpc-compute-cb";
++						reg = <6>;
++						iommus = <&apps_iommu 25>;
++					};
++				};
+ 			};
  		};
  	};
- 
--	remoteproc_cdsp: remoteproc-cdsp {
--		compatible = "qcom,qcs404-cdsp-pas";
--
--		interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
--				      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
--		interrupt-names = "wdog", "fatal", "ready",
--				  "handover", "stop-ack";
--
--		clocks = <&xo_board>;
--		clock-names = "xo";
--
--		memory-region = <&cdsp_fw_mem>;
--
--		qcom,smem-states = <&cdsp_smp2p_out 0>;
--		qcom,smem-state-names = "stop";
--
--		status = "disabled";
--
--		glink-edge {
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
--
--			qcom,remote-pid = <5>;
--			mboxes = <&apcs_glb 12>;
--
--			label = "cdsp";
--		};
--	};
--
- 	remoteproc_wcss: remoteproc-wcss {
- 		compatible = "qcom,qcs404-wcss-pas";
- 
-@@ -288,6 +257,57 @@
- 			clock-names = "core";
- 		};
- 
-+		remoteproc_cdsp: remoteproc@b00000 {
-+			compatible = "qcom,qcs404-cdsp-pas";
-+			reg = <0x00b00000 0x4040>;
-+
-+			interrupts-extended = <&intc GIC_SPI 229 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&cdsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&xo_board>,
-+				 <&gcc GCC_CDSP_CFG_AHB_CLK>,
-+				 <&gcc GCC_CDSP_TBU_CLK>,
-+				 <&gcc GCC_BIMC_CDSP_CLK>,
-+				 <&turingcc TURING_WRAPPER_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_AHBS_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_AHBM_AON_CLK>,
-+				 <&turingcc TURING_Q6SS_Q6_AXIM_CLK>;
-+			clock-names = "xo",
-+				      "sway",
-+				      "tbu",
-+				      "bimc",
-+				      "ahb_aon",
-+				      "q6ss_slave",
-+				      "q6ss_master",
-+				      "q6_axim";
-+
-+			resets = <&gcc GCC_CDSP_RESTART>;
-+			reset-names = "restart";
-+
-+			qcom,halt-regs = <&tcsr 0x19004>;
-+
-+			memory-region = <&cdsp_fw_mem>;
-+
-+			qcom,smem-states = <&cdsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+
-+				qcom,remote-pid = <5>;
-+				mboxes = <&apcs_glb 12>;
-+
-+				label = "cdsp";
-+			};
-+		};
-+
- 		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,qcs404-pinctrl";
- 			reg = <0x01000000 0x200000>,
 -- 
 2.18.0
 
