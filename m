@@ -2,201 +2,149 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C10C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 320C0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C79A3217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5E32173B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Wj1zED1i"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YOQP0dts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727280AbfEJHbE (ORCPT
+        id S1727117AbfEJHh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:31:04 -0400
-Received: from mail-eopbgr60050.outbound.protection.outlook.com ([40.107.6.50]:40674
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726976AbfEJHbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:31:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s/HulLwxu+EG6kzqReFShjr6ZPorzPB10t+g8rxdqNU=;
- b=Wj1zED1ifmq9+i750lYBmd7RHVuA330m0rnYljaJqqYToMP3rw5gVbIohrE5fR5ta0tFZg0eXfxNgtY5qZvk5TmHLvhLw9A9Q+CtUOiLpsEUghbhHIZthFSadeRPMcrxbZxyTPYd3Cy6GTubyIlyGkCPsbQXwQvQ81tjGxmc03Q=
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
- AM0PR04MB4289.eurprd04.prod.outlook.com (52.134.124.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Fri, 10 May 2019 07:30:20 +0000
-Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::c19b:5964:bfcb:96a8]) by AM0PR04MB5779.eurprd04.prod.outlook.com
- ([fe80::c19b:5964:bfcb:96a8%7]) with mapi id 15.20.1856.012; Fri, 10 May 2019
- 07:30:20 +0000
-From:   Abel Vesa <abel.vesa@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-Subject: Re: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
- support
-Thread-Topic: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
- support
-Thread-Index: AQHU+KWWicVqVQQzP0ClKRUbB9ME9qZjwquAgABQeoA=
-Date:   Fri, 10 May 2019 07:30:20 +0000
-Message-ID: <20190510073019.rkf6zxkxoj4sgxpy@fsr-ub1664-175>
-References: <1554965048-19450-1-git-send-email-Anson.Huang@nxp.com>
- <20190421073958.GC19962@dragon> <20190421074152.GD19962@dragon>
- <DB3PR0402MB39161C0DDFF0EEA6D8A90378F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39164B30B26CAF62EE807168F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <VI1PR04MB5533CED52723AE8292CFC305EE220@VI1PR04MB5533.eurprd04.prod.outlook.com>
- <20190510024215.GA15856@dragon>
-In-Reply-To: <20190510024215.GA15856@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=abel.vesa@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57db8cd2-ed1d-416b-34ae-08d6d5195ba4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4289;
-x-ms-traffictypediagnostic: AM0PR04MB4289:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM0PR04MB4289820794B6E3CFA3AA9B24F60C0@AM0PR04MB4289.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(39860400002)(396003)(366004)(346002)(376002)(199004)(189003)(13464003)(76176011)(14454004)(54906003)(26005)(99286004)(53546011)(5660300002)(6506007)(478600001)(1076003)(102836004)(71190400001)(71200400001)(6512007)(9686003)(25786009)(6246003)(53936002)(14444005)(256004)(4326008)(2906002)(316002)(3846002)(6116002)(86362001)(66066001)(33716001)(66556008)(66476007)(66446008)(64756008)(6486002)(44832011)(6436002)(8936002)(11346002)(446003)(476003)(73956011)(76116006)(91956017)(229853002)(305945005)(66946007)(7736002)(486006)(186003)(6916009)(7416002)(81156014)(81166006)(68736007)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4289;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4c4wmY2m71lMSXqKozi7eS53aUcSQMFCvt4KlUOz5IWEdV8zM8o2gWN+QN0qey65MQ+roNjlFoH/8S9fpgLUFVvF3BuzRVzEVabj/L+f5ZK1CPoi4coksZmDJiqAwUJTcCWKHZYc1WH+Zw9DumUHL42y5aVvQsh2PDQcP+/X4/E5KXTwTBiZ0hV0CBhEjAb5WPdcfDluGcYnpDQa+yq98yozGhCSUXftRqrCoZzKDgYTEtiWKAGO+xfAwwhHeISduM4iA624VVeLsFnJHHIE9ZHSLp4Nf3zl96Aguxsc725g/tFmmsKkgFBE6LcRjiWGmjzSW4yj5mB8FRNmg5LXQtVMhwNM0WppidhyrkAwnlDuuXTm5lOwR9OfONODqPPEiO893HwuEmNiN2KhdVQEOINKLC5d2ZMPrpJOwbCj6HQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <69A407636461B248A9D298170B2FC4BD@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 May 2019 03:37:58 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44017 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726981AbfEJHh6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 03:37:58 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z6so2244184qkl.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YPIdmEziEMHUxazGM82nUeKFs82CMeVb0svBlAIM9mc=;
+        b=YOQP0dtsuHdYUa3VJGsw06uyx6HBDRcu7CqZFjC6R74X5SCqFH/fbolbZ4NikUGBOB
+         01VRHlTKWDTKyNcqr0mx3OXaYA78NK/XUYGPfVgakaCkbsccPVHl+QvhvJFgRCvxbuDG
+         KJ3D9BUxmIMQh16Ljn7fZFKLA8Vj0mFGbYJho=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YPIdmEziEMHUxazGM82nUeKFs82CMeVb0svBlAIM9mc=;
+        b=UVRD8JknDJVK+gNq8kVg+oaCAC/97ThLTM19biHKnyNa+N83KBl54EowrJFEMujFLK
+         OmO38nopW3g59yDdOtPK5HOrGEaAowlCKuDZTnG9Rg/7qmV2FdqTr+HXpaCALRdXcdDh
+         i35CWEn/E3twO372DTSljHhwXuc89DEXWG3Hy9T8RCX0yUePKj8zBTMq5Z4jenXp8KXb
+         IoDplnGFqxZDVUHGE4V3D6QLafZBfggWFufqEamh0CtrK+RFO1AXrl6rkgIvhja99qbY
+         sDVfJhz4fRhZ0VV6NiHI6R8WAyGe/rjW/D61kPedz02PhJx3KQp7YUHRkovi3t/3q5Dn
+         HUxw==
+X-Gm-Message-State: APjAAAXQVWF/jlW7w+iLU99DH8H6qXljYrbAyEOi7HC5k9pe6zQdedbO
+        zmQgjBxBENZWSWPGBi+ZZxJCZRCGBHNVrLyGESDjqA==
+X-Google-Smtp-Source: APXvYqw0oTMu+CovlvxeRY9ocZTmZNLydi0JE63J09a1MhVGCcjf777Api8V4IshlZIMqAkICDBwoldY3iKTtUIQcho=
+X-Received: by 2002:a05:620a:1585:: with SMTP id d5mr7444463qkk.212.1557473876989;
+ Fri, 10 May 2019 00:37:56 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57db8cd2-ed1d-416b-34ae-08d6d5195ba4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 07:30:20.5901
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4289
+References: <20190507045433.542-1-hsinyi@chromium.org> <CAL_Jsq+rGeFKAPVmPvv_Z+G=BppKUK-tEUphBajZVxFtbRBJvQ@mail.gmail.com>
+ <CAJMQK-iVhScf0ybZ85kqP0B5_QPoYZ9PZt35jHRUh8FNHKvu7w@mail.gmail.com>
+ <CAL_JsqJZ+mOnrLWt0Cpo_Ybr_ohxwWom1qiyV8_EFocULde7=Q@mail.gmail.com>
+ <CAJMQK-jjzYwX3NZAKJ-8ypjcN75o-ZX4iOVD=84JecEd4qV1bA@mail.gmail.com>
+ <CAL_JsqLnmedF5cJYH+91U2Q_WX755O8TQs6Ue9mqtEiFKcjGWQ@mail.gmail.com>
+ <CAJMQK-hJUG855+TqX=droOjUfb-MKnU0n0FYtr_SW2KByKAW1w@mail.gmail.com> <36fab640-b98e-9781-f96f-0ed988a71077@rasmusvillemoes.dk>
+In-Reply-To: <36fab640-b98e-9781-f96f-0ed988a71077@rasmusvillemoes.dk>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 10 May 2019 15:37:31 +0800
+Message-ID: <CAJMQK-hpA7rkaznW2REYbO=6rOvEMfJOvo6xxPkNb9o1VNUqTA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: add support for rng-seed
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Architecture Mailman List <boot-architecture@lists.linaro.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-05-10 10:42:17, Shawn Guo wrote:
-> On Mon, Apr 22, 2019 at 08:48:56AM +0000, Leonard Crestez wrote:
-> > On 4/22/2019 9:46 AM, Anson Huang wrote:
-> > >> -----Original Message-----
-> > >> From: Anson Huang
-> > >>> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> > >>> On Sun, Apr 21, 2019 at 03:40:00PM +0800, Shawn Guo wrote:
-> > >>>> On Thu, Apr 11, 2019 at 06:49:12AM +0000, Anson Huang wrote:
-> > >>>>> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> > >>>>> inside, the system controller is in charge of controlling power,
-> > >>>>> clock and fuse etc..
-> > >>>>>
-> > >>>>> This patch adds i.MX system controller soc driver support, Linux
-> > >>>>> kernel has to communicate with system controller via MU (message
-> > >>>>> unit) IPC to get soc revision, uid etc..
-> > >>>>>
-> > >>>>> With this patch, soc info can be read from sysfs:
-> > >>>>>
-> > >>>>>   drivers/soc/imx/Kconfig      |   7 ++
-> > >>>>>   drivers/soc/imx/Makefile     |   1 +
-> > >>>>>   drivers/soc/imx/soc-imx-sc.c | 220
-> > >>>>> +++++++++++++++++++++++++++++++++++++++++++
-> > >>>>>   3 files changed, 228 insertions(+)  create mode 100644
-> > >>>>> drivers/soc/imx/soc-imx-sc.c
-> > >>>>
-> > >>>> Rather than creating a new driver, please take a look at Abel's
-> > >>>> generic
-> > >>>> i.MX8 SoC driver, and see if it can be extended to cover i.MX8QXP.
-> > >>
-> > >> Got it, I didn't notice that this patch bas been accepted, I will re=
-do the patch
-> > >> based on it, thanks.
-> > >=20
-> > > I have sent the new patch set to support i.MX8QXP SoC revision based =
-on generic i.MX8
-> > > SoC driver, however, the Kconfig modification is NOT good, it may bre=
-ak i.MX8MQ if IMX_SCU
-> > > is NOT enabled, although we can add some warp function for SCU firmwa=
-re API call to fix it,
-> > > but after further thought and discussion with Dong Aisheng, I think w=
-e may need to roll back to
-> > > use this patch series to create a new SoC driver dedicated for i.MX8 =
-SoCs
-> > > with system controller inside, such as i.MX8QXP, i.MX8QM etc., the re=
-ason are as below:
-> > >=20
-> > > For i.MX8MQ/i.MX8MM:
-> > > 	1. SoC driver does NOT depends on i.MX SCU firmware, so no need to u=
-se platform driver
-> > > 	     probe model, just device_init phase call is good enough;
-> > > 	2. The SoC driver no need to depends on IMX_SCU, so it can be always=
- built in, no need to
-> > > 	     check IMX_SCU config;
-> > > 	3. The fuse check for CPU speed grading, HDCP status, NoC settings e=
-tc. could be added to this driver,
-> > > 	    but they are ONLY for i.MX8MQ/i.MX8MM etc..
-> > > For i.MX8QXP/i.MX8QM:
-> > > 	1. SoC driver MUST depends on IMX_SCU;
-> > > 	2. MUST use platform model to support defer probe;
-> > > 	3. No fuse check for CPU speed grading.
-> > >=20
-> > > So, I guess the reused code for i.MX8MQ and i.MX8QXP is ONLY those pa=
-rt of creating SoC id device node (less than
-> > > 30% I think), all other functions are implemented in total different =
-ways, that is why I created the imx_sc_soc driver
-> > > in this patch series, so do you think we can add new SoC driver for i=
-.MX8 SoC with SCU inside? Putting 2 different architecture
-> > > SoCs' driver into 1 file looks like NOT making enough sense.
-> >=20
-> > +1 for separate SOC driver. The 8mq/8mm and 8qm/8qxp families are very=
-=20
-> > different, they just happen to share the imx8 prefix.
-> >=20
-> > It makes sense to allow people to compile one without the other and thi=
-s=20
-> > is easier with distinct SOC drivers.
+On Fri, May 10, 2019 at 2:14 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 
-Totally agree.
+> So, why not just have the bootloader add whatever entropy it has via the
+> commandline, which already gets mixed in? That requires no kernel
+> changes, and works for all architectures.
+>
+> If anything, perhaps instead of just adding gobbledygook=abc123, make an
+> official command line parameter (there was talk about this at some
+> point), and have the kernel overwrite the value with xxx so it's not
+> visible in /proc/cmdline.
+>
+> Rasmus
 
->=20
-> Leonard, Abel,
->=20
-> Can you guys help review the patch?  Thanks.
->=20
-> Shawn
+For some arch, besides commandline, we also need to overwrite bootargs
+in fdt, otherwise it's still visible by
+/sys/firmware/devicetree/base/chosen/bootargs for example.
 
-Looks good to me.
+Originally planned to land v2 as
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>=
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index de893c9616a1..96ea5eba9dd5 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -24,6 +24,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/random.h>
+
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1079,6 +1080,7 @@ int __init early_init_dt_scan_chosen(unsigned
+long node, const char *uname,
+ {
+        int l;
+        const char *p;
++       const void *rng_seed;
+
+        pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+
+@@ -1113,6 +1115,15 @@ int __init early_init_dt_scan_chosen(unsigned
+long node, const char *uname,
+
+        pr_debug("Command line is: %s\n", (char*)data);
+
++       rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
++       if (!rng_seed || l == 0)
++               return 1;
++
++       /* try to clear seed so it won't be found. */
++        fdt_nop_property(initial_boot_params, node, "rng-seed");
++
++        add_device_randomness(rng_seed, l);
++
+        /* break now */
+        return 1;
+ }
+
+(For arm64 RW/RO issue, it will be done in other patch.)
+
+If we add parameter into commandline, I think we probably also need to
+do similar changes here since there are fdt related overwrite.
