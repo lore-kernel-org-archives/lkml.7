@@ -6,37 +6,36 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4453C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CCBC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55E620881
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D784120881
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727356AbfEJJft (ORCPT
+        id S1727393AbfEJJfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:35:49 -0400
-Received: from smtp-out.xnet.cz ([178.217.244.18]:32964 "EHLO smtp-out.xnet.cz"
+        Fri, 10 May 2019 05:35:51 -0400
+Received: from smtp-out.xnet.cz ([178.217.244.18]:33074 "EHLO smtp-out.xnet.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfEJJfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:35:47 -0400
+        id S1727298AbfEJJft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:35:49 -0400
 Received: from meh.true.cz (meh.true.cz [108.61.167.218])
         (Authenticated sender: petr@true.cz)
-        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 01B2D4347;
-        Fri, 10 May 2019 11:35:43 +0200 (CEST)
-Received: by meh.true.cz (OpenSMTPD) with ESMTP id 9913a3c0;
-        Fri, 10 May 2019 11:35:42 +0200 (CEST)
+        by smtp-out.xnet.cz (Postfix) with ESMTPSA id 48E0F434B;
+        Fri, 10 May 2019 11:35:46 +0200 (CEST)
+Received: by meh.true.cz (OpenSMTPD) with ESMTP id 7046f80c;
+        Fri, 10 May 2019 11:35:45 +0200 (CEST)
 From:   =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>
-To:     netdev@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
+To:     netdev@vger.kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh@kernel.org>,
         =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 1/5] of_net: remove nvmem-mac-address property
-Date:   Fri, 10 May 2019 11:35:14 +0200
-Message-Id: <1557480918-9627-2-git-send-email-ynezz@true.cz>
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 3/5] powerpc: tsi108: fix similar warning reported by kbuild test robot
+Date:   Fri, 10 May 2019 11:35:16 +0200
+Message-Id: <1557480918-9627-4-git-send-email-ynezz@true.cz>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1557480918-9627-1-git-send-email-ynezz@true.cz>
 References: <1557480918-9627-1-git-send-email-ynezz@true.cz>
@@ -48,73 +47,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit d01f449c008a ("of_net: add NVMEM support to
-of_get_mac_address") I've added `nvmem-mac-address` property which was
-wrong idea as I've allocated the property with devm_kzalloc and then
-added it to DT, so then 2 entities would be refcounting the allocation.
-So if the driver unbinds, the buffer is freed, but DT code would be
-still referencing that memory.
+This patch fixes following (similar) warning reported by kbuild test robot:
 
-I'm removing this property completely instead of fixing it, as it's not
-needed to have it.
+ In function ‘memcpy’,
+  inlined from ‘smsc75xx_init_mac_address’ at drivers/net/usb/smsc75xx.c:778:3,
+  inlined from ‘smsc75xx_bind’ at drivers/net/usb/smsc75xx.c:1501:2:
+  ./include/linux/string.h:355:9: warning: argument 2 null where non-null expected [-Wnonnull]
+  return __builtin_memcpy(p, q, size);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  drivers/net/usb/smsc75xx.c: In function ‘smsc75xx_bind’:
+  ./include/linux/string.h:355:9: note: in a call to built-in function ‘__builtin_memcpy’
 
-Fixes: d01f449c008a ("of_net: add NVMEM support to of_get_mac_address")
-Suggested-by: Rob Herring <robh@kernel.org>
+I've replaced the offending memcpy with ether_addr_copy, because I'm
+100% sure, that of_get_mac_address can't return NULL as it returns valid
+pointer or ERR_PTR encoded value, nothing else.
+
+I'm hesitant to just change IS_ERR into IS_ERR_OR_NULL check, as this
+would make the warning disappear also, but it would be confusing to
+check for impossible return value just to make a compiler happy.
+
+I'm now changing all occurencies of memcpy to ether_addr_copy after the
+of_get_mac_address call, as it's very likely, that we're going to get
+similar reports from kbuild test robot in the future.
+
+Fixes: ea168cdf1299 ("powerpc: tsi108: support of_get_mac_address new ERR_PTR error")
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Petr Štetiar <ynezz@true.cz>
 ---
- drivers/of/of_net.c | 29 ++++++-----------------------
- 1 file changed, 6 insertions(+), 23 deletions(-)
+ arch/powerpc/sysdev/tsi108_dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/of_net.c b/drivers/of/of_net.c
-index 9649cd53e955..a4b392a5406b 100644
---- a/drivers/of/of_net.c
-+++ b/drivers/of/of_net.c
-@@ -52,39 +52,22 @@ static const void *of_get_mac_addr(struct device_node *np, const char *name)
- static const void *of_get_mac_addr_nvmem(struct device_node *np)
- {
- 	int ret;
--	u8 mac[ETH_ALEN];
--	struct property *pp;
-+	const void *mac;
-+	u8 nvmem_mac[ETH_ALEN];
- 	struct platform_device *pdev = of_find_device_by_node(np);
+diff --git a/arch/powerpc/sysdev/tsi108_dev.c b/arch/powerpc/sysdev/tsi108_dev.c
+index c92dcac85231..026619c9a8cb 100644
+--- a/arch/powerpc/sysdev/tsi108_dev.c
++++ b/arch/powerpc/sysdev/tsi108_dev.c
+@@ -18,6 +18,7 @@
+ #include <linux/irq.h>
+ #include <linux/export.h>
+ #include <linux/device.h>
++#include <linux/etherdevice.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_net.h>
+ #include <asm/tsi108.h>
+@@ -106,7 +107,7 @@ static int __init tsi108_eth_of_init(void)
  
- 	if (!pdev)
- 		return ERR_PTR(-ENODEV);
+ 		mac_addr = of_get_mac_address(np);
+ 		if (!IS_ERR(mac_addr))
+-			memcpy(tsi_eth_data.mac_addr, mac_addr, 6);
++			ether_addr_copy(tsi_eth_data.mac_addr, mac_addr);
  
--	ret = nvmem_get_mac_address(&pdev->dev, &mac);
-+	ret = nvmem_get_mac_address(&pdev->dev, &nvmem_mac);
- 	if (ret)
- 		return ERR_PTR(ret);
- 
--	pp = devm_kzalloc(&pdev->dev, sizeof(*pp), GFP_KERNEL);
--	if (!pp)
-+	mac = devm_kmemdup(&pdev->dev, nvmem_mac, ETH_ALEN, GFP_KERNEL);
-+	if (!mac)
- 		return ERR_PTR(-ENOMEM);
- 
--	pp->name = "nvmem-mac-address";
--	pp->length = ETH_ALEN;
--	pp->value = devm_kmemdup(&pdev->dev, mac, ETH_ALEN, GFP_KERNEL);
--	if (!pp->value) {
--		ret = -ENOMEM;
--		goto free;
--	}
--
--	ret = of_add_property(np, pp);
--	if (ret)
--		goto free;
--
--	return pp->value;
--free:
--	devm_kfree(&pdev->dev, pp->value);
--	devm_kfree(&pdev->dev, pp);
--
--	return ERR_PTR(ret);
-+	return mac;
- }
- 
- /**
+ 		ph = of_get_property(np, "mdio-handle", NULL);
+ 		mdio = of_find_node_by_phandle(*ph);
 -- 
 1.9.1
 
