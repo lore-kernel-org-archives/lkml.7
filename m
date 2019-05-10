@@ -2,121 +2,103 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83438C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CDEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5365E2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9709E216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qyZk1xIa"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Cvm0zx54"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfEJI6G (ORCPT
+        id S1727122AbfEJJAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:58:06 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37956 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727162AbfEJI6F (ORCPT
+        Fri, 10 May 2019 05:00:38 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47461 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727010AbfEJJAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:58:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so2699304pgl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 01:58:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BLA/WS5Qjqm8Gf8XgW/ZNYa77d8QFu73NkVZQ1zqGQY=;
-        b=qyZk1xIarN+LL7Yw/uwGUVrC6gC8xepRpmVXnEL3zEakG2gzcEq5xoEPojXLkh4Fin
-         E/XiWWXQMT+IQwQJVQ7PfG9NsMUm+X6U8RMEquYvekYCiP9rda5LcMkn6Q1KB/y1l/49
-         9QWFOIP3gQwb+V6MHxC6Am1vORFJEHQgMk1CHFofZT7QYx6Dq7Is7zAi2xVfxgvhIj+F
-         C2wi6/f6lQwOxjsnXHWAFbdPv4A4CeJZZENBvOoIag2fVVqbLBAPZhOqQGfYxZ9GyBvm
-         dMHrNNaF+tqmExPaENBYLW6cLZPJwvTDP4PIGXb+AHbhaGI+wn48np2l3slUqEHySiue
-         EGBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BLA/WS5Qjqm8Gf8XgW/ZNYa77d8QFu73NkVZQ1zqGQY=;
-        b=JNbnZZ4YsKWV9O01JQ/Cl85Oh9rbcux9FPhqIuryPLoP/XCEgMZJL9UWSIecEJHfq9
-         7cSfVZipTL7Ucuc/Tl/eRLp9wflrfSQGuGkdH0HQNUg5bjRvJs0es8ZVMtwyRge8W7//
-         A1Ips26c4Ss0FkVzC6OchAys1Dh/FuUzOZZv6o49tNiRwcYMrhfCIhUjt0IY2qfb9lrZ
-         cJD6zT2OGlMt2jzG9u42YAUAcOz5fdyUnS0ZArcAcesgrJvoXhKn/5sExNkBaeZVNTp3
-         OqQ1zp1Dp56Tvd1RIErBEF8mcaYRWoPpM6fpPVPebFEvLqgMO4ttexyuu1nO6HUlvkK+
-         HZIg==
-X-Gm-Message-State: APjAAAXeP99lPNNobVoSyBKNOOauwF/DHwKciLT/Y/AMMbXW9QRY1Rj3
-        TtldJLvqfRRVKoVM3d/EqZPe
-X-Google-Smtp-Source: APXvYqymnzbuCQoW7yHb+6xnA9h1PRjyRHtHXDt179pRmz2DNbtx7QzL2dYN0vStjrCF2l28D9OMyQ==
-X-Received: by 2002:aa7:8a53:: with SMTP id n19mr12107415pfa.11.1557478684213;
-        Fri, 10 May 2019 01:58:04 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2405:204:73c1:9991:95b6:5055:2390:bf9b])
-        by smtp.gmail.com with ESMTPSA id e16sm3032276pfj.77.2019.05.10.01.57.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 01:58:03 -0700 (PDT)
-Date:   Fri, 10 May 2019 14:27:56 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     p.zabel@pengutronix.de, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com
-Subject: Re: [PATCH v2 0/4] Add reset controller support for BM1880 SoC
-Message-ID: <20190510085756.GA4974@Mani-XPS-13-9360>
-References: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
+        Fri, 10 May 2019 05:00:38 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CC540891AB;
+        Fri, 10 May 2019 21:00:32 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1557478832;
+        bh=a2N5ljKDh064bmfEmLWhlBmHgOU5t3wv3K3qWa5WcuE=;
+        h=From:To:Cc:Subject:Date;
+        b=Cvm0zx54BAVHFGb5yrLDvm3P596TBlTy47ZkN75dWg/mLGeqfTgpL3uv843OJLiDm
+         GgTWGBMc2t/innLjR1MBVud5NcGpEUTNtpUReV5HGJEp9q3wsS6y9JGuLVGiJon4pw
+         BVJV8GA7diEI1I3W/e6krcJerDsxjvw3urxEBSkr9f0Erk8xDSIV5Pt88U8MSBmc67
+         LWGEQCY1hlJ1lo9LxfUV+iHKVFcjyXU7jxxeCXdBgx0tx/su9nZvy/X9R1CP5BL4dr
+         EvqvwnezDosMEia7t9el1SyMn6vUQdV0xv293mN9k+UjT40SV723VygGv4VcuX9er8
+         lSrIee3T6t5mw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cd53db10000>; Fri, 10 May 2019 21:00:33 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id B1DA213EEA0;
+        Fri, 10 May 2019 21:00:32 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 36F901E1D5B; Fri, 10 May 2019 21:00:32 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     keescook@chromium.org, re.emese@gmail.com
+Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
+Date:   Fri, 10 May 2019 21:00:25 +1200
+Message-Id: <20190510090025.4680-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508165319.19822-1-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 10:23:15PM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This patchset adds reset controller support for Bitmain BM1880 SoC.
-> BM1880 SoC has two reset controllers each controlling reset lines of
-> different peripherals. And the reset-simple driver has been reused here.
-> 
+Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
+that handles the difference between GCC versions implementing
+the latter.
 
-Sorry, above information was wrong! Actually there is only one reset
-controller in this SoC. The other one (clk_rst) is a set of registers used
-for clock gating functionality (clarified by Bitmain Engineer), so I will
-remove it in next version.
+This fixes the following error on my system with g++ 5.4.0 as the host
+compiler
 
-Thanks,
-Mani
+   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_r=
+tx_SET" requires 3 arguments, but only 2 given
+          mask)),
+               ^
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function =E2=80=98unsi=
+gned int arm_pertask_ssp_rtl_execute()=E2=80=99:
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: =E2=80=98gen=
+_rtx_SET=E2=80=99 was not declared in this scope
+    emit_insn_before(gen_rtx_SET
 
-> This patchset has been tested on 96Boards Sophon Edge board.
-> 
-> Thanks,
-> Mani
-> 
-> Changes in v2:
-> 
-> As per review from Philipp:
-> 
-> * Reused reset_simple_active_low struct instead of a new one for bm1880
-> * Splitted the SPDX license change to a separate commit
-> * Added Reviewed-by tags from Rob and Philipp
-> 
-> Manivannan Sadhasivam (4):
->   dt-bindings: reset: Add devicetree binding for BM1880 reset controller
->   arm64: dts: bitmain: Add reset controller support for BM1880 SoC
->   reset: Add reset controller support for BM1880 SoC
->   reset: Switch to SPDX license identifier for reset-simple
-> 
->  .../bindings/reset/bitmain,bm1880-reset.txt   |  18 +++
->  arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  17 +++
->  drivers/reset/Kconfig                         |   3 +-
->  drivers/reset/reset-simple.c                  |   8 +-
->  .../dt-bindings/reset/bitmain,bm1880-reset.h  | 106 ++++++++++++++++++
->  5 files changed, 146 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/reset/bitmain,bm1880-reset.txt
->  create mode 100644 include/dt-bindings/reset/bitmain,bm1880-reset.h
-> 
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-=
+plugins/arm_ssp_per_task_plugin.c
+index 89c47f57d1ce..8c1af9bdcb1b 100644
+--- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
++++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_execute(void)
+ 		mask =3D GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
+ 		masked_sp =3D gen_reg_rtx(Pmode);
+=20
+-		emit_insn_before(gen_rtx_SET(masked_sp,
++		emit_insn_before(gen_rtx_set(masked_sp,
+ 					     gen_rtx_AND(Pmode,
+ 							 stack_pointer_rtx,
+ 							 mask)),
+--=20
+2.21.0
+
