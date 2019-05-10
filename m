@@ -2,127 +2,67 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E4BC04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E3AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5FC1217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557470339;
-	bh=9KQ4ViIGYTnYarcX4Pb4wtH61StH6vOjHImeVqPdOOE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Co70TNuX+EOyVA5+TAtlx58pQInnHWPrjoxZuhxwsfPysSi8JawnSL+XVO02xlM0X
-	 eH48rGNEhOAOVSMU5GnhKvFxd0wiQzXGHByfh02QUivMO9bMtsJhhThcmsMpWxDfIa
-	 Vv2vGXkbELkSK/GhP4xQ7r/HHOW7IA+J5ig/VMIU=
+	by mail.kernel.org (Postfix) with ESMTP id 51A51217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfEJGi7 (ORCPT
+        id S1727084AbfEJGkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:38:59 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53548 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfEJGi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:38:58 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 198so6108151wme.3;
-        Thu, 09 May 2019 23:38:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IFp57boJpfFhBFAlb/ed9iGf+JEpk1sdcUGlB20djWg=;
-        b=oG3NSzC6Lua47W6H00tTMGdYhVpuhfUAj4P5VckCsd0W1KK+c8JX2wxAvabs3lxa4I
-         IWQA6nIPTe7WkUqzGTKXKwruQQwbWV7AOgmVWf+fIgT4T5IQ8glfHOufg9KFh72GSY5h
-         RbbINPGDpCarsFSv8YlIcv99uRBCpg3Ieu5Zr4nZbg5iy97gwlE5EK8ayQ8zoeZMkduI
-         jr7mV45gse4HiLbHYAdSqL0kpyieIghhBaBJ/AjBW7KxP3c2xyOTKDm6RtyqCPM8cEnj
-         YtoKJ7ygkvUQpxeJweXUI5/q64/MjRXeR0GnYRwEKmFmsFZZEXCXQM6g2Uu7u1Qf58mC
-         F/GA==
-X-Gm-Message-State: APjAAAVkNdULo6KiEZgaJ4wrVWw1/sQZjkQBOQrbyb5nxmrjWBu7R+gs
-        LMF9DhjNpoxmUKiCjRkA3w==
-X-Google-Smtp-Source: APXvYqy0ffVTpZ93KEfreFdAk/op7nwYCihsXMgZGjbL+ijh1TtplNVyEONJ+ltirTEFGVqEzrCV+A==
-X-Received: by 2002:a1c:1a49:: with SMTP id a70mr5297420wma.120.1557470336581;
-        Thu, 09 May 2019 23:38:56 -0700 (PDT)
-Received: from tesla ([2a02:c7d:8e07:7c00:3e97:eff:feb3:72f1])
-        by smtp.googlemail.com with ESMTPSA id s3sm6811893wre.97.2019.05.09.23.38.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 23:38:55 -0700 (PDT)
-Received: from javi by tesla with local (Exim 4.92)
-        (envelope-from <javi@tesla>)
-        id 1hOzBG-0004dh-7s; Fri, 10 May 2019 07:38:54 +0100
-Date:   Fri, 10 May 2019 07:38:54 +0100
-From:   Javi Merino <javi.merino@kernel.org>
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] thermal: cpu_cooling: Actually trace CPU load in
- thermal_power_cpu_get_power
-Message-ID: <20190510063854.GA20477@tesla>
-References: <20190502183238.182058-1-mka@chromium.org>
+        Fri, 10 May 2019 02:40:05 -0400
+Received: from orcrist.hmeau.com ([5.180.42.13]:34110 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726940AbfEJGkF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 02:40:05 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hOzBj-0001Lo-Ph; Fri, 10 May 2019 14:39:23 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hOzBb-0004u3-V0; Fri, 10 May 2019 14:39:16 +0800
+Date:   Fri, 10 May 2019 14:39:15 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Neal Liu <neal.liu@mediatek.com>
+Cc:     Stephan Mueller <smueller@chronox.de>, mpm@selenic.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com,
+        wsd_upstream@mediatek.com, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, Crystal.Guo@mediatek.com
+Subject: Re: [PATCH 3/3] hwrng: add mt67xx-rng driver
+Message-ID: <20190510063915.kwqy3e5urs6j7ity@gondor.apana.org.au>
+References: <1557287937-2410-1-git-send-email-neal.liu@mediatek.com>
+ <1557287937-2410-4-git-send-email-neal.liu@mediatek.com>
+ <12193108.aNnqf5ydOJ@tauon.chronox.de>
+ <1557311737.11818.11.camel@mtkswgap22>
+ <20190509052649.xfkgb3qd7rhcgktj@gondor.apana.org.au>
+ <1557413686.23445.6.camel@mtkswgap22>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502183238.182058-1-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557413686.23445.6.camel@mtkswgap22>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 11:32:38AM -0700, Matthias Kaehlcke wrote:
-> The CPU load values passed to the thermal_power_cpu_get_power
-> tracepoint are zero for all CPUs, unless, unless the
-> thermal_power_cpu_limit tracepoint is enabled too:
-> 
->   irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
->   cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
-> 
-> vs
-> 
->   irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
->   cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
->   irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
->   cpus=0000000f freq=408000 cdev_state=10 power=416
-> 
-> There seems to be no good reason for omitting the CPU load information
-> depending on another tracepoint. My guess is that the intention was to
-> check whether thermal_power_cpu_get_power is (still) enabled, however
-> 'load_cpu != NULL' already indicates that it was at least enabled when
-> cpufreq_get_requested_power() was entered, there seems little gain
-> from omitting the assignment if the tracepoint was just disabled, so
-> just remove the check.
-> 
-> Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+On Thu, May 09, 2019 at 10:54:46PM +0800, Neal Liu wrote:
+>
+> Hi Stephan/Herbert,
+> 	My mistake. This buffer is allocated by kmalloc with larger than 32
+> bytes. So yes, it's word-align for sure.
+> 	reference:
+> https://elixir.bootlin.com/linux/latest/source/drivers/char/hw_random/core.c#L590
 
-Yep, looks good to me.
+Yes you're right.
 
-Acked-by: Javi Merino <javi.merino@kernel.org>
-
-> ---
->  drivers/thermal/cpu_cooling.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-> index f7c1f49ec87f..b437804e099b 100644
-> --- a/drivers/thermal/cpu_cooling.c
-> +++ b/drivers/thermal/cpu_cooling.c
-> @@ -458,7 +458,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
->  			load = 0;
->  
->  		total_load += load;
-> -		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
-> +		if (load_cpu)
->  			load_cpu[i] = load;
->  
->  		i++;
-> -- 
-> 2.21.0.593.g511ec345e18-goog
-> 
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
