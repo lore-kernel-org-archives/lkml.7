@@ -2,173 +2,127 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EF1C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E4BC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F1C205C9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:37:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TDn9BDTg"
+	by mail.kernel.org (Postfix) with ESMTP id C5FC1217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:38:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557470339;
+	bh=9KQ4ViIGYTnYarcX4Pb4wtH61StH6vOjHImeVqPdOOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Co70TNuX+EOyVA5+TAtlx58pQInnHWPrjoxZuhxwsfPysSi8JawnSL+XVO02xlM0X
+	 eH48rGNEhOAOVSMU5GnhKvFxd0wiQzXGHByfh02QUivMO9bMtsJhhThcmsMpWxDfIa
+	 Vv2vGXkbELkSK/GhP4xQ7r/HHOW7IA+J5ig/VMIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfEJGhU (ORCPT
+        id S1727088AbfEJGi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:37:20 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44030 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfEJGhT (ORCPT
+        Fri, 10 May 2019 02:38:59 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53548 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfEJGi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:37:19 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z5so4084133lji.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:37:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dDjtLoV+g4xy2332cvIu8FDNJxtwUQ2tO38cCGm0YQY=;
-        b=TDn9BDTgqTF18lV6Y9Q/zpvWXhjJXDjRAtDmEBLF0uOlgxK3GaUm3gPif2kaAIkWh2
-         iVzCGcgHQ75L8bwIcFHzPaLfpN8b+0UPC5Q19E3IxnRgqlCcnE+0maeNbOUznXrjknZf
-         s7AQwJ/Gno/TVHopsap+uSg0GkfB6QgOvfpBCAZGysWKedZeDyV0f6yWK9dOOnVT9v+3
-         6XgmXbdUbYQX8ao8jBxEO/VC0tdHfoTwkS6IeylriOcIAvbPpGQWDAbuzgr+oYvhH6GQ
-         uIH67wVNY2FAjg1Dsb/r0h81ghpxlteIVDGLtkax5kIa3KtQi/WWUkF43koYoUijEekN
-         f0mQ==
+        Fri, 10 May 2019 02:38:58 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 198so6108151wme.3;
+        Thu, 09 May 2019 23:38:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dDjtLoV+g4xy2332cvIu8FDNJxtwUQ2tO38cCGm0YQY=;
-        b=L0bqFf41gveOyOfmEZz4PV52leHuf9IB6VfYpt1SDRt7dQVTxlkmXWi5hAGvN1rzDa
-         sPvGIeGodQiO9G7krQs0PrZ24MYnvROv8am/pnzq3p/rx2YoQ0/fNNw2PDZlgtD3SwzO
-         IR4R3r90U2Lm9F7qMio/iHnpprpg7k6jkMG6v6P8Wu4wgKAaZt17L2Q2ZfzaDa5qYdwk
-         +XvdABwo6ghBwkVCrMwALqlUSAMbCvOZQvHw7BPM5nndDkoOoToNekez5jKVThtvCuhg
-         22eDUo4+yat704IDy8xcyHEwEsUJZ4LT60UToSJwPQMakaiPMUXHpJdNTgw3tUpF2N6y
-         Ug7w==
-X-Gm-Message-State: APjAAAXkZKhNVDkY3rGWaY101P/fgNSmz14DxmcsZwG3InL+vGPkwk2O
-        kqoUDlYcfHZtK5lI0pByrYpoK43VU2W97iCG6oKQlw==
-X-Google-Smtp-Source: APXvYqwWe7ViNXHczZrFZNkQUdAzrCiLGv/nAdovj6i7neR/CCUcE6e69I3OUd+Bt0eZruHLMWQOIDUsU9hkCNs3SV4=
-X-Received: by 2002:a2e:568d:: with SMTP id k13mr4712010lje.194.1557470237752;
- Thu, 09 May 2019 23:37:17 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IFp57boJpfFhBFAlb/ed9iGf+JEpk1sdcUGlB20djWg=;
+        b=oG3NSzC6Lua47W6H00tTMGdYhVpuhfUAj4P5VckCsd0W1KK+c8JX2wxAvabs3lxa4I
+         IWQA6nIPTe7WkUqzGTKXKwruQQwbWV7AOgmVWf+fIgT4T5IQ8glfHOufg9KFh72GSY5h
+         RbbINPGDpCarsFSv8YlIcv99uRBCpg3Ieu5Zr4nZbg5iy97gwlE5EK8ayQ8zoeZMkduI
+         jr7mV45gse4HiLbHYAdSqL0kpyieIghhBaBJ/AjBW7KxP3c2xyOTKDm6RtyqCPM8cEnj
+         YtoKJ7ygkvUQpxeJweXUI5/q64/MjRXeR0GnYRwEKmFmsFZZEXCXQM6g2Uu7u1Qf58mC
+         F/GA==
+X-Gm-Message-State: APjAAAVkNdULo6KiEZgaJ4wrVWw1/sQZjkQBOQrbyb5nxmrjWBu7R+gs
+        LMF9DhjNpoxmUKiCjRkA3w==
+X-Google-Smtp-Source: APXvYqy0ffVTpZ93KEfreFdAk/op7nwYCihsXMgZGjbL+ijh1TtplNVyEONJ+ltirTEFGVqEzrCV+A==
+X-Received: by 2002:a1c:1a49:: with SMTP id a70mr5297420wma.120.1557470336581;
+        Thu, 09 May 2019 23:38:56 -0700 (PDT)
+Received: from tesla ([2a02:c7d:8e07:7c00:3e97:eff:feb3:72f1])
+        by smtp.googlemail.com with ESMTPSA id s3sm6811893wre.97.2019.05.09.23.38.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 23:38:55 -0700 (PDT)
+Received: from javi by tesla with local (Exim 4.92)
+        (envelope-from <javi@tesla>)
+        id 1hOzBG-0004dh-7s; Fri, 10 May 2019 07:38:54 +0100
+Date:   Fri, 10 May 2019 07:38:54 +0100
+From:   Javi Merino <javi.merino@kernel.org>
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] thermal: cpu_cooling: Actually trace CPU load in
+ thermal_power_cpu_get_power
+Message-ID: <20190510063854.GA20477@tesla>
+References: <20190502183238.182058-1-mka@chromium.org>
 MIME-Version: 1.0
-References: <20190509181247.647767531@linuxfoundation.org>
-In-Reply-To: <20190509181247.647767531@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 10 May 2019 12:07:06 +0530
-Message-ID: <CA+G9fYvCwWPpF8MaKWkOhmV9nZR1p3MQeUhjF7QWa9rabcGfaA@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/28] 4.9.175-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190502183238.182058-1-mka@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 at 00:14, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.175 release.
-> There are 28 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat 11 May 2019 06:11:12 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.175-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Thu, May 02, 2019 at 11:32:38AM -0700, Matthias Kaehlcke wrote:
+> The CPU load values passed to the thermal_power_cpu_get_power
+> tracepoint are zero for all CPUs, unless, unless the
+> thermal_power_cpu_limit tracepoint is enabled too:
+> 
+>   irq/41-rockchip-98    [000] ....   290.972410: thermal_power_cpu_get_power:
+>   cpus=0000000f freq=1800000 load={{0x0,0x0,0x0,0x0}} dynamic_power=4815
+> 
+> vs
+> 
+>   irq/41-rockchip-96    [000] ....    95.773585: thermal_power_cpu_get_power:
+>   cpus=0000000f freq=1800000 load={{0x56,0x64,0x64,0x5e}} dynamic_power=4959
+>   irq/41-rockchip-96    [000] ....    95.773596: thermal_power_cpu_limit:
+>   cpus=0000000f freq=408000 cdev_state=10 power=416
+> 
+> There seems to be no good reason for omitting the CPU load information
+> depending on another tracepoint. My guess is that the intention was to
+> check whether thermal_power_cpu_get_power is (still) enabled, however
+> 'load_cpu != NULL' already indicates that it was at least enabled when
+> cpufreq_get_requested_power() was entered, there seems little gain
+> from omitting the assignment if the tracepoint was just disabled, so
+> just remove the check.
+> 
+> Fixes: 6828a4711f99 ("thermal: add trace events to the power allocator governor")
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Yep, looks good to me.
 
-Summary
-------------------------------------------------------------------------
+Acked-by: Javi Merino <javi.merino@kernel.org>
 
-kernel: 4.9.175-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 50bbfeb1e2a357db99ff35681cfa95341b33103a
-git describe: v4.9.174-29-g50bbfeb1e2a3
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.174-29-g50bbfeb1e2a3
-
-No regressions (compared to build v4.9.174)
-
-No fixes (compared to build v4.9.174)
-
-Ran 22312 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> ---
+>  drivers/thermal/cpu_cooling.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index f7c1f49ec87f..b437804e099b 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -458,7 +458,7 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
+>  			load = 0;
+>  
+>  		total_load += load;
+> -		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
+> +		if (load_cpu)
+>  			load_cpu[i] = load;
+>  
+>  		i++;
+> -- 
+> 2.21.0.593.g511ec345e18-goog
+> 
