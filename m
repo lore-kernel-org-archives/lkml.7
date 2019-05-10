@@ -2,170 +2,111 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CEEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FABC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568EF21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EAA2053B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bc5Spi54"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Vse51UYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfEJPU2 (ORCPT
+        id S1727581AbfEJPZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:20:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35139 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbfEJPU2 (ORCPT
+        Fri, 10 May 2019 11:25:34 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43246 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727471AbfEJPZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:20:28 -0400
-Received: by mail-io1-f68.google.com with SMTP id p2so4803405iol.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:20:27 -0700 (PDT)
+        Fri, 10 May 2019 11:25:33 -0400
+Received: by mail-qt1-f196.google.com with SMTP id r3so6991124qtp.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BrbeovF+fjWSeVPTpilNjNVE8DYyqu+aTis0l/oYkL4=;
-        b=bc5Spi54huGVHztgDsdTF8soN5Lb8gcKIzqHvBSey/7ADIFfzvhOL5QJ5yDvBjJeVc
-         KAUUU71MlDw88D+naXb7K5FeXTVRxHTTgo/KsCWFU71JQfqVO52TZXz3wVmyYs+Ootx4
-         7F2Up23rhUJgrLKL9ACsI64nAWHP+/0NI+XwY=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=rD6wdEZSwVm7gTO6Zc262W7xf6pRwKIUW1NU/7rGn2A=;
+        b=Vse51UYSyy1ghsiglgXF6RW3/8/qDVh6OS4BH4EjjM9jjMD+8CXA1py2GPvl3A017T
+         uL6orKa2PgLUA3X4ixVWlrQTLHP+6u3csJPPLltnFLsvDacPuKzH5qoxcN9o5EqrEnmB
+         GaKetGi6OWFI/Nedw3bwFPy+HkbaZC3hCIlBvD+HzafpNGmSCwgVDsH3pCahZsSbD+XZ
+         mK+rPQftwxIxDiq4xJdD+W8fNtsG/manQvMDu3es0iNrf9bzAjPxCAF5+u35qi9q1PMu
+         zys2cKRQuaJ7djrq/jjNFpKYnwyps9KaVAq4t3XC4rLft4Jli+wns2VVK+GNQx70ud4K
+         uTrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BrbeovF+fjWSeVPTpilNjNVE8DYyqu+aTis0l/oYkL4=;
-        b=gT3K78r3iyK5ZZwF8uhV/a08DoRIWwrqOAgYvrc5zyegyUnKDwOli6S4114QgEvi2g
-         veQWikXPi3SpuhuQwNlBJhX8RDACVNUgBRfVG0IuqXA/wquaY4z8XhrXQkxuNVcKgbAS
-         exWpuQpQD98h2Xn7WgwyRXC1p0Nj9vpFFXUb/ipm3g4CcnuTX3801/lW6aQOPaJPzH7S
-         AzXomNdkxFMKQ0H4UZAOoPZyqgFaU+d5GHM4yhjADqt54GO16Sd3DcvM8osl1AP3ir5/
-         Hk0A8D5vyelPofSxCqndEK+8SbbDWF3CcvhkD71d337CG3pNOqS7kcQEmz8RFJf1rE/b
-         3TSA==
-X-Gm-Message-State: APjAAAU0T+Rvvh6xVvmxmldsPlsk7IGfZWyU4NhyBrreWGh1h+22TJPE
-        rnFwF+iXbXJ+HTkJ3wwxaC00dEasiqlNZ7SXjXCdkQ==
-X-Google-Smtp-Source: APXvYqyGy0QKq8RFEM2FhfJVX0s/4Ab+rOb+P2bBUoQMSnJ8RrYBJVX9LW7nbUglSVX5XIrzrc3uV91SJ4OQGoa2SJk=
-X-Received: by 2002:a6b:400a:: with SMTP id k10mr8036136ioa.291.1557501627148;
- Fri, 10 May 2019 08:20:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
- <20190509200633.19678-1-daniel.vetter@ffwll.ch> <20190510092819.elu4b7fcojzcek2q@pathway.suse.cz>
-In-Reply-To: <20190510092819.elu4b7fcojzcek2q@pathway.suse.cz>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 10 May 2019 17:20:15 +0200
-Message-ID: <CAKMK7uEPAH82xv8r+8Rh3eQT1mTO00A-sFTEqQMwA=zFtWmfxQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/locking/semaphore: use wake_q in up()
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=rD6wdEZSwVm7gTO6Zc262W7xf6pRwKIUW1NU/7rGn2A=;
+        b=eF/3bD4wdbUPe9LXsQA4D5iSoMEbUP57jvjIa0h0L0fYlipx2sqDk3I2WhzW0Or0T5
+         2ZpwkJu8nlQ3gVYGsBqeQheQ0uRZIDQvcrMKoi6DIDekVznDtgX92E0ye71nXkattsgW
+         B4qaNenSagh8IcnASL0sstWV4muaZz2aA70pxevEiRiOdq9Y1F2wmHbyzHoM9WO7ez9s
+         5Bv0RHkpQO2UJuEY8UvXQ9D92KycTS1v1UueaZvjR+19zCjlvtnwqGc6Ns7qUnfcC34+
+         H31kJgmoZX3BybO/UyusdQI2rSYX16rH+2Mcpz1hTZ4rQh1+xUfNbVhUnFPQQnlfoY+G
+         FAMA==
+X-Gm-Message-State: APjAAAUd8R/4wLT1jtbKF6ZekbAWgp2Pk6LVZD6IwDJzCV1igAVhzwPB
+        xfh/k2GC79vyrGAHHWDytI/56A==
+X-Google-Smtp-Source: APXvYqx3J0ym1yQz+Vzeb3MzyXSoo3lAxbtNWwkgNoOay9pH4FboDbP/qAzIr+xyoTJRauMSCqESPQ==
+X-Received: by 2002:aed:354c:: with SMTP id b12mr10389906qte.251.1557501933144;
+        Fri, 10 May 2019 08:25:33 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id s7sm3037983qkg.70.2019.05.10.08.25.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 08:25:32 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     dwmw2@infradead.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] iommu/intel: fix variable 'iommu' set but not used
+Date:   Fri, 10 May 2019 11:25:07 -0400
+Message-Id: <1557501907-6450-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 11:28 AM Petr Mladek <pmladek@suse.com> wrote:
->
-> On Thu 2019-05-09 22:06:33, Daniel Vetter wrote:
-> > console_trylock, called from within printk, can be called from pretty
-> > much anywhere. Including try_to_wake_up. Note that this isn't common,
-> > usually the box is in pretty bad shape at that point already. But it
-> > really doesn't help when then lockdep jumps in and spams the logs,
-> > potentially obscuring the real backtrace we're really interested in.
-> > One case I've seen (slightly simplified backtrace):
-> >
-> > Fix this specific locking recursion by moving the wake_up_process out
-> > from under the semaphore.lock spinlock, using wake_q as recommended by
-> > Peter Zijlstra.
->
-> It might make sense to mention also the optimization effect mentioned
-> by Peter.
->
-> > diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-> > index 561acdd39960..7a6f33715688 100644
-> > --- a/kernel/locking/semaphore.c
-> > +++ b/kernel/locking/semaphore.c
-> > @@ -169,6 +169,14 @@ int down_timeout(struct semaphore *sem, long timeout)
-> >  }
-> >  EXPORT_SYMBOL(down_timeout);
-> >
-> > +/* Functions for the contended case */
-> > +
-> > +struct semaphore_waiter {
-> > +     struct list_head list;
-> > +     struct task_struct *task;
-> > +     bool up;
-> > +};
-> > +
-> >  /**
-> >   * up - release the semaphore
-> >   * @sem: the semaphore to release
-> > @@ -179,24 +187,25 @@ EXPORT_SYMBOL(down_timeout);
-> >  void up(struct semaphore *sem)
-> >  {
-> >       unsigned long flags;
-> > +     struct semaphore_waiter *waiter;
-> > +     DEFINE_WAKE_Q(wake_q);
->
-> We need to call wake_q_init(&wake_q) to make sure that
-> it is empty.
+The commit cf04eee8bf0e ("iommu/vt-d: Include ACPI devices in iommu=pt")
+added for_each_active_iommu() in iommu_prepare_static_identity_mapping()
+but never used the each element, i.e, "drhd->iommu".
 
-DEFINE_WAKE_Q does that already, and if it didn't, I'd wonder how I
-managed to boot with this patch. console_lock is usally terribly
-contented because thanks to fbcon we must do a full display modeset
-while holding it, which takes forever. As long as anyone printks
-meanwhile (guaranteed while loading drivers really) you have
-contention.
--Daniel
+drivers/iommu/intel-iommu.c: In function
+'iommu_prepare_static_identity_mapping':
+drivers/iommu/intel-iommu.c:3037:22: warning: variable 'iommu' set but not
+used [-Wunused-but-set-variable]
+  struct intel_iommu *iommu;
 
+Fixed the warning by passing "drhd->iommu" directly to
+for_each_active_iommu() which all subsequent self-assignments should be
+ignored by a compiler anyway.
 
-> Best Regards,
-> Petr
->
-> >       raw_spin_lock_irqsave(&sem->lock, flags);
-> > -     if (likely(list_empty(&sem->wait_list)))
-> > +     if (likely(list_empty(&sem->wait_list))) {
-> >               sem->count++;
-> > -     else
-> > -             __up(sem);
-> > +     } else {
-> > +             waiter =  list_first_entry(&sem->wait_list,
-> > +                                        struct semaphore_waiter, list);
-> > +             list_del(&waiter->list);
-> > +             waiter->up = true;
-> > +             wake_q_add(&wake_q, waiter->task);
-> > +     }
-> >       raw_spin_unlock_irqrestore(&sem->lock, flags);
-> > +
-> > +     wake_up_q(&wake_q);
-> >  }
-> >  EXPORT_SYMBOL(up);
-> >
-> > -/* Functions for the contended case */
-> > -
-> > -struct semaphore_waiter {
-> > -     struct list_head list;
-> > -     struct task_struct *task;
-> > -     bool up;
-> > -};
-> > -
-> >  /*
-> >   * Because this function is inlined, the 'state' parameter will be
-> >   * constant, and thus optimised away by the compiler.  Likewise the
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/iommu/intel-iommu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-
-
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index a209199f3af6..86e1ddcb4a8e 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3034,7 +3034,6 @@ static int __init iommu_prepare_static_identity_mapping(int hw)
+ {
+ 	struct pci_dev *pdev = NULL;
+ 	struct dmar_drhd_unit *drhd;
+-	struct intel_iommu *iommu;
+ 	struct device *dev;
+ 	int i;
+ 	int ret = 0;
+@@ -3045,7 +3044,7 @@ static int __init iommu_prepare_static_identity_mapping(int hw)
+ 			return ret;
+ 	}
+ 
+-	for_each_active_iommu(iommu, drhd)
++	for_each_active_iommu(drhd->iommu, drhd)
+ 		for_each_active_dev_scope(drhd->devices, drhd->devices_cnt, i, dev) {
+ 			struct acpi_device_physical_node *pn;
+ 			struct acpi_device *adev;
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+1.8.3.1
+
