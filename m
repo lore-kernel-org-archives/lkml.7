@@ -2,150 +2,239 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D00C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D0DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835622175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 316892175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfEJPiv convert rfc822-to-8bit (ORCPT
+        id S1727623AbfEJPkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:38:51 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:39092 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfEJPiv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:38:51 -0400
-Received: from marcel-macpro.fritz.box (p4FF9FD9B.dip0.t-ipconnect.de [79.249.253.155])
-        by mail.holtmann.org (Postfix) with ESMTPSA id 5207FCF182;
-        Fri, 10 May 2019 17:47:04 +0200 (CEST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 00/14] Add support for FM radio in hcill and kill TI_ST
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CAHCN7x+2t++EifqQ17kyzW0=NnnQ4A1HeFvE4pEzJ02cXwy+LA@mail.gmail.com>
-Date:   Fri, 10 May 2019 17:38:48 +0200
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
-        linux-media@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <4C83753E-205B-42CE-AF85-74674B311151@holtmann.org>
-References: <20181221011752.25627-1-sre@kernel.org>
- <4f47f7f2-3abb-856c-4db5-675caf8057c7@xs4all.nl>
- <20190319133154.7tbfafy7pguzw2tk@earth.universe>
- <CAHCN7xLZFLs=ed539bwuT6s-n6SDof-um7B3AeErQ2ChztC26A@mail.gmail.com>
- <CAHCN7xLQ=h3bfwS=uTfjSpOtv9qWbic0=_51WJz9KmX7v8+vmw@mail.gmail.com>
- <FCCA9B3E-80AD-416E-B6E4-85E90721881E@holtmann.org>
- <CAHCN7x+2t++EifqQ17kyzW0=NnnQ4A1HeFvE4pEzJ02cXwy+LA@mail.gmail.com>
-To:     Adam Ford <aford173@gmail.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Fri, 10 May 2019 11:40:36 -0400
+Received: from mga04.intel.com ([192.55.52.120]:4613 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727267AbfEJPkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:40:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 08:35:33 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga001.fm.intel.com with ESMTP; 10 May 2019 08:35:32 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hP7YZ-00058V-OG; Fri, 10 May 2019 18:35:31 +0300
+Date:   Fri, 10 May 2019 18:35:31 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>
+Subject: [GIT PULL] platform-drivers-x86 for 5.2-1
+Message-ID: <20190510153531.GA19723@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adam,
+Hi Linus,
 
->>>>>>> This moves all remaining users of the legacy TI_ST driver to hcill (patches
->>>>>>> 1-3). Then patches 4-7 convert wl128x-radio driver to a standard platform
->>>>>>> device driver with support for multiple instances. Patch 7 will result in
->>>>>>> (userless) TI_ST driver no longer supporting radio at runtime. Patch 8-11 do
->>>>>>> some cleanups in the wl128x-radio driver. Finally patch 12 removes the TI_ST
->>>>>>> specific parts from wl128x-radio and adds the required infrastructure to use it
->>>>>>> with the serdev hcill driver instead. The remaining patches 13 and 14 remove
->>>>>>> the old TI_ST code.
->>>>>>> 
->>>>>>> The new code has been tested on the Motorola Droid 4. For testing the audio
->>>>>>> should be configured to route Ext to Speaker or Headphone. Then you need to
->>>>>>> plug headphone, since its cable is used as antenna. For testing there is a
->>>>>>> 'radio' utility packages in Debian. When you start the utility you need to
->>>>>>> specify a frequency, since initial get_frequency returns an error:
->>>>>> 
->>>>>> What is the status of this series?
->>>>>> 
->>>>>> Based on some of the replies (from Adam Ford in particular) it appears that
->>>>>> this isn't ready to be merged, so is a v2 planned?
->>>>> 
->>>>> Yes, a v2 is planned, but I'm super busy at the moment. I don't
->>>>> expect to send something for this merge window. Neither LogicPD
->>>>> nor IGEP use FM radio, so I can just remove FM support from the
->>>>> TI_ST framework. Converting those platforms to hci_ll can be done
->>>>> in a different patchset.
->>>>> 
->>>>> If that was the only issue there would be a v2 already. But Marcel
->>>>> Holtmann suggested to pass the custom packet data through the BT
->>>>> subsystem, which is non-trivial (at least for me) :)
->>>> 
->>>> I am running some tests today on the wl1283-st on the Logic PD Torpedo
->>>> board.  Tony had suggested a few options, so I'm going to try those.
->>>> Looking at those today.  If/when you have a V2, please CC me on it. If
->>>> it's been posted, can you send me a link?  I would really like to see
->>>> the st-kim driver go away so I'd like to resolve the issues with the
->>>> torpedo board.
->>> 
->>> I have run a bunch of tests on the 5.1 kernel.  I am able to get the
->>> firmware to load now and the hci0 goes up.  I was able to establish a
->>> BLE connection to a TI Sensor Tag and read and write data to it with
->>> good success on the wl1283.
->>> 
->>> Unfortunately, when I tried to do some more extensive testing over
->>> classic Bluetooth, I got an error that repeats itself at seemingly
->>> random intervals:
->>>     Bluetooth: hci0: Frame reassembly failed (-84)
->>> 
->>> I can still scan and pair, but these Frame reassembly failed errors
->>> appear to come and go.
->> 
->> there are only 3 places in h4_recv_buf that return EILSEQ. Just add an extra printk to these to figure out which one it is. Maybe it is just extra packet types that we need to handle. If it is not the packet type one, print what packet we have that is causing this.
->> 
-> 
-> I added some code around
-> 
-> /* Check for invalid packet type */
->    if (!skb) {
->     printk("Check for invalid packet type %x\n", (unsigned int)
-> (&pkts[i])->type);
->     return ERR_PTR(-EILSEQ);
-> }
-> 
-> I don't know if I did it right or I am reading the packet type
-> correctly, but the frame reassembly errors are being caught here.
-> 
-> [  408.519165] Check for invalid packet type ff
-> [  408.523559] Bluetooth: hci0: Frame reassembly failed (-84)
+Gathered pile of patches for Platform Drivers x86. No surprises and no merge
+conflicts. Business as usual.
 
-so now we need to figure our on how to handle HCI_VENDOR_PKT.
+Thanks,
 
-#define LL_RECV_VENDOR \
-	.type = HCI_VENDOR_PKT, \
-	.hlen = aaa, \
-	.loff = bbb, \
-	.lsize = ccc, \
-	.maxlen = ddd
+With Best Regards,
+Andy Shevchenko
 
-static const struct h4_recv_pkt ll_recv_pkts[] = {
-	...
-	{ LL_RECV_WAKE_ACK,  .recv = ll_recv_frame  },
-	{ LL_RECV_VENDOR,    .recv = hci_recv_diag  },
-};
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
-Can you hexdump the data inside the skb and we can figure out what it uses for the header and size.
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
 
-In hci_bcm.c there are a few examples of fixed size packets and bpa10x.c contains one where it follows an actual header definition. Also hci_nokia.c contains a few for their packets.
+are available in the Git repository at:
 
-Regards
+  git://git.infradead.org/linux-platform-drivers-x86.git tags/platform-drivers-x86-v5.2-1
 
-Marcel
+for you to fetch changes up to 6456fd731517f473eac033f898d40ae76b160183:
+
+  platform/x86: Add support for Basin Cove power button (2019-05-09 00:33:03 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v5.2-1
+
+New driver of power button for Basin Cove PMIC.
+
+ASUS WMI driver has got a Fn lock mode switch support.
+
+Resolve a never end story with non working Wi-Fi on newer Lenovo Ideapad
+computers. Now the black list is replaced with white list.
+
+New facility to debug S0ix failures on Intel Atom platforms. The Intel PMC
+and accompanying drivers are cleaned up.
+
+Mellanox got a new TmFifo driver. Besides tachometer sensor and watchdog
+are enabled on Mellanox platforms.
+
+The information of embedded controller is now recognized on new Thinkpads.
+Bluetooth driver on Thinkpads is blacklisted for some models.
+
+Touchscreen DMI driver extended to support 'jumper ezpad 6 pro b' and
+Myria MY8307 2-in-1.
+
+Additionally few small fixes here and there for WMI and ACPI laptop drivers.
+
+The following is an automated git shortlog grouped by driver:
+
+alienware-wmi:
+ -  printing the wrong error code
+ -  fix kfree on potentially uninitialized pointer
+
+asus-wmi:
+ -  Add fn-lock mode switch support
+
+dell-laptop:
+ -  fix rfkill functionality
+
+dell-rbtn:
+ -  Add missing #include
+
+ideapad-laptop:
+ -  Remove no_hw_rfkill_list
+
+intel_pmc_core:
+ -  Allow to dump debug registers on S0ix failure
+ -  Convert to a platform_driver
+ -  Mark local function static
+
+intel_pmc_ipc:
+ -  Don't map non-used optional resources
+ -  Apply same width for offset definitions
+ -  Use BIT() macro
+ -  adding error handling
+
+intel_punit_ipc:
+ -  Revert "Fix resource ioremap warning"
+
+mlx-platform:
+ -  Add mlx-wdt platform driver activation
+ -  Add support for tachometer speed register
+ -  Add TmFifo driver for Mellanox BlueField Soc
+
+sony-laptop:
+ -  Fix unintentional fall-through
+
+thinkpad_acpi:
+ -  cleanup for Thinkpad ACPI led
+ -  Mark expected switch fall-throughs
+ -  fix spelling mistake "capabilites" -> "capabilities"
+ -  Read EC information on newer models
+ -  Disable Bluetooth for some machines
+
+touchscreen_dmi:
+ -  Add info for 'jumper ezpad 6 pro b' touchscreen
+ -  Add info for Myria MY8307 2-in-1
+
+----------------------------------------------------------------
+Andy Shevchenko (5):
+      platform/x86: intel_pmc_ipc: Use BIT() macro
+      platform/x86: intel_pmc_ipc: Apply same width for offset definitions
+      platform/x86: intel_pmc_ipc: Don't map non-used optional resources
+      platform/x86: intel_punit_ipc: Revert "Fix resource ioremap warning"
+      platform/x86: Add support for Basin Cove power button
+
+Benjamin Renz (1):
+      platform/x86: touchscreen_dmi: Add info for 'jumper ezpad 6 pro b' touchscreen
+
+Chris Chiu (1):
+      platform/x86: asus-wmi: Add fn-lock mode switch support
+
+Colin Ian King (2):
+      platform/x86: alienware-wmi: fix kfree on potentially uninitialized pointer
+      platform/x86: thinkpad_acpi: fix spelling mistake "capabilites" -> "capabilities"
+
+Dan Carpenter (1):
+      platform/x86: alienware-wmi: printing the wrong error code
+
+Gabriel Lazar (1):
+      platform/x86: touchscreen_dmi: Add info for Myria MY8307 2-in-1
+
+Guenter Roeck (1):
+      platform/x86: intel_pmc_core: Mark local function static
+
+Gustavo A. R. Silva (2):
+      platform/x86: sony-laptop: Fix unintentional fall-through
+      platform/x86: thinkpad_acpi: Mark expected switch fall-throughs
+
+Hans de Goede (1):
+      platform/x86: ideapad-laptop: Remove no_hw_rfkill_list
+
+Jiaxun Yang (2):
+      platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
+      platform/x86: thinkpad_acpi: Read EC information on newer models
+
+Junxiao Chang (1):
+      platform/x86: intel_pmc_ipc: adding error handling
+
+Liming Sun (1):
+      platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc
+
+Mario Limonciello (1):
+      platform/x86: dell-laptop: fix rfkill functionality
+
+Pavel Machek (1):
+      platform/x86: thinkpad_acpi: cleanup for Thinkpad ACPI led
+
+Rajat Jain (2):
+      platform/x86: intel_pmc_core: Convert to a platform_driver
+      platform/x86: intel_pmc_core: Allow to dump debug registers on S0ix failure
+
+Vadim Pasternak (2):
+      platform/x86: mlx-platform: Add support for tachometer speed register
+      platform/x86: mlx-platform: Add mlx-wdt platform driver activation
+
+Valdis Kletnieks (1):
+      platform/x86: dell-rbtn: Add missing #include
+
+ drivers/platform/mellanox/Kconfig             |   12 +-
+ drivers/platform/mellanox/Makefile            |    1 +
+ drivers/platform/mellanox/mlxbf-tmfifo-regs.h |   63 ++
+ drivers/platform/mellanox/mlxbf-tmfifo.c      | 1281 +++++++++++++++++++++++++
+ drivers/platform/x86/Kconfig                  |   11 +
+ drivers/platform/x86/Makefile                 |    1 +
+ drivers/platform/x86/alienware-wmi.c          |   19 +-
+ drivers/platform/x86/asus-wmi.c               |   37 +
+ drivers/platform/x86/dell-laptop.c            |    6 +-
+ drivers/platform/x86/dell-rbtn.c              |    2 +
+ drivers/platform/x86/ideapad-laptop.c         |  321 +------
+ drivers/platform/x86/intel_mrfld_pwrbtn.c     |  107 +++
+ drivers/platform/x86/intel_pmc_core.c         |  172 +++-
+ drivers/platform/x86/intel_pmc_core.h         |    7 +
+ drivers/platform/x86/intel_pmc_ipc.c          |   46 +-
+ drivers/platform/x86/intel_punit_ipc.c        |    8 +-
+ drivers/platform/x86/mlx-platform.c           |  228 ++++-
+ drivers/platform/x86/sony-laptop.c            |    8 +-
+ drivers/platform/x86/thinkpad_acpi.c          |  146 ++-
+ drivers/platform/x86/touchscreen_dmi.c        |   51 +
+ include/linux/platform_data/x86/asus-wmi.h    |    1 +
+ 21 files changed, 2147 insertions(+), 381 deletions(-)
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo-regs.h
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo.c
+ create mode 100644 drivers/platform/x86/intel_mrfld_pwrbtn.c
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
