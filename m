@@ -2,102 +2,71 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA90EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A50D0217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EE92087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbfEJHED (ORCPT
+        id S1727100AbfEJHHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:04:03 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:57794 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfEJHEC (ORCPT
+        Fri, 10 May 2019 03:07:41 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35831 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfEJHHl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:04:02 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 56F9320076;
-        Fri, 10 May 2019 09:03:56 +0200 (CEST)
-Date:   Fri, 10 May 2019 09:03:54 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] kconfig: do not write .config if the content is the
- same
-Message-ID: <20190510070354.GA2193@ravnborg.org>
-References: <20190510061205.28753-1-yamada.masahiro@socionext.com>
- <20190510061205.28753-2-yamada.masahiro@socionext.com>
- <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
+        Fri, 10 May 2019 03:07:41 -0400
+Received: from cpc129250-craw9-2-0-cust139.know.cable.virginm.net ([82.43.126.140] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hOzd0-0003za-Oz; Fri, 10 May 2019 07:07:34 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu: fix spelling mistake "retrived" -> "retrieved"
+Date:   Fri, 10 May 2019 08:07:34 +0100
+Message-Id: <20190510070734.20625-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=c-n4J4-pAAAA:8
-        a=CyLFrPR0bYC2-3M4T7AA:9 a=CjuIK1q_8ugA:10 a=L0NDqeB7ZLmQzAogN4cw:22
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert/Masahiro.
+From: Colin Ian King <colin.king@canonical.com>
 
-On Fri, May 10, 2019 at 08:46:35AM +0200, Geert Uytterhoeven wrote:
-> Hi Yamada-san,
-> 
-> On Fri, May 10, 2019 at 8:14 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> > Kconfig updates the .config when it exits even if its content is
-> > exactly the same as before. Since its timestamp becomes newer than
-> > that of other build artifacts, additional processing is invoked,
-> > which is annoying.
-> >
-> > - syncconfig is invoked to update include/config/auto.conf, etc.
-> >
-> > - kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
-> >   then vmlinux is relinked as well.
-> >
-> > If the .config is not changed at all, we do not have to even
-> > touch it. Just bail out showing "No change to .config".
-It would be preferable that if nothing changed no output is generated.
-Like we do not tell that we did not build a .o file because the .c file
-had not changed.
-Less noise for a kernel build where nothings happens.
+There is a spelling mistake in a DRM_ERROR error message. Fix this.
 
-> This causes a semantic change for the meaning of ".config.old", which is
-> no longer updated if .config has not changed.
-> Hence its contents may no longer correspond to the previous config, but to
-> an arbitrary older version.
-This semantic change is good.
-So we now have a .config.old that correspond to the state before
-the last change. Also after several kernel builds.
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/amdgpu/df_v3_6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > My workflow involves always running my own script "linux-oldconfig",
-> instead of "make oldconfig", so I immediately see what has changed:
-> 
->     $ cat $(type -p linux-oldconfig)
->     #!/bin/bash
->     make ${0#*/linux-} && colordiff -u .config{.old,}
-So scripts relying on the old (broken) behaviour will no longer work.
-The new behaviour is better as it is usefaul in many typical situations.
+diff --git a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
+index 7d375f8dcce6..a5c3558869fb 100644
+--- a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
++++ b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
+@@ -194,7 +194,7 @@ static void df_v3_6_pmc_get_ctrl_settings(struct amdgpu_device *adev,
+ 		return;
+ 
+ 	if ((*lo_base_addr == 0) || (*hi_base_addr == 0)) {
+-		DRM_ERROR("DF PMC addressing not retrived! Lo: %x, Hi: %x",
++		DRM_ERROR("DF PMC addressing not retrieved! Lo: %x, Hi: %x",
+ 				*lo_base_addr, *hi_base_addr);
+ 		return;
+ 	}
+-- 
+2.20.1
 
-Hacking, hack. What did I change in the config?
-
-	Sam
