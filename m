@@ -2,225 +2,127 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D0DFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB69C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1346E217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TcYtPFcq"
+	by mail.kernel.org (Postfix) with ESMTP id DBA36217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfEJWiL (ORCPT
+        id S1726721AbfEJWjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:38:11 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44578 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbfEJWh7 (ORCPT
+        Fri, 10 May 2019 18:39:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42342 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728014AbfEJWjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:37:59 -0400
-Received: by mail-pf1-f194.google.com with SMTP id g9so3920708pfo.11;
-        Fri, 10 May 2019 15:37:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GbEXwJMOtDQCCWFKbIVF5kC5vfVIQcIDsT/50hWcZh8=;
-        b=TcYtPFcqmJM5QCzQKdsaHDVEOJVlJsX8wGV6kBbxVG1qyVufYDlFsKa+5kbCFWpyiX
-         +vDk+LPCnpCb0V7VjQUQ4BSNPWmLKTTmFR/YPfCLvi0PpCkPDlRJLe4n507fxvyWKt+V
-         2rcKmVPrwZxof4OON99Q5rdbD/as/e5Phixk30dNrSL6aTsEA7/XrBT2VOPzOfBq7+kK
-         /9gAK35rqAoUxT2O1HFZiJndYHP8tRrKxVjAfbGsbA3MT/O1Vx9q72VVlZRfyaHr1mdX
-         rZPoEDo8A6CY3hP4azFcHzWNKLJHDq3sVvqbt3pVP62ZRU42OudeXsSF2hp4WmFHC2CJ
-         wfcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GbEXwJMOtDQCCWFKbIVF5kC5vfVIQcIDsT/50hWcZh8=;
-        b=TA5Sz8JvE/h/fI6EOmx94LXYkpL7dh6uLRNSSpYFJG6DAlnSXsuwa5kl3XfYjscIS2
-         BFFm8BbwIxAD90F5kvEVUNqGz+bjZz+/l4bP8+3oSRcF6bVbdaOg2Yoyyh9MrKuxShr8
-         N8tRltabI8F8As7+J/2imY+NKHR9q5cdm+b9UxG8xnTNsHM0Tcy5qBDdW8ZL1oO8Q1HE
-         Xxq7MgrGmQTHjr/qRzIPm/HuNF/ocvzsrLzku3FRY4Y7ztmmoqyprBJLTiAvh8TdhVke
-         70za7ZcTsSlo1WGKyaEiI6wg4F9C5XzXqXRKGzIZwzkoAeA3F3M47X6DaAg964RYvMWN
-         9evg==
-X-Gm-Message-State: APjAAAWX+XHn2GwjSaSlsCbyTZyUe5ef37NYJ9d7Hnq7a/cGAE+OFo2w
-        TaywDO7EYjpu5txzqTPsPaUYnIW3NW0=
-X-Google-Smtp-Source: APXvYqzjJr3YdkryE0ilpepGw2WGiwS81groppM5Cqsc9tuG0zvHKdptuh9wsuTjGf1+YgH11wSDGQ==
-X-Received: by 2002:a65:5106:: with SMTP id f6mr16800600pgq.253.1557527878069;
-        Fri, 10 May 2019 15:37:58 -0700 (PDT)
-Received: from prsriva-linux.corp.microsoft.com ([2001:4898:80e8:a:1d1b:db59:93e9:eab5])
-        by smtp.gmail.com with ESMTPSA id r74sm12459430pfa.71.2019.05.10.15.37.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 15:37:57 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-X-Google-Original-From: Prakhar Srivastava
-To:     linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, ebiederm@xmission.com, vgoyal@redhat.com,
-        prsriva@microsoft.com, Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH 2/3 v5] add a new template field buf to contain the buffer
-Date:   Fri, 10 May 2019 15:37:43 -0700
-Message-Id: <20190510223744.10154-3-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190510223744.10154-1-prsriva02@gmail.com>
-References: <20190510223744.10154-1-prsriva02@gmail.com>
-MIME-Version: 1.0
+        Fri, 10 May 2019 18:39:08 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AMae1P051978
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 18:39:07 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sde89064t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 18:39:07 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 10 May 2019 23:39:05 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 10 May 2019 23:38:58 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4AMcvKk47251620
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 22:38:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B7DA052076;
+        Fri, 10 May 2019 22:38:57 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.96])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E99D752077;
+        Fri, 10 May 2019 22:38:54 +0000 (GMT)
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Rob Landley <rob@landley.net>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        viro@zeniv.linux.org.uk
+Cc:     linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com, hpa@zytor.com,
+        arnd@arndb.de, james.w.mcmechan@gmail.com
+Date:   Fri, 10 May 2019 18:38:44 -0400
+In-Reply-To: <3a9d717e-0e12-9d62-a3cf-afb7a5dbf166@landley.net>
+References: <20190509112420.15671-1-roberto.sassu@huawei.com>
+         <fca8e601-1144-1bb8-c007-518651f624a5@landley.net>
+         <bf0d02fc-d6ce-ef1d-bb7d-7ca14432c6fd@huawei.com>
+         <1557488971.10635.102.camel@linux.ibm.com>
+         <3a9d717e-0e12-9d62-a3cf-afb7a5dbf166@landley.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051022-0008-0000-0000-000002E570DA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051022-0009-0000-0000-00002251FEE0
+Message-Id: <1557527924.10635.157.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-10_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=902 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905100143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prakhar Srivastava <prsriva02@gmail.com>
+On Fri, 2019-05-10 at 15:46 -0500, Rob Landley wrote:
+> On 5/10/19 6:49 AM, Mimi Zohar wrote:
+> > On Fri, 2019-05-10 at 08:56 +0200, Roberto Sassu wrote:
+> >> On 5/9/2019 8:34 PM, Rob Landley wrote:
+> >>> On 5/9/19 6:24 AM, Roberto Sassu wrote:
+> > 
+> >>>> The difference with another proposal
+> >>>> (https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
+> >>>> included in an image without changing the image format, as opposed to
+> >>>> defining a new one. As seen from the discussion, if a new format has to be
+> >>>> defined, it should fix the issues of the existing format, which requires
+> >>>> more time.
+> >>>
+> >>> So you've explicitly chosen _not_ to address Y2038 while you're there.
+> >>
+> >> Can you be more specific?
+> > 
+> > Right, this patch set avoids incrementing the CPIO magic number and
+> > the resulting changes required (eg. increasing the timestamp field
+> > size), by including a file with the security xattrs in the CPIO.  In
+> > either case, including the security xattrs in the initramfs header or
+> > as a separate file, the initramfs, itself, needs to be signed.
+> 
+> The /init binary in the initramfs runs as root and launches all other processes
+> on the system. Presumably it can write any xattrs it wants to, and doesn't need
+> any extra permissions granted to it to do so. But as soon as you start putting
+> xattrs on _other_ files within the initramfs that are _not_ necessarily running
+> as PID 1, _that's_ when the need to sign the initramfs comes in?
+> 
+> Presumably the signing occurs on the gzipped file. How does that affect the cpio
+> parsing _after_ it's decompressed? Why would that be part of _this_ patch?
 
-The buffer(cmdline args) added to the ima log cannot be attested
-without having the actual buffer. Thus to make the measured buffer 
-available to stroe/read a new ima temaplate (buf) is added. 
-The cmdline args used for soft reboot can then be read and attested
-later.
+The signing and verification of the initramfs is a separate issue, not
+part of this patch set.  The only reason for mentioning it here was to
+say that both methods of including the security xattrs require the
+initramfs be signed.  Just as the kernel image needs to be signed and
+verified, the initramfs should be too.
 
-The patch adds a new template field buf to store/read the buffer
-used while measuring kexec_cmdline args in the 
-[PATCH 1/2 v5]: "add a new ima hook and policy to measure the cmdline".
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
----
- security/integrity/ima/ima_main.c         | 23 +++++++++++++++++++++++
- security/integrity/ima/ima_template.c     |  2 ++
- security/integrity/ima/ima_template_lib.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_template_lib.h |  4 ++++
- security/integrity/integrity.h            |  1 +
- 5 files changed, 51 insertions(+)
+Mimi
 
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 1d186bda25fe..ca12885ca241 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -605,10 +605,32 @@ static int process_buffer_measurement(const void *buf, int size,
- 	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
- 	int action = 0;
- 
-+	struct buffer_xattr {
-+		enum evm_ima_xattr_type type;
-+		u16 buf_length;
-+		unsigned char buf[0];
-+	};
-+	struct buffer_xattr *buffer_event_data = NULL;
-+	int alloc_length = 0;
-+
- 	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr);
- 	if (!(action & IMA_AUDIT) && !(action & IMA_MEASURE))
- 		goto out;
- 
-+	alloc_length = sizeof(struct buffer_xattr) + size;
-+	buffer_event_data = kzalloc(alloc_length, GFP_KERNEL);
-+	if (!buffer_event_data) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	buffer_event_data->type = IMA_XATTR_BUFFER;
-+	buffer_event_data->buf_length = size;
-+	memcpy(buffer_event_data->buf, buf, size);
-+
-+	event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
-+	event_data.xattr_len = alloc_length;
-+
- 	memset(iint, 0, sizeof(*iint));
- 	memset(&hash, 0, sizeof(hash));
- 
-@@ -638,6 +660,7 @@ static int process_buffer_measurement(const void *buf, int size,
- 	}
- 
- out:
-+	kfree(buffer_event_data);
- 	return ret;
- }
- 
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index b631b8bc7624..a76d1c04162a 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -43,6 +43,8 @@ static const struct ima_template_field supported_fields[] = {
- 	 .field_show = ima_show_template_string},
- 	{.field_id = "sig", .field_init = ima_eventsig_init,
- 	 .field_show = ima_show_template_sig},
-+	{.field_id = "buf", .field_init = ima_eventbuf_init,
-+	 .field_show = ima_show_template_buf},
- };
- #define MAX_TEMPLATE_NAME_LEN 15
- 
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 513b457ae900..95a827f42c18 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -162,6 +162,11 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
- }
- 
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+				struct ima_field_data *field_data)
-+{
-+	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
-+}
- /**
-  * ima_parse_buf() - Parses lengths and data from an input buffer
-  * @bufstartp:       Buffer start address.
-@@ -389,3 +394,19 @@ int ima_eventsig_init(struct ima_event_data *event_data,
- 	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
- 					     DATA_FMT_HEX, field_data);
- }
-+
-+/*
-+ *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
-+ *  template data.
-+ */
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+				struct ima_field_data *field_data)
-+{
-+	struct evm_ima_xattr_data *xattr_value = event_data->xattr_value;
-+
-+	if ((!xattr_value) || (xattr_value->type != IMA_XATTR_BUFFER))
-+		return 0;
-+
-+	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
-+					DATA_FMT_HEX, field_data);
-+}
-diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
-index 6a3d8b831deb..12f1a8578b31 100644
---- a/security/integrity/ima/ima_template_lib.h
-+++ b/security/integrity/ima/ima_template_lib.h
-@@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
- 			      struct ima_field_data *field_data);
- void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 			   struct ima_field_data *field_data);
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+			   struct ima_field_data *field_data);
- int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
- 		  int maxfields, struct ima_field_data *fields, int *curfields,
- 		  unsigned long *len_mask, int enforce_mask, char *bufname);
-@@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
- 			  struct ima_field_data *field_data);
- int ima_eventsig_init(struct ima_event_data *event_data,
- 		      struct ima_field_data *field_data);
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+		      struct ima_field_data *field_data);
- #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index 7de59f44cba3..14ef904f091d 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -74,6 +74,7 @@ enum evm_ima_xattr_type {
- 	EVM_IMA_XATTR_DIGSIG,
- 	IMA_XATTR_DIGEST_NG,
- 	EVM_XATTR_PORTABLE_DIGSIG,
-+	IMA_XATTR_BUFFER,
- 	IMA_XATTR_LAST
- };
- 
--- 
-2.20.1
 
