@@ -2,216 +2,73 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78BCC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4896AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BCAC217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:35:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E8C720989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfEJVfH (ORCPT
+        id S1728231AbfEJVkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:35:07 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27057 "EHLO mga04.intel.com"
+        Fri, 10 May 2019 17:40:06 -0400
+Received: from muru.com ([72.249.23.125]:48374 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728133AbfEJVfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:35:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 14:35:06 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.lm.intel.com) ([10.232.112.69])
-  by fmsmga005.fm.intel.com with ESMTP; 10 May 2019 14:35:05 -0700
-From:   Keith Busch <keith.busch@intel.com>
-To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org
-Cc:     Rafael Wysocki <rafael@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH] nvme/pci: Use host managed power state for suspend
-Date:   Fri, 10 May 2019 15:29:37 -0600
-Message-Id: <20190510212937.11661-1-keith.busch@intel.com>
-X-Mailer: git-send-email 2.13.6
+        id S1727828AbfEJVkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:40:06 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 6A0A7808C;
+        Fri, 10 May 2019 21:40:23 +0000 (UTC)
+Date:   Fri, 10 May 2019 14:40:02 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>, Tero Kristo <t-kristo@ti.com>
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>,
+        YueHaibing <yuehaibing@huawei.com>, catalin.marinas@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] arm64: arch_k3: Fix kconfig dependency warning
+Message-ID: <20190510214002.GV8007@atomide.com>
+References: <20190510035255.27568-1-yuehaibing@huawei.com>
+ <f7c420ec-ee4e-c17e-7650-353002bb81b9@ti.com>
+ <86o94acgdg.wl-marc.zyngier@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86o94acgdg.wl-marc.zyngier@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The nvme pci driver prepares its devices for power loss during suspend
-by shutting down the controllers, and the power setting is deferred to
-pci driver's power management before the platform removes power. The
-suspend-to-idle mode, however, does not remove power.
+* Marc Zyngier <marc.zyngier@arm.com> [190510 18:30]:
+> On Fri, 10 May 2019 06:16:38 +0100,
+> Lokesh Vutla <lokeshvutla@ti.com> wrote:
+> > 
+> > 
+> > 
+> > On 10/05/19 9:22 AM, YueHaibing wrote:
+> > > Fix Kbuild warning when SOC_TI is not set
+> > > 
+> > > WARNING: unmet direct dependencies detected for TI_SCI_INTA_IRQCHIP
+> > >   Depends on [n]: TI_SCI_PROTOCOL [=y] && SOC_TI [=n]
+> > >   Selected by [y]:
+> > >   - ARCH_K3 [=y]
+> > > 
+> > > Fixes: 009669e74813 ("arm64: arch_k3: Enable interrupt controller drivers")
+> > > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> > 
+> > Thanks for catching it.
+> > 
+> > Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+> 
+> Tony, can you please route this patch via armsoc?
 
-NVMe devices that implement host managed power settings can achieve
-lower power and better transition latencies than using generic PCI
-power settings. Try to use this feature if the platform is not involved
-with the suspend. If successful, restore the previous power state on
-resume.
+Thanks adding Tero to loop so he can queue it.
 
-Cc: Mario Limonciello <Mario.Limonciello@dell.com>
-Cc: Kai Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
----
-Disclaimer: I've tested only on emulation faking support for the feature.
+Regards,
 
-General question: different devices potentially have divergent values
-for power consumption and transition latencies. Would it be useful to
-allow a user tunable setting to select the desired target power state
-instead of assuming the lowest one?
-
- drivers/nvme/host/core.c | 27 ++++++++++++++++++++++++
- drivers/nvme/host/nvme.h |  2 ++
- drivers/nvme/host/pci.c  | 53 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 82 insertions(+)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index a6644a2c3ef7..eb3640fd8838 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1132,6 +1132,33 @@ static int nvme_set_features(struct nvme_ctrl *dev, unsigned fid, unsigned dword
- 	return ret;
- }
- 
-+int nvme_set_power(struct nvme_ctrl *ctrl, unsigned ps)
-+{
-+	return nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, ps, NULL, 0, NULL);
-+}
-+EXPORT_SYMBOL_GPL(nvme_set_power);
-+
-+int nvme_get_power(struct nvme_ctrl *ctrl, u32 *result)
-+{
-+	struct nvme_command c;
-+	union nvme_result res;
-+	int ret;
-+
-+	if (!result)
-+		return -EINVAL;
-+
-+	memset(&c, 0, sizeof(c));
-+	c.features.opcode = nvme_admin_get_features;
-+	c.features.fid = cpu_to_le32(NVME_FEAT_POWER_MGMT);
-+
-+	ret = __nvme_submit_sync_cmd(ctrl->admin_q, &c, &res,
-+			NULL, 0, 0, NVME_QID_ANY, 0, 0, false);
-+	if (ret >= 0)
-+		*result = le32_to_cpu(res.u32);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(nvme_get_power);
-+
- int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count)
- {
- 	u32 q_count = (*count - 1) | ((*count - 1) << 16);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 5ee75b5ff83f..eaa571ac06d2 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -459,6 +459,8 @@ int __nvme_submit_sync_cmd(struct request_queue *q, struct nvme_command *cmd,
- 		unsigned timeout, int qid, int at_head,
- 		blk_mq_req_flags_t flags, bool poll);
- int nvme_set_queue_count(struct nvme_ctrl *ctrl, int *count);
-+int nvme_set_power(struct nvme_ctrl *ctrl, unsigned ps);
-+int nvme_get_power(struct nvme_ctrl *ctrl, u32 *result);
- void nvme_stop_keep_alive(struct nvme_ctrl *ctrl);
- int nvme_reset_ctrl(struct nvme_ctrl *ctrl);
- int nvme_reset_ctrl_sync(struct nvme_ctrl *ctrl);
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 3e4fb891a95a..0d5d91e5b293 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -18,6 +18,7 @@
- #include <linux/mutex.h>
- #include <linux/once.h>
- #include <linux/pci.h>
-+#include <linux/suspend.h>
- #include <linux/t10-pi.h>
- #include <linux/types.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
-@@ -116,6 +117,7 @@ struct nvme_dev {
- 	u32 cmbsz;
- 	u32 cmbloc;
- 	struct nvme_ctrl ctrl;
-+	u32 last_ps;
- 
- 	mempool_t *iod_mempool;
- 
-@@ -2828,11 +2830,59 @@ static void nvme_remove(struct pci_dev *pdev)
- }
- 
- #ifdef CONFIG_PM_SLEEP
-+static int nvme_deep_state(struct nvme_dev *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev->dev);
-+	int ret;
-+
-+	/*
-+	 * Save the current power state in case a user tool set a power policy
-+	 * for this device. We'll restore that state on resume.
-+	 */
-+	dev->last_ps = 0;
-+	ret = nvme_get_power(&dev->ctrl, &dev->last_ps);
-+
-+	/*
-+	 * Return the error to halt suspend if the driver either couldn't
-+	 * submit a command or didn't see a response.
-+	 */
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = nvme_set_power(&dev->ctrl, dev->ctrl.npss);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!ret) {
-+		/*
-+		 * A saved state prevents pci pm from generically controlling
-+		 * the device's power. We're using protocol specific settings
-+		 * so we don't want pci interfering.
-+		 */
-+		pci_save_state(pdev);
-+	} else {
-+		/*
-+		 * The drive failed the low power request. Fallback to device
-+		 * shutdown and clear npss to force a controller reset on
-+		 * resume. The value will be rediscovered during reset.
-+		 */
-+		dev->ctrl.npss = 0;
-+		nvme_dev_disable(dev, true);
-+	}
-+	return 0;
-+}
-+
- static int nvme_suspend(struct device *dev)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
- 
-+	/*
-+	 * Try to use nvme if the device supports host managed power settings
-+	 * and platform firmware is not involved.
-+	 */
-+	if (!pm_suspend_via_firmware() && ndev->ctrl.npss)
-+		return nvme_deep_state(ndev);
- 	nvme_dev_disable(ndev, true);
- 	return 0;
- }
-@@ -2842,6 +2892,9 @@ static int nvme_resume(struct device *dev)
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct nvme_dev *ndev = pci_get_drvdata(pdev);
- 
-+	if (!pm_resume_via_firmware() && ndev->ctrl.npss)
-+		if (nvme_set_power(&ndev->ctrl, ndev->last_ps) == 0)
-+			return 0;
- 	nvme_reset_ctrl(&ndev->ctrl);
- 	return 0;
- }
--- 
-2.14.4
-
+Tony
