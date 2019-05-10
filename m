@@ -2,272 +2,179 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E21BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB65C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B7B2177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07EA421479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 11:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k9cS+0yw"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FRBEPPEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbfEJLi6 (ORCPT
+        id S1727234AbfEJLqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 07:38:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50472 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbfEJLi5 (ORCPT
+        Fri, 10 May 2019 07:46:31 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57232 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfEJLqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 07:38:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4ABYWes171319;
-        Fri, 10 May 2019 11:37:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : subject
- : from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=corp-2018-07-02;
- bh=uItGwRyuCRl9mmMVE4L1Nw0evDm9cO6EMsr+QrxE1/A=;
- b=k9cS+0ywWXeSgoEi0SAQbHlb06pfmBXrzpN+ls/IsTNn3NUiveSsZY4BwlTdkXuBhr2O
- BeVLun70BPgzomOjtFsyxVthxh3p2vFt/I/E7Q1j9wOLWPLSZz6dVmpPbF6Yg0JXk6Vy
- O9OWRCAAx1S3v8cmGJHsE8EtAcga21uP6q2J1VCRNiyaRz4qkX10C43O4e+PCjo4J741
- klmLg6mOyBPai16avfiHB+DfTrOH/kdgdzjj5YgWWy3fPZtrfLK9ighSM0JC4uiNrQQQ
- 3gat1JBOOTEZpYUAlbbdc7W3Q2Xz9q9L+fqVoRIkkGahlP3vK6YVdAY4XOnhrSX5Key1 tw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2s94bggf39-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 11:37:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4ABbGD5078991;
-        Fri, 10 May 2019 11:37:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2scpy67a12-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 11:37:19 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4ABb2aY018536;
-        Fri, 10 May 2019 11:37:02 GMT
-Received: from asu (/92.220.18.196)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 May 2019 04:37:01 -0700
-Message-ID: <0a1659f2abb2cba109ba588e4a87bda252c57be6.camel@oracle.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-From:   Knut Omang <knut.omang@oracle.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Tim.Bird@sony.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Date:   Fri, 10 May 2019 13:36:54 +0200
-In-Reply-To: <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
-References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
-         <20190509015856.GB7031@mit.edu>
-         <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
-         <20190509032017.GA29703@mit.edu>
-         <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
-         <20190509133551.GD29703@mit.edu>
-         <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
-         <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
-         <20190509214233.GA20877@mit.edu>
-         <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
-         <20190509233043.GC20877@mit.edu>
-         <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
-         <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
-         <a1b88d5add15d43de0468c32d9a2427629337abb.camel@oracle.com>
-         <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905100082
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905100082
+        Fri, 10 May 2019 07:46:31 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190510114628euoutp01b49eab63e9f71968c4b7e8119aba6dfa~dT80at1JQ1858118581euoutp01i;
+        Fri, 10 May 2019 11:46:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190510114628euoutp01b49eab63e9f71968c4b7e8119aba6dfa~dT80at1JQ1858118581euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557488788;
+        bh=sAYgRsBUjpJp0qTA3ifq8squgPrBoWwQtxswIlARtRM=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=FRBEPPErTlLsbK4UQ1aMkP83pf0G5vtZrv9mTttFmXaaMroTJKrHvvAzdoTY5sxKe
+         CkTG5Y9iGW77P3OOkpDm7LHuMaBRby49hAozsEOX467cj6Vdm1bfCmPbuwotw9EMcR
+         3tnKmLJAEBorSAcMoyGFMpMUp07Mb+ktSJhttCuY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190510114628eucas1p23184b6e27317f65fa9398e4402585694~dT8z-YXaK1072710727eucas1p2u;
+        Fri, 10 May 2019 11:46:28 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 76.FB.04298.39465DC5; Fri, 10
+        May 2019 12:46:27 +0100 (BST)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190510114627eucas1p25476833d2d375b113353741c18aecd92~dT8zVFDaW1928319283eucas1p27;
+        Fri, 10 May 2019 11:46:27 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-71-5cd56493a8f5
+Received: from eusync3.samsung.com ( [203.254.199.213]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 3C.4F.04146.39465DC5; Fri, 10
+        May 2019 12:46:27 +0100 (BST)
+Received: from amdc2143.DIGITAL.local ([106.120.51.59]) by
+        eusync3.samsung.com (Oracle Communications Messaging Server 7.0.5.31.0 64bit
+        (built May  5 2014)) with ESMTPA id <0PRA004DQE1CEA60@eusync3.samsung.com>;
+        Fri, 10 May 2019 12:46:27 +0100 (BST)
+From:   Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Lukasz Pawelczyk <havner@gmail.com>,
+        Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+Subject: [PATCH v3] netfilter: xt_owner: Add supplementary groups option
+Date:   Fri, 10 May 2019 13:46:22 +0200
+Message-id: <20190510114622.831-1-l.pawelczyk@samsung.com>
+X-Mailer: git-send-email 2.20.1
+MIME-version: 1.0
+Content-transfer-encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWy7djPc7qTU67GGBzaqW3xd2c7s8Wc8y0s
+        Ftt6VzNa/H+tY3G5bxqzxZlJC5ksLu+aw2ZxbIGYxYR1p1gspr+5yuzA5XG6aSOLx5aVN5k8
+        ds66y+7x9vcJJo++LasYPQ59X8Dq8XmTXAB7FJdNSmpOZllqkb5dAlfG24lrmAv2CVV09G5l
+        a2A8ytfFyMEhIWAi8WiLTBcjF4eQwApGibcn7jJ1MXICOZ8ZJe5894WpuXi9AqJmGaPEsqkP
+        WCGc/4wS7QdfsoI0sAkYSHy/sJcZJCEiMJ1JYk3DK0aQBLNAqMS5R+uZQWxhAQ+JKxNfs4JM
+        ZRFQlTi5hAskzCtgJTHl5zuwEgkBeYnzvevYIeKCEj8m32OBGCMvcfDKcxaImjVsEk8+hUEc
+        5yLRfJoHIiwj0dlxkAkiXC1x8gzYzRICHYwSG1/MZoSosZb4PGkLM8RIPolJ26YzQ9TzSnS0
+        CUGUeEhMmHqaHSQsJBArsfdCwQRGyVlI7pmF5J4FjEyrGMVTS4tz01OLDfNSy/WKE3OLS/PS
+        9ZLzczcxAiP69L/jn3Ywfr2UdIhRgINRiYfXgv9KjBBrYllxZe4hRgkOZiUR3iIdoBBvSmJl
+        VWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5OqQbGaXca986o/v3k7YEn
+        p7p5dthqaDz/JXBA4MbXQz837l9QqNW+XXi752+Fnyusf73/Vy/NcP7yCzZX2fUKujE/mPP7
+        LopJXN3/qoHroFrUhO//dy2wsbzC0yx7n3Ox82c+voJVJ/5JNjBM88kJmxpx8cXJi9vXeyvG
+        vNx56FDalGieZY5Lz0SaX1RiKc5INNRiLipOBABtnahb5AIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCLMWRmVeSWpSXmKPExsVy+t/xq7qTU67GGKw8J2Dxd2c7s8Wc8y0s
+        Ftt6VzNa/H+tY3G5bxqzxZlJC5ksLu+aw2ZxbIGYxYR1p1gspr+5yuzA5XG6aSOLx5aVN5k8
+        ds66y+7x9vcJJo++LasYPQ59X8Dq8XmTXAB7FJdNSmpOZllqkb5dAlfG24lrmAv2CVV09G5l
+        a2A8ytfFyMEhIWAicfF6RRcjF4eQwBJGiW1HZjBBOI1MEtdOXWLtYuTkYBMwkPh+YS8ziC0i
+        MJ1J4s8sYRCbWSBU4tqM6WBxYQEPiSsTX7OCDGURUJU4uYQLJMwrYCUx5ec7sBIJAXmJ873r
+        2CHighI/Jt9jgRgjL3HwynOWCYw8s5CkZiFJLWBkWsUoklpanJueW2yoV5yYW1yal66XnJ+7
+        iREYltuO/dy8g/HSxuBDjAIcjEo8vBMEr8QIsSaWFVfmHmKU4GBWEuEt0gEK8aYkVlalFuXH
+        F5XmpBYfYpTmYFES5+0QOBgjJJCeWJKanZpakFoEk2Xi4JRqYOwxvusnJfStsbY4kt2B2zDf
+        VWY2154pv8wvaWSteWS+78yr9Cn8tXP3tBozBpfaNtVHha0XecRVtVabKdhw3lFryU5e7XQX
+        /eQpbpufCYT+nr7hm6XfsVdLGyrDZzpJWlX4R6wV4ujXm8woVsOSn/I2ftUOXu2wo48f8Ols
+        2LDG4HzfZIZsJZbijERDLeai4kQAsBtk9UcCAAA=
+X-CMS-MailID: 20190510114627eucas1p25476833d2d375b113353741c18aecd92
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190510114627eucas1p25476833d2d375b113353741c18aecd92
+References: <CGME20190510114627eucas1p25476833d2d375b113353741c18aecd92@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-10 at 10:12 +0200, Daniel Vetter wrote:
-> On Fri, May 10, 2019 at 7:49 AM Knut Omang <knut.omang@oracle.com> wrote:
-> >
-> > On Thu, 2019-05-09 at 22:18 -0700, Frank Rowand wrote:
-> > > On 5/9/19 4:40 PM, Logan Gunthorpe wrote:
-> > > >
-> > > >
-> > > > On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
-> > > >> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
-> > > >>>
-> > > >>> The second item, arguably, does have significant overlap with kselftest.
-> > > >>> Whether you are running short tests in a light weight UML environment or
-> > > >>> higher level tests in an heavier VM the two could be using the same
-> > > >>> framework for writing or defining in-kernel tests. It *may* also be valuable
-> > > >>> for some people to be able to run all the UML tests in the heavy VM
-> > > >>> environment along side other higher level tests.
-> > > >>>
-> > > >>> Looking at the selftests tree in the repo, we already have similar items to
-> > > >>> what Kunit is adding as I described in point (2) above. kselftest_harness.h
-> > > >>> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
-> > > >>> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
-> > > >>>
-> > > >>> However, the number of users of this harness appears to be quite small. Most
-> > > >>> of the code in the selftests tree seems to be a random mismash of scripts
-> > > >>> and userspace code so it's not hard to see it as something completely
-> > > >>> different from the new Kunit:
-> > > >>>
-> > > >>> $ git grep --files-with-matches kselftest_harness.h *
-> > > >>
-> > > >> To the extent that we can unify how tests are written, I agree that
-> > > >> this would be a good thing.  However, you should note that
-> > > >> kselftest_harness.h is currently assums that it will be included in
-> > > >> userspace programs.  This is most obviously seen if you look closely
-> > > >> at the functions defined in the header files which makes calls to
-> > > >> fork(), abort() and fprintf().
-> > > >
-> > > > Ah, yes. I obviously did not dig deep enough. Using kunit for
-> > > > in-kernel tests and kselftest_harness for userspace tests seems like
-> > > > a sensible line to draw to me. Trying to unify kernel and userspace
-> > > > here sounds like it could be difficult so it's probably not worth
-> > > > forcing the issue unless someone wants to do some really fancy work
-> > > > to get it done.
-> > > >
-> > > > Based on some of the other commenters, I was under the impression
-> > > > that kselftests had in-kernel tests but I'm not sure where or if they
-> > > > exist.
-> > >
-> > > YES, kselftest has in-kernel tests.  (Excuse the shouting...)
-> > >
-> > > Here is a likely list of them in the kernel source tree:
-> > >
-> > > $ grep module_init lib/test_*.c
-> > > lib/test_bitfield.c:module_init(test_bitfields)
-> > > lib/test_bitmap.c:module_init(test_bitmap_init);
-> > > lib/test_bpf.c:module_init(test_bpf_init);
-> > > lib/test_debug_virtual.c:module_init(test_debug_virtual_init);
-> > > lib/test_firmware.c:module_init(test_firmware_init);
-> > > lib/test_hash.c:module_init(test_hash_init);  /* Does everything */
-> > > lib/test_hexdump.c:module_init(test_hexdump_init);
-> > > lib/test_ida.c:module_init(ida_checks);
-> > > lib/test_kasan.c:module_init(kmalloc_tests_init);
-> > > lib/test_list_sort.c:module_init(list_sort_test);
-> > > lib/test_memcat_p.c:module_init(test_memcat_p_init);
-> > > lib/test_module.c:static int __init test_module_init(void)
-> > > lib/test_module.c:module_init(test_module_init);
-> > > lib/test_objagg.c:module_init(test_objagg_init);
-> > > lib/test_overflow.c:static int __init test_module_init(void)
-> > > lib/test_overflow.c:module_init(test_module_init);
-> > > lib/test_parman.c:module_init(test_parman_init);
-> > > lib/test_printf.c:module_init(test_printf_init);
-> > > lib/test_rhashtable.c:module_init(test_rht_init);
-> > > lib/test_siphash.c:module_init(siphash_test_init);
-> > > lib/test_sort.c:module_init(test_sort_init);
-> > > lib/test_stackinit.c:module_init(test_stackinit_init);
-> > > lib/test_static_key_base.c:module_init(test_static_key_base_init);
-> > > lib/test_static_keys.c:module_init(test_static_key_init);
-> > > lib/test_string.c:module_init(string_selftest_init);
-> > > lib/test_ubsan.c:module_init(test_ubsan_init);
-> > > lib/test_user_copy.c:module_init(test_user_copy_init);
-> > > lib/test_uuid.c:module_init(test_uuid_init);
-> > > lib/test_vmalloc.c:module_init(vmalloc_test_init)
-> > > lib/test_xarray.c:module_init(xarray_checks);
-> > >
-> > >
-> > > > If they do exists, it seems like it would make sense to
-> > > > convert those to kunit and have Kunit tests run-able in a VM or
-> > > > baremetal instance.
-> > >
-> > > They already run in a VM.
-> > >
-> > > They already run on bare metal.
-> > >
-> > > They already run in UML.
-> > >
-> > > This is not to say that KUnit does not make sense.  But I'm still trying
-> > > to get a better description of the KUnit features (and there are
-> > > some).
-> >
-> > FYI, I have a master student who looks at converting some of these to KTF, such as for
-> > instance the XArray tests, which lended themselves quite good to a semi-automated
-> > conversion.
-> >
-> > The result is also a somewhat more compact code as well as the flexibility
-> > provided by the Googletest executor and the KTF frameworks, such as running selected
-> > tests, output formatting, debugging features etc.
-> 
-> So is KTF already in upstream? 
+The XT_OWNER_SUPPL_GROUPS flag causes GIDs specified with XT_OWNER_GID
+to be also checked in the supplementary groups of a process.
 
-No..
+f_cred->group_info cannot be modified during its lifetime and f_cred
+holds a reference to it so it's safe to use.
 
-> Or is the plan to unify the KTF and
-> Kunit in-kernel test harnesses? 
+Signed-off-by: Lukasz Pawelczyk <l.pawelczyk@samsung.com>
+---
 
-Since KTF delegates reporting and test running to user space - reporting is based on
-netlink communication with the user land frontend (Googletest based, but can in principle
-be ported to any user land framework if need be) - little specific test harness features
-are needed for KTF, so there's little if no direct overlap with the infrastructure in
-kselftests (as far as I understand, I'd like to spend more time on the details there..)
+Changes from v2:
+ - XT_SUPPL_GROUPS -> XT_OWNER_SUPPL_GROUPS
+ - clarified group_info usage in the commit log
+    
+Changes from v1:
+ - complementary -> supplementary
 
-> Because there's tons of these
-> in-kernel unit tests already, and every merge we get more (Frank's
-> list didn't even look into drivers or anywhere else, e.g. it's missing
-> the locking self tests I worked on in the past), and a more structured
-> approach would really be good.
+ include/uapi/linux/netfilter/xt_owner.h |  7 ++++---
+ net/netfilter/xt_owner.c                | 23 ++++++++++++++++++++---
+ 2 files changed, 24 insertions(+), 6 deletions(-)
 
-That's been my thinking too. Having a unified way to gradually move to would benefit
-anyone who needs to relate to these tests in that there will be less to learn.
-But that would be a long term evolutionary goal of course.
-
-Also I think each of these test suites/sets would benefit from being more available for
-running even in kernels not made specifically for testing, and I think using the module
-structure and a lean, common module (ktf.ko) as a library for the tests, but no
-"polluting" of the "production" kernel code with anything else, is a kind of a policy that
-comes implicitly with KTF that can make it easier to maintain a sort of standard
-"language" for writing kernel tests. 
-
-Wrt KTF, we're working on making a suitable patch set for the kernel,
-but also have projects running internally that uses KTF as a standalone git repository,
-and that inspires new features and other changes, as well as a growing set of tests. 
-I want to make sure we find a good candidate kernel integration that can coexist nicely
-with the separate git repo version without becoming too much of a back/forward porting
-challenge.
-
-Knut
-
-> -Daniel
+diff --git a/include/uapi/linux/netfilter/xt_owner.h b/include/uapi/linux/netfilter/xt_owner.h
+index fa3ad84957d5..9e98c09eda32 100644
+--- a/include/uapi/linux/netfilter/xt_owner.h
++++ b/include/uapi/linux/netfilter/xt_owner.h
+@@ -5,9 +5,10 @@
+ #include <linux/types.h>
+ 
+ enum {
+-	XT_OWNER_UID    = 1 << 0,
+-	XT_OWNER_GID    = 1 << 1,
+-	XT_OWNER_SOCKET = 1 << 2,
++	XT_OWNER_UID          = 1 << 0,
++	XT_OWNER_GID          = 1 << 1,
++	XT_OWNER_SOCKET       = 1 << 2,
++	XT_OWNER_SUPPL_GROUPS = 1 << 3,
+ };
+ 
+ struct xt_owner_match_info {
+diff --git a/net/netfilter/xt_owner.c b/net/netfilter/xt_owner.c
+index 46686fb73784..a8784502aca6 100644
+--- a/net/netfilter/xt_owner.c
++++ b/net/netfilter/xt_owner.c
+@@ -91,11 +91,28 @@ owner_mt(const struct sk_buff *skb, struct xt_action_param *par)
+ 	}
+ 
+ 	if (info->match & XT_OWNER_GID) {
++		unsigned int i, match = false;
+ 		kgid_t gid_min = make_kgid(net->user_ns, info->gid_min);
+ 		kgid_t gid_max = make_kgid(net->user_ns, info->gid_max);
+-		if ((gid_gte(filp->f_cred->fsgid, gid_min) &&
+-		     gid_lte(filp->f_cred->fsgid, gid_max)) ^
+-		    !(info->invert & XT_OWNER_GID))
++		struct group_info *gi = filp->f_cred->group_info;
++
++		if (gid_gte(filp->f_cred->fsgid, gid_min) &&
++		    gid_lte(filp->f_cred->fsgid, gid_max))
++			match = true;
++
++		if (!match && (info->match & XT_OWNER_SUPPL_GROUPS) && gi) {
++			for (i = 0; i < gi->ngroups; ++i) {
++				kgid_t group = gi->gid[i];
++
++				if (gid_gte(group, gid_min) &&
++				    gid_lte(group, gid_max)) {
++					match = true;
++					break;
++				}
++			}
++		}
++
++		if (match ^ !(info->invert & XT_OWNER_GID))
+ 			return false;
+ 	}
+ 
+-- 
+2.20.1
 
