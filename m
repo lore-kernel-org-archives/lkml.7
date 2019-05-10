@@ -2,63 +2,60 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99578C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAFDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4B52175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98974217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="wb2zQMJi"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mDw/iZnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfEJKQ1 (ORCPT
+        id S1727680AbfEJKQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:16:27 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47693 "EHLO
+        Fri, 10 May 2019 06:16:33 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47637 "EHLO
         gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbfEJKPo (ORCPT
+        with ESMTP id S1727376AbfEJKPn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:15:44 -0400
+        Fri, 10 May 2019 06:15:43 -0400
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4F167891B0;
-        Fri, 10 May 2019 22:15:41 +1200 (NZST)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CAABE891AD;
+        Fri, 10 May 2019 22:15:40 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1557483341;
-        bh=v9Aw/YaE6GdbUbtrxy0F2tvVWbTIe52/yaBuyQsceOk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=wb2zQMJieaPnL/5Jpr6mqs1Owe21amgzlyuUkdTX0d9kkMmbOdzlVnwgfGdVHk+BM
-         518LQ1vOSalblu+bDNvgQYiNFzUOXte4HGGywCR4C+m4OvafK3w7j0uv9uh5vKl9Si
-         x/4lksomABVYvJ8vVh8sHBdxz1H5SkQU5ATGVe7D2IPJ2V3k/KJAk8WOMucBCzHQMj
-         NKLjqznwLCm3CTtjdP/dY3uGEWrHjpZlpaKYNB7w1JLBdY37920z4blX9YajE2JfmE
-         Oz05pAVG4dKiskt2xquRPQ4JJGyMWYYB2Cqg+lmGIOyBgRlEj2ZNIQiIWoPu55QSY9
-         fkplyi7w3zf7g==
+        s=mail181024; t=1557483340;
+        bh=On8oRpSMr9n7y+jn0PyfMJc06liZSsVfOPwylqHrUoU=;
+        h=From:To:Cc:Subject:Date;
+        b=mDw/iZnvLKj+CSlmDMAnuGUoEwt1Q9shVT6hjsSdmnjp07GUxxIhxBEvPxVFxGjhk
+         FBpmAI27gvA1INf+JFE5dvzt9rsr/IkG5fwLWR68jueSgNzb9lh4y051WAxIXRiP28
+         VOd1L41QWEtgt5dj18puSqJHB4d/8YPRY9glwnFejPTKkf5D+RuaSoH8fZNrK7kCWV
+         XtEoAToY+BwVwhsFX/SnssGAL0hY9L61z8ucsvKK41d45zJPygNULwX6bQ2THPwarr
+         LAy11Zk4kQt1GrMlZ/oRD2ZSsdOhkBUurFGWhuI9jiyXmKsVxljpf6zSpJhjns9hIS
+         /i1a3XA1ICL0Q==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cd54f4c0002>; Fri, 10 May 2019 22:15:41 +1200
+        id <B5cd54f4c0000>; Fri, 10 May 2019 22:15:41 +1200
 Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id D1D8A13EF8C;
+        by smtp (Postfix) with ESMTP id 896D913EEA0;
         Fri, 10 May 2019 22:15:39 +1200 (NZST)
 Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 66CA71E1D5B; Fri, 10 May 2019 22:15:39 +1200 (NZST)
+        id 1B34B1E1D5B; Fri, 10 May 2019 22:15:39 +1200 (NZST)
 From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
 To:     linux@armlinux.org.uk, bp@alien8.de, mark.rutland@arm.com,
         robh+dt@kernel.org, mchehab@kernel.org, james.morse@arm.com,
         jlu@pengutronix.de, gregory.clement@bootlin.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@free-electrons.com>,
         Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v8 2/9] ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
-Date:   Fri, 10 May 2019 22:15:29 +1200
-Message-Id: <20190510101536.6724-3-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v8 0/9] EDAC drivers for Armada XP L2 and DDR
+Date:   Fri, 10 May 2019 22:15:27 +1200
+Message-Id: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
-References: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 x-atlnz-ls: pat
@@ -67,48 +64,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Luebbe <jlu@pengutronix.de>
+The Reviews/Acks have been given so this should be good to go in via the =
+ARM
+tree as planned.
 
-The macro name is too generic, so add a AURORA_ prefix.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.=
+html
 
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
-Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/include/asm/hardware/cache-aurora-l2.h | 2 +-
- arch/arm/mm/cache-l2x0.c                        | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+This series adds drivers for the L2 cache and DDR RAM ECC functionality a=
+s
+found on the MV78230/MV78x60 SoCs. Jan has tested these changes with the
+MV78460 (on a custom board with a DDR3 ECC DIMM), Chris has tested these
+changes with 88F6820 and 98dx3236 (both a custom boards with fixed DDR3 +=
+ ECC).
 
-diff --git a/arch/arm/include/asm/hardware/cache-aurora-l2.h b/arch/arm/i=
-nclude/asm/hardware/cache-aurora-l2.h
-index c86124769831..dc5c479ec4c3 100644
---- a/arch/arm/include/asm/hardware/cache-aurora-l2.h
-+++ b/arch/arm/include/asm/hardware/cache-aurora-l2.h
-@@ -41,7 +41,7 @@
- #define AURORA_ACR_FORCE_WRITE_THRO_POLICY	\
- 	(2 << AURORA_ACR_FORCE_WRITE_POLICY_OFFSET)
-=20
--#define MAX_RANGE_SIZE		1024
-+#define AURORA_MAX_RANGE_SIZE	1024
-=20
- #define AURORA_WAY_SIZE_SHIFT	2
-=20
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index a00d6f7fd34c..7d2d2a3c67d0 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -1364,8 +1364,8 @@ static unsigned long aurora_range_end(unsigned long=
- start, unsigned long end)
- 	 * since cache range operations stall the CPU pipeline
- 	 * until completion.
- 	 */
--	if (end > start + MAX_RANGE_SIZE)
--		end =3D start + MAX_RANGE_SIZE;
-+	if (end > start + AURORA_MAX_RANGE_SIZE)
-+		end =3D start + AURORA_MAX_RANGE_SIZE;
-=20
- 	/*
- 	 * Cache range operations can't straddle a page boundary.
+Also contained in this series is an additional debugfs wrapper.
+
+Compared to the previous v7 series this has been rebased against 5.1 requ=
+iring
+some changes in the devicetree binding documentation.
+
+Compared to the previous v6 series I've dropped the marvell,ecc-disable
+property.
+
+Compared to the previous v5 series I've split the dt-binding documentatio=
+n into
+its own patch and updated armada_xp_edac.c to use a SPDX license.
+
+Compared to the previous v4 series I've added my s-o-b to some of Jan's
+patches and rebased against v4.19.0.
+
+Compared to the previous v3 series, the following changes have been made:
+- Use shorter names for the AURORA ECC and parity registers
+- Numerous formatting changes to edac/armada_xp.c (as requested by Boris)
+- Added support for Armada-38x and 98dx3236 SoCs
+
+Compared to the previous v2 series, the following changes have been made:
+- Allocate EDAC structures later during probing and drop devres support
+  patches (requested by Boris)
+- Make drvdata->width usage consistent according to the comment (suggeste=
+d by
+  Chris)
+
+Compared to the previous v1 series, the following changes have been made:
+- Add the aurora-l2 register defines earlier in the series (suggested by
+  Russell King and Gregory CLEMENT )
+- Changed the DT vendor prefix from "arm" to "marvell" for the ecc-enable=
+/disable
+  properties on the aurora-l2 (suggested by Russell King)
+- Fix some warnings reported by checkpatch
+
+Compared to the original RFC series, the following changes have been made=
+:
+- Integrated Chris' patches for parity and ECC configuration via DT
+- Merged the DDR RAM and L2 cache drivers (as requested by Boris, analogo=
+us
+  to fsl_ddr_edac.c and mpc85xx_edac.c)
+- Added myself to MAINTAINERS (requested by Boris)
+- L2 cache: Track the msg size and use snprintf (review comment by Chris)
+- L2 cache: Split error injection from the check function (review comment=
+ by
+  Chris)
+- DDR RAM: Allow 16 bit width in addition to 32 and 64 bit (review commen=
+t by
+  Chris)
+- Use of_match_ptr() (review comments by Chris)
+- Minor checkpatch cleanups
+
+
+Chris Packham (4):
+  ARM: l2x0: support parity-enable/disable on aurora
+  dt-bindings: ARM: document marvell,ecc-enable binding
+  ARM: l2x0: add marvell,ecc-enable property for aurora
+  EDAC: armada_xp: Add support for more SoCs
+
+Jan Luebbe (5):
+  ARM: l2c: move cache-aurora-l2.h to asm/hardware
+  ARM: aurora-l2: add prefix to MAX_RANGE_SIZE
+  ARM: aurora-l2: add defines for parity and ECC registers
+  EDAC: Add missing debugfs_create_x32 wrapper
+  EDAC: Add driver for the Marvell Armada XP SDRAM and L2 cache ECC
+
+ .../devicetree/bindings/arm/l2c2x0.yaml       |   4 +
+ MAINTAINERS                                   |   6 +
+ .../asm/hardware}/cache-aurora-l2.h           |  50 +-
+ arch/arm/mm/cache-l2x0.c                      |  18 +-
+ drivers/edac/Kconfig                          |   7 +
+ drivers/edac/Makefile                         |   1 +
+ drivers/edac/armada_xp_edac.c                 | 635 ++++++++++++++++++
+ drivers/edac/debugfs.c                        |  11 +
+ drivers/edac/edac_module.h                    |   5 +
+ 9 files changed, 733 insertions(+), 4 deletions(-)
+ rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (50%)
+ create mode 100644 drivers/edac/armada_xp_edac.c
+
 --=20
 2.21.0
 
