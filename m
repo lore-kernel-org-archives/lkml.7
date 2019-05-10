@@ -2,147 +2,154 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ED3C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449052084A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eWgPmiy8";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IwYvbwHy"
+	by mail.kernel.org (Postfix) with ESMTP id 61D9F2084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 03:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfEJDbV (ORCPT
+        id S1727079AbfEJDb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 23:31:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:59128 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfEJDbU (ORCPT
+        Thu, 9 May 2019 23:31:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:11623 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726882AbfEJDbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 23:31:20 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F07C4607EB; Fri, 10 May 2019 03:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557459080;
-        bh=ZdJ/UhXjQBUu2fWsqDO0l9IHAfnLU9pcY6tmqkKnt/I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eWgPmiy8q3KCGwv+cC+BJ7tbr7F/+kB1ksNKBz6GrsHwUjWYXd5wKBhOh2Sb7xdAn
-         9rjvXMrwFP+bmTzdMaObGYXHy1gONAKqfZZJlGe3JGN1Mwqm/fxaOME19CTHy6Sv29
-         TlpaS/Eoa/rRkGm/GXMywKmgCBnXRvSk1pkhcGVY=
-Received: from [10.204.78.109] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gkohli@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 86DDC60592;
-        Fri, 10 May 2019 03:31:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557459079;
-        bh=ZdJ/UhXjQBUu2fWsqDO0l9IHAfnLU9pcY6tmqkKnt/I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IwYvbwHyjQBccR78yGpBpQQhaLwWMAnjUYY0tes3ePguKuTyPPWPHW6vzlJ7d83bU
-         NTaVcZY5ldVw0WtlZK1QYHmZFcPUKeWf8CiqCGJbHYdCGIX5SscsO0jl/DsjGCQ7ng
-         8dQREHYyuK6fINknqSgt3oi3olZm5JrEyFriRmKY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 86DDC60592
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
-Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
- directory
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Muchun Song <smuchun@gmail.com>
-Cc:     rafael@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
-        zhaowuyun@wingtech.com, linux-arm-msm@vger.kernel.org
-References: <20190423143258.96706-1-smuchun@gmail.com>
- <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
- <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
- <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
- <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
- <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
- <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
- <20190504153440.GB19654@kroah.com>
- <e79201c2-a00b-d226-adc2-62769ae1ad81@codeaurora.org>
- <73b783e634551420dfa249816514fb31ed3487b6.camel@kernel.crashing.org>
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-Message-ID: <6d755534-714b-5d04-3280-b27fd8a1df1b@codeaurora.org>
-Date:   Fri, 10 May 2019 09:01:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 9 May 2019 23:31:25 -0400
+X-UUID: f7bcf20f63b1405f844762fb0ffd0d35-20190510
+X-UUID: f7bcf20f63b1405f844762fb0ffd0d35-20190510
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 328189043; Fri, 10 May 2019 11:31:22 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 May 2019 11:31:21 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 May 2019 11:31:21 +0800
+Message-ID: <1557459081.29102.4.camel@mtksdaap41>
+Subject: Re: [PATCH v5 03/12] dt-binding: gce: add binding for gce subsys
+ property
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Fri, 10 May 2019 11:31:21 +0800
+In-Reply-To: <20190507174110.GA6767@bogus>
+References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
+         <20190507081355.52630-4-bibby.hsieh@mediatek.com>
+         <20190507174110.GA6767@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <73b783e634551420dfa249816514fb31ed3487b6.camel@kernel.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 2CE4E89CBFF18FFD220CA801469A51525C75B7E68B1C0A4BF46A2CE75B1E01422000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the comment, will check the patch and update.
+Hi, Rob,
 
-Regards
-Gaurav
+On Tue, 2019-05-07 at 12:41 -0500, Rob Herring wrote:
+> On Tue, May 07, 2019 at 04:13:46PM +0800, Bibby Hsieh wrote:
+> > tcmdq driver provide a function that get the relationship
+> > of sub system number from device node for client.
+> > add specification for #subsys-cells, mediatek,gce-subsys.
+> > 
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
+> >  1 file changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > index 1f7f8f2a3f49..8fd9479bc9f6 100644
+> > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > @@ -21,11 +21,19 @@ Required properties:
+> >  	priority: Priority of GCE thread.
+> >  	atomic_exec: GCE processing continuous packets of commands in atomic
+> >  		way.
+> > +- #subsys-cells: Should be 3.
+> > +	<&phandle subsys_number start_offset size>
+> > +	phandle: Label name of a gce node.
+> > +	subsys_number: specify the sub-system id which is corresponding
+> > +		       to the register address.
+> > +	start_offset: the start offset of register address that GCE can access.
+> > +	size: the total size of register address that GCE can access.
+> 
+> Like the #event-cells, do you need this if it isn't variable?
+> 
 
-On 5/10/2019 4:52 AM, Benjamin Herrenschmidt wrote:
-> On Thu, 2019-05-09 at 20:08 +0530, Gaurav Kohli wrote:
->> Hi ,
->>
->> Last patch will serialize the addition of child to parent directory,
->> won't it affect performance.
+Yes, we need. Because the start_offset and size will be a fix number
+when the chip was designed out.
+Those two informations will help us to check if the same register
+address was wrote by different user.
+The checking mechanism is designing...
+
+> >  
+> >  Required properties for a client device:
+> >  - mboxes: Client use mailbox to communicate with GCE, it should have this
+> >    property and list of phandle, mailbox specifiers.
+> > -- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
+> > +Optional propertier for a client device:
+> > +- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+> >    to the register address.
 > 
-> I doubt this is a significant issue, and there's already a global lock
-> taken once or twice in that path, the fix is purely to make sure that
-> the some locked section is used both for the lookup and the addition as
-> the bug comes from the window in between those two operations allowing
-> the object to be removed after it was "found".
+> This isn't a u32, but a phandle + 3 cells (or a list of those). How many 
+> entries can there be?
+
+Ok, I will fix it.
 > 
-> Cheers,
-> Ben.
->   
->>
->> Regards
->> Gaurav
->>
->> On 5/4/2019 9:04 PM, Greg KH wrote:
->>> On Sat, May 04, 2019 at 10:47:07PM +0800, Muchun Song wrote:
->>>> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四
->>>> 下午2:25写道：
->>>>
->>>>>>> The basic idea yes, the whole bool *locked is horrid
->>>>>>> though.
->>>>>>> Wouldn't it
->>>>>>> work to have a get_device_parent_locked that always returns
->>>>>>> with
->>>>>>> the mutex held,
->>>>>>> or just move the mutex to the caller or something simpler
->>>>>>> like this
->>>>>>> ?
->>>>>>>
->>>>>>
->>>>>> Greg and Rafael, do you have any suggestions for this? Or you
->>>>>> also
->>>>>> agree with Ben?
->>>>>
->>>>> Ping guys ? This is worth fixing...
->>>>
->>>> I also agree with you. But Greg and Rafael seem to be high
->>>> latency right now.
->>>
->>> It's in my list of patches to get to, sorry, hopefully will dig out
->>> of
->>> that next week with the buffer that the merge window provides me.
->>>
->>> thanks,
->>>
->>> greg k-h
->>>
->>
->>
-> 
+> >  
+> >  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+> > @@ -40,6 +48,7 @@ Example:
+> >  		clocks = <&infracfg CLK_INFRA_GCE>;
+> >  		clock-names = "gce";
+> >  		#mbox-cells = <3>;
+> > +		#subsys-cells = <3>;
+> >  	};
+> >  
+> >  Example for a client device:
+> > @@ -48,9 +57,9 @@ Example for a client device:
+> >  		compatible = "mediatek,mt8173-mmsys";
+> >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+> >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> > -		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+> >  		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> >  				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> > -
+> > +		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+> > +					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+> >  		...
+> >  	};
+> > -- 
+> > 2.18.0
+> > 
 
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Bibby
+
