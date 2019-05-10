@@ -2,86 +2,139 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546F2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD1C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26502217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:41:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ChcGxHz1"
+	by mail.kernel.org (Postfix) with ESMTP id 7B196217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbfEJRlw (ORCPT
+        id S1727700AbfEJRnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:41:52 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60864 "EHLO mail.skyhub.de"
+        Fri, 10 May 2019 13:43:13 -0400
+Received: from mx.ewheeler.net ([66.155.3.69]:52514 "EHLO mx.ewheeler.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727488AbfEJRlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:41:52 -0400
-Received: from zn.tnic (p200300EC2F0F4000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727383AbfEJRnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:43:13 -0400
+X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 13:43:12 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by mx.ewheeler.net (Postfix) with ESMTP id 1BF7DA0692;
+        Fri, 10 May 2019 17:36:45 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at ewheeler.net
+Received: from mx.ewheeler.net ([127.0.0.1])
+        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id Dp0a1D6s0PIr; Fri, 10 May 2019 17:36:44 +0000 (UTC)
+Received: from mx.ewheeler.net (mx.ewheeler.net [66.155.3.69])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 72FF21EC09A3;
-        Fri, 10 May 2019 19:41:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557510111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=woBta16CIlbP3jCTjLLZyi/UgLJeGjPQxBvByWnfnQQ=;
-        b=ChcGxHz1mrje4YpxM4LjkKgIYuUb94lpj7SpJUBVWCchvxaFgy5t1XqHYhyDEfLKi2nTNN
-        0CW5gmdqsQ1Wmlhm0puOrAJlmKmAXUCGabNMvb7N5GWw1D3W2UkYjaJnJ+HG+0l6EhXodQ
-        /bNBuKfgezcbSE9pA/eUYjVmm8VSy/E=
-Date:   Fri, 10 May 2019 19:41:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Babu Moger <babu.moger@amd.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 02/13] selftests/resctrl: Add basic resctrl file
- system operations and data
-Message-ID: <20190510174146.GD29927@zn.tnic>
-References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
- <1549767042-95827-3-git-send-email-fenghua.yu@intel.com>
+        by mx.ewheeler.net (Postfix) with ESMTPSA id 4B05EA067D;
+        Fri, 10 May 2019 17:36:44 +0000 (UTC)
+Date:   Fri, 10 May 2019 17:36:32 +0000 (UTC)
+From:   Eric Wheeler <drbd-dev@lists.ewheeler.net>
+X-X-Sender: lists@mx.ewheeler.net
+To:     Lars Ellenberg <lars.ellenberg@linbit.com>
+cc:     Christoph Hellwig <hch@infradead.org>, drbd-dev@lists.linbit.com,
+        stable@vger.kernel.org,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drbd: fix discard_zeroes_if_aligned regression
+In-Reply-To: <20180116094907.GD4107@soda.linbit>
+Message-ID: <alpine.LRH.2.11.1905101728280.1835@mx.ewheeler.net>
+References: <15124635.GA4107@soda.linbit> <1516057231-21756-1-git-send-email-drbd-dev@lists.ewheeler.net> <20180116072615.GA3940@infradead.org> <20180116094907.GD4107@soda.linbit>
+User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1549767042-95827-3-git-send-email-fenghua.yu@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 09, 2019 at 06:50:31PM -0800, Fenghua Yu wrote:
-> From: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
+On Tue, 16 Jan 2018, Lars Ellenberg wrote:
+
+> On Mon, Jan 15, 2018 at 11:26:15PM -0800, Christoph Hellwig wrote:
+> > NAK.  Calling a discard and expecting zeroing is simply buggy.
 > 
-> The basic resctrl file system operations and data are added for future
-> usage by resctrl selftest tool.
+> What he said.
 > 
-> Signed-off-by: Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-> Signed-off-by: Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> The bug/misunderstanding was that we now use zeroout even for discards,
+> with the assumption that it would try to do discards where it can.
+> 
+> Which is even true.
+> 
+> But our expectations of when zeroout "should" use unmap,
+> and where it actually can do that safely
+> based on the information it has,
+> don't really match:
+> our expectations where wrong, we assumed too much.
+> (in the general case).
+> 
+> Which means in DRBD we have to stop use zeroout for discards,
+> and again pass down normal discard for discards.
+> 
+> In the specific case where the backend to DRBD is lvm-thin,
+> AND it does de-alloc blocks on discard,
+> AND it does NOT have skip_block_zeroing set or it's backend
+> does zero on discard and it does discard passdown, and we tell
+> DRBD about all of that (using the discard_zeroes_if_aligned flag)
+> then we can do this "zero head and tail, discard full blocks",
+> and expect them to be zero.
+> 
+> If skip_block_zeroing is set however, and there is no discard
+> passdown in thin, or the backend of thin does not zero on discard,
+> DRBD can still pass down discards to thin, and expect them do be
+> de-allocated, but can not expect discarded ranges to remain
+> "zero", any later partial write to an unallocated area could pull
+> in different "undefined" garbage on different replicas for the
+> not-written-to part of a new allocated block.
+> 
+> The end result is that you have areas of the block device
+> that return different data depending on which replica you
+> read from.
+> 
+> But that is the case even eithout discard in that setup,
+> don't do that then or live with it.
+> 
+> "undefined data" is undefined, you have that directly on thin
+> in that setup already, with DRBD on top you now have several
+> versions of "undefined".
+> 
+> Anything on top of such a setup must not do "read-modify-write"
+> of "undefined" data and expect a defined result, adding DRBD
+> on top does not change that.
+> 
+> DRBD can deal with that just fine, but our "online verify" will
+> report loads of boring "mismatches" for those areas.
+> 
+> TL;DR: we'll stop doing "discard-is-zeroout"
+> (our assumptions were wrong).
+> We still won't do exactly "discard-is-discard", but re-enable our
+> "discard-is-discard plus zeroout on head and tail", because in
+> some relevant setups, this gives us the best result, and avoids
+> the false positives in our online-verify.
+> 
+>     Lars
+> 
 
-And while feedback from Andre is being addressed, you those SOB chains
-need to be fixed.
+Hi Lars,
 
-Thx.
+We just tried 4.19.x and this bugs still exists. We applied the patch 
+which was originally submitted to this thread and it still applies cleanly 
+and seems to work for our use case. You mentioned that you had some older 
+code which zeroed out unaligned discard requests (or perhaps it was for a 
+different purpose) that you may be able to use to patch this. Could you 
+dig those up and see if we can get this solved?
 
--- 
-Regards/Gruss,
-    Boris.
+It would be nice to be able to use drbd with thin backing volumes from the 
+vanilla kernel. If this has already been fixed in something newer than 
+4.19, then please point me to the commit.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thank you for your help!
+
+ 
+--
+Eric Wheeler
+
+
