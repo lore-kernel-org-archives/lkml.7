@@ -2,143 +2,95 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA3BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA3C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075A0216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7872216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557503457;
+	bh=1BVvOWCjoaFQDVl6i/Zn1Sw6NKesESpsYSrv+0kFYWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fdM0o5Hvq21vXljwZZwWjxjUFJxT4+pZEWy3LsQqHIwtPyq8XksYWbSOaZUmdGyt+
+	 QI7csgCFBxZvwVtiftEcQChG0ZAGUbjhbUFbhePm5JPx1h9f4Hi8iMl3TSSYI1kEq6
+	 QauFA4cRc37PGGRZHXHSPRYGac1NgUFIcdTK3QQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727767AbfEJPuU (ORCPT
+        id S1727694AbfEJPu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:50:20 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:54520 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727264AbfEJPuT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:50:19 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id AF90F3C00C6;
-        Fri, 10 May 2019 17:50:15 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TDuNWFWMQi7w; Fri, 10 May 2019 17:50:08 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Fri, 10 May 2019 11:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727264AbfEJPuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:50:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id D64D73C004C;
-        Fri, 10 May 2019 17:50:08 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 10 May
- 2019 17:50:08 +0200
-Date:   Fri, 10 May 2019 17:50:05 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-CC:     Jiada Wang <jiada_wang@mentor.com>, <rui.zhang@intel.com>,
-        <edubezval@gmail.com>, <daniel.lezcano@linaro.org>,
-        <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <horms+renesas@verge.net.au>, <geert+renesas@glider.be>,
-        <sergei.shtylyov@cogentembedded.com>,
-        <marek.vasut+renesas@gmail.com>,
-        <kuninori.morimoto.gx@renesas.com>, <hien.dang.eb@renesas.com>,
-        <fabrizio.castro@bp.renesas.com>, <dien.pham.ry@renesas.com>,
-        <biju.das@bp.renesas.com>, <george_davis@mentor.com>,
-        <joshua_frkuska@mentor.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH v4 0/2] thermal: rcar_gen3_thermal: fix IRQ issues
-Message-ID: <20190510155005.GA499@vmlxhi-102.adit-jv.com>
-References: <20190424051145.23072-1-jiada_wang@mentor.com>
- <20190507235403.GA24112@bigcity.dyn.berto.se>
- <20190510104231.GA15836@vmlxhi-102.adit-jv.com>
- <20190510113608.GD28561@bigcity.dyn.berto.se>
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9FA20881;
+        Fri, 10 May 2019 15:50:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557503455;
+        bh=1BVvOWCjoaFQDVl6i/Zn1Sw6NKesESpsYSrv+0kFYWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rRM4nRWfRRZ40yQKb+fRWhQlHDrHcrQCb1c+k5tnCZ7vPnorUA4P6onuV3zIqD0Iz
+         VhSxVSlofoJN5bL2mtZjd/nuxj2oajHeV9C69FhUZqxIgYNHqV0jYe3OOJNdtPoeeB
+         Asgcg7shiKvSW+bUS4mBTC4CJFD/4YN1DILDA9+4=
+Date:   Fri, 10 May 2019 17:50:51 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.0 00/95] 5.0.15-stable review
+Message-ID: <20190510155051.GC2209@kroah.com>
+References: <20190509181309.180685671@linuxfoundation.org>
+ <CA+G9fYvKNb-WD+0govE2NWzjHisdJXiRRioTQGZKHP0gvO9WKw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190510113608.GD28561@bigcity.dyn.berto.se>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <CA+G9fYvKNb-WD+0govE2NWzjHisdJXiRRioTQGZKHP0gvO9WKw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Niklas,
+On Fri, May 10, 2019 at 12:06:07PM +0530, Naresh Kamboju wrote:
+> On Fri, 10 May 2019 at 00:21, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.0.15 release.
+> > There are 95 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat 11 May 2019 06:11:22 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.15-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-On Fri, May 10, 2019 at 01:36:08PM +0200, Niklas Söderlund wrote:
-> Hi Eugeniu,
-> 
-> On 2019-05-10 12:42:31 +0200, Eugeniu Rosca wrote:
-> > Hi Niklas,
-> > 
-> > On Wed, May 08, 2019 at 01:54:03AM +0200, Niklas Söderlund wrote:
-> > > Hi Jiada,
-> > [..]
-> > > I really like this series, nice work.
-> > > 
-> > > Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > > Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> > 
-> > Is there anything off-the-shelf available for testing the rcar3
-> > thermal driver, to avoid reinventing the wheel via
-> > https://patchwork.kernel.org/cover/10913163/#22602335
-> 
-> Not that I know of, unfortunately :-(
-> 
-> I have a private home hacked testing framework (don't we all?) based on 
-> tcl+expect where I have two basic tests for rcar_gen3_thermal. I'm 
-> willing to share the tests if you by chance want them, but be warned 
-> that they are highly specialised for my needs and I'm reluctant to 
-> publish my whole hack tool as it just a ugly hack ;-)
-> 
-> On a high level the tests I have are
-> 
-> 1. thermal-load
->     Generates load on target and observes the temperature is increased 
->     using the /sys/class/thermal/thermal_zone*/temp" interface. This 
->     seems similar to the test case your reference using stress-ng.
-> 
-> 2. thermal-cooling
->     Emulate the passive trip point temperatures using the 
->     /sys/class/thermal/*/emul_temp interface and observe that the 
->     specified cooling state is achieved.
-> 
-> I should add a third test to make sure IRQ fires but this is just a pet 
-> project for me so maybe I will get around to it sometime...
-> 
-> If you know of anything around to test thermal drivers or if you create 
-> something please let me know so I can add it to my tests. And let me 
-> know if you want my hacks for inspiration for your own testing.
+Thanks for testing 4 of these (no 5.1?) and letting me know.
 
-Thanks for this summary. It would be definitely convenient to have
-a set of tests covering the most important features of the driver.
-
-I was particularly thinking of the test procedure in light of below:
- - I still can reproduce a few UBSAN (signed integer overflow) and
-   KASAN (use-after-free) reports with the most recent vanilla driver.
- - There are a couple of thermal commits in rcar-3.9.x pending for
-   mainline submission:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=fe7d0d1c77f9 ("thermal: rcar_gen3_thermal: Use FUSE values if they are available")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=2776ccd63649 ("thermal: rcar_gen3_thermal: Fix interrupt count issue")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=9146af785f41 ("thermal: rcar_gen3_thermal: Enable selection between polling/interrupt mode")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=55b262766ec2 ("thermal: rcar_gen3_thermal: PIO-INT can be selected for each TSC separately")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=d323d9de0683 ("thermal: rcar_gen3_thermal: Add support for r8a77990")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=fb8efb8bac29 ("thermal: rcar_gen3_thermal: Fix interrupts are not raised issue on E3")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=5627c42a1bd5 ("thermal: rcar_gen3_thermal: Use DIV_ROUND_CLOSEST correctly as its description")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=d4e41702e53b ("thermal: rcar_gen3_thermal: [H3/M3N] Update calculation formula due to HW evaluation")
-https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas-bsp.git/commit/?id=958bd36e03b7 ("thermal: rcar_gen3_thermal: [E3] Update calculation formula due to HW evaluation")
-
-Long story short, I think we will review more thermal commits in
-hopefully not so distant future and it would be helpful to reach some
-common understanding what kind of testing the new patches should pass.
-
-Your summary already gives some insight in that direction. Thanks.
-
--- 
-Best Regards,
-Eugeniu.
+greg k-h
