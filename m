@@ -2,150 +2,88 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211A5C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D72FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FB5217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:23:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF132182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JU7a3v7R"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="AgdKZn6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfEJSXs (ORCPT
+        id S1728041AbfEJSYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 14:23:48 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40526 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727453AbfEJSXr (ORCPT
+        Fri, 10 May 2019 14:24:01 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36160 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727453AbfEJSYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 14:23:47 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j12so5564277eds.7;
-        Fri, 10 May 2019 11:23:46 -0700 (PDT)
+        Fri, 10 May 2019 14:24:00 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a17so6458341qth.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 11:24:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dra68sD3A+L9jmTIge40RbJUDi0r64rvVKFCcIo9SWw=;
-        b=JU7a3v7RiEPD0VNYuvo2kA58OUV7CQec5Ky0+jiMqZlny9/CBjNNYq4moEr1fX4pk5
-         Vl39VkY8/uNJsv3AmfCAB4yL/naqG1CR4VS8IBCruJAiFmJCq4PKyMcGsojx3eOxbB0I
-         VGRmjtXGeVK6pCln5OuvJUVLngWjz9mng9/csQqQcVukvSUlw7G3behUihBvp/Q6dYQM
-         KpD/fVa/3uGUf3NHOIvyS6PB5ehNdGETjupUhRA6M7U5KJOknptkLUIivQx2ur907mKN
-         UkkhhgRONlVmFckixCjsCppo6REXgRk/ORQlUjmFMCPVZ3yvauhqYRex1VQau3q+Te27
-         77yQ==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sKS5Fj/EEtSMbliwSHz31jl5UWhgaLLNKzcdv3HiOg8=;
+        b=AgdKZn6HYNv221xca0XVSBa2lJs6g9ZN/fDhC0UKtfgh86gPpSKySDa8EHoKdAkwXh
+         OPUbb6rjj/0vZD/52ALcm64YAno6w2qlc0fZjC556wrBTip/57WnH2tDAaXD5ez1ykP8
+         6Bp99KZjroFrISTsE/THxKq7QrHKJtfroBoHARBah1Wh6GBCOWku+dgatZbZfhyf0eB0
+         AN5ykQG4Lvlbb9jLvV1MuBig9RfA6zoMDp19p9oQcsaMcNuI8AQdk0XWpINbpniDzEs0
+         wsXTfIJ2mhbB3kKPHj+HwVBWOY/vqx1LhxJRZhVqxJ7lb3HYOLWt381D0k7h8ebVtWZ9
+         EfFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dra68sD3A+L9jmTIge40RbJUDi0r64rvVKFCcIo9SWw=;
-        b=CqAfsjfevj83r/B1Q7X9A5XkqI/xerjVvRzKQbUsgy9nxvoH0PLs9FP4XY5sU3cSnR
-         LGKfNW27q638C+8zlVYDYlFPcKo+jUXvL20+s1FM3/255TGVj/S5jXRpTFMRWcaJcJEf
-         dKERK+rIKVDozK34swMkQDG8kmz3zfWosV7uD3RTopbQoWVAO3qgA5Pf7tJHTEMw0pE0
-         GDLfYH5Z7hsFnH6qKrqitBFg6dtbE14IDvwXTZv7od2J+R7mT4EjRTTRnCaa5R54DGfj
-         RlCbTpaF5e9tog6l2ZR31yEz+IuzvRgDPeaPlteA6wHhHMbOF8LkShgPkTXvrJ67aKv+
-         AACA==
-X-Gm-Message-State: APjAAAXo7O+obWNDRQw49M1FpELkWjgo08vMZL0UWt5gAH6WHiDuQ0jJ
-        3swgET6VG1an3Z+V9ptvTpb7a2fXSfPe3wlr/oY=
-X-Google-Smtp-Source: APXvYqzRQiFqm/l2aMVgEBwFQ5yK/wNMJvVmyhgygOk1zEL5AYR7ciH6/liicBqcTNkP12Ulkw8VgOjDuH6k3s3Qgm4=
-X-Received: by 2002:a50:b3a6:: with SMTP id s35mr13324855edd.220.1557512625336;
- Fri, 10 May 2019 11:23:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sKS5Fj/EEtSMbliwSHz31jl5UWhgaLLNKzcdv3HiOg8=;
+        b=fHGhdvlTGSslAwr/yvykcFOEszIfaT7e8Go/E272ZjlwiyfUtzKYwuthDvmQPyMI4q
+         tALrge+xsgKDNO50HR6OOfahMxDIOoJu9I8Koe17Km6qPNliJGhjU5ImckXggQcuClCv
+         eE36xnRo0MGNwFGGNv+7wFE7w+XRxH9Q5Z0Ex1tmWMQbEDNhOgNS7TsE3YvxWqudImoy
+         7o9bT8MgG8cYblbT1JmmoK4HrTePw+ugX+guvENb+RZjyurJ0mQmlKVSzU25OMee1zW8
+         V8zT5JGtrXx14GEX9QwLX0fQQGPf/4W5vVQsjtG+pcEmwz81SaZBF0IZ+tj+dnnip9sr
+         WDfw==
+X-Gm-Message-State: APjAAAVDnmEIQ26bFSJgxJ1pGJB6O3aCsKC1eEVdXm2weomDPiO2zu9+
+        atMEELZeJcvU8L2caaVUKUvkqg==
+X-Google-Smtp-Source: APXvYqw7LGTG/ljbnARCaw3FB1QZV622KVj8crTejgs8O9VGh7OGeNSVMe79Qp0PZrvgjCfQAYrO+g==
+X-Received: by 2002:a0c:b99c:: with SMTP id v28mr10440432qvf.10.1557512639945;
+        Fri, 10 May 2019 11:23:59 -0700 (PDT)
+Received: from localhost (pool-108-27-252-85.nycmny.fios.verizon.net. [108.27.252.85])
+        by smtp.gmail.com with ESMTPSA id x7sm3026823qkc.22.2019.05.10.11.23.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 11:23:59 -0700 (PDT)
+Date:   Fri, 10 May 2019 14:23:58 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Dan Schatzberg <dschatzberg@fb.com>
+Cc:     Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org
+Subject: Re: [PATCH] psi: Expose pressure metrics on root cgroup
+Message-ID: <20190510182358.GA14027@cmpxchg.org>
+References: <20190510174938.3361741-1-dschatzberg@fb.com>
 MIME-Version: 1.0
-References: <20170914194444.32551-1-robdclark@gmail.com> <20170919123038.GF8398@8bytes.org>
- <CAF6AEGuutkqjrWk4jagE=p-NwHgxdiPZjjsaFsfwtczK568j+A@mail.gmail.com>
- <20170922090204.GJ8398@8bytes.org> <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
-In-Reply-To: <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 10 May 2019 11:23:35 -0700
-Message-ID: <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com>
-Subject: Re: [RFC] iommu: arm-smmu: stall support
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510174938.3361741-1-dschatzberg@fb.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 22, 2017 at 2:58 AM Jean-Philippe Brucker
-<jean-philippe.brucker@arm.com> wrote:
->
-> On 22/09/17 10:02, Joerg Roedel wrote:
-> > On Tue, Sep 19, 2017 at 10:23:43AM -0400, Rob Clark wrote:
-> >> I would like to decide in the IRQ whether or not to queue work or not,
-> >> because when we get a gpu fault, we tend to get 1000's of gpu faults
-> >> all at once (and I really only need to handle the first one).  I
-> >> suppose that could also be achieved by having a special return value
-> >> from the fault handler to say "call me again from a wq"..
-> >>
-> >> Note that in the drm driver I already have a suitable wq to queue the
-> >> work, so it really doesn't buy me anything to have the iommu driver
-> >> toss things off to a wq for me.  Might be a different situation for
-> >> other drivers (but I guess mostly other drivers are using iommu API
-> >> indirectly via dma-mapping?)
-> >
-> > Okay, so since you are the only user for now, we don't need a
-> > work-queue. But I still want the ->resume call-back to be hidden in the
-> > iommu code and not be exposed to users.
-> >
-> > We already have per-domain fault-handlers, so the best solution for now
-> > is to call ->resume from report_iommu_fault() when the fault-handler
-> > returns a special value.
->
-> The problem is that report_iommu_fault is called from IRQ context by the
-> SMMU driver, so the device driver callback cannot sleep.
->
-> So if the device driver needs to be able to sleep between fault report and
-> resume, as I understand Rob needs for writing debugfs, we can either:
->
-> * call report_iommu_fault from higher up, in a thread or workqueue.
-> * split the fault reporting as this patch proposes. The exact same
->   mechanism is needed for the vSVM work by Intel: in order to inject fault
->   into the guest, they would like to have an atomic notifier registered by
->   VFIO for passing down the Page Request, and a new function in the IOMMU
->   API to resume/complete the fault.
->
+On Fri, May 10, 2019 at 10:49:34AM -0700, Dan Schatzberg wrote:
+> Pressure metrics are already recorded and exposed in procfs for the
+> entire system, but any tool which monitors cgroup pressure has to
+> special case the root cgroup to read from procfs. This patch exposes
+> the already recorded pressure metrics on the root cgroup.
+> 
+> Signed-off-by: Dan Schatzberg <dschatzberg@fb.com>
 
-So I was thinking about this topic again.. I would still like to get
-some sort of async resume so that I can wire up GPU cmdstream/state
-logging on iommu fault (without locally resurrecting and rebasing this
-patch and drm/msm side changes each time I need to debug iommu
-faults)..
+Looks good to me, thanks Dan!
 
-And I do still prefer the fault cb in irq (or not requiring it in
-wq)..  but on thinking about it, the two ideas aren't entirely
-conflicting, ie. add some flags either when we register handler[1], or
-they could be handled thru domain_set_attr, like:
-
- _EXPLICIT_RESUME - iommu API user calls iommu_domain_resume(),
-potentialy from wq/thread after fault handler returns
- _HANDLER_SLEEPS  - iommu core handles the wq, and calls ops->resume()
-internally
-
-In both cases, from the iommu driver PoV it just implements
-iommu_ops::resume().. in first case it is called via iommu user either
-from the fault handler or at some point later (ie. wq or thread).
-
-I don't particularly need the _HANDLER_SLEEPS case (unless I can't
-convince anyone that iommu_domamin_resume() called from outside iommu
-core is a good idea).. so probably I wouldn't wire up the wq plumbing
-for the _HANDLER_SLEEPS case unless someone really wanted me to.
-
-Since there are more iommu drivers, than places that register fault
-handlers, I like the idea that in either case, from the driver PoV, it
-is just implementing the resume callback.
-
-[1] currently I only see a few places where fault handlers are
-registered, so changing iommu_set_fault_handler() is really not much
-churn
-
-BR,
--R
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
