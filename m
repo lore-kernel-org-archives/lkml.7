@@ -2,321 +2,147 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E73C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C810C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCBD217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC17D21852
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:24:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C/zZPD33"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfEJVYH (ORCPT
+        id S1728147AbfEJVYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:24:07 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:57628 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfEJVYD (ORCPT
+        Fri, 10 May 2019 17:24:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:41430 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727767AbfEJVYz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:24:03 -0400
-Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id DC68B7A02B4;
-        Fri, 10 May 2019 23:24:00 +0200 (CEST)
-From:   Ondrej Zary <linux@zary.sk>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] fdomain: Add ISA bus support
-Date:   Fri, 10 May 2019 23:23:35 +0200
-Message-Id: <20190510212335.14728-2-linux@zary.sk>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190510212335.14728-1-linux@zary.sk>
-References: <20190510212335.14728-1-linux@zary.sk>
+        Fri, 10 May 2019 17:24:55 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z3so3583190pgp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 14:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=Ht7ftENytry8iLdjfON93hG8IOVq7xHiHUNG0B8Cq0Y=;
+        b=C/zZPD33t+80hCt103zWOGGjxmmkR+8z+LazeEaU4ZX2PPxkLxNL29kA7CqI2lV+5M
+         sqSL/uR8q7GIvD0drctcWk8CJ+nZb6xsbgD0rpNFc6kGLHjq9eBRh/WtvvPE67weo4yZ
+         YOQxFcEG7iRU/w4JjmEUz0f0AaCozoEKzkVQE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=Ht7ftENytry8iLdjfON93hG8IOVq7xHiHUNG0B8Cq0Y=;
+        b=WU0lm5MC5I/jTS0e9WRG8KGf0uqRFDlWQ4ESlsv0zqmgwTFa8P6xHMw2wqfkgWgdCG
+         ePYfn06Xw994A32gLbw67AXOLRUA8++lPiHm5AGgF7DS72gdfuHBy9NvMmXQ+xVx3R1F
+         DqXoBMOXiJUGajik7B0yMu4Lpifx364aqP/W7YHoDru98VGbLBQgYhK/QCTT3StF7gEw
+         KDvVqNpJP9wIajvhXCPuLIo0is+Tnb+tg1Y0rTk85MUYPd9dGdvrJdJB8CAY0PyxvA/5
+         sl3PIaBQRJekt7lUJXYqXvW529Fd/o0/oDkafiOdbDSzmgDeIXzrGVxbncyUhxNzVvAw
+         i8Vw==
+X-Gm-Message-State: APjAAAV3BJVIZppgH3PuCC0swVq7BoL+XhKQNTIi/pOBwEhNuoJeOu4R
+        319v0YufTn3nCDRoKyrfr8AnERX4gCN4Lw==
+X-Google-Smtp-Source: APXvYqx3slvyEUa7J0TfDFeqPbGJSvoOA0ayYKfIpk9Tj5LO9EXcCJWkOnLGRw3pFT8HzGja6oriTg==
+X-Received: by 2002:a63:4710:: with SMTP id u16mr5496241pga.447.1557523494573;
+        Fri, 10 May 2019 14:24:54 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id i27sm17037346pfk.162.2019.05.10.14.24.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 14:24:53 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190510180151.115254-3-swboyd@chromium.org>
+References: <20190510180151.115254-1-swboyd@chromium.org> <20190510180151.115254-3-swboyd@chromium.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v2 2/5] firmware: google: memconsole: Use devm_memremap()
+Cc:     linux-kernel@vger.kernel.org,
+        Wei-Ning Huang <wnhuang@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Guenter Roeck <groeck@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Message-ID: <155752349303.14659.3560946140992031740@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Fri, 10 May 2019 14:24:53 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Future Domain 16xx ISA SCSI support card support.
+Use the devm version of memremap so that we can delete the unmapping
+code in driver remove, but more importantly so that we can unmap this
+memory region if memconsole_sysfs_init() errors out for some reason.
 
-Tested on IBM 92F0330 card (18C50 chip) with v1.00 BIOS.
-
-Signed-off-by: Ondrej Zary <linux@zary.sk>
+Cc: Wei-Ning Huang <wnhuang@chromium.org>
+Cc: Julius Werner <jwerner@chromium.org>
+Cc: Brian Norris <briannorris@chromium.org>
+Cc: Samuel Holland <samuel@sholland.org>
+Cc: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- drivers/scsi/Kconfig       |  14 +++
- drivers/scsi/Makefile      |   1 +
- drivers/scsi/fdomain_isa.c | 222 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 237 insertions(+)
- create mode 100644 drivers/scsi/fdomain_isa.c
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index f9d058a07e2a..2ea77dafbc00 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -684,6 +684,20 @@ config SCSI_FDOMAIN_PCI
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called fdomain_pci.
- 
-+config SCSI_FDOMAIN_ISA
-+	tristate "Future Domain 16xx ISA SCSI support"
-+	depends on ISA && SCSI
-+	select CHECK_SIGNATURE
-+	select SCSI_FDOMAIN
-+	help
-+	  This is support for Future Domain's 16-bit SCSI host adapters
-+	  (TMC-1660/1680, TMC-1650/1670, TMC-1610M/MER/MEX) and other adapters
-+	  with ISA bus based on the Future Domain chipsets (Quantum ISA-200S,
-+	  ISA-250MG; and at least one IBM board).
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called fdomain_isa.
-+
- config SCSI_GDTH
- 	tristate "Intel/ICP (former GDT SCSI Disk Array) RAID Controller support"
- 	depends on PCI && SCSI
-diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
-index f6cc4fbe6957..2e2cffff777d 100644
---- a/drivers/scsi/Makefile
-+++ b/drivers/scsi/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_SCSI_ISCI)		+= isci/
- obj-$(CONFIG_SCSI_IPS)		+= ips.o
- obj-$(CONFIG_SCSI_FDOMAIN)	+= fdomain.o
- obj-$(CONFIG_SCSI_FDOMAIN_PCI)	+= fdomain_pci.o
-+obj-$(CONFIG_SCSI_FDOMAIN_ISA)	+= fdomain_isa.o
- obj-$(CONFIG_SCSI_GENERIC_NCR5380) += g_NCR5380.o
- obj-$(CONFIG_SCSI_QLOGIC_FAS)	+= qlogicfas408.o	qlogicfas.o
- obj-$(CONFIG_PCMCIA_QLOGIC)	+= qlogicfas408.o
-diff --git a/drivers/scsi/fdomain_isa.c b/drivers/scsi/fdomain_isa.c
-new file mode 100644
-index 000000000000..bca5d56f12aa
---- /dev/null
-+++ b/drivers/scsi/fdomain_isa.c
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/isa.h>
-+#include <scsi/scsi_host.h>
-+#include "fdomain.h"
-+
-+#define MAXBOARDS_PARAM 4
-+static int io[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(io, int, ioport, NULL, 0);
-+MODULE_PARM_DESC(io, "base I/O address of controller (0x140, 0x150, 0x160, 0x170)");
-+
-+static int irq[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(irq, int, irq, NULL, 0);
-+MODULE_PARM_DESC(irq, "IRQ of controller (0=auto [default])");
-+
-+static int scsi_id[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(scsi_id, int, other, NULL, 0);
-+MODULE_PARM_DESC(scsi_id, "SCSI ID of controller (default = 7)");
-+
-+static unsigned long addresses[] = {
-+	0xc8000,
-+	0xca000,
-+	0xce000,
-+	0xde000,
-+};
-+#define ADDRESS_COUNT ARRAY_SIZE(addresses)
-+
-+static unsigned short ports[] = { 0x140, 0x150, 0x160, 0x170 };
-+#define PORT_COUNT ARRAY_SIZE(ports)
-+
-+static unsigned short irqs[] = { 3, 5, 10, 11, 12, 14, 15, 0 };
-+
-+/* This driver works *ONLY* for Future Domain cards using the TMC-1800,
-+ * TMC-18C50, or TMC-18C30 chip.  This includes models TMC-1650, 1660, 1670,
-+ * and 1680. These are all 16-bit cards.
-+ * BIOS versions prior to 3.2 assigned SCSI ID 6 to SCSI adapter.
-+ *
-+ * The following BIOS signature signatures are for boards which do *NOT*
-+ * work with this driver (these TMC-8xx and TMC-9xx boards may work with the
-+ * Seagate driver):
-+ *
-+ * FUTURE DOMAIN CORP. (C) 1986-1988 V4.0I 03/16/88
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V5.0C2/14/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V6.0A7/28/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0105/31/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0209/18/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V7.009/18/90
-+ * FUTURE DOMAIN CORP. (C) 1992 V8.00.004/02/92
-+ *
-+ * (The cards which do *NOT* work are all 8-bit cards -- although some of
-+ * them have a 16-bit form-factor, the upper 8-bits are used only for IRQs
-+ * and are *NOT* used for data. You can tell the difference by following
-+ * the tracings on the circuit board -- if only the IRQ lines are involved,
-+ * you have a "8-bit" card, and should *NOT* use this driver.)
-+ */
-+
-+static struct signature {
-+	const char *signature;
-+	int offset;
-+	int length;
-+	int this_id;
-+	int base_offset;
-+} signatures[] = {
-+/*          1         2         3         4         5         6 */
-+/* 123456789012345678901234567890123456789012345678901234567890 */
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89",	 5, 50,  6, 0x1fcc },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V1.07/28/89",	 5, 50,  6, 0x1fcc },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89", 72, 50,  6, 0x1fa2 },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.0",	73, 43,  6, 0x1fa2 },
-+{ "FUTURE DOMAIN CORP. (C) 1991 1800-V2.0.",		72, 39,  6, 0x1fa3 },
-+{ "FUTURE DOMAIN CORP. (C) 1992 V3.00.004/02/92",	 5, 44,  6, 0 },
-+{ "FUTURE DOMAIN TMC-18XX (C) 1993 V3.203/12/93",	 5, 44,  7, 0 },
-+{ "IBM F1 P2 BIOS v1.0011/09/92",			 5, 28,  7, 0x1ff3 },
-+{ "IBM F1 P2 BIOS v1.0104/29/93",			 5, 28,  7, 0 },
-+{ "Future Domain Corp. V1.0008/18/93",			 5, 33,  7, 0 },
-+{ "Future Domain Corp. V2.0108/18/93",			 5, 33,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.5008/18/93",			 5, 34,  7, 0 },
-+{ "FUTURE DOMAIN 18c30/18c50/1800 (C) 1994 V3.5",	 5, 44,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6008/18/93",			 5, 34,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6108/18/93",			 5, 34,  7, 0 },
-+};
-+#define SIGNATURE_COUNT ARRAY_SIZE(signatures)
-+
-+static int fdomain_isa_match(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh;
-+	int i, base = 0, irq = 0;
-+	unsigned long bios_base = 0;
-+	struct signature *sig = NULL;
-+	void __iomem *p;
-+	static struct signature *saved_sig;
-+	int this_id = 7;
-+
-+	if (ndev < ADDRESS_COUNT) {	/* scan supported ISA BIOS addresses */
-+		p = ioremap(addresses[ndev], FDOMAIN_BIOS_SIZE);
-+		if (!p)
-+			return 0;
-+		for (i = 0; i < SIGNATURE_COUNT; i++)
-+			if (check_signature(p + signatures[i].offset,
-+					    signatures[i].signature,
-+					    signatures[i].length))
-+				break;
-+		if (i == SIGNATURE_COUNT)	/* no signature found */
-+			goto fail_unmap;
-+		sig = &signatures[i];
-+		bios_base = addresses[ndev];
-+		/* read I/O base from BIOS area */
-+		if (sig->base_offset)
-+			base = readb(p + sig->base_offset) +
-+			      (readb(p + sig->base_offset + 1) << 8);
-+		iounmap(p);
-+		if (base)
-+			dev_info(dev, "BIOS at 0x%lx specifies I/O base 0x%x\n",
-+				 bios_base, base);
-+		else
-+			dev_info(dev, "BIOS at 0x%lx\n", bios_base);
-+		if (!base) {	/* no I/O base in BIOS area */
-+			/* save BIOS signature for later use in port probing */
-+			saved_sig = sig;
-+			return 0;
-+		}
-+	} else	/* scan supported I/O ports */
-+		base = ports[ndev - ADDRESS_COUNT];
-+
-+	/* use saved BIOS signature if present */
-+	if (!sig && saved_sig)
-+		sig = saved_sig;
-+
-+	if (!request_region(base, FDOMAIN_REGION_SIZE, "fdomain_isa"))
-+		return 0;
-+
-+	irq = irqs[(inb(base + Configuration1) & 0x0e) >> 1];
-+
-+
-+	if (sig)
-+		this_id = sig->this_id;
-+
-+	sh = fdomain_create(base, irq, this_id, dev);
-+	if (!sh) {
-+		release_region(base, FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
-+
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+fail_unmap:
-+	iounmap(p);
-+	return 0;
-+}
-+
-+static int fdomain_isa_param_match(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh;
-+	int irq_ = irq[ndev];
-+
-+	if (!io[ndev])
-+		return 0;
-+
-+	if (!request_region(io[ndev], FDOMAIN_REGION_SIZE, "fdomain_isa")) {
-+		dev_err(dev, "base 0x%x already in use", io[ndev]);
-+		return 0;
-+	}
-+
-+	if (irq_ <= 0)
-+		irq_ = irqs[(inb(io[ndev] + Configuration1) & 0x0e) >> 1];
-+
-+	sh = fdomain_create(io[ndev], irq_, scsi_id[ndev], dev);
-+	if (!sh) {
-+		dev_err(dev, "controller not found at base 0x%x", io[ndev]);
-+		release_region(io[ndev], FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
-+
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+}
-+
-+static int fdomain_isa_remove(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh = dev_get_drvdata(dev);
-+	int base = sh->io_port;
-+
-+	fdomain_destroy(sh);
-+	release_region(base, FDOMAIN_REGION_SIZE);
-+	dev_set_drvdata(dev, NULL);
-+	return 0;
-+}
-+
-+static struct isa_driver fdomain_isa_driver = {
-+	.match		= fdomain_isa_match,
-+	.remove		= fdomain_isa_remove,
-+	.driver = {
-+		.name	= "fdomain_isa",
-+		.pm	= FDOMAIN_PM_OPS,
-+	},
-+};
-+
-+static int __init fdomain_isa_init(void)
-+{
-+	int isa_probe_count = ADDRESS_COUNT + PORT_COUNT;
-+
-+	if (io[0]) {	/* use module parameters if present */
-+		fdomain_isa_driver.match = fdomain_isa_param_match;
-+		isa_probe_count = MAXBOARDS_PARAM;
-+	}
-+
-+	return isa_register_driver(&fdomain_isa_driver, isa_probe_count);
-+}
-+
-+static void __exit fdomain_isa_exit(void)
-+{
-+	isa_unregister_driver(&fdomain_isa_driver);
-+}
-+
-+module_init(fdomain_isa_init);
-+module_exit(fdomain_isa_exit);
-+
-+MODULE_AUTHOR("Ondrej Zary, Rickard E. Faith");
-+MODULE_DESCRIPTION("Future Domain TMC-16x0 ISA SCSI driver");
-+MODULE_LICENSE("GPL");
--- 
-Ondrej Zary
+Quoting Stephen Boyd (2019-05-10 11:01:48)
+> diff --git a/drivers/firmware/google/memconsole-coreboot.c b/drivers/firm=
+ware/google/memconsole-coreboot.c
+> index 86331807f1d5..0b29b27b86f5 100644
+> --- a/drivers/firmware/google/memconsole-coreboot.c
+> +++ b/drivers/firmware/google/memconsole-coreboot.c
+> @@ -85,7 +85,7 @@ static int memconsole_probe(struct coreboot_device *dev)
+> =20
+>         /* Read size only once to prevent overrun attack through /dev/mem=
+. */
+>         cbmem_console_size =3D tmp_cbmc->size_dont_access_after_boot;
+> -       cbmem_console =3D memremap(dev->cbmem_ref.cbmem_addr,
+> +       cbmem_console =3D devm_memremap(&dev->dev, dev->cbmem_ref.cbmem_a=
+ddr,
 
+Whoops, this returns an error pointer now. Here's an updated patch.
+
+ drivers/firmware/google/memconsole-coreboot.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/firmware/google/memconsole-coreboot.c b/drivers/firmwa=
+re/google/memconsole-coreboot.c
+index 86331807f1d5..cc3797f1ba85 100644
+--- a/drivers/firmware/google/memconsole-coreboot.c
++++ b/drivers/firmware/google/memconsole-coreboot.c
+@@ -85,13 +85,13 @@ static int memconsole_probe(struct coreboot_device *dev)
+=20
+ 	/* Read size only once to prevent overrun attack through /dev/mem. */
+ 	cbmem_console_size =3D tmp_cbmc->size_dont_access_after_boot;
+-	cbmem_console =3D memremap(dev->cbmem_ref.cbmem_addr,
++	cbmem_console =3D devm_memremap(&dev->dev, dev->cbmem_ref.cbmem_addr,
+ 				 cbmem_console_size + sizeof(*cbmem_console),
+ 				 MEMREMAP_WB);
+ 	memunmap(tmp_cbmc);
+=20
+-	if (!cbmem_console)
+-		return -ENOMEM;
++	if (IS_ERR(cbmem_console))
++		return PTR_ERR(cbmem_console);
+=20
+ 	memconsole_setup(memconsole_coreboot_read);
+=20
+@@ -102,9 +102,6 @@ static int memconsole_remove(struct coreboot_device *de=
+v)
+ {
+ 	memconsole_exit();
+=20
+-	if (cbmem_console)
+-		memunmap(cbmem_console);
+-
+ 	return 0;
+ }
+=20
+
+base-commit: e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+prerequisite-patch-id: b7c2a1e21fb108364f0e8cfaf1970cbc7903c750
+--=20
+Sent by a computer through tubes
