@@ -2,120 +2,226 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6552EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB689C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB1F2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DE8A217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4deC/hC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbfEJHZA (ORCPT
+        id S1727308AbfEJHZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:25:00 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44310 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726976AbfEJHZA (ORCPT
+        Fri, 10 May 2019 03:25:05 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45837 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbfEJHZE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:25:00 -0400
-Received: by mail-vs1-f67.google.com with SMTP id j184so3026470vsd.11;
-        Fri, 10 May 2019 00:24:59 -0700 (PDT)
+        Fri, 10 May 2019 03:25:04 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i21so2553486pgi.12;
+        Fri, 10 May 2019 00:25:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MxdAiari0nmP4dzXk8y1jGFeEkTXq4eqOJGoyehmXIg=;
+        b=S4deC/hCB9MWckQ7p7EvDz7MCjGrl8YSsW+gbeIAUPtPvn/NVkV0jpq3+YnLs+0HM5
+         6L3YHqvsUz8azvLbSvXfAILZ+X3c6w3Kzb5VB0LhrqklV+Hq/fyPjB279ApmeAlgLKaa
+         RhHdrOkokuhbQTYXqpF3Hlsbqzu6Wkc1aB6BEjbWgKuV0TEPz+8TPURDADd7CJRozhe3
+         KquzhfcwsEh7OzsOwWJImDW9qTVMzw7Pbkzi4Hekb+dD27dxFYC0CJHTC1kUcuYGosq5
+         xmyseexu3M+Tzdp5ZqYb+j1U4CADmYf817shn+tWjiu6gFZD7O27U8SvaNsXb22eDHgB
+         ngcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nIS0O0pcdTP5yqoW/Nfw3hhc4RbpJndS6/mlXFNPnnw=;
-        b=QCRgUAQ/qt1kTvhCm+Si8Xqvj84UNfWlhP9QqMOEf+y+HgoFD3lt3T85iYWbifP302
-         q+DRXki1pkA9LL3gVWcqVAHf+W8SPFcrtOxaVSr/eHA17K/P0PkhRTRi1fsT7FrMQFaC
-         Wtw1Yx7k66U/NXn9nquc1lSX7g2hJgdqD+GYjbTu2T5bhXzM8rU/FoUOEmbDbnd+/Ybr
-         GNXWiBlL3wTUvFJB3U0Qbjt8TpkmheV4c6mXzc2r4wjHtVxd99jT7+NDxgQWjzkegTKr
-         GBy94o6Lr3kR8S0R8FriQdGub0XZMc1j6NmyietXsvzRnvAb6WkzXCt7Zty3skWgkeOI
-         cxgg==
-X-Gm-Message-State: APjAAAWl6ueCr7aZyP/n9EFrq5aQF1X/YjVb04EKiFh8lZWU/1mP0MS8
-        I+kdYkUHfZ3O8Dn3YfeI+tXP0a0WRPNMdl6f8JM=
-X-Google-Smtp-Source: APXvYqyouUuMIh4F1k3kkwPX+coDmDYbA8nvK4I2H2QmYxd4iySsSLR2uiUFMg1eRBXxjqpMGN5J0y8wMMr+PzHmsOs=
-X-Received: by 2002:a67:fdd4:: with SMTP id l20mr1875398vsq.63.1557473099187;
- Fri, 10 May 2019 00:24:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190510061205.28753-1-yamada.masahiro@socionext.com>
- <20190510061205.28753-2-yamada.masahiro@socionext.com> <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
- <20190510070354.GA2193@ravnborg.org>
-In-Reply-To: <20190510070354.GA2193@ravnborg.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 10 May 2019 09:24:46 +0200
-Message-ID: <CAMuHMdXqJX_35WJDx_H4y39+sED5MeYeQVnqWXmStUTsfX1C2A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kconfig: do not write .config if the content is the same
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MxdAiari0nmP4dzXk8y1jGFeEkTXq4eqOJGoyehmXIg=;
+        b=miaMqnM2rdpUn/9xD2z9/YgKBpGNlpJV0v2tx5jALcuQwetyn0ev9UJX1F9YP2onl1
+         1UVESVOp8MhWF8lh+zCnzpSH8uIuxB2xg3B2uAp62ntGgwMGJ484NM2qPviC3xuSJSOm
+         CS/5eDGYSkySLXRBhWobVnGvIIDcRT3uhQLfnZhkh1BadvlbpdO05W7dwbpWMLH0s9l8
+         ZgRv7hsri2zizrkpDzhsK+rVEXGwPYABzMd/5znUbjnwmK0ohTIcnbG2QrN1U33Xz4N6
+         iYNG6gmb1mP2115WaQngmZlyG+Nb5nM6fUK0+lkWaJLEgHIE66qRAYFuCsGAV2YMrDhf
+         OzqA==
+X-Gm-Message-State: APjAAAXVm/K9kV72uyMbGGITXuCgsKULX1c3nD99xwyfK7GOkySvV0Fb
+        MrKsNdzTXedR1X5UvpJldIE=
+X-Google-Smtp-Source: APXvYqymmigac22Jqy6M2hK7+ePaHYrKV0Cx4Y210l9vnI9b0FU2xOOkWf23ZRWm2Tq7zbG6sKZFvQ==
+X-Received: by 2002:aa7:8046:: with SMTP id y6mr12066017pfm.251.1557473102856;
+        Fri, 10 May 2019 00:25:02 -0700 (PDT)
+Received: from localhost ([2601:640:1:34d8:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id z66sm6289282pfz.83.2019.05.10.00.25.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 00:25:01 -0700 (PDT)
+Date:   Fri, 10 May 2019 00:25:00 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Rafael Aquini <aquini@redhat.com>,
+        Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Sandeep Patil <sspatil@android.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
+Message-ID: <20190510072500.GA1520@yury-thinkpad>
+References: <1557158023-23021-1-git-send-email-jsavitz@redhat.com>
+ <20190507125430.GA31025@x230.aquini.net>
+ <20190508063716.GA3096@yury-thinkpad>
+ <87k1ezugqh.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87k1ezugqh.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sam,
-
-On Fri, May 10, 2019 at 9:03 AM Sam Ravnborg <sam@ravnborg.org> wrote:
-> On Fri, May 10, 2019 at 08:46:35AM +0200, Geert Uytterhoeven wrote:
-> > On Fri, May 10, 2019 at 8:14 AM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > > Kconfig updates the .config when it exits even if its content is
-> > > exactly the same as before. Since its timestamp becomes newer than
-> > > that of other build artifacts, additional processing is invoked,
-> > > which is annoying.
-> > >
-> > > - syncconfig is invoked to update include/config/auto.conf, etc.
-> > >
-> > > - kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
-> > >   then vmlinux is relinked as well.
-> > >
-> > > If the .config is not changed at all, we do not have to even
-> > > touch it. Just bail out showing "No change to .config".
-
-> > This causes a semantic change for the meaning of ".config.old", which is
-> > no longer updated if .config has not changed.
-> > Hence its contents may no longer correspond to the previous config, but to
-> > an arbitrary older version.
-> This semantic change is good.
-> So we now have a .config.old that correspond to the state before
-> the last change. Also after several kernel builds.
->
-> > > My workflow involves always running my own script "linux-oldconfig",
-> > instead of "make oldconfig", so I immediately see what has changed:
+On Fri, May 10, 2019 at 01:32:22PM +1000, Michael Ellerman wrote:
+> Yury Norov <yury.norov@gmail.com> writes:
+> > On Tue, May 07, 2019 at 08:54:31AM -0400, Rafael Aquini wrote:
+> >> On Mon, May 06, 2019 at 11:53:43AM -0400, Joel Savitz wrote:
+> >> > There is currently no easy and architecture-independent way to find the
+> >> > lowest unusable virtual address available to a process without
+> >> > brute-force calculation. This patch allows a user to easily retrieve
+> >> > this value via /proc/<pid>/status.
+> >> > 
+> >> > Using this patch, any program that previously needed to waste cpu cycles
+> >> > recalculating a non-sensitive process-dependent value already known to
+> >> > the kernel can now be optimized to use this mechanism.
+> >> > 
+> >> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+> >> > ---
+> >> >  Documentation/filesystems/proc.txt | 2 ++
+> >> >  fs/proc/task_mmu.c                 | 2 ++
+> >> >  2 files changed, 4 insertions(+)
+> >> > 
+> >> > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+> >> > index 66cad5c86171..1c6a912e3975 100644
+> >> > --- a/Documentation/filesystems/proc.txt
+> >> > +++ b/Documentation/filesystems/proc.txt
+> >> > @@ -187,6 +187,7 @@ read the file /proc/PID/status:
+> >> >    VmLib:      1412 kB
+> >> >    VmPTE:        20 kb
+> >> >    VmSwap:        0 kB
+> >> > +  VmTaskSize:	137438953468 kB
+> >> >    HugetlbPages:          0 kB
+> >> >    CoreDumping:    0
+> >> >    THP_enabled:	  1
+> >> > @@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
+> >> >   VmPTE                       size of page table entries
+> >> >   VmSwap                      amount of swap used by anonymous private data
+> >> >                               (shmem swap usage is not included)
+> >> > + VmTaskSize                  lowest unusable address in process virtual memory
+> >> 
+> >> Can we change this help text to "size of process' virtual address space memory" ?
 > >
-> >     $ cat $(type -p linux-oldconfig)
-> >     #!/bin/bash
-> >     make ${0#*/linux-} && colordiff -u .config{.old,}
-> So scripts relying on the old (broken) behaviour will no longer work.
-> The new behaviour is better as it is usefaul in many typical situations.
->
-> Hacking, hack. What did I change in the config?
+> > Agree. Or go in other direction and make it VmEnd
+> 
+> Yeah I think VmEnd would be clearer to folks who aren't familiar with
+> the kernel's usage of the TASK_SIZE terminology.
+> 
+> >> > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> >> > index 95ca1fe7283c..0af7081f7b19 100644
+> >> > --- a/fs/proc/task_mmu.c
+> >> > +++ b/fs/proc/task_mmu.c
+> >> > @@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+> >> >  	seq_put_decimal_ull_width(m,
+> >> >  		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
+> >> >  	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
+> >> > +	seq_put_decimal_ull_width(m,
+> >> > +		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
+> >> >  	seq_puts(m, " kB\n");
+> >> >  	hugetlb_report_usage(m, mm);
+> >> >  }
+> >
+> > I'm OK with technical part, but I still have questions not answered
+> > (or wrongly answered) in v1 and v2. Below is the very detailed
+> > description of the concerns I have.
+> >
+> > 1. What is the exact reason for it? Original version tells about some
+> > test that takes so much time that you were able to drink a cup of
+> > coffee before it was done. The test as you said implements linear
+> > search to find the last page and so is of O(n). If it's only for some
+> > random test, I think the kernel can survive without it. Do you have a
+> > real example of useful programs that suffer without this information?
+> >
+> >
+> > 2. I have nothing against taking breaks and see nothing weird if
+> > ineffective algorithms take time. On my system (x86, Ubuntu) the last
+> > mapped region according to /proc/<pid>/maps is:
+> > ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0     [vsyscall]
+> > So to find the required address, we have to inspect 2559 pages. With a
+> > binary search it would take 12 iterations at max. If my calculation is
+> > wrong or your environment is completely different - please elaborate.
+> 
+> I agree it should not be hard to calculate, but at the same time it's
+> trivial for the kernel to export the information so I don't see why the
+> kernel shouldn't.
 
-I agree both semantics have their merits.
-Sometimes I also wanted to see the last real change...
+Kernel shouldn't do it unless there will be real users of the feature.
+Otherwise it's pure bloating.
 
-No worries, updating my script, so it works with both semantics:
+One possible user of it that I can imagine is mmap(MAP_FIXED). The
+documentation is very clear about it:
 
-    $ cat $(type -p linux-oldconfig)
-    #!/bin/bash
-    cp -a .config .config.orig
-    make ${0#*/linux-} && colordiff -u .config{.orig,}
+   Furthermore,  this  option  is  extremely  hazardous (when used on its own),
+   because it forcibly removes preexisting mappings, making it easy for a 
+   multithreaded  process  to corrupt its own address space.
 
-Gr{oetje,eeting}s,
+VmEnd provided by kernel may encourage people to solve their problems
+by using MAP_FIXED which is potentially dangerous.
 
-                        Geert
+Another scenario of VmEnd is to understand how many top bits of address will
+be always zero to allocate them for user's purpose, like smart pointers. It
+worth to discuss this usecase with compiler people. If they have interest,
+I think it's more straightforward to give them something like:
+   int preserve_top_bits(int nbits);
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Anything else?
+ 
+> > 3. As far as I can see, Linux currently does not support dynamic
+> > TASK_SIZE. It means that for any platform+ABI combination VmTaskSize
+> > will be always the same. So VmTaskSize would be effectively useless waste
+> > of lines. In fact, TASK SIZE is compiler time information and should
+> > be exposed to user in headers. In discussion to v2 Rafael Aquini answered
+> > for this concern that TASK_SIZE is a runtime resolved macro. It's
+> > true, but my main point is: GCC knows what type of binary it compiles
+> > and is able to select proper value. We are already doing similar things
+> > where appropriate. Refer for example to my arm64/ilp32 series:
+> >
+> > arch/arm64/include/uapi/asm/bitsperlong.h:
+> > -#define __BITS_PER_LONG 64
+> > +#if defined(__LP64__)
+> > +/* Assuming __LP64__ will be defined for native ELF64's and not for ILP32. */
+> > +#  define __BITS_PER_LONG 64
+> > +#elif defined(__ILP32__)
+> > +#  define __BITS_PER_LONG 32
+> > +#else
+> > +#  error "Neither LP64 nor ILP32: unsupported ABI in asm/bitsperlong.h"
+> > +#endif
+> >
+> > __LP64__ and __ILP32__ are symbols provided by GCC to distinguish
+> > between ABIs. So userspace is able to take proper __BITS_PER_LONG value
+> > at compile time, not at runtime. I think, you can do the same thing for
+> > TASK_SIZE.
+> 
+> No you can't do it at compile time for TASK_SIZE.
+> 
+> On powerpc a 64-bit program might run on a kernel built with 4K pages
+> where TASK_SIZE is 64TB, and that same program can run on a kernel built
+> with 64K pages where TASK_SIZE is 4PB.
+> 
+> And it's not just determined by PAGE_SIZE, that same program might also
+> run on an older kernel where TASK_SIZE with 64K pages was 512TB.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+OK, understood.
