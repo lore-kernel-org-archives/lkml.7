@@ -2,224 +2,77 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0032C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A993C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7E32182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:28:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cg00A8UF"
+	by mail.kernel.org (Postfix) with ESMTP id DEB86217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbfEJS2x (ORCPT
+        id S1728020AbfEJS3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 14:28:53 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:43030 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbfEJS2w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 14:28:52 -0400
-Received: by mail-ua1-f66.google.com with SMTP id 94so2462089uaf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 11:28:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=53B459eecvRty+a3wV9xVIaRrF5O7M+rhPq+rsdt49Q=;
-        b=Cg00A8UFLYkETfa0fNN/fBZTQ/WB3tM0tBvqcgmsD7y4Qnh+T7w5qI3un3uJFEYnzl
-         KaC1ZQ/e9h8U5x1HQqzOqNI+6QLjLi/9TFwZV2s5ZCpnbc93Q+uelEF4LDdko9hbTWIF
-         qGhDp/rhVSoIR1YCxVfG+VsqcQf+Yd0U54jPTVl1qycbXo2zKhtQGbXG2QYvHgQQ3MYy
-         MINutBZLASFsyKnRhT4dShy9e9JHBIsnDYytNtgzXxVPJULGq0ypi0kXFh3+jCuckYps
-         rDP7Xjq0ehMyZeT2eXWFoObjJNJn2iG704TlGzr7DBAVgSeiKZfsnMw2fDgzI8Qw7I6n
-         OMXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=53B459eecvRty+a3wV9xVIaRrF5O7M+rhPq+rsdt49Q=;
-        b=PZa4SjWrGgC/LdXYqGD0qM5STFFWos6dhLtXJe99EN6w1FcqjwwshdJFyV6GNB1y/j
-         Fqw9kkUHRH4KkZBPegSArghPO920WcJWd5cK2JysQ6G9JZufk/ofgtaxbCxEbFMltQCm
-         BFkCqRdtN9QMg/MUkRn45Su/8h9K7JjYCnUZsnglx6zCjpMjJN+TNho4a1eiOMKC2fBr
-         jL/Eaa9+KcSEVTj2ruQVFd8wZ9USrUm35U0bQQiwm+jeIJp3/UVWEhdT2yD8U8uty/ky
-         y88bmsUGBRkqmic2UXNUmGddKFIzm1DYqrRxmCEB8L7ah9gMlvSN2MISu157gSkeYERE
-         YO4A==
-X-Gm-Message-State: APjAAAW0DDuZ9lI58w/rIVU3LjucL7nSK+2WkfXPRWF+kbxc4CJKBuTU
-        XkhrySxGSkhN25tK+lAFnc2p1BdhgXZj6ai+WdDUcw==
-X-Google-Smtp-Source: APXvYqwXRa9KK3jbWYWs+gozP2JQn6xPfkndKLXXl4HD2u+AuhwHY19lfENjCYj/mWKbuNyqLzndwn0I636BipoYXhc=
-X-Received: by 2002:ab0:154e:: with SMTP id p14mr6334650uae.48.1557512931577;
- Fri, 10 May 2019 11:28:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190508145600.GA26843@centauri> <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
- <20190510091158.GA10284@e107155-lin>
-In-Reply-To: <20190510091158.GA10284@e107155-lin>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Fri, 10 May 2019 23:58:40 +0530
-Message-ID: <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Lina Iyer <lina.iyer@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 May 2019 14:29:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:55032 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727642AbfEJS3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 14:29:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43BCCA78;
+        Fri, 10 May 2019 11:29:52 -0700 (PDT)
+Received: from big-swifty.misterjones.org (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B5A93F6C4;
+        Fri, 10 May 2019 11:29:49 -0700 (PDT)
+Date:   Fri, 10 May 2019 19:29:47 +0100
+Message-ID: <86o94acgdg.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <tony@atomide.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: arch_k3: Fix kconfig dependency warning
+In-Reply-To: <f7c420ec-ee4e-c17e-7650-353002bb81b9@ti.com>
+References: <20190510035255.27568-1-yuehaibing@huawei.com>
+        <f7c420ec-ee4e-c17e-7650-353002bb81b9@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On Thu, May 09, 2019 at 11:19:23PM +0530, Amit Kucheria wrote:
-> > (Adding Lorenzo and Sudeep)
-> >
-> > On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > >
-> > > On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
-> > > > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > > > >
-> > > > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > > > >
-> > > > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > > > ---
-> > > > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > > > >  1 file changed, 15 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > > @@ -31,6 +31,7 @@
-> > > > >                         reg = <0x100>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU1: cpu@101 {
-> > > > > @@ -39,6 +40,7 @@
-> > > > >                         reg = <0x101>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU2: cpu@102 {
-> > > > > @@ -47,6 +49,7 @@
-> > > > >                         reg = <0x102>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 CPU3: cpu@103 {
-> > > > > @@ -55,12 +58,24 @@
-> > > > >                         reg = <0x103>;
-> > > > >                         enable-method = "psci";
-> > > > >                         next-level-cache = <&L2_0>;
-> > > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > > >                 };
-> > > > >
-> > > > >                 L2_0: l2-cache {
-> > > > >                         compatible = "cache";
-> > > > >                         cache-level = <2>;
-> > > > >                 };
-> > > > > +
-> > > > > +               idle-states {
-> > > >
-> > > > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
-> > > >
-> > > > I don't think the psci_cpuidle_ops will even get called without this.
-> > >
-> > > Hello Amit,
-> > >
-> > > I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
-> > > when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
-> > > with the correct psci suspend parameter.
-> > >
-> > > The output from:
-> > > grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
-> > > also looks sane.
-> > >
-> > > However, if 'entry-method="psci"' is required according to the DT binding,
-> > > perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
-> >
-> > Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
-> > out that entry-method="psci" isn't checked for in code anywhere. Let's
-> > get their view on this for posterity.
-> >
->
-> Yes entry-method="psci" is required as per DT binding but not checked
-> in code on arm64. We have CPU ops with idle enabled only for "psci", so
-> there's not need to check.
+On Fri, 10 May 2019 06:16:38 +0100,
+Lokesh Vutla <lokeshvutla@ti.com> wrote:
+> 
+> 
+> 
+> On 10/05/19 9:22 AM, YueHaibing wrote:
+> > Fix Kbuild warning when SOC_TI is not set
+> > 
+> > WARNING: unmet direct dependencies detected for TI_SCI_INTA_IRQCHIP
+> >   Depends on [n]: TI_SCI_PROTOCOL [=y] && SOC_TI [=n]
+> >   Selected by [y]:
+> >   - ARCH_K3 [=y]
+> > 
+> > Fixes: 009669e74813 ("arm64: arch_k3: Enable interrupt controller drivers")
+> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Thanks for catching it.
+> 
+> Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
 
-I don't see it being checked on arm32 either.
+Tony, can you please route this patch via armsoc?
 
-> Once we have DT schema validation, this will be caught, so it's better
-> to fix it.
->
-> > What does entry-method="psci" in the idle-states node achieve that
-> > enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
-> > vs. entry-).
-> >
->
-> From DT binding perspective, we can have different CPU enable-method
-> and CPU idle entry-method. However on arm64, it's restricted to PSCI
-> only. I need to check what happens on arm32 though, as the driver
-> invocation happens via CPUIDLE_METHOD_OF_DECLARE.
->
-> > The enable-method property is the one that sets up the
-> > psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
-> > macro.
-> >
->
-> Indeed.
->
-> > IOW, if we deprecated the entry-method property, everything would
-> > still work, wouldn't it?
->
-> Why do you want to deprecated just because Linux kernel doesn't want to
-> use it. That's not a valid reason IMO.
+Thanks,
 
-Fair enough. Just want to make sure that it isn't some vestigial
-property that was never used. Do you know if another OS is actually
-using it?
+	M.
 
-> > Do we expect to support PSCI platforms that might have a different
-> > entry-method for idle states?
->
-> Not on ARM64, but same DT bindings can be used for idle-states on
-> say RISC-V and have some value other than "psci".
-
-Both enable-method and entry-method properties are currently only used
-(and documented) for ARM platforms. Hence this discussion about
-deprecation of one of them.
-
-> > Should I whip up a patch removing entry-method? Since we don't check
-> > for it today, it won't break the old DTs either.
-> >
->
-> Nope, I don't think so. But if it's causing issues, we can look into it.
-> I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
-
-Only a couple of minor issues:
-1. There is a trickle of DTs that need fixing up every now and then
-because they don't use entry-method in their idle-states node. Schema
-validation ought to fix that.
-2. A property that isn't ready by any code is a bit confusing. Perhaps
-we can mention something to the effect in the documentation?
-
-Regards,
-Amit
+-- 
+Jazz is not dead, it just smell funny.
