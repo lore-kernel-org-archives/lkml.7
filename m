@@ -2,82 +2,124 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580D5C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB33C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 128B9217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557469526;
-	bh=xCyIuPEcqKdpdBDeoKypAEdjrtjwfp4VH1BUPkegH80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VTRSJQ/gud9JYrDwJ2vSVlvCeyRXMTu1Cu+Qq+ljKQS2e+zYQJl7kY+ndmYc30Zxo
-	 pvxjL46lDGGk1e0QnJ8f2Eed7XtHNfK6pfgv6o7JX2GzxaWu5WkQFOBOzCf1At+lTG
-	 pbvws/UOiz9eU8RH6oWlruYE8mgMm3899bJfd3I0=
+	by mail.kernel.org (Postfix) with ESMTP id 7F59A217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:29:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="itdBqCoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfEJGZZ (ORCPT
+        id S1726972AbfEJG3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:25:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfEJGZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:25:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F9B217D6;
-        Fri, 10 May 2019 06:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557469524;
-        bh=xCyIuPEcqKdpdBDeoKypAEdjrtjwfp4VH1BUPkegH80=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FiRY9DuruDcwKWvOXqpN3jKQqnB4xiqy9Nty2e6e0BOWTFviDQtiWzbptmkcKxzSD
-         nP/wlYefoVuHOueZ+JSQULEq/A98qqvDWpw8QpcTMn1dA/1+QTFe2BHxiXdb2GyoK/
-         YX5+Irq7dzoAs+l9Tp6+uCsnRP33jC3mAV8uoYp8=
-Date:   Fri, 10 May 2019 08:25:21 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.0 00/95] 5.0.15-stable review
-Message-ID: <20190510062521.GC18014@kroah.com>
-References: <20190509181309.180685671@linuxfoundation.org>
- <5cd4c561.1c69fb81.ca185.0137@mx.google.com>
+        Fri, 10 May 2019 02:29:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35294 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726823AbfEJG3I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 02:29:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w12so6271449wrp.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 23:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fXoP+f6QC17xzzktncyb1JK9XYTxg2n/Jos+hr8hflY=;
+        b=itdBqCoK1ajm7GqCEPGxrB4iEYXPleHImyaPAPsZtPsRwoWDRxpDa4NAhAIe/YjORU
+         oqeRSlllHu/LFz4qLzNU/BtIHxQjE+c0XLCAsitWX5oumvzfiN1VN8S2uYdJdes6QkyI
+         JMYBg7Ls0TpcMqP8QlutVJ1FpirHfsqDQd/dA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fXoP+f6QC17xzzktncyb1JK9XYTxg2n/Jos+hr8hflY=;
+        b=uCVThIky88t8BP5BrAQGUuNdyoodPcWmR9cA1Ykgv6fZYRSzvS5lwX7j3JX/wqc/5b
+         I1mkNUYaXhVVX54DNWG7njczdyFMw2ov11ax5wjr4QkGImwP4Wg+LrfxelST/btfjR6c
+         6Asr13IZFv2E9T9yAwWunMzYTIHMbzE6YxhQ8eZG+SuUz5lJ962Ydwj1eiZ8mnFDFOtj
+         TgETAjLXA7qnjs4V3Aa5La3SSRdGHfOPw5nx8eJ19PJlStUypdd8luKsyf+JWheI5lZd
+         MNYOPn9HBmHwp7FPWEzQWXd9gXRhhnOw1xNEFmGI8hHVrTnJsO6RnAyQy6OUUJMre79W
+         GoCw==
+X-Gm-Message-State: APjAAAVBc6UltPgbsPsOoNUX9Dl+d/GN+INMQg2CkfbhwbT4NPnt3KjR
+        QXSyjYmM5kBUn34KymhWGja0gw==
+X-Google-Smtp-Source: APXvYqyD/Ihm3RfEZqSrIUKTRP3K/yqwgsWS6ZBxR1ydlc2vrnLSWVZMYQ86kUm3VXj7Ytc6N2PrUQ==
+X-Received: by 2002:adf:cf05:: with SMTP id o5mr6398927wrj.262.1557469746571;
+        Thu, 09 May 2019 23:29:06 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id n17sm3750263wrw.77.2019.05.09.23.29.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 23:29:05 -0700 (PDT)
+Date:   Fri, 10 May 2019 08:27:27 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org
+Subject: Re: [PATCH 3/5] sbitmap: fix improper use of smp_mb__before_atomic()
+Message-ID: <20190510062727.GA4607@andrea>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1556568902-12464-4-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190510034101.GC27944@ming.t460p>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5cd4c561.1c69fb81.ca185.0137@mx.google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190510034101.GC27944@ming.t460p>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 05:27:13PM -0700, kernelci.org bot wrote:
-> stable-rc/linux-5.0.y boot: 143 boots: 1 failed, 141 passed with 1 untried/unknown (v5.0.14-96-gdf1376651d49)
-> 
-> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-5.0.y/kernel/v5.0.14-96-gdf1376651d49/
-> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.0.y/kernel/v5.0.14-96-gdf1376651d49/
-> 
-> Tree: stable-rc
-> Branch: linux-5.0.y
-> Git Describe: v5.0.14-96-gdf1376651d49
-> Git Commit: df1376651d496484d341d374c3d2566a089b1969
-> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> Tested: 77 unique boards, 25 SoC families, 15 builds out of 208
-> 
-> Boot Failure Detected:
-> 
-> arm:
->     multi_v7_defconfig:
->         gcc-8:
->             stih410-b2120: 1 failed lab
+Hi Ming,
 
-Is this a "real" issue?
+On Fri, May 10, 2019 at 11:41:02AM +0800, Ming Lei wrote:
+> On Mon, Apr 29, 2019 at 10:14:59PM +0200, Andrea Parri wrote:
+> > This barrier only applies to the read-modify-write operations; in
+> > particular, it does not apply to the atomic_set() primitive.
+> > 
+> > Replace the barrier with an smp_mb().
+> > 
+> > Fixes: 6c0ca7ae292ad ("sbitmap: fix wakeup hang after sbq resize")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: "Paul E. McKenney" <paulmck@linux.ibm.com>
+> > Reported-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Omar Sandoval <osandov@fb.com>
+> > Cc: linux-block@vger.kernel.org
+> > ---
+> >  lib/sbitmap.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/lib/sbitmap.c b/lib/sbitmap.c
+> > index 155fe38756ecf..4a7fc4915dfc6 100644
+> > --- a/lib/sbitmap.c
+> > +++ b/lib/sbitmap.c
+> > @@ -435,7 +435,7 @@ static void sbitmap_queue_update_wake_batch(struct sbitmap_queue *sbq,
+> >  		 * to ensure that the batch size is updated before the wait
+> >  		 * counts.
+> >  		 */
+> > -		smp_mb__before_atomic();
+> > +		smp_mb();
+> >  		for (i = 0; i < SBQ_WAIT_QUEUES; i++)
+> >  			atomic_set(&sbq->ws[i].wait_cnt, 1);
+> >  	}
+> > -- 
+> > 2.7.4
+> > 
+> 
+> sbitmap_queue_update_wake_batch() won't be called in fast path, and
+> the fix is correct too, so:
+> 
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Thank you for the review(s),
+
+  Andrea
+
+
+> thanks,
+> Ming
