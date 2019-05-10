@@ -1,77 +1,94 @@
-Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5584C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 23:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876F520820
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 23:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AEC2146F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfEJX7L (ORCPT
+        id S1728090AbfEKAFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 19:59:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:3432 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfEJX7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 19:59:11 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 16:59:10 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 May 2019 16:59:10 -0700
-Date:   Fri, 10 May 2019 16:59:47 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     akpm@linux-foundation.org, jack@suse.cz, keith.busch@intel.com,
-        aneesh.kumar@linux.ibm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/gup.c: Make follow_page_mask static
-Message-ID: <20190510235946.GA14927@iweiny-DESK2.sc.intel.com>
-References: <20190510190831.GA4061@bharath12345-Inspiron-5559>
+        Fri, 10 May 2019 20:05:46 -0400
+Received: from mail02.iobjects.de ([188.40.134.68]:32782 "EHLO
+        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727921AbfEKAFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 20:05:46 -0400
+X-Greylist: delayed 459 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 20:05:45 EDT
+Received: from tux.wizards.de (pD9EBF14A.dip0.t-ipconnect.de [217.235.241.74])
+        by mail02.iobjects.de (Postfix) with ESMTPSA id 0865E4168C0A;
+        Sat, 11 May 2019 01:58:06 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.wizards.de (Postfix) with ESMTP id 7A94E6D3233;
+        Sat, 11 May 2019 01:58:05 +0200 (CEST)
+Subject: Re: [PATCH] bfq: backport: update internal depth state when queue
+ depth changes
+To:     Eric Wheeler <stable@lists.ewheeler.net>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "open list:BFQ I/O SCHEDULER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
+References: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
+ <20190510201855.GB14410@sasha-vm>
+ <alpine.LRH.2.11.1905102312220.4789@mx.ewheeler.net>
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <a5e71713-3ce6-2888-1658-c973393a01ec@applied-asynchrony.com>
+Date:   Sat, 11 May 2019 01:58:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510190831.GA4061@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <alpine.LRH.2.11.1905102312220.4789@mx.ewheeler.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 12:38:32AM +0530, Bharath Vedartham wrote:
-> follow_page_mask is only used in gup.c, make it static.
+On 5/11/19 1:17 AM, Eric Wheeler wrote:
+> On Fri, 10 May 2019, Sasha Levin wrote:
 > 
-> Tested by compiling and booting. Grepped the source for
-> "follow_page_mask" to be sure it is not used else where.
+>> On Fri, May 10, 2019 at 10:56:32AM -0700, Eric Wheeler wrote:
+>>> From: Jens Axboe <axboe@kernel.dk>
+>>>
+>>> commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
+>>>
+>>> A previous commit moved the shallow depth and BFQ depth map calculations
+>>> to be done at init time, moving it outside of the hotter IO path. This
+>>> potentially causes hangs if the users changes the depth of the scheduler
+>>> map, by writing to the 'nr_requests' sysfs file for that device.
+>>>
+>>> Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
+>>> the depth changes, so that the scheduler can update its internal state.
+>>>
+>>> Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
+>>> Tested-by: Kai Krakow <kai@kaishome.de>
+>>> Reported-by: Paolo Valente <paolo.valente@linaro.org>
+>>> Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>> Cc: stable@vger.kernel.org
+>>
+>> I wasn't clear on what was backported here, so I've queued the upstream
+>> version on 4.19 and 4.14, it doesn't seem to be relevant to older
+>> branches.
 > 
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+> 
+> Thanks Sasha.  We needed it for 4.19, I wasn't sure how far it would patch
+> back so I left the version off.  BFQ was merged in 4.12 iirc, so if it
+> patched against 4.14, then 4.19 and 4.14 are the only ones that need it.
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+It was applied in mainline for 5.1 and also applies fine to 5.0.x, so IMHO
+that wouldn't hurt either.
 
-> ---
->  mm/gup.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 91819b8..e6f3b7f 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -409,7 +409,7 @@ static struct page *follow_p4d_mask(struct vm_area_struct *vma,
->   * an error pointer if there is a mapping to something not represented
->   * by a page descriptor (see also vm_normal_page()).
->   */
-> -struct page *follow_page_mask(struct vm_area_struct *vma,
-> +static struct page *follow_page_mask(struct vm_area_struct *vma,
->  			      unsigned long address, unsigned int flags,
->  			      struct follow_page_context *ctx)
->  {
-> -- 
-> 2.7.4
-> 
+thanks,
+Holger
