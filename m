@@ -3,138 +3,122 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD1C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FDFC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B196217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916502184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727700AbfEJRnN (ORCPT
+        id S1727667AbfEJRpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:43:13 -0400
-Received: from mx.ewheeler.net ([66.155.3.69]:52514 "EHLO mx.ewheeler.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727383AbfEJRnN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:43:13 -0400
-X-Greylist: delayed 387 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 13:43:12 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mx.ewheeler.net (Postfix) with ESMTP id 1BF7DA0692;
-        Fri, 10 May 2019 17:36:45 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at ewheeler.net
-Received: from mx.ewheeler.net ([127.0.0.1])
-        by localhost (mx.ewheeler.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id Dp0a1D6s0PIr; Fri, 10 May 2019 17:36:44 +0000 (UTC)
-Received: from mx.ewheeler.net (mx.ewheeler.net [66.155.3.69])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx.ewheeler.net (Postfix) with ESMTPSA id 4B05EA067D;
-        Fri, 10 May 2019 17:36:44 +0000 (UTC)
-Date:   Fri, 10 May 2019 17:36:32 +0000 (UTC)
-From:   Eric Wheeler <drbd-dev@lists.ewheeler.net>
-X-X-Sender: lists@mx.ewheeler.net
-To:     Lars Ellenberg <lars.ellenberg@linbit.com>
-cc:     Christoph Hellwig <hch@infradead.org>, drbd-dev@lists.linbit.com,
-        stable@vger.kernel.org,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drbd: fix discard_zeroes_if_aligned regression
-In-Reply-To: <20180116094907.GD4107@soda.linbit>
-Message-ID: <alpine.LRH.2.11.1905101728280.1835@mx.ewheeler.net>
-References: <15124635.GA4107@soda.linbit> <1516057231-21756-1-git-send-email-drbd-dev@lists.ewheeler.net> <20180116072615.GA3940@infradead.org> <20180116094907.GD4107@soda.linbit>
-User-Agent: Alpine 2.11 (LRH 23 2013-08-11)
+        Fri, 10 May 2019 13:45:43 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:46831 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727383AbfEJRpn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:45:43 -0400
+Received: by mail-qk1-f195.google.com with SMTP id a132so4100237qkb.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 10:45:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ItAX23A+ZK4sf8NEwjAZtt+aMB/LmGzTQuo1uxHF1/0=;
+        b=UZvwaRGVooiEtYUjPSwbPs7eVZybRraJLgvYlOi0k35SuQGDZUkHZf7APdC1Qjzd4B
+         EqBwe1aUTbwQenoWSTevphHldt06e4HN6sHPScbtxE4JYfK3ERRsTwZ7QCUGw7C7+XNw
+         ir86MKPp+56ElMnBMtOjjm0kmXhBgAmeO+XL0h4tPr2TGi9+C8HmBvkwCdtqzX5igk95
+         eJlHnOZR+ywo4B2qdtDatZF6+srI3eEmnKNBfI0htR1CKA1tWR28ogNJRkEelP8ZOhm1
+         NJKqmM5z/pucOpfqUFY2LfS95KXwyOsbM9p5Btr+7iBStrSoETY0n1ryoJ7zHXc/SU5e
+         cgVA==
+X-Gm-Message-State: APjAAAUvb4Ll8xFkbb6N3DRwme/6MRZlZQHK464EMIfTT1MGBeSbbaoF
+        3Tl2p80OTgmOys8UbXHABQq0TDNxoVk=
+X-Google-Smtp-Source: APXvYqx1jICg7CS0UwHc52npH/Yny0UGKDM8v5+hee7gxDo8h3K94GlP6ro645dP+vmCXxSTHU2/Tw==
+X-Received: by 2002:a05:620a:1463:: with SMTP id j3mr10351073qkl.157.1557510342262;
+        Fri, 10 May 2019 10:45:42 -0700 (PDT)
+Received: from vitty.brq.redhat.com ([209.48.7.126])
+        by smtp.gmail.com with ESMTPSA id k53sm3528159qtb.65.2019.05.10.10.45.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 10:45:41 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "m.maya.nakamura" <m.maya.nakamura@gmail.com>
+Cc:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/6] x86: hv: hv_init.c: Replace alloc_page() with kmem_cache_alloc()
+In-Reply-To: <BYAPR21MB1221962ED2DD7FEE19E7DAB6D70C0@BYAPR21MB1221.namprd21.prod.outlook.com>
+References: <cover.1554426039.git.m.maya.nakamura@gmail.com> <bdbacc872e369762a877af4415ad1b07054826db.1554426040.git.m.maya.nakamura@gmail.com> <87wok8it8p.fsf@vitty.brq.redhat.com> <20190412072401.GA69620@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net> <87mukvfynk.fsf@vitty.brq.redhat.com> <20190508064559.GA54416@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net> <87mujxro70.fsf@vitty.brq.redhat.com> <MN2PR21MB1232C6ABA5DAC847C8A910E1D70C0@MN2PR21MB1232.namprd21.prod.outlook.com> <87r296qwbk.fsf@vitty.brq.redhat.com> <BYAPR21MB1221962ED2DD7FEE19E7DAB6D70C0@BYAPR21MB1221.namprd21.prod.outlook.com>
+Date:   Fri, 10 May 2019 13:45:41 -0400
+Message-ID: <8736lmqk3e.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jan 2018, Lars Ellenberg wrote:
+Michael Kelley <mikelley@microsoft.com> writes:
 
-> On Mon, Jan 15, 2018 at 11:26:15PM -0800, Christoph Hellwig wrote:
-> > NAK.  Calling a discard and expecting zeroing is simply buggy.
-> 
-> What he said.
-> 
-> The bug/misunderstanding was that we now use zeroout even for discards,
-> with the assumption that it would try to do discards where it can.
-> 
-> Which is even true.
-> 
-> But our expectations of when zeroout "should" use unmap,
-> and where it actually can do that safely
-> based on the information it has,
-> don't really match:
-> our expectations where wrong, we assumed too much.
-> (in the general case).
-> 
-> Which means in DRBD we have to stop use zeroout for discards,
-> and again pass down normal discard for discards.
-> 
-> In the specific case where the backend to DRBD is lvm-thin,
-> AND it does de-alloc blocks on discard,
-> AND it does NOT have skip_block_zeroing set or it's backend
-> does zero on discard and it does discard passdown, and we tell
-> DRBD about all of that (using the discard_zeroes_if_aligned flag)
-> then we can do this "zero head and tail, discard full blocks",
-> and expect them to be zero.
-> 
-> If skip_block_zeroing is set however, and there is no discard
-> passdown in thin, or the backend of thin does not zero on discard,
-> DRBD can still pass down discards to thin, and expect them do be
-> de-allocated, but can not expect discarded ranges to remain
-> "zero", any later partial write to an unallocated area could pull
-> in different "undefined" garbage on different replicas for the
-> not-written-to part of a new allocated block.
-> 
-> The end result is that you have areas of the block device
-> that return different data depending on which replica you
-> read from.
-> 
-> But that is the case even eithout discard in that setup,
-> don't do that then or live with it.
-> 
-> "undefined data" is undefined, you have that directly on thin
-> in that setup already, with DRBD on top you now have several
-> versions of "undefined".
-> 
-> Anything on top of such a setup must not do "read-modify-write"
-> of "undefined" data and expect a defined result, adding DRBD
-> on top does not change that.
-> 
-> DRBD can deal with that just fine, but our "online verify" will
-> report loads of boring "mismatches" for those areas.
-> 
-> TL;DR: we'll stop doing "discard-is-zeroout"
-> (our assumptions were wrong).
-> We still won't do exactly "discard-is-discard", but re-enable our
-> "discard-is-discard plus zeroout on head and tail", because in
-> some relevant setups, this gives us the best result, and avoids
-> the false positives in our online-verify.
-> 
->     Lars
-> 
+> From: Vitaly Kuznetsov <vkuznets@redhat.com>  Sent: Friday, May 10, 2019 6:22 AM
+>> >>
+>> >> I think we can consider these allocations being DMA-like (because
+>> >> Hypervisor accesses this memory too) so you can probably take a look at
+>> >> dma_pool_create()/dma_pool_alloc() and friends.
+>> >>
+>> >
+>> > I've taken a look at dma_pool_create(), and it takes a "struct device"
+>> > argument with which the DMA pool will be associated.  That probably
+>> > makes DMA pools a bad choice for this usage.  Pages need to be allocated
+>> > pretty early during boot for Hyper-V communication, and even if the
+>> > device subsystem is initialized early enough to create a fake device,
+>> > such a dependency seems rather dubious.
+>> 
+>> We can probably use dma_pool_create()/dma_pool_alloc() from vmbus module
+>> but these 'early' allocations may not have a device to bind to indeed.
+>> 
+>> >
+>> > kmem_cache_create/alloc() seems like the only choice to get
+>> > guaranteed alignment.  Do you see any actual problem with
+>> > using kmem_cache_*, other than the naming?  It seems like these
+>> > kmem_cache_*  functions really just act as a sub-allocator for
+>> > known-size allocations, and "cache" is a common usage
+>> > pattern, but not necessarily the only usage pattern.
+>> 
+>> Yes, it's basically the name - it makes it harder to read the code and
+>> some future refactoring of kmem_cache_* may not take our use-case into
+>> account (as we're misusing the API). We can try renaming it to something
+>> generic of course and see what -mm people have to say :-)
+>> 
+>
+> This makes me think of creating Hyper-V specific alloc/free functions
+> that wrap whatever the backend allocator actually is.  So we have
+> hv_alloc_hyperv_page() and hv_free_hyperv_page().  That makes the
+> code very readable and the intent is super clear.
+>
+> As for the backend allocator, an alternative is to write our own simple
+> allocator.  It maintains a single free list.  If hv_alloc_hyperv_page() is
+> called, and the free list is empty, do alloc_page() and break it up into
+> Hyper-V sized pages to replenish the free list.  (On x86, these end up
+> being 1-for-1 operations.)  hv_free_hyperv_page() just puts the Hyper-V
+> page back on the free list.  Don't worry trying to combine and do
+> free_page() since there's very little free'ing done anyway.  And I'm
+> assuming GPF_KERNEL is all we need.
+>
+> If in the future Linux provides an alternate general-purpose allocator
+> that guarantees alignment, we can ditch the simple allocator and use
+> the new mechanism with some simple code changes in one place.
+>
+> Thoughts?
+>
 
-Hi Lars,
++1 for adding wrappers and if the allocator turns out to be more-or-less
+trivial I think we can live with that for the time being.
 
-We just tried 4.19.x and this bugs still exists. We applied the patch 
-which was originally submitted to this thread and it still applies cleanly 
-and seems to work for our use case. You mentioned that you had some older 
-code which zeroed out unaligned discard requests (or perhaps it was for a 
-different purpose) that you may be able to use to patch this. Could you 
-dig those up and see if we can get this solved?
-
-It would be nice to be able to use drbd with thin backing volumes from the 
-vanilla kernel. If this has already been fixed in something newer than 
-4.19, then please point me to the commit.
-
-Thank you for your help!
-
- 
---
-Eric Wheeler
-
-
+-- 
+Vitaly
