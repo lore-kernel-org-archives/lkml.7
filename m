@@ -2,159 +2,177 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C10C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B4BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02C21217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557524878;
-	bh=uGuKdpcnbNynUPSfIfEiu8Vxvnoyu9UL4a8JrFHkYEM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tP980uVXSALqscnG3E2YoU44Hrkn3EJpb8jczaosZVW8AhPBOZ1H2ccdGPoLDNbYf
-	 oPQYRmLmQMZr/w9qUP6fuaQDoacsQJpI2P+xksQalaQvoEzHfS6b5iGDpEAomQJake
-	 wSOae93xifTV0JOuIPmr8kNGsixxeanz9mkkHz2g=
+	by mail.kernel.org (Postfix) with ESMTP id 61E17217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8EBxrb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728288AbfEJVr5 (ORCPT
+        id S1728264AbfEJVu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:47:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728161AbfEJVr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:47:56 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6ACB217D6;
-        Fri, 10 May 2019 21:47:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557524875;
-        bh=uGuKdpcnbNynUPSfIfEiu8Vxvnoyu9UL4a8JrFHkYEM=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=GpgJp1orFXFeY1NOPGbmDYEx+fj8jr4cO/hTGGLOl7+UW4DVFMFnESbIcIHvbgT+h
-         eBcGlLABvRYRhCArHwl9CLl1Q8ZqTKyie2e6ZQANfkfJlWeJlgniqg2TVGOcb8PdNt
-         mj3Z91Cw/fjoBxBIFEaIlzbrnvYLoD639L4gsc5s=
-Date:   Fri, 10 May 2019 23:47:50 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        live-patching@vger.kernel.org, x86@kernel.org,
-        Borislav Petkov <bp@alien8.de>
-Subject: [RFC][PATCH 3/2] livepatch: remove klp_check_compiler_support()
-In-Reply-To: <20190510163519.794235443@goodmis.org>
-Message-ID: <nycvar.YFH.7.76.1905102346100.17054@cbobk.fhfr.pm>
-References: <20190510163519.794235443@goodmis.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 10 May 2019 17:50:26 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42872 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbfEJVu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:50:26 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 13so3882878pfw.9;
+        Fri, 10 May 2019 14:50:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ILFENIjP3pNWcBKSRP9eS47C60iumECdMiBouSjU6so=;
+        b=I8EBxrb4hQF/HSjVAZ0eX7cqdImmzwpA3qZcWlY5J2qRLntWR6PFM5K78S3hQJZfJS
+         kxG157XHFOBnJa/z2didiEjDqhpbMxmPCHOuUo7T2HCmcNED9Z9IKsopKIrbLIHxXNJz
+         ILpQQs1NFcRsLNrJy1iTllpA2zyb2LQ/B8bTQaqK5C2GwbaxTk52zsz2A65Ms7ORJnVS
+         tf+2X8dszuwdO/2iTA+QIxc441zuMjN9umjxNCZZeSoDzQpkK5hqe5q3hrPT9r1Pa9B6
+         Fz+kIRQilBs0OWeOwyp0ac9tHtav93sXvMT/u8+CYvwPW8MgsIhu5tF5vvL5TTnAad2x
+         hTww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=ILFENIjP3pNWcBKSRP9eS47C60iumECdMiBouSjU6so=;
+        b=S0w6BIJ2pzJVwnvynDPU+I+7Tb8wkK03r9rhD4WbnKJBHHesd8w/ameVGPlVhn44Xa
+         FeTCKaD4tFKOs6kgdmAYJ5vHu//Qy+jKYJVnY3pf7NOXMmSKR21hOBrhkh8B4FfgQobY
+         tnQ4DZCVAwY2ion5FEsWh2hgflZkzyv8t2hLH5N+XSINH7nQLX/+YaaBsziU34f7ET1o
+         K+QEBXgOMipUje8gOxDmDkBxxbDbCN6EvX/YEK81EwFSxmFLj9orvQUBI1og2qV1db0R
+         wFAgb3oTj+cPCY5Rjq+WuEWEibhjgo1yarM4RXn+cKn/XsQshPraaDf+fJPr3ZLOv66r
+         AX0g==
+X-Gm-Message-State: APjAAAXgXIcilnMcpJETwDChgRYiUDCCfDO7P1IWt/r6eXzswVApyEDn
+        bx0tol48whfC47BNPzNfxOLMsv/0
+X-Google-Smtp-Source: APXvYqzaJ6rfIHRoopXu6KSUaSoTGT0Dcukd0y1BznTi/uh/wLgpQfhBydkA1OoqzeaoXG8sz0DNLA==
+X-Received: by 2002:a65:500d:: with SMTP id f13mr17052699pgo.250.1557525024766;
+        Fri, 10 May 2019 14:50:24 -0700 (PDT)
+Received: from majic.sklembedded.com (c-73-202-231-77.hsd1.ca.comcast.net. [73.202.231.77])
+        by smtp.googlemail.com with ESMTPSA id e14sm1524108pff.60.2019.05.10.14.50.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 14:50:23 -0700 (PDT)
+From:   Steve Longerbeam <slongerbeam@gmail.com>
+To:     linux-media@vger.kernel.org
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Rui Miguel Silva <rmfrfs@gmail.com>,
+        devel@driverdev.osuosl.org (open list:STAGING SUBSYSTEM),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX
+        / MXC ARM ARCHITECTURE), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 1/9] Revert "media: staging/imx: add media device to capture register"
+Date:   Fri, 10 May 2019 14:50:04 -0700
+Message-Id: <20190510215012.13881-2-slongerbeam@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190510215012.13881-1-slongerbeam@gmail.com>
+References: <20190510215012.13881-1-slongerbeam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+The imx6-specific subdevs that register a capture device will no
+longer hold a reference to the media device, so this commit must be
+reverted.
 
-The only purpose of klp_check_compiler_support() is to make sure that we 
-are not using ftrace on x86 via mcount (because that's executed only after 
-prologue has already happened, and that's too late for livepatching 
-purposes).
+This reverts commit 16204b8a1c1af77725533b77936e6c73953486ae.
 
-Now that mcount is not supported by ftrace any more, there is no need for 
-klp_check_compiler_support() either.
-
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
 ---
+ drivers/staging/media/imx/imx-ic-prpencvf.c   | 2 +-
+ drivers/staging/media/imx/imx-media-capture.c | 6 +++---
+ drivers/staging/media/imx/imx-media-csi.c     | 2 +-
+ drivers/staging/media/imx/imx-media.h         | 3 +--
+ drivers/staging/media/imx/imx7-media-csi.c    | 2 +-
+ 5 files changed, 7 insertions(+), 8 deletions(-)
 
-I guess it makes most sense to merge this together with mcount removal in 
-one go.
-
- arch/powerpc/include/asm/livepatch.h | 5 -----
- arch/s390/include/asm/livepatch.h    | 5 -----
- arch/x86/include/asm/livepatch.h     | 5 -----
- kernel/livepatch/core.c              | 8 --------
- 4 files changed, 23 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/livepatch.h b/arch/powerpc/include/asm/livepatch.h
-index 5070df19d463..c005aee5ea43 100644
---- a/arch/powerpc/include/asm/livepatch.h
-+++ b/arch/powerpc/include/asm/livepatch.h
-@@ -24,11 +24,6 @@
- #include <linux/sched/task_stack.h>
+diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
+index 3ca1422f6154..5c8e6ad8c025 100644
+--- a/drivers/staging/media/imx/imx-ic-prpencvf.c
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -1270,7 +1270,7 @@ static int prp_registered(struct v4l2_subdev *sd)
+ 	if (ret)
+ 		return ret;
  
- #ifdef CONFIG_LIVEPATCH
--static inline int klp_check_compiler_support(void)
--{
--	return 0;
--}
--
- static inline void klp_arch_set_pc(struct pt_regs *regs, unsigned long ip)
+-	ret = imx_media_capture_device_register(priv->md, priv->vdev);
++	ret = imx_media_capture_device_register(priv->vdev);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+index 7688238a3396..9703c85b19c4 100644
+--- a/drivers/staging/media/imx/imx-media-capture.c
++++ b/drivers/staging/media/imx/imx-media-capture.c
+@@ -706,8 +706,7 @@ void imx_media_capture_device_error(struct imx_media_video_dev *vdev)
+ }
+ EXPORT_SYMBOL_GPL(imx_media_capture_device_error);
+ 
+-int imx_media_capture_device_register(struct imx_media_dev *md,
+-				      struct imx_media_video_dev *vdev)
++int imx_media_capture_device_register(struct imx_media_video_dev *vdev)
  {
- 	regs->nip = ip;
-diff --git a/arch/s390/include/asm/livepatch.h b/arch/s390/include/asm/livepatch.h
-index 672f95b12d40..818612b784cd 100644
---- a/arch/s390/include/asm/livepatch.h
-+++ b/arch/s390/include/asm/livepatch.h
-@@ -13,11 +13,6 @@
+ 	struct capture_priv *priv = to_capture_priv(vdev);
+ 	struct v4l2_subdev *sd = priv->src_sd;
+@@ -716,7 +715,8 @@ int imx_media_capture_device_register(struct imx_media_dev *md,
+ 	struct v4l2_subdev_format fmt_src;
+ 	int ret;
  
- #include <asm/ptrace.h>
+-	priv->md = md;
++	/* get media device */
++	priv->md = dev_get_drvdata(sd->v4l2_dev->dev);
  
--static inline int klp_check_compiler_support(void)
--{
--	return 0;
--}
--
- static inline void klp_arch_set_pc(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->psw.addr = ip;
-diff --git a/arch/x86/include/asm/livepatch.h b/arch/x86/include/asm/livepatch.h
-index 2f2bdf0662f8..a66f6706c2de 100644
---- a/arch/x86/include/asm/livepatch.h
-+++ b/arch/x86/include/asm/livepatch.h
-@@ -24,11 +24,6 @@
- #include <asm/setup.h>
- #include <linux/ftrace.h>
+ 	vfd->v4l2_dev = sd->v4l2_dev;
  
--static inline int klp_check_compiler_support(void)
--{
--	return 0;
--}
--
- static inline void klp_arch_set_pc(struct pt_regs *regs, unsigned long ip)
- {
- 	regs->ip = ip;
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index f12c0eabd843..7e5cdeeca3bd 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -1207,14 +1207,6 @@ void klp_module_going(struct module *mod)
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index c33d714ed953..41965d8b56c4 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1816,7 +1816,7 @@ static int csi_registered(struct v4l2_subdev *sd)
+ 	if (ret)
+ 		goto free_fim;
  
- static int __init klp_init(void)
- {
--	int ret;
--
--	ret = klp_check_compiler_support();
--	if (ret) {
--		pr_info("Your compiler is too old; turning off.\n");
--		return -EINVAL;
--	}
--
- 	klp_root_kobj = kobject_create_and_add("livepatch", kernel_kobj);
- 	if (!klp_root_kobj)
- 		return -ENOMEM;
+-	ret = imx_media_capture_device_register(priv->md, priv->vdev);
++	ret = imx_media_capture_device_register(priv->vdev);
+ 	if (ret)
+ 		goto free_fim;
+ 
+diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+index fc5d969ded79..dd603a6b3a70 100644
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -272,8 +272,7 @@ int imx_media_of_add_csi(struct imx_media_dev *imxmd,
+ struct imx_media_video_dev *
+ imx_media_capture_device_init(struct v4l2_subdev *src_sd, int pad);
+ void imx_media_capture_device_remove(struct imx_media_video_dev *vdev);
+-int imx_media_capture_device_register(struct imx_media_dev *md,
+-				      struct imx_media_video_dev *vdev);
++int imx_media_capture_device_register(struct imx_media_video_dev *vdev);
+ void imx_media_capture_device_unregister(struct imx_media_video_dev *vdev);
+ struct imx_media_buffer *
+ imx_media_capture_device_next_buf(struct imx_media_video_dev *vdev);
+diff --git a/drivers/staging/media/imx/imx7-media-csi.c b/drivers/staging/media/imx/imx7-media-csi.c
+index a708a0340eb1..18eb5d3ecf10 100644
+--- a/drivers/staging/media/imx/imx7-media-csi.c
++++ b/drivers/staging/media/imx/imx7-media-csi.c
+@@ -1126,7 +1126,7 @@ static int imx7_csi_registered(struct v4l2_subdev *sd)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = imx_media_capture_device_register(csi->imxmd, csi->vdev);
++	ret = imx_media_capture_device_register(csi->vdev);
+ 	if (ret < 0)
+ 		return ret;
+ 
 -- 
-Jiri Kosina
-SUSE Labs
+2.17.1
 
