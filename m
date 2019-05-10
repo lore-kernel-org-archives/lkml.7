@@ -4,67 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F33C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB095C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B932184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7300E21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:35:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bDwrUyGi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YTMOEM9o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfEJEe6 (ORCPT
+        id S1727219AbfEJEfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:34:58 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34254 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727070AbfEJEe3 (ORCPT
+        Fri, 10 May 2019 00:35:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39167 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfEJEe2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:34:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n19so2514733pfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:34:28 -0700 (PDT)
+        Fri, 10 May 2019 00:34:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w22so2350162pgi.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=I9XJT6/tH1dITtwqwwLksUn/i2UuLzClmRgZy8rDTNU=;
-        b=bDwrUyGicRP9fSW6fbUR34sFHt4e3afbYdrtDoiQet4eIfjmlw0QLI1eIaUKuswFbM
-         LbIGKBZjCQBX9EQrW8nigwlmLJedEWzM/PkucoGO2ywGW3gBRwQ7HBmzjKdKHqyhbVHh
-         dG1F5LvMkdI93G0Nyy+/detIg+eJOVf+CuruHZvqA/xp2DfZvgaSt24ceJa1PjHGODEe
-         Fe/M56z8UEHzKh35wPl7s6NNN4aQfOv9eCLCJMtHaSg6ZhozOBi1iVzyHS1DSh5QETJL
-         9qAwPqE8+4jIuejFfheUw6nXcspOCSbO1W9/mtM3IJB3iZD+M2AofBxGuFNZs+Gz2Ccl
-         XTbg==
+        bh=7D9fT9nrITboyJ+SOXix9/gHXfGWOiHJwaPk2qVUU3c=;
+        b=YTMOEM9o3me4VlRS+ZfA4B///ON/wFOPFUMHSfZWcslGeKldYyWK8bbE6t9cha00Jv
+         5TMhjzu3Y4+hciowkOsucL14c+gFUxPYBx50CA+ZvCqWkYSkfpcnSGhdFx8ld8ZI0PLT
+         rGzjFgde4ZnB2nwF9UDUYK4pZfry4RfWgHkTRVqoXWFFVpbiatqDUcpLNKCBeNchyeW9
+         u3kRpzwlD5al65AgnOyDxe9IiKb14Hw0vRR3mUejE+G3niYqda3Dxr3dwvJuXK3BO62w
+         HPtHTQPseVN9tFLUNWGJ9B7kEUd4hInGRgGgPJnUlU24d5GkbVrpV8PjrHB6cmyLcoEM
+         gnVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=I9XJT6/tH1dITtwqwwLksUn/i2UuLzClmRgZy8rDTNU=;
-        b=rPdnGks82xnzE32iWHFuWZLADiDVsTIml0Xfpe4fYQWEcc7lgitUpWngZawOV48n8x
-         ReQs8f5LRWyhh50ICivzjDQmScY2To9nowhgJbgebvazUaQflxl/6fwJx2UedfE8k/Ah
-         4IjMTHx0k2pPDXSoepUPfiHKygCEBCTy3cAyiK8DafpWdydW1Xs/Kc/iTqvwXEUpHoUJ
-         crX95JGyeorPYohtxIIDCLl3QyXIHDxdEH0GFwmTRtomcsleBsVY5t3aM4eG6QcIKNvu
-         yq3TasozuK9zAk8UpXt9EsoYk+h9PwLOwWTgeIaRTIUCXdmDi89M4uTtdKcQ0TkH94wO
-         SzmQ==
-X-Gm-Message-State: APjAAAVYkqBX07RTKsS2NF6J16sYjR7tb+jicR3TjWSiyEDaUBIu16L4
-        caiiZBGYDjjj2IpmMq4IRsnDsg==
-X-Google-Smtp-Source: APXvYqx2tWMZbLvXcC5dL4h3+Ji6jKr/3wiZYay/VBSDzYcTpM25FB4xAbgZ2RwJciBxjYcSochlSQ==
-X-Received: by 2002:a63:5d44:: with SMTP id o4mr10993170pgm.15.1557462868338;
-        Thu, 09 May 2019 21:34:28 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s17sm4785317pfm.149.2019.05.09.21.34.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        bh=7D9fT9nrITboyJ+SOXix9/gHXfGWOiHJwaPk2qVUU3c=;
+        b=RNGlKWZ813p+Of1RkFo4GaR/pTkTw5TEyUq4jii3u0Wo9dNWc5+lU49WlblYJRnvUn
+         Py4LWcXAgu39rCjGP+I++6554s06mSKhDesiMxn7dYIlNx/GlTeR/D3geGVw6djmYwl0
+         YXkY1FuKep9D5iiAVF+1EaN/rVLb+s3s8besk6JmtFUOhYl+Yo8x7hZFY2ILFLmHw0qj
+         66hN7zjhg99aGqF9Ws2zlsK83AkV+UzLcSXMSsPOBA47P555XULAMZd2SOuOJEfYV3zg
+         wGu8OKR1/yhgViwlXX2pNFGM8e6Ug/yXFWdj4t9vrVY0SG13vEqL/BV7rV04p4ZAnxrF
+         G0DQ==
+X-Gm-Message-State: APjAAAWTvi0Hyz0oiKDLAqJCi5IWz2tLOXfGq4GO9YvrQJ6t7LojQ5AH
+        XAiQralisfzs8eU8NcfOi9c3bA==
+X-Google-Smtp-Source: APXvYqxIprToIswQFMOzfCd48VF5TpWAoqllvK2FOj2FFIKi9CnO2e1KIMoeH01AgQCujvCKMKg35w==
+X-Received: by 2002:a63:4621:: with SMTP id t33mr10954607pga.246.1557462867214;
         Thu, 09 May 2019 21:34:27 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s17sm4785317pfm.149.2019.05.09.21.34.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 21:34:26 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>,
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/8] arm64: dts: qcom: qcs404-evb: Mark CDSP clocks protected
-Date:   Thu,  9 May 2019 21:34:16 -0700
-Message-Id: <20190510043421.31393-4-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/8] remoteproc: qcom: qdsp6-adsp: Add support for QCS404 CDSP
+Date:   Thu,  9 May 2019 21:34:15 -0700
+Message-Id: <20190510043421.31393-3-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190510043421.31393-1-bjorn.andersson@linaro.org>
 References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
@@ -73,36 +75,189 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the Trustzone based CDSP remoteproc driver these clocks are
-controlled elsewhere and as they are not enabled by anything in Linux
-the clock framework will turn them off during lateinit.
+Move the clock list to adsp_pil_data, make the pdc_reset optional and
+make the driver directly enable the xo, sleep and core clocks.
 
-This results in issues either to later start the CDSP, using the
-Trustzone interface, or if the CDSP is already running it will crash.
+The three clocks are previously toggled through the clock controller,
+but that means the same hardware block needs to be mapped in both
+drivers. Making the remoteproc driver enable the clocks is a nop when
+using the clock controller, but allow us to remove the clocks from the
+clock controller.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/remoteproc/qcom_q6v5_adsp.c | 73 ++++++++++++++++++++++-------
+ 1 file changed, 55 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 2c3127167e3c..dc1d7d5d21a4 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -56,6 +56,13 @@
- 	qcom,controlled-remotely;
+diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+index 1f3ef9ee493c..e953886b2eb7 100644
+--- a/drivers/remoteproc/qcom_q6v5_adsp.c
++++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+@@ -46,11 +46,9 @@
+ #define LPASS_PWR_ON_REG		0x10
+ #define LPASS_HALTREQ_REG		0x0
+ 
+-/* list of clocks required by ADSP PIL */
+-static const char * const adsp_clk_id[] = {
+-	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
+-	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
+-};
++#define QDSP6SS_XO_CBCR		0x38
++#define QDSP6SS_CORE_CBCR	0x20
++#define QDSP6SS_SLEEP_CBCR	0x3c
+ 
+ struct adsp_pil_data {
+ 	int crash_reason_smem;
+@@ -59,6 +57,9 @@ struct adsp_pil_data {
+ 	const char *ssr_name;
+ 	const char *sysmon_name;
+ 	int ssctl_id;
++
++	const char **clk_ids;
++	int num_clks;
  };
  
-+&gcc {
-+	protected-clocks = <GCC_BIMC_CDSP_CLK>,
-+			   <GCC_CDSP_CFG_AHB_CLK>,
-+			   <GCC_CDSP_BIMC_CLK_SRC>,
-+			   <GCC_CDSP_TBU_CLK>;
+ struct qcom_adsp {
+@@ -75,7 +76,7 @@ struct qcom_adsp {
+ 	void __iomem *qdsp6ss_base;
+ 
+ 	struct reset_control *pdc_sync_reset;
+-	struct reset_control *cc_lpass_restart;
++	struct reset_control *restart;
+ 
+ 	struct regmap *halt_map;
+ 	unsigned int halt_lpass;
+@@ -143,7 +144,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
+ 	/* Assert the LPASS PDC Reset */
+ 	reset_control_assert(adsp->pdc_sync_reset);
+ 	/* Place the LPASS processor into reset */
+-	reset_control_assert(adsp->cc_lpass_restart);
++	reset_control_assert(adsp->restart);
+ 	/* wait after asserting subsystem restart from AOSS */
+ 	usleep_range(200, 300);
+ 
+@@ -153,7 +154,7 @@ static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
+ 	/* De-assert the LPASS PDC Reset */
+ 	reset_control_deassert(adsp->pdc_sync_reset);
+ 	/* Remove the LPASS reset */
+-	reset_control_deassert(adsp->cc_lpass_restart);
++	reset_control_deassert(adsp->restart);
+ 	/* wait after de-asserting subsystem restart from AOSS */
+ 	usleep_range(200, 300);
+ 
+@@ -192,6 +193,15 @@ static int adsp_start(struct rproc *rproc)
+ 		goto disable_power_domain;
+ 	}
+ 
++	/* Enable the XO clock */
++	writel(1, adsp->qdsp6ss_base + QDSP6SS_XO_CBCR);
++
++	/* Enable the QDSP6SS sleep clock */
++	writel(1, adsp->qdsp6ss_base + QDSP6SS_SLEEP_CBCR);
++
++	/* Enable the QDSP6 core clock */
++	writel(1, adsp->qdsp6ss_base + QDSP6SS_CORE_CBCR);
++
+ 	/* Program boot address */
+ 	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
+ 
+@@ -280,8 +290,9 @@ static const struct rproc_ops adsp_ops = {
+ 	.load = adsp_load,
+ };
+ 
+-static int adsp_init_clock(struct qcom_adsp *adsp)
++static int adsp_init_clock(struct qcom_adsp *adsp, const char **clk_ids)
+ {
++	int num_clks = 0;
+ 	int i, ret;
+ 
+ 	adsp->xo = devm_clk_get(adsp->dev, "xo");
+@@ -292,32 +303,39 @@ static int adsp_init_clock(struct qcom_adsp *adsp)
+ 		return ret;
+ 	}
+ 
+-	adsp->num_clks = ARRAY_SIZE(adsp_clk_id);
++	for (i = 0; clk_ids[i]; i++)
++		num_clks++;
++
++	adsp->num_clks = num_clks;
+ 	adsp->clks = devm_kcalloc(adsp->dev, adsp->num_clks,
+ 				sizeof(*adsp->clks), GFP_KERNEL);
+ 	if (!adsp->clks)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < adsp->num_clks; i++)
+-		adsp->clks[i].id = adsp_clk_id[i];
++		adsp->clks[i].id = clk_ids[i];
+ 
+ 	return devm_clk_bulk_get(adsp->dev, adsp->num_clks, adsp->clks);
+ }
+ 
+ static int adsp_init_reset(struct qcom_adsp *adsp)
+ {
+-	adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
++	adsp->pdc_sync_reset = devm_reset_control_get_optional_exclusive(adsp->dev,
+ 			"pdc_sync");
+ 	if (IS_ERR(adsp->pdc_sync_reset)) {
+ 		dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
+ 		return PTR_ERR(adsp->pdc_sync_reset);
+ 	}
+ 
+-	adsp->cc_lpass_restart = devm_reset_control_get_exclusive(adsp->dev,
+-			"cc_lpass");
+-	if (IS_ERR(adsp->cc_lpass_restart)) {
+-		dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
+-		return PTR_ERR(adsp->cc_lpass_restart);
++	adsp->restart = devm_reset_control_get_optional_exclusive(adsp->dev, "restart");
++
++	/* Fall back to the  old "cc_lpass" if "restart" is absent */
++	if (!adsp->restart)
++		adsp->restart = devm_reset_control_get_exclusive(adsp->dev, "cc_lpass");
++
++	if (IS_ERR(adsp->restart)) {
++		dev_err(adsp->dev, "failed to acquire restart\n");
++		return PTR_ERR(adsp->restart);
+ 	}
+ 
+ 	return 0;
+@@ -415,7 +433,7 @@ static int adsp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto free_rproc;
+ 
+-	ret = adsp_init_clock(adsp);
++	ret = adsp_init_clock(adsp, desc->clk_ids);
+ 	if (ret)
+ 		goto free_rproc;
+ 
+@@ -479,9 +497,28 @@ static const struct adsp_pil_data adsp_resource_init = {
+ 	.ssr_name = "lpass",
+ 	.sysmon_name = "adsp",
+ 	.ssctl_id = 0x14,
++	.clk_ids = (const char*[]) {
++		"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
++		"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core", NULL
++	},
++	.num_clks = 7,
 +};
 +
- &pms405_spmi_regulators {
- 	vdd_s3-supply = <&pms405_s3>;
++static const struct adsp_pil_data cdsp_resource_init = {
++	.crash_reason_smem = 601,
++	.firmware_name = "cdsp.mdt",
++	.ssr_name = "cdsp",
++	.sysmon_name = "cdsp",
++	.ssctl_id = 0x17,
++	.clk_ids = (const char*[]) {
++		"sway", "tbu", "bimc", "ahb_aon", "q6ss_slave", "q6ss_master",
++		"q6_axim", NULL
++	},
++	.num_clks = 7,
+ };
  
+ static const struct of_device_id adsp_of_match[] = {
++	{ .compatible = "qcom,qcs404-cdsp-pil", .data = &cdsp_resource_init },
+ 	{ .compatible = "qcom,sdm845-adsp-pil", .data = &adsp_resource_init },
+ 	{ },
+ };
 -- 
 2.18.0
 
