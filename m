@@ -2,102 +2,127 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F872C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30742C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6162D217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="2PD8SaZY"
+	by mail.kernel.org (Postfix) with ESMTP id 0CF46217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfEJSOT (ORCPT
+        id S1727921AbfEJSVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 14:14:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43884 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfEJSOT (ORCPT
+        Fri, 10 May 2019 14:21:30 -0400
+Received: from outbound-smtp12.blacknight.com ([46.22.139.17]:45231 "EHLO
+        outbound-smtp12.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727453AbfEJSV3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 14:14:19 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i8so6375468oth.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 11:14:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5U30ojrLveO0inIWQQWVEjYKxtRzBkXH88X7bSSzUP8=;
-        b=2PD8SaZYjCX5fOspaHLvF+HDNUNfPqOCRXbzBxnlOalcbNSl2AINgSRjHpgf3gU3KY
-         Eja3ACdueZfJ9yGmcuCvicELvwx5ByLlYQZuLrKoBdoFf5EWkK5YmRD54TQ2yeglijrs
-         U0TTqevIjlZ+fr4h7nBfaBnmlqQ4NdMPc8Qzq73250yzHbW4jSm8kWXZtOrm+d1Wb1Iv
-         YaIVtuwhdFPe8UJo0U2VVwLSfpLJD891ErFam1bAQGIXEbu/JkTToR1dLeXCQpfIOMHQ
-         zsRCKc2uPrnGdINNn99KF1I7evMFXELfA3gd6MZlkmyfVE+tlUaGD8ZJJADiJp3dyvtt
-         TGSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5U30ojrLveO0inIWQQWVEjYKxtRzBkXH88X7bSSzUP8=;
-        b=UaZLhq1b82sfVeL40YqtD978yyWCD/MuzWyVLlWnLWCjI4iD/g4aI6XiHiwhu8zQ0W
-         BHbh1/iTjZZ6boVkMf1taai1yWrqpCkpxmHtePPedr1k0rbjv/dCvLk3x5lKLL7ogHph
-         qcQfiD68LeyNr53F7PxxTDIEkcEbbq0bpCI4eiMjnUj5jr615ZASYQ36BEGhW4pinnbQ
-         7nahcbodVu1XWdUDbBRQtQdGa3tHl3EB5mSFWTVpsnZVvVeyjFs99kI9tJISCJa0qgPb
-         1YCGTb75tyWO60EOqLOm8NAuRednMdH96BQqd6l5wzW9QPoq/vXQ7DLsZLB1UGIKII58
-         GtOg==
-X-Gm-Message-State: APjAAAUVDWHMCt2LvoYB782WWh5ixJRO8heCud2FjQ9N53PBmW0qnTZV
-        NthxYbSiY08fuvr1IQhfWNgrDSq5bXaeow0Iy7lnuA==
-X-Google-Smtp-Source: APXvYqzCkRU/LApt95XEDdDEUgIIw7lC4YzebWLylbbCwywX0NVlDoO/rBv9jia1H70b/HmzgSWapfax4U0jRSj8Wlc=
-X-Received: by 2002:a9d:6f19:: with SMTP id n25mr2528783otq.367.1557512058405;
- Fri, 10 May 2019 11:14:18 -0700 (PDT)
+        Fri, 10 May 2019 14:21:29 -0400
+Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
+        by outbound-smtp12.blacknight.com (Postfix) with ESMTPS id 715351C28B8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 19:21:26 +0100 (IST)
+Received: (qmail 4850 invoked from network); 10 May 2019 18:21:26 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[37.228.225.79])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 10 May 2019 18:21:26 -0000
+Date:   Fri, 10 May 2019 19:21:24 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     syzbot <syzbot+d84c80f9fe26a0f7a734@syzkaller.appspotmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Qian Cai <cai@lca.pw>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@suse.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH] mm/compaction.c: correct zone boundary handling when
+ isolating pages from a pageblock
+Message-ID: <20190510182124.GI18914@techsingularity.net>
 MIME-Version: 1.0
-References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
- <1557417933-15701-2-git-send-email-larry.bassel@oracle.com> <AT5PR8401MB116928031D52A318F04A2819AB0C0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
-In-Reply-To: <AT5PR8401MB116928031D52A318F04A2819AB0C0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 10 May 2019 11:14:07 -0700
-Message-ID: <CAPcyv4juGEo=sMX01YuqPY9oYDjBjmRp7GvreNnX8YvKQz=SjA@mail.gmail.com>
-Subject: Re: [PATCH, RFC 1/2] Add config option to enable FS/DAX PMD sharing
-To:     "Elliott, Robert (Servers)" <elliott@hpe.com>
-Cc:     Larry Bassel <larry.bassel@oracle.com>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 9:32 AM Elliott, Robert (Servers)
-<elliott@hpe.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Linux-nvdimm <linux-nvdimm-bounces@lists.01.org> On Behalf Of
-> > Larry Bassel
-> > Sent: Thursday, May 09, 2019 11:06 AM
-> > Subject: [PATCH, RFC 1/2] Add config option to enable FS/DAX PMD
-> > sharing
-> >
-> > If enabled, sharing of FS/DAX PMDs will be attempted.
-> >
-> ...
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> ...
-> >
-> > +config MAY_SHARE_FSDAX_PMD
-> > +def_bool y
-> > +
->
-> Is a config option really necessary - is there any reason to
-> not choose to do this?
+syzbot reported the following error from a tree with a head commit of
+baf76f0c58ae ("slip: make slhc_free() silently accept an error pointer")
 
-Agree. Either the arch implementation supports it or it doesn't, I
-don't see a need for any further configuration flexibility. Seems
-ARCH_WANT_HUGE_PMD_SHARE should be renamed ARCH_HAS_HUGE_PMD_SHARE and
-then auto-enable it.
+  BUG: unable to handle kernel paging request at ffffea0003348000
+  #PF error: [normal kernel read fault]
+  PGD 12c3f9067 P4D 12c3f9067 PUD 12c3f8067 PMD 0
+  Oops: 0000 [#1] PREEMPT SMP KASAN
+  CPU: 1 PID: 28916 Comm: syz-executor.2 Not tainted 5.1.0-rc6+ #89
+  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+  RIP: 0010:constant_test_bit arch/x86/include/asm/bitops.h:314 [inline]
+  RIP: 0010:PageCompound include/linux/page-flags.h:186 [inline]
+  RIP: 0010:isolate_freepages_block+0x1c0/0xd40 mm/compaction.c:579
+  Code: 01 d8 ff 4d 85 ed 0f 84 ef 07 00 00 e8 29 00 d8 ff 4c 89 e0 83 85 38 ff
+  ff ff 01 48 c1 e8 03 42 80 3c 38 00 0f 85 31 0a 00 00 <4d> 8b 2c 24 31 ff 49
+  c1 ed 10 41 83 e5 01 44 89 ee e8 3a 01 d8 ff
+  RSP: 0018:ffff88802b31eab8 EFLAGS: 00010246
+  RAX: 1ffffd4000669000 RBX: 00000000000cd200 RCX: ffffc9000a235000
+  RDX: 000000000001ca5e RSI: ffffffff81988cc7 RDI: 0000000000000001
+  RBP: ffff88802b31ebd8 R08: ffff88805af700c0 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: ffffea0003348000
+  R13: 0000000000000000 R14: ffff88802b31f030 R15: dffffc0000000000
+  FS:  00007f61648dc700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: ffffea0003348000 CR3: 0000000037c64000 CR4: 00000000001426e0
+  Call Trace:
+   fast_isolate_around mm/compaction.c:1243 [inline]
+   fast_isolate_freepages mm/compaction.c:1418 [inline]
+   isolate_freepages mm/compaction.c:1438 [inline]
+   compaction_alloc+0x1aee/0x22e0 mm/compaction.c:1550
+
+There is no reproducer and it is difficult to hit -- 1 crash every
+few days. The issue is very similar to the fix in commit 6b0868c820ff
+("mm/compaction.c: correct zone boundary handling when resetting
+pageblock skip hints"). When isolating free pages around a target
+pageblock, the boundary handling is off by one and can stray into the next
+pageblock. Triggering the syzbot error requires that the end of pageblock
+is section or zone aligned, and that the next section is unpopulated.
+
+A more subtle consequence of the bug is that pageblocks were being
+improperly used as migration targets which potentially hurts fragmentation
+avoidance in the long-term one page at a time.
+
+A debugging patch revealed that it's definitely possible to stray outside
+of a pageblock which is not intended. While syzbot cannot be used to
+verify this patch, it was confirmed that the debugging warning no longer
+triggers with this patch applied. It has also been confirmed that the
+THP allocation stress tests are not degraded by this patch.
+
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Reported-by: syzbot+d84c80f9fe26a0f7a734@syzkaller.appspotmail.com
+Fixes: e332f741a8dd ("mm, compaction: be selective about what pageblocks to clear skip hints")
+Cc: stable@vger.kernel.org # v5.1+
+---
+ mm/compaction.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 3319e0872d01..444029da4e9d 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1228,7 +1228,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
+ 
+ 	/* Pageblock boundaries */
+ 	start_pfn = pageblock_start_pfn(pfn);
+-	end_pfn = min(start_pfn + pageblock_nr_pages, zone_end_pfn(cc->zone));
++	end_pfn = min(pageblock_end_pfn(pfn), zone_end_pfn(cc->zone)) - 1;
+ 
+ 	/* Scan before */
+ 	if (start_pfn != pfn) {
+@@ -1239,7 +1239,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn, unsigned long
+ 
+ 	/* Scan after */
+ 	start_pfn = pfn + nr_isolated;
+-	if (start_pfn != end_pfn)
++	if (start_pfn < end_pfn)
+ 		isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
+ 
+ 	/* Skip this pageblock in the future as it's full or nearly full */
