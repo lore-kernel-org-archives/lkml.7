@@ -2,141 +2,204 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE98C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726E1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F4B20989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3070520989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:05:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GhV0V2JA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClByEsCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfEJVEM (ORCPT
+        id S1728087AbfEJVFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:04:12 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34170 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727677AbfEJVEM (ORCPT
+        Fri, 10 May 2019 17:05:31 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42318 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727677AbfEJVFa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:04:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Jf3Pm2zDnOWtkQJIjcun0b5bQQ/YocTgtQI3kHh8yL8=; b=GhV0V2JAEAawViKkY2SVXycQp
-        58sa/lOsnxvAUOPJJLwRr/I8dd7Ihx7veCwvg8HSVDid0w1bxTWQxO9ld3u9kJ4TeLvjT5STWzKgh
-        JwdJuf6ZyMdgYq3BlFo1cjdTTsaDxzbnEhsX6f4kFkqCb5F2kXmWT+d02TYv8vGzLzn3OuPPvFz05
-        euU2PhPA1MsdnyG7/1nULM/rmfE6P05SIzOuX7te0snM7apPxN9SeZaN6wsBVbWT4SToHKYlp+Y6y
-        YStPU+T41v/E6t8AtAKkX2b9TZ/RlMoFwsAQ36hnJF5BwGPmpLYsu8p9GXJvKtC7PpQWRPLU7e/y1
-        uOten5YrA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:55748)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hPCgZ-0007uW-EE; Fri, 10 May 2019 22:04:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hPCgX-0004lU-SF; Fri, 10 May 2019 22:04:05 +0100
-Date:   Fri, 10 May 2019 22:04:05 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Vicente Bergas <vicencb@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Message-ID: <20190510210405.tehgan2s5rhimihc@shell.armlinux.org.uk>
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
+        Fri, 10 May 2019 17:05:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id x15so3352312pln.9;
+        Fri, 10 May 2019 14:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=bKDY86DQ3W8jTrCX7JTAOvqhYJw5e29RxFbksE/Tm5E=;
+        b=ClByEsCJDjCVHeIc+90ps1Fj8itwE3WgKR5kUdmpBCEn0XRD4+vae4F5yS9j6jFewt
+         i8EIhmCz9GOc0J8MAK9oo5WNI87DbetO7EoWQmFkjrhZnKZ4hpEC46joMxGiml6HzJn6
+         Esp4jJPn0ybvOdsTm9KytSGKplglomfRdTbNfugibupGksfwjDJ7B/5+zwOnz5GXhS+5
+         OiBSN99TU65NMtcc0hINGCuApQDz95rvHRCELmdJpbWewZtUafw2OJhO1KjvbJxIOV2E
+         o8/DjWywoSrMDvb6uZzjlHBmZJtTYDGx6bIzx/d3I26QP2DnWBbB6fy8tESDC+RQmIHs
+         xfJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bKDY86DQ3W8jTrCX7JTAOvqhYJw5e29RxFbksE/Tm5E=;
+        b=cSQmjcf9TMyjyFSuqW+J9Haq/XERIKiQkba5zDdZ0N6Wd34CSWlT3fNZ7p1+wRWNNl
+         91QScstT9XS8v2RumRSg29mctxAu3Fyc6gxGCKqfPgIpkmp2XjDRPM4d5eal5bRriM3q
+         PcsXLZixm9StYM8AKea9H2/iAoR19uKQNI2rO3syIMtxO6XWV5e/AVNoipMU6Wc3pHop
+         Q31uSH9/YD6a/QRcRG0/FhONETcfeGvjfn0aN7yjxjW1gYPd/qsPBINoYsxjRV/KQdlJ
+         Ebc0YuTFvy1D5BZEPfkiBZsNRSHef5wJT+gJX9SBrNNfJT5rsLXEfZQAfUFN6E+jB04U
+         rCOQ==
+X-Gm-Message-State: APjAAAUbEUos8P829BIMpODXNS/BUsD/d/fBByJyh+2+bfwXh77PniMZ
+        AdOMmdOK9JaBP0AAG9x67G8=
+X-Google-Smtp-Source: APXvYqywYvbG31SDd1wnXI23JEAmm1Kft3apAyHEzsebGAIN14xMmXaQg0pIdJvJogj74UqlweKbzg==
+X-Received: by 2002:a17:902:2d:: with SMTP id 42mr15993810pla.34.1557522329358;
+        Fri, 10 May 2019 14:05:29 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id p2sm7613330pgd.63.2019.05.10.14.05.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 14:05:28 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        Tim.Bird@sony.com, amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190501230126.229218-1-brendanhiggins@google.com>
+ <54940124-50df-16ec-1a32-ad794ee05da7@gmail.com>
+ <20190507080119.GB28121@kroah.com>
+ <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <78e4d46e-6212-9871-51d6-dd2126f39d45@gmail.com>
+ <20190510104338.GB6889@mit.edu>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <86ea0fa1-8ce7-c299-3144-c57fc465c891@gmail.com>
+Date:   Fri, 10 May 2019 14:05:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190510104338.GB6889@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 05:05:13PM +0200, Vicente Bergas wrote:
-> Hello,
-> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
-> pointer dereference.
-> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
->  net: phy: realtek: Add rtl8211e rx/tx delays config
-> which uncovered a bug in phy-core when attempting to call
->  phydev->drv->read_page
-> which can be null.
-> The patch to drivers/net/phy/phy-core.c below fixes the kernel null pointer
-> dereference. After applying the patch, there is still no network. I have
-> also tested the patch to drivers/net/phy/realtek.c, but no success. The
-> system hangs forever while initializing eth0.
+On 5/10/19 3:43 AM, Theodore Ts'o wrote:
+> On Thu, May 09, 2019 at 10:11:01PM -0700, Frank Rowand wrote:
+>>>> You *can* run in-kernel test using modules; but there is no framework
+>>>> for the in-kernel code found in the test modules, which means each of
+>>>> the in-kernel code has to create their own in-kernel test
+>>>> infrastructure.
+>>
+>> The kselftest in-kernel tests follow a common pattern.  As such, there
+>> is a framework.
+> 
+> So we may have different definitions of "framework".  In my book, code
+> reuse by "cut and paste" does not make a framework.  Could they be
+> rewritten to *use* a framework, whether it be KTF or KUnit?  Sure!
+> But they are not using a framework *today*.
+> 
+>> This next two paragraphs you ignored entirely in your reply:
+>>
+>>> Why create an entire new subsystem (KUnit) when you can add a header
+>>> file (and .c code as appropriate) that outputs the proper TAP formatted
+>>> results from kselftest kernel test modules?
+> 
+> And you keep ignoring my main observation, which is that spinning up a
+> VM, letting systemd start, mounting a root file system, etc., is all
+> unnecessary overhead which takes time.  This is important to me,
+> because developer velocity is extremely important if you are doing
+> test driven development.
 
-You're not supposed to call these functions unless you provide the page
-read/write page functions.  The fact that this code has crept in shows
-that the patch adding the call to phy_select_page() in the realtek
-driver was patently never tested, which, IMHO is bad software
-engineering practice.  No, it's not even engineering practice, it's
-an untested hack.
+No, I do not "keep ignoring my main observation".  You made that
+observation in an email of Thu, 9 May 2019 09:35:51 -0400.  In my
+reply to Tim's reply to your email, I wrote:
 
-I don't see any point in adding run-time checks - that will only add
-additional code, and we lose the backtrace.  The resulting oops from
-trying to use these will give a backtrace and show exactly where the
-problem is, including which driver is at fault.
+   "< massive snip >
 
-The answer is... fix the driver to provide the required functions
-before attempting to use an interface that requires said functions!
+   I'll reply in more detail to some other earlier messages in this thread
+   later.
+
+   This reply is an attempt to return to the intent of my original reply to
+   patch 0 of this series."
+
+
+I have not directly replied to any of your other emails that have made
+that observation (I may have replied to other emails that were replies
+to such an email of yours, but not in the context of the overhead).
+After this email, my next reply will be my delayed response to your
+original email about overhead.
+
+And the "mommy, he hit me first" argument does not contribute to a
+constructive conversation about a kernel patch submittal.
+
+
+> Yes, you can manually unload a module, recompile the module, somehow
+> get the module back into the VM (perhaps by using virtio-9p), and then
+> reloading the module with the in-kernel test code, and the restart the
+> test.  BUT: (a) even if it is faster, it requires a lot of manual
+> steps, and would be very hard to automate, and (b) if the test code
+> ever OOPS or triggers a lockdep warning, you will need to restart the
+> VM, and so this involves all of the VM restart overhead, plus trying
+> to automate determining when you actually do need to restart the VM
+> versus unloading and reloading the module.   It's clunky.
+
+I have mentioned before that the in-kernel kselftest tests can be
+run in UML.  You simply select the configure options to build them
+into the kernel instead of building them as modules.  Then build
+a UML kernel and execute ("boot") the UML kernel.
+
+This is exactly the same as for KUnit.  No more overhead.  No less
+overhead.  No more steps.  No fewer steps.
+
 
 > 
-> Any suggestions?
+> Being able to do the equivalent of "make && make check" is a really
+> big deal.  And "make check" needs to go fast.
 > 
-> Regards,
->  Vicenç.
+> You keep ignore this point, perhaps because you don't care about this
+> issue?  Which is fine, and why we may just need to agree to disagree.
+
+No, I agree that fast test execution is useful.
+
+
 > 
-> --- a/drivers/net/phy/phy-core.c
-> +++ b/drivers/net/phy/phy-core.c
-> @@ -648,11 +648,17 @@
+> Cheers,
 > 
-> static int __phy_read_page(struct phy_device *phydev)
-> {
-> +	if (!phydev->drv->read_page)
-> +		return -EOPNOTSUPP;
-> +	
-> 	return phydev->drv->read_page(phydev);
-> }
+> 						- Ted
 > 
-> static int __phy_write_page(struct phy_device *phydev, int page)
-> {
-> +	if (!phydev->drv->write_page)
-> +		return -EOPNOTSUPP;
-> +
-> 	return phydev->drv->write_page(phydev, page);
-> }
-> --- a/drivers/net/phy/realtek.c
-> +++ b/drivers/net/phy/realtek.c
-> @@ -214,8 +214,10 @@
-> 	 * for details).
-> 	 */
-> 	oldpage = phy_select_page(phydev, 0x7);
-> -	if (oldpage < 0)
-> -		goto err_restore_page;
-> +	if (oldpage < 0) {
-> +		dev_warn(&phydev->mdio.dev, "Unable to set rgmii delays\n");
-> +		return 0;
-> +	}
-> 
-> 	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-> 	if (ret)
-> 
+> P.S.  Running scripts is Turing-equivalent, so it's self-evident that
+> *anything* you can do with other test frameworks you can somehow do in
+> kselftests.  That argument doesn't impress me, and why I do consider
+> it quite flippant.  (Heck, /bin/vi is Turing equivalent so we could
+> use vi to as a kernel test framework.  Or we could use emacs.  Let's
+> not.  :-)
+
+I have not been talking about running scripts, other than to the extent
+that _one of the ways_ the in-kernel kselftests can be invoked is via
+a script that loads the test module.  The same exact in-kernel test can
+instead be built into a UML kernel, as mentioned above.
+
+
+> The question is whether it is the most best and most efficient way to
+> do that testing.  And developer velocity is a really big part of my
+> evaluation function when judging whether or a test framework is fit
+> for that purpose.
+> .
 > 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
