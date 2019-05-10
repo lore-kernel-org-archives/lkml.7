@@ -2,130 +2,82 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953F6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA98DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6535E217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:25:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vLHYryG1"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6D22182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557523521;
+	bh=NA8IKsW9FppDjOSYXkIzz4goIQugrxcFhN1dyyK7u9c=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=g8ot5xRrk1W5tidXC5XtPu1RkHiseqL5w+v4Jhpipph1oM/xRLIqgHsnvHXCNnvMh
+	 s0H20IEwHgQk7S3mRWL1kmH2RuVrl8/kxcA74JiIAvsHDC4Rat9zNSiGBmpT2gMR9o
+	 J6QWNoKwK7m1Du7wczvwgdRb5IKHKnUlNgmnZNdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfEJVZR (ORCPT
+        id S1728184AbfEJVZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:25:17 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:35600 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727767AbfEJVZR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:25:17 -0400
-Received: by mail-vs1-f67.google.com with SMTP id s4so4504791vsl.2;
-        Fri, 10 May 2019 14:25:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:message-id;
-        bh=IRTLh3UNu7SPuTbbI61OV5Ow9SpRxjKSzwT3uHWMX5E=;
-        b=vLHYryG1zs0J79YjN8Wnu86cKnSSweIlY7wAFbYr0Gkw9IVnfa3UZ4conX/ssCuQe3
-         3Zw0ulCI5lV17hSPlfZIX64stAfNLQXqlYU4u1fZW/Cw2F7UdknEiVkRa9Vy/df87LAx
-         QJY38l/A1SLiOb7p01rLhw1/AkenHssqx5CCU4jEJZxNy88AUS/ED+vuOtSVLTL4Yrdj
-         z4h5UCK/bsb1BejX8ZGdSS2igIrjghgWcuFio7LurvtdNdYvwGPuxR62SJVMzy+3tyng
-         dQYNLLWWAIgZi7Eoy33eQtqH4Ze/J0Q+LvJMbphi0AYDzYQqVoTogQEe592mz2Ny3jpZ
-         iXsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:message-id;
-        bh=IRTLh3UNu7SPuTbbI61OV5Ow9SpRxjKSzwT3uHWMX5E=;
-        b=ljcUTz2xWV4DhIUn/zfczPRswZZpkzgQVj4coWyvatVfKDWAtjWT8PWM1DOEIKzlXO
-         nqCGJpEPTkrUKRM4btgQc1ewL8J3mobTPCVXgWFa+iEhuMdGt6vZgSGdRAmrKTY+PDel
-         AipeVB9CJYudSHuwGFSGlhMeC7fSgWKUyfWO8Yb8ktSxpWCGH66niBrF5/82Ef6yaQdR
-         2lMQwuRvzlKaHZZY1N1/pGkrNHjM2yFOyJRdFKg0Flp3KulPFRMG9XgAnTx70tub+YD/
-         skWdEb2Qm9JR5FH1hjwT2VSrPljhVIh+GGGf3ZWRenjoOAu955p8zwcPZ2hYxpgibL8n
-         rXMg==
-X-Gm-Message-State: APjAAAUUYxp0tZWO8fSsAn8PKnJ0Nue1Qvwynm/0m/7u8aaXzEDu/TMd
-        rWukeUtoMdE3cs4W4sa5EiE=
-X-Google-Smtp-Source: APXvYqwn00Lcp6Z3izxfZ3GTSCywUImOfkwdr8X6hPTssjctHERIhMSHNo/gEm/R0sT9rfBA6roaOQ==
-X-Received: by 2002:a67:ea0b:: with SMTP id g11mr7351534vso.130.1557523515985;
-        Fri, 10 May 2019 14:25:15 -0700 (PDT)
-Received: from [192.168.1.113] ([199.116.59.166])
-        by smtp.gmail.com with ESMTPSA id j71sm4117957vsd.0.2019.05.10.14.25.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 14:25:15 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Date:   Fri, 10 May 2019 17:25:10 -0400
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190510161150.20be7f1e@gandalf.local.home>
-References: <20190510195606.537643615@goodmis.org> <20190510200105.966709757@goodmis.org> <20190510161150.20be7f1e@gandalf.local.home>
+        Fri, 10 May 2019 17:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727767AbfEJVZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:25:18 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3547F217F5;
+        Fri, 10 May 2019 21:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557523517;
+        bh=NA8IKsW9FppDjOSYXkIzz4goIQugrxcFhN1dyyK7u9c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nyJ3ljPgfxKm6qZ6kIXCO58H1cipak0ugpTZVmH4+yHxrJy8Lum1guHoxRY2E/oj6
+         nSrP+beGW71Y2KAY6goYmxpxrZKcEA6+aeTGZfV7MF7vdB4TaDG42KETxYog7wzc0y
+         NOQrDvb3HnfgMpw6NyLw464xjGxAnnb+AqcMt+FA=
+Subject: Re: [PATCH 4.19 00/66] 4.19.42-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190509181301.719249738@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <33b73b1d-ba51-9eaf-42da-838f85ffba87@kernel.org>
+Date:   Fri, 10 May 2019 15:25:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 01/27] tools lib traceevent: Remove hard coded install paths from pkg-config file
-To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org
-CC:     Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Message-ID: <BDB00110-43B1-4766-BB21-D7BF6FDD5EC7@kernel.org>
+In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 10, 2019 4:11:50 PM AST, Steven Rostedt <rostedt@goodmis=2Eorg> wrot=
-e:
->On Fri, 10 May 2019 15:56:07 -0400
->Steven Rostedt <rostedt@goodmis=2Eorg> wrote:
->
->> From: Tzvetomir Stoyanov <tstoyanov@vmware=2Ecom>
->>=20
->> Install directories of header and library files are hard coded in
->> pkg-config template file=2E
->>=20
->> They must be configurable, the Makefile should set them on the
->> compilation / install stage=2E
->>=20
->> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware=2Ecom>
->> Cc: Jiri Olsa <jolsa@redhat=2Ecom>
->> Link:
->http://lkml=2Ekernel=2Eorg/r/20190418211556=2E5a12adc3@oasis=2Elocal=2Eho=
-me
->> Link:
->http://lkml=2Ekernel=2Eorg/r/20190329144546=2E5819-1-tstoyanov@vmware=2Ec=
-om
->> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis=2Eorg>
->> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat=2Ecom>
->
->Bah!
->
->I based my patch series off of the wrong commit, and ended up including
->this one in this series=2E
->
->Arnaldo,
->
->I believe you already applied patch 1 (otherwise I would not have your
->SOB on it), please ignore=2E But patch 2 on are new to be applied=2E
+On 5/9/19 12:41 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.42 release.
+> There are 66 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 11 May 2019 06:11:18 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.42-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
+> 
 
+Compiled and booted on my test system. No dmesg regressions.
 
-Ok, I'll be back at work early next week and will peixes this,
-
-- Arnaldo
-
->
->Thanks!
->
->-- Steve
->
->> ---
->>  tools/lib/traceevent/Makefile                  | 13 +++++++++----
->>  tools/lib/traceevent/libtraceevent=2Epc=2Etemplate |  4 ++--
->>  2 files changed, 11 insertions(+), 6 deletions(-)
-
+thanks,
+-- Shuah
