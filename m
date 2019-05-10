@@ -2,182 +2,113 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B287C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79360C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49D952175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B1532175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:25:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="taWSJ99P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfEJJYq (ORCPT
+        id S1727306AbfEJJYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:24:46 -0400
-Received: from foss.arm.com ([217.140.101.70]:40896 "EHLO foss.arm.com"
+        Fri, 10 May 2019 05:24:51 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34576 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727160AbfEJJYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:24:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A7F7A78;
-        Fri, 10 May 2019 02:24:45 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B2FC3F738;
-        Fri, 10 May 2019 02:24:42 -0700 (PDT)
-Date:   Fri, 10 May 2019 10:24:37 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Lina Iyer <lina.iyer@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
-Message-ID: <20190510091158.GA10284@e107155-lin>
-References: <20190508145600.GA26843@centauri>
- <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1727160AbfEJJYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:24:50 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 450lD01KCKz9v1Mt;
+        Fri, 10 May 2019 11:24:48 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=taWSJ99P; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id KJXQjKtTJ41s; Fri, 10 May 2019 11:24:48 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 450lD00HK7z9v1MX;
+        Fri, 10 May 2019 11:24:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557480288; bh=7+rPkb2mMCN5fVEdeNW5Bv+959x/xuLC/xkQspJWIF4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=taWSJ99PKG67Av4raH7KIE+Cms6j4wKbf27OdG2itiwITW2soKJWE2LGl/28cLXXI
+         +U9DlPPhQ7uHNnTjc3v8CfSWhU7C4wW1W5gzC6RdgDS/zUWx0AKQuWgBtOW1VGp7b5
+         JbHEWmola2E6NrjmVNMdZ+MR5+b67mB2A+KLvZ1E=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30AB88B940;
+        Fri, 10 May 2019 11:24:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 6vEArAskASY9; Fri, 10 May 2019 11:24:49 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 15F368B7E6;
+        Fri, 10 May 2019 11:24:49 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DAAD2673B2; Fri, 10 May 2019 09:24:48 +0000 (UTC)
+Message-Id: <c6ff2faba7fbb56a7f5b5f08cd3453f89fc0aaf4.1557480165.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc: slightly improve cache helpers
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 10 May 2019 09:24:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 11:19:23PM +0530, Amit Kucheria wrote:
-> (Adding Lorenzo and Sudeep)
->
-> On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> >
-> > On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
-> > > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
-> > > >
-> > > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
-> > > >
-> > > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > > > ---
-> > > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
-> > > >  1 file changed, 15 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > index ffedf9640af7..f9db9f3ee10c 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > > > @@ -31,6 +31,7 @@
-> > > >                         reg = <0x100>;
-> > > >                         enable-method = "psci";
-> > > >                         next-level-cache = <&L2_0>;
-> > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > >                 };
-> > > >
-> > > >                 CPU1: cpu@101 {
-> > > > @@ -39,6 +40,7 @@
-> > > >                         reg = <0x101>;
-> > > >                         enable-method = "psci";
-> > > >                         next-level-cache = <&L2_0>;
-> > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > >                 };
-> > > >
-> > > >                 CPU2: cpu@102 {
-> > > > @@ -47,6 +49,7 @@
-> > > >                         reg = <0x102>;
-> > > >                         enable-method = "psci";
-> > > >                         next-level-cache = <&L2_0>;
-> > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > >                 };
-> > > >
-> > > >                 CPU3: cpu@103 {
-> > > > @@ -55,12 +58,24 @@
-> > > >                         reg = <0x103>;
-> > > >                         enable-method = "psci";
-> > > >                         next-level-cache = <&L2_0>;
-> > > > +                       cpu-idle-states = <&CPU_PC>;
-> > > >                 };
-> > > >
-> > > >                 L2_0: l2-cache {
-> > > >                         compatible = "cache";
-> > > >                         cache-level = <2>;
-> > > >                 };
-> > > > +
-> > > > +               idle-states {
-> > >
-> > > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
-> > >
-> > > I don't think the psci_cpuidle_ops will even get called without this.
-> >
-> > Hello Amit,
-> >
-> > I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
-> > when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
-> > with the correct psci suspend parameter.
-> >
-> > The output from:
-> > grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
-> > also looks sane.
-> >
-> > However, if 'entry-method="psci"' is required according to the DT binding,
-> > perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
->
-> Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
-> out that entry-method="psci" isn't checked for in code anywhere. Let's
-> get their view on this for posterity.
->
+Cache instructions (dcbz, dcbi, dcbf and dcbst) take two registers
+that are summed to obtain the target address. Using 'Z' constraint
+and '%y0' argument gives GCC the opportunity to use both registers
+instead of only one with the second being forced to 0.
 
-Yes entry-method="psci" is required as per DT binding but not checked
-in code on arm64. We have CPU ops with idle enabled only for "psci", so
-there's not need to check.
+Suggested-by: Segher Boessenkool <segher@kernel.crashing.org>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/cache.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Once we have DT schema validation, this will be caught, so it's better
-to fix it.
+diff --git a/arch/powerpc/include/asm/cache.h b/arch/powerpc/include/asm/cache.h
+index 40ea5b3781c6..df8e4c407366 100644
+--- a/arch/powerpc/include/asm/cache.h
++++ b/arch/powerpc/include/asm/cache.h
+@@ -85,22 +85,22 @@ extern void _set_L3CR(unsigned long);
+ 
+ static inline void dcbz(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbz 0, %0" : : "r"(addr) : "memory");
++	__asm__ __volatile__ ("dcbz %y0" : : "Z"(*(u8 *)addr) : "memory");
+ }
+ 
+ static inline void dcbi(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbi 0, %0" : : "r"(addr) : "memory");
++	__asm__ __volatile__ ("dcbi %y0" : : "Z"(*(u8 *)addr) : "memory");
+ }
+ 
+ static inline void dcbf(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbf 0, %0" : : "r"(addr) : "memory");
++	__asm__ __volatile__ ("dcbf %y0" : : "Z"(*(u8 *)addr) : "memory");
+ }
+ 
+ static inline void dcbst(void *addr)
+ {
+-	__asm__ __volatile__ ("dcbst 0, %0" : : "r"(addr) : "memory");
++	__asm__ __volatile__ ("dcbst %y0" : : "Z"(*(u8 *)addr) : "memory");
+ }
+ #endif /* !__ASSEMBLY__ */
+ #endif /* __KERNEL__ */
+-- 
+2.13.3
 
-> What does entry-method="psci" in the idle-states node achieve that
-> enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
-> vs. entry-).
->
-
-From DT binding perspective, we can have different CPU enable-method
-and CPU idle entry-method. However on arm64, it's restricted to PSCI
-only. I need to check what happens on arm32 though, as the driver
-invocation happens via CPUIDLE_METHOD_OF_DECLARE.
-
-> The enable-method property is the one that sets up the
-> psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
-> macro.
->
-
-Indeed.
-
-> IOW, if we deprecated the entry-method property, everything would
-> still work, wouldn't it?
-
-Why do you want to deprecated just because Linux kernel doesn't want to
-use it. That's not a valid reason IMO.
-
-> Do we expect to support PSCI platforms that might have a different
-> entry-method for idle states?
-
-Not on ARM64, but same DT bindings can be used for idle-states on
-say RISC-V and have some value other than "psci".
-
-> Should I whip up a patch removing entry-method? Since we don't check
-> for it today, it won't break the old DTs either.
->
-
-Nope, I don't think so. But if it's causing issues, we can look into it.
-I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
-
---
-Regards,
-Sudeep
