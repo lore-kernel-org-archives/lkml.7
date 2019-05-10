@@ -2,122 +2,112 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38AFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99EFC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B48217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 18:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EE3217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="OaHdjFZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727920AbfEJS4l (ORCPT
+        id S1728003AbfEJTBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 14:56:41 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11875 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727535AbfEJS4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 14:56:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 11:56:40 -0700
-X-ExtLoop1: 1
-Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
-  by orsmga007.jf.intel.com with ESMTP; 10 May 2019 11:56:40 -0700
-Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
- ORSMSX104.amr.corp.intel.com (10.22.225.131) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Fri, 10 May 2019 11:56:39 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.36]) by
- ORSMSX122.amr.corp.intel.com ([169.254.11.68]) with mapi id 14.03.0415.000;
- Fri, 10 May 2019 11:56:39 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: RE: [PATCH v20 00/28] Intel SGX1 support
-Thread-Topic: [PATCH v20 00/28] Intel SGX1 support
-Thread-Index: AQHU9QnxaoiNNkdqP0yJjajWChyAgKZCnqeAgAAN+QCAAVPmAIAAE4cAgABGGYCAABE4gIAAAfWAgAABFgCAAADiAIAABegAgAABOYCAAAN6gIAAAQAAgAAA2wCAAATlgIAEWt6AgBvkEoCAAHnYgIAABJkAgAAC6gD//5XxkA==
-Date:   Fri, 10 May 2019 18:56:38 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <CALCETrV=wAsyWxtxQJ7y0xNrzkE863hTfU6Ysej48Gk9yPFJZw@mail.gmail.com>
- <43aa8fdd-e777-74cb-e3f0-d36805ffa18b@fortanix.com>
- <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
- <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
- <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
- <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
- <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
- <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
- <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
- <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
- <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
- <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
- <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
- <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
-In-Reply-To: <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTFjNjBiNTItZmUxMy00ZjgzLTg4N2QtYmZiYzg2MmU4NzA0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiVFkrQ1YweFh0WlZ1NHM2NGNGdW5PRnVzTTU3QnBnZzJTYUFEamxIak9Wb1VOTEpuVm1VWm5zNkMzK29mZFpSTyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 10 May 2019 15:01:30 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34105 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727914AbfEJTB3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 15:01:29 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so5164391ljg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 12:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=lRsqoSqizC0Lpx0MdOlUYVCjsAeqtwnsFnbrDqrKraM=;
+        b=OaHdjFZLrNEAtgu+yLoo6K6uB60m3lXMjf7uIS986pi4ch+u+j0VHGA9iM6qafIe1J
+         TUClfIbFo8wh+PD7SEIhRpum972FmSfqfGOddhUdUe10ZndI6Sx7zjQ1LeI232xcqY4L
+         hzaHEcsuT1i3TobIPMYKjxW8TliQ7lXpRhyaJU8qXd0MixgtqgjtPtEdGd2SdV1PYrP/
+         W8tDvuz6mpySNO7bW7AsESIwhJbD7m36h1L6LzzHVGk6U27rOA9vEKUcMLL6jZmbT8Mw
+         Azf73GWltM4JrqNaWdALZxe1dWA+X2wwoXF1igjDNJ1fbs19eXkP9Gf6ZWsaDpHUmA6w
+         dJOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lRsqoSqizC0Lpx0MdOlUYVCjsAeqtwnsFnbrDqrKraM=;
+        b=uWKcZIDRcVf7OYkhB+jHsYgUhWXYxVyusn3HGatkYOI7LckJOHYn1pdYaEbGaVfnW6
+         9ttw3qPKdU/9/QPAccYCgkuBIMcsK+l/6fQjnZTQSW/T9XUDz4GMW4V8z+Yb2nm8tv9P
+         cfWAoEanMg9c/R9/nhJdF7v9rat6fflUKPMhPJfG7nQgq7Alq5m3VZpnjWw6ZUaTHTkK
+         ZKHC5Nt9+wknXc6/c6W3RP7Kpy8cxhCqvJ1nr4nzN22LxLdepx5O55fT83URjvCHGda3
+         vWQLoTz38k8gyJjdKgwetuoI1W68caC2zJxf+R1r8Jjvqz7vlv4qmJPHTwDiapkFvt4x
+         8IXA==
+X-Gm-Message-State: APjAAAXu5CCXBpp4yiAFL1A4DeGj7Le49nEo2rcCBAYOEOai7sjQxCbW
+        pMpG4eHEG0VljomuTaYwT3Fy3Q==
+X-Google-Smtp-Source: APXvYqxEFvqRRYfGkqf67TGF7zMsFQidnKuhJN5ls47d7/B4qBA0DwhzDln8IPGXP94A5LuWmq4nBA==
+X-Received: by 2002:a2e:99d4:: with SMTP id l20mr7056110ljj.10.1557514887462;
+        Fri, 10 May 2019 12:01:27 -0700 (PDT)
+Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
+        by smtp.gmail.com with ESMTPSA id s16sm1584264lji.61.2019.05.10.12.01.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 12:01:26 -0700 (PDT)
+Date:   Fri, 10 May 2019 21:01:24 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Michael Rodin <mrodin@de.adit-jv.com>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michael@rodin.online,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] media: i2c: adv748x: initialize bit 7 of
+ csi_tx_top_reg_1f
+Message-ID: <20190510190124.GE28561@bigcity.dyn.berto.se>
+References: <1557502240-16274-1-git-send-email-mrodin@de.adit-jv.com>
+ <26e001a0-298f-e23b-9e46-98e62a8399c2@ideasonboard.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <26e001a0-298f-e23b-9e46-98e62a8399c2@ideasonboard.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmV0aHJvLA0KIA0KPiBFTEYgZmlsZXMgYXJlIGV4cGxpY2l0bHkgZGVzaWduZWQgc3VjaCB0
-aGF0IHlvdSBjYW4gbWFwIHRoZW0gKHdpdGggbW1hcCkNCj4gaW4gNDA5Ni1ieXRlIGNodW5rcy4g
-SG93ZXZlciwgc29tZXRpbWVzIHRoZXJlJ3Mgb3ZlcmxhcCBhbmQgeW91IHdpbGwNCj4gc29tZXRp
-bWVzIHNlZSB0aGF0IGEgcGFydGljdWxhciBvZmZzZXQgaXMgbWFwcGVkIHR3aWNlIGJlY2F1c2Ug
-dGhlIGZpcnN0DQo+IGhhbGYgb2YgdGhlIHBhZ2UgaW4gdGhlIGZpbGUgYmVsb25ncyB0byBhbiBS
-WCByYW5nZSBhbmQgdGhlIHNlY29uZCBoYWxmDQo+IHRvIGFuIFItb25seSByYW5nZS4gQWxzbywg
-RUxGIGZpbGVzIGRvbid0IChub3JtYWxseSkgZGVzY3JpYmUgc3RhY2ssDQo+IGhlYXAsIGV0Yy4g
-d2hpY2ggeW91IGRvIG5lZWQgZm9yIGVuY2xhdmVzLg0KDQpZb3UgaGF2ZSBwcm9iYWJseSBtaXNy
-ZWFkIG15IGVtYWlsLiBCeSBtbWFwKCksIEkgbWVhbnQgdGhlIGVuY2xhdmUgZmlsZSB3b3VsZCBi
-ZSBtYXBwZWQgdmlhICptdWx0aXBsZSogbW1hcCgpIGNhbGxzLCBpbiB0aGUgc2FtZSB3YXkgYXMg
-d2hhdCBkbG9wZW4oKSB3b3VsZCBkbyBpbiBsb2FkaW5nIHJlZ3VsYXIgc2hhcmVkIG9iamVjdC4g
-VGhlIGludGVudGlvbiBoZXJlIGlzIHRvIG1ha2UgdGhlIGVuY2xhdmUgZmlsZSBzdWJqZWN0IHRv
-IHRoZSBzYW1lIGNoZWNrcyBhcyByZWd1bGFyIHNoYXJlZCBvYmplY3RzLg0KDQpUaGUgb3RoZXIg
-ZW5jbGF2ZSBjb21wb25lbnRzIChlLmcuIFRDUywgaGVhcCwgc3RhY2ssIGV0Yy4pIHdpbGwgYmUg
-Y3JlYXRlZCBmcm9tIHdyaXRhYmxlIHBhZ2VzIHdpdGhpbiB0aGUgY2FsbGluZyBwcm9jZXNzJ3Mg
-YWRkcmVzcyBzcGFjZSBhcyBiZWZvcmUuIFNpbWlsYXIgdG8gaGVhcHMvc3RhY2tzIGluIGEgcmVn
-dWxhciBwcm9jZXNzLCB0aG9zZSBjb21wb25lbnRzIGRvbid0IGhhdmUgdG8gYmUgYmFja2VkIGJ5
-IGRpc2sgZmlsZXMuDQoNClRoZSBjb3JlIGlkZWEgaXMgZm9yIFNHWCBkcml2ZXIgdG8gImNvcHki
-IG5vdCBvbmx5IHRoZSBjb250ZW50IGJ1dCBhbHNvIHBlcm1pc3Npb25zIGZyb20gYSBzb3VyY2Ug
-cGFnZSB0byB0aGUgdGFyZ2V0IEVQQyBwYWdlLiBHaXZlbiB0aGUgZXhpc3RlbmNlIG9mIHRoZSBz
-b3VyY2UgcGFnZSwgaXQgY2FuIGJlIGNvbmNsdWRlZCB0aGF0IHRoZSBjb21iaW5hdGlvbiBvZiBj
-b250ZW50IGFuZCBwZXJtaXNzaW9ucyBvZiB0aGF0IHBhZ2UgaGFzIHBhc3NlZCBhbGwgSU1BL0xT
-TSBjaGVja3MgYXBwbGljYWJsZSB0byB0aGF0IHBhZ2UsIGhlbmNlICJjb3B5aW5nIiB0aGF0IHBh
-Z2UgdG8gRVBDIHdpdGggdGhlIHNhbWUgKG9yIGxlc3MpIHBlcm1pc3Npb24gaXMgKm5vdCogYSBj
-aXJjdW12ZW50aW9uIG9mIElNQS9MU00gcG9saWNpZXMuDQoNCi1DZWRyaWMNCg==
+Hi Kieran and Michael,
+
+On 2019-05-10 17:25:24 +0100, Kieran Bingham wrote:
+<snip>
+
+> 
+> Niklas, how does RCar-CSI determine the top/bottom sequence?
+
+That patch just got merged in the media tree a few days ago,
+
+    9f7983bdc4925ae2 ("media: rcar-csi2: Propagate the FLD signal for NTSC and PAL")
+
+> 
+> Do we have field inversion currently? (or one which is perhaps swapped
+> somewhere along the pipeline in rcar-vin?)
+> 
+
+I'm not sure which tree this patch is developed on but Steve Longerbeam 
+posted a RFC which IMHO had the fields inverted, there was a discussion 
+in his thread [1] where I tried to get to the bottom of the issue. My 
+conclusions there might be wrong due to the issues addressed in this 
+patch.
+
+Michael: Did you have Steve's patch in your tree when testing this?
+
+1. https://patchwork.kernel.org/patch/10904263/
+
+-- 
+Regards,
+Niklas Söderlund
