@@ -2,106 +2,138 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EB6C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B58C04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F5121848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E1E22182B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:41:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="MC1VMYh/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnWMeilq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfEJA1P (ORCPT
+        id S1726789AbfEJAkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 20:27:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33220 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbfEJA1P (ORCPT
+        Thu, 9 May 2019 20:40:10 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:43201 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbfEJAkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 20:27:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id e11so5441596wrs.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 17:27:14 -0700 (PDT)
+        Thu, 9 May 2019 20:40:10 -0400
+Received: by mail-yw1-f65.google.com with SMTP id p19so3361057ywe.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 17:40:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=yAAyy3BHNM/31FkJFRTkcNx30RMpdg86sV/KQ+dR8UU=;
-        b=MC1VMYh/rizm4a41+EsnpnBAlqZGhsP0RklmlfREZYU/JT7jWJ1q2PvFNqFW9ytrkc
-         O3ImL9X428DgBNaSfxUPUOhA2Tixd0mcVYDZF+BE+24zuvIsIreDEghgaSMrtKvv4LGW
-         t+ghAOXnd45PAg6+jar4eByS3AQnw4tpmlGdv3pck/EB0S+RR0I+KbvorYyl/RywK9Bg
-         tevrrHQQZTOlFzVtFSLuPW/mlLa9oQZYhM+b5mDJNn/M2vdswbhNBEM58uNHtvHB1PmT
-         jNrJIE2UfyKFZQgBfHfVZ7zpBqJdMOYk9xfQltsXde2wR/aUaQkmj/dO0vGqj2PnjUFx
-         V0FQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kJIkcAZ6u5IJ9XmF7NOxVNNYB8HdaXRsalPuY1w3/z8=;
+        b=BnWMeilq5CmV7xEOS7UTY0R8GZBvNiJUb5X8thIrkLC146CGJ28ux8O51ka94luUji
+         ko51fW4KRyCWVOi/von/XCjTv5Bq+D0G0m8PuWDLMU8pmLoHkVAidAi/9MCw72ZNpUBN
+         q7xTRHcayJCQmsiAPDShWGpwdLShGMWkoOMABic60GtN3IaFoPIX9eSVsFIkBfxpV7pe
+         K1YZw/DNtI7wDyhVsKXKTR6evCj+wKBM/ZCKAVbXjVWRlyOHkScfk3FLQ4FnRkjbDi/x
+         TcZbJlD57h5bUMnjLqNuuD1i4+gmaFje2JyxaP3cHRb97P+2aaN1Ctg2LNMnSUH9vTQS
+         7NZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=yAAyy3BHNM/31FkJFRTkcNx30RMpdg86sV/KQ+dR8UU=;
-        b=QkPJulXUk7KSmEek0a0IWiBHYz1nY3OoBCF11sAhYK9JprnI12tJjZ6WaiqeLvInEA
-         iWK9OyDLlhWCUXxEVUkYbscXvGfGiVzkaw8LFKqFUChvLh5hpzmPk/wI3ZOwpKb5WRmr
-         jd+rACalu8i5mq81ei0NqdVTXmSBolIDOn6eD5Xz22bmsru3BnM4Wc31BxUUFdR75umt
-         v8Mja3lF/F3WbTnxVBUYzpifioq9avsHSQw6tHtbwiU63Qvg090hUcTno9f8M4++dAkP
-         c0VmDiTIBoR2gl/vDp4lg8Tf9J/m0kFfrht6Gq2uQAC3mUtx4GufYKcdEas8wL1AIj2d
-         s3tw==
-X-Gm-Message-State: APjAAAWCGBnv/KnazcytRrgI9RCEAUqlYjcYENrGl4t0JVYYx9ehExe9
-        ZVudKH40L9FziCjzgUConthZdQ==
-X-Google-Smtp-Source: APXvYqyY/HwMu9+Kps9zzh6CuB0NRqAMs2vSMIz6L+iKWb/4LHH4IiEXeM8bf5yzXj/pK5WpBWnevg==
-X-Received: by 2002:adf:b64e:: with SMTP id i14mr5445877wre.72.1557448033689;
-        Thu, 09 May 2019 17:27:13 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a125sm6286229wmc.47.2019.05.09.17.27.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 17:27:13 -0700 (PDT)
-Message-ID: <5cd4c561.1c69fb81.ca185.0137@mx.google.com>
-Date:   Thu, 09 May 2019 17:27:13 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kJIkcAZ6u5IJ9XmF7NOxVNNYB8HdaXRsalPuY1w3/z8=;
+        b=XjOykYOugB4g4P25IVFy3WH4Z5a50QsfMmVjASHrW7ZhwAI9PI0dw2phM7cBW+ZRbQ
+         ICGy7YdZqAseKKCC1ma6/0cS8iz6TccnJOp1nW/EfhzakF2mHudlHQa9BYB9UjdDgxq0
+         xRmgHlUr2mgoCzYlKkMgov/xGJAl/yZxyZLTDJfyVEq6IKxwIi7GWyGXCc8bUEnybq2Q
+         YfoTWsVHaLhLiZtPriQ4RgLDXuEIrimlOkdwVSSTZMM3z9Sfcxpj33dY//PhIh7A8D/L
+         RDgiz0/tmRHAHmXsO7rQfPE8fgw9F7aDQm9ASNzWz4cQGbglrAzzzSwWxJj23RmyDofr
+         rtSQ==
+X-Gm-Message-State: APjAAAW/EQ68gXSJkrTUR8I6T2uyGuTMhp6Aq6Bc13GKPn1XmMxcjoxN
+        qKaIyzPW596OKSOVh4XsCmmB3ESi0JO4S7BSI9plPA==
+X-Google-Smtp-Source: APXvYqw2dVC2ET7GPFNXeSlt/NpFnxG8e1iXqGKojoN4LujAfzUVvhzsWFouCtyUPIv6d5hMLtOYG5Es5WGTXBS03mU=
+X-Received: by 2002:a25:4147:: with SMTP id o68mr4131573yba.148.1557448809031;
+ Thu, 09 May 2019 17:40:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-5.0.y
-X-Kernelci-Kernel: v5.0.14-96-gdf1376651d49
-In-Reply-To: <20190509181309.180685671@linuxfoundation.org>
-References: <20190509181309.180685671@linuxfoundation.org>
-Subject: Re: [PATCH 5.0 00/95] 5.0.15-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 9 May 2019 17:39:57 -0700
+Message-ID: <CALvZod5LjCMxsPhbY68QRggFy4QjVsTDXh192PqSW6qsMCKknw@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     Huang Ying <ying.huang@intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.0.y boot: 143 boots: 1 failed, 141 passed with 1 untried/=
-unknown (v5.0.14-96-gdf1376651d49)
+From: Yang Shi <yang.shi@linux.alibaba.com>
+Date: Thu, May 9, 2019 at 5:16 PM
+To: <ying.huang@intel.com>, <hannes@cmpxchg.org>, <mhocko@suse.com>,
+<mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
+<hughd@google.com>, <akpm@linux-foundation.org>
+Cc: <yang.shi@linux.alibaba.com>, <linux-mm@kvack.org>,
+<linux-kernel@vger.kernel.org>
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.0.y/kernel/v5.0.14-96-gdf1376651d49/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.0.y=
-/kernel/v5.0.14-96-gdf1376651d49/
+> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+> still gets inc'ed by one even though a whole THP (512 pages) gets
+> swapped out.
+>
+> This doesn't make too much sense to memory reclaim.  For example, direct
+> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+> direct reclaim may just waste time to reclaim more pages,
+> SWAP_CLUSTER_MAX * 512 pages in worst case.
+>
+> This change may result in more reclaimed pages than scanned pages showed
+> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
+>
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@techsingularity.net>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Tree: stable-rc
-Branch: linux-5.0.y
-Git Describe: v5.0.14-96-gdf1376651d49
-Git Commit: df1376651d496484d341d374c3d2566a089b1969
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 77 unique boards, 25 SoC families, 15 builds out of 208
+Nice find.
 
-Boot Failure Detected:
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            stih410-b2120: 1 failed lab
-
----
-For more info write to <info@kernelci.org>
+> ---
+> I'm not quite sure if it was the intended behavior or just omission. I tried
+> to dig into the review history, but didn't find any clue. I may miss some
+> discussion.
+>
+>  mm/vmscan.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index fd9de50..7e026ec 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>
+>                 unlock_page(page);
+>  free_it:
+> -               nr_reclaimed++;
+> +               /*
+> +                * THP may get swapped out in a whole, need account
+> +                * all base pages.
+> +                */
+> +               nr_reclaimed += (1 << compound_order(page));
+>
+>                 /*
+>                  * Is there need to periodically free_page_list? It would
+> --
+> 1.8.3.1
+>
