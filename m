@@ -2,79 +2,105 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0526DC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016E1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC0532175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B50F82175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfEJEsR (ORCPT
+        id S1727075AbfEJEu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:48:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53178 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfEJEsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:48:16 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A5604308339A;
-        Fri, 10 May 2019 04:48:16 +0000 (UTC)
-Received: from [10.72.12.54] (ovpn-12-54.pek2.redhat.com [10.72.12.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7CE635C296;
-        Fri, 10 May 2019 04:48:10 +0000 (UTC)
-Subject: Re: [RFC PATCH V2] vhost: don't use kmap() to log dirty pages
-From:   Jason Wang <jasowang@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-References: <1557406680-4087-1-git-send-email-jasowang@redhat.com>
- <20190509090433-mutt-send-email-mst@kernel.org>
- <d6d69a36-9a3a-2a21-924e-97fdcc6e6733@redhat.com>
-Message-ID: <fa6444aa-9c46-22f0-204a-c7592dc5bd51@redhat.com>
-Date:   Fri, 10 May 2019 12:48:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 00:50:56 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43736 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726284AbfEJEu4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 00:50:56 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4A4livR031694
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 May 2019 00:47:45 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 11AEE420024; Fri, 10 May 2019 00:47:44 -0400 (EDT)
+Date:   Fri, 10 May 2019 00:47:43 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, dan.j.williams@intel.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190510044743.GA6889@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
+        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+ <20190509233043.GC20877@mit.edu>
+ <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <d6d69a36-9a3a-2a21-924e-97fdcc6e6733@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 10 May 2019 04:48:16 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 09, 2019 at 05:40:48PM -0600, Logan Gunthorpe wrote:
+> 
+> Based on some of the other commenters, I was under the impression that
+> kselftests had in-kernel tests but I'm not sure where or if they exist. If
+> they do exists, it seems like it would make sense to convert those to kunit
+> and have Kunit tests run-able in a VM or baremetal instance.
 
-On 2019/5/10 上午10:59, Jason Wang wrote:
->>>
->>>         r = get_user_pages_fast(log, 1, 1, &page);
->> OK so the trick is that page is pinned so you don't expect
->> arch_futex_atomic_op_inuser below to fail.  get_user_pages_fast
->> guarantees page is not going away but does it guarantee PTE won't be
->> invaidated or write protected?
->
->
-> Good point, then I think we probably need to do manual fixup through 
-> fixup_user_fault() if arch_futex_atomic_op_in_user() fail. 
+There are kselftests tests which are shell scripts which load a
+module, and the module runs the in-kernel code.  However, I didn't see
+much infrastructure for the in-kernel test code; the one or two test
+modules called from kselftests looked pretty ad hoc to me.
 
+That's why I used the "vise grips" analogy.  You can use a pair of
+vise grips like a monkey wrench; but it's not really a monkey wrench,
+and might not be the best tool to loosen or tighten nuts and bolts.
 
-This looks like a overkill, we don't need to atomic environment here 
-actually. Instead, just keep pagefault enabled should work. So just 
-introduce arch_futex_atomic_op_inuser_inatomic() variant with pagefault 
-disabled there just for futex should be sufficient.
-
-Thanks
-
+       	   	     	       	   - Ted
