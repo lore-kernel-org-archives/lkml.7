@@ -2,188 +2,131 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5698BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBFBAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24E11217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45DF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="uR/72ikB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfEJHpi convert rfc822-to-8bit (ORCPT
+        id S1727025AbfEJHvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:45:38 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:46039 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfEJHph (ORCPT
+        Fri, 10 May 2019 03:51:22 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:57542 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726899AbfEJHvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:45:37 -0400
-X-Originating-IP: 90.88.28.253
-Received: from xps13 (aaubervilliers-681-1-86-253.w90-88.abo.wanadoo.fr [90.88.28.253])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 300EF2000F;
-        Fri, 10 May 2019 07:45:29 +0000 (UTC)
-Date:   Fri, 10 May 2019 09:45:28 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, richard@nod.at, dwmw2@infradead.org,
-        computersforpeace@gmail.com, linux-mtd@lists.infradead.org,
-        juliensu@mxic.com.tw
-Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190510094528.6008e8da@xps13>
-In-Reply-To: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 10 May 2019 03:51:22 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A7ke2e019336;
+        Fri, 10 May 2019 09:51:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=nmDxg4+93XGhQH+CBc6pkLSbg19CIe1swFbFgCL8ynY=;
+ b=uR/72ikBnHLXDX5yi8jl/nbg4R6bAWIlVXcz+WyWuipKJP7UA4+VROg3MFgElPvXKUu+
+ PrAexkTBVIP4hZvUSn3QFTiBL/0r8aRlUL33o9THxXKlkhyz5LuG668SvRR2d77uRgYR
+ M/rENVvB5J8brAwKB4ZCsUnECND3xm58KDJtaUdq4jzUIj+R90IbaWrTd51J6ZryrrdQ
+ OEDsDGHUo3K8vAu7mCrb8bwT1NIpnrAZyXoj7ylz1ceOibnGzdXqbSCOlkxgiaGKw7Hp
+ G1CYGHSnbQ1RR4cAl9bndfPzGH7buA5hNwhCCSQAnJ/wXMwyg6CBKYzauGASOmzG6XEN LQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2scdjp7fum-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Fri, 10 May 2019 09:51:04 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9800A3D;
+        Fri, 10 May 2019 07:51:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 10EFC15CE;
+        Fri, 10 May 2019 07:51:02 +0000 (GMT)
+Received: from [10.48.0.167] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 10 May
+ 2019 09:51:02 +0200
+Subject: Re: [RESEND PATCH v5 0/3] Add PM support to STM32 LP Timer drivers
+To:     <thierry.reding@gmail.com>
+CC:     <robh+dt@kernel.org>, <u.kleine-koenig@pengutronix.de>,
+        <tduszyns@gmail.com>, <mark.rutland@arm.com>,
+        <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Loic PALLARDY <loic.pallardy@st.com>,
+        Mark Brown <broonie@kernel.org>
+References: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <45e934af-d677-d7d4-09ea-3ed01872dab6@st.com>
+Date:   Fri, 10 May 2019 09:51:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1555580267-29299-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
-
-Mason Yang <masonccyang@mxic.com.tw> wrote on Fri, 10 May 2019 15:41:02
-+0800:
-
-> Add a driver for Macronix NAND read retry.
-
-"Add support for Macronix NAND read retry."? This is not a "new driver".
-
+On 4/18/19 11:37 AM, Fabrice Gasnier wrote:
+> This patch series adds power management support for STM32 LP Timer:
+> - PWM driver
+> - Document the pinctrl states for sleep mode
 > 
-> Macronix NAND supports specfical read for data recovery and enabled
-
-
-Macronix NANDs support specific read operation for data recovery,
-which can be enabled with a SET_FEATURE.
-
-> Driver check byte 167 of Vendor Blocks in ONFI parameter page table
-
-         checks
-
-> to see if this high reliability function is support or not.
-
-                 high-reliability function? not sure it is English
-                 anyway.
-
-                                              supported
-
+> It also adds device link between the PWM consumer and the PWM provider.
+> This allows proper sequencing for suspend/resume (e.g. user will likely
+> do a pwm_disable() before the PWM provider suspend executes), see [1].
 > 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> [1] https://lkml.org/lkml/2019/2/5/770
+> 
+
+Hi Thierry,
+
+Please let me know if you have some more comments on this series. It's
+been under review since quite some time now.
+
+Thanks in advance,
+Best Regards,
+Fabrice
+
 > ---
->  drivers/mtd/nand/raw/nand_macronix.c | 52 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
+> resend v5:
+> - update collected acks
 > 
-> diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-> index 47d8cda..5cd1e5f 100644
-> --- a/drivers/mtd/nand/raw/nand_macronix.c
-> +++ b/drivers/mtd/nand/raw/nand_macronix.c
-> @@ -17,6 +17,57 @@
->  
->  #include "internals.h"
->  
-> +#define MACRONIX_READ_RETRY_BIT BIT(0)
-> +#define MACRONIX_READ_RETRY_MODE 5
-> +
-> +struct nand_onfi_vendor_macronix {
-> +	u8 reserved[1];
-> +	u8 reliability_func;
-> +} __packed;
-> +
-> +static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-> +{
-> +	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
-
-                                                 0 is not needed here
-
-> +	int ret;
-> +
-> +	if (mode > MACRONIX_READ_RETRY_MODE)
-> +		mode = MACRONIX_READ_RETRY_MODE;
-> +
-> +	feature[0] = mode;
-> +	ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-
-Don't you miss to select/deselect the target?
-
-> +	if (ret)
-> +		pr_err("set feature failed to read retry moded:%d\n", mode);
-
-                       "Failed to set read retry mode: %d\n"
-
-I think you can abort the operation with a negative return code in this
-case.
-
-> +
-> +	ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-
-If the operation succeeded but the controller cannot get the feature
-you don't want to abort the operation. You should check if get_features
-is supported, if yes you can rely on the below test.
-
-> +	if (ret || feature[0] != mode)
-> +		pr_err("get feature failed to read retry moded:%d(%d)\n",
-> +		       mode, feature[0]);
-
-                       "Failed to verify read retry mode..."
-
-                Also return something negative here.
-
-> +
-> +	return ret;
-
-And if all went right, return 0 at the end.
-
-> +}
-> +
-> +static void macronix_nand_onfi_init(struct nand_chip *chip)
-> +{
-> +	struct nand_parameters *p = &chip->parameters;
-> +
-> +	if (p->onfi) {
-> +		struct nand_onfi_vendor_macronix *mxic =
-> +				(void *)p->onfi->vendor;
-
-Please put everything on the same line
-
-> +
-> +		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
-> +			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
-
-Why +1 here, I am missing something?
-
-> +			chip->setup_read_retry =
-> +				 macronix_nand_setup_read_retry;
-> +			if (p->supports_set_get_features) {
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->set_feature_list);
-> +				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-> +					p->get_feature_list);
-
-Please use bitmap_set()
-
-> +			}
-> +		}
-> +	}
-> +}
-> +
->  /*
->   * Macronix AC series does not support using SET/GET_FEATURES to change
->   * the timings unlike what is declared in the parameter page. Unflag
-> @@ -65,6 +116,7 @@ static int macronix_nand_init(struct nand_chip *chip)
->  		chip->bbt_options |= NAND_BBT_SCAN2NDPAGE;
->  
->  	macronix_nand_fix_broken_get_timings(chip);
-> +	macronix_nand_onfi_init(chip);
->  
->  	return 0;
->  }
-
-
-Thanks,
-Miquèl
+> Changes in v5:
+> - improve a warning message, fix a style issue.
+> 
+> Changes in v4:
+> - improve error handling when adding the PWM consumer device link.
+> 
+> Changes in v3:
+> - Move the device_link_add() call to of_pwm_get() as discussed with Uwe.
+> 
+> Changes in v2:
+> - Don't disable PWM channel in PWM provider: rather refuse to suspend
+>   and report an error as suggested by Uwe and Thierry.
+> - Add patch 3/3 to propose device link addition.
+> - No updates for STM32 LP Timer IIO driver. Patches can be send separately.
+> 
+> Fabrice Gasnier (3):
+>   dt-bindings: pwm-stm32-lp: document pinctrl sleep state
+>   pwm: stm32-lp: Add power management support
+>   pwm: core: add consumer device link
+> 
+>  .../devicetree/bindings/pwm/pwm-stm32-lp.txt       |  9 ++--
+>  drivers/pwm/core.c                                 | 50 ++++++++++++++++++++--
+>  drivers/pwm/pwm-stm32-lp.c                         | 25 +++++++++++
+>  include/linux/pwm.h                                |  6 ++-
+>  4 files changed, 82 insertions(+), 8 deletions(-)
+> 
