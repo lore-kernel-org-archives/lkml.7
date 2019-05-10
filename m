@@ -2,108 +2,103 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15BBC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9D3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7391B2175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131E720881
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 10:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ik3QIGtA"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="WsjCO92j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfEJKQk (ORCPT
+        id S1727533AbfEJKPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 06:16:40 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18549 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbfEJKQc (ORCPT
+        Fri, 10 May 2019 06:15:43 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47620 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbfEJKPm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 06:16:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd54f590000>; Fri, 10 May 2019 03:15:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 10 May 2019 03:16:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 10 May 2019 03:16:30 -0700
-Received: from [10.26.11.182] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 May
- 2019 10:16:25 +0000
-Subject: Re: [PATCH 4.14 00/42] 4.14.118-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190509181252.616018683@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <55d84e69-4ad4-e840-f716-fcb64484dd7f@nvidia.com>
-Date:   Fri, 10 May 2019 11:16:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 06:15:42 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9C3C3891AB;
+        Fri, 10 May 2019 22:15:40 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1557483340;
+        bh=MiPXzREL9W1jwb0qqv3Cp/VmybxETnuh2vjHwP0eucw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=WsjCO92j0IOB4jd+tn7TjfIi6I+yo6SCkUbe+smuu+fNk+vV9DMOWr7S98TVt26xw
+         y3zv/Oo+NtCJ9VGt2ySw//uhoLOL/utK4wCNkI+hp4awDqO3++AK8OKscb3T27fTIU
+         WgdYH36Ob+dS4N1Nea+0/02NEPbQVR5bWHTJETkHDXdFNH3MA3hmHigAESYENpCGNl
+         7OKodWgRq+2kws6wOKh2XbeD0yIZiFwCdK3RowAb+dQXO+FFSgeHz0Xd97Ea0yuSGj
+         529c2JUlg+jXW0vM+Ke1gESCkbw2Rvdk3mWpHTJaqDbsFm02fwrzk3zEmTMxNE5jKQ
+         9z4D8TTuc9FpQ==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cd54f4c0001>; Fri, 10 May 2019 22:15:41 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id AF00F13EEF9;
+        Fri, 10 May 2019 22:15:39 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 43E741E1D5B; Fri, 10 May 2019 22:15:39 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linux@armlinux.org.uk, bp@alien8.de, mark.rutland@arm.com,
+        robh+dt@kernel.org, mchehab@kernel.org, james.morse@arm.com,
+        jlu@pengutronix.de, gregory.clement@bootlin.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gregory CLEMENT <gregory.clement@free-electrons.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v8 1/9] ARM: l2c: move cache-aurora-l2.h to asm/hardware
+Date:   Fri, 10 May 2019 22:15:28 +1200
+Message-Id: <20190510101536.6724-2-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
+References: <20190510101536.6724-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-In-Reply-To: <20190509181252.616018683@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557483354; bh=LT7N2XHoXj4UUUvKBT/M1kdRveZxhoojEy5WCu0TSNs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ik3QIGtAj4VNeokSa1a9rYMtrzqgpEvxv2lfwjUcpx1rkrDZz9tiQ6Z9J1k13Wgo7
-         PcVTbs9Kg9fLlGtIKooiXBAvBNKhYFokZAPnIrgAeIpyZc7J1dBrZs57OD4IQ2MKCT
-         KDi9W5AlRdleVUKj+OoJ8S2GxpgAqq5y4uZgs9TTxy/1F6ZNMT4+eg14PaAIJl/43X
-         rJJcrEtt5krDQ16av1/Cg50Fsqp0kr6vpt1bsxhzW5X130Mwbot6yv+6ZOdbeMU93B
-         fAW1N2Jvh6mboBH1kRgUV9U2X52xRTa3uLah1xy+o5YJ0qCw/usmjiv9/tTv6udaqq
-         wOj8jx3TpoKtA==
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jan Luebbe <jlu@pengutronix.de>
 
-On 09/05/2019 19:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.118 release.
-> There are 42 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat 11 May 2019 06:11:15 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.118-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+This include file will be used by the AURORA EDAC code.
 
-All tests are passing for Tegra ...
+Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Reviewed-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h | 0
+ arch/arm/mm/cache-l2x0.c                                | 2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (100%)
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+diff --git a/arch/arm/mm/cache-aurora-l2.h b/arch/arm/include/asm/hardwar=
+e/cache-aurora-l2.h
+similarity index 100%
+rename from arch/arm/mm/cache-aurora-l2.h
+rename to arch/arm/include/asm/hardware/cache-aurora-l2.h
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 808efbb89b88..a00d6f7fd34c 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -30,8 +30,8 @@
+ #include <asm/cp15.h>
+ #include <asm/cputype.h>
+ #include <asm/hardware/cache-l2x0.h>
++#include <asm/hardware/cache-aurora-l2.h>
+ #include "cache-tauros3.h"
+-#include "cache-aurora-l2.h"
+=20
+ struct l2c_init_data {
+ 	const char *type;
+--=20
+2.21.0
 
-Linux version:	4.14.118-rc1-gfd7dbc6
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
