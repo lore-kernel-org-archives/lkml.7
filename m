@@ -2,262 +2,182 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D87BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B287C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3816F21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:17:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ugo00JU4"
+	by mail.kernel.org (Postfix) with ESMTP id 49D952175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727364AbfEJJRW (ORCPT
+        id S1727271AbfEJJYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:17:22 -0400
-Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:32642
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726992AbfEJJRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:17:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8/hCFATjPX/2x9Add1ZWMfcOIu8FCWPMNjPUYos9vsw=;
- b=Ugo00JU4Fzqx7ZRFxqNUUNCRDfvRPkE/knGPWcXuXc55P0piol8vhDMnbc0ChJJVKBvLRkE941DT9HlV7+0JT64Uvz45xON3hiRpPke7WYZz3pzSXrxJdeQg8w9DE71QvIh3icEe8QRvI3gB6WQ3cscVCAqqnMM9kGup04plxEY=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4419.eurprd04.prod.outlook.com (52.135.152.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.12; Fri, 10 May 2019 09:17:16 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::c415:3cab:a042:2e13]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::c415:3cab:a042:2e13%6]) with mapi id 15.20.1878.022; Fri, 10 May 2019
- 09:17:15 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "olof@lixom.net" <olof@lixom.net>,
-        Andy Gross <andy.gross@linaro.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
- support
-Thread-Topic: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
- support
-Thread-Index: AQHU8DKsAg9Kriz6B0mooDc33xId46ZkPYEg
-Date:   Fri, 10 May 2019 09:17:15 +0000
-Message-ID: <AM0PR04MB42117C4AB89EA69E48F95D39800C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1554965048-19450-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1554965048-19450-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc666aeb-d82d-40fd-c1e4-08d6d5284b60
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4419;
-x-ms-traffictypediagnostic: AM0PR04MB4419:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM0PR04MB4419D529A2FC1A8A8FADF857800C0@AM0PR04MB4419.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:741;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(346002)(396003)(136003)(189003)(199004)(53936002)(14454004)(11346002)(7736002)(66066001)(66946007)(2906002)(478600001)(71200400001)(73956011)(71190400001)(64756008)(66476007)(66556008)(66446008)(4326008)(55016002)(2501003)(9686003)(76116006)(3846002)(6116002)(256004)(6246003)(6436002)(52536014)(316002)(102836004)(33656002)(81156014)(476003)(25786009)(68736007)(86362001)(229853002)(99286004)(7416002)(7696005)(305945005)(5660300002)(76176011)(6506007)(81166006)(8676002)(44832011)(486006)(2201001)(110136005)(74316002)(446003)(186003)(8936002)(26005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4419;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: f1SB3ileTjyH2/cZGKoSl2q15zmvEtmhOW+QxlLAH4Xx7QFkIKatoI85pp4oMVzn93Z+8AF2MVCubLM0yRicoDXHxhOufxjpwAK2OkfmylM7nvH1xgPBBOEt9aAqx8v0cPwQLYQaSyvhHzZ05wGKT6XJIbgVU2tE/vlSHr8oDhKrqhP8sL9LlDmHV1gublpTTDlqcgg1Yv1nQrueGf2+5uFYb+U/Z1TV0Y0goJH8V4dilhDm8IEe6eN8jlydqN6zjKGp65G40GIwH8oG5A8Vi4lQM7gsVrILIa0eHIEutsQxPc0+eikPW8UyfWbfcbOeaURRtMxc80HpZyHyo4HpTvZDWk/uEr7O6lAuaNIVqiAG7l+gSFOrtPdzezdiMgi+2EZJ59soQ0bguI2nf7CF6b/weldRI3vl/oqRboEFuyk=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 10 May 2019 05:24:46 -0400
+Received: from foss.arm.com ([217.140.101.70]:40896 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727160AbfEJJYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:24:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A7F7A78;
+        Fri, 10 May 2019 02:24:45 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B2FC3F738;
+        Fri, 10 May 2019 02:24:42 -0700 (PDT)
+Date:   Fri, 10 May 2019 10:24:37 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Lina Iyer <lina.iyer@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Message-ID: <20190510091158.GA10284@e107155-lin>
+References: <20190508145600.GA26843@centauri>
+ <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc666aeb-d82d-40fd-c1e4-08d6d5284b60
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 09:17:15.8494
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4419
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBUaHVyc2RheSwgQXByaWwgMTEsIDIwMTkgMjo0
-OSBQTQ0KPiANCj4gaS5NWDhRWFAgaXMgYW4gQVJNdjggU29DIHdoaWNoIGhhcyBhIENvcnRleC1N
-NCBzeXN0ZW0gY29udHJvbGxlciBpbnNpZGUsDQo+IHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBp
-biBjaGFyZ2Ugb2YgY29udHJvbGxpbmcgcG93ZXIsIGNsb2NrIGFuZCBmdXNlIGV0Yy4uDQo+IA0K
-PiBUaGlzIHBhdGNoIGFkZHMgaS5NWCBzeXN0ZW0gY29udHJvbGxlciBzb2MgZHJpdmVyIHN1cHBv
-cnQsIExpbnV4IGtlcm5lbCBoYXMgdG8NCj4gY29tbXVuaWNhdGUgd2l0aCBzeXN0ZW0gY29udHJv
-bGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCBzb2MNCj4gcmV2aXNpb24sIHVp
-ZCBldGMuLg0KPiANCj4gV2l0aCB0aGlzIHBhdGNoLCBzb2MgaW5mbyBjYW4gYmUgcmVhZCBmcm9t
-IHN5c2ZzOg0KPiANCj4gaS5teDhxeHAtbWVrIyBjYXQgL3N5cy9kZXZpY2VzL3NvYzAvZmFtaWx5
-IEZyZWVzY2FsZSBpLk1YDQo+IA0KPiBpLm14OHF4cC1tZWsjIGNhdCAvc3lzL2RldmljZXMvc29j
-MC9zb2NfaWQgaS5NWDhRWFANCj4gDQo+IGkubXg4cXhwLW1layMgY2F0IC9zeXMvZGV2aWNlcy9z
-b2MwL21hY2hpbmUgRnJlZXNjYWxlIGkuTVg4UVhQIE1FSw0KPiANCj4gaS5teDhxeHAtbWVrIyBj
-YXQgL3N5cy9kZXZpY2VzL3NvYzAvcmV2aXNpb24NCj4gMS4xDQo+IA0KPiBpLm14OHF4cC1tZWsj
-IGNhdCAvc3lzL2RldmljZXMvc29jMC9zb2NfdWlkDQo+IDdCNjQyODBCNTdBQzE4OTgNCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0N
-Cj4gIGRyaXZlcnMvc29jL2lteC9LY29uZmlnICAgICAgfCAgIDcgKysNCj4gIGRyaXZlcnMvc29j
-L2lteC9NYWtlZmlsZSAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9zb2MvaW14L3NvYy1pbXgtc2Mu
-YyB8IDIyMA0KPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+
-ICAzIGZpbGVzIGNoYW5nZWQsIDIyOCBpbnNlcnRpb25zKCspDQo+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9zb2MvaW14L3NvYy1pbXgtc2MuYw0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvc29jL2lteC9LY29uZmlnIGIvZHJpdmVycy9zb2MvaW14L0tjb25maWcgaW5kZXgNCj4gZDgw
-Zjg5OS4uYzkwMmI4OSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9zb2MvaW14L0tjb25maWcNCj4g
-KysrIGIvZHJpdmVycy9zb2MvaW14L0tjb25maWcNCj4gQEAgLTcsNCArNywxMSBAQCBjb25maWcg
-SU1YX0dQQ1YyX1BNX0RPTUFJTlMNCj4gIAlzZWxlY3QgUE1fR0VORVJJQ19ET01BSU5TDQo+ICAJ
-ZGVmYXVsdCB5IGlmIFNPQ19JTVg3RA0KPiANCj4gK2NvbmZpZyBJTVhfU0NfU09DDQo+ICsJZGVw
-ZW5kcyBvbiBJTVhfU0NVIHx8IENPTVBJTEVfVEVTVA0KDQpDT01QSUxFX1RFU1QgbWF5IG5vdCB3
-b3JrIGR1ZSB0byBkZXBlbmRlbmN5DQoNCj4gKwl0cmlzdGF0ZSAiaS5NWCBTeXN0ZW0gQ29udHJv
-bGxlciBTb0Mgc3VwcG9ydCINCg0KQ2FuIGl0IGJ1aWxkIGFzIG1vZHVsZT8NCkkgZGlkIG5vdCBz
-ZWUgc29jX2RldmljZV9yZWdpc3RlcigpIGlzIGV4cG9ydGVkLg0KDQo+ICsJaGVscA0KPiArCSAg
-IElmIHlvdSBzYXkgeWVzIGhlcmUgeW91IGdldCBzdXBwb3J0IGZvciB0aGUgaS5NWCBTeXN0ZW0N
-Cj4gKwkgICBDb250cm9sbGVyIFNvQyBtb2R1bGUuDQo+ICsNCj4gIGVuZG1lbnUNCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvc29jL2lteC9NYWtlZmlsZSBiL2RyaXZlcnMvc29jL2lteC9NYWtlZmls
-ZSBpbmRleA0KPiA1MDZhNmYzLi5kMDA2MDZkIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9p
-bXgvTWFrZWZpbGUNCj4gKysrIGIvZHJpdmVycy9zb2MvaW14L01ha2VmaWxlDQo+IEBAIC0xLDIg
-KzEsMyBAQA0KPiAgb2JqLSQoQ09ORklHX0hBVkVfSU1YX0dQQykgKz0gZ3BjLm8NCj4gIG9iai0k
-KENPTkZJR19JTVhfR1BDVjJfUE1fRE9NQUlOUykgKz0gZ3BjdjIubw0KPiArb2JqLSQoQ09ORklH
-X0lNWF9TQ19TT0MpICs9IHNvYy1pbXgtc2Mubw0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zb2Mv
-aW14L3NvYy1pbXgtc2MuYyBiL2RyaXZlcnMvc29jL2lteC9zb2MtaW14LXNjLmMgbmV3IGZpbGUN
-Cj4gbW9kZSAxMDA2NDQgaW5kZXggMDAwMDAwMC4uMDI5ZDc1NA0KPiAtLS0gL2Rldi9udWxsDQo+
-ICsrKyBiL2RyaXZlcnMvc29jL2lteC9zb2MtaW14LXNjLmMNCj4gQEAgLTAsMCArMSwyMjAgQEAN
-Cj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KPiArLyoNCj4gKyAqIENv
-cHlyaWdodCAyMDE5IE5YUC4NCj4gKyAqLw0KPiArDQo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3Mv
-ZmlybXdhcmUvaW14L3JzcmMuaD4gI2luY2x1ZGUNCj4gKzxsaW51eC9maXJtd2FyZS9pbXgvc2Np
-Lmg+ICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4gI2luY2x1ZGUNCj4gKzxsaW51eC9zbGFiLmg+
-ICNpbmNsdWRlIDxsaW51eC9zeXNfc29jLmg+ICNpbmNsdWRlDQo+ICs8bGludXgvcGxhdGZvcm1f
-ZGV2aWNlLmg+ICNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiArDQo+ICsjaW5jbHVkZSA8c29jL2lt
-eC9yZXZpc2lvbi5oPg0KPiArDQo+ICsjZGVmaW5lIElNWF9TQ19TT0NfRFJJVkVSX05BTUUJImlt
-eC1zYy1zb2MiDQo+ICsNCj4gKyNkZWZpbmUgU09DX1JFVl9NQUpPUl9PRkZTRVQJMHg0DQo+ICsj
-ZGVmaW5lIFNPQ19SRVZfTUFKT1JfTUFTSwkweGYNCj4gKyNkZWZpbmUgU09DX1JFVl9NSU5PUl9P
-RkZTRVQJMHg0DQo+ICsjZGVmaW5lIFNPQ19SRVZfTUlOT1JfTUFTSwkweGYNCj4gKw0KPiArI2Rl
-ZmluZSBnZXRfc29jX3Jldl9tYWpvcihyZXYpICgocmV2ID4+IFNPQ19SRVZfTUFKT1JfT0ZGU0VU
-KSAmDQo+ICtTT0NfUkVWX01BSk9SX01BU0spICNkZWZpbmUgZ2V0X3NvY19yZXZfbWlub3IocmV2
-KSAoKHJldiA+Pg0KPiArU09DX1JFVl9NSU5PUl9PRkZTRVQpICYgU09DX1JFVl9NSU5PUl9NQVNL
-KQ0KPiArDQo+ICtzdGF0aWMgdTMyIGlteF9zY19zb2NfcmV2ID0gSU1YX0NISVBfUkVWSVNJT05f
-VU5LTk9XTjsgc3RhdGljIHU2NA0KPiAraW14X3NjX3NvY191aWQ7DQo+ICsNCj4gK3N0YXRpYyBz
-dHJ1Y3QgaW14X3NjX2lwYyAqc29jX2lwY19oYW5kbGU7IHN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlDQo+ICsqaW14X3NjX3NvY19wZGV2Ow0KPiArDQo+ICtzdHJ1Y3QgaW14X3NjX21zZ19t
-aXNjX2dldF9zb2NfaWQgew0KPiArCXN0cnVjdCBpbXhfc2NfcnBjX21zZyBoZHI7DQo+ICsJdW5p
-b24gew0KPiArCQlzdHJ1Y3Qgew0KPiArCQkJdTMyIGNvbnRyb2w7DQo+ICsJCQl1MTYgcmVzb3Vy
-Y2U7DQo+ICsJCX0gX19wYWNrZWQgc2VuZDsNCj4gKwkJc3RydWN0IHsNCj4gKwkJCXUzMiBpZDsN
-Cj4gKwkJCXUxNiByZXNlcnZlZDsNCj4gKwkJfSBfX3BhY2tlZCByZXNwOw0KPiArCX0gZGF0YTsN
-Cj4gK307DQoNCkJ5IGxlYXJuZWQgbW9yZSwgSSB0aGluayBwcm9iYWJseSBhIG1vcmUgc2FmZSBy
-ZWZlcmVuY2UgaXMgdG8NCmhhdmUgb25lIG1vcmUgX19wYWNrZWQgb3V0c2lkZS4gVGhlbiB3ZSBj
-YW4gdW5pZmllZCBpbiB0aGlzIHdheS4NCg0KPiArDQo+ICtzdHJ1Y3QgaW14X3NjX21zZ19taXNj
-X2dldF9zb2NfdWlkIHsNCj4gKwlzdHJ1Y3QgaW14X3NjX3JwY19tc2cgaGRyOw0KPiArCXUzMiBp
-ZF9sOw0KPiArCXUzMiBpZF9oOw0KPiArfTsNCj4gKw0KPiArc3RhdGljIGlubGluZSB2b2lkIGlt
-eF9zY19zZXRfc29jX3JldmlzaW9uKHUzMiByZXYpIHsNCj4gKwlpbXhfc2Nfc29jX3JldiA9IHJl
-djsNCj4gK30NCj4gKw0KPiArdW5zaWduZWQgaW50IGlteF9nZXRfc29jX3JldmlzaW9uKHZvaWQp
-IHsNCj4gKwlyZXR1cm4gaW14X3NjX3NvY19yZXY7DQo+ICt9DQo+ICtFWFBPUlRfU1lNQk9MKGlt
-eF9nZXRfc29jX3JldmlzaW9uKTsNCj4gKw0KPiArc3RhdGljIHUzMiBpbXhfaW5pdF9yZXZpc2lv
-bl9mcm9tX3NjdSh2b2lkKSB7DQo+ICsJc3RydWN0IGlteF9zY19tc2dfbWlzY19nZXRfc29jX2lk
-IG1zZzsNCj4gKwlzdHJ1Y3QgaW14X3NjX21zZ19taXNjX2dldF9zb2NfdWlkIG1zZzE7DQo+ICsJ
-c3RydWN0IGlteF9zY19ycGNfbXNnICpoZHIgPSAmbXNnLmhkcjsNCj4gKwlzdHJ1Y3QgaW14X3Nj
-X3JwY19tc2cgKmhkcjEgPSAmbXNnMS5oZHI7DQo+ICsJdTMyIGlkLCByZXY7DQo+ICsJaW50IHJl
-dDsNCj4gKw0KPiArCWhkci0+dmVyID0gSU1YX1NDX1JQQ19WRVJTSU9OOw0KPiArCWhkci0+c3Zj
-ID0gSU1YX1NDX1JQQ19TVkNfTUlTQzsNCj4gKwloZHItPmZ1bmMgPSBJTVhfU0NfTUlTQ19GVU5D
-X0dFVF9DT05UUk9MOw0KPiArCWhkci0+c2l6ZSA9IDM7DQo+ICsNCj4gKwltc2cuZGF0YS5zZW5k
-LmNvbnRyb2wgPSBJTVhfU0NfQ19JRDsNCj4gKwltc2cuZGF0YS5zZW5kLnJlc291cmNlID0gSU1Y
-X1NDX1JfU1lTVEVNOw0KPiArDQo+ICsJcmV0ID0gaW14X3NjdV9jYWxsX3JwYyhzb2NfaXBjX2hh
-bmRsZSwgJm1zZywgdHJ1ZSk7DQo+ICsJaWYgKHJldCkgew0KPiArCQlwcl9lcnIoIm1pc2MgZ2V0
-IGNvbnRyb2wgZmFpbGVkLCByZXQgJWRcbiIsIHJldCk7DQoNClBscyBpbXByb3ZlIHRoZSBtZXNz
-YWdlDQoNCj4gKwkJcmV0dXJuIHJldDsNCj4gKwl9DQo+ICsNCj4gKwlpZCA9IG1zZy5kYXRhLnJl
-c3AuaWQ7DQo+ICsNCj4gKwlyZXYgPSAoaWQgPj4gNSkgJiAweGY7DQo+ICsJcmV2ID0gKCgocmV2
-ID4+IDIpICsgMSkgPDwgNCkgfCAocmV2ICYgMHgzKTsNCj4gKw0KPiArCWlteF9zY19zZXRfc29j
-X3JldmlzaW9uKHJldik7DQo+ICsNCj4gKwloZHIxLT52ZXIgPSBJTVhfU0NfUlBDX1ZFUlNJT047
-DQo+ICsJaGRyMS0+c3ZjID0gSU1YX1NDX1JQQ19TVkNfTUlTQzsNCj4gKwloZHIxLT5mdW5jID0g
-SU1YX1NDX01JU0NfRlVOQ19VTklRVUVfSUQ7DQo+ICsJaGRyMS0+c2l6ZSA9IDE7DQoNCkNhbid0
-IHdlIHJldXNlIHRoZSBmaXJzdCBvbmU/DQoNCj4gKw0KPiArCS8qIHRoZSByZXR1cm4gdmFsdWUg
-b2YgU0NVIEZXIGlzIGluIGNvcnJlY3QsIGNhbiBOT1QgY2hlY2sgdGhlIHJldCAqLw0KPiArCXJl
-dCA9IGlteF9zY3VfY2FsbF9ycGMoc29jX2lwY19oYW5kbGUsICZtc2cxLCB0cnVlKTsNCg0KSWYg
-Y2FuJ3QgY2hlY2sgcmV0LCB0aGVuIGRvIG5vdCBhc3NpZ24/DQoNCkJ1dCBob3cgZG8gd2UgbWFr
-ZSBzdXJlIHRoZSBmdW5jdGlvbiBjYWxsIGlzIHN1Y2Nlc3NmdWxseT8NCkhvdyBhYm91dCBjaGVj
-ayBvdGhlciByZXR1cm5zPyBFLmcuIC1FVElNRU9VVD8NCg0KPiArDQo+ICsJaW14X3NjX3NvY191
-aWQgPSBtc2cxLmlkX2g7DQo+ICsJaW14X3NjX3NvY191aWQgPDw9IDMyOw0KPiArCWlteF9zY19z
-b2NfdWlkIHw9IG1zZzEuaWRfbDsNCj4gKw0KPiArCXJldHVybiByZXY7DQo+ICt9DQo+ICsNCj4g
-K3N0YXRpYyBzc2l6ZV90IGlteF9zY19nZXRfc29jX3VpZChzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+
-ICsJCQkJICBzdHJ1Y3QgZGV2aWNlX2F0dHJpYnV0ZSAqYXR0ciwNCj4gKwkJCQkgIGNoYXIgKmJ1
-ZikNCj4gK3sNCj4gKwlyZXR1cm4gc3ByaW50ZihidWYsICIlMDE2bGxYXG4iLCBpbXhfc2Nfc29j
-X3VpZCk7IH0NCj4gKw0KPiArc3RhdGljIHN0cnVjdCBkZXZpY2VfYXR0cmlidXRlIGlteF9zY191
-aWQgPQ0KPiArCV9fQVRUUihzb2NfdWlkLCAwNDQ0LCBpbXhfc2NfZ2V0X3NvY191aWQsIE5VTEwp
-Ow0KPiArDQo+ICtzdGF0aWMgaW50IGlteF9zY19zb2NfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikgew0KPiArCXN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0ZSAqc29jX2Rldl9h
-dHRyOw0KPiArCXUzMiByZXYgPSBJTVhfQ0hJUF9SRVZJU0lPTl9VTktOT1dOOw0KPiArCXN0cnVj
-dCBzb2NfZGV2aWNlICpzb2NfZGV2Ow0KPiArCXUzMiBzb2NfcmV2Ow0KPiArCWludCByZXQ7DQo+
-ICsNCj4gKwlyZXQgPSBpbXhfc2N1X2dldF9oYW5kbGUoJnNvY19pcGNfaGFuZGxlKTsNCj4gKwlp
-ZiAocmV0KQ0KPiArCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJc29jX2Rldl9hdHRyID0ga3phbGxv
-YyhzaXplb2YoKnNvY19kZXZfYXR0ciksIEdGUF9LRVJORUwpOw0KPiArCWlmICghc29jX2Rldl9h
-dHRyKQ0KPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gKw0KPiArCXNvY19kZXZfYXR0ci0+ZmFtaWx5
-ID0gIkZyZWVzY2FsZSBpLk1YIjsNCj4gKw0KPiArCWlmIChvZl9tYWNoaW5lX2lzX2NvbXBhdGli
-bGUoImZzbCxpbXg4cXhwIikpDQo+ICsJCXNvY19kZXZfYXR0ci0+c29jX2lkID0gImkuTVg4UVhQ
-IjsNCj4gKwllbHNlDQo+ICsJCXNvY19kZXZfYXR0ci0+c29jX2lkID0gInVua25vd24iOw0KDQpX
-aHkgbm90IGp1c3QgcmV0dXJuIGRpcmVjdGx5PyBUaGVuIHdlIGNhbiByZW1vdmUgdGhlIHVua25v
-dyBjaGlwIHN1cHBvcnQuDQpPciB3ZSBtdXN0IGhhdmUgdG8gc3VwcG9ydCBhbiB1bmtvd24gY2hp
-cD8NCg0KPiArDQo+ICsJcmV2ID0gaW14X2luaXRfcmV2aXNpb25fZnJvbV9zY3UoKTsNCj4gKwlp
-ZiAocmV2ID09IElNWF9DSElQX1JFVklTSU9OX1VOS05PV04pDQo+ICsJCWRldl9pbmZvKCZwZGV2
-LT5kZXYsICJDUFUgaWRlbnRpZmllZCBhcyAlcywgdW5rbm93biByZXZpc2lvblxuIiwNCj4gKwkJ
-CSBzb2NfZGV2X2F0dHItPnNvY19pZCk7DQo+ICsJZWxzZQ0KPiArCQlkZXZfaW5mbygmcGRldi0+
-ZGV2LCAiQ1BVIGlkZW50aWZpZWQgYXMgJXMsIHNpbGljb24gcmV2ICVkLiVkXG4iLA0KPiArCQkJ
-IHNvY19kZXZfYXR0ci0+c29jX2lkLA0KPiArCQkJIGdldF9zb2NfcmV2X21ham9yKHJldiksDQo+
-ICsJCQkgZ2V0X3NvY19yZXZfbWlub3IocmV2KSk7DQo+ICsNCj4gKwlzb2NfcmV2ID0gaW14X2dl
-dF9zb2NfcmV2aXNpb24oKTsNCj4gKwlzb2NfZGV2X2F0dHItPnJldmlzaW9uID0ga2FzcHJpbnRm
-KEdGUF9LRVJORUwsICIlZC4lZCIsDQo+ICsJCQkJCSAgIGdldF9zb2NfcmV2X21ham9yKHJldiks
-DQo+ICsJCQkJCSAgIGdldF9zb2NfcmV2X21pbm9yKHJldikpOw0KPiArCWlmICghc29jX2Rldl9h
-dHRyLT5yZXZpc2lvbikgew0KPiArCQlyZXQgPSAtRU5PTUVNOw0KPiArCQlnb3RvIGZyZWVfc29j
-Ow0KPiArCX0NCj4gKw0KPiArCW9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG9mX3Jvb3QsICJtb2Rl
-bCIsICZzb2NfZGV2X2F0dHItPm1hY2hpbmUpOw0KPiArDQo+ICsJc29jX2RldiA9IHNvY19kZXZp
-Y2VfcmVnaXN0ZXIoc29jX2Rldl9hdHRyKTsNCj4gKwlpZiAoSVNfRVJSKHNvY19kZXYpKSB7DQo+
-ICsJCXJldCA9IFBUUl9FUlIoc29jX2Rldik7DQo+ICsJCWdvdG8gZnJlZV9yZXY7DQo+ICsJfQ0K
-PiArDQo+ICsJcmV0ID0gZGV2aWNlX2NyZWF0ZV9maWxlKHNvY19kZXZpY2VfdG9fZGV2aWNlKHNv
-Y19kZXYpLCAmaW14X3NjX3VpZCk7DQo+ICsJaWYgKHJldCkNCj4gKwkJZGV2X2VycigmcGRldi0+
-ZGV2LCAiY291bGQgbm90IHJlZ2lzdGVyIHN5c2ZzIGVudHJ5XG4iKTsNCg0KSW1wcm92ZSB0aGUg
-bWVzc2FnZQ0KDQo+ICsNCj4gKwlyZXR1cm4gcmV0Ow0KPiArDQo+ICtmcmVlX3JldjoNCj4gKwlr
-ZnJlZShzb2NfZGV2X2F0dHItPnJldmlzaW9uKTsNCj4gK2ZyZWVfc29jOg0KPiArCWtmcmVlKHNv
-Y19kZXZfYXR0cik7DQoNCklmIHVzaW5nIHBsYXRmb3JtIGRldmljZSBtb2RlbCwgd2UgbWF5IHVz
-ZSBkZXZtX3ggQVBJIGFzIHdlbGwuDQoNCkhvd2V2ZXIsIEknbSBhIGJpdCB3b25kZXJpbmcgd2hl
-dGhlciBpdCdzIHJlYWxseSBuZWNlc3NhcnkgdG8gbW9kZWwNCkl0IGFzIHBsYXRmb3JtIGRldmlj
-ZT8NCiANCj4gKwlyZXR1cm4gcmV0Ow0KPiArfQ0KPiArDQo+ICtzdGF0aWMgc3RydWN0IHBsYXRm
-b3JtX2RyaXZlciBpbXhfc2Nfc29jX2RyaXZlciA9IHsNCj4gKwkuZHJpdmVyID0gew0KPiArCQku
-bmFtZSA9IElNWF9TQ19TT0NfRFJJVkVSX05BTUUsDQo+ICsJfSwNCj4gKwkucHJvYmUgPSBpbXhf
-c2Nfc29jX3Byb2JlLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGludCBfX2luaXQgaW14X3NjX3Nv
-Y19pbml0KHZvaWQpIHsNCj4gKwlpbnQgcmV0Ow0KPiArDQo+ICsJcmV0ID0gcGxhdGZvcm1fZHJp
-dmVyX3JlZ2lzdGVyKCZpbXhfc2Nfc29jX2RyaXZlcik7DQo+ICsJaWYgKHJldCkNCj4gKwkJcmV0
-dXJuIHJldDsNCj4gKw0KPiArCWlteF9zY19zb2NfcGRldiA9DQo+ICsJCXBsYXRmb3JtX2Rldmlj
-ZV9yZWdpc3Rlcl9zaW1wbGUoSU1YX1NDX1NPQ19EUklWRVJfTkFNRSwNCj4gKwkJCQkJCS0xLA0K
-PiArCQkJCQkJTlVMTCwNCj4gKwkJCQkJCTApOw0KDQpJcyBpdCByZWFsbHkgbmVjZXNzYXJ5Pw0K
-DQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiArCWlmIChJU19FUlIoaW14X3NjX3NvY19wZGV2
-KSkgew0KPiArCQlyZXQgPSBQVFJfRVJSKGlteF9zY19zb2NfcGRldik7DQo+ICsJCWdvdG8gdW5y
-ZWdfcGxhdGZvcm1fZHJpdmVyOw0KPiArCX0NCj4gKw0KPiArCXJldHVybiAwOw0KPiArDQo+ICt1
-bnJlZ19wbGF0Zm9ybV9kcml2ZXI6DQo+ICsJcGxhdGZvcm1fZHJpdmVyX3VucmVnaXN0ZXIoJmlt
-eF9zY19zb2NfZHJpdmVyKTsNCj4gKwlyZXR1cm4gcmV0Ow0KPiArfQ0KPiArDQo+ICtzdGF0aWMg
-dm9pZCBfX2V4aXQgaW14X3NjX3NvY19leGl0KHZvaWQpIHsNCj4gKwlwbGF0Zm9ybV9kZXZpY2Vf
-dW5yZWdpc3RlcihpbXhfc2Nfc29jX3BkZXYpOw0KPiArCXBsYXRmb3JtX2RyaXZlcl91bnJlZ2lz
-dGVyKCZpbXhfc2Nfc29jX2RyaXZlcik7DQo+ICt9DQo+ICsNCj4gK21vZHVsZV9pbml0KGlteF9z
-Y19zb2NfaW5pdCk7DQo+ICttb2R1bGVfZXhpdChpbXhfc2Nfc29jX2V4aXQpOw0KPiAtLQ0KPiAy
-LjcuNA0KDQo=
+On Thu, May 09, 2019 at 11:19:23PM +0530, Amit Kucheria wrote:
+> (Adding Lorenzo and Sudeep)
+>
+> On Wed, May 8, 2019 at 8:26 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> >
+> > On Wed, May 08, 2019 at 02:48:19AM +0530, Amit Kucheria wrote:
+> > > On Tue, May 7, 2019 at 1:01 AM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+> > > >
+> > > > Add device bindings for CPUs to suspend using PSCI as the enable-method.
+> > > >
+> > > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > > ---
+> > > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 15 +++++++++++++++
+> > > >  1 file changed, 15 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > index ffedf9640af7..f9db9f3ee10c 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > > @@ -31,6 +31,7 @@
+> > > >                         reg = <0x100>;
+> > > >                         enable-method = "psci";
+> > > >                         next-level-cache = <&L2_0>;
+> > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > >                 };
+> > > >
+> > > >                 CPU1: cpu@101 {
+> > > > @@ -39,6 +40,7 @@
+> > > >                         reg = <0x101>;
+> > > >                         enable-method = "psci";
+> > > >                         next-level-cache = <&L2_0>;
+> > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > >                 };
+> > > >
+> > > >                 CPU2: cpu@102 {
+> > > > @@ -47,6 +49,7 @@
+> > > >                         reg = <0x102>;
+> > > >                         enable-method = "psci";
+> > > >                         next-level-cache = <&L2_0>;
+> > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > >                 };
+> > > >
+> > > >                 CPU3: cpu@103 {
+> > > > @@ -55,12 +58,24 @@
+> > > >                         reg = <0x103>;
+> > > >                         enable-method = "psci";
+> > > >                         next-level-cache = <&L2_0>;
+> > > > +                       cpu-idle-states = <&CPU_PC>;
+> > > >                 };
+> > > >
+> > > >                 L2_0: l2-cache {
+> > > >                         compatible = "cache";
+> > > >                         cache-level = <2>;
+> > > >                 };
+> > > > +
+> > > > +               idle-states {
+> > >
+> > > entry-method="psci" property goes here. I have a patch fixing it for 410c ;-)
+> > >
+> > > I don't think the psci_cpuidle_ops will even get called without this.
+> >
+> > Hello Amit,
+> >
+> > I added debug prints in psci_cpu_suspend_enter() and arm_cpuidle_suspend()
+> > when verifying this patch, and psci_cpu_suspend_enter() is indeed called,
+> > with the correct psci suspend parameter.
+> >
+> > The output from:
+> > grep "" /sys/bus/cpu/devices/cpu0/cpuidle/state?/*
+> > also looks sane.
+> >
+> > However, if 'entry-method="psci"' is required according to the DT binding,
+> > perhaps you can send a 2/2 series that fixes both this patch and msm8916 ?
+>
+> Last time I discussed this with Lorenzo and Sudeep (on IRC), I pointed
+> out that entry-method="psci" isn't checked for in code anywhere. Let's
+> get their view on this for posterity.
+>
+
+Yes entry-method="psci" is required as per DT binding but not checked
+in code on arm64. We have CPU ops with idle enabled only for "psci", so
+there's not need to check.
+
+Once we have DT schema validation, this will be caught, so it's better
+to fix it.
+
+> What does entry-method="psci" in the idle-states node achieve that
+> enable-method="psci" in the cpu node doesn't achieve? (Note: enable-
+> vs. entry-).
+>
+
+From DT binding perspective, we can have different CPU enable-method
+and CPU idle entry-method. However on arm64, it's restricted to PSCI
+only. I need to check what happens on arm32 though, as the driver
+invocation happens via CPUIDLE_METHOD_OF_DECLARE.
+
+> The enable-method property is the one that sets up the
+> psci_cpuidle_ops callbacks through the CPUIDLE_METHOD_OF_DECLARE
+> macro.
+>
+
+Indeed.
+
+> IOW, if we deprecated the entry-method property, everything would
+> still work, wouldn't it?
+
+Why do you want to deprecated just because Linux kernel doesn't want to
+use it. That's not a valid reason IMO.
+
+> Do we expect to support PSCI platforms that might have a different
+> entry-method for idle states?
+
+Not on ARM64, but same DT bindings can be used for idle-states on
+say RISC-V and have some value other than "psci".
+
+> Should I whip up a patch removing entry-method? Since we don't check
+> for it today, it won't break the old DTs either.
+>
+
+Nope, I don't think so. But if it's causing issues, we can look into it.
+I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
+
+--
+Regards,
+Sudeep
