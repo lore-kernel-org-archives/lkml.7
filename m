@@ -2,150 +2,89 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7932C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259FAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88D521479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557506788;
-	bh=LEjaS1MAo+FVs84vgyW9ohJdElC+EdhY5JNBgJJ0kXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KiyuN1KHmmZ8hEdLK1AGakd5GK8PJ+IruwCHVdBG7UEzHunqHKgRv+K0iow5FF+Z0
-	 UOnF2Ac4x8oLI4HN77uQ8BtZA3AGF+HTPpTMGPX8Ucx7g/qW+nWLqKPpfFYM6c5Cxe
-	 zHklu+pLorFtgevRmbZNrorZScPA7NrTepDEw5pg=
+	by mail.kernel.org (Postfix) with ESMTP id D85FE21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HWrLNOSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfEJQq1 (ORCPT
+        id S1727836AbfEJQtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57982 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfEJQq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:46:26 -0400
-Received: from localhost (50-81-62-123.client.mchsi.com [50.81.62.123])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53FD621479;
-        Fri, 10 May 2019 16:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557506784;
-        bh=LEjaS1MAo+FVs84vgyW9ohJdElC+EdhY5JNBgJJ0kXc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d5iGk90ST5ha9qiSiEKOuBLBE/5YfAGKZZqMDt3dtoEyUp2xOSPufHTzJvUhtgSuH
-         bzfRXNuc3hmP81jpY554uu1MC5PG/LY4kYnGnlGLT4d0b3UEoK6V9TK/XUwJO+/rY9
-         JrSIJXoLDzmEERceK0J4TLYrf8Ptwo0Wc96tETj0=
-Date:   Fri, 10 May 2019 11:46:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Krishna Thota <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: Re: [PATCH V5 03/16] PCI: Export pcie_bus_config symbol
-Message-ID: <20190510164623.GI235064@google.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-4-vidyas@nvidia.com>
- <20190503110732.GC32400@ulmo>
- <80616ff5-d7a5-84a4-a71b-569e340d128c@nvidia.com>
+        Fri, 10 May 2019 12:49:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35108 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfEJQtr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:49:47 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q15so4185908wmj.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 09:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QD9hBkezx95+dQeemkScJZveM5ylPZcSzzLZ+VBuxxE=;
+        b=HWrLNOSW7RlVAi8RnLDx9KvIJJknkMjmnYmZy9vW+1r2Ma2dQZiiDk7bY9t/f18XlA
+         ruQW4Pgi+nn4UplAbSckCQl+rTWnKc/XFo3SAExVvYIUksfeRGB9IXrglJt27LbXWzDx
+         UfYVUOBbUBaPkIMh/fXiKGzHRlaGldrihSDv5LwkaeLgbDZtfimsklmxo6juBNUUGQsb
+         rLEXRDRLc6qvjpYDGaFJPEOOKRW9wZKGuGJaYhFFKNywyeiZsTT4ui4rH63GDiNoe1lI
+         ADhN+LhC0aOhapH30Ta4zLY13kfu50mhOI5VagYLrUorRUs3lGZQYRcDuA6WPmn6G6vt
+         M9fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QD9hBkezx95+dQeemkScJZveM5ylPZcSzzLZ+VBuxxE=;
+        b=nIWPadzR8kq1QoDbIB6bNwdLxP4EPdeL+VJ45/XUoCNBuT4eobobQ8DXFL9iAmPRPv
+         x6LlFoSGLrXSTuBCIjSyKSQDgLBGM9RvEnb5nx9fgjFAbbHDvzUh1UNSCFBT3DcCFXuq
+         /klrc2t4O8NiC4Vr8R8omDl1QRPPHFp5gJN81/FXgkIpvG7uAvMeznUC+NgGoH9CX4Gw
+         3MkyJUr9cD/N5NVMvGaWmj7NHoZFDbpjd+CTf6OWnKDdnIfXzy4Tc1BLBnty+WE+QUEo
+         07rUlAtXseP3TbzfH4u1Mq2SKBps9g8gnGYIOo9gjiYXIFvbUhCDHnlSHdteldGCrHJO
+         AM1A==
+X-Gm-Message-State: APjAAAVD7Rlya3GRn8iT4wQk3oCeHlwt1x8tmgoB41Xk6L19Na48CS0i
+        L2jCCHLscSe9JzC5S/G1z1J7DA==
+X-Google-Smtp-Source: APXvYqwUEF4XTc72WlhD1gJI2eKGwCeixpKjDSaEsM4YUTrNZXm/BcVU7KxsNOWWwpGU80rHKeaNLg==
+X-Received: by 2002:a1c:730c:: with SMTP id d12mr7423745wmb.47.1557506985321;
+        Fri, 10 May 2019 09:49:45 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id q26sm5114308wmq.25.2019.05.10.09.49.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 09:49:44 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 0/5] arm64: dts: meson: g12a: add network support
+Date:   Fri, 10 May 2019 18:49:35 +0200
+Message-Id: <20190510164940.13496-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80616ff5-d7a5-84a4-a71b-569e340d128c@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vidya,
+Add network support for the g12a
 
-On Fri, May 10, 2019 at 11:51:24AM +0530, Vidya Sagar wrote:
-> > -----Original Message-----
-> > From: linux-pci-owner@vger.kernel.org <linux-pci-owner@vger.kernel.org> On
-> > Behalf Of Thierry Reding
-> > Sent: Friday, May 3, 2019 4:38 PM
-> > To: Vidya Sagar <vidyas@nvidia.com>
-> > On Wed, Apr 24, 2019 at 10:49:51AM +0530, Vidya Sagar wrote:
-> > > Export pcie_bus_config to enable host controller drivers setting it to
-> > > a specific configuration be able to build as loadable modules
-> > >
-> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Jerome Brunet (5):
+  arm64: dts: meson: g12a: add ethernet mac controller
+  arm64: dts: meson: g12a: add ethernet pinctrl definitions
+  arm64: dts: meson: g12a: add mdio multiplexer
+  arm64: dts: meson: u200: add internal network
+  arm64: dts: meson: sei510: add network support
 
-> > It doesn't look to me like this is something that host controller drivers are
-> > supposed to change. This is set via the pci kernel command- line parameter,
-> > meaning it's a way of tuning the system configuration.
-> > Drivers should not be allowed to override this after the fact.
-> > 
-> > Why do we need to set this?
-> Here is the reason I'm doing it.
-> First things first, Tegra194 supports MPS up to 256 bytes.
-> Assume there are two endpoints with MPS supported up to
-> a) 128 bytes (Ex:- Realtek NIC with 8168 controller)
-> b) 256 bytes (Ex:- Kingston NVMe drive)
-> Now, leaving "pcie_bus_config" untouched in the driver sets it to
-> PCIE_BUS_DEFAULT by default. With this setting, for both (a) and (b),
-> MPS is set to 128, which means, even though Tegra194 supports 256 MPS, it is not
-> set to 256 even in case of (b) thereby not using RP's 256 MPS feature.
-> If I explicitly set pcie_bus_config=PCIE_BUS_PERFORMACE in the code, then 256 MPS is set when
-> (b) is connected, but when (a) is connected, for root port MPS 256 is set and for
-> endpoint MPS 128 is set, because of which root port tries to send packets with 256
-> payload that breaks functionality of Realtek NIC card.
-> The best option I've found out is that when I set 256 in PCI_EXP_DEVCTL of root port
-> explicitly before link up and use pcie_bus_config=PCIE_BUS_SAFE, then, I get the best of both
-> PCIE_BUS_DEFAULT and PCIE_BUS_PERFORMANCE i.e. with (a) connected, MPS is set to 128 in both RP
-> and EP and with (b) connected, MPS is set to 256 in both RP and EP.
-> 
-> So, is it like, pcie_bus_config shouldn't be set to anything explicitly in the driver and depending on the
-> platform and what is connected to root port, kernel parameter can be passed with appropriate setting?
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |  7 ++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  7 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 90 +++++++++++++++++++
+ 3 files changed, 104 insertions(+)
 
-Host controller drivers shouldn't change this unless there's some host
-controller defect that means the generic code can't do the right
-thing.  Even then, I'd prefer that the host controller driver merely
-set a quirk bit that describes the defect, e.g., "mps_*_broken".  Then
-the generic code could pay attention to that and we wouldn't have to
-make "pcie_bus_config" a part of the ABI.
+-- 
+2.20.1
 
-From your description, it sounds like there's nothing actually wrong
-with the Tegra194 hardware, but the generic code isn't as smart about
-setting MPS as it possibly could be.  My solution to that would be to
-make the generic code smarter so everybody can benefit.
-
-Bjorn
-
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c index
-> > > f5ff01dc4b13..731f78508601 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -94,6 +94,7 @@ unsigned long pci_hotplug_mem_size =
-> > > DEFAULT_HOTPLUG_MEM_SIZE;  unsigned long pci_hotplug_bus_size =
-> > > DEFAULT_HOTPLUG_BUS_SIZE;
-> > >
-> > >  enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
-> > > +EXPORT_SYMBOL_GPL(pcie_bus_config);
-> > >
-> > >  /*
-> > >   * The default CLS is used if arch didn't set CLS explicitly and not
-> > > --
-> > > 2.17.1
-> > >
