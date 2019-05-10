@@ -2,114 +2,100 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F25C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E951C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C7E217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E4C21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:34:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3MoHNACh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y8kT4pXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbfEJEd7 (ORCPT
+        id S1727036AbfEJEe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:33:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41634 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfEJEd7 (ORCPT
+        Fri, 10 May 2019 00:34:26 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38656 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfEJEe0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:33:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4A4XiQJ043797;
-        Fri, 10 May 2019 04:33:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=DnWxQah1Do/p8EcIEEk2BiuTUT59Z4lUEvulq0K5mhc=;
- b=3MoHNAChqFlsCkP77/nGN+VS1G0RkB6PQoQS+kDQ/kOn4FJ4PHSL8ImWCPRF0TZUaxZN
- BximiYmSacqyiPejbpmU9fUjvyt0TDSdFtiKVZgoiqrWd3SyyNif8aLmiKUbqVhgrTL5
- Ir4CSeL1kwItQL2RMBT/ymr9LsVxE0h8H22Yx0+Fx9YJgn/OZaAbz4d5dUN3+7dyDD0Y
- ziU2h8VCQWJxM4zPLwd8FeQjAlR/Q3UO+iGbOvuJM1OBn45YxIGv2SCTarTje1af+jxc
- eUQJUZJVJXDKK8TmWKfSRTqb9CMphOfxsAIep+8Ebvi8rT4suGjQdOH2H+60gY0JZIPq 5w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2s94bgep2c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 04:33:43 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4A4XLbN157217;
-        Fri, 10 May 2019 04:33:43 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2schw0733d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 04:33:42 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4A4XbSt014833;
-        Fri, 10 May 2019 04:33:37 GMT
-Received: from dhcp-10-65-129-1.vpn.oracle.com (/10.65.129.1)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 May 2019 04:33:36 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <87tve3j9jf.fsf@yhuang-dev.intel.com>
-Date:   Thu, 9 May 2019 22:33:35 -0600
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <640160C2-4579-45FC-AABB-B60185A2348D@oracle.com>
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <1fb73973-f409-1411-423b-c48895d3dde8@linux.alibaba.com>
- <87tve3j9jf.fsf@yhuang-dev.intel.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=582
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905100032
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9252 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=617 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905100032
+        Fri, 10 May 2019 00:34:26 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so2352118pgl.5
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:34:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ib+MUjfQhZnZSro4VhngEMbvlKvKCZvtG3Xyv5qHdHM=;
+        b=Y8kT4pXGqWTcxgxc4KCfDvBPKoX9ELoCs2hDyY4Ly2GO7yVbII5C5sIybh7CoMWWhn
+         4irrfpAX6ysaErLDHDcQJRGttSZkhh9Ww19O4oEUoX5Wbl8w0QiEkoN7U8w2gWc7MbkW
+         AqhObpLDDOK2kISIX3NSTtSucgohoBF4rSc+YzDtS8HF+vo0q/yfsdNP9L5CqD25sOsV
+         PtGgfAAyumJepwJX9awssnffDPrKnW8KYZTbSbyPqXFjhgsqKv6kGET/MTYWpsHZkmK1
+         39EJ/vXp90+YA8s+wb0a29uGlUi02OibPxvIzcamKW2OrcAS1QMohj5w5Mc1xXKnnSBU
+         l8SA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ib+MUjfQhZnZSro4VhngEMbvlKvKCZvtG3Xyv5qHdHM=;
+        b=Q2eYA2n4+4fr3e4TeJi+r6XprUwu2LkxhJSUEb6f7z4+mfiyIurAoFaHL1pJ8lRSwK
+         CSIQOXNSMH9KCDTewzAzjqY8pvknrMIqTtS7fBQVGi2nilwNJq8SG22ty7p76z3ZmtkK
+         Y0R9tnXtjgWxnPNKwpaavfXYkdPmRNh/Y34MWrHg8qf32+dZUVM/ZFeaQbx4GPpQHfxM
+         U2foi2SfuFeZ2d2iEqBXcziBruVUBV48H4EJMZ4hBciKHo5CdJ1ivX7+xQpo7bdeq0bI
+         XMtsciRr1DP6KqaxuO9254S7X/K46rubq3un8H9SSZ+i+DMcIuEhaecGr7Q8I6YI1y3K
+         3Kyw==
+X-Gm-Message-State: APjAAAX8al8Q1JolU19AQXE22syT4INN01MCkpTfiifQs3MqUM5rwaR7
+        I+chojQk269OkuYhgxLAuF9iEA==
+X-Google-Smtp-Source: APXvYqzWbJYyDIfDb0r0u0JljNU5JZ51XRGaYNlxCB4WAlDG+AP+mkXCY46HRjIg+iRu5M3TEr3K5Q==
+X-Received: by 2002:a65:4907:: with SMTP id p7mr11059685pgs.288.1557462864894;
+        Thu, 09 May 2019 21:34:24 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s17sm4785317pfm.149.2019.05.09.21.34.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 21:34:24 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] Qualcomm QCS404 CDSP improvements and fastrpc
+Date:   Thu,  9 May 2019 21:34:13 -0700
+Message-Id: <20190510043421.31393-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series introduces the non-Trustzone based CDSP support, restructures the
+remoteproc nodes in the dts, introduces the IOMMU and adds the fastrpc nodes.
 
+The matrix_multi app is used for verification, the test completes 100% of the
+time, but exits only succesfully 70% of the time.
 
-> On May 9, 2019, at 9:03 PM, Huang, Ying <ying.huang@intel.com> wrote:
-> 
-> Yang Shi <yang.shi@linux.alibaba.com> writes:
-> 
->> On 5/9/19 7:12 PM, Huang, Ying wrote:
->>> 
->>> How about to change this to
->>> 
->>> 
->>>         nr_reclaimed += hpage_nr_pages(page);
->> 
->> Either is fine to me. Is this faster than "1 << compound_order(page)"?
-> 
-> I think the readability is a little better.  And this will become
-> 
->        nr_reclaimed += 1
-> 
-> if CONFIG_TRANSPARENT_HUAGEPAGE is disabled.
+Bjorn Andersson (7):
+  dt-bindings: remoteproc: Rename and amend Hexagon v56 binding
+  remoteproc: qcom: qdsp6-adsp: Add support for QCS404 CDSP
+  arm64: dts: qcom: qcs404-evb: Mark CDSP clocks protected
+  arm64: dts: qcom: qcs404: Add TCSR node
+  arm64: dts: qcom: qcs404: Fully describe the CDSP
+  arm64: dts: qcom: qcs404: Move lpass and q6 into soc
+  arm64: dts: qcom: qcs404: Define APPS IOMMU
 
-I find this more legible and self documenting, and it avoids the bit shift
-operation completely on the majority of systems where THP is not configured.
+Thierry Escande (1):
+  arm64: dts: qcom: qcs404: Add fastrpc nodes
 
+ ...qcom,adsp-pil.txt => qcom,hexagon-v56.txt} |  35 +-
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |   7 +
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          | 364 +++++++++++++-----
+ drivers/remoteproc/qcom_q6v5_adsp.c           |  73 +++-
+ 4 files changed, 358 insertions(+), 121 deletions(-)
+ rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp-pil.txt => qcom,hexagon-v56.txt} (74%)
+
+-- 
+2.18.0
 
