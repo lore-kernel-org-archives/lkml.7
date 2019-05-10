@@ -2,114 +2,151 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDD8C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6BCC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E851E21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:05:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F3B21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cmq1aMrT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PiOY8fFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfEJNFK (ORCPT
+        id S1727568AbfEJNGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:05:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34240 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbfEJNFJ (ORCPT
+        Fri, 10 May 2019 09:06:44 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38476 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbfEJNGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:05:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so3021908pgt.1;
-        Fri, 10 May 2019 06:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fpkFptDpQZm55D6haD3JjJF9CnC6Z82ZE89k2GMPDNU=;
-        b=Cmq1aMrTSDioFuOgSDGJ+Vw9DKxqHMVvStU7l/OlsJiKZQXOyzsG0AZv8fyz5VyUAj
-         Zz3qK2Mb06CmSPFghLMyLh4x0y2ylW9CMHpAsYVpLMoyUbi10mmhk3QXWZVglFplXkZ6
-         8J6rJOngm4jrOz8LL20+1yQOv1JQ7GdnJ2zCKLpYR9DB07UIJW8HPn6Tl01qOKJ05ltB
-         VDupjhqf3DHBHAvsIewy3sfk4sryVkIT8TX2kf7VCgG1pK/fcXXxdmSX26bKDYTXZz2f
-         qBtA5+YEyAWbqtkmH7jea8z+yddm8gPdVdu2xqB50wLUHaoqXDjNAxo69YAWYUAmByFr
-         Tvhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fpkFptDpQZm55D6haD3JjJF9CnC6Z82ZE89k2GMPDNU=;
-        b=ljQiSBuYinIXfbjkjUWX2rQd4gUmZyNWLN5hmMepPqLSIPJUx0nLinHBPtO4E51w6n
-         w8/+kIJJvSe3Ert4oDKxVz7zOxYz1nLmrj680JilNut3Bg1CERNkZEIidcYAJU+uHVMO
-         D1COxvE3pUaX6nK7UBaFRMQ0CniVHLGoqHLoZnFYrnNgOn4eXDH8LyQmzF9kcc7TUDKX
-         bK1qz8a5nuMR4DqQ1BVu5N44GTFbWcfO8fvZi0lLRXVAQ6+tA2L9cIfn+xkSTkvwSdna
-         VBHT+/Syn6fZdZfaj/z2gOzEDJMNtKssJHTXMCsoL0OZhQElEYLlOemWaGfjR5hjw+SQ
-         r1WA==
-X-Gm-Message-State: APjAAAX8MHnbodJXfo92BtgK7h+a2f+fwgMRXVC0fLqEdSVw4RGb5tjV
-        beBNwOcaQe49gIyxImnRR/SOk0D5
-X-Google-Smtp-Source: APXvYqw80K8ybW3+Do2to1CKTX+/l4pQZ/DHt5qQi7HkB/kfjjBaNJQDIrqr+aePGvKQ8zH6en83ww==
-X-Received: by 2002:a62:520b:: with SMTP id g11mr13374539pfb.215.1557493508647;
-        Fri, 10 May 2019 06:05:08 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 63sm11348932pfu.95.2019.05.10.06.05.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 06:05:07 -0700 (PDT)
-Subject: Re: [PATCH] power: supply: ucs1002: Fix build error without
- CONFIG_REGULATOR
-To:     YueHaibing <yuehaibing@huawei.com>, sre@kernel.org,
-        andrew.smirnov@gmail.com, sebastian.reichel@collabora.com,
-        enric.balletbo@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20190510071823.2984-1-yuehaibing@huawei.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9b37be09-c323-94c6-8bba-44e854597e95@roeck-us.net>
-Date:   Fri, 10 May 2019 06:05:06 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 09:06:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m519XLqZSDnfkbpGbsv710zXFaUAfBMr21hl4yE19g0=; b=PiOY8fFm6G7g9DKI904lrKsYA
+        K1kImV854iDFxCqS1cwiwkjOKkF/sa9TuNQfg51Qpdt8FZ9bBnyCeWRISBuCl1V+pUxKhuyUKXUyl
+        YPYgLOjeJCjX1SlAWb1BArxXofce3cVtV1RiftBO6VCtqZc6SyG81BLo6P9Z7LT7yz77xq7ezbwbc
+        mD+xST6qfOJYh2RkYECwTeHhHERMVZinTXkfxW8Fg+m9piOlSEsYLoXSQx26+aomYKuAhlkCn7eSl
+        dsA5I/EK2Cq7VNUN6pCiphZA5ZxffF+lbuEARiqN7DFpyMTSMApCGAAI2Gk3MKe3/rFa+TtTYEKpF
+        4yhP1S2yA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hP5EH-0005rl-8v; Fri, 10 May 2019 13:06:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 139362029F877; Fri, 10 May 2019 15:06:24 +0200 (CEST)
+Date:   Fri, 10 May 2019 15:06:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Aaron Lu <aaron.lu@linux.alibaba.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH v2 11/17] sched: Basic tracking of matching tasks
+Message-ID: <20190510130624.GW2589@hirez.programming.kicks-ass.net>
+References: <cover.1556025155.git.vpillai@digitalocean.com>
+ <2364f2b65bf50826d881c84d7634b6565dfee527.1556025155.git.vpillai@digitalocean.com>
+ <20190429033620.GA128241@aaronlu>
 MIME-Version: 1.0
-In-Reply-To: <20190510071823.2984-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429033620.GA128241@aaronlu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/19 12:18 AM, YueHaibing wrote:
-> Fix gcc build error while CONFIG_REGULATOR is not set
+On Mon, Apr 29, 2019 at 11:36:22AM +0800, Aaron Lu wrote:
+> On Tue, Apr 23, 2019 at 04:18:16PM +0000, Vineeth Remanan Pillai wrote:
+> > +/*
+> > + * l(a,b)
+> > + * le(a,b) := !l(b,a)
+> > + * g(a,b)  := l(b,a)
+> > + * ge(a,b) := !l(a,b)
+> > + */
+> > +
+> > +/* real prio, less is less */
+> > +static inline bool __prio_less(struct task_struct *a, struct task_struct *b, bool core_cmp)
+> > +{
+> > +	u64 vruntime;
+> > +
+> > +	int pa = __task_prio(a), pb = __task_prio(b);
+> > +
+> > +	if (-pa < -pb)
+> > +		return true;
+> > +
+> > +	if (-pb < -pa)
+> > +		return false;
+> > +
+> > +	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
+> > +		return !dl_time_before(a->dl.deadline, b->dl.deadline);
+> > +
+> > +	vruntime = b->se.vruntime;
+> > +	if (core_cmp) {
+> > +		vruntime -= task_cfs_rq(b)->min_vruntime;
+> > +		vruntime += task_cfs_rq(a)->min_vruntime;
+> > +	}
+> > +	if (pa == MAX_RT_PRIO + MAX_NICE) /* fair */
+> > +		return !((s64)(a->se.vruntime - vruntime) <= 0);
+> > +
+> > +	return false;
+> > +}
 > 
-> drivers/power/supply/ucs1002_power.o: In function `ucs1002_probe':
-> drivers/power/supply/ucs1002_power.c:593: undefined reference to `devm_regulator_register'
-> drivers/power/supply/ucs1002_power.o:(.rodata+0x3b8): undefined reference to `regulator_enable_regmap'
-> drivers/power/supply/ucs1002_power.o:(.rodata+0x3c0): undefined reference to `regulator_disable_regmap'
-> drivers/power/supply/ucs1002_power.o:(.rodata+0x3c8): undefined reference to `regulator_is_enabled_regmap'
+> This unfortunately still doesn't work.
 > 
-> Add Kconfig dependency to CONFIG_REGULATOR.
+> Consider the following task layout on two sibling CPUs(cpu0 and cpu1):
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 9a2688e42638 ("power: supply: Add driver for Microchip UCS1002")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>     rq0.cfs_rq    rq1.cfs_rq
+>         |             |
+>      se_bash        se_hog
+> 
+> se_hog is the sched_entity for a cpu intensive task and se_bash is the
+> sched_entity for bash.
+> 
+> There are two problems:
+> 1 SCHED_DEBIT
+> when user execute some commands through bash, say ls, bash will fork.
+> The newly forked ls' vruntime is set in the future due to SCHED_DEBIT.
+> This made 'ls' lose in __prio_less() when compared with hog, whose
+> vruntime may very likely be the same as its cfs_rq's min_vruntime.
+> 
+> This is OK since we do not want forked process to starve already running
+> ones. The problem is, since hog keeps running, its vruntime will always
+> sync with its cfs_rq's min_vruntime. OTOH, 'ls' can not run, its
+> cfs_rq's min_vruntime doesn't proceed, making 'ls' always lose to hog.
+> 
+> 2 who schedules, who wins
+> so I disabled SCHED_DEBIT, for testing's purpose. When cpu0 schedules,
+> ls could win where both sched_entity's vruntime is the same as their
+> cfs_rqs' min_vruntime. So does hog: when cpu1 schedules, hog can preempt
+> ls in the same way. The end result is, interactive task can lose to cpu
+> intensive task and ls can feel "dead".
+> 
+> I haven't figured out a way to solve this yet. A core wide cfs_rq's
+> min_vruntime can probably solve this. Your suggestions are appreciated.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+multi-queue virtual time is 'interesting'. I worked it out once and then
+my head hurt, I've forgotten the details again. Esp. when combined with
+affinity masks the simple things don't work right. For every
+non-feasible weight scenario it comes apart.
 
-> ---
->   drivers/power/supply/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index ef36bd2..26dacda 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -682,6 +682,7 @@ config CHARGER_UCS1002
->   	tristate "Microchip UCS1002 USB Port Power Controller"
->   	depends on I2C
->   	depends on OF
-> +	depends on REGULATOR
->   	select REGMAP_I2C
->   	help
->   	  Say Y to enable support for Microchip UCS1002 Programmable
-> 
+I know pjt has an approximation somewhere that might work for us; but I
+forgot those details again too.
 
+On possible hack would be to allow min_vruntime to go backwards when
+there is only a single task present; basically have min_vruntime =
+p->vruntime when you enqueue the first task.
