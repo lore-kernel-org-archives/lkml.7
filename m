@@ -2,119 +2,172 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D534BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3822C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7843216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557505363;
-	bh=Qxgie+HcP1ND9knwIbqtVtE4AKwUMSq+SKuD9/60Jg4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h2mlsJpJWRycXzWvv2uOYixuffzO7WmkzHoUcZgNJnG+wSGgAz/34xVr0bgAFRH+y
-	 5PtcMiUs5ps6GQpkYqqIFKfofxuxhYI0HsjUGy3hamOssYs3knScAhZeH/ilIfyY72
-	 GrsUJBtxndn3E+ldrDvXO4sKEqBgM1+lJ76MZIxg=
+	by mail.kernel.org (Postfix) with ESMTP id C74CB20882
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixVqAjVT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfEJQWm (ORCPT
+        id S1727792AbfEJQXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727647AbfEJQWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:22:42 -0400
-Received: from earth.universe (host-091-097-177-147.ewe-ip-backbone.de [91.97.177.147])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFE1320882;
-        Fri, 10 May 2019 16:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557505361;
-        bh=Qxgie+HcP1ND9knwIbqtVtE4AKwUMSq+SKuD9/60Jg4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xiRQDMh9VZirl24MsjXjDn4qwHYDWKOsyh5LjVakEvW8ge3kTbSbPPpn5atCAdkqP
-         4Arj9sxp/+l/1jmg+vNmqHB7lbMEDVyas+w4Jc27tZ4NPx8RSkrFGLc0wmrlrtgIjt
-         dFD6GK90sLx9SaJCSd7Bza7Ut+cNtI4rGAFWRiLs=
-Received: by earth.universe (Postfix, from userid 1000)
-        id BB3A33C0CBC; Fri, 10 May 2019 18:22:39 +0200 (CEST)
-Date:   Fri, 10 May 2019 18:22:39 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     YueHaibing <yuehaibing@huawei.com>, andrew.smirnov@gmail.com,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] power: supply: ucs1002: Fix build error without
- CONFIG_REGULATOR
-Message-ID: <20190510162239.qbnmtw7fxszwbwiw@earth.universe>
-References: <20190510071823.2984-1-yuehaibing@huawei.com>
- <9b37be09-c323-94c6-8bba-44e854597e95@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="abf7t6ubodig5fry"
-Content-Disposition: inline
-In-Reply-To: <9b37be09-c323-94c6-8bba-44e854597e95@roeck-us.net>
-User-Agent: NeoMutt/20180716
+        Fri, 10 May 2019 12:23:07 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38096 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbfEJQXH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:23:07 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y19so4569204lfy.5;
+        Fri, 10 May 2019 09:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ayY1uydNbi09S54QGqWj/gKqj2c4BgGfzdZK20ZWByU=;
+        b=ixVqAjVT4nEj7ElJ4+oPsfs/itKW4X4vU8v6F94p7FJRWAuHjnuM510YOIMC174eGt
+         2b0/k6+OEjBNDLHeRxZUUwwionRljahp83Hw6HGSxDAUHqdqWKZkAX0CF8InrgM2sNSK
+         5tKduvvXM6S2XXls0SvDIsdjjeUw4pZeIPD7Bz3m/OzWmNCfueFM9n5bSlY8shYcq3z5
+         lCoOBp4YfxEIL6l2f8xohZZRGYvOxYSNA2EQr94TUq5ycmvog4knRxVFDAEdqhxziWuO
+         EA1TzJk4uFN4dhrIirdJKeoEJbbbtziR1kIKdS9JjBB9jum+yn68uFaGuLLkn0nWrzZa
+         90cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ayY1uydNbi09S54QGqWj/gKqj2c4BgGfzdZK20ZWByU=;
+        b=Ca8oJdWHdv+aY6MFy2id3Sm9SQm4fGYlGUuTGB5RE4AmQ9XUxEz3gAOCEddW0bGApU
+         c8SpJQbxQtcFdMgpkIwAPkA8dTY+Q4qtaoxpuuDJQ82+r4SZ3gionPbHE5/W71ohnnm3
+         v3Ha6+yA9642KQujYiKNYs6WkLul87hWCY5TlTYxIQOlgHImcbhQH2wbj18rvPeXWUor
+         5tQCSMvTJoIRZmhFmp2X2sLnyC2JWWtwC2pgyN6i9s8yRUT+ItqqKQml+q1sprPSbhvC
+         urOgjEZ//Tznq61iDGu+MsgKF4i8nXzUzw/ZuCGBjmxeCkJMAYzphpUJ1b9ZpLiK7Ig0
+         Ah2w==
+X-Gm-Message-State: APjAAAXkZ9L2sX8JTxyC37xToTsLgtNPF17VQePaepjM6joL+cmX+iZd
+        KWEeWX+DnRt9TO9wEB+TgzjhEAQfHHI=
+X-Google-Smtp-Source: APXvYqyZR6Cs5GH6zJDgLKpDIylalMinGPFQRdaUOVl8hukJxEvg+xm6wZCjO7n46eWhFEFmXhcZPw==
+X-Received: by 2002:a19:4bd1:: with SMTP id y200mr6892246lfa.25.1557505385006;
+        Fri, 10 May 2019 09:23:05 -0700 (PDT)
+Received: from otyshchenko.kyiv.epam.com (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id z12sm1693732lfh.72.2019.05.10.09.23.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 10 May 2019 09:23:04 -0700 (PDT)
+From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
+To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
+        linux@armlinux.org.uk,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory region
+Date:   Fri, 10 May 2019 19:22:57 +0300
+Message-Id: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
---abf7t6ubodig5fry
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Don't use hardcoded address, retrieve it from device-tree instead.
 
-Hi,
+And besides, this patch fixes the memory error when running
+on top of Xen hypervisor:
 
-On Fri, May 10, 2019 at 06:05:06AM -0700, Guenter Roeck wrote:
-> On 5/10/19 12:18 AM, YueHaibing wrote:
-> > Fix gcc build error while CONFIG_REGULATOR is not set
-> >=20
-> > drivers/power/supply/ucs1002_power.o: In function `ucs1002_probe':
-> > drivers/power/supply/ucs1002_power.c:593: undefined reference to `devm_=
-regulator_register'
-> > drivers/power/supply/ucs1002_power.o:(.rodata+0x3b8): undefined referen=
-ce to `regulator_enable_regmap'
-> > drivers/power/supply/ucs1002_power.o:(.rodata+0x3c0): undefined referen=
-ce to `regulator_disable_regmap'
-> > drivers/power/supply/ucs1002_power.o:(.rodata+0x3c8): undefined referen=
-ce to `regulator_is_enabled_regmap'
-> >=20
-> > Add Kconfig dependency to CONFIG_REGULATOR.
-> >=20
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Fixes: 9a2688e42638 ("power: supply: Add driver for Microchip UCS1002")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->=20
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+(XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000
+      gpa=0x000000e6080000
 
-Thanks, queued.
+Which shows that VCPU0 in Dom0 is trying to access an address in memory
+it is not allowed to access (0x000000e6080000).
+Put simply, Xen doesn't know that it is a device's register memory
+since it wasn't described in a host device tree (which Xen parses)
+and as the result this memory region wasn't assigned to Dom0 at
+domain creation time.
 
--- Sebastian
+Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
---abf7t6ubodig5fry
-Content-Type: application/pgp-signature; name="signature.asc"
+---
 
------BEGIN PGP SIGNATURE-----
+This patch is meant to get feedback from the community before
+proceeding further. If we decide to go this direction, all Gen2
+device-trees should be updated (add memory region) before
+this patch going in.
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzVpUwACgkQ2O7X88g7
-+poDGRAAnJb/Jvso2KCVfj7f63PFAscr2hzeDdrgKWpbl+flff18pOOhwCMHNi7I
-rpv6dZMohdH2/Vaae06lyp/LAgXudeZwsObVLwvgX6qQPtC9kaDq80dLQmEdQINv
-SPMxH+spTNq5sIaVftSvex+vByNe6gzKf4fMOfa8JGuBgoMTJM0pAjbvqOVr3RET
-v57J5yumNT1+zIKEaA3MQD2NJDRsE7bgJoLP+3SJkXSC/jnvDLC8F6OqmSF8cfv7
-zbjiivy/HndJr/tzAgD0zIkoFvNG4Gey7C1OoZPdc4Qzijh9caUjfr3vjbF4Af0b
-2Cl69ar/e1l/Dh1hIG4tl7K2oOOK6EKMDlq3IUxYKIVSxY06hX5vaCm0EJBg1Wc2
-MAcHDQ3Rnyxdx8y9qcv/qdVmh9Rfrj8x6SmEgwgDQLKxu9LS1r7UI23SVKRzF2O/
-7cgJ6jSpa41Dz1Gn2VKmysSHFMpdYNBAkKcsVjPlQX5gFDpnxNv5xphKXLzGG1cC
-AojhO6WPAgUU1vb7Yc70EIaMJkzEzryQQ4ul37T+l/4oSiuxnwd/cQy8eDTWQYfh
-0f/3LGYEKXQxwdnj+1EonBxOIojGcfjTTnmj8PqW6ZDnFTkbxpifig/RXcf+AQSb
-64+vkH5yDbuPL7m776g/QVIeJ6aKQCfdC3li+1J+W75xqhuxzVQ=
-=1NGs
------END PGP SIGNATURE-----
+e.g. r8a7790.dtsi:
 
---abf7t6ubodig5fry--
+...
+timer {
+	compatible = "arm,armv7-timer";
+	interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+			      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+			      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+			      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
++	 reg = <0 0xe6080000 0 0x1000>;
+};
+...
+
+---
+ arch/arm/mach-shmobile/setup-rcar-gen2.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+index 35dda21..153e3f5 100644
+--- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+@@ -15,6 +15,7 @@
+ #include <linux/kernel.h>
+ #include <linux/memblock.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+ #include <asm/mach/arch.h>
+@@ -61,6 +62,8 @@ static unsigned int __init get_extal_freq(void)
+ 
+ void __init rcar_gen2_timer_init(void)
+ {
++	struct device_node *np;
++	struct resource res;
+ 	void __iomem *base;
+ 	u32 freq;
+ 
+@@ -72,6 +75,13 @@ void __init rcar_gen2_timer_init(void)
+ 	if (!psci_smp_available())
+ 		secure_cntvoff_init();
+ 
++	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
++	if (!np)
++		goto out;
++
++	if (of_address_to_resource(np, 0, &res))
++		goto out;
++
+ 	if (of_machine_is_compatible("renesas,r8a7745") ||
+ 	    of_machine_is_compatible("renesas,r8a77470") ||
+ 	    of_machine_is_compatible("renesas,r8a7792") ||
+@@ -88,7 +98,9 @@ void __init rcar_gen2_timer_init(void)
+ 	}
+ 
+ 	/* Remap "armgcnt address map" space */
+-	base = ioremap(0xe6080000, PAGE_SIZE);
++	base = ioremap(res.start, resource_size(&res));
++	if (!base)
++		goto out;
+ 
+ 	/*
+ 	 * Update the timer if it is either not running, or is not at the
+@@ -109,6 +121,9 @@ void __init rcar_gen2_timer_init(void)
+ 
+ 	iounmap(base);
+ 
++out:
++	of_node_put(np);
++
+ 	of_clk_init(NULL);
+ 	timer_probe();
+ }
+-- 
+2.7.4
+
