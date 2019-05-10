@@ -2,90 +2,77 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F22AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADFDC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEC520882
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27F9120896
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfEJQX4 (ORCPT
+        id S1727811AbfEJQYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:23:56 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:43644 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727346AbfEJQXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:23:55 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TRMJ8gS_1557505420;
-Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRMJ8gS_1557505420)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 May 2019 00:23:47 +0800
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     ying.huang@intel.com, hannes@cmpxchg.org, mhocko@suse.com,
-        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
-        hughd@google.com, shakeelb@google.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org
-Cc:     yang.shi@linux.alibaba.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
-Date:   Sat, 11 May 2019 00:23:40 +0800
-Message-Id: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 10 May 2019 12:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727346AbfEJQYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 12:24:05 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76EF420882;
+        Fri, 10 May 2019 16:24:03 +0000 (UTC)
+Date:   Fri, 10 May 2019 12:24:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
+ addresses
+Message-ID: <20190510122401.21a598f6@gandalf.local.home>
+In-Reply-To: <20190510084213.22149-1-pmladek@suse.com>
+References: <20190510081635.GA4533@jagdpanzerIV>
+        <20190510084213.22149-1-pmladek@suse.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
-still gets inc'ed by one even though a whole THP (512 pages) gets
-swapped out.
+On Fri, 10 May 2019 10:42:13 +0200
+Petr Mladek <pmladek@suse.com> wrote:
 
-This doesn't make too much sense to memory reclaim.  For example, direct
-reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
-could fulfill it.  But, if nr_reclaimed is not increased correctly,
-direct reclaim may just waste time to reclaim more pages,
-SWAP_CLUSTER_MAX * 512 pages in worst case.
+>  static const char *check_pointer_msg(const void *ptr)
+>  {
+> -	char byte;
+> -
+>  	if (!ptr)
+>  		return "(null)";
+>  
+> -	if (probe_kernel_address(ptr, byte))
+> +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
+>  		return "(efault)";
+>  
 
-This change may result in more reclaimed pages than scanned pages showed
-by /proc/vmstat since scanning one head page would reclaim 512 base pages.
 
-Cc: "Huang, Ying" <ying.huang@intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Hugh Dickins <hughd@google.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
----
-v2: Added Shakeel's Reviewed-by
-    Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+	< PAGE_SIZE ?
 
- mm/vmscan.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+do you mean: < TASK_SIZE ?
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index fd9de50..4226d6b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 
- 		unlock_page(page);
- free_it:
--		nr_reclaimed++;
-+		/* 
-+		 * THP may get swapped out in a whole, need account
-+		 * all base pages.
-+		 */
-+		nr_reclaimed += hpage_nr_pages(page);
- 
- 		/*
- 		 * Is there need to periodically free_page_list? It would
--- 
-1.8.3.1
-
+-- Steve
