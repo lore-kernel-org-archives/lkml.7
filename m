@@ -2,121 +2,85 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D35EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15A9C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AE96217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:34:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90855217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:34:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="saKkANIF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfEJOeV (ORCPT
+        id S1727988AbfEJOeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 10:34:21 -0400
-Received: from mga14.intel.com ([192.55.52.115]:32461 "EHLO mga14.intel.com"
+        Fri, 10 May 2019 10:34:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:34258 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727248AbfEJOeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727511AbfEJOeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 May 2019 10:34:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 07:34:16 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga002.jf.intel.com with ESMTP; 10 May 2019 07:34:08 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hP6b9-0004Sg-Pc; Fri, 10 May 2019 17:34:07 +0300
-Date:   Fri, 10 May 2019 17:34:07 +0300
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-rpi-kernel@lists.infradead.org" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 03/16] lib,treewide: add new match_string() helper/macro
-Message-ID: <20190510143407.GA9224@smile.fi.intel.com>
-References: <20190508112842.11654-1-alexandru.ardelean@analog.com>
- <20190508112842.11654-5-alexandru.ardelean@analog.com>
- <20190508131128.GL9224@smile.fi.intel.com>
- <20190508131856.GB10138@kroah.com>
- <b2440bc9485456a7a90a488c528997587b22088b.camel@analog.com>
- <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
+Received: from zn.tnic (p200300EC2F0F4000329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0f:4000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D3FE1EC09A3;
+        Fri, 10 May 2019 16:34:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557498857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=C7+IBqexWMEpmbNKkcHjYer0PezJFxH8eIctfj9JsKQ=;
+        b=saKkANIF8smkogjtdEzHVG5cCpmFn+8uNGWgXdVj+2Vco6/Ziz5lLYgWd1qJMpTofyJkN0
+        BawLhz5CuCiz2s1MacwkA1RVDk9C5eTqdJVy+IdtTi0bsjX3bp/02aon6Ao09jc2FfA/9L
+        5H/9cbxb6EObhdMwmP90jzzMivLIpI4=
+Date:   Fri, 10 May 2019 16:34:13 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     thor.thayer@linux.intel.com
+Cc:     mchehab@kernel.org, james.morse@arm.com, dinguyen@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Add Stratix10 OCRAM & SDMMC EDAC Support
+Message-ID: <20190510143413.GC29927@zn.tnic>
+References: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4df165bc4247e60aa4952fd55cb0c77e60712767.camel@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <1556030197-24534-1-git-send-email-thor.thayer@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 09:15:27AM +0000, Ardelean, Alexandru wrote:
-> On Wed, 2019-05-08 at 16:22 +0300, Alexandru Ardelean wrote:
-> > On Wed, 2019-05-08 at 15:18 +0200, Greg KH wrote:
-> > > On Wed, May 08, 2019 at 04:11:28PM +0300, Andy Shevchenko wrote:
-> > > > On Wed, May 08, 2019 at 02:28:29PM +0300, Alexandru Ardelean wrote:
-
-> > > > Can you split include/linux/ change from the rest?
-> > > 
-> > > That would break the build, why do you want it split out?  This makes
-> > > sense all as a single patch to me.
-> > > 
-> > 
-> > Not really.
-> > It would be just be the new match_string() helper/macro in a new commit.
-> > And the conversions of the simple users of match_string() (the ones using
-> > ARRAY_SIZE()) in another commit.
-> > 
+On Tue, Apr 23, 2019 at 09:36:33AM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> I should have asked in my previous reply.
-> Leave this as-is or re-formulate in 2 patches ?
+> This patch series adds EDAC support for the Stratix10 OCRAM
+> and SDMMC peripherals.
+> 
+> Thor Thayer (4):
+>   EDAC, altera: Add Stratix10 OCRAM ECC support
+>   arm64: dts: stratix10: Add OCRAM EDAC node
+>   EDAC, altera: Add Stratix10 SDMMC support
+>   arm64: dts: stratix10: Add SDMMC EDAC node
+> 
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  8 ++++
+>  .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 11 ++++++
+>  drivers/edac/altera_edac.c                         | 43 ++++++++++++++++++++--
+>  3 files changed, 59 insertions(+), 3 deletions(-)
+> 
+> -- 
 
-Depends on on what you would like to spend your time: collecting Acks for all
-pieces in treewide patch or send new API first followed up by per driver /
-module update in next cycle.
+All 4 queued locally, will appear after -rc1 releases.
 
-I also have no strong preference.
-And I think it's good to add Heikki Krogerus to Cc list for both patch series,
-since he is the author of sysfs variant and may have something to comment on
-the rest.
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
 
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
