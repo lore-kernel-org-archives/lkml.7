@@ -2,195 +2,150 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B0AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A6BC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51E92217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A8E217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bYXJGAYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfEJHVs (ORCPT
+        id S1727307AbfEJHV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:21:48 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44513 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbfEJHVd (ORCPT
+        Fri, 10 May 2019 03:21:58 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:60041 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbfEJHV6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:21:33 -0400
-Received: by mail-qk1-f195.google.com with SMTP id w25so3047870qkj.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:21:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vOejBc1QN8TJ6K5lhz+Yvn4+87eApSQ46e32YrdputU=;
-        b=stPIaAE8WyGUcWExUKY5n+2KdfzMooZZxhMx8Gug7jNnArJ8wM1rdLBwlpf+Zomb5e
-         oiwelU+5cXoz+SZRfxRNm7TGY77vj6X+ebaMTXKy1WFHUEDjqEECGZzGZ1NZOMATbUnu
-         B99AcwBRn1KCWUuKWN6jpu59dovZzAC/grAjxpxPT/QfRUdinXsyMSiBBXKBAexZhVtH
-         ixYlVfXUTOgh9wW3prp5h42iucGZ1N+3Qp9SS2D9/YcbXX844Q1kC9KX3V7/yzq8EUSD
-         8z1XqpWbdWjk7lf0DGRWB8Sd3lTuxaQI5p4/YjgWKPCa/mnCcnxivC4YDs76z5XoFmu/
-         6YIA==
-X-Gm-Message-State: APjAAAVJ7u2657XF9+alQysVG4MkTeF6WaHUM3k9lzI0LnmYtcMEqDJD
-        bZgM305j6cDNNedy2ygBXn0XJsaK1co2rQ==
-X-Google-Smtp-Source: APXvYqzPe26b8EbsZNX43wXIk/ZJMwyIsrlo41vyylWWI/zUIYOTf4fWR2vuKOPN9vH/HO0FjC5SPg==
-X-Received: by 2002:a37:5444:: with SMTP id i65mr7490671qkb.263.1557472892023;
-        Fri, 10 May 2019 00:21:32 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y18sm2145077qty.78.2019.05.10.00.21.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 00:21:31 -0700 (PDT)
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-Subject: [PATCH RFC 2/4] mm/ksm: introduce VM_UNMERGEABLE
-Date:   Fri, 10 May 2019 09:21:23 +0200
-Message-Id: <20190510072125.18059-3-oleksandr@redhat.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190510072125.18059-1-oleksandr@redhat.com>
-References: <20190510072125.18059-1-oleksandr@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 10 May 2019 03:21:58 -0400
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190510072155epoutp02d0ef514dffc4f5af2574458e622d5b61~dQV1-M_zv0207702077epoutp02k
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 07:21:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190510072155epoutp02d0ef514dffc4f5af2574458e622d5b61~dQV1-M_zv0207702077epoutp02k
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557472916;
+        bh=0GHg7hg1JH/Hx2kxrbu6qAah08w35aybr4V9aViVsPs=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=bYXJGAYT85TwR7MMryABJh+YY5gqdJBzz2lYzSlZpIgAWShlcbDxKpbQQW7CSCG4z
+         08r2MaKwxExPvVXl9YcWVukd7YvVR973XhAuz/BKlrO46kl/FTRQVKT9Qx8rpSDTG/
+         3iyiWVcVZBGz8uRCsZMHeWxAIBDTE7K5lUZJdrP4=
+Received: from epsmges5p3new.samsung.com (unknown [182.195.40.193]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20190510072154epcas5p109db6ea89ab70e5b214436f6dff7fca6~dQV0USwuU3047530475epcas5p1E;
+        Fri, 10 May 2019 07:21:54 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2D.BB.04067.29625DC5; Fri, 10 May 2019 16:21:54 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1~dPazciaV32280722807epcas5p3V;
+        Fri, 10 May 2019 06:14:18 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190510061418epsmtrp14aaaf105d4d2f8ab03548bbbe07e9a1d~dPazbvThh0714207142epsmtrp1J;
+        Fri, 10 May 2019 06:14:18 +0000 (GMT)
+X-AuditID: b6c32a4b-78bff70000000fe3-59-5cd526922ef3
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        35.36.03692.AB615DC5; Fri, 10 May 2019 15:14:18 +0900 (KST)
+Received: from localhost.localdomain (unknown [107.109.224.135]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190510061416epsmtip290cabd8939c2be6a25e4ab8ae7a48a7f~dPaxVZ6e51223912239epsmtip2h;
+        Fri, 10 May 2019 06:14:16 +0000 (GMT)
+From:   Maninder Singh <maninder1.s@samsung.com>
+To:     terrelln@fb.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+        keescook@chromium.org, gustavo@embeddedor.com
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        a.sahrawat@samsung.com, pankaj.m@samsung.com,
+        Maninder Singh <maninder1.s@samsung.com>,
+        Vaneet Narang <v.narang@samsung.com>
+Subject: [PATCH 2/2] zstd: use U16 data type for rankPos
+Date:   Fri, 10 May 2019 11:43:59 +0530
+Message-Id: <1557468839-3388-1-git-send-email-maninder1.s@samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUhUURTHufPeLC5Tj2k7WcrwcII0bcaa6VYuUSED+kEIKmLKXnoZpdl4
+        b8a2D01llkpZttBimlSUFi2mZprlVtFie5YNWpAVmU2omIUUzfMl9e13/ud/7v9y71FRmmF5
+        mCrb4Sa8g7OximC6tnVmVEzxjJcWve+BEj9tILjkcS6Na27ocGHvdPyw0I7fdv+U4ef1JQrc
+        WpZH4+6+Ghnu/d2hwC33TqBFIebj3qe0ubqiU2a+2Kwz79/hV5prm3TmvdWVyDxYFZGmXGWL
+        zyJcJuG1xJHhzMx2WBPYlGXpS9KNJr0hxjAfz2O1Ds5OEtilqWkxydm2wPVYbQ5n8wSkNE4Q
+        2NmJ8bzT4ybaLKfgTmCJK9PmMsS5YgXOLngc1tgMp32BQa+PMwaca21ZHeXn5a6CoI0/hr20
+        F/kVBUilAmYu1DQuLEBBKg3TgMBbCBIPIPB/tBSg4AB/R+ArG0Jj/r6etZLeGPCUtiulYgjB
+        heP5CnFawcRCZf0NWuSJTA6cvH5TLpoopgnBkP8KJTYmMBi2595RikwzOhh4tkcpJqiZZGiv
+        2CLKwERA56N8SpwF5oICzua3UVJjKXTknZZJPAF671YrJQ6Dz0V5SmlgF4JXRztoqTiIIP9b
+        xV9XErx7fXs0jWJmwqX62ZIcDofuXxw9lGLGwZ6Rnr8BaqgrHWMd5HZelks8DQb7+2mJzTDQ
+        OCITj9Qwq6G1K2kfCj/2L+AkQpVoKnEJdisRjK45DrLh/2+qQqNLF5VSh6oepbYgRoXYUDUe
+        /8KikXM5wiZ7CwIVxU5U87MCkjqT27SZ8M503mMjQgsyBh5wPxU2KcMZWGGHO91gjDOZ9PP1
+        xjnYZGCnqIvlLy0axsq5yXpCXIQfm5OpgsK8aEX8lp3njnxIjWhLrQtvuNZsfTeyMzF6utWZ
+        VF882B69JrF86wY33Ipe/mvz7+5Pa6Kujkw2FfUslr1fpz0aen0bHl45tw+fjuwKfdMVsrI2
+        5olr997Sj4bmrudffXRw05lTh48cKOtnfMgyrTw55M6P5i9FjfN4/+uUyEhfKfG8aWNpIYsz
+        RFG8wP0BRZI6t4oDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMLMWRmVeSWpSXmKPExsWy7bCSvO4usasxBhuea1hc3J1qMed8C4vF
+        1j2qFt2vZCzOdOda3L/3k8ni8q45bBaH57exWNx7s5XJ4tW/a2wWh07OZXTg9pjdcJHFY8vK
+        m0we6w6qekxsfsfuse2AqkffllWMHp83yQWwR3HZpKTmZJalFunbJXBlXFu4mrWgi7Pix/cG
+        lgbGd2xdjBwcEgImEm+eJHQxcnEICexmlFi7/ghrFyMnUFxa4ue/9ywQtrDEyn/P2SGKPjNK
+        HNqwlxkkwSagJ7Fq1x6wIhGBGom2f0fZQIqYBY4xSmxYcJ0RJCEsYCHR1HKMHcRmEVCV+HSp
+        lx1kM6+Am8TZldUQC+Qkbp7rZJ7AyLOAkWEVo2RqQXFuem6xYYFhXmq5XnFibnFpXrpecn7u
+        JkZw0Glp7mC8vCT+EKMAB6MSD68F/5UYIdbEsuLK3EOMEhzMSiK8RTpAId6UxMqq1KL8+KLS
+        nNTiQ4zSHCxK4rxP845FCgmkJ5akZqemFqQWwWSZODilGhgFUxbP0zjBdlo3bWvDiZJ3f47J
+        di1ZXv5MedejS8H7ZB1Wyi6NCD5W7tuW9HHV9MLwI0t+HRaol5u/UmxLkWeZxBvLuYpVe9VX
+        W1WWXbRfy9vgdK9hprjCyV/erzW+Nik/qlBYxDmHZ2fUssfvvvf/SlPqf9K8mUNwaufsWy8X
+        XRQ88Lc717NTiaU4I9FQi7moOBEA0G2ajDYCAAA=
+X-CMS-MailID: 20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1
+References: <CGME20190510061418epcas5p3679447cedd01f3ec70139f79ac7bcca1@epcas5p3.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add separate vmaflag to allow applications to opt out of automatic VMAs
-merging due to (possible) security concerns.
+rankPos structure variables value can not be more than 512.
+So it can easily be declared as U16 rather than U32.
 
-Since vmaflags are tight on free bits, this flag is available on 64-bit
-architectures only. Thus, subsequently, KSM "always" mode will be
-available for 64-bit architectures only as well.
+It will reduce stack usage of HUF_sort from 256 bytes to 128 bytes
 
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+original:
+e92ddbf0        push    {r4, r5, r6, r7, r8, r9, fp, ip, lr, pc}
+e24cb004        sub     fp, ip, #4
+e24ddc01        sub     sp, sp, #256    ; 0x100
+
+changed:
+e92ddbf0        push    {r4, r5, r6, r7, r8, r9, fp, ip, lr, pc}
+e24cb004        sub     fp, ip, #4
+e24dd080        sub     sp, sp, #128    ; 0x80
+
+
+Signed-off-by: Maninder Singh <maninder1.s@samsung.com>
+Signed-off-by: Vaneet Narang <v.narang@samsung.com>
 ---
- fs/proc/task_mmu.c             |  3 +++
- include/linux/mm.h             |  6 ++++++
- include/trace/events/mmflags.h |  7 +++++++
- mm/ksm.c                       | 13 +++++++++++++
- 4 files changed, 29 insertions(+)
+ lib/zstd/huf_compress.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 95ca1fe7283c..19cc246000e8 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -648,6 +648,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
- 		[ilog2(VM_MIXEDMAP)]	= "mm",
- 		[ilog2(VM_HUGEPAGE)]	= "hg",
- 		[ilog2(VM_NOHUGEPAGE)]	= "nh",
-+#ifdef VM_UNMERGEABLE
-+		[ilog2(VM_UNMERGEABLE)]	= "ug",
-+#endif
- 		[ilog2(VM_MERGEABLE)]	= "mg",
- 		[ilog2(VM_UFFD_MISSING)]= "um",
- 		[ilog2(VM_UFFD_WP)]	= "uw",
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 6b10c21630f5..114cdb882cdd 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -252,11 +252,13 @@ extern unsigned int kobjsize(const void *objp);
- #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
-+#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
- #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
- #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
- #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
- #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
-+#define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
- #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
+diff --git a/lib/zstd/huf_compress.c b/lib/zstd/huf_compress.c
+index e727812..2203124 100644
+--- a/lib/zstd/huf_compress.c
++++ b/lib/zstd/huf_compress.c
+@@ -382,8 +382,8 @@ static U32 HUF_setMaxHeight(nodeElt *huffNode, U32 lastNonNull, U32 maxNbBits)
+ }
  
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -272,6 +274,10 @@ extern unsigned int kobjsize(const void *objp);
- #endif
- #endif /* CONFIG_ARCH_HAS_PKEYS */
+ typedef struct {
+-	U32 base;
+-	U32 curr;
++	U16 base;
++	U16 curr;
+ } rankPos;
  
-+#ifdef VM_HIGH_ARCH_5
-+#define VM_UNMERGEABLE	VM_HIGH_ARCH_5	/* Opt-out for KSM "always" mode */
-+#endif /* VM_HIGH_ARCH_5 */
-+
- #if defined(CONFIG_X86)
- # define VM_PAT		VM_ARCH_1	/* PAT reserves whole VMA at once (x86) */
- #elif defined(CONFIG_PPC)
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index a1675d43777e..717e0fd9d2ef 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -130,6 +130,12 @@ IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
- #define IF_HAVE_VM_SOFTDIRTY(flag,name)
- #endif
- 
-+#ifdef VM_UNMERGEABLE
-+#define IF_HAVE_VM_UNMERGEABLE(flag,name) {flag, name },
-+#else
-+#define IF_HAVE_VM_UNMERGEABLE(flag,name)
-+#endif
-+
- #define __def_vmaflag_names						\
- 	{VM_READ,			"read"		},		\
- 	{VM_WRITE,			"write"		},		\
-@@ -161,6 +167,7 @@ IF_HAVE_VM_SOFTDIRTY(VM_SOFTDIRTY,	"softdirty"	)		\
- 	{VM_MIXEDMAP,			"mixedmap"	},		\
- 	{VM_HUGEPAGE,			"hugepage"	},		\
- 	{VM_NOHUGEPAGE,			"nohugepage"	},		\
-+IF_HAVE_VM_UNMERGEABLE(VM_UNMERGEABLE,	"unmergeable"	)		\
- 	{VM_MERGEABLE,			"mergeable"	}		\
- 
- #define show_vma_flags(flags)						\
-diff --git a/mm/ksm.c b/mm/ksm.c
-index a6b0788a3a22..0fb5f850087a 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -2450,12 +2450,18 @@ int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
- 
- 	switch (advice) {
- 	case MADV_MERGEABLE:
-+#ifdef VM_UNMERGEABLE
-+		*vm_flags &= ~VM_UNMERGEABLE;
-+#endif
- 		err = ksm_enter(mm, vma, vm_flags);
- 		if (err)
- 			return err;
- 		break;
- 
- 	case MADV_UNMERGEABLE:
-+#ifdef VM_UNMERGEABLE
-+		*vm_flags |= VM_UNMERGEABLE;
-+#endif
- 		if (!(*vm_flags & VM_MERGEABLE))
- 			return 0;		/* just ignore the advice */
- 
-@@ -2496,6 +2502,10 @@ int ksm_enter(struct mm_struct *mm, struct vm_area_struct *vma,
- 	if (*vm_flags & VM_SPARC_ADI)
- 		return 0;
- #endif
-+#ifdef VM_UNMERGEABLE
-+	if (*vm_flags & VM_UNMERGEABLE)
-+		return 0;
-+#endif
- 
- 	if (!test_bit(MMF_VM_MERGEABLE, &mm->flags)) {
- 		err = __ksm_enter(mm);
-@@ -3173,6 +3183,9 @@ static ssize_t full_scans_show(struct kobject *kobj,
- KSM_ATTR_RO(full_scans);
- 
- static struct attribute *ksm_attrs[] = {
-+#ifdef VM_UNMERGEABLE
-+	&mode_attr.attr,
-+#endif
- 	&sleep_millisecs_attr.attr,
- 	&pages_to_scan_attr.attr,
- 	&run_attr.attr,
+ static void HUF_sort(nodeElt *huffNode, const U32 *count, U32 maxSymbolValue)
 -- 
-2.21.0
+2.7.4
 
