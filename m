@@ -2,129 +2,126 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5988C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 447C3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E7A208C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D63521479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:33:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727676AbfEJQcn convert rfc822-to-8bit (ORCPT
+        id S1727771AbfEJQdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:32:43 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:40418 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727496AbfEJQcn (ORCPT
+        Fri, 10 May 2019 12:33:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35978 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727697AbfEJQdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:32:43 -0400
-Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AGKtiK010000;
-        Fri, 10 May 2019 16:32:31 GMT
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2sdb13gtqj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 May 2019 16:32:31 +0000
-Received: from G1W8106.americas.hpqcorp.net (g1w8106.austin.hp.com [16.193.72.61])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by g4t3426.houston.hpe.com (Postfix) with ESMTPS id 85BD45C;
-        Fri, 10 May 2019 16:32:30 +0000 (UTC)
-Received: from G9W9209.americas.hpqcorp.net (16.220.66.156) by
- G1W8106.americas.hpqcorp.net (16.193.72.61) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 May 2019 16:32:29 +0000
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (15.241.52.10) by
- G9W9209.americas.hpqcorp.net (16.220.66.156) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3 via Frontend Transport; Fri, 10 May 2019 16:32:28 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.147) by
- AT5PR8401MB0785.NAMPRD84.PROD.OUTLOOK.COM (10.169.7.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Fri, 10 May 2019 16:32:26 +0000
-Received: from AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::2884:44eb:25bf:b376]) by AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM
- ([fe80::2884:44eb:25bf:b376%12]) with mapi id 15.20.1878.022; Fri, 10 May
- 2019 16:32:26 +0000
-From:   "Elliott, Robert (Servers)" <elliott@hpe.com>
-To:     Larry Bassel <larry.bassel@oracle.com>,
-        "mike.kravetz@oracle.com" <mike.kravetz@oracle.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Subject: RE: [PATCH, RFC 1/2] Add config option to enable FS/DAX PMD sharing
-Thread-Topic: [PATCH, RFC 1/2] Add config option to enable FS/DAX PMD sharing
-Thread-Index: AQHVBoGeTmkAemjoekib1TYYWlBJqqZkjkrQ
-Date:   Fri, 10 May 2019 16:32:26 +0000
-Message-ID: <AT5PR8401MB116928031D52A318F04A2819AB0C0@AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM>
-References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
- <1557417933-15701-2-git-send-email-larry.bassel@oracle.com>
-In-Reply-To: <1557417933-15701-2-git-send-email-larry.bassel@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2601:2c3:877f:e23c:eda6:b2df:f285:610b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f23d3430-588f-45c8-b52f-08d6d56516c2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AT5PR8401MB0785;
-x-ms-traffictypediagnostic: AT5PR8401MB0785:
-x-microsoft-antispam-prvs: <AT5PR8401MB0785C368E342B5E9436A2BF1AB0C0@AT5PR8401MB0785.NAMPRD84.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(39860400002)(136003)(346002)(199004)(189003)(13464003)(74316002)(52536014)(46003)(186003)(110136005)(86362001)(2201001)(229853002)(66446008)(66946007)(55016002)(64756008)(66556008)(66476007)(478600001)(4744005)(5660300002)(6436002)(9686003)(316002)(73956011)(76116006)(14454004)(81166006)(256004)(81156014)(33656002)(25786009)(2501003)(8936002)(446003)(8676002)(99286004)(68736007)(71190400001)(71200400001)(53936002)(6246003)(305945005)(2906002)(102836004)(476003)(11346002)(6116002)(7696005)(76176011)(7736002)(6506007)(53546011)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:AT5PR8401MB0785;H:AT5PR8401MB1169.NAMPRD84.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: hpe.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: G+l2Qd5ZRkoUmswyYI5tPsZbCdBjUhRZaUOeI0i2AEi6Y+GYPvwtbwcVSZHqdGmqFFoP+JnzYf30hBYwtnWRp7qBsIqUTl/29EdT0gGkqspTEcMLIrUx5dsUfESKDZuJrkLdZBvWMcG2HMIinoZVS4oUrsC83/yzRnCuCFtLmAPzoYFrLCUPhJD32E064t25XAUFX3IeUd0iNncfbY4JaegUvA+VkexB0CGaUG3Up083wTTtvoGhcH7rwoaxBX/6ayYCif1WBt/dTpCPHVkjMRHklmp+5+2tpT9LWQj5vp0Nxj1KcwR2XyW5ItIN1qiYXuFz3jnXXhlyVbFhkP78zrnPwacNQUabjUt1tYg4yPYyj4ACjLANuxlzwANVYGEmXIOv6h5TD+hillrAEWJBO/kGWHnd4uxAv7bc4+Se0mw=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 10 May 2019 12:33:12 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AGMUNk068320
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 12:33:11 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sdb9xmc7p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 12:33:10 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Fri, 10 May 2019 17:33:08 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 10 May 2019 17:33:02 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4AGX1jq47186160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 16:33:01 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 00ED642052;
+        Fri, 10 May 2019 16:33:01 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63DF54203F;
+        Fri, 10 May 2019 16:33:00 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.32.174])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 May 2019 16:33:00 +0000 (GMT)
+Date:   Fri, 10 May 2019 18:32:58 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
+ addresses
+In-Reply-To: <20190510122401.21a598f6@gandalf.local.home>
+References: <20190510081635.GA4533@jagdpanzerIV>
+        <20190510084213.22149-1-pmladek@suse.com>
+        <20190510122401.21a598f6@gandalf.local.home>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: f23d3430-588f-45c8-b52f-08d6d56516c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 16:32:26.8565
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 105b2061-b669-4b31-92ac-24d304d195dc
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AT5PR8401MB0785
-X-OriginatorOrg: hpe.com
-X-HPE-SCL: -1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051016-0016-0000-0000-0000027A67E3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051016-0017-0000-0000-000032D72460
+Message-Id: <20190510183258.1f6c4153@mschwideX1>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=870 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905100111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 10 May 2019 12:24:01 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-> -----Original Message-----
-> From: Linux-nvdimm <linux-nvdimm-bounces@lists.01.org> On Behalf Of
-> Larry Bassel
-> Sent: Thursday, May 09, 2019 11:06 AM
-> Subject: [PATCH, RFC 1/2] Add config option to enable FS/DAX PMD
-> sharing
+> On Fri, 10 May 2019 10:42:13 +0200
+> Petr Mladek <pmladek@suse.com> wrote:
 > 
-> If enabled, sharing of FS/DAX PMDs will be attempted.
+> >  static const char *check_pointer_msg(const void *ptr)
+> >  {
+> > -	char byte;
+> > -
+> >  	if (!ptr)
+> >  		return "(null)";
+> >  
+> > -	if (probe_kernel_address(ptr, byte))
+> > +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
+> >  		return "(efault)";
+> >    
 > 
-...
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-...
 > 
-> +config MAY_SHARE_FSDAX_PMD
-> +	def_bool y
-> +
+> 	< PAGE_SIZE ?
+> 
+> do you mean: < TASK_SIZE ?
 
-Is a config option really necessary - is there any reason to
-not choose to do this?
+The check with < TASK_SIZE would break on s390. The 'ptr' is
+in the kernel address space, *not* in the user address space.
+Remember s390 has two separate address spaces for kernel/user
+the check < TASK_SIZE only makes sense with a __user pointer.
 
+-- 
+blue skies,
+   Martin.
 
+"Reality continues to ruin my life." - Calvin.
 
