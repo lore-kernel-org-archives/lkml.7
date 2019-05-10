@@ -2,98 +2,113 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25B6C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ECFC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D54217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lNZ7a6py"
+	by mail.kernel.org (Postfix) with ESMTP id B30B7217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfEJHVf (ORCPT
+        id S1727271AbfEJHVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:21:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37246 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727224AbfEJHVc (ORCPT
+        Fri, 10 May 2019 03:21:39 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38396 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727250AbfEJHVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:21:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uwdIcBUmVfzWGoctVjnYH5rQgHvL0u+qnruw3GjdPnQ=; b=lNZ7a6pyI902Z6aRZzYeDPq0C
-        ogGK4N60ciJU0RpHq9y23wowsXTmw4T8f65owtYKg5qPv2FhCxNKTaZQCIDsXOBFKAJK9aa+ofjeG
-        02ywY6seKiw1eJG2CGOx7yzEhurAbHsdN2+B8DU24ZC0yCYhOhB14jC6UYk0EIYu/X4o5GJDCH7yh
-        egTsl2ZM+/ZIizCeUGYiOx6paEC6OXqlmOnZzMIEiiCWmgIfdpECmhYg/7G6shfflk4MnkLpwMmgE
-        ak8Ne95SMzCWbfFnn7OnCWfRFeHaQoIFiH63YHneljN2aMIgIrBnfSz8s5a5oi2Tsv21rVT8tfqAu
-        g5p5RFxLA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOzqS-0004cY-2M; Fri, 10 May 2019 07:21:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 07C83284B2F48; Fri, 10 May 2019 09:21:26 +0200 (CEST)
+        Fri, 10 May 2019 03:21:38 -0400
+Received: by mail-qt1-f196.google.com with SMTP id d13so5490941qth.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:21:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UYXKxPKXPsTybNC4JZhfndIieIgXto0Au/T3tY/gXyg=;
+        b=b5JC0PWQc315JQIebyaYIge7943FrHWTO4KAjD2MVnwxyZXZ/I6kVypGltpScnd9a5
+         wCvZbBKODpr9F1GKq+KX9rr0Wf8afzJRK/BiSP+oyT7yHRIFSi5HFvHy+grT+MhMWfw3
+         GfmJHbF8LNCCq633TNDuRvk9hHEu/lABlrPgNDvLyJBDHKNQyD1lxysKf8k7RxeIpLfM
+         kwjruoojRe2mtwcEWjdX1AiNvdfWCRXFtwm5lI7eMcJ9N3AdWMc3IC+divu+lNVNnM6M
+         bduPG25HuKy2bAox1oNc7j2LAIx8HWfAeZtZAqznysHH/uksUkju7aoOmirGeFY8/jzT
+         JD3g==
+X-Gm-Message-State: APjAAAUWX8kYZWFpWB3HIKlhaO2xZhteWGEyHTCT2xZExFKLffatcXAz
+        BC383n16vTJ5oM9FAA0ZLbEGh6oQu5U4TQ==
+X-Google-Smtp-Source: APXvYqxw5WeE0e1Tl0rCWVbYdCmPx9jVnpRz2LqMlAgWX6iwo8mnCouCMFYdDyqwFsbfVQdq2npsFA==
+X-Received: by 2002:a0c:b907:: with SMTP id u7mr7761329qvf.189.1557472896947;
+        Fri, 10 May 2019 00:21:36 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id b19sm2308808qkk.51.2019.05.10.00.21.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 00:21:36 -0700 (PDT)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
+Subject: [PATCH RFC 4/4] mm/ksm: add automerging documentation
 Date:   Fri, 10 May 2019 09:21:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        Dietmar.Eggemann@arm.com, linux-kernel@vger.kernel.org,
-        steven.sistare@oracle.com
-Subject: Re: [RFC V2 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-Message-ID: <20190510072125.GG2623@hirez.programming.kicks-ass.net>
-References: <cover.1556182964.git.viresh.kumar@linaro.org>
- <59b37c56b8fcb834f7d3234e776eaeff74ad117f.1556182965.git.viresh.kumar@linaro.org>
+Message-Id: <20190510072125.18059-5-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190510072125.18059-1-oleksandr@redhat.com>
+References: <20190510072125.18059-1-oleksandr@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <59b37c56b8fcb834f7d3234e776eaeff74ad117f.1556182965.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 03:07:40PM +0530, Viresh Kumar wrote:
-> We target for an idle CPU in select_idle_sibling() to run the next task,
-> but in case we don't find idle CPUs it is better to pick a CPU which
-> will run the task the soonest, for performance reason. A CPU which isn't
-> idle but has only SCHED_IDLE activity queued on it should be a good
-> target based on this criteria as any normal fair task will most likely
-> preempt the currently running SCHED_IDLE task immediately. In fact,
-> choosing a SCHED_IDLE CPU shall give better results as it should be able
-> to run the task sooner than an idle CPU (which requires to be woken up
-> from an idle state).
-> 
-> This patch updates the fast path to fallback to a sched-idle CPU if the
-> idle CPU isn't found, the slow path can be updated separately later.
-> 
-> Following is the order in which select_idle_sibling() picks up next CPU
-> to run the task now:
-> 
-> 1. idle_cpu(target) OR sched_idle_cpu(target)
-> 2. idle_cpu(prev) OR sched_idle_cpu(prev)
-> 3. idle_cpu(recent_used_cpu) OR sched_idle_cpu(recent_used_cpu)
-> 4. idle core(sd)
-> 5. idle_cpu(sd)
-> 6. sched_idle_cpu(sd)
-> 7. idle_cpu(p) - smt
-> 8. sched_idle_cpu(p)- smt
-> 
-> Though the policy can be tweaked a bit if we want to have different
-> priorities.
+Document KSM "always" mode kernel cmdline option as well as
+corresponding sysfs knob.
 
-I don't hate his per se; but the whole select_idle_sibling() thing is
-something that needs looking at.
+Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 7 +++++++
+ Documentation/admin-guide/mm/ksm.rst            | 7 +++++++
+ 2 files changed, 14 insertions(+)
 
-There was the task stealing thing from Steve that looked interesting and
-that would render your apporach unfeasible.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2b8ee90bb644..510766a3fa05 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2008,6 +2008,13 @@
+ 			0: force disabled
+ 			1: force enabled
+ 
++	ksm_mode=
++			[KNL]
++			Format: [madvise|always]
++			Default: madvise
++			Can be used to control the default behavior of the system
++			with respect to merging anonymous memory.
++
+ 	kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
+ 			Default is 0 (don't ignore, but inject #GP)
+ 
+diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-guide/mm/ksm.rst
+index 9303786632d1..9af730640da7 100644
+--- a/Documentation/admin-guide/mm/ksm.rst
++++ b/Documentation/admin-guide/mm/ksm.rst
+@@ -78,6 +78,13 @@ KSM daemon sysfs interface
+ The KSM daemon is controlled by sysfs files in ``/sys/kernel/mm/ksm/``,
+ readable by all but writable only by root:
+ 
++mode
++        * set madvise to deduplicate only madvised memory
++        * set always to allow deduplicating all the anonymous memory
++          (applies to newly allocated memory only)
++
++        Default: madvise (maintains old behaviour)
++
+ pages_to_scan
+         how many pages to scan before ksmd goes to sleep
+         e.g. ``echo 100 > /sys/kernel/mm/ksm/pages_to_scan``.
+-- 
+2.21.0
+
