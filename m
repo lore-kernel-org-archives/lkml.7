@@ -2,108 +2,199 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3D8C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 05:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9443AC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 05:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13FF2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 05:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 670EA217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 05:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vhUOfmR1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1W7JeDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfEJFRW (ORCPT
+        id S1727063AbfEJFSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 01:17:22 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44590 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfEJFRW (ORCPT
+        Fri, 10 May 2019 01:18:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40965 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfEJFSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 01:17:22 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4A5H9Qt119282;
-        Fri, 10 May 2019 00:17:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557465429;
-        bh=XzeXpROI5a8Ib+B15hXUIuq68tFBHpy9RE1urDk4Fxg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vhUOfmR1SQLwC9e6IwOLQ+fb8Ct4UBCcW1lSNW/qtTDpGjzv1EJvWwRp0cXuRpCwS
-         UY+nSBep7erXQvPjr9fcENZ5EVVgbOXw5dq5qgaWQo8dJpjstBBzngF2MTUVi5Pibv
-         q9VTlYPxMSVE370+DDdw0Pynb9XdO326pyFv+71I=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4A5H9AW003501
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 May 2019 00:17:09 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 10
- May 2019 00:17:08 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 10 May 2019 00:17:08 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4A5H6jM032326;
-        Fri, 10 May 2019 00:17:06 -0500
-Subject: Re: [PATCH] arm64: arch_k3: Fix kconfig dependency warning
-To:     YueHaibing <yuehaibing@huawei.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <marc.zyngier@arm.com>, <tony@atomide.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190510035255.27568-1-yuehaibing@huawei.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <f7c420ec-ee4e-c17e-7650-353002bb81b9@ti.com>
-Date:   Fri, 10 May 2019 10:46:38 +0530
+        Fri, 10 May 2019 01:18:30 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z3so2402074pgp.8;
+        Thu, 09 May 2019 22:18:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=xr7T45ENj0X8h0TTVYIw3YN3QMd5VAPV0aYioKPyHGs=;
+        b=E1W7JeDYer401ts5Pou7l1Dg8TvNv88Ns4Lxp8N/AgQI/qtmKYf4sNUlvOULHL6msw
+         bA+I7RbCsYKAaaMHAvXT6Fy1BGVr1yesoASaRLH6j/RcI8tUmGMA5UmJ/rWF+KvKU+u2
+         kHaJkGp0GSxbcaoUl+lU2S18kDfjfldcm6/dgG8YRjndn5rv5Vcgo2gT7GV7bNpO12MH
+         WACO3dSP6EWF4OBYJVOjOuhUw87UecegOh600ZVYpyP23r15SmCI6/2JOlQtfBmzCiBv
+         GKCcSYfhY18upXwnqcnmZwEFLwwyITRtKemOfO3+vrLyFwKarkL6tbKzZ3EF3xyKXxzT
+         KHfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xr7T45ENj0X8h0TTVYIw3YN3QMd5VAPV0aYioKPyHGs=;
+        b=ZrLeRC0dVWtw2i61ISCEscA5vpfCyC7KvDc3i1oD2xwj8o2iB/JJLjiew5JkH26+d3
+         a2s0QCFgKyMyWO0mcwc1yjTWIKephgp0MX+dt9WPclc4QT5N6yK3qx7x/O2IaYnSgaUE
+         pn0zmZpdK+fr1i5qQ1KPQO/+Px+X4FBqiPaDbldNQ9YHLbeqzlArTaXqCG9dn/EuwKhR
+         ksmnhOkltM3zMVM6wQjZzF+yQvRZDG0WBi1EHN7MSO6nTbUK8ZFQUmVNwgBow0WY1pGp
+         Eu4GPG2Bye7rc0KkKaNFE9h/o8aUOdGzf2B2qRHFzu/1MVdsu/Orzyc38Wr+JscuvRXS
+         Q+Yw==
+X-Gm-Message-State: APjAAAWiogm++iDkzrUGupfAleMM4AAWGyj8ZvdCM9hCMUm3srvmVz2S
+        7IeSfgOutr7l3Xt0uljExdw=
+X-Google-Smtp-Source: APXvYqwtH7Skgh8l1ykgmrPjhuMGx9pfdkEsTTFsM6aBvQOxMoXlEpvU8usovtkKH/1Zc0SXCzAcIQ==
+X-Received: by 2002:a63:4820:: with SMTP id v32mr11058846pga.89.1557465509602;
+        Thu, 09 May 2019 22:18:29 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id l19sm4974597pff.1.2019.05.09.22.18.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 22:18:29 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, dan.j.williams@intel.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, mpe@ellerman.id.au,
+        pmladek@suse.com, richard@nod.at, rientjes@google.com,
+        rostedt@goodmis.org, wfg@linux.intel.com
+References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+ <20190509233043.GC20877@mit.edu>
+ <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
+Date:   Thu, 9 May 2019 22:18:25 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190510035255.27568-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/05/19 9:22 AM, YueHaibing wrote:
-> Fix Kbuild warning when SOC_TI is not set
+On 5/9/19 4:40 PM, Logan Gunthorpe wrote:
 > 
-> WARNING: unmet direct dependencies detected for TI_SCI_INTA_IRQCHIP
->   Depends on [n]: TI_SCI_PROTOCOL [=y] && SOC_TI [=n]
->   Selected by [y]:
->   - ARCH_K3 [=y]
 > 
-> Fixes: 009669e74813 ("arm64: arch_k3: Enable interrupt controller drivers")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-
-Thanks for catching it.
-
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
-
-Thanks and regards,
-Lokesh
-
-> ---
->  arch/arm64/Kconfig.platforms | 1 +
->  1 file changed, 1 insertion(+)
+> On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
+>> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
+>>>
+>>> The second item, arguably, does have significant overlap with kselftest.
+>>> Whether you are running short tests in a light weight UML environment or
+>>> higher level tests in an heavier VM the two could be using the same
+>>> framework for writing or defining in-kernel tests. It *may* also be valuable
+>>> for some people to be able to run all the UML tests in the heavy VM
+>>> environment along side other higher level tests.
+>>>
+>>> Looking at the selftests tree in the repo, we already have similar items to
+>>> what Kunit is adding as I described in point (2) above. kselftest_harness.h
+>>> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
+>>> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
+>>>
+>>> However, the number of users of this harness appears to be quite small. Most
+>>> of the code in the selftests tree seems to be a random mismash of scripts
+>>> and userspace code so it's not hard to see it as something completely
+>>> different from the new Kunit:
+>>>
+>>> $ git grep --files-with-matches kselftest_harness.h *
+>>
+>> To the extent that we can unify how tests are written, I agree that
+>> this would be a good thing.  However, you should note that
+>> kselftest_harness.h is currently assums that it will be included in
+>> userspace programs.  This is most obviously seen if you look closely
+>> at the functions defined in the header files which makes calls to
+>> fork(), abort() and fprintf().
 > 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 42eca65..9d1292f 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -88,6 +88,7 @@ config ARCH_K3
->  	bool "Texas Instruments Inc. K3 multicore SoC architecture"
->  	select PM_GENERIC_DOMAINS if PM
->  	select MAILBOX
-> +	select SOC_TI
->  	select TI_MESSAGE_MANAGER
->  	select TI_SCI_PROTOCOL
->  	select TI_SCI_INTR_IRQCHIP
+> Ah, yes. I obviously did not dig deep enough. Using kunit for
+> in-kernel tests and kselftest_harness for userspace tests seems like
+> a sensible line to draw to me. Trying to unify kernel and userspace
+> here sounds like it could be difficult so it's probably not worth
+> forcing the issue unless someone wants to do some really fancy work
+> to get it done.
 > 
+> Based on some of the other commenters, I was under the impression
+> that kselftests had in-kernel tests but I'm not sure where or if they
+> exist.
+
+YES, kselftest has in-kernel tests.  (Excuse the shouting...)
+
+Here is a likely list of them in the kernel source tree:
+
+$ grep module_init lib/test_*.c
+lib/test_bitfield.c:module_init(test_bitfields)
+lib/test_bitmap.c:module_init(test_bitmap_init);
+lib/test_bpf.c:module_init(test_bpf_init);
+lib/test_debug_virtual.c:module_init(test_debug_virtual_init);
+lib/test_firmware.c:module_init(test_firmware_init);
+lib/test_hash.c:module_init(test_hash_init);	/* Does everything */
+lib/test_hexdump.c:module_init(test_hexdump_init);
+lib/test_ida.c:module_init(ida_checks);
+lib/test_kasan.c:module_init(kmalloc_tests_init);
+lib/test_list_sort.c:module_init(list_sort_test);
+lib/test_memcat_p.c:module_init(test_memcat_p_init);
+lib/test_module.c:static int __init test_module_init(void)
+lib/test_module.c:module_init(test_module_init);
+lib/test_objagg.c:module_init(test_objagg_init);
+lib/test_overflow.c:static int __init test_module_init(void)
+lib/test_overflow.c:module_init(test_module_init);
+lib/test_parman.c:module_init(test_parman_init);
+lib/test_printf.c:module_init(test_printf_init);
+lib/test_rhashtable.c:module_init(test_rht_init);
+lib/test_siphash.c:module_init(siphash_test_init);
+lib/test_sort.c:module_init(test_sort_init);
+lib/test_stackinit.c:module_init(test_stackinit_init);
+lib/test_static_key_base.c:module_init(test_static_key_base_init);
+lib/test_static_keys.c:module_init(test_static_key_init);
+lib/test_string.c:module_init(string_selftest_init);
+lib/test_ubsan.c:module_init(test_ubsan_init);
+lib/test_user_copy.c:module_init(test_user_copy_init);
+lib/test_uuid.c:module_init(test_uuid_init);
+lib/test_vmalloc.c:module_init(vmalloc_test_init)
+lib/test_xarray.c:module_init(xarray_checks);
+
+
+> If they do exists, it seems like it would make sense to
+> convert those to kunit and have Kunit tests run-able in a VM or
+> baremetal instance.
+
+They already run in a VM.
+
+They already run on bare metal.
+
+They already run in UML.
+
+This is not to say that KUnit does not make sense.  But I'm still trying
+to get a better description of the KUnit features (and there are
+some).
+
+-Frank
