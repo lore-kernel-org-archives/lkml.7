@@ -2,374 +2,172 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11577C04AB2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E7CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FE5217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61969217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="nVsOJWSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727203AbfEJHIU (ORCPT
+        id S1727223AbfEJHIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:08:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48674 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727018AbfEJHIT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:08:19 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A73MRL139652
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:08:17 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sd1nuxc8e-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 03:08:16 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 10 May 2019 08:08:14 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 May 2019 08:08:11 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4A789WU55509020
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 07:08:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A6AE3A4040;
-        Fri, 10 May 2019 07:08:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D622BA404D;
-        Fri, 10 May 2019 07:08:08 +0000 (GMT)
-Received: from [9.145.187.238] (unknown [9.145.187.238])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 May 2019 07:08:08 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove sequence
-To:     Parav Pandit <parav@mellanox.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-References: <20190430224937.57156-1-parav@mellanox.com>
- <20190430224937.57156-9-parav@mellanox.com>
- <20190508190957.673dd948.cohuck@redhat.com>
- <VI1PR0501MB2271CFAFF2ACF145FDFD8E2ED1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
- <20190509110600.5354463c.cohuck@redhat.com>
- <VI1PR0501MB2271DD5EE143784B9F94D446D1330@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 10 May 2019 09:08:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 03:08:25 -0400
+Received: from mail-eopbgr780074.outbound.protection.outlook.com ([40.107.78.74]:8288
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726934AbfEJHIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 03:08:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=idbeOJpMWWKVVxJsCC009CC1eowIPz22bWYhdNICMhI=;
+ b=nVsOJWSBvwcHHDawAEO913WcQZOEchgihesEnwFAIg0MqmYKG7CfHUeOqCzyxFn7LXa4gssZhBAGVbwEjuzS7eErXwXyFijkY+QRs4F8/vRUQD2cgiqfrZ2Rak02kYn8G06CDI7zSQmg5oIUYkdchp8gtWmknluj59nc7F9UVkI=
+Received: from BYAPR02CA0048.namprd02.prod.outlook.com (2603:10b6:a03:54::25)
+ by DM5PR02MB3832.namprd02.prod.outlook.com (2603:10b6:4:b1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1878.22; Fri, 10 May
+ 2019 07:07:40 +0000
+Received: from SN1NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::204) by BYAPR02CA0048.outlook.office365.com
+ (2603:10b6:a03:54::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1878.22 via Frontend
+ Transport; Fri, 10 May 2019 07:07:40 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ SN1NAM02FT003.mail.protection.outlook.com (10.152.73.29) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1856.11
+ via Frontend Transport; Fri, 10 May 2019 07:07:39 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:59126 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <anurag.kumar.vulisha@xilinx.com>)
+        id 1hOzd5-0003Nt-FJ; Fri, 10 May 2019 00:07:39 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <anurag.kumar.vulisha@xilinx.com>)
+        id 1hOzd0-0004bk-B9; Fri, 10 May 2019 00:07:34 -0700
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x4A77TQZ004220;
+        Fri, 10 May 2019 00:07:30 -0700
+Received: from [172.23.64.8] (helo=xhdvnc108.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <anuragku@xilinx.com>)
+        id 1hOzcv-0004aK-Ir; Fri, 10 May 2019 00:07:29 -0700
+Received: by xhdvnc108.xilinx.com (Postfix, from userid 15427)
+        id BB4A760509; Fri, 10 May 2019 12:37:28 +0530 (IST)
+From:   Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Claus H. Stovgaard" <cst@phaseone.com>
+CC:     <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <v.anuragkumar@gmail.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v3 0/3] usb: gadget: Add support for disabling U1 and U2 entries
+Date:   Fri, 10 May 2019 12:37:25 +0530
+Message-ID: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+X-Mailer: git-send-email 2.1.1
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(346002)(376002)(2980300002)(189003)(199004)(50466002)(2616005)(7416002)(48376002)(47776003)(305945005)(16586007)(42186006)(63266004)(316002)(106002)(966005)(51416003)(478600001)(26005)(81166006)(8676002)(70206006)(81156014)(70586007)(8936002)(6266002)(107886003)(103686004)(6666004)(50226002)(110136005)(426003)(476003)(356004)(5660300002)(486006)(2906002)(14444005)(336012)(4326008)(36756003)(90966002)(54906003)(126002)(52956003)(6306002)(186003)(36386004)(5001870100001)(6606295002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR02MB3832;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <VI1PR0501MB2271DD5EE143784B9F94D446D1330@VI1PR0501MB2271.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051007-0028-0000-0000-0000036C37C5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051007-0029-0000-0000-0000242BBC2C
-Message-Id: <f91816f8-2ec9-25a2-c3d4-adc04f5cb6b9@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905100049
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e344e7cd-9340-4893-57cb-08d6d51630b6
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:DM5PR02MB3832;
+X-MS-TrafficTypeDiagnostic: DM5PR02MB3832:
+X-MS-Exchange-PUrlCount: 1
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <DM5PR02MB3832A8947A32938D489F7CDCA70C0@DM5PR02MB3832.namprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 0033AAD26D
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: Zd9d9H5dq7+9mxsO4qW3GJ6R0T1AZPlTnYSoB4Ax87oEfxb+SG9UKltUZy3j2ZH7KJ92BwZt51uTgcVcjoAbecFp2/waOUKL6M3sp++0HEsBdRR81KvaDZQa0pwhj91zyokOFudrMueK0C/ChjWiOo/ZTJm0umU5GwnTUbnDfiWqvQUp+QRVoNgF0FMyTPC5URXufXvcGzGZ/13ExhmaXnRzwhgSQYXx2e3ztGxPSJXYbJSbVYz9NTL95rk4tV+T6fFgfYnLGxabbKa/lZ9olJ/K4J7FKjasFCopBchvxqA9wj7El933J5B3hutgLYB/adrXmUVxUCKZgsmCDqvkoDevjjzi1Ecy7rkKkQRlaeRanF9lbbUjjwWAuMDsP/qGr+Myz77FDObHM+LWzvGykehAJW+slo7/6GL/nDpOKWg=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2019 07:07:39.8799
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e344e7cd-9340-4893-57cb-08d6d51630b6
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR02MB3832
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/05/2019 21:19, Parav Pandit wrote:
-> 
-> 
->> -----Original Message-----
->> From: Cornelia Huck <cohuck@redhat.com>
->> Sent: Thursday, May 9, 2019 4:06 AM
->> To: Parav Pandit <parav@mellanox.com>
->> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com;
->> Tony Krowiak <akrowiak@linux.ibm.com>; Pierre Morel
->> <pmorel@linux.ibm.com>; Halil Pasic <pasic@linux.ibm.com>
->> Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
->> sequence
->>
->> [vfio-ap folks: find a question regarding removal further down]
->>
->> On Wed, 8 May 2019 22:06:48 +0000
->> Parav Pandit <parav@mellanox.com> wrote:
->>
->>>> -----Original Message-----
->>>> From: Cornelia Huck <cohuck@redhat.com>
->>>> Sent: Wednesday, May 8, 2019 12:10 PM
->>>> To: Parav Pandit <parav@mellanox.com>
->>>> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>> kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com
->>>> Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
->>>> sequence
->>>>
->>>> On Tue, 30 Apr 2019 17:49:35 -0500
->>>> Parav Pandit <parav@mellanox.com> wrote:
->>>>
->>>>> This patch addresses below two issues and prepares the code to
->>>>> address 3rd issue listed below.
->>>>>
->>>>> 1. mdev device is placed on the mdev bus before it is created in
->>>>> the vendor driver. Once a device is placed on the mdev bus without
->>>>> creating its supporting underlying vendor device, mdev driver's
->>>>> probe()
->>>> gets triggered.
->>>>> However there isn't a stable mdev available to work on.
->>>>>
->>>>>     create_store()
->>>>>       mdev_create_device()
->>>>>         device_register()
->>>>>            ...
->>>>>           vfio_mdev_probe()
->>>>>          [...]
->>>>>          parent->ops->create()
->>>>>            vfio_ap_mdev_create()
->>>>>              mdev_set_drvdata(mdev, matrix_mdev);
->>>>>              /* Valid pointer set above */
->>>>>
->>>>> Due to this way of initialization, mdev driver who want to use the
->>
->> s/want/wants/
->>
->>>>> mdev, doesn't have a valid mdev to work on.
->>>>>
->>>>> 2. Current creation sequence is,
->>>>>     parent->ops_create()
->>>>>     groups_register()
->>>>>
->>>>> Remove sequence is,
->>>>>     parent->ops->remove()
->>>>>     groups_unregister()
->>>>>
->>>>> However, remove sequence should be exact mirror of creation
->> sequence.
->>>>> Once this is achieved, all users of the mdev will be terminated
->>>>> first before removing underlying vendor device.
->>>>> (Follow standard linux driver model).
->>>>> At that point vendor's remove() ops shouldn't failed because
->>>>> device is
->>
->> s/failed/fail/
->>
->>>>> taken off the bus that should terminate the users.
->>
->> "because taking the device off the bus should terminate any usage" ?
->>
->>>>>
->>>>> 3. When remove operation fails, mdev sysfs removal attempts to add
->>>>> the file back on already removed device. Following call trace [1] is
->> observed.
->>>>>
->>>>> [1] call trace:
->>>>> kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
->>>>> sysfs_create_file_ns+0x7f/0x90
->>>>> kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not tainted
->>>>> 5.1.0-rc6-vdevbus+ #6
->>>>> kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS
->>>>> 2.0b
->>>>> 08/09/2016
->>>>> kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
->>>>> kernel: Call Trace:
->>>>> kernel: remove_store+0xdc/0x100 [mdev]
->>>>> kernel: kernfs_fop_write+0x113/0x1a0
->>>>> kernel: vfs_write+0xad/0x1b0
->>>>> kernel: ksys_write+0x5a/0xe0
->>>>> kernel: do_syscall_64+0x5a/0x210
->>>>> kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>>
->>>>> Therefore, mdev core is improved in following ways.
->>>>>
->>>>> 1. Before placing mdev devices on the bus, perform vendor drivers
->>>>> creation which supports the mdev creation.
->>
->> "invoke the vendor driver ->create callback" ?
->>
->>>>> This ensures that mdev specific all necessary fields are
->>>>> initialized
->>
->> "that all necessary mdev specific fields are initialized" ?
->>
->>>>> before a given mdev can be accessed by bus driver.
->>>>> This follows standard Linux kernel bus and device model similar to
->>>>> other widely used PCI bus.
->>
->> "This follows standard practice on other Linux device model buses." ?
->>
->>>>>
->>>>> 2. During remove flow, first remove the device from the bus. This
->>>>> ensures that any bus specific devices and data is cleared.
->>>>> Once device is taken of the mdev bus, perform remove() of mdev
->>>>> from
->>
->> s/of/off/
->>
->>>>> the vendor driver.
->>>>>
->>>>> 3. Linux core device model provides way to register and auto
->>>>> unregister the device sysfs attribute groups at dev->groups.
->>
->> "The driver core provides a way to automatically register and unregister sysfs
->> attributes via dev->groups." ?
->>
->>>>> Make use of this groups to let core create the groups and simplify
->>>>> code to avoid explicit groups creation and removal.
->>>>>
->>>>> A below stack dump of a mdev device remove process also ensures
->>>>> that vfio driver guards against device removal already in use.
->>>>>
->>>>>   cat /proc/21962/stack
->>>>> [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio] [<0>]
->>>>> mdev_remove+0x21/0x40 [mdev] [<0>]
->>>>> device_release_driver_internal+0xe8/0x1b0
->>>>> [<0>] bus_remove_device+0xf9/0x170 [<0>] device_del+0x168/0x350
->>>>> [<0>] mdev_device_remove_common+0x1d/0x50 [mdev] [<0>]
->>>>> mdev_device_remove+0x8c/0xd0 [mdev] [<0>]
->> remove_store+0x71/0x90
->>>>> [mdev] [<0>] kernfs_fop_write+0x113/0x1a0 [<0>]
->>>>> vfs_write+0xad/0x1b0 [<0>] ksys_write+0x5a/0xe0 [<0>]
->>>>> do_syscall_64+0x5a/0x210 [<0>]
->>>>> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->>>>> [<0>] 0xffffffffffffffff
->>>>>
->>>>> This prepares the code to eliminate calling device_create_file()
->>>>> in subsquent patch.
->>
->> I find this stack dump and explanation more confusing than enlightening.
->> Maybe just drop it?
->>
->>>>
->>>> I'm afraid I have a bit of a problem following this explanation, so
->>>> let me try to summarize what the patch does to make sure that I
->>>> understand it
->>>> correctly:
->>>>
->>>> - Add the sysfs groups to device->groups so that the driver core deals
->>>>    with proper registration/deregistration.
->>>> - Split the device registration/deregistration sequence so that some
->>>>    things can be done between initialization of the device and hooking
->>>>    it up to the infrastructure respectively after deregistering it from
->>>>    the infrastructure but before giving up our final reference. In
->>>>    particular, this means invoking the ->create and ->remove callback in
->>>>    those new windows. This gives the vendor driver an initialized mdev
->>>>    device to work with during creation.
->>>> - Don't allow ->remove to fail, as the device is already removed from
->>>>    the infrastructure at that point in time.
->>>>
->>> You got all the points pretty accurate.
->>
->> Ok, good.
->>
->>>
->>>>>
->>>>> Signed-off-by: Parav Pandit <parav@mellanox.com>
->>>>> ---
->>>>>   drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-----------------------
->>>>>   drivers/vfio/mdev/mdev_private.h |  2 +-
->>>>>   drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
->>>>>   3 files changed, 27 insertions(+), 71 deletions(-)
->>>>
->>>> (...)
->>
->>>>> @@ -373,16 +330,15 @@ int mdev_device_remove(struct device *dev,
->>>> bool force_remove)
->>>>>   	mutex_unlock(&mdev_list_lock);
->>>>>
->>>>>   	type = to_mdev_type(mdev->type_kobj);
->>>>> +	mdev_remove_sysfs_files(dev, type);
->>>>> +	device_del(&mdev->dev);
->>>>>   	parent = mdev->parent;
->>>>> +	ret = parent->ops->remove(mdev);
->>>>> +	if (ret)
->>>>> +		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
->>>>
->>>> I think carrying on with removal regardless of the return code of
->>>> the
->>>> ->remove callback makes sense, as it simply matches usual practice.
->>>> However, are we sure that every vendor driver works well with that?
->>>> I think it should, as removal from bus unregistration (vs. from the
->>>> sysfs
->>>> file) was always something it could not veto, but have you looked at
->>>> the individual drivers?
->>>>
->>> I looked at following drivers a little while back.
->>> Looked again now.
->>>
->>> drivers/gpu/drm/i915/gvt/kvmgt.c which clears the handle valid in
->> intel_vgpu_release(), which should finish first before remove() is invoked.
->>>
->>> s390 vfio_ccw_mdev_remove() driver drivers/s390/cio/vfio_ccw_ops.c
->> remove() always returns 0.
->>> s39 crypo fails the remove() once vfio_ap_mdev_release marks kvm null,
->> which should finish before remove() is invoked.
->>
->> That one is giving me a bit of a headache (the ->kvm reference is supposed
->> to keep us from detaching while a vm is running), so let's cc:
->> the vfio-ap maintainers to see whether they have any concerns.
->>
-> I probably wrote wrongly.
-> vfio_ap_mdev_remove() fails if the VM is already running (i.e. vfio_ap_mdev_release() is not yet called).
-> 
-> And if VM is running it guarded by the vfio_mdev driver which is the one who binds to the device mdev device.
-> That is why I shown the above stack trace in the commit log, indicating that vfio driver is guarding it.
-> 
+Gadget applications may have a requirement to disable the U1 and U2
+entry based on the usecase. Below are few usecases where the disabling
+U1/U2 entries may be possible.
 
-I looked again, and see the race you are speaking of, it is not the one 
-I thought first, which does not really mater at this stage of the driver 
-but indeed between release and remove we do not take the lock in the 
-right way.
+Usecase 1:
+When combining dwc3 with an redriver for a USB Type-C device solution, it
+sometimes have problems with leaving U1/U2 for certain hosts, resulting in
+link training errors and reconnects. For this U1/U2 state entries may be
+avoided.
 
-We will correct this.
-Thanks,
+Usecase 2:
+When performing performance benchmarking on mass storage gadget the
+U1 and U2 entries can be disabled.
 
-Pierre
+Usecase 3:
+When periodic transfers like ISOC transfers are used with bInterval
+of 1 which doesn't require the link to enter into U1 or U2 state entry
+(since ping is issued from host for every uframe interval). In this
+case the U1 and U2 entry can be disabled.
 
+Disablement of U1/U2 can be done by setting U1DevExitLat and U2DevExitLat
+values to 0 in the BOS descriptor. Host on seeing 0 value for U1DevExitLat
+and U2DevExitLat, it doesn't send SET_SEL requests to the gadget. There
+may be some hosts which may send SET_SEL requests even after seeing 0 in
+the UxDevExitLat of BOS descriptor. To aviod U1/U2 entries for these type
+of hosts, dwc3 controller can be programmed to reject those U1/U2 requests
+by not enabling ACCEPTUxENA bits in DCTL register.
 
->>> samples/vfio-mdev/mbochs.c mbochs_remove() always returns 0.
->>>
->>>>>
->>>>> -	ret = mdev_device_remove_ops(mdev, force_remove);
->>>>> -	if (ret) {
->>>>> -		mdev->active = true;
->>>>> -		return ret;
->>>>> -	}
->>>>> -
->>>>> -	mdev_remove_sysfs_files(dev, type);
->>>>> -	device_unregister(dev);
->>>>> +	/* Balances with device_initialize() */
->>>>> +	put_device(&mdev->dev);
->>>>>   	mdev_put_parent(parent);
->>>>>
->>>>>   	return 0;
->>>>
->>>> I think that looks sane in general, but the commit message might
->>>> benefit from tweaking.
->>> Part of your description is more crisp than my commit message, I can
->> probably take snippet from it to improve?
->>> Or any specific entries in commit message that I should address?
->>
->> I have added some comments inline (mostly some wording tweaks).
->>
->> Feel free to take anything from my summary as well.
-> 
+This patch series updates the same.
 
+Changes in v3:
+	1. As suggested by Thinh Nguyen modified the logic for rejecting only
+	   SET_FEATURE(enable U1/U2) from host.
+	2. Used cpu_to_le16() before assigning the value to bU2DevExitLat.
+
+Changes in v2:
+	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+	   to "snps,dis-u1-entry-quirk"
+	2. Merged the changes done by Claus H. Stovgaard in ep0.c for rejecting
+	   U1/U2 requests into this patch. Changes done by Claus can be found
+	   here https://marc.info/?l=linux-kernel&m=155722068820568&w=2
+
+Anurag Kumar Vulisha (3):
+  doc: dt: bindings: usb: dwc3: Update entries for disabling U1 and U2
+  usb: gadget: send usb_gadget as an argument in get_config_params
+  usb: dwc3: gadget: Add support for disabling U1 and U2 entries
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  2 ++
+ drivers/usb/dwc3/core.c                        |  4 ++++
+ drivers/usb/dwc3/core.h                        |  4 ++++
+ drivers/usb/dwc3/ep0.c                         |  9 ++++++++-
+ drivers/usb/dwc3/gadget.c                      | 20 ++++++++++++++++++++
+ drivers/usb/dwc3/gadget.h                      |  6 ++++++
+ drivers/usb/gadget/composite.c                 |  2 +-
+ include/linux/usb/gadget.h                     |  3 ++-
+ 8 files changed, 47 insertions(+), 3 deletions(-)
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.1.1
 
