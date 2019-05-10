@@ -2,155 +2,137 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E7EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23BBC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8393F217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822CC217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:46:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="HS666DuQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ahdEKFGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728317AbfEJVq0 (ORCPT
+        id S1728331AbfEJVqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:46:26 -0400
-Received: from mail-eopbgr750132.outbound.protection.outlook.com ([40.107.75.132]:30426
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728160AbfEJVqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:46:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OFVtRO8FWTbDZualdbJeHyfovV7M1dlu4nGNifM/wZM=;
- b=HS666DuQUXyd86l0M6O1CpT1Vyz1OjWJrPOqaNiSIV1b2kGm2ZsAb+/FqEFNqLxoLGuY3+UUUa56NY8olk10vDBgeEnC0m9hzMA/4DE1r9LtJXoLMHEvFNFF0lNqkV7nnjrJkJz1XRgoFCQ8abDNb+ulWj/nDsyTiwIWqWGxu3w=
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
- MWHPR0601MB3612.namprd06.prod.outlook.com (10.167.236.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Fri, 10 May 2019 21:46:12 +0000
-Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::b496:85ab:4cb0:5876]) by MWHPR0601MB3708.namprd06.prod.outlook.com
- ([fe80::b496:85ab:4cb0:5876%2]) with mapi id 15.20.1878.022; Fri, 10 May 2019
- 21:46:12 +0000
-From:   Trent Piepho <tpiepho@impinj.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Trent Piepho <tpiepho@impinj.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH 3/5] net: phy: dp83867: Add ability to disable output clock
-Thread-Topic: [PATCH 3/5] net: phy: dp83867: Add ability to disable output
- clock
-Thread-Index: AQHVB3nIIyUkBzLWD0GI+/+3LNDYHg==
-Date:   Fri, 10 May 2019 21:46:11 +0000
-Message-ID: <20190510214550.18657-3-tpiepho@impinj.com>
-References: <20190510214550.18657-1-tpiepho@impinj.com>
-In-Reply-To: <20190510214550.18657-1-tpiepho@impinj.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR05CA0044.namprd05.prod.outlook.com
- (2603:10b6:a03:74::21) To MWHPR0601MB3708.namprd06.prod.outlook.com
- (2603:10b6:301:7c::38)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=tpiepho@impinj.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.14.5
-x-originating-ip: [216.207.205.253]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c5b533a6-917b-470b-8954-08d6d590eafd
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3612;
-x-ms-traffictypediagnostic: MWHPR0601MB3612:
-x-microsoft-antispam-prvs: <MWHPR0601MB361289CBFE989A3BC1646D17D30C0@MWHPR0601MB3612.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(39840400004)(136003)(189003)(199004)(316002)(3846002)(6116002)(86362001)(8676002)(81166006)(99286004)(66066001)(81156014)(478600001)(102836004)(25786009)(73956011)(76176011)(476003)(2616005)(68736007)(11346002)(66946007)(66476007)(66556008)(66446008)(64756008)(14454004)(50226002)(6506007)(446003)(486006)(8936002)(26005)(386003)(186003)(4326008)(52116002)(256004)(36756003)(305945005)(2906002)(1076003)(110136005)(6436002)(6486002)(6512007)(54906003)(71190400001)(2501003)(5660300002)(71200400001)(53936002)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3612;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: impinj.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: j0kfich/NQ8NZuCEjZYgmpAvIdR2dKcHOkYv2kqileAhEzAfJOBpeb3lEVxveDJ5uC6wrlm4LJz8tUijk1rX6wOAFgperwzcwyrKcSlCNht/p1M7Dnp8XVAJBT1IbiD8kiALQMl8ktOZSSAx2y5rC81RRgb8KYL3md0FeUOt2F7+hVkRtFWV1m2b54Aj8eResCjWpV1Fj77WWO7x86q5eHQ5by+7I3jTRBzW8t6ibsPkL+r9/FAhl8GSEmOYBygfwc+sQnNYHY2fP64KtL38QeCFE4gS34wF9EJrQAtcrknEMl8mVvrzL+y9mn7ZDK9f8mHW3LJ8i4ZpSzMvlpw1kZuH9EtGEdBDQ4vEaUMzwOulUu1b+sgDfJVPnsv6IjzN59ai1KBOPzG1aOcz3D9sonh6fL1mdARitI5x1AymKts=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 10 May 2019 17:46:31 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36583 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728160AbfEJVqa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 17:46:30 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d21so3416126plr.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 14:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CypxHt1sI2HFVc20aRWi1Iy+wmFvcX4HUufWa3L5NtU=;
+        b=ahdEKFGH657NxRSXetF4YIdbDu+7xuiBUH3XkB/btnCaCBenwx8GQzU4L3s6XoXN9m
+         78C9R/U8CTGACerCOrt51OZm2VLdnMhrpw9L2n/RHvNedU3JvCr0y5L+Q/FL3WVjMgKc
+         ICqGlTDxiwzLZnSw1foolMZweNxWkafbp2t/FSvYwwBlAXglYUvUrqXGBfmgCMgH1SYq
+         hqAgMHmu8whHVWA0K8yzNj8lgiJhmlHQ9zy/GZl1/LQggLxbdEcyacIZQx/9LGqsm1cQ
+         4/+hmQuYbeTWUlnHZAAo4R1Nbgd3MJGTJrHNvmAhCNpC05wlq8F3NHMO/q+IbT0NHaHc
+         XzXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CypxHt1sI2HFVc20aRWi1Iy+wmFvcX4HUufWa3L5NtU=;
+        b=oLhGMHEwhjcPOo+FlF/owjqpxOuGGtjVUPOD+PnR2xnx86V7lj/nX0QX3oWAOf+UVF
+         gL+AkB7t8BgXKCH7dwXB6TRtvVOKtLOyF1CYFBjNYG2aUplFYrMdryLbvLXrfi+3lwVk
+         4HYDtV5DYb/1zvb7fC+AwIlQxR/8e0zQFaRFw99zmTLPA2hJAjosYFgKYX/tVRHvQT11
+         uzsPBGAi6k6HIaOjHCZ32oW4fCjxh/Mf1tcwncxYSzX2VAt/rptuIGTJKRwV7bpcFW38
+         vcmRZLpNkAlQSQdBV9uA+qWaoIfxkwAIduyBEc2KwLo9d+jQYeMWvRYnsfLZjbrZuEF8
+         SpUw==
+X-Gm-Message-State: APjAAAV44uKe5WzAvAQqujglBgmB+VFVG0hOrybWEMS372tZEybumy8G
+        dohJdh9xQgNofqd7W6A6SNg9QQ==
+X-Google-Smtp-Source: APXvYqwYK1LRY/zykcry4kocjMHlnViiLHRg4/Jq/d2FPkuTmkKravH6h5IBIcmuDxExL80HBy2BWg==
+X-Received: by 2002:a17:902:ab98:: with SMTP id f24mr15506483plr.223.1557524788114;
+        Fri, 10 May 2019 14:46:28 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id v1sm9467395pff.81.2019.05.10.14.46.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 10 May 2019 14:46:26 -0700 (PDT)
+Date:   Fri, 10 May 2019 14:46:22 -0700
+From:   Benson Leung <bleung@google.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/chrome: cros_ec_spi: Always add of_match_table
+Message-ID: <20190510214622.GA63153@google.com>
+References: <20190509181750.134960-1-evgreen@chromium.org>
 MIME-Version: 1.0
-X-OriginatorOrg: impinj.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c5b533a6-917b-470b-8954-08d6d590eafd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 21:46:12.0069
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3612
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Disposition: inline
+In-Reply-To: <20190509181750.134960-1-evgreen@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-R2VuZXJhbGx5LCB0aGUgb3V0cHV0IGNsb2NrIHBpbiBpcyBvbmx5IHVzZWQgZm9yIHRlc3Rpbmcg
-YW5kIG9ubHkgc2VydmVzCmFzIGEgc291cmNlIG9mIFJGIG5vaXNlIGFmdGVyIHRoaXMuICBJdCBj
-b3VsZCBiZSB1c2VkIHRvIGRhaXN5LWNoYWluClBIWXMsIGJ1dCB0aGlzIGlzIHVuY29tbW9uLiAg
-U2luY2UgdGhlIFBIWSBjYW4gZGlzYWJsZSB0aGUgb3V0cHV0LCBtYWtlCmRvaW5nIHNvIGFuIG9w
-dGlvbi4gIEkgZG8gdGhpcyBieSBhZGRpbmcgYW5vdGhlciBlbnVtZXJhdGlvbiB0byB0aGUKYWxs
-b3dlZCB2YWx1ZXMgb2YgdGksY2xrLW91dHB1dC1zZWwuCgpUaGUgY29kZSB3YXMgbm90IHVzaW5n
-IHRoZSB2YWx1ZSBEUDgzODY3X0NMS19PX1NFTF9SRUZfQ0xLIGFzIG9uZSBtaWdodApleHBlY3Q6
-IHRvIHNlbGVjdCB0aGUgUkVGX0NMSyBhcyB0aGUgb3V0cHV0LiAgUmF0aGVyIGl0IG1lYW50ICJr
-ZWVwCmNsb2NrIG91dHB1dCBzZXR0aW5nIGFzIGlzIiwgd2hpY2gsIGRlcGVuZGluZyBvbiBQSFkg
-c3RyYXBwaW5nLCBtaWdodApub3QgYmUgb3V0cHV0dGluZyBSRUZfQ0xLLgoKQ2hhbmdlIHRoaXMg
-c28gRFA4Mzg2N19DTEtfT19TRUxfUkVGX0NMSyBtZWFucyBlbmFibGUgUkVGX0NMSyBvdXRwdXQu
-Ck9taXR0aW5nIHRoZSBwcm9wZXJ0eSB3aWxsIGxlYXZlIHRoZSBzZXR0aW5nIGFzIGlzICh3aGlj
-aCB3YXMgdGhlCnByZXZpb3VzIGJlaGF2aW9yIGluIHRoaXMgY2FzZSkuCgpPdXQgb2YgcmFuZ2Ug
-dmFsdWVzIHdlcmUgc2lsZW50bHkgY29udmVydGVkIGludG8KRFA4Mzg2N19DTEtfT19TRUxfUkVG
-X0NMSy4gIENoYW5nZSB0aGlzIHNvIHRoZXkgZ2VuZXJhdGUgYW4gZXJyb3IuCgpDYzogQW5kcmV3
-IEx1bm4gPGFuZHJld0BsdW5uLmNoPgpDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBn
-bWFpbC5jb20+CkNjOiBIZWluZXIgS2FsbHdlaXQgPGhrYWxsd2VpdDFAZ21haWwuY29tPgpTaWdu
-ZWQtb2ZmLWJ5OiBUcmVudCBQaWVwaG8gPHRwaWVwaG9AaW1waW5qLmNvbT4KLS0tCiBkcml2ZXJz
-L25ldC9waHkvZHA4Mzg2Ny5jIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tCiAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvcGh5L2RwODM4NjcuYyBiL2RyaXZlcnMvbmV0L3BoeS9k
-cDgzODY3LmMKaW5kZXggZmQzNTEzMWEwYzM5Li40MjA3MjljZDYwMjUgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvbmV0L3BoeS9kcDgzODY3LmMKKysrIGIvZHJpdmVycy9uZXQvcGh5L2RwODM4NjcuYwpA
-QCAtNjgsNiArNjgsNyBAQAogCiAjZGVmaW5lIERQODM4NjdfSU9fTVVYX0NGR19JT19JTVBFREFO
-Q0VfTUFYCTB4MAogI2RlZmluZSBEUDgzODY3X0lPX01VWF9DRkdfSU9fSU1QRURBTkNFX01JTgkw
-eDFmCisjZGVmaW5lIERQODM4NjdfSU9fTVVYX0NGR19DTEtfT19ESVNBQkxFCUJJVCg2KQogI2Rl
-ZmluZSBEUDgzODY3X0lPX01VWF9DRkdfQ0xLX09fU0VMX01BU0sJKDB4MWYgPDwgOCkKICNkZWZp
-bmUgRFA4Mzg2N19JT19NVVhfQ0ZHX0NMS19PX1NFTF9TSElGVAk4CiAKQEAgLTg3LDcgKzg4LDgg
-QEAgc3RydWN0IGRwODM4NjdfcHJpdmF0ZSB7CiAJaW50IGlvX2ltcGVkYW5jZTsKIAlpbnQgcG9y
-dF9taXJyb3Jpbmc7CiAJYm9vbCByeGN0cmxfc3RyYXBfcXVpcms7Ci0JaW50IGNsa19vdXRwdXRf
-c2VsOworCWJvb2wgc2V0X2Nsa19vdXRwdXQ7CisJdTMyIGNsa19vdXRwdXRfc2VsOwogfTsKIAog
-c3RhdGljIGludCBkcDgzODY3X2Fja19pbnRlcnJ1cHQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRl
-dikKQEAgLTE1NCwxMSArMTU2LDE2IEBAIHN0YXRpYyBpbnQgZHA4Mzg2N19vZl9pbml0KHN0cnVj
-dCBwaHlfZGV2aWNlICpwaHlkZXYpCiAJLyogT3B0aW9uYWwgY29uZmlndXJhdGlvbiAqLwogCXJl
-dCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG9mX25vZGUsICJ0aSxjbGstb3V0cHV0LXNlbCIsCiAJ
-CQkJICAgJmRwODM4NjctPmNsa19vdXRwdXRfc2VsKTsKLQlpZiAocmV0IHx8IGRwODM4NjctPmNs
-a19vdXRwdXRfc2VsID4gRFA4Mzg2N19DTEtfT19TRUxfUkVGX0NMSykKLQkJLyogS2VlcCB0aGUg
-ZGVmYXVsdCB2YWx1ZSBpZiB0aSxjbGstb3V0cHV0LXNlbCBpcyBub3Qgc2V0Ci0JCSAqIG9yIHRv
-byBoaWdoCi0JCSAqLwotCQlkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCA9IERQODM4NjdfQ0xLX09f
-U0VMX1JFRl9DTEs7CisJLyogSWYgbm90IHNldCwga2VlcCBkZWZhdWx0ICovCisJaWYgKCFyZXQp
-IHsKKwkJZHA4Mzg2Ny0+c2V0X2Nsa19vdXRwdXQgPSB0cnVlOworCQlpZiAoZHA4Mzg2Ny0+Y2xr
-X291dHB1dF9zZWwgPiBEUDgzODY3X0NMS19PX1NFTF9SRUZfQ0xLICYmCisJCSAgICBkcDgzODY3
-LT5jbGtfb3V0cHV0X3NlbCAhPSBEUDgzODY3X0NMS19PX1NFTF9PRkYpIHsKKwkJCXBoeWRldl9l
-cnIocGh5ZGV2LCAidGksY2xrLW91dHB1dC1zZWwgdmFsdWUgJXUgb3V0IG9mIHJhbmdlXG4iLAor
-CQkJCSAgIGRwODM4NjctPmNsa19vdXRwdXRfc2VsKTsKKwkJCXJldHVybiAtRUlOVkFMOworCQl9
-CisJfQogCiAJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChvZl9ub2RlLCAidGksbWF4LW91dHB1
-dC1pbXBlZGFuY2UiKSkKIAkJZHA4Mzg2Ny0+aW9faW1wZWRhbmNlID0gRFA4Mzg2N19JT19NVVhf
-Q0ZHX0lPX0lNUEVEQU5DRV9NQVg7CkBAIC0yODgsMTEgKzI5NSwyMCBAQCBzdGF0aWMgaW50IGRw
-ODM4NjdfY29uZmlnX2luaXQoc3RydWN0IHBoeV9kZXZpY2UgKnBoeWRldikKIAkJZHA4Mzg2N19j
-b25maWdfcG9ydF9taXJyb3JpbmcocGh5ZGV2KTsKIAogCS8qIENsb2NrIG91dHB1dCBzZWxlY3Rp
-b24gaWYgbXV4aW5nIHByb3BlcnR5IGlzIHNldCAqLwotCWlmIChkcDgzODY3LT5jbGtfb3V0cHV0
-X3NlbCAhPSBEUDgzODY3X0NMS19PX1NFTF9SRUZfQ0xLKQorCWlmIChkcDgzODY3LT5zZXRfY2xr
-X291dHB1dCkgeworCQl1MTYgbWFzayA9IERQODM4NjdfSU9fTVVYX0NGR19DTEtfT19ESVNBQkxF
-OworCisJCWlmIChkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCA9PSBEUDgzODY3X0NMS19PX1NFTF9P
-RkYpIHsKKwkJCXZhbCA9IERQODM4NjdfSU9fTVVYX0NGR19DTEtfT19ESVNBQkxFOworCQl9IGVs
-c2UgeworCQkJbWFzayB8PSBEUDgzODY3X0lPX01VWF9DRkdfQ0xLX09fU0VMX01BU0s7CisJCQl2
-YWwgPSBkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCA8PAorCQkJICAgICAgRFA4Mzg2N19JT19NVVhf
-Q0ZHX0NMS19PX1NFTF9TSElGVDsKKwkJfQorCiAJCXBoeV9tb2RpZnlfbW1kKHBoeWRldiwgRFA4
-Mzg2N19ERVZBRERSLCBEUDgzODY3X0lPX01VWF9DRkcsCi0JCQkgICAgICAgRFA4Mzg2N19JT19N
-VVhfQ0ZHX0NMS19PX1NFTF9NQVNLLAotCQkJICAgICAgIGRwODM4NjctPmNsa19vdXRwdXRfc2Vs
-IDw8Ci0JCQkgICAgICAgRFA4Mzg2N19JT19NVVhfQ0ZHX0NMS19PX1NFTF9TSElGVCk7CisJCQkg
-ICAgICAgbWFzaywgdmFsKTsKKwl9CiAKIAlyZXR1cm4gMDsKIH0KLS0gCjIuMTQuNQoK
+
+--HlL+5n6rz5pIUxbD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Evan,
+
+On Thu, May 09, 2019 at 11:17:50AM -0700, Evan Green wrote:
+> The Chrome OS EC driver attaches to devices using the of_match_table
+> even when ACPI is the underlying firmware. It does this using the
+> magic PRP0001 ACPI HID, which tells ACPI to go find an OF compatible
+> string under the hood and match on that.
+>=20
+> The cros_ec_spi driver needs to provide the of_match_table regardless
+> of whether CONFIG_OF is enabled or not, since the table is used by
+> ACPI for PRP0001 devices.
+>=20
+> Signed-off-by: Evan Green <evgreen@chromium.org>
+
+Looks good to me.
+Reviewed-by: Benson Leung <bleung@chromium.org>
+
+I'll leave this to Enric to merge to our for-next.
+
+Thanks,
+Benson
+
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--HlL+5n6rz5pIUxbD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlzV8SsACgkQHwn1ewov
+5lgtdxAAixyvYNuxuXb3R0XUwoZr4OW17jwYk1zu4/Y4tsaMWY0ZS0RyInFygScC
++70a6qG+DNtmPaHWOajFIlFjaGPpteaIizPUPzglGgqF6vy+901oenxEtqapcq+U
+c7kq0PZaRpRH789s8CYomzz7zMYxy+58lrBgGki+0tlRz44NMEKPR4N+wTo9zF0h
+Omj0cjKfiCUHsKAn/pe+oye+a9Xqj+CyyPByAobY0haTrDPtwgNrn5ma0SXxQDPz
+VlelhEMJxsVsxHJ394zhGNRYmiHMbG+PHbOMXCtndf9qO7lERa9PlvQObvjG9TSj
+56vf4fib3Mx3Oc32yLtBxDKvoDglpSO/WV6Yc0vsGTPLblgVU/Zi1oYchvT0mJsD
+CwlsFoLB5uWKpLOvwxw5VXY4WdlAuyHT2ja6nshIJBJgagEMzMllPlikHWE5RmFu
+v83EzzUS6Tzzs2cURsTRkPS6nV56EUANWJ8xI7rFzi/VVBCQD9FV1RrPXwIqIj0i
+7rThUyaP0tPjN0bX//2HqlLN7Nd0z437NsE9eSHi3wv0wQFyoEaI3+SA9fKod+Ww
+R416YDmZEeLNqPup1DOTQRyLxF7LkEBzhT2ptDInH+shOKADeJZRrKZ/+twOZz3C
+nSeiW4QnjpKLqV6C2yUp3kS2yX3+I+iEXePRNLr9A+lr0Ho6JSQ=
+=rt78
+-----END PGP SIGNATURE-----
+
+--HlL+5n6rz5pIUxbD--
