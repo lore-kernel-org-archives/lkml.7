@@ -2,185 +2,105 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E19EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EAAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DE8217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557528035;
-	bh=sjg797I3Ege8CH2yMEKO3LN7YMxSK0+Tf/Ul0+K1ZmU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v/M22wz+DDyXQteha38jgOtO3689nYwquZdjt8tjjJ2g1ChBegoS1/eejPXIiebmn
-	 exwQYZhVd2Z9nd0AkMkWVq44ULkTSunNjqv94zjH9n9fQmiUy57tMg2Hwund965mb0
-	 RqggabEOnLiywjXeXppXZL4+w2U6Iv7Toygubeo8=
+	by mail.kernel.org (Postfix) with ESMTP id E4499217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UEfBh7LH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbfEJWke (ORCPT
+        id S1728118AbfEJWpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfEJWkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:40:33 -0400
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45FB217D6;
-        Fri, 10 May 2019 22:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557528031;
-        bh=sjg797I3Ege8CH2yMEKO3LN7YMxSK0+Tf/Ul0+K1ZmU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2BQZd867VQk7T/6xVDuphNMg8PT5izoOPVjRH879mo5UuHee3+ME5We5UOp8oRApd
-         iNSg0CMTjRLx+00A9EkpzztyQHHRMInm04SGcjFY0N6Ai1ssRwJbeHEvYjgtLq3o/8
-         Wx03509gNXFgIf1KQaGDcBNEhhyg+soHiT3IF6pM=
-Received: by mail-qk1-f175.google.com with SMTP id c1so3365531qkk.4;
-        Fri, 10 May 2019 15:40:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAW4lI9YZcdBQOHTUO12vKApasFtUEa37qKOlUhFHw63XY3DrNho
-        Z4MY0Q3mcIdVCFavI5lHXsb3A24Yv0TtGLIEow==
-X-Google-Smtp-Source: APXvYqzfUsXjKG+F9pb5KnYx61JOP50q/a8ljf0lZ3E6IZXXHNgJGxcJf1n0r9rKoC1VBQNTKS7hmCXklLDer5hjE7Q=
-X-Received: by 2002:a37:c42:: with SMTP id 63mr10276099qkm.326.1557528030863;
- Fri, 10 May 2019 15:40:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190507203749.3384-1-ilina@codeaurora.org> <20190507203749.3384-5-ilina@codeaurora.org>
-In-Reply-To: <20190507203749.3384-5-ilina@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 10 May 2019 17:40:19 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKXN2ye49HGEf+vLD0xaysp6kDqsZfFXX9BssK+TUh5SA@mail.gmail.com>
-Message-ID: <CAL_JsqKXN2ye49HGEf+vLD0xaysp6kDqsZfFXX9BssK+TUh5SA@mail.gmail.com>
-Subject: Re: [PATCH v5 04/11] of: irq: document properties for wakeup
- interrupt parent
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
+        Fri, 10 May 2019 18:45:19 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42198 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfEJWpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 18:45:19 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 145so3657833pgg.9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=d97YmyA/3LiD+Mv8la+sVqazB0Wi/v83PJRamaL8IZA=;
+        b=UEfBh7LHUprotWgJPz47HT61WOt99NIYruH7UVlYWzGp4leqNw7BqhT7vDvqv9kY05
+         FKyz/tgBrTPfjkcCh+21RVlmTBikMUeRlhdmfQi2wjrPwKMwMcKuqBtLEZeGcfxg905Q
+         kUq7k+hsUcLNGqIkhh0wrUlGl7hetNo3FVVXHaKarX2zcWMGTqkRnOvAKXvkvW4ZFFKV
+         WBPXBZAr93pQ3oHpHnxaTB2Dg0sPKef+ipSQ4xkc9mMH5hymm66nUugkVooCXyVjAtFl
+         WXsorAy2Z+x+GyF+wCZ8MmIxQvXHD4VC84TEeCHm9ezcB3cYMYi3E58GHtX/yygFUdaJ
+         5mVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=d97YmyA/3LiD+Mv8la+sVqazB0Wi/v83PJRamaL8IZA=;
+        b=j6zsBTpQ7NLWp5uyelvtw+YkdLjTFE6WFfIrFw/VTvXUZ+zCpb3sFV0SnnQRVMSx5B
+         w40tjF4DJSMEiEHF5lAJFr7dbtKhSrjwVZ1dcZZj3mj0hh9JnEgBEjijDB4DyVfrM7ZU
+         kw60pUI0Qi7b009p79Yf5Rle8sMwCSueS+rIVLGWWLyd2lEeOULfkz1F297aWC7YIMPa
+         ViLD9vhozNKfLrATlDXW1FTTYA+DYWtQpcwDm05hHtxpHqfFc78jSXheXlg5NNgbSK1l
+         yOVBbCilO4LRQMCFIYN4oC7TTfyDT6LF8Nhs5+s1zvm292hZevaYPxRJiswQPk6DBQYU
+         EnVw==
+X-Gm-Message-State: APjAAAWkiaUhzvpqgU7h3xLwuP6UXwuUuqWF7gVGXNPb0IWmDrouh4o+
+        3tsr6JRNWUgDYkNdOxMJDhfVfQ==
+X-Google-Smtp-Source: APXvYqxp0q0ql6/xwfvXB+jKs9bE8hhgTE2r8MIvm/sZG0/ChzNNxXC/9dZEpANHwGlx3k2JIC4I9Q==
+X-Received: by 2002:a62:56d9:: with SMTP id h86mr18128439pfj.195.1557528318502;
+        Fri, 10 May 2019 15:45:18 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
+        by smtp.googlemail.com with ESMTPSA id i3sm8675360pfa.90.2019.05.10.15.45.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 15:45:17 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
+In-Reply-To: <20190510164940.13496-6-jbrunet@baylibre.com>
+References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-6-jbrunet@baylibre.com>
+Date:   Fri, 10 May 2019 15:45:16 -0700
+Message-ID: <7ho94ac4jn.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 7, 2019 at 3:41 PM Lina Iyer <ilina@codeaurora.org> wrote:
+Jerome Brunet <jbrunet@baylibre.com> writes:
+
+> Enable the network interface of the SEI510 which use the internal PHY.
 >
-> Some interrupt controllers in a SoC, are always powered on and have a
-> select interrupts routed to them, so that they can wakeup the SoC from
-> suspend. Add wakeup-parent DT property to refer to these interrupt
-> controllers.
->
-> If the interrupts routed to the wakeup parent are not sequential, than a
-> map needs to exist to associate the same interrupt line on multiple
-> interrupt controllers. Providing this map in every driver is cumbersome.
-> Let's add this in the device tree and document the properties to map the
-> interrupt specifiers
->
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
-> Changes in v5:
->         - Update documentation to describe masks in the example
-> Changes in v4:
->         - Added this documentation
-> ---
->  .../interrupt-controller/interrupts.txt       | 54 +++++++++++++++++++
->  1 file changed, 54 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> index 8a3c40829899..e3e43f5d5566 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> @@ -108,3 +108,57 @@ commonly used:
->                         sensitivity = <7>;
->                 };
->         };
-> +
-> +3) Interrupt wakeup parent
-> +--------------------------
-> +
-> +Some interrupt controllers in a SoC, are always powered on and have a select
-> +interrupts routed to them, so that they can wakeup the SoC from suspend. These
-> +interrupt controllers do not fall into the category of a parent interrupt
-> +controller and can be specified by the "wakeup-parent" property and contain a
-> +single phandle referring to the wakeup capable interrupt controller.
-> +
-> +   Example:
-> +       wakeup-parent = <&pdc_intc>;
-> +
-> +
-> +4) Interrupt mapping
-> +--------------------
-> +
-> +Sometimes interrupts may be detected by more than one interrupt controller
-> +(depending on which controller is active). The interrupt controllers may not
-> +be in hierarchy and therefore the interrupt controller driver is required to
-> +establish the relationship between the same interrupt at different interrupt
-> +controllers. If these interrupts are not sequential then a map needs to be
-> +specified to help identify these interrupts.
-> +
-> +Mapping the interrupt specifiers in the device tree can be done using the
-> +"irqdomain-map" property. The property contains interrupt specifier at the
-> +current interrupt controller followed by the interrupt specifier at the mapped
-> +interrupt controller.
-> +
-> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-I'm wondering why we need a new map property rather than just using
-interrupt-map? Contrary to what Linus said, it is not PCI only.
+I tried testing this series on SEI510, but I must still be missing some
+defconfig options, as the default defconfig doesn't lead to a working
+interface.
 
-It would be an extension of the current behavior. It's generally used
-to map each interrupt to different parents or swizzle the routing (in
-the PCI case). Generally, a node would be either an
-'interrupt-controller' or an 'interrupt-map' node. The interrupt
-parsing code (for the kernel at least) prioritizes
-'interrupt-controller' path, so adding 'interrupt-map' could be done
-without changing behavior.
 
-Another concern I have with this is it only solves the problem of an
-IRQ routed to multiple parents for the case of 2 parents. What happens
-when we have an IRQ routed to 3 different parents? Maybe the solution
-is the incoming-interrupt-specifier can be listed more than once. Marc
-already expressed concerns with the scalability of interrupt-map
-property, so that's maybe not an ideal solution.
+I tried adding this kconfig fragment[1], and the dwmac probes/inits but
+I must still be missing something, as the dwmac is still failing to find
+a PHY.  Boot log: https://termbin.com/ivf3
 
-> +
-> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
-> +be provided to help interpret the valid bits of the incoming and mapped
-> +interrupt specifiers respectively.
-> +
-> +   Example:
-> +       intc: interrupt-controller@17a00000 {
-> +               #interrupt-cells = <3>;
+I have the same result testing on the u200.
 
-The phandle doesn't count as a cell, so this should be 2.
+Kevin
 
-> +       };
-> +
-> +       pinctrl@3400000 {
-> +               #interrupt-cells = <2>;
-> +               irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
-> +               irqdomain-map-mask = <0xff 0>;
-> +               irqdomain-map-pass-thru = <0 0xff>;
-> +       };
-> +
-> +In the above example, the input interrupt specifier map-mask <0xff 0> applied
-> +on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
-> +input interrupt 22, 24 etc. The second argument being irq type is immaterial
-> +from the map and is used from the incoming request instead. The pass-thru
-> +specifier parses the output interrupt specifier from the rest of the unparsed
-> +argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
-> +interrupt 36, 37 etc.
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
+[1] amlogic network kconfig fragment
+CONFIG_STMMAC_ETH=y
+
+# following are needed, but automatically enabled if above is set
+#CONFIG_STMMAC_PLATFORM=m
+#CONFIG_DWMAC_MESON=m
+
+CONFIG_PHYLIB=y
+CONFIG_MICREL_PHY=y
+CONFIG_REALTEK_PHY=y
+
+CONFIG_MDIO_BUS_MUX_MESON_G12A=y
+CONFIG_MESON_GXL_PHY=y
