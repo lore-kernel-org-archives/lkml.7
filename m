@@ -2,77 +2,82 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D53C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F31C04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F37E21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA0F21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 14:38:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfEJOiT (ORCPT
+        id S1727897AbfEJOiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 10 May 2019 10:38:20 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:39797 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfEJOiT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 May 2019 10:38:19 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7741 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727248AbfEJOiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 10:38:19 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F05C7BD70029A2692D3C;
-        Fri, 10 May 2019 22:38:04 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 May 2019
- 22:37:58 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <linusw@kernel.org>, <kaloz@openwrt.org>, <khalasa@piap.pl>,
-        <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] clocksource/drivers/ixp4xx: Fix build warning
-Date:   Fri, 10 May 2019 22:36:09 +0800
-Message-ID: <20190510143609.29236-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+X-Originating-IP: 109.213.220.252
+Received: from localhost (alyon-652-1-77-252.w109-213.abo.wanadoo.fr [109.213.220.252])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 3ACD9FF809;
+        Fri, 10 May 2019 14:38:17 +0000 (UTC)
+Date:   Fri, 10 May 2019 16:38:16 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Olof Johansson <olof@lixom.net>
+Subject: Re: [GIT PULL] RTC for 5.2
+Message-ID: <20190510143816.GB7622@piout.net>
+References: <20190509210340.GA23061@piout.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509210340.GA23061@piout.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc build warning:
+On 09/05/2019 23:03:40+0200, Alexandre Belloni wrote:
+> Hello Linus,
+> 
+> A huge series from me this cycle. I went through many drivers to set the
+> date and time range supported by the RTC which helps solving HW
+> limitation when the time comes (as early as next year for some). This
+> time, I focused on drivers using .set_mms and .set_mmss64, allowing me
+> to remove those callbacks. About a third of the patches got reviews, I
+> actually own the RTCs and I tested another third and the remaining one
+> are unlikely to cause any issues.
+> 
+> Other than that, a single new driver and the usual fixes here and there.
+> 
+> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+> 
+>   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux.git tags/rtc-5.2
+> 
+> for you to fetch changes up to dacb6a4035a010e41abaf81c1cfe2beadfb05ec8:
+> 
+>   rtc: snvs: Use __maybe_unused instead of #if CONFIG_PM_SLEEP (2019-05-08 22:14:36 +0200)
+> 
 
-drivers/clocksource/timer-ixp4xx.c:78:20:
- warning: 'ixp4xx_read_sched_clock' defined but not used [-Wunused-function]
+I forgot to mention that you will have a non trivial conflict that is
+properly resolved in linux-next when you will pull arm-soc.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/clocksource/timer-ixp4xx.c | 2 ++
- 1 file changed, 2 insertions(+)
+There is no need to check the return value of tm2bcd() after
+35118b7a4ea0 ("rtc: omap: let the core handle range")
 
-diff --git a/drivers/clocksource/timer-ixp4xx.c b/drivers/clocksource/timer-ixp4xx.c
-index 404445b..96a72e5 100644
---- a/drivers/clocksource/timer-ixp4xx.c
-+++ b/drivers/clocksource/timer-ixp4xx.c
-@@ -75,10 +75,12 @@ to_ixp4xx_timer(struct clock_event_device *evt)
- 	return container_of(evt, struct ixp4xx_timer, clkevt);
- }
- 
-+#ifdef CONFIG_ARM
- static u64 notrace ixp4xx_read_sched_clock(void)
- {
- 	return __raw_readl(local_ixp4xx_timer->base + IXP4XX_OSTS_OFFSET);
- }
-+#endif
- 
- static u64 ixp4xx_clocksource_read(struct clocksource *c)
- {
+
 -- 
-2.7.4
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
