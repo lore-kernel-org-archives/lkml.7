@@ -2,69 +2,97 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BDAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C098AC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAF921479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92F9B21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfEJNA3 (ORCPT
+        id S1727546AbfEJNCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:00:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39936 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727836AbfEJNA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:00:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 749EDAEC6;
-        Fri, 10 May 2019 13:00:25 +0000 (UTC)
+        Fri, 10 May 2019 09:02:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:46622 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727258AbfEJNCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 09:02:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBFD3374;
+        Fri, 10 May 2019 06:02:44 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AA5B3F6C4;
+        Fri, 10 May 2019 06:02:42 -0700 (PDT)
+Date:   Fri, 10 May 2019 14:02:40 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        devicetree@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCHv1 2/8] Documentation: arm: Link idle-states binding to
+ code
+Message-ID: <20190510130240.GC10284@e107155-lin>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <5f25e2b3096fa73f205e1797e355e049ed9f8c9c.1557486950.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 10 May 2019 15:00:25 +0200
-From:   osalvador@suse.de
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, owner-linux-mm@kvack.org
-Subject: Re: [PATCH v8 08/12] mm/sparsemem: Prepare for sub-section ranges
-In-Reply-To: <155718600896.130019.3565988182718346388.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155718600896.130019.3565988182718346388.stgit@dwillia2-desk3.amr.corp.intel.com>
-Message-ID: <3b031a3e721fd81dcfd5fa344e2a5bd0@suse.de>
-X-Sender: osalvador@suse.de
-User-Agent: Roundcube Webmail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f25e2b3096fa73f205e1797e355e049ed9f8c9c.1557486950.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-07 01:40, Dan Williams wrote:
-> Prepare the memory hot-{add,remove} paths for handling sub-section
-> ranges by plumbing the starting page frame and number of pages being
-> handled through arch_{add,remove}_memory() to
-> sparse_{add,remove}_one_section().
-> 
-> This is simply plumbing, small cleanups, and some identifier renames. 
-> No
-> intended functional changes.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+On Fri, May 10, 2019 at 04:59:40PM +0530, Amit Kucheria wrote:
+> The enable-method needs to be psci for the psci_cpuidle_ops to be
+> correctly registered.
+>
+> Add a note to the binding documentation on where to find the declaration
+> of the enable-method since it is a macro and escapes any attempts to
+> grep for it.
+>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/idle-states.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+> index 45730ba60af5..3a42335a6f3d 100644
+> --- a/Documentation/devicetree/bindings/arm/idle-states.txt
+> +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+> @@ -239,6 +239,10 @@ processor idle states, defined as device tree nodes, are listed.
+>  			# On ARM v8 64-bit this property is required and must
+>  			  be:
+>  			   - "psci"
+> +			     (This assumes that the enable-method is "psci"
+> +			     in the cpu node[6] that then uses the
+> +			     CPUIDLE_METHOD_OF_DECLARE macro to setup the
+> +			     psci_cpuidle_ops callbacks)
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+I don't prefer to refer some Linux implementation macros in DT bindings
+as they may disappear any day. Further, the use of CPUIDLE_METHOD_OF_DECLARE
+is restricted to ARM32 platforms only. So better to move it down without
+the reference to the above macro or any kernel implementation details if
+possible.
 
+>  			# On ARM 32-bit systems this property is optional
+>
 
+Something like:
+"This assumes that the "enable-method" property is set to "psci" in
+in the cpu node[6] and use this property to set up the CPU idle
+management in OS PM implementations"
+
+With something on these line, you can add:
+
+Acked-by: Sudeep Holla <sudeep.holla@arm.com
+
+--
+Regards,
+Sudeep
