@@ -2,106 +2,102 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683BFC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA90EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39151217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:02:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gtxeRFAU"
+	by mail.kernel.org (Postfix) with ESMTP id A50D0217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:04:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfEJHCd (ORCPT
+        id S1727131AbfEJHED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:02:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35174 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbfEJHCc (ORCPT
+        Fri, 10 May 2019 03:04:03 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:57794 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfEJHEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:02:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q15so2114860wmj.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:02:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=JRWdWoewTocU8nrk2Hz18h3BUdlM7HWn5LtcY0LdbcI=;
-        b=gtxeRFAUwu8fb+cBGQ/DnmXucUFlEOy68GizZHQW/AQTTHdo4E0h05hckutZ0mGg9x
-         JqiRMXZjpRrEml0i6G63qnCKDl0A6d18flfT9zogkcrv0TpJaScuFje4+9VfyumCehQ0
-         eRBU04ZBb1bP2v83OjOoSi3PkTqwg8z9pVr8fAaShlU1Qevy+QjiwPciiaV0BLIm29HP
-         hTquskbaz3trJBO9+BUnMVbSyl4MYdwXAsqag1+JBF/Th+Q1BO7RbMfV8eLdSpOPp/BQ
-         VyS4JW60ZOVe+yBblwHccZlnrnl2oABhZPJat8wqfSZZocz0r4tC/MOeGSnIfdFmtBNC
-         SiHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=JRWdWoewTocU8nrk2Hz18h3BUdlM7HWn5LtcY0LdbcI=;
-        b=JN70RJuAdQM3ZAZozmZXpBtKTR641xxtKx9cqAlFI3YvBVYIE9423fciyg+gAWXEpL
-         9PE3HFP+a4xrTQZMkD8IHSs2kDB9Zasyw7vZ2rO0BF8ZOc9u4cSkmxl8yFTY5QHmXjO6
-         Cm3yMPafx2xnA88X7ExEhjaY+8VZbWQ6d+oc7e9BcE2WY6vDkuGjJlLg/6ZATMPHY2qQ
-         PTamdjWV4f/Q7GfjzU7DTcB88uDDv7udxaupwDsI98QfV+NqVeqmE5SwL1rYV6uMIVxo
-         XaUG+AyZBxfZO5qlxHF6Zn+6ZUWDVYj2MQaXjHcLPSi2gBMS6lJpsFLbb76voaaI8+sz
-         HfIg==
-X-Gm-Message-State: APjAAAXiUyw9Vizzk6LDdJVdkNiraRB2RbzPdsszbp1JU7CPddDPMz3b
-        rwAHPSqxaZS30ZOIIrUg4v+Bv3n927g=
-X-Google-Smtp-Source: APXvYqxy5RbQWyQHmMAGJH4mhe6fz63p/mLoUwUpk3w2k2NVGrRrH3Be8C8LG2kd7wumX0JTvZTpsw==
-X-Received: by 2002:a1c:ca01:: with SMTP id a1mr6085358wmg.30.1557471751173;
-        Fri, 10 May 2019 00:02:31 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id n4sm3912417wmk.24.2019.05.10.00.02.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 00:02:30 -0700 (PDT)
-Date:   Fri, 10 May 2019 08:02:28 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH next v3] mfd: Use dev_get_drvdata()
-Message-ID: <20190510070228.GA7321@dell>
-References: <20190509061443.GU31645@dell>
- <20190509142339.96276-1-wangkefeng.wang@huawei.com>
+        Fri, 10 May 2019 03:04:02 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 56F9320076;
+        Fri, 10 May 2019 09:03:56 +0200 (CEST)
+Date:   Fri, 10 May 2019 09:03:54 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Ulf Magnusson <ulfalizer@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] kconfig: do not write .config if the content is the
+ same
+Message-ID: <20190510070354.GA2193@ravnborg.org>
+References: <20190510061205.28753-1-yamada.masahiro@socionext.com>
+ <20190510061205.28753-2-yamada.masahiro@socionext.com>
+ <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190509142339.96276-1-wangkefeng.wang@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=c-n4J4-pAAAA:8
+        a=CyLFrPR0bYC2-3M4T7AA:9 a=CjuIK1q_8ugA:10 a=L0NDqeB7ZLmQzAogN4cw:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 09 May 2019, Kefeng Wang wrote:
+Hi Geert/Masahiro.
 
-> Using dev_get_drvdata directly.
+On Fri, May 10, 2019 at 08:46:35AM +0200, Geert Uytterhoeven wrote:
+> Hi Yamada-san,
 > 
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> ---
-> v3:
-> - fix build issue('dev' undeclared) in tc6393xb_nand_enable()
-> v2:
-> -use dev_get_drvdata() instead of to_ssbi()
+> On Fri, May 10, 2019 at 8:14 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> > Kconfig updates the .config when it exits even if its content is
+> > exactly the same as before. Since its timestamp becomes newer than
+> > that of other build artifacts, additional processing is invoked,
+> > which is annoying.
+> >
+> > - syncconfig is invoked to update include/config/auto.conf, etc.
+> >
+> > - kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
+> >   then vmlinux is relinked as well.
+> >
+> > If the .config is not changed at all, we do not have to even
+> > touch it. Just bail out showing "No change to .config".
+It would be preferable that if nothing changed no output is generated.
+Like we do not tell that we did not build a .o file because the .c file
+had not changed.
+Less noise for a kernel build where nothings happens.
+
+> This causes a semantic change for the meaning of ".config.old", which is
+> no longer updated if .config has not changed.
+> Hence its contents may no longer correspond to the previous config, but to
+> an arbitrary older version.
+This semantic change is good.
+So we now have a .config.old that correspond to the state before
+the last change. Also after several kernel builds.
+
+> > My workflow involves always running my own script "linux-oldconfig",
+> instead of "make oldconfig", so I immediately see what has changed:
 > 
->  drivers/mfd/ssbi.c     |  6 ++----
->  drivers/mfd/t7l66xb.c  | 12 ++++--------
->  drivers/mfd/tc6387xb.c | 12 ++++--------
->  drivers/mfd/tc6393xb.c | 23 ++++++++---------------
->  4 files changed, 18 insertions(+), 35 deletions(-)
+>     $ cat $(type -p linux-oldconfig)
+>     #!/bin/bash
+>     make ${0#*/linux-} && colordiff -u .config{.old,}
+So scripts relying on the old (broken) behaviour will no longer work.
+The new behaviour is better as it is usefaul in many typical situations.
 
-Applied, thanks.
+Hacking, hack. What did I change in the config?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+	Sam
