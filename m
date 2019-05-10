@@ -2,174 +2,102 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E833FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6486C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 23:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA7C20896
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:56:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8149E20989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 23:00:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PVtCvoAB"
+	dkim=pass (1024-bit key) header.d=att.net header.i=@att.net header.b="xP6YQeYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfEJWzi (ORCPT
+        id S1728074AbfEJXAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:55:38 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36628 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfEJWzh (ORCPT
+        Fri, 10 May 2019 19:00:47 -0400
+Received: from sonic317-30.consmr.mail.bf2.yahoo.com ([74.6.129.85]:46490 "EHLO
+        sonic317-30.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726862AbfEJXAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:55:37 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a8so7210306edx.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WVJrycbr/gzeELcTlNLGESPEZue/RmnlQ2sNJEpDNsY=;
-        b=PVtCvoABifhhpps7LQCxWpbe0cETkuW4407swtpW2wZNB0MYdMM0GxxDqv0HNnNodv
-         Ayg8e8drsN5+V97gaXJXhOaknixPfzkzvVcOPyIYII32yga6n2wAaMTThM8259KmS1TC
-         xSJrWL+MhMncjrmBTiAaJe/uJL9mtGHSfExT19YLks6SK0rDOxEamgcnb8LEhXqZNBD5
-         xaij2B4S8UQV1G46OCEPRl6wk8lJFCRFQ5z0okf/im6T3M/WNhhB1k+bGuD4HbdhzVXX
-         8V9EB9KSr9JsFhY3/whaTmkpEOdY5oRlYM0GdJtu+83RR0JobEEwXtgv42WNiUjIl3Gh
-         QibQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WVJrycbr/gzeELcTlNLGESPEZue/RmnlQ2sNJEpDNsY=;
-        b=gA7rdxwHyEa97Qpkf5bKnl8vORZroBUwvF1QTFSpQg6QQIGHXYBknHNrve4uGXIvAl
-         J0q2mMOmLLjZ/hwd3qNWA8L6Uivx3hgunTsSoINrTcbddpiGwvcYhjgUP1LChbmS0Q7K
-         2pZSumZ6MXW3dedCBEH9Jw6BK8nbL6czdlEpo1wdtl7u21KmSdujf92eEP0oWvCVoZ9l
-         Logly37eSMQ9Wn28HxdY07uaS7tilv0m2qrozX3ahTjl3mcQCfpur/xsimrfz45MDE/W
-         4WavvRmYuxddyG1wNYSpH/XuxZ7U9X6BZ61+ijQALGb50BUZcjkxDAUa+VXNTlQDcauV
-         qsNA==
-X-Gm-Message-State: APjAAAV3zlelU9g6sAQ/QOslSOQx46cn2u8AyztP1Vh8p/Nm1SJ70qaF
-        WhXssnYshoaN/m/ksp0VMrCTvQ==
-X-Google-Smtp-Source: APXvYqyFgIAUQN/iwwVHYrlE9ztkC5/Qr3cjj52DwUiZqwb23Y2z2EEJlTmPIu9Z3scX1Cu2fCPrLA==
-X-Received: by 2002:a17:906:f91:: with SMTP id q17mr10924134ejj.63.1557528934578;
-        Fri, 10 May 2019 15:55:34 -0700 (PDT)
-Received: from google.com ([2a00:79e0:1b:201:ee0a:cce3:df40:3ac5])
-        by smtp.gmail.com with ESMTPSA id b4sm1767070edf.7.2019.05.10.15.55.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 15:55:33 -0700 (PDT)
-Date:   Sat, 11 May 2019 00:55:27 +0200
-From:   Jann Horn <jannh@google.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-Message-ID: <20190510225527.GA59914@google.com>
-References: <20190506165439.9155-1-cyphar@cyphar.com>
- <20190506165439.9155-6-cyphar@cyphar.com>
- <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
- <20190506191735.nmzf7kwfh7b6e2tf@yavin>
- <20190510204141.GB253532@google.com>
- <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 May 2019 19:00:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=att.net; s=s1024; t=1557529245; bh=wepY/gS3yMca5RtTmrlwhUMxYb8B5nzbu5WWMJJMoJE=; h=Subject:From:In-Reply-To:Date:Cc:References:To:From:Subject; b=xP6YQeYEojWEfXLZ59KCrpXsglTSnBa/W9ULxCcE9Ex9VxTyt+AGINwB4t/Z0XBWIMMI4xOgYkpBz2nB9fh9xdwjXg/+5w1yvqO4FChXcnHl1WpdtoZkmJWDI5jjvd0g1Gi2+dcn+eP8Yr8SRTqAC8Ds4vLaCuLKU29uIvsIr1A=
+X-YMail-OSG: K4CoSg0VM1keuYaffQGn0nX6HU07dmphsUmu2d6eivbDn_.BK.PhM61NRqO0Z1N
+ 1ZclmEC.ol98u5a_7YNRuNAJGRHc_UfQ95JI500UGYhQVyoDLBAYup1MpfMn6eJazziGTuFQQ1vW
+ ZmBTfeioBJHF_drcihY2q3I6Yi1vhzQSzPrDRD.MOGpPbxeWiB2RJ_osuwLvuPtgcOttPjJATe7K
+ il0VCizeR9juAvSHM_yMD1684xhKi3Q.x8TnRGzG1X42qOYlKrlw.R8XwYlkyY610dTe3g5FZh03
+ upkkY76yGxQVZ80El4R.NeDMsnfMujcbQwC10HWbxdXq4q030smkwB155jSFBPEHc96kJQ27YDiL
+ FrEJKotDRc6wDVJR3v.jcLIRL9K402jFpxgjvk5fXv32NOUwTXo.6lBkddAhc8XFWWSK2xl9XBsc
+ Q83DIv9KQKFq.PDaQsDF.JWUk1exeVp0pTMrpXiUqSAZXTxvs1hbwTZOGHr0Zm0JNoF2WyjN2WTa
+ 2.yuFCvueefs0dl3VPrg7v2UL6FQnOJGJqqIypq0sPHU.Fq52YrMJeKHixWAc0Geth4_183g_v0z
+ Rtiouz4Qi6y_idNCfbrNY8E_IOASDXaKJABXH3ZuDEHmM5RMDikCMDHpoWosnGHQaHBTeG.scSbY
+ SLo90EhX6XQuR7.Uu8qNbhwuN.0vBy7w7zfHbcoEfnIfdqWr.FQ9vL1QvGnnz.jqbqL1mJ5LHLpz
+ HEHGQMkfZobhxLDR1gM0QfucTQQw6.CCYn8KEw6i9KSDWUrp9b6qaCXwq7kXNtfFNXHgnCeb01nl
+ BtOsG.VPfz09Zx_gP5u.gMn7cnNHTlKCrwC_6PFixhPGDcvHpZOLWivADmSDKTUUzi30v5VhK2_R
+ QyRlFCVhmwH6x7yGX7IbTC7jLNNX47RVCHD2zptnCWWHHiNeiTcuiueupB0uXhLeqT3fsxuzmLQC
+ wRrOTuGiBmWQhSI8CsufH.sqpzjNydWxduDRBs7rbOxLckKo5Qfz0MPub31DG1V632CsP9E2esN0
+ t.v16RMJ7gQoANogFAfx7GDR3VbFHgoEXhQ58RfBeGWo5eiHKjWCqMn__wtvHAQKqb.9sTwMgY5n
+ Ga7OtVAADRBLLRI6PZ_C0oUml92eE9N8s.mMJ.g9Y1X14Sqv2EGGLgm6dOSiVr9KjYp44AJ5gRA-
+ -
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Fri, 10 May 2019 23:00:45 +0000
+Received: from 76-203-170-160.lightspeed.miamfl.sbcglobal.net (EHLO [192.168.1.66]) ([76.203.170.160])
+          by smtp430.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 01de54cdcaf527339859d75695bc30e2;
+          Fri, 10 May 2019 23:00:43 +0000 (UTC)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: Danish FreeBSD Developer hates jews collectively
+From:   Farias Martinez <aaronfarias@att.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190511011723.2e25dade@rimwks>
+Date:   Fri, 10 May 2019 19:00:32 -0400
+Cc:     Steffen Nurpmeso <steffen@sdaoden.eu>, ossobserver@redchan.it,
+        linux-kernel@vger.kernel.org, misc@openbsd.org,
+        freebsd-current@freebsd.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6FF7513E-CC99-497E-850A-4761A5AEEBD9@att.net>
+References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it> <20190510073249.73a17721@rimwks> <20190510182231.k24xb%steffen@sdaoden.eu> <20190511011723.2e25dade@rimwks>
+To:     Rozhuk Ivan <rozhuk.im@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 02:20:23PM -0700, Andy Lutomirski wrote:
-> On Fri, May 10, 2019 at 1:41 PM Jann Horn <jannh@google.com> wrote:
-> >
-> > On Tue, May 07, 2019 at 05:17:35AM +1000, Aleksa Sarai wrote:
-> > > On 2019-05-06, Jann Horn <jannh@google.com> wrote:
-> > > > In my opinion, CVE-2019-5736 points out two different problems:
-> > > >
-> > > > The big problem: The __ptrace_may_access() logic has a special-case
-> > > > short-circuit for "introspection" that you can't opt out of; this
-> > > > makes it possible to open things in procfs that are related to the
-> > > > current process even if the credentials of the process wouldn't permit
-> > > > accessing another process like it. I think the proper fix to deal with
-> > > > this would be to add a prctl() flag for "set whether introspection is
-> > > > allowed for this process", and if userspace has manually un-set that
-> > > > flag, any introspection special-case logic would be skipped.
-> > >
-> > > We could do PR_SET_DUMPABLE=3 for this, I guess?
-> >
-> > Hmm... I'd make it a new prctl() command, since introspection is
-> > somewhat orthogonal to dumpability. Also, dumpability is per-mm, and I
-> > think the introspection flag should be per-thread.
-> 
-> I've lost track of the context here, but it seems to me that
-> mitigating attacks involving accidental following of /proc links
-> shouldn't depend on dumpability.  What's the actual problem this is
-> trying to solve again?
+Why don=E2=80=99t you guys just closed the cased. For gods sake. Now they ar=
+e investigating the incident.
 
-The one actual security problem that I've seen related to this is
-CVE-2019-5736. There is a write-up of it at
-<https://blog.dragonsector.pl/2019/02/cve-2019-5736-escape-from-docker-and.html>
-under "Successful approach", but it goes more or less as follows:
+Sent from my iPhone
 
-A container is running that doesn't use user namespaces (because for
-some reason I don't understand, apparently some people still do that).
-An evil process is running inside the container with UID 0 (as in,
-GLOBAL_ROOT_UID); so if the evil process inside the container was able
-to reach root-owned files on the host filesystem, it could write into
-them.
-
-The container engine wants to spawn a new process inside the container.
-It forks off a child that joins the container's namespaces (including
-PID and mount namespaces), and then the child calls execve() on some
-path in the container.
-The attacker replaces the executable in the container with a symlink
-to /proc/self/exe and replaces a library inside the container with a
-malicious one.
-When the container engine calls execve(), intending to run an executable
-inside the container, it instead goes through ptrace_may_access() using
-the introspection short-circuit and re-executes its own executable
-through the jumped symlink /proc/self/exe (which is normally unreachable
-for the container). After the execve(), the process loads an evil
-library from inside the container and is under the control of the
-container.
-Now the container controls a process whose /proc/self/exe is a jumped
-symlink to a host executable, and the container can write into it.
-
-Some container engines are now using an extremely ugly hack to work
-around this - whenever they want to enter a container, they copy the
-host binary into a new memfd and execute that to avoid exposing the
-original host binary to containers:
-<https://github.com/opencontainers/runc/commit/0a8e4117e7f715d5fbeef398405813ce8e88558b>
+> On May 10, 2019, at 6:17 PM, Rozhuk Ivan <rozhuk.im@gmail.com> wrote:
+>=20
+> On Fri, 10 May 2019 20:22:31 +0200
+> Steffen Nurpmeso <steffen@sdaoden.eu> wrote:
+>=20
+>> |> Background: Apparently a FreeBSD developer, a viking looking
+>> fellow, |> has been hiding a secret: just as many of his predecessors
+>> in the |> Danish cities during WWII (collaborators); He has a disdain
+>> for "the |> jews" collectively.
+>> |>  =20
+>> |
+>> |Who cares!?
+>>=20
+>> I want to point out one thing.  No, two.  One is that i concur
+>> with all left hand side arguments of PHKs blog post that was
+>> linked a 100 percent.  But that is my personal opinion.
+>=20
+> I mean that this is "tech" resource about freebsd.
+> Who and what doing outside source tree is irrelivant.
+>=20
+> ossobserver@redchan.it - idiot.
+> CoC - stupid thing.
+>=20
+>=20
+> PS: sorry for offtopic.
+> _______________________________________________
+> freebsd-current@freebsd.org mailing list
+> https://lists.freebsd.org/mailman/listinfo/freebsd-current
+> To unsubscribe, send any mail to "freebsd-current-unsubscribe@freebsd.org"=
 
 
-In my opinion, the problems here are:
-
- - Apparently some people run untrusted containers without user
-   namespaces. It would be really nice if people could not do that.
-   (Probably the biggest problem here.)
- - ptrace_may_access() has a short-circuit that permits a process to
-   unintentionally look at itself even if it has dropped privileges -
-   here, it permits the execve("/proc/self/exe", ...) that would
-   normally be blocked by the check for CAP_SYS_PTRACE if the process
-   is nondumpable.
- - You can use /proc/*/exe to get a writable fd.
