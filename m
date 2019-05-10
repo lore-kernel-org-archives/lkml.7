@@ -2,124 +2,141 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	T_DKIMWL_WL_MED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FE9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42FFC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A92F2182B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:00:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AE3217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:07:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tSZ3t6N4"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="zm7hjnBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfEJAAj (ORCPT
+        id S1726783AbfEJAHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 20:00:39 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:43807 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbfEJAAi (ORCPT
+        Thu, 9 May 2019 20:07:16 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33750 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbfEJAHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 20:00:38 -0400
-Received: by mail-qt1-f202.google.com with SMTP id q32so4436936qtk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 17:00:37 -0700 (PDT)
+        Thu, 9 May 2019 20:07:15 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e11so5396997wrs.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 17:07:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
-        b=tSZ3t6N4Z1hNAMYvgS92eIL566ndUhmt5xsPPoUSXPzweWrogmxc+KJ10EVf3pttkF
-         merVBSZHG0xLznvz4TKUL7L/GZ2cjBzn9Uqwa07TqFu+hek4xO0PQZfpn+9AYYxEqHRe
-         iG61HVtIimI9EQNzmCMq2HhMo1YFeWooHmUb1dCm4Km/pTzPbAhRn7WUXoNAQprfpOYl
-         KpalQjheFynt2AC8LlfdwPcJT2Dd9exlL1kqGHdpBmSVkj/RAc0c7GLZHzWoZStRx/DU
-         OVyvgiKkjGPP01EUrs0iwK5npCTDem8hdHBbtbZEpi9IcUifRkYzYt5ron+RYMbsxchS
-         oAYA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=x/CXGRp80IRiXeAmAwY4ABp5f377aFe0bLcL5F214gE=;
+        b=zm7hjnBWdxRz8c7snZRskGOs1vLkqvVfnT0vVKjhAKFq8NC62YJR+yasZjfxGLV6UT
+         UCyUOOFzTMbYBWfsDD+Zr9K6/iX3IEvrmpxobfIYO1jjB24JPxulhwOQfpMBjcuixMLY
+         fIaVNiX1YPChBlGvKvLl9lO21Uv1o1JJCDJxTZtbTIalLy4vLXzUvm9neO+p5T9YVXsg
+         sPOHOIfewBUcanaEOnzU+I+LIiKf/QYjw2NPEifXmDeZG2ad4IqZ37py2m2a7Nq2TcaP
+         3eeh6if3CU0BktRmj1YsLN8DXwg2zuuLwf3332LUca6TopfLZMOdGOi00dGDYkZmA3Q+
+         ndAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
-         :content-transfer-encoding;
-        bh=M35jpHh+HUdAc93UKOjDO7JbyHiHSckhQH2gYDGobXY=;
-        b=bOMphADQCPN2fUDeqQeOxcCeTkOZqZkuWNfYZ3xUsusnw0qFqntBWWP8WIGMIkgAM2
-         TxhCgsqzzvdVbOnwo0kBxKdkU4sV0ToIG+TxqgXao8O/9kypOEaomWewUzGHrHh8m8g5
-         2jJA/GGaNmnL/4j9EYFSlCAdN5igDs17ZPUT4XLLGHBqE6krtEydJB30RNmB0FREoTO3
-         TcfRbOucStMduwt2BV1RJJXMBOkWyTnnwzg6Er/TqHexhJP45/LzsK97wL0/xzg3cFdo
-         HmSbq0niUMfBinh22kfbPv9W/3guZiLbV4nCXBzZN/9+xiOav4gLX5zp1dgwQ55eJJ0l
-         0TSQ==
-X-Gm-Message-State: APjAAAXEIJW3rjAjpnRmheixQWkagktIqUdPXEuQL2hXXN11Gj8HgGa4
-        lufgFDGUuy9biUb5rpSJsza9PZa7vF+1x87H8lf36YfF+8WOfbmy01YPYmbyGMfFJsMQliw9HTs
-        SqbFdvhEOLo9UG3U9xsJ8x1geF+fskWaFJ6WWDp2p86EbLh1zAeeI0DjaT+QQl0RYfqQ=
-X-Google-Smtp-Source: APXvYqxnWMeG08te3Sc05EXGTxd8eHwJqSeZWK3/hm9AqvlKOJ36EdgmCBMpQKg7lKin0TXW98MNSIkgsQ==
-X-Received: by 2002:ac8:29af:: with SMTP id 44mr6461067qts.352.1557446435276;
- Thu, 09 May 2019 17:00:35 -0700 (PDT)
-Date:   Thu,  9 May 2019 17:00:29 -0700
-Message-Id: <20190510000032.40749-1-fengc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [dma-buf v3 0/3] Improve the dma-buf tracking
-From:   Chenbo Feng <fengc@google.com>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-media@vger.kernel.org
-Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>, erickreyes@google.com,
-        kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=x/CXGRp80IRiXeAmAwY4ABp5f377aFe0bLcL5F214gE=;
+        b=cYo7UB1fT5KnTPuvLFLRgG+KePxXCg6mcqD2h3SZPCCaGXVCAFaVISTpkcxeTCcaEP
+         oDV9SbRsW/ytt2Ou/E+pkVaIVRChs9M73jiRhAFoSS+RBIqEHT7lQ86QQeWUO4MGvqCi
+         YGP9+TZY80RsDQ3W6B6jt7cZWzyyt4fFA1Jv2iwK1GEC8SH1MgGLC+vJeQbpali9xAhY
+         Hg/0+2zl2kS5fNudADKUjQf/r9vhoce0h69o/vRsChZGMHKevJP/MqX2gFSMqsiEdcU2
+         MjHodQaEaIIIa/q3nyzWWXLwyuJ+PsioYZ7xTqRiWa+TX17j21/btRy3u6DZE4NqNXAA
+         1RsA==
+X-Gm-Message-State: APjAAAWumnydnxu296MWCFIyp6/qijw5PzJEKHNaASNbu74TuSVeCk/L
+        nfQbXkt6i/kU/1x5A2PuOCmT4A==
+X-Google-Smtp-Source: APXvYqw8TyNbsxwv8pfcxINOYbZZdRhwzpvv30ozame/EW/8EJOBSC5fqlVypo8Zm1YUlheuC2LpRA==
+X-Received: by 2002:a5d:4d46:: with SMTP id a6mr5503966wru.142.1557446834027;
+        Thu, 09 May 2019 17:07:14 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id g10sm2273532wrq.2.2019.05.09.17.07.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 May 2019 17:07:13 -0700 (PDT)
+Message-ID: <5cd4c0b1.1c69fb81.2bb79.a649@mx.google.com>
+Date:   Thu, 09 May 2019 17:07:13 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Kernel: v4.19.41-67-g82fd2fd59cff
+In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
+References: <20190509181301.719249738@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/66] 4.19.42-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, all dma-bufs share the same anonymous inode. While we can count
-how many dma-buf fds or mappings a process has, we can't get the size of
-the backing buffers or tell if two entries point to the same dma-buf. And
-in debugfs, we can get a per-buffer breakdown of size and reference count,
-but can't tell which processes are actually holding the references to each
-buffer.
+stable-rc/linux-4.19.y boot: 135 boots: 1 failed, 132 passed with 2 conflic=
+ts (v4.19.41-67-g82fd2fd59cff)
 
-To resolve the issue above and provide better method for userspace to track
-the dma-buf usage across different processes, the following changes are
-proposed in dma-buf kernel side. First of all, replace the singleton inode
-inside the dma-buf subsystem with a mini-filesystem, and assign each
-dma-buf a unique inode out of this filesystem.  With this change, calling
-stat(2) on each entry gives the caller a unique ID (st_ino), the buffer's
-size (st_size), and even the number of pages assigned to each dma-buffer.
-Secoundly, add the inode information to /sys/kernel/debug/dma_buf/bufinfo
-so in the case where a buffer is mmap()ed into a process=E2=80=99s address =
-space
-but all remaining fds have been closed, we can still get the dma-buf
-information and try to accociate it with the process by searching the
-proc/pid/maps and looking for the corresponding inode number exposed in
-dma-buf debug fs. Thirdly, created an ioctl to assign names to dma-bufs
-which lets userspace assign short names (e.g., "CAMERA") to buffers. This
-information can be extremely helpful for tracking and accounting shared
-buffers based on their usage and original purpose. Last but not least, add
-dma-buf information to /proc/pid/fdinfo by adding a show_fdinfo() handler
-to dma_buf_file_operations. The handler will print the file_count and name
-of each buffer.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.41-67-g82fd2fd59cff/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.41-67-g82fd2fd59cff/
 
-Change in v2:
-* Add a check to prevent changing dma-buf name when it is attached to
-  devices.
-* Fixed some compile warnings
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.41-67-g82fd2fd59cff
+Git Commit: 82fd2fd59cffa3045f205da555c0defe8bb35912
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 71 unique boards, 25 SoC families, 15 builds out of 206
 
-Change in v3:
-* Removed the GET_DMA_BUF_NAME ioctls, add the dma_buf pointer to dentry
-  d_fsdata so the name can be displayed in proc/pid/maps and
-  proc/pid/map_files.
+Boot Regressions Detected:
 
-Greg Hackmann (3):
-  dma-buf: give each buffer a full-fledged inode
-  dma-buf: add DMA_BUF_{GET,SET}_NAME ioctls
-  dma-buf: add show_fdinfo handler
+arm:
 
- drivers/dma-buf/dma-buf.c    | 122 +++++++++++++++++++++++++++++++++--
- include/linux/dma-buf.h      |   5 +-
- include/uapi/linux/dma-buf.h |   3 +
- include/uapi/linux/magic.h   |   1 +
- 4 files changed, 124 insertions(+), 7 deletions(-)
+    omap2plus_defconfig:
+        gcc-8:
+          omap4-panda:
+              lab-baylibre: failing since 1 day (last pass: v4.19.40-100-gf=
+897c76a347c - first fail: v4.19.41)
 
---=20
-2.21.0.1020.gf2820cf01a-goog
+x86_64:
 
+    x86_64_defconfig:
+        gcc-8:
+          qemu:
+              lab-collabora: new failure (last pass: v4.19.41-56-g487b15502=
+665)
+
+Boot Failure Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            stih410-b2120: 1 failed lab
+
+Conflicting Boot Failures Detected: (These likely are not failures as other=
+ labs are reporting PASS. Needs review.)
+
+x86_64:
+    x86_64_defconfig:
+        qemu:
+            lab-baylibre: PASS (gcc-8)
+            lab-mhart: PASS (gcc-8)
+            lab-drue: PASS (gcc-8)
+            lab-collabora: FAIL (gcc-8)
+
+arm:
+    omap2plus_defconfig:
+        omap4-panda:
+            lab-baylibre: FAIL (gcc-8)
+            lab-baylibre-seattle: PASS (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
