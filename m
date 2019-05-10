@@ -2,221 +2,133 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC23FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45197C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1AE2173B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14D88217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uhtIwH/N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbfEJIXi (ORCPT
+        id S1727316AbfEJIXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:23:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727266AbfEJIXd (ORCPT
+        Fri, 10 May 2019 04:23:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35436 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfEJIXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:23:33 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A8NKOE078515
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 04:23:33 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sd41cc7ws-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 04:23:31 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 10 May 2019 09:22:44 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 May 2019 09:22:40 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4A8McNk58851378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 08:22:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1D2DAE051;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3AA27AE045;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.187.238])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     sebott@linux.vnet.ibm.com
-Cc:     gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Subject: [PATCH 4/4] vfio: vfio_iommu_type1: implement VFIO_IOMMU_INFO_CAPABILITIES
-Date:   Fri, 10 May 2019 10:22:35 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19051008-0016-0000-0000-0000027A405B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051008-0017-0000-0000-000032D6F9DC
-Message-Id: <1557476555-20256-5-git-send-email-pmorel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=950 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905100059
+        Fri, 10 May 2019 04:23:34 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w12so6714964wrp.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 01:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=5yCZDsoXX8gNHDHrkDE/DYR09t36eKuYM9S/4pn/Ftw=;
+        b=uhtIwH/NZFJ48uIDBhqwqTjMsx8agUVdKqxKn/wT/HGQlFyxplSo0EsUpNiPGg6JHo
+         Hwk87YTmDU83xzZU4f/LZkFJEptHPgRlhmGbuvPSGo0flQPdltEjUO/tJnmJINywp1fF
+         /fhrTKpp689UDLZLwSpp+XZJgc7OJowEQWncaI5m+nzv/EgOSI1GKWIZ2za/9eUCQthL
+         jrTAKxlBFre024EAVcXeIFQAfH8L4ey988GlfD7Ze8o2FQxlZ3680a3vePn+4c505AGu
+         OXhELXQScpUgFO5OHMHi3k/S3oLkrmucozy0M0Z0VCjv8rKIpqafTyX1HTUcXELNZDhC
+         rOoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=5yCZDsoXX8gNHDHrkDE/DYR09t36eKuYM9S/4pn/Ftw=;
+        b=ajlBaIWZUGi6VqM9vp8EloEnBQyGcxRLydFUTNJ/bnM9jTDzXuwbekrIbK6ZufyzW7
+         zo9Qf4b5Vj7+emvRTRmILGLGwE9gBKgOVyCoUcZ8+UzihDWx/DcnI5vSYArIp1OloD7l
+         bXFfHEOQsfDqVHUFCMuq6+UIEdstXYSeRWJxr6s6uO6+DoCFIIA8pcs7XEjVTo1/Ucd9
+         BEsVk6ScV8PXxah9ssr4xylSgV90BB3VJHS+GXtgiRtce02d7caPxv/Bn7aozjV3B5Jn
+         mgP+bwE8XrRRk1y/11K1n26a/h51SiWyiv5ITp53u6g9/LZScjGvfLh8Tr1rELBrqaHg
+         xQ/Q==
+X-Gm-Message-State: APjAAAVHNndQKQR8Sh5RlIlmZ4+GIfBRuS1tspX6ajJges/27mA0ddy/
+        UiUf5HqHPakUDI02ftwc8fp2Yg==
+X-Google-Smtp-Source: APXvYqy1wdwN6UVZDfIDYZvOAXqF7PasI/1MfUnTkfGHdroPNXzwZ1cLMEwwK7qQbtPMHGjW6nfkaw==
+X-Received: by 2002:adf:eb02:: with SMTP id s2mr286910wrn.29.1557476612615;
+        Fri, 10 May 2019 01:23:32 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id z4sm3790285wmk.5.2019.05.10.01.23.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 01:23:32 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 6/6] pinctrl: meson: g12a: add DS bank value
+Date:   Fri, 10 May 2019 10:23:24 +0200
+Message-Id: <20190510082324.21181-7-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
+References: <20190510082324.21181-1-glaroque@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We implement a capability intercafe for VFIO_IOMMU_GET_INFO and add the
-first capability: VFIO_IOMMU_INFO_CAPABILITIES.
+add drive-strength bank regiter and bit value for G12A SoC
 
-When calling the ioctl, the user must specify
-VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and must check
-in the answer if capabilities are supported.
-Older kernel will not check nor set the VFIO_IOMMU_INFO_CAPABILITIES in
-the flags of vfio_iommu_type1_info.
-
-The iommu get_attr callback will be called to retrieve the specific
-attributes and fill the capabilities, VFIO_IOMMU_INFO_CAP_QFN for the
-PCI query function attributes and VFIO_IOMMU_INFO_CAP_QGRP for the
-PCI query function group.
-
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 ---
- drivers/vfio/vfio_iommu_type1.c | 95 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 1 deletion(-)
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c | 36 +++++++++++-----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index d0f731c..f7f8120 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1658,6 +1658,70 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
- 	return ret;
- }
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+index d494492e98e9..3475cd7bd2af 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
+ };
  
-+int vfio_iommu_type1_caps(struct vfio_iommu *iommu, struct vfio_info_cap *caps,
-+			  size_t size)
-+{
-+	struct vfio_domain *d;
-+	struct vfio_iommu_type1_info_block *info_fn;
-+	struct vfio_iommu_type1_info_block *info_grp;
-+	unsigned long total_size, fn_size, grp_size;
-+	int ret;
-+
-+	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
-+	if (!d)
-+		return -ENODEV;
-+	/* The size of these capabilities are device dependent */
-+	fn_size = iommu_domain_get_attr(d->domain,
-+					DOMAIN_ATTR_ZPCI_FN_SIZE, NULL);
-+	if (fn_size < 0)
-+		return fn_size;
-+	fn_size +=  sizeof(struct vfio_info_cap_header);
-+	total_size = fn_size;
-+
-+	grp_size = iommu_domain_get_attr(d->domain,
-+					 DOMAIN_ATTR_ZPCI_GRP_SIZE, NULL);
-+	if (grp_size < 0)
-+		return grp_size;
-+	grp_size +=  sizeof(struct vfio_info_cap_header);
-+	total_size += grp_size;
-+
-+	/* Tell caller to call us with a greater buffer */
-+	if (total_size > size) {
-+		caps->size = total_size;
-+		return 0;
-+	}
-+
-+	info_fn = kzalloc(fn_size, GFP_KERNEL);
-+	if (!info_fn)
-+		return -ENOMEM;
-+	ret = iommu_domain_get_attr(d->domain,
-+				    DOMAIN_ATTR_ZPCI_FN, &info_fn->data);
-+	if (ret < 0)
-+		return ret;
-+
-+	info_fn->header.id = VFIO_IOMMU_INFO_CAP_QFN;
-+
-+	ret = vfio_info_add_capability(caps, &info_fn->header, fn_size);
-+	if (ret)
-+		goto err_fn;
-+
-+	info_grp = kzalloc(grp_size, GFP_KERNEL);
-+	if (!info_grp)
-+		goto err_fn;
-+	ret = iommu_domain_get_attr(d->domain,
-+				    DOMAIN_ATTR_ZPCI_GRP, &info_grp->data);
-+	if (ret < 0)
-+		goto err_grp;
-+	info_grp->header.id = VFIO_IOMMU_INFO_CAP_QGRP;
-+	ret = vfio_info_add_capability(caps, &info_grp->header, grp_size);
-+
-+err_grp:
-+	kfree(info_grp);
-+err_fn:
-+	kfree(info_fn);
-+	return ret;
-+}
-+
- static long vfio_iommu_type1_ioctl(void *iommu_data,
- 				   unsigned int cmd, unsigned long arg)
- {
-@@ -1679,6 +1743,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 		}
- 	} else if (cmd == VFIO_IOMMU_GET_INFO) {
- 		struct vfio_iommu_type1_info info;
-+		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-+		int ret;
+ static struct meson_bank meson_g12a_periphs_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in */
+-	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
+-	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
+-	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
+-	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
+-	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
+-	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
+-	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
+-	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
+-	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
+-	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
+-	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
+-	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
++		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
++	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
++		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
++	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
++		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
++	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
++		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
++	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
++		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
++	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
++		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
+ };
  
- 		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+ static struct meson_bank meson_g12a_aobus_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in  */
+-	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
+-	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
++		0, 0),
+ 	/* GPIOE actually located in the AO bank */
+-	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
+-	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
++	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
++		16, 1, 0),
+ };
  
-@@ -1688,7 +1754,34 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 		if (info.argsz < minsz)
- 			return -EINVAL;
- 
--		info.flags = VFIO_IOMMU_INFO_PGSIZES;
-+		if (info.flags & VFIO_IOMMU_INFO_CAPABILITIES) {
-+			minsz = offsetofend(struct vfio_iommu_type1_info,
-+					    cap_offset);
-+			if (info.argsz < minsz)
-+				return -EINVAL;
-+			ret = vfio_iommu_type1_caps(iommu, &caps,
-+						    info.argsz - sizeof(info));
-+			if (ret)
-+				return ret;
-+		}
-+		if (caps.size) {
-+			if (info.argsz < sizeof(info) + caps.size) {
-+				info.argsz = sizeof(info) + caps.size;
-+				info.cap_offset = 0;
-+			} else {
-+				if (copy_to_user((void __user *)arg +
-+						 sizeof(info), caps.buf,
-+						 caps.size)) {
-+					kfree(caps.buf);
-+					return -EFAULT;
-+				}
-+
-+				info.cap_offset = sizeof(info);
-+			}
-+			kfree(caps.buf);
-+		}
-+
-+		info.flags |= VFIO_IOMMU_INFO_PGSIZES;
- 
- 		info.iova_pgsizes = vfio_pgsize_bitmap(iommu);
- 
+ static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
 -- 
-2.7.4
+2.17.1
 
