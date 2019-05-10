@@ -2,118 +2,87 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B61C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF59FC04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0532175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hD35Q1DA"
+	by mail.kernel.org (Postfix) with ESMTP id BF82B2177B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 12:49:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfEJMt2 (ORCPT
+        id S1727364AbfEJMtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 08:49:28 -0400
-Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:64465
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727071AbfEJMt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 08:49:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ficx79QKKi4OdnGf8pHUVHNPrLeLEltcSkwjTdr5w9I=;
- b=hD35Q1DAmIAsQWgBT4x1HxkH2mqJIhcRHC3CCv0Bs09untyIDCWecZn5IW4SWX34dfBuY55S3HqostzfmApGSck7RXBvZuS7treBy2ZPJBeN3oJslSzqd+FYjw2E54vWpaZPpoTvJZVS7UnxEypsqe4rL7aW4UXk/8T2wSiAmPo=
-Received: from VI1PR04MB4800.eurprd04.prod.outlook.com (20.177.48.221) by
- VI1PR04MB5744.eurprd04.prod.outlook.com (20.178.127.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Fri, 10 May 2019 12:49:21 +0000
-Received: from VI1PR04MB4800.eurprd04.prod.outlook.com
- ([fe80::91dc:dc9:180e:cf65]) by VI1PR04MB4800.eurprd04.prod.outlook.com
- ([fe80::91dc:dc9:180e:cf65%3]) with mapi id 15.20.1878.022; Fri, 10 May 2019
- 12:49:21 +0000
-From:   Vabhav Sharma <vabhav.sharma@nxp.com>
-To:     Fabio Estevam <festevam@gmail.com>,
-        Pramod Kumar <pramod.kumar_1@nxp.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Fri, 10 May 2019 08:49:43 -0400
+Received: from hel-mailgw-01.vaisala.com ([193.143.230.17]:9765 "EHLO
+        hel-mailgw-01.vaisala.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfEJMtm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 08:49:42 -0400
+X-IronPort-AV: E=Sophos;i="5.60,453,1549922400"; 
+   d="scan'208";a="218814811"
+Subject: Re: [PATCH v3 2/2] dt-bindings: power: reset: add document for NVMEM
+ based reboot-mode
+To:     Rob Herring <robh@kernel.org>
+Cc:     "sre@kernel.org" <sre@kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] Re: [PATCH 2/2] add dts file to enable support for
- ls1046afrwy board.
-Thread-Topic: [EXT] Re: [PATCH 2/2] add dts file to enable support for
- ls1046afrwy board.
-Thread-Index: AQHVBaVf+VCLC05vFU+xwIgyLZG0QaZhQWwAgAMPZHA=
-Date:   Fri, 10 May 2019 12:49:21 +0000
-Message-ID: <VI1PR04MB480054935B3DDADFF2FD0055F30C0@VI1PR04MB4800.eurprd04.prod.outlook.com>
-References: <20190508135501.17578-1-pramod.kumar_1@nxp.com>
- <20190508135501.17578-3-pramod.kumar_1@nxp.com>
- <CAOMZO5C=dAN0LkhbTqCApmhv1msxAC8B2=u6D0gtC2KYV7T-HQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5C=dAN0LkhbTqCApmhv1msxAC8B2=u6D0gtC2KYV7T-HQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vabhav.sharma@nxp.com; 
-x-originating-ip: [92.120.0.8]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3c295be6-6205-4e38-75d3-08d6d545ec8c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5744;
-x-ms-traffictypediagnostic: VI1PR04MB5744:
-x-microsoft-antispam-prvs: <VI1PR04MB5744739A5E7FE2CA18D50D0EF30C0@VI1PR04MB5744.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2043;
-x-forefront-prvs: 0033AAD26D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39860400002)(366004)(376002)(13464003)(189003)(199004)(305945005)(26005)(76176011)(6506007)(53546011)(74316002)(3846002)(102836004)(2906002)(486006)(476003)(86362001)(446003)(11346002)(6116002)(7696005)(44832011)(5660300002)(99286004)(68736007)(71200400001)(71190400001)(14454004)(52536014)(186003)(256004)(316002)(14444005)(6246003)(478600001)(4326008)(73956011)(76116006)(66476007)(53936002)(66446008)(64756008)(66556008)(6636002)(66946007)(25786009)(110136005)(8936002)(7736002)(9686003)(6436002)(66066001)(55016002)(54906003)(8676002)(33656002)(229853002)(81166006)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5744;H:VI1PR04MB4800.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KKSiUzIHSceR5ACDQogmbzY1LTc/upQ/yf0UNLOKzEllOLwV/a5Y/laoi3m+UsoMEh/qprnUuW2FYpUC9aEzrNRZw8g5fjsHUpZR5jpBdDiRK6xRq5+3NCmxzWvXHzKNZS3H0EpkQNKBG+aQ0lJZAmiS29MSfwnPiHHeY5tvBMCltDCJkosP/ycXUQy95+64Fj+Cj0FfloH/8xH2Jji9U0LdzhfBwFrq0iYGjZdq+20Dvtc1+lMXb6ByMSWAutJdGseeuMurzDC37b8fIc/lOSkKd01BoJ0kMIr/9uDKiPBlogOVogkKIlc048/U9tZlpOy5waPZzPxAsNfXtlTBzzHENfbJRCw9WwKQpI8v3NUWAYrlWzUgJlKhnYESw4zObh+8xunDqEJ5yhgUUS9r6CJKWfIR/jm2HDzMqW2MROE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+References: <fc60b885f1b447ce55950184c7921cfc1c96ade6>
+ <20190421190913.1478-3-nandor.han@vaisala.com> <20190430224731.GA31760@bogus>
+From:   Nandor Han <nandor.han@vaisala.com>
+Message-ID: <0134c853-f5eb-8d6f-6523-61688607b367@vaisala.com>
+Date:   Fri, 10 May 2019 15:49:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c295be6-6205-4e38-75d3-08d6d545ec8c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 May 2019 12:49:21.5970
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5744
+In-Reply-To: <20190430224731.GA31760@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-OriginalArrivalTime: 10 May 2019 12:49:36.0745 (UTC) FILETIME=[D3041D90:01D5072E]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmFiaW8sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmFiaW8g
-RXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE1heSA4LCAy
-MDE5IDc6MzAgUE0NCj4gVG86IFByYW1vZCBLdW1hciA8cHJhbW9kLmt1bWFyXzFAbnhwLmNvbT4N
-Cj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3Vv
-QGtlcm5lbC5vcmc7DQo+IG1hbml2YW5uYW4uc2FkaGFzaXZhbUBsaW5hcm8ub3JnOyBBaXNoZW5n
-IERvbmcNCj4gPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgTWljaGFsLlZva2FjQHlzb2Z0LmNvbTsN
-Cj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IFZhYmhhdiBTaGFybWENCj4gPHZhYmhhdi5zaGFybWFAbnhwLmNvbT4NCj4gU3ViamVjdDog
-W0VYVF0gUmU6IFtQQVRDSCAyLzJdIGFkZCBkdHMgZmlsZSB0byBlbmFibGUgc3VwcG9ydCBmb3Ig
-bHMxMDQ2YWZyd3kNCj4gYm9hcmQuDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IEhp
-IFByYW1vZCwNCj4gDQo+IE9uIFdlZCwgTWF5IDgsIDIwMTkgYXQgMTA6NTYgQU0gUHJhbW9kIEt1
-bWFyDQo+IDxwcmFtb2Qua3VtYXJfMUBueHAuY29tPiB3cm90ZToNCj4gDQo+ID4gKyZmbWFuMCB7
-DQo+ID4gKyAgICAgICBldGhlcm5ldEBlMDAwMCB7DQo+IA0KPiBZb3UgaGF2ZSBwYXNzZWQgQGUw
-MDAwIHdpdGhvdXQgYSBjb3JyZXNwb25maW5nIHJlZyBlbnRyeS4NCj4gDQo+IFRoaXMgY2F1c2Vz
-IGR0YyBidWlsZCB3YXJuaW5ncyB3aXRoIFc9MS4NCj4gDQo+IFBsZWFzZSBtYWtlIHN1cmUgeW91
-IGRvbid0IGludHJvZHVjZSBuZXcgVz0xIHdhcm5pbmdzLg0KZXRoZXJuZXQgbm9kZSBpcyBpbmNs
-dWRlZCB3aXRoIGZzbC1sczEwNDYtcG9zdC5kdHNpIGZpbGUgYW5kIG5vIHdhcm5pbmcgaXMgaW50
-cm9kdWNlZC4NCm5vZGUgY29udGVudCBjYW4gYmUgZm91bmQgaW4gIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL3FvcmlxLWZtYW4zLTAtMWctMC5kdHNpOg0KICAgICAgICBldGhlcm5ldEBl
-MDAwMCB7DQogICAgICAgICAgICAgICAgY2VsbC1pbmRleCA9IDwwPjsNCiAgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImZzbCxmbWFuLW1lbWFjIjsNCiAgICAgICAgICAgICAgICByZWcgPSA8
-MHhlMDAwMCAweDEwMDA+Ow0KICAgICAgICAgICAgICAgIGZzbCxmbWFuLXBvcnRzID0gPCZmbWFu
-MF9yeF8weDA4ICZmbWFuMF90eF8weDI4PjsNCiAgICAgICAgICAgICAgICBwdHAtdGltZXIgPSA8
-JnB0cF90aW1lcjA+Ow0KICAgICAgICAgICAgICAgIHBjc3BoeS1oYW5kbGUgPSA8JnBjc3BoeTA+
-Ow0KICAgICAgICB9Ow0KDQpSZWdhcmRzLA0KVmFiaGF2DQo=
+On 5/1/19 1:47 AM, Rob Herring wrote:
+
+Hi Rob,
+   Thanks for review.
+
+>> @@ -0,0 +1,32 @@
+>> +NVMEM reboot mode driver
+>> +
+>> +This driver gets reboot mode magic value from reboot-mode driver
+>> +and stores it in a NVMEM cell named "reboot-mode". Then the bootloader
+>> +can read it and take different action according to the magic
+>> +value stored.
+> 
+> This is also assuming the nvmem is writeable which is more often not the
+> case.
+> 
+> Is your usecase a platform that supports pstore? Adding on to that
+> binding might be a better fit.
+> 
+
+I'm using an RTC persistent memory for storing this data. The available
+memory is low and don't think pstore will fit in this case.
+
+>> +The rest of the properties should follow the generic reboot-mode description
+>> +found in reboot-mode.txt
+>> +
+>> +Example:
+>> +	reboot-mode-nvmem@0 {
+> 
+> What's this node for?
+> 
+>> +		compatible = "simple-mfd";
+> 
+> I only see 1 function.
+> 
+
+No need to this. Will remove
+
+Nandor
