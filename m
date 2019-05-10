@@ -2,130 +2,123 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C86C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E2FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB50F20989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 672BB21479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:23:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kmwjFiFO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1dJasqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfEJRWl (ORCPT
+        id S1727837AbfEJRXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:22:41 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55949 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbfEJRWk (ORCPT
+        Fri, 10 May 2019 13:23:15 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39191 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727318AbfEJRXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:22:40 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190510172238euoutp018d763ff8bfb05adb0f6f919c66f1378d~dYiU5bXFY1840718407euoutp01W
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 17:22:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190510172238euoutp018d763ff8bfb05adb0f6f919c66f1378d~dYiU5bXFY1840718407euoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1557508958;
-        bh=6acAZu8dGZA1MIPBWkPAY4AMzfaBXTL9zJwV22dhf8Q=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=kmwjFiFO6E/bT98t7wPgx0DrAHSvets0l0hWKn3cz5/fKKZiC7xzGSFTLAX85gvaC
-         U5Jb2ridMvbbMGgYMSvmwolbwFbIcsmpjK2ln5HyOnY4sMReYIbxmhCZizXaBjClxK
-         43YtRRjKV6fBbEnv2I7o2JKxoqD0WsVZYys2+zoQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190510172237eucas1p289163bd8bc5396258c2f87c575fee4a8~dYiUEt3N82447524475eucas1p2D;
-        Fri, 10 May 2019 17:22:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9F.CB.04298.C53B5DC5; Fri, 10
-        May 2019 18:22:36 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190510172236eucas1p138115389e72802f72e47158df6ed9871~dYiTP6brX0098100981eucas1p1o;
-        Fri, 10 May 2019 17:22:36 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190510172236eusmtrp2027c35dd302262b10122232ea04f2343~dYiTB_iE92211822118eusmtrp28;
-        Fri, 10 May 2019 17:22:36 +0000 (GMT)
-X-AuditID: cbfec7f2-f13ff700000010ca-85-5cd5b35c5a05
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 37.CA.04140.C53B5DC5; Fri, 10
-        May 2019 18:22:36 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190510172235eusmtip11faddbb27905632231565d9ba21940f9~dYiSsoVci0695706957eusmtip1u;
-        Fri, 10 May 2019 17:22:35 +0000 (GMT)
-Subject: Re: [GIT] IDE
-To:     David Miller <davem@davemloft.net>, torvalds@linux-foundation.org
-Cc:     akpm@linux-foundation.org, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <4b706a9a-5cfd-db15-456b-b06476a7bc31@samsung.com>
-Date:   Fri, 10 May 2019 19:22:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
-        Thunderbird/45.3.0
+        Fri, 10 May 2019 13:23:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id w22so3323863pgi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 10:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wKTqfFOYYmSMRtaxYzh3rDlijcoMoye7aE2PTxLgk+M=;
+        b=t1dJasqSSqrY0/mFV00RuccD2sYzP9oFsunitbSpAuSt1fNb9B4gI6obiOEsrvCosV
+         XetVN/B4ciIH1wZX1get32F9AQd8t2a9d3gDP6AsPv3LB7INIxqdRgULFZOg05v8SUV2
+         KWoVRoYp6OlQIjeJLPPgstr3MrvBzHD8WilxhrUTrcyH4jaP8+SgYt9Pp++Gkn017VTz
+         QVFigekAt09Z0tBuJPkW4jcL2JtPYquudkMRHyi5UNokSas+Y3ob+mQxcPk1CLxOGQZw
+         jtnaKMmOT+VLV+ndXd/zaRkkQpu4bTgVytF0r6ZcaddFPo5gAeOqVEYO0OBPU4HQwaVd
+         Y4gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wKTqfFOYYmSMRtaxYzh3rDlijcoMoye7aE2PTxLgk+M=;
+        b=fkkpfIJcL0itplV05cxX6d7CKyMVubopIKxyW/l99UnSu5upKhp+QdYzTyn9SzM43F
+         jmpG79vkeOghNd5psl0BEe7om2VCsyV5bpsmFKL7WHN+9JWBjuXU3BQp4LZlhM2G1HzQ
+         Vyk1tagoRhzVzfIG4cGIbTi2pIXWbzf/jGRqPDcQYWsngFQ0PuWG0WZ1chRzvY+NS+8s
+         gKh3FyxWorzXhFZLDKM4X3QQil0qtoytNL6BYn+N5tsaQvSsuj3qAz1XzxQKUW65cdAk
+         oxb9w94sQpuRyg+ac0zLxYtgDlGhqCpCgYqn04n77oaqCTtT0VT0CuE9MKk2L35wJ+oO
+         CMFQ==
+X-Gm-Message-State: APjAAAVSDKf9tuZgTh+hvmQ2TIpBBdUUG2S+9+BWDl4wBwLIXtH/xuXQ
+        K07aHeJWWcgY/4hj12/4WqA=
+X-Google-Smtp-Source: APXvYqz/c5oedmTv7OXut2ZRscRfwnPG32MfuwyJponuIrspwqX1LA8WYBs8p7OnuJHVzPSao12rNA==
+X-Received: by 2002:aa7:9206:: with SMTP id 6mr15840843pfo.71.1557508993973;
+        Fri, 10 May 2019 10:23:13 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id z9sm6220113pga.92.2019.05.10.10.23.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 10:23:12 -0700 (PDT)
+Date:   Fri, 10 May 2019 22:53:08 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tim Collier <osdevtc@gmail.com>,
+        Chris Opperman <eklikeroomys@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: wlan-ng: collect return status without variable
+Message-ID: <20190510172308.GA3075@hari-Inspiron-1545>
+References: <20190510023900.GA4390@hari-Inspiron-1545>
+ <20190510105754.GA18105@kadam>
 MIME-Version: 1.0
-In-Reply-To: <20190508.165320.2267661705586017777.davem@davemloft.net>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkleLIzCtJLcpLzFFi42LZduznOd2YzVdjDDruWlvMWb+GzWLO+RYW
-        i2M7HjFZXN41h83iUd9bdgdWjy0rbzJ5nJjxm8Xj8ya5AOYoLpuU1JzMstQifbsErowd9/ey
-        F1xirrjTcICxgfElUxcjJ4eEgInE1StvGbsYuTiEBFYwSny4fI0ZwvnCKLF83T1WCOczo8Ts
-        QyeAWjjAWuZvMYCIL2eUePmnkwnCecso0dO3D2yusICYxLZfbxhBbBEBV4kdsx6AxZkFIiTW
-        LNoFZrMJWElMbF8FVsMrYCexpPsEG8gCFgFVietn/UBMUaDy/jPqEBWCEidnPmEBsTkF3CTm
-        b7vLDDFRXmL72zlgR0sI/GeTODRnDjPEay4SF9sPskDYwhKvjm9hh7BlJP7vnM8E0bCOUeJv
-        xwuo7u1AL0/+xwZRZS1x+PhFVpArmAU0Jdbv0ocIO0q83/iaDRIQfBI33gpCHMEnMWnbdGaI
-        MK9ER5sQRLWaxIZlG9hg1nbtXAl1mofEmZ8rWCcwKs5C8tosJO/MQti7gJF5FaN4amlxbnpq
-        sWFearlecWJucWleul5yfu4mRmACOf3v+KcdjF8vJR1iFOBgVOLhFUi+GiPEmlhWXJl7iFGC
-        g1lJhLdI50qMEG9KYmVValF+fFFpTmrxIUZpDhYlcd5qhgfRQgLpiSWp2ampBalFMFkmDk6p
-        BsZpnxh1e860KkhI/vKU4D6hLed3qcJRqf6/WVVW+Mw62ZREB/6fE+se9zwK163dWsOVfnRS
-        mnlTeuobZw/XVgXdB/bfheRvC+97Jqevc32P96PwaKn5B/69jP++7Mv96R66i16L3Df6dNI+
-        ab2u8Y5T3xm/xC8tZ1KUyDs6JXrChB3z7+09tVKJpTgj0VCLuag4EQAtuV7dHAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjkeLIzCtJLcpLzFFi42I5/e/4Xd2YzVdjDO5OZbGYs34Nm8Wc8y0s
-        Fsd2PGKyuLxrDpvFo7637A6sHltW3mTyODHjN4vH501yAcxRejZF+aUlqQoZ+cUltkrRhhZG
-        eoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehk77u9lL7jEXHGn4QBjA+NLpi5GDg4J
-        AROJ+VsMuhi5OIQEljJKzNx3DiouI3F8fVkXIyeQKSzx51oXG0TNa0aJB81zWUESwgJiEtt+
-        vWEEsUUEXCV2zHrABGILAdl7Pj0Gs5kFIiRaVi0Gs9kErCQmtq8Cq+cVsJNY0n2CDWQXi4Cq
-        xPWzfiBhUaDyWw87WCBKBCVOznwCZnMKuEnM33aXGWKkusSfeZegbHmJ7W/nME9gFJyFpGUW
-        krJZSMoWMDKvYhRJLS3OTc8tNtIrTswtLs1L10vOz93ECIyLbcd+btnB2PUu+BCjAAejEg+v
-        QPLVGCHWxLLiytxDjBIczEoivEU6V2KEeFMSK6tSi/Lji0pzUosPMZoC/TCRWUo0OR8Ys3kl
-        8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhhbtzaLcawL9dMzjIvV
-        /+eeV/D758eHV9u6DjFEiv0Pv9t8qy30no9i/krvG7H2P+6vuLzpdknRm4Is282Hfux/V3bW
-        NJHxRNv++kjr7Y9/9D5srV28dEHSjidMf3Mrdmcmc8cbcQlJ9neJF+YeYyg1/3tFpzIhJYN5
-        tfK9pWfMeM+431zZE6jEUpyRaKjFXFScCAAr4T6voQIAAA==
-X-CMS-MailID: 20190510172236eucas1p138115389e72802f72e47158df6ed9871
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190510172236eucas1p138115389e72802f72e47158df6ed9871
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190510172236eucas1p138115389e72802f72e47158df6ed9871
-References: <20190508.165320.2267661705586017777.davem@davemloft.net>
-        <CGME20190510172236eucas1p138115389e72802f72e47158df6ed9871@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510105754.GA18105@kadam>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 05/09/2019 01:53 AM, David Miller wrote:
+On Fri, May 10, 2019 at 01:57:54PM +0300, Dan Carpenter wrote:
+> On Fri, May 10, 2019 at 08:09:00AM +0530, Hariprasad Kelam wrote:
+> > diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+> > index 8a862f7..5dad5ac 100644
+> > --- a/drivers/staging/wlan-ng/cfg80211.c
+> > +++ b/drivers/staging/wlan-ng/cfg80211.c
+> > @@ -231,17 +231,12 @@ static int prism2_set_default_key(struct wiphy *wiphy, struct net_device *dev,
+> >  {
+> >  	struct wlandevice *wlandev = dev->ml_priv;
+> >  
+> > -	int err = 0;
+> > -	int result = 0;
+> > -
+> > -	result = prism2_domibset_uint32(wlandev,
+> > -		DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> > -		key_index);
+> > -
+> > -	if (result)
+> > -		err = -EFAULT;
+> > -
+> > -	return err;
+> > +	if (prism2_domibset_uint32(wlandev,
+> > +				   DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> > +				   key_index))
+> > +		return -EFAULT;
+> > +	else
+> > +		return 0;
 > 
-> Finally deprecate the legacy IDE layer.
+> We should just preserve the error codes from prism2_domibset_uint32().
 > 
-> Frankly this is long overdue.
+> 	return prism2_domibset_uint32(dev->ml_priv,
+> 				DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> 				key_index);
+>
+   prism2_domibset_uint32 function can return  -ENODEV,-EPERM,-EBUSY if
+   fail  case.
+
+   If we observe the pattern of calling this function,we can find
+   
+   "return -EFAULT on failure and 0 on success".
+
+   Due to this we  can not collect return status directly.
+> regards,
+> dan carpenter
 > 
-> Please pull, thanks a lot!
-
-Thank you for applying this.
-
-I'll continue to assist in moving legacy IDE users to libata
-(when time permits).
-
-> Christoph Hellwig (1):
->       ide: officially deprecated the legacy IDE driver
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
