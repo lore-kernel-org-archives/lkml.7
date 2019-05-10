@@ -2,138 +2,114 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,T_DKIMWL_WL_MED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B58C04AB1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDF2C46470
 	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1E22182B
+	by mail.kernel.org (Postfix) with ESMTP id 6DC262183F
 	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 00:41:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnWMeilq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557448917;
+	bh=EqsJaW5/Bzf8oCcbFLU8Gud/uLDl1k8nju9cFcmd4TE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QSBI4MOIMIccuZFUbVeFrag0DJXvrvhw4y/5ChkZ+15fXTvUfdKAWfknf79mD4L7G
+	 PD4UV1eva3WHQyf0xir2ozPn9m7dkUrCUHQyGBdTCU+3yVbgaKgfQuzhSBvq8wIajW
+	 idfH9I95zS50+j/6Giy5HHkvrzslmtUv54WavVMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726789AbfEJAkK (ORCPT
+        id S1726823AbfEJAlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 20:40:10 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:43201 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfEJAkK (ORCPT
+        Thu, 9 May 2019 20:41:50 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:48001 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726714AbfEJAlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 20:40:10 -0400
-Received: by mail-yw1-f65.google.com with SMTP id p19so3361057ywe.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 17:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kJIkcAZ6u5IJ9XmF7NOxVNNYB8HdaXRsalPuY1w3/z8=;
-        b=BnWMeilq5CmV7xEOS7UTY0R8GZBvNiJUb5X8thIrkLC146CGJ28ux8O51ka94luUji
-         ko51fW4KRyCWVOi/von/XCjTv5Bq+D0G0m8PuWDLMU8pmLoHkVAidAi/9MCw72ZNpUBN
-         q7xTRHcayJCQmsiAPDShWGpwdLShGMWkoOMABic60GtN3IaFoPIX9eSVsFIkBfxpV7pe
-         K1YZw/DNtI7wDyhVsKXKTR6evCj+wKBM/ZCKAVbXjVWRlyOHkScfk3FLQ4FnRkjbDi/x
-         TcZbJlD57h5bUMnjLqNuuD1i4+gmaFje2JyxaP3cHRb97P+2aaN1Ctg2LNMnSUH9vTQS
-         7NZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kJIkcAZ6u5IJ9XmF7NOxVNNYB8HdaXRsalPuY1w3/z8=;
-        b=XjOykYOugB4g4P25IVFy3WH4Z5a50QsfMmVjASHrW7ZhwAI9PI0dw2phM7cBW+ZRbQ
-         ICGy7YdZqAseKKCC1ma6/0cS8iz6TccnJOp1nW/EfhzakF2mHudlHQa9BYB9UjdDgxq0
-         xRmgHlUr2mgoCzYlKkMgov/xGJAl/yZxyZLTDJfyVEq6IKxwIi7GWyGXCc8bUEnybq2Q
-         YfoTWsVHaLhLiZtPriQ4RgLDXuEIrimlOkdwVSSTZMM3z9Sfcxpj33dY//PhIh7A8D/L
-         RDgiz0/tmRHAHmXsO7rQfPE8fgw9F7aDQm9ASNzWz4cQGbglrAzzzSwWxJj23RmyDofr
-         rtSQ==
-X-Gm-Message-State: APjAAAW/EQ68gXSJkrTUR8I6T2uyGuTMhp6Aq6Bc13GKPn1XmMxcjoxN
-        qKaIyzPW596OKSOVh4XsCmmB3ESi0JO4S7BSI9plPA==
-X-Google-Smtp-Source: APXvYqw2dVC2ET7GPFNXeSlt/NpFnxG8e1iXqGKojoN4LujAfzUVvhzsWFouCtyUPIv6d5hMLtOYG5Es5WGTXBS03mU=
-X-Received: by 2002:a25:4147:: with SMTP id o68mr4131573yba.148.1557448809031;
- Thu, 09 May 2019 17:40:09 -0700 (PDT)
+        Thu, 9 May 2019 20:41:49 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id DBEE0244D4;
+        Thu,  9 May 2019 20:41:48 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 09 May 2019 20:41:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=eSuSuN
+        WKvuPEDUPjbixf2FvUCsLfGC4yeDD4rUAOVfY=; b=nTKo8Y+C8t4v3/B0TVP69m
+        ccd+25zeVPVFUoY4V0qBoUGUX0i5vqpKfGK/pvpNWnvcHUTeUi0+Pdpo3gvKor1d
+        az8yY5nD8ZJ3cRJhCLfpBywApTuiYVx/KU0umH+Kxs4BppXPGTT30rZZ3mU3RLOX
+        vZYidikiMb2TOdyACEiKsfUrPmZjKiG3OmnA+soNVd6w6/dBWOXANaJ8ANZ1ddoe
+        2J5C6SFcdqmxi7mmh7+XV0ARRtwv0hwRIgITXtEe2w2nq8eT+b+Ofy3fVqQMbex0
+        CS9nfCybu5eOt1cXST/794lft7Lmwl3hvtCgkqmTXAwSCbaYQ15gpGGHp2m7PJyw
+        ==
+X-ME-Sender: <xms:zMjUXNjUsGsZF5k6Y9opmAEj3XkuP1O8t2pH2ms6OCDakt9md0NAFQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeeigddugedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    goteeftdduqddtudculdduhedmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttder
+    tdforedvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehtohgsih
+    hnsehkvghrnhgvlhdrohhrgheqnecukfhppeduvdegrddujedurddvuddrhedvnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehtohgsihhnsehkvghrnhgvlhdrohhrghenucevlhhush
+    htvghrufhiiigvpedt
+X-ME-Proxy: <xmx:zMjUXLB1G5jzUpXX_1wx0JhoZOG5hXWRvUtB1hkI6awged12RSKVjg>
+    <xmx:zMjUXGxPikSVMiIzWj3fJq-xnqtbURk0G5xsLqCqqLz1Fk4eFEguEA>
+    <xmx:zMjUXJMoG3ZInwUicjbBHfo-pW83tauKieyX1P5kx37goJgq2aI_QQ>
+    <xmx:zMjUXCVsv5qsP8rIqsBnX-QfgENdc5e_9wKLjhM1f79-KUlIrWUKdQ>
+Received: from localhost (124-171-21-52.dyn.iinet.net.au [124.171.21.52])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B0A33103D0;
+        Thu,  9 May 2019 20:41:47 -0400 (EDT)
+Date:   Fri, 10 May 2019 10:41:04 +1000
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>, Corey Minyard <minyard@acm.org>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: Move kref.txt to core-api/kref.rst
+Message-ID: <20190510004104.GA12809@eros.localdomain>
+References: <20190510001747.8767-1-tobin@kernel.org>
 MIME-Version: 1.0
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
-In-Reply-To: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 9 May 2019 17:39:57 -0700
-Message-ID: <CALvZod5LjCMxsPhbY68QRggFy4QjVsTDXh192PqSW6qsMCKknw@mail.gmail.com>
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Huang Ying <ying.huang@intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510001747.8767-1-tobin@kernel.org>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
-Date: Thu, May 9, 2019 at 5:16 PM
-To: <ying.huang@intel.com>, <hannes@cmpxchg.org>, <mhocko@suse.com>,
-<mgorman@techsingularity.net>, <kirill.shutemov@linux.intel.com>,
-<hughd@google.com>, <akpm@linux-foundation.org>
-Cc: <yang.shi@linux.alibaba.com>, <linux-mm@kvack.org>,
-<linux-kernel@vger.kernel.org>
-
-> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
-> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
-> still gets inc'ed by one even though a whole THP (512 pages) gets
-> swapped out.
->
-> This doesn't make too much sense to memory reclaim.  For example, direct
-> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
-> could fulfill it.  But, if nr_reclaimed is not increased correctly,
-> direct reclaim may just waste time to reclaim more pages,
-> SWAP_CLUSTER_MAX * 512 pages in worst case.
->
-> This change may result in more reclaimed pages than scanned pages showed
-> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
->
-> Cc: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mel Gorman <mgorman@techsingularity.net>
-> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Hugh Dickins <hughd@google.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-
-Nice find.
-
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-
+On Fri, May 10, 2019 at 10:17:47AM +1000, Tobin C. Harding wrote:
+> kref.txt is already written using correct ReStructuredText format.  This
+> can be verified as follows
+> 
+> 	make cleandocs
+> 	make htmldocs 2> pre.stderr
+> 	mv Documentation/kref.txt Documentation/core-api/kref.rst
+> 	// Add 'kref' to core-api/index.rst
+> 	make cleandocs
+> 	make htmldocs 2> post.stderr
+> 	diff pre.stderr post.stderr
+> 
+> While doing the file move, fix the column width to be 72 characters wide
+> as it is throughout the document.  This is whitespace only.  kref.txt is
+> so cleanly written its a shame to have these few extra wide paragraphs.
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 > ---
-> I'm not quite sure if it was the intended behavior or just omission. I tried
-> to dig into the review history, but didn't find any clue. I may miss some
-> discussion.
->
->  mm/vmscan.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index fd9de50..7e026ec 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->
->                 unlock_page(page);
->  free_it:
-> -               nr_reclaimed++;
-> +               /*
-> +                * THP may get swapped out in a whole, need account
-> +                * all base pages.
-> +                */
-> +               nr_reclaimed += (1 << compound_order(page));
->
->                 /*
->                  * Is there need to periodically free_page_list? It would
-> --
-> 1.8.3.1
->
+> 
+> I'm always hesitant to do docs patches that seem obvious - is there
+> some reason that this was not done previously?
+> 
+> I did this one in preparation for converting kobject.txt, my intent is
+> to put kboject.rst in core-api/ also?
+
+Oh, I should have started on kobject.rst before sending this.  It builds
+without errors also.  The 'conversion' is no more than renaming the
+file.
+
+If this patch is acceptable I can re-spin it as part of a series that
+does kobject as well so you don't get merge conflicts in core-api/index
+
+thanks,
+Tobin.
