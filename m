@@ -2,144 +2,146 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B197C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B53217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:46:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1036217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfEJGqs (ORCPT
+        id S1727097AbfEJGsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:46:48 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:38302 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbfEJGqs (ORCPT
+        Fri, 10 May 2019 02:48:39 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:57265 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726857AbfEJGsi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:46:48 -0400
-Received: by mail-vs1-f65.google.com with SMTP id v9so3002105vse.5;
-        Thu, 09 May 2019 23:46:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+xWxilDOnu8Bu/PxtRMw20TWij1eUXAEr9rz33p/haM=;
-        b=HqLjcZiMr6BdIT0CkJzU/VbC/CWxRxt6mOb+Xt2s1xdCJEv107mr2qnfQ9z3uTbJqR
-         p6aBf0kEqK5YHgkJFrF9QYc8QZIMAlpZ1BPNe5GvXwHUZ2pDcWP5la1m46xxzsB7Kn4O
-         i6/3DjFECGePDEzpqa2BS6rp+d0rl6fIMnX0/0TQcQ43TAMGQ9HEKGhQKuv/m6Iz6/e1
-         sZ+3j6W2+sW0HbPNj0LSMGdaIPZfm76wPeVWa8A5g739hWneY4ws5XFA4b1kzTgfEO6G
-         f1EmNP1OaZucWFPsKyML4ygGKu8sXz2VrHF3Q79bnsRmqQQkBbgKE79A92vS2yi+fZge
-         BSig==
-X-Gm-Message-State: APjAAAVj0+lFKMFtOuZtgAfYJnHMRLbo7KXsem2P28aPWIft+8pTd5Im
-        jw6TtR+GUG3lCy17BYN+2YB9Q98/c6Mwc1evollrox3F
-X-Google-Smtp-Source: APXvYqy/VAGQtxd4C1DFnWSsqd027UyDsztN5uRv5CFMfigNS41lNWQtv1HceDhXDnlJLkv8lz7UTWfcTOmsnj+txs0=
-X-Received: by 2002:a67:fdd4:: with SMTP id l20mr1810974vsq.63.1557470806711;
- Thu, 09 May 2019 23:46:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190510061205.28753-1-yamada.masahiro@socionext.com> <20190510061205.28753-2-yamada.masahiro@socionext.com>
-In-Reply-To: <20190510061205.28753-2-yamada.masahiro@socionext.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 10 May 2019 08:46:35 +0200
-Message-ID: <CAMuHMdVmgZjyGxz0F=Akz+3egFtGMppGg6TRAnRhd=KZv5ADdg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kconfig: do not write .config if the content is the same
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Ulf Magnusson <ulfalizer@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 10 May 2019 02:48:38 -0400
+X-UUID: 5b33f12457704db1b97a65315a30794e-20190510
+X-UUID: 5b33f12457704db1b97a65315a30794e-20190510
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 441105826; Fri, 10 May 2019 14:48:32 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 May 2019 14:48:30 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 May 2019 14:48:30 +0800
+Message-ID: <1557470910.20990.7.camel@mtksdaap41>
+Subject: Re: [PATCH v5 04/12] dt-binding: gce: add binding for gce event
+ property
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
+        Frederic Chen <Frederic.Chen@mediatek.com>
+Date:   Fri, 10 May 2019 14:48:30 +0800
+In-Reply-To: <1557458857.29102.1.camel@mtksdaap41>
+References: <20190507081355.52630-1-bibby.hsieh@mediatek.com>
+         <20190507081355.52630-5-bibby.hsieh@mediatek.com>
+         <1557292247.3936.5.camel@mtksdaap41> <1557458857.29102.1.camel@mtksdaap41>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+Hi, Bibby:
 
-On Fri, May 10, 2019 at 8:14 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Kconfig updates the .config when it exits even if its content is
-> exactly the same as before. Since its timestamp becomes newer than
-> that of other build artifacts, additional processing is invoked,
-> which is annoying.
->
-> - syncconfig is invoked to update include/config/auto.conf, etc.
->
-> - kernel/config.o is recompiled if CONFIG_IKCONFIG is enabled,
->   then vmlinux is relinked as well.
->
-> If the .config is not changed at all, we do not have to even
-> touch it. Just bail out showing "No change to .config".
->
->   $ make allmodconfig
->   scripts/kconfig/conf  --allmodconfig Kconfig
->   #
->   # configuration written to .config
->   #
->   $ make allmodconfig
->   scripts/kconfig/conf  --allmodconfig Kconfig
->   #
->   # No change to .config
->   #
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Fri, 2019-05-10 at 11:27 +0800, Bibby Hsieh wrote:
+> Hi, CK,
+> 
+> On Wed, 2019-05-08 at 13:10 +0800, CK Hu wrote:
+> > Hi, Bibby:
+> > 
+> > On Tue, 2019-05-07 at 16:13 +0800, Bibby Hsieh wrote:
+> > > Client hardware would send event to GCE hardware,
+> > > mediatek,gce-event-names and mediatek,gce-events
+> > > can be used to present the event.
+> > > 
+> > > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mailbox/mtk-gce.txt | 9 +++++++--
+> > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > > index 8fd9479bc9f6..76491f194c56 100644
+> > > --- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > > +++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+> > > @@ -35,6 +35,9 @@ Required properties for a client device:
+> > >  Optional propertier for a client device:
+> > >  - mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+> > >    to the register address.
+> > > +- mediatek,gce-event-names: the event name can be defined by user.
+> > 
+> > gce-event is like an interrupt from client hardware to GCE hardware, we
+> > do not give a name to an interrupt, so do we need to give a name for
+> > gce-event?
+> > 
+> 
+> Yes, we need to know the name of gce-ecent.
+> The name can help users to figure out the problems when GCE meet the
+> event time out errors.
 
-Thanks for your patch!
+For debug, driver does not need this information. In your example, The
+event 'CMDQ_EVENT_MDP_RDMA0_SOF' is used by rdma driver. I think rdma
+driver should know why it need this event (it want to know whether 'rdma
+is starting to work (SOF)'), so when this event is time out, rdma driver
+should know what is timeout (it knows RDMA_SOF is timeout).
 
-> --- a/scripts/kconfig/confdata.c
-> +++ b/scripts/kconfig/confdata.c
+Regards,
+CK
 
-> @@ -888,6 +935,13 @@ int conf_write(const char *name)
->         fclose(out);
->
->         if (*tmpname) {
-> +               if (is_same(name, tmpname)) {
-> +                       conf_message("No change to %s", name);
-> +                       unlink(tmpname);
-> +                       sym_set_change_count(0);
-> +                       return 0;
-> +               }
-> +
->                 snprintf(oldname, sizeof(oldname), "%s.old", name);
->                 rename(name, oldname);
->                 if (rename(tmpname, name))
-
-This causes a semantic change for the meaning of ".config.old", which is
-no longer updated if .config has not changed.
-Hence its contents may no longer correspond to the previous config, but to
-an arbitrary older version.
-
-My workflow involves always running my own script "linux-oldconfig",
-instead of "make oldconfig", so I immediately see what has changed:
-
-    $ cat $(type -p linux-oldconfig)
-    #!/bin/bash
-    make ${0#*/linux-} && colordiff -u .config{.old,}
-
-However, after your patch, "linux-oldconfig" keeps on showing the old
-changes, while .config itself has not changed.  I guess other people
-tracking .config changes are using a similar scheme.
-
-One way to fix this is to rename tmpname to oldname if is_same() returns
-true. However, this may have side effects for other people, as the
-timestamp of .config.old will be changed.
-
-Do you have a better solution?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+> 
+> 
+> > Regards,
+> > CK
+> > 
+> > > +- mediatek,gce-events: u32, the event number defined in
+> > > +  'dt-bindings/gce/mt8173-gce.h' or 'dt-binding/gce/mt8183-gce.h'.
+> > >  
+> > >  Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+> > >  or 'dt-binding/gce/mt8183-gce.h'. Such as sub-system ids, thread priority, event ids.
+> > > @@ -57,8 +60,10 @@ Example for a client device:
+> > >  		compatible = "mediatek,mt8173-mmsys";
+> > >  		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+> > >  			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+> > > -		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+> > > -				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
+> > > +		mediatek,gce-event-names = "rdma0_sof",
+> > > +					   "rsz0_sof";
+> > > +		mediatek,gce-events = <CMDQ_EVENT_MDP_RDMA0_SOF>,
+> > > +				      <CMDQ_EVENT_MDP_RSZ0_SOF>;
+> > >  		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
+> > >  					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+> > >  		...
+> > 
+> > 
+> 
 
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
