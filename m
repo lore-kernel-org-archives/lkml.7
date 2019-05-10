@@ -2,95 +2,72 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FAAC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B58C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0D8D217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:10:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaFcRTb8"
+	by mail.kernel.org (Postfix) with ESMTP id A09F821852
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 22:13:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfEJWKs (ORCPT
+        id S1728318AbfEJWNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 18:10:48 -0400
-Received: from mail-ed1-f43.google.com ([209.85.208.43]:35650 "EHLO
-        mail-ed1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfEJWKs (ORCPT
+        Fri, 10 May 2019 18:13:35 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:58690 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727943AbfEJWNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 18:10:48 -0400
-Received: by mail-ed1-f43.google.com with SMTP id p26so7082812edr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 15:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=K/7iP1H8jYHok11EpsySbjHdSiWJmN/DYdow4cCNPHk=;
-        b=iaFcRTb8NE/xMUnQTsGtMWCw+XwDqzZG+lcCVCefA4TBalJzpJulM3dp/IMHguz4br
-         brmf9YEFE7R+kqkRX4BMpv7gsO99FnBsQpifxWEx3mGsPkxXz6dGhnwUPJjvYhbUaJAC
-         0A4Ez8M/FTZZtKe7tZRIsNsSLg1n758mhS8WhlWGKlv8rYTK0HcDoo+sz/j/rpmsSB1b
-         7he9O7YEPLqhuDgT7kI2H1SrSxSjBucf6iESC9L2jIfVWKNFn2LzhUW/EWFhiwexUrgD
-         xTG3q4IpshinBR3qfusjfvhNH9UYD+vY/nwGOZWPs1AeaiObRKb2rrjMPVDMAFLztLlV
-         zMPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=K/7iP1H8jYHok11EpsySbjHdSiWJmN/DYdow4cCNPHk=;
-        b=Lw98NKX8Y9ZSR2X0ZKSq4Ri+MlvgEXcM4/v3ysRWVcoeO8v+oeNa098MwP5jrbhKm3
-         x3S3sqQ+Rq8+YYT2I5ZoZHZuLsB55rqxeFG7XD767TLe3PInq57K7rTw7x7wUUdxBvJp
-         UJba5VhvFu4EOqYemb9uUI/4EeEUlfzC1Xb3XGJVT/iJYAqj0K6TyfhczEq7phhudqc1
-         W7fZQXMHPPWDRu7wbC7bQynjCoeIipFWRT3KDaI17nNkpzM0Qx0PU211Ekc857BpKKON
-         cxixuIU1PjuCdT8vj8fnGV4xur6I1cmR+WkDRMHoXt5F4VbzOW/k8t57t8S/o1iVlyal
-         fUtA==
-X-Gm-Message-State: APjAAAUOJ2daO20sKHHdsBtIR4VkKOyi6aByTwMIg8q3hqfSjcct/1RL
-        5S/snEqLx9X7arSqku2A2j64VNlV
-X-Google-Smtp-Source: APXvYqz4cYPXx+WlMWe/0b1npGHEEdd0defXqIa42bIFi/GG2md9wfXhzCZBgCV51VpVfDc8k+FPYA==
-X-Received: by 2002:aa7:dada:: with SMTP id x26mr14074256eds.77.1557526246802;
-        Fri, 10 May 2019 15:10:46 -0700 (PDT)
-Received: from rimwks ([2001:470:1f15:3d8:7285:c2ff:fe37:5722])
-        by smtp.gmail.com with ESMTPSA id b42sm1767557edd.83.2019.05.10.15.10.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 15:10:45 -0700 (PDT)
-From:   Rozhuk Ivan <rozhuk.im@gmail.com>
-X-Google-Original-From: Rozhuk Ivan <Rozhuk.IM@gmail.com>
-Date:   Sat, 11 May 2019 01:10:43 +0300
-To:     Robert Wing <wingairak@gmail.com>
-Cc:     ossobserver@redchan.it, linux-kernel@vger.kernel.org,
-        misc@openbsd.org, Steffen Nurpmeso <steffen@sdaoden.eu>
-Subject: Re: Danish FreeBSD Developer hates jews collectively
-Message-ID: <20190511011043.35a09117@rimwks>
-In-Reply-To: <CA+3BqY0Jwx+Qjj41L-zfx5WkM4VvqtKLb7mkODW-Z68j+E1VWw@mail.gmail.com>
-References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
-        <20190510073249.73a17721@rimwks>
-        <20190510182231.k24xb%steffen@sdaoden.eu>
-        <CA+3BqY0Jwx+Qjj41L-zfx5WkM4VvqtKLb7mkODW-Z68j+E1VWw@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; amd64-portbld-freebsd12.0)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Fri, 10 May 2019 18:13:35 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C53DB133E9747;
+        Fri, 10 May 2019 15:13:33 -0700 (PDT)
+Date:   Fri, 10 May 2019 15:13:33 -0700 (PDT)
+Message-Id: <20190510.151333.266788690200661708.davem@davemloft.net>
+To:     wenbin.zeng@gmail.com
+Cc:     bfields@fieldses.org, viro@zeniv.linux.org.uk, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        wenbinzeng@tencent.com, dsahern@gmail.com,
+        nicolas.dichtel@6wind.com, willy@infradead.org,
+        edumazet@google.com, jakub.kicinski@netronome.com,
+        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] netns: add netns_evict into netns_operations
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1557470163-30071-3-git-send-email-wenbinzeng@tencent.com>
+References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
+        <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+        <1557470163-30071-3-git-send-email-wenbinzeng@tencent.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 10 May 2019 15:13:34 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 08:56:48 -0800
-Robert Wing <wingairak@gmail.com> wrote:
+From: Wenbin Zeng <wenbin.zeng@gmail.com>
+Date: Fri, 10 May 2019 14:36:02 +0800
 
-> At the cost of sending more spam to the FreeBSD-Current mailing
-> list...
+> The newly added netns_evict() shall be called when the netns inode being
+> evicted. It provides another path to release netns refcounts, previously
+> netns_put() is the only choice, but it is not able to release all netns
+> refcount, for example, a rpc client holds two netns refcounts, these
+> refcounts are supposed to be released when the rpc client is freed, but
+> the code to free rpc client is normally triggered by put() callback only
+> when netns refcount gets to 0, specifically:
+>     refcount=0 -> cleanup_net() -> ops_exit_list -> free rpc client
+> But netns refcount will never get to 0 before rpc client gets freed, to
+> break the deadlock, the code to free rpc client can be put into the newly
+> added netns_evict.
 > 
-> I'm posting the following excerpt taken from the FreeBSD website as a
-> reminder to those subscribed to this list and who continue to spam it:
-> 
-> "This is the mailing list for users of freebsd-current. It includes
-> warnings about new features coming out in -current that will affect
-> the users, and instructions on steps that must be taken to remain
-> -current. Anyone running "current" must subscribe to this list."
+> Signed-off-by: Wenbin Zeng <wenbinzeng@tencent.com>
 
-
-Im not sure that freebsd.org is tech resource after it apply CoC.
+Acked-by: David S. Miller <davem@davemloft.net>
