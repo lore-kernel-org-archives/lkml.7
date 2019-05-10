@@ -2,71 +2,49 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BFFC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D458EC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7AC12175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="HC9GwhY1"
+	by mail.kernel.org (Postfix) with ESMTP id B211C216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 08:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfEJIwM (ORCPT
+        id S1727084AbfEJI5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 04:52:12 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36496 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfEJIwL (ORCPT
+        Fri, 10 May 2019 04:57:02 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42755 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfEJI5C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 04:52:11 -0400
-Received: by mail-wm1-f65.google.com with SMTP id j187so6544606wmj.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 01:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=aaM8432jFaEmhAAs5kJRzcW3PtFv9V/mPFGHY/gVINc=;
-        b=HC9GwhY1KxcCvquoeRmAWTsEHBkGlMjC2GOSg6QgSOb4NqeO9tQazouSymWwoGOCjA
-         9JWrMkzWVeVEGra7oAVM1kJhEEZM/PhqiogQbhTl6twBJtLpQ0/MPg56TCYYAt+Nvv1o
-         mCJg3YB/RHexlJfjgBa+KFzqJ5FvXDDHsnnWtvdJONcsi/MDywBvcfou5mimKwOEo1iZ
-         aCqw/BkOF0tmUEWP1PK3VYzCYHdrfLvr1cLVaGotwWbUkfqHza9nLRXR4qX182qhGhEq
-         TKz1aA9ZIVvYWW+B6qEF292a80KFSQDyuElD+0kAVBqsrRz195OMy7ClsyOwrwFgKNTG
-         4aNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=aaM8432jFaEmhAAs5kJRzcW3PtFv9V/mPFGHY/gVINc=;
-        b=OX7uyNO8KuLe3LR45bxMSuTj4yW9anuudutg2ywjnSaSKg5qIXyKFIaUfscviB6mBe
-         aXQwdPEf3WKXAvAoftN7htUEdbctMo9O4WvK0afOFsjV2k/332sJaSElkQt6Pe5OGsOa
-         woTUv+Z6OeVOkORAKziVbvHynsHIGBlz/qJJ/yIux0bgmvgNXQyDOBKrYoDgRssssFxz
-         vsQ9lys3AaCWxeMuQc8kmJRZ+oIY4azfNgNH/34XaHe3itaidtzW/22T59arOZZ0IbmQ
-         clm843QQ5PXJDmrpQAFWxfk7J0xh84LZuGlnNLu+zg8OoMnajMTvOFcXg+G1+vhjPw83
-         xYuA==
-X-Gm-Message-State: APjAAAU7PaD1TDnU4cLKNNgCPaJZJJGs9XeZOyKy6VcT0xCTtaT0Sewi
-        wPul/gShZu899oBwIilZfL4FHA==
-X-Google-Smtp-Source: APXvYqykj1mHG44y8+cSJrOUjhNqzrgeo1uIXi5+tTVxFFhizSUvTXk2PbGt+OXdLaVSil5RdqYKuA==
-X-Received: by 2002:a1c:80d7:: with SMTP id b206mr5910297wmd.48.1557478328921;
-        Fri, 10 May 2019 01:52:08 -0700 (PDT)
-Received: from boomer.baylibre.com (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d4sm12281121wrf.7.2019.05.10.01.52.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 10 May 2019 01:52:08 -0700 (PDT)
-Message-ID: <331673da2c1cad1c72d61b45e0c614961445ec90.camel@baylibre.com>
-Subject: Re: [PATCH v5 0/6] Add drive-strength in Meson pinctrl driver
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Guillaume La Roque <glaroque@baylibre.com>,
-        linus.walleij@linaro.org, khilman@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Fri, 10 May 2019 10:52:07 +0200
-In-Reply-To: <20190510082324.21181-1-glaroque@baylibre.com>
-References: <20190510082324.21181-1-glaroque@baylibre.com>
+        Fri, 10 May 2019 04:57:02 -0400
+X-Originating-IP: 83.155.44.161
+Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 847936000D;
+        Fri, 10 May 2019 08:56:56 +0000 (UTC)
+Message-ID: <55468fdd88da9f487789b2073a1babb14bc7a282.camel@hadess.net>
+Subject: Re: [RFC v3] iio: input-bridge: optionally bridge iio acceleometers
+ to create a /dev/input interface
+From:   Bastien Nocera <hadess@hadess.net>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-input@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Date:   Fri, 10 May 2019 10:56:55 +0200
+In-Reply-To: <AA2B43FE-E196-4FEC-B4C5-897D0F44A76F@goldelico.com>
+References: <d52cf9ee5944c90c69f6e74a46d844cef51e487e.1555362312.git.hns@goldelico.com>
+         <0189da8d91652dd3ecf729b03029ab9db5a24f99.camel@hadess.net>
+         <AA2B43FE-E196-4FEC-B4C5-897D0F44A76F@goldelico.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,66 +52,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-10 at 10:23 +0200, Guillaume La Roque wrote:
-> The purpose of this patchset is to add drive-strength support in meson pinconf
-> driver. This is a new feature that was added on the g12a. It is critical for us
-> to support this since many functions are failing with default pad drive-strength.
+On Tue, 2019-04-16 at 21:33 +0200, H. Nikolaus Schaller wrote:
+> Hi Bastien,
 > 
-> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-> 'drive-strength' is expressed in mA.
-> So this patch add another generic property "drive-strength-microamp". The change to do so
-> would be minimal and could be benefit to other platforms later on.
+> > Am 16.04.2019 um 18:04 schrieb Bastien Nocera <hadess@hadess.net>:
+> > This can be done in user-space, reading the data from the IIO driver,
+> > and using uinput to feed it back. Why is doing this at the kernel level
+> > better?
 > 
-> Cheers
-> Guillaume
+> Well, I'd estimate that >80% of the current kernel could be done in user-space
+> (but not at the same speed/quality).
+> 
+> E.g. TCP could most likely be done by directly accessing the Ethernet layer and
+> providing other processes access through named pipes instead of sockets.
+> 
+> But usually a user-space daemon feeding things back into the kernel is slower
+> (because it is scheduled differently) and needs more resources for running the
+> process and IPC and is less protected against hickups and deadlocks.
 
-Guillaume,
+This is mostly irrelevant for the amount of data we're treating, but it
+doesn't matter too much.
 
-Several tags, such as Acked-by, Reviewed-by or Tested-by have been given on this
-series.
+> Two more aspects come to my mind from reading your project page:
+> 
+> a) "It requires libgudev and systemd"
+> b) "Note that a number of kernel bugs will prevent it from working correctly"
+> 
+> a) this makes quite significant assumptions about the user-space while a kernel
+>    driver can be kept independent of this
 
-Please remember to collect and add them to the commit description when posting newer
-revision of a series
+It's made for modern desktop OSes/"traditional" Linux. I don't think
+that those 2 libraries are problematic dependencies unless you're on
+Android, where a replacement could be implemented or iio-sensor-proxy
+modified for that use case.
 
-If you didn't already, please have a look at Documentation/process/submitting-patches.rst
+> b) if it is in-kernel it will be kept in sync with kernel changes and such bugs
+>    are less likely
 
-Thanks
+No they're not. This warning was because 1) drivers sometimes have bugs
+2) user-space sometimes has bugs 3) user-space sometimes causes the
+kernel to have bugs.
 
-> 
-> Changes since v4:
-> - fix dt-binding documentation
-> - rename drive-strength-uA to drive-strength-microamp in coverletter
-> 
-> Changes since v3:
-> - remove dev_err in meson_get_drive_strength
-> - cleanup code
-> 
-> Changes since v2:
-> - rename driver-strength-uA property to drive-strength-microamp
-> - rework patch series for better understanding
-> - rework set_bias function
-> 
-> Changes since v1:
-> - fix missing break
-> - implement new pinctrl generic property "drive-strength-uA"
-> 
-> [1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-> 
-> Guillaume La Roque (6):
->   dt-bindings: pinctrl: add a 'drive-strength-microamp' property
->   pinctrl: generic: add new 'drive-strength-microamp' property support
->   dt-bindings: pinctrl: meson: Add drive-strength-microamp property
->   pinctrl: meson: Rework enable/disable bias part
->   pinctrl: meson: add support of drive-strength-microamp
->   pinctrl: meson: g12a: add DS bank value
-> 
->  .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
->  .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
->  drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
->  drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
->  drivers/pinctrl/pinconf-generic.c             |   2 +
->  include/linux/pinctrl/pinconf-generic.h       |   3 +
->  7 files changed, 193 insertions(+), 53 deletions(-)
-
+The 2 significant breakages for iio-sensor-proxy were caused by runtime
+PM bugs in the hid-sensor-hub driver, and in the USB core. I doubt a
+kernel-space implementation would have been able to magically fix those
+bugs unfortunately.
 
