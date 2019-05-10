@@ -2,90 +2,93 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F117C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB587C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AA3B21479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8398B2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:14:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727225AbfEJJOe (ORCPT
+        id S1727258AbfEJJOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:14:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44587 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727094AbfEJJOe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:14:34 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hP1bs-0004X1-DN; Fri, 10 May 2019 11:14:32 +0200
-Message-ID: <1557479671.7859.2.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: fix potential null pointer dereference on
- pointer dev
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Colin King <colin.king@canonical.com>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Fri, 10 May 2019 11:14:31 +0200
-In-Reply-To: <20190509160036.19433-1-colin.king@canonical.com>
-References: <20190509160036.19433-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Fri, 10 May 2019 05:14:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40576 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726992AbfEJJOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:14:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8840A78;
+        Fri, 10 May 2019 02:14:44 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6C76B3F738;
+        Fri, 10 May 2019 02:14:43 -0700 (PDT)
+Date:   Fri, 10 May 2019 10:14:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 4/7] sched: Add sched_load_rq tracepoint
+Message-ID: <20190510091440.2vbebpndrcxm7gin@e107158-lin.cambridge.arm.com>
+References: <20190505115732.9844-1-qais.yousef@arm.com>
+ <20190505115732.9844-5-qais.yousef@arm.com>
+ <4971629f-70d2-9ee1-7509-5d0cfe9004ff@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4971629f-70d2-9ee1-7509-5d0cfe9004ff@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
-
-[added Bartosz to Cc:]
-
-On Thu, 2019-05-09 at 17:00 +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On 05/10/19 10:51, Dietmar Eggemann wrote:
+> Hi Qais,
 > 
-> Pointer dev is being dereferenced when passed to the inlined
-> functon dev_name, however, dev is later being null checked.
-> Thus there is a potential null pointer dereference on a null
-> dev. Fix this by performing the null check on dev before
-> dereferencing it.
+> On 5/5/19 1:57 PM, Qais Yousef wrote:
 > 
-> Addresses-Coverity: ("Dereference before null check")
-> Fixes: 6691dffab0ab ("reset: add support for non-DT systems")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/reset/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> [...]
 > 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 81ea77cba123..83f1a1d5ee67 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -691,12 +691,13 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
->  {
->  	const struct reset_control_lookup *lookup;
->  	struct reset_controller_dev *rcdev;
-> -	const char *dev_id = dev_name(dev);
-> +	const char *dev_id;
->  	struct reset_control *rstc = NULL;
->  
->  	if (!dev)
->  		return ERR_PTR(-EINVAL);
+> > diff --git a/kernel/sched/sched_tracepoints.h b/kernel/sched/sched_tracepoints.h
+> > new file mode 100644
+> > index 000000000000..f4ded705118e
+> > --- /dev/null
+> > +++ b/kernel/sched/sched_tracepoints.h
+> > @@ -0,0 +1,39 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Scheduler tracepoints that are probe-able only and aren't exported ABI in
+> > + * tracefs.
+> > + */
+> > +
+> > +#include <trace/events/sched.h>
+> > +
+> > +#define SCHED_TP_PATH_LEN		64
+> > +
+> > +
+> > +static __always_inline void sched_tp_load_cfs_rq(struct cfs_rq *cfs_rq)
+> > +{
+> > +	if (trace_sched_load_rq_enabled()) {
+> > +		int cpu = cpu_of(rq_of(cfs_rq));
+> > +		char path[SCHED_TP_PATH_LEN];
+> > +
+> > +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
+> > +		trace_sched_load_rq(cpu, path, &cfs_rq->avg);
+> 
+> This will let a !CONFIG_SMP build fail.
 
-Thank you for the patch. I think this check should be removed instead,
-though, as __reset_control_get_from_lookup is only ever called from
-__reset_control_get, right after checking dev->of_node. So dev can not
-be NULL here.
+You're right. sched_avg is only defined if CONFIG_SMP. Fixed all three
+functions.
 
-regards
-Philipp
+Thanks!
+
+--
+Qais Yousef
