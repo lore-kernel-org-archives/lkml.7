@@ -2,151 +2,118 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D1AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CD5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633B420989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD912184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 21:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ci2xc1wM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfEJVmL (ORCPT
+        id S1728243AbfEJVny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 17:42:11 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:44879 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfEJVmL (ORCPT
+        Fri, 10 May 2019 17:43:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41590 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbfEJVnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 17:42:11 -0400
-Received: from localhost (lfbn-1-3034-80.w90-66.abo.wanadoo.fr [90.66.53.80])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id AF7EC240002;
-        Fri, 10 May 2019 21:42:07 +0000 (UTC)
-Date:   Fri, 10 May 2019 23:42:07 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, Nicolas.Ferre@microchip.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] clk: at91: sckc: add support for SAM9X60
-Message-ID: <20190510214207.GG7622@piout.net>
-References: <1557487388-32098-1-git-send-email-claudiu.beznea@microchip.com>
- <1557487388-32098-5-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 10 May 2019 17:43:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z3so3601801pgp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 14:43:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=txyEEfuShyaKA6OU4S1C4qT56CSHhTHuadhhSgL/B1w=;
+        b=ci2xc1wMaUwRzlapr3pHT3/06zeHBirtF8f8zIVeaDiEcqVmHzp8ogt2zKmtauZmmL
+         VZg/Ua/ac6Wvtp5CoYM+tnC+aYJaIBAZL/I49GcWt47mNK4nhHSsjecPYnOitfIdasBD
+         AYTR08ttwqYyE0Ej5rmdVDb49HkxqKb+WKnZ9TH0Y0zkn244hVP/WYmeoBK5CqBl2emv
+         g/aKYE7jv5GV/ja1Evbhw35hjze33nG1A3FodYiHjFc19l124BBiEBJ9VqziVZ8Mqjzx
+         qBdPmQfXE/QaAS4/STKAdR9UpbmC9z32yGxjaZ5yEj7OpwP5BmxaWMtk4pmQj6lcNOxx
+         L6fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=txyEEfuShyaKA6OU4S1C4qT56CSHhTHuadhhSgL/B1w=;
+        b=Q8cymQ9ELMXYdQHphYFlkdtDE7SNUrJzGufbG7hVtk0sc1DrO17tID1Df026IbFbTJ
+         eOJjwIQO/yTRVsFzjKAy66bjv98tQfOHJhmY1YlhntmFh2YMKqiRXk/CMb9Y6k9Ohu45
+         PYEAxOxit+D4DY9IAl7KG7lJJv1RzxU/00ijpcSaikoPLJ9UHO+H115zb3jjfggjkI3C
+         op5T7FCUh76ZxLAI42mZeZvPTyIqGtfVPI3Dy9Zcs4qMoN84QFrVhRnlBEWwEYFfWOsF
+         UmX2a1dxD+qZMlt5NHuKREIxatQEIQJqw0VEmzOnmmJIVgghqzxrmvHmSS8NEJLyt6nb
+         A0+A==
+X-Gm-Message-State: APjAAAXpOPXUZN6vzInbnhfGHPl4tK3aB+lUunaLey1Omjx/hqW+rgeW
+        veHWKUga7T1+oIdM8DqhvbfbIRdTTde/gQ==
+X-Google-Smtp-Source: APXvYqzRCjmRJjSzsDwGBlbaEZrNsuy1m6VB19YK4Aid076Xs8KZtDoj/OsSd8Sa+55YAvxnj8ibsw==
+X-Received: by 2002:a63:a449:: with SMTP id c9mr16552136pgp.149.1557524632125;
+        Fri, 10 May 2019 14:43:52 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
+        by smtp.googlemail.com with ESMTPSA id j189sm15075590pfc.72.2019.05.10.14.43.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 14:43:51 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
+In-Reply-To: <20190510155327.5759-2-jbrunet@baylibre.com>
+References: <20190510155327.5759-1-jbrunet@baylibre.com> <20190510155327.5759-2-jbrunet@baylibre.com>
+Date:   Fri, 10 May 2019 14:43:50 -0700
+Message-ID: <7h4l62dlyh.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557487388-32098-5-git-send-email-claudiu.beznea@microchip.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 11:23:40+0000, Claudiu.Beznea@microchip.com wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Add support for SAM9X60's slow clock.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
+> Like order boards, order nodes by address then node names then aliases.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  drivers/clk/at91/sckc.c | 74 +++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
-> 
-> diff --git a/drivers/clk/at91/sckc.c b/drivers/clk/at91/sckc.c
-> index 2a4ac548de80..2c410f41b413 100644
-> --- a/drivers/clk/at91/sckc.c
-> +++ b/drivers/clk/at91/sckc.c
-> @@ -415,6 +415,80 @@ static void __init of_sama5d3_sckc_setup(struct device_node *np)
->  CLK_OF_DECLARE(sama5d3_clk_sckc, "atmel,sama5d3-sckc",
->  	       of_sama5d3_sckc_setup);
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    | 92 +++++++++----------
+>  1 file changed, 46 insertions(+), 46 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> index 34b40587e5ef..61fb30047d7f 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+> @@ -14,10 +14,6 @@
+>  	compatible = "seirobotics,sei510", "amlogic,g12a";
+>  	model = "SEI Robotics SEI510";
 >  
-> +static const struct clk_slow_bits at91sam9x60_bits = {
-> +	.cr_osc32en = BIT(1),
-> +	.cr_osc32byp = BIT(2),
-> +	.cr_oscsel = BIT(24),
-> +};
-> +
-> +static void __init of_sam9x60_sckc_setup(struct device_node *np)
-> +{
-> +	void __iomem *regbase = of_iomap(np, 0);
-> +	struct clk_hw_onecell_data *clk_data;
-> +	struct clk_hw *slow_rc, *slow_osc;
-> +	const char *xtal_name;
-> +	const char *parent_names[2] = { "slow_rc_osc", "slow_osc" };
-> +	bool bypass;
-> +	int ret;
-> +
-> +	if (!regbase)
-> +		return;
-> +
-> +	slow_rc = clk_hw_register_fixed_rate(NULL, parent_names[0], NULL, 0,
-> +					     32768);
-> +	if (IS_ERR(slow_rc))
-> +		return;
-> +
-> +	xtal_name = of_clk_get_parent_name(np, 0);
-> +	if (!xtal_name)
-> +		goto unregister_slow_rc;
-> +
-> +	bypass = of_property_read_bool(np, "atmel,osc-bypass");
-> +	slow_osc = at91_clk_register_slow_osc(regbase, parent_names[1],
-> +					      xtal_name, 5000000, bypass,
-> +					      &at91sam9x60_bits);
-> +	if (IS_ERR(slow_osc))
-> +		goto unregister_slow_rc;
-> +
-> +	clk_data = kzalloc(sizeof(*clk_data) + (2 * sizeof(struct clk_hw *)),
-> +			   GFP_KERNEL);
-> +	if (!clk_data)
-> +		goto unregister_slow_osc;
-> +
-> +	/* MD_SLCK and TD_SLCK. */
-> +	clk_data->num = 2;
-> +	clk_data->hws[0] = clk_hw_register_fixed_rate(NULL, "md_slck",
-> +						      parent_names[0],
-> +						      0, 32768);
-> +	if (IS_ERR(clk_data->hws[0]))
-> +		goto clk_data_free;
-> +
-> +	clk_data->hws[1] = at91_clk_register_sam9x5_slow(regbase, "td_slck",
-> +							 parent_names, 2,
-> +							 &at91sam9x60_bits);
-> +	if (IS_ERR(clk_data->hws[1]))
-> +		goto unregister_md_slck;
-> +
-> +	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, clk_data);
-> +	if (WARN_ON(ret))
-> +		goto unregister_td_slck;
-> +
-> +	return;
-> +
-> +unregister_td_slck:
-> +	clk_hw_unregister(clk_data->hws[1]);
-> +unregister_md_slck:
-> +	clk_hw_unregister(clk_data->hws[0]);
-> +clk_data_free:
-> +	kfree(clk_data);
-> +unregister_slow_osc:
-> +	clk_hw_unregister(slow_osc);
-> +unregister_slow_rc:
-> +	clk_hw_unregister(slow_rc);
-> +}
-> +CLK_OF_DECLARE(sam9x60_clk_sckc, "microchip,sam9x60-sckc",
-> +	       of_sam9x60_sckc_setup);
-> +
->  static int clk_sama5d4_slow_osc_prepare(struct clk_hw *hw)
->  {
->  	struct clk_sama5d4_slow_osc *osc = to_clk_sama5d4_slow_osc(hw);
-> -- 
-> 2.7.4
-> 
+> -	aliases {
+> -		serial0 = &uart_AO;
+> -	};
+> -
+>  	adc_keys {
+>  		compatible = "adc-keys";
+>  		io-channels = <&saradc 0>;
+> @@ -31,13 +27,8 @@
+>  		};
+>  	};
+>  
+> -	ao_5v: regulator-ao_5v {
+> -		compatible = "regulator-fixed";
+> -		regulator-name = "AO_5V";
+> -		regulator-min-microvolt = <5000000>;
+> -		regulator-max-microvolt = <5000000>;
+> -		vin-supply = <&dc_in>;
+> -		regulator-always-on;
+> +	aliases {
+> +		serial0 = &uart_AO;
+>  	};
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+minor nit: I kind of like "aliases" and "chosen" at the top since they
+are kind of special nodes, but honestly, I can't think of a really good
+reason other than personal preference, so keeping things sorted as
+you've done here is probably better.
+
+Kevin
