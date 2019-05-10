@@ -6,368 +6,258 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD130C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B157C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AC920578
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E01820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfEJP24 (ORCPT
+        id S1727568AbfEJPaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:28:56 -0400
-Received: from vmicros1.altlinux.org ([194.107.17.57]:60888 "EHLO
-        vmicros1.altlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727589AbfEJP2z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:28:55 -0400
-Received: from mua.local.altlinux.org (mua.local.altlinux.org [192.168.1.14])
-        by vmicros1.altlinux.org (Postfix) with ESMTP id 3407D72CCD1;
-        Fri, 10 May 2019 18:28:53 +0300 (MSK)
-Received: by mua.local.altlinux.org (Postfix, from userid 508)
-        id 1942B7CCE30; Fri, 10 May 2019 18:28:52 +0300 (MSK)
-Date:   Fri, 10 May 2019 18:28:52 +0300
-From:   "Dmitry V. Levin" <ldv@altlinux.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Eugene Syromyatnikov <esyr@redhat.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v11 7/7] selftests/ptrace: add a test case for
- PTRACE_GET_SYSCALL_INFO
-Message-ID: <20190510152852.GG28558@altlinux.org>
-References: <20190510152640.GA28529@altlinux.org>
+        Fri, 10 May 2019 11:30:01 -0400
+Received: from mga11.intel.com ([192.55.52.93]:36180 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727413AbfEJPaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:30:00 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 08:30:00 -0700
+X-ExtLoop1: 1
+Received: from sjmeyer-mobl.amr.corp.intel.com (HELO [10.254.97.194]) ([10.254.97.194])
+  by fmsmga001.fm.intel.com with ESMTP; 10 May 2019 08:29:58 -0700
+Subject: Re: [alsa-devel] [PATCH] ASoC: SOF: Fix build error with
+ CONFIG_SND_SOC_SOF_NOCODEC=m
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     alsa-devel@alsa-project.org, rdunlap@infradead.org,
+        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, broonie@kernel.org
+References: <20190510023657.8960-1-yuehaibing@huawei.com>
+ <s5h7eayn5or.wl-tiwai@suse.de>
+ <73c6dd27-895a-adba-a4ef-2992266fcc48@linux.intel.com>
+ <s5hlfzempf0.wl-tiwai@suse.de>
+ <1e7e1908-a813-6c9b-5b88-122864d3a372@linux.intel.com>
+ <s5hbm0amnpl.wl-tiwai@suse.de> <s5h8svemn0u.wl-tiwai@suse.de>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <00aa3055-0b97-3ac4-f588-3665bfcb5811@linux.intel.com>
+Date:   Fri, 10 May 2019 10:29:58 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510152640.GA28529@altlinux.org>
+In-Reply-To: <s5h8svemn0u.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check whether PTRACE_GET_SYSCALL_INFO semantics implemented in the kernel
-matches userspace expectations.
 
-Acked-by: Shuah Khan <shuah@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: Eugene Syromyatnikov <esyr@redhat.com>
-Cc: linux-kselftest@vger.kernel.org
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
----
 
-Notes:
-    v11: unchanged
-    v10: changed GPL-2.0-or-later to GPL-2.0+,
-         added Acked-by from https://lore.kernel.org/lkml/f2f015da-35d4-7207-cd57-e6589cd9d2c4@kernel.org/
-    v9: unchanged
-    v8: unchanged
-    v7: unchanged
-    v6: made PTRACE_GET_SYSCALL_INFO return value checks strict
-    v5: initial revision
+On 5/10/19 8:56 AM, Takashi Iwai wrote:
+> On Fri, 10 May 2019 15:41:10 +0200,
+> Takashi Iwai wrote:
+>>
+>> On Fri, 10 May 2019 15:34:03 +0200,
+>> Pierre-Louis Bossart wrote:
+>>>
+>>> On 5/10/19 8:04 AM, Takashi Iwai wrote:
+>>>> On Fri, 10 May 2019 14:56:29 +0200,
+>>>> Pierre-Louis Bossart wrote:
+>>>>>
+>>>>> On 5/10/19 2:12 AM, Takashi Iwai wrote:
+>>>>>> On Fri, 10 May 2019 04:36:57 +0200,
+>>>>>> YueHaibing wrote:
+>>>>>>>
+>>>>>>> Fix gcc build error while CONFIG_SND_SOC_SOF_NOCODEC=m
+>>>>>>>
+>>>>>>> sound/soc/sof/core.o: In function `snd_sof_device_probe':
+>>>>>>> core.c:(.text+0x4af): undefined reference to `sof_nocodec_setup'
+>>>>>>>
+>>>>>>> Change SND_SOC_SOF_NOCODEC to bool to fix this.
+>>>>>>>
+>>>>>>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>>>>>>> Fixes: c16211d6226d ("ASoC: SOF: Add Sound Open Firmware driver core")
+>>>>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>>>>
+>>>>>> This change would break things severely.  This won't allow to build it
+>>>>>> as a module any longer.
+>>>>>
+>>>>> Isn't this fixed already?
+>>>>> See the patch  'ASoC: SOF: core: fix undefined nocodec reference' and
+>>>>> Takashi's follow-up to fix the unused variable warning.
+>>>>
+>>>> Possibly the problem still persists although I haven't seen through my
+>>>> local build tests with randconfig.  You can set SND_SOC_SOF=y and
+>>>> SND_SOC_NOCODEC=m, i.e. built-in sof-core while nocodec is a module.
+>>>
+>>> YueHiabing, can you share the config and SHA1 so that we can double check?
+>>>
+>>> If the problem persists, we can do something like
+>>>
+>>> config SND_SOF_NOCODEC_SUPPORT
+>>> 	bool "SOF nocodec mode support"
+>>>
+>>> config SND_SOF_NOCODEC
+>>> 	tristate
+>>>
+>>> confir SND_SOC_SOF
+>>> 	tristate
+>>> 	select SND_SOF_NOCODEC if SND_SOF_NOCODEC_SUPPORT
+>>>
+>>> that way you propagate the required dependencies
+>>
+>> Yes, that would work.  OTOH, I see no merit to build an extra module
+>> for nocodec.  nocodec.c can be built together with sof-core stuff.
 
- tools/testing/selftests/ptrace/.gitignore     |   1 +
- tools/testing/selftests/ptrace/Makefile       |   2 +-
- .../selftests/ptrace/get_syscall_info.c       | 271 ++++++++++++++++++
- 3 files changed, 273 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/ptrace/get_syscall_info.c
+the module has its benefits. Today nocodec includes all possible DAIs, I 
+wanted to add module parameters to restrict things a bit for 
+tests/debug. It'll be e.g. very helpful for SoundWire to avoid exposing 
+the SSP DAIs.
 
-diff --git a/tools/testing/selftests/ptrace/.gitignore b/tools/testing/selftests/ptrace/.gitignore
-index b3e59d41fd82..cfcc49a7def7 100644
---- a/tools/testing/selftests/ptrace/.gitignore
-+++ b/tools/testing/selftests/ptrace/.gitignore
-@@ -1 +1,2 @@
-+get_syscall_info
- peeksiginfo
-diff --git a/tools/testing/selftests/ptrace/Makefile b/tools/testing/selftests/ptrace/Makefile
-index 8a2bc5562179..4bc550b6b845 100644
---- a/tools/testing/selftests/ptrace/Makefile
-+++ b/tools/testing/selftests/ptrace/Makefile
-@@ -1,5 +1,5 @@
- CFLAGS += -iquote../../../../include/uapi -Wall
- 
--TEST_GEN_PROGS := peeksiginfo
-+TEST_GEN_PROGS := get_syscall_info peeksiginfo
- 
- include ../lib.mk
-diff --git a/tools/testing/selftests/ptrace/get_syscall_info.c b/tools/testing/selftests/ptrace/get_syscall_info.c
-new file mode 100644
-index 000000000000..d1961c3ee72e
---- /dev/null
-+++ b/tools/testing/selftests/ptrace/get_syscall_info.c
-@@ -0,0 +1,271 @@
-+/* SPDX-License-Identifier: GPL-2.0+
-+ *
-+ * Copyright (c) 2018 Dmitry V. Levin <ldv@altlinux.org>
-+ * All rights reserved.
-+ *
-+ * Check whether PTRACE_GET_SYSCALL_INFO semantics implemented in the kernel
-+ * matches userspace expectations.
-+ */
-+
-+#include "../kselftest_harness.h"
-+#include <err.h>
-+#include <signal.h>
-+#include <asm/unistd.h>
-+#include "linux/ptrace.h"
-+
-+static int
-+kill_tracee(pid_t pid)
-+{
-+	if (!pid)
-+		return 0;
-+
-+	int saved_errno = errno;
-+
-+	int rc = kill(pid, SIGKILL);
-+
-+	errno = saved_errno;
-+	return rc;
-+}
-+
-+static long
-+sys_ptrace(int request, pid_t pid, unsigned long addr, unsigned long data)
-+{
-+	return syscall(__NR_ptrace, request, pid, addr, data);
-+}
-+
-+#define LOG_KILL_TRACEE(fmt, ...)				\
-+	do {							\
-+		kill_tracee(pid);				\
-+		TH_LOG("wait #%d: " fmt,			\
-+		       ptrace_stop, ##__VA_ARGS__);		\
-+	} while (0)
-+
-+TEST(get_syscall_info)
-+{
-+	static const unsigned long args[][7] = {
-+		/* a sequence of architecture-agnostic syscalls */
-+		{
-+			__NR_chdir,
-+			(unsigned long) "",
-+			0xbad1fed1,
-+			0xbad2fed2,
-+			0xbad3fed3,
-+			0xbad4fed4,
-+			0xbad5fed5
-+		},
-+		{
-+			__NR_gettid,
-+			0xcaf0bea0,
-+			0xcaf1bea1,
-+			0xcaf2bea2,
-+			0xcaf3bea3,
-+			0xcaf4bea4,
-+			0xcaf5bea5
-+		},
-+		{
-+			__NR_exit_group,
-+			0,
-+			0xfac1c0d1,
-+			0xfac2c0d2,
-+			0xfac3c0d3,
-+			0xfac4c0d4,
-+			0xfac5c0d5
-+		}
-+	};
-+	const unsigned long *exp_args;
-+
-+	pid_t pid = fork();
-+
-+	ASSERT_LE(0, pid) {
-+		TH_LOG("fork: %m");
-+	}
-+
-+	if (pid == 0) {
-+		/* get the pid before PTRACE_TRACEME */
-+		pid = getpid();
-+		ASSERT_EQ(0, sys_ptrace(PTRACE_TRACEME, 0, 0, 0)) {
-+			TH_LOG("PTRACE_TRACEME: %m");
-+		}
-+		ASSERT_EQ(0, kill(pid, SIGSTOP)) {
-+			/* cannot happen */
-+			TH_LOG("kill SIGSTOP: %m");
-+		}
-+		for (unsigned int i = 0; i < ARRAY_SIZE(args); ++i) {
-+			syscall(args[i][0],
-+				args[i][1], args[i][2], args[i][3],
-+				args[i][4], args[i][5], args[i][6]);
-+		}
-+		/* unreachable */
-+		_exit(1);
-+	}
-+
-+	const struct {
-+		unsigned int is_error;
-+		int rval;
-+	} *exp_param, exit_param[] = {
-+		{ 1, -ENOENT },	/* chdir */
-+		{ 0, pid }	/* gettid */
-+	};
-+
-+	unsigned int ptrace_stop;
-+
-+	for (ptrace_stop = 0; ; ++ptrace_stop) {
-+		struct ptrace_syscall_info info = {
-+			.op = 0xff	/* invalid PTRACE_SYSCALL_INFO_* op */
-+		};
-+		const size_t size = sizeof(info);
-+		const int expected_none_size =
-+			(void *) &info.entry - (void *) &info;
-+		const int expected_entry_size =
-+			(void *) &info.entry.args[6] - (void *) &info;
-+		const int expected_exit_size =
-+			(void *) (&info.exit.is_error + 1) -
-+			(void *) &info;
-+		int status;
-+		long rc;
-+
-+		ASSERT_EQ(pid, wait(&status)) {
-+			/* cannot happen */
-+			LOG_KILL_TRACEE("wait: %m");
-+		}
-+		if (WIFEXITED(status)) {
-+			pid = 0;	/* the tracee is no more */
-+			ASSERT_EQ(0, WEXITSTATUS(status));
-+			break;
-+		}
-+		ASSERT_FALSE(WIFSIGNALED(status)) {
-+			pid = 0;	/* the tracee is no more */
-+			LOG_KILL_TRACEE("unexpected signal %u",
-+					WTERMSIG(status));
-+		}
-+		ASSERT_TRUE(WIFSTOPPED(status)) {
-+			/* cannot happen */
-+			LOG_KILL_TRACEE("unexpected wait status %#x", status);
-+		}
-+
-+		switch (WSTOPSIG(status)) {
-+		case SIGSTOP:
-+			ASSERT_EQ(0, ptrace_stop) {
-+				LOG_KILL_TRACEE("unexpected signal stop");
-+			}
-+			ASSERT_EQ(0, sys_ptrace(PTRACE_SETOPTIONS, pid, 0,
-+						PTRACE_O_TRACESYSGOOD)) {
-+				LOG_KILL_TRACEE("PTRACE_SETOPTIONS: %m");
-+			}
-+			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
-+						      pid, size,
-+						      (unsigned long) &info))) {
-+				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
-+			}
-+			ASSERT_EQ(expected_none_size, rc) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_EQ(PTRACE_SYSCALL_INFO_NONE, info.op) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.arch) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.instruction_pointer) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			ASSERT_TRUE(info.stack_pointer) {
-+				LOG_KILL_TRACEE("signal stop mismatch");
-+			}
-+			break;
-+
-+		case SIGTRAP | 0x80:
-+			ASSERT_LT(0, (rc = sys_ptrace(PTRACE_GET_SYSCALL_INFO,
-+						      pid, size,
-+						      (unsigned long) &info))) {
-+				LOG_KILL_TRACEE("PTRACE_GET_SYSCALL_INFO: %m");
-+			}
-+			switch (ptrace_stop) {
-+			case 1: /* entering chdir */
-+			case 3: /* entering gettid */
-+			case 5: /* entering exit_group */
-+				exp_args = args[ptrace_stop / 2];
-+				ASSERT_EQ(expected_entry_size, rc) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(PTRACE_SYSCALL_INFO_ENTRY, info.op) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.arch) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.instruction_pointer) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_TRUE(info.stack_pointer) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[0], info.entry.nr) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[1], info.entry.args[0]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[2], info.entry.args[1]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[3], info.entry.args[2]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[4], info.entry.args[3]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[5], info.entry.args[4]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				ASSERT_EQ(exp_args[6], info.entry.args[5]) {
-+					LOG_KILL_TRACEE("entry stop mismatch");
-+				}
-+				break;
-+			case 2: /* exiting chdir */
-+			case 4: /* exiting gettid */
-+				exp_param = &exit_param[ptrace_stop / 2 - 1];
-+				ASSERT_EQ(expected_exit_size, rc) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(PTRACE_SYSCALL_INFO_EXIT, info.op) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.arch) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.instruction_pointer) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_TRUE(info.stack_pointer) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(exp_param->is_error,
-+					  info.exit.is_error) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				ASSERT_EQ(exp_param->rval, info.exit.rval) {
-+					LOG_KILL_TRACEE("exit stop mismatch");
-+				}
-+				break;
-+			default:
-+				LOG_KILL_TRACEE("unexpected syscall stop");
-+				abort();
-+			}
-+			break;
-+
-+		default:
-+			LOG_KILL_TRACEE("unexpected stop signal %#x",
-+					WSTOPSIG(status));
-+			abort();
-+		}
-+
-+		ASSERT_EQ(0, sys_ptrace(PTRACE_SYSCALL, pid, 0, 0)) {
-+			LOG_KILL_TRACEE("PTRACE_SYSCALL: %m");
-+		}
-+	}
-+
-+	ASSERT_EQ(ARRAY_SIZE(args) * 2, ptrace_stop);
-+}
-+
-+TEST_HARNESS_MAIN
--- 
-ldv
+Also nocodec is incompatible with hdaudio/hdmi support at the moment, we 
+had all sorts of issues with suspend/resume.
+
+> 
+> I mean a patch like below.
+> 
+> 
+> Takashi
+> 
+> diff --git a/include/sound/sof.h b/include/sound/sof.h
+> index 4640566b54fe..1af70800f6dc 100644
+> --- a/include/sound/sof.h
+> +++ b/include/sound/sof.h
+> @@ -92,9 +92,4 @@ struct sof_dev_desc {
+>   	const struct sof_arch_ops *arch_ops;
+>   };
+>   
+> -int sof_nocodec_setup(struct device *dev,
+> -		      struct snd_sof_pdata *sof_pdata,
+> -		      struct snd_soc_acpi_mach *mach,
+> -		      const struct sof_dev_desc *desc,
+> -		      const struct snd_sof_dsp_ops *ops);
+>   #endif
+> diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+> index b204c65698f9..9c280c977d55 100644
+> --- a/sound/soc/sof/Kconfig
+> +++ b/sound/soc/sof/Kconfig
+> @@ -44,7 +44,7 @@ config SND_SOC_SOF_OPTIONS
+>   if SND_SOC_SOF_OPTIONS
+>   
+>   config SND_SOC_SOF_NOCODEC
+> -	tristate "SOF nocodec mode Support"
+> +	bool "SOF nocodec mode Support"
+>   	help
+>   	  This adds support for a dummy/nocodec machine driver fallback
+>   	  option if no known codec is detected. This is typically only
+> diff --git a/sound/soc/sof/Makefile b/sound/soc/sof/Makefile
+> index 8f14c9d2950b..09222be6d1b8 100644
+> --- a/sound/soc/sof/Makefile
+> +++ b/sound/soc/sof/Makefile
+> @@ -2,14 +2,12 @@
+>   
+>   snd-sof-objs := core.o ops.o loader.o ipc.o pcm.o pm.o debug.o topology.o\
+>   		control.o trace.o utils.o
+> +snd-sof-$(CONFIG_SND_SOC_SOF_NOCODEC) += nocodec.o
+>   
+>   snd-sof-pci-objs := sof-pci-dev.o
+>   snd-sof-acpi-objs := sof-acpi-dev.o
+> -snd-sof-nocodec-objs := nocodec.o
+>   
+>   obj-$(CONFIG_SND_SOC_SOF) += snd-sof.o
+> -obj-$(CONFIG_SND_SOC_SOF_NOCODEC) += snd-sof-nocodec.o
+> -
+>   
+>   obj-$(CONFIG_SND_SOC_SOF_ACPI) += sof-acpi-dev.o
+>   obj-$(CONFIG_SND_SOC_SOF_PCI) += sof-pci-dev.o
+> diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+> index 32105e0fabe8..744f7f465173 100644
+> --- a/sound/soc/sof/core.c
+> +++ b/sound/soc/sof/core.c
+> @@ -502,6 +502,18 @@ int snd_sof_device_remove(struct device *dev)
+>   }
+>   EXPORT_SYMBOL(snd_sof_device_remove);
+>   
+> +static int __init snd_sof_init(void)
+> +{
+> +	return platform_driver_register(&sof_nocodec_audio);
+> +}
+> +module_init(snd_sof_init);
+> +
+> +static void __exit snd_sof_exit(void)
+> +{
+> +	platform_driver_unregister(&sof_nocodec_audio);
+> +}
+> +module_exit(snd_sof_exit);
+> +
+>   MODULE_AUTHOR("Liam Girdwood");
+>   MODULE_DESCRIPTION("Sound Open Firmware (SOF) Core");
+>   MODULE_LICENSE("Dual BSD/GPL");
+> diff --git a/sound/soc/sof/nocodec.c b/sound/soc/sof/nocodec.c
+> index f84b4344dcc3..11811591bd81 100644
+> --- a/sound/soc/sof/nocodec.c
+> +++ b/sound/soc/sof/nocodec.c
+> @@ -8,7 +8,6 @@
+>   // Author: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+>   //
+>   
+> -#include <linux/module.h>
+>   #include <sound/sof.h>
+>   #include "sof-priv.h"
+>   
+> @@ -77,7 +76,6 @@ int sof_nocodec_setup(struct device *dev,
+>   				    &sof_nocodec_card);
+>   	return ret;
+>   }
+> -EXPORT_SYMBOL(sof_nocodec_setup);
+>   
+>   static int sof_nocodec_probe(struct platform_device *pdev)
+>   {
+> @@ -93,7 +91,7 @@ static int sof_nocodec_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -static struct platform_driver sof_nocodec_audio = {
+> +struct platform_driver sof_nocodec_audio = {
+>   	.probe = sof_nocodec_probe,
+>   	.remove = sof_nocodec_remove,
+>   	.driver = {
+> @@ -101,9 +99,3 @@ static struct platform_driver sof_nocodec_audio = {
+>   		.pm = &snd_soc_pm_ops,
+>   	},
+>   };
+> -module_platform_driver(sof_nocodec_audio)
+> -
+> -MODULE_DESCRIPTION("ASoC sof nocodec");
+> -MODULE_AUTHOR("Liam Girdwood");
+> -MODULE_LICENSE("Dual BSD/GPL");
+> -MODULE_ALIAS("platform:sof-nocodec");
+> diff --git a/sound/soc/sof/sof-priv.h b/sound/soc/sof/sof-priv.h
+> index 1e85d6f9c5c3..3ae55d15820f 100644
+> --- a/sound/soc/sof/sof-priv.h
+> +++ b/sound/soc/sof/sof-priv.h
+> @@ -559,6 +559,17 @@ int snd_sof_init_trace_ipc(struct snd_sof_dev *sdev);
+>    */
+>   extern struct snd_compr_ops sof_compressed_ops;
+>   
+> +/*
+> + * nocodec platform binding
+> + */
+> +extern struct platform_driver sof_nocodec_audio;
+> +
+> +int sof_nocodec_setup(struct device *dev,
+> +		      struct snd_sof_pdata *sof_pdata,
+> +		      struct snd_soc_acpi_mach *mach,
+> +		      const struct sof_dev_desc *desc,
+> +		      const struct snd_sof_dsp_ops *ops);
+> +
+>   /*
+>    * Kcontrols.
+>    */
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> 
