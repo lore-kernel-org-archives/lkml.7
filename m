@@ -2,132 +2,87 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF78AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A956C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED121479
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VD9DKzz9"
+	by mail.kernel.org (Postfix) with ESMTP id 3752921479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 16:50:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfEJQuK (ORCPT
+        id S1727974AbfEJQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 12:50:10 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41545 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfEJQtt (ORCPT
+        Fri, 10 May 2019 12:50:16 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:45002 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727838AbfEJQuP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 12:49:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d12so8643315wrm.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 09:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ymMWA7qGWKTKg4sjga2JHa1g3AkDQJanr/hpUl4TY20=;
-        b=VD9DKzz95+nkF7M2qPqLJnLBiyRHTWMc45ShguOvHFsS+EbnWctH6q8qU2PaWi+MH2
-         3DngXRS+8cYv2kTg4Yw8kJZRL2SGdgZLBo1a5DuSE1HN+qglmY++uOR02Abm+c5mlK1t
-         wwPKvXg7TRDc8Dq5Ip+lyC8r4zF+jmDXLlIJ0OSrcIxbzQjxboRH/8yfM/mx1RdugAAj
-         z17GQCVWWdsPK2DstD09KmUPn/E4jjb4WN4CrRjC1mq0/VqGTV7KnVcEjZIYHUAbTX5H
-         ATm4YXxTJqEu/vy4UEJwmolN1lLDuDsmVs9dZnehUYhAmWdsphVJXAcaPaPNthAKmlHu
-         W36g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ymMWA7qGWKTKg4sjga2JHa1g3AkDQJanr/hpUl4TY20=;
-        b=LksGJ1af/3bD00dZnUS+vcDlQlAWT9rAxQWjJ3LoTN8O8OURRQmWH7UUYhWOi+gMfh
-         cF5EqVv7LPdqRTl+TQo5eTi7xo7mj+Xk2uGuZlD36VvPQcl2xCTCya7ZZgFXPfTzLSoS
-         /g+YMLoQD0pSjlnLfkiB0nErHw36Lka8vSEaaCg1fUTBAH5pssUh5yTIFwRQyrDZujxK
-         uB/Z9iq7ScErdtBV28BQCcg3gnWZ258mphq+4L/OZ9y5qzngbTpOt/+qRFKXxRXMyVv6
-         bfOFVth+wcvUmHK5svkU1kY501vY8kAQwnu/R/5zEBAjowyOyD0mjBmLVA/Bi3XlxPWv
-         pqKQ==
-X-Gm-Message-State: APjAAAV1AYlSE4xJ3OkepjSbgpek8N9gEvrBpQkK/vTPyQgzQ/oSvQRH
-        2OHUrC1okfMRe6dBiSiYrLQasg==
-X-Google-Smtp-Source: APXvYqzCTtFAhIiU7kp0M3POS//+ppjzgKaLXZ9pNB/HF4k19/83k7W5+CFc2VFcbAQUZbJnYoPQvw==
-X-Received: by 2002:adf:e8c4:: with SMTP id k4mr8969231wrn.9.1557506987191;
-        Fri, 10 May 2019 09:49:47 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id q26sm5114308wmq.25.2019.05.10.09.49.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 09:49:46 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH 2/5] arm64: dts: meson: g12a: add ethernet pinctrl definitions
-Date:   Fri, 10 May 2019 18:49:37 +0200
-Message-Id: <20190510164940.13496-3-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190510164940.13496-1-jbrunet@baylibre.com>
-References: <20190510164940.13496-1-jbrunet@baylibre.com>
+        Fri, 10 May 2019 12:50:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TRMJzjz_1557507007;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRMJzjz_1557507007)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 11 May 2019 00:50:10 +0800
+Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
+To:     Matthew Wilcox <willy@infradead.org>,
+        "Huang, Ying" <ying.huang@intel.com>
+Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
+        kirill.shutemov@linux.intel.com, hughd@google.com,
+        akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
+ <87y33fjbvr.fsf@yhuang-dev.intel.com>
+ <20190510163612.GA23417@bombadil.infradead.org>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <3a919cba-fefe-d78e-313a-8f0d81a4a75d@linux.alibaba.com>
+Date:   Fri, 10 May 2019 09:50:04 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190510163612.GA23417@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the ethernet pinctrl settings for RMII, RGMII and internal phy leds
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 37 +++++++++++++++++++++
- 1 file changed, 37 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index a32db09809f7..fe0f73730525 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -206,6 +206,43 @@
- 						};
- 					};
- 
-+					eth_leds_pins: eth-leds {
-+						mux {
-+							groups = "eth_link_led",
-+								 "eth_act_led";
-+							function = "eth";
-+							bias-disable;
-+						};
-+					};
-+
-+					eth_rmii_pins: eth-rmii {
-+						mux {
-+							groups = "eth_mdio",
-+								 "eth_mdc",
-+								 "eth_rgmii_rx_clk",
-+								 "eth_rx_dv",
-+								 "eth_rxd0",
-+								 "eth_rxd1",
-+								 "eth_txen",
-+								 "eth_txd0",
-+								 "eth_txd1";
-+							function = "eth";
-+							bias-disable;
-+						};
-+					};
-+
-+					eth_rgmii_pins: eth-rgmii {
-+						mux {
-+							groups = "eth_rxd2_rgmii",
-+								 "eth_rxd3_rgmii",
-+								 "eth_rgmii_tx_clk",
-+								 "eth_txd2_rgmii",
-+								 "eth_txd3_rgmii";
-+							function = "eth";
-+							bias-disable;
-+						};
-+					};
-+
- 					hdmitx_ddc_pins: hdmitx_ddc {
- 						mux {
- 							groups = "hdmitx_sda",
--- 
-2.20.1
+On 5/10/19 9:36 AM, Matthew Wilcox wrote:
+> On Fri, May 10, 2019 at 10:12:40AM +0800, Huang, Ying wrote:
+>>> +		nr_reclaimed += (1 << compound_order(page));
+>> How about to change this to
+>>
+>>
+>>          nr_reclaimed += hpage_nr_pages(page);
+> Please don't.  That embeds the knowledge that we can only swap out either
+> normal pages or THP sized pages.  I'm trying to make the VM capable of
+> supporting arbitrary-order pages, and this would be just one more place
+> to fix.
+>
+> I'm sympathetic to the "self documenting" argument.  My current tree has
+> a patch in it:
+>
+>      mm: Introduce compound_nr
+>      
+>      Replace 1 << compound_order(page) with compound_nr(page).  Minor
+>      improvements in readability.
+>
+> It goes along with this patch:
+>
+>      mm: Introduce page_size()
+>
+>      It's unnecessarily hard to find out the size of a potentially huge page.
+>      Replace 'PAGE_SIZE << compound_order(page)' with page_size(page).
+
+So you prefer keeping using  "1 << compound_order" as v1 did? Then you 
+will convert all "1 << compound_order" to compound_nr?
+
+>
+> Better suggestions on naming gratefully received.  I'm more happy with
+> page_size() than I am with compound_nr().  page_nr() gives the wrong
+> impression; page_count() isn't great either.
 
