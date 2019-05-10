@@ -2,89 +2,124 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D68C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F1FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D75217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557519539;
-	bh=Q/hdExccvJjNzjv6Qv8a4/VCle6IDL5htrBTYUcGjr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NL8v4YFTtojL6980udmq+RnxedCVneN7Q6AGrO77hRXhwf6HXPoU20rhddnImwGAX
-	 az6W5mUG3bQRjG7GqrhlsuGZ9d082OQ3SmN6PtS1P8d6VUQ6wCJb6VjVZf8t5mS2NH
-	 1sNu5U/1bdqQRUzYS2mm076Nqx8J75oS9tkXVqOA=
+	by mail.kernel.org (Postfix) with ESMTP id F3275217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 20:23:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cK2XokVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfEJUS6 (ORCPT
+        id S1728017AbfEJUX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 16:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbfEJUS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 16:18:57 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2F2D217F5;
-        Fri, 10 May 2019 20:18:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557519537;
-        bh=Q/hdExccvJjNzjv6Qv8a4/VCle6IDL5htrBTYUcGjr4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bVft6V5xugEbJpoW4Q5HmHOuZ+5Bl20NunFrAETP+6/Gj1j2JnlCiJJ7vq2LrEZ1z
-         52yK21jmbI8xcqT322Bd7bhDPrdTkPcmcS9YHUWelrbXW2IKH+n7xJOwsS7pOgD9KD
-         KQ+dDTlBXkBPrgEOuUY0ytOTJ28RmK7yiowTK/aw=
-Date:   Fri, 10 May 2019 16:18:55 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Eric Wheeler <stable@lists.ewheeler.net>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BFQ I/O SCHEDULER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
-Subject: Re: [PATCH] bfq: backport: update internal depth state when queue
- depth changes
-Message-ID: <20190510201855.GB14410@sasha-vm>
-References: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
+        Fri, 10 May 2019 16:23:28 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32842 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727762AbfEJUX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 16:23:27 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so3540471pgv.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 13:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=hnsEOtZUe8FJnEfNKVhXMIrHa1KhnNCENToE54mzqug=;
+        b=cK2XokVUUCVhQ/FGj4M8aPYamNv86OpFxB0vCqs0ukb3SVTaguNp1hXqTrFpYNQKtc
+         hxfiLc69rv4r3XmE7zzoezLbsAZTxDaVJ6bJR+X0c9LD1VTqA14Zv0+8gMIxSQ8Y1/Lv
+         4rXhIKHcDQkrJFwhpJdcJ7FE+EnggGJQa/hzg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=hnsEOtZUe8FJnEfNKVhXMIrHa1KhnNCENToE54mzqug=;
+        b=o76ZmeDUPDxGmPP6X5WuhZExqRjiugG0WhN3PDpcIkuMjTuL98sSBN+4o8uClpA4KX
+         QsGDfZbHasafdmzM7BMvzvyrqXX/CnSjsHVnAROLJFOIp3v523USTqguW2HyaBTJzI3E
+         lJwGYsjWaY9NgUdmYPEtScCsG1zVxuz7It7KsarZdZ4HCt6wwL3g4q6+psve8nys9bg5
+         0Qqn8i20PAqL66uHWK1Boqqius57nQApcFmzMVLD05rxespmGB9g69che5US3v8Gao7F
+         yISvvAPbV74Z44iHSA6FA2DtaNQGyL7iHKFkQoMRqZc9Gp/FOR+EL5jyH4sXNvYDH//B
+         S2vA==
+X-Gm-Message-State: APjAAAUtmK7frv2aRlJqAu4MSzMR53kbxqk4j1mNqKfsaoDk3JgmTtSG
+        y0lUypAGLhfPW2veHYhi838oCw==
+X-Google-Smtp-Source: APXvYqxpr4wd/Z7iIJFFCvjs9GVV2R6oPWspwBFAShKC9zjxr7Xu19JweCrS/THwVUDeh+cEDCAPYQ==
+X-Received: by 2002:a63:804a:: with SMTP id j71mr16475539pgd.68.1557519806949;
+        Fri, 10 May 2019 13:23:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e184sm11835000pfc.102.2019.05.10.13.23.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 13:23:25 -0700 (PDT)
+Date:   Fri, 10 May 2019 13:23:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     re.emese@gmail.com, kernel-hardening@lists.openwall.com,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC
+ < 6
+Message-ID: <201905101322.BEDE5CC@keescook>
+References: <20190510090025.4680-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190510090025.4680-1-chris.packham@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 10:56:32AM -0700, Eric Wheeler wrote:
->From: Jens Axboe <axboe@kernel.dk>
->
->commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
->
->A previous commit moved the shallow depth and BFQ depth map calculations
->to be done at init time, moving it outside of the hotter IO path. This
->potentially causes hangs if the users changes the depth of the scheduler
->map, by writing to the 'nr_requests' sysfs file for that device.
->
->Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
->the depth changes, so that the scheduler can update its internal state.
->
->Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
->Tested-by: Kai Krakow <kai@kaishome.de>
->Reported-by: Paolo Valente <paolo.valente@linaro.org>
->Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
->Signed-off-by: Jens Axboe <axboe@kernel.dk>
->Cc: stable@vger.kernel.org
+On Fri, May 10, 2019 at 09:00:25PM +1200, Chris Packham wrote:
+> Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
+> that handles the difference between GCC versions implementing
+> the latter.
+> 
+> This fixes the following error on my system with g++ 5.4.0 as the host
+> compiler
+> 
+>    HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
+>  scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_rtx_SET" requires 3 arguments, but only 2 given
+>           mask)),
+>                ^
+>  scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function ‘unsigned int arm_pertask_ssp_rtl_execute()’:
+>  scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: ‘gen_rtx_SET’ was not declared in this scope
+>     emit_insn_before(gen_rtx_SET
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-I wasn't clear on what was backported here, so I've queued the upstream
-version on 4.19 and 4.14, it doesn't seem to be relevant to older
-branches.
+Thanks for this! It seems correct to me. Ard, any thoughts? I can send
+it to Linus next week...
 
---
-Thanks,
-Sasha
+Fixes: 189af4657186 ("ARM: smp: add support for per-task stack canaries")
+Cc: stable@vger.kernel.org
+
+-Kees
+
+> ---
+>  scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+> index 89c47f57d1ce..8c1af9bdcb1b 100644
+> --- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+> +++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
+> @@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_execute(void)
+>  		mask = GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
+>  		masked_sp = gen_reg_rtx(Pmode);
+>  
+> -		emit_insn_before(gen_rtx_SET(masked_sp,
+> +		emit_insn_before(gen_rtx_set(masked_sp,
+>  					     gen_rtx_AND(Pmode,
+>  							 stack_pointer_rtx,
+>  							 mask)),
+> -- 
+> 2.21.0
+> 
+
+-- 
+Kees Cook
