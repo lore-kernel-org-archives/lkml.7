@@ -2,103 +2,175 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CDEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D72AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9709E216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Cvm0zx54"
+	by mail.kernel.org (Postfix) with ESMTP id 7727B216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfEJJAi (ORCPT
+        id S1727171AbfEJJBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:00:38 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47461 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727010AbfEJJAi (ORCPT
+        Fri, 10 May 2019 05:01:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40778 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727009AbfEJJBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:00:38 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CC540891AB;
-        Fri, 10 May 2019 21:00:32 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1557478832;
-        bh=a2N5ljKDh064bmfEmLWhlBmHgOU5t3wv3K3qWa5WcuE=;
-        h=From:To:Cc:Subject:Date;
-        b=Cvm0zx54BAVHFGb5yrLDvm3P596TBlTy47ZkN75dWg/mLGeqfTgpL3uv843OJLiDm
-         GgTWGBMc2t/innLjR1MBVud5NcGpEUTNtpUReV5HGJEp9q3wsS6y9JGuLVGiJon4pw
-         BVJV8GA7diEI1I3W/e6krcJerDsxjvw3urxEBSkr9f0Erk8xDSIV5Pt88U8MSBmc67
-         LWGEQCY1hlJ1lo9LxfUV+iHKVFcjyXU7jxxeCXdBgx0tx/su9nZvy/X9R1CP5BL4dr
-         EvqvwnezDosMEia7t9el1SyMn6vUQdV0xv293mN9k+UjT40SV723VygGv4VcuX9er8
-         lSrIee3T6t5mw==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cd53db10000>; Fri, 10 May 2019 21:00:33 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id B1DA213EEA0;
-        Fri, 10 May 2019 21:00:32 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id 36F901E1D5B; Fri, 10 May 2019 21:00:32 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     keescook@chromium.org, re.emese@gmail.com
-Cc:     kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] gcc-plugins: arm_ssp_per_task_plugin: Fix for older GCC < 6
-Date:   Fri, 10 May 2019 21:00:25 +1200
-Message-Id: <20190510090025.4680-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+        Fri, 10 May 2019 05:01:39 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A8tHPJ093359;
+        Fri, 10 May 2019 05:01:28 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sd468dn3y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 May 2019 05:01:28 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4A333f2010291;
+        Fri, 10 May 2019 03:05:38 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 2s92c47rvm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 May 2019 03:05:38 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4A91OnN36569210
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 May 2019 09:01:24 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5E3E0AC05F;
+        Fri, 10 May 2019 09:01:24 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20120AC059;
+        Fri, 10 May 2019 09:01:24 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.248])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 10 May 2019 09:01:24 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 9C4EA2E3788; Fri, 10 May 2019 14:31:22 +0530 (IST)
+From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+To:     Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
+Date:   Fri, 10 May 2019 14:31:11 +0530
+Message-Id: <1557478871-31808-1-git-send-email-ego@linux.vnet.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905100063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use gen_rtx_set instead of gen_rtx_SET. The former is a wrapper macro
-that handles the difference between GCC versions implementing
-the latter.
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-This fixes the following error on my system with g++ 5.4.0 as the host
-compiler
+During a memory hotplug operations involving resizing of the HPT, we
+invoke a stop_machine() to perform the resizing. In this code path, we
+end up recursively taking the cpu_hotplug_lock, first in
+memory_hotplug_begin() and then subsequently in stop_machine(). This
+causes the system to hang. With lockdep enabled we get the following
+error message before the hang.
 
-   HOSTCXX -fPIC scripts/gcc-plugins/arm_ssp_per_task_plugin.o
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:42:14: error: macro "gen_r=
-tx_SET" requires 3 arguments, but only 2 given
-          mask)),
-               ^
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c: In function =E2=80=98unsi=
-gned int arm_pertask_ssp_rtl_execute()=E2=80=99:
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c:39:20: error: =E2=80=98gen=
-_rtx_SET=E2=80=99 was not declared in this scope
-    emit_insn_before(gen_rtx_SET
+  swapper/0/1 is trying to acquire lock:
+  (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+  but task is already holding lock:
+  (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+
+  other info that might help us debug this:
+   Possible unsafe locking scenario:
+
+         CPU0
+         ----
+    lock(cpu_hotplug_lock.rw_sem);
+    lock(cpu_hotplug_lock.rw_sem);
+
+   *** DEADLOCK ***
+
+Fix this issue by
+  1) Requiring all the calls to pseries_lpar_resize_hpt() be made
+     with cpu_hotplug_lock held.
+
+  2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
+     as a consequence of 1)
+
+  3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
+     with cpu_hotplug_lock held.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 ---
- scripts/gcc-plugins/arm_ssp_per_task_plugin.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/hash_utils_64.c       | 9 ++++++++-
+ arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c b/scripts/gcc-=
-plugins/arm_ssp_per_task_plugin.c
-index 89c47f57d1ce..8c1af9bdcb1b 100644
---- a/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-+++ b/scripts/gcc-plugins/arm_ssp_per_task_plugin.c
-@@ -36,7 +36,7 @@ static unsigned int arm_pertask_ssp_rtl_execute(void)
- 		mask =3D GEN_INT(sext_hwi(sp_mask, GET_MODE_PRECISION(Pmode)));
- 		masked_sp =3D gen_reg_rtx(Pmode);
-=20
--		emit_insn_before(gen_rtx_SET(masked_sp,
-+		emit_insn_before(gen_rtx_set(masked_sp,
- 					     gen_rtx_AND(Pmode,
- 							 stack_pointer_rtx,
- 							 mask)),
---=20
-2.21.0
+diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+index 0a4f939..b05c79c 100644
+--- a/arch/powerpc/mm/hash_utils_64.c
++++ b/arch/powerpc/mm/hash_utils_64.c
+@@ -37,6 +37,7 @@
+ #include <linux/context_tracking.h>
+ #include <linux/libfdt.h>
+ #include <linux/pkeys.h>
++#include <linux/cpu.h>
+ 
+ #include <asm/debugfs.h>
+ #include <asm/processor.h>
+@@ -1890,10 +1891,16 @@ static int hpt_order_get(void *data, u64 *val)
+ 
+ static int hpt_order_set(void *data, u64 val)
+ {
++	int ret;
++
+ 	if (!mmu_hash_ops.resize_hpt)
+ 		return -ENODEV;
+ 
+-	return mmu_hash_ops.resize_hpt(val);
++	cpus_read_lock();
++	ret = mmu_hash_ops.resize_hpt(val);
++	cpus_read_unlock();
++
++	return ret;
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index f2a9f0a..65df95b 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
+ 	return 0;
+ }
+ 
+-/* Must be called in user context */
++/*
++ * Must be called in user context. The caller should hold the
++ * cpus_lock.
++ */
+ static int pseries_lpar_resize_hpt(unsigned long shift)
+ {
+ 	struct hpt_resize_state state = {
+@@ -911,7 +914,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+ 
+ 	t1 = ktime_get();
+ 
+-	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
++	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
++				     &state, NULL);
+ 
+ 	t2 = ktime_get();
+ 
+-- 
+1.9.4
 
