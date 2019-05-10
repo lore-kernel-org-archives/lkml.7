@@ -2,150 +2,242 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,T_DKIMWL_WL_HIGH,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D29BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA50C04AB1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A782183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557456175;
-	bh=pZ/RYhQiiXIobOqGJuOmMUFqoqiojXjUHDEaqT4DJ7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ISa/TW8KqVx3XHr/kaSX+QJ49Xua7SpGwKOtWksu7IRTGZODWGYA5zAqi9gXuDzid
-	 NUrw0sbf47A25Hhxi86342ehkCvxtdiqIXaoWlEUjKGH8VTMx71u7la72zlx+mQY5d
-	 pOgHG2j4GYwrMic67KGqosNAYOE6QcC5pL3CcoJk=
+	by mail.kernel.org (Postfix) with ESMTP id ED79D20675
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 02:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfEJCmy (ORCPT
+        id S1727021AbfEJCs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 May 2019 22:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55006 "EHLO mail.kernel.org"
+        Thu, 9 May 2019 22:48:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15469 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbfEJCmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 May 2019 22:42:53 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4708E20645;
-        Fri, 10 May 2019 02:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557456173;
-        bh=pZ/RYhQiiXIobOqGJuOmMUFqoqiojXjUHDEaqT4DJ7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1EUSEGfLrYMAEAVek3nO0AAeZnER9ELE2yjPxiIqL5XMPgas/6nyjek8DCuJ+kOyJ
-         uYzAjeS50aEtM/vdV89aQX8QO0voL7+I6wxLHbPQ1USI7EuB7PnBB2mXHQjEy2ZQ2z
-         2vH97kNHNhvpvV92QMpq8An5OaGaDQzxEyVcZQ2Y=
-Date:   Fri, 10 May 2019 10:42:17 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        "stefan.wahren@i2se.com" <stefan.wahren@i2se.com>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        id S1726963AbfEJCs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 May 2019 22:48:58 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 19:48:58 -0700
+X-ExtLoop1: 1
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
+  by fmsmga005.fm.intel.com with ESMTP; 09 May 2019 19:48:53 -0700
+Date:   Thu, 9 May 2019 22:43:15 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "eskultet@redhat.com" <eskultet@redhat.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "dgilbert@redhat.com" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>
-Subject: Re: [PATCH 1/2] soc: imx-sc: add i.MX system controller soc driver
- support
-Message-ID: <20190510024215.GA15856@dragon>
-References: <1554965048-19450-1-git-send-email-Anson.Huang@nxp.com>
- <20190421073958.GC19962@dragon>
- <20190421074152.GD19962@dragon>
- <DB3PR0402MB39161C0DDFF0EEA6D8A90378F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <DB3PR0402MB39164B30B26CAF62EE807168F5220@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <VI1PR04MB5533CED52723AE8292CFC305EE220@VI1PR04MB5533.eurprd04.prod.outlook.com>
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190510024315.GH24397@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+ <20190506014904.3621-1-yan.y.zhao@intel.com>
+ <20190507111954.43d477c3.cohuck@redhat.com>
+ <20190508115704.GB24397@joy-OptiPlex-7040>
+ <20190509172449.723a048b.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB5533CED52723AE8292CFC305EE220@VI1PR04MB5533.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190509172449.723a048b.cohuck@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 22, 2019 at 08:48:56AM +0000, Leonard Crestez wrote:
-> On 4/22/2019 9:46 AM, Anson Huang wrote:
-> >> -----Original Message-----
-> >> From: Anson Huang
-> >>> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> >>> On Sun, Apr 21, 2019 at 03:40:00PM +0800, Shawn Guo wrote:
-> >>>> On Thu, Apr 11, 2019 at 06:49:12AM +0000, Anson Huang wrote:
-> >>>>> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> >>>>> inside, the system controller is in charge of controlling power,
-> >>>>> clock and fuse etc..
-> >>>>>
-> >>>>> This patch adds i.MX system controller soc driver support, Linux
-> >>>>> kernel has to communicate with system controller via MU (message
-> >>>>> unit) IPC to get soc revision, uid etc..
-> >>>>>
-> >>>>> With this patch, soc info can be read from sysfs:
-> >>>>>
-> >>>>>   drivers/soc/imx/Kconfig      |   7 ++
-> >>>>>   drivers/soc/imx/Makefile     |   1 +
-> >>>>>   drivers/soc/imx/soc-imx-sc.c | 220
-> >>>>> +++++++++++++++++++++++++++++++++++++++++++
-> >>>>>   3 files changed, 228 insertions(+)  create mode 100644
-> >>>>> drivers/soc/imx/soc-imx-sc.c
-> >>>>
-> >>>> Rather than creating a new driver, please take a look at Abel's
-> >>>> generic
-> >>>> i.MX8 SoC driver, and see if it can be extended to cover i.MX8QXP.
-> >>
-> >> Got it, I didn't notice that this patch bas been accepted, I will redo the patch
-> >> based on it, thanks.
-> > 
-> > I have sent the new patch set to support i.MX8QXP SoC revision based on generic i.MX8
-> > SoC driver, however, the Kconfig modification is NOT good, it may break i.MX8MQ if IMX_SCU
-> > is NOT enabled, although we can add some warp function for SCU firmware API call to fix it,
-> > but after further thought and discussion with Dong Aisheng, I think we may need to roll back to
-> > use this patch series to create a new SoC driver dedicated for i.MX8 SoCs
-> > with system controller inside, such as i.MX8QXP, i.MX8QM etc., the reason are as below:
-> > 
-> > For i.MX8MQ/i.MX8MM:
-> > 	1. SoC driver does NOT depends on i.MX SCU firmware, so no need to use platform driver
-> > 	     probe model, just device_init phase call is good enough;
-> > 	2. The SoC driver no need to depends on IMX_SCU, so it can be always built in, no need to
-> > 	     check IMX_SCU config;
-> > 	3. The fuse check for CPU speed grading, HDCP status, NoC settings etc. could be added to this driver,
-> > 	    but they are ONLY for i.MX8MQ/i.MX8MM etc..
-> > For i.MX8QXP/i.MX8QM:
-> > 	1. SoC driver MUST depends on IMX_SCU;
-> > 	2. MUST use platform model to support defer probe;
-> > 	3. No fuse check for CPU speed grading.
-> > 
-> > So, I guess the reused code for i.MX8MQ and i.MX8QXP is ONLY those part of creating SoC id device node (less than
-> > 30% I think), all other functions are implemented in total different ways, that is why I created the imx_sc_soc driver
-> > in this patch series, so do you think we can add new SoC driver for i.MX8 SoC with SCU inside? Putting 2 different architecture
-> > SoCs' driver into 1 file looks like NOT making enough sense.
+On Thu, May 09, 2019 at 11:24:49PM +0800, Cornelia Huck wrote:
+> On Wed, 8 May 2019 07:57:05 -0400
+> Yan Zhao <yan.y.zhao@intel.com> wrote:
 > 
-> +1 for separate SOC driver. The 8mq/8mm and 8qm/8qxp families are very 
-> different, they just happen to share the imx8 prefix.
+> > On Tue, May 07, 2019 at 05:19:54PM +0800, Cornelia Huck wrote:
+> > > On Sun,  5 May 2019 21:49:04 -0400
+> > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > >   
+> > > > version attribute is used to check two mdev devices' compatibility.
+> > > > 
+> > > > The key point of this version attribute is that it's rw.
+> > > > User space has no need to understand internal of device version and no
+> > > > need to compare versions by itself.
+> > > > Compared to reading version strings from both two mdev devices being
+> > > > checked, user space only reads from one mdev device's version attribute.
+> > > > After getting its version string, user space writes this string into the
+> > > > other mdev device's version attribute. Vendor driver of mdev device
+> > > > whose version attribute being written will check device compatibility of
+> > > > the two mdev devices for user space and return success for compatibility
+> > > > or errno for incompatibility.  
+> > > 
+> > > I'm still missing a bit _what_ is actually supposed to be
+> > > compatible/incompatible. I'd assume some internal state descriptions
+> > > (even if this is not actually limited to migration).
+> > >  
+> > right.
+> > originally, I thought this attribute should only contain a device's hardware
+> > compatibility info. But seems also including vendor specific software migration
+> > version is more reasonable, because general VFIO migration code cannot know
+> > version of vendor specific software migration code until migration data is
+> > transferring to the target vm. Then renaming it to migration_version is more
+> > appropriate.
+> > :)
 > 
-> It makes sense to allow people to compile one without the other and this 
-> is easier with distinct SOC drivers.
+> Nod.
+> 
+> (...)
+> 
+> > > > @@ -246,6 +249,143 @@ Directories and files under the sysfs for Each Physical Device
+> > > >    This attribute should show the number of devices of type <type-id> that can be
+> > > >    created.
+> > > >  
+> > > > +* version
+> > > > +
+> > > > +  This attribute is rw, and is optional.
+> > > > +  It is used to check device compatibility between two mdev devices and is
+> > > > +  accessed in pairs between the two mdev devices being checked.
+> > > > +  The intent of this attribute is to make an mdev device's version opaque to
+> > > > +  user space, so instead of reading two mdev devices' version strings and
+> > > > +  comparing in userspace, user space should only read one mdev device's version
+> > > > +  attribute, and writes this version string into the other mdev device's version
+> > > > +  attribute. Then vendor driver of mdev device whose version attribute being
+> > > > +  written would check the incoming version string and tell user space whether
+> > > > +  the two mdev devices are compatible via return value. That's why this
+> > > > +  attribute is writable.  
+> > > 
+> > > I would reword this a bit:
+> > > 
+> > > "This attribute provides a way to check device compatibility between
+> > > two mdev devices from userspace. The intended usage is for userspace to
+> > > read the version attribute from one mdev device and then writing that
+> > > value to the version attribute of the other mdev device. The second
+> > > mdev device indicates compatibility via the return code of the write
+> > > operation. This makes compatibility between mdev devices completely
+> > > vendor-defined and opaque to userspace."
+> > > 
+> > > We still should explain _what_ compatibility we're talking about here,
+> > > though.
+> > >   
+> > Thanks. It's much better than mine:) 
+> > Then I'll change compatibility --> migration compatibility.
+> 
+> Ok, with that it should be clear enough.
+> 
+> > 
+> > > > +
+> > > > +  when reading this attribute, it should show device version string of
+> > > > +  the device of type <type-id>.
+> > > > +
+> > > > +  This string is private to vendor driver itself. Vendor driver is able to
+> > > > +  freely define format and length of device version string.
+> > > > +  e.g. It can use a combination of pciid of parent device + mdev type.
+> > > > +
+> > > > +  When writing a string to this attribute, vendor driver should analyze this
+> > > > +  string and check whether the mdev device being identified by this string is
+> > > > +  compatible with the mdev device for this attribute. vendor driver should then
+> > > > +  return written string's length if it regards the two mdev devices are
+> > > > +  compatible; vendor driver should return negative errno if it regards the two
+> > > > +  mdev devices are not compatible.
+> > > > +
+> > > > +  User space should treat ANY of below conditions as two mdev devices not
+> > > > +  compatible:
+> > > > +  (1) any one of the two mdev devices does not have a version attribute
+> > > > +  (2) error when read from one mdev device's version attribute  
+> > > 
+> > > s/read/reading/
+> > >   
+> > > > +  (3) error when write one mdev device's version string to the other mdev  
+> > > 
+> > > s/write/writing/
+> > >   
+> > > > +  device's version attribute
+> > > > +
+> > > > +  User space should regard two mdev devices compatible when ALL of below
+> > > > +  conditions are met:
+> > > > +  (1) success when read from one mdev device's version attribute.  
+> > > 
+> > > s/read/reading/
+> > >   
+> > > > +  (2) success when write one mdev device's version string to the other mdev  
+> > > 
+> > > s/write/writing/  
+> > got it. thanks for pointing them out:)
+> > >   
+> > > > +  device's version attribute
+> > > > +
+> > > > +  Errno:
+> > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev  
+> > > 
+> > > "If the vendor driver wants to designate a mdev device..."
+> > >   
+> > ok. thanks:)
+> > > > +  devices, it should not register version attribute for this mdev device. But if
+> > > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > > +  -ENODEV on access to this mdev device's version attribute.
+> > > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > > +  incompatible mdev devices's version strings to its version attribute should
+> > > > +  return -EINVAL;  
+> > > 
+> > > 
+> > > Maybe put the defined return code into a bulleted list instead? But
+> > > this looks reasonable as well.
+> > >   
+> > as user space have no idea of those errno and only gets 0/1 as return code from
+> > read/write. maybe I can move this description of errno to patch 2/2 as an
+> > example?
+> 
+> Confused. They should get -EINVAL/-ENODEV/... all right, shouldn't they?
+>
+sorry. my previous statement is not right.
+read(2)/write(2) return -1 on error, error cause is returned through errno.
+So, it's also fine if we can get an agreement in this doc that
+-ENODEV meaning a mdev device is not compatible to all devices,
+-EINVAL meaning a mdev device is not compatible to specified device.
 
-Leonard, Abel,
 
-Can you guys help review the patch?  Thanks.
-
-Shawn
+> > 
+> > > > +
+> > > > +  This attribute can be taken advantage of by live migration.
+> > > > +  If user space detects two mdev devices are compatible through version
+> > > > +  attribute, it can start migration between the two mdev devices, otherwise it
+> > > > +  should abort its migration attempts between the two mdev devices.  
+> > > 
+> > > (...)
+> > > _______________________________________________
+> > > intel-gvt-dev mailing list
+> > > intel-gvt-dev@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev  
+> 
+> _______________________________________________
+> intel-gvt-dev mailing list
+> intel-gvt-dev@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gvt-dev
