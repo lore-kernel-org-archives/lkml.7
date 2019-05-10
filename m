@@ -2,96 +2,120 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93190C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F44DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71057217F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E6252184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="NAFJZAAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfEJJbU (ORCPT
+        id S1727309AbfEJJeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:31:20 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41140 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727342AbfEJJbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:31:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77487169E;
-        Fri, 10 May 2019 02:31:17 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 67D713F738;
-        Fri, 10 May 2019 02:31:16 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     mathieu.poirier@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 3/4] coresight: tmc-etf: Do not call smp_processor_id from preemptible
-Date:   Fri, 10 May 2019 10:31:02 +0100
-Message-Id: <1557480663-16759-4-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557480663-16759-1-git-send-email-suzuki.poulose@arm.com>
-References: <1557480663-16759-1-git-send-email-suzuki.poulose@arm.com>
+        Fri, 10 May 2019 05:34:01 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:27146 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbfEJJeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:34:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1557480836;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=C8WiZW1jjTfeo6DJEapxqioDf/xOovEO+bb4GmMWIpM=;
+        b=NAFJZAAnyxaBSg7NB3eS9fb6vja9PlGNJNfWaD9DKrgFIzZrWSrhk7hEpbYNJg249o
+        dSFT6QdW5ZYSdc+JLkAIcbTDH464X5ksycmz/PA5Afd4w11XrOKj1SBVb8A0Oenkmmwu
+        yD+1fLhaH0Ja02wC45PmvpYSAikGmXaJRQzg7SsLfykx9HdYnc51MwRjMWKTj8yNilCO
+        E3aBdMNbOZtxbW0sWwN1nGxjlODC5s6VCh0OXcGcu76uiJQmt+lalpbIXRSSM60RCKVi
+        Wr7F3A+8adkmcV778jXN98xWHBOkg84+JpJP3Rt1dWZ2TqdxB4feYtHOEWiSwRKdztjm
+        Nnpg==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmMgw4Tt7w=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id j04dc1v4A9XQQRb
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Fri, 10 May 2019 11:33:26 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v2] iio: input-bridge: optionally bridge iio acceleometers to create a /dev/input interface
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <b5e40ab0d5aad247b7cb9539c198e04096c516c1.camel@hadess.net>
+Date:   Fri, 10 May 2019 11:33:26 +0200
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-input@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7440F555-5A92-442C-B217-BE17EEF9EF68@goldelico.com>
+References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com> <20190407133037.0ad98897@archlinux> <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com> <20190414124029.1f1f6084@archlinux> <CD6219BE-61FF-4C38-9532-054C60A77F89@goldelico.com> <20190422152014.7c6637ab@archlinux> <b5e40ab0d5aad247b7cb9539c198e04096c516c1.camel@hadess.net>
+To:     Bastien Nocera <hadess@hadess.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We find the current CPU using smp_processor_id() if the event is not bound
-to a CPU, to find the node for memory allocation. Use the safe
-numa_node_id() instead, to avoid BUG(). e.g:
 
- BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
- caller is tmc_alloc_etf_buffer+0x5c/0x60
- CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
- Call trace:
-  dump_backtrace+0x0/0x150
-  show_stack+0x14/0x20
-  dump_stack+0x9c/0xc4
-  debug_smp_processor_id+0x10c/0x110
-  tmc_alloc_etf_buffer+0x5c/0x60
-  etm_setup_aux+0x1c4/0x230
-  rb_alloc_aux+0x1b8/0x2b8
-  perf_mmap+0x35c/0x478
-  mmap_region+0x34c/0x4f0
-  do_mmap+0x2d8/0x418
-  vm_mmap_pgoff+0xd0/0xf8
-  ksys_mmap_pgoff+0x88/0xf8
-  __arm64_sys_mmap+0x28/0x38
-  el0_svc_handler+0xd8/0x138
-  el0_svc+0x8/0xc
+> Am 10.05.2019 um 10:57 schrieb Bastien Nocera <hadess@hadess.net>:
+>=20
+> On Mon, 2019-04-22 at 15:20 +0100, Jonathan Cameron wrote:
+>>> Different goals usually lead to different solution architectures.
+>>=20
+>> Indeed, but in this case we have your proposal which is a subset of
+>> what
+>> I am suggesting.  One architecture can fulfil both requirements.
+>>=20
+>> I'll leave it for the other thread, but Bastien has raised the case
+>> (that I'd forgotten) that there already userspace stacks that are
+>> capable of happily taking in both IIO and Input devices.  The
+>> confusion
+>> here is they will now discover 'both' without the existing userspace
+>> knowing that they are the same device.  We need to be very careful
+>> not
+>> to break those userspace programs.
+>>=20
+>> So this is an illustration of why the simplistic case doesn't work
+>> 'now'.
+>=20
+> I don't know what state the whole patch is, but, at the very least, =
+I'd
+> expect that patch to export the fact that it's exporting synthesised
+> data from another driver, so that it can be easily ignored in user-
+> space that already supports IIO devices.
+>=20
 
-Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+It does through "Input device name:" starting with "iio-bridge:" as you =
+can see in the commit message of [RFC v3]:
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 31093de..5d0e594 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -377,12 +377,10 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev,
- 				  struct perf_event *event, void **pages,
- 				  int nr_pages, bool overwrite)
- {
--	int node, cpu = event->cpu;
-+	int node;
- 	struct cs_buffers *buf;
- 
--	if (cpu == -1)
--		cpu = smp_processor_id();
--	node = cpu_to_node(cpu);
-+	node = (event->cpu == -1) ? numa_node_id() : cpu_to_node(event->cpu);
- 
- 	/* Allocate memory structure for interaction with Perf */
- 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
--- 
-2.7.4
+root@letux:~# evtest /dev/input/event5 | head -19
+Input driver version is 1.0.1
+Input device ID: bus 0x0 vendor 0x0 product 0x0 version 0x0
+Input device name: "iio-bridge: bmc150_accel"
+Supported events:
+  Event type 0 (EV_SYN)
+  Event type 3 (EV_ABS)
+    Event code 0 (ABS_X)
+      Value      8
+      Min     -511
+      Max      511
+    Event code 1 (ABS_Y)
+      Value    -44
+      Min     -511
+      Max      511
+    Event code 2 (ABS_Z)
+      Value   -265
+      Min     -511
+      Max      511
+
+
 
