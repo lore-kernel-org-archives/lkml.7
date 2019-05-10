@@ -2,126 +2,151 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE81C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9CEC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FC520989
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cuXvBtYb"
+	by mail.kernel.org (Postfix) with ESMTP id 6B93820989
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 09:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfEJJsZ (ORCPT
+        id S1727324AbfEJJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 05:48:25 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46531 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfEJJsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 05:48:25 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f37so4543038edb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 02:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=BmS+YypmTH70NsRGDtlhScKeOjsqeldkuJn7h8AAN6c=;
-        b=cuXvBtYbowHAlEPUTiQUTRleTW6shxpAvzPebDGFO0ru7nxN3G+8tX+gUwr6KqEZYh
-         8zXUQqcbGWyQxwp6TzfrFzJzlF/NHyVOcY31l5WmzJgU/dSONGbTjqeQZX0L2gjOjJTo
-         geF4IZHqzOpNZszfVl6YIgnEWnWVDvZfWHOjSz62tYxRSN7vo7+qK9BnTfj8hFT+k3pC
-         0lw98VmvoYUNn6WUBzNs14DSSKHyabeDHgGhpiYiJbwxHIiOvrsrijzuep35p/Vsx6h9
-         UzxcMhhAeUvHvTtRNm/W6OP+kjCBRz/ETg+XoRMrKzrEDtgjib9J9mSDngZkDbS+8BBm
-         SrqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=BmS+YypmTH70NsRGDtlhScKeOjsqeldkuJn7h8AAN6c=;
-        b=PpCVzQ+ep6LlV+/wxrHa2a//dkvyQHTPyTqP7ft8XAvcO1TCbfghUtujsCdh8ZdrJg
-         LbvDXidXwDA81xP5OISVwUyb6XDNStK1A9XYEfgWNslgHqfeBrtkkXU3UqFL9J0zvcYU
-         zfPM2XtS+j75bRICnUBS5gX+oWIIy5mBF5Pir4iEVnUyP8yzqyKWlQGXLMvuIydHMSoK
-         3PjrbjNxV62A89Lq5jLfTvleo3lTKSUSoXjbgEBJ85UnL363dU2s4fglMQyCFZjpg7vJ
-         wNanossVkr0QNrO+4K43Cfd9Yp3berhMSwEG6Fz6fNYERQrTAmmwPPmVML0/LG23a37L
-         vkdg==
-X-Gm-Message-State: APjAAAXFagEuGOQj2gEaryx5nsgQQUhFxyvCAjZ6HlYzGicDLRyU9via
-        Y5VmOwmH5xEsY/7K7X0GF+i5ZppTzU8=
-X-Google-Smtp-Source: APXvYqyjzXIRVVWmITXFTDZUL5xGIiCwXuBtZWZd4wR+9isCZ0p2Yrs1EyP5Mecs+ps1R8B6u1NRNg==
-X-Received: by 2002:a50:d2d4:: with SMTP id q20mr9928677edg.120.1557481703345;
-        Fri, 10 May 2019 02:48:23 -0700 (PDT)
-Received: from [192.168.178.43] ([88.130.159.71])
-        by smtp.gmail.com with ESMTPSA id o34sm1289914eda.97.2019.05.10.02.48.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 02:48:22 -0700 (PDT)
-Date:   Fri, 10 May 2019 09:44:53 +0000 (UTC)
-From:   Roderick <hruodr@gmail.com>
-To:     Poul-Henning Kamp <phk@phk.freebsd.dk>
-cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
-        freebsd-current@freebsd.org
-Subject: Re: Danish FreeBSD Developer hates jews collectively
-In-Reply-To: <2052.1557444762@critter.freebsd.dk>
-Message-ID: <alpine.BSF.2.21.9999.1905100843270.999@fbsd.local>
-References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it> <2052.1557444762@critter.freebsd.dk>
-User-Agent: Alpine 2.21.9999 (BSF 287 2018-06-16)
+        Fri, 10 May 2019 05:48:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60198 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727145AbfEJJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 05:48:54 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B8AC85376;
+        Fri, 10 May 2019 09:48:53 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 766EF600C7;
+        Fri, 10 May 2019 09:48:40 +0000 (UTC)
+Date:   Fri, 10 May 2019 11:48:38 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        intel-gvt-dev@lists.freedesktop.org, arei.gonglei@huawei.com,
+        aik@ozlabs.ru, Zhengxiao.zx@alibaba-inc.com,
+        shuangtai.tst@alibaba-inc.com, qemu-devel@nongnu.org,
+        eauger@redhat.com, yi.l.liu@intel.com, ziye.yang@intel.com,
+        mlevitsk@redhat.com, pasic@linux.ibm.com, felipe@nutanix.com,
+        changpeng.liu@intel.com, Ken.Xue@amd.com,
+        jonathan.davies@nutanix.com, shaopeng.he@intel.com,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        libvir-list@redhat.com, eskultet@redhat.com, kevin.tian@intel.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com, cjia@nvidia.com,
+        kwankhede@nvidia.com, berrange@redhat.com, dinechin@redhat.com
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190510114838.7e16c3d6.cohuck@redhat.com>
+In-Reply-To: <20190510093608.GD2854@work-vm>
+References: <20190506014514.3555-1-yan.y.zhao@intel.com>
+        <20190506014904.3621-1-yan.y.zhao@intel.com>
+        <20190507151826.502be009@x1.home>
+        <20190509173839.2b9b2b46.cohuck@redhat.com>
+        <20190509154857.GF2868@work-vm>
+        <20190509175404.512ae7aa.cohuck@redhat.com>
+        <20190509164825.GG2868@work-vm>
+        <20190510110838.2df4c4d0.cohuck@redhat.com>
+        <20190510093608.GD2854@work-vm>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 10 May 2019 09:48:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 10 May 2019 10:36:09 +0100
+"Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
 
-Dear Poul-Henning!
+> * Cornelia Huck (cohuck@redhat.com) wrote:
+> > On Thu, 9 May 2019 17:48:26 +0100
+> > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> >   
+> > > * Cornelia Huck (cohuck@redhat.com) wrote:  
+> > > > On Thu, 9 May 2019 16:48:57 +0100
+> > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> > > >     
+> > > > > * Cornelia Huck (cohuck@redhat.com) wrote:    
+> > > > > > On Tue, 7 May 2019 15:18:26 -0600
+> > > > > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > > > > >       
+> > > > > > > On Sun,  5 May 2019 21:49:04 -0400
+> > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:      
+> > > > > >       
+> > > > > > > > +  Errno:
+> > > > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+> > > > > > > > +  devices, it should not register version attribute for this mdev device. But if
+> > > > > > > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > > > > > > +  -ENODEV on access to this mdev device's version attribute.
+> > > > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > > > > > > +  incompatible mdev devices's version strings to its version attribute should
+> > > > > > > > +  return -EINVAL;        
+> > > > > > > 
+> > > > > > > I think it's best not to define the specific errno returned for a
+> > > > > > > specific situation, let the vendor driver decide, userspace simply
+> > > > > > > needs to know that an errno on read indicates the device does not
+> > > > > > > support migration version comparison and that an errno on write
+> > > > > > > indicates the devices are incompatible or the target doesn't support
+> > > > > > > migration versions.      
+> > > > > > 
+> > > > > > I think I have to disagree here: It's probably valuable to have an
+> > > > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
+> > > > > > those two particular devices'. Userspace might want to do different
+> > > > > > things (e.g. trying with different device pairs).      
+> > > > > 
+> > > > > Trying to stuff these things down an errno seems a bad idea; we can't
+> > > > > get much information that way.    
+> > > > 
+> > > > So, what would be a reasonable approach? Userspace should first read
+> > > > the version attributes on both devices (to find out whether migration
+> > > > is supported at all), and only then figure out via writing whether they
+> > > > are compatible?
+> > > > 
+> > > > (Or just go ahead and try, if it does not care about the reason.)    
+> > > 
+> > > Well, I'm OK with something like writing to test whether it's
+> > > compatible, it's just we need a better way of saying 'no'.
+> > > I'm not sure if that involves reading back from somewhere after
+> > > the write or what.  
+> > 
+> > Hm, so I basically see two ways of doing that:
+> > - standardize on some error codes... problem: error codes can be hard
+> >   to fit to reasons
+> > - make the error available in some attribute that can be read
+> > 
+> > I'm not sure how we can serialize the readback with the last write,
+> > though (this looks inherently racy).
+> > 
+> > How important is detailed error reporting here?  
+> 
+> I think we need something, otherwise we're just going to get vague
+> user reports of 'but my VM doesn't migrate'; I'd like the error to be
+> good enough to point most users to something they can understand
+> (e.g. wrong card family/too old a driver etc).
 
-I do get your point. I do not think you are an antesimite. I would think
-the opposite: most antisemites hide behind their israel-friendliness.
+Ok, that sounds like a reasonable point. Not that I have a better idea
+how to achieve that, though... we could also log a more verbose error
+message to the kernel log, but that's not necessarily where a user will
+look first.
 
-I appreciate your involvement on what is happenning in the near east.
-From the end of WWI the situation of the palestinians got only worse
-and worser, and with the last developements, faster.
+Ideally, we'd want to have the user space program setting up things
+querying the general compatibility for migration (so that it becomes
+their problem on how to alert the user to problems :), but I'm not sure
+how to eliminate the race between asking the vendor driver for
+compatibility and getting the result of that operation.
 
-You got it, it was not a skilled use of twitter, but unfortunately
-not only that: you made some errors. It is perhaps not your guilt,
-because these errors are promoted by the israeli propaganda.
-
-From the very beginning there was jewish oposition to the zionist
-enterprise, due to different reasons, from so called secular jews
-and from religious ones. Many as radical as the most radical
-palestinian. In the internet era this should be clear to you:
-I suppose you are new in the thema. This is why one cannot
-use the word "jews" to name a party in the conflict, unless in a
-very restricted context. The AIPAC is not a jewish political lobbying
-organization, but a zionist one, a israeli one.
-
-The zionist propaganda always told that all jews are behind israel,
-that they represent all jews, it equates zionist with jewish, and
-opposition to zionism with antisemitism. It seems you fell in their
-trap.
-
-The other error is perhaps to consider jews as a religious group,
-that they freely chose to be that: it is irrelevant in the context
-of the conflict. Arabs see them as a religious group, but zionists,
-antisemites and perhaps most europeans see them as a people.
-But even among them there are discussions about it (Shlomo Sand). I
-once met a very anti-israel jew that very proudly considered her
-ethnicity as "ashkenazy". How they define their collective identity
-is mainly their issue.
-
-As said, I appreciate your involvement, but I think you were also
-not prudent. While these guys kill without scrupples in the near east,
-hidden behind heavy weapons, elsewhere their favourite weapon even
-against the most weak opposition is diffamation.
-
-Best regards
-Rodrigo
-
-
-On Thu, 9 May 2019, Poul-Henning Kamp wrote:
-
->
-> You forgot to include this link:
->
-> 	http://phk.freebsd.dk/sagas/israel/
+Unless we introduce an interface that can retrieve _all_ results
+together with the written value? Or is that not going to be much of a
+problem in practice?
