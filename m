@@ -2,126 +2,115 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299D8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9383FC46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EA6217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B5E0217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 07:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfEJHT1 (ORCPT
+        id S1727198AbfEJHV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 03:19:27 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:13087 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726855AbfEJHT0 (ORCPT
+        Fri, 10 May 2019 03:21:29 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:37010 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726855AbfEJHV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 03:19:26 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG4.macronix.com with ESMTP id x4A7JHt6076937;
-        Fri, 10 May 2019 15:19:17 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
-        linux-mtd@lists.infradead.org
-Cc:     juliensu@mxic.com.tw, masonccyang@mxic.com.tw
-Subject: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
-Date:   Fri, 10 May 2019 15:41:02 +0800
-Message-Id: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG4.macronix.com x4A7JHt6076937
+        Fri, 10 May 2019 03:21:28 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c1so1749589qkk.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 00:21:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qkp3uN3JmIP+V4STFBMw4M1itzMyk7qqDLAq1F6TTQI=;
+        b=GjkLfSJVj2Ed4Dth/vTbrupIdXHvfVxVbpZsi+q6L2SQP0bd/fR4RkKnU7bYDUQLHL
+         tYK+nwMHpCVEKVGcceqizz11yWTfW7DF2LgxylD8NoocJ6oDZQBuO1mIP5lRYeVgT6Fk
+         jyNluntZ+PPzKYS57wszdjggejYD6RmlGDe0B2mlzsqCzGQf4BHS7sO+yndRjMp8MgKt
+         avLes4GhWwQ4W4lw//9hkuLm3YIv5c+lpTFDsdk1z+BTWFPgleqCDKRA8jFRbMOD+xtH
+         r8seWpVOTmB2h6CGyWvH+zDZCgo+pWnG/lZbDnqJi319bzZihhPI3sUfVxWFMlMlxv0y
+         pGXw==
+X-Gm-Message-State: APjAAAUfpQG83saWBVa37vPBW+pDqKavIvHHiWI0Ia9fHkOeSiG09qyD
+        IznFLpfvZjqmRVh63U9ZS/cVH9aeqBT1ZA==
+X-Google-Smtp-Source: APXvYqxQmGrUW/No6yN8KlnGJEV4Aj+h/RJzKqJ9tg+pnXf3scxoRahou77rSE4Udu+LioHkCbnimQ==
+X-Received: by 2002:a37:a216:: with SMTP id l22mr7397641qke.282.1557472887500;
+        Fri, 10 May 2019 00:21:27 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id t57sm521405qtt.7.2019.05.10.00.21.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 00:21:26 -0700 (PDT)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
+Subject: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
+Date:   Fri, 10 May 2019 09:21:21 +0200
+Message-Id: <20190510072125.18059-1-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for Macronix NAND read retry.
+By default, KSM works only on memory that is marked by madvise(). And the
+only way to get around that is to either:
 
-Macronix NAND supports specfical read for data recovery and enabled
-it by Set Feature.
-Driver check byte 167 of Vendor Blocks in ONFI parameter page table
-to see if this high reliability function is support or not.
+  * use LD_PRELOAD; or
+  * patch the kernel with something like UKSM or PKSM.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/nand_macronix.c | 52 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+Instead, lets implement a so-called "always" mode, which allows marking
+VMAs as mergeable on do_anonymous_page() call automatically.
 
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index 47d8cda..5cd1e5f 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -17,6 +17,57 @@
- 
- #include "internals.h"
- 
-+#define MACRONIX_READ_RETRY_BIT BIT(0)
-+#define MACRONIX_READ_RETRY_MODE 5
-+
-+struct nand_onfi_vendor_macronix {
-+	u8 reserved[1];
-+	u8 reliability_func;
-+} __packed;
-+
-+static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN] = {0};
-+	int ret;
-+
-+	if (mode > MACRONIX_READ_RETRY_MODE)
-+		mode = MACRONIX_READ_RETRY_MODE;
-+
-+	feature[0] = mode;
-+	ret =  nand_set_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-+	if (ret)
-+		pr_err("set feature failed to read retry moded:%d\n", mode);
-+
-+	ret =  nand_get_features(chip, ONFI_FEATURE_ADDR_READ_RETRY, feature);
-+	if (ret || feature[0] != mode)
-+		pr_err("get feature failed to read retry moded:%d(%d)\n",
-+		       mode, feature[0]);
-+
-+	return ret;
-+}
-+
-+static void macronix_nand_onfi_init(struct nand_chip *chip)
-+{
-+	struct nand_parameters *p = &chip->parameters;
-+
-+	if (p->onfi) {
-+		struct nand_onfi_vendor_macronix *mxic =
-+				(void *)p->onfi->vendor;
-+
-+		if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
-+			chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;
-+			chip->setup_read_retry =
-+				 macronix_nand_setup_read_retry;
-+			if (p->supports_set_get_features) {
-+				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-+					p->set_feature_list);
-+				set_bit(ONFI_FEATURE_ADDR_READ_RETRY,
-+					p->get_feature_list);
-+			}
-+		}
-+	}
-+}
-+
- /*
-  * Macronix AC series does not support using SET/GET_FEATURES to change
-  * the timings unlike what is declared in the parameter page. Unflag
-@@ -65,6 +116,7 @@ static int macronix_nand_init(struct nand_chip *chip)
- 		chip->bbt_options |= NAND_BBT_SCAN2NDPAGE;
- 
- 	macronix_nand_fix_broken_get_timings(chip);
-+	macronix_nand_onfi_init(chip);
- 
- 	return 0;
- }
+The submission introduces a new sysctl knob as well as kernel cmdline option
+to control which mode to use. The default mode is to maintain old
+(madvise-based) behaviour.
+
+Due to security concerns, this submission also introduces VM_UNMERGEABLE
+vmaflag for apps to explicitly opt out of automerging. Because of adding
+a new vmaflag, the whole work is available for 64-bit architectures only.
+
+This patchset is based on earlier Timofey's submission [1], but it doesn't
+use dedicated kthread to walk through the list of tasks/VMAs.
+
+For my laptop it saves up to 300 MiB of RAM for usual workflow (browser,
+terminal, player, chats etc). Timofey's submission also mentions
+containerised workload that benefits from automerging too.
+
+Open questions:
+
+  * once "always" mode is activated, should re-scan of all VMAs be
+    triggered to find eligible ones for automerging?
+
+Thanks.
+
+[1] https://lore.kernel.org/patchwork/patch/1012142/
+
+Oleksandr Natalenko (4):
+  mm/ksm: introduce ksm_enter() helper
+  mm/ksm: introduce VM_UNMERGEABLE
+  mm/ksm: allow anonymous memory automerging
+  mm/ksm: add automerging documentation
+
+ .../admin-guide/kernel-parameters.txt         |   7 +
+ Documentation/admin-guide/mm/ksm.rst          |   7 +
+ fs/proc/task_mmu.c                            |   3 +
+ include/linux/ksm.h                           |   5 +
+ include/linux/mm.h                            |   6 +
+ include/trace/events/mmflags.h                |   7 +
+ mm/ksm.c                                      | 142 ++++++++++++++----
+ mm/memory.c                                   |   6 +
+ 8 files changed, 157 insertions(+), 26 deletions(-)
+
 -- 
-1.9.1
+2.21.0
 
