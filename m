@@ -3,29 +3,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D14C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5549C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93E0E217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B4F217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 17:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfEJRjP (ORCPT
+        id S1727817AbfEJRkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 13:39:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:53872 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfEJRjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 13:39:15 -0400
+        Fri, 10 May 2019 13:40:07 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53914 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727144AbfEJRkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 13:40:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99B85A78;
-        Fri, 10 May 2019 10:39:14 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8300CA78;
+        Fri, 10 May 2019 10:40:06 -0700 (PDT)
 Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 522003F6C4;
-        Fri, 10 May 2019 10:39:12 -0700 (PDT)
-Date:   Fri, 10 May 2019 18:39:09 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 275943F6C4;
+        Fri, 10 May 2019 10:40:04 -0700 (PDT)
+Date:   Fri, 10 May 2019 18:40:01 +0100
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     Fenghua Yu <fenghua.yu@intel.com>
 Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
@@ -48,12 +48,13 @@ References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
 Organization: ARM
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190510174001.INihKPyzUlBV5wl3vi6VTUNhf8NhzmH3J-We1VUt7cw@z>
 
 On Sat,  9 Feb 2019 18:50:39 -0800
 Fenghua Yu <fenghua.yu@intel.com> wrote:
@@ -135,6 +136,7 @@ There is a much easier way to detect the vendor, without resorting to
 (unchecked) inline assembly in userland:
 I changed this to scan /proc/cpuinfo for a line starting with vendor_id,
 then use the information there. This should work everywhere.
+http://linux-arm.org/git?p=linux-ap.git;a=commitdiff;h=ce9c9f3a40e52
 
 Cheers,
 Andre
