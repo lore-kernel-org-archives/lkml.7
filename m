@@ -2,174 +2,124 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F765C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E34C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED5782175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y7TbJMNH"
+	by mail.kernel.org (Postfix) with ESMTP id AF0EC216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfEJPFn (ORCPT
+        id S1727584AbfEJPKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:05:43 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43659 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727346AbfEJPFm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:05:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id v7so4732552iob.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 08:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NuznlxC7GEgYokZCrm7IN/tj/NbTxvoE1lpbLD+P6FM=;
-        b=Y7TbJMNHX/xLGrt6Ey5Ga60Br3W/GGMSwc4WapRpMZPFn+rsnXTCRXWgm2noVfXHwr
-         IPfC7a5tOe75zipivGvl92RxMtCNfoX7shKuz5CZ1H+2uQyjxDPXfPr1BTGUm9UrHLEC
-         i1rf+aEPM9dqjAqNOK5Y0RgZx7YkxWS6hQo10=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NuznlxC7GEgYokZCrm7IN/tj/NbTxvoE1lpbLD+P6FM=;
-        b=RjV3GfbSjiEXmvvjyflfK0q+y7I3/6uh5oTBVmv2LQsQ6BCWc4STNUX6kD8trnASza
-         hFQnUPOxBfOsd2xk5xvryAYIUNoBU+SObXkEbguS7kb8B+L/tPQkM4GsWYWvDMKMqhbw
-         QQr7jFKEJhG3R53JESgHzQ2MuT3tN7yIT5Vz5npv8lUotV1iupWdheRT2IFlTU+Bswut
-         zUk0QbY/E0CRwRtHAC6+9rcTJOEq/4sr/y9J0HK4pWuzVIzwwA6PmsenoxndFgsQuKDg
-         B+QVNk7U7/Tfpj7ZvUlFeXFvfz5O1FDsfHyGNqlGTSPgq/fwYwi/dWFUykFugVGuqKm3
-         zlxw==
-X-Gm-Message-State: APjAAAU6ESfGtMXJypXrc4aOS4bChTXTAdNSWrGLXylTJbR+x/Is9g7S
-        n6a9u/OmS3FtvuXu7C8daHI9rxgebG0u4RTSPkAXCQ==
-X-Google-Smtp-Source: APXvYqwxgeizLdvyfN+m8ikpEhXLZD1a3NmQ19FUU+pj3MwBauIM70TcpKnQaZZGOg/jgLFS0r+D94herHx1aPVIh0Q=
-X-Received: by 2002:a6b:9306:: with SMTP id v6mr7274576iod.278.1557500741598;
- Fri, 10 May 2019 08:05:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509120903.28939-1-daniel.vetter@ffwll.ch>
- <20190509145620.2pjqko7copbxuzth@pathway.suse.cz> <CAKMK7uFTsr1F8nFExTvC7nWFQMcZ7ejh+k_X6E8EcMUaP3e29A@mail.gmail.com>
- <20190510091537.44e3aeb7gcrcob76@pathway.suse.cz>
-In-Reply-To: <20190510091537.44e3aeb7gcrcob76@pathway.suse.cz>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Fri, 10 May 2019 17:05:30 +0200
-Message-ID: <CAKMK7uEqnDATnEUVLjHdv2YkTcfXOJ8Fsg2K9VWYG4nnJX_SAg@mail.gmail.com>
-Subject: Re: [PATCH] RFC: console: hack up console_lock more v3
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Fri, 10 May 2019 11:10:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36122 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727346AbfEJPKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:10:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C50C86679;
+        Fri, 10 May 2019 15:10:34 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id EDF0E5D9D5;
+        Fri, 10 May 2019 15:10:27 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 10 May 2019 17:10:32 +0200 (CEST)
+Date:   Fri, 10 May 2019 17:10:25 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Sultan Alsawaf <sultan@kerneltoast.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tim Murray <timmurray@google.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>,
+        kernel-team <kernel-team@android.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190510151024.GA21421@redhat.com>
+References: <20190318235052.GA65315@google.com>
+ <20190319221415.baov7x6zoz7hvsno@brauner.io>
+ <CAKOZuessqcjrZ4rfGLgrnOhrLnsVYiVJzOj4Aa=o3ZuZ013d0g@mail.gmail.com>
+ <20190319231020.tdcttojlbmx57gke@brauner.io>
+ <20190320015249.GC129907@google.com>
+ <20190507021622.GA27300@sultan-box.localdomain>
+ <20190507153154.GA5750@redhat.com>
+ <20190507163520.GA1131@sultan-box.localdomain>
+ <20190509155646.GB24526@redhat.com>
+ <20190509183353.GA13018@sultan-box.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509183353.GA13018@sultan-box.localdomain>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Fri, 10 May 2019 15:10:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 11:15 AM Petr Mladek <pmladek@suse.com> wrote:
-> On Thu 2019-05-09 18:43:12, Daniel Vetter wrote:
-> > One thing to keep in mind is that the kernel is already dying, and
-> > things will come crashing down later on
+On 05/09, Sultan Alsawaf wrote:
 >
-> This is important information. I havn't seen it mentioned earlier.
+> On Thu, May 09, 2019 at 05:56:46PM +0200, Oleg Nesterov wrote:
+> > Impossible ;) I bet lockdep should report the deadlock as soon as find_victims()
+> > calls find_lock_task_mm() when you already have a locked victim.
+>
+> I hope you're not a betting man ;)
 
-I thought I explained that, sorry if this wasn't clear.
+I am starting to think I am ;)
 
-> > (I've seen this only in dmesg
-> > tails capture in pstore in our CI, i.e. the box died for good). I just
-> > want to make sure that the useful information isn't overwritten by
-> > more dmesg splats that happen as a consequence of us somehow trying to
-> > run things on an offline cpu. Once console_unlock has completed in
-> > your above backtrace and the important stuff has gone out I'm totally
-> > fine with the kernel just dying. Pulling the wake_up_process out from
-> > under the semaphore.lock is enough to prevent lockdep from dumping
-> > more stuff while we're trying to print the important things,
->
-> With the more stuff you mean the lockdep splat? If yes, it might
-> make sense to call debug_locks_off() earlier in panic().
+If you have task1 != task2 this code
 
-I'm not sure this only happens in panics (I'm honestly not sure at all
-why we're complaining about offline cpus). But in general I've seen
-piles of dying systems that dump WARNINGS and then eventually panic.
-Still would be good to not have a pointless lockdep splat in between.
+	task_lock(task1);
+	task_lock(task2);
 
-> > and I think the untangling of the locking hiararchy is useful irrespective
-> > of this lockdep splat. Plus Peter doesn't sound like he likes to roll
-> > out more printk_deferred kind of things.
-> >
-> > But if you think I should do the printk_deferred thing too I can look
-> > into that. Just not quite sure what that's supposed to look like now.
->
-> Your patch might remove the particular lockdep splat. It might be
-> worth it (Peter mentioned also an optimization effect). Anyway
-> it will not prevent the deadlock.
->
-> The only way to avoid the deadlock is to use printk_deferred()
-> with the current printk() code.
->
->
-> Finally, I have recently worked on similar problem with dying system.
-> I sent the following patch for testing. I wonder if it might be
-> acceptable upstream:
->
->
-> From: Petr Mladek <pmladek@suse.com>
-> Subject: sched/x86: Do not warn about offline CPUs when all are being stopped
-> Patch-mainline: No, just for testing
-> References: bsc#1104406
->
-> The warning about rescheduling offline CPUs cause dealock when
-> the CPUs need to get stopped using NMI. It might happen with
-> logbuf_lock, locks used by console drivers, especially tty.
-> But it might also be caused by a registered kernel message
-> dumper, for example, pstore.
->
-> The warning is pretty common when there is a high load and
-> CPUs are being stopped by native_stop_other_cpus(). But
-> they are not really useful in this context. And they scrolls
-> the really important messages off the screen.
->
-> We need to fix printk() in the long term. But disabling
-> the message looks reasonable at least in the meantime.
->
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  arch/x86/kernel/smp.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> --- a/arch/x86/kernel/smp.c
-> +++ b/arch/x86/kernel/smp.c
-> @@ -124,7 +124,8 @@ static bool smp_no_nmi_ipi = false;
->   */
->  static void native_smp_send_reschedule(int cpu)
->  {
-> -       if (unlikely(cpu_is_offline(cpu))) {
-> +       if (unlikely(cpu_is_offline(cpu) &&
-> +                    atomic_read(&stopping_cpu) < 0)) {
+should trigger print_deadlock_bug(), task1->alloc_lock and task2->alloc_lock are
+the "same" lock from lockdep pov, held_lock's will have the same hlock_class().
 
-Hm yeah this sounds like another fix which would stop things from
-getting worse when the machine is dying. I can try and stuff this (or
-something like this, I honestly have no idea about cpu handling code
-so no idea what's reasonable) into our CI and see what happens.
+> CONFIG_PROVE_LOCKING=y
 
-Thanks, Daniel
+OK,
 
->                 WARN(1, "sched: Unexpected reschedule of offline CPU#%d!\n", cpu);
->                 return;
->         }
+> And a printk added in vtsk_is_duplicate() to print when a duplicate is detected,
+
+in this case find_lock_task_mm() won't be called, and this is what saves us from
+the actual deadlock.
 
 
+> and my phone's memory cut in half to make simple_lmk do something, this is what
+> I observed:
+> taimen:/ # dmesg | grep lockdep
+> [    0.000000] \x09RCU lockdep checking is enabled.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+this reports that CONFIG_PROVE_RCU is enabled ;)
+
+> taimen:/ # dmesg | grep simple_lmk
+> [   23.211091] simple_lmk: Killing android.carrier with adj 906 to free 37420 kiB
+> [   23.211160] simple_lmk: Killing oadcastreceiver with adj 906 to free 36784 kiB
+
+yes, looks like simple_lmk has at least 2 locked victims. And I have no idea why
+you do not see anything else in dmesg. May be debug_locks_off() was already called.
+
+But see above, "grep lockdep" won't work.  Perhaps you can do
+"grep -e WARNING -e BUG -e locking".
+
+Oleg.
+
