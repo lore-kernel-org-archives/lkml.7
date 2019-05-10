@@ -2,124 +2,87 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CACC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032C2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A698E217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4AB7217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 04:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFGOE2Nw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McuGjFId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfEJEcG (ORCPT
+        id S1726982AbfEJEc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 00:32:06 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43684 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbfEJEcG (ORCPT
+        Fri, 10 May 2019 00:32:59 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:39825 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbfEJEc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 00:32:06 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so2192650plp.10;
-        Thu, 09 May 2019 21:32:05 -0700 (PDT)
+        Fri, 10 May 2019 00:32:59 -0400
+Received: by mail-lj1-f181.google.com with SMTP id q10so3904734ljc.6
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2019 21:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xvneL+tleAZug+cm73ok0sRVVSDLg417J9gTpEjzm0Y=;
-        b=OFGOE2NwOn/bcY8miPOcXwpkHA80Ku8G4fyzOGykVhmR/QDaMsnCcwbIDimS7JTF5x
-         gvMg+htASqUGwslWKLMbU1xXdsQaVUcA/xPqXJ0j45BYvpJ3onYF5mDvzaoz3gA3C77B
-         ++l12pVN+QFnZjgx39cid1yMH+P3KT0xaTRuupjJwhqpQ78pa3bVqh+Gj22blHzFubzH
-         YtdQ7BQvuXX8czCJXHl9ref8MygU9ec9G0beZY9SNC55RzYgkGmMTDmHFBliUjOnie/Y
-         rT9nhRDFk346t/w2nxRdrAq6xrkYiBzWcghocJe6EOAGwJeDfMlTeLC4nNAuKqMZeMcw
-         bPpQ==
+        h=from:date:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wXqDyT54eG8GjQFqXbx6hw1gB6u+wOkPmPcMAUJsUa0=;
+        b=McuGjFId86StbKuSJ+yG6vZBhcf5x0htNqzcSco/SevsPlcGDmxOcy4FSf72jvpt0t
+         h6mRvr4jGUlhWOdxsusCRsNHl/8BJjPVxCa8j7oUHVwJZw8Yhwr+AC4ApaGsKOY5l0t7
+         0eGq3u+xp6nAYqMwSJRBqupNn/7EPARlhiCGxr+wBctmqoiRLoLU+cWJ+4PiNgi8vNIc
+         bmKw4R26qSSJVvaHcjuGUKp7o7BNKbhvfFcEHTVT6SKib3MUBACb/Ek0ZIea39l0pnnY
+         X0zcnyDLCv1Vh3oqigNKEkCmkR8Jo2w6NrAc1UfCOfE98c1FVc6baMdoG418kPCH7e3+
+         oDvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xvneL+tleAZug+cm73ok0sRVVSDLg417J9gTpEjzm0Y=;
-        b=Y0UEUUxtaCQH2cnMxENfztawyFlKdgExduujyJU56aewSxayhN6h2+Iik42pZ4fYfL
-         G0USklTwMFTE7STym7HUymEKZ51r+7KgYpQUhl96Poao7bgbSIx+gaie83KPEenjx2i/
-         u4fCjXrxKqHoJnIpD/9lYMHtE/dTxHElFr/wl5UnIvlIydVIgF7vTwTuA0fuei6V+www
-         9MQrgRc6sqiPzieAZ9uWCMSpjV5GU63lnIysNmRiQ1x1fL5Z1WI6UC0GdV+UbrZWVZFu
-         7oWzQ4bYZnr+1U383eFNEKF4Y85JTOfw3n5h729ZM9fRvBhR7bLq9++uMTQa5Lx4icr7
-         hJtQ==
-X-Gm-Message-State: APjAAAX6vavaKS69kYb9/SY2+CDXGY43dwl+lDR2ITe7EpIbVcCsCRPz
-        iBW8A0K2e2ZGorGmiM7w1zY=
-X-Google-Smtp-Source: APXvYqzCVqQG81jyDsA4pwg3oVltor0yDbhImtQRMizI91ol50Lus0a+020M12H8AeI0dti/GS3zRA==
-X-Received: by 2002:a17:902:10c:: with SMTP id 12mr10524545plb.61.1557462725544;
-        Thu, 09 May 2019 21:32:05 -0700 (PDT)
-Received: from localhost ([39.7.15.25])
-        by smtp.gmail.com with ESMTPSA id y17sm5555133pfb.161.2019.05.09.21.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 09 May 2019 21:32:03 -0700 (PDT)
-Date:   Fri, 10 May 2019 13:32:00 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190510043200.GC15652@jagdpanzerIV>
-References: <20190509121923.8339-1-pmladek@suse.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wXqDyT54eG8GjQFqXbx6hw1gB6u+wOkPmPcMAUJsUa0=;
+        b=LVSMuIjKnYXN2u4orNGIsJ+e8c7wyZZSRxTYZs+66qzl75TEndoDpkyNDoR3yTuTcI
+         dJLgrfXQpK/s6P81UIrlcRjbJywGcZWGYrrFcVcavGDVsZBEfbL6dNa5aT2CY18LQgvU
+         igrzxvRF6EmmS3qK2LBCydOANYB+770Vd+C7gx2xwmutnrVFqUxjCjC9iMxG8pQQnc5M
+         yng761446LWfdxW4rcXOuvfPwO5akk/12efqfwIA8xn8fXGyVc4N0eM33TxWWNabQdE3
+         +x0L6FJO46lr2op/bR9Ec+8YgjelyP/RJodtSUlA9tOsoORVFR3nv8biGMMnP8WSQv1k
+         9UHA==
+X-Gm-Message-State: APjAAAXCtDbRUb63zo66UD7Tuu3liC4i2CKo5+DxYEU0iikGuu1behdx
+        51GlJ7MM7Pe/D568Mn3W4peMZ9Oz
+X-Google-Smtp-Source: APXvYqywVbPJkk/7SIVcABr8gD3o+8qc6lWM0Ajw2WMxdqxLcLgWCHkY4EK+acReNIVkZJw8YZfUVQ==
+X-Received: by 2002:a2e:9583:: with SMTP id w3mr4480251ljh.150.1557462777485;
+        Thu, 09 May 2019 21:32:57 -0700 (PDT)
+Received: from rimwks ([2001:470:1f15:3d8:7285:c2ff:fe37:5722])
+        by smtp.gmail.com with ESMTPSA id h123sm959243lfe.65.2019.05.09.21.32.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 09 May 2019 21:32:56 -0700 (PDT)
+From:   Rozhuk Ivan <rozhuk.im@gmail.com>
+X-Google-Original-From: Rozhuk Ivan <Rozhuk.IM@gmail.com>
+Date:   Fri, 10 May 2019 07:32:49 +0300
+To:     ossobserver@redchan.it
+Cc:     linux-kernel@vger.kernel.org, misc@openbsd.org,
+        freebsd-current@freebsd.org
+Subject: Re: Danish FreeBSD Developer hates jews collectively
+Message-ID: <20190510073249.73a17721@rimwks>
+In-Reply-To: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
+References: <49cfcff55fe21d5d01df916e9f9531f1@redchan.it>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; amd64-portbld-freebsd12.0)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/09/19 14:19), Petr Mladek wrote:
-> 1. Report on Power:
+On Thu, 09 May 2019 18:03:04 +0000
+ossobserver@redchan.it wrote:
+
+> Background: Apparently a FreeBSD developer, a viking looking fellow,  
+> has been hiding a secret: just as many of his predecessors in the
+> Danish cities during WWII (collaborators); He has a disdain for "the
+> jews" collectively.
 > 
-> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
-> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
-> 
-> The problem is the combination of some new code called via printk(),
-> check_pointer() which calls probe_kernel_read(). That then calls
-> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-> (before we've patched features). With the JUMP_LABEL debug enabled that
-> causes us to call printk() & dump_stack() and we end up recursing and
-> overflowing the stack.
 
-Hmm... hmm... PPC does an .opd-based symbol dereference, which
-eventually probe_kernel_read()-s. So early printk(%pS) will do
+Who cares!?
 
-	printk(%pS)
-	 dereference_function_descriptor()
-	  probe_kernel_address()
-	   dump_stack()
-	    printk(%pS)
-	     dereference_function_descriptor()
-	      probe_kernel_address()
-	       dump_stack()
-	        printk(%pS)
-	         ...
-
-I'd say... that it's not vsprintf that we want to fix, it's
-the idea that probe_kernel_address() can dump_stack() on any
-platform. On some archs probe_kernel_address()->dump_stack()
-is going nowhere:
- dump_stack() does probe_kernel_address(), which calls dump_stack(),
- which calls printk(%pS)->probe_kernel_address() again and again,
- and again.
-
-	-ss
