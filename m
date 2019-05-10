@@ -2,173 +2,96 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996C6C04AB3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06EAC04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 761922177B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:15:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD1321479
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 13:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfEJNPs (ORCPT
+        id S1727611AbfEJNQE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 09:15:48 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:52308 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbfEJNPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 09:15:48 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 0B7521FF3E;
-        Fri, 10 May 2019 15:15:46 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id E96A11FF1D;
-        Fri, 10 May 2019 15:15:45 +0200 (CEST)
-Subject: Re: [PATCHv1 7/8] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <3de9c573-5971-15fc-1632-706fc30e90c2@free.fr>
-Date:   Fri, 10 May 2019 15:15:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 09:16:04 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:36169 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727258AbfEJNQE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 09:16:04 -0400
+X-Originating-IP: 109.213.220.252
+Received: from localhost (alyon-652-1-77-252.w109-213.abo.wanadoo.fr [109.213.220.252])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 67C50240017;
+        Fri, 10 May 2019 13:15:59 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>
+Subject: Re: [PATCH] ARM: dts: lpc32xx: Revert set default clock rate of HCLK PLL
+In-Reply-To: <20190510130855.4263-1-alexandre.belloni@bootlin.com>
+References: <20190510130855.4263-1-alexandre.belloni@bootlin.com>
+Date:   Fri, 10 May 2019 15:15:58 +0200
+Message-ID: <877eay30xd.fsf@FE-laptop>
 MIME-Version: 1.0
-In-Reply-To: <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri May 10 15:15:46 2019 +0200 (CEST)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 13:29, Amit Kucheria wrote:
+Hi Alexandre,
 
-> Add device bindings for cpuidle states for cpu devices.
-> 
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> This reverts commit c17e9377aa81664d94b4f2102559fcf2a01ec8e7.
+>
+> The lpc32xx clock driver is not able to actually change the PLL rate as
+> this would require reparenting ARM_CLK, DDRAM_CLK, PERIPH_CLK to SYSCLK,
+> then stop the PLL, update the register, restart the PLL and wait for the
+> PLL to lock and finally reparent ARM_CLK, DDRAM_CLK, PERIPH_CLK to HCLK
+> PLL.
+>
+> Currently, the HCLK driver simply updates the registers but this has no
+> real effect and all the clock rate calculation end up being wrong. This is
+> especially annoying for the peripheral (e.g. UARTs, I2C, SPI).
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+
+Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+
+
+Gregory
+
 > ---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 3fd0769fe648..208281f318e2 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -78,6 +78,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
-
-For some reason, I was expecting the big cores to come first, but according
-to /proc/cpuinfo, cores 0-3 are part 0x801, while cores 4-7 are part 0x800.
-
-According to https://github.com/pytorch/cpuinfo/blob/master/src/arm/uarch.c
-
-0x801 = Low-power Kryo 260 / 280 "Silver" -> Cortex-A53
-0x800 = High-performance Kryo 260 (r10p2) / Kryo 280 (r10p1) "Gold" -> Cortex-A73
-
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
-> @@ -97,6 +98,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_1: l1-icache {
-> @@ -112,6 +114,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x2>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_2: l1-icache {
-> @@ -127,6 +130,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x3>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_3: l1-icache {
-> @@ -142,6 +146,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L2_1: l2-cache {
-> @@ -161,6 +166,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_101: l1-icache {
-> @@ -176,6 +182,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x102>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_102: l1-icache {
-> @@ -191,6 +198,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x103>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_103: l1-icache {
-> @@ -238,6 +246,30 @@
+>  arch/arm/boot/dts/lpc32xx.dtsi | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+> index 20b38f4ade37..a49c97e5a38a 100644
+> --- a/arch/arm/boot/dts/lpc32xx.dtsi
+> +++ b/arch/arm/boot/dts/lpc32xx.dtsi
+> @@ -323,9 +323,6 @@
+>  
+>  					clocks = <&xtal_32k>, <&xtal>;
+>  					clock-names = "xtal_32k", "xtal";
+> -
+> -					assigned-clocks = <&clk LPC32XX_CLK_HCLK_PLL>;
+> -					assigned-clock-rates = <208000000>;
 >  				};
 >  			};
->  		};
-> +
-> +		idle-states {
-> +			entry-method="psci";
-> +
-> +			LITTLE_CPU_PD: little-power-down {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "little-power-down";
-> +				arm,psci-suspend-param = <0x00000002>;
-> +				entry-latency-us = <43>;
-> +				exit-latency-us = <43>;
+>  
+> -- 
+> 2.21.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Little cores have higher latency (+5%) than big cores?
-
-> +				min-residency-us = <200>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			BIG_CPU_PD: big-power-down {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "big-power-down";
-> +				arm,psci-suspend-param = <0x00000002>;
-> +				entry-latency-us = <41>;
-> +				exit-latency-us = <41>;
-> +				min-residency-us = <200>;
-> +				local-timer-stop;
-> +			};
-> +		};
-
-What is the simplest way to test this patch?
-
-Regards.
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
