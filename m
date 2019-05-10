@@ -2,146 +2,189 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD839C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A60C04A6B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78578217D7
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C704217F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 19:42:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c0C0iDXq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCDPaaEq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbfEJTlW (ORCPT
+        id S1727925AbfEJTmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 15:41:22 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36333 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbfEJTlV (ORCPT
+        Fri, 10 May 2019 15:42:50 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38168 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727638AbfEJTmt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 15:41:21 -0400
-Received: by mail-lj1-f194.google.com with SMTP id z1so6062859ljb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 12:41:20 -0700 (PDT)
+        Fri, 10 May 2019 15:42:49 -0400
+Received: by mail-io1-f66.google.com with SMTP id y6so5427796ior.5;
+        Fri, 10 May 2019 12:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=Wb6m/O8d+DXIkatA4xAsxw74L+R8D3ET/JMyosDN25I=;
-        b=c0C0iDXqWaUAIG1ohB5tjTXZ/hf4DohrNmsMZMo1g+YMNRf0ErI84ambZfx2i1mMLp
-         fQWJx0lzvaEpXoayJWzHvxRPzh5GdwNOYJvdRbk4RmNdmcsZu8WYITZOOTXNzWMU+B3o
-         lvaihAf/O3SX2bJ194Alh/GTnq9zfYNjrRQyeAJhl/bqug12fu7KAS/2gMInqUs25N4r
-         M6eDxFL0A8rjEdznxX1WCO/BPwWLac+7TV+K/DpkIpq3qQ4pMf6/OTgXRU85dYAypdKV
-         DA9BPKijr6icsUlYeOK3gH+JthGKdqtFON3xz3Pr7k0NTYm7i09+ZG8OKCqAIoiC4+z6
-         lRVg==
+        bh=YO5aV9RNmEsHE9amrXyCgHA1u0E4O0knkwps7WnuFv0=;
+        b=BCDPaaEqvrLXcSGRWr5S3MZNdOouK+RphRlWHZ5/MqyPJSq1/rPiTHnFk5GulaQEYW
+         9ZrqoezOIM8sO+Oo/+S/zlh28o8gSbW66OlRlIM/argXlA3WQx10wZtdOpEM6Qp52bRM
+         EZq/+WrL1PR4EM+D2SAXqa3DpEuELlep0Gx0zLQa/N9OohVwJ+bY2J0dBMxyXvYWBhSH
+         XvXtqFssBfQw5o7/5tHjkfl+bxC3Md0PWk5wHdZZUv+Wqx65XFIXoATFvlqqbGfuVsnq
+         z2utpcJsI+XxLd1wiEtgIQI+CcPVT0hRStWY4FYKktl1IxFQLqY7W4VugQaawX/kYfHz
+         1tdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Wb6m/O8d+DXIkatA4xAsxw74L+R8D3ET/JMyosDN25I=;
-        b=St2W+YIT8UNNeXjVVa10+/7dt0lhF70hMn+bRIG0F2s3508Qj9npvpA/MuOW8bmFgK
-         KktGwobYOGEvsG6IlFgcrWQnyeclQBUuiZbQCB0jtZtIndeoePaMcEE7uULiExL0hWKQ
-         /MlqSW9yZ6h8gE5hsJ826B+DD1ccJOdGfnH9yEbBWYOrcwtTkRxxoyY74v6cbJbTznJI
-         XSA/VYfacvzItObpdzmAQ0y6Z9AxUc2fEwHAq6hCU5vXIugLQAZ9gPWPs/2YC3VcqzfA
-         oCfdRSqybQq8fTMYywS/IjbxPLkfOSb1JiGq81kDw+Fh3QEnJ//Kd4tHy23JLL0zuiDj
-         ixdQ==
-X-Gm-Message-State: APjAAAXGYr5wiXilfwqDKnC2/jake06q9YRWgq6jpP3iLf8T6JoGTyiA
-        LqhuI/ldE3p3HpEE6Hck2grr8wVKU/0=
-X-Google-Smtp-Source: APXvYqw+HCubHGtscCBX39N6Vu1XB5zecs9Yh+y6jonPtjxXKqn5BekZ+cJ9Mync7fQC4ZGaU0dHPg==
-X-Received: by 2002:a2e:9c89:: with SMTP id x9mr6860384lji.28.1557517279493;
-        Fri, 10 May 2019 12:41:19 -0700 (PDT)
-Received: from octofox.cadence.com (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
-        by smtp.gmail.com with ESMTPSA id x21sm1680558ljj.43.2019.05.10.12.41.16
+        bh=YO5aV9RNmEsHE9amrXyCgHA1u0E4O0knkwps7WnuFv0=;
+        b=b+DH1O1adtAfQ4OqPtAB40y0G3cfDzTHIbF1Fi5nx/9NM7wJ+9ftDSGc8mtrUc6+VR
+         XKNIn1ByQ7Mpjc0P4nVAbq0CQ6d9w+MtnWfS6kmtN3AgzGULuYkPz6p7tsLEJvf9xV/V
+         70ElBwRMxPOBN4+Gm8XoZPvnvAnFzOfzD1lmAajhSy4kEMRxQHtchlnI4BB29te0PosB
+         eS7zK9tHLpNlayWIkhtn7VZF2F72+/ekYJjy0ghjGyZCm6l+a3XEjOfdbbfY9NGn8+G7
+         4hM+a6fRABnSNHld25WrRo1UcLNTimjVj/pehadQHV+C7PaW1K+6TyG5qhjlh+vPVHpl
+         bMAw==
+X-Gm-Message-State: APjAAAUN8MKFFrO4J6PMsQjEDrMFDaTC3r2VKNHs+TK+gB5PF4CLFeI1
+        lFNSZjhlM8PA8qwcK68xcwJkyVYfRDt6Sw==
+X-Google-Smtp-Source: APXvYqx5kbQ9jaDVLMe+fwt230a/4Euni6CMHlf+lRjuzrr3etdu9O2C4gXTKyCTCM8O97vANKQlUw==
+X-Received: by 2002:a6b:5b0f:: with SMTP id v15mr8502059ioh.82.1557517368203;
+        Fri, 10 May 2019 12:42:48 -0700 (PDT)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id p184sm2845331itb.2.2019.05.10.12.42.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 12:41:18 -0700 (PDT)
-From:   Max Filippov <jcmvbkbc@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PULL 0/7] xtensa updates for v5.2
-Date:   Fri, 10 May 2019 12:41:02 -0700
-Message-Id: <20190510194102.28038-1-jcmvbkbc@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 10 May 2019 12:42:47 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-omap@vger.kernel.org
+Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/omap: Migrate minimum FCK/PCK ratio from Kconfig to dts
+Date:   Fri, 10 May 2019 14:42:29 -0500
+Message-Id: <20190510194229.20628-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Currently the source code is compiled using hard-coded values
+from CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK.  This patch allows this
+clock divider value to be moved to the device tree and be changed
+without having to recompile the kernel.
 
-please pull the following batch of updates for the Xtensa architecture:
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
-
-  Linux 5.1 (2019-05-05 17:42:58 -0700)
-
-are available in the git repository at:
-
-  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190510
-
-for you to fetch changes up to a5944195d00a359e28d6e093593609bcee37ed5e:
-
-  xtensa: implement initialize_cacheattr for MPU cores (2019-05-07 10:36:34 -0700)
-
-----------------------------------------------------------------
-Xtensa updates for v5.2:
-
-- implement atomic operations using exclusive access Xtensa option
-  operations.
-- add support for Xtensa cores with memory protection unit (MPU).
-- clean up xtensa-specific kernel-only headers.
-- fix error path in simdisk_setup.
-
-----------------------------------------------------------------
-Chengguang Xu (2):
-      xtensa: fix incorrect fd close in error case of simdisk_setup()
-      xtensa: set proper error code for simdisk_setup()
-
-Max Filippov (5):
-      xtensa: drop ifdef __KERNEL__ from kernel-only headers
-      xtensa: replace variant/core.h with asm/core.h
-      xtensa: clean up inline assembly in futex.h
-      xtensa: add exclusive atomics support
-      xtensa: implement initialize_cacheattr for MPU cores
-
- arch/xtensa/Kconfig                                |  26 ++++-
- arch/xtensa/boot/boot-redboot/bootstrap.S          |   2 +-
- arch/xtensa/include/asm/asmmacro.h                 |   2 +-
- arch/xtensa/include/asm/atomic.h                   |  66 ++++++++++-
- arch/xtensa/include/asm/barrier.h                  |   4 +
- arch/xtensa/include/asm/bitops.h                   | 125 ++++++++++++++++++++-
- arch/xtensa/include/asm/cache.h                    |   2 +-
- arch/xtensa/include/asm/checksum.h                 |   2 +-
- arch/xtensa/include/asm/cmpxchg.h                  |  36 +++++-
- arch/xtensa/include/asm/coprocessor.h              |   2 +-
- arch/xtensa/include/asm/core.h                     |  21 ++++
- arch/xtensa/include/asm/futex.h                    | 122 +++++++++++++-------
- arch/xtensa/include/asm/initialize_mmu.h           |  38 ++++++-
- arch/xtensa/include/asm/io.h                       |   3 -
- arch/xtensa/include/asm/irq.h                      |   2 +-
- arch/xtensa/include/asm/pci-bridge.h               |   3 -
- arch/xtensa/include/asm/pci.h                      |   4 -
- arch/xtensa/include/asm/pgalloc.h                  |   3 -
- arch/xtensa/include/asm/processor.h                |   2 +-
- arch/xtensa/include/asm/ptrace.h                   |   2 +-
- arch/xtensa/include/asm/vectors.h                  |   2 +-
- arch/xtensa/kernel/hw_breakpoint.c                 |   2 +-
- arch/xtensa/kernel/setup.c                         |   3 +
- arch/xtensa/kernel/vmlinux.lds.S                   |   2 +-
- arch/xtensa/lib/checksum.S                         |   2 +-
- arch/xtensa/lib/memcopy.S                          |   2 +-
- arch/xtensa/lib/memset.S                           |   2 +-
- arch/xtensa/lib/strncpy_user.S                     |   2 +-
- arch/xtensa/lib/strnlen_user.S                     |   2 +-
- arch/xtensa/lib/usercopy.S                         |   2 +-
- arch/xtensa/platforms/iss/simdisk.c                |   3 +-
- .../platforms/xt2000/include/platform/hardware.h   |   2 +-
- .../platforms/xt2000/include/platform/serial.h     |   2 +-
- 33 files changed, 397 insertions(+), 98 deletions(-)
- create mode 100644 arch/xtensa/include/asm/core.h
-
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+index cd02516a40b6..42449d07c47e 100644
+--- a/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
++++ b/Documentation/devicetree/bindings/display/ti/ti,omap3-dss.txt
+@@ -40,7 +40,7 @@ Required properties:
+ Optional properties:
+ - max-memory-bandwidth: Input memory (from main memory to dispc) bandwidth limit
+ 			in bytes per second
+-
++- min-fck-pck-ratio:  Make sure that DISPC FCK is at least n x PCK
+ 
+ RFBI
+ ----
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 4043ecb38016..bf84a8487aae 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -751,7 +751,7 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 
+-			dispc@48050400 {
++			dispc: dispc@48050400 {
+ 				compatible = "ti,omap3-dispc";
+ 				reg = <0x48050400 0x400>;
+ 				interrupts = <25>;
+diff --git a/drivers/gpu/drm/omapdrm/dss/Kconfig b/drivers/gpu/drm/omapdrm/dss/Kconfig
+index f24ebf7f61dd..d0666edcdf2a 100644
+--- a/drivers/gpu/drm/omapdrm/dss/Kconfig
++++ b/drivers/gpu/drm/omapdrm/dss/Kconfig
+@@ -102,24 +102,6 @@ config OMAP2_DSS_DSI
+ 
+ 	  See http://www.mipi.org/ for DSI specifications.
+ 
+-config OMAP2_DSS_MIN_FCK_PER_PCK
+-	int "Minimum FCK/PCK ratio (for scaling)"
+-	range 0 32
+-	default 0
+-	help
+-	  This can be used to adjust the minimum FCK/PCK ratio.
+-
+-	  With this you can make sure that DISPC FCK is at least
+-	  n x PCK. Video plane scaling requires higher FCK than
+-	  normally.
+-
+-	  If this is set to 0, there's no extra constraint on the
+-	  DISPC FCK. However, the FCK will at minimum be
+-	  2xPCK (if active matrix) or 3xPCK (if passive matrix).
+-
+-	  Max FCK is 173MHz, so this doesn't work if your PCK
+-	  is very high.
+-
+ config OMAP2_DSS_SLEEP_AFTER_VENC_RESET
+ 	bool "Sleep 20ms after VENC reset"
+ 	default y
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+index ba82d916719c..09a130c53da2 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -198,6 +198,9 @@ struct dispc_device {
+ 
+ 	/* DISPC_CONTROL & DISPC_CONFIG lock*/
+ 	spinlock_t control_lock;
++
++	/* Optional min-fck-pck-ratio */
++	u32 min_fck_per_pck;
+ };
+ 
+ enum omap_color_component {
+@@ -3683,15 +3686,8 @@ bool dispc_div_calc(struct dispc_device *dispc, unsigned long dispc_freq,
+ 	unsigned long pck, lck;
+ 	unsigned long lck_max;
+ 	unsigned long pckd_hw_min, pckd_hw_max;
+-	unsigned int min_fck_per_pck;
+ 	unsigned long fck;
+ 
+-#ifdef CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK
+-	min_fck_per_pck = CONFIG_OMAP2_DSS_MIN_FCK_PER_PCK;
+-#else
+-	min_fck_per_pck = 0;
+-#endif
+-
+ 	pckd_hw_min = dispc->feat->min_pcd;
+ 	pckd_hw_max = 255;
+ 
+@@ -3723,7 +3719,7 @@ bool dispc_div_calc(struct dispc_device *dispc, unsigned long dispc_freq,
+ 			else
+ 				fck = lck;
+ 
+-			if (fck < pck * min_fck_per_pck)
++			if (fck < pck * dispc->min_fck_per_pck)
+ 				continue;
+ 
+ 			if (func(lckd, pckd, lck, pck, data))
+@@ -4826,6 +4822,8 @@ static int dispc_bind(struct device *dev, struct device *master, void *data)
+ 		}
+ 	}
+ 
++	of_property_read_u32(np, "min-fck-pck-ratio", &dispc->min_fck_per_pck);
++
+ 	r = dispc_init_gamma_tables(dispc);
+ 	if (r)
+ 		goto err_free;
 -- 
-Thanks.
--- Max
+2.17.1
+
