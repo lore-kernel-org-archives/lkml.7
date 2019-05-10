@@ -2,87 +2,95 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE389C04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5980DC04AB3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0A12175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:55:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SYf4bR9d"
+	by mail.kernel.org (Postfix) with ESMTP id 2B116217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 06:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfEJGzq (ORCPT
+        id S1727124AbfEJG43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 02:55:46 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36380 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfEJGzq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 02:55:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nSJVr7DrkLGkqkdyFPqIgwXShT1bf00nOpHzyaCw/7U=; b=SYf4bR9dfob6NlrLLsymleQ3f
-        nnMQiemLD3tn4CgeWx6Tcs8cEyzkIMlj5sjW0FlS5tnamx0cDEh6GQ7eCUb1/E6XbD/2VGecWSU55
-        7Szp4sRjKhWJZ+Mc+D1XE50CuCOzU6pNMewQ1XLmb+m0MfmmRtUpnDpF8lzBhNZ35PbAEf72UtvZI
-        RsxG/XU4gLscOTWQ3pUkRIHT/dYhEc8Kae9TOnmeLBWsus22ylKwHNHBRRiRnCJVGNJKzGdCQINMn
-        LwyEh7/wyXNGt0iw5sOpj4r5RX5wd7G9Qw5VDJbb8xdYP39jMWGqchWPM7V7wqMiyOgavKW5gmkXv
-        tcBxcb/iA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hOzRO-00039O-RV; Fri, 10 May 2019 06:55:35 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 03E262023AD97; Fri, 10 May 2019 08:55:31 +0200 (CEST)
-Date:   Fri, 10 May 2019 08:55:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        Dietmar.Eggemann@arm.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 1/2] sched: Start tracking SCHED_IDLE tasks count in
- cfs_rq
-Message-ID: <20190510065531.GF2623@hirez.programming.kicks-ass.net>
-References: <cover.1556182964.git.viresh.kumar@linaro.org>
- <ec46d6d30116742c48bfc0eb301aa72df266d6ce.1556182965.git.viresh.kumar@linaro.org>
+        Fri, 10 May 2019 02:56:29 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32931 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726816AbfEJG42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 02:56:28 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 80FC5F410DD9BCBB68F2;
+        Fri, 10 May 2019 07:56:26 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Fri, 10 May
+ 2019 07:56:16 +0100
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Rob Landley <rob@landley.net>, <viro@zeniv.linux.org.uk>
+CC:     <linux-security-module@vger.kernel.org>,
+        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
+        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
+        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
+        <takondra@cisco.com>, <kamensky@cisco.com>, <hpa@zytor.com>,
+        <arnd@arndb.de>, <james.w.mcmechan@gmail.com>
+References: <20190509112420.15671-1-roberto.sassu@huawei.com>
+ <fca8e601-1144-1bb8-c007-518651f624a5@landley.net>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <bf0d02fc-d6ce-ef1d-bb7d-7ca14432c6fd@huawei.com>
+Date:   Fri, 10 May 2019 08:56:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec46d6d30116742c48bfc0eb301aa72df266d6ce.1556182965.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fca8e601-1144-1bb8-c007-518651f624a5@landley.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 03:07:39PM +0530, Viresh Kumar wrote:
-> @@ -5166,6 +5170,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->  {
->  	struct cfs_rq *cfs_rq;
->  	struct sched_entity *se = &p->se;
-> +	int idle_h_nr_running = unlikely(task_has_idle_policy(p)) ? 1 : 0;
->  
->  	/*
->  	 * The code below (indirectly) updates schedutil which looks at
+On 5/9/2019 8:34 PM, Rob Landley wrote:
+> On 5/9/19 6:24 AM, Roberto Sassu wrote:
+>> This patch set aims at solving the following use case: appraise files from
+>> the initial ram disk. To do that, IMA checks the signature/hash from the
+>> security.ima xattr. Unfortunately, this use case cannot be implemented
+>> currently, as the CPIO format does not support xattrs.
+>>
+>> This proposal consists in marshaling pathnames and xattrs in a file called
+>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
+>> been extracted.
+> 
+> So it's in-band signalling that has a higher peak memory requirement.
 
-> @@ -5266,6 +5273,7 @@ static void dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->  	struct cfs_rq *cfs_rq;
->  	struct sched_entity *se = &p->se;
->  	int task_sleep = flags & DEQUEUE_SLEEP;
-> +	int idle_h_nr_running = unlikely(task_has_idle_policy(p)) ? 1 : 0;
->  
->  	for_each_sched_entity(se) {
->  		cfs_rq = cfs_rq_of(se);
+This can be modified. Now I allocate the memory necessary for the path
+and all xattrs of a file (max: .xattr-list size - 10 bytes). I could
+process each xattr individually (max: 255 + 1 + 65536 bytes).
 
-That's a completely pointless branch there (and I suspect the compiler
-will see that too), just write:
 
-	int idle_h_nr_running = task_has_idle_policy(p);
+>> The difference with another proposal
+>> (https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
+>> included in an image without changing the image format, as opposed to
+>> defining a new one. As seen from the discussion, if a new format has to be
+>> defined, it should fix the issues of the existing format, which requires
+>> more time.
+> 
+> So you've explicitly chosen _not_ to address Y2038 while you're there.
 
+Can you be more specific?
+
+Thanks
+
+Roberto
+
+
+> Rob
+> 
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
