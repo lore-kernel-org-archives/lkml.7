@@ -2,124 +2,144 @@ Return-Path: <SRS0=sufd=TK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEEC04A6B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B2F7C04AB2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470F12175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3C120850
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 May 2019 15:42:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557502948;
+	bh=Hw27M/VVpzvlgy0+Cp2fWOKuadtrz+0jpnj+MKKWsxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nx3RPQZeWxIaT4CIowgPf+KLCs5p1jg3UbjTq7DjKH/wVV5e4gtfYzwPlZsDkE5/q
+	 rVKsEA6bnuTuxFtNc8Cu2j1QcdI1lAUKaD1xu82H9ya90N+yy0UNdFg4Aso2IWefNj
+	 ZtcKs3b07W6wObQ2BtRLUu/4YxcHOUxglUQSbUZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfEJPlt (ORCPT
+        id S1727661AbfEJPm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 11:41:49 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:59099 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727510AbfEJPlt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 11:41:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R891e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TRM5wdz_1557502897;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRM5wdz_1557502897)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 May 2019 23:41:39 +0800
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     hannes@cmpxchg.org, mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <1fb73973-f409-1411-423b-c48895d3dde8@linux.alibaba.com>
- <87tve3j9jf.fsf@yhuang-dev.intel.com>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <c5d74c72-b54f-de22-43b4-8723518bdc0d@linux.alibaba.com>
-Date:   Fri, 10 May 2019 08:41:34 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Fri, 10 May 2019 11:42:27 -0400
+Received: from mga05.intel.com ([192.55.52.43]:52870 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727364AbfEJPm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 11:42:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 May 2019 08:42:25 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga004.fm.intel.com with ESMTP; 10 May 2019 08:42:26 -0700
+Date:   Fri, 10 May 2019 09:36:58 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Keith Busch <keith.busch@intel.com>
+Subject: Re: [PATCH] nvme-pci: Use non-operational power state instead of D3
+ on Suspend-to-Idle
+Message-ID: <20190510153658.GI9675@localhost.localdomain>
+References: <20190509103142.GA19550@lst.de>
+ <AB325926-0D77-4851-8E8A-A10599756BF9@canonical.com>
+ <31b7d7959bf94c15a04bab0ced518444@AUSX13MPC101.AMER.DELL.COM>
+ <20190509192807.GB9675@localhost.localdomain>
+ <7a002851c435481593f8629ec9193e40@AUSX13MPC101.AMER.DELL.COM>
+ <20190509215409.GD9675@localhost.localdomain>
+ <495d76c66aec41a8bfbbf527820f8eb9@AUSX13MPC101.AMER.DELL.COM>
+ <BC5EB1D0-8718-48B3-ACAB-F7E5571D821D@canonical.com>
+ <CAJZ5v0jAcX-Q2twygKoKvmx2H6tneHWimmH+c2GsYitHK5-knw@mail.gmail.com>
+ <54E4999C-DBE8-4FC1-8E82-17FEDFDA9CA6@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <87tve3j9jf.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54E4999C-DBE8-4FC1-8E82-17FEDFDA9CA6@canonical.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 10, 2019 at 11:15:05PM +0800, Kai Heng Feng wrote:
+> Sorry, I should mention that I use a slightly modified drivers/nvme/host/pci.c:
+> 
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 3e4fb891a95a..ece428ce6876 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/once.h>
+>  #include <linux/pci.h>
+> +#include <linux/suspend.h>
+>  #include <linux/t10-pi.h>
+>  #include <linux/types.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+> @@ -2833,6 +2834,11 @@ static int nvme_suspend(struct device *dev)
+>         struct pci_dev *pdev = to_pci_dev(dev);
+>         struct nvme_dev *ndev = pci_get_drvdata(pdev);
+>  
+> +       if (!pm_suspend_via_firmware()) {
+> +               nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
+> +               pci_save_state(pdev);
+> +       }
+> +
+>         nvme_dev_disable(ndev, true);
 
+This won't work because you're falling through to nvme_dev_disable after
+setting the power, so the resume side would certainly fail.
 
-On 5/9/19 8:03 PM, Huang, Ying wrote:
-> Yang Shi <yang.shi@linux.alibaba.com> writes:
->
->> On 5/9/19 7:12 PM, Huang, Ying wrote:
->>> Yang Shi <yang.shi@linux.alibaba.com> writes:
->>>
->>>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
->>>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
->>>> still gets inc'ed by one even though a whole THP (512 pages) gets
->>>> swapped out.
->>>>
->>>> This doesn't make too much sense to memory reclaim.  For example, direct
->>>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
->>>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
->>>> direct reclaim may just waste time to reclaim more pages,
->>>> SWAP_CLUSTER_MAX * 512 pages in worst case.
->>>>
->>>> This change may result in more reclaimed pages than scanned pages showed
->>>> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
->>>>
->>>> Cc: "Huang, Ying" <ying.huang@intel.com>
->>>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>>> Cc: Michal Hocko <mhocko@suse.com>
->>>> Cc: Mel Gorman <mgorman@techsingularity.net>
->>>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->>>> Cc: Hugh Dickins <hughd@google.com>
->>>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->>>> ---
->>>> I'm not quite sure if it was the intended behavior or just omission. I tried
->>>> to dig into the review history, but didn't find any clue. I may miss some
->>>> discussion.
->>>>
->>>>    mm/vmscan.c | 6 +++++-
->>>>    1 file changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/mm/vmscan.c b/mm/vmscan.c
->>>> index fd9de50..7e026ec 100644
->>>> --- a/mm/vmscan.c
->>>> +++ b/mm/vmscan.c
->>>> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>>>      		unlock_page(page);
->>>>    free_it:
->>>> -		nr_reclaimed++;
->>>> +		/*
->>>> +		 * THP may get swapped out in a whole, need account
->>>> +		 * all base pages.
->>>> +		 */
->>>> +		nr_reclaimed += (1 << compound_order(page));
->>>>      		/*
->>>>    		 * Is there need to periodically free_page_list? It would
->>> Good catch!  Thanks!
->>>
->>> How about to change this to
->>>
->>>
->>>           nr_reclaimed += hpage_nr_pages(page);
->> Either is fine to me. Is this faster than "1 << compound_order(page)"?
-> I think the readability is a little better.  And this will become
->
->          nr_reclaimed += 1
->
-> if CONFIG_TRANSPARENT_HUAGEPAGE is disabled.
+This is what you'd want:
 
-Good point. Will update in v2 soon.
+       if (!pm_suspend_via_firmware()) {
+               pci_save_state(pdev);
+               return nvme_set_power(&ndev->ctrl, ndev->ctrl.npss);
+       }
 
->
-> Best Regards,
-> Huang, Ying
->
->>> Best Regards,
->>> Huang, Ying
+>         return 0;
+>  }
+> @@ -2842,6 +2848,10 @@ static int nvme_resume(struct device *dev)
+>         struct pci_dev *pdev = to_pci_dev(dev);
+>         struct nvme_dev *ndev = pci_get_drvdata(pdev);
+>  
+> +       if (!pm_resume_via_firmware()) {
+> +               return nvme_set_power(&ndev->ctrl, 0);
+> +       }
+> +
+>         nvme_reset_ctrl(&ndev->ctrl);
+>         return 0;
+> }
+> 
+> Does pci_save_state() here enough to prevent the device enter to D3?
 
+Yes, saving the state during suspend will prevent pci pm from assuming
+control over this device's power. It's a bit non-intuitive as Christoph
+mentioned, so we'll need to make that clear in the comments. For
+reference, here's the relevant part in pci-driver.c:
+
+---
+static int pci_pm_suspend_noirq(struct device *dev)
+{
+...
+
+	if (!pci_dev->state_saved) {
+		pci_save_state(pci_dev);
+		if (pci_power_manageable(pci_dev))
+			pci_prepare_to_sleep(pci_dev);
+	}
+...
+}
+--
+
+So by saving the state in our suspend callback, pci will skip
+pci_prepare_to_sleep(), which is what's setting your device most likely
+to a D3hot, undermining our nvme power state setting.
