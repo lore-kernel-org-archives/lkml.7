@@ -2,629 +2,149 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A00BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89504C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1242921841
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557566564;
-	bh=uqHMoYWS4XLzFeLw6rIslMCleeA03aTOQ6Yxf9kPs9g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kWI5AXuLM2HO7iZmjUAEJwZ+KMI/QGzLhkvDzOYf+36pUBYieQQahnh+uK718uO9S
-	 HlFCHiLwe4USKwpsF2bhKA4Njh5HxX/EMCEzg/fB+9y8uz5prUhyjco7UiuD/8wc7n
-	 b+zLygy9CGI/qeS6rXdTozmS7m+ZJLf45JkPSP7A=
+	by mail.kernel.org (Postfix) with ESMTP id 597FC20989
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:32:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isjLUCTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfEKJWn (ORCPT
+        id S1728496AbfEKJcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 05:22:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35796 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfEKJWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 05:22:42 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86BAA217D6;
-        Sat, 11 May 2019 09:22:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557566561;
-        bh=uqHMoYWS4XLzFeLw6rIslMCleeA03aTOQ6Yxf9kPs9g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NziU5unNZOsjIivGbuf7os/BlfgyUxsKkBxSHXbFWKwKVFS8YS+kWXlkMXH3IAgGf
-         wGLi2mI9NDHbLrg5ejYQOjndSMqDHwRTt1ZXZTA+SK0/aHrbvKO1UTUips6XDM7GOJ
-         78cnpNirrcS/+BNpEIJky4qFLTsme4Gop+mjuJKo=
-Date:   Sat, 11 May 2019 10:22:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
-Subject: Re: [PATCH v2 1/3] iio: Add driver for Infineon DPS310
-Message-ID: <20190511102236.4c5f9585@archlinux>
-In-Reply-To: <1557344128-690-2-git-send-email-eajames@linux.ibm.com>
-References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
-        <1557344128-690-2-git-send-email-eajames@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 05:32:36 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41875 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfEKJcg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 05:32:36 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f12so1938249plt.8;
+        Sat, 11 May 2019 02:32:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=cjTU4+uCmuJ0Yl4gp0FKzJLeKrgb5vL6eBPDXpXp/sA=;
+        b=isjLUCToOhKYz4fsEzEXiHviDVgUBwtR4ealGTQhSNkBISnGWNBD/U53iUBuPYU8Sl
+         XJU+PZdLZw8iQEbxjiIY+IVqRn6YciuB2IoCoWEc39mOtH6bwLquQMMNJq62STuxAO3l
+         UN366TgrQy8PNWqonJ8I2dOo9cvc4WwIbMtwORDRzodYNBbXfTBP6dbm88BE7A4ca+S3
+         kjo698hHF44VZ7lEnwJaS5F6g8Df1K/apa2CXcBMxjXSOK0U6Ro6HZwShC+A19YJ/D3p
+         rs/Ec7Um85PbYxfLXuqlHvp2L0xyuSTUNUKm5adQN7szjTNAbV1lTscNdWDwoap9SwzB
+         eOPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=cjTU4+uCmuJ0Yl4gp0FKzJLeKrgb5vL6eBPDXpXp/sA=;
+        b=NiVr3MWmwkPMJW6RvDQY5xRu1jLM7+7GtjcJjJtFNN5eyEl79+tJGE+tdQBpmP/yK2
+         MjXqQC4PnAnoAsxKXE4EFnEvti3rsvoZPHW7ZxCANBTG3F/x5H+OJCrrYmdRjksPPyYM
+         Rf6f5sPjz9rPGEe1nmpU1CeFSZaL8oRvWnbIqvdcf0G1VQqTuhblvZU4NTZt37loskL4
+         Y7zUZ6kKAGCxHscjWzMcQrdkpjbQMqf+fawpwTaPfrQSnX5OKoDr/jfjRjzRbbHraX7D
+         /ZB54T/qVPtR5V4iN+uT6siqi3H1w6cn2UfUD0SYvWwBGY7o9PesLPHqF/bPmNH6UMBn
+         p6oA==
+X-Gm-Message-State: APjAAAUk6ubtNnCZlUyihn/lruC5QkM7azdGZ/kZkHyhmN5AbA3uCDIh
+        d8meB1LB7i53MzdDSp8OBvM=
+X-Google-Smtp-Source: APXvYqxL3VR80XppbSKs4um3c/utB9FSipbRkfynylW9joT60R9D/V8K1s/KJLWNbBQuIc5XJsHVfg==
+X-Received: by 2002:a17:902:2a07:: with SMTP id i7mr19428997plb.125.1557567155676;
+        Sat, 11 May 2019 02:32:35 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
+        by smtp.gmail.com with ESMTPSA id o73sm22880681pfi.137.2019.05.11.02.32.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 02:32:35 -0700 (PDT)
+Date:   Sat, 11 May 2019 15:02:28 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfs/dns_resolve.c: Move redundant headers to the top 
+Message-ID: <20190511093228.GA8757@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  8 May 2019 14:35:26 -0500
-Eddie James <eajames@linux.ibm.com> wrote:
+NFS uses either the kernel's DNS service or its own depending on whether
+CONFIG_NFS_USE_KERNEL_DNS is enabled or not.
 
-> From: Joel Stanley <joel@jms.id.au>
->=20
-> The DPS310 is a temperature and pressure sensor. It can be accessed over
-> i2c and SPI.
->=20
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Hi Eddie,
+4 header files which are:
+(i) #include <linux/module.h>
+(ii) #include <linux/sunrpc/clnt.h>
+(iii) #include <linux/sunrpc/addr.h>
+(iv) #include "dns_resolve.h"
 
-Ideally we'll get a sign off form Joel as well on this.
+These 4 header files are used regardless of whether
+CONFIG_NFS_USE_KERNEL_DNS is enabled or not. But they have been included
+under #ifdef CONFIG_NFS_USE_KERNEL_DNS and also the #else section(if
+CONFIG_NFS_USE_KERNEL_DNS is not enabled).
 
-A few comments inline.
+Move these redundant headers to the top of the file i.e include them
+before #ifdef CONFIG_NFS_USE_KERNEL_DNS.
 
-I 'think' this is probably fine without any locking to prevent simultaneous=
- reads
-and /or writes to the registers because the few functions that do multiple =
-reads
-and writes look fine.  Please do take another look at that though to confir=
-m there
-are no corner cases.
+Tested by compiling the kernel and also running
+./scripts/checkincludes.pl on fs/nfs/dns_resolve.c
 
-Otherwise there is a race in the remove path that needs fixing.
-Various minor bits and bobs inline.
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+ fs/nfs/dns_resolve.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-thanks,
-
-Jonathan
-
-
-
-> ---
->  MAINTAINERS                   |   6 +
->  drivers/iio/pressure/Kconfig  |  10 +
->  drivers/iio/pressure/Makefile |   1 +
->  drivers/iio/pressure/dps310.c | 429 ++++++++++++++++++++++++++++++++++++=
-++++++
->  4 files changed, 446 insertions(+)
->  create mode 100644 drivers/iio/pressure/dps310.c
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7afaa1a..3d8c3d0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -7737,6 +7737,12 @@ W:	http://industrypack.sourceforge.net
->  S:	Maintained
->  F:	drivers/ipack/
-> =20
-> +INFINEON DPS310 Driver
-> +M:	Eddie James <eajames@linux.ibm.com>
-> +L:	linux-iio@vger.kernel.org
-> +F:	drivers/iio/pressure/dps310.c
-> +S:	Maintained
-> +
->  INFINIBAND SUBSYSTEM
->  M:	Doug Ledford <dledford@redhat.com>
->  M:	Jason Gunthorpe <jgg@mellanox.com>
-> diff --git a/drivers/iio/pressure/Kconfig b/drivers/iio/pressure/Kconfig
-> index efeb89f..681a1cc 100644
-> --- a/drivers/iio/pressure/Kconfig
-> +++ b/drivers/iio/pressure/Kconfig
-> @@ -52,6 +52,16 @@ config IIO_CROS_EC_BARO
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called cros_ec_baro.
-> =20
-> +config DPS310
-> +       tristate "Infineon DPS310 pressure and temperature sensor"
-> +       depends on I2C
-> +       select REGMAP_I2C
-> +       help
-> +	 Support for the Infineon DPS310 digital barometric pressure sensor.
-> +
-> +	 This driver can also be built as a module.  If so, the module will be
-> +	 called dps310.
-> +
->  config HID_SENSOR_PRESS
->  	depends on HID_SENSOR_HUB
->  	select IIO_BUFFER
-> diff --git a/drivers/iio/pressure/Makefile b/drivers/iio/pressure/Makefile
-> index c2058d7..d8f5ace 100644
-> --- a/drivers/iio/pressure/Makefile
-> +++ b/drivers/iio/pressure/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_BMP280) +=3D bmp280.o
->  bmp280-objs :=3D bmp280-core.o bmp280-regmap.o
->  obj-$(CONFIG_BMP280_I2C) +=3D bmp280-i2c.o
->  obj-$(CONFIG_BMP280_SPI) +=3D bmp280-spi.o
-> +obj-$(CONFIG_DPS310) +=3D dps310.o
->  obj-$(CONFIG_IIO_CROS_EC_BARO) +=3D cros_ec_baro.o
->  obj-$(CONFIG_HID_SENSOR_PRESS)   +=3D hid-sensor-press.o
->  obj-$(CONFIG_HP03) +=3D hp03.o
-> diff --git a/drivers/iio/pressure/dps310.c b/drivers/iio/pressure/dps310.c
-> new file mode 100644
-> index 0000000..7afaa88
-> --- /dev/null
-> +++ b/drivers/iio/pressure/dps310.c
-> @@ -0,0 +1,429 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright IBM Corp 2019
-> +/*
-> + * The DPS310 is a barometric pressure and temperature sensor.
-> + * Currently only reading a single temperature is supported by
-> + * this driver.
-> + *
-> + * https://www.infineon.com/dgdl/?fileId=3D5546d462576f34750157750826c42=
-242
-> + *
-> + * Temperature calculation:
-> + *   c0 * 0.5 + c1 * T_raw / kT =C2=B0C
-> + *
-> + * TODO:
-> + *  - Pressure sensor readings
-> + *  - Optionally support the FIFO
-> + */
-> +
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +#define DPS310_PRS_B0		0x00
-> +#define DPS310_PRS_B1		0x01
-> +#define DPS310_PRS_B2		0x02
-> +#define DPS310_TMP_B0		0x03
-> +#define DPS310_TMP_B1		0x04
-> +#define DPS310_TMP_B2		0x05
-> +#define DPS310_PRS_CFG		0x06
-> +#define DPS310_TMP_CFG		0x07
-> +#define  DPS310_TMP_RATE_BITS	GENMASK(6, 4)
-> +#define  DPS310_TMP_PRC_BITS	GENMASK(3, 0)
-> +#define  DPS310_TMP_EXT		BIT(7)
-> +#define DPS310_MEAS_CFG		0x08
-> +#define  DPS310_MEAS_CTRL_BITS	GENMASK(2, 0)
-> +#define   DPS310_PRS_EN		BIT(0)
-> +#define   DPS310_TEMP_EN	BIT(1)
-> +#define   DPS310_BACKGROUND	BIT(2)
-> +#define  DPS310_PRS_RDY		BIT(4)
-> +#define  DPS310_TMP_RDY		BIT(5)
-> +#define  DPS310_SENSOR_RDY	BIT(6)
-> +#define  DPS310_COEF_RDY	BIT(7)
-> +#define DPS310_CFG_REG		0x09
-> +#define  DPS310_INT_HL		BIT(7)
-> +#define  DPS310_TMP_SHIFT_EN	BIT(3)
-> +#define  DPS310_PRS_SHIFT_EN	BIT(4)
-> +#define  DPS310_FIFO_EN		BIT(5)
-> +#define  DPS310_SPI_EN		BIT(6)
-> +#define DPS310_RESET		0x0c
-> +#define  DPS310_RESET_MAGIC	(BIT(0) | BIT(3))
-Is this expressed as bits in the datasheet?  Superficially I would say this
-would be more readable as a simple number.
-
-> +#define DPS310_COEF_BASE	0x10
-> +
-> +/* Make sure sleep time is <=3D 20ms for usleep_range */
-> +#define DPS310_POLL_SLEEP_US(t)		((t) > 160000 ? 20000 : (t) / 8)
-min(20000, (t)/8) is perhaps more readable?
-
-> +#define DPS310_POLL_TIMEOUT_US(r)	((r) <=3D 0 ? 1000000 : 1000000 / (r))
-I'm curious.  How does r ever end up as less than 0?
-
-> +
-> +#define DPS310_PRS_BASE		DPS310_PRS_B0
-> +#define DPS310_TMP_BASE		DPS310_TMP_B0
-> +
-> +#define DPS310_CALC_RATE(_n)	ilog2(_n)
-> +#define DPS310_CALC_PRC(_n)	ilog2(_n)
-Why? I'm not convinced these defines help readability over just using ilog2=
- inline.
-
-> +
-> +/*
-> + * These values (defined in the spec) indicate how to scale the raw regi=
-ster
-> + * values for each level of precision available.
-> + */
-> +static const int scale_factors[] =3D {
-> +	 524288,
-> +	1572864,
-> +	3670016,
-> +	7864320,
-> +	 253952,
-> +	 516096,
-> +	1040384,
-> +	2088960,
-> +};
-> +
-> +struct dps310_data {
-> +	struct i2c_client *client;
-> +	struct regmap *regmap;
-> +
-> +	s32 c0, c1;
-> +	s32 temp_raw;
-> +};
-> +
-> +static const struct iio_chan_spec dps310_channels[] =3D {
-> +	{
-> +		.type =3D IIO_TEMP,
-> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_OFFSET) |
-> +			BIT(IIO_CHAN_INFO_SCALE) |
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
-> +			BIT(IIO_CHAN_INFO_SAMP_FREQ) |
-> +			BIT(IIO_CHAN_INFO_RAW),
-> +	},
-> +};
-> +
-> +/* To be called after checking the COEF_RDY bit in MEAS_CFG */
-> +static int dps310_get_temp_coef(struct dps310_data *data)
-> +{
-> +	struct regmap *regmap =3D data->regmap;
-> +	u8 coef[3];
-> +	int r;
-> +	u32 c0, c1;
-> +
-> +	/*
-> +	 * Read temperature calibration coefficients c0 and c1 from the
-> +	 * COEF register. The numbers are 12-bit 2's compliment numbers
-> +	 */
-> +	r =3D regmap_bulk_read(regmap, DPS310_COEF_BASE, coef, sizeof(coef));
-> +	if (r < 0)
-> +		return r;
-> +
-> +	c0 =3D (coef[0] << 4) | (coef[1] >> 4);
-> +	data->c0 =3D sign_extend32(c0, 11);
-> +
-> +	c1 =3D ((coef[1] & GENMASK(3, 0)) << 8) | coef[2];
-> +	data->c1 =3D sign_extend32(c1, 11);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dps310_get_temp_precision(struct dps310_data *data)
-> +{
-> +	int val, r;
-> +
-> +	r =3D regmap_read(data->regmap, DPS310_TMP_CFG, &val);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	/*
-> +	 * Scale factor is bottom 4 bits of the register, but 1111 is
-> +	 * reserved so just grab bottom three
-> +	 */
-> +	return BIT(val & GENMASK(2, 0));
-> +}
-> +
-> +static int dps310_set_temp_precision(struct dps310_data *data, int val)
-> +{
-> +	int ret;
-> +	u8 shift_en;
-> +
-> +	if (val < 0 || val > 128)
-> +		return -EINVAL;
-> +
-> +	shift_en =3D val >=3D 16 ? DPS310_TMP_SHIFT_EN : 0;
-> +	ret =3D regmap_write_bits(data->regmap, DPS310_CFG_REG,
-> +				DPS310_TMP_SHIFT_EN, shift_en);
-> +	if (ret)
-> +		return ret;
-
-There isn't any locking around these.  Is there any potential problem if
-a read occurs between these two calls?  It may be fine - I haven't checked
-but this looks risky.
-
-> +
-> +	return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
-> +				  DPS310_TMP_PRC_BITS, DPS310_CALC_PRC(val));
-> +}
-> +
-> +static int dps310_set_temp_samp_freq(struct dps310_data *data, int freq)
-> +{
-> +	u8 val;
-> +
-> +	if (freq < 0 || freq > 128)
-> +		return -EINVAL;
-> +
-> +	val =3D DPS310_CALC_RATE(freq) << 4;
-> +
-> +	return regmap_update_bits(data->regmap, DPS310_TMP_CFG,
-> +				  DPS310_TMP_RATE_BITS, val);
-> +}
-> +
-> +static int dps310_get_temp_samp_freq(struct dps310_data *data)
-> +{
-> +	int val, r;
-> +
-> +	r =3D regmap_read(data->regmap, DPS310_TMP_CFG, &val);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	return BIT((val & DPS310_TMP_RATE_BITS) >> 4);
-> +}
-> +
-> +static int dps310_get_temp_k(struct dps310_data *data)
-> +{
-> +	int r =3D dps310_get_temp_precision(data);
-> +
-> +	if (r < 0)
-> +		return r;
-> +
-> +	return scale_factors[DPS310_CALC_PRC(r)];
-> +}
-> +
-> +static int dps310_read_temp(struct dps310_data *data)
-> +{
-> +	u8 val[3];
-> +	s32 raw;
-> +	int r, ready;
-> +	int rate =3D dps310_get_temp_samp_freq(data);
-> +	int timeout =3D DPS310_POLL_TIMEOUT_US(rate);
-
-Are there any potential races in these functions?  Note that there is nothi=
-ng
-stopping mulitple calls to read_raw occurring at the same time.
-
-> +
-> +	/* Poll for sensor readiness; base the timeout upon the sample rate. */
-> +	r =3D regmap_read_poll_timeout(data->regmap, DPS310_MEAS_CFG, ready,
-> +				     ready & DPS310_TMP_RDY,
-> +				     DPS310_POLL_SLEEP_US(timeout), timeout);
-> +	if (r < 0)
-> +		return r;
-> +
-> +	r =3D regmap_bulk_read(data->regmap, DPS310_TMP_BASE, val, sizeof(val));
-> +	if (r < 0)
-> +		return r;
-> +
-> +	raw =3D (val[0] << 16) | (val[1] << 8) | val[2];
-> +	data->temp_raw =3D sign_extend32(raw, 23);
-> +
-> +	return 0;
-> +}
-> +
-> +static bool dps310_is_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case DPS310_PRS_CFG:
-> +	case DPS310_TMP_CFG:
-> +	case DPS310_MEAS_CFG:
-> +	case DPS310_CFG_REG:
-> +	case DPS310_RESET:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static bool dps310_is_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case DPS310_PRS_B0:
-> +	case DPS310_PRS_B1:
-> +	case DPS310_PRS_B2:
-> +	case DPS310_TMP_B0:
-> +	case DPS310_TMP_B1:
-> +	case DPS310_TMP_B2:
-> +	case DPS310_MEAS_CFG:
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static int dps310_write_raw(struct iio_dev *iio,
-> +			    struct iio_chan_spec const *chan, int val,
-> +			    int val2, long mask)
-> +{
-> +	struct dps310_data *data =3D iio_priv(iio);
-> +
-> +	if (chan->type !=3D IIO_TEMP)
-> +		return -EINVAL;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		return dps310_set_temp_samp_freq(data, val);
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		return dps310_set_temp_precision(data, val);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int dps310_read_raw(struct iio_dev *iio,
-> +			   struct iio_chan_spec const *chan,
-> +			   int *val, int *val2, long mask)
-> +{
-> +	struct dps310_data *data =3D iio_priv(iio);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_SAMP_FREQ:
-> +		*val =3D dps310_get_temp_samp_freq(data);
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret =3D dps310_read_temp(data);
-> +		if (ret)
-> +			return ret;
-> +
-> +		*val =3D data->temp_raw * data->c1;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		ret =3D dps310_get_temp_k(data);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val =3D (data->c0 >> 1) * ret;
-> +		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		ret =3D dps310_get_temp_k(data);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val =3D 1000; /* milliCelsius per Celsius */
-> +		*val2 =3D ret;
-> +		return IIO_VAL_FRACTIONAL;
-> +
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		*val =3D dps310_get_temp_precision(data);
-> +		return IIO_VAL_INT;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct regmap_config dps310_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +	.writeable_reg =3D dps310_is_writeable_reg,
-> +	.volatile_reg =3D dps310_is_volatile_reg,
-> +	.cache_type =3D REGCACHE_RBTREE,
-> +	.max_register =3D 0x29,
-Normally a define relating to the last register name would
-be used here.
-
-> +};
-> +
-> +static const struct iio_info dps310_info =3D {
-> +	.read_raw =3D dps310_read_raw,
-> +	.write_raw =3D dps310_write_raw,
-> +};
-> +
-> +static int dps310_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct dps310_data *data;
-> +	struct iio_dev *iio;
-> +	int r, ready;
-> +
-> +	iio =3D devm_iio_device_alloc(&client->dev,  sizeof(*data));
-> +	if (!iio)
-> +		return -ENOMEM;
-> +
-> +	data =3D iio_priv(iio);
-> +	data->client =3D client;
-> +
-> +	iio->dev.parent =3D &client->dev;
-> +	iio->name =3D id->name;
-> +	iio->channels =3D dps310_channels;
-> +	iio->num_channels =3D ARRAY_SIZE(dps310_channels);
-> +	iio->info =3D &dps310_info;
-> +	iio->modes =3D INDIO_DIRECT_MODE;
-> +
-> +	data->regmap =3D devm_regmap_init_i2c(client, &dps310_regmap_config);
-> +	if (IS_ERR(data->regmap))
-> +		return PTR_ERR(data->regmap);
-> +
-> +	/*
-> +	 * Set up external (MEMS) temperature sensor in single sample, one
-> +	 * measurement per second mode
-> +	 */
-> +	r =3D regmap_write(data->regmap, DPS310_TMP_CFG,
-> +			 DPS310_TMP_EXT | DPS310_CALC_RATE(1) |
-> +			 DPS310_CALC_PRC(1));
-> +	if (r < 0)
-> +		goto err;
-> +
-> +	/* Temp shift is disabled when PRC <=3D 8 */
-> +	r =3D regmap_write_bits(data->regmap, DPS310_CFG_REG,
-> +			      DPS310_TMP_SHIFT_EN, 0);
-> +	if (r < 0)
-> +		goto err;
-> +
-> +	/* Turn on temperature measurement in the background */
-> +	r =3D regmap_write_bits(data->regmap, DPS310_MEAS_CFG,
-> +			      DPS310_MEAS_CTRL_BITS,
-> +			      DPS310_TEMP_EN | DPS310_BACKGROUND);
-> +	if (r < 0)
-> +		goto err;
-> +
-> +	/*
-> +	 * Calibration coefficients required for reporting temperature.
-> +	 * They are available 40ms after the device has started
-> +	 */
-> +	r =3D regmap_read_poll_timeout(data->regmap, DPS310_MEAS_CFG, ready,
-> +				     ready & DPS310_COEF_RDY, 10000, 40000);
-> +	if (r < 0)
-> +		goto err;
-> +
-> +	r =3D dps310_get_temp_coef(data);
-> +	if (r < 0)
-> +		goto err;
-> +
-> +	r =3D devm_iio_device_register(&client->dev, iio);
-> +	if (r)
-> +		goto err;
-> +
-> +	i2c_set_clientdata(client, iio);
-> +
-> +	return 0;
-> +
-> +err:
-> +	regmap_write(data->regmap, DPS310_RESET, DPS310_RESET_MAGIC);
-> +	return r;
-> +}
-> +
-> +static int dps310_remove(struct i2c_client *client)
-> +{
-> +	struct dps310_data *data =3D i2c_get_clientdata(client);
-> +
-> +	return regmap_write(data->regmap, DPS310_RESET, DPS310_RESET_MAGIC);
-
-This could do with a comment.  I'm going to assume that a reset
-puts the device into a low power state?
-
-You could use a devm_add_action_or_reset call to remove the need for the
-error path in probe and for the remove function to exist at all.
-
-As it stands there is a race on remove as you reset the device before
-removing the userspace and inkernel interfaces.  It is almost never
-valid to mix devm_ calls with other calls (devm_add_action_or_reset
-is the nicest solution to this by making anything a managed call).
-
-> +}
-> +
-> +static const struct i2c_device_id dps310_id[] =3D {
-> +	{ "dps310", 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, dps310_id);
-> +
-> +static const unsigned short normal_i2c[] =3D {
-> +	0x77, 0x76, I2C_CLIENT_END
-> +};
-> +
-> +static struct i2c_driver dps310_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "dps310",
-> +	},
-> +	.probe =3D dps310_probe,
-> +	.remove =3D dps310_remove,
-> +	.address_list =3D normal_i2c,
-I'm fairly sure the address list is only used along with the detection
-infrastructure.  As such it doesn't actually provide any value unless
-you have a detect callback.  Please remove.
-
-I would like to see a DT and/or ACPI binding though as that is the
-means most people will use to find the device.
-
-> +	.id_table =3D dps310_id,
-> +};
-> +module_i2c_driver(dps310_driver);
-> +
-> +MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
-> +MODULE_DESCRIPTION("Infineon DPS310 pressure and temperature sensor");
-> +MODULE_LICENSE("GPL v2");
+diff --git a/fs/nfs/dns_resolve.c b/fs/nfs/dns_resolve.c
+index a7d3df8..b34e575 100644
+--- a/fs/nfs/dns_resolve.c
++++ b/fs/nfs/dns_resolve.c
+@@ -7,14 +7,15 @@
+  * Resolves DNS hostnames into valid ip addresses
+  */
+ 
+-#ifdef CONFIG_NFS_USE_KERNEL_DNS
+-
+ #include <linux/module.h>
+ #include <linux/sunrpc/clnt.h>
+ #include <linux/sunrpc/addr.h>
+-#include <linux/dns_resolver.h>
+ #include "dns_resolve.h"
+ 
++#ifdef CONFIG_NFS_USE_KERNEL_DNS
++
++#include <linux/dns_resolver.h>
++
+ ssize_t nfs_dns_resolve_name(struct net *net, char *name, size_t namelen,
+ 		struct sockaddr *sa, size_t salen)
+ {
+@@ -33,24 +34,19 @@ ssize_t nfs_dns_resolve_name(struct net *net, char *name, size_t namelen,
+ 
+ #else
+ 
+-#include <linux/module.h>
+ #include <linux/hash.h>
+ #include <linux/string.h>
+ #include <linux/kmod.h>
+ #include <linux/slab.h>
+-#include <linux/module.h>
+ #include <linux/socket.h>
+ #include <linux/seq_file.h>
+ #include <linux/inet.h>
+-#include <linux/sunrpc/clnt.h>
+-#include <linux/sunrpc/addr.h>
+ #include <linux/sunrpc/cache.h>
+ #include <linux/sunrpc/svcauth.h>
+ #include <linux/sunrpc/rpc_pipe_fs.h>
+ #include <linux/nfs_fs.h>
+ 
+ #include "nfs4_fs.h"
+-#include "dns_resolve.h"
+ #include "cache_lib.h"
+ #include "netns.h"
+ 
+-- 
+2.7.4
 
