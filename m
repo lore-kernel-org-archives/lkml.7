@@ -2,100 +2,117 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 290CFC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B70DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF63F216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0027420989
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="KwFf4gWy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xm15bRCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbfEKSn0 (ORCPT
+        id S1726248AbfEKSrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 14:43:26 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:52454 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfEKSn0 (ORCPT
+        Sat, 11 May 2019 14:47:43 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:45618 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfEKSrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 14:43:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1557600203; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SBNC7EtOtCDjHibYBSHYYIsbYXAqV5LGmbErBkoGtOE=;
-        b=KwFf4gWyvN9tnu7Nr7GQ/2h2NMIIu9Zbhti/gcCvbACE/EKzmjxhpSI4kKfwCP6tbgW6c9
-        osK7ecqKoGOKVPKDpmsHV5+U7KL9DUn8xRa3LszrhoLAuCidO1+BdYUK2lb5uPUvBDsKyQ
-        7vm1jwnfex0gDnYwewOWM4YZS7eUCWI=
-Date:   Sat, 11 May 2019 20:43:09 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] irqchip: ingenic: Drop dependency on MACH_INGENIC, use
- COMPILE_TEST
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org
-Message-Id: <1557600189.1898.0@crapouillou.net>
-In-Reply-To: <20190511170916.12990-1-paul@crapouillou.net>
-References: <20190511170916.12990-1-paul@crapouillou.net>
+        Sat, 11 May 2019 14:47:43 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t1so1520660qtc.12;
+        Sat, 11 May 2019 11:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JDUH+ECvLR1j+epjg5DNmKksHTWaTEUOaV6JPEZYcdA=;
+        b=Xm15bRCctxqDFymgWz01KUJxzlroz8Mgt0yFTwhBRpHNNxOuNxeocQP4+G4Jn8xK0V
+         /KzBgYeawBk93f4EpcaGFdCwPOeNGo/9ghk1MGIYn9eJFWBQVXT9HdhajYtLu2OSVfRI
+         sv7kRjDprj5Feip9sKJ00dLi7/JbuM2113OrKEllakTg7/7++X+PeFv5cf9kfMmC1I/W
+         EXvxhKMdYndKODIqRP09GAeoPW7ultpaellRZRQXjIJdfKBqqtqbOgNih8EI5xxfrvi9
+         tvXyhRkQi2a5+g5ot1kSf2D/I7x1TqyEpHdTkZDI+6KehPhkVEAY6h4U4v/r7T4rU6RS
+         RSuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JDUH+ECvLR1j+epjg5DNmKksHTWaTEUOaV6JPEZYcdA=;
+        b=fwKabJBeOO4cLK9mS8Y+9edWxzOkX41XMNIMp5IbIHkQ62Vp/3UcMJZRHCT+o29lIE
+         tz2oA6adF6vNeYW/wkbRIo6WAOCQEhDCxhwRR/WYHnMhVqtopm8pSEs2eU8+2D8kUhGr
+         q0GP8DcWH0hX39oc8H6lMyW6kJ7JaScs75gMu3BUBTgYj1uIlt+vpWV2uIYPKa+oe/78
+         Wdtru3HnCh9E5M8Jd4FgowornjIed1Fxm4w8a1hMYQiOteGVIWHieD4jCnqxAZe/LEAp
+         /y/zUXjzI7y7J7TKOo6LcU2lxIoP5J+UdwKPVxOvqzcouKXqZagMmEyaDdTeaklVTrN8
+         +ihQ==
+X-Gm-Message-State: APjAAAU0PP1OkT126Kjb/1rOb19okSLstkx/lB3S2v+rN4VW+KVPVBQE
+        teS11Sp7ZFVgYwqbOp/WrSnpfcMe+F54n9gFdD8=
+X-Google-Smtp-Source: APXvYqzDhG2cRN30u5fD5CsogZpcT00fmZHCbwX9PMlnx8NRNi9ZX9DcPEBcyA2IDZ23gOYfUb5tsWFFbFDEOf7uzn8=
+X-Received: by 2002:ad4:542c:: with SMTP id g12mr15084174qvt.223.1557600462077;
+ Sat, 11 May 2019 11:47:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com>
+ <20190407133037.0ad98897@archlinux> <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com>
+ <20190414124029.1f1f6084@archlinux> <CAEc3jaCnHLA9PV5gLiBvHT5y26mwMGSUxa3YCO=c+FYmcszePQ@mail.gmail.com>
+ <d9f2ee79b8690939f36377990fb6d6fb08e9f0bc.camel@hadess.net>
+In-Reply-To: <d9f2ee79b8690939f36377990fb6d6fb08e9f0bc.camel@hadess.net>
+From:   Roderick Colenbrander <thunderbird2k@gmail.com>
+Date:   Sat, 11 May 2019 11:47:30 -0700
+Message-ID: <CAEc3jaBTbH=zHogxekRw5i=GtQcRc9O_d68fMwQb-7jdOcvh5w@mail.gmail.com>
+Subject: Re: [RFC v2] iio: input-bridge: optionally bridge iio acceleometers
+ to create a /dev/input interface
+To:     Bastien Nocera <hadess@hadess.net>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-input <linux-input@vger.kernel.org>,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        lkml <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My bad, I'm stupid. I tested CONFIG_COMPILE_TEST on MIPS...
+On Fri, May 10, 2019 at 1:57 AM Bastien Nocera <hadess@hadess.net> wrote:
+>
+> On Sun, 2019-04-14 at 09:26 -0700, Roderick Colenbrander wrote:
+> >
+> <snip>
+> > We at the time were one of the first to expose acceleration and gyro
+> > data through /dev/input for DualShock 4 as supported by hid-sony. We
+> > report acceleration in 'g' and angular velocity in 'degree / s'. We
+> > set the resolution to respectively '1 g' and '1 degree / s'. The range
+> > we set to the range of the device e.g. for DS4 -4g to +4g for
+> > acceleration. I need to check though what coordinate system we use,
+> > but I think it is right handed (gyro counter clockwise relative to
+> > acceleration axes).
+>
+> How do you export the gyro information through the input device?
 
-The driver does depend on arch-specific includes so COMPILE_TEST
-cannot be used; I'll send a V2.
+For each DS4, there are multiple evdev devices for a DS4 for
+respectively "gamepad", touchpad and motion sensors. The motion
+sensors one, has INPUT_PROP_ACCELEROMETER set. ABS_X/_Y_Z provide
+acceleration and ABS_RX/_RY/_RZ provide gyro. When we added this we
+also updated the input documentation (event-codes.rst) to allow gyro
+to use the rotational axes.
 
--Paul
-
-
-Le sam. 11 mai 2019 =E0 19:09, Paul Cercueil <paul@crapouillou.net> a=20
-=E9crit :
-> Depending on MACH_INGENIC prevent us from creating a generic kernel=20
-> that
-> works on more than one MIPS board. Instead, we just depend on MIPS=20
-> being
-> set.
->=20
-> On other architectures, this driver can still be built, thanks to
-> COMPILE_TEST. This is used by automated tools to find bugs, for
-> instance.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  drivers/irqchip/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 5438abb1baba..864dc38782e8 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -286,9 +286,9 @@ config MIPS_GIC
->  	select MIPS_CM
->=20
->  config INGENIC_IRQ
-> -	bool
-> -	depends on MACH_INGENIC
-> -	default y
-> +	bool "Ingenic JZ47xx IRQ controller driver"
-> +	depends on MIPS || COMPILE_TEST
-> +	default MACH_INGENIC
->=20
->  config RENESAS_H8300H_INTC
->          bool
-> --
-> 2.21.0.593.g511ec345e18
->=20
-
-=
-
+> FWIW, we needed to do extra work in iio-sensor-proxy so that the
+> accelerometer in the Sixaxis/DS4 joypads (and uDraw tablet) didn't
+> appear as though they were accelerometer for the system:
+> https://github.com/hadess/iio-sensor-proxy/commit/401d59e54b3123860180d4401e09df8a1e1bc6c3
+>
+> > The two other drivers using INPUT_PROC_ACCELEROMETER are hid-wacom and
+> > hid-udraw-ps3 Wacom. Both seem to report resolution in 'g'  as well.
+>
+> I wrote hid-udraw-ps3, and it's reporting accelerometer data through
+> input because the rest of the driver is input, and it didn't make much
+> sense to use another subsystem for just that small portion of the
+> events the device sends out.
+>
