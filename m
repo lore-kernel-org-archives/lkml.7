@@ -2,143 +2,111 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0F0C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C4FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B41216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557554866;
-	bh=0SGhsFDVAYUAer+zMGd8vxbptVDyA8vsxsDeg+Jr0XM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s22XX7Y2Pgrjw283Kv+OODt8/hVFT44oSUwrbx7zrB9Dzfn8vJsO/MaGZME7jGFBR
-	 lOoaMg667G4VJtzQ/0kqet41NUyZYq1cwWV6NNdEvwSxZ1IX4xUwk3z4wdqNUwEhqK
-	 Q49XP85QvC0BQparPibhXpTeeDRhgLXp8w60HhHk=
+	by mail.kernel.org (Postfix) with ESMTP id 4B46D216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:13:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbfEKGHp (ORCPT
+        id S1728389AbfEKGNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 02:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56756 "EHLO mail.kernel.org"
+        Sat, 11 May 2019 02:13:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56832 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbfEKGHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 02:07:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726840AbfEKGNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 02:13:01 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23745216C4;
-        Sat, 11 May 2019 06:07:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557554863;
-        bh=0SGhsFDVAYUAer+zMGd8vxbptVDyA8vsxsDeg+Jr0XM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jUoJ/l4qujlTRrdwN9etBE0XaxNNee5dUXMxo/ruVW+WqZaG1TNUhgG9/Ehp6qz9F
-         G+znJ/SSFxUnoon7/Y8WNjdOBDs0CBIsJHkMYEwRwXe7JM9v+X+HcBkvRfH34EoUL+
-         /HZfqbs5ka5UJ0MSFJHcOSq1lwPAHz30adj+3ak4=
-Date:   Sat, 11 May 2019 08:07:41 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file
- of Linux 5.0.14
-Message-ID: <20190511060741.GC18755@kroah.com>
-References: <CAAie0ar11_mPipN=d=mrgnVdEMO1Np0cCYdqcRfZrij_d-5zaQ@mail.gmail.com>
- <20190510051415.GA6073@kroah.com>
- <CAAie0ao_O0hcUOuUf67oog+dSswdQRpAtX8NyQvDAr_XQr=xQg@mail.gmail.com>
- <20190510151206.GA31186@kroah.com>
- <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 18448307CDC7;
+        Sat, 11 May 2019 06:13:01 +0000 (UTC)
+Received: from Hades.local (dhcp-17-185.bos.redhat.com [10.18.17.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D65B17A72;
+        Sat, 11 May 2019 06:12:59 +0000 (UTC)
+Subject: Re: [PATCH] bonding: fix arp_validate toggling in active-backup mode
+To:     Jay Vosburgh <jay.vosburgh@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <20190510215709.19162-1-jarod@redhat.com>
+ <26675.1557528809@famine>
+From:   Jarod Wilson <jarod@redhat.com>
+Message-ID: <2033e768-9e35-ac89-c526-4c28fc3f747e@redhat.com>
+Date:   Sat, 11 May 2019 02:12:58 -0400
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <26675.1557528809@famine>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Sat, 11 May 2019 06:13:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 09:21:39AM +0800, Gen Zhang wrote:
-> On Fri, May 10, 2019 at 11:12:50PM +0800, Greg KH <
-> gregkh@linuxfoundation.org> wrote:
-> >Still impossible to apply :(
-> >
-> >Also, what about Dave's response to you?  This really can never be hit,
-> >like other early-init tty allocations that we do not check because of
-> >this issue, correct?
-> >
-> >thanks,
-> >
-> >greg k-h
-> 1. Cannot imply the patch
-> I pulled the latest kernel from github(commit
-> 1fb3b526df3bd7647e7854915ae6b22299408baf), and patched with
-> **************************************
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
+On 5/10/19 6:53 PM, Jay Vosburgh wrote:
+> Jarod Wilson <jarod@redhat.com> wrote:
 > 
-> @@ -3322,10 +3322,14 @@ static int __init con_init(void)
+>> There's currently a problem with toggling arp_validate on and off with an
+>> active-backup bond. At the moment, you can start up a bond, like so:
+>>
+>> modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+>> ip link set bond0 down
+>> echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+>> echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+>> ip link set bond0 up
+>> ip addr add 192.168.1.2/24 dev bond0
+>>
+>> Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
+>>
+>> echo 1 > /sys/class/net/bond0/bonding/arp_validate
+>>
+>> Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+>> arp_validate off again, the link falls flat on it's face:
+>>
+>> echo 0 > /sys/class/net/bond0/bonding/arp_validate
+>> dmesg
+>> ...
+>> [133191.911987] bond0: Setting arp_validate to none (0)
+>> [133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+>> [133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+>> [133194.259000] bond0: making interface ens4f1 the new active one
+>> [133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+>> [133197.331191] bond0: now running without any active interface!
+>>
+>> The problem lies in bond_options.c, where passing in arp_validate=0
+>> results in bond->recv_probe getting set to NULL. This flies directly in
+>> the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+>> bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+>> this in bond_option_arp_interval_set, but missed that we can get to that
+>> same state in bond_option_arp_validate_set as well.
+>>
+>> One solution would be to universally set recv_probe = bond_arp_recv here
+>> as well, but I don't think bond_option_arp_validate_set has any business
+>> touching recv_probe at all, and that should be left to the arp_interval
+>> code, so we can just make things much tidier here.
+>>
+>> Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
 > 
->   for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
->   vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> + if (!vc_cons[currcons].d || !vc)
-> + goto err_vc;
->   INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->   tty_port_init(&vc->port);
->   visual_init(vc, currcons, 1);
->   vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> + if (!vc->vc_screenbuf)
-> + goto err_vc_screenbuf;
->   vc_init(vc, vc->vc_rows, vc->vc_cols,
->   currcons || !vc->vc_sw->con_save_screen);
->   }
-> @@ -3347,6 +3351,14 @@ static int __init con_init(void)
->   register_console(&vt_console_driver);
->  #endif
->   return 0;
-> +err_vc:
-> + console_unlock();
-> + return -ENOMEM;
-> +err_vc_screenbuf:
-> + console_unlock();
-> + kfree(vc);
-> + vc_cons[currcons].d = NULL;
-> + return -ENOMEM;
->  }
->  console_initcall(con_init);
+> 	Is the above Fixes: tag correct?  3fe68df97c7f is not the source
+> of the erroneous logic being removed, which was introduced by
 > 
+> commit 29c4948293bfc426e52a921f4259eb3676961e81
+> Author: sfeldma@cumulusnetworks.com <sfeldma@cumulusnetworks.com>
+> Date:   Thu Dec 12 14:10:38 2013 -0800
 > 
-> **************************************
-> (It is possible that you missed the last line?)
+>      bonding: add arp_validate netlink support
 
-Look at the patch above, all of the whitespace is damaged.  There is no
-way you took the raw email and then were able to apply that to the
-kernel tree.
+I wasn't entirely sure that was the best choice for Fixes either, it was 
+sort of more "Augments the Fix in", so I'd certainly have no objection 
+to changing the Fixes tag to the earlier commit instead.
 
-You can not cut/paste patches into gmail, please read the kernel
-Documentation file all about email clients and how to get them to work
-properly to send patches.
-
-> 2. David's response
-> In my humble opinion, whatever the cause is, theoratically, there is a
-> possibility that memory allocation (e.g. kzalloc()) can be failed.
-> I don't think it is related to whether we are in the early-initial stage or
-> not.
-
-But it is directly related.
-
-> Once the allocated pointer (e.g. vc) is deferenced, the kernel might go
-> wrong.
-> And in this case, variable vc_cons[currcons].d, vc and vc->vc_screenbuf is
-> deferenced after allocation.
-> Thus I think we should add the allocation check to prevent null pointer
-> deference.
-
-For most problems, yes, if you can successfully unwind and continue on
-with a working system.  Will that happen here?
-
-thanks,
-
-greg k-h
+-- 
+Jarod Wilson
+jarod@redhat.com
