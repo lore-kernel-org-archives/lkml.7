@@ -2,166 +2,152 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C410FC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3C8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CEF2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557536226;
-	bh=192hqAeX73EIOnp8rUHUxJQFygKBG3o6jcfAO47fW1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ONcZBIA14n7qGsjdTg56gzigtyniyIyIQ2bkCMlgp6ijMtXfmELhUTHgssnNnIUit
-	 WJtxGRMdC4aPv47nvrCBPeQyNaaegF7fGcMaEjjOQFWIYUZezEN0ukbsboeYQgKq0V
-	 sadXFPFg17FvG32rx1Vc66kgG+dHkx5vWa9or7Mc=
+	by mail.kernel.org (Postfix) with ESMTP id 675BB217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:59:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JR3F2drF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfEKA5F (ORCPT
+        id S1728348AbfEKA7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 20:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbfEKA5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 20:57:05 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9419217D7;
-        Sat, 11 May 2019 00:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557536223;
-        bh=192hqAeX73EIOnp8rUHUxJQFygKBG3o6jcfAO47fW1o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=g/mmeDe64gdo1ZjwwOmn4qMdV9rQze6g9V9u38yEXR51rNwckbO5Hq3iLvya1p2Ci
-         q6nZZTK4RLWkcnTchlYU2FnYXJKSXl3iKtUHsy3a/MC6WY/XSkXwrB6DgbHR0j0GS+
-         rQU4xloCOUyoX348bNXGo4YdpszyohKPxGAjsrtc=
-Date:   Sat, 11 May 2019 09:56:55 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-Id: <20190511095655.405147cde331cd1da539d0e8@kernel.org>
-In-Reply-To: <20190510124054.GV2589@hirez.programming.kicks-ass.net>
-References: <20190508115416.nblx7c2kocidpytm@treble>
-        <20190508120416.GL2589@hirez.programming.kicks-ass.net>
-        <20190508124248.u5ukpbhnh4wpiccq@treble>
-        <20190508153907.GM2589@hirez.programming.kicks-ass.net>
-        <20190508184848.qerg3flv3ej3xsev@treble>
-        <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
-        <20190509081431.GO2589@hirez.programming.kicks-ass.net>
-        <20190509230106.3551b08553440d125e437f66@kernel.org>
-        <20190509171416.GY2623@hirez.programming.kicks-ass.net>
-        <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
-        <20190510124054.GV2589@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 10 May 2019 20:59:21 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:32794 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbfEKA7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 20:59:21 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m204so5821232oib.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 17:59:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cl42dZaKPdWPXIrbH2C5qTFgM5gCSynPhXLIFVqa36M=;
+        b=JR3F2drFoXseIQNDe33GWiE73pjKGHV2B+ZvDgnMGVjCLxOFIDvA+J2M/UovbYCnvV
+         YcuxiRV4p1HMaTBSOYebaH3fsVxx/ol7Wtq6ZpE6/Gk1IBXROdqbBeu5MDQMRwwVcRah
+         m9Qjvj1EU8HgsmsPflXbrp5Vw906510cI+DXtJRIWjFfNagGxWdGiXAeQF1hyIkdtmMT
+         32kIvIJCS08/uOxfO80bXjH93DKhiS1SMnc1m4KGF7ma2My4ftVxbek5TCV+Tx8pP9Eg
+         MJhTlP53ahTMQYspd6lsWtec5GjwwOjEr4TA+HSjHeNVwNiPPO4FWDnfuEaCMgG0/X9d
+         2Zaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cl42dZaKPdWPXIrbH2C5qTFgM5gCSynPhXLIFVqa36M=;
+        b=ez65nu1yMH/PcIlUsDl1YGetHxH1ZcNf0QONgXyaKSTjiugehvCBUaB/ShDIhoazwA
+         9PIDoJ9mi9gz2vOk8d+BNBLtZhC/tDW6+OF/js/2TmgLvsHoXBt79d13NEZf5/Yx9Itm
+         7sOpQ6eOir+zztw1GMaYagr7LnclFXsxs4ExuoNqF5MKiVzqgQGU79xORPg9LTaWOHu0
+         9ATSCOXVLo/DbLZSwoieH5Yf5g2EGErlUsEqLko6cufdV75EdeGEBf+/YpwTAyIFkRZR
+         zg8J/vGiqRoGJLWyBRjtSzGLpvNExDLxynBXtZRc23VksxKlSEuZG5jdXNC1o/xsaDoD
+         3c1A==
+X-Gm-Message-State: APjAAAVZkMZ0oouxNNPXWCsA3PtBgbzx0D6p7Q245T8jgpYOt51pa6qU
+        yPpMiBhlxwXJfNnBrxwLJ10UTybmjY0WA0pvMazmLg==
+X-Google-Smtp-Source: APXvYqxd5L2Nvbw7B4301QM480ldUecZ6yt4es0ATqbCcPph8SnTzi7vakiTbRG5uoFRT6lPjWaHfX+1q4uJu4AYewU=
+X-Received: by 2002:aca:f512:: with SMTP id t18mr3998026oih.0.1557536360283;
+ Fri, 10 May 2019 17:59:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190510155202.14737-1-pagupta@redhat.com> <20190510155202.14737-4-pagupta@redhat.com>
+ <CAPcyv4hbVNRFSyS2CTbmO88uhnbeH4eiukAng2cxgbDzLfizwg@mail.gmail.com> <864186878.28040999.1557535549792.JavaMail.zimbra@redhat.com>
+In-Reply-To: <864186878.28040999.1557535549792.JavaMail.zimbra@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 10 May 2019 17:59:08 -0700
+Message-ID: <CAPcyv4gL3ODfOr52Ztgq7BM4gVf1cih6cj0271gcpVvpi9aFSA@mail.gmail.com>
+Subject: Re: [PATCH v8 3/6] libnvdimm: add dax_dev sync flag
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 14:40:54 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Fri, May 10, 2019 at 5:45 PM Pankaj Gupta <pagupta@redhat.com> wrote:
+>
+>
+>
+> > >
+> > > This patch adds 'DAXDEV_SYNC' flag which is set
+> > > for nd_region doing synchronous flush. This later
+> > > is used to disable MAP_SYNC functionality for
+> > > ext4 & xfs filesystem for devices don't support
+> > > synchronous flush.
+> > >
+> > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > ---
+> > >  drivers/dax/bus.c            |  2 +-
+> > >  drivers/dax/super.c          | 13 ++++++++++++-
+> > >  drivers/md/dm.c              |  3 ++-
+> > >  drivers/nvdimm/pmem.c        |  5 ++++-
+> > >  drivers/nvdimm/region_devs.c |  7 +++++++
+> > >  include/linux/dax.h          |  8 ++++++--
+> > >  include/linux/libnvdimm.h    |  1 +
+> > >  7 files changed, 33 insertions(+), 6 deletions(-)
+> > [..]
+> > > diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> > > index 043f0761e4a0..ee007b75d9fd 100644
+> > > --- a/drivers/md/dm.c
+> > > +++ b/drivers/md/dm.c
+> > > @@ -1969,7 +1969,8 @@ static struct mapped_device *alloc_dev(int minor)
+> > >         sprintf(md->disk->disk_name, "dm-%d", minor);
+> > >
+> > >         if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
+> > > -               dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
+> > > +               dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops,
+> > > +                                                        DAXDEV_F_SYNC);
+> >
+> > Apologies for not realizing this until now, but this is broken.
+> > Imaging a device-mapper configuration composed of both 'async'
+> > virtio-pmem and 'sync' pmem. The 'sync' flag needs to be unified
+> > across all members. I would change this argument to '0' and then
+> > arrange for it to be set at dm_table_supports_dax() time after
+> > validating that all components support synchronous dax.
+>
+> o.k. Need to set 'DAXDEV_F_SYNC' flag after verifying all the target
+> components support synchronous DAX.
+>
+> Just a question, If device mapper configuration have composed of both
+> virtio-pmem or pmem devices, we want to configure device mapper for async flush?
 
-> On Fri, May 10, 2019 at 01:58:31PM +0900, Masami Hiramatsu wrote:
-> > On Thu, 9 May 2019 19:14:16 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > > --- a/arch/x86/kernel/kprobes/core.c
-> > > > > +++ b/arch/x86/kernel/kprobes/core.c
-> > > > > @@ -731,29 +731,8 @@ asm(
-> > > > >  	".global kretprobe_trampoline\n"
-> > > > >  	".type kretprobe_trampoline, @function\n"
-> > > > >  	"kretprobe_trampoline:\n"
-> 
-> > > > Here, we need a gap for storing ret-ip, because kretprobe_trampoline is
-> > > > the address which is returned from the target function. We have no 
-> > > > "ret-ip" here at this point. So something like
-> > > > 
-> > > > +	"push $0\n"	/* This is a gap, will be filled with real return address*/
-> > > 
-> > > The trampoline already provides a gap, trampoline_handler() will need to
-> > > use int3_emulate_push() if it wants to inject something on the return
-> > > stack.
-> > 
-> > I guess you mean the int3 case. This trampoline is used as a return destination.
-> 
-> > When the target function is called, kretprobe interrupts the first instruction,
-> > and replace the return address with this trampoline. When a "ret" instruction
-> > is done, it returns to this trampoline. Thus the stack frame start with
-> > previous context here. As you described above,
-> 
-> I would prefer to change that to inject an extra return address, instead
-> of replacing it. With the new exception stuff we can actually do that.
-> 
-> So on entry we then go from:
-> 
-> 	<previous context>
-> 	RET-IP
-> 
-> to
-> 
-> 	<previous context>
-> 	RET-IP
-> 	return-trampoline
-> 
-> So when the function returns, it falls into the trampoline instead.
-
-Is that really possible? On x86-64, most parameters are passed by registers,
-but x86-32 (and x86-64 in rare case) some parameters can be passed by stack.
-If we change the stack layout in the function prologue, the code in
-function body can not access those parameters on stack.
-
-Thank you,
-
-> 
-> > > > > +	 * On entry the stack looks like:
-> > > > > +	 *
-> > > > > +	 *   2*4(%esp) <previous context>
-> > > > > +	 *   1*4(%esp) RET-IP
-> > > > > +	 *   0*4(%esp) func
-> > 
-> > From this trampoline call, the stack looks like:
-> > 
-> > 	 *   1*4(%esp) <previous context>
-> > 	 *   0*4(%esp) func
-> > 
-> > So we need one more push.
-> 
-> And then the stack looks just right at this point.
-> 
-> > > > > +	"push trampoline_handler\n"
-> > > > > +	"jmp call_to_exception_trampoline\n"
-> > > > >  	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
-> > > > >  );
-> > > > >  NOKPROBE_SYMBOL(kretprobe_trampoline);
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+If it's composed of both then, yes, it needs to be async flush at the
+device-mapper level. Otherwise MAP_SYNC will succeed and fail to
+trigger fsync on the host file when necessary for the virtio-pmem
+backed portion of the device-mapper device.
