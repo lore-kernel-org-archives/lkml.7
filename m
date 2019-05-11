@@ -2,107 +2,117 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83089C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20356C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B34217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 09:58:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557568701;
-	bh=w06xIIDrPLNrUYunIGSuFxnclJ9Ts8pgisvyPGIll0c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fGf1NSx0MsS7KJ54Oz8sJ3pEXNOokW+j25dt8Q5Ctg9qpWUuB7QiOki4GNIy15k+Q
-	 GQiZlbO3FuPpKgaTPwviPNCCpZM7LvMbnZV+fQhjqEigjN7Q9ZbXlCnFU6JVdVitUM
-	 1ukMBzHAEjn/kU3b93z47Ournb1SyxAUhSl1bxqc=
+	by mail.kernel.org (Postfix) with ESMTP id DC82221479
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="klfVSy6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfEKJ6U (ORCPT
+        id S1728503AbfEKKFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 05:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfEKJ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 05:58:20 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1620D21479;
-        Sat, 11 May 2019 09:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557568699;
-        bh=w06xIIDrPLNrUYunIGSuFxnclJ9Ts8pgisvyPGIll0c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KpuAxiSrFCRO5aA7AgDmR6XNEY/HgQMzyfHQlLiLaqKhuXAve4OUfzRbsxkC9lgoo
-         u/KWxxXhC0NdI3bWI0AQ+Kfxm8DqpWmK0ppR3q+pBOeKkQK7DDyIvUC1u5+4tbpxef
-         pPvH/wpW2lxtd4V+kNlF6XUZ8GeqTyFZu7QD9EZA=
-Date:   Sat, 11 May 2019 10:58:12 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/5] iio: stmpe-adc: Add compatible name
-Message-ID: <20190511105812.54f6d5f0@archlinux>
-In-Reply-To: <20190507143615.28477-1-dev@pschenker.ch>
-References: <20190507143615.28477-1-dev@pschenker.ch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 11 May 2019 06:05:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:33242 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbfEKKFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 06:05:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id x132so5847242lfd.0
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 03:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=S1pzAmLNYPAdy00NLo0+swPi8ZueHy7n/ZkntsATcVI=;
+        b=klfVSy6EuBXbSF6HXaXcZqpKz9ArrgWbJLcJ/kiA+mUkTEmlnelyUiy+Ebc8lRDVF4
+         oJFOI2e031uG3NFEcMEKQqN7RykJoZr2Llk7h7G65PZNEGmsh50YH7h+bzjhfEYbSESC
+         L+zVmygnc8g3W/7S2XAwH5H3NBVSp5uYLPqvSMeBGMLSky47UaopILOd5R36IHeFeZpq
+         nYoUOj9cC8O3UbSbyjDMpe7ul4TuR40bYud8BzpaAuD+3LBBYEHVWpGE4Ae+6jFRvtA4
+         oIQzEYlOSNZngzIbq0rGpZIisbJeWT0Y+EKhxc5r94Q13Xb8OoilJeC1ngbfLKyom8Le
+         wUIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=S1pzAmLNYPAdy00NLo0+swPi8ZueHy7n/ZkntsATcVI=;
+        b=J1Qm6fJ/tmC4AKXWXuFD0l9cTkZl6iAd2M4fljvLnOgU8X1SUIFoB+YDUpztMl4bPx
+         JXuc+AxlrCUfvNC/6dvgEs9XWMjsjz2JIXfi+JIiRcQBGZBGxM5oTcxheSJzuwNYPR4c
+         ZqmXCiQL6B6qU1JvzxSgYCIkhWDZxBEDK2ScxFZJl1GkPqEpKGFo9z12plQpXmxAsvIk
+         O5OQsD666KFnUwgRpv7I7prMqaddRdI6N9heaWL5wBUrSS40QdxWXCQuD9C4Fp4dliNx
+         N3WX5R7RmKkKsBwCCKINEd1wXKadr0BQRhyuEmsrRpeqwHadpSL/1CzW4eeAVLZmYUGZ
+         P6qw==
+X-Gm-Message-State: APjAAAVTaF6eDqWWfs+ZsuG+cIUWvgOKPJI9nHnECMuY6KfGnSkKrBTy
+        UeSS2Lxk7ae3c7B5LwOP4MA=
+X-Google-Smtp-Source: APXvYqxBlf058XLRLFZsCI5tRDwGeplpimfiuQZEYKJ3VIiqwLjYZ8sn94EHcuKStD9r7wG7384ngw==
+X-Received: by 2002:a19:e002:: with SMTP id x2mr9047896lfg.16.1557569118133;
+        Sat, 11 May 2019 03:05:18 -0700 (PDT)
+Received: from localhost.localdomain (80-167-223-88-cable.dk.customer.tdc.net. [80.167.223.88])
+        by smtp.gmail.com with ESMTPSA id v1sm2196313lfa.93.2019.05.11.03.05.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 11 May 2019 03:05:17 -0700 (PDT)
+From:   Daniel Gomez <dagmcr@gmail.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        alsa-devel@alsa-project.org (moderated list:CIRRUS LOGIC MADERA CODEC
+        DRIVERS),
+        patches@opensource.cirrus.com (open list:CIRRUS LOGIC MADERA CODEC
+        DRIVERS), linux-kernel@vger.kernel.org (open list)
+Cc:     dagmcr@gmail.com, javier@dowhile0.org,
+        alsa-devel@alsa-project.org (moderated list:CIRRUS LOGIC MADERA CODEC
+        DRIVERS),
+        patches@opensource.cirrus.com (open list:CIRRUS LOGIC MADERA CODEC
+        DRIVERS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] mfd: madera: Add missing of table registration
+Date:   Sat, 11 May 2019 12:03:58 +0200
+Message-Id: <1557569038-20340-1-git-send-email-dagmcr@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 May 2019 16:36:11 +0200
-Philippe Schenker <dev@pschenker.ch> wrote:
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> Add the compatible name to the driver so it gets loaded when the proper
-> node in DT is detected.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Applied thanks,
+Before this patch:
+modinfo ./drivers/mfd/madera.ko | grep alias
 
-Jonathan
+After this patch:
+modinfo ./drivers/mfd/madera.ko | grep alias
+alias:          of:N*T*Ccirrus,wm1840C*
+alias:          of:N*T*Ccirrus,wm1840
+alias:          of:N*T*Ccirrus,cs47l91C*
+alias:          of:N*T*Ccirrus,cs47l91
+alias:          of:N*T*Ccirrus,cs47l90C*
+alias:          of:N*T*Ccirrus,cs47l90
+alias:          of:N*T*Ccirrus,cs47l85C*
+alias:          of:N*T*Ccirrus,cs47l85
+alias:          of:N*T*Ccirrus,cs47l35C*
+alias:          of:N*T*Ccirrus,cs47l35
 
-> ---
-> 
->  drivers/iio/adc/stmpe-adc.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> index 37f4b74a5d32..9ec338ba3440 100644
-> --- a/drivers/iio/adc/stmpe-adc.c
-> +++ b/drivers/iio/adc/stmpe-adc.c
-> @@ -354,9 +354,14 @@ static struct platform_driver stmpe_adc_driver = {
->  		.pm	= &stmpe_adc_pm_ops,
->  	},
->  };
-> -
->  module_platform_driver(stmpe_adc_driver);
->  
-> +static const struct of_device_id stmpe_adc_ids[] = {
-> +	{ .compatible = "st,stmpe-adc", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, stmpe_adc_ids);
-> +
->  MODULE_AUTHOR("Stefan Agner <stefan.agner@toradex.com>");
->  MODULE_DESCRIPTION("STMPEXXX ADC driver");
->  MODULE_LICENSE("GPL v2");
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+---
+ drivers/mfd/madera-core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
+index 2a77988..826b971 100644
+--- a/drivers/mfd/madera-core.c
++++ b/drivers/mfd/madera-core.c
+@@ -286,6 +286,7 @@ const struct of_device_id madera_of_match[] = {
+ 	{ .compatible = "cirrus,wm1840", .data = (void *)WM1840 },
+ 	{}
+ };
++MODULE_DEVICE_TABLE(of, madera_of_match);
+ EXPORT_SYMBOL_GPL(madera_of_match);
+ 
+ static int madera_get_reset_gpio(struct madera *madera)
+-- 
+2.7.4
 
