@@ -2,111 +2,149 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CCEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC1FC04AB3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07F7217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF25C2183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:05:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557572744;
+	bh=OP5PzMKNdv7eZTclz6nMXr+GPXx4HBbNzjUZYRYUa/U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lsMk2sDq4dPQEclEbalTbK8EpBbP7oHpxBSF2BqXCgH8FNLA7N1EbUZAeo56UZNkt
+	 /pBOyr1SDcHMZCusvzvRQgvtWUAZcx/mcgDW77O90mwBonQDzGXIYWYGYX7XJnDdwP
+	 XwBQrwxVY6oNoKcrhOReY3jhxmkP2wm7VYae+YMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfEKLBk (ORCPT
+        id S1728554AbfEKLFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 07:01:40 -0400
-Received: from static.187.34.201.195.clients.your-server.de ([195.201.34.187]:34684
-        "EHLO sysam.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbfEKLBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 07:01:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by sysam.it (Postfix) with ESMTP id 0821B3FE9A;
-        Sat, 11 May 2019 12:55:41 +0200 (CEST)
-Received: from sysam.it ([127.0.0.1])
-        by localhost (mail.sysam.it [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Jqyj6kYSd3xh; Sat, 11 May 2019 12:55:40 +0200 (CEST)
-Received: from jerusalem (host87-8-dynamic.4-87-r.retail.telecomitalia.it [87.4.8.87])
-        by sysam.it (Postfix) with ESMTPSA id 6C8FF3FBE6;
-        Sat, 11 May 2019 12:55:40 +0200 (CEST)
-Date:   Sat, 11 May 2019 12:55:39 +0200
-From:   Angelo Dureghello <angelo@sysam.it>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] m68k: io: Fix io{read,write}{16,32}be() for Coldfire
- peripherals
-Message-ID: <20190511105539.GA20920@jerusalem>
-References: <20190429081937.7544-1-geert@linux-m68k.org>
- <CAK8P3a1NbjYAGCTq2RUfqEX1OgppEV5mKmBJ0t=JiFF13zSytg@mail.gmail.com>
+        Sat, 11 May 2019 07:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54330 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726240AbfEKLFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 07:05:43 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9CEA217F9;
+        Sat, 11 May 2019 11:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557572741;
+        bh=OP5PzMKNdv7eZTclz6nMXr+GPXx4HBbNzjUZYRYUa/U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xKbDZt6GAyBICk/pLUZM4FgM6vLQ8lH5jT1N5OdVcsZXE84mIFZVF+4Y/jkngLSQX
+         6NQeV8XCW6snF6a6WMTDHT+qjSBW/3PNaUz+yp8Fhhs9wt12SmRlx6kNLL2C5C51ix
+         a9MkDcGf+JfuUrBOIgkq3n2wgIt1fHkRLc1v7rNY=
+Date:   Sat, 11 May 2019 12:05:36 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     linux-input <linux-input@vger.kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-iio <linux-iio@vger.kernel.org>, kernel@pyra-handheld.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Subject: Re: [Letux-kernel] [RFC v2] iio: input-bridge: optionally bridge
+ iio acceleometers to create a /dev/input interface
+Message-ID: <20190511120536.647c8676@archlinux>
+In-Reply-To: <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
+References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com>
+        <20190407133037.0ad98897@archlinux>
+        <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com>
+        <20190414124029.1f1f6084@archlinux>
+        <CD6219BE-61FF-4C38-9532-054C60A77F89@goldelico.com>
+        <20190422152014.7c6637ab@archlinux>
+        <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
+        <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1NbjYAGCTq2RUfqEX1OgppEV5mKmBJ0t=JiFF13zSytg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 9 May 2019 19:02:49 +0200
+"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-On Mon, Apr 29, 2019 at 02:39:47PM +0200, Arnd Bergmann wrote:
-> On Mon, Apr 29, 2019 at 10:19 AM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> >
-> > The generic definitions of mmio_{read,write}{16,32}be() in lib/iomap.c
-> > assume that the {read,write}[wl]() I/O accessors always use little
-> > endian accesses, and swap the result.
-> >
-> > However, the Coldfire versions of the {read,write}[wl]() I/O accessors are
-> > special, in that they use native big endian instead of little endian for
-> > accesses to the on-SoC peripheral block, thus violating the assumption.
-> >
-> > Fix this by providing our own variants, using the raw accessors,
-> > reinstating the old behavior.  This is fine on m68k, as no special
-> > barriers are needed, and also avoids swapping data twice.
-> >
-> > Reported-by: Angelo Dureghello <angelo@sysam.it>
-> > Fixes: aecc787c06f4300f ("iomap: Use non-raw io functions for io{read|write}XXbe")
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> > This can be reverted later, after this oddity of the Coldfire I/O
-> > support has been fixed, and drivers have been updated.
-> > ---
-> >  arch/m68k/include/asm/io.h | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/m68k/include/asm/io.h b/arch/m68k/include/asm/io.h
-> > index aabe6420ead2a599..d47e7384681ab1cd 100644
-> > --- a/arch/m68k/include/asm/io.h
-> > +++ b/arch/m68k/include/asm/io.h
-> > @@ -8,6 +8,12 @@
-> >  #include <asm/io_mm.h>
-> >  #endif
-> >
-> > +#define mmio_read16be(addr)            __raw_readw(addr)
-> > +#define mmio_read32be(addr)            __raw_readl(addr)
-> > +
-> > +#define mmio_write16be(val, port)      __raw_writew((val), (port))
-> > +#define mmio_write32be(val, port)      __raw_writel((val), (port))
-> > +
-> >  #include <asm-generic/io.h>
+> > Am 09.05.2019 um 11:09 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
+> > 
+> > Hi Jonathan,  
+> >> 
+> >> 
+> >> And how does that work on the common case of a sensor in the lid of a laptop?
+> >> how do you know what angle the screen is at?    
+> > 
+> > Well, I am not aware of laptops where the sensor is in the lid because I am in the handhelds
+> > business, but let's assume it is common.
+> > 
+> > I realized that if the sensor orientation is related to the lid position, while the reference
+> > frame reported to user space is to be referenced to the lap or keyboard of the laptop, there does
+> > not exist a static mount-matrix to describe it properly. So no driver can report that correctly.
+> > 
+> > Therefore, such a device needs a dynamic mount matrix, i.e. there should be a kernel driver that
+> > reads out the lid angle sensor and modifies the mount-matrix of the accelerometer by some sin()/cos()
+> > table.  
 > 
-> This looks correct to me, but there are two points that stick out to me:
+> One more thought on this topic.
 > 
-> - why do you only do this for mmio and not for pio?
-> - why do you even use the generic_iomap wrappers rather than
->   the trivial asm-generic versions of those functions?
+> My answer to the question "how do you know what angle the screen is at?" by requiring an ADC to
+> measure some potentiometer in the hinge to make the mount matrix dynamic is probably completely
+> wrong...
+
+There are lid angle sensors out independent of this discussion that might work
+as you describe but so far they are rare.  There is one under review for
+cros_ec for example - how it is implemented, no idea!
+
 > 
->        Arnd
+> If we take the definition for the mount matrix, it defines a specific g-vector pointing to
+> center of earth if the user is holding the device in a specific position and looking on the display
+> or the keyboard.
+> 
+> So far the description assumes that there is a single accelerometer and display and keys of a phone
+> are in a single plane, i.e. there is no angle and everything is fine.
+> 
+> Now if we simply take the two accelerometers separately, one z-axis is going through the keyboard
+> and the other through the display. Which means if the mount matrices are well defined, the accelerometers
+> should report almost the same values if the display is fully opened by 180 degrees, i.e. the display
+> is sitting flat on the table. This is what my RFC does by autoscaling. The values differ only
+> by noise.
+> 
+> Now what about measuring the lid angle? Well, it is already measured by both accelerometers! If they
+> do not agree, the angle can be calculated by some arctan() based on y and z axis reports...
+Agreed. This is how it is done.
+> 
+> If you close the lid, the display is turned upside down and y and z axes reverse sign.
+> 
+> So there remains only the issue that user-space must know which sensor device file is which sensor
+> and can do the calculation of the lid angle. This is possible because the iio accelerometer name
+> is available through the input event ioctls.
+> 
+> In summary this case also does not need policy or configuration. Just user space using the information
+> that is already presented.
 
-At least i applied it and it works properly, dspi / dma drivers are
-back working.
+I disagree with that last statement.  If there is a lid angle sensor, policy is
+needed to know which of your associated orientation is the base one and which
+device indicates the lid angle.
 
-Thanks, 
+Actually most of the time what you will do is pick one 'correct' sensor under
+some configuration of the device and use that.  That is policy.  Yes, you could
+bake the policy in to device tree, but then you can also bake in the association
+between the underlying IIO sensor and any virtual input sensor.
 
-Regards
-Angelo
+Anyhow, we still disagree on whether any such virtual input interface
+should be a userspace policy decision.  So far I haven't seen any compelling
+argument why it shouldn't be and the flexibility such a policy based interface
+provides is its major advantage.
+
+Thanks,
+
+Jonathan
