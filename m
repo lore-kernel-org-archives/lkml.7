@@ -2,144 +2,109 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C10C2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 01:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5368C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 01:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F2F2184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 01:23:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B720C2184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 01:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnMpbkIZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfEKBXU (ORCPT
+        id S1728434AbfEKBXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 21:23:20 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55252 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728064AbfEKBXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 21:23:20 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 217C2308FC4E;
-        Sat, 11 May 2019 01:23:19 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E0D66100E9FF;
-        Sat, 11 May 2019 01:23:18 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 676DA18089CA;
-        Sat, 11 May 2019 01:23:18 +0000 (UTC)
-Date:   Fri, 10 May 2019 21:23:17 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     cohuck@redhat.com, Jan Kara <jack@suse.cz>,
-        KVM list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, david <david@fromorbit.com>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        virtualization@lists.linux-foundation.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>, jstaron@google.com,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        jmoyer <jmoyer@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Rik van Riel <riel@surriel.com>,
-        yuval shaia <yuval.shaia@oracle.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Kevin Wolf <kwolf@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Igor Mammedov <imammedo@redhat.com>
-Message-ID: <2003480558.28042237.1557537797923.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4gL3ODfOr52Ztgq7BM4gVf1cih6cj0271gcpVvpi9aFSA@mail.gmail.com>
-References: <20190510155202.14737-1-pagupta@redhat.com> <20190510155202.14737-4-pagupta@redhat.com> <CAPcyv4hbVNRFSyS2CTbmO88uhnbeH4eiukAng2cxgbDzLfizwg@mail.gmail.com> <864186878.28040999.1557535549792.JavaMail.zimbra@redhat.com> <CAPcyv4gL3ODfOr52Ztgq7BM4gVf1cih6cj0271gcpVvpi9aFSA@mail.gmail.com>
-Subject: Re: [Qemu-devel] [PATCH v8 3/6] libnvdimm: add dax_dev sync flag
+        Fri, 10 May 2019 21:23:46 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36459 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbfEKBXq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 21:23:46 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a8so7584584edx.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 18:23:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Sy6IJVq4VJSGNsCncCOevfEMVkxJ4DdVxf3Fz7dO1o=;
+        b=rnMpbkIZV4iQ4uC1XfVbzikGIDK3Y+X7xhPA0psUZYD05UE/Dqd5RuIMhOxiYAFKqn
+         uKs3xy3l40Rp4PJym3z08kOPIuHzjGzk2tezFv6qMlcYGEncR0+Y7n0whFx+kDsCB6Tb
+         Z49SYnDW8VehUpLEXctnUsWYHTGT++65Lp23fGWAICCifApmLlteKtlNTK2oFp3mQ6lH
+         ikukBB6HUN+zaBVSvGe1nLUw/HbhQ8ruWgpsy/T66ozOwjE5ykYJtuGBAtvUAPDllIxf
+         /gCI9y5LGU9tCSG/+V5w754Nbb8UPqwBMl1/pqEk1U0JYG6UXtn9r/cJGpKeIlOC2zyt
+         q7HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Sy6IJVq4VJSGNsCncCOevfEMVkxJ4DdVxf3Fz7dO1o=;
+        b=Nkb3GkMxj8V6WQtrvV8SjAh+NnBz7GHWX10e6x6mvC/lstDWeqmS2vU9aN0OMuJv1W
+         UYM5XCIT6VC48ZHT/pI2Hcpf0Z1lpmO+O8QoKA5vj/PaFYkjLMR9LdR5XFC6e2LZmj5h
+         kuqnQZbpoyk5dQgSyYFYJ3vnZku1+glkUWMUoKRM0bduWrt/FO76FqCXfwpNFj9USoBh
+         9rKkYwpkN0/Ko4Cb66YrDl4DmPCUkje3XsAHDBB3GbSOaskGjJ5KA65qT217kdeuDV8u
+         08WO0XLLTw6ei+3rozbgjTmQl8VtZc+3nkbXXZiCF+8bAwevVRy7EiXy0TrakDxBGwCp
+         bqVA==
+X-Gm-Message-State: APjAAAVSxKM/pk9nqkX8bTODPvKoLcgpMi2NajdURp/WpZ6KpR0aKkj6
+        HqVonk3+e6wj0F963Ex9PA8=
+X-Google-Smtp-Source: APXvYqx0DjxzxMiJASMnY3yXqVa1UNYgM9oYsPoKMw+8rRXJ93TwPZ8R959C69MGa/Os41aCsPmcww==
+X-Received: by 2002:a50:b3a4:: with SMTP id s33mr14924192edd.112.1557537824828;
+        Fri, 10 May 2019 18:23:44 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id r3sm941779ejb.88.2019.05.10.18.23.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 18:23:44 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] mfd: stmfx: Fix macro definition spelling
+Date:   Fri, 10 May 2019 18:23:01 -0700
+Message-Id: <20190511012301.2661-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.28, 10.4.195.22]
-Thread-Topic: libnvdimm: add dax_dev sync flag
-Thread-Index: ptJfczfofLn7Sapjrtn0VT/vVA1TgQ==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sat, 11 May 2019 01:23:19 +0000 (UTC)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Clang warns:
 
-> > > >
-> > > > This patch adds 'DAXDEV_SYNC' flag which is set
-> > > > for nd_region doing synchronous flush. This later
-> > > > is used to disable MAP_SYNC functionality for
-> > > > ext4 & xfs filesystem for devices don't support
-> > > > synchronous flush.
-> > > >
-> > > > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > > > ---
-> > > >  drivers/dax/bus.c            |  2 +-
-> > > >  drivers/dax/super.c          | 13 ++++++++++++-
-> > > >  drivers/md/dm.c              |  3 ++-
-> > > >  drivers/nvdimm/pmem.c        |  5 ++++-
-> > > >  drivers/nvdimm/region_devs.c |  7 +++++++
-> > > >  include/linux/dax.h          |  8 ++++++--
-> > > >  include/linux/libnvdimm.h    |  1 +
-> > > >  7 files changed, 33 insertions(+), 6 deletions(-)
-> > > [..]
-> > > > diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> > > > index 043f0761e4a0..ee007b75d9fd 100644
-> > > > --- a/drivers/md/dm.c
-> > > > +++ b/drivers/md/dm.c
-> > > > @@ -1969,7 +1969,8 @@ static struct mapped_device *alloc_dev(int minor)
-> > > >         sprintf(md->disk->disk_name, "dm-%d", minor);
-> > > >
-> > > >         if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
-> > > > -               dax_dev = alloc_dax(md, md->disk->disk_name,
-> > > > &dm_dax_ops);
-> > > > +               dax_dev = alloc_dax(md, md->disk->disk_name,
-> > > > &dm_dax_ops,
-> > > > +
-> > > > DAXDEV_F_SYNC);
-> > >
-> > > Apologies for not realizing this until now, but this is broken.
-> > > Imaging a device-mapper configuration composed of both 'async'
-> > > virtio-pmem and 'sync' pmem. The 'sync' flag needs to be unified
-> > > across all members. I would change this argument to '0' and then
-> > > arrange for it to be set at dm_table_supports_dax() time after
-> > > validating that all components support synchronous dax.
-> >
-> > o.k. Need to set 'DAXDEV_F_SYNC' flag after verifying all the target
-> > components support synchronous DAX.
-> >
-> > Just a question, If device mapper configuration have composed of both
-> > virtio-pmem or pmem devices, we want to configure device mapper for async
-> > flush?
-> 
-> If it's composed of both then, yes, it needs to be async flush at the
-> device-mapper level. Otherwise MAP_SYNC will succeed and fail to
-> trigger fsync on the host file when necessary for the virtio-pmem
-> backed portion of the device-mapper device.
+In file included from drivers/mfd/stmfx.c:13:
+include/linux/mfd/stmfx.h:7:9: warning: 'MFD_STMFX_H' is used as a
+header guard here, followed by #define of a different macro
+[-Wheader-guard]
 
-o.k. Agree.
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/475
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ include/linux/mfd/stmfx.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks you,
-Pankaj
-> 
-> 
+diff --git a/include/linux/mfd/stmfx.h b/include/linux/mfd/stmfx.h
+index d890595b89b6..3c67983678ec 100644
+--- a/include/linux/mfd/stmfx.h
++++ b/include/linux/mfd/stmfx.h
+@@ -5,7 +5,7 @@
+  */
+ 
+ #ifndef MFD_STMFX_H
+-#define MFX_STMFX_H
++#define MFD_STMFX_H
+ 
+ #include <linux/regmap.h>
+ 
+-- 
+2.21.0
+
