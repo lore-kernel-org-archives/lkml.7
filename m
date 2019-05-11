@@ -7,59 +7,60 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF182C04AB1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4033C04AB4
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2577B208C0
+	by mail.kernel.org (Postfix) with ESMTP id A55AB2184B
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:28:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="pQNNebF3"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="osvXv0Im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726403AbfEKU2Z (ORCPT
+        id S1726449AbfEKU20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 16:28:25 -0400
-Received: from narfation.org ([79.140.41.39]:34154 "EHLO v3-1039.vlinux.de"
+        Sat, 11 May 2019 16:28:26 -0400
+Received: from narfation.org ([79.140.41.39]:34156 "EHLO v3-1039.vlinux.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfEKU2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 16:28:25 -0400
-X-Greylist: delayed 534 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 May 2019 16:28:24 EDT
+        id S1726279AbfEKU20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 16:28:26 -0400
 Received: from sven-desktop.home.narfation.org (unknown [IPv6:2a00:1ca0:1480:f1fc::4065])
-        by v3-1039.vlinux.de (Postfix) with ESMTPSA id 44A201100D9;
-        Sat, 11 May 2019 22:19:28 +0200 (CEST)
+        by v3-1039.vlinux.de (Postfix) with ESMTPSA id C6A3C11012A;
+        Sat, 11 May 2019 22:19:32 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1557605968; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=20121; t=1557605972; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references:openpgp:autocrypt;
-        bh=7w4hc+IcRext4UXbUarhDzyKL3rDHUZzGOnD6LexJ18=;
-        b=pQNNebF3QrUxQPUOvgWNO4PhvNG3fNe2eguAwUwV23jReO0FEQ45DXxNgs71I5xshCDgAv
-        QRyCT2oeLXDr+ikLTNs3hHFFxnduadcUWvxorMNgASk+nFuuZdoa5Hv6EQ9NDj72LyxB9M
-        Ru+u4R1UE2bnM0UD39ZLWDYYZJynRss=
+         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
+        bh=d8Jl+aESyorlbKSD9+hm1B07d7adsmKXPXVlOeQAHlY=;
+        b=osvXv0Imcz74BTqOBSQl7mfqJYJ3w8l1hnVLAacXo6XN0O9LXshy/nysO+Ft50BJHjhhvy
+        0SS92rRPvNr8eXxJ1XOMVtCwmsOelc5zyRw7hzBt5og/rtiz2yz8mBg1SaCnhVocZq4ncN
+        tsLEzzKqmeseO2m91nhrL5iMJZDVHYQ=
 From:   Sven Eckelmann <sven@narfation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Sven Eckelmann <sven@narfation.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Christoph Hellwig <hch@lst.de>
-Subject: [PATCH] scripts/spdxcheck.py: Fix path to deprecated licenses
-Date:   Sat, 11 May 2019 22:19:16 +0200
-Message-Id: <20190511201917.20828-1-sven@narfation.org>
+Subject: [PATCH 2/2] scripts/spdxcheck.py: Add dual license subdirectory
+Date:   Sat, 11 May 2019 22:19:17 +0200
+Message-Id: <20190511201917.20828-2-sven@narfation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190511201917.20828-1-sven@narfation.org>
+References: <20190511201917.20828-1-sven@narfation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1557605968; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=20121; t=1557605972; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references:openpgp:autocrypt;
-        bh=7w4hc+IcRext4UXbUarhDzyKL3rDHUZzGOnD6LexJ18=;
-        b=pkt8sH9FGWCnY1byVoTeJ/4W3OcPspWWgHAwKrYlW5F0iA7EeV5bAwQptbk9P5Sni42rgv
-        UdDLkEBWwNzU2rFFwWIiDZoZZb70oCglVjMjfXUYKvFH9Mmqf8JQdr8EctC/c48z1Z89xw
-        i/lZ+AdThayEw0KXaLS0TDFZKT9Puys=
-ARC-Seal: i=1; s=20121; d=narfation.org; t=1557605968; a=rsa-sha256;
+         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
+        bh=d8Jl+aESyorlbKSD9+hm1B07d7adsmKXPXVlOeQAHlY=;
+        b=lDugwnakkrXMNpsOpm+UuTkBRTN+Fnf2hk6UVazoCwwFrjvZRa9PBrVqYcAl1aEE7Svmfc
+        2jR3VVnvmj48eIHjIe9QgRWBI43nZAYmhkLOHYP9LxBl2v83RlRnNcA0oo2uVNaGIQi95z
+        kT7CKO8qPagtdQ1LwvKJbIVh5uNIY9Q=
+ARC-Seal: i=1; s=20121; d=narfation.org; t=1557605972; a=rsa-sha256;
         cv=none;
-        b=zEv1csVNyBD1jnOIa6gCxq+smzkcaGHujyvJuXYRC86ejMPOuwSkN6vCpXS8cxuGCXPzSP
-        06Wxw+AZvpa08SB1UG4QR9qgsftqwZsmxxcRbjM2G0+wbpz17l2qHjhP57KM76CqsjOxbM
-        HOjy4SZh9p0LAj/6SiLt6c4aLdU4yrI=
+        b=iT19LE3/sKcpgocZeRtPf/fCNwofhwreIMeEuHgAmxSvmxQZzFfiZthumVs9Fh4+lN596H
+        juwQX6J8R49iHztnhOVbAsQT9Xjh7rpTrxYb0P10d0LYaigSo4L8oZ3yTGseL6XMm66SzU
+        lbO4Qr8M33kOWp6NDlOZaJGmK2tRuQo=
 ARC-Authentication-Results: i=1;
         ORIGINATING;
         auth=pass smtp.auth=sven smtp.mailfrom=sven@narfation.org
@@ -68,40 +69,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The directory name for other licenses was changed to "deprecated" in 
-commit 62be257e986d ("LICENSES: Rename other to deprecated"). But it was
-not changed for spdxcheck.py. As result, checkpatch failed with
+The licenses from the other directory were partially moved to the dual
+directory in commit 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to
+deprecated licenses"). checkpatch therefore rejected files like
+drivers/staging/android/ashmem.h with
 
-  FAIL: "Blob or Tree named 'other' not found"
-  Traceback (most recent call last):
-    File "scripts/spdxcheck.py", line 240, in <module>
-      spdx = read_spdxdata(repo)
-    File "scripts/spdxcheck.py", line 41, in read_spdxdata
-      for el in lictree[d].traverse():
-    File "/usr/lib/python2.7/dist-packages/git/objects/tree.py", line 298, in __getitem__
-      return self.join(item)
-    File "/usr/lib/python2.7/dist-packages/git/objects/tree.py", line 244, in join
-      raise KeyError(msg % file)
-  KeyError: "Blob or Tree named 'other' not found"
+  WARNING: 'SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */' is not supported in LICENSES/...
+  #1: FILE: drivers/staging/android/ashmem.h:1:
+  +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
 
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Christoph Hellwig <hch@lst.de>
-Fixes: 62be257e986d ("LICENSES: Rename other to deprecated")
+Fixes: 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to deprecated licenses")
 Signed-off-by: Sven Eckelmann <sven@narfation.org>
 ---
  scripts/spdxcheck.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
-index 4fe392e507fb..1a39b34588b7 100755
+index 1a39b34588b7..33df646618e2 100755
 --- a/scripts/spdxcheck.py
 +++ b/scripts/spdxcheck.py
 @@ -32,7 +32,7 @@ class SPDXdata(object):
  def read_spdxdata(repo):
  
      # The subdirectories of LICENSES in the kernel source
--    license_dirs = [ "preferred", "other", "exceptions" ]
-+    license_dirs = [ "preferred", "deprecated", "exceptions" ]
+-    license_dirs = [ "preferred", "deprecated", "exceptions" ]
++    license_dirs = [ "preferred", "deprecated", "exceptions", "dual" ]
      lictree = repo.head.commit.tree['LICENSES']
  
      spdx = SPDXdata()
