@@ -2,107 +2,104 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0876FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6535217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:02:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557554527;
-	bh=p/HRiT9yqHlg2V7XNH8WpqZb2zm5DrER+cqskPbJ7+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YCOpP8HN8BJsGrwwNWCP4XoAv6SpHi2h8kh50TIJhUCPUYFdYZidddjxkNR4onJlj
-	 ee4MOfXd2eSQuhWHnNtBjqUl7Kpnmi2ipXkCuXH4OZtaXrQVOIhJ+l/dI8DlajC3fO
-	 y8IivRwt5xGYSCfzl7jWLLRxeG79mF/Bl3tipRMw=
+	by mail.kernel.org (Postfix) with ESMTP id C7C7B2173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAqSgrQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfEKGCG (ORCPT
+        id S1728274AbfEKGDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 02:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfEKGCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 02:02:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C61012173B;
-        Sat, 11 May 2019 06:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557554525;
-        bh=p/HRiT9yqHlg2V7XNH8WpqZb2zm5DrER+cqskPbJ7+s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ktm0kz52FhtprAmfDKfRf0+t/ACR967wBlZo/njpZyLTvdvQQcZE/JHEG0mPhwMnS
-         fSPu28p3h+yTt9jEZ2bBD58kVUAHRLZfIuy79u26uItO5gMpvcOkRhorvGTs7CSDs1
-         MdDsjOpnTitVkTfxOZTdc+qoCez/9OEhX6dWx0xE=
-Date:   Sat, 11 May 2019 08:02:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH 3/3] kheaders: Make it depend on sysfs
-Message-ID: <20190511060203.GA18650@kroah.com>
-References: <20190510210243.152808-1-joel@joelfernandes.org>
- <20190510210243.152808-4-joel@joelfernandes.org>
- <CAK7LNATeJqmE29M=Y1Vexg8nnRdr3qUDkq1BejN7t2_106PgVg@mail.gmail.com>
+        Sat, 11 May 2019 02:03:20 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41436 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfEKGDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 02:03:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z3so4027980pgp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 23:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kBIV0O0qGoeY97ZaUi2m9+lkbOG6A0guIBzLPEYh3y8=;
+        b=XAqSgrQEObDwj/mPPtLgS0JSVjBIlJJ/0JJnvBFfJ+3+31lwnxrp1DvnQ57VnKE9X0
+         EZD1SyQi6bcCqGn6+UpqH0tzOiXQ+9oiv1q8HTd7CvybmcfKD5FnLzKPbKIHKe30jCZL
+         kDhbyCVATD5KXgcGwRtzAKeCmQqqVmR/QvJw5+IjT+el2LTK5cptFWDB8Xu85xZF5Afv
+         qIjg/QHW4EmhVtP3c/SDYWnB7LFr3YATCix5ipOP+n+YAKyJiP4w0eza0J6qk5643WAU
+         TqJnKWSMp8QAoSsfe03TaJlsv5O8DKGZO0dYjJRXkG5dEu9Em/oKJM29est7aD/uu5tN
+         MFcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kBIV0O0qGoeY97ZaUi2m9+lkbOG6A0guIBzLPEYh3y8=;
+        b=LCvcIJysoLx/8fe+OyxK1vfjRGw4AxoPZowZe4SfkG/okbxLye3UfdcKMLO6VXFoXd
+         QjW96gLxVaihAmakSzwVnNxtAx6MPU6sM5fchXCAXCKGcwTd7Bk4yihKChjKLe5xmWrA
+         iqS10o7xmxed/+bf0RKXYfg3hUvWrEpyJtNM9uXYpkk9A3buP71CEpl1OG52Yo4bcfDK
+         B5evCotRHgtUJNpCpKr1U4//LwsRhYlH3bYwK4P2fYC8pqE87RhHcMlLitQ71FF9I669
+         +XMpcBjvJmmMQ+taGYDK9YRkDAYmSNzA97dCVhknPzc+4iCOqWWmWT2cV68/GZk8jI4L
+         gYqA==
+X-Gm-Message-State: APjAAAUTJW8vWlxa6d+MuWQxQUgMXoellcIF70wUd4tAv33gyY21gTDl
+        hMt8E6pX+BaNAg75bWwwlB09Zj7h+v9+Sw==
+X-Google-Smtp-Source: APXvYqxZTw/+JETq1S5v5JxKB0pyLjUgcIwpOyyHOLrwQhYgB19EUcR23ia58Yj0e4cZbS6D2rfyjw==
+X-Received: by 2002:a65:4589:: with SMTP id o9mr18550951pgq.381.1557554599593;
+        Fri, 10 May 2019 23:03:19 -0700 (PDT)
+Received: from localhost.localdomain (115.193.225.49.dyn.cust.vf.net.nz. [49.225.193.115])
+        by smtp.gmail.com with ESMTPSA id m17sm11687559pfi.17.2019.05.10.23.03.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 May 2019 23:03:19 -0700 (PDT)
+From:   Murray McAllister <murray.mcallister@gmail.com>
+Cc:     murray.mcallister@gmail.com,
+        VMware Graphics <linux-graphics-maintainer@vmware.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/vmwgfx: NULL pointer dereference from vmw_cmd_dx_view_define()
+Date:   Sat, 11 May 2019 18:01:37 +1200
+Message-Id: <20190511060138.20592-1-murray.mcallister@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNATeJqmE29M=Y1Vexg8nnRdr3qUDkq1BejN7t2_106PgVg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 09:52:04AM +0900, Masahiro Yamada wrote:
-> On Sat, May 11, 2019 at 6:05 AM Joel Fernandes (Google)
-> <joel@joelfernandes.org> wrote:
-> >
-> > The kheaders archive is exposed through SYSFS in /sys/kernel/. Make it
-> > depend on SYSFS as it makes no sense to enable this feature without it.
-> 
-> 
-> And, it also makes no sense to break the feature by 1/3,
-> then fix it by 3/3.
-> 
-> 
-> Why don't you squash this?
+If SVGA_3D_CMD_DX_DEFINE_RENDERTARGET_VIEW is called with a surface
+ID of SVGA3D_INVALID_ID, the srf struct will remain NULL after
+vmw_cmd_res_check(), leading to a null pointer dereference in
+vmw_view_add().
 
-I agree, this belongs in patch 1/3.
+Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+index 2ff7ba04d8c8..447afd086206 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -2414,6 +2414,10 @@ static int vmw_cmd_dx_view_define(struct vmw_private *dev_priv,
+ 		return -EINVAL;
+ 
+ 	cmd = container_of(header, typeof(*cmd), header);
++	if (unlikely(cmd->sid == SVGA3D_INVALID_ID)) {
++		DRM_ERROR("Invalid surface id.\n");
++		return -EINVAL;
++	}
+ 	ret = vmw_cmd_res_check(dev_priv, sw_context, vmw_res_surface,
+ 				VMW_RES_DIRTY_NONE, user_surface_converter,
+ 				&cmd->sid, &srf);
+-- 
+2.20.1
+
