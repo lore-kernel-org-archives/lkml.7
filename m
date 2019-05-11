@@ -2,182 +2,128 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABFDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB1BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921D7217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:08:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Dw7FyF67"
+	by mail.kernel.org (Postfix) with ESMTP id 99F1421841
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557569321;
+	bh=SsM1ofarQZfVphiOzN1Muff7BbA5Z1fF8eufyrWWeQI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XN9N8/5SGTsVhVejbWN0dQGdy8r6L+MCPcwov7dwoxRwr6xahLLmOQR0ZzY1wcKql
+	 BMRr3LKyEWueWsI3uKH0BKdQHpXjE7F8TWEEP2Gcvd2WrXJLSxSzXiP6QYRLF1vehl
+	 PX5+60lIIdmamaWopPtZ1ILUQjmL+dW9WtxfyzsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfEKKIe (ORCPT
+        id S1728564AbfEKKIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 06:08:34 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39360 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728424AbfEKKId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 06:08:33 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g9so3996798plm.6
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 03:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0EQbtG9UK8LaFWPxCR8l4gLESWDW0fS19bkjthE7mrI=;
-        b=Dw7FyF673u3rt2Kt56MEIfuZ4GVyNqyF2ZS81A2N0yZg+R9xjVDroPHkMdsjhq8vPO
-         1yQMH5Q+r+3IN98KLc7R/Rv4uPphjAvsz8hInTbeqc13q+Y3rxN+Mt40EaSgCEnp14pF
-         DcC+Mp2+4pb6/pDFQ80eS2DGU+3mkTkcw9tmi+LrGVT24nKJtIGzLjM0xCKv055ksZgE
-         x3jTPLghR7mRHJYiNgS+X0T6gprmSSsXjvjd6deqisc29IdpJWs8fD48hU2iT7nsquuc
-         kTIYqiAJqfkkmwWopyv3E55jZi0FFYNQY5bhv1P+9Aobkml6OB/8BDybYVuEZxdSXbYh
-         2V1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=0EQbtG9UK8LaFWPxCR8l4gLESWDW0fS19bkjthE7mrI=;
-        b=R2XR7VNzQJIpiojE9FWhWKKFgKOi943c01b6FaoYoD+G6nMfAQO1gL7h7JOaf11xb+
-         pLMqtBeym9hx8zircw8If3aLLJCYY1bjfKu9FIGhH3k984ZKpJDJkFv2+y5z2FE2DhYV
-         B4gSE3nGxM1WQA3yJ2EJu5VFkpGWWJVBppqbmzPw07P19MyDcDebchbU0bqPZLSlQOdM
-         LAZ88p+5yxsA3Sl0ToZkUSDXEr32xBVaSRp0AeTh07OaaV/5FTiMLci+ChSmFuUl2JcQ
-         feXnegB/XHLcg/8dGgfIZDtOkqVoJZGugk6Non7VDa53ip03z93Ul8WR5BBOWGpqDOpR
-         zufg==
-X-Gm-Message-State: APjAAAUPTm8mq1gMpuzdYt+g0wDQjANRUWRiTr0c2xMNkZFKcpHBiAnA
-        Z4O4KciHtlQWj5BHXy3vbwN/Ww==
-X-Google-Smtp-Source: APXvYqwVECdIzOQsAnYcibww71gPB9aNXqCmxNekgY5j0GplT7l+TITNM79GbCsGwsm/oKFur5YlVw==
-X-Received: by 2002:a17:902:b70c:: with SMTP id d12mr19459356pls.178.1557569313210;
-        Sat, 11 May 2019 03:08:33 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id c129sm16951836pfg.178.2019.05.11.03.08.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 11 May 2019 03:08:32 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        bbrezillon@kernel.org, richard@nod.at, palmer@sifive.com,
-        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v4 2/3] mtd: spi-nor: add support to unlock flash device.
-Date:   Sat, 11 May 2019 15:38:07 +0530
-Message-Id: <1557569288-19441-3-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557569288-19441-1-git-send-email-sagar.kadam@sifive.com>
-References: <1557569288-19441-1-git-send-email-sagar.kadam@sifive.com>
+        Sat, 11 May 2019 06:08:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57648 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728424AbfEKKIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 06:08:39 -0400
+Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB3E217D6;
+        Sat, 11 May 2019 10:08:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557569319;
+        bh=SsM1ofarQZfVphiOzN1Muff7BbA5Z1fF8eufyrWWeQI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HAXe6MeobDUFP7WvrCs1xsgjUoGOeAmEG9RNlbuH+Ab7ZuTAzxqpPSMxZdkfT5wtQ
+         aQsGa/YmucANFbQql6kff84p7mospL8kV8nxz1TrQyR+xpNWlZI8bFaiPCfeDi02Hb
+         VoB5x2tTwt28/2zhixssWI4f11DWdWK3ai+hQEbw=
+Date:   Sat, 11 May 2019 11:08:32 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Philippe Schenker <dev@pschenker.ch>
+Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/5] iio: stmpe-adc: Reinit completion struct on begin
+ conversion
+Message-ID: <20190511110832.24f58e4a@archlinux>
+In-Reply-To: <20190507143615.28477-2-dev@pschenker.ch>
+References: <20190507143615.28477-1-dev@pschenker.ch>
+        <20190507143615.28477-2-dev@pschenker.ch>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nor device (is25wp256 mounted on HiFive unleashed Rev A00 board) from ISSI
-have memory blocks guarded by block protection bits BP[0,1,2,3].
+On Tue,  7 May 2019 16:36:12 +0200
+Philippe Schenker <dev@pschenker.ch> wrote:
 
-Clearing block protection bits,unlocks the flash memory regions
-The unlock scheme is registered during nor scans.
+> From: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> In some cases, the wait_completion got interrupted. This caused the
+> error-handling to mutex_unlock the function. The before turned on
+> interrupt then got called anyway. In the ISR then completion() was
+> called causing wrong adc-values returned in a following adc-readout.
+> 
+> Reinitialise completion struct to make sure the counter is zero
+> when beginning a new adc-conversion.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Hi Philippe, 
 
-Based on code developed by Wesley Terpstra <wesley@sifive.com>
-and/or Palmer Dabbelt <palmer@sifive.com>.
-https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
+To me this looks like a fix that we should consider applying to stable.
+However, as it is in the middle of this series I'm not going to take
+it via the fast route (during rc's). If people want to backport it
+they will have to wait until after the next merge window.
+If anyone has an urgent need, then shout in the next week and I'll
+pull this version out and we can restructure the set.
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 51 ++++++++++++++++++++++++++++++++++++++++++-
- include/linux/mtd/spi-nor.h   |  1 +
- 2 files changed, 51 insertions(+), 1 deletion(-)
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index c5408ed..3942b26 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1461,6 +1461,49 @@ static int macronix_quad_enable(struct spi_nor *nor)
- }
- 
- /**
-+ * issi_unlock() - clear BP[0123] write-protection.
-+ * @nor: pointer to a 'struct spi_nor'.
-+ * @ofs: offset from which to unlock memory.
-+ * @len: number of bytes to unlock.
-+ *
-+ * Bits [2345] of the Status Register are BP[0123].
-+ * ISSI chips use a different block protection scheme than other chips.
-+ * Just disable the write-protect unilaterally.
-+ *
-+ * Return: 0 on success, -errno otherwise.
-+ */
-+static int issi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+{
-+	int ret, val;
-+	u8 mask = SR_BP0 | SR_BP1 | SR_BP2 | SR_BP3;
-+
-+	val = read_sr(nor);
-+	if (val < 0)
-+		return val;
-+	if (!(val & mask))
-+		return 0;
-+
-+	write_enable(nor);
-+
-+	write_sr(nor, val & ~mask);
-+
-+	ret = spi_nor_wait_till_ready(nor);
-+	if (ret)
-+		return ret;
-+
-+	ret = read_sr(nor);
-+	if (ret > 0 && !(ret & mask)) {
-+		dev_info(nor->dev,
-+			"ISSI Block Protection Bits cleared SR=0x%x", ret);
-+		ret = 0;
-+	} else {
-+		dev_err(nor->dev, "ISSI Block Protection Bits not cleared\n");
-+		ret = -EINVAL;
-+	}
-+	return ret;
-+}
-+
-+/**
-  * spansion_quad_enable() - set QE bit in Configuraiton Register.
-  * @nor:	pointer to a 'struct spi_nor'
-  *
-@@ -1836,7 +1879,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
--			SPI_NOR_4B_OPCODES)
-+			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
- 	},
- 
- 	/* Macronix */
-@@ -4078,6 +4121,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
- 		nor->flash_is_locked = stm_is_locked;
- 	}
- 
-+	/* NOR protection support for ISSI chips */
-+	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
-+	    info->flags & SPI_NOR_HAS_LOCK) {
-+		nor->flash_unlock = issi_unlock;
-+
-+	}
- 	if (nor->flash_lock && nor->flash_unlock && nor->flash_is_locked) {
- 		mtd->_lock = spi_nor_lock;
- 		mtd->_unlock = spi_nor_unlock;
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index ff13297..9a7d719 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -127,6 +127,7 @@
- #define SR_BP0			BIT(2)	/* Block protect 0 */
- #define SR_BP1			BIT(3)	/* Block protect 1 */
- #define SR_BP2			BIT(4)	/* Block protect 2 */
-+#define SR_BP3			BIT(5)	/* Block protect 3 for ISSI device*/
- #define SR_TB			BIT(5)	/* Top/Bottom protect */
- #define SR_SRWD			BIT(7)	/* SR write protect */
- /* Spansion/Cypress specific status bits */
--- 
-1.9.1
+Thanks,
+
+Jonathan
+
+> ---
+> 
+>  drivers/iio/adc/stmpe-adc.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
+> index 9ec338ba3440..b3872eb37293 100644
+> --- a/drivers/iio/adc/stmpe-adc.c
+> +++ b/drivers/iio/adc/stmpe-adc.c
+> @@ -65,6 +65,8 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
+>  
+>  	mutex_lock(&info->lock);
+>  
+> +	reinit_completion(&info->completion);
+> +
+>  	info->channel = (u8)chan->channel;
+>  
+>  	if (info->channel > STMPE_ADC_LAST_NR) {
+> @@ -105,6 +107,8 @@ static int stmpe_read_temp(struct stmpe_adc *info,
+>  
+>  	mutex_lock(&info->lock);
+>  
+> +	reinit_completion(&info->completion);
+> +
+>  	info->channel = (u8)chan->channel;
+>  
+>  	if (info->channel != STMPE_TEMP_CHANNEL) {
 
