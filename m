@@ -2,93 +2,102 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03062C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79AEC2146F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7DB6217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:17:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYKrGaSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfEKAFq (ORCPT
+        id S1728121AbfEKAQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 20:05:46 -0400
-Received: from mail02.iobjects.de ([188.40.134.68]:32782 "EHLO
-        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfEKAFq (ORCPT
+        Fri, 10 May 2019 20:16:29 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35063 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728049AbfEKAQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 20:05:46 -0400
-X-Greylist: delayed 459 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 May 2019 20:05:45 EDT
-Received: from tux.wizards.de (pD9EBF14A.dip0.t-ipconnect.de [217.235.241.74])
-        by mail02.iobjects.de (Postfix) with ESMTPSA id 0865E4168C0A;
-        Sat, 11 May 2019 01:58:06 +0200 (CEST)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.wizards.de (Postfix) with ESMTP id 7A94E6D3233;
-        Sat, 11 May 2019 01:58:05 +0200 (CEST)
-Subject: Re: [PATCH] bfq: backport: update internal depth state when queue
- depth changes
-To:     Eric Wheeler <stable@lists.ewheeler.net>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BFQ I/O SCHEDULER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
-References: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
- <20190510201855.GB14410@sasha-vm>
- <alpine.LRH.2.11.1905102312220.4789@mx.ewheeler.net>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <a5e71713-3ce6-2888-1658-c973393a01ec@applied-asynchrony.com>
-Date:   Sat, 11 May 2019 01:58:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 May 2019 20:16:28 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t87so4042678pfa.2;
+        Fri, 10 May 2019 17:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=5x2tWauOasbmQygmVEvJr0U0PUarRPwShg51MdnJLjQ=;
+        b=NYKrGaSy3oF5JiFyyguay0cqndzovy1Tn3SS3vaNjZwpXKRuQy0zWkWUd9u/d/HN6U
+         5CMUK0MO/TDYq2oNKHyk8qs+w2PeD9GHwj3oa7nQ/WP3u6dY+axSPxqLmsCM+oSqz4Gu
+         FdZJNC8E4a/27AHMcIVtRU7hPnoexyVQGJwC0+ILnA4VFpmrNR9JMVguBX6jUFOZ60gt
+         rIOhzvyZlierHLXSR/qV7I9o4Vn5JUWaQqjyKazH+1/g6JEiDBI+CHocGIpZRfjDUHUe
+         jmpP+Ol2NQHqb9A4AjGpq1Rq3dvzMi3GYCvUP0v7MbB8EjkmetHpjN4kGhb4MqkZn3g8
+         cmjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=5x2tWauOasbmQygmVEvJr0U0PUarRPwShg51MdnJLjQ=;
+        b=dndPiIzNyQSRVYhsXbcxrwJAbEdHoeyMokkfPFU28zj+JwurDQB89/to93OWeSBYnH
+         67CuPdHojxROF/e1oxxzUy0alzzRwWUVIykozvaKRjTqrD6F8+DSxcjtF4W80cobVsg8
+         BwJf1LGYm29pgFCsGwWjeGN6O/EJCLpghwyDaBG5myw34b1YHtEAmC/wNXPRNLfelXvg
+         IcBB+o/Bb0g7Hz5gN5LZgWa+/LXwZddBX5G481vuS16sFLCr/HPXJBikhC1InGupwSCx
+         zVVYzlgCRH5Y/ISXL9J7YJnbFvgdIjf8k+um5Czt0TbXMprHtnjdctQEG2hQUBIAMq2J
+         o8+w==
+X-Gm-Message-State: APjAAAU7TgSfFA5MoTtSkqmzAd7hwmsWRI9oQUG+GIdLKStI2aEIb0J3
+        LoqQb+7TFP4+s6yKNyTFX6kJU9kjughTkbCEBF7KLLOyol0=
+X-Google-Smtp-Source: APXvYqx1xKu0zJ3XE0Jwmh+BulASMoZnGAAwoGQNyC0SpKI616cDoMY6/HdpLNcr/L7AUE7av17Z1RAHQNfSMQmNW24=
+X-Received: by 2002:aa7:8acb:: with SMTP id b11mr17929164pfd.115.1557533787604;
+ Fri, 10 May 2019 17:16:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.11.1905102312220.4789@mx.ewheeler.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   prakhar srivastava <prsriva02@gmail.com>
+Date:   Fri, 10 May 2019 17:16:16 -0700
+Message-ID: <CAEFn8q+rT2_0TFb0fKA6ixOvC3H5R5KpR0zFiTOXa_4U-9HeUw@mail.gmail.com>
+Subject: Carrying over the ima log during kexec_file_load
+To:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kexec@lists.infradead.org
+Cc:     jmorris@namei.org, Mimi Zohar <zohar@linux.ibm.com>,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/19 1:17 AM, Eric Wheeler wrote:
-> On Fri, 10 May 2019, Sasha Levin wrote:
-> 
->> On Fri, May 10, 2019 at 10:56:32AM -0700, Eric Wheeler wrote:
->>> From: Jens Axboe <axboe@kernel.dk>
->>>
->>> commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
->>>
->>> A previous commit moved the shallow depth and BFQ depth map calculations
->>> to be done at init time, moving it outside of the hotter IO path. This
->>> potentially causes hangs if the users changes the depth of the scheduler
->>> map, by writing to the 'nr_requests' sysfs file for that device.
->>>
->>> Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
->>> the depth changes, so that the scheduler can update its internal state.
->>>
->>> Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
->>> Tested-by: Kai Krakow <kai@kaishome.de>
->>> Reported-by: Paolo Valente <paolo.valente@linaro.org>
->>> Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
->>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
->>> Cc: stable@vger.kernel.org
->>
->> I wasn't clear on what was backported here, so I've queued the upstream
->> version on 4.19 and 4.14, it doesn't seem to be relevant to older
->> branches.
-> 
-> 
-> Thanks Sasha.  We needed it for 4.19, I wasn't sure how far it would patch
-> back so I left the version off.  BFQ was merged in 4.12 iirc, so if it
-> patched against 4.14, then 4.19 and 4.14 are the only ones that need it.
+Hi,
 
-It was applied in mainline for 5.1 and also applies fine to 5.0.x, so IMHO
-that wouldn't hurt either.
+I am currently looking at carrying over the ima log from the current
+kernel to the next kernel during soft reboot(kexec_file_load) for arm64
+and x86_64.
+During soft reboot(kexec_file_load) TPM boot PCR=E2=80=99s(PCRs 0 through 7=
+)
+are not reset or extended and thus the boot aggregate does not change,
+leaving the new kernel with a sense of secure boot.
+During kexec_file_load the kernel file signature is validated through PE
+file signature validation.
+The boot cmdline args will also be measured with
+=E2=80=9Ckexec cmdline buffer measure=E2=80=9D change which is in progress.
+https://lkml.org/lkml/2019/5/10/728
 
-thanks,
-Holger
+Looking at the powerpc implementation of kexec_file_load,  making
+change to the kimage_arch as below seems most reasonable.
+
+Struct kimage_arch {
+                =E2=80=A6
+                ima_log_buffer
+                ima_log_buffer_size
+};
+
+Add respective entries in dtb/fdt and read the same in the next kernel.
+No changes to the purgatory should be needed since no kernel segments
+are changed.
+
+Is anyone already looking at this?
+If not, I want to understand what=E2=80=99s the best approach for this is?
+
+Thanks,
+Prakhar Srivastava
