@@ -2,84 +2,136 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DA5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE20C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:12:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD562173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706AF2173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:12:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="pQCJMws5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edW68aqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfEKPI0 (ORCPT
+        id S1728632AbfEKPML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 11:08:26 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:60811 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728572AbfEKPIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 11:08:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=fz0TG2HVuHdCB+n/eg0BGCxLCtFhcBm6HNAd+QooGbs=; b=pQCJMws5AnRYd+VxMdt16JRvXY
-        Cg8XfvdVo2QLMT/Hl6SJBRKWZ8PaZKNRLUP71MIS9yHGPBvGujpTpgAbJ4yCoUlii4PO4GDUoXNZ+
-        qVphZ4oF6RHbaEZ8tO9KItJbV3r+ePD9vt3C/X3WMPI6+PPl8TJK+54+/dPB1MIt/zJM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hPTbn-0003X7-1b; Sat, 11 May 2019 17:08:19 +0200
-Date:   Sat, 11 May 2019 17:08:19 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vicente Bergas <vicencb@gmail.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Message-ID: <20190511150819.GF4889@lunn.ch>
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
- <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
- <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Sat, 11 May 2019 11:12:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39227 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfEKPMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 11:12:10 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w8so8311150wrl.6
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 08:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id;
+        bh=C9xJNH3rQETX8Uvs3BiVRbTmI3eQORXEanCcAES6EWo=;
+        b=edW68aqiIHYXtk5/iyC/IjpLFuHH5sNyT/MWGYlKWphrNuWw6CC4sAOLKhR+YYuFjY
+         wAdYHFoArU5lVWImIRBdWDF0fhK8aEMDjL4/3KVfbNk3dEDIwVa4PXdlhtkLCQSfNFSu
+         Alc4+s7PmH0P3dmVS1JlC1J59yekcgeWRdNw/NXDpyhkj/hD5dcuy8/CNEKNtNfP8MMD
+         VeBFVLvzem3RIthSx+dOCgrGxTTxwMxh4e+C2aEl/urK1grtbM3umIY5Jx9l39bBo3oI
+         BJelrPxkXR1wZWnYk6f1emsArtADKTW3V8WJSHtSrobvE1pMl/TIAYUxOyHzSeq6oRTz
+         Bzww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id;
+        bh=C9xJNH3rQETX8Uvs3BiVRbTmI3eQORXEanCcAES6EWo=;
+        b=bXu2HukxLzZ3262ZrvgV+sCI6oOiEi3fJ0OLpJhhHqwW9+HuTjSAu9Rc43pwXQ7854
+         14AnmaoXDfcrvD9q9U3MJafiVAZc7jPVOYtT/N0KcryXMUNFUufvzbpaAxqwMT77C9SL
+         FMdxeDT0KgeLBO5Mr7jV/Yk4lUMvyBNxl6hYE4yHZaGoWkru+/s/QWgShzeKOWJ8fDE1
+         6Ry7jV6y3vg5ASw5mvthgtoAqOFzDpflpeu0X4Zui1+pArXWugnDaA9QJGcMcMXKMie3
+         OXfNQk+MoJ+or0FYE9UUNTDp8quZBxi7Dtnon/C613+zD938My0URzpF+ef/+rrotRPE
+         VFzg==
+X-Gm-Message-State: APjAAAUnx8IOpnt7vG6FyYJIADo8GZ9/KcOpwqU424XgNaGXGIH6OPs3
+        HaopxjCfNQqqlpoNDbiVHss=
+X-Google-Smtp-Source: APXvYqyWfcN3Yu3qXJX1XKz4kwKny7FzO4sA95+9hvM0ipCvNtla9/0vQyTesyjVdmZHRW/aV4yrqA==
+X-Received: by 2002:a5d:6b46:: with SMTP id x6mr11143117wrw.313.1557587529021;
+        Sat, 11 May 2019 08:12:09 -0700 (PDT)
+Received: from localhost.localdomain (p5DCFEB77.dip0.t-ipconnect.de. [93.207.235.119])
+        by smtp.gmail.com with ESMTPSA id c9sm5650992wrv.62.2019.05.11.08.12.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 08:12:07 -0700 (PDT)
+From:   Saravanan Sekar <sravanhome@gmail.com>
+To:     sravanhome@gmail.com, lgirdwood@gmail.com, broonie@kernel.org,
+        perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4] ASoC: tlv320aic3x: Add support for high power analog output
+Date:   Sat, 11 May 2019 17:11:49 +0200
+Message-Id: <20190511151149.28823-1-sravanhome@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 04:46:40PM +0200, Vicente Bergas wrote:
-> On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
-> >On 10.05.2019 17:05, Vicente Bergas wrote:
-> >>Hello,
-> >>there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
-> >>pointer dereference.
-> >>The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
-> >> net: phy: realtek: Add rtl8211e rx/tx delays config ...
-> >The page operation callbacks are missing in the RTL8211E driver.
-> >I just submitted a fix adding these callbacks to few Realtek PHY drivers
-> >including RTl8211E. This should fix the issue.
-> 
-> Hello Heiner,
-> just tried your patch and indeed the NPE is gone. But still no network...
-> The MAC <-> PHY link was working before, so, maybe the rgmii delays are not
-> correctly configured.
+Add support to output level control for the analog high power output
+drivers HPOUT and HPCOM.
 
-Hi Vicente
+Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
+---
 
-What phy-mode do you have in device tree? Have you tried the others?
+Notes:
+    Notes:
+        Changes in V4:
+        -Added separate mono playback volume control
+        -grouped volume controls with corresponding switch
+    
+        Changes in V3:
+        -Fixed compilation error
+    
+        Changes in V2:
+        - Removed power control as it is handled by DAPM
+        - Added level control for left channel
 
-rmgii
-rmgii-id
-rmgii-rxid
-rmgii-txid
+ sound/soc/codecs/tlv320aic3x.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-	Andrew
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index 516d17cb2182..599e4ed3850b 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -324,6 +324,9 @@ static DECLARE_TLV_DB_SCALE(adc_tlv, 0, 50, 0);
+  */
+ static DECLARE_TLV_DB_SCALE(output_stage_tlv, -5900, 50, 1);
+ 
++/* Output volumes. From 0 to 9 dB in 1 dB steps */
++static const DECLARE_TLV_DB_SCALE(out_tlv, 0, 100, 0);
++
+ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
+ 	/* Output */
+ 	SOC_DOUBLE_R_TLV("PCM Playback Volume",
+@@ -386,11 +389,17 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
+ 			 DACL1_2_HPLCOM_VOL, DACR1_2_HPRCOM_VOL,
+ 			 0, 118, 1, output_stage_tlv),
+ 
+-	/* Output pin mute controls */
++	/* Output pin controls */
++	SOC_DOUBLE_R_TLV("Line Playback Volume", LLOPM_CTRL, RLOPM_CTRL, 4,
++			 9, 0, out_tlv),
+ 	SOC_DOUBLE_R("Line Playback Switch", LLOPM_CTRL, RLOPM_CTRL, 3,
+ 		     0x01, 0),
++	SOC_DOUBLE_R_TLV("HP Playback Volume", HPLOUT_CTRL, HPROUT_CTRL, 4,
++			 9, 0, out_tlv),
+ 	SOC_DOUBLE_R("HP Playback Switch", HPLOUT_CTRL, HPROUT_CTRL, 3,
+ 		     0x01, 0),
++	SOC_DOUBLE_R_TLV("HPCOM Playback Volume", HPLCOM_CTRL, HPRCOM_CTRL,
++			 4, 9, 0, out_tlv),
+ 	SOC_DOUBLE_R("HPCOM Playback Switch", HPLCOM_CTRL, HPRCOM_CTRL, 3,
+ 		     0x01, 0),
+ 
+@@ -472,6 +481,9 @@ static const struct snd_kcontrol_new aic3x_mono_controls[] = {
+ 			 0, 118, 1, output_stage_tlv),
+ 
+ 	SOC_SINGLE("Mono Playback Switch", MONOLOPM_CTRL, 3, 0x01, 0),
++	SOC_SINGLE_TLV("Mono Playback Volume", MONOLOPM_CTRL, 4, 9, 0,
++			out_tlv),
++
+ };
+ 
+ /*
+-- 
+2.17.1
+
