@@ -2,131 +2,141 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5F0C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FAAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 784AB217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:34:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZdWDQ1Gl"
+	by mail.kernel.org (Postfix) with ESMTP id B8D442184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557614404;
+	bh=6aAVxVoG0YErbZEF5yAMdrjDFqc8XWrGVGwGxXiD2h8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bW3ib6uFBWNekq6pGnoNepptrBvgUTTIJZ61rI3DMuVoMQ+ZKLw5JAnEzjcmzMcki
+	 KfAJYjLnRHRs+Qh10kv0kL6Z0eBVo7rHpfnePwImgE8En3+EByLRucCmgNiYouJlRC
+	 cewh40oMUISMF/spyIN1wUuxPIgD/i3gRfLwcFyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfEKWd7 (ORCPT
+        id S1726408AbfEKWkD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 18:33:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45318 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfEKWd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 18:33:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4BMOgAx189680;
-        Sat, 11 May 2019 22:33:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=cg1vXAzcRFjP3GXfQCRMyWsYUJ2Cc80Ce/8Y/l18iMY=;
- b=ZdWDQ1GlAM12R9SP3yvHS31Pp2G9dDtfK6IA0Xac73GUL0zD+nS5QIo9lvdcjZ5fprLA
- RBbMfZZNbNg7LHtQStm4pDyD/kTyDxRSFVIpDYaZ5bi46EqE1cO5vrM0GyB4xNERhak9
- yLuT+zJ6U4ji3CReu/YV3pgmEit6FxgJhnlIBlaOUbVCno7+KKe5lCmUqDhFZeKWWdxf
- 8nnR9/rkifOcnfFelT97uZNiWd0oRDT+U5BL1WatnesS8orEMoWrKdrXEKPlm31Ov/yt
- FV7tVoJ9IBEHOI+xnGd9A3CRc4PfZQ4ViHzyHeVTms+aLyu5ofN+oiZU8+peyHK9KO8y 3g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sdntt9r1v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 11 May 2019 22:33:20 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4BMXH7O112688;
-        Sat, 11 May 2019 22:33:19 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2sdme9yw8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 11 May 2019 22:33:19 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4BMX5ur020474;
-        Sat, 11 May 2019 22:33:05 GMT
-Received: from [192.168.0.110] (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sat, 11 May 2019 15:33:05 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] mm: vmscan: correct nr_reclaimed for THP
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20190510163612.GA23417@bombadil.infradead.org>
-Date:   Sat, 11 May 2019 16:33:01 -0600
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, hannes@cmpxchg.org,
-        mhocko@suse.com, mgorman@techsingularity.net,
-        kirill.shutemov@linux.intel.com, hughd@google.com,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
+        Sat, 11 May 2019 18:40:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726033AbfEKWkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 18:40:01 -0400
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBA3B21852
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 22:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557614400;
+        bh=6aAVxVoG0YErbZEF5yAMdrjDFqc8XWrGVGwGxXiD2h8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oOZpwkFy4KvTDWQ5x5WmN/Wa2/j/gcwfjt6x79ZL178HwDByZxOuKJdbpmoh5MPbi
+         Q9L2idDgToQpAZDmoMzdQolUzlnxexTRLumvHOVlxwJkKKLK5rfwiShuaMuNv4Sneh
+         xYPL1JqnSu3BKdnF/2mH8CY5/L/nb0cln6QvsWkc=
+Received: by mail-wm1-f47.google.com with SMTP id y3so1127819wmm.2
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 15:39:59 -0700 (PDT)
+X-Gm-Message-State: APjAAAU8bRr2TqO/iKUCIjHbzhfoEUKRfHNngg5j8gASGIm8UFIT2DBx
+        je+49K9NzheISliwWygMLA1JGduHiPJf6EBUQ9Bm2w==
+X-Google-Smtp-Source: APXvYqw8wpn9vXY9rQ/LMQUH9mP2L9fR7s63JaX9ok1OnI1y0hE/ySixRfj2P53nN+TZ8buAf8WBOkoM5tw1kuhN8ZY=
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr11759062wmh.32.1557614396632;
+ Sat, 11 May 2019 15:39:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190506165439.9155-1-cyphar@cyphar.com> <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin> <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+ <20190510225527.GA59914@google.com> <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
+ <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
+In-Reply-To: <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sat, 11 May 2019 15:39:45 -0700
+X-Gmail-Original-Message-ID: <CALCETrUOj=4VWp=B=QT0BQ8X_Ds_b+pt68oDwfjGb+K0StXmWA@mail.gmail.com>
+Message-ID: <CALCETrUOj=4VWp=B=QT0BQ8X_Ds_b+pt68oDwfjGb+K0StXmWA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <7B762A95-B8A6-4281-94F1-5DA6B62EDCF9@oracle.com>
-References: <1557447392-61607-1-git-send-email-yang.shi@linux.alibaba.com>
- <87y33fjbvr.fsf@yhuang-dev.intel.com>
- <20190510163612.GA23417@bombadil.infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9254 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=688
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905110166
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9254 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=718 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905110165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> On May 11, 2019, at 10:21 AM, Linus Torvalds <torvalds@linux-foundation.o=
+rg> wrote:
+>
+>> On Sat, May 11, 2019 at 1:00 PM Andy Lutomirski <luto@amacapital.net> wr=
+ote:
+>>
+>> A better =E2=80=9Cspawn=E2=80=9D API should fix this.
+>
+> Andy, stop with the "spawn would be better".
 
+It doesn=E2=80=99t have to be spawn per se.  But the current situation suck=
+s.
 
-> On May 10, 2019, at 10:36 AM, Matthew Wilcox <willy@infradead.org> =
-wrote:
->=20
-> Please don't.  That embeds the knowledge that we can only swap out =
-either=20
-> normal pages or THP sized pages.  I'm trying to make the VM capable of=20=
+>
+> Notice? None of the real problems are about execve or would be solved
+> by any spawn API. You just think that because you've apparently been
+> talking to too many MS people that think fork (and thus indirectly
+> execve()) is bad process management.
+>
+>
 
-> supporting arbitrary-order pages, and this would be just one more =
-place
-> to fix.
->=20
-> I'm sympathetic to the "self documenting" argument.  My current tree =
-has
-> a patch in it:
->=20
->    mm: Introduce compound_nr
->=20
->    Replace 1 << compound_order(page) with compound_nr(page).  Minor
->    improvements in readability.
->=20
-> It goes along with this patch:
->=20
->    mm: Introduce page_size()
->=20
->    It's unnecessarily hard to find out the size of a potentially huge =
-page.
->    Replace 'PAGE_SIZE << compound_order(page)' with page_size(page).
->=20
-> Better suggestions on naming gratefully received.  I'm more happy with=20=
+I=E2=80=99ve literally never spoken to an MS person about it.
 
-> page_size() than I am with compound_nr().  page_nr() gives the wrong
-> impression; page_count() isn't great either.
+What container managers and init systems *want* is a way to drop
+privileges, change namespaces, etc and then run something in a
+controlled way so that the intermediate states aren=E2=80=99t dangerous. An
+API for this could be spawn-like or exec-like =E2=80=94 that particular
+distinction is beside the point.  Having personally written code that
+mucks with namepsaces, I've wanted two particular abilities that are
+both quite awkward:
 
-I like page_size() as well. At least to me, page_nr() or page_count() =
-would
-imply a basis of PAGESIZE, or that you would need to do something like:
+a) Change all my UIDs and GIDs to match a container, enter that
+container's namespaces, and run some binary in the container's
+filesystem, all atomically enough that I don't need to worry about
+accidentally leaking privileges into the container.  A
+super-duper-non-dumpable mode would kind of allow this, but I'd worry
+that there's some other hole besides ptrace() and /proc/self.
 
-    page_size =3D page_nr() << PAGE_SHIFT;
+b) Change all my UIDs and GIDs to match a container, enter that
+container's namespaces, and run some binary that is *not* in the
+container's filesystem.  This happens, for example, if the container's
+mount namespace has no exec mounts at all.  We don't have a fantastic
+way to do this at all right now due to /proc/self/exe.
 
-to get the size in bytes; page_size() is more straightforward in that =
-respect.=
+Regardless, the actual CVE at hand would have been nicely avoided if
+writing to /proc/self/exe didn=E2=80=99t work, and I see no reason we can=
+=E2=80=99t
+make that happen.
+
+I suppose we could also consider a change to disable /proc/self/exe if
+it's not reachable from /proc/self/root.  By "disable", I mean that
+readlink() should maybe still work, but actually trying to open it
+could probably fail safely.
