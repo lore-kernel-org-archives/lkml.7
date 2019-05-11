@@ -2,104 +2,118 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0876FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA6EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C7B2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:03:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAqSgrQE"
+	by mail.kernel.org (Postfix) with ESMTP id 5CB4E2173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557554665;
+	bh=kYzDwn15QrIEi6kXFnvZYfsdIVkmI+/O0EqDSXyCmSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KYMZHEiKU7lbpR6dBt00TvLQFph/8Um5O1l+XnjQS54sHubPuxcpMzqrPn4DewOOs
+	 FqzOl7mCNFvrFzSb58/ytBFOZZ0+A2+wFZxYOh8DnxXvTn43ddNHEpOkAijWmyJl7S
+	 hcipSF/v41WOoMW/pSxIurBXYj8WrUiX2xhz02aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbfEKGDU (ORCPT
+        id S1728345AbfEKGEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 02:03:20 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41436 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725990AbfEKGDU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 02:03:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id z3so4027980pgp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 23:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kBIV0O0qGoeY97ZaUi2m9+lkbOG6A0guIBzLPEYh3y8=;
-        b=XAqSgrQEObDwj/mPPtLgS0JSVjBIlJJ/0JJnvBFfJ+3+31lwnxrp1DvnQ57VnKE9X0
-         EZD1SyQi6bcCqGn6+UpqH0tzOiXQ+9oiv1q8HTd7CvybmcfKD5FnLzKPbKIHKe30jCZL
-         kDhbyCVATD5KXgcGwRtzAKeCmQqqVmR/QvJw5+IjT+el2LTK5cptFWDB8Xu85xZF5Afv
-         qIjg/QHW4EmhVtP3c/SDYWnB7LFr3YATCix5ipOP+n+YAKyJiP4w0eza0J6qk5643WAU
-         TqJnKWSMp8QAoSsfe03TaJlsv5O8DKGZO0dYjJRXkG5dEu9Em/oKJM29est7aD/uu5tN
-         MFcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kBIV0O0qGoeY97ZaUi2m9+lkbOG6A0guIBzLPEYh3y8=;
-        b=LCvcIJysoLx/8fe+OyxK1vfjRGw4AxoPZowZe4SfkG/okbxLye3UfdcKMLO6VXFoXd
-         QjW96gLxVaihAmakSzwVnNxtAx6MPU6sM5fchXCAXCKGcwTd7Bk4yihKChjKLe5xmWrA
-         iqS10o7xmxed/+bf0RKXYfg3hUvWrEpyJtNM9uXYpkk9A3buP71CEpl1OG52Yo4bcfDK
-         B5evCotRHgtUJNpCpKr1U4//LwsRhYlH3bYwK4P2fYC8pqE87RhHcMlLitQ71FF9I669
-         +XMpcBjvJmmMQ+taGYDK9YRkDAYmSNzA97dCVhknPzc+4iCOqWWmWT2cV68/GZk8jI4L
-         gYqA==
-X-Gm-Message-State: APjAAAUTJW8vWlxa6d+MuWQxQUgMXoellcIF70wUd4tAv33gyY21gTDl
-        hMt8E6pX+BaNAg75bWwwlB09Zj7h+v9+Sw==
-X-Google-Smtp-Source: APXvYqxZTw/+JETq1S5v5JxKB0pyLjUgcIwpOyyHOLrwQhYgB19EUcR23ia58Yj0e4cZbS6D2rfyjw==
-X-Received: by 2002:a65:4589:: with SMTP id o9mr18550951pgq.381.1557554599593;
-        Fri, 10 May 2019 23:03:19 -0700 (PDT)
-Received: from localhost.localdomain (115.193.225.49.dyn.cust.vf.net.nz. [49.225.193.115])
-        by smtp.gmail.com with ESMTPSA id m17sm11687559pfi.17.2019.05.10.23.03.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 May 2019 23:03:19 -0700 (PDT)
-From:   Murray McAllister <murray.mcallister@gmail.com>
-Cc:     murray.mcallister@gmail.com,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/vmwgfx: NULL pointer dereference from vmw_cmd_dx_view_define()
-Date:   Sat, 11 May 2019 18:01:37 +1200
-Message-Id: <20190511060138.20592-1-murray.mcallister@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 11 May 2019 02:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55512 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbfEKGEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 02:04:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8E5C2173B;
+        Sat, 11 May 2019 06:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557554663;
+        bh=kYzDwn15QrIEi6kXFnvZYfsdIVkmI+/O0EqDSXyCmSg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r358BJeyRxcCtBNBrUDqEsD1Lu0ZUdSgloe9OMEQRhu3Lhiv2mi+3a9Jgy97rzwvY
+         eZX0GfPpnKiRbBR8wt6+4lfD29VBrdjGym2nauPRvsq7QNOAwKoMMPDs59y/g1awM3
+         SF/Ss6jw49/OvWZITHDbvjXIeq2Ux5Khk/z5qes4=
+Date:   Sat, 11 May 2019 08:04:20 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vandana BN <bnvandana@gmail.com>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH] Staging: kpc2000: kpc_dma: resolve checkpath errors and
+ warnings
+Message-ID: <20190511060420.GA18755@kroah.com>
+References: <20190510193833.1051-1-bnvandana@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510193833.1051-1-bnvandana@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If SVGA_3D_CMD_DX_DEFINE_RENDERTARGET_VIEW is called with a surface
-ID of SVGA3D_INVALID_ID, the srf struct will remain NULL after
-vmw_cmd_res_check(), leading to a null pointer dereference in
-vmw_view_add().
+On Sat, May 11, 2019 at 01:08:33AM +0530, Vandana BN wrote:
+> This patch resolves coding style errors and warnings reported by chechpatch
+> 
+> ERROR: "(foo*)" should be "(foo *)"
+> ERROR: trailing whitespace
+> ERROR: space required before the open brace '{'
+> ERROR: "foo * bar" should be "foo *bar"
+> ERROR: space prohibited after that '!' (ctx:BxW)
+> ERROR: space prohibited after that open parenthesis '('
+> ERROR: switch and case should be at the same indent
+> ERROR: trailing statements should be on next line
+> ERROR: Macros with complex values should be enclosed in parentheses
+> ERROR: "foo __init  bar" should be "foo __init bar"
+> ERROR: "foo __exit  bar" should be "foo __exit bar"
+> WARNING: Missing a blank line after declarations
+> WARNING: Prefer using '"%s...", __func__' to using function's name, in a string
+> WARNING: braces {} are not necessary for any arm of this statement
+> WARNING: unnecessary cast may hide bugs
+> WARNING: braces {} are not necessary for single statement
+> WARNING: struct file_operations should normally be const
+> WARNING: labels should not be indented
+> Signed-off-by: Vandana BN <bnvandana@gmail.com>
+> ---
+>  drivers/staging/kpc2000/kpc_dma/dma.c         | 137 +++++------
+>  drivers/staging/kpc2000/kpc_dma/fileops.c     | 220 +++++++++---------
+>  .../staging/kpc2000/kpc_dma/kpc_dma_driver.c  | 121 +++++-----
+>  .../staging/kpc2000/kpc_dma/kpc_dma_driver.h  |  32 +--
+>  4 files changed, 265 insertions(+), 245 deletions(-)
+> 
 
-Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi,
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-index 2ff7ba04d8c8..447afd086206 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -2414,6 +2414,10 @@ static int vmw_cmd_dx_view_define(struct vmw_private *dev_priv,
- 		return -EINVAL;
- 
- 	cmd = container_of(header, typeof(*cmd), header);
-+	if (unlikely(cmd->sid == SVGA3D_INVALID_ID)) {
-+		DRM_ERROR("Invalid surface id.\n");
-+		return -EINVAL;
-+	}
- 	ret = vmw_cmd_res_check(dev_priv, sw_context, vmw_res_surface,
- 				VMW_RES_DIRTY_NONE, user_surface_converter,
- 				&cmd->sid, &srf);
--- 
-2.20.1
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- Your patch did many different things all at once, making it difficult
+  to review.  All Linux kernel patches need to only do one thing at a
+  time.  If you need to do multiple things (such as clean up all coding
+  style issues in a file/driver), do it in a sequence of patches, each
+  one doing only one thing.  This will make it easier to review the
+  patches to ensure that they are correct, and to help alleviate any
+  merge issues that larger patches can cause.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
