@@ -2,97 +2,95 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CC5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B53C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611582173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557573613;
-	bh=FPw5tH6pTg0ImQQbQf6rPIaakB64renHH0j6wMOqbGY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yEKRt7cS7iwmHexDi2NJOfNb7eFrHP8pYlb1BWkswRqRH+JsuFztMMKsUXH7uDlSp
-	 zrm5ieIpd5WinZMslri31/IZ6rrEJJLMtqzQDqFo+CtqfeDWu6L/6JJy+8+/2CrYie
-	 AMACh1zwg1veOhX0+DMQhkf/3SF/OwnosvCuJCrk=
+	by mail.kernel.org (Postfix) with ESMTP id 45FB0216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:33:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfEKLUM (ORCPT
+        id S1728566AbfEKLdt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 07:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbfEKLUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 07:20:12 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E27AA2089E;
-        Sat, 11 May 2019 11:20:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557573611;
-        bh=FPw5tH6pTg0ImQQbQf6rPIaakB64renHH0j6wMOqbGY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AtPHCbby/tY/IIBUdZN6//Cg90OKong0GwjS9WM9EljhoktdQWz2OY013D8GCyImp
-         apOXalI0rEWtQZ4F8y/t4cs9zLG987aAWwiUm3PKHG9Nke3O0VOBsc3+XDEtn0jUF7
-         BL2Aje9D00KLntc5frA6ljyABRXfPTB8ep0zZew0=
-Date:   Sat, 11 May 2019 12:20:06 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        xe-linux-external@cisco.com, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] iio: dac: ds4422/ds4424 drop of_node check
-Message-ID: <20190511122006.3e78486e@archlinux>
-In-Reply-To: <20190505192438.2644-1-ruslan@babayev.com>
-References: <20190505192438.2644-1-ruslan@babayev.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 07:33:49 -0400
+Received: from ipmail06.adl6.internode.on.net ([150.101.137.145]:45184 "EHLO
+        ipmail06.adl6.internode.on.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725861AbfEKLds (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 07:33:48 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: A2Ak9ACh299ZAEaufAFehV+EIYMqh2modUQBhH0BhRoDAQEBAQECDwEBATKGFlEdEA0CizibYJARgicii0yBDoIfg1iCFYdkAQGDYIISIAWSVo5ugi6UUIV0g3ENhwqXJFaBDzIhMFMSAYcaigiCNQEBAQ
+X-IronPort-SPAM: SPAM
+Received: from unknown (HELO [100.69.127.174]) ([1.124.174.70])
+  by ipmail06.adl6.internode.on.net with ESMTP; 11 May 2019 21:03:46 +0930
+Date:   Sat, 11 May 2019 21:03:44 +0930
+User-Agent: K-9 Mail for Android
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: ext3/ext4 filesystem corruption under post 5.1.0 kernels
+To:     linux-kernel@vger.kernel.org
+From:   Arthur Marsh <arthur.marsh@internode.on.net>
+Message-ID: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 May 2019 12:24:36 -0700
-Ruslan Babayev <ruslan@babayev.com> wrote:
+I have yet to bisect, but have had trouble with recent, post 5.1.0 kernels built from Linus' git head on both i386 (Pentium 4 pc) and amd64 (Athlon II X4 640).
 
-> The driver doesn't actually rely on any DT properties. Removing this
-> check makes it usable on ACPI based platforms.
-> 
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+The easiest way to trigger the problem is:
 
-Thanks,
+git gc
 
-Jonathan
+on the kernel source tree, although the problem can occur without doing a git gc.
 
-> ---
->  drivers/iio/dac/ds4424.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/iio/dac/ds4424.c b/drivers/iio/dac/ds4424.c
-> index 883a47562055..2b3ba1a66fe8 100644
-> --- a/drivers/iio/dac/ds4424.c
-> +++ b/drivers/iio/dac/ds4424.c
-> @@ -236,12 +236,6 @@ static int ds4424_probe(struct i2c_client *client,
->  	indio_dev->dev.of_node = client->dev.of_node;
->  	indio_dev->dev.parent = &client->dev;
->  
-> -	if (!client->dev.of_node) {
-> -		dev_err(&client->dev,
-> -				"Not found DT.\n");
-> -		return -ENODEV;
-> -	}
-> -
->  	data->vcc_reg = devm_regulator_get(&client->dev, "vcc");
->  	if (IS_ERR(data->vcc_reg)) {
->  		dev_err(&client->dev,
+The filesystem with the kernel source tree is the root file system, ext3, mounted as:
 
+/dev/sdb7 on / type ext3 (rw,relatime,errors=remount-ro)
+
+After the "Compressing objects" stage, the following appears in dmesg:
+
+[  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
+[  849.077426] Aborting journal on device sdb7-8.
+[  849.100963] EXT4-fs (sdb7): Remounting filesystem read-only
+[  849.100976] jbd2_journal_bmap: journal block not found at offset 989 on sdb7-8
+
+fsck -yv 
+
+then reports:
+
+# fsck -yv
+fsck from util-linux 2.33.1
+e2fsck 1.45.0 (6-Mar-2019)
+/dev/sdb7: recovering journal
+/dev/sdb7 contains a file system with errors, check forced.
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+Free blocks count wrong (4619656, counted=4619444).
+Fix? yes
+
+Free inodes count wrong (15884075, counted=15884058).
+Fix? yes
+
+
+/dev/sdb7: ***** FILE SYSTEM WAS MODIFIED *****
+
+Other times, I have gotten:
+
+"Inodes that were part of a corrupted orphan linked list found."
+"Block bitmap differences:"
+"Free blocks sound wrong for group"
+
+No problems have been observed with the 5.1.0 release kernel.
+
+Any suggestions for narrowing down the issue welcome.
+
+Arthur.
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
