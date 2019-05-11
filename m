@@ -2,96 +2,95 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F373C04AB1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D77C46470
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46071217D6
+	by mail.kernel.org (Postfix) with ESMTP id 689092184B
 	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:58:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="mTZipGuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfEKU5h (ORCPT
+        id S1726465AbfEKU6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 16:57:37 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:45823 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfEKU5h (ORCPT
+        Sat, 11 May 2019 16:58:45 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38340 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfEKU6p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 16:57:37 -0400
-Received: from excalibur.cnev.de ([213.196.205.140]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N0o7f-1gTB542I2X-00wkTo; Sat, 11 May 2019 22:57:15 +0200
-Received: from karsten by excalibur.cnev.de with local (Exim 4.89)
-        (envelope-from <merker@debian.org>)
-        id 1hPZ3P-00048x-9K; Sat, 11 May 2019 22:57:11 +0200
-Date:   Sat, 11 May 2019 22:57:11 +0200
-From:   Karsten Merker <merker@debian.org>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Atish Patra <atish.patra@wdc.com>, linux-kernel@vger.kernel.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Zong Li <zong@andestech.com>, mark.rutland@arm.com,
-        merker@debian.org
-Subject: Re: [v2 PATCH] RISC-V: Add a PE/COFF compliant Image header.
-Message-ID: <20190511205711.pp54kufgret662xv@excalibur.cnev.de>
-References: <20190501195607.32553-1-atish.patra@wdc.com>
+        Sat, 11 May 2019 16:58:45 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a59so4448210pla.5
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 13:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=elwgxb8XYgTIriByBWF9deMUc6c8M6Y8MIlBqiZfHjU=;
+        b=mTZipGuTJpw81BLSTSjwcm1GDWw+WD8irR2clWCrQZGG6j0nz6y1H2cLsX4a//J5q+
+         Pagb/ezxSdc4YarsDh57XLMEKVmslPTc8/9BTs+RFwb43gaqLKTxhTIemfc2bcUT9C/6
+         iAoYQrOWqlT6NralpUW0Tc0xlOo4WWiaYyeNYubfFKoCmzr5XS5jT95VxbKYpdhhREbO
+         cYdXhCrP7eMT2zIkW9Gm5l5DSeUOFpr7GRqkTYAJ8rjsu97mwDwLUHb9jikhAyzuq/vN
+         MvzHBRTnf2pGCjZfRmRSShWJ0d202h1EPNtyqpGmdQQFglMXXp5boIcm50LIILir4gjV
+         +Qxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=elwgxb8XYgTIriByBWF9deMUc6c8M6Y8MIlBqiZfHjU=;
+        b=QnELY8f+hRuqq+ndzhKYrTodypHnLLKsSnCNn1B6lNiHnvfZC+gNGr2ajJbwp73RuK
+         UJL0gxBwCnlaAoNTb4pOPpPpX9/EqOZAPBnDkMa4la+wASWRR82Bl4hg53pmhQLahIWu
+         NpRXAIUCzmPdjBCt7G1cDec1BRUbdL2egvHU7gucoDKPDkRqClF5uLRGyH5rStm1en7+
+         mpl2pAnUg2M/l+RQooQYnnAsziUg/k651lYmbCIVcqlqWfZgGIF2GyIL/5hSCLDq0NOg
+         r/aGzOXzahDgVe/Ess7xMOwcLstM+LO38sUAGOJg5P7GjiaR0Ol5eDalrdwLR7FarY4b
+         +5Lg==
+X-Gm-Message-State: APjAAAXcWSMyZbxPjlSPpCsHdOZnVaOJjSstGIzHIZ3zI377I9LrGQKK
+        Ztx64k1SOjO2nwhXNP/l6ysJVoEHgwl674HrCthBOQ==
+X-Google-Smtp-Source: APXvYqy4MaRZEbjhD24D5CDbZW2mpGnc/vgQNNkixPgHTkwzNLc9bAL0OjtOXzd7w0ax4agEGGNIbUQ1gyI5gI+QgxE=
+X-Received: by 2002:a17:902:f215:: with SMTP id gn21mr22016322plb.194.1557608324468;
+ Sat, 11 May 2019 13:58:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190501195607.32553-1-atish.patra@wdc.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Provags-ID: V03:K1:/xkbM78ealdbZdv6ETAtl6zu3DJ7y7eSvM3/2gU2x4ECT24NeAa
- rNckyR3vQzZx26gazhyfoMO9JxisyplzfzWdzXjBbBcCWjJztS1tdI+GcuvR8WKLGNEFIEf
- EHy/COzluWqK3GUcak3ovhmW2fdR9scfEKNQAiQjSKdtKflSnCU4CDxpgaDPlsLhuP27t/A
- 5wTm4FmJaQGjOtyJsqz3g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qkYxWV8zqxQ=:C+40/wcclDkdRJjoNXAH9b
- foQwVXtiwpM4A22L8QPZYvhPA+dSAmKtPRoBPMSkIidqslY5MwRJLU1CuvgIcbTk5p30AmiZR
- 2PorYLUQmAcN6M94BB5iOEBAySmi+3vOhBBgIewxM8Uw0pD2gv+5WQ+NfkX7pwapgrU8WrBs4
- WeMaPn6qz3l8BojlAGtkeXH1t/hitRot+IA4adf9Wnt8JpzAcVLjThULOtMsyzDhhXnZQ/Dlg
- P7AmExDg4+UNHqYyP2fCdsRb2rTIdtGW3tWlBflPuANZpWydhSOp4H7NqoS01ln6QU1yx4QRU
- zIgiBc06sPQfLT7lF5g18w2YZ+v2JwxlCK6RjY+AqJHZeHUmtEseTn5iT2W7Lfj/vtBxDIYYF
- fXOzHeAZ8go5YyUnltPL7OobTi6d1QXKPgRMFChkXoO+Sk24QN+vIDfHBveY2iD4nx56BSrtZ
- MN0EzwbZ5muF/N4p63DmNkG2s5QNZ/DJaXjwm/r13hx44+UrZ+Yiso0SqRFmxVLnz63UdeVMW
- 1dggahU8zMKYT0kw3zqP+dEwra+oMQt1+3wgTFz5XTzKwBKL4AJn8Zm02zUov8J0aJgzG2b0L
- hMAVG3Fs0ml96w4kS7UI5Ca6kBNLc5FLbbaNV64Ho+Gm9cVp2B2qKCrCGEowJYDsn6TgFuFT+
- o73uxQ8mx6fWHHDt8ipn6dMfWfi752VxvDXzVFO11BR/eNtn3bvSc4AdNWCEz0d+JQrNfF5bw
- oyg65AGEOMnO0HAVhLuYvQOXaTva6K0VFFDYiA==
+References: <20190405163126.7278-1-jeffrin@rajagiritech.edu.in>
+ <20190405164746.pfc6wxj4nrynjma4@breakpoint.cc> <CAG=yYwnN37OoL1DSN8qPeKWhzVJOcUFtR-7Q9fVT5AULk5S54w@mail.gmail.com>
+ <c4660969-1287-0697-13c0-e598327551fb@kernel.org> <20190430100256.mfgerggoccagi2hc@breakpoint.cc>
+ <20190430105225.bu5pil5fjxkltu4q@salvia>
+In-Reply-To: <20190430105225.bu5pil5fjxkltu4q@salvia>
+From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
+Date:   Sun, 12 May 2019 02:28:07 +0530
+Message-ID: <CAG=yYw=YQzZQd-uyVXEgdTtLC9rpO5DE7SYW3hxQD3bVS8SD=g@mail.gmail.com>
+Subject: Re: [PATCH] selftests : netfilter: Wrote a error and exit code for a
+ command which needed veth kernel module.
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     Florian Westphal <fw@strlen.de>, shuah <shuah@kernel.org>,
+        linu-kselftest@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 01, 2019 at 12:56:07PM -0700, Atish Patra wrote:
+Hi Pablo,
 
-> Currently, last stage boot loaders such as U-Boot can accept only
-> uImage which is an unnecessary additional step in automating boot flows.
-> 
-> Add a PE/COFF compliant image header that boot loaders can parse and
-> directly load kernel flat Image. The existing booting methods will continue
-> to work as it is.
-> 
-> Another goal of this header is to support EFI stub for RISC-V in future.
-> EFI specification needs PE/COFF image header in the beginning of the kernel
-> image in order to load it as an EFI application. In order to support
-> EFI stub, code0 should be replaced with "MZ" magic string and res5(at
-> offset 0x3c) should point to the rest of the PE/COFF header (which will
-> be added during EFI support).
-> 
-> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+Please follow up on the mail you sent.
+This is for my interest to see my patch upstream
 
-Hello Palmer,
+On Tue, Apr 30, 2019 at 4:22 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+>
+> Cc'ing netfilter-devel@vger.kernel.org
+>
+> On Tue, Apr 30, 2019 at 12:02:56PM +0200, Florian Westphal wrote:
+> > shuah <shuah@kernel.org> wrote:
+> > > Would you like me to take this patch through ksleftest tree?
+> >
+> > Please do, this patch is neither in nf nor nf-next and it looks fine to
+> > me.
+>
+> Indeed, thanks.
 
-it would be great if this patch could go in with the 5.2 merge
-window. Is there anything particular blocking its acceptance?
 
-Regards,
-Karsten
+
 -- 
-Ich widerspreche hiermit ausdrücklich der Nutzung sowie der
-Weitergabe meiner personenbezogenen Daten für Zwecke der Werbung
-sowie der Markt- oder Meinungsforschung.
+software engineer
+rajagiri school of engineering and technology
