@@ -2,91 +2,138 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49763C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F82C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 16:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5A42173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48C4206A3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 16:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="s0FzKNSd"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="qLq/xi5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfEKPw4 (ORCPT
+        id S1726896AbfEKQRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 11:52:56 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33351 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbfEKPwz (ORCPT
+        Sat, 11 May 2019 12:17:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39190 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfEKQRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 11:52:55 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so3206172wme.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 08:52:54 -0700 (PDT)
+        Sat, 11 May 2019 12:17:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z26so4853010pfg.6
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 09:17:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=wPE7oz9+/ykS8zKoedHqVltx9asTMcwNqU/NkoJcdcY=;
-        b=s0FzKNSdOBwo0GMStdjIpty4uA5mj8FO72cIPIiYgPgYd35EBRX9ZiG8D0YFnvU2+t
-         VYwKiZ1P/isFku880QbFIILYQg3OhxyqzDJdkmfWwJRUDidN4S9lzNq8KB4rICYtC4I4
-         S2Q3K/YunQWelvK80PpWUzRAXPoJpO4nn7wFr8BYPQXuIHi469BOXYyjSuWJZxRTPHx3
-         eNagyGJCnyOkUKPvtBSHVXNACZg4o05CBhoNRxq9gh+4Ql99zjGV222YVyfVJ+9dRgoD
-         cWuf4cdIxX9M/3BZ0fbVsS1I4pmOVkmVl8j66d12AogWNnCpJjJFiU3K1pNRYATgECZX
-         Ll7g==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Odh+YMUmXqxxn2pUwWEKZYqwhsM/e7BZh99KpQUKonM=;
+        b=qLq/xi5VaOmk5QBHpCipGArPVi3NegYyBubZ0l23k5Meagl/axkdmV0pJLKMnaBK6x
+         719v6LAMXaMXcOXzRKnSMK9Cse4PTZxL4W79PAR6oqtFAKiPyR4GJfPIg8Xf7+4STwCO
+         7DzTlF98i4slQDIv6HVl4kUQlCuvXNgpq5WCo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=wPE7oz9+/ykS8zKoedHqVltx9asTMcwNqU/NkoJcdcY=;
-        b=DLTy7hfdBZTcsgSaySVG5jFDZs4m/tEVps0BSnZlFmEjiAvaC5hMReUBNjjn8W8uF5
-         4PtOa208hpZPxAf+4Sbs3fZYCZjhx/SxVyrU376ovw0nzHw0wthreifLnW5pW+KvUGag
-         pAK7gj4Akuil1zJobrKDQmRH2sUjjF4sl08qqVxcPm23Zow/AEe4H+chrUzFzIyclkED
-         LSmfLVRy+mDTacfJknY5UvI4v8BqVxMCkO+6fbItdBEsLHFA75f/180DFGgzaE6yLre/
-         MxPTaKX0jkwuk2DkS+vgxg9SDWUq8CihmSwcnX4fVVHBZ2y9lFtQwjGw+1I41lUEL0Vu
-         0RAg==
-X-Gm-Message-State: APjAAAUREw5c+0mMkQkxy9uy5fSuTYNm9Cu4nlhlmgsiWe8qdmdmvTU3
-        sFZ/SO7F/xYWbf+9p3S8aIpFbg==
-X-Google-Smtp-Source: APXvYqxNW8CXjnTFV/v4WjIAb7jakTDUy3oFkP7JkALz95R+UIhsGTf/3/M7lS479C8OkF5mMMCpsg==
-X-Received: by 2002:a1c:a013:: with SMTP id j19mr6207172wme.59.1557589973884;
-        Sat, 11 May 2019 08:52:53 -0700 (PDT)
-Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id m17sm7174332wmc.6.2019.05.11.08.52.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 11 May 2019 08:52:53 -0700 (PDT)
-Message-ID: <3bad9dc8c53e50c4aea1212bf949215660259412.camel@baylibre.com>
-Subject: Re: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Sat, 11 May 2019 17:52:50 +0200
-In-Reply-To: <7h4l62dlyh.fsf@baylibre.com>
-References: <20190510155327.5759-1-jbrunet@baylibre.com>
-         <20190510155327.5759-2-jbrunet@baylibre.com> <7h4l62dlyh.fsf@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Odh+YMUmXqxxn2pUwWEKZYqwhsM/e7BZh99KpQUKonM=;
+        b=i8jdwYd9p38w5t91biCbB/pRbbh97WHBGEJn9EWN6X3Dqg8K+aMr8m5Hkv+t3pebrV
+         gF2c4xVIUSkduab6cuTncVJ87xObkDV33Q2WJRQ54OURcXFOBxCfE5oz55gX73bY1cjP
+         QLjMPbJsopuIAo8t5y7vT2EZVHC4POH1aVEBk/twSPRw2KQHaVaeBdXPEaGPrWVvrHHc
+         v+L22MQi5htCW7ifdLC1d1QHez+Djju1/974Whwvi7OhQhbd4h+gs92D/5Ft1FN+al6d
+         GVuzPAUf4+JQczaCx87IPZPxyJiL3j2V+D+3wk7CRrQVv/jV4E5tGHo8CAgUTdNGmVmQ
+         uOpA==
+X-Gm-Message-State: APjAAAWu+yhVoXsG2IcIjdwXggmubkp/BJ9WtfxwiFNqW+nHxMgNqpJX
+        1ZIboumJGjtsqnAfnW8ulQMv2Q==
+X-Google-Smtp-Source: APXvYqxTiJcEcmzT7eLWCLJAaF3JSIaR+WNDPlhbqHsPuJXlNFt0am0ojnsERLBSkb1Ve0uNPXHBVg==
+X-Received: by 2002:a65:62c4:: with SMTP id m4mr21634116pgv.308.1557591438309;
+        Sat, 11 May 2019 09:17:18 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id z187sm12253685pfb.132.2019.05.11.09.17.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 May 2019 09:17:16 -0700 (PDT)
+Date:   Sat, 11 May 2019 12:17:14 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adrian Ratiu <adrian.ratiu@collabora.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
+        Brendan Gregg <bgregg@netflix.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        duyuchao <yuchao.du@unisoc.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manjo Raja Rao <linux@manojrajarao.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        =?utf-8?Q?Micha=C5=82?= Gregorczyk <michalgr@fb.com>,
+        Michal Gregorczyk <michalgr@live.com>,
+        Mohammad Husain <russoue@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Tamir Carmeli <carmeli.tamir@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH 3/3] kheaders: Make it depend on sysfs
+Message-ID: <20190511161714.GA179270@google.com>
+References: <20190510210243.152808-1-joel@joelfernandes.org>
+ <20190510210243.152808-4-joel@joelfernandes.org>
+ <CAK7LNATeJqmE29M=Y1Vexg8nnRdr3qUDkq1BejN7t2_106PgVg@mail.gmail.com>
+ <20190511060203.GA18650@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190511060203.GA18650@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-10 at 14:43 -0700, Kevin Hilman wrote:
-> minor nit: I kind of like "aliases" and "chosen" at the top since they
-> are kind of special nodes, but honestly, I can't think of a really good
-> reason other than personal preference, so keeping things sorted as
-> you've done here is probably better.
+On Sat, May 11, 2019 at 08:02:03AM +0200, Greg Kroah-Hartman wrote:
+> On Sat, May 11, 2019 at 09:52:04AM +0900, Masahiro Yamada wrote:
+> > On Sat, May 11, 2019 at 6:05 AM Joel Fernandes (Google)
+> > <joel@joelfernandes.org> wrote:
+> > >
+> > > The kheaders archive is exposed through SYSFS in /sys/kernel/. Make it
+> > > depend on SYSFS as it makes no sense to enable this feature without it.
+> > 
+> > 
+> > And, it also makes no sense to break the feature by 1/3,
+> > then fix it by 3/3.
+> > 
+> > 
+> > Why don't you squash this?
 > 
+> I agree, this belongs in patch 1/3.
 
-You thought the same, then thought maybe memory was important too. But going
-down that path, you end up sorting by feeling. It is going to be difficult
-to all agree on which nodes are special.
+Fine with me. The reason I split it this way is I already had posted 1/3
+recently for the driver tree [1], and I did not want to confuse Greg since he
+was in the process of picking it up [2].
 
-In the end, we just want/need something that is easy to respect and verify.
+Anyway, I can resend the series soon with 1/3 and 3/3 squashed unless anyone
+applying this is Ok with squashing it in their trees. thanks!
 
-> Kevin
+[1] https://lore.kernel.org/patchwork/patch/1070005/
+[2] https://lore.kernel.org/patchwork/patch/1070005/#1267273
 
+thanks,
+
+ - Joel
 
