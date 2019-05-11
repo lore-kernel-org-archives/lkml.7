@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 624B4C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B04DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3519B217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57252184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557586819;
-	bh=coXhDy5rztapowd7/ZoUvupbnJU99RnXnrpO3pouju4=;
+	s=default; t=1557586821;
+	bh=T6pVOfdptkOhickgXKdhwoX33PocrD0eTvc02KmYvUk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=1hdMfqPZbBBpqkEvFm/6quD7bxT91UIN/ODginOhSX6pprEgW1M1/sU59LPG80csM
-	 U4+CLqNUmkjO0+MQohc6OM8IlwvXCBEbCrotmttYWOeQ0bdKsJrT0gvfEO5ud0xXil
-	 aoYVhSb5R0sV0iC1Kcg/sljN+xLwysigB2B2A1P4=
+	b=olNuZILY4pF024mqVV2WNEYzzzFhpMF9upJ4PYNi2Lbca1ygGGOS+Wdf5cs9OZPaM
+	 YjBYSzIWiEnOzQjveBqw9TYr8wLT5QHIxSpKRg06brpcrZadp1ir6lSBUdoI7DtL5U
+	 gUmsV4VdjA3guT2pxddCp37swVPNzxJYuzDKILN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfEKPAR (ORCPT
+        id S1728668AbfEKPAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 11:00:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
+        Sat, 11 May 2019 11:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfEKPAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 11:00:14 -0400
-Subject: Re: [GIT PULL] VFIO updates for v5.2-rc1
+        id S1728626AbfEKPAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 11:00:15 -0400
+Subject: Re: [GIT PULL] security subsystem: Tomoyo updates for v5.2
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1557586814;
-        bh=coXhDy5rztapowd7/ZoUvupbnJU99RnXnrpO3pouju4=;
+        bh=T6pVOfdptkOhickgXKdhwoX33PocrD0eTvc02KmYvUk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Vxu44zv72tetHOZIJYwg0jBiRlXxoWhxI0uHNYLa07igKK3ba4CAUAaBBD/ZPDANF
-         1h6GMesV3zusSPZ+jz4Vvm0/s8VeFtcDze6BpworAOmdOkttrex6+fUc7Lee+BWjzJ
-         7ufmWA+MV757e9DSv47PewX/97dln6RC3ZDGWves=
+        b=N5yOzackAgnUMLRvtQOZyVRD0VD3APVCA+K6FlsF7Qd9WCL2bSsWhamgNHsfVqxKs
+         bb6w0WJG6poqm8kvVJQIR44UetonQ+mAW489K60S4KBQ04jJUcOKIac1cazl6ES9bg
+         4RecJY8C4Vuh0GmqvXXA2AQiO2uwvcHZwRbJFLdg=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190510155057.75cc97ba@x1.home>
-References: <20190510155057.75cc97ba@x1.home>
+In-Reply-To: <alpine.LRH.2.21.1905110801350.9392@namei.org>
+References: <alpine.LRH.2.21.1905110801350.9392@namei.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190510155057.75cc97ba@x1.home>
-X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git
- tags/vfio-v5.2-rc1
-X-PR-Tracked-Commit-Id: 15c80c1659f27364734a3938b04d1c67479aa11c
+X-PR-Tracked-Message-Id: <alpine.LRH.2.21.1905110801350.9392@namei.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git
+ next-tomoyo2
+X-PR-Tracked-Commit-Id: 4ad98ac46490d5f8441025930070eaf028cfd0f2
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6fe567df04a27468b306ae5c53fa7a1cd3acc5e1
-Message-Id: <155758681427.22634.1099507694139674226.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: c367dc8d0dd2a1e1ed9fdc2dd831053bdfdf0968
+Message-Id: <155758681477.22634.12296218789154770772.pr-tracker-bot@kernel.org>
 Date:   Sat, 11 May 2019 15:00:14 +0000
-To:     Alex Williamson <alex.williamson@redhat.com>
+To:     James Morris <jmorris@namei.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 May 2019 15:50:57 -0600:
+The pull request you sent on Sat, 11 May 2019 08:09:22 +1000 (AEST):
 
-> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.2-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security.git next-tomoyo2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6fe567df04a27468b306ae5c53fa7a1cd3acc5e1
+https://git.kernel.org/torvalds/c/c367dc8d0dd2a1e1ed9fdc2dd831053bdfdf0968
 
 Thank you!
 
