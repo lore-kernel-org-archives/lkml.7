@@ -3,100 +3,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262D9C04AB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA2EC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C723D2184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED89F2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557614668;
-	bh=DBGXq/wo5eO+VqLPrQODgPeSLnJ8AW0XoIMolnMCp6Q=;
+	s=default; t=1557614737;
+	bh=j5Kq1wmV0e3QZ7WAehUGWtMqpUFvp6XaSKwsh6VOCjg=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sjq18f+7IZXNw8RZ+aW5ebc3+6bp8GfejdFq04CcuvyA8X4fswyokYDmcAOmmHrUA
-	 HBVzt0ExiPNfTEeH/XIsQKywEf3Qx5U+ZUOgCn68/pifRyEXzlqnGotDQiYA7OHglu
-	 V5RqI+VYqzgiF3i0g8b08WElwvP/b0K4SceHk3cU=
+	b=Ne2xCyyO872imvV2vQdDya9ro5n6sWYpJt+Cwt3yRxKqvQuIvK1fxxM6brzwMmJR/
+	 kmeQrAnNjjx1/eOeHFDGpZW22xb6tA9tj9W6lFI3TtjtfKVcmb9v5yfrkA/P4XVDdK
+	 Wu1yRLdPh+Wwwv8gbTKanK5ZcwVGClUrIEm4Ojxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbfEKWo2 (ORCPT
+        id S1726465AbfEKWpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 18:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
+        Sat, 11 May 2019 18:45:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726121AbfEKWo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 18:44:26 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+        id S1726033AbfEKWpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 18:45:35 -0400
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EC8C21883
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 22:44:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4F5021871
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 22:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557614665;
-        bh=DBGXq/wo5eO+VqLPrQODgPeSLnJ8AW0XoIMolnMCp6Q=;
+        s=default; t=1557614734;
+        bh=j5Kq1wmV0e3QZ7WAehUGWtMqpUFvp6XaSKwsh6VOCjg=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2T1xXzIyLDFtQqcxDJubuIMPoaEwT56pjInA0mlMgeInYHftrgyEJJ1vJcvv+Tkuf
-         eA8Y/MST6nLsAmwk6H3JEMwXXqquGK0WICtADAdRVPD2CSlR8kj0BwKZncxL4LGmv8
-         hdsfKVy1tsrMoucuy5dczDnqZPdjIjsc/GSodU54=
-Received: by mail-wr1-f51.google.com with SMTP id d12so11307059wrm.8
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 15:44:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAUEA8grB2Kv9XYfJry0qSgx9GTV+iH9bFGB+9PJdPg2T0R4tS9I
-        T1QFM6dRhYI7p6keb2o05ZBK0i+IZU59CGf0gSaHQQ==
-X-Google-Smtp-Source: APXvYqz9VVf+0M9zlAhmu/aFtD6QMQ36wIxFeD0UzE/oiKErAKWSOoq0eUm7WmnOKqEkU517LcD4VC3J8VtYROM702w=
-X-Received: by 2002:adf:fb4a:: with SMTP id c10mr12063994wrs.309.1557614663619;
- Sat, 11 May 2019 15:44:23 -0700 (PDT)
+        b=SakiPGZtPWXJrGkvIOjG/+dAQZv0SyWGj/x7tPcqMxGlssIjAcpTsj2sJJU0QC+yG
+         s0Bu4kaLFHLR+6dLkQjZl7c3I7tbmfKN1DDplJLW2TtD4FRx+NwqKSDiuYcE/PA3Mp
+         0uhMjWGct/8pSWTU7eOWf3DT/HziOO/3RbwcwzY8=
+Received: by mail-wr1-f48.google.com with SMTP id h4so11332044wre.7
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 15:45:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAXiwt8pCvYvKWzpJ5mGy5v25q2isswOCsIKDEjhHJEr1wsQQy8N
+        YM46CtisLjduF+R4kmeOoDY+HRifUxROlrvlFyo1Yg==
+X-Google-Smtp-Source: APXvYqyudQF5m9LmMFyks+mdUQhng+fQg9MZdPlooGt6iLzqLCV6n8y+WWz7gXDkPGmSuAJoY27rzjrI06QrDLsFYUc=
+X-Received: by 2002:adf:ef8f:: with SMTP id d15mr12879839wro.330.1557614732557;
+ Sat, 11 May 2019 15:45:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509112420.15671-1-roberto.sassu@huawei.com>
-In-Reply-To: <20190509112420.15671-1-roberto.sassu@huawei.com>
+References: <20190502150853.GA16779@gmail.com> <d64b3562d179430f9bdd8712999ff98a@AcuMS.aculab.com>
+ <20190502164524.GB115950@gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
+ <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com> <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
+ <20190508113239.GA33324@gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
+ <20190509055915.GA58462@gmail.com> <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
+ <20190509084352.GA96236@gmail.com>
+In-Reply-To: <20190509084352.GA96236@gmail.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sat, 11 May 2019 15:44:12 -0700
-X-Gmail-Original-Message-ID: <CALCETrXy7gqmmy37=nrMAisGadZ+qbjZjXtWFF8Crq86xNpsfA@mail.gmail.com>
-Message-ID: <CALCETrXy7gqmmy37=nrMAisGadZ+qbjZjXtWFF8Crq86xNpsfA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        initramfs@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.vnet.ibm.com>,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Rob Landley <rob@landley.net>, james.w.mcmechan@gmail.com
+Date:   Sat, 11 May 2019 15:45:19 -0700
+X-Gmail-Original-Message-ID: <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
+Message-ID: <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     "Reshetova, Elena" <elena.reshetova@intel.com>,
+        David Laight <David.Laight@aculab.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Eric Biggers <ebiggers3@gmail.com>,
+        "ebiggers@google.com" <ebiggers@google.com>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:27 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
+On Thu, May 9, 2019 at 1:43 AM Ingo Molnar <mingo@kernel.org> wrote:
 >
-> This patch set aims at solving the following use case: appraise files from
-> the initial ram disk. To do that, IMA checks the signature/hash from the
-> security.ima xattr. Unfortunately, this use case cannot be implemented
-> currently, as the CPIO format does not support xattrs.
 >
-> This proposal consists in marshaling pathnames and xattrs in a file called
-> .xattr-list. They are unmarshaled by the CPIO parser after all files have
-> been extracted.
+> * Reshetova, Elena <elena.reshetova@intel.com> wrote:
 >
-> The difference from v1 (https://lkml.org/lkml/2018/11/22/1182) is that all
-> xattrs are stored in a single file and not per file (solves the file name
-> limitation issue, as it is not necessary to add a suffix to files
-> containing xattrs).
+> > > I find it ridiculous that even with 4K blocked get_random_bytes(),
+> > > which gives us 32k bits, which with 5 bits should amortize the RNG
+> > > call to something like "once per 6553 calls", we still see 17%
+> > > overhead? It's either a measurement artifact, or something doesn't
+> > > compute.
+> >
+> > If you check what happens underneath of get_random_bytes(), there is a
+> > fair amount of stuff that is going on, including reseeding CRNG if
+> > reseeding interval has passed (see _extract_crng()). It also even
+> > attempts to stir in more entropy from rdrand if avalaible:
+> >
+> > I will look into this whole construction slowly now to investigate. I
+> > did't optimize anything yet also (I take 8 bits at the time for
+> > offset), but these small optimization won't make performance impact
+> > from 17% --> 2%, so pointless for now, need a more radical shift.
 >
-> The difference with another proposal
-> (https://lore.kernel.org/patchwork/cover/888071/) is that xattrs can be
-> included in an image without changing the image format, as opposed to
-> defining a new one. As seen from the discussion, if a new format has to be
-> defined, it should fix the issues of the existing format, which requires
-> more time.
+> So assuming that the 17% overhead primarily comes from get_random_bytes()
+> (does it? I don't know), that's incredibly slow for something like the
+> system call entry path, even if it's batched.
+>
 
-I read some of those emails.  ISTM that adding TAR support should be
-seriously considered.  Sure, it's baroque, but it's very, very well
-supported, and it does exactly what we need.
+ISTM maybe a better first step would be to make get_random_bytes() be
+much faster? :)
 
 --Andy
