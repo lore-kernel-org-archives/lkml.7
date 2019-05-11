@@ -2,112 +2,81 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40884C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 08:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A4CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 08:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B21B20578
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 08:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZzavZLD6"
+	by mail.kernel.org (Postfix) with ESMTP id 02247217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 08:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728500AbfEKI2e (ORCPT
+        id S1728465AbfEKIkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 04:28:34 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:33926 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728407AbfEKI2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 04:28:33 -0400
-Received: by mail-ua1-f66.google.com with SMTP id f9so3008666ual.1
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 01:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=25ik70f2E2mAqLYpaZBMoD10MWbGvVn+7ZN/sGqsAX8=;
-        b=ZzavZLD6qcIcx27oWgwnwDdGt2K42iJVD7gdU7YMgaLWkjgNw7hkznt1WyQra2t/Ca
-         PSdNc66gm1Q2wt/o9lffYPRP4eWEGjwcnqNpaI5ROqXZQ35SGuXzj3PBFBhYrZg8Hm3C
-         XfLlyw1TEt6D50MxwAybtGukEZ7qxN8cG6bUht7PupXuvjBQYhw5EjCPApW3BFdXjhXH
-         y/f43k1v+n/tvuDmOh/uFs5r2gXPx9uGeMg11z0fGncfnCQphFRZ1OnK4WPt5PgoI1YK
-         aKZiJbgPD1rIpVucYCt6qiZX1azeRdtiXbiMRWB4BxCrhUgnHJpSdEuSSfMpGHy9+ozb
-         lR9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=25ik70f2E2mAqLYpaZBMoD10MWbGvVn+7ZN/sGqsAX8=;
-        b=a2JQX3FfHedN0ADt/u0vkgkb/XSj/CM+B8C5BoeqxMg9j8jy2srbk5Rf37KBmP8yfb
-         bDE6pB/SgfG2Q1vyu+LjyCuecwNSFLS+9VAHFbZ8TAgynKTrJ0qruNpEaqp+svGTtzd+
-         JIyUPCpnXTLA2EJ26s/5jOk/6zCDFuBpc1vNP0A1uhgQHBMr8KrRDnwBjFrS6nSmqwXc
-         AXUOq4tB4hPPCto6eEDzsiO1tL/Di2XwPx8+ujqW3TnsZa7uZZZgmBXxlOIE8IijprKG
-         pB4HvTR7KnrZMC5m2/t2yQB1V+bc9nEg/IImdyveil69Tl+59OFvxWjwW7H2KS6u9ktq
-         mzHA==
-X-Gm-Message-State: APjAAAWfFo/3xAYfz18oSS6NJs+RogyRkqMIuBwaQ1tGKS3KDiddKOxi
-        KBUbZ10jRt4SaSCHlCnCAg+GzFwbnypVyq+3a/k=
-X-Google-Smtp-Source: APXvYqxNg7H2RZMKn5M0pmOgmfKoVyv6mjSjMMBK58Qm0Wm0QvncqQjkgtL96swgZ8adzof1JOCjAYLTsoHnBa7KAHk=
-X-Received: by 2002:ab0:70d4:: with SMTP id r20mr4110137ual.67.1557563312464;
- Sat, 11 May 2019 01:28:32 -0700 (PDT)
+        Sat, 11 May 2019 04:40:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37374 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725887AbfEKIkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 04:40:31 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4FA053092654;
+        Sat, 11 May 2019 08:40:31 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DAC1F27CC9;
+        Sat, 11 May 2019 08:40:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190509155801.8369-1-christian@brauner.io>
+References: <20190509155801.8369-1-christian@brauner.io>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] fs: make all new mount api fds cloexec by default
 MIME-Version: 1.0
-References: <1555960190-8645-1-git-send-email-dagmcr@gmail.com> <20190508102701.GI3995@dell>
-In-Reply-To: <20190508102701.GI3995@dell>
-From:   Daniel G <dagmcr@gmail.com>
-Date:   Sat, 11 May 2019 10:28:21 +0200
-Message-ID: <CAPsT6hmVQWNtt2cLWkVQ8kHa_Q_7KVp4D-mMnjBsajdYdn8EeA@mail.gmail.com>
-Subject: Re: [PATCH] spi: TI power management: add missing of table registration
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Javier Martinez Canillas <javier@dowhile0.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9331.1557564029.1@warthog.procyon.org.uk>
+Date:   Sat, 11 May 2019 09:40:29 +0100
+Message-ID: <9333.1557564029@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sat, 11 May 2019 08:40:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 12:27 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> The subject line is not correct.  This is an MFD driver.
->
-> When submitting you should follow the convention for the subsystem you
-> are patching against.  The following command is helpful:
->
->   `git log --oneline -- <SUBSYSTEM>`
->
-> I will fix it for you this time (and for the other patch I see).
->
-Sorry for that and thanks for rewriting the subject.
+Christian Brauner <christian@brauner.io> wrote:
 
-> On Mon, 22 Apr 2019, Daniel Gomez wrote:
->
-> > MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete D=
-T
-> > OF mathing mechanism and register it.
-> >
-> > Before this patch:
-> > modinfo drivers/mfd/tps65912-spi.ko | grep alias
-> > alias:          spi:tps65912
-> >
-> > After this patch:
-> > modinfo drivers/mfd/tps65912-spi.ko | grep alias
-> > alias:          of:N*T*Cti,tps65912C*
-> > alias:          of:N*T*Cti,tps65912
-> > alias:          spi:tps65912
-> >
-> > Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-> > Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-> > ---
-> >  drivers/mfd/tps65912-spi.c | 1 +
-> >  1 file changed, 1 insertion(+)
->
-> Applied, thanks.
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Linaro Services Technical Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> This makes all file descriptors returned from new syscalls of the new mount
+> api cloexec by default.
+> 
+> From a userspace perspective it is rarely the case that fds are supposed to
+> be inherited across exec. Having them not cloexec by default forces
+> userspace to remember to pass the <SPECIFIC>_CLOEXEC flag along or to
+> invoke fcntl() on the fd to prevent leaking it. And leaking the fd is a
+> much bigger issue than forgetting to remove the cloexec flag and failing to
+> inherit the fd.
+> For old fd types we can't break userspace. But for new ones we should
+> whenever reasonable make them cloexec by default (Examples of this policy
+> are the new seccomp notify fds and also pidfds.). If userspace wants to
+> inherit fds across exec they can remove the O_CLOEXEC flag and so opt in to
+> inheritance explicitly.
+> 
+> This patch also has the advantage that we can get rid of all the special
+> flags per file descriptor type for the new mount api. In total this lets us
+> remove 4 flags:
+> - FSMOUNT_CLOEXEC
+> - FSOPEN_CLOEXEC
+> - FSPICK_CLOEXEC
+> - OPEN_TREE_CLOEXEC
+> 
+> Signed-off-by: Christian Brauner <christian@brauner.io>
+
+Fine by me.
+
+Reviewed-by: David Howells <dhowells@redhat.com>
