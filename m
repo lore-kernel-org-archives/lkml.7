@@ -2,229 +2,162 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1D4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1281C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F18EE20881
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C0A6216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MI8w5cGx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXrknFiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfEKTEY (ORCPT
+        id S1726221AbfEKTKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 15:04:24 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34781 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfEKTEX (ORCPT
+        Sat, 11 May 2019 15:10:10 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33840 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfEKTKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 15:04:23 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w7so4394803plz.1;
-        Sat, 11 May 2019 12:04:23 -0700 (PDT)
+        Sat, 11 May 2019 15:10:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id m20so8569396wmg.1
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 12:10:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mGaRnqVCoyCZOIBZ9izPfSHfOocCoIwti//LG4qze0c=;
-        b=MI8w5cGx0btx5xiSYFrJJoCJwkyQlKKgVznkYSIQQyeEo51cg4O3QncAEZ2yQ7qAEk
-         ClKCFyKB1BtyCtfMJwqORCb+mHsBhx7bTBh5eO8Jp3JnAfuRr3yXyhzH2FdDTyChiPFY
-         PE2ibBHBRZGKjU7qWeRcDtASrk8YyzIvVIvPuVYmqf0YuDwlA0xS+6nOJ8q+ejqY5zDc
-         9ia25Yc+pKfzsShQKYxWWvitFtb498YlRPX0Hh1mT2kH4erY8pugknQ/Uh8aTUBOkGHQ
-         HKxxl0UPHcS5VYEdyxZmQD10jgPJWiCP2rgMNouweQ6cXUE/bgDzk0G/U3cbc4n20Xgp
-         savA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MfGrmqC7D7F6enHrfpsTmPEIqWHqv5G2uRwI3xddp6M=;
+        b=bXrknFiQeIOVGskqrvgOsC/geKwFDC3Yo86/CAKighwYpuQInu6FECJYMiJ76alKI2
+         9+cYwRqcty0U7gjzes8v6xzXtlf2rqgAceyauoeyxTg+cGfw/OxFdprUhEq2tIVVHTAa
+         Ikq0AIW3DgOCxm28Q+hkoypNLPpeb6/0lASFeXqCqvQ7gMEF5xVVm0AUA8e8b7UQkVNu
+         NEhvuHdkepU9XvAdzgNYwClqwi3MYzkGvX4ZwzRsJzKcfyFklb2QSV4KOkmjG6CvuCI0
+         x9eU12fG3MJd+rowd9vID23WJIADTi8QPi/vLC0mneWR+4+SVWROSVdrPtZtUJAzYDJJ
+         68Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mGaRnqVCoyCZOIBZ9izPfSHfOocCoIwti//LG4qze0c=;
-        b=oYK29aTCgr3XJTqrLbtU4cnsnDgqMQKdp69GBmYPJcVUp9fLvOgTOg/WCLN7pzCLBH
-         zsU/iLUb985r2xFqqPFHN9HCcHxPxz5nY7zJdmV3GMTMEMXUbYMcHWQpgGXbZzVW8KgV
-         GbXxeMQAAzHJR7sfsXW+39KzzAiTeM1wg7wcU3Rom8xq2tOeQNTt93f11kKTjOTtCrJp
-         ZwzgjRK2EBgGSBuWwWCByFxYDCRq/HZub3JzVZI10BDoIZQI5lSbHstu1rx8lelh4HwE
-         avq4DPEHdMhk5YUUHz/4Q/+QOPSXRwpg+NaZGaF1hY78/mTxWEnhk03K59SH6fMTYgMx
-         tMpg==
-X-Gm-Message-State: APjAAAW6g5jso73lZXqCYBhVrAfawLN8GZt4pvJ32dM/GC3m4VIQcizH
-        Ee9i1d2D2FD4zbZDzNHhCzE=
-X-Google-Smtp-Source: APXvYqyt/eaU9d15W8IfOa5xOEidfRGbLhiHRr2EdYIRq+a25FXzjyRxhMHBQ2aiAInKd+bzRgMYIg==
-X-Received: by 2002:a17:902:20e2:: with SMTP id v31mr21870303plg.138.1557601462677;
-        Sat, 11 May 2019 12:04:22 -0700 (PDT)
-Received: from localhost.localdomain ([2607:fb90:4a55:a659:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id u38sm9494634pgn.73.2019.05.11.12.04.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 12:04:22 -0700 (PDT)
-Date:   Sat, 11 May 2019 12:04:18 -0700
-From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-pm@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/6] thermal: Introduce
- devm_thermal_of_cooling_device_register
-Message-ID: <20190511190415.GA22816@localhost.localdomain>
-References: <1555617500-10862-1-git-send-email-linux@roeck-us.net>
- <1555617500-10862-2-git-send-email-linux@roeck-us.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MfGrmqC7D7F6enHrfpsTmPEIqWHqv5G2uRwI3xddp6M=;
+        b=p8Gl5OJ2730HWPWNbkLXyw3pV1XMMidSkszyr9ctgD+NYPwI3/19N76dnwUbLuutGk
+         bVZkjbS3l7UTVFeuJ+YuKNwNM0W1yS5DSFlDsqhEjF/4jKKUp24Wa0IkDioelytJMo1I
+         1E6Vt6zb9o5tH7Zu7yPLKmNkcXeI2rbUpeZSrstiTJJIw2O537WvSlMxabiyzZlYhUvA
+         jFB1qk9a7AOKe31C+R2V7s/YUAcCcaTtIMSEFvIy9w5DZkCMqxDA2NxSD2PUqCPO9TRT
+         1jx9uvvCxpFZGYreYZs6HF053qXqqeDtUJHvDsfYLeH+FaUrphE9VlC+CBNqewNYcOkr
+         rBgA==
+X-Gm-Message-State: APjAAAWFCIuMe9XaY3eXloC5S2Y1rhLl6cZ8bzWAprv74oJcIo2mugIA
+        UFI/saKpikXI1F0jlXQju4EKhM1ppvOKmwJeCvU=
+X-Google-Smtp-Source: APXvYqxtrXHmxuXeZG5+dLztGl2XzuGjN6KcXSqF9ibg83JTKY98Ld6NJtsvolWaVnE4iN/5T1rlOR0y5jo1Pys9oMU=
+X-Received: by 2002:a1c:5f02:: with SMTP id t2mr10697632wmb.19.1557601808429;
+ Sat, 11 May 2019 12:10:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555617500-10862-2-git-send-email-linux@roeck-us.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190511151149.28823-1-sravanhome@gmail.com>
+In-Reply-To: <20190511151149.28823-1-sravanhome@gmail.com>
+From:   =?UTF-8?Q?Beno=C3=AEt_Th=C3=A9baudeau?= 
+        <benoit.thebaudeau.dev@gmail.com>
+Date:   Sat, 11 May 2019 21:10:32 +0200
+Message-ID: <CA+sos7-KyuCmfuxby4ta46ypK6H-DmEA7RgoL3cyrghQa8i+zA@mail.gmail.com>
+Subject: Re: [alsa-devel] [PATCH v4] ASoC: tlv320aic3x: Add support for high
+ power analog output
+To:     Saravanan Sekar <sravanhome@gmail.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, Alsa-devel <alsa-devel@alsa-project.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Guenter,
+Dear Saravanan Sekar,
 
-On Thu, Apr 18, 2019 at 12:58:15PM -0700, Guenter Roeck wrote:
-> thermal_of_cooling_device_register() and thermal_cooling_device_register()
-> are typically called from driver probe functions, and
-> thermal_cooling_device_unregister() is called from remove functions. This
-> makes both a perfect candidate for device managed functions.
-> 
-> Introduce devm_thermal_of_cooling_device_register(). This function can
-> also be used to replace thermal_cooling_device_register() by passing a NULL
-> pointer as device node. The new function requires both struct device *
-> and struct device_node * as parameters since the struct device_node *
-> parameter is not always identical to dev->of_node.
-> 
-> Don't introduce a device managed remove function since it is not needed
-> at this point.
-
-I don't have any objection on adding this API. Only a minor thing below:
-
-
-> 
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+On Sat, May 11, 2019 at 5:13 PM Saravanan Sekar <sravanhome@gmail.com> wrot=
+e:
+>
+> Add support to output level control for the analog high power output
+> drivers HPOUT and HPCOM.
+>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
->  drivers/thermal/thermal_core.c | 49 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/thermal.h        |  5 +++++
->  2 files changed, 54 insertions(+)
-> 
-> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-> index 6590bb5cb688..e0b530603db6 100644
-> --- a/drivers/thermal/thermal_core.c
-> +++ b/drivers/thermal/thermal_core.c
-> @@ -1046,6 +1046,55 @@ thermal_of_cooling_device_register(struct device_node *np,
->  }
->  EXPORT_SYMBOL_GPL(thermal_of_cooling_device_register);
->  
-> +static void thermal_cooling_device_release(struct device *dev, void *res)
-> +{
-> +	thermal_cooling_device_unregister(
-> +				*(struct thermal_cooling_device **)res);
-> +}
+>
+> Notes:
+>     Notes:
+>         Changes in V4:
+>         -Added separate mono playback volume control
+>         -grouped volume controls with corresponding switch
+>
+>         Changes in V3:
+>         -Fixed compilation error
+>
+>         Changes in V2:
+>         - Removed power control as it is handled by DAPM
+>         - Added level control for left channel
+>
+>  sound/soc/codecs/tlv320aic3x.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+>
+> diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3=
+x.c
+> index 516d17cb2182..599e4ed3850b 100644
+> --- a/sound/soc/codecs/tlv320aic3x.c
+> +++ b/sound/soc/codecs/tlv320aic3x.c
+> @@ -324,6 +324,9 @@ static DECLARE_TLV_DB_SCALE(adc_tlv, 0, 50, 0);
+>   */
+>  static DECLARE_TLV_DB_SCALE(output_stage_tlv, -5900, 50, 1);
+>
+> +/* Output volumes. From 0 to 9 dB in 1 dB steps */
+> +static const DECLARE_TLV_DB_SCALE(out_tlv, 0, 100, 0);
 > +
-> +/**
-> + * devm_thermal_of_cooling_device_register() - register an OF thermal cooling
-> + *					       device
-> + * @dev:	a valid struct device pointer of a sensor device.
-> + * @np:		a pointer to a device tree node.
-> + * @type:	the thermal cooling device type.
-> + * @devdata:	device private data.
-> + * @ops:	standard thermal cooling devices callbacks.
-> + *
-> + * This function will register a cooling device with device tree node reference.
-> + * This interface function adds a new thermal cooling device (fan/processor/...)
-> + * to /sys/class/thermal/ folder as cooling_device[0-*]. It tries to bind itself
-> + * to all the thermal zone devices registered at the same time.
-> + *
-> + * Return: a pointer to the created struct thermal_cooling_device or an
-> + * ERR_PTR. Caller must check return value with IS_ERR*() helpers.
-> + */
-> +struct thermal_cooling_device *
-> +devm_thermal_of_cooling_device_register(struct device *dev,
-> +				struct device_node *np,
-> +				char *type, void *devdata,
-> +				const struct thermal_cooling_device_ops *ops)
-> +{
-> +	struct thermal_cooling_device **ptr, *tcd;
+>  static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
+>         /* Output */
+>         SOC_DOUBLE_R_TLV("PCM Playback Volume",
+> @@ -386,11 +389,17 @@ static const struct snd_kcontrol_new aic3x_snd_cont=
+rols[] =3D {
+>                          DACL1_2_HPLCOM_VOL, DACR1_2_HPRCOM_VOL,
+>                          0, 118, 1, output_stage_tlv),
+>
+> -       /* Output pin mute controls */
+> +       /* Output pin controls */
+> +       SOC_DOUBLE_R_TLV("Line Playback Volume", LLOPM_CTRL, RLOPM_CTRL, =
+4,
+> +                        9, 0, out_tlv),
+>         SOC_DOUBLE_R("Line Playback Switch", LLOPM_CTRL, RLOPM_CTRL, 3,
+>                      0x01, 0),
+> +       SOC_DOUBLE_R_TLV("HP Playback Volume", HPLOUT_CTRL, HPROUT_CTRL, =
+4,
+> +                        9, 0, out_tlv),
+>         SOC_DOUBLE_R("HP Playback Switch", HPLOUT_CTRL, HPROUT_CTRL, 3,
+>                      0x01, 0),
+> +       SOC_DOUBLE_R_TLV("HPCOM Playback Volume", HPLCOM_CTRL, HPRCOM_CTR=
+L,
+> +                        4, 9, 0, out_tlv),
+>         SOC_DOUBLE_R("HPCOM Playback Switch", HPLCOM_CTRL, HPRCOM_CTRL, 3=
+,
+>                      0x01, 0),
+>
+> @@ -472,6 +481,9 @@ static const struct snd_kcontrol_new aic3x_mono_contr=
+ols[] =3D {
+>                          0, 118, 1, output_stage_tlv),
+>
+>         SOC_SINGLE("Mono Playback Switch", MONOLOPM_CTRL, 3, 0x01, 0),
+> +       SOC_SINGLE_TLV("Mono Playback Volume", MONOLOPM_CTRL, 4, 9, 0,
+> +                       out_tlv),
 > +
-> +	ptr = devres_alloc(thermal_cooling_device_release, sizeof(*ptr),
-> +			   GFP_KERNEL);
-> +	if (!ptr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	tcd = __thermal_cooling_device_register(np, type, devdata, ops);
-> +	if (IS_ERR(tcd)) {
-> +		devres_free(ptr);
-> +		return tcd;
-> +	}
-> +
-> +	*ptr = tcd;
-> +	devres_add(dev, ptr);
-> +
-> +	return tcd;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_thermal_of_cooling_device_register);
-> +
->  static void __unbind(struct thermal_zone_device *tz, int mask,
->  		     struct thermal_cooling_device *cdev)
->  {
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index 5f4705f46c2f..43cf4fdd71d4 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -447,6 +447,11 @@ struct thermal_cooling_device *thermal_cooling_device_register(char *, void *,
->  struct thermal_cooling_device *
->  thermal_of_cooling_device_register(struct device_node *np, char *, void *,
->  				   const struct thermal_cooling_device_ops *);
-> +struct thermal_cooling_device *
-> +devm_thermal_of_cooling_device_register(struct device *dev,
-> +				struct device_node *np,
-> +				char *type, void *devdata,
-> +				const struct thermal_cooling_device_ops *ops);
+>  };
+>
+>  /*
+> --
+> 2.17.1
+>
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> https://mailman.alsa-project.org/mailman/listinfo/alsa-devel
 
-We need to stub this in case thermal is not selected.
+Reviewed-by: Beno=C3=AEt Th=C3=A9baudeau <benoit.thebaudeau.dev@gmail.com>
 
->  void thermal_cooling_device_unregister(struct thermal_cooling_device *);
->  struct thermal_zone_device *thermal_zone_get_zone_by_name(const char *name);
->  int thermal_zone_get_temp(struct thermal_zone_device *tz, int *temp);
-
-Something like:
-
-
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 43cf4fd..9b1b365 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -508,6 +508,14 @@ static inline struct thermal_cooling_device *
- thermal_of_cooling_device_register(struct device_node *np,
-        char *type, void *devdata, const struct thermal_cooling_device_ops *ops)
- { return ERR_PTR(-ENODEV); }
-+struct thermal_cooling_device *
-+devm_thermal_of_cooling_device_register(struct device *dev,
-+                               struct device_node *np,
-+                               char *type, void *devdata,
-+                               const struct thermal_cooling_device_ops *ops)
-+{
-+       return ERR_PTR(-ENODEV);
-+}
- static inline void thermal_cooling_device_unregister(
-        struct thermal_cooling_device *cdev)
- { }
-~
-
-
-If you want I can amend this to your patch and apply it.
-
-Also, do you prefer me to collect only this patch and you would collect hwmon changes,
-or are you ok if I collect all the series?
-
+Best regards,
+Beno=C3=AEt
