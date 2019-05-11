@@ -4,220 +4,321 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F200C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D014CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43888217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE76217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tk+Cia6L"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tpILgy3R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfEKAdJ (ORCPT
+        id S1728342AbfEKAdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 20:33:09 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43041 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbfEKAdI (ORCPT
+        Fri, 10 May 2019 20:33:14 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34562 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728314AbfEKAdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 20:33:08 -0400
-Received: by mail-yw1-f67.google.com with SMTP id t5so233110ywf.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 17:33:08 -0700 (PDT)
+        Fri, 10 May 2019 20:33:13 -0400
+Received: by mail-yw1-f65.google.com with SMTP id n76so6152132ywd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 17:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ye4xjLBtskl0qaTIrAIO0OuPNKdvzfw2Zbbyb7AMX+0=;
-        b=tk+Cia6LQWUyTR2QMWtaxW4xlLnam23BiAPZUU497NNekR9TLFNsc1GQjiOqvwJsUK
-         pjqKmrZUuYrzIK7JIClULwKQP+798D8yl3A3DUjbdS0ftesLBYyvWtozavQK3YYGJwrw
-         JZPXFPBFF0aUjzuP2ygJ8/VhrH9g6bA1XsXhXnT0MBh4AvNDL0qgZmnOFN/IDbnLerZ0
-         d9c7SqY/0cxMjhF+qX8cJRxQ/6utbLyCH3NTvbdqtAjJBHDu9y2CDKEzpR7x1OQKibPF
-         7AZiaZL85aRsBGJ+Kb4ynkyXbkfUhLQfFG8PZ3HG1+YpXRYsziNC+J4bQshJb5zrcy36
-         L4wA==
+        bh=05t4yLqiGc54LnQ5ZpBdMWfaLZVhZ5+2KCRuzx7eEX8=;
+        b=tpILgy3RmXvC0yltT+cnRg1Pt1urKSjgHZLDaAd0PFyHRCWS4ofNZsI7qMNoOaArmC
+         5eKPcc494ECjICs6c7N2ZDyJcGcp93BmshTYiPOVGXv8V7UzwFhUfFxWMkhVbO00LHhy
+         n3sMBrBwUt5l6RZAo2YzV4AY3QtVIIxJVicfetorlD/1+7AGVdBqlR2eqed1oAE0BNMA
+         G2L9CYcxCr4hcN1+VX2NHAGNdwXfa6YCQVXtnT4MiL3CEPIuKYI483EJiMac15JgntHW
+         WLT5IFS3yVf46q2+amrQnPkVbVJ895ldIK7jtzvFe0VsLOd4XmYWhdy4AZVRQXSgY4KQ
+         HcMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ye4xjLBtskl0qaTIrAIO0OuPNKdvzfw2Zbbyb7AMX+0=;
-        b=HFVMgdmH4V27g9Z75kA1aDXMrHufVBjtK1CkIrXdJMTH7av7c7QUuGH84wr1GCWlAz
-         9M1vw+17LOkdBPPyZB7vzDTo4TrkuF+Uo6ysPgOMff16gyNFO0gNc+zK+9jkCuZdIo+Y
-         e3RysyOjs/lPicKT4TLvTI24nHznKrYnwJhh45O6RrVV1uBDe3/f/1WiftOV5wMuqIzP
-         RfNE8YZ45HpgU70BeluteI52J+3OkSceMqBXFZVu6uCZfOf4kPwznGZpPfF0eJk/X2o2
-         0XD5CkLoY3bV/os3rpLbIPER7bSCbhAXZ34eviPoaBXxlitP7EZvqS4PpVAKJ2QBXlc7
-         +/mg==
-X-Gm-Message-State: APjAAAUt7loeK0kVwcVimBmGi4LCwhVsC2OgunDOTLBrq4YKjSrQADuo
-        GB7PqvqlfqevqXnjF8KBc44vGVOvqyhDvVrpkiTG4g==
-X-Google-Smtp-Source: APXvYqzXf5QXyZblKWUlxEvpqIOeU0JlCpHdy7/HAbwCQeXRVq6sHeM47rrhypwookSlCy+pVIIa/ci8nY9S8yxXwtg=
-X-Received: by 2002:a5b:404:: with SMTP id m4mr7375530ybp.282.1557534787785;
- Fri, 10 May 2019 17:33:07 -0700 (PDT)
+        bh=05t4yLqiGc54LnQ5ZpBdMWfaLZVhZ5+2KCRuzx7eEX8=;
+        b=FC7bpT/e/jhjRpKc3+Ell8MhpaRyfjvXahNKyUHZW7LNkqz4GibeQoUBhDhkZmPys0
+         rKp0JTJtHhWdy002lH2n1SShhg8OKJ+SoUFM4EcyoQF1GsZmGobSDeX9WDGTlOpq2bHN
+         M6lw24Ubm6FXKW1kr79M+ST7ZIAMHtxaPnDB1GZ5VeIqy1Xd35Bu+q1Q/olxbOu8NUDg
+         fxvrDcKuch+xGhnTr0SSqR64E4YrwYqJW5g7GXnqmPPPxchRrLLMd/4nM2Jc/zue2XFW
+         sWrcAPCHUym4UIP3taw8TkP6unEv2nz5ouCJdN4gM7Ua8GtKHbFs2bQ2AV7BbhS9j+JH
+         SDaw==
+X-Gm-Message-State: APjAAAXi0seTrc0RxAX6ZdhKVQmuAoobKCFm5ZXLvJ+c4/AqPV/uHRqt
+        GbxNNSt4APm5nTsX0k+EQvyRsB/+qGQOKubm9FzF1w==
+X-Google-Smtp-Source: APXvYqzqg8t1QDEkbNyfsK/W1VqD88Ql/nMpu8XxA4P/KzF3MqAprZpmoXOLhhKwyv4sl6SAbJEuFpA2Dy9Pzjj0TyQ=
+X-Received: by 2002:a81:2204:: with SMTP id i4mr7167446ywi.349.1557534792229;
+ Fri, 10 May 2019 17:33:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190510223437.84368-1-dianders@chromium.org> <20190510223437.84368-5-dianders@chromium.org>
-In-Reply-To: <20190510223437.84368-5-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Fri, 10 May 2019 17:32:57 -0700
-Message-ID: <CABXOdTcNJNKfOj8e5TGPmCRZsZS8UQGwqC42hrOjm9t216c9JQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] Revert "platform/chrome: cros_ec_spi: Transfer
- messages at high priority"
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190508202458.550808-1-guro@fb.com> <20190508202458.550808-3-guro@fb.com>
+In-Reply-To: <20190508202458.550808-3-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 10 May 2019 17:33:01 -0700
+Message-ID: <CALvZod7oxh+5z7xWGnrs4zTpM2fHGfqsWcx7+KU8r9vMp38TWw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] mm: generalize postponed non-root kmem_cache deactivation
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
-Date: Fri, May 10, 2019 at 3:35 PM
-To: Mark Brown, Benson Leung, Enric Balletbo i Serra
-Cc: <linux-rockchip@lists.infradead.org>, <drinkcat@chromium.org>,
-Guenter Roeck, <briannorris@chromium.org>, <mka@chromium.org>, Douglas
-Anderson, <linux-kernel@vger.kernel.org>
+From: Roman Gushchin <guro@fb.com>
+Date: Wed, May 8, 2019 at 1:30 PM
+To: Andrew Morton, Shakeel Butt
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+<kernel-team@fb.com>, Johannes Weiner, Michal Hocko, Rik van Riel,
+Christoph Lameter, Vladimir Davydov, <cgroups@vger.kernel.org>, Roman
+Gushchin
 
-> This reverts commit 37a186225a0c020516bafad2727fdcdfc039a1e4.
+> Currently SLUB uses a work scheduled after an RCU grace period
+> to deactivate a non-root kmem_cache. This mechanism can be reused
+> for kmem_caches reparenting, but requires some generalization.
 >
-> We have a better solution in the patch ("platform/chrome: cros_ec_spi:
-> Set ourselves as timing sensitive").  Let's revert the uglier and less
-> reliable solution.
+> Let's decouple all infrastructure (rcu callback, work callback)
+> from the SLUB-specific code, so it can be used with SLAB as well.
 >
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Also, let's rename some functions to make the code look simpler.
+> All SLAB/SLUB-specific functions start with "__". Remove "deact_"
+> prefix from the corresponding struct fields.
+>
+> Here is the graph of a new calling scheme:
+> kmemcg_cache_deactivate()
+>   __kmemcg_cache_deactivate()                  SLAB/SLUB-specific
+>   kmemcg_schedule_work_after_rcu()             rcu
+>     kmemcg_after_rcu_workfn()                  work
+>       kmemcg_cache_deactivate_after_rcu()
+>         __kmemcg_cache_deactivate_after_rcu()  SLAB/SLUB-specific
+>
+> instead of:
+> __kmemcg_cache_deactivate()                    SLAB/SLUB-specific
+>   slab_deactivate_memcg_cache_rcu_sched()      SLUB-only
+>     kmemcg_deactivate_rcufn                    SLUB-only, rcu
+>       kmemcg_deactivate_workfn                 SLUB-only, work
+>         kmemcg_cache_deact_after_rcu()         SLUB-only
+>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
 > ---
+>  include/linux/slab.h |  6 ++---
+>  mm/slab.c            |  4 +++
+>  mm/slab.h            |  3 ++-
+>  mm/slab_common.c     | 62 ++++++++++++++++++++------------------------
+>  mm/slub.c            |  8 +-----
+>  5 files changed, 38 insertions(+), 45 deletions(-)
 >
->  drivers/platform/chrome/cros_ec_spi.c | 80 ++-------------------------
->  1 file changed, 6 insertions(+), 74 deletions(-)
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 9449b19c5f10..47923c173f30 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -642,10 +642,10 @@ struct memcg_cache_params {
+>                         struct list_head children_node;
+>                         struct list_head kmem_caches_node;
 >
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> index 757a115502ec..70ff1ad09012 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -75,27 +75,6 @@ struct cros_ec_spi {
->         unsigned int end_of_msg_delay;
->  };
+> -                       void (*deact_fn)(struct kmem_cache *);
+> +                       void (*work_fn)(struct kmem_cache *);
+>                         union {
+> -                               struct rcu_head deact_rcu_head;
+> -                               struct work_struct deact_work;
+> +                               struct rcu_head rcu_head;
+> +                               struct work_struct work;
+>                         };
+>                 };
+>         };
+> diff --git a/mm/slab.c b/mm/slab.c
+> index f6eff59e018e..83000e46b870 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -2281,6 +2281,10 @@ void __kmemcg_cache_deactivate(struct kmem_cache *cachep)
+>  {
+>         __kmem_cache_shrink(cachep);
+>  }
+> +
+> +void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
+> +{
+> +}
+>  #endif
 >
-> -typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
-> -                                 struct cros_ec_command *ec_msg);
-> -
+>  int __kmem_cache_shutdown(struct kmem_cache *cachep)
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 6a562ca72bca..4a261c97c138 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -172,6 +172,7 @@ int __kmem_cache_shutdown(struct kmem_cache *);
+>  void __kmem_cache_release(struct kmem_cache *);
+>  int __kmem_cache_shrink(struct kmem_cache *);
+>  void __kmemcg_cache_deactivate(struct kmem_cache *s);
+> +void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s);
+>  void slab_kmem_cache_release(struct kmem_cache *);
+>
+>  struct seq_file;
+> @@ -291,7 +292,7 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
+>  extern void slab_init_memcg_params(struct kmem_cache *);
+>  extern void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg);
+>  extern void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+> -                               void (*deact_fn)(struct kmem_cache *));
+> +                               void (*work_fn)(struct kmem_cache *));
+>
+>  #else /* CONFIG_MEMCG_KMEM */
+>
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 6e00bdf8618d..4e5b4292a763 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -691,17 +691,18 @@ void memcg_create_kmem_cache(struct mem_cgroup *memcg,
+>         put_online_cpus();
+>  }
+>
+> -static void kmemcg_deactivate_workfn(struct work_struct *work)
+> +static void kmemcg_after_rcu_workfn(struct work_struct *work)
+>  {
+>         struct kmem_cache *s = container_of(work, struct kmem_cache,
+> -                                           memcg_params.deact_work);
+> +                                           memcg_params.work);
+>
+>         get_online_cpus();
+>         get_online_mems();
+>
+>         mutex_lock(&slab_mutex);
+>
+> -       s->memcg_params.deact_fn(s);
+> +       s->memcg_params.work_fn(s);
+> +       s->memcg_params.work_fn = NULL;
+>
+>         mutex_unlock(&slab_mutex);
+>
+> @@ -712,37 +713,28 @@ static void kmemcg_deactivate_workfn(struct work_struct *work)
+>         css_put(&s->memcg_params.memcg->css);
+>  }
+>
+> -static void kmemcg_deactivate_rcufn(struct rcu_head *head)
+> +/*
+> + * We need to grab blocking locks.  Bounce to ->work.  The
+> + * work item shares the space with the RCU head and can't be
+> + * initialized eariler.
+> +*/
+> +static void kmemcg_schedule_work_after_rcu(struct rcu_head *head)
+>  {
+>         struct kmem_cache *s = container_of(head, struct kmem_cache,
+> -                                           memcg_params.deact_rcu_head);
+> +                                           memcg_params.rcu_head);
+>
+> -       /*
+> -        * We need to grab blocking locks.  Bounce to ->deact_work.  The
+> -        * work item shares the space with the RCU head and can't be
+> -        * initialized eariler.
+> -        */
+> -       INIT_WORK(&s->memcg_params.deact_work, kmemcg_deactivate_workfn);
+> -       queue_work(memcg_kmem_cache_wq, &s->memcg_params.deact_work);
+> +       INIT_WORK(&s->memcg_params.work, kmemcg_after_rcu_workfn);
+> +       queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
+>  }
+>
 > -/**
-> - * struct cros_ec_xfer_work_params - params for our high priority workers
+> - * slab_deactivate_memcg_cache_rcu_sched - schedule deactivation after a
+> - *                                        sched RCU grace period
+> - * @s: target kmem_cache
+> - * @deact_fn: deactivation function to call
 > - *
-> - * @work: The work_struct needed to queue work
-> - * @fn: The function to use to transfer
-> - * @ec_dev: ChromeOS EC device
-> - * @ec_msg: Message to transfer
-> - * @ret: The return value of the function
+> - * Schedule @deact_fn to be invoked with online cpus, mems and slab_mutex
+> - * held after a sched RCU grace period.  The slab is guaranteed to stay
+> - * alive until @deact_fn is finished.  This is to be used from
+> - * __kmemcg_cache_deactivate().
 > - */
-> -
-> -struct cros_ec_xfer_work_params {
-> -       struct work_struct work;
-> -       cros_ec_xfer_fn_t fn;
-> -       struct cros_ec_device *ec_dev;
-> -       struct cros_ec_command *ec_msg;
-> -       int ret;
-> -};
-> -
->  static void debug_packet(struct device *dev, const char *name, u8 *ptr,
->                          int len)
+> -void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+> -                                          void (*deact_fn)(struct kmem_cache *))
+> +static void kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
 >  {
-> @@ -371,13 +350,13 @@ static int cros_ec_spi_receive_response(struct cros_ec_device *ec_dev,
+> -       if (WARN_ON_ONCE(is_root_cache(s)) ||
+> -           WARN_ON_ONCE(s->memcg_params.deact_fn))
+> -               return;
+> +       __kmemcg_cache_deactivate_after_rcu(s);
+> +}
+> +
+> +static void kmemcg_cache_deactivate(struct kmem_cache *s)
+> +{
+> +       __kmemcg_cache_deactivate(s);
+>
+>         if (s->memcg_params.root_cache->memcg_params.dying)
+>                 return;
+> @@ -750,8 +742,9 @@ void slab_deactivate_memcg_cache_rcu_sched(struct kmem_cache *s,
+>         /* pin memcg so that @s doesn't get destroyed in the middle */
+>         css_get(&s->memcg_params.memcg->css);
+>
+> -       s->memcg_params.deact_fn = deact_fn;
+> -       call_rcu(&s->memcg_params.deact_rcu_head, kmemcg_deactivate_rcufn);
+> +       WARN_ON_ONCE(s->memcg_params.work_fn);
+> +       s->memcg_params.work_fn = kmemcg_cache_deactivate_after_rcu;
+> +       call_rcu(&s->memcg_params.rcu_head, kmemcg_schedule_work_after_rcu);
 >  }
 >
->  /**
-> - * do_cros_ec_pkt_xfer_spi - Transfer a packet over SPI and receive the reply
-> + * cros_ec_pkt_xfer_spi - Transfer a packet over SPI and receive the reply
->   *
->   * @ec_dev: ChromeOS EC device
->   * @ec_msg: Message to transfer
->   */
-> -static int do_cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
-> -                                  struct cros_ec_command *ec_msg)
-> +static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
-> +                               struct cros_ec_command *ec_msg)
->  {
->         struct ec_host_response *response;
->         struct cros_ec_spi *ec_spi = ec_dev->priv;
-> @@ -514,13 +493,13 @@ static int do_cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
+>  void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
+> @@ -773,7 +766,7 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
+>                 if (!c)
+>                         continue;
+>
+> -               __kmemcg_cache_deactivate(c);
+> +               kmemcg_cache_deactivate(c);
+>                 arr->entries[idx] = NULL;
+>         }
+>         mutex_unlock(&slab_mutex);
+> @@ -866,11 +859,12 @@ static void flush_memcg_workqueue(struct kmem_cache *s)
+>         mutex_unlock(&slab_mutex);
+>
+>         /*
+> -        * SLUB deactivates the kmem_caches through call_rcu. Make
+> +        * SLAB and SLUB deactivate the kmem_caches through call_rcu. Make
+>          * sure all registered rcu callbacks have been invoked.
+>          */
+> -       if (IS_ENABLED(CONFIG_SLUB))
+> -               rcu_barrier();
+> +#ifndef CONFIG_SLOB
+> +       rcu_barrier();
+> +#endif
+>
+>         /*
+>          * SLAB and SLUB create memcg kmem_caches through workqueue and SLUB
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 16f7e4f5a141..43c34d54ad86 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -4028,7 +4028,7 @@ int __kmem_cache_shrink(struct kmem_cache *s)
 >  }
 >
->  /**
-> - * do_cros_ec_cmd_xfer_spi - Transfer a message over SPI and receive the reply
-> + * cros_ec_cmd_xfer_spi - Transfer a message over SPI and receive the reply
->   *
->   * @ec_dev: ChromeOS EC device
->   * @ec_msg: Message to transfer
->   */
-> -static int do_cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
-> -                                  struct cros_ec_command *ec_msg)
-> +static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
-> +                               struct cros_ec_command *ec_msg)
+>  #ifdef CONFIG_MEMCG
+> -static void kmemcg_cache_deact_after_rcu(struct kmem_cache *s)
+> +void __kmemcg_cache_deactivate_after_rcu(struct kmem_cache *s)
 >  {
->         struct cros_ec_spi *ec_spi = ec_dev->priv;
->         struct spi_transfer trans;
-> @@ -632,53 +611,6 @@ static int do_cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
->         return ret;
->  }
->
-> -static void cros_ec_xfer_high_pri_work(struct work_struct *work)
-> -{
-> -       struct cros_ec_xfer_work_params *params;
-> -
-> -       params = container_of(work, struct cros_ec_xfer_work_params, work);
-> -       params->ret = params->fn(params->ec_dev, params->ec_msg);
-> -}
-> -
-> -static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
-> -                                struct cros_ec_command *ec_msg,
-> -                                cros_ec_xfer_fn_t fn)
-> -{
-> -       struct cros_ec_xfer_work_params params;
-> -
-> -       INIT_WORK_ONSTACK(&params.work, cros_ec_xfer_high_pri_work);
-> -       params.ec_dev = ec_dev;
-> -       params.ec_msg = ec_msg;
-> -       params.fn = fn;
+>         /*
+>          * Called with all the locks held after a sched RCU grace period.
+> @@ -4054,12 +4054,6 @@ void __kmemcg_cache_deactivate(struct kmem_cache *s)
+>          */
+>         slub_set_cpu_partial(s, 0);
+>         s->min_partial = 0;
 > -
 > -       /*
-> -        * This looks a bit ridiculous.  Why do the work on a
-> -        * different thread if we're just going to block waiting for
-> -        * the thread to finish?  The key here is that the thread is
-> -        * running at high priority but the calling context might not
-> -        * be.  We need to be at high priority to avoid getting
-> -        * context switched out for too long and the EC giving up on
-> -        * the transfer.
+> -        * s->cpu_partial is checked locklessly (see put_cpu_partial), so
+> -        * we have to make sure the change is visible before shrinking.
 > -        */
-> -       queue_work(system_highpri_wq, &params.work);
-> -       flush_work(&params.work);
-> -       destroy_work_on_stack(&params.work);
-> -
-> -       return params.ret;
-> -}
-> -
-> -static int cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
-> -                               struct cros_ec_command *ec_msg)
-> -{
-> -       return cros_ec_xfer_high_pri(ec_dev, ec_msg, do_cros_ec_pkt_xfer_spi);
-> -}
-> -
-> -static int cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
-> -                               struct cros_ec_command *ec_msg)
-> -{
-> -       return cros_ec_xfer_high_pri(ec_dev, ec_msg, do_cros_ec_cmd_xfer_spi);
-> -}
-> -
->  static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
->  {
->         struct device_node *np = dev->of_node;
+> -       slab_deactivate_memcg_cache_rcu_sched(s, kmemcg_cache_deact_after_rcu);
+>  }
+>  #endif /* CONFIG_MEMCG */
+>
 > --
-> 2.21.0.1020.gf2820cf01a-goog
+> 2.20.1
 >
