@@ -2,205 +2,182 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478FBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 03:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134DEC04AB3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 04:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A8621479
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 03:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C859E2183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 04:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bi2+BqDD"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZIRar0lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfEKD47 (ORCPT
+        id S1726080AbfEKEEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 23:56:59 -0400
-Received: from mail-eopbgr1300121.outbound.protection.outlook.com ([40.107.130.121]:29024
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        Sat, 11 May 2019 00:04:53 -0400
+Received: from mail-eopbgr50042.outbound.protection.outlook.com ([40.107.5.42]:51085
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726038AbfEKD47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 23:56:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=M+AZrEH1pzffRIluNPfvKVpvGEbRZjYZ7U0BArkiSxXDX2YbWkmkMbiVUgYN3885tagxtVzSyq+n8QrKUFQovxK5Wyc/jRLejCIm0XyiTrm+xGbVdx2GTCTaivGgTn98/DoYPHFyHpsRWcbr2ENKsKKY/IDmNXk0vHIW1SS4kcg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
+        id S1725882AbfEKEEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 00:04:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/o9ZuAf4kk90Wx3KPTIRfArq8OzkhLWeEOumezWrWgY=;
- b=r7vLnHHYATqSyMqsXmLjsA8mHJG3llOz5SyjQtCH0TWWSuVqvVAH1dT8oVuVu9B9Vv9n7YqYA4MskvivarwbYmRKUBxZQ7WKtxKAXEhVBiuxJVCr+Ba4O4sHI4kU4IKlTCZ6NWBdkpgncsX0u0UNTkpF9Rm/Qs0F+SpotFw7YTM=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/o9ZuAf4kk90Wx3KPTIRfArq8OzkhLWeEOumezWrWgY=;
- b=bi2+BqDDVsFPRxNI8jc6gY4lmDHyFEUnyl5WsUxpuBINQFa2bPU4ThjyhEcjNHZRsrbd2uF4So61DhNrcEczecmxEx23UNAnk1s8Cq0lm9Tr3B8ew8z+ZN9txOvjcwjOVV+7Qw3AC/CzOAAYTiQ8vTlYQodGAOYaOLYHsrgvd7k=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0155.APCP153.PROD.OUTLOOK.COM (10.170.189.11) with Microsoft SMTP
+ bh=CPN5++gogOJxwCHah6Jmh/Kr0SGGwqKeanq2XriIMj4=;
+ b=ZIRar0lktYrWpSRCRlpQ4sEflJ+pYfPd5b4wf2MOKjQT/LtQTGE3ZxUrhO2zssph6aZa6FJ3DTWVadfo22DGxNLA53nL0tAvfDH16Kw4WcUyfoUX/T9MDlpApn2uB/Pbf5S4O8N+mW0T05zuaYU53BN+T1LHgMo0fp/MdRQYDhI=
+Received: from VI1PR04MB4333.eurprd04.prod.outlook.com (52.134.122.155) by
+ VI1PR04MB5999.eurprd04.prod.outlook.com (20.178.123.214) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.4; Sat, 11 May 2019 03:56:49 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1900.002; Sat, 11 May 2019
- 03:56:49 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hv_sock: Fix data loss upon socket close
-Thread-Topic: [PATCH] hv_sock: Fix data loss upon socket close
-Thread-Index: AdUF8eO/rXjnGSU+Q+iHOcDDYgexQQBncSCg
-Date:   Sat, 11 May 2019 03:56:49 +0000
-Message-ID: <PU1P153MB01695C88469F32B9ECC7657EBF0D0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <BN6PR21MB0465168DEA6CABA910832A5BC0320@BN6PR21MB0465.namprd21.prod.outlook.com>
-In-Reply-To: <BN6PR21MB0465168DEA6CABA910832A5BC0320@BN6PR21MB0465.namprd21.prod.outlook.com>
+ 15.20.1878.22; Sat, 11 May 2019 04:04:48 +0000
+Received: from VI1PR04MB4333.eurprd04.prod.outlook.com
+ ([fe80::3ca0:86a9:eb1:a8c2]) by VI1PR04MB4333.eurprd04.prod.outlook.com
+ ([fe80::3ca0:86a9:eb1:a8c2%4]) with mapi id 15.20.1878.022; Sat, 11 May 2019
+ 04:04:48 +0000
+From:   Andy Tang <andy.tang@nxp.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>
+Subject: RE: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+ zone node
+Thread-Topic: [EXT] Re: [PATCH v6] arm64: dts: ls1088a: add one more thermal
+ zone node
+Thread-Index: AQHU+XzmCgrzkjA8mUWSxshg4ZOzYKZjybwAgAADYUCAAEB/AIAAD+oggAAhM4CAASpssA==
+Date:   Sat, 11 May 2019 04:04:48 +0000
+Message-ID: <VI1PR04MB43330D9FC454AEF3F96E7CEAF30D0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20190423022507.34969-1-andy.tang@nxp.com>
+ <20190510031335.GD15856@dragon>
+ <VI1PR04MB4333D24227603D1497BA3CB9F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <9fb2e306-38c7-2af7-5470-ff5bc4e23370@linaro.org>
+ <VI1PR04MB4333372C1DABD0E4C9DD7FE8F30C0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <20190510101219.oruzvzlk7mm6iahw@vireshk-i7>
+In-Reply-To: <20190510101219.oruzvzlk7mm6iahw@vireshk-i7>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-11T03:56:45.2460723Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=cd20b9e0-8a1f-4bd1-b9b3-e337b3c76db0;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:d471:db70:ecbb:48f6]
+ smtp.mailfrom=andy.tang@nxp.com; 
+x-originating-ip: [92.121.68.134]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 08289d13-b47e-4b62-e9a0-08d6d5c4b217
+x-ms-office365-filtering-correlation-id: fd61186c-3b0a-4f87-49a7-08d6d5c5cf8a
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0155;
-x-ms-traffictypediagnostic: PU1P153MB0155:
-x-microsoft-antispam-prvs: <PU1P153MB0155F2C137B2804686A4E2AFBF0D0@PU1P153MB0155.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5999;
+x-ms-traffictypediagnostic: VI1PR04MB5999:
+x-microsoft-antispam-prvs: <VI1PR04MB599991FD5A11608491FDA1A0F30D0@VI1PR04MB5999.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 00342DD5BC
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(376002)(136003)(346002)(366004)(199004)(189003)(14444005)(476003)(446003)(486006)(76116006)(11346002)(25786009)(10290500003)(478600001)(74316002)(71190400001)(229853002)(256004)(71200400001)(52536014)(66476007)(66946007)(9686003)(55016002)(8936002)(66556008)(86362001)(53936002)(66446008)(6246003)(4326008)(14454004)(1511001)(5660300002)(64756008)(305945005)(7736002)(8676002)(81166006)(81156014)(86612001)(73956011)(22452003)(33656002)(6506007)(102836004)(54906003)(316002)(110136005)(99286004)(10090500001)(2906002)(76176011)(7696005)(46003)(8990500004)(68736007)(6436002)(186003)(6636002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0155;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(136003)(346002)(376002)(366004)(396003)(39860400002)(199004)(189003)(13464003)(7736002)(6916009)(3846002)(305945005)(71200400001)(71190400001)(8936002)(53546011)(446003)(11346002)(99286004)(76176011)(7696005)(6506007)(256004)(66556008)(44832011)(81156014)(66476007)(102836004)(8676002)(7416002)(486006)(76116006)(73956011)(64756008)(66946007)(476003)(81166006)(66446008)(9686003)(54906003)(186003)(229853002)(6116002)(5660300002)(26005)(74316002)(6436002)(55016002)(33656002)(68736007)(66066001)(53936002)(6246003)(2906002)(478600001)(316002)(4326008)(86362001)(52536014)(14454004)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5999;H:VI1PR04MB4333.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: qFNcQHn3xvfmKC0nktRX7otKf9x/Md63EyiTAS+aEJzMZu1pOOIpBWy6kNdEksxKXwZjrYB1Bc9NAdTCQppHVLCioDWh/V54o4oOryCpX1m1pnV1//Kw1Y6x5on+z132npgSK5rXm3E9Ly2ZMeOt1s4cfFTOmzMh+95STyMYSdGSiaK2/I6OixBBUjVxQJR7FofG8o0beAbLJybIT0PbvRzqI1Pu8YvCudwy8pxZqZeaQIOgfIbFg6S4VWsyByQrL+iNCm81MX5RKEJvunF64w5nCEgZO6wF5HmvWGws5lOPncmBpSgr9aNHLSxTR5uedQErUGb1WglECSnrcPLM3L+/pidim0IhVMz+qgYcA0Rhu6fd3hyUiTcn0mbDxiM7xV5aWNeSZPMk98fCmf+gaHMDrA5iLmtQocMB4mTMfdk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: U2B2iT/FHYJgCLKocKMshLHVY98jj/ZUyK25g8fhrzzPuxEi3VNUCcphtf5tDmJwU4GUWXZ+CN5/G1zxnggrzRM5J3PaDNHB+0fJ5964h4IW//bgMe4Iep1IxFxFqF9BWgQc3VChCVrRJDab5WbbTKFVVD6U8oCHGFiN/EN3jH4NZPRzbbNoPfTXWgOv0rPwQapjGogIao8hRlH/fhmMzRq7qaEDw3Wh+o+f9Gz7LPbH0JmTKnFJDQ6TFtNUmp/BCCq62Zd8+0sE2Ak7TmzqAQ0VTup8m6wdf7FT6qwC5W2uHnaTBG7NYLTChOBEG4JNNOONT/UUIUFCFaoPafIXjPOoDVgcqxmHjqHiI0yTM/YAbcSg802H8IvLEa1GMpKacMgCwPAgFBIMUGWNpOd3/42N+I72hTFoEZFcB+CIPMU=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 08289d13-b47e-4b62-e9a0-08d6d5c4b217
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2019 03:56:49.3404
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd61186c-3b0a-4f87-49a7-08d6d5c5cf8a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 May 2019 04:04:48.5743
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0155
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5999
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Sent: Wednesday, May 8, 2019 4:11 PM
->
-> Currently, when a hvsock socket is closed, the socket is shutdown and
-> immediately a RST is sent. There is no wait for the FIN packet to arrive
-> from the other end. This can lead to data loss since the connection is
-> terminated abruptly. This can manifest easily in cases of a fast guest
-> hvsock writer and a much slower host hvsock reader. Essentially hvsock is
-> not following the proper STREAM(TCP) closing handshake mechanism.
-
-Hi Sunil,
-It looks to me the above description is inaccurate.
-
-In the upstream Linux kernel, closing a hv_sock file descriptor may hang
-in vmbus_hvsock_device_unregister() -> msleep(), until the host side of
-the connection is closed. This is bad and should be fixed, but I don't thin=
-k
-the current code can cause data loss: when Linux calls hvs_destruct() ->
-vmbus_hvsock_device_unregister() -> vmbus_device_unregister() -> ...
--> vmbus_close() to close the channel, Linux knows the host app has
-already called close(), and normally that means the host app has
-received all the data from the connection.
-
-BTW, technically speaking, in hv_sock there is no RST packet, while there
-is indeed a payload_len=3D=3D0 packet, which is similar to TCP FIN.
-
-I think by saying "a RST is sent" you mean Linux VM closes the channel.
-
-> The fix involves adding support for the delayed close of hvsock, which is
-> in-line with other socket providers such as virtio.
-
-With this "delayed close" patch, Linux's close() won't hang until the host
-also closes the connection. This is good!
-
-> While closing, the
-> socket waits for a constant timeout, for the FIN packet to arrive from th=
-e
-> other end. On timeout, it will terminate the connection (i.e a RST).
-
-As I mentioned above, I suppose the "RST" means Linux closes the channel.
-
-When Linux closes a connection, the FIN packet is written into the shared
-guest-to-host channel ringbuffer immediately, so the host is able to see it
-immediately, but the real question is: what if the host kernel and/or host =
-app
-can not (timely) receive the data from the ringbuffer, inclding the FIN?
-
-Does the host kernel guarantee it *always* timely fetches/caches all the
-data from a connection, even if the host app has not accept()'d the
-conection, or the host app is reading from the connection too slowly?
-
-If the host doesn't guarantee that, then even with this patch there is stil=
-l
-a chance Linux can time out, and close the channel before the host
-finishes receiving all the data.
-
-I'm curious how Windows guest implements the "async close"?
-Does Windows guest also use the same timeout strategy here? If yes,
-what's the timeout value used?
-
-> diff --git a/net/vmw_vsock/hyperv_transport.c
-> b/net/vmw_vsock/hyperv_transport.c
-> index a827547..62b986d 100644
-
-Sorry, I need more time to review the rest of patch. Will try to reply ASAP=
-.
-
-> -static int hvs_update_recv_data(struct hvsock *hvs)
-> +static int hvs_update_recv_data(struct vsock_sock *vsk)
->  {
->       struct hvs_recv_buf *recv_buf;
->       u32 payload_len;
-> +     struct hvsock *hvs =3D vsk->trans;
->
->       recv_buf =3D (struct hvs_recv_buf *)(hvs->recv_desc + 1);
->       payload_len =3D recv_buf->hdr.data_size;
-> @@ -543,8 +591,12 @@ static int hvs_update_recv_data(struct hvsock *hvs)
->       if (payload_len > HVS_MTU_SIZE)
->               return -EIO;
->
-> -     if (payload_len =3D=3D 0)
-> +     /* Peer shutdown */
-> +     if (payload_len =3D=3D 0) {
-> +             struct sock *sk =3D sk_vsock(vsk);
->               hvs->vsk->peer_shutdown |=3D SEND_SHUTDOWN;
-> +             sk->sk_state_change(sk);
-> +     }
-
-Can you please explain why we need to call this sk->sk_state_change()?
-
-When we call hvs_update_recv_data(), we hold the lock_sock(sk) lock, and we
-know there is at least one byte to read. Since we hold the lock, the other
-code paths, which normally are also requried to acquire the lock before
-checking vsk->peer_shutdown, can not race with us.
-
-Thanks,
--- Dexuan
+VGhhbmtzIFZpcmVzaCBmb3IgeW91ciBleHBsYW5hdGlvbi4NCg0KQlIsDQpBbmR5DQo+IC0tLS0t
+T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1bWFy
+QGxpbmFyby5vcmc+DQo+IFNlbnQ6IDIwMTnlubQ15pyIMTDml6UgMTg6MTINCj4gVG86IEFuZHkg
+VGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IENjOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxl
+emNhbm9AbGluYXJvLm9yZz47IFNoYXduIEd1bw0KPiA8c2hhd25ndW9Aa2VybmVsLm9yZz47IExl
+byBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1
+dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
+Cj4gbGludXgtcG1Admdlci5rZXJuZWwub3JnOyBydWkuemhhbmdAaW50ZWwuY29tOyBlZHViZXp2
+YWxAZ21haWwuY29tDQo+IFN1YmplY3Q6IFJlOiBbRVhUXSBSZTogW1BBVENIIHY2XSBhcm02NDog
+ZHRzOiBsczEwODhhOiBhZGQgb25lIG1vcmUgdGhlcm1hbA0KPiB6b25lIG5vZGUNCj4gDQo+IENh
+dXRpb246IEVYVCBFbWFpbA0KPiANCj4gT24gMTAtMDUtMTksIDA4OjQ3LCBBbmR5IFRhbmcgd3Jv
+dGU6DQo+ID4gKyBWaXJlc2ggZm9yIGhlbHAuDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGlu
+YXJvLm9yZz4NCj4gPiA+IFNlbnQ6IDIwMTnlubQ15pyIMTDml6UgMTU6MTcNCj4gPiA+IFRvOiBB
+bmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPjsgU2hhd24gR3VvDQo+IDxzaGF3bmd1b0BrZXJu
+ZWwub3JnPg0KPiA+ID4gQ2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBr
+ZXJuZWwub3JnOw0KPiA+ID4gbWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtcG1Admdlci5rZXJuZWwu
+b3JnOyBydWkuemhhbmdAaW50ZWwuY29tOyBlZHViZXp2YWxAZ21haWwuY29tDQo+ID4gPiBTdWJq
+ZWN0OiBSZTogW0VYVF0gUmU6IFtQQVRDSCB2Nl0gYXJtNjQ6IGR0czogbHMxMDg4YTogYWRkIG9u
+ZSBtb3JlDQo+ID4gPiB0aGVybWFsIHpvbmUgbm9kZQ0KPiA+ID4NCj4gPiA+IENhdXRpb246IEVY
+VCBFbWFpbA0KPiA+ID4NCj4gPiA+IE9uIDEwLzA1LzIwMTkgMDU6NDAsIEFuZHkgVGFuZyB3cm90
+ZToNCj4gPiA+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiA+PiBGcm9tOiBT
+aGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiA+PiBTZW50OiAyMDE55bm0Neac
+iDEw5pelIDExOjE0DQo+ID4gPiA+PiBUbzogQW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4N
+Cj4gPiA+ID4+IENjOiBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVs
+Lm9yZzsNCj4gPiA+ID4+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7DQo+ID4gPiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsg
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+ID4+IGxpbnV4LXBtQHZnZXIua2Vy
+bmVsLm9yZzsgZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZzsNCj4gPiA+ID4+IHJ1aS56aGFuZ0Bp
+bnRlbC5jb207IGVkdWJlenZhbEBnbWFpbC5jb20NCj4gPiA+ID4+IFN1YmplY3Q6IFtFWFRdIFJl
+OiBbUEFUQ0ggdjZdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBvbmUgbW9yZQ0KPiA+ID4gPj4g
+dGhlcm1hbCB6b25lIG5vZGUNCj4gPiA+ID4+DQo+ID4gPiA+PiBDYXV0aW9uOiBFWFQgRW1haWwN
+Cj4gPiA+ID4+DQo+ID4gPiA+PiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDoyNTowN0FNICsw
+ODAwLCBZdWFudGlhbiBUYW5nIHdyb3RlOg0KPiA+ID4gPj4+IExzMTA4OGEgaGFzIDIgdGhlcm1h
+bCBzZW5zb3JzLCBjb3JlIGNsdXN0ZXIgYW5kIFNvQyBwbGF0Zm9ybS4NCj4gPiA+ID4+PiBDb3Jl
+IGNsdXN0ZXIgc2Vuc29yIGlzIHVzZWQgdG8gbW9uaXRvciB0aGUgdGVtcGVyYXR1cmUgb2YgY29y
+ZQ0KPiA+ID4gPj4+IGFuZCBTb0MgcGxhdGZvcm0gaXMgZm9yIHBsYXRmb3JtLiBUaGUgY3VycmVu
+dCBkdHMgb25seSBzdXBwb3J0IHRoZSBmaXJzdA0KPiBzZW5zb3IuDQo+ID4gPiA+Pj4gVGhpcyBw
+YXRjaCBhZGRzIHRoZSBzZWNvbmQgc2Vuc29yIG5vZGUgdG8gZHRzIHRvIGVuYWJsZSBpdC4NCj4g
+PiA+ID4+Pg0KPiA+ID4gPj4+IFNpZ25lZC1vZmYtYnk6IFl1YW50aWFuIFRhbmcgPGFuZHkudGFu
+Z0BueHAuY29tPg0KPiA+ID4gPj4+IC0tLQ0KPiA+ID4gPj4+IHY2Og0KPiA+ID4gPj4+ICAgICAg
+ICAgLSBhZGQgY29vbGluZyBkZXZpY2UgbWFwIHRvIGNwdTAtNyBpbiBwbGF0Zm9ybSBub2RlLg0K
+PiA+ID4gPiBJIGxpa2UgdG8gZXhwbGFpbiBhIGxpdHRsZS4gSSB0aGluayBpdCBtYWtlcyBzZW5z
+ZSB0aGF0IG11bHRpcGxlDQo+ID4gPiA+IHRoZXJtYWwgem9uZQ0KPiA+ID4gbWFwIHRvIHNhbWUg
+Y29vbGluZyBkZXZpY2UuDQo+ID4gPiA+IEluIHRoaXMgd2F5LCBubyBtYXR0ZXIgd2hpY2ggdGhl
+cm1hbCB6b25lIHJhaXNlcyBhIHRlbXAgYWxhcm0sIGl0DQo+ID4gPiA+IGNhbiBjYWxsDQo+ID4g
+PiBjb29saW5nIGRldmljZSB0byBjaGlsbCBvdXQuDQo+ID4gPiA+IEkgYWxzbyBhc2tlZCBjcHVm
+cmVxIG1haW50YWluZXIgYWJvdXQgdGhlIGNvb2xpbmcgbWFwIGlzc3VlLCBoZQ0KPiA+ID4gPiB0
+aGluayBpdA0KPiA+ID4gd291bGQgYmUgZmluZS4NCj4gDQo+IFllcywgeW91IGFza2VkIG1lIGFu
+ZCBJIHNhaWQgaXQgc2hvdWxkIGJlIG9rYXkuDQo+IA0KPiA+ID4gPiBJIGhhdmUgdGVzdGVkIGFu
+ZCBubyBpc3N1ZSBmb3VuZC4NCj4gPiA+ID4NCj4gPiA+ID4gRGFuaWVsLCB3aGF0J3MgeW91ciB0
+aG91Z2h0Pw0KPiA+ID4NCj4gPiA+IElmIHRoZXJlIGFyZSBtdWx0aXBsZSB0aGVybWFsIHpvbmVz
+LCB0aGV5IHdpbGwgYmUgbWFuYWdlZCBieQ0KPiA+ID4gZGlmZmVyZW50IGluc3RhbmNlcyBvZiBh
+IHRoZXJtYWwgZ292ZXJub3IuIEVhY2ggaW5zdGFuY2VzIHdpbGwgYWN0DQo+ID4gPiBvbiB0aGUg
+c2hhcmVkIGNvb2xpbmcgZGV2aWNlIGFuZCB3aWxsIGNvbGxpZGUgaW4gdGhlaXIgZGVjaXNpb25z
+Og0KPiA+ID4NCj4gPiA+ICAtIElmIHRoZSBzZW5zb3JzIGFyZSBjbG9zZWQsIHRoZWlyIGJlaGF2
+aW9yIHdpbGwgYmUgc2ltaWxhcg0KPiA+ID4gcmVnYXJkaW5nIHRoZSB0ZW1wZXJhdHVyZS4gVGhl
+IGdvdmVybm9ycyBtYXkgdGFrZSB0aGUgc2FtZSBkZWNpc2lvbg0KPiA+ID4gZm9yIHRoZSBjb29s
+aW5nIGRldmljZS4gQnV0IGluIHN1Y2ggY2FzZSBoYXZpbmcganVzdCBvbmUgdGhlcm1hbCB6b25l
+DQo+IG1hbmFnZWQgaXMgZW5vdWdoLg0KPiA+ID4NCj4gPiA+ICAtIElmIHRoZSBzZW5zb3JzIGFy
+ZSBub3QgY2xvc2VkLCB0aGVpciBiZWhhdmlvciB3aWxsIGJlIGRpZmZlcmVudA0KPiA+ID4gcmVn
+YXJkaW5nIHRoZSB0ZW1wZXJhdHVyZS4gVGhlIGdvdmVybm9ycyB3aWxsIHRha2UgZGlmZmVyZW50
+DQo+ID4gPiBkZWNpc2lvbiByZWdhcmRpbmcgdGhlIGNvb2xpbmcgZGV2aWNlIChvbmUgd2lsbCBk
+ZWNyZWFzZSB0aGUgZnJlcSwgb3RoZXINCj4gd2lsbCBpbmNyZWFzZSB0aGUgZnJlcSkuDQo+ID4g
+Pg0KPiA+ID4gQXMgdGhlIHRoZXJtYWwgZ292ZXJub3JzIGFyZSBub3QgYWJsZSB0byBtYW5hZ2Ug
+c2V2ZXJhbCB0aGVybWFsDQo+ID4gPiB6b25lcyBhbmQgdGhlcmUgaXMgb25lIGNvb2xpbmcgZGV2
+aWNlICh0aGUgY3B1IGNvb2xpbmcgZGV2aWNlKSwgdGhpcw0KPiA+ID4gc2V0dXAgd29uJ3Qgd29y
+ayBhcyBleHBlY3RlZCBJTU8uDQo+ID4gPg0KPiA+ID4gVGhlIHNldHVwIG1ha2luZyBzZW5zZSBp
+cyBoYXZpbmcgYSB0aGVybWFsIHpvbmUgcGVyICdjbHVzdGVyJyBhbmQgYQ0KPiA+ID4gY29vbGlu
+ZyBkZXZpY2UgcGVyICdjbHVzdGVyJy4gVGhhdCBtZWFucyB0aGUgcGxhdGZvcm0gaGFzIG9uZSBj
+bG9jayBsaW5lDQo+IHBlciAnY2x1c3RlcicuDQo+ID4gPiBUaGUgdGhlcm1hbCBtYW5hZ2VtZW50
+IGhhcHBlbnMgaW4gYSBzZWxmLWNvbnRhaW5lZCB0aGVybWFsIHpvbmUgKG9uZQ0KPiA+ID4gY29v
+bGluZyBkZXZpY2UgLSBvbmUgZ292ZXJub3IgLSBvbmUgdGhlcm1hbCB6b25lKS4NCj4gPiA+DQo+
+ID4gPiBJbiB0aGUgY2FzZSBvZiBITVAsIG90aGVyIGNvbWJpbmF0aW9ucyBhcmUgcG9zc2libGUg
+dG8gYmUgb3B0aW1hbC4NCj4gDQo+IEJ1dCBub3Qgc3VyZSBob3cgSSBtaXNzZWQgdGhlIG9idmlv
+dXMsIHRob3VnaCBJIGRvIHJlbWVtYmVyIHRoaW5raW5nIGFib3V0DQo+IHRoaXMuDQo+IA0KPiBT
+byB0aGUgcHJvYmxlbSBpcyB0aGF0IHRoZSBjcHVfY29vbGluZyBkcml2ZXIgd2lsbCBnZXQgcmVx
+dWVzdHMgaW4gcGFyYWxsZWwgdG8NCj4gc2V0IGRpZmZlcmVudCBtYXggZnJlcXVlbmNpZXMgYW5k
+IHRoZSBsYXN0IGNhbGwgd2lsbCBhbHdheXMgd2luIGFuZCBtYXkgcmVzdWx0DQo+IGluIHVuZGVz
+aXJlZCBvdXRjb21lLg0KPiANCj4gU29ycnkgYWJvdXQgY3JlYXRpbmcgdGhlIGNvbmZ1c2lvbi4N
+Cj4gDQo+IC0tDQo+IHZpcmVzaA0K
