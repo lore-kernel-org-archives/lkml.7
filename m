@@ -6,64 +6,66 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEE6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 02:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FC4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 02:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675FB2084E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 02:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE7EC2084E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 02:42:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfEKCmj (ORCPT
+        id S1728431AbfEKCmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 22:42:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53956 "EHLO
+        Fri, 10 May 2019 22:42:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42340 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726038AbfEKCmi (ORCPT
+        by vger.kernel.org with ESMTP id S1726038AbfEKCmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 22:42:38 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4B2fjR5014577
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 22:42:37 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sdjwx5ac7-1
+        Fri, 10 May 2019 22:42:42 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4B2fl9K119025
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 22:42:41 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sdjvunc8a-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 22:42:37 -0400
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2019 22:42:41 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Sat, 11 May 2019 03:42:35 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Sat, 11 May 2019 03:42:39 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 11 May 2019 03:42:32 +0100
+        Sat, 11 May 2019 03:42:38 +0100
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4B2gVO042926140
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4B2gbUA30998558
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 11 May 2019 02:42:31 GMT
+        Sat, 11 May 2019 02:42:37 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A3EF11C054;
-        Sat, 11 May 2019 02:42:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0BD7A11C04C;
+        Sat, 11 May 2019 02:42:37 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 676C911C04C;
-        Sat, 11 May 2019 02:42:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 51F2A11C050;
+        Sat, 11 May 2019 02:42:34 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.102.0.124])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat, 11 May 2019 02:42:24 +0000 (GMT)
+        Sat, 11 May 2019 02:42:31 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     peterz@infradead.org, jolsa@redhat.com, mpe@ellerman.id.au,
         maddy@linux.vnet.ibm.com
 Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 1/2] perf ioctl: Add check for the sample_period value
-Date:   Sat, 11 May 2019 08:12:16 +0530
+Subject: [PATCH 2/2] powerpc/perf: Fix mmcra corruption by bhrb_filter
+Date:   Sat, 11 May 2019 08:12:17 +0530
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190511024217.4013-1-ravi.bangoria@linux.ibm.com>
+References: <20190511024217.4013-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19051102-4275-0000-0000-000003339561
+x-cbid: 19051102-0012-0000-0000-0000031A7F98
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051102-4276-0000-0000-000038430D2F
-Message-Id: <20190511024217.4013-1-ravi.bangoria@linux.ibm.com>
+x-cbparentid: 19051102-0013-0000-0000-000021530C79
+Message-Id: <20190511024217.4013-2-ravi.bangoria@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-11_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -76,29 +78,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a check for sample_period value sent from userspace. Negative
-value does not make sense. And in powerpc arch code this could cause
-a recursive PMI leading to a hang (reported when running perf-fuzzer).
+Consider a scenario where user creates two events:
+
+  1st event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_ANY;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
+
+  This sets cpuhw->bhrb_filter to 0 and returns valid fd.
+
+  2nd event:
+    attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+    attr.branch_sample_type = PERF_SAMPLE_BRANCH_CALL;
+    fd = perf_event_open(attr, 0, 1, -1, 0);
+
+  It overrides cpuhw->bhrb_filter to -1 and returns with error.
+
+Now if power_pmu_enable() gets called by any path other than
+power_pmu_add(), ppmu->config_bhrb(-1) will set mmcra to -1.
 
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- kernel/events/core.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/perf/core-book3s.c | 6 ++++--
+ arch/powerpc/perf/power8-pmu.c  | 3 +++
+ arch/powerpc/perf/power9-pmu.c  | 3 +++
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index abbd4b3b96c2..e44c90378940 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5005,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
- 	if (perf_event_check_period(event, value))
- 		return -EINVAL;
+diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+index b0723002a396..8eb5dc5df62b 100644
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -1846,6 +1846,7 @@ static int power_pmu_event_init(struct perf_event *event)
+ 	int n;
+ 	int err;
+ 	struct cpu_hw_events *cpuhw;
++	u64 bhrb_filter;
  
-+	if (!event->attr.freq && (value & (1ULL << 63)))
-+		return -EINVAL;
+ 	if (!ppmu)
+ 		return -ENOENT;
+@@ -1951,13 +1952,14 @@ static int power_pmu_event_init(struct perf_event *event)
+ 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 
+ 	if (has_branch_stack(event)) {
+-		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
++		bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+ 
+-		if (cpuhw->bhrb_filter == -1) {
++		if (bhrb_filter == -1) {
+ 			put_cpu_var(cpu_hw_events);
+ 			return -EOPNOTSUPP;
+ 		}
++		cpuhw->bhrb_filter = bhrb_filter;
+ 	}
+ 
+ 	put_cpu_var(cpu_hw_events);
+diff --git a/arch/powerpc/perf/power8-pmu.c b/arch/powerpc/perf/power8-pmu.c
+index d12a2db26353..d10feef93b6b 100644
+--- a/arch/powerpc/perf/power8-pmu.c
++++ b/arch/powerpc/perf/power8-pmu.c
+@@ -29,6 +29,7 @@ enum {
+ #define	POWER8_MMCRA_IFM1		0x0000000040000000UL
+ #define	POWER8_MMCRA_IFM2		0x0000000080000000UL
+ #define	POWER8_MMCRA_IFM3		0x00000000C0000000UL
++#define	POWER8_MMCRA_BHRB_MASK		0x00000000C0000000UL
+ 
+ /*
+  * Raw event encoding for PowerISA v2.07 (Power8):
+@@ -243,6 +244,8 @@ static u64 power8_bhrb_filter_map(u64 branch_sample_type)
+ 
+ static void power8_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER8_MMCRA_BHRB_MASK;
 +
- 	event_function_call(event, __perf_event_period, &value);
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
+diff --git a/arch/powerpc/perf/power9-pmu.c b/arch/powerpc/perf/power9-pmu.c
+index 030544e35959..f3987915cadc 100644
+--- a/arch/powerpc/perf/power9-pmu.c
++++ b/arch/powerpc/perf/power9-pmu.c
+@@ -92,6 +92,7 @@ enum {
+ #define POWER9_MMCRA_IFM1		0x0000000040000000UL
+ #define POWER9_MMCRA_IFM2		0x0000000080000000UL
+ #define POWER9_MMCRA_IFM3		0x00000000C0000000UL
++#define POWER9_MMCRA_BHRB_MASK		0x00000000C0000000UL
  
- 	return 0;
+ /* Nasty Power9 specific hack */
+ #define PVR_POWER9_CUMULUS		0x00002000
+@@ -300,6 +301,8 @@ static u64 power9_bhrb_filter_map(u64 branch_sample_type)
+ 
+ static void power9_config_bhrb(u64 pmu_bhrb_filter)
+ {
++	pmu_bhrb_filter &= POWER9_MMCRA_BHRB_MASK;
++
+ 	/* Enable BHRB filter in PMU */
+ 	mtspr(SPRN_MMCRA, (mfspr(SPRN_MMCRA) | pmu_bhrb_filter));
+ }
 -- 
 2.20.1
 
