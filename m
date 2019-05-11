@@ -2,76 +2,133 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF137C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAEDC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9835F2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D766320657
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dknuyWvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbfEKMcA (ORCPT
+        id S1728607AbfEKMce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 08:32:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35097 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEKMb7 (ORCPT
+        Sat, 11 May 2019 08:32:34 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33370 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEKMce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 08:31:59 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hPRAR-0007va-5C; Sat, 11 May 2019 12:31:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/display: remove redundant assignment to variable actual_clock
-Date:   Sat, 11 May 2019 13:31:54 +0100
-Message-Id: <20190511123154.2708-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 11 May 2019 08:32:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d9so2124171wrx.0;
+        Sat, 11 May 2019 05:32:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=z36DBF8uzaNUXPe6+Cpp2JzXZTaHD3wGKITgeF7biT4=;
+        b=dknuyWvFFKylY5XCdzE5sBKt2uEzimW5P4awc66inlGSOVg0JWO0rd755IH79nY1fO
+         qdi1NuDbkgW22cj7Wqq8TKwAg1UAPG7WtwO3akTNa1iXw/a5/r8GmqkMI45SI0dV1+zo
+         CnO0Yyyq1TOyTH2d80Yg2E8oVg1d+Y/MY6RoEk7f2pHDdsTHRMMIseanui5XzJi8YjM3
+         CF0K7RROTGa/LajkdrFW4G3cgiDNUpjB2+7M8hfF2k3nNmqcWHuhrfV4q9YZqvd+t/UY
+         99I3sSpZphwKHd0SVghqERMYCX/336CwaoJjoeiEUvnJHjfh9bADrCn74r6Jznfo3nOs
+         HgaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=z36DBF8uzaNUXPe6+Cpp2JzXZTaHD3wGKITgeF7biT4=;
+        b=SWlA593OUtCXeuZsELiwpyonchnnfhtzCpghWOkkKc1l9WXBUFKPWOPFVocv22jX4G
+         kEVAsmucB6vP1soKdjT3JslFkItZhtCaR3K/KDMeL1NOGFL4OqBSv64LfwtMy4/DiJrd
+         v06BO8OsJguUXxO4S1L5TP4GySs8FqONfpYzu7P0+nDpos8D/Siz32zyJE6GZ/coIw68
+         jMR30lI7f1/pHJbFJnPPvLK6nmTwShsJ+Y3JuvqS723K4HeaxKt8NyLqqiWxd9gOoMKX
+         TWpVq5wxEPI1Zszii83CaKZb5DTCVf/gqLpOr0YHHg4B/mZKsMdTX/8JcSHvz8v9p254
+         S6Ww==
+X-Gm-Message-State: APjAAAWPtljGYawj+57E2ogMj5yKmtjHLHbqjz/3j9iQo4d1mggtslyh
+        REJE60/N95g2Zq3GJjUvsD4=
+X-Google-Smtp-Source: APXvYqzQcX7d6RmTgy5kRsYvGJ7rFqeqLG/nmPQ1vpcZVjcaexthsPMcqhpfBFGYW8EmLjT1+7ca7Q==
+X-Received: by 2002:adf:dd43:: with SMTP id u3mr11652089wrm.302.1557577952422;
+        Sat, 11 May 2019 05:32:32 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd4:5700:152f:e071:7960:90b9? (p200300EA8BD45700152FE071796090B9.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:152f:e071:7960:90b9])
+        by smtp.googlemail.com with ESMTPSA id n2sm14130454wra.89.2019.05.11.05.32.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 05:32:31 -0700 (PDT)
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+To:     Trent Piepho <tpiepho@impinj.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+ <20190510214550.18657-5-tpiepho@impinj.com>
+ <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+Message-ID: <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+Date:   Sat, 11 May 2019 14:32:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 11.05.2019 12:41, Heiner Kallweit wrote:
+> On 10.05.2019 23:46, Trent Piepho wrote:
+>> The variables used to store u32 DT properties were signed ints.  This
+>> doesn't work properly if the value of the property were to overflow.
+>> Use unsigned variables so this doesn't happen.
+>>
+> In patch 3 you added a check for DT properties being out of range.
+> I think this would be good also for the three properties here.
+> The delay values are only 4 bits wide, so you might also consider
+> to switch to u8 or u16.
+> 
+I briefly looked over the rest of the driver. What is plain wrong
+is to allocate memory for the private data structure in the
+config_init callback. This has to be done in the probe callback.
+An example is marvell_probe(). As you seem to work on this driver,
+can you provide a patch for this?
 
-The variable actual_clock is being initialized however this is never
-read and later it is being reassigned to a new value. The initialization
-is redundant and hence can be removed.
-
-Addresses-Coverity: ("Unused Value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
-index 6b2e207777f0..fdd973c03dca 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
-@@ -344,7 +344,7 @@ int dce112_set_dispclk(struct clk_mgr *clk_mgr, int requested_clk_khz)
- 	struct dc_bios *bp = clk_mgr->ctx->dc_bios;
- 	struct dc *core_dc = clk_mgr->ctx->dc;
- 	struct dmcu *dmcu = core_dc->res_pool->dmcu;
--	int actual_clock = requested_clk_khz;
-+	int actual_clock;
- 	/* Prepare to program display clock*/
- 	memset(&dce_clk_params, 0, sizeof(dce_clk_params));
- 
--- 
-2.20.1
+> Please note that net-next is closed currently. Please resubmit the
+> patches once it's open again, and please annotate them properly
+> with net-next.
+> 
+>> Cc: Andrew Lunn <andrew@lunn.ch>
+>> Cc: Florian Fainelli <f.fainelli@gmail.com>
+>> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+>> Signed-off-by: Trent Piepho <tpiepho@impinj.com>
+>> ---
+>>  drivers/net/phy/dp83867.c | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+>> index a46cc9427fb3..edd9e27425e8 100644
+>> --- a/drivers/net/phy/dp83867.c
+>> +++ b/drivers/net/phy/dp83867.c
+>> @@ -82,9 +82,9 @@ enum {
+>>  };
+>>  
+>>  struct dp83867_private {
+>> -	int rx_id_delay;
+>> -	int tx_id_delay;
+>> -	int fifo_depth;
+>> +	u32 rx_id_delay;
+>> +	u32 tx_id_delay;
+>> +	u32 fifo_depth;
+>>  	int io_impedance;
+>>  	int port_mirroring;
+>>  	bool rxctrl_strap_quirk;
+>>
+> 
 
