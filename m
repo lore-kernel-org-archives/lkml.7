@@ -2,149 +2,158 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC1FC04AB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B49FC46460
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF25C2183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557572744;
-	bh=OP5PzMKNdv7eZTclz6nMXr+GPXx4HBbNzjUZYRYUa/U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lsMk2sDq4dPQEclEbalTbK8EpBbP7oHpxBSF2BqXCgH8FNLA7N1EbUZAeo56UZNkt
-	 /pBOyr1SDcHMZCusvzvRQgvtWUAZcx/mcgDW77O90mwBonQDzGXIYWYGYX7XJnDdwP
-	 XwBQrwxVY6oNoKcrhOReY3jhxmkP2wm7VYae+YMA=
+	by mail.kernel.org (Postfix) with ESMTP id 372B62173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfEKLFn (ORCPT
+        id S1728559AbfEKLTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 07:05:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54330 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726240AbfEKLFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 07:05:43 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9CEA217F9;
-        Sat, 11 May 2019 11:05:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557572741;
-        bh=OP5PzMKNdv7eZTclz6nMXr+GPXx4HBbNzjUZYRYUa/U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xKbDZt6GAyBICk/pLUZM4FgM6vLQ8lH5jT1N5OdVcsZXE84mIFZVF+4Y/jkngLSQX
-         6NQeV8XCW6snF6a6WMTDHT+qjSBW/3PNaUz+yp8Fhhs9wt12SmRlx6kNLL2C5C51ix
-         a9MkDcGf+JfuUrBOIgkq3n2wgIt1fHkRLc1v7rNY=
-Date:   Sat, 11 May 2019 12:05:36 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Eric Piel <eric.piel@tremplin-utc.net>,
-        linux-iio <linux-iio@vger.kernel.org>, kernel@pyra-handheld.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>
-Subject: Re: [Letux-kernel] [RFC v2] iio: input-bridge: optionally bridge
- iio acceleometers to create a /dev/input interface
-Message-ID: <20190511120536.647c8676@archlinux>
-In-Reply-To: <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
-References: <195994ebff28de22eae872df134d086c761b83b8.1554026986.git.hns@goldelico.com>
-        <20190407133037.0ad98897@archlinux>
-        <CD44AFA0-6676-4842-9C80-61BB363DD556@goldelico.com>
-        <20190414124029.1f1f6084@archlinux>
-        <CD6219BE-61FF-4C38-9532-054C60A77F89@goldelico.com>
-        <20190422152014.7c6637ab@archlinux>
-        <CA9A9410-C393-49B9-81FA-D9BC55F04468@goldelico.com>
-        <D4F87479-4FF7-4DBC-81D5-1BA836D2C889@goldelico.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 07:19:46 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60909 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728518AbfEKLTq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 07:19:46 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id DA7AE8033F; Sat, 11 May 2019 13:19:32 +0200 (CEST)
+Date:   Sat, 11 May 2019 13:19:45 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/66] 4.19.42-stable review
+Message-ID: <20190511111945.GA27538@amd>
+References: <20190509181301.719249738@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+In-Reply-To: <20190509181301.719249738@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 19:02:49 +0200
-"H. Nikolaus Schaller" <hns@goldelico.com> wrote:
 
-> > Am 09.05.2019 um 11:09 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
-> > 
-> > Hi Jonathan,  
-> >> 
-> >> 
-> >> And how does that work on the common case of a sensor in the lid of a laptop?
-> >> how do you know what angle the screen is at?    
-> > 
-> > Well, I am not aware of laptops where the sensor is in the lid because I am in the handhelds
-> > business, but let's assume it is common.
-> > 
-> > I realized that if the sensor orientation is related to the lid position, while the reference
-> > frame reported to user space is to be referenced to the lap or keyboard of the laptop, there does
-> > not exist a static mount-matrix to describe it properly. So no driver can report that correctly.
-> > 
-> > Therefore, such a device needs a dynamic mount matrix, i.e. there should be a kernel driver that
-> > reads out the lid angle sensor and modifies the mount-matrix of the accelerometer by some sin()/cos()
-> > table.  
-> 
-> One more thought on this topic.
-> 
-> My answer to the question "how do you know what angle the screen is at?" by requiring an ADC to
-> measure some potentiometer in the hinge to make the mount matrix dynamic is probably completely
-> wrong...
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-There are lid angle sensors out independent of this discussion that might work
-as you describe but so far they are rare.  There is one under review for
-cros_ec for example - how it is implemented, no idea!
+Hi!
 
-> 
-> If we take the definition for the mount matrix, it defines a specific g-vector pointing to
-> center of earth if the user is holding the device in a specific position and looking on the display
-> or the keyboard.
-> 
-> So far the description assumes that there is a single accelerometer and display and keys of a phone
-> are in a single plane, i.e. there is no angle and everything is fine.
-> 
-> Now if we simply take the two accelerometers separately, one z-axis is going through the keyboard
-> and the other through the display. Which means if the mount matrices are well defined, the accelerometers
-> should report almost the same values if the display is fully opened by 180 degrees, i.e. the display
-> is sitting flat on the table. This is what my RFC does by autoscaling. The values differ only
-> by noise.
-> 
-> Now what about measuring the lid angle? Well, it is already measured by both accelerometers! If they
-> do not agree, the angle can be calculated by some arctan() based on y and z axis reports...
-Agreed. This is how it is done.
-> 
-> If you close the lid, the display is turned upside down and y and z axes reverse sign.
-> 
-> So there remains only the issue that user-space must know which sensor device file is which sensor
-> and can do the calculation of the lid angle. This is possible because the iio accelerometer name
-> is available through the input event ioctls.
-> 
-> In summary this case also does not need policy or configuration. Just user space using the information
-> that is already presented.
+> This is the start of the stable review cycle for the 4.19.42 release.
+> There are 66 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Sat 11 May 2019 06:11:18 PM UTC.
+> Anything received after that time might be too late.
+>=20
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.42=
+-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-4.19.y
+> and the diffstat can be found below.
 
-I disagree with that last statement.  If there is a lid angle sensor, policy is
-needed to know which of your associated orientation is the base one and which
-device indicates the lid angle.
+I reviewed these patches and found them ok:
 
-Actually most of the time what you will do is pick one 'correct' sensor under
-some configuration of the device and use that.  That is policy.  Yes, you could
-bake the policy in to device tree, but then you can also bake in the association
-between the underlying IIO sensor and any virtual input sensor.
+    /- commit in linux-stable-rc.git linux-4.19.
+    |            /- mainline commit it references.
+a | c9849e7b0d19 03110a5cb216 | arm64: futex: Bound number of LDXR/STXR loo=
+ps in FUTEX_WAKE_OP
+a | 7f70094a664c 0efa3334d65b | ASoC: Intel: avoid Oops if DMA setup fails
+a diff has whitespace problems | b47e4bc2c6bf 3ae62a42090f | UAS: fix align=
+ment of scatter/gather segments
+a | d93b3794e11d a1616a5ac99e | Bluetooth: hidp: fix buffer overflow
+a | 390fb51f14ed 2137490f2147 | scsi: qla2xxx: Fix device staying in blocke=
+d state
+a | 648efce413c9 5cbdae10bf11 | scsi: qla2xxx: Fix incorrect region-size se=
+tting in optrom SYSFS routines
+a | de4ed47623d2 a84014e1db35 | soc: sunxi: Fix missing dependency on REGMA=
+P_MMIO
+a | cfccebbba945 8db82563451f | cpufreq: armada-37xx: fix frequency calcula=
+tion for opp
+a | a747d98ffde8 e60e9a4b231a | intel_th: pci: Add Comet Lake support
+a | 79c5c7d9ce07 747668dbc061 | usb-storage: Set virt_boundary_mask to avoi=
+d SG overflows
+a | 841f47e3548c 764478f41130 | USB: cdc-acm: fix unthrottle races
+a | 14fa060959b0 8d791929b2fb | usb: dwc3: Fix default lpm_nyet_threshold v=
+alue
+a | 3b34dc57f585 59c39840f5ab | genirq: Prevent use-after-free and work lis=
+t corruption
+a | 2b02d3a95527 b995dcca7cf1 | platform/x86: pmc_atom: Drop __initconst on=
+ dmi table
+a | 997718a02d82 d6ba3f815bc5 | ASoC: Intel: kbl: fix wrong number of chann=
+els
+a | 1483cfcf3c9f 4772e03d2394 | RDMA/hns: Fix bug that caused srq creation =
+to fail
+a | 506a0e6862e1 6a8aae68c873 | virtio_pci: fix a NULL pointer reference in=
+ vp_del_vqs
+a | 02fd02c489cc 1a07a94b47b1 | drm/sun4i: tcon top: Fix NULL/invalid point=
+er dereference in sun8i_tcon_top_un/bind
+a | 71ad65f5bb67 fcf88917dd43 | slab: fix a crash by reading /proc/slab_all=
+ocators
+a | b5d7ac566868 c85064435fe7 | ASoC: rockchip: pdm: fix regmap_ops hang is=
+sue
+a | eaa1d16862ee d7262457e35d | perf/x86/intel: Initialize TFA MSR
+a | 378151a25204 583feb08e7f7 | perf/x86/intel: Fix handling of wakeup_even=
+ts for multi-entry PEBS
+a | 0c56a7078088 2d85978341e6 | drm/mediatek: Fix an error code in mtk_hdmi=
+_dt_parse_pdata()
+a | adbf3d1f3ed8 c63adb28f6d9 | ASoC: tlv320aic32x4: Fix Common Pins
+a | b9cdb2937e9a ab8a6d821179 | MIPS: KGDB: fix kgdb support for SMP platfo=
+rms.
+a | de583e633e02 a8639a79e85c | IB/hfi1: Eliminate opcode tests on mr deref
+a typo: inaudile | b13ae59295e9 c899df3e9b0b | ASoC:intel:skl:fix a simulta=
+neous playback & capture issue on hda platform
+a | 3161876cbf97 570f18b6a8d1 | ASoC:soc-pcm:fix a codec fixup issue in TDM=
+ case
+a wrong reference counting, not terribly serious; noone unloads these anywa=
+y | d978c80542e6 af708900e9a4 | ee3b6ffe3302 82ad759143ed | ASoC: tlv320aic=
+3x: fix reset gpio reference counting
+a "))" in changelog | e275c9a0765b 47830c1127ef | staging: greybus: power_s=
+upply: fix prop-descriptor request size
+a | c211648a4906 a0033bd1eae4 | Drivers: hv: vmbus: Remove the undesired pu=
+t_cpu_ptr() in hv_synic_cleanup()
+a | 97aec5cea4fa b90cd6f2b905 | scsi: libsas: fix a race condition when smp=
+ task timeout
+a | bf78d2cb30eb f87db4dbd52f | net: stmmac: Use bfsize1 in ndesc_init_rx_d=
+esc
 
-Anyhow, we still disagree on whether any such virtual input interface
-should be a userspace policy decision.  So far I haven't seen any compelling
-argument why it shouldn't be and the flexibility such a policy based interface
-provides is its major advantage.
+A lot of the autosel patches do not seem to match stable criteria to
+me. It would be good to synchronize documentation with actual practice here.
 
-Thanks,
+Best regards,
+								Pavel
 
-Jonathan
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlzWr9EACgkQMOfwapXb+vIG+wCfVo//MbW8Cjw53FocurDod4dz
+vaQAoKtaVJMMkCuqkYPWiCuX/SazVt22
+=HEpk
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
