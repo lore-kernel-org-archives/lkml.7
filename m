@@ -7,134 +7,151 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6119C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3CEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8CC1217D7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:46:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4354F216C4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQRi45YY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTjdthMz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbfEKOqp (ORCPT
+        id S1728624AbfEKO5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 10:46:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42066 "EHLO
+        Sat, 11 May 2019 10:57:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44634 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbfEKOqp (ORCPT
+        with ESMTP id S1726147AbfEKO5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 10:46:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l2so10682881wrb.9;
-        Sat, 11 May 2019 07:46:43 -0700 (PDT)
+        Sat, 11 May 2019 10:57:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id c5so10690248wrs.11;
+        Sat, 11 May 2019 07:57:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
-         :references:user-agent:content-transfer-encoding;
-        bh=VIuUNR7wCJcqoGqSy/xt5oOP5q6nBpghSO+lnkhhWsQ=;
-        b=DQRi45YY6oRQsy8ZdNDoBw7ossZ87WmFKahL/iiowA97O0nP0Zl7Cv1t4pLMDeBHQl
-         X/+lqy7JAuJXhuRsmSxx2nIUgwhgf8Y9Fe3fCFqvcNUpXgSb+Q0Dz8MNnLdg+GMX3IwL
-         uGUnDvAhrkiZi0083IWTvQfOQKrurcRp1F9AKLCpaWSyLt/0lshseHPNQYstok7vtC4D
-         pt9XVS5TyeaDs8eVAfZWVKyYpHNFZ5nIaeD+CWYXopRvwa07U2svHEMzgK5u7xEgkt7M
-         BiEchfmEPkFL+7gLKxq/bLN/tp8VUyXFiGFdBXhvOI8oEDnej4A0MOeOW12HF3E7Yjt1
-         LDEA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xagJeCmWrwX8fg4zejA2jF3/DsWcj+RzmZOj/KM3CUw=;
+        b=aTjdthMzRCw+P/u0hQ2uEZUTfqrP9nrwZJ8tfh3SdFM4GR3KfEB4FUpC0LXemNrdR9
+         73ZoBYSIGfGNB8JP7jkfP+P2bTP5Hsd4s9ohKDuSqFJG3Hal9jh13/5lA2qXvq/s/m/e
+         4k2aGsxlDsMjPapuJbXT/9G6pHodY5xBFLEE6+vsYnh2X28v/6o+w4a9aR2owPqwdHJ8
+         fZ7hvswODmuR/3XXZSSjgfo1XekQahrk7OToQHpWJtDOOuaU61SG1RhP5fIV8X1A6pqz
+         XkDBz0IC8twLUVvgCi/n/nMY2UJsgMMV0LQ9gYp0rHXnc9dTsNjY46NnnngnVQQoaIlj
+         Vjvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
-         :in-reply-to:references:user-agent:content-transfer-encoding;
-        bh=VIuUNR7wCJcqoGqSy/xt5oOP5q6nBpghSO+lnkhhWsQ=;
-        b=ThKza+CaUpXZRYRVOA2KnOllaso+B6xyj0KEagBa1BQMXQdMsaLcAsLeu0zdqd3umA
-         5l5/mK/Rcu+xgQP79SUwo6vm7B6gdoIm21jklVt4RqxWVJcZA0HhCoJoZnrWC1LY+U3e
-         XlJOmghcxqzIcRiSN0e121G7E5A6ZYYHYw5WkuEedr9DBxEOFK5XQd6+Y7aRAqiseT28
-         i/LXfG2LofzasH0X1TpfR+qyAYVvaHHJ3vNSuPI9p7Hx3Gm+DtSidV9uSbM/Za5sNvE+
-         HmrqNAW8GXCvGu8OfoPOMAM/mRs7ADcshgXHJE/8U8UJX8wAR/MpbPnmv3RDA954hgQe
-         lQIg==
-X-Gm-Message-State: APjAAAUfhBM5Iv+nhPaU41UFfsN7GkYJAc1USw6W7XNd+SRz6GMS6LNR
-        75xLgthU3oJABlQaYLejMrA=
-X-Google-Smtp-Source: APXvYqy+THvtUdLSbZoMctGP/fJeh4rdnhq5Xh4MHlSBCpuHV+PFy/MDWPpDj9c7U0zETLLE4V87Vg==
-X-Received: by 2002:a5d:49c1:: with SMTP id t1mr11275306wrs.247.1557586003143;
-        Sat, 11 May 2019 07:46:43 -0700 (PDT)
-Received: from localhost ([92.59.185.54])
-        by smtp.gmail.com with ESMTPSA id l14sm4460987wrt.57.2019.05.11.07.46.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 11 May 2019 07:46:42 -0700 (PDT)
-From:   Vicente Bergas <vicencb@gmail.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xagJeCmWrwX8fg4zejA2jF3/DsWcj+RzmZOj/KM3CUw=;
+        b=s7jWjHt8Ik4x/FdqFVphhZIuSmK/ULTsx6eBcZ81S4/4nCVixF/Xw1JjNziJPpe7+6
+         FnKazztDCcb84dwywqkeEj7HPEGvhRx369M0++mj71EwpokGQ8cOxOegI2v05Z5tSDQF
+         1GfsRzC5dmzZoyp86uuaiyW+Qwt2lZ5RjVSD3B/5wNbDAgiv217sP+dofBTteUchEh8p
+         H+58jWnaD5J6Qs+6zUl16O5KiZl5U8LJWM44xr9CKjdr/IzY+W8ofrpW8zTVEy/1NEYr
+         dH3YXb9w3QQ0MASMIxBtRqTnCbdAyula4nhsZYD1i3M+E2P8/7dRxKQA3WC9ueROwOwe
+         zawg==
+X-Gm-Message-State: APjAAAUgvcjKKPDJ/N6ti3DMJFkzkFKC7VuRFJFZy/vO9YqZCFh6Xz/4
+        Eer47sA5GDJarRMddFTlzrCdPYa5oJg=
+X-Google-Smtp-Source: APXvYqx/tBCZgDMJ99kkZyLvrfvYLY9f5iwY3R6CoZr7CZJ5yDunrZTekHMJkfFCsi3Dmq7zucr2Hw==
+X-Received: by 2002:adf:e649:: with SMTP id b9mr5264676wrn.195.1557586622283;
+        Sat, 11 May 2019 07:57:02 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd4:5700:152f:e071:7960:90b9? (p200300EA8BD45700152FE071796090B9.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:152f:e071:7960:90b9])
+        by smtp.googlemail.com with ESMTPSA id t6sm7878406wrn.3.2019.05.11.07.57.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 07:57:01 -0700 (PDT)
+Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
+To:     Vicente Bergas <vicencb@gmail.com>,
+        Serge Semin <fancer.lancer@gmail.com>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         Andrew Lunn <andrew@lunn.ch>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Date:   Sat, 11 May 2019 16:46:40 +0200
-MIME-Version: 1.0
-Message-ID: <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
-In-Reply-To: <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
  <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
-User-Agent: Trojita
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+ <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
+Date:   Sat, 11 May 2019 16:56:56 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
-> On 10.05.2019 17:05, Vicente Bergas wrote:
->> Hello,
->> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
->> pointer dereference.
->> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
->>  net: phy: realtek: Add rtl8211e rx/tx delays config ...
-> The page operation callbacks are missing in the RTL8211E driver.
-> I just submitted a fix adding these callbacks to few Realtek PHY drivers
-> including RTl8211E. This should fix the issue.
+On 11.05.2019 16:46, Vicente Bergas wrote:
+> On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
+>> On 10.05.2019 17:05, Vicente Bergas wrote:
+>>> Hello,
+>>> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
+>>> pointer dereference.
+>>> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
+>>>  net: phy: realtek: Add rtl8211e rx/tx delays config ...
+>> The page operation callbacks are missing in the RTL8211E driver.
+>> I just submitted a fix adding these callbacks to few Realtek PHY drivers
+>> including RTl8211E. This should fix the issue.
+> 
+> Hello Heiner,
+> just tried your patch and indeed the NPE is gone. But still no network...
+> The MAC <-> PHY link was working before, so, maybe the rgmii delays are not
+> correctly configured.
 
-Hello Heiner,
-just tried your patch and indeed the NPE is gone. But still no network...
-The MAC <-> PHY link was working before, so, maybe the rgmii delays are not
-correctly configured.
-With this change it is back to working:
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -300,7 +300,6 @@
- =09}, {
- =09=09PHY_ID_MATCH_EXACT(0x001cc915),
- =09=09.name=09=09=3D "RTL8211E Gigabit Ethernet",
--=09=09.config_init=09=3D &rtl8211e_config_init,
- =09=09.ack_interrupt=09=3D &rtl821x_ack_interrupt,
- =09=09.config_intr=09=3D &rtl8211e_config_intr,
- =09=09.suspend=09=3D genphy_suspend,
-That is basically reverting the patch.
+That's a question to the author of the original patch. My patch was just
+meant to fix the NPE. In which configuration are you using the RTL8211E?
+As a standalone PHY (with which MAC/driver?) or is it the integrated PHY
+in a member of the RTL8168 family?
 
-Regards,
-  Vicen=C3=A7.
+Serge: The issue with the NPE gave a hint already that you didn't test your
+patch. Was your patch based on an actual issue on some board and did you
+test it? We may have to consider reverting the patch.
 
-> Nevertheless your proposed patch looks good to me, just one small change
-> would be needed and it should be splitted.
->
-> The change to phy-core I would consider a fix and it should be fine to
-> submit it to net (net-next is closed currently).
->
-> Adding the warning to the Realtek driver is fine, but this would be
-> something for net-next once it's open again.
->
->> Regards,
->>  Vicen=C3=A7.
->>=20
-> Heiner
->
->> --- a/drivers/net/phy/phy-core.c
->> +++ b/drivers/net/phy/phy-core.c
->> @@ -648,11 +648,17 @@
->>=20
->> static int __phy_read_page(struct phy_device *phydev)
->> { ...
->
-> Here phydev_warn() should be used.
->
->> +        return 0;
->> +    }
->>=20
->>     ret =3D phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
->>     if (ret)
+> With this change it is back to working:
+> --- a/drivers/net/phy/realtek.c
+> +++ b/drivers/net/phy/realtek.c
+> @@ -300,7 +300,6 @@
+>     }, {
+>         PHY_ID_MATCH_EXACT(0x001cc915),
+>         .name        = "RTL8211E Gigabit Ethernet",
+> -        .config_init    = &rtl8211e_config_init,
+>         .ack_interrupt    = &rtl821x_ack_interrupt,
+>         .config_intr    = &rtl8211e_config_intr,
+>         .suspend    = genphy_suspend,
+> That is basically reverting the patch.
+> 
+> Regards,
+>  Vicenç.
+> 
+>> Nevertheless your proposed patch looks good to me, just one small change
+>> would be needed and it should be splitted.
+>>
+>> The change to phy-core I would consider a fix and it should be fine to
+>> submit it to net (net-next is closed currently).
+>>
+>> Adding the warning to the Realtek driver is fine, but this would be
+>> something for net-next once it's open again.
+>>
+>>> Regards,
+>>>  Vicenç.
+>>>
+>> Heiner
+>>
+>>> --- a/drivers/net/phy/phy-core.c
+>>> +++ b/drivers/net/phy/phy-core.c
+>>> @@ -648,11 +648,17 @@
+>>>
+>>> static int __phy_read_page(struct phy_device *phydev)
+>>> { ...
+>>
+>> Here phydev_warn() should be used.
+>>
+>>> +        return 0;
+>>> +    }
+>>>
+>>>     ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
+>>>     if (ret)
+> 
+> 
 
