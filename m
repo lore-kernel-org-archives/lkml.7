@@ -2,143 +2,121 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291D0C46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:19:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0490BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4532184E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA293217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 19:25:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pY7cNStG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ju3UudD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfEKTT6 (ORCPT
+        id S1726233AbfEKTZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 15:19:58 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57366 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725911AbfEKTT5 (ORCPT
+        Sat, 11 May 2019 15:25:05 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43717 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725911AbfEKTZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 15:19:57 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id D31002B6;
-        Sat, 11 May 2019 21:19:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1557602395;
-        bh=N9FrpQlMLYI6rzPXpiofwX81vn3OadVb+j/RphktR9I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pY7cNStGazVJAdCKEQrnAPB7kQ6hKJptdbsC4lVJxZhR3HdGXaZaTYobcwYKxaSYE
-         4x/UVeve1OCI5rYM4gSvx4HPxe/i9EKZVOyLrvMGzPOibRNi3I8EvfHcdJZHsDf1N4
-         AIHdv78uiYefUPYLrh2u7ekvhJP9Y8XLrIOJBo1s=
-Date:   Sat, 11 May 2019 22:19:38 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-Message-ID: <20190511191938.GM13043@pendragon.ideasonboard.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
- <20190417154121.GJ13337@phenom.ffwll.local>
- <20190418062229.eyog4i62eg4pr6uf@flea>
- <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
- <20190418090221.e57dogn4yx5nwdni@flea>
- <6578c22ddf5420d4dead69d29f451bc6a91f6c4a.camel@bootlin.com>
- <20190420224045.GY4964@pendragon.ideasonboard.com>
- <06f3722e96df32c02421105cab1280f2fbe52e2b.camel@bootlin.com>
+        Sat, 11 May 2019 15:25:05 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t22so4642700pgi.10;
+        Sat, 11 May 2019 12:25:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=koge2frMwY+TltXqt/qyrkfkpXH+dUytXf+ZhSr+NI0=;
+        b=ju3UudD57ScsZshKrD3KFLS6n12pOfUK6z1Ujd2ZBAydDwIE+3sdp7ZXiv0mRrtc6N
+         G36Qk2orxejN/NFYkMH9Pfd2xMR7EPJqQ+Kw2MjGRZqNsOozq7b24PVQVbUUJKAOiHn9
+         oSieIoFkdkH48XFXiUrFqtKJTrV+oeVOznCmJhlxkcOSX/C6oZpZAEqWdr5wQkNBMDVs
+         fea3h+4ZUqqrAgiQLPbx8ToVsDKZc2pTsPqqnZN8kBAkLbCvveOafgOsW2ddJnDhRGMT
+         vZ7qC08ruxUXtgUiRnROuocxfjPqYYgFUG3ik1teFdBZuGAV8VqdORWJoqSbfk2WDakc
+         Vtdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=koge2frMwY+TltXqt/qyrkfkpXH+dUytXf+ZhSr+NI0=;
+        b=qw1oAjl2V6PTz4EIa7HxJl5IKGn5xHmloTtyaWm8EqTRkAWOHnlvB2+Wu5cNZ8K2HF
+         ISiDxqP32j+yjWFqahMIN/XeWABhxD4WCC8RByMgn7gNKtOzzO8ywtMip73Lf8SikNKt
+         p02n1FcyDRqW+u5oG85VzuLwPQkHEas6La4I7apioh/HbF69H7Zn5k0inVNM3B/bERVP
+         +R+p/6snn36adXHlmpKx7KP5iR0VDvpo/fFwVcRzwR2kyb1jlmFAytNukj80qi/04xdf
+         RhLWLtLlbSiyJ5KgB131Jg6Gfc9POfvUzbk70JN9DIFRWjqOKP7ktGnHPmpdVSGHF9z2
+         KwKw==
+X-Gm-Message-State: APjAAAUmUrxSImReTpPIXXa/A3ih9ZOpliMJDZxkhCf38gPCXONwosPD
+        F199vDTPxBlfrvLxcL0xx5ORA7Ec+Yw=
+X-Google-Smtp-Source: APXvYqz5GFANMOLS2G8X55ATmWDTmtSRvrdy/Jn217NOAvKY/i4/+VQJGmG9QZBcwOsvErPFHPuTSQ==
+X-Received: by 2002:a62:d044:: with SMTP id p65mr4107462pfg.37.1557602704436;
+        Sat, 11 May 2019 12:25:04 -0700 (PDT)
+Received: from localhost.localdomain ([2607:fb90:4e8b:2a8:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id a80sm25972795pfj.105.2019.05.11.12.25.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 12:25:03 -0700 (PDT)
+Date:   Sat, 11 May 2019 12:25:00 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>
+Subject: Re: [PATCH - resend 1/3] thermal/drivers/cpu_cooling: Fixup the
+ header and copyright
+Message-ID: <20190511192451.GA15554@localhost.localdomain>
+References: <20190428095106.5171-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <06f3722e96df32c02421105cab1280f2fbe52e2b.camel@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190428095106.5171-1-daniel.lezcano@linaro.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Sun, Apr 28, 2019 at 11:51:03AM +0200, Daniel Lezcano wrote:
+> The copyright format does not conform to the format requested by
+> Linaro: https://wiki.linaro.org/Copyright
+>=20
+> Fix it.
+>=20
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Viresh Kumar <viresh.kumar@linaro.org>
 
-On Tue, Apr 23, 2019 at 06:54:49PM +0200, Paul Kocialkowski wrote:
-> Le dimanche 21 avril 2019 à 01:40 +0300, Laurent Pinchart a écrit :
-> > On Thu, Apr 18, 2019 at 01:49:54PM +0200, Paul Kocialkowski wrote:
-> >> On Thu, 2019-04-18 at 11:02 +0200, Maxime Ripard wrote:
-> >>> On Thu, Apr 18, 2019 at 09:52:10AM +0200, Daniel Vetter wrote:
-> >>>> And a lot of people pushed for the "fourcc is a standard", when
-> >>>> really it's totally not.
-> >>> 
-> >>> Even if it's not a standard, having consistency would be a good thing.
-> >>> 
-> >>> And you said yourself that DRM fourcc is now pretty much an authority
-> >>> for the fourcc, so it definitely looks like a standard to me.
-> >> 
-> >> I think trying to make the V4L2 and DRM fourccs converge is a lost
-> >> cause, as it has already significantly diverged. Even if we coordinate
-> >> an effort to introduce new formats with the same fourcc on both sides,
-> >> I don't see what good that would be since the formats we have now are
-> >> still plagued by the inconsistency.
-> >> 
-> >> I think we always need an explicit translation step from either v4l2 or
-> >> drm to the internal representation and back, without ever assuming that
-> >> formats might be compatible because they share the same fourcc.
-> > 
-> > I don't agree. APIs evolve, and while we can't switch from one set of
-> > 4CCs to another in existing APIs, we could in new APIs. Boris is working
-> > on new ioctls to handle formats in V4L2, and while 4CC unification could
-> > be impopular from a userspace developers point of view there, I don't
-> > think we have ruled it out completely. The move to the request API is
-> > also an area where a common set of 4CCs could be used, as it will depart
-> > from the existing V4L2 ioctls. To summarize my opinion, we're not there
-> > yet, but I wouldn't rule it out completely for the future.
-> 
-> Well, I don't see how we could maintain backward compatibility with
-> some DRM and V4L2 fourccs that are compatible and some that aren't.
-> Since both descriptions have diverged already, one would need explicit
-> checking of whether the format at hand is a compatible one or not
-> before passing-it along as-is to the other subsystem or going through a
-> format conversion step (in userspace, duplicating the information).
-> So it feels like it kind of defeats the purpose.
+Based on the series and other patches of it, I am assuming this is an
+Acked-by..
 
-Yes and no. If a V4L2-only application needs to deal with two sets of
-4CCs for old and new APIs, it's a burden. However, if an application
-that shares buffers between V4L2 and DRM/KMS can use a single set of
-4CCs, that's a win, as those applications already need to convert. In
-the end this shifts the problem from one set of applications to another,
-but as soon as the new APIs get old enough to mandate their usage (which
-would roughly be when the corresponding kernel ships in all supported
-versions of all major distros), then applications will be able to drop
-the conversion code, and everybody will be happier. Short term pain for
-long term gain.
+Applied as Acked-by.
 
-> If we're going to use a unified 4CC representation in the future, I
-> think we should do it by using the new formats that this proposal is
-> introducing instead of subsystem-specific formats. At which point I
-> believe we will need an internal conversion step between that format
-> and what the subsystem uses internally. Or do it the other way round
-> and use the unified format all around the subsystem, with a legacy
-> layer for the previous subsystem-specific format.
-
-I agree with you. I would like new APIs to use unified 4CCs (probably
-coming from DRM), and have an internal conversion from and to
-subsystem-specific 4CCs where needed. That's quite a lot of work of
-course, and won't happen overnight.
-
--- 
-Regards,
-
-Laurent Pinchart
+> ---
+>  drivers/thermal/cpu_cooling.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
+> index ee8419a6390c..42aeb9087cab 100644
+> --- a/drivers/thermal/cpu_cooling.c
+> +++ b/drivers/thermal/cpu_cooling.c
+> @@ -2,9 +2,11 @@
+>   *  linux/drivers/thermal/cpu_cooling.c
+>   *
+>   *  Copyright (C) 2012	Samsung Electronics Co., Ltd(http://www.samsung.c=
+om)
+> - *  Copyright (C) 2012  Amit Daniel <amit.kachhap@linaro.org>
+>   *
+> - *  Copyright (C) 2014  Viresh Kumar <viresh.kumar@linaro.org>
+> + *  Copyright (C) 2012-2018 Linaro Limited.
+> + *
+> + *  Authors:	Amit Daniel <amit.kachhap@linaro.org>
+> + *		Viresh Kumar <viresh.kumar@linaro.org>
+>   *
+>   * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
+~~~~~
+>   *  This program is free software; you can redistribute it and/or modify
