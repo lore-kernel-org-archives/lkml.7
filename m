@@ -2,133 +2,95 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78D6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5102C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A19A22184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:45:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934272184D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfEKApw (ORCPT
+        id S1728254AbfEKAvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 20:45:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38628 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727961AbfEKApv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 20:45:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 264E2DF23;
-        Sat, 11 May 2019 00:45:51 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D99122CFE6;
-        Sat, 11 May 2019 00:45:50 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 3309B41F56;
-        Sat, 11 May 2019 00:45:50 +0000 (UTC)
-Date:   Fri, 10 May 2019 20:45:49 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Message-ID: <864186878.28040999.1557535549792.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4hbVNRFSyS2CTbmO88uhnbeH4eiukAng2cxgbDzLfizwg@mail.gmail.com>
-References: <20190510155202.14737-1-pagupta@redhat.com> <20190510155202.14737-4-pagupta@redhat.com> <CAPcyv4hbVNRFSyS2CTbmO88uhnbeH4eiukAng2cxgbDzLfizwg@mail.gmail.com>
-Subject: Re: [PATCH v8 3/6] libnvdimm: add dax_dev sync flag
+        Fri, 10 May 2019 20:51:31 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38098 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbfEKAvb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 20:51:31 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d13so1598567qth.5;
+        Fri, 10 May 2019 17:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2yJyMuj40ehLn1VJjGCyDbn5ZrzNMv6yLbIutJnLbw0=;
+        b=oslF2ILCtz6Ra76n5Gdli4mg1t5uTVK7flOHFONAcO6QR/C1HZJyMnQhDnsDBICH5n
+         /DPlgM+yrTiIRHefxIdZVJTdVzACEdIyOxVdtF3lypZIf8IFfqtX42lm/iYW4z9h0WoB
+         V2viRR6n4BfhTZB0nMuA4VTM2HO4Jpy271uaygsjvCVS4YOKjRqg05ZDWFwldAokokyc
+         pXW0IWQoH59hDEwPp1wVpQySlIPbOaQV8NrBJ8XvudPBj6yKz6q0duBu7l7sz65WCaF3
+         9B9T68OZTB8RmxyXanUii4lk9QlxtPHQCgFXcYzr1c9lCTFiuUL+aDPvTqMzvmaxPxID
+         72yw==
+X-Gm-Message-State: APjAAAXdPTq2g06a2VWs1UaWFq4r95Yq8XqEcaH4Aa2pTlqZ2TKoxzw1
+        pSjpbBiCpO3qvSah9KDzPvsOTdFFlYdmAYBw/Ho=
+X-Google-Smtp-Source: APXvYqxFKEloXfs+RHuMKqqDTkbQ2DMYSkXhWhHARTrTqb4xCGfWCNfnszBb+Rc+y0gwljMkH4orfi2JM8qYr2q0Dhk=
+X-Received: by 2002:a0c:87f4:: with SMTP id 49mr11681367qvk.149.1557535885304;
+ Fri, 10 May 2019 17:51:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.14, 10.4.195.12]
-Thread-Topic: libnvdimm: add dax_dev sync flag
-Thread-Index: gVGO0BoaDll3U20KXC407XNgj3ThLg==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sat, 11 May 2019 00:45:51 +0000 (UTC)
+References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
+ <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
+In-Reply-To: <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 10 May 2019 20:51:12 -0400
+Message-ID: <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
+Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Nick Kossifidis <mick@ics.forth.gr>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
+On Fri, May 10, 2019 at 6:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
 > >
-> > This patch adds 'DAXDEV_SYNC' flag which is set
-> > for nd_region doing synchronous flush. This later
-> > is used to disable MAP_SYNC functionality for
-> > ext4 & xfs filesystem for devices don't support
-> > synchronous flush.
-> >
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/dax/bus.c            |  2 +-
-> >  drivers/dax/super.c          | 13 ++++++++++++-
-> >  drivers/md/dm.c              |  3 ++-
-> >  drivers/nvdimm/pmem.c        |  5 ++++-
-> >  drivers/nvdimm/region_devs.c |  7 +++++++
-> >  include/linux/dax.h          |  8 ++++++--
-> >  include/linux/libnvdimm.h    |  1 +
-> >  7 files changed, 33 insertions(+), 6 deletions(-)
-> [..]
-> > diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-> > index 043f0761e4a0..ee007b75d9fd 100644
-> > --- a/drivers/md/dm.c
-> > +++ b/drivers/md/dm.c
-> > @@ -1969,7 +1969,8 @@ static struct mapped_device *alloc_dev(int minor)
-> >         sprintf(md->disk->disk_name, "dm-%d", minor);
-> >
-> >         if (IS_ENABLED(CONFIG_DAX_DRIVER)) {
-> > -               dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops);
-> > +               dax_dev = alloc_dax(md, md->disk->disk_name, &dm_dax_ops,
-> > +                                                        DAXDEV_F_SYNC);
-> 
-> Apologies for not realizing this until now, but this is broken.
-> Imaging a device-mapper configuration composed of both 'async'
-> virtio-pmem and 'sync' pmem. The 'sync' flag needs to be unified
-> across all members. I would change this argument to '0' and then
-> arrange for it to be set at dm_table_supports_dax() time after
-> validating that all components support synchronous dax.
+> > I think it's good to have a sanity check in-place for consistency.
+>
+>
+> Hi,
+>
+> This broke our cross-builds from x86. I am using:
+>
+> $ powerpc64le-linux-gnu-gcc --version
+> powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
+>
+> and it says that it's little-endian somehow:
+>
+> $ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
+> #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+>
+> Is it broke compiler? Or I always hold it wrong? Is there some
+> additional flag I need to add?
 
-o.k. Need to set 'DAXDEV_F_SYNC' flag after verifying all the target
-components support synchronous DAX.
+It looks like a bug in the kernel Makefiles to me. powerpc32 is always
+big-endian,
+powerpc64 used to be big-endian but is now usually little-endian. There are
+often three separate toolchains that default to the respective user
+space targets
+(ppc32be, ppc64be, ppc64le), but generally you should be able to build
+any of the
+three kernel configurations with any of those compilers, and have the Makefile
+pass the correct -m32/-m64/-mbig-endian/-mlittle-endian command line options
+depending on the kernel configuration. It seems that this is not happening
+here. I have not checked why, but if this is the problem, it should be
+easy enough
+to figure out.
 
-Just a question, If device mapper configuration have composed of both 
-virtio-pmem or pmem devices, we want to configure device mapper for async flush?
-
-Thank you,
-Pankaj 
-> 
+       Arnd
