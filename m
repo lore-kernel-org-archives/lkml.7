@@ -2,94 +2,76 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28798C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF137C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDDE02173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 11:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557575353;
-	bh=0bGRBAjOshAD95C4e1pSM8zt2quIj/Enze1DCLSbCQg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Rm6dQ6nJEg1zlkWppbiqhwBg+dYzC4SYZn2c823vqRnvqc+VBLqs2SLcEbiOIS98g
-	 2cQQVOCAhCiXCVFILafsyoWFbUY+jDX3/Mhd97W3VUOK3bw8IK4inkUjnQD3Gouj+/
-	 OEK8Be81MHM7utYpnPBNJS5t4+ta+kiqsoxhiEuY=
+	by mail.kernel.org (Postfix) with ESMTP id 9835F2173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 12:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfEKLtL (ORCPT
+        id S1728588AbfEKMcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 07:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728526AbfEKLtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 07:49:11 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B19C2146F;
-        Sat, 11 May 2019 11:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557575350;
-        bh=0bGRBAjOshAD95C4e1pSM8zt2quIj/Enze1DCLSbCQg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=egYpDecqn9SOsfLFkpYLBblPdNLRD38lWcH0FThLOmE/f9BjIdVlQSwUlHwwh52w2
-         dE9NX7nMsBf4FhKQ0UE9eKmTBBRiqauxItM7czV2xU8NV4ibTxulK3sdMNG8xVFnG8
-         JwIBJ2MTAaD6Sd+XyuEE3aTgHFRWbXAgpOJsfLmQ=
-Date:   Sat, 11 May 2019 12:49:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        xe-linux-external@cisco.com, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] iio: dac: ds4422/ds4424 fix chip verification
-Message-ID: <20190511124905.11d24e5b@archlinux>
-In-Reply-To: <20190505192438.2644-2-ruslan@babayev.com>
-References: <20190505192438.2644-2-ruslan@babayev.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 08:32:00 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35097 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEKMb7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 08:31:59 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hPRAR-0007va-5C; Sat, 11 May 2019 12:31:55 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amd/display: remove redundant assignment to variable actual_clock
+Date:   Sat, 11 May 2019 13:31:54 +0100
+Message-Id: <20190511123154.2708-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  5 May 2019 12:24:37 -0700
-Ruslan Babayev <ruslan@babayev.com> wrote:
+From: Colin Ian King <colin.king@canonical.com>
 
-> The ds4424_get_value function takes channel number as it's 3rd
-> argument and translates it internally into I2C address using
-> DS4424_DAC_ADDR macro. The caller ds4424_verify_chip was passing an
-> already translated I2C address as its last argument.
-> 
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
-> Cc: xe-linux-external@cisco.com
-Applied to the fixes-togreg branch of iio.git and marked for stable.
+The variable actual_clock is being initialized however this is never
+read and later it is being reassigned to a new value. The initialization
+is redundant and hence can be removed.
 
-Thanks,
+Addresses-Coverity: ("Unused Value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jonathan
-
-> ---
->  drivers/iio/dac/ds4424.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/dac/ds4424.c b/drivers/iio/dac/ds4424.c
-> index 2b3ba1a66fe8..ae9be792693b 100644
-> --- a/drivers/iio/dac/ds4424.c
-> +++ b/drivers/iio/dac/ds4424.c
-> @@ -166,7 +166,7 @@ static int ds4424_verify_chip(struct iio_dev *indio_dev)
->  {
->  	int ret, val;
->  
-> -	ret = ds4424_get_value(indio_dev, &val, DS4424_DAC_ADDR(0));
-> +	ret = ds4424_get_value(indio_dev, &val, 0);
->  	if (ret < 0)
->  		dev_err(&indio_dev->dev,
->  				"%s failed. ret: %d\n", __func__, ret);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
+index 6b2e207777f0..fdd973c03dca 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_clk_mgr.c
+@@ -344,7 +344,7 @@ int dce112_set_dispclk(struct clk_mgr *clk_mgr, int requested_clk_khz)
+ 	struct dc_bios *bp = clk_mgr->ctx->dc_bios;
+ 	struct dc *core_dc = clk_mgr->ctx->dc;
+ 	struct dmcu *dmcu = core_dc->res_pool->dmcu;
+-	int actual_clock = requested_clk_khz;
++	int actual_clock;
+ 	/* Prepare to program display clock*/
+ 	memset(&dce_clk_params, 0, sizeof(dce_clk_params));
+ 
+-- 
+2.20.1
 
