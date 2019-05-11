@@ -2,103 +2,124 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4033C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2699C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55AB2184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A205C217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=narfation.org header.i=@narfation.org header.b="osvXv0Im"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NJ3xB0/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEKU20 (ORCPT
+        id S1726348AbfEKUra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 16:28:26 -0400
-Received: from narfation.org ([79.140.41.39]:34156 "EHLO v3-1039.vlinux.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfEKU20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 16:28:26 -0400
-Received: from sven-desktop.home.narfation.org (unknown [IPv6:2a00:1ca0:1480:f1fc::4065])
-        by v3-1039.vlinux.de (Postfix) with ESMTPSA id C6A3C11012A;
-        Sat, 11 May 2019 22:19:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1557605972; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
-        bh=d8Jl+aESyorlbKSD9+hm1B07d7adsmKXPXVlOeQAHlY=;
-        b=osvXv0Imcz74BTqOBSQl7mfqJYJ3w8l1hnVLAacXo6XN0O9LXshy/nysO+Ft50BJHjhhvy
-        0SS92rRPvNr8eXxJ1XOMVtCwmsOelc5zyRw7hzBt5og/rtiz2yz8mBg1SaCnhVocZq4ncN
-        tsLEzzKqmeseO2m91nhrL5iMJZDVHYQ=
-From:   Sven Eckelmann <sven@narfation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Sven Eckelmann <sven@narfation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 2/2] scripts/spdxcheck.py: Add dual license subdirectory
-Date:   Sat, 11 May 2019 22:19:17 +0200
-Message-Id: <20190511201917.20828-2-sven@narfation.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190511201917.20828-1-sven@narfation.org>
-References: <20190511201917.20828-1-sven@narfation.org>
+        Sat, 11 May 2019 16:47:30 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:47704 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726043AbfEKUra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 16:47:30 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4BKcxfq138977;
+        Sat, 11 May 2019 20:47:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=TATKjhwZHN/z6muIX01mJSP7pI5rbeNwwgu/ed7JqrA=;
+ b=NJ3xB0/iG5+EBwd2G0oY6BBq5zwHsuqUssQca7AJiS6/HaxfY6stMCwTlt4sk3vNYUj7
+ NmTAIj5qypg7jo4eQ35JD0nb95I4ggm5T/qvVWqB1kism4CSnMO8EsH5r2KiSLTX34/d
+ Qf0aIJvoUPyKCpwjIWPvViiduPZmlQn1SBCd42Vmg56dAZ85tfjJEhlZn5AXWuthQEzs
+ 8FWgeQZsdSUiJm6AgZKdcdNHgWgoZ2Kab3w/f997zzWweOoRiE+CzVoBUS0XG8hiXkBX
+ pbpLMxMUbrp1HZz9pSZZs+OBN+LfPSNnu7xvQJJxYgmw77lhWj+8Yw2wM37jyAj2oND+ VQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2sdkwd9s2f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 May 2019 20:47:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4BKk4AO155526;
+        Sat, 11 May 2019 20:47:21 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2sdy5u26pt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 May 2019 20:47:21 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4BKlJPU021793;
+        Sat, 11 May 2019 20:47:19 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sat, 11 May 2019 13:47:18 -0700
+Date:   Sat, 11 May 2019 23:47:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tim Collier <osdevtc@gmail.com>,
+        Chris Opperman <eklikeroomys@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v2] drivers: staging : wlan-ng : collect return status
+ without variable
+Message-ID: <20190511204711.GG18105@kadam>
+References: <20190511094859.GA21232@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=narfation.org;
-        s=20121; t=1557605972; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:autocrypt;
-        bh=d8Jl+aESyorlbKSD9+hm1B07d7adsmKXPXVlOeQAHlY=;
-        b=lDugwnakkrXMNpsOpm+UuTkBRTN+Fnf2hk6UVazoCwwFrjvZRa9PBrVqYcAl1aEE7Svmfc
-        2jR3VVnvmj48eIHjIe9QgRWBI43nZAYmhkLOHYP9LxBl2v83RlRnNcA0oo2uVNaGIQi95z
-        kT7CKO8qPagtdQ1LwvKJbIVh5uNIY9Q=
-ARC-Seal: i=1; s=20121; d=narfation.org; t=1557605972; a=rsa-sha256;
-        cv=none;
-        b=iT19LE3/sKcpgocZeRtPf/fCNwofhwreIMeEuHgAmxSvmxQZzFfiZthumVs9Fh4+lN596H
-        juwQX6J8R49iHztnhOVbAsQT9Xjh7rpTrxYb0P10d0LYaigSo4L8oZ3yTGseL6XMm66SzU
-        lbO4Qr8M33kOWp6NDlOZaJGmK2tRuQo=
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=sven smtp.mailfrom=sven@narfation.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190511094859.GA21232@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9254 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905110152
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9254 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905110152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The licenses from the other directory were partially moved to the dual
-directory in commit 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to
-deprecated licenses"). checkpatch therefore rejected files like
-drivers/staging/android/ashmem.h with
+On Sat, May 11, 2019 at 03:18:59PM +0530, Hariprasad Kelam wrote:
+> As caller rdev_set_default_key  not particular about -EFAULT.
+> We can preserve the return value of prism2_domibset_uint32.
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> -----
+> Changes in v2:
+>   - remove  masking of original return value with EFAULT
+> ---
+>  drivers/staging/wlan-ng/cfg80211.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/staging/wlan-ng/cfg80211.c b/drivers/staging/wlan-ng/cfg80211.c
+> index 5dad5ac..4018fc5 100644
+> --- a/drivers/staging/wlan-ng/cfg80211.c
+> +++ b/drivers/staging/wlan-ng/cfg80211.c
+> @@ -231,12 +231,9 @@ static int prism2_set_default_key(struct wiphy *wiphy, struct net_device *dev,
+>  {
+>  	struct wlandevice *wlandev = dev->ml_priv;
+>  
+> -	if (prism2_domibset_uint32(wlandev,
+> -				   DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> -				   key_index))
+> -		return -EFAULT;
+> -	else
+> -		return 0;
+> +	return prism2_domibset_uint32(wlandev,
+> +				      DIDMIB_DOT11SMT_PRIVACYTABLE_WEPDEFAULTKEYID,
+> +				      key_index);
+>  }
+>  
 
-  WARNING: 'SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */' is not supported in LICENSES/...
-  #1: FILE: drivers/staging/android/ashmem.h:1:
-  +/* SPDX-License-Identifier: GPL-2.0 OR Apache-2.0 */
+I'm sorry, this patch can only be applied on top of v1, but we need a
+patch which can be applied on top of linux-next without applying v1
+first.  (Merge/fold the two patches together and resend).
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Christoph Hellwig <hch@lst.de>
-Fixes: 99871f2f9a4d ("scripts/spdxcheck.py: Fix path to deprecated licenses")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
----
- scripts/spdxcheck.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/spdxcheck.py b/scripts/spdxcheck.py
-index 1a39b34588b7..33df646618e2 100755
---- a/scripts/spdxcheck.py
-+++ b/scripts/spdxcheck.py
-@@ -32,7 +32,7 @@ class SPDXdata(object):
- def read_spdxdata(repo):
- 
-     # The subdirectories of LICENSES in the kernel source
--    license_dirs = [ "preferred", "deprecated", "exceptions" ]
-+    license_dirs = [ "preferred", "deprecated", "exceptions", "dual" ]
-     lictree = repo.head.commit.tree['LICENSES']
- 
-     spdx = SPDXdata()
--- 
-2.20.1
+regards,
+dan carpenter
 
