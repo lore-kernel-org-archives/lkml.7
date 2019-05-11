@@ -2,171 +2,96 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07710C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 13:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14809C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 13:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1EE2146F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 13:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D156F2146F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 13:41:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjHMIV7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbfEKNjn (ORCPT
+        id S1728613AbfEKNlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 09:39:43 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60868 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726147AbfEKNjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 09:39:43 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C77D2DB4F40640748510;
-        Sat, 11 May 2019 21:39:36 +0800 (CST)
-Received: from linux-wjgadX.huawei.com (10.90.31.46) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 11 May 2019 21:39:29 +0800
-From:   Heyi Guo <guoheyi@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <wanghaibin.wang@huawei.com>, Heyi Guo <guoheyi@huawei.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        "Marc Zyngier" <marc.zyngier@arm.com>
-Subject: [RFC] irqchip/gic-its: fix command queue pointer comparison bug
-Date:   Sat, 11 May 2019 21:34:44 +0800
-Message-ID: <1557581684-71297-1-git-send-email-guoheyi@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+        Sat, 11 May 2019 09:41:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40372 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfEKNlY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 09:41:24 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d31so4395329pgl.7
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 06:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=fMbhxbGSMg6IyfZVoXPipxwzBU2Akzjdq8jUr8r58Es=;
+        b=WjHMIV7z89eRvB7MKFxUJmzX14CLSFQdjYN/CWmy3f3zArIrZI4+3wlGNA6BSqdM9M
+         OZ036V09A0yaMcSuduAqBLdBqmXn9W30UcwbTN0PPDsPOHZpCvfB1rteWL5GCHUd3jLP
+         a8P39aksSv/X0jySZpPY1Hpo3OGyvActIE2iTLIre3nc7Ie1ilJLDGSa3LgnKKxQ+4xf
+         HxA/U/dxOgpVq75IILg57kMhwOeI3/u1TMzQi3vRzKiJRDTzLOzQdFoGtQJ80YDqiZCR
+         JUdVJjsMjnxS+CgnbTMK3zvOsw4H5hzjB/5GLJdx3zjDIbGfLdhrTIA8C4eH06Iuu2sc
+         jN7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=fMbhxbGSMg6IyfZVoXPipxwzBU2Akzjdq8jUr8r58Es=;
+        b=bxyP3/VRxg3JUFuwYteWz4d7JCUvGjkmfbqFMCy4WRk2gVjpKAP0cU6ujSHlpy4+ZZ
+         937b5xq8OTnRtyutp6H1CWVzz+/SovKE6R9bPhjeeIxApeyvyGaqRwhqpYGSOQ9EtZKi
+         S5zqdPJ5YqNbZZpYSPM4nWbO1h2dT359CkfaaE3jjh7cyQHgsID1yXCqng1GNkN3355m
+         0lMZI1facgFSDybbiPL8G5436tFvpXwIzmLMUQ99z6XwbbQrp/xg6ZBhcOE7pS+4+Djw
+         lGGxjyddSaRShRnlQje0FsCKjuJbFh257RM/dS3UtaI5pQ3RcYOfHyzoYnVv0JeNGS2b
+         P1AA==
+X-Gm-Message-State: APjAAAXQkQZHi19orRaItuNJI0z9cVLbtRCtnu0AfQs31JKYsjCCK87M
+        nhMy+YqARgTDhH9plc2bZfTgFDkW
+X-Google-Smtp-Source: APXvYqyQ2Q4LRWGH2zCQqkTNkeYBRTC9/zl1HH+gmEa+mh71EI2WR5NG+Gw0RgAsL44ne6CaNG0Xlg==
+X-Received: by 2002:a63:6fce:: with SMTP id k197mr21066887pgc.140.1557582083914;
+        Sat, 11 May 2019 06:41:23 -0700 (PDT)
+Received: from sabyasachi ([2405:205:6182:13c5:4c7b:e4f7:a66c:4459])
+        by smtp.gmail.com with ESMTPSA id 132sm9981863pga.79.2019.05.11.06.41.22
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sat, 11 May 2019 06:41:22 -0700 (PDT)
+Message-ID: <5cd6d102.1c69fb81.b7df1.aae9@mx.google.com>
+X-Google-Original-Message-ID: <20190511134117.GA5069@sabyasachi.linux@gmail.com>
+Date:   Sat, 11 May 2019 19:11:17 +0530
+From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+To:     linux@armlinux.org.uk
+Cc:     jrdr.linux@gmail.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: Remove duplicate header
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.31.46]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we run several VMs with PCI passthrough and GICv4 enabled, not
-pinning vCPUs, we will occasionally see below warnings in dmesg:
+Remove linux/tty.h which is included more than once
 
-ITS queue timeout (65440 65504 480)
-ITS cmd its_build_vmovp_cmd failed
-
-The reason for the above issue is that in BUILD_SINGLE_CMD_FUNC:
-1. Post the write command.
-2. Release the lock.
-3. Start to read GITS_CREADR to get the reader pointer.
-4. Compare the reader pointer to the target pointer.
-5. If reader pointer does not reach the target, sleep 1us and continue
-to try.
-
-If we have several processors running the above concurrently, other
-CPUs will post write commands while the 1st CPU is waiting the
-completion. So we may have below issue:
-
-phase 1:
----rd_idx-----from_idx-----to_idx--0---------
-
-wait 1us:
-
-phase 2:
---------------from_idx-----to_idx--0-rd_idx--
-
-That is the rd_idx may fly ahead of to_idx, and if in case to_idx is
-near the wrap point, rd_idx will wrap around. So the below condition
-will not be met even after 1s:
-
-if (from_idx < to_idx && rd_idx >= to_idx)
-
-There is another theoretical issue. For a slow and busy ITS, the
-initial rd_idx may fall behind from_idx a lot, just as below:
-
----rd_idx---0--from_idx-----to_idx-----------
-
-This will cause the wait function exit too early.
-
-Actually, it does not make much sense to use from_idx to judge if
-to_idx is wrapped, but we need a initial rd_idx when lock is still
-acquired, and it can be used to judge whether to_idx is wrapped and
-the current rd_idx is wrapped.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-
-Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
 ---
+ arch/arm/mach-sa1100/hackkit.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-This patch has only been tested on 4.19.36, for my NIC device driver has
-something wrong with mainline kernel, so I mark it as a RFC until test has been
-done upon mainline kernel.
-
- drivers/irqchip/irq-gic-v3-its.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 7577755..d14f3fbc 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -745,30 +745,30 @@ static void its_flush_cmd(struct its_node *its, struct its_cmd_block *cmd)
- }
- 
- static int its_wait_for_range_completion(struct its_node *its,
--					 struct its_cmd_block *from,
-+					 u64	origin_rd_idx,
- 					 struct its_cmd_block *to)
- {
--	u64 rd_idx, from_idx, to_idx;
-+	u64 rd_idx, to_idx;
- 	u32 count = 1000000;	/* 1s! */
- 
--	from_idx = its_cmd_ptr_to_offset(its, from);
- 	to_idx = its_cmd_ptr_to_offset(its, to);
-+	if (to_idx < origin_rd_idx)
-+		to_idx += ITS_CMD_QUEUE_SZ;
- 
- 	while (1) {
- 		rd_idx = readl_relaxed(its->base + GITS_CREADR);
- 
--		/* Direct case */
--		if (from_idx < to_idx && rd_idx >= to_idx)
--			break;
-+		/* Wrap around for CREADR */
-+		if (rd_idx < origin_rd_idx)
-+			rd_idx += ITS_CMD_QUEUE_SZ;
- 
--		/* Wrapped case */
--		if (from_idx >= to_idx && rd_idx >= to_idx && rd_idx < from_idx)
-+		if (rd_idx >= to_idx)
- 			break;
- 
- 		count--;
- 		if (!count) {
- 			pr_err_ratelimited("ITS queue timeout (%llu %llu %llu)\n",
--					   from_idx, to_idx, rd_idx);
-+					   origin_rd_idx, to_idx, rd_idx);
- 			return -1;
- 		}
- 		cpu_relax();
-@@ -787,6 +787,7 @@ void name(struct its_node *its,						\
- 	struct its_cmd_block *cmd, *sync_cmd, *next_cmd;		\
- 	synctype *sync_obj;						\
- 	unsigned long flags;						\
-+	u64 rd_idx;							\
- 									\
- 	raw_spin_lock_irqsave(&its->lock, flags);			\
- 									\
-@@ -808,10 +809,11 @@ void name(struct its_node *its,						\
- 	}								\
- 									\
- post:									\
-+	rd_idx = readl_relaxed(its->base + GITS_CREADR);		\
- 	next_cmd = its_post_commands(its);				\
- 	raw_spin_unlock_irqrestore(&its->lock, flags);			\
- 									\
--	if (its_wait_for_range_completion(its, cmd, next_cmd))		\
-+	if (its_wait_for_range_completion(its, rd_idx, next_cmd))	\
- 		pr_err_ratelimited("ITS cmd %ps failed\n", builder);	\
- }
- 
+diff --git a/arch/arm/mach-sa1100/hackkit.c b/arch/arm/mach-sa1100/hackkit.c
+index 643d5f2..0016d25 100644
+--- a/arch/arm/mach-sa1100/hackkit.c
++++ b/arch/arm/mach-sa1100/hackkit.c
+@@ -22,7 +22,6 @@
+ #include <linux/serial_core.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/partitions.h>
+-#include <linux/tty.h>
+ #include <linux/gpio.h>
+ #include <linux/leds.h>
+ #include <linux/platform_device.h>
 -- 
-1.8.3.1
+2.7.4
 
