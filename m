@@ -2,100 +2,125 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291FFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202C4C04AB3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E20F22184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E430C217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 22:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="mLIyO2y+"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Ej4E7gbn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfEKWI0 (ORCPT
+        id S1726461AbfEKWLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 18:08:26 -0400
-Received: from sonic306-9.consmr.mail.bf2.yahoo.com ([74.6.132.48]:44735 "EHLO
-        sonic306-9.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726348AbfEKWIZ (ORCPT
+        Sat, 11 May 2019 18:11:37 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51828 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726220AbfEKWLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 18:08:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1557612504; bh=sVwX4Pbfsm9Uj9dzX0wgQUbE125Ae2WKACxSBlL18uM=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=mLIyO2y+0hf+tMf08WsNSspCjkvy/eujQBOD9Np9spL9tvaQ5VpLT3X41qYJ6rqag/SX5jfVJalTRHw7L/dfOsdFju/c6HiWJtZIlBcV2DVhS3LPy3Vkb55Iwfh4/9UVxZyFahyNB+DNt0DOj2obyD15t9tqeK+yfIeMP5zEIThfrMycWR75kZMi72/Okt6YWD+ygLeAN8+kV/UJoKyCMayDfJmvpGu+SRKPvmTC375S7JeZMDYxUutYvuE8lOhElDrGkOw+oVWNx+IbxZ3l4nINTlMBC0aPfmdSCFWHmWWUtsBCWFVJ0OtVX7xj0Hih0VEvu5ZW/lPUrcs+jv5IWA==
-X-YMail-OSG: ET_0JFYVM1mGTvVnpqtxwdc0ELvATxbKogTCBvQCzVy35Szp0cIPZojhdHVPHuL
- QiKRUGrrWIK94HpWvEiHk8XYLyGAjPmww7HIcSIB90hbCZ1nfhYLEAR3Dhm3OmNiuxz0giDnv2wq
- 6h_PsfkXUIiVBZUHMBRczQnwsO4SmP4P3.uo8226rn1KxCVzXsxQW6kIFX1.4ExpzzsSBhVnKC3c
- IUpevFKflaeAIkqxoOgxLYzx5c6zQV6BaNZqPwwW9rj_rC.awj4HeslhuvXyIuu1.IVgDlfZ9Tjp
- AtsLzmLxltsFJ4Lb23tDIf75zUZbwJerlrCIXS18rquMieacBywIMEAwhxUKXszD65slnQGrnKqE
- 4iu16exxfVHLu0aLgb4xmxgnkKMzbZstC7Wcx..vT5PY_2bDIZ6ZT41BPsfpIlHOdDmeT3t.vs.g
- l4kMb9USU3DAh7ba9a8vNoJL7hws8yIRlojUo1UdMCLYmoseQ_48A57NlhqPJRbJf2uH6Mpi08pB
- hku6MXdoZ_W4pKWJ46lwQJo59zthHwE4ueiyBksShjhAvB5KdQ7OIZXXTl1OBaOxhonCKDelu5Dh
- ONiYL1dKPP_ZP.YJhkBZrxEh4c9DAxDHbkx9W4y7WJD.z4i6_GJ8WiT5OlqlpCWN42GWhzVYBAV8
- .r23iMCg8MLoYCfyakCruPAGLgd9_k1rYxuWecrPBFeMFHIz0vK3cydVLfHVBjXagMqJd2cJ.W7J
- iMSBxdYY1cjZ03NaXZY2ju0ATd3Xo1xqUfzVVWorAzI5dxUb0TL0V6JZ4_ydniGfKeURzSHdjDDs
- W_B28q53izGN6rIuGlBEuPWXR4zakerVGauSt.fzCR7B3UjyljoY.YmCBZ5tOdfTfn60OQ6LNbE7
- diXGn1lq1PmAOrGf6_v1K8lJ9Bxf38UpD7rNOFNatnQNovTx5pL2bdLNUoAbsYXd.xooMJV9gada
- 5ydGLcDg6D83Evmiv2vQzmTpou0hFoeXW5jP70b3g7oRsReMgypj3JX8SpRY3u4VCbyW9cafVDug
- tuERVjNSF6qxZM_spWHFUWoHivgvFY_Dwxy_GNheYq2gb_SECn9pcEUgTV8.GAyrp_v2gp4Dvnrm
- 6d0uDMErAwurCyZajfhpRCQ5b5s_ZTX4WAQnO0VA2bKxPi0aYzxZjEI7XqTxsAuhVt0zqEW.IT1B
- RNFYYCk8Rs0ipXhMCkJxA2lW9qjTv8pR5HXlH91bo0s50JiPnXM93sc9E.WFnoPk3r8ztT8.UMhp
- AyOXqe8VxoNmKCfj0HTq4R2E-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.bf2.yahoo.com with HTTP; Sat, 11 May 2019 22:08:24 +0000
-Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
-          by smtp409.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 89f668ca3f757c7aa6565c3d3f390d4e;
-          Sat, 11 May 2019 22:08:20 +0000 (UTC)
-Subject: Re: [GIT PULL] security subsystem: Tomoyo updates for v5.2
-To:     Paul Moore <paul@paul-moore.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        James Morris <jmorris@namei.org>
-Cc:     LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        casey@schaufler-ca.com
-References: <alpine.LRH.2.21.1905110801350.9392@namei.org>
- <CAHk-=wg8UFHD_KmTWF3LMnDf_VN7cv_pofpc4eOHmx_8kmMPWw@mail.gmail.com>
- <CAHC9VhSSwYk6isqz8N3nOO_O17C30E2EyCHKf5OqsdESeMoT7g@mail.gmail.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <24d602d2-a1a7-7b1e-9035-a2d732cd822b@schaufler-ca.com>
-Date:   Sat, 11 May 2019 15:08:07 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sat, 11 May 2019 18:11:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o189so10537385wmb.1
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 15:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=d1+FGziLF47L4qrx03aVD+M8jY5l9sq1jNKrZJyhi2o=;
+        b=Ej4E7gbnKGYiowwSnWtaTwbeMaxu1nIyXWrwEaork0CeI/aFXbuw4R6MmShvlH/OZ4
+         fC5MfKzqE6lg+eUSu+7ClEGLLRY+L/4hU+vlLfCpQZokJksy/FUSAezD1n3yQyBSXfWJ
+         5WDCkAW7BK2eq0YLIvZHkl87MGNWpVc+Id3/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d1+FGziLF47L4qrx03aVD+M8jY5l9sq1jNKrZJyhi2o=;
+        b=G1rpZx/bR7SrLKY3KBGxcQGvHBhQKxJMxYzUQdG7M9l6/HHV+qQNw3E1pb3JqYNZra
+         GvspaCyzNQQn16rpKlUFkiuDq8Ar960MtTNS+wukKHE8OXFCjb4eY6A86nx6mXwN9olu
+         lUJ6NMvet+Ww9KVKQIpnbz0JejNgVTI4NdF1/2d4IunDk9yKd+/hGQHL5xkUTvgYCbYs
+         dgQub4bS0mUSRnwZi4LIGWI/ESRi7kdzqSvIco6gzrUZJwMrn1HrLiHOpO4xTCjbLSsw
+         z9/5uZl+aGbwdt4rRj/UGhIt128C1tKF/dBCKzjN9IgASMTEEK2kQTOiKcVx7XedsD2K
+         LREA==
+X-Gm-Message-State: APjAAAXinfsh36nK5RW4sDeoXH6ssmzTzE7em3+doS8h+96r01+WTrvs
+        ycxISFUnixZNlfcW1A8ipCkOqA==
+X-Google-Smtp-Source: APXvYqxOKIy4AHjaZp8FltX2FkddcS0U5ptHUeNcdKRpT68Ku+qiK08plVhUjpP6TiWqvwmGdD4eYw==
+X-Received: by 2002:a1c:cc10:: with SMTP id h16mr11462278wmb.39.1557612695128;
+        Sat, 11 May 2019 15:11:35 -0700 (PDT)
+Received: from andrea ([89.22.71.151])
+        by smtp.gmail.com with ESMTPSA id 91sm17491123wrs.43.2019.05.11.15.11.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 15:11:34 -0700 (PDT)
+Date:   Sun, 12 May 2019 00:11:26 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] doc/rcu: Correct field_count field naming in examples
+Message-ID: <20190511221126.GA3984@andrea>
+References: <20190505020328.165839-1-joel@joelfernandes.org>
+ <20190507000453.GB3923@linux.ibm.com>
+ <20190508162635.GD187505@google.com>
+ <20190508181638.GY3923@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHC9VhSSwYk6isqz8N3nOO_O17C30E2EyCHKf5OqsdESeMoT7g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508181638.GY3923@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/2019 11:13 AM, Paul Moore wrote:
-> On Sat, May 11, 2019 at 10:38 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->> On Fri, May 10, 2019 at 6:09 PM James Morris <jmorris@namei.org> wrote:
->>> These patches include fixes to enable fuzz testing, and a fix for
->>> calculating whether a filesystem is user-modifiable.
->> So now these have been very recently rebased (on top of a random
->> merge-window "tree of the day" version) instead of having multiple
->> merges.
->>
->> That makes the history cleaner, but has its own issues.
->>
->> We really need to find a different model for the security layer patches.
-> If it helps, the process I use for the SELinux and audit trees is
-> documented below.  While it's far from perfect (I still don't like
-> basing the -next trees on -rcX releases) it has seemed to work
-> reasonably well for some time now.
->
-> * https://github.com/SELinuxProject/selinux-kernel/blob/master/README.md
+Hi Paul, Joel,
 
-On the whole this looks fine to me. I am less comfortable than Paul
-is regarding changes that happen elsewhere, so I would be more likely
-to base in the rc-1 than Paul. More developers test with SELinux than
-Smack. I am in the process of putting an appropriate GPG environment
-together for 5.3.
+> > > On the other hand, would you have ideas for more modern replacement
+> > > examples?
+> > 
+> > There are 3 cases I can see in listRCU.txt:
+> >   (1) action taken outside of read_lock (can tolerate stale data), no in-place update.
+> >                 this is the best possible usage of RCU.
+> >   (2) action taken outside of read_lock, in-place updates
+> >                 this is good as long as not too many in-place updates.
+> >                 involves copying creating new list node and replacing the
+> >                 node being updated with it.
+> >   (3) cannot tolerate stale data: here a deleted or obsolete flag can be used
+> >                                   protected by a per-entry lock. reader
+> > 				  aborts if object is stale.
+> > 
+> > Any replacement example must make satisfy (3) too?
+> 
+> It would be OK to have a separate example for (3).  It would of course
+> be nicer to have one example for all three, but not all -that- important.
+> 
+> > The only example for (3) that I know of is sysvipc sempahores which you also
+> > mentioned in the paper. Looking through this code, it hasn't changed
+> > conceptually and it could be a fit for an example (ipc_valid_object() checks
+> > for whether the object is stale).
+> 
+> That is indeed the classic canonical example.  ;-)
+> 
+> > The other example could be dentry look up which uses seqlocks for the
+> > RCU-walk case? But that could be too complex. This is also something I first
+> > learnt from the paper and then the excellent path-lookup.rst document in
+> > kernel sources.
+> 
+> This is a great example, but it would need serious simplification for
+> use in the Documentation/RCU directory.  Note that dcache uses it to
+> gain very limited and targeted consistency -- only a few types of updates
+> acquire the write-side of that seqlock.
+> 
+> Might be quite worthwhile to have a simplified example, though!
+> Perhaps a trivial hash table where write-side sequence lock is acquired
+> only when moving an element from one chain to another?
 
-The LSM infrastructure work I've been doing should still go through
-James, as it has global implications.
+Sorry to take you down here..., but what do you mean by "the paper"?  ;-/
 
+Thanx,
+  Andrea
