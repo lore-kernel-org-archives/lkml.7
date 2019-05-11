@@ -2,94 +2,94 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A905FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6818C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7961F2146F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:24:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="M6sOyTv2"
+	by mail.kernel.org (Postfix) with ESMTP id 876C3217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 14:38:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557585521;
+	bh=6xMRak7Bv6swPh+iH1bNyQMam0bQnMP1VBv9ZeKVhMs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RY49y1og2sT5qvG5wILIIxwM4FT86CDwNKsheIz3xNz0CV8yvs38hkREc9XevRLMP
+	 DIdphneed//5ljljx0EkFGSZo4sUOiTF9kWurYD6r0Y8nXMrGGz7Jd6JAmPN53gpon
+	 clMzfHGy1Vot7QddyLn40B3AyEPbt31FfmciW/IM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfEKOYJ (ORCPT
+        id S1728599AbfEKOie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 10:24:09 -0400
-Received: from nbd.name ([46.4.11.11]:58496 "EHLO nbd.name"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfEKOYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 10:24:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6D8lHhlPnErlwBUUg7pykhDXuLB10RpnRmnHan5006c=; b=M6sOyTv2Vw0yg/RJTR8macl6dL
-        Ts1wn7fHpqTg9blYEtrdghH4NTRvSy3Gnxm8pytbHCfVeDpsrgJXszmhz+FsOnCOXqRgL3xZfKc1f
-        FsUHZxSaN5GGZ4fzVv19MRS8/BYG8RhDht/W3brnmRaTr3y+R5pVtajyPKDrvcbiUTVQ=;
-Received: from p54ae9c89.dip0.t-ipconnect.de ([84.174.156.137] helo=nf.local)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1hPSuy-0005td-Hp; Sat, 11 May 2019 16:24:04 +0200
-Subject: Re: [PATCH] mt76: mt7615: Make mt7615_irq_handler static
-To:     YueHaibing <yuehaibing@huawei.com>, lorenzo.bianconi83@gmail.com,
-        ryder.lee@mediatek.com, royluo@google.com, kvalo@codeaurora.org,
-        matthias.bgg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-wireless@vger.kernel.org
-References: <20190504102247.43720-1-yuehaibing@huawei.com>
-From:   Felix Fietkau <nbd@nbd.name>
-Openpgp: preference=signencrypt
-Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
- mQGiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
- ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
- Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
- AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
- vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
- wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
- TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
- l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwbQcRmVsaXggRmll
- dGthdSA8bmJkQG5iZC5uYW1lPohgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
- HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
- VrwYTIThkTlQuQINBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
- CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
- VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
- Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
- DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
- wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
- f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
- aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
- FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
- TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabiEkE
- GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
- RjMaxwtSdaCKMw3j33ZbsWS4
-Message-ID: <eb17d602-ab87-2d75-7d82-acbf93ede150@nbd.name>
-Date:   Sat, 11 May 2019 16:24:03 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Sat, 11 May 2019 10:38:34 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36037 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726240AbfEKOid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 10:38:33 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z1so7432532ljb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 07:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y0nMY1dAXe3rU/EGGiXuIeNRBZ78Ma5ZAZuK2pC9YCI=;
+        b=Eqgqu+RP5jF0lLzL+ebZS0xFoE2Nw9GZPEdGt2vF8FOu8+DBqY/apNwweFNq7lRwvf
+         PrqvCmmZt+gXoClxsOuAkAVajcbrkacCcZDgJKHIaa8X0Jz/0A9OT+s0I74g4AJSdudt
+         MY9SB7sftM339abzQfP8fe0j2sMPejVzDLY9s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y0nMY1dAXe3rU/EGGiXuIeNRBZ78Ma5ZAZuK2pC9YCI=;
+        b=Ipe8nDD4g5D8bf3j/sTNecJtJs2Epd4QuJ2n6nNN1qrGhuK1bKp9+JmMJwsM6uK55B
+         aQLiex+5e4M96GebIKZzQwI0dH1KlHP9XYc/CebzWFtEKe035fd2egWHSiMAtIzYIShQ
+         be9s1ziBuj6OnLZPsHOOocVqGUb7yHhiYAi85bKM6T0vV2WxlM7frQcLltAZexmXRTlo
+         5Ou0xDTPF36OBwk+YT0z5MTE8RlLYcR3ZQYxAeIjzg+R/3vyrZjuaU1wirK3Uq+zIIQI
+         RaF8MmAYfZuomBPDKtrarV7OfqSwGOCAohO2eArbkusfhVJhKgPPVPN8o2pykjqVJyhD
+         GrAQ==
+X-Gm-Message-State: APjAAAVjVsZ5XaD8LmOSYK3/Dcr3UU7ELIBvDnniB8nbQxv1a9YLHUHp
+        QuJL028mEzKSnhOpEURAmiHbTJMHqQQ=
+X-Google-Smtp-Source: APXvYqyMW7TKHdvD0fZfKaEWquhNjIfhPAQ5R5v8ZUY5Js+I/j+JzwPRl3YAtlFbmNMhq1NtiRs+vA==
+X-Received: by 2002:a2e:8098:: with SMTP id i24mr8716889ljg.88.1557585511036;
+        Sat, 11 May 2019 07:38:31 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id s26sm2062034ljj.52.2019.05.11.07.38.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 07:38:29 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id z1so7432487ljb.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 07:38:29 -0700 (PDT)
+X-Received: by 2002:a2e:a294:: with SMTP id k20mr4024290lja.118.1557585509228;
+ Sat, 11 May 2019 07:38:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190504102247.43720-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <alpine.LRH.2.21.1905110801350.9392@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1905110801350.9392@namei.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sat, 11 May 2019 10:38:13 -0400
+X-Gmail-Original-Message-ID: <CAHk-=wg8UFHD_KmTWF3LMnDf_VN7cv_pofpc4eOHmx_8kmMPWw@mail.gmail.com>
+Message-ID: <CAHk-=wg8UFHD_KmTWF3LMnDf_VN7cv_pofpc4eOHmx_8kmMPWw@mail.gmail.com>
+Subject: Re: [GIT PULL] security subsystem: Tomoyo updates for v5.2
+To:     James Morris <jmorris@namei.org>
+Cc:     LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-04 12:22, YueHaibing wrote:
-> Fix sparse warning:
-> 
-> drivers/net/wireless/mediatek/mt76/mt7615/pci.c:37:13:
->  warning: symbol 'mt7615_irq_handler' was not declared. Should it be static?
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Applied, thanks.
+On Fri, May 10, 2019 at 6:09 PM James Morris <jmorris@namei.org> wrote:
+>
+> These patches include fixes to enable fuzz testing, and a fix for
+> calculating whether a filesystem is user-modifiable.
 
-- Felix
+So now these have been very recently rebased (on top of a random
+merge-window "tree of the day" version) instead of having multiple
+merges.
+
+That makes the history cleaner, but has its own issues.
+
+We really need to find a different model for the security layer patches.
+
+                   Linus
