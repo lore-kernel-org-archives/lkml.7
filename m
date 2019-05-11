@@ -2,137 +2,166 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00454C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C410FC04A6B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72AC21841
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="umIRC7/3"
+	by mail.kernel.org (Postfix) with ESMTP id 87CEF2184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 00:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557536226;
+	bh=192hqAeX73EIOnp8rUHUxJQFygKBG3o6jcfAO47fW1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ONcZBIA14n7qGsjdTg56gzigtyniyIyIQ2bkCMlgp6ijMtXfmELhUTHgssnNnIUit
+	 WJtxGRMdC4aPv47nvrCBPeQyNaaegF7fGcMaEjjOQFWIYUZezEN0ukbsboeYQgKq0V
+	 sadXFPFg17FvG32rx1Vc66kgG+dHkx5vWa9or7Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728387AbfEKAxM (ORCPT
+        id S1728298AbfEKA5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 May 2019 20:53:12 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:31960 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727961AbfEKAxL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 May 2019 20:53:11 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x4B0qe6p032760;
-        Sat, 11 May 2019 09:52:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4B0qe6p032760
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557535961;
-        bh=iUxXS+30vplKGahUoVQhsc/083rdodKyu7vjq55D8xg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=umIRC7/3lNRLSfK+GHljh9R3w0EjQ+AonhIXa9BSr4osEJ1qBhMgzY50aI+8ebY8u
-         L9oNE/JlHyZaHMcd4m+0yEm/5oI6h4wmSJrCCbPCcO6F9NuHKAdyqzbvVIY2k5Zfna
-         ca9coS/3yMGwaZA736aNpG0ktBbgblls2W8ptdUMGkfOK9RM3DESUXB6IPNXsx8FcL
-         6cLIBKpJx7B2GacYkS186Z1oQ7b2X3Kyns+i1GE9ZBw8huUIgJvfsFJxpyQD6mWtwX
-         8rv9pykSnmYRazTLtdNBM/Z8HlK0+Kr7FWfwHPrYo4ncv0T60fUsm0CodN3bh5sY9g
-         MN3rUi7l+Az+g==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id j184so4668136vsd.11;
-        Fri, 10 May 2019 17:52:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAULBF5NbSY/oTiCb/RjkNEBAhB22SJO/v3+qos7RudpzuklxxXC
-        Lhu7f7D8vgA6EXESGRF3FFMdGYNbrcSYB9DiltI=
-X-Google-Smtp-Source: APXvYqyUc+v7TtnlTZkAvl+FZ1vVEt3lE7J6HYJX7L39IUWk68P03S3ownrv/zhg9Wxx1qmb65a+wPCgt1rx7T1DAls=
-X-Received: by 2002:a67:fd89:: with SMTP id k9mr7848953vsq.54.1557535960078;
- Fri, 10 May 2019 17:52:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190510210243.152808-1-joel@joelfernandes.org> <20190510210243.152808-4-joel@joelfernandes.org>
-In-Reply-To: <20190510210243.152808-4-joel@joelfernandes.org>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sat, 11 May 2019 09:52:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATeJqmE29M=Y1Vexg8nnRdr3qUDkq1BejN7t2_106PgVg@mail.gmail.com>
-Message-ID: <CAK7LNATeJqmE29M=Y1Vexg8nnRdr3qUDkq1BejN7t2_106PgVg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kheaders: Make it depend on sysfs
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Ratiu <adrian.ratiu@collabora.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        Fri, 10 May 2019 20:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfEKA5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 May 2019 20:57:05 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9419217D7;
+        Sat, 11 May 2019 00:56:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557536223;
+        bh=192hqAeX73EIOnp8rUHUxJQFygKBG3o6jcfAO47fW1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=g/mmeDe64gdo1ZjwwOmn4qMdV9rQze6g9V9u38yEXR51rNwckbO5Hq3iLvya1p2Ci
+         q6nZZTK4RLWkcnTchlYU2FnYXJKSXl3iKtUHsy3a/MC6WY/XSkXwrB6DgbHR0j0GS+
+         rQU4xloCOUyoX348bNXGo4YdpszyohKPxGAjsrtc=
+Date:   Sat, 11 May 2019 09:56:55 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        atish patra <atishp04@gmail.com>, bpf@vger.kernel.org,
-        Brendan Gregg <bgregg@netflix.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        duyuchao <yuchao.du@unisoc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manjo Raja Rao <linux@manojrajarao.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        =?UTF-8?Q?Micha=C5=82_Gregorczyk?= <michalgr@fb.com>,
-        Michal Gregorczyk <michalgr@live.com>,
-        Mohammad Husain <russoue@gmail.com>,
-        Olof Johansson <olof@lixom.net>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nicolai Stange <nstange@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
         Shuah Khan <shuah@kernel.org>,
-        Srinivas Ramana <sramana@codeaurora.org>,
-        Tamir Carmeli <carmeli.tamir@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
+Message-Id: <20190511095655.405147cde331cd1da539d0e8@kernel.org>
+In-Reply-To: <20190510124054.GV2589@hirez.programming.kicks-ass.net>
+References: <20190508115416.nblx7c2kocidpytm@treble>
+        <20190508120416.GL2589@hirez.programming.kicks-ass.net>
+        <20190508124248.u5ukpbhnh4wpiccq@treble>
+        <20190508153907.GM2589@hirez.programming.kicks-ass.net>
+        <20190508184848.qerg3flv3ej3xsev@treble>
+        <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
+        <20190509081431.GO2589@hirez.programming.kicks-ass.net>
+        <20190509230106.3551b08553440d125e437f66@kernel.org>
+        <20190509171416.GY2623@hirez.programming.kicks-ass.net>
+        <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
+        <20190510124054.GV2589@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 6:05 AM Joel Fernandes (Google)
-<joel@joelfernandes.org> wrote:
->
-> The kheaders archive is exposed through SYSFS in /sys/kernel/. Make it
-> depend on SYSFS as it makes no sense to enable this feature without it.
+On Fri, 10 May 2019 14:40:54 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
+> On Fri, May 10, 2019 at 01:58:31PM +0900, Masami Hiramatsu wrote:
+> > On Thu, 9 May 2019 19:14:16 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > > --- a/arch/x86/kernel/kprobes/core.c
+> > > > > +++ b/arch/x86/kernel/kprobes/core.c
+> > > > > @@ -731,29 +731,8 @@ asm(
+> > > > >  	".global kretprobe_trampoline\n"
+> > > > >  	".type kretprobe_trampoline, @function\n"
+> > > > >  	"kretprobe_trampoline:\n"
+> 
+> > > > Here, we need a gap for storing ret-ip, because kretprobe_trampoline is
+> > > > the address which is returned from the target function. We have no 
+> > > > "ret-ip" here at this point. So something like
+> > > > 
+> > > > +	"push $0\n"	/* This is a gap, will be filled with real return address*/
+> > > 
+> > > The trampoline already provides a gap, trampoline_handler() will need to
+> > > use int3_emulate_push() if it wants to inject something on the return
+> > > stack.
+> > 
+> > I guess you mean the int3 case. This trampoline is used as a return destination.
+> 
+> > When the target function is called, kretprobe interrupts the first instruction,
+> > and replace the return address with this trampoline. When a "ret" instruction
+> > is done, it returns to this trampoline. Thus the stack frame start with
+> > previous context here. As you described above,
+> 
+> I would prefer to change that to inject an extra return address, instead
+> of replacing it. With the new exception stuff we can actually do that.
+> 
+> So on entry we then go from:
+> 
+> 	<previous context>
+> 	RET-IP
+> 
+> to
+> 
+> 	<previous context>
+> 	RET-IP
+> 	return-trampoline
+> 
+> So when the function returns, it falls into the trampoline instead.
 
-And, it also makes no sense to break the feature by 1/3,
-then fix it by 3/3.
+Is that really possible? On x86-64, most parameters are passed by registers,
+but x86-32 (and x86-64 in rare case) some parameters can be passed by stack.
+If we change the stack layout in the function prologue, the code in
+function body can not access those parameters on stack.
 
+Thank you,
 
-Why don't you squash this?
-
-
-
->
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  init/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/init/Kconfig b/init/Kconfig
-> index ce08adf0f637..f27138a8cf28 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -581,6 +581,7 @@ config IKCONFIG_PROC
->
->  config IKHEADERS
->         tristate "Enable kernel headers through /sys/kernel/kheaders.tar.xz"
-> +       depends on SYSFS
->         help
->           This option enables access to the in-kernel headers that are generated during
->           the build process. These can be used to build eBPF tracing programs,
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+> 
+> > > > > +	 * On entry the stack looks like:
+> > > > > +	 *
+> > > > > +	 *   2*4(%esp) <previous context>
+> > > > > +	 *   1*4(%esp) RET-IP
+> > > > > +	 *   0*4(%esp) func
+> > 
+> > From this trampoline call, the stack looks like:
+> > 
+> > 	 *   1*4(%esp) <previous context>
+> > 	 *   0*4(%esp) func
+> > 
+> > So we need one more push.
+> 
+> And then the stack looks just right at this point.
+> 
+> > > > > +	"push trampoline_handler\n"
+> > > > > +	"jmp call_to_exception_trampoline\n"
+> > > > >  	".size kretprobe_trampoline, .-kretprobe_trampoline\n"
+> > > > >  );
+> > > > >  NOKPROBE_SYMBOL(kretprobe_trampoline);
 
 
 -- 
-Best Regards
-Masahiro Yamada
+Masami Hiramatsu <mhiramat@kernel.org>
