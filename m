@@ -3,150 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,TVD_RCVD_SPACE_BRACKET autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055BDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C2FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1FB216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 861B92173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 18:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfEKSBV (ORCPT
+        id S1726142AbfEKSMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 14:01:21 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:29254 "EHLO mx1.mailbox.org"
+        Sat, 11 May 2019 14:12:12 -0400
+Received: from mutluit.com ([82.211.8.197]:52858 "EHLO mutluit.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbfEKSBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 14:01:20 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id A711C4EBA7;
-        Sat, 11 May 2019 20:01:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id lj_58bGFozcr; Sat, 11 May 2019 20:00:58 +0200 (CEST)
-Date:   Sun, 12 May 2019 04:00:43 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Jann Horn <jannh@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christian Brauner <christian@brauner.io>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-Message-ID: <20190511180043.mfwwcz5j2fnxe6lp@yavin>
-References: <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
- <20190506191735.nmzf7kwfh7b6e2tf@yavin>
- <20190510204141.GB253532@google.com>
- <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
- <20190510225527.GA59914@google.com>
- <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
- <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
- <CAHk-=whOL-NBso8X5S8s597yZEOMBoU8chkMFVTi8b-ff2qARg@mail.gmail.com>
- <20190511173113.qhqmv5q5f74povix@yavin>
- <CAHk-=wgo-X9pDbVf8khfDsgEKn3wSvLJkB890OxHL+42Hosypw@mail.gmail.com>
+        id S1725939AbfEKSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 14:12:11 -0400
+Received: from [127.0.0.1] (s2.mutluit.com [82.211.8.197]:40136)
+        by mutluit.com (s2.mutluit.com [82.211.8.197]:50025) with ESMTP ([XMail 1.27 ESMTP Server])
+        id <S16FACAA> for <linux-kernel@vger.kernel.org> from <um@mutluit.com>;
+        Sat, 11 May 2019 14:12:07 -0400
+Subject: Re: [RFC PATCH] drivers: ata: ahci_sunxi: Increased SATA/AHCI DMA
+ TX/RX FIFOs
+To:     Stefan Monnier <monnier@iro.umontreal.ca>,
+        linux-ide@vger.kernel.org
+Cc:     linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, u-boot@lists.denx.de
+References: <20190510192550.17458-1-um@mutluit.com>
+ <jwvk1ex6rvb.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+From:   "U.Mutlu" <um@mutluit.com>
+Organization: mutluit.com
+Message-ID: <5CD71077.1020100@mutluit.com>
+Date:   Sat, 11 May 2019 20:12:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:40.0) Gecko/20100101
+ Firefox/40.0 SeaMonkey/2.37a1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="x6j6zu2zk3nponfr"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgo-X9pDbVf8khfDsgEKn3wSvLJkB890OxHL+42Hosypw@mail.gmail.com>
+In-Reply-To: <jwvk1ex6rvb.fsf-monnier+gmane.comp.hardware.netbook.arm.sunxi@gnu.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Stefan Monnier wrote on 05/11/2019 03:37 PM:
+>> Increasing the SATA/AHCI DMA TX/RX FIFOs (P0DMACR.TXTS and .RXTS) from
+>> default 0x0 each to 0x3 each gives a write performance boost of 120MB/s
+>> from lame 36MB/s to 45MB/s previously. Read performance is about 200MB/s
+>> [tested on SSD using dd bs=4K count=512K].
+>
+> Such a simple patch to fix such a long-standing performance problem that
+> everyone [ well, apparently not quite everyone ] assumed was a hardware
+> limitation...
+>
+> And yet, April 1st is long gone.
+>
+> Is it really for real?
 
---x6j6zu2zk3nponfr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, it's indeed real, Stefan; really no April 1st joke.  :-)
 
-On 2019-05-11, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Sat, May 11, 2019 at 1:31 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > Yup, I've dropped the patch for the next version. (To be honest, I'm not
-> > sure why I included any of the other flags -- the only one that would've
-> > been necessary to deal with CVE-2019-5736 was AT_NO_MAGICLINKS.)
->=20
-> I do wonder if we could try to just set AT_NO_MAGICLINKS
-> unconditionally for execve() (and certainly for the suid case).
->=20
-> I'd rather try to do these things across the board, than have "suid
-> binaries are treated specially" if at all possible.
->=20
-> The main use case for having /proc/<pid>/exe thing is for finding open
-> file descriptors, and for 'ps' kind of use, or to find the startup
-> directory when people don't populate the execve() environment fully
-> (ie "readlink(/proc/self/exe)" is afaik pretty common.
->=20
-> Sadly, googling for
->=20
->     execve /proc/self/exe
->=20
-> does actually find hits, including one that implies that chrome does
-> exactly that.  So it might not be possible.
->=20
-> Somewhat odd, but it does just confirm the whole "users will at some
-> point do everything in their power to use every odd special case,
-> intended or not".
+As you indicated, this problem of slow SATA write-speed
+with these small devices lasts now for more than 5 years.
+This patch finally solves the problem.
 
-*sheepishly* Actually we use this in runc very liberally.
+On my test device (BPI-R1) the optimum blocksize seems to be 12K
+as it then gives even 129 MB/s write speed.
 
-It's done because we need to run namespace-related code but runc is
-written in Go so (long story short) we re-exec ourselves in order to
-run some __attribute__((constructor)) code which sets up the namespaces
-and then lets the Go runtime boot.
+Here are some test results with different blocksizes, all giving
+a write speed of 125 to 129 MB/s:
 
-I suspect just writing everything in C would've been orders of magnitude
-simpler, but I wasn't around when that decision was made. :P
+time sh -c "dd if=/dev/zero of=test.tmp bs=$bs count=$count conv=fdatasync"
 
-Also as Christian mentioned, fexecve(3) in glibc is implemented using
-/proc/self/fd on old kernels (then again, if we change the behaviour on
-new kernels it won't matter because glibc uses execveat(AT_EMPTY_PATH)
-if it's available).
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+------------ bs=8K / count=256K / 1 ------------------
+262144+0 records in
+262144+0 records out
+2147483648 bytes (2.1 GB) copied, 16.9237 s, 127 MB/s
 
---x6j6zu2zk3nponfr
-Content-Type: application/pgp-signature; name="signature.asc"
+real	0m16.935s
+user	0m0.388s
+sys	0m15.777s
 
------BEGIN PGP SIGNATURE-----
+------------ bs=8K / count=256K / 2 ------------------
+262144+0 records in
+262144+0 records out
+2147483648 bytes (2.1 GB) copied, 16.9916 s, 126 MB/s
 
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzXDcoACgkQSnvnv3De
-m5/VQg//cNbE0gWGWd67U4KsSDs6MVJJyqjF6LOvkYQ7ZDla/7TmoJD8gMLeRiEr
-JEg4aoL53swukD16188CiyfgExJOaecf1WWuDM74MelW1FYIrlf2pqD214UO3sq7
-K40GqdW9H/JKL+yZrH6+zzQXIYOpf0xNDFwF6yf4yb1vFCk/yEp5+LsewxwDzYVp
-u/5L6KcndExqtyHhgY5iS19/rGKtEvqiYSYrpYSpFAtkN3ROb2xe6b7oO4b6Y30q
-HQslOeSH11Qw5XU+nV4QkZoIw14pJLV4laPkYHfUyJLNwAjqQEp4CtCuegOH3P95
-Zo1PSu1DItJwNgGAM6UcFAF9ctcN0fE4rh5+3szsOIN72vEVHHj6899Y87X+9eEH
-OTjiV5I39KAaznMg65tFp4pC8N8wK1jQangilrGuvUOrQdhdr0bA6Yw3eWQ2fWVB
-5MlVZzgAvBW1nPasgt9wzbFzj7h+ijXy1H9fGJ88M2t+gT0y7d1f5eu597vAF9An
-ZsFiuiRA9tJAFdujgC764s8ujlkI9gELE5fvUQtoXW0WlVoGh0q+y4ffAWFf90o8
-pzIv7qxZ/N20ORB1kpUUi0aLBGAjGnksOOUbK/wU1dmTNKxOqQn0HUEOg7EdjPa6
-tg84KmSTwS04JizzCtv+4T2oWleq81UUhRvLnmyyF1UZiiJiEHU=
-=m7LL
------END PGP SIGNATURE-----
+real	0m17.973s
+user	0m0.326s
+sys	0m16.806s
 
---x6j6zu2zk3nponfr--
+------------ bs=8K / count=256K / 3 ------------------
+262144+0 records in
+262144+0 records out
+2147483648 bytes (2.1 GB) copied, 17.0085 s, 126 MB/s
+
+real	0m17.993s
+user	0m0.442s
+sys	0m16.588s
+
+------------ bs=12K / count=171K / 1 ------------------
+175104+0 records in
+175104+0 records out
+2151677952 bytes (2.2 GB) copied, 16.8474 s, 128 MB/s
+
+real	0m16.860s
+user	0m0.205s
+sys	0m15.705s
+
+------------ bs=12K / count=171K / 2 ------------------
+175104+0 records in
+175104+0 records out
+2151677952 bytes (2.2 GB) copied, 16.6934 s, 129 MB/s
+
+real	0m17.669s
+user	0m0.227s
+sys	0m16.355s
+
+------------ bs=12K / count=171K / 3 ------------------
+175104+0 records in
+175104+0 records out
+2151677952 bytes (2.2 GB) copied, 16.6684 s, 129 MB/s
+
+real	0m17.654s
+user	0m0.388s
+sys	0m16.118s
+
+------------ bs=16K / count=128K / 1 ------------------
+131072+0 records in
+131072+0 records out
+2147483648 bytes (2.1 GB) copied, 17.1845 s, 125 MB/s
+
+real	0m17.200s
+user	0m0.251s
+sys	0m16.060s
+
+------------ bs=16K / count=128K / 2 ------------------
+131072+0 records in
+131072+0 records out
+2147483648 bytes (2.1 GB) copied, 16.9221 s, 127 MB/s
+
+real	0m17.902s
+user	0m0.170s
+sys	0m16.763s
+
+------------ bs=16K / count=128K / 3 ------------------
+131072+0 records in
+131072+0 records out
+2147483648 bytes (2.1 GB) copied, 16.8845 s, 127 MB/s
+
+real	0m17.868s
+user	0m0.167s
+sys	0m16.736s
+
+
