@@ -2,316 +2,248 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD2F5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21100C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 567412182B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:52:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557557579;
-	bh=8K5v2eBV+DBSUDJnUqjsD9sQ0PqIwISZetvWNoJ5Y5s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZDT0B8ziX+uS9//patQlkdqfO/I8ucuyZT8xWFawEirspmcKkM4heTNZLbUHb9hoE
-	 RlhKjUoGMEAQq0LxqQTUbCWuf8ihOfebGbiG213WHNkKOlxG3XrZZQ5tsnQBkN6igZ
-	 AwofL1cvKEa4AKdniswLceeS6mLVsa9JIcg+MV4I=
+	by mail.kernel.org (Postfix) with ESMTP id E8A7E217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+b5ISSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfEKGw5 (ORCPT
+        id S1728445AbfEKG6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 02:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbfEKGw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 02:52:57 -0400
-Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F168D20882;
-        Sat, 11 May 2019 06:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557557575;
-        bh=8K5v2eBV+DBSUDJnUqjsD9sQ0PqIwISZetvWNoJ5Y5s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N0xPi16uWYEYAa16iA6UtBK6LnmhjmokkcrW/K3HmjD3gJoesa0eaq0X9ZFtwt+JY
-         3ZWr7N8ZM0IavsuBt5cQfEiwK+avZzRiZQ9tENOX8sfR45brro7RWwY1w9oaRdxnp2
-         GCaaVxR52+RtM4ecyU7XRZ2wFstxXYd5od7dOK50=
-Date:   Sat, 11 May 2019 14:52:41 +0800
-From:   Guo Ren <guoren@kernel.org>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     tglx@linutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V2 4/7] irqchip/irq-csky-mpintc: Add triger type and
- priority
-Message-ID: <20190511065241.GA18924@guoren-Inspiron-7460>
-References: <1550455483-11710-1-git-send-email-guoren@kernel.org>
- <1550455483-11710-4-git-send-email-guoren@kernel.org>
- <20190218143823.593e7b5b@why.wild-wind.fr.eu.org>
- <20190510082510.GA25926@guoren-Inspiron-7460>
- <86r296ch6l.wl-marc.zyngier@arm.com>
+        Sat, 11 May 2019 02:58:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40715 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfEKG6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 02:58:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so4386394pfn.7;
+        Fri, 10 May 2019 23:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4525HGCKYKUIAapdwWluuqynGvAVPVK39ZeXzU/AgIU=;
+        b=B+b5ISSUBaP+7by+S8MqPgbupEfuJLYuQuLLULVYJH/wHZnQ1/Njs8RW3z7e7CHTHU
+         qeBKtsyDYjs+KH2dT8jMOpPoxurTAux8WRON1fM23QFDOlWjIcynirrI2nq8wTxcA8p8
+         QzVws4QDkvPDT0kycYzRcThn299KXw2ZnqfmBzKWWtWPb9dU/G6a1i8SmSG07poKumni
+         U4V2QkdPgfxmrJ4g3QxLBtn4CSLfWZhlbHh3wKTU/vib0bcxoaUQ6TqTPczMTccgjakd
+         dj84qXqULvojENgg0BiWmbTeCcJptwnKm5XIf6Df4VO7GPlRP+pFl7Z4SrDVvI2EdT6s
+         MMOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4525HGCKYKUIAapdwWluuqynGvAVPVK39ZeXzU/AgIU=;
+        b=pMA8V6Z/Vwe5gDfhDjeGAbU/wjWMwRAHAj2ucENBygXURi9bfy89m7Vmbn34kYCmO2
+         VkcQ6F6Ed0cs349ZUq+vFC8LUBHDPx11eCznYK6YH9gpa02rXrlechQJacEPArdTOosc
+         jG2VXaDUKnChFH6VfKTAEtVyXvcHswzQUt/f5X2+qa7Zypevv8qZ6YK0rKroUxhSHMHA
+         MYZiahYywGAUV8p8wb/uq8woDxiFNURUjXPwF0I8OpmobW14wEA2JEkemc3TbjZZ8005
+         uK5jqNkD2yvuA/uCxKah8DlqtqbsTliBMXaS/D4HamOvR0O/5m50JuG4An2BQEMwAWM0
+         mscQ==
+X-Gm-Message-State: APjAAAW0hM8RQQbZMPU83RNfwOSHyO9cZteZtfvb3WXVj9mKvqQMvXdH
+        g7dSbbhKIlNSw/OiWoX2ids=
+X-Google-Smtp-Source: APXvYqwdfhGTcoe9i5aGD0rc82DI1M58Dd90fWRsCpi0jU52OifRtTs4B2hC/572ks4l1immRnBTuA==
+X-Received: by 2002:a63:af44:: with SMTP id s4mr18397248pgo.411.1557557897791;
+        Fri, 10 May 2019 23:58:17 -0700 (PDT)
+Received: from Gentoo ([103.231.90.172])
+        by smtp.gmail.com with ESMTPSA id g71sm20395987pgc.41.2019.05.10.23.58.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 May 2019 23:58:16 -0700 (PDT)
+Date:   Sat, 11 May 2019 12:28:02 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.1.1
+Message-ID: <20190511065802.GA3945@Gentoo>
+References: <20190511065032.GA27580@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
 Content-Disposition: inline
-In-Reply-To: <86r296ch6l.wl-marc.zyngier@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190511065032.GA27580@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thx Marc,
 
-On Fri, May 10, 2019 at 07:12:18PM +0100, Marc Zyngier wrote:
-> On Fri, 10 May 2019 09:25:10 +0100,
-> Guo Ren <guoren@kernel.org> wrote:
-> > 
-> > Thx Marc,
-> > 
-> > Sorry for late reply:
-> > 
-> > On Mon, Feb 18, 2019 at 02:38:23PM +0000, Marc Zyngier wrote:
-> > > On Mon, 18 Feb 2019 10:04:40 +0800
-> > > guoren@kernel.org wrote:
-> > > 
-> > > > From: Guo Ren <ren_guo@c-sky.com>
-> > > > 
-> > > > Support 4 triger types:
-> > > >  - IRQ_TYPE_LEVEL_HIGH
-> > > >  - IRQ_TYPE_LEVEL_LOW
-> > > >  - IRQ_TYPE_EDGE_RISING
-> > > >  - IRQ_TYPE_EDGE_FALLING
-> > > > 
-> > > > Support 0-255 priority setting for each irq.
-> > > > 
-> > > > Changelog:
-> > > >  - Fixup this_cpu_read() preempted problem.
-> > > >  - Optimize the coding style.
-> > > > 
-> > > > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > > > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > > > ---
-> > > >  drivers/irqchip/irq-csky-mpintc.c | 105 +++++++++++++++++++++++++++++++++++++-
-> > > >  1 file changed, 104 insertions(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-> > > > index 99d3f3f..07a3752 100644
-> > > > --- a/drivers/irqchip/irq-csky-mpintc.c
-> > > > +++ b/drivers/irqchip/irq-csky-mpintc.c
-> > > > @@ -17,6 +17,7 @@
-> > > >  #include <asm/reg_ops.h>
-> > > >  
-> > > >  static struct irq_domain *root_domain;
-> > > > +
-> > > >  static void __iomem *INTCG_base;
-> > > >  static void __iomem *INTCL_base;
-> > > >  
-> > > > @@ -29,9 +30,12 @@ static void __iomem *INTCL_base;
-> > > >  
-> > > >  #define INTCG_ICTLR	0x0
-> > > >  #define INTCG_CICFGR	0x100
-> > > > +#define INTCG_CIPRTR	0x200
-> > > >  #define INTCG_CIDSTR	0x1000
-> > > >  
-> > > >  #define INTCL_PICTLR	0x0
-> > > > +#define INTCL_CFGR	0x14
-> > > > +#define INTCL_PRTR	0x20
-> > > >  #define INTCL_SIGR	0x60
-> > > >  #define INTCL_RDYIR	0x6c
-> > > >  #define INTCL_SENR	0xa0
-> > > > @@ -40,6 +44,51 @@ static void __iomem *INTCL_base;
-> > > >  
-> > > >  static DEFINE_PER_CPU(void __iomem *, intcl_reg);
-> > > >  
-> > > > +static unsigned long *__trigger;
-> > > > +static unsigned long *__priority;
-> > > > +
-> > > > +#define IRQ_OFFSET(irq) ((irq < COMM_IRQ_BASE) ? irq : (irq - COMM_IRQ_BASE))
-> > > > +
-> > > > +#define TRIG_BYTE_OFFSET(i)	((((i) * 2) / 32) * 4)
-> > > > +#define TRIG_BIT_OFFSET(i)	 (((i) * 2) % 32)
-> > > > +
-> > > > +#define PRI_BYTE_OFFSET(i)	((((i) * 8) / 32) * 4)
-> > > > +#define PRI_BIT_OFFSET(i)	 (((i) * 8) % 32)
-> > > > +
-> > > > +#define TRIG_VAL(trigger, irq)	(trigger << TRIG_BIT_OFFSET(IRQ_OFFSET(irq)))
-> > > > +#define TRIG_VAL_MSK(irq)	    (~(3 << TRIG_BIT_OFFSET(IRQ_OFFSET(irq))))
-> > > > +#define PRI_VAL(priority, irq)	(priority << PRI_BIT_OFFSET(IRQ_OFFSET(irq)))
-> > > > +#define PRI_VAL_MSK(irq)	  (~(0xff << PRI_BIT_OFFSET(IRQ_OFFSET(irq))))
-> > > > +
-> > > > +#define TRIG_BASE(irq) \
-> > > > +	(TRIG_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
-> > > > +	(this_cpu_read(intcl_reg) + INTCL_CFGR) : (INTCG_base + INTCG_CICFGR)))
-> > > > +
-> > > > +#define PRI_BASE(irq) \
-> > > > +	(PRI_BYTE_OFFSET(IRQ_OFFSET(irq)) + ((irq < COMM_IRQ_BASE) ? \
-> > > > +	(this_cpu_read(intcl_reg) + INTCL_PRTR) : (INTCG_base + INTCG_CIPRTR)))
-> > > > +
-> > > > +static DEFINE_SPINLOCK(setup_lock);
-> > > > +static void setup_trigger_priority(unsigned long irq, unsigned long trigger,
-> > > > +				   unsigned long priority)
-> > > > +{
-> > > > +	unsigned int tmp;
-> > > > +
-> > > > +	spin_lock(&setup_lock);
-> > > > +
-> > > > +	/* setup trigger */
-> > > > +	tmp = readl_relaxed(TRIG_BASE(irq)) & TRIG_VAL_MSK(irq);
-> > > > +
-> > > > +	writel_relaxed(tmp | TRIG_VAL(trigger, irq), TRIG_BASE(irq));
-> > > > +
-> > > > +	/* setup priority */
-> > > > +	tmp = readl_relaxed(PRI_BASE(irq)) & PRI_VAL_MSK(irq);
-> > > > +
-> > > > +	writel_relaxed(tmp | PRI_VAL(priority, irq), PRI_BASE(irq));
-> > > > +
-> > > > +	spin_unlock(&setup_lock);
-> > > > +}
-> > > > +
-> > > >  static void csky_mpintc_handler(struct pt_regs *regs)
-> > > >  {
-> > > >  	void __iomem *reg_base = this_cpu_read(intcl_reg);
-> > > > @@ -52,6 +101,9 @@ static void csky_mpintc_enable(struct irq_data *d)
-> > > >  {
-> > > >  	void __iomem *reg_base = this_cpu_read(intcl_reg);
-> > > >  
-> > > > +	setup_trigger_priority(d->hwirq, __trigger[d->hwirq],
-> > > > +				 __priority[d->hwirq]);
-> > > > +
-> > > >  	writel_relaxed(d->hwirq, reg_base + INTCL_SENR);
-> > > >  }
-> > > >  
-> > > > @@ -69,6 +121,28 @@ static void csky_mpintc_eoi(struct irq_data *d)
-> > > >  	writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
-> > > >  }
-> > > >  
-> > > > +static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
-> > > > +{
-> > > > +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> > > > +	case IRQ_TYPE_LEVEL_HIGH:
-> > > > +		__trigger[d->hwirq] = 0;
-> > > > +		break;
-> > > > +	case IRQ_TYPE_LEVEL_LOW:
-> > > > +		__trigger[d->hwirq] = 1;
-> > > > +		break;
-> > > > +	case IRQ_TYPE_EDGE_RISING:
-> > > > +		__trigger[d->hwirq] = 2;
-> > > > +		break;
-> > > > +	case IRQ_TYPE_EDGE_FALLING:
-> > > > +		__trigger[d->hwirq] = 3;
-> > > > +		break;
-> > > > +	default:
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  #ifdef CONFIG_SMP
-> > > >  static int csky_irq_set_affinity(struct irq_data *d,
-> > > >  				 const struct cpumask *mask_val,
-> > > > @@ -101,6 +175,7 @@ static struct irq_chip csky_irq_chip = {
-> > > >  	.irq_eoi	= csky_mpintc_eoi,
-> > > >  	.irq_enable	= csky_mpintc_enable,
-> > > >  	.irq_disable	= csky_mpintc_disable,
-> > > > +	.irq_set_type	= csky_mpintc_set_type,
-> > > >  #ifdef CONFIG_SMP
-> > > >  	.irq_set_affinity = csky_irq_set_affinity,
-> > > >  #endif
-> > > > @@ -121,9 +196,29 @@ static int csky_irqdomain_map(struct irq_domain *d, unsigned int irq,
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > > +static int csky_irq_domain_xlate_cells(struct irq_domain *d,
-> > > > +		struct device_node *ctrlr, const u32 *intspec,
-> > > > +		unsigned int intsize, unsigned long *out_hwirq,
-> > > > +		unsigned int *out_type)
-> > > > +{
-> > > > +	if (WARN_ON(intsize < 1))
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	*out_hwirq = intspec[0];
-> > > > +	if (intsize > 1)
-> > > > +		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-> > > > +	else
-> > > > +		*out_type = IRQ_TYPE_NONE;
-> > > 
-> > > What does IRQ_TYPE_NONE mean in this context? Shouldn't it actually be
-> > > whatever the HW defaults to? Or even better, whatever was expected in
-> > > the previous definition of the DT binding?
-> > Yes, it shouldn't use IRQ_TYPE_NONE and I'll use
-> > > IRQ_TYPE_LEVEL_HIGH.
-> 
-> I think you should use what the DT gives you and nothing else, unless
-> there is some backward compatibility scheme you want to support.
-I want backward compatibliltiy scheme, eg:
-	interrupts = <34>; (IRQ_TYPE_LEVEL_HIGH priority=0)
-	interrupts = <34 IRQ_TYPE_EDGE_RISING>; (priority=0)
-	interrupts = <34 IRQ_TYPE_EDGE_RISING 253>; (priority=253)
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-All of above DT settings could work.
+Thanks, a bunch Greg! :)
 
-> 
-> > 
-> > > 
-> > > > +
-> > > > +	if (intsize > 2)
-> > > > +		__priority[*out_hwirq] = intspec[2];
-> > > 
-> > > And what is the used priority in this case?
-> > C-SKY MPINTC could support interrupt's priority and this will be set in
-> > INTCG_CIPRTR register. It is set in csky_mpintc_enable function.
-> >
-> > > 
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > >  static const struct irq_domain_ops csky_irqdomain_ops = {
-> > > >  	.map	= csky_irqdomain_map,
-> > > > -	.xlate	= irq_domain_xlate_onecell,
-> > > > +	.xlate	= csky_irq_domain_xlate_cells,
-> > > >  };
-> > > >  
-> > > >  #ifdef CONFIG_SMP
-> > > > @@ -157,6 +252,14 @@ csky_mpintc_init(struct device_node *node, struct device_node *parent)
-> > > >  	if (ret < 0)
-> > > >  		nr_irq = INTC_IRQS;
-> > > >  
-> > > > +	__priority = kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL);
-> > > > +	if (__priority == NULL)
-> > > > +		return -ENXIO;
-> > > > +
-> > > > +	__trigger  = kcalloc(nr_irq, sizeof(unsigned long), GFP_KERNEL);
-> > > > +	if (__trigger == NULL)
-> > > > +		return -ENXIO;
-> > > 
-> > > Maybe you should consider initializing these arrays to something that
-> > > makes sense for the case where the DT doesn't carry this information
-> > > (which is 100% of the DTs up to this point).
-> > Yes, and zero is enough.
-> > 
-> > /**
-> >  * kcalloc - allocate memory for an array. The memory is set to zero.
-> >  * @n: number of elements.
-> >  * @size: element size.
-> >  * @flags: the type of memory to allocate (see kmalloc).
-> >  */
-> > static inline void *kcalloc(size_t n, size_t size, gfp_t flags)
-> > {
-> > 	return kmalloc_array(n, size, flags | __GFP_ZERO);
-> > }
-> 
-> Trust me, I have a rather precise idea of how kcalloc works, and I
-> have a copy of the kernel source handy, so no need to paste it in an
-> email.
-> 
-> My question was about the default values: Everything gets a default
-> priority of zero, and nothing seem to set it to another value
-> either. So why do we have this allocation anyway?
-__priority and __trigger are used to setup interrupt controller's irq
-number's priority and trigger type. (See previous answer)
+On 08:50 Sat 11 May , Greg KH wrote:
+>I'm announcing the release of the 5.1.1 kernel.
+>
+>All users of the 5.1 kernel series must upgrade.
+>
+>The updated 5.1.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.1.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+>
+>thanks,
+>
+>greg k-h
+>
+>------------
+>
+> Makefile                               |    2
+> arch/arm64/include/asm/futex.h         |   55 ++-
+> drivers/acpi/acpi_lpss.c               |    4
+> drivers/bluetooth/hci_bcm.c            |   20 +
+> drivers/cpufreq/armada-37xx-cpufreq.c  |   22 +
+> drivers/hv/hv.c                        |    1
+> drivers/hwtracing/intel_th/pci.c       |    5
+> drivers/i3c/master.c                   |    5
+> drivers/iio/adc/qcom-spmi-adc5.c       |    1
+> drivers/scsi/lpfc/lpfc_attr.c          |  196 ++++++-------
+> drivers/scsi/lpfc/lpfc_ct.c            |   12
+> drivers/scsi/lpfc/lpfc_debugfs.c       |  474 ++++++++++++++++-----------------
+> drivers/scsi/lpfc/lpfc_debugfs.h       |    6
+> drivers/scsi/qla2xxx/qla_attr.c        |    4
+> drivers/scsi/qla2xxx/qla_nvme.c        |   19 -
+> drivers/scsi/qla2xxx/qla_target.c      |    4
+> drivers/soc/sunxi/Kconfig              |    1
+> drivers/staging/greybus/power_supply.c |    2
+> drivers/staging/most/cdev/cdev.c       |    2
+> drivers/staging/most/sound/sound.c     |    2
+> drivers/staging/wilc1000/wilc_netdev.c |    2
+> drivers/usb/class/cdc-acm.c            |   32 +-
+> drivers/usb/dwc3/Kconfig               |    6
+> drivers/usb/dwc3/core.c                |    2
+> drivers/usb/musb/Kconfig               |    2
+> drivers/usb/serial/f81232.c            |   39 ++
+> drivers/usb/storage/scsiglue.c         |   26 -
+> drivers/usb/storage/uas.c              |   35 +-
+> include/net/bluetooth/hci_core.h       |    3
+> kernel/futex.c                         |  188 ++++++++-----
+> kernel/irq/manage.c                    |    4
+> lib/ubsan.c                            |   49 +--
+> net/bluetooth/hci_conn.c               |    8
+> net/bluetooth/hidp/sock.c              |    1
+> net/bluetooth/l2cap_core.c             |    9
+> sound/soc/intel/common/sst-firmware.c  |    8
+> 36 files changed, 715 insertions(+), 536 deletions(-)
+>
+>Alan Stern (1):
+>      usb-storage: Set virt_boundary_mask to avoid SG overflows
+>
+>Alexander Shishkin (1):
+>      intel_th: pci: Add Comet Lake support
+>
+>Andrew Vasquez (1):
+>      scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+>
+>Andrey Ryabinin (1):
+>      ubsan: Fix nasty -Wbuiltin-declaration-mismatch GCC-9 warnings
+>
+>Bjorn Andersson (1):
+>      iio: adc: qcom-spmi-adc5: Fix of-based module autoloading
+>
+>Chen-Yu Tsai (1):
+>      Bluetooth: hci_bcm: Fix empty regulator supplies for Intel Macs
+>
+>Christian Gromm (1):
+>      staging: most: sound: pass correct device when creating a sound card
+>
+>Dan Carpenter (1):
+>      i3c: Fix a shift wrap bug in i3c_bus_set_addr_slot_status()
+>
+>Dexuan Cui (1):
+>      Drivers: hv: vmbus: Remove the undesired put_cpu_ptr() in hv_synic_cleanup()
+>
+>Giridhar Malavali (1):
+>      scsi: qla2xxx: Set remote port devloss timeout to 0
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.1.1
+>
+>Gregory CLEMENT (1):
+>      cpufreq: armada-37xx: fix frequency calculation for opp
+>
+>Hans de Goede (1):
+>      ACPI / LPSS: Use acpi_lpss_* instead of acpi_subsys_* functions for hibernate
+>
+>Ji-Ze Hong (Peter Hong) (1):
+>      USB: serial: f81232: fix interrupt worker not stop
+>
+>Johan Hovold (2):
+>      staging: greybus: power_supply: fix prop-descriptor request size
+>      USB: cdc-acm: fix unthrottle races
+>
+>Luiz Augusto von Dentz (1):
+>      Bluetooth: Fix not initializing L2CAP tx_credits
+>
+>Marc Gonzalez (1):
+>      usb: dwc3: Allow building USB_DWC3_QCOM without EXTCON
+>
+>Marcel Holtmann (1):
+>      Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+>
+>Oliver Neukum (1):
+>      UAS: fix alignment of scatter/gather segments
+>
+>Prasad Sodagudi (1):
+>      genirq: Prevent use-after-free and work list corruption
+>
+>Quinn Tran (1):
+>      scsi: qla2xxx: Fix device staying in blocked state
+>
+>Ross Zwisler (1):
+>      ASoC: Intel: avoid Oops if DMA setup fails
+>
+>Samuel Holland (1):
+>      soc: sunxi: Fix missing dependency on REGMAP_MMIO
+>
+>Silvio Cesare (1):
+>      scsi: lpfc: change snprintf to scnprintf for possible overflow
+>
+>Suresh Udipi (1):
+>      staging: most: cdev: fix chrdev_region leak in mod_exit
+>
+>Tetsuo Handa (1):
+>      staging: wilc1000: Avoid GFP_KERNEL allocation from atomic context.
+>
+>Thinh Nguyen (1):
+>      usb: dwc3: Fix default lpm_nyet_threshold value
+>
+>Will Deacon (2):
+>      locking/futex: Allow low-level atomic operations to return -EAGAIN
+>      arm64: futex: Bound number of LDXR/STXR loops in FUTEX_WAKE_OP
+>
+>Young Xiao (1):
+>      Bluetooth: hidp: fix buffer overflow
+>
 
-Best Regards
- Guo Ren
+
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzWcnAACgkQsjqdtxFL
+KRWnvgf/YHT0hK7SF2Kh1xR/gCx8/pB8p0k443HMizb6rZJKNWOCe8F+PwmJXxE+
+tNzJh0ZdxHGO89/VQ5poz0ZFn+WQjpKvuQtPg7hxvOFzEHattO6sur6LBZfKZMsV
+6mQr236L1nn19U8KECdwgrKsDO6T1OtbLZogk1xSowpOrPqBWhbt68WtPhpMgQKJ
+2R7hsXSyizz5IuqFYfkRc6PZx8qdZaFPH0aOq5vruQWJF5WzpfhLcffB4XXT4gQb
+215a0lZ9TxMwbbVqS+jwREPcL+/P+blHlX2U/EGAYNeOnl64dbjigqKFsFsDRbRl
+zANt+7dUYVu1j1/hOCIVNKnA9Efxng==
+=oAWH
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
