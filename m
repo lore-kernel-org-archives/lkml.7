@@ -2,122 +2,159 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52A7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29188C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7315E216C4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50B7217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 06:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l/abIgi1"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="BVXw6bzp";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rDyd390K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfEKGUs (ORCPT
+        id S1728371AbfEKGdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 02:20:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34208 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfEKGUs (ORCPT
+        Sat, 11 May 2019 02:33:00 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:55481 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726502AbfEKGdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 02:20:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id n19so4365718pfa.1;
-        Fri, 10 May 2019 23:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qJ6baBOhjbTgfhgQ7m0z/YKuXkTsd3b70o/ipcNU1J0=;
-        b=l/abIgi17jUI7sh4Ke8I0OIwPiOLxb7fi1Dlc6rsou7M0rz/nMXkjJvZyWy6AmSXVe
-         nTEPSIDwapqVlf0hkZz3Jc0GlyzIryKQ8tmfo18Mbm4X5SfZzUtVlOyq0lmcTxI2/V+X
-         tzKpCQHJT1uBuP9ORtt3W6rSrcXd1dToueekCEmhj0feNm6Z3V2o4p7pM0CER/7dNaK+
-         rxQjOa7r4di5+Wu0ODcjZKAYPrRkBTMRJe5QA7+bRmnQLzUBnYnP0lZenChnlaD4BQsv
-         GS7wvRAyab5J85T5ccvosSO/Kj9H6IbYyzdbZSNs96FAFYGHjlNe62+Jf7MF6jYvFTP4
-         WURw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qJ6baBOhjbTgfhgQ7m0z/YKuXkTsd3b70o/ipcNU1J0=;
-        b=SXXoHslxi+/l00N0BOtWKyO/BsHz3hBff1JW5QfHHv44G2EQnewua0mGPeOcUvbKH3
-         uuK4ckH0jxFtyqTh7Hwz+vgfHDIOUODZmHYxDA7z/P/r/s96MyQ0CGQC+P01YCrzYqok
-         /FzXVx2DMh4HQf8Ld6zgdr3SzO6wwdiWcp94b3dPvut0iikhovL/d7H31y0deqIIVTjO
-         An0I9HX+bWhiWxTHrVN3UA9fDbl5W8uumbzSaRxqzrcOYT7fbcgMF0X1GpvvfYa5dHhh
-         og0uB2oBp3veoMcfF/J4hey4f9OBvZkRv5i6Bs2l6I/bvzTJza/DN4dsydJU8J3Teo1J
-         0iSA==
-X-Gm-Message-State: APjAAAXD+jXm7JkqTImSl4vLs98tPSbeA+y2y5X0rPUnC8BBjuXxqycI
-        tpBG2dJn07sWlz9hrR4ibkA=
-X-Google-Smtp-Source: APXvYqxZ6WWkgD3Uu87LcJG0AWsxWGz9OUOcMujZFe/mKEoTSFbmXY9lfsPMxpsDVWnE+SkB6Aj2wg==
-X-Received: by 2002:a62:5103:: with SMTP id f3mr20323036pfb.146.1557555647336;
-        Fri, 10 May 2019 23:20:47 -0700 (PDT)
-Received: from NixOS ([103.231.91.38])
-        by smtp.gmail.com with ESMTPSA id y10sm10284128pfm.27.2019.05.10.23.20.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 May 2019 23:20:45 -0700 (PDT)
-Date:   Sat, 11 May 2019 11:50:35 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: Re: Linux v5.1.1
-Message-ID: <20190511062035.GA1827@NixOS>
-References: <CA+icZUWSJSnKcoYeh__v_BLnXP5O0XGewLdGenz13extauRr_w@mail.gmail.com>
- <20190511055210.GF14153@kroah.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Content-Disposition: inline
-In-Reply-To: <20190511055210.GF14153@kroah.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Sat, 11 May 2019 02:33:00 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 022E821E44;
+        Sat, 11 May 2019 02:32:59 -0400 (EDT)
+Received: from imap37 ([10.202.2.87])
+  by compute5.internal (MEProxy); Sat, 11 May 2019 02:32:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm3; bh=urVdJJyBFXeY2/ER+RB7IsvUiLq/kfA
+        pyA+UFACJ3qQ=; b=BVXw6bzp908KUqhjY+XV7cr7cONQU9BDoqIAawsxRGXFhAy
+        ajielz/saTIYTHRjMMzS/yoY3O9aT/svpND+YNewT2ty6ENF6OoYOovUQlvb1OnP
+        JBgDT4D2BfT5cNMzI6fwlYax2LWZuzxW6paRgpEgfc70YeDoyOJbxw7QCISoHDYD
+        2SrH/isHrwE38HArpKrjUsD8Vt4wTwu4ZAFwqqGUcRaqyLLcFaDq10pjzAV6la+X
+        4J8qAW2AqXnLs+mPFyPLZSFQqRtJwwNxDJHaNC+sNKQw3qsTy1l1AnEdcUfaQ4yo
+        pGR5w2NL8krMwTOE9hdeuj8qZs1JgO+X7hWb6nA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=urVdJJ
+        yBFXeY2/ER+RB7IsvUiLq/kfApyA+UFACJ3qQ=; b=rDyd390KW5fIk+qSnIygNh
+        Gj9p/62GIv/M+jHVVJlrw4hpGIeR8eN1X1RkZ81Anh0pxs7ZOyc3mxbHecZFpT5r
+        ZkOv/UIVzG4B20aXRN1ne+wPyWjrJzMRfLo9desvZ/lwdJxdhr9yNzr/I3JVtMgn
+        Na8zY2QIGfVHVypafhAJ6a1iQ3kOFZpwnz8JCRHPRfJZuYuSBxWQszKPstjDQN26
+        otKrmINI+/60tg6YFH8oEoZrDYfUXs1QDCxH33bZnTkwX4BbdqQrV8HcOvVsNGXR
+        KyPWtv/cKroDp1bAU9uoiQyv4a89j+D/KBeXrUz/gbUrNLs7+2A0q0sfCl1IGUng
+        ==
+X-ME-Sender: <xms:mmzWXClljGp0htJ7-FtypiL6LRyVvmmUdppPeBptTbZ8pF75Bp-qNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrkeelgdduudduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpefofgggkfgjfhffhffvufgtsehttdertder
+    redtnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsehtohgsihhnrdgttgen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:mmzWXAtk17q8FFEkwLwHfjzUzfElrsjK7WcC67T-Fu0Du8DxsBEgFg>
+    <xmx:mmzWXNn7TOC6j4t6px9tVKb-s7gWK4M3-cXT6RjLjyN1rVJOdjJwZw>
+    <xmx:mmzWXDs763L2cBkm6sA8TVh-cJZDFeQ7C20mxo_KXELwca0tBtTwng>
+    <xmx:mmzWXMUzKv74WMJs8U8qTxUjrXDr3_dWIDHjWThFRJD2UeUISPvfCA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 22D9EDEC25; Sat, 11 May 2019 02:32:58 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-449-gfb3fc5a-fmstable-20190430v1
+Mime-Version: 1.0
+Message-Id: <1aa4ce74-b0a5-474b-95ad-7402a4a2710a@www.fastmail.com>
+In-Reply-To: <20190510094025.wiw37baomizk6bip@pathway.suse.cz>
+References: <20190430233803.GB10777@eros.localdomain>
+ <CAJZ5v0g34RZmugeBm63UT3XRvUmdJtvCAjcowdwDffrRorrscQ@mail.gmail.com>
+ <20190510023538.GA10356@eros.localdomain>
+ <20190510094025.wiw37baomizk6bip@pathway.suse.cz>
+Date:   Sat, 11 May 2019 02:32:19 -0400
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     "Petr Mladek" <pmladek@suse.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Tyrel Datwyler" <tyreld@linux.vnet.ibm.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Miroslav Benes" <mbenes@suse.cz>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: Re: kobject_init_and_add() confusion
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-"Dinner happened before I could get to them all :)" he he he he Greg! :) RO=
-FL=20
+On Fri, May 10, 2019, at 19:40, Petr Mladek wrote:
+> On Fri 2019-05-10 12:35:38, Tobin C. Harding wrote:
+> > On Wed, May 01, 2019 at 09:54:16AM +0200, Rafael J. Wysocki wrote:
+> > > On Wed, May 1, 2019 at 1:38 AM Tobin C. Harding <me@tobin.cc> wrote:
+> > > > TODO
+> > > > ----
+> > > >
+> > > > - Fix all the callsites to kobject_init_and_add()
+> > > > - Further clarify the function docstring for kobject_init_and_add() [perhaps]
+> > > > - Add a section to Documentation/kobject.txt [optional]
+> > > > - Add a sample usage file under samples/kobject [optional]
+> > > 
+> > > The plan sounds good to me, but there is one thing to note IMO:
+> > > kobject_cleanup() invokes the ->release() callback for the ktype, so
+> > > these callbacks need to be able to cope with kobjects after a failing
+> > > kobject_add() which may not be entirely obvious to developers
+> > > introducing them ATM.
+> > 
+> > It has taken a while for this to soak in.  This is actually quite an
+> > insidious issue.  If I give an example and perhaps we can come to a
+> > solution.  This example is based on the code (and assumptions) in
+> > mm/slub.c
+> > 
+> > If a developer has an object that they wish to add to sysfs they go
+> > ahead and embed a kobject in it.  Correctly set up a ktype including
+> > release function that just frees the object (using container of).  Now
+> > assume that the object is already set up and in use when we go to set up
+> > the sysfs entry.
+> 
+> It would say that this is a bad design. I see the creation of the sysfs
+> entry as part of the initialization. The object should not be made
+> usable before it is fully initialized.
 
-On 07:52 Sat 11 May , Greg Kroah-Hartman wrote:
->On Fri, May 10, 2019 at 09:47:14PM +0200, Sedat Dilek wrote:
->> Hi Greg,
->>
->> I have seen that all other Linux-stable Git branches got a new release.
->>
->> What happened to Linux-stable-5.1.y and v5.1.1 release?
->
->Dinner happened before I could get to them all :)
->
->> Is there a show-stopper?
->
->Nope, nothing was "supposed" to be released until today, according to
->the -rc announcement, so there's no real issue.
->
->Dealing with 5 stable trees at once is not trivial, please give us a
->chance...
->
->greg k-h
+It may be a case of my lack of understanding of object lifecycles here and not bad design, if as you say creation of sysfs is always part of initialisation then the problem I describe above should not exist (and it may well not, assumptions behind code are hard to grok).
+ 
+> > If kobject_init_and_add() fails and we correctly call
+> > kobject_put() the containing object will be free'd.  Yet the calling
+> > code may not be done with the object, more to the point just because
+> > sysfs setup fails the object is now unusable.  Besides the interesting
+> > theoretical discussion this means we cannot just go and willy-nilly add
+> > calls to kobject_put() in the error path of kobject_init_and_add() if
+> > the original code was not written under the assumption that the release
+> > method could be called during the error path (I have found 2 places at
+> > least where behaviour of calling the release method is non-trivial to
+> > ascertain).
+> 
+> kobject usage is complicated and it is easy to make it wrong. I think
+> that this is motivation to improve the documentation and adding
+> good examples.
 
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
+Cool, I did work on adding your example from last week into samples/kobject but I wasn't able to come up with anything that I was totally happy with.  Hard to use API needs minimal concise correct examples right, I'm going to keep at that as I learn more from seeing/patching current kobject code.
 
------BEGIN PGP SIGNATURE-----
+> > I guess, as Greg said, its just a matter that reference counting within
+> > the kernel is a hard problem.  So we fix the easy ones and then look a
+> > bit harder at the hard ones ...
+> 
+> The people working on the affected subsystem should be able to help.
+> They might have misunderstood kobjects. But they should be more
+> familiar with the other dependencies.
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzWaa0ACgkQsjqdtxFL
-KRWGuwf/cQgzTbFCkLqcszTWEUmPw3cbO/COTclMJT9rExEO1hwelLwPYQKQavhC
-/oCKp1Nr09qvZDJla2O4HW9CjyBBVPaO93ClIb6ydGBLYkvib0H127o0SKRFEk7p
-oGGKE5uaHqib6TAgH+hS3KlxtCsM5oVyEGFRj/rKYzo4ZebLzM6cs7qT6C5DAsQ2
-0SjccrsLBHDQCjGl2d7/wzhAA1v/+V80wgJDphQ5OYAJfTQfGJLV5O/d0mRVTitE
-Z+dNIsKsgT2O23ffJ12hDobccih3QQuOtBpCdBLfFj2KgmSGfPCfN50obuvaL+G9
-gkF/BzH0RqPE1niXoUjM15GKA+WjOw==
-=+ZYm
------END PGP SIGNATURE-----
+Sure thing.
 
---fdj2RfSjLxBAspz7--
+> Thanks for working on it.
+
+Things that bend ones brain are the funnest to work on ;)
+
+Cheers,
+Tobin.
