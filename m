@@ -2,81 +2,38 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32959C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 17:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6938C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 17:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F218D2173B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 17:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557595687;
-	bh=SarPsF9wVdDjeaHDnr3nVckP4R3JfsrB7CQ+qWWWYaI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1w+wrll9bkWIhX/TqPO+8562rzBJmNthiQusbVHKWwqriRCXAWfWuoEgTAbOQEaMo
-	 l1ZP3aLdKEjw/9USZAZKNObsizOKanTcIjUEhQJ1UBEoqk0EGeHbxRBBEbQW8YptQ/
-	 yYawNuIRkreVFV/lEKBFU3X0PTgabotrQ+Jp3jK4=
+	by mail.kernel.org (Postfix) with ESMTP id 81C0A2173B
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 17:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfEKR2F (ORCPT
+        id S1727950AbfEKRbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 13:28:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39085 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbfEKR2F (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 13:28:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q10so7634824ljc.6
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 10:28:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/KXVrXCOoOJzYs9luHiRMdkROvz6GYngOgjcnMA4n3A=;
-        b=Hety9aPlucNn5YIwnDgl8T3xjH+kXuoGBPFuY/OFtMOJcXBxT9yY1dN0jhbCAtXCK0
-         Fa6aOPlBmmvU40A7F6POImQufHmWg9Vb9DX0ym6/HYmPb7jC+B4zImEGQr9edmzZr+8E
-         D7AZsufzimvvqZsX7ErQ2Z7DvHrgK4oj1AIJI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/KXVrXCOoOJzYs9luHiRMdkROvz6GYngOgjcnMA4n3A=;
-        b=tL59STHlG7KvxthADOomAYvJB4kUae69/1ayg///TD2z2nC8hNBQv3/KwCk6g/W0xs
-         q/FqxycDbiTNbjPqna07X9FLR9mT0G43kpeRGilRNR+/fYD4VFhEfq8dbc0vDnOrX4RB
-         KU65908uviUY72JjuYA/tDDnOWjcguv7Dcz0+b5MgCUaU1FgRsfA1oSRaywVyWypvFgT
-         T0zwLLF26tZIGFagVkFOX6Y1eTdItM1BliLZZD9HnOv65ZZNlQFwXDYqIFj5yR/NpZyd
-         vf2yiU1lOfQ7lO8Y+b/za9/UBrqvkJo01OtPs0qzypRTazVbbSgvbEhYwNhM5SzsIpOA
-         7nag==
-X-Gm-Message-State: APjAAAWHrnHIQCbXlKMUFIh+ug9JTPnd/cpXlpgqPQCRFB7MS6eFZZCd
-        FtirHJwbzRUEJlx8udY/BSKc6R7y+Ks=
-X-Google-Smtp-Source: APXvYqz+ZJWd7jdDD7+oFtJkTWk4TwOIH4Pwmav3jgzA2uXD4QU+hRbfz5xoosLcdDOvPHrOvOD/7A==
-X-Received: by 2002:a2e:801a:: with SMTP id j26mr9153479ljg.2.1557595682015;
-        Sat, 11 May 2019 10:28:02 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id w17sm1498713ljj.31.2019.05.11.10.28.01
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 10:28:01 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id w1so5064263ljw.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 10:28:01 -0700 (PDT)
-X-Received: by 2002:a2e:9d86:: with SMTP id c6mr9078356ljj.135.1557595287924;
- Sat, 11 May 2019 10:21:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190506165439.9155-1-cyphar@cyphar.com> <20190506165439.9155-6-cyphar@cyphar.com>
- <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
- <20190506191735.nmzf7kwfh7b6e2tf@yavin> <20190510204141.GB253532@google.com>
- <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
- <20190510225527.GA59914@google.com> <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
-In-Reply-To: <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 11 May 2019 13:21:11 -0400
-X-Gmail-Original-Message-ID: <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
-Message-ID: <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
+        Sat, 11 May 2019 13:31:55 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:62220 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfEKRbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 13:31:55 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 345DCA1102;
+        Sat, 11 May 2019 19:31:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id U96iYXqkAw6V; Sat, 11 May 2019 19:31:28 +0200 (CEST)
+Date:   Sun, 12 May 2019 03:31:13 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Jann Horn <jannh@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Jeff Layton <jlayton@kernel.org>,
         "J. Bruce Fields" <bfields@fieldses.org>,
@@ -96,63 +53,83 @@ Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
         Linux API <linux-api@vger.kernel.org>,
         kernel list <linux-kernel@vger.kernel.org>,
         linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+Message-ID: <20190511173113.qhqmv5q5f74povix@yavin>
+References: <20190506165439.9155-1-cyphar@cyphar.com>
+ <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+ <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+ <20190510225527.GA59914@google.com>
+ <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
+ <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
+ <CAHk-=whOL-NBso8X5S8s597yZEOMBoU8chkMFVTi8b-ff2qARg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i44ldloocwzu2rot"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whOL-NBso8X5S8s597yZEOMBoU8chkMFVTi8b-ff2qARg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 1:00 PM Andy Lutomirski <luto@amacapital.net> wrote=
-:
->
-> A better =E2=80=9Cspawn=E2=80=9D API should fix this.
 
-Andy, stop with the "spawn would be better".
+--i44ldloocwzu2rot
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Spawn is garbage. It's garbage because it's fundamentally too
-inflexible, and it's garbage because it is quite complex to try to
-work around the inflexibility by having those complex "action pointer
-arrays" to make up for its failings.
+On 2019-05-11, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Sat, May 11, 2019 at 1:21 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > Notice? None of the real problems are about execve or would be solved
+> > by any spawn API. You just think that because you've apparently been
+> > talking to too many MS people that think fork (and thus indirectly
+> > execve()) is bad process management.
+>=20
+> Side note: a good policy has been (and remains) to make suid binaries
+> not be dynamically linked. And in the absence of that, the dynamic
+> linker at least resets the library path when it notices itself being
+> dynamic, and it certainly doesn't inherit any open flags from the
+> non-trusted environment.
+>=20
+> And by the same logic, a suid interpreter must *definitely* should not
+> inherit any execve() flags from the non-trusted environment. So I
+> think Aleksa's patch to use the passed-in open flags is *exactly* the
+> wrong thing to do for security reasons. It doesn't close holes, it
+> opens them.
 
-And spawn() would fundamentally have all the same permission issues
-that you now point to execve() as having, so it doesn't even *solve*
-anything.
+Yup, I've dropped the patch for the next version. (To be honest, I'm not
+sure why I included any of the other flags -- the only one that would've
+been necessary to deal with CVE-2019-5736 was AT_NO_MAGICLINKS.)
 
-You've said this whole "spawn would fix things" thing before, and it's
-wrong. Spawn isn't better. Really. If fixes absolutely zero things,
-and the only reason for spawn existing is because VMS and NT had that
-broken and inflexible model.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-There's at least one paper from some MS people about how "spawn()" is
-wonderful, and maybe you bought into the garbage from that. But that
-paper is about how they hate fork(), not because of execve(). And if
-you hate fork, use "vfork()" instead (preferably with an immediate
-call to a non-returning function in the child to avoid the stack
-re-use issue that makes it so simple to screw up vfork() in hard to
-debug ways).
+--i44ldloocwzu2rot
+Content-Type: application/pgp-signature; name="signature.asc"
 
-execve() is a _fine_ model. That's not the problem in this whole issue
-at all - never was, and never will be.
+-----BEGIN PGP SIGNATURE-----
 
-The problem in this discussion is (a) having privileges you shouldn't
-have and (b) having other interfaces that make it easyish to change
-the filesystem layout to confuse those entities with privileges.
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzXBuEACgkQSnvnv3De
+m597fQ//WXBoDgwSchtS2eCgORVEt/GpkQAgePJYwEpQBr0+c1V9sqX1MgF8PyV+
+RfEKv1o0pv1ObTZHVoGJtIayxPKpDF+fC7O5c5uEqMA+9q0rVd+wlZGCS981L19J
+g2/7Wr7k/keX1kuSxcSUtuiDqwfNtQNlX0wHsV7LBoAsnCRzZAOfooyN9kylZ5wl
+LrWn6dVN9xB9ZLskG9Ygsu0ea8scE/IPhrj4C0qjVtNrHcblANdXUfXtcMWd4N3v
+6NbA8FQoK0+mqnVg/fe390z80RHMtjcGQNWjrPTDRiozevLmwLVY5N2GL6VdQqUn
+pXxdZNnw8YgRBDk1jZzMtfQE1cIMiLrvLHHgw5HHIoHXWS0O3Io471A/lciG5oOw
+j7XI7PHZ5AOScO0OokJwjdTLWJDM4RbNMa7pbccJfcpZVAbkkei/Ok5wc4Fmaz/V
+3t7BPXmG3hH5QJRWijBWk/UVhbEw9wr/ZrKfs92RJyMV1ssVm05ie3QUI2J7PeE+
+nMAzIhmjsnB6hE1hMdh9KYiF4jNE5+pEHAqwftby57wAZFLfGp4DoLqZ6NlNAHz2
+FlBp+5f+bj/hyRqi3ZnhWnTgrMzOhwPWW44hoYYp81sQXC6JachI1Hg1uMlRlDVw
+HaUI9KXoYI8KKUxYhX/AA9kDkkaJlJ7I6V73lh5SlDU6SFLPACk=
+=wYoq
+-----END PGP SIGNATURE-----
 
-So the reason the open flags can be problematic is exactly because
-they effectively change filesystem layout. And no, it's not just
-AT_THIS_ROOT, although that's the obvious one. Things like "you can't
-follow symlinks" can also effectively change the layout: imagine if
-you have a PATH-like lookup model, and you end up having symlinks as
-part of the standard filesystem layout.. Now a "don't follow symlinks"
-can turn the *standard* executable into something that isn't found,
-and then you might end up executing something else instead (think root
-having '.' as the last entry in path, which some people used to
-suggest as the fix for the completely bad "first entry" case)..
-
-Notice? None of the real problems are about execve or would be solved
-by any spawn API. You just think that because you've apparently been
-talking to too many MS people that think fork (and thus indirectly
-execve()) is bad process management.
-
-                Linus
+--i44ldloocwzu2rot--
