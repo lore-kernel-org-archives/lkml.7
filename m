@@ -2,120 +2,164 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BF7C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DDBC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3AB20989
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W8NR9LnI"
+	by mail.kernel.org (Postfix) with ESMTP id B365920989
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbfEKPqz (ORCPT
+        id S1728673AbfEKPtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 11:46:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40997 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728624AbfEKPqz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 11:46:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d12so10771507wrm.8
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 08:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=9EyAvll/ATAIGdWTAfOnNvm6AJWZDwOSY5TYnJ4aLu4=;
-        b=W8NR9LnIM746OC6UAr+I4/mwaTFWbv/cXM9gmgPM3KoD0ltprY3CktFRo2rAiOPbfr
-         4VhYGiIKa+rfIYOCCPIx4IMHeveJirtAo3Ya+zx7+TstMMo14LBljvp7nPdgFK5M1Dyp
-         wyGi0Mft856R9ZsfcbaAH+AnJr6G6SzFMSCtQ3FtYpRO8Ucn56f2eiZTa+32s0+Luat2
-         WObr+TQMnPFKjqYEK6SUC1Gtw47yjmdPe70Rz8jDksZKduyeield1foYZhD+qWaeewTb
-         lZEVwyr8ulZWRoKyFgqd6DdaueObW7u5l/7YBjzndbwKzWQzW4AQ5ODiRidBxSk/pFBI
-         y5zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=9EyAvll/ATAIGdWTAfOnNvm6AJWZDwOSY5TYnJ4aLu4=;
-        b=nDV3UtVYb5kLcOO+EeP4Jx4DTsLtfZPo6Yp0k72VAKW7u3pxb22ZCK6+ENnNGpzx5J
-         D8h47QhMJZI5fAtgKgf8kUQOvW5Ori7F5ii/pbWPGNhF+M/sQdepTbvoCDZwFOGk8q0c
-         SNzENx22nQKJn4AP0k0VnBEOddBoxv9yGXUU16m+1W1y0wOd0dEyH4bdGsMcH7MLe1VY
-         E7eyRiwgWbHarb+8lO7y8QhlzMBT4sAZDII6+xxruFo65Utn1Cbtn1KphOze7ePoixKE
-         zFGkQMvZbPPpAkVjZ8iEbQerQnA/w8a+9OqDKCRUSMDoK0D1tJFloZPdoR2L4m3/buAJ
-         JxNg==
-X-Gm-Message-State: APjAAAVBm7OOdUll0Tvk2Mz++p50WMidGTIUqMsUw/ZsBKSF1UDwcMYw
-        xJE//kfRZi+XsF3RMxMH7hVavA==
-X-Google-Smtp-Source: APXvYqxB8d87irChUP/Gna5KPAG1k70rARyG7XAXhFYcz1xreLZlylj5y6uj22gjPVvPo3HoulXyHA==
-X-Received: by 2002:a5d:50c7:: with SMTP id f7mr11637247wrt.95.1557589613287;
-        Sat, 11 May 2019 08:46:53 -0700 (PDT)
-Received: from boomer.baylibre.com (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.gmail.com with ESMTPSA id y6sm11486952wrw.60.2019.05.11.08.46.49
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 11 May 2019 08:46:52 -0700 (PDT)
-Message-ID: <bf1360ab62a4e7bd3928052ebb6c969e8059f29e.camel@baylibre.com>
-Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Date:   Sat, 11 May 2019 17:46:45 +0200
-In-Reply-To: <7ho94ac4jn.fsf@baylibre.com>
-References: <20190510164940.13496-1-jbrunet@baylibre.com>
-         <20190510164940.13496-6-jbrunet@baylibre.com> <7ho94ac4jn.fsf@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Sat, 11 May 2019 11:49:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728618AbfEKPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 11:49:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 12BE4AFF1;
+        Sat, 11 May 2019 15:49:38 +0000 (UTC)
+Date:   Sun, 12 May 2019 01:49:23 +1000
+From:   Aleksa Sarai <asarai@suse.de>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+Message-ID: <20190511154923.z5woxv4dqperuqty@mikami>
+References: <20190506165439.9155-1-cyphar@cyphar.com>
+ <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+ <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+ <20190510225527.GA59914@google.com>
+ <CAHrFyr5vjTZfgtMsHwr6iwVVFxVsU3UCOiEq=FM-rjr0kPGHUw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="borziu3c5eych3ip"
+Content-Disposition: inline
+In-Reply-To: <CAHrFyr5vjTZfgtMsHwr6iwVVFxVsU3UCOiEq=FM-rjr0kPGHUw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-05-10 at 15:45 -0700, Kevin Hilman wrote:
-> Jerome Brunet <jbrunet@baylibre.com> writes:
-> 
-> > Enable the network interface of the SEI510 which use the internal PHY.
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> 
-> I tried testing this series on SEI510, but I must still be missing some
-> defconfig options, as the default defconfig doesn't lead to a working
-> interface.
 
-That's weird. AFAICT, the net part has hit Linus's tree.
-You should have everything needed by default, the mdio mux has
+--borziu3c5eych3ip
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> default m if ARCH_MESON
+On 2019-05-11, Christian Brauner <christian@brauner.io> wrote:
+> > In my opinion, the problems here are:
+> >
+> >  - Apparently some people run untrusted containers without user
+> >    namespaces. It would be really nice if people could not do that.
+> >    (Probably the biggest problem here.)
+>
+> I know I sound like a broken record since I've been going on about this
+> forever together with a lot of other people but honestly,
+> the fact that people are running untrusted workloads in privileged contai=
+ners
+> is the real issue here.
 
-> 
-> 
-> I tried adding this kconfig fragment[1], and the dwmac probes/inits but
-> I must still be missing something, as the dwmac is still failing to find
-> a PHY.  Boot log: https://termbin.com/ivf3
-> 
-> I have the same result testing on the u200.
+I completely agree. It's a shit-show, and it's caused by bad defaults in
+Docker and (now) podman. To be fair, they both now support rootless
+containers but the default is still privileged containers.
 
-I don't any other patch pending for the network of the g12a.
-Maybe I've done something wrong while rebasing. I'll check on monday.
+They do support user namespaces (though it should be noted that LXD's
+support is much nicer from a security standpoint) but unless it's the
+default the support is almost pointless. In the case of Docker it can
+lead to some usability issues when you enable it (which I believe is the
+main justification for it not being the default).
 
-> 
-> Kevin
-> 
-> [1] amlogic network kconfig fragment
-> CONFIG_STMMAC_ETH=y
-> 
-> # following are needed, but automatically enabled if above is set
-> #CONFIG_STMMAC_PLATFORM=m
-> #CONFIG_DWMAC_MESON=m
-> 
-> CONFIG_PHYLIB=y
-> CONFIG_MICREL_PHY=y
-> CONFIG_REALTEK_PHY=y
-> 
-> CONFIG_MDIO_BUS_MUX_MESON_G12A=y
-> CONFIG_MESON_GXL_PHY=y
+> Aleksa is a good friend of mine and we have discussed this a lot so I hope
+> he doesn't hate me for saying this again: it is crazy that there are cont=
+ainer
+> runtimes out there that promise (or at least do not state the opposite)
+> containers without user namespaces or containers with user namespaces
+> that allow to map the host root id to anything can be safe. They cannot.
 
+Yeah, the fact that we (runc) don't scream from the rooftops that this
+setup is insecure is definitely a problem. I have mentioned this
+whenever I've had a chance, but the fact that the most popular runtimes
+(which use runc) don't use user namespaces compounds the issue. I'm
+willing to bet that >90% of users of runc-based runtimes don't use user
+namespaces at all, and this is all down to bad defaults.
 
+There are also some other misfeatures we have in runc that we're
+basically forced to support because some users use them, and we can't
+really break entire projects (even though it's the projects' fault they
+have an insecure setup).
+
+> It seems to me to be heading in the wrong direction to keep up the
+> illusion that with enough effort we can make this all nice and safe.
+> Yes, the userspace memfd hack we came up with is as ugly as a security
+> patch can be but if you make promises you can't keep you better be
+> prepared to pay the price when things start to fall apart.
+
+> So if this part of the patch is just needed to handle this do we really
+> want to do all that tricky work or is there more to gain from this that
+> makes it worth it.
+
+I dropped this patch in v7, I don't think it's required for the
+overarching feature. Looking back on it, it doesn't make much sense
+given the context that privileged containers are unsafe in the first
+place.
+
+I do think that being able to block introspection might be a useful
+hardening feature though. During attachment it would be nice to be sure
+that nothing will be able to touch the attaching process's /proc/$pid --
+even itself.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--borziu3c5eych3ip
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEXzbGxhtUYBJKdfWmnhiqJn3bjbQFAlzW7wAACgkQnhiqJn3b
+jbR3bxAAnM8LJPMf2Pan3q301DdRUniZUy671tYDuLAvqlkzeM+iitQn3MFlLSwS
+/vr4dbITCJIWK8vnSv4W2E1o8MJdiVuKRXQHvFUUGwm4UEyjmr7OXE5ExqD4nGUl
+BsaJeOUjmIJ18qnQGC3fcbxki14L7320aswV0bkylxulAJlzoK35Uerc5gp6rzrn
+zjXlcmTguykS8HgZrg+F0Dx2SfSH0au28EOTpxe9Go/Y4PcuVc5qWn4A3rZW+mLQ
+bGffGaYxpuubJku7mQW+fg8NZjMKCIl72abGAQkEoVQGLDuu9Wpgk8cmBHSrVB9l
+OIANqypYyJw8SBlL75aWXAKLDfBhkxmF9TyFBLvUuMNNWqibbx518saj2/jbgke6
+medifvB7Fq+RpBdJXhAeFemhZnXf3MlF16o55N7XfEt+J9TBMH8YsbdOv8tlZwFQ
+sipQ9+ADbAk7qVRXXmrkrO7Ne359DKZfT7csyXFzwbRBJLyVUdlqsw3hAJIBeaGB
+UyLf0JxF0P2qZ0QSptixnjPp9gnvh1XL/NyzhFPDbUHXF1vJ/BdzmcTBi/s6O+gm
+pEIWxNjSY1c/wsE7w1ZJUaXwo7ePeGsbyGX+UjDQ4gbYVEnfDoHfNAjWeFeQKEjh
+u2n1yLOFsuBZLlwZuUPsTKB02EUGMneVoc4JUPOCB+zSKN9LBRE=
+=SjiX
+-----END PGP SIGNATURE-----
+
+--borziu3c5eych3ip--
