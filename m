@@ -2,120 +2,124 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEC3C46460
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E74CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6C85217F9
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557570277;
-	bh=Ol9ib5bihEYIjrd1c8mt+AxCWFeb4Ti7BaHuwJkxvQA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=cmjbgiebtAEY+AUi6oe0WkV3kuDzNw7r+negDVV7/gcbjss9pEOu2qOxYWTdeVtGd
-	 v9iCS7kH7JvinspjziR96BAlOfMmy9m4y99d5ZJk4aSMr/EzmEdzwRxsQy9Xv4V6nZ
-	 YiNoNTvAz4gOQ2Doxyicn7+4+Dl71/p+QwnSYTm8=
+	by mail.kernel.org (Postfix) with ESMTP id 60CC821479
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:41:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EdcLPKtn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728568AbfEKKYh (ORCPT
+        id S1728539AbfEKKlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 06:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbfEKKYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 06:24:36 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE1E62173B;
-        Sat, 11 May 2019 10:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557570276;
-        bh=Ol9ib5bihEYIjrd1c8mt+AxCWFeb4Ti7BaHuwJkxvQA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=v4U603/bLabnldrLM6MOiPNDVz7DK0r/MC9QoaiSqqorwz+ySd4TjrJKypZ3+bF9s
-         Oi7pE83vuWve+W8K6qopE3LO/K10MtfkVM1TJXht3uXte67oWPnpF2vxXDyky7JEUN
-         So9eLCXfDPm7MdKyCanuDsLdFHH6/rXp2DvYpyD8=
-Date:   Sat, 11 May 2019 11:24:29 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/5] iio: stmpe-adc: Reset possible interrupts
-Message-ID: <20190511112429.25ddd84d@archlinux>
-In-Reply-To: <20190507143615.28477-5-dev@pschenker.ch>
-References: <20190507143615.28477-1-dev@pschenker.ch>
-        <20190507143615.28477-5-dev@pschenker.ch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 06:41:40 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39894 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfEKKlj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 06:41:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w8so7893859wrl.6;
+        Sat, 11 May 2019 03:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dxo37QiebDnia51nBIXSyhvdd7R5v9MF4iXVx2vhVik=;
+        b=EdcLPKtnYZSorPFZws0W0CPF7F821AUXHVPp+92cnlCVS0uS6klBTjKGfJwNOxvWaM
+         IZwn1/jtPcgRxstd+PF7JKTydUDBUus+HZly3U2RhupDEygZT0PuAu/QOH4rgeeBNO9F
+         svnjf11HuaY1246HzVMyHnTgZQAQc1JlzPHxN2Aa4dQaqI54GiqG7RFIU3hMU8K05dSR
+         5qPtbIaV/5cikfWlFOxXz77gYebGAdXUeM8Tfy80ftJ52klj2sI51bwCpDSiqqbaKCTv
+         Qgh7NN8eMDXPdPpQEsDUEIiQHCpn/fdYP+iVM/DyC1JNFENmFTSp8xQ9fw9WC9eFz75M
+         JpmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dxo37QiebDnia51nBIXSyhvdd7R5v9MF4iXVx2vhVik=;
+        b=Dj0KHtDbrhqkXtfMLDyrQbrrBdNnHfwoVYcncyCAPE+9hn6TUDD6D/2recTxp+xEsC
+         sDLpjW9NtmbMGQ5XF/0LJs5MHCtAlxhfIR09XB0ZFjqteE9DnTsX7bGfVuaNoUdI40bp
+         6N5DMlJX8mgXDLfjkPXhijJjnKJJwr56RyaaaPfP+2rRKhInHioCIK9OBBPLJxIgBh/J
+         1YbmtqiDr/Ix0kaouuYRLFkkExVEto/IZH3uWIBVjA/JqVrBgPIbCG/44JTWWH7S6rFQ
+         yjx5eF84ro4wtm3AtqG7w0ZkVboGvvqL1dKpfGvhAvXoLPEVQCJd69gEhXIYQZBG7Vt3
+         gZtg==
+X-Gm-Message-State: APjAAAVwQJ1sXVtvwJ9EczJU0ZHFEdEQaagBDjyoncEcl6W2TzTKjESF
+        E3YgImaJcKQzK3fB1j1VyOc=
+X-Google-Smtp-Source: APXvYqwqeEqNJmtHPVZezZmUT6MtGbi4k3ufZFZ0tezCR4ruOL5pRDJHgIEpEhu5LVlkdUTkIarQAA==
+X-Received: by 2002:adf:dc4b:: with SMTP id m11mr11302841wrj.66.1557571297735;
+        Sat, 11 May 2019 03:41:37 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8bd4:5700:152f:e071:7960:90b9? (p200300EA8BD45700152FE071796090B9.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:152f:e071:7960:90b9])
+        by smtp.googlemail.com with ESMTPSA id f7sm6466262wrt.81.2019.05.11.03.41.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 03:41:36 -0700 (PDT)
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+To:     Trent Piepho <tpiepho@impinj.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+ <20190510214550.18657-5-tpiepho@impinj.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+Date:   Sat, 11 May 2019 12:41:31 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190510214550.18657-5-tpiepho@impinj.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 May 2019 16:36:15 +0200
-Philippe Schenker <dev@pschenker.ch> wrote:
-
-> From: Philippe Schenker <philippe.schenker@toradex.com>
+On 10.05.2019 23:46, Trent Piepho wrote:
+> The variables used to store u32 DT properties were signed ints.  This
+> doesn't work properly if the value of the property were to overflow.
+> Use unsigned variables so this doesn't happen.
 > 
-> Clear any interrupt that still is on the device on every channel
-> this driver is activated for in probe and specific channels in
-> the timeout handler.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-I'm never particularly clean on blanket resets as they do tend to
-hide bugs. However, the probe one is something that would happen anyway
-if there was a 'reset' function.
+In patch 3 you added a check for DT properties being out of range.
+I think this would be good also for the three properties here.
+The delay values are only 4 bits wide, so you might also consider
+to switch to u8 or u16.
 
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+Please note that net-next is closed currently. Please resubmit the
+patches once it's open again, and please annotate them properly
+with net-next.
 
-Thanks,
-
-Jonathan
-
-> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Trent Piepho <tpiepho@impinj.com>
 > ---
+>  drivers/net/phy/dp83867.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
->  drivers/iio/adc/stmpe-adc.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
+> index a46cc9427fb3..edd9e27425e8 100644
+> --- a/drivers/net/phy/dp83867.c
+> +++ b/drivers/net/phy/dp83867.c
+> @@ -82,9 +82,9 @@ enum {
+>  };
+>  
+>  struct dp83867_private {
+> -	int rx_id_delay;
+> -	int tx_id_delay;
+> -	int fifo_depth;
+> +	u32 rx_id_delay;
+> +	u32 tx_id_delay;
+> +	u32 fifo_depth;
+>  	int io_impedance;
+>  	int port_mirroring;
+>  	bool rxctrl_strap_quirk;
 > 
-> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> index cc752a47444c..a5990e9f2c80 100644
-> --- a/drivers/iio/adc/stmpe-adc.c
-> +++ b/drivers/iio/adc/stmpe-adc.c
-> @@ -80,6 +80,8 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
->  	ret = wait_for_completion_timeout(&info->completion, STMPE_ADC_TIMEOUT);
->  
->  	if (ret <= 0) {
-> +		stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_STA,
-> +				STMPE_ADC_CH(info->channel));
->  		mutex_unlock(&info->lock);
->  		return -ETIMEDOUT;
->  	}
-> @@ -326,6 +328,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
->  	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
->  			~(norequest_mask & 0xFF));
->  
-> +	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_STA,
-> +			~(norequest_mask & 0xFF));
-> +
->  	return devm_iio_device_register(&pdev->dev, indio_dev);
->  }
->  
 
