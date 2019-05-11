@@ -2,72 +2,131 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC45C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7C2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CA6C21851
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557586829;
-	bh=u9lJiCpsj+VZ2QNXRJvGZgciHAGie8v3YeL8uSIeio8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=rVJ5OW0/9qgZP31SNkQJ/LGQKaBbV/Cg+OEzsSM/MAnI88b2eNKzU1ElkZxKWjRmT
-	 hWedQloDEAiK/gp3ZFVqi7/Kv32A7WeLiq9zhHLN+vVzfCptuD0yROp7MPrAeGRKxA
-	 3HSI7LzBfp+/0YkKuK+FyWsknC5a1U1C1Cy326uw=
+	by mail.kernel.org (Postfix) with ESMTP id 831D8217D7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 15:06:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A32EvO3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbfEKPA2 (ORCPT
+        id S1728641AbfEKPGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 11:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbfEKPAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 11:00:16 -0400
-Subject: Re: [GIT PULL] GPIO bulk changes for v5.2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557586816;
-        bh=u9lJiCpsj+VZ2QNXRJvGZgciHAGie8v3YeL8uSIeio8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=wR55sUGLtYAie9cC+baOPeEOs7/PSJFP35RgQT+Zd87jrU1uoYO+Cetsp33nWhcsZ
-         zyC098uAmEf2rBIVKD0IDSLTVO3os3JdRSAbpIfTk0SUUFe+z1rBKZ20tVBeqlbV3q
-         M9pEdEmq5TY1fXzV42lz2wKWDGX/M9rVbfcQfqqc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdZg0=f1KvwDhYGo=iv0ntQWzjTqYno1BgLE4zYxq-RAUQ@mail.gmail.com>
-References: <CACRpkdZg0=f1KvwDhYGo=iv0ntQWzjTqYno1BgLE4zYxq-RAUQ@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdZg0=f1KvwDhYGo=iv0ntQWzjTqYno1BgLE4zYxq-RAUQ@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.2-1
-X-PR-Tracked-Commit-Id: 0fbee1df2078fa1f61e2da14f51ceb357c79ae69
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8148c17b179d8acad190551fe0fb90d8f5193990
-Message-Id: <155758681608.22634.4406728706001259037.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 May 2019 15:00:16 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        Sat, 11 May 2019 11:06:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39201 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfEKPGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 11:06:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so9890247wmk.4;
+        Sat, 11 May 2019 08:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=6UiqJ4m3sPzyqJomJHE7ExCLyXzjMLS98K0ef/RXLqM=;
+        b=A32EvO3vT97nPsb17JblWScq/XGUUQbxZ80CDHR3TB+hUY4N8JC5DCb3ni8k98y6HJ
+         3e/h6gFm+YEMLzNJb2x3OcWJihyEqa3Atjs5sNv3ctiyVh1Lhq+KmRu6v6wFusYqfk3k
+         96sZg2ytrT3rQmHOCTzRO49OH8A3TykpzKmz71MEBoQQjAlfT9VJu+aoRnqiijR9bUrY
+         nk19GkM6KTvCBZ7+rcuRNOgadCxTWY4RF7CR+UH+8H770Y06Yofd43F5ZLonQPC/YaeX
+         0PUId5H8j1712WzcLicZskpCNccZ9egdwu6N+4tVuMeCtx35Bt8yEzq2MwfjiByJfbXu
+         eB8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=6UiqJ4m3sPzyqJomJHE7ExCLyXzjMLS98K0ef/RXLqM=;
+        b=j7CUrEgy+LYUhnngOE4whNWx65xBlUTvGaTgTBtVKUq1ExtiTKSs8pYi92FpThjM0j
+         ypADsRI5clhJ0udGVCxx+hrQ4BlzgaL8QppXapb2wMy/IzeMXysakgStvlag6tRqTMY3
+         rE/oYd4xfZkdUy/gtkWJdz7lGZ2B1EUZFbLD6UvezRQcTyT6ARbTyJnuG754TZf5igKt
+         XvSZTHsfCCdYcBcb6EW3LFF+biNHPkr8UeJ0X9k7GUtHfh7sjo6LOms0QHdUxncgLd6e
+         tPqQk/0GeSxmaNcT1Y9LU5WJQjiscyseo/TfRX1PZnBFLFWIg3n7FAMJZdJjXnGHTJw/
+         b0RA==
+X-Gm-Message-State: APjAAAVUbxee5Uj9uimzYt26P53Cn7u4gGAj1qUf7Ny2+0xWa/f1HtZv
+        obIik519cadXvckCvoV8uIE=
+X-Google-Smtp-Source: APXvYqzf+zs+O6W1AWuhFETXIp95aae5PeCygtmrCNOYqQrkdcyEqkflvUOX5JUrjHx0T/0QDtOG6A==
+X-Received: by 2002:a1c:9eca:: with SMTP id h193mr1650053wme.125.1557587166149;
+        Sat, 11 May 2019 08:06:06 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id v5sm18209728wra.83.2019.05.11.08.06.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 11 May 2019 08:06:05 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
+Date:   Sat, 11 May 2019 17:06:04 +0200
+MIME-Version: 1.0
+Message-ID: <0f16b2c5-ef2a-42a1-acdc-08fa9971b347@gmail.com>
+In-Reply-To: <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
+References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
+ <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
+ <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
+ <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 11 May 2019 10:45:05 +0200:
+On Saturday, May 11, 2019 4:56:56 PM CEST, Heiner Kallweit wrote:
+> On 11.05.2019 16:46, Vicente Bergas wrote:
+>> On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
+>>> On 10.05.2019 17:05, Vicente Bergas wrote: ...
+>>=20
+>> Hello Heiner,
+>> just tried your patch and indeed the NPE is gone. But still no network...
+>> The MAC <-> PHY link was working before, so, maybe the rgmii=20
+>> delays are not
+>> correctly configured.
+>
+> That's a question to the author of the original patch. My patch was just
+> meant to fix the NPE. In which configuration are you using the RTL8211E?
+> As a standalone PHY (with which MAC/driver?) or is it the integrated PHY
+> in a member of the RTL8168 family?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.2-1
+It is the one on the Sapphire board, so is connected to the MAC on the
+RK3399 SoC. It is on page 8 of the schematics:
+http://dl.vamrs.com/products/sapphire_excavator/RK_SAPPHIRE_SOCBOARD_RK3399_L=
+PDDR3D178P232SD8_V12_20161109HXS.pdf
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8148c17b179d8acad190551fe0fb90d8f5193990
+> Serge: The issue with the NPE gave a hint already that you didn't test your=
 
-Thank you!
+> patch. Was your patch based on an actual issue on some board and did you
+> test it? We may have to consider reverting the patch.
+>
+>> With this change it is back to working:
+>> --- a/drivers/net/phy/realtek.c
+>> +++ b/drivers/net/phy/realtek.c
+>> @@ -300,7 +300,6 @@
+>>     }, {
+>>         PHY_ID_MATCH_EXACT(0x001cc915),
+>>         .name        =3D "RTL8211E Gigabit Ethernet",
+>> -        .config_init    =3D &rtl8211e_config_init,
+>>         .ack_interrupt    =3D &rtl821x_ack_interrupt,
+>>         .config_intr    =3D &rtl8211e_config_intr,
+>>         .suspend    =3D genphy_suspend,
+>> That is basically reverting the patch.
+>>=20
+>> Regards,
+>>  Vicen=C3=A7.
+>>=20
+>>> Nevertheless your proposed patch looks good to me, just one small change
+>>> would be needed and it should be splitted.
+>>>=20
+>>> The change to phy-core I would consider a fix and it should be fine to
+>>> submit it to net (net-next is closed currently).
+>>>=20
+>>> Adding the warning to the Realtek driver is fine, but this would be ...
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
