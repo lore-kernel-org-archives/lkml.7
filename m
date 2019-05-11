@@ -2,120 +2,112 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB80C04AB3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B334C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 029CC217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557569382;
-	bh=lhbK+i4DBoD29MQ6wtvmJNog/VnQ3v6fvRLB/M5EOzU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FsWamocFYNuc1xH62k6DHvu/RM5N+TCOXtj1pi9sh6aCJzIRV6z1G3E9r6EQo9aOJ
-	 Kb8h6TJD3ZdAtsBc+6Fwo47ZPAsvm2zP2lAn4ElHYHFZZDJlbgBL0y8G7CpNAA2QUf
-	 4pxnU/uElc2QY9YdiJHccNGJT6D8aJDdwIXeBM2Y=
+	by mail.kernel.org (Postfix) with ESMTP id CFCEC208C0
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 10:10:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hze29sze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfEKKJk (ORCPT
+        id S1728581AbfEKKKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 06:09:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfEKKJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 06:09:40 -0400
-Received: from archlinux (cpc91196-cmbg18-2-0-cust659.5-4.cable.virginm.net [81.96.234.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3222F208C0;
-        Sat, 11 May 2019 10:09:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557569379;
-        bh=lhbK+i4DBoD29MQ6wtvmJNog/VnQ3v6fvRLB/M5EOzU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oei5RmKiBXQGpIfBoODyvkMH3Rlv1lT4YNkPlGO2ptQBZivYPlEuyQx8YjtPUZS6i
-         iXIoeC5eRrfnmuwXrd5bR+wBSOAbn6wYyAqk9m24sEiQZ/0gH6ahxe1FsVc3DG5ozQ
-         Hi7BGigEBpeLiiMlv9riVkNxOrjujUsBVb+8sUOE=
-Date:   Sat, 11 May 2019 11:09:32 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Philippe Schenker <dev@pschenker.ch>
-Cc:     linux-iio@vger.kernel.org, Stefan Agner <stefan@agner.ch>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Max Krummenacher <max.krummenacher@toradex.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/5] iio: stmpe-adc: Enable all stmpe-adc interrupts
- just once
-Message-ID: <20190511110932.75b2b186@archlinux>
-In-Reply-To: <20190507143615.28477-3-dev@pschenker.ch>
-References: <20190507143615.28477-1-dev@pschenker.ch>
-        <20190507143615.28477-3-dev@pschenker.ch>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 May 2019 06:10:37 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39777 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfEKKKh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 06:10:37 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f1so5827315lfl.6;
+        Sat, 11 May 2019 03:10:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VzMtYzzNqYL2idEdrrg1jhwZJhQgObiWzEmMj0ADVDw=;
+        b=Hze29szeSBCrx8PCMd2kozwM2hfpOtEfKzcHNtT3VSdMN/WQ5OyUHsli5azMvHhLkq
+         QfzH167TZcBL2kcYYHrav171bPly9pvqZHXE/RyHPD2mUr8uaYy8TIMOsttzGSUmUnk1
+         SgmB/xntyeBpr6IqUAUExDN6VSxvowwua5glTQAyDWAs9MgPaQrggJQHzmlidQsbTP5v
+         VHi6+7kLYFqNtSa1ucP2ugDnmftnvtl1D6ZBfoIykqc99OZPflVc0JfLVCZpFkYvWHOP
+         rEQDvhvYCAUu05zzadpMNb3rkUbKcJ/7x1XyZHG7UbdPf9WmReBGmZABFrvQMOp//NLw
+         2GLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VzMtYzzNqYL2idEdrrg1jhwZJhQgObiWzEmMj0ADVDw=;
+        b=lJC0gTrwjFtKHo5qZNMODm9r90VoQqrpkhjfqIzaC+1S70IiXzUpxi+MCqM05+ncS/
+         AXthOaNdXL3RicdOVv/YQziI8te1vBOUapAkXPVcqM0WU68vLuynW015vRwrMscSoGyh
+         QhAs/2UC9m8kImQzN179pAAXMA/RZ7OevgClHLscPFn9bYL6F+tY37Y0vuQpJQ7Kk8Qy
+         XzDcY5VzmZoR87emqYU/6EqfPP+oD50nlz1bdRRgRXf2PFdpI7WXIdviJK7OTztocvsy
+         KN+xxJSQjMVJpr6FVlPPRC3PUtDFvQzIeioQe3R9WmxfL3wjRT10eAXxi/FrFIRd/z2W
+         xLcA==
+X-Gm-Message-State: APjAAAWJOD5cCwUyGxOmQKZ7EMhhu9lk6Ugc0axK9iMKYgt6QALEVuet
+        nDeTf8y0WJwtzCYH0kYZbDY=
+X-Google-Smtp-Source: APXvYqzPa7PsMelHqLBk5OBG2GNU/d6s1cKSStqRF0KcddlbymTxZxcd+/NvolSQExLAihGj49b4YA==
+X-Received: by 2002:ac2:528f:: with SMTP id q15mr7979913lfm.37.1557569435575;
+        Sat, 11 May 2019 03:10:35 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id o124sm1443874lfe.92.2019.05.11.03.10.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 03:10:34 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH v4 0/2] media: v4l2-subdev: Verify arguments of v4l2_subdev_call()
+Date:   Sat, 11 May 2019 12:10:29 +0200
+Message-Id: <20190511101031.4777-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  7 May 2019 16:36:13 +0200
-Philippe Schenker <dev@pschenker.ch> wrote:
+Correctness of format type (try or active) and pad number parameters
+passed to subdevice operation callbacks is now verified only for IOCTL
+calls.  However, those callbacks are also used by drivers, e.g., V4L2
+host interfaces.
+    
+Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
+macro while calling subdevice operations, move those parameter checks
+from subdev_do_ioctl() to v4l2_subdev_call().  Also, add a check for
+a non-NULL pad config pointer if V4L2_SUBDEV_FORMAT_tRY is requested.
 
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> This commit will enable the interrupts of all channels handled by this
-> driver only once in the probe function.
-> 
-> This will improve performance because one byte less has to be written over
-> i2c on each read out of the adc. On the fastest ADC mode this will improve
-> read out speed by 15%.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+This way we can avoid taking care of those checks inside drivers.
 
-Thanks,
+Janusz Krzysztofik (2):
+  media: v4l2-subdev: Verify arguments of v4l2_subdev_call()
+  media: v4l2-subdev: Verify pad config argument
 
-Jonathan
+ drivers/media/v4l2-core/v4l2-subdev.c | 234 ++++++++++++++++----------
+ include/media/v4l2-subdev.h           |   6 +
+ 2 files changed, 151 insertions(+), 89 deletions(-)
 
-> ---
-> 
->  drivers/iio/adc/stmpe-adc.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/stmpe-adc.c b/drivers/iio/adc/stmpe-adc.c
-> index b3872eb37293..82b43e4522b6 100644
-> --- a/drivers/iio/adc/stmpe-adc.c
-> +++ b/drivers/iio/adc/stmpe-adc.c
-> @@ -74,9 +74,6 @@ static int stmpe_read_voltage(struct stmpe_adc *info,
->  		return -EINVAL;
->  	}
->  
-> -	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
-> -			STMPE_ADC_CH(info->channel));
-> -
->  	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_CAPT,
->  			STMPE_ADC_CH(info->channel));
->  
-> @@ -336,6 +333,9 @@ static int stmpe_adc_probe(struct platform_device *pdev)
->  	if (ret)
->  		return ret;
->  
-> +	stmpe_reg_write(info->stmpe, STMPE_REG_ADC_INT_EN,
-> +			~(norequest_mask & 0xFF));
-> +
->  	return devm_iio_device_register(&pdev->dev, indio_dev);
->  }
->  
+Changelog:
+v3->v4:
+- fix 'struct' keyword missing from patch 2/2,
+- fix checkpatch reported style issue in patch 2/2
+Sorry for that.
+
+v2->v3:
+- add patch 2/2 with pad config check,
+- adjust continuation line alignments in patch 1/2 to match those 
+  used in 2/2.
+
+v1->v2:
+- replace the horrible macro with a structure of wrapper functions;
+  inspired by Hans' and Sakari's comments - thanks!
+
+-- 
+2.21.0
 
