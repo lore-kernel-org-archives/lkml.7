@@ -2,95 +2,105 @@ Return-Path: <SRS0=o7UO=TL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D77C46470
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED40C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 21:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689092184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 20:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1D4217D6
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 May 2019 21:45:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="mTZipGuT"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="BdtQOkaY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfEKU6p (ORCPT
+        id S1726360AbfEKVpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 16:58:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38340 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfEKU6p (ORCPT
+        Sat, 11 May 2019 17:45:32 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45307 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfEKVpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 16:58:45 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a59so4448210pla.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 13:58:44 -0700 (PDT)
+        Sat, 11 May 2019 17:45:31 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b18so1296385wrq.12
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 14:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=elwgxb8XYgTIriByBWF9deMUc6c8M6Y8MIlBqiZfHjU=;
-        b=mTZipGuTJpw81BLSTSjwcm1GDWw+WD8irR2clWCrQZGG6j0nz6y1H2cLsX4a//J5q+
-         Pagb/ezxSdc4YarsDh57XLMEKVmslPTc8/9BTs+RFwb43gaqLKTxhTIemfc2bcUT9C/6
-         iAoYQrOWqlT6NralpUW0Tc0xlOo4WWiaYyeNYubfFKoCmzr5XS5jT95VxbKYpdhhREbO
-         cYdXhCrP7eMT2zIkW9Gm5l5DSeUOFpr7GRqkTYAJ8rjsu97mwDwLUHb9jikhAyzuq/vN
-         MvzHBRTnf2pGCjZfRmRSShWJ0d202h1EPNtyqpGmdQQFglMXXp5boIcm50LIILir4gjV
-         +Qxg==
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PPBGZkBoQo3Ukc85VDhfZeXzhApaOOcUc2m8QXSsq3Q=;
+        b=BdtQOkaYnoAFy22dv+qrBSLmW3PUjkU/CFTnc3YG8/29yPpqaoX0EIKu7kcBZIJpnU
+         3C+SqvRVMrl3x9puWWU94sAdFwW9rVE2ILksZY780tsnWfUJghwcZlaW3HpzAqvrvvhO
+         UQp78xNTYidqyrNCzk8qmyjmzuN97i5qkMqUw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=elwgxb8XYgTIriByBWF9deMUc6c8M6Y8MIlBqiZfHjU=;
-        b=QnELY8f+hRuqq+ndzhKYrTodypHnLLKsSnCNn1B6lNiHnvfZC+gNGr2ajJbwp73RuK
-         UJL0gxBwCnlaAoNTb4pOPpPpX9/EqOZAPBnDkMa4la+wASWRR82Bl4hg53pmhQLahIWu
-         NpRXAIUCzmPdjBCt7G1cDec1BRUbdL2egvHU7gucoDKPDkRqClF5uLRGyH5rStm1en7+
-         mpl2pAnUg2M/l+RQooQYnnAsziUg/k651lYmbCIVcqlqWfZgGIF2GyIL/5hSCLDq0NOg
-         r/aGzOXzahDgVe/Ess7xMOwcLstM+LO38sUAGOJg5P7GjiaR0Ol5eDalrdwLR7FarY4b
-         +5Lg==
-X-Gm-Message-State: APjAAAXcWSMyZbxPjlSPpCsHdOZnVaOJjSstGIzHIZ3zI377I9LrGQKK
-        Ztx64k1SOjO2nwhXNP/l6ysJVoEHgwl674HrCthBOQ==
-X-Google-Smtp-Source: APXvYqy4MaRZEbjhD24D5CDbZW2mpGnc/vgQNNkixPgHTkwzNLc9bAL0OjtOXzd7w0ax4agEGGNIbUQ1gyI5gI+QgxE=
-X-Received: by 2002:a17:902:f215:: with SMTP id gn21mr22016322plb.194.1557608324468;
- Sat, 11 May 2019 13:58:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PPBGZkBoQo3Ukc85VDhfZeXzhApaOOcUc2m8QXSsq3Q=;
+        b=bV/8P95cNDsZ0/Bu9S9rGUp1u1Hdj86nAgd4nifJxSc7W5/JqNOA/JuaVGQI5Fr7eW
+         eRyfQFSqu8UhOwfv1enUTuepbpLLIqqKt21eim2/cowBzHbGmVp2eBNXxafY5palynMo
+         7G2+Lnuia1KWj1t+HaSs7cfZUQq0Mxj7oh0lJHJ0rokxf+RTgzKsHiPxxwp+jNnZElnQ
+         rUuJjv1u73sq9MUUuRVF8StaBfmtzr48TdsS3vTChmPUGSBqbKDWN9qLuKMBT4XvI7Px
+         2QqZpjZMJpovby7YhQb7GdcUd5cANa0itZ76r672qFspJTbj4gCex3/O+jnvNfgk9RRp
+         bojQ==
+X-Gm-Message-State: APjAAAUKQPa8zROnBf/qnKr+h2SNOftq7SOe+cA8q3+D6rdsK2mvZ6Ln
+        dGo/bU/WSLxLISXhQdj+s0frRA==
+X-Google-Smtp-Source: APXvYqyWpxql6Ydh91GFk5ZwhNDajUu3C6mPZiyE4ur8CDdVGlyqt4DOADmT05wNsx5HS3s/R8ZwVw==
+X-Received: by 2002:a05:6000:1201:: with SMTP id e1mr11894162wrx.136.1557611130178;
+        Sat, 11 May 2019 14:45:30 -0700 (PDT)
+Received: from andrea ([89.22.71.151])
+        by smtp.gmail.com with ESMTPSA id o16sm8236649wro.63.2019.05.11.14.45.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 14:45:29 -0700 (PDT)
+Date:   Sat, 11 May 2019 23:45:20 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>, joelaf@google.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: Re: Question about sched_setaffinity()
+Message-ID: <20190511214520.GA3251@andrea>
+References: <20190430105129.GA3923@linux.ibm.com>
+ <20190430115551.GT2623@hirez.programming.kicks-ass.net>
+ <20190501191213.GX3923@linux.ibm.com>
+ <20190501151655.51469a4c@gandalf.local.home>
+ <20190501202713.GY3923@linux.ibm.com>
+ <20190507221613.GA11057@linux.ibm.com>
+ <20190509173654.GA23530@linux.ibm.com>
+ <20190509193625.GA12455@linux.ibm.com>
+ <20190510120819.GR2589@hirez.programming.kicks-ass.net>
+ <20190510230742.GY3923@linux.ibm.com>
 MIME-Version: 1.0
-References: <20190405163126.7278-1-jeffrin@rajagiritech.edu.in>
- <20190405164746.pfc6wxj4nrynjma4@breakpoint.cc> <CAG=yYwnN37OoL1DSN8qPeKWhzVJOcUFtR-7Q9fVT5AULk5S54w@mail.gmail.com>
- <c4660969-1287-0697-13c0-e598327551fb@kernel.org> <20190430100256.mfgerggoccagi2hc@breakpoint.cc>
- <20190430105225.bu5pil5fjxkltu4q@salvia>
-In-Reply-To: <20190430105225.bu5pil5fjxkltu4q@salvia>
-From:   Jeffrin Thalakkottoor <jeffrin@rajagiritech.edu.in>
-Date:   Sun, 12 May 2019 02:28:07 +0530
-Message-ID: <CAG=yYw=YQzZQd-uyVXEgdTtLC9rpO5DE7SYW3hxQD3bVS8SD=g@mail.gmail.com>
-Subject: Re: [PATCH] selftests : netfilter: Wrote a error and exit code for a
- command which needed veth kernel module.
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Florian Westphal <fw@strlen.de>, shuah <shuah@kernel.org>,
-        linu-kselftest@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510230742.GY3923@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pablo,
+> > The below trace explain the issue. Some Paul person did it, see below.
+> > It's broken per construction :-)
+> 
+> *facepalm*  Hence the very strange ->cpus_allowed mask.  I really
+> should have figured that one out.
+> 
+> The fix is straightforward.  I just added "rcutorture.shuffle_interval=0"
+> to the TRIVIAL.boot file, which stops rcutorture from shuffling its
+> kthreads around.
 
-Please follow up on the mail you sent.
-This is for my interest to see my patch upstream
-
-On Tue, Apr 30, 2019 at 4:22 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> Cc'ing netfilter-devel@vger.kernel.org
->
-> On Tue, Apr 30, 2019 at 12:02:56PM +0200, Florian Westphal wrote:
-> > shuah <shuah@kernel.org> wrote:
-> > > Would you like me to take this patch through ksleftest tree?
-> >
-> > Please do, this patch is neither in nf nor nf-next and it looks fine to
-> > me.
->
-> Indeed, thanks.
+I added the option to the file and I didn't reproduce the issue.
 
 
+> Please accept my apologies for the hassle, and thank you for tracking
+> this down!!!
 
--- 
-software engineer
-rajagiri school of engineering and technology
+Peter (echoing Paul):  Thank you for pointing that shuffler out!
+
+  Andrea
