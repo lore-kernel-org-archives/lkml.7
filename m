@@ -2,72 +2,58 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF055C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C538CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF992133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92E792133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfELJIG (ORCPT
+        id S1726567AbfELJRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 05:08:06 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7743 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726232AbfELJIF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 05:08:05 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 595DCEB198AB1B5A4E50;
-        Sun, 12 May 2019 17:08:01 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sun, 12 May 2019
- 17:07:53 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <herbert@gondor.apana.org.au>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <davem@davemloft.net>,
-        <linux@armlinux.org.uk>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] arm/sha512 - Make sha512_arm_final static
-Date:   Sun, 12 May 2019 17:05:40 +0800
-Message-ID: <20190512090540.36472-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Sun, 12 May 2019 05:17:51 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:35594 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726031AbfELJRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 05:17:51 -0400
+Received: by isilmar-4.linta.de (Postfix, from userid 1000)
+        id D43142005B3; Sun, 12 May 2019 09:17:48 +0000 (UTC)
+Date:   Sun, 12 May 2019 11:17:48 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com, hpa@zytor.com,
+        arnd@arndb.de, rob@landley.net, james.w.mcmechan@gmail.com
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190512091748.s6fvy2f5p2a2o6ja@isilmar-4.linta.de>
+References: <20190509112420.15671-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509112420.15671-1-roberto.sassu@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warning:
+On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
+> This proposal consists in marshaling pathnames and xattrs in a file called
+> .xattr-list. They are unmarshaled by the CPIO parser after all files have
+> been extracted.
 
-arch/arm/crypto/sha512-glue.c:40:5: warning:
- symbol 'sha512_arm_final' was not declared. Should it be static?
+Couldn't this parsing of the .xattr-list file and the setting of the xattrs
+be done equivalently by the initramfs' /init? Why is kernel involvement
+actually required here?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- arch/arm/crypto/sha512-glue.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/crypto/sha512-glue.c b/arch/arm/crypto/sha512-glue.c
-index 86540cd..23fc381 100644
---- a/arch/arm/crypto/sha512-glue.c
-+++ b/arch/arm/crypto/sha512-glue.c
-@@ -37,7 +37,7 @@ int sha512_arm_update(struct shash_desc *desc, const u8 *data,
- 		(sha512_block_fn *)sha512_block_data_order);
- }
- 
--int sha512_arm_final(struct shash_desc *desc, u8 *out)
-+static int sha512_arm_final(struct shash_desc *desc, u8 *out)
- {
- 	sha512_base_do_finalize(desc,
- 		(sha512_block_fn *)sha512_block_data_order);
--- 
-2.7.4
-
-
+Thanks,
+	Dominik
