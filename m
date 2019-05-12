@@ -2,122 +2,110 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFB2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7276C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F142146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557642334;
-	bh=FopxydH9UPNQppTrvFx7gpSyK5wXsezcfPeEoAD6yCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sSmCKNZKBwpr+q06BnGPRLvKLBS5Kh3jPfu8u9GC6zLPPT44lOlmz6h1ek5ks3uZr
-	 QB+mComK5kBUemPKYJObCScGi1jSDgrGO/fVZjJi19705ab0DFFLgpoJzugO1HSVYr
-	 WG/wWGEWKLAeJi9+IHXrcQ29jvM/N+nwsnpU2Na8=
+	by mail.kernel.org (Postfix) with ESMTP id B72532146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fomichev-me.20150623.gappssmtp.com header.i=@fomichev-me.20150623.gappssmtp.com header.b="CKf756Si"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfELGUN (ORCPT
+        id S1726332AbfELG3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 02:20:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725934AbfELGUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 02:20:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D13F32133D;
-        Sun, 12 May 2019 06:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557642012;
-        bh=FopxydH9UPNQppTrvFx7gpSyK5wXsezcfPeEoAD6yCQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K7HMLxX94uycs1NFF6d3QE5DvesXv6QloXk3426t9Ou7bIPWCOCz+UH9ESTxGMS6t
-         iPNL5qX1Dumo3lHARuVvIQy124pverfzUtlD4vKh5xAUugg6UGwKXcjR2k/Ja3LBH6
-         0HVw7JESxaQSc7cvZCb9tqTAKe4b2MVefysz/K3k=
-Date:   Sun, 12 May 2019 08:20:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file
- of Linux 5.0.14
-Message-ID: <20190512062009.GA25153@kroah.com>
-References: <CAAie0ar11_mPipN=d=mrgnVdEMO1Np0cCYdqcRfZrij_d-5zaQ@mail.gmail.com>
- <20190510051415.GA6073@kroah.com>
- <CAAie0ao_O0hcUOuUf67oog+dSswdQRpAtX8NyQvDAr_XQr=xQg@mail.gmail.com>
- <20190510151206.GA31186@kroah.com>
- <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
- <20190511060741.GC18755@kroah.com>
- <20190512032719.GA16296@zhanggen-UX430UQ>
+        Sun, 12 May 2019 02:29:10 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43783 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfELG3K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 02:29:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t22so5067537pgi.10
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 23:29:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fomichev-me.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pSWMt1O9RyRNp2R37obyg4EhfrggGYCpcdG8qEUd4/w=;
+        b=CKf756SiRXeuNuJY5MCR440JDY0r/+ZbV+fmGloYC2vXpaJyT/W27LoJbDNwfzR4GQ
+         0QjWahoJm+onBpzCptev7pIaQJ9YlLdaUR7mP1k/ZJCO9GL97fAU0dGj9MIuL8NPTjW0
+         wVvy/KSOxZaznitl9ALWJGLTLFYMZN/OrKOjD90iROk6Y/NIP4X3TH0gxmuvg/EXXof7
+         Cw2EjPaLTDIlTkAGW/+EjA4OukxKfRsSeHhQuh8mZFBDxgZiQYPTJxoQaLvtwyUnTkut
+         BQSUmV1yieB7+26nVd4cj1T0gN70hi0WZaQaaBbl4/qCCwhrweUgpBeuDsHy/Vht8PMq
+         S7WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pSWMt1O9RyRNp2R37obyg4EhfrggGYCpcdG8qEUd4/w=;
+        b=kXwvh3NMhbFdFdxUUtjuwnmmA3uf7wnPkk1+G7dgtDYcMLpx/wcYHGrnK0vAjjFApt
+         LhqOwx+oKPp5MyWIRuOkTsONBNbTnu28Qe+0+w+bcsX8LbdDU2Uf7fYf1WTZw6DBDSka
+         D2US02TkHqzTCAeqo9C7uITC2i/oLmnUCVKo6jr9gNkJrWNq/Drvdj4zt1JfHRkrMMAb
+         O+/5cpwLKW2oTn7bbmaz2srCKkdyZP7VHn7eniZ7bD72y73pk6clSwmR4sITWJzZdN7B
+         +Kf2nVg7zv1bwzuzuA4uRU/+RUflPNpNZEzH5QQXI9QWR8eKBV/ePe7hSlbp/BFr4QyS
+         1JlQ==
+X-Gm-Message-State: APjAAAUJmRnzBVa94jV096ysz7IU4rmsn3HJ6LvKpYhfwJthnbVbytfr
+        kxqV9SL2Oh6iIB4UmL1b4vZrmA==
+X-Google-Smtp-Source: APXvYqxprQsC0AXWjoX8Vnk2CDqxAQBeXRlCaMTi7hz2pRnNfQMIUWZqND2vSYrCfrN6LqxCvng/yw==
+X-Received: by 2002:a62:4d03:: with SMTP id a3mr26678309pfb.2.1557642549622;
+        Sat, 11 May 2019 23:29:09 -0700 (PDT)
+Received: from localhost ([2601:646:8f00:18d9:d0fa:7a4b:764f:de48])
+        by smtp.gmail.com with ESMTPSA id v1sm16037213pgb.85.2019.05.11.23.29.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sat, 11 May 2019 23:29:08 -0700 (PDT)
+Date:   Sat, 11 May 2019 23:29:07 -0700
+From:   Stanislav Fomichev <sdf@fomichev.me>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] selftests: bpf: Add files generated when compiled to
+ .gitignore
+Message-ID: <20190512062907.GL1247@mini-arch>
+References: <20190512035009.25451-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190512032719.GA16296@zhanggen-UX430UQ>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190512035009.25451-1-skunberg.kelsey@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 11:27:19AM +0800, Gen Zhang wrote:
-> On Sat, May 11, 2019 at 08:07:41AM +0200, Greg KH wrote:
-> > Look at the patch above, all of the whitespace is damaged.  There is no
-> > way you took the raw email and then were able to apply that to the
-> > kernel tree.
-> > 
-> > You can not cut/paste patches into gmail, please read the kernel
-> > Documentation file all about email clients and how to get them to work
-> > properly to send patches.
-> Hi Greg,
-> I switched to mutt and get rid of cut/paste.
-> I patched it successffully with commit 1fb3b526df3bd7647e7854915ae6b22299408baf.
-> The patch file is:
+On 05/11, Kelsey Skunberg wrote:
+> The following files are generated when /selftests/bpf/ is compiled and
+> should be added to .gitignore:
+> 
+> 	- libbpf.pc
+> 	- libbpf.so.0
+> 	- libbpf.so.0.0.3
+> 
+> Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 > ---
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index fdd12f8..b756609 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -3350,10 +3350,14 @@ static int __init con_init(void)
->  
->  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
->  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> +		if (!vc_cons[currcons].d || !vc)
-> +			goto err_vc;
->  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->  		tty_port_init(&vc->port);
->  		visual_init(vc, currcons, 1);
->  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> +		if (!vc->vc_screenbuf)
-> +			goto err_vc_screenbuf;
->  		vc_init(vc, vc->vc_rows, vc->vc_cols,
->  			currcons || !vc->vc_sw->con_save_screen);
->  	}
-> @@ -3375,6 +3379,14 @@ static int __init con_init(void)
->  	register_console(&vt_console_driver);
->  #endif
->  	return 0;
-> +err_vc:
-> +	console_unlock();
-> +	return -ENOMEM;
-> +err_vc_screenbuf:
-> +	console_unlock();
-> +	kfree(vc);
-> +	vc_cons[currcons].d = NULL;
-> +	return -ENOMEM;
->  }
->  console_initcall(con_init);
->  
->  ---
-> I hope that the format is not broken any more.
+>  tools/testing/selftests/bpf/.gitignore | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+> index 41e8a689aa77..ceb11f98fe4f 100644
+> --- a/tools/testing/selftests/bpf/.gitignore
+> +++ b/tools/testing/selftests/bpf/.gitignore
+> @@ -32,3 +32,6 @@ test_tcpnotify_user
+>  test_libbpf
+>  test_tcp_check_syncookie_user
+>  alu32
+> +libbpf.pc
 
-Yes, that worked!  Now, can you resend it in a proper format that I can
-apply it in?  (with changelog text, signed-off-by, etc.) as described in
-Documentation/SubmittingPatches, I will be glad to review it after the
-5.2-rc1 release happens.
+[..]
+> +libbpf.so.0
+> +libbpf.so.0.0.3
+How about libbpf.so.* so we don't have to update it on every release?
 
-thanks,
-
-greg k-h
+> --
+> 2.20.1
+> 
