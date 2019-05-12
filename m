@@ -2,111 +2,114 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21C6C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEF5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D00320862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB0120862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRT3IpcP"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K3sxFPvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfEMDdo (ORCPT
+        id S1727462AbfEMDfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 23:33:44 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35470 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727375AbfEMDdn (ORCPT
+        Sun, 12 May 2019 23:35:22 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:39748 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfEMDfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 23:33:43 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h1so6019085pgs.2
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 20:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ssvJqTtxKhAvLQPzQtpUqE8pWc5Fl+uFeyG3o3mGIG4=;
-        b=hRT3IpcPm+r4T4Tp/gntF0uo4Co799yVXIYapcJ32vTkYN7nrUdCVlLGOJXKF4nwOy
-         z9hUNBFPaCwgWjm2OfTCFA9Xh2KkdlAMmItYq0IJituQcXTbeJEBaqeKg6KGrWqgF8mg
-         24tIG+UNvYOv6Ge9Pq4AsvvrhN4llYMZJbNBO23Amb+7Lw0MZoJuRAemsbHy+gM62KDK
-         PJiZ3Iy/DlyAxOeMfxyWgjlbt7CM5sdJL/gXOhdIpBvOKRK6UCm8kBaCwEpWU6SMuTSn
-         LOplrvoPtTcLuPVaDR7UlOy12GznY3tuYaQkA02iGHkf35ppQ6MQFElSX5NTA5nmIdFi
-         Acpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ssvJqTtxKhAvLQPzQtpUqE8pWc5Fl+uFeyG3o3mGIG4=;
-        b=QM7YYI2b8QN/TZPtbXEBc8xl3IMz6DCUdYVGZ0deso8UAliJ/VKUksnvgsMw7lQExe
-         B7if4hJ+shTSyOEVOMyBC3hUFQEq7U0ymKwIr1wvgNOtc0Wg2Zx2srZwmqYxPmbC2rYO
-         4z4vE0JsHHpdOZuIKaAIcSjIYOnE6S0A683EXAUYbbUZTU2PyLdsUm2DGtS640IyTDTa
-         qKdbCaGXfJrxifa0Rsg8J09JC6esWgGJwEftf/YWlAWh873irNnfG+zqRswgrDe4oh+a
-         c7eYsvEHNW1JwaEiY71EVx2hszhs/EQ6Sb04it/RdaRLk9mVQoynvABKWsuonHdrNV/A
-         MtFA==
-X-Gm-Message-State: APjAAAXRybtHFd5iRXGJeMtXMH0muoQpWpJIJL9Q5ZmXZNL3t6hZwE0O
-        Wx974BRsXqvK+se3s9PofGE=
-X-Google-Smtp-Source: APXvYqz0YNkp3r1oW/cR5CLyk4nKsq08dG0CjUW/rr7bPspvFvqYqKgC38adXFG3pYZvhMR60rFrgQ==
-X-Received: by 2002:a63:8149:: with SMTP id t70mr28919889pgd.134.1557718422627;
-        Sun, 12 May 2019 20:33:42 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id k6sm10883791pfi.86.2019.05.12.20.33.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 May 2019 20:33:41 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Cory Tusar <cory.tusar@pid1solutions.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: spi-nor: Add Micron MT25QL02 support
-Date:   Sun, 12 May 2019 20:33:26 -0700
-Message-Id: <20190513033326.20352-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 12 May 2019 23:35:22 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4D3YL17040258;
+        Mon, 13 May 2019 03:34:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=r32tubxsUXPdHsbPUXKPUehGznTQnk+IpyDTdJj3D7Q=;
+ b=K3sxFPvX27NlUsM04jJx+vPeBVvEciwZnkM1PCKdWRXzOJZ2JYX5lFAT+uTS0z4u8M19
+ f0qA13BJ0ZuqmIX51GQ6n6q+SN8T5/zRq4g3RdRNW2u0wk+5n4/pTP/97p/btMq4kOtZ
+ sAEKvgGIA1/GZQnNnWeHzEkB8CpenMMBeCB3CcwJucuQW4fCgWhGrnOL+MmxBtIE6s7h
+ k98ClGykoA2MS3VWIf/2W4MBss0yQ4Bu0wmnt1V0QtSvqqDEn1Ak+0ZDU9kAzyp0XPW+
+ ZPluFctbNEf10mZOS8ldocEVRB1HPbjCVX1XXGh/3sg6P5igSDlygcBDsKFUixcl/1B5 dA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2sdkwdcatr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 03:34:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4D3Va3B145133;
+        Mon, 13 May 2019 03:32:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sdnqhr439-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 03:32:20 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4D3WEw7025820;
+        Mon, 13 May 2019 03:32:14 GMT
+Received: from z2.cn.oracle.com (/10.182.69.87)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 12 May 2019 20:32:13 -0700
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Cc:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, corbet@lwn.net, tglx@linutronix.de,
+        mingo@kernel.org, gregkh@linuxfoundation.org,
+        keescook@chromium.org, srinivas.eeda@oracle.com,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v2] doc: kernel-parameters.txt: fix documentation of nmi_watchdog parameter
+Date:   Sun, 12 May 2019 11:35:27 +0800
+Message-Id: <1557632127-16717-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905130023
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for Micron MT25QL02 which is a 3V variant of already
-supported MT25QU02.
+The default behavior of hardlockup depends on the config of
+CONFIG_BOOTPARAM_HARDLOCKUP_PANIC.
 
-Testing was done on a ZII VF610 Dev Board (rev. B).
+Fix the description of nmi_watchdog to make it clear.
 
-Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>
-Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 ---
+ v2: fix description using words suggested by Steven Rostedt
 
-Previous verion of the patch: https://lore.kernel.org/patchwork/patch/577372/
+ Documentation/admin-guide/kernel-parameters.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- drivers/mtd/spi-nor/spi-nor.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index fae147452aff..2a644f01254c 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1881,6 +1881,7 @@ static const struct flash_info spi_nor_ids[] = {
- 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
-+	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 
- 	/* Micron */
- 	{
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 08df588..b9d4358 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2805,8 +2805,9 @@
+ 			0 - turn hardlockup detector in nmi_watchdog off
+ 			1 - turn hardlockup detector in nmi_watchdog on
+ 			When panic is specified, panic when an NMI watchdog
+-			timeout occurs (or 'nopanic' to override the opposite
+-			default). To disable both hard and soft lockup detectors,
++			timeout occurs (or 'nopanic' to not panic on an NMI
++			watchdog, if CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is set)
++			To disable both hard and soft lockup detectors,
+ 			please see 'nowatchdog'.
+ 			This is useful when you use a panic=... timeout and
+ 			need the box quickly up again.
 -- 
-2.21.0
+1.8.3.1
 
