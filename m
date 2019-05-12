@@ -2,131 +2,157 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	TVD_RCVD_SPACE_BRACKET,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDF4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74F8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 21:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F02B320C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:59:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="uNU20vHk"
+	by mail.kernel.org (Postfix) with ESMTP id 7D54D20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 21:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfELU7g (ORCPT
+        id S1727101AbfELVAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 16:59:36 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:52142 "EHLO mx4.wp.pl"
+        Sun, 12 May 2019 17:00:31 -0400
+Received: from mutluit.com ([82.211.8.197]:44974 "EHLO mutluit.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726909AbfELU7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 16:59:36 -0400
-Received: (wp-smtpd smtp.wp.pl 4272 invoked from network); 12 May 2019 22:59:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1557694773; bh=iyiQTrIWFatOO2FrWGC5Ae8DDFTrjkzZbDAhPWkurEg=;
-          h=Subject:To:Cc:From;
-          b=uNU20vHkGDzKtwImgBNkc0B+4XnFRPuquVdy+PJLYlIQH0bA9cvvKhXZCPRVYEXj0
-           VR/94dli6VW9LlaYuJZX1tuU6d1Hczn97ikMkEipwMnZm1vXdGcqNXhkVeum9m5MTW
-           dzSetjp75ALxH2ABxhJsf2Vesn0KglgPwpHuiDOw=
-Received: from pc-201-108-240-185-static.strong-pc.com (HELO [192.168.0.9]) (spaz16@wp.pl@[185.240.108.201])
-          (envelope-sender <spaz16@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <linux-kernel@vger.kernel.org>; 12 May 2019 22:59:33 +0200
-Subject: Re: [PATCH] HID: fix A4Tech horizontal scrolling
-To:     Peter Hutterer <peter.hutterer@who-t.net>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Igor Kushnir <igorkuo@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20190502213639.7632-1-spaz16@wp.pl>
- <CAO-hwJLbFv3S9M5N+BKBuafj8H-vToy=2VQd=cvohmaTHLMC3A@mail.gmail.com>
- <1a40ea07-368a-93f6-8335-dec7ae50bbf4@gmail.com>
- <CAO-hwJKNH7WoJV-X+egK5cJNNtxamh0L0e1er5dkiTt6KvrmSQ@mail.gmail.com>
- <20190507050150.GA9838@jelly>
-From:   =?UTF-8?B?QsWCYcW8ZWogU3pjenlnaWXFgg==?= <spaz16@wp.pl>
-Message-ID: <549757a1-33b5-e460-d6e7-ee766a792c27@wp.pl>
-Date:   Sun, 12 May 2019 22:59:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190507050150.GA9838@jelly>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: b67fab14069587d2b61ea64472ce62d8
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [MQP0]                               
+        id S1727003AbfELVAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 17:00:30 -0400
+Received: from c22-local.mutluit.com (ip4d155212.dynamic.kabel-deutschland.de [77.21.82.18]:31290)
+        by mutluit.com (s2.mutluit.com [82.211.8.197]:25) with ESMTP ([XMail 1.27 ESMTP Server])
+        id <S16FAD18> for <linux-kernel@vger.kernel.org> from <um@mutluit.com>;
+        Sun, 12 May 2019 17:00:24 -0400
+From:   Uenal Mutlu <um@mutluit.com>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-ide@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Uenal Mutlu <um@mutluit.com>, linux-sunxi@googlegroups.com,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Pablo Greco <pgreco@centosproject.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Oliver Schinagl <oliver@schinagl.nl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        FUKAUMI Naoki <naobsd@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Stefan Monnier <monnier@iro.umontreal.ca>
+Subject: [RFC PATCH v2 RESEND] drivers: ata: ahci_sunxi: Increased SATA/AHCI DMA TX/RX FIFOs
+Date:   Sun, 12 May 2019 22:59:54 +0200
+Message-Id: <20190512205954.18435-1-um@mutluit.com>
+X-Mailer: git-send-email 2.11.0
+X-Patchwork-Bot: notify
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Increasing the SATA/AHCI DMA TX/RX FIFOs (P0DMACR.TXTS and .RXTS, ie.
+TX_TRANSACTION_SIZE and RX_TRANSACTION_SIZE) from default 0x0 each
+to 0x3 each, gives a write performance boost of 120 MiB/s to 132 MiB/s
+from lame 36 MiB/s to 45 MiB/s previously.
+Read performance is about 200 MiB/s.
+[tested on SSD using dd bs=2K/4K/8K/12K/16K/24K/32K: peak-perf at 12K].
 
-On 07.05.2019 at 07:01, Peter Hutterer wrote:
-> On Fri, May 03, 2019 at 01:59:23PM +0200, Benjamin Tissoires wrote:
->> Hi,
->>
->> On Fri, May 3, 2019 at 11:43 AM Igor Kushnir <igorkuo@gmail.com> wrote:
->>>
->>> Hi Benjamin,
->>>
->>> On 5/3/19 10:36 AM, Benjamin Tissoires wrote:
->>>> Hi,
->>>>
->>>> On Thu, May 2, 2019 at 11:37 PM Błażej Szczygieł <spaz16@wp.pl> wrote:
->>>>>
->>>>> Since recent high resolution scrolling changes the A4Tech driver must
->>>>> check for the "REL_WHEEL_HI_RES" usage code.
->>>>>
->>>>> Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e (HID: input: use the
->>>>> Resolution Multiplier for high-resolution scrolling)
->>>>>
->>>>> Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
->>>>
->>>> Thanks for the patch. I do not doubt this fixes the issues, but I
->>>> still wonder if we should not export REL_HWHEEL_HI_RES instead of
->>>> REL_HWHEEL events.
->>>
->>>
->>> If you mean exporting REL_HWHEEL_HI_RES instead of REL_HWHEEL from
->>> hid-a4tech.c, then it makes sense to me, though I do not know the code
->>> well enough to be certain.
->>
->> Yep, that's what I meant. I am worried that userspace doesn't know
->> well how to deal with a device that mixes the new and old REL_WHEEL
->> events.
-> 
-> sorry, I'm not sure what you mean here. The new events are always mixed with
-> the old ones anyway, and both should be treated as separate event streams.
-> The kernel interface to userspace is fairly easy to deal with, it's the rest
-> that's a bit of mess.
-> 
-> [..]
-> 
->>>
->>
->> OK, thanks both of you for your logs, this is helpful.
->> So just in case I need to come back later, the horizontal wheel is
->> "just" the normal wheel plus a modifier in the report.
->>
->> Anyway, ideally, can we have a v2 of the patch with the 2 changes
->> requested above in the commit message and the introduction of
->> REL_HWHEEL_HI_RES events in addition to REL_HWHEEL?
->> REL_HWHEEL_HI_RES should report `120*value` and we should also keep
->> the reporting of REL_WHEEL as it is currently.
->>
->> Peter, I grepped in the hid code, and it seems hid-cypress.c is having
->> the exact same issue. Sigh.
-> 
-> yeah, I found that too when grepping through it. seems to be the only other
-> one though and we can use Błażej's patch as boilerplate once it's done.
+Tested on the Banana Pi R1 (aka Lamobo R1) and Banana Pi M1 SBCs
+with Allwinner A20 32bit-SoCs (ARMv7-a / arm-linux-gnueabihf).
+These devices are RaspberryPi-like small devices.
 
-Peter, I also found comparison of "usage->code ==" with "REL_HWHEEL"
-and "REL_WHEEL" in hid-lenovo.c, hid-apple.c, hid-ezkey.c, hid-lg.c.
-Unfortunatelly, I don't have such devices to test :(
+This problem of slow SATA write-speed with these small devices lasts now
+for more than 5 years. Many commentators throughout the years wrongly
+assumed the slow write speed was a hardware limitation. This patch finally
+solves the problem, which in fact was just a hard-to-fix software problem
+(b/c of lack of documentation by the SoC-maker Allwinner Technology).
 
-Cheers,
-Błażej.
+RFC: Since more than about 25 similar SBC/SoC models do use the
+ahci_sunxi driver, users are encouraged to test it on all the
+affected boards and give feedback.
+
+Lists of the affected sunxi and other boards and SoCs with SATA using
+the ahci_sunxi driver:
+  $ grep -i -e "^&ahci" arch/arm/boot/dts/sun*dts
+  and http://linux-sunxi.org/SATA#Devices_with_SATA_ports
+  See also http://linux-sunxi.org/Category:Devices_with_SATA_port
+
+Patch v2:
+  - Commented the patch in-place in ahci_sunxi.c
+  - With bs=12K and no conv=... passed to dd, the write performance
+    rises further to 132 MiB/s
+  - Changed MB/s to MiB/s
+  - Posted the story behind the patch:
+    http://lkml.iu.edu/hypermail/linux/kernel/1905.1/03506.html
+  - Posted a dd test script to find optimal bs, and some results:
+    https://bit.ly/2YoOzEM
+
+Patch v1:
+  - States bs=4K for dd and a write performance of 120 MiB/s
+
+Signed-off-by: Uenal Mutlu <um@mutluit.com>
+---
+ drivers/ata/ahci_sunxi.c | 47 +++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 45 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/ata/ahci_sunxi.c b/drivers/ata/ahci_sunxi.c
+index 911710643305..ed19f19808c5 100644
+--- a/drivers/ata/ahci_sunxi.c
++++ b/drivers/ata/ahci_sunxi.c
+@@ -157,8 +157,51 @@ static void ahci_sunxi_start_engine(struct ata_port *ap)
+ 	void __iomem *port_mmio = ahci_port_base(ap);
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
+ 
+-	/* Setup DMA before DMA start */
+-	sunxi_clrsetbits(hpriv->mmio + AHCI_P0DMACR, 0x0000ff00, 0x00004400);
++	/* Setup DMA before DMA start
++	 *
++	 * NOTE: A similar SoC with SATA/AHCI by Texas Instruments documents
++	 *   this Vendor Specific Port (P0DMACR, aka PxDMACR) in its
++	 *   User's Guide document (TMS320C674x/OMAP-L1x Processor
++	 *   Serial ATA (SATA) Controller, Literature Number: SPRUGJ8C,
++	 *   March 2011, Chapter 4.33 Port DMA Control Register (P0DMACR),
++	 *   p.68, https://www.ti.com/lit/ug/sprugj8c/sprugj8c.pdf)
++	 *   as equivalent to the following struct:
++	 *
++	 *   struct AHCI_P0DMACR_t
++	 *     {
++	 *       unsigned TXTS     : 4,
++	 *                RXTS     : 4,
++	 *                TXABL    : 4,
++	 *                RXABL    : 4,
++	 *                Reserved : 16;
++	 *     };
++	 *
++	 *   TXTS: Transmit Transaction Size (TX_TRANSACTION_SIZE).
++	 *     This field defines the DMA transaction size in DWORDs for
++	 *     transmit (system bus read, device write) operation. [...]
++	 *
++	 *   RXTS: Receive Transaction Size (RX_TRANSACTION_SIZE).
++	 *     This field defines the Port DMA transaction size in DWORDs
++	 *     for receive (system bus write, device read) operation. [...]
++	 *
++	 *   TXABL: Transmit Burst Limit.
++	 *     This field allows software to limit the VBUSP master read
++	 *     burst size. [...]
++	 *
++	 *   RXABL: Receive Burst Limit.
++	 *     Allows software to limit the VBUSP master write burst
++	 *     size. [...]
++	 *
++	 *   Reserved: Reserved.
++	 *
++	 *
++	 * NOTE: According to the above document, the following alternative
++	 *   to the code below could perhaps be a better option
++	 *   (or preparation) for possible further improvements later:
++	 *     sunxi_clrsetbits(hpriv->mmio + AHCI_P0DMACR, 0x0000ffff,
++	 *		0x00000033);
++	 */
++	sunxi_clrsetbits(hpriv->mmio + AHCI_P0DMACR, 0x0000ffff, 0x00004433);
+ 
+ 	/* Start DMA */
+ 	sunxi_setbits(port_mmio + PORT_CMD, PORT_CMD_START);
+-- 
+2.11.0
+
