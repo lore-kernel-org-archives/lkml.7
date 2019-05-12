@@ -2,97 +2,119 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98467C04AB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE648C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628D3216C4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:05:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wlWg+EV6"
+	by mail.kernel.org (Postfix) with ESMTP id 7635C21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557630774;
+	bh=FjhLbAIwjFX1ISoJo+00bvp1axuJ2BtK6jr804KbCts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aVF2V0LviKBc8X17G+F1RFlkx0viweMHEp+4M7JpchBv8VmMeCbUj/+5DIAZPnq+P
+	 40lvOu/d3amla/8mCRDLlR2cZUB1WPSnRsEkbn9BkZyDO4uXJtIW5LOxDUGy4XRS6b
+	 WoIaxpwALTPCScRSQkmQlTICY8kTCQKdviTIzcn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfELDF3 (ORCPT
+        id S1726260AbfELDMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 23:05:29 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:45488 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726101AbfELDF3 (ORCPT
+        Sat, 11 May 2019 23:12:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35212 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbfELDMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 23:05:29 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4C35OJf015949;
-        Sun, 12 May 2019 12:05:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4C35OJf015949
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557630325;
-        bh=PHCpTfH/NZWO5h1TGpj40t3Xwi0gsH7zm2ttJ8bgtjk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wlWg+EV6p2+hWfqagl6qKA6zeryeHT4AiHUyHpHG9bIJxM7i85RKK7kXdqcQhGRxf
-         2BtclUHEyO5BMWmU88/ndzk4RCVUEboitZJneF7Z4bpQJjHNn0EnrOm+T9Ktz1relF
-         mGyx3oQBRNdzhHGfrhkGwXDtNPzYiIdnX/K11bvowIcTIpOnkvBZZMmIuZjzo4XtC6
-         w4R//jH/UtPPbJgBwEqLQbsaG9lrV5YAWUcNqB6AyUC1sA2LQNr8Gtx+gjZxGicUvQ
-         GCVMes5FiCMmWUcBchcWApupfLIsgYo1mnm9MQH+1/FJTaS/wkOzg8OKQ/y7CmXhDy
-         1AY/FPPdyAdTA==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id g187so5954926vsc.8;
-        Sat, 11 May 2019 20:05:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGQIMUOu6eONWSO++AQXD+0WvATkIdq1GIOQr8IK0AzdJTp6NX
-        +B4hb+r4ZexDJKZP+WUU3gW3kWEIMqSrRgGJReo=
-X-Google-Smtp-Source: APXvYqyA7rGAUt6eu5OhrYBOkShM4Orx8bhmw0YZYMWyaFVc/82zhCGwtz59kicrBkLA2W9vTY4b8JPs7swdFESjGYU=
-X-Received: by 2002:a67:f443:: with SMTP id r3mr10260907vsn.179.1557630324014;
- Sat, 11 May 2019 20:05:24 -0700 (PDT)
+        Sat, 11 May 2019 23:12:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=A9OY9hBfbTY7S2hso66X68O5pPXVzbcBRlTLnQO/ZWY=; b=ehzAh4hceMgRSle4c8PxPkagJ
+        +xO4SKEW6EuiRTK8dYfmBml6bjfbe52xaQPMo1WFeDYL0KKG2Spco0Wt7Nrhq2TI5D1amXQiOKr7a
+        bWtJwwzs9Ins7JSJLz3T6S1IxTV0B17AP55kftVnKVZZ9a+bqSyFXtEmpDrbBvsS8WPtI=;
+Received: from [61.200.20.122] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hPeus-0002IA-0s; Sun, 12 May 2019 03:12:46 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 1AD5844000C; Sun, 12 May 2019 04:12:42 +0100 (BST)
+Date:   Sun, 12 May 2019 12:12:42 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH V3 5/9] spi: export spi core function spi_set_cs
+Message-ID: <20190512031242.GB21483@sirena.org.uk>
+References: <1555363834-32155-1-git-send-email-skomatineni@nvidia.com>
+ <1555363834-32155-6-git-send-email-skomatineni@nvidia.com>
+ <20190419151823.GS2803@sirena.org.uk>
+ <BYAPR12MB3398D133D1C71355BC530754C2390@BYAPR12MB3398.namprd12.prod.outlook.com>
+ <20190506044425.GN14916@sirena.org.uk>
+ <BYAPR12MB3398D946FDD0E5406B23EB50C20C0@BYAPR12MB3398.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-References: <20190509201925.189615-1-ndesaulniers@google.com> <20190511022458.GA7376@archlinux-i9>
-In-Reply-To: <20190511022458.GA7376@archlinux-i9>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Sun, 12 May 2019 12:04:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARB_ds9-dF9n1jHD==JRWsnPYNGoKxLqb+FwKvTTC0bLQ@mail.gmail.com>
-Message-ID: <CAK7LNARB_ds9-dF9n1jHD==JRWsnPYNGoKxLqb+FwKvTTC0bLQ@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add script check for cross compilation utilities
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398D946FDD0E5406B23EB50C20C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+X-Cookie: HOST SYSTEM RESPONDING, PROBABLY UP...
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 11:25 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Few comments below but nothing major, this seems to work fine as is.
->
-> On Thu, May 09, 2019 at 01:19:21PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > When cross compiling via setting CROSS_COMPILE, if the prefixed tools
-> > are not found, then the host utilities are often instead invoked, and
-> > produce often difficult to understand errors.  This is most commonly the
-> > case for developers new to cross compiling the kernel that have yet to
-> > install the proper cross compilation toolchain. Rather than charge
-> > headlong into a build that will fail obscurely, check that the tools
-> > exist before starting to compile, and fail with a friendly error
-> > message.
->
-> This part of the commit message makes it sound like this is a generic
-> problem when it is actually specific to clang. make will fail on its
-> own when building with gcc if CROSS_COMPILE is not properly set (since
-> gcc won't be found).
->
-> On a side note, seems kind of odd that clang falls back to the host
-> tools when a non-host --target argument is used... (how in the world is
-> that expected to work?)
 
+--neYutvxvOLaeuPCA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I agree.
-Failure is much better than falling back to host tools.
+On Fri, May 10, 2019 at 06:53:25PM +0000, Sowjanya Komatineni wrote:
+> > On Mon, Apr 29, 2019 at 10:02:46PM +0000, Sowjanya Komatineni wrote:
 
+To reiterate:
 
--- 
-Best Regards
-Masahiro Yamada
+> > Please fix your mail client to word wrap within paragraphs at
+> > something substantially less than 80 columns.  Doing this makes your
+> > messages much easier to read and reply to.
+
+> Any concerns for using set_cs API from SPI core as it already does direct gpio based cs using
+> Descriptors?
+
+Yes, that is precisely what I'm telling you not to do.  That function
+doesn't do enough to make it worth exporting and the code that uses it
+assumes it's managing the chip select entirely, adding a single other
+use will make things fragile as it will mean that there's a chance
+someone will change what the core is doing without taking into account
+the different things that the Tegra code is doing.  Either let the core
+handle chip select entirely or open code it.
+
+--neYutvxvOLaeuPCA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzXjykACgkQJNaLcl1U
+h9CdDwf/RMwk8JveODVogg3LW+9FdUslYiuSh/72+FYAjmKk28dm3H328PpA/y2c
+ZytPr8GyaF0vI4dbOhl7xFeHSJvb3FSmZxYUrD0f5kWkPjMI/SB2Z2hCZFdnONMm
+wssyJ+3Q7dS4fOCmSOg11yn8c02PAzP5R+G2Vqdt/tKH+hj2ItKxghQI10qGL78K
+AtAYMCzLlUNJ1QgWeg3cAfNZZlGTQoOuRCx6hvklNTgwxk6ED2aKF2FV4Jw2AxI0
+n89eG0UOGQeI0KmPSc8GOUduj/0vUITd0qSWVNOtvirNf1rV6gu6mMZIclPiLPjp
+kPI1Fp72G4ZAFyfGuleOFW2K6uDZVA==
+=qEfj
+-----END PGP SIGNATURE-----
+
+--neYutvxvOLaeuPCA--
