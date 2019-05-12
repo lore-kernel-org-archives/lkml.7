@@ -2,103 +2,132 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2E3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CD0C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F79721019
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8563321019
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fjM1S5rH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBmE7w7P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfELRnY (ORCPT
+        id S1726922AbfELRqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 13:43:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39365 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfELRnY (ORCPT
+        Sun, 12 May 2019 13:46:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36175 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfELRqR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 13:43:24 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z26so5884673pfg.6;
-        Sun, 12 May 2019 10:43:23 -0700 (PDT)
+        Sun, 12 May 2019 13:46:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id j187so11558733wmj.1;
+        Sun, 12 May 2019 10:46:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=RpfQWsV4Cbteqis6flWSQny0WpQ+Omw4oCErU7z7boU=;
-        b=fjM1S5rHQqQcQd4WKjcxpSpf/RFROidSPqgD621jf1QPwRyL0r+h5EwLAMqv1Obsbq
-         CGGMdJweC0t63KEYmq6MWkdav2WloDvQoZN/SJxecAMgoOkQ/K7fAxBZ1pC9l/dPGndk
-         C4L/Jc9sIsCmgfqorFyGMPsz3wN+i/jthDI6dq0zfn61d4iJhN15CAPJD2vDiJht2+/1
-         JEcSDTmE/mtYq0qyn3NONfVE4e1IyE1/Azv6YEtO68QeCVlgg4DNNKKEILhpGrobLQD7
-         T2BgJHi0qQmeBhVNWv0iF5qX7FUdEBYgHpH56YzJ1+Xn4a3IBzxGpkzmh2Y4vA1pBH9v
-         29iQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QVZfv1XrlSfCBKYSGVa1+qErP5NlTniZ7Uw0fXhDRsM=;
+        b=nBmE7w7P+u/frCbPSdZZa0Xz+mMQkcFFkWsU3I6Hta0YBTEF9DDgCHpCIVFXrcFstD
+         CEvhmQNCSykn2g8xZMk77WWw626Ia3fV1rSp5z1dYf6OVEkMUXY/QD5FRaZ2qY8VVstE
+         m5OJQirNJgPgxvv28WYnq8sJXVTdvAmynUI37JIyuZY8Sb/1XxRABptKzWNvbjmnJlnV
+         DOwj5L1QUQOvOzZarMkEh80NzOQX8/f1msKgmIyc/ms/1s2dhTxCPcptMh/feRm+rBsI
+         QpSQD6JEXJzk1T5/RbL472yHbo/VkcuOMhf15pXbJKuBPmBJ7uTDTF4QBpCLjtJbyZf9
+         iXzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=RpfQWsV4Cbteqis6flWSQny0WpQ+Omw4oCErU7z7boU=;
-        b=XknaEIH+x8U1+WW+XSVW4p52KoWDePrxymTLGOLg6XBU1fm9hIna3mNjkL54wpPRec
-         U3Ei6IjdHpgEk/WJtXhQ+9BL13kFJqNdlU6XewgNHLfaLbD9VrvgQ3piaAiQip4xV6sP
-         OiI+ZS1sjAno+sng7zBug5bVT0AYzcF8LBgIcJOJOATc7bazxOCrUcfTgQm+E6rUdXpw
-         4mMMABy7/1fnEQqVbiGtUXjEJlH+jyoQPU8JEFgrnPfAMd9NEfkPl1210k6kpHQwkmQI
-         xNcImoRy1hIUM+v68sBXqu5+NUw0eETvrg/1Cacgchzit8sxPpTt3jTCtJMh3oY2FzPG
-         zFzw==
-X-Gm-Message-State: APjAAAVwclL4qchHd62LMxWal3mJKqq5W14IucumH7BsEHI9ND53lBha
-        zTbk3JkoSjA5DatHa+artSRCoga5
-X-Google-Smtp-Source: APXvYqwA2JLRsVBcHD5XrPTOoDV9t5KwrAn9xuuMjj9Ou0loLok0YzAVyBhvlltiUo/rZLTLoCgOBA==
-X-Received: by 2002:a63:170a:: with SMTP id x10mr25927719pgl.355.1557683003371;
-        Sun, 12 May 2019 10:43:23 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id m6sm1125842pgr.18.2019.05.12.10.43.17
+        bh=QVZfv1XrlSfCBKYSGVa1+qErP5NlTniZ7Uw0fXhDRsM=;
+        b=o1XknW6Tzvr6gpMwQD6NJC18PzsOy8z8a1akUhRTXyGRAqdL1c//31lt5WZLVDCj3/
+         bYWCOt/wIJ5D6dwCTh8Ic3hRK7iC/+i2+7MBQvbHXgzrHMqRM7wABWT6Q98FewpZ9VMh
+         t3iMFGO/g30stb7jr84WpSEiOl7MMEo/UwLEIDpUqPyqRydGWsQDPkKJItToO297zHXI
+         yXOr8yKkBjNIsYEJgZJ/0F/N6QNkSPjAgs5m2V1c7+YpsVoImFtx1lqEWekk4z5Lg4Ho
+         nnEvTK2ccfN2jZm0pOSau0/UtqLaUPTCXrp9Bfemc46zE8tJZXZbE2L5LwLVDqOSo2z9
+         6i+g==
+X-Gm-Message-State: APjAAAWbh/KvSFAJAqhshAQ9zt+9RpYqMQayho8zSej8i0jQhPVZaS4H
+        hhUmFBDvpKcmXQcig+3zs7E=
+X-Google-Smtp-Source: APXvYqxhWeqE2lBh2k5a4dTcV7sEJ2M9qqkT8DQ/tBHx1rAhg4yUak6CGFAClz0i/26Aef9LHqGtXw==
+X-Received: by 2002:a05:600c:254e:: with SMTP id e14mr1830396wma.70.1557683175358;
+        Sun, 12 May 2019 10:46:15 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
+        by smtp.gmail.com with ESMTPSA id d14sm9090558wre.78.2019.05.12.10.46.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 10:43:22 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 5/6] soc/tegra: regulators: Add regulators coupler
- for Tegra20
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-6-digetx@gmail.com>
- <20190508075706.GW14916@sirena.org.uk>
- <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
- <20190512090627.GO21483@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <586b4f29-1937-2d7b-3944-c29311502878@gmail.com>
-Date:   Sun, 12 May 2019 20:42:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 12 May 2019 10:46:14 -0700 (PDT)
+From:   peron.clem@gmail.com
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@googlegroups.com,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Date:   Sun, 12 May 2019 19:46:00 +0200
+Message-Id: <20190512174608.10083-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190512090627.GO21483@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12.05.2019 12:06, Mark Brown пишет:
-> On Wed, May 08, 2019 at 04:10:58PM +0300, Dmitry Osipenko wrote:
-> 
->> 1) CORE and RTC have max-spread voltage of 170mV.
->> 2) CORE and RTC voltages must be higher than the CPU voltage by at least
->> 120mV.
-> 
-> This seems like it should be easy enough to describe - we just need
-> minimum and maximum spreads between pairs of rails.
-> 
+From: Clément Péron <peron.clem@gmail.com>
 
-Yes, but the proper CORE/RTC minimum voltages shall be maintained until
-all drivers will get support for the voltage management, which likely to
-take a lot of time to get upstreamed. So I'd want to get at least some
-basics working for the start, later on it should be possible to consider
-generalization of the regulators coupling. Mark, are you okay with
-having the custom regulators coupler as an interim solution?
+Hi,
+
+The Allwinner H6 has a Mali-T720 MP2. The drivers are
+out-of-tree so this series only introduce the dt-bindings.
+
+The first patch is from Neil Amstrong and has been already
+merged in linux-amlogic. It is required for this series.
+
+The second patch is from Icenowy Zheng where I changed the
+order has required by Rob Herring.
+See: https://patchwork.kernel.org/patch/10699829/
+
+Thanks,
+Clément
+
+Changes in v4:
+ - Add Rob Herring reviewed-by tag
+ - Resent with correct Maintainers
+
+Changes in v3 (Thanks to Maxime Ripard):
+ - Reauthor Icenowy for her patch
+
+Changes in v2 (Thanks to Maxime Ripard):
+ - Drop GPU OPP Table
+ - Add clocks and clock-names in required
+
+Clément Péron (6):
+  dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+  arm64: dts: allwinner: Add ARM Mali GPU node for H6
+  arm64: dts: allwinner: Add mali GPU supply for Pine H64
+  arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+  arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+
+Icenowy Zheng (1):
+  dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+
+Neil Armstrong (1):
+  dt-bindings: gpu: mali-midgard: Add resets property
+
+ .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
+ .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
+ 6 files changed, 61 insertions(+)
+
+-- 
+2.17.1
+
