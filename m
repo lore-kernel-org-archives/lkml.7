@@ -2,100 +2,105 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC03C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F243C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91642133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F106A2133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:19:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oMVsLDNV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qni6gC2q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfELMSx (ORCPT
+        id S1726726AbfELMTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 08:18:53 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:36436 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfELMSx (ORCPT
+        Sun, 12 May 2019 08:19:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:36598 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfELMTb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 08:18:53 -0400
-Received: by mail-it1-f195.google.com with SMTP id e184so3835567ite.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 05:18:53 -0700 (PDT)
+        Sun, 12 May 2019 08:19:31 -0400
+Received: by mail-pl1-f196.google.com with SMTP id d21so5029350plr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 05:19:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=alWOx1r6/Z9rB6PhHJXJE/9Vs78NWkWdtgi8OAKuStU=;
-        b=oMVsLDNV7JrRrXgV7zMNB/Tkv3GcdtwVhUcjy+Uw0v3DU4FYiW70ltCZBRod6amr98
-         a5W1/WSMaUfYd5qa5muTAhQD7yCG/T8n+gA1Bi0w4MjoJBx+PbdveT4QpdG1VW024r0S
-         dmkczJFgJagkcs5kkNM8wjhwzAUlw8GBUEU9iw+hUuqnrjLvC+3x/bbysYfeWFwnl69c
-         eP8iczDl0qnf+ec4XLIaZPkda1eqxYa4CVHp+UJigpJCL2j2BTR/o31m2xGZzGpiv72i
-         whuy4ryTZBxHYlblbgLI7G95WoCLnATmT3dniCx1HmfoadxvmRaq4urgzd2cWBx1zDfZ
-         2o7A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XnvQJc31NkYJDKHGe2ZPAaF9BNwwW3ZlTSoXFk3nhO4=;
+        b=Qni6gC2qcHVxnGYXbzGXFA9Yp5N6QGoVnRMAzbqDpG5X4dbAjsX3knozjJcOCcsecR
+         GOzEjXGzJkgzewVsUxOpYfTjVOHxBedYDgI2eB//Qw4tqPeHpxAUq1/yEzzt/plXutlS
+         1OMRMgzbAZErJJbiqmvqlTytA3mDI5Tz3t6eZw3Tq1YK65C6kZRu75Wa+dLFhGsxf254
+         dwFRqJRyR9jVVMoJpS49BSe5kt6wfvu2Yx1w3c9JTX8DH9mUCj9I5Oqfiqh+fjEfrNmi
+         F0U/wosSM5aAlfjQSKX6ATNwB8/GzzNFXMpxmvujMUU0J0xDVoSe75ZRGYSD3fjOaQWN
+         105w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=alWOx1r6/Z9rB6PhHJXJE/9Vs78NWkWdtgi8OAKuStU=;
-        b=NXHEB6eI/wwNdpqCo3q97LRz8B8BphgRtMV74JfS9fU5gG7oHXGb0u2hvc13Rl5S86
-         5uuiIHyaO+tW/UNFlnSTX/pdZ1myieJ1qd0DTBBvhr7ErNfy7XVrbJoGCp1NVLzWIYeE
-         +P0SdBwWxMbkIRbR37Sn4OjFy1rxmbHV8cbQ+Br2SNFHCq9NdDZqIbqIAaHWiPYh8wWd
-         l3OhgtXUOPWOMSsyBHI9Uzhjj1yzhvMeYSmwTLjliTU8Vtw7VxD0ds3Xn+lVyvE14ONC
-         kNwa8+pUE0JFAdjqN0IGK3rU/wpaFn97hGTkKn+5t+g+skbNue56uSypS02VCyRIZoDR
-         eo8A==
-X-Gm-Message-State: APjAAAXluOgXpvvqd5ygEHsxYbYj0HFtMRfZLzuNYPa8B/EHfH6IPt+W
-        8VB+4OQfSrPiFP0aB+tw2Ws74/RQ+G4=
-X-Google-Smtp-Source: APXvYqxihnvC2ZjLEUeYlaZi/P7dBilIn07WBMKuDLDh/A/+sIm6p1ME1z9CsxxScalUJuYM+SCQQg==
-X-Received: by 2002:a05:660c:a8e:: with SMTP id m14mr6500980itk.169.1557663532402;
-        Sun, 12 May 2019 05:18:52 -0700 (PDT)
-Received: from [10.21.60.184] (hampton-inn.wintek.com. [72.12.199.50])
-        by smtp.googlemail.com with ESMTPSA id y18sm6278425ita.3.2019.05.12.05.18.51
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XnvQJc31NkYJDKHGe2ZPAaF9BNwwW3ZlTSoXFk3nhO4=;
+        b=kd26TP+h8cbdqrXrhjWFF4whYHFiOwPmRihizJ04Vvw/5xwU32Qp8H00icH4EkiwEM
+         oEURNb2RL8S/ouBHArq/mHffQgqcuOuRWNHp6ynVxKsldB9SjV8SY0+20+ApL/OEvq4q
+         SHbUoFCyDRFRfw9n/A36Xlz7v+7gfEa0o2gpsuuExFOZ11wME81FTeLq9HQYVkQW7VyF
+         4jlarQMoX+GmviLPJ6fNLMWp03QKln9AkKooJ2ebIswLwvD3z0s18NnqETb0bea+MhS5
+         v4ZQ+IBST5E/HgRKX1IjvGhInXcIZxvaZutzyIzt2Wz+3Ftlh46kFUTIRpngqcmiujXL
+         0djg==
+X-Gm-Message-State: APjAAAU6mOA38QMdt0GiNidI13+SLYBtw+lO9chlVcKcJp5JUbOV9bov
+        1Toie5pU5TA4uwEf5FlgRPc=
+X-Google-Smtp-Source: APXvYqyC83gg6Ai8bfXkwZua15B6U4OweOWKPKmYAfnGwlo5mj9QUpnoGiMZe3g8HkfI0XukjYdO9g==
+X-Received: by 2002:a17:902:2827:: with SMTP id e36mr24196393plb.45.1557663570546;
+        Sun, 12 May 2019 05:19:30 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id k6sm9195910pfi.86.2019.05.12.05.19.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 05:18:51 -0700 (PDT)
-Subject: Re: [PATCH 01/18] bitfield.h: add FIELD_MAX() and field_max()
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
-        ilias.apalodimas@linaro.org, johannes@sipsolutions.net,
-        andy.shevchenko@gmail.com, syadagir@codeaurora.org,
-        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, abhishek.esse@gmail.com,
-        linux-kernel@vger.kernel.org
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-2-elder@linaro.org> <8736lkji6e.fsf@codeaurora.org>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <adede2d0-c271-259d-a452-39f54f4895c7@linaro.org>
-Date:   Sun, 12 May 2019 07:18:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 12 May 2019 05:19:29 -0700 (PDT)
+Date:   Sun, 12 May 2019 17:49:23 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        viswanath.barenkala@gmail.com
+Subject: [PATCH] staging: rtl8723bs: core  fix warning  "Comparison to bool"
+Message-ID: <20190512121923.GA28044@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <8736lkji6e.fsf@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/19 1:33 AM, Kalle Valo wrote:
-> Alex Elder <elder@linaro.org> writes:
-> 
->> Define FIELD_MAX(), which supplies the maximum value that can be
->> represented by a field value.  Define field_max() as well, to go
->> along with the lower-case forms of the field mask functions.
->>
->> Signed-off-by: Alex Elder <elder@linaro.org>
-> 
-> Via which tree is this going? I assume I do not have take it unless
-> someone says otherwise.
+fix below issue reported by coccicheck
+drivers/staging/rtl8723bs/core/rtw_cmd.c:1741:7-17: WARNING: Comparison
+to bool
 
-Sorry about that, perhaps I should have posted it separately.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_cmd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I don't have an answer, but we could avoid having to coordinate
-if it went together with the rest.
+diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+index ecaa769..fcd26e1 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
++++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
+@@ -1738,7 +1738,7 @@ static void rtw_chk_hi_queue_hdl(struct adapter *padapter)
+ 			pstapriv->tim_bitmap &= ~BIT(0);
+ 			pstapriv->sta_dz_bitmap &= ~BIT(0);
+ 
+-			if (update_tim == true)
++			if (update_tim)
+ 				update_beacon(padapter, _TIM_IE_, NULL, true);
+ 		} else {/* re check again */
+ 			rtw_chk_hi_queue_cmd(padapter);
+-- 
+2.7.4
 
-					-Alex
