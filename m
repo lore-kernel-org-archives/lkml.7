@@ -4,112 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3559C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FD4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 921FB20882
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25A520C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:48:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJiwm9+K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OwdFa64I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbfELPlp (ORCPT
+        id S1726785AbfELPsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 11:41:45 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:45444 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfELPlo (ORCPT
+        Sun, 12 May 2019 11:48:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32978 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfELPsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 11:41:44 -0400
-Received: by mail-vs1-f67.google.com with SMTP id o10so6497742vsp.12
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:41:44 -0700 (PDT)
+        Sun, 12 May 2019 11:48:13 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z28so5814563pfk.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1uG0bivhTUejUYCRrrklLeHk3N0BPLHnD725/cI68EM=;
-        b=sJiwm9+KPs7IRgLD8j4w62N2RmFZ1h0n4FhkeFXOTaRxUOiCyOT0/KzvQ3gLCEkUH1
-         1djUf7rJ9bpcpU6xPvfCUX5Y0ZNmrh8eC732/6AaHHvfIT9EoQ1lPCUm3uY2e24OKUnx
-         GsHCfsFTMVXBut+R3LrniecbHpz/QHeJ4h7IiA0HmzKAhp4rfu9a6Ya66Y2l0gsKYTCs
-         r+ZAeKLi6tKTwtcudZEOvvbFoXGdAhZRrBuPFC5NtJp9FemmZweDoAl1kIZEIp5vgek0
-         ceW2B0Tz6QDO6fI6CpzE7/vvXzOpOCdmwY1vzdhQXyYPXp5mDI6M5cju8XNhapYm7JRc
-         AdVg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=BA1Za5U5KfZQk8wsu+NsfRi5EQ03hIXikx32Ckah2CA=;
+        b=OwdFa64IwXEmKAs9iKguG8rFcoiTqvLtuYUiFfcpnpe7dH2fbJjeSllNKGvgjqDa4m
+         AfOKVUGeTvRLfBavE24rlBkDjTDCxn/elgisyywjwK3sFNfO+RVus0RLTrKZSO/y7b8X
+         AFnmu/v0o8jtepmbmY5fwF+FErBNYKfQCVc2LHq3RRtjRaxg/Psi7wC90uTgoNzLlgtS
+         1Xe756Zwb3QAQX8Ztx9m6/SJM2lfMivU3Xhwt956by7sB1rDPtc0HmVm304cBNLB77ir
+         3cIFMmwpGz1dzS53NPAjLUj6CPQ/aU6NUBL9r6fy89eoITLoTtRKNrsPoKHO1SpxMmgn
+         8T1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1uG0bivhTUejUYCRrrklLeHk3N0BPLHnD725/cI68EM=;
-        b=aGCAvKWaDC9wuVZT5myWkz5lbybV6fX0ez67dtasp81KyUf9B5eQfHL8Cl3cq+S5WV
-         S2/Pz1enCqH+/9gjOmAHwthMzSUvgnd7tusiOeYdc1zZea+5xXBDpITBYVG/mlNfUAnx
-         vaXZogtmmxaPCz1Qd55L4OQS4AjFCsidXU3Vwd+mKZ0B/jfX9aqplU3eXkWBomDoMmE0
-         j1nK8zbDLIybeO/lMhzUj7RVwYY9VF/iFuUWsAuHNiChUCHm/kl1clrFFYEwjyohB+Zu
-         2RkQQatSP9siQN8ZObvWPmKYW8/F+MBeHjuELSSNWx3ouu8Rz9/aGb2krP3LhnhRuXuD
-         vsnA==
-X-Gm-Message-State: APjAAAUUURTk1TYKaq/PTB4pPTMddu8a/3kfsotrdeVgDBgD+mC8A7DE
-        K7uOVf3+e84H9oT6CGkfoQTmH2PNILK5j3GWQxU=
-X-Google-Smtp-Source: APXvYqwT2y7jDLgGNhBNA81qUTnKiEMzx8FUsJG2jY1R1VLHVs9RSkBhQHi/GzpncbnQfylq8oyUSgTVUgIjrMjbG4Y=
-X-Received: by 2002:a67:ca1c:: with SMTP id z28mr659462vsk.6.1557675703831;
- Sun, 12 May 2019 08:41:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190408163319.10382-1-vichy.kuo@gmail.com> <CAKv+Gu9gfq6PdwwLJd-zXYTiVT0oKtkhJHG4+AaOdD+N0k6c=Q@mail.gmail.com>
-In-Reply-To: <CAKv+Gu9gfq6PdwwLJd-zXYTiVT0oKtkhJHG4+AaOdD+N0k6c=Q@mail.gmail.com>
-From:   pierre kuo <vichy.kuo@gmail.com>
-Date:   Sun, 12 May 2019 23:41:30 +0800
-Message-ID: <CAOVJa8EGh2Unqok1JNhxmRUi4vU45G_d0W+cWupkmRaqRPk9NQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] kaslr: shift linear region randomization ahead of memory_limit
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Price <steven.price@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=BA1Za5U5KfZQk8wsu+NsfRi5EQ03hIXikx32Ckah2CA=;
+        b=b6ePla6dVgnoQli4T9aRaI84xa8VrCih6ODegpFgCHiHMsoIHY+GSYan2rKKaORAzR
+         E2xU/Pfv3F50gpL2BIFAjp0Q2VH4rLIHIk7Hstm6XXQFrkeL37/zfNzD4zHRrQLKOjTy
+         jwqBlu20DYSc++aFh75ohRBb7z6iaDahbGyyjwNpO1HJT79tEjw8aVpmUsH1w4uz4fl4
+         /bMZdhVBnI/QvAiXthAnR7flOiUrnIRtVYBY4XzEsfWMXzqh7ZeTe/clTWir7R12y/Yz
+         CptZ/m2pKUIp9jICCUuRa9kEvPHdymqFUeGa2aLXD1BXz7bml+kaA0IQCfrARiSSIVam
+         9kKQ==
+X-Gm-Message-State: APjAAAXhKTdygHIQNNWayGb3Af8JpcoQA0ZD5tC7IoXTULcM0exr5lWo
+        Vbp3jNoweF+LsmtLyPk4rwQ=
+X-Google-Smtp-Source: APXvYqzt4SsMDZGm8d53Kdhe9kvMQxysA5Ld5CIf2/FlU1iEKljoQ0ic8+y2o2XJFiMV2AtpTYohfg==
+X-Received: by 2002:a62:4ed8:: with SMTP id c207mr28513808pfb.241.1557676092441;
+        Sun, 12 May 2019 08:48:12 -0700 (PDT)
+Received: from [192.168.1.7] ([117.241.202.125])
+        by smtp.gmail.com with ESMTPSA id e14sm7947489pff.60.2019.05.12.08.48.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 08:48:11 -0700 (PDT)
+Subject: Re: [Linux-kernel-mentees] [PATCH] Staging: kpc2000: kpc_dma: resolve
+ checkpath errors and warnings
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20190510193833.1051-1-bnvandana@gmail.com>
+ <CAKXUXMzJCmSZqJ+VFxEOgf_HNgKfPfKS7OECw_RzSxVrDZpCGw@mail.gmail.com>
+From:   Vandana BN <bnvandana@gmail.com>
+Message-ID: <311fb622-b6ea-f580-df55-c26c24823ef5@gmail.com>
+Date:   Sun, 12 May 2019 21:18:07 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAKXUXMzJCmSZqJ+VFxEOgf_HNgKfPfKS7OECw_RzSxVrDZpCGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ard:
-> > The following is schematic diagram of the program before and after the
-> > modification.
-> >
-> > Before:
-> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
-> > if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
-> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
-> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
-> >
-> > After:
-> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
-> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
-> > if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
-> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
-> >
-> > After grouping modification of memstart_address by moving linear region
-> > randomization ahead of memory_init, driver can safely using macro,
-> > __phys_to_virt, in (b) or (c), if necessary.
-> >
+
+On 11/05/19 2:04 AM, Lukas Bulwahn wrote:
+> On Fri, May 10, 2019 at 9:39 PM Vandana BN <bnvandana@gmail.com> wrote:
+>> This patch resolves coding style errors and warnings reported by chechpatch
+>>
+> I did not look at the patch in detail, but you might want to also
+> consider to replace the CamlCase (function) names by names in
+> lower-case with underscores. That is the common style in the kernel.
 >
-> Why is this an advantage?
+> Lukas
 
-1st, by putting (d) right behind (a),  driver can safely uses macro,
-__phys_to_virt that depends on memstart_address, in (b) and (c) if necessary.
-That means:
-(a)
-(d)
------ finish modification of memstart_address --------
-(b) --> can safely use __phys_to_virt
-(c) --> can safely use __phys_to_virt
+With this path I wanted to fix Error and warning reported by checkpatch.pl
 
-2nd, it can make current driver more concise.
-Letting (d) right behind (a), as below v3 patch shows,
-https://lkml.org/lkml/2019/4/8/683
-it can put initrd_start/initrd_end to be calculated only when linear
-mapping check
-pass and concise the driver by eliminating
-"if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) " as patch shows.
+Is it ok if i do CamlCase fixes as separate patch than this ?
 
-Thanks for your message.
+thanks,
+
+Vandana.
+
