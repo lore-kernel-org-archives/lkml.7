@@ -2,32 +2,32 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F55C04A6B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E18EBC04AB4
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D5C2173B
+	by mail.kernel.org (Postfix) with ESMTP id BD3AE217D7
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726595AbfELKtC (ORCPT
+        id S1726660AbfELKtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 06:49:02 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:54142 "EHLO honk.sigxcpu.org"
+        Sun, 12 May 2019 06:49:03 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:54125 "EHLO honk.sigxcpu.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726100AbfELKtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725934AbfELKtC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 May 2019 06:49:02 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 3D11BFB03;
-        Sun, 12 May 2019 12:48:57 +0200 (CEST)
+        by honk.sigxcpu.org (Postfix) with ESMTP id D13C2FB05;
+        Sun, 12 May 2019 12:48:54 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
 Received: from honk.sigxcpu.org ([127.0.0.1])
         by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GpXnQVOhyJqT; Sun, 12 May 2019 12:48:52 +0200 (CEST)
+        with ESMTP id exSV5RRusFEc; Sun, 12 May 2019 12:48:52 +0200 (CEST)
 Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 7CE9947D5C; Sun, 12 May 2019 12:48:51 +0200 (CEST)
+        id 8DB6547B79; Sun, 12 May 2019 12:48:51 +0200 (CEST)
 From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
 To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -50,10 +50,12 @@ To:     Kishon Vijay Abraham I <kishon@ti.com>,
         Robert Chiras <robert.chiras@nxp.com>,
         Sam Ravnborg <sam@ravnborg.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v11 0/2] Mixel MIPI DPHY support for NXPs i.MX8 SOCs
-Date:   Sun, 12 May 2019 12:48:49 +0200
-Message-Id: <cover.1557657814.git.agx@sigxcpu.org>
+Subject: [PATCH v11 1/2] dt-bindings: phy: Add documentation for mixel dphy
+Date:   Sun, 12 May 2019 12:48:50 +0200
+Message-Id: <b3f171fdbed948074fecb619c242ba427285d98e.1557657814.git.agx@sigxcpu.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1557657814.git.agx@sigxcpu.org>
+References: <cover.1557657814.git.agx@sigxcpu.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,135 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds initial support for the Mixel IP based mipi dphy as found on i.MX8
-processors.  It has support for the i.MX8MQ, support for other variants can be
-added - once the platform specific parts are in - via the provided devdata.
-The driver is somewhat based on what's found in NXPs BSP.
+Add support for the MIXEL DPHY IP as found on NXP's i.MX8MQ SoCs.
 
-Public documentation on the DPHY's registers is currently thin in the i.MX8
-reference manuals (even on the i.MX8QXP form 11/18) so most of the values were
-taken from existing drivers. Newer NXP drivers have a bit more details so where
-possible the timings are calculated and validated.
-
-This was tested with the an initial version of a NWL MIPI DSI host
-controller driver
-
-    https://lists.freedesktop.org/archives/dri-devel/2019-March/209685.html
-
-and a forward ported DCSS driver on linux-next 20190506.
-
-Robert Chiras (the author of the corresponding driver in NXPs vendor
-tree) got this driver to work in his tree as well using mxsfb:
-
-    https://www.spinics.net/lists/arm-kernel/msg711950.html
-
-Changes from v10
-* Collect Reviewed-by: from Fabio Estevam
-* Collect Reviewed-by: from Sam Ravnborg
-* As per review comments from Sam Ravnborg
-  * Terminate all dev_{dbg,err} with '\n'
-  * Add more whitespace to CM/CN/CO macros
-  * Drop another non-ascii symbol in a debug message
-
-Changes from v9
-* As per review comments from Fabio Estevam
-  * Sort includes alphabetically
-  * Remove excessive new lines between functions
-  * Drop error message on devm_ioremap_resource, handled by
-    the core already.
-  * Don't default to it on i.MX8
-* As per review comments from Sam Ravnborg
-  * Use clearer variablenames:
-       struct regmap *regs -> regmap
-       void __iomem *regs -> base
-  * Use u32 for all parameters of get_best_ratio()
-  * Don't use non-ascii symbols in debug message
-  * Change MODULE_LICENSE to GPL
-* As per review comment from Andreas Färber
-  * Change co-authored-by: to co-developed-by:
-* Collect Signed-off-by from Robert Chiras
-
-Changes from v8
-* Collect Reviewed-by from Rob Herring
-* Fix {hs,clk}_prepare vs {hs,clk}_zero debug print out
-
-Changes from v7
-* As per review comments from Rob Herring
-  * Use fsl, as vendor prefix
-  * Drop changes to vendor-prefixes.txt due to that
-  * Shorten mixel_dphy to dphy in the example
-* Fix an indentation error noticed by checkpatch that got introduced in v6
-* Use lowercase letters in hex addresses in DT bindings example
-
-Changes from v6
-* Depend on HAS_IOMEM (fixes a build problem on UM spotted by kbuild)
-
-Changes from v5
-* Fix build problems on mips (spotted by the kbuild test robot) by using u32
-  consistently and long long for lp_t.
-
-Changes from v4
-* Build by default on ARCH_MXC && ARM64
-
-Changes form v3
-* Check correct variable after devm_ioremap_resource
-* Add Robert Chiras as Co-authored-by since he's the author
-  of the driver in NXPs BSP.
-
-Changes from v2
-* As per review comments from Fabio Estevam
-  * KConfig: select REGMAP_MMIO
-  * Drop phy_read
-  * Don't make phy_write inline
-  * Remove duplicate debugging output
-  * Comment style and typo fixes
-  * Add #defines's for PLL lock timing values
-  * Return correct error value when PLL fails to lock
-  * Check error when enabling clock
-  * Use devm_ioremap_resource
-* As per review comments from Robert Chiras
-  * Deassert PD_DPHY after PLL lock (as per mixel ref manual)
-  * Assert PD_{DPHY,PLL} before power on (as per mixel ref manual)manual
-* Add exit phy_op to reset CN/CM/CO
-
-Changes from v1
-* As per review comments from Fabio Estevam
-  * Kconfig: tristate mixel dphy support.
-  * Drop unused 'ret' in mixel_dphy_ref_power_off.
-  * Match values of DPHY_RXL{PRP,DRP} to those of
-    https://source.codeaurora.org/external/imx/linux-imx/log/?h=imx_4.14.78_1.0.0_ga
-    The previous values were based on 4.9.
-  * Use resource size on devm_ioremap, we have that in dt already.
-  * Use regmap so it's simple to dump the registers.
-  * Use regmap_read_poll_timeout instead of open coded loop.
-  * Add undocumented rxhs_settle register
-* As per review comments from Sam Ravnborg
-  * Move driver to d/phy/freescale/
-  * Move SPDX-License-Identifier to top of file.
-  * Drop '/* #define DEBUG 1 */'.
-  * Use GPL-2.0+ since the vendor driver uses that as well.
-  * Drop the mutex, register access is now protected by regmap.
-  * Fix various style / indentation issues.
-* Check for register read, write and ioremap errors
-* Improve phy timing calculations
-  * Use LP clock rate where sensible, check for errors
-  * Use ad hoc forumulas for timings involving hs clock
-* Switch from dphy_ops to devdata. Other i.MX8 variants
-  differ in register layout too
-* Add Mixel Inc to vendor-prefixes.txt
-
-Guido Günther (2):
-  dt-bindings: phy: Add documentation for mixel dphy
-  phy: Add driver for mixel mipi dphy found on NXP's i.MX8 SoCs
-
- .../bindings/phy/mixel,mipi-dsi-phy.txt       |  29 +
- drivers/phy/freescale/Kconfig                 |  10 +
- drivers/phy/freescale/Makefile                |   1 +
- .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 500 ++++++++++++++++++
- 4 files changed, 540 insertions(+)
+Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+---
+ .../bindings/phy/mixel,mipi-dsi-phy.txt       | 29 +++++++++++++++++++
+ 1 file changed, 29 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
- create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
 
+diff --git a/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+new file mode 100644
+index 000000000000..9b23407233c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/mixel,mipi-dsi-phy.txt
+@@ -0,0 +1,29 @@
++Mixel DSI PHY for i.MX8
++
++The Mixel MIPI-DSI PHY IP block is e.g. found on i.MX8 platforms (along the
++MIPI-DSI IP from Northwest Logic). It represents the physical layer for the
++electrical signals for DSI.
++
++Required properties:
++- compatible: Must be:
++  - "fsl,imx8mq-mipi-dphy"
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Must contain the following entries:
++  - "phy_ref": phandle and specifier referring to the DPHY ref clock
++- reg: the register range of the PHY controller
++- #phy-cells: number of cells in PHY, as defined in
++  Documentation/devicetree/bindings/phy/phy-bindings.txt
++  this must be <0>
++
++Optional properties:
++- power-domains: phandle to power domain
++
++Example:
++	dphy: dphy@30a0030 {
++		compatible = "fsl,imx8mq-mipi-dphy";
++		clocks = <&clk IMX8MQ_CLK_DSI_PHY_REF>;
++		clock-names = "phy_ref";
++		reg = <0x30a00300 0x100>;
++		power-domains = <&pd_mipi0>;
++		#phy-cells = <0>;
++        };
 -- 
 2.20.1
 
