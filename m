@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB90C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0607AC04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DE3217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA466217D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:46:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u24eCC2S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C87Q+0KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfELRq3 (ORCPT
+        id S1727003AbfELRqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 13:46:29 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35044 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfELRqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 May 2019 13:46:25 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w12so12735356wrp.2;
-        Sun, 12 May 2019 10:46:24 -0700 (PDT)
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50660 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfELRqV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 13:46:21 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f204so6170820wme.0;
+        Sun, 12 May 2019 10:46:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lb3IP/Hl9lXy/TNODmgqSdzhcHKCTOi5Q6K9F3iD6Yc=;
-        b=u24eCC2SgKLBkmO/LnDz2izzPhp4h023a+HZEvpM6YzgQ7pIzUHZItuuECjuW4vP60
-         E85x71N9IoxOKj5h+cTaH25KQ2NWmsQvioP3XzSdgZBXrg7CLYBHjlWO+zr/r5rnPZ7o
-         AJ5kguSwtuaoBFvZ0fpVvxWsAWn7HvTVWdhsyTPpIir82PdndXqLNSrYL8EWwJZPF07H
-         TI70oBn08Y/j8mgJdUPt4t8nBIHU7TTUFoK4NO6PQiiKtX3JwedlOTGCBCQLfkTKwxCZ
-         18Wxma2Ew8biSRB8zxUY25ZZ7P2x5171XH7oXs8gjEXcdlSdJ7DY6n3VNWzMj5Vjf6/+
-         hw2A==
+        bh=EXpuW1H5E6JQJvkk+bffS60LiMlJ6FTGBpL+lRXA+/0=;
+        b=C87Q+0KZQadrQrFy/za95yC+j5F9HIcOk+MD/C9HIXG+ocEQapjM4S2ITPa0BLHET0
+         TveZfiYQ/0GIB0Q3RDpOCPvI8Dq5yBr0wNvFMerC0oF3tyITvUzD/EMkVuawaWcZUeJW
+         Losyzn7J5obpJCtjMEmo4hNYOj5ULqh8Mdo7ZOuLLhrEEMff8cwte3uzAy4fMbRvy94O
+         YdhlCq/6M2Vyhu/IoB60ud/+9jDueB89Y3+rz/lRGzS5vw/O/YtZa+uLqVQsxXQ+yUt3
+         yyK0Fznt12O+GzSnJ+cMNNwKLT0DYr5HX1QPF3OWWx5m5t/RszjCKfW0+mrczm8pWipQ
+         Jn0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lb3IP/Hl9lXy/TNODmgqSdzhcHKCTOi5Q6K9F3iD6Yc=;
-        b=CgNSUEpBdUK/Q9SnxIzDv3SoCnf/OhUelI4cJYxsOPRnHI8PG9fcHA8kkRrFagMJ0f
-         mgs8VjD4pzadal9lS4blOvhRkBIYFIQvT4RwdqYoUBFFCM9+IYGAK/R/xU9/6AOaxP5o
-         owTTzFGaJRG5lnhZDUSeoYt8e9COHYXrkEel77AqiZqpPCJHOD4nJmktEJ29umtFkxPs
-         nbuP4sn/ife7A020re4O5/T5sgVHwJ7pEV4SmqrXfiJDOQp5cGNDzybNODXuWeUnGYuY
-         5UoRrBRxqilwxOFBB0tdvvWbVqK6tMWkx7MoXd2gY/LUjg34zxT3y5ceuceLUU0K/2Sa
-         IY5Q==
-X-Gm-Message-State: APjAAAWjJ5DWh8bY7SWXptUJ+kzSsJFRXUn4EtpNa5iyHd5w4aEjUXP/
-        sf2uSCchi4M0eESSsrz1FRo=
-X-Google-Smtp-Source: APXvYqz/VewqOJnmZC2dZcKpaUrdwzIGnGakbHjHUF/LaI2SfDQMiogOyo/etrjKnneSrTsw/xi4RA==
-X-Received: by 2002:adf:f9c3:: with SMTP id w3mr5934677wrr.271.1557683184146;
-        Sun, 12 May 2019 10:46:24 -0700 (PDT)
+        bh=EXpuW1H5E6JQJvkk+bffS60LiMlJ6FTGBpL+lRXA+/0=;
+        b=U0627i1f9p5dEa0I6BThK6v2LOqhGPOYLJpwiCEhmiV/9QAguQP1SKJaM4ui/VXFs/
+         6YhiEBLz/MaNFg0Ym848QeHn8XE62Jn6xBp3TmASgo8c0ctQucl+DhLxGIZFBrmJ4w/z
+         PewbxFKv4rIcktzszUzfWYJIvSS1CsfA7E4UX9PMeOlMDaCHNz/3cNJoShlJiqvfkKaD
+         cftinl8TmMlFFGTkZ+auVCi2eIfPqUgwNU5qTMyR22btMfzX+/os12unrD0qRF1VNCcF
+         LtdvVHRAMkNVgKFiSFKRM1pWsqp9gKux1bjequFIEe+UuiK1jgInsWmk4JyJG9ULVywV
+         tqmA==
+X-Gm-Message-State: APjAAAXjx6duR90unSDvJskPrk5GYbJo6+WMFojf7jdJH5+IN65aeW2h
+        Dk+H+URQuzjySrFcmCWvwDo=
+X-Google-Smtp-Source: APXvYqxhB7vibCkxRA4FPfP8y01EU8vmUJIZfLKUu16/cqguHPZ7Vjvf/kWOGAn7GjdIKhCBtdMUHg==
+X-Received: by 2002:a1c:7a12:: with SMTP id v18mr13528180wmc.69.1557683179040;
+        Sun, 12 May 2019 10:46:19 -0700 (PDT)
 Received: from localhost.localdomain ([2a01:e0a:1f1:d0f0::4e2b:d7ca])
-        by smtp.gmail.com with ESMTPSA id d14sm9090558wre.78.2019.05.12.10.46.23
+        by smtp.gmail.com with ESMTPSA id d14sm9090558wre.78.2019.05.12.10.46.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 10:46:23 -0700 (PDT)
+        Sun, 12 May 2019 10:46:18 -0700 (PDT)
 From:   peron.clem@gmail.com
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -66,9 +66,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-sunxi@googlegroups.com,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v4 8/8] arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
-Date:   Sun, 12 May 2019 19:46:08 +0200
-Message-Id: <20190512174608.10083-9-peron.clem@gmail.com>
+Subject: [PATCH v4 3/8] dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+Date:   Sun, 12 May 2019 19:46:03 +0200
+Message-Id: <20190512174608.10083-4-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190512174608.10083-1-peron.clem@gmail.com>
 References: <20190512174608.10083-1-peron.clem@gmail.com>
@@ -82,30 +82,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Clément Péron <peron.clem@gmail.com>
 
-Enable and add supply to the Mali GPU node on the
-Orange Pi 3 board.
+This add the H6 mali compatible in the dt-bindings to later support
+specific implementation.
 
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt         | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index 17d496990108..d4c989cc92a7 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -58,6 +58,11 @@
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+index 2e8bbce35695..4bf17e1cf555 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+@@ -15,6 +15,7 @@ Required properties:
+     + "arm,mali-t860"
+     + "arm,mali-t880"
+   * which must be preceded by one of the following vendor specifics:
++    + "allwinner,sun50i-h6-mali"
+     + "amlogic,meson-gxm-mali"
+     + "rockchip,rk3288-mali"
+     + "rockchip,rk3399-mali"
+@@ -49,9 +50,15 @@ Vendor-specific bindings
+ ------------------------
  
-+&gpu {
-+	mali-supply = <&reg_dcdcc>;
-+	status = "okay";
-+};
+ The Mali GPU is integrated very differently from one SoC to
+-another. In order to accomodate those differences, you have the option
++another. In order to accommodate those differences, you have the option
+ to specify one more vendor-specific compatible, among:
+ 
++- "allwinner,sun50i-h6-mali"
++  Required properties:
++  - clocks : phandles to core and bus clocks
++  - clock-names : must contain "core" and "bus"
++  - resets: phandle to GPU reset line
 +
- &mmc0 {
- 	vmmc-supply = <&reg_cldo1>;
- 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
+ - "amlogic,meson-gxm-mali"
+   Required properties:
+   - resets : Should contain phandles of :
 -- 
 2.17.1
 
