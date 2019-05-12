@@ -2,95 +2,135 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9BCC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54E5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4951D2183F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77D472146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:09:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="clNGRZ6m"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="JtUgc6MI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfELBGR (ORCPT
+        id S1726505AbfELBJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 21:06:17 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42413 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfELBGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 21:06:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 451m3n6Vntz9s6w;
-        Sun, 12 May 2019 11:06:13 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557623174;
-        bh=Xtjyvso89laWXm6NCNbkiV0He2EaomzL1+sXkM99k6I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=clNGRZ6mq9YLH3CsZNatRQ7Krrmft8bqQjMn7IxrziorrWPca+NTcOTsI534gjKJ+
-         ft+D24B82NiGJHFusbEcaN+xtl098ZPkEcocii3Ap2URsOU+JBUM2jI6HsQ8TLyn2O
-         Iexp+DD/w9QUxkSeuiy4yW5t5VZoKy3P2x9/AkY2Lp/Tv0TySah42k9sAxI+XNkCR1
-         4wMdQLuliEhX69VZqhoegDrfLS6o2Sq4aHHHOXMARWQ7gQ8ff/0HdTk96uKIMh1A3o
-         6sZSK310s+g2z1AXOxtlr33skd3oZm+76ypwz0AOdfyVp/5LXdj9dU5hXO76GjjSTO
-         CC4mZDUon4Ugw==
-Date:   Sun, 12 May 2019 11:06:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Eduardo Valentin <edubezval@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiada Wang <jiada_wang@mentor.com>
-Subject: linux-next: Fixes tag needs some work in the thermal-soc tree
-Message-ID: <20190512110603.767286b1@canb.auug.org.au>
+        Sat, 11 May 2019 21:09:51 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46222 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfELBJv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 May 2019 21:09:51 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so10831363wrr.13
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:09:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b8AW4BGaZt47ssLrB6qXfhhNxNJaIAABugP8Bf2LUJc=;
+        b=JtUgc6MIGk7Y5MmFv4m3d4ISHMCOvUp6g70RA6sbJklbPEVGXVcftsBCT7hb5H1h0k
+         /tp84iZt9wpGTu4789QOwr/LuvvL5efzMDvkcNfztOA+KYtq22DXr4TJOuCD71vDgcfy
+         PAmm6OmFKtJSdn20Sq0KP1N7R6yfVj4Vk6Oss=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b8AW4BGaZt47ssLrB6qXfhhNxNJaIAABugP8Bf2LUJc=;
+        b=JRinHy0t2EXBS0lYfowjZ77joS5O/1halO2pWOxNagN9WzEjfHvksMVLH0wpncJLml
+         46Km1znkFP0WB8nEA29NdLv4v8b4eTOXKh7/8hdUEAsUx+4Nzmic+v+F7KfhRIGaFgIK
+         Nz04ad2tm8XDmUHTs+nGE318J+wqaDN3gNsGOVSzQQGJRBzR6r8xX2ml8Xl7l9fNGPeD
+         H/ibJVDzc2WosuPjrB5uQIBvFyMu8OSwGlxbs5yPTvHZotVYOQRpEvtmI+0MeYiO9L8S
+         WgRQZR8MnfOBo9LZuAihgTPXxV+JSdaKyovDZptNZ6xxGexVefyuGVrCLCTnoI6ySU9U
+         L6YA==
+X-Gm-Message-State: APjAAAVYnyU4emFlbm0nEFl4ZLRM98FKlaGL0pW+0sA3CElp9ow8jO+2
+        ozr0SaRUrN/6gPp5PH3ltmfsrQ==
+X-Google-Smtp-Source: APXvYqyhFbsf1FNgNI+/rAhBZzMgj02SE5lckYXHhdIt2dVUQv5+Ig7Tv7vgFOweYh2jEJHIGNHKzg==
+X-Received: by 2002:a5d:4647:: with SMTP id j7mr7970362wrs.280.1557623389777;
+        Sat, 11 May 2019 18:09:49 -0700 (PDT)
+Received: from andrea ([89.22.71.151])
+        by smtp.gmail.com with ESMTPSA id t18sm19424094wrg.19.2019.05.11.18.09.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 18:09:49 -0700 (PDT)
+Date:   Sun, 12 May 2019 03:09:41 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] doc/rcu: Correct field_count field naming in examples
+Message-ID: <20190512010941.GA8611@andrea>
+References: <20190505020328.165839-1-joel@joelfernandes.org>
+ <20190507000453.GB3923@linux.ibm.com>
+ <20190508162635.GD187505@google.com>
+ <20190508181638.GY3923@linux.ibm.com>
+ <20190511221126.GA3984@andrea>
+ <20190512004131.GE3923@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/URt6mAOff+2C4Lc0Y_moRZ6"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190512004131.GE3923@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/URt6mAOff+2C4Lc0Y_moRZ6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, May 11, 2019 at 05:41:31PM -0700, Paul E. McKenney wrote:
+> On Sun, May 12, 2019 at 12:11:26AM +0200, Andrea Parri wrote:
+> > Hi Paul, Joel,
+> > 
+> > > > > On the other hand, would you have ideas for more modern replacement
+> > > > > examples?
+> > > > 
+> > > > There are 3 cases I can see in listRCU.txt:
+> > > >   (1) action taken outside of read_lock (can tolerate stale data), no in-place update.
+> > > >                 this is the best possible usage of RCU.
+> > > >   (2) action taken outside of read_lock, in-place updates
+> > > >                 this is good as long as not too many in-place updates.
+> > > >                 involves copying creating new list node and replacing the
+> > > >                 node being updated with it.
+> > > >   (3) cannot tolerate stale data: here a deleted or obsolete flag can be used
+> > > >                                   protected by a per-entry lock. reader
+> > > > 				  aborts if object is stale.
+> > > > 
+> > > > Any replacement example must make satisfy (3) too?
+> > > 
+> > > It would be OK to have a separate example for (3).  It would of course
+> > > be nicer to have one example for all three, but not all -that- important.
+> > > 
+> > > > The only example for (3) that I know of is sysvipc sempahores which you also
+> > > > mentioned in the paper. Looking through this code, it hasn't changed
+> > > > conceptually and it could be a fit for an example (ipc_valid_object() checks
+> > > > for whether the object is stale).
+> > > 
+> > > That is indeed the classic canonical example.  ;-)
+> > > 
+> > > > The other example could be dentry look up which uses seqlocks for the
+> > > > RCU-walk case? But that could be too complex. This is also something I first
+> > > > learnt from the paper and then the excellent path-lookup.rst document in
+> > > > kernel sources.
+> > > 
+> > > This is a great example, but it would need serious simplification for
+> > > use in the Documentation/RCU directory.  Note that dcache uses it to
+> > > gain very limited and targeted consistency -- only a few types of updates
+> > > acquire the write-side of that seqlock.
+> > > 
+> > > Might be quite worthwhile to have a simplified example, though!
+> > > Perhaps a trivial hash table where write-side sequence lock is acquired
+> > > only when moving an element from one chain to another?
+> > 
+> > Sorry to take you down here..., but what do you mean by "the paper"?  ;-/
+> 
+> One or both of these two:
+> 
+> http://www2.rdrop.com/~paulmck/techreports/survey.2012.09.17a.pdf
+> http://www2.rdrop.com/~paulmck/techreports/RCUUsage.2013.02.24a.pdf
 
-Hi Eduardo,
+Oh, these are familiar.  ;-) Thank you!
 
-In commit
-
-  201f0534b335 ("thermal: rcar_gen3_thermal: fix interrupt type")
-
-Fixes tag
-
-  Fixes: 7d4b269776ec6 ("enable hardware interrupts for trip points")
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/URt6mAOff+2C4Lc0Y_moRZ6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzXcXsACgkQAVBC80lX
-0GyEJggAoHu7bgeOYAMmFkS17O/82MTuiOP9Mx1tspbvJ0SGLshJ56fkGc1zFoIN
-dMuw4vZXcV917W2daahGgcYXNGwQ1aATTPU6lOwzuyDZOB6tXUz52FpEWhv7bIxx
-DuOdxIC3Vm1r2Jlcs4rlfStE2uhsYlog7WN/hvpb0GZ7xgNuwQFvxCkybWripA6R
-MNEdFGtmDNkKVYHXYPpGxxmOVb5GggDVOP37m/FQQ48ADmObFnc4r/vY2VqmC0Zi
-DQie1zS10lDEY0W00IgBowhtDARXKNrocHVoRubi8PI0v6EPPrzwLZ4uqawH71SD
-E+hAH+JPgmmG19ZAY5/6pMuo3MOeIQ==
-=rny1
------END PGP SIGNATURE-----
-
---Sig_/URt6mAOff+2C4Lc0Y_moRZ6--
+  Andrea
