@@ -5,56 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DE5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E120C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D92217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D43F2173E
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rT6GYZe9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i3YEIaQI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfELQJn (ORCPT
+        id S1726878AbfELQJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 12:09:43 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:34145 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726553AbfELQJm (ORCPT
+        Sun, 12 May 2019 12:09:58 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:53037 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfELQJ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 12:09:42 -0400
-Received: by mail-vk1-f202.google.com with SMTP id u17so3132635vkk.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 09:09:42 -0700 (PDT)
+        Sun, 12 May 2019 12:09:57 -0400
+Received: by mail-yw1-f74.google.com with SMTP id b189so20545585ywa.19
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 09:09:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=ZQi/sjipIMJL03RXDXGUBdRsbi1X2/+nI6E1TTfR44o=;
-        b=rT6GYZe9JljSs+O2RaDoCdYaRjz42r+UWesVjP61KLuG6brTai+B8I0s6wONcIdeUT
-         ZgBS6h91WxDWjJLdDl7mdy4nSk0wB5tEBBSyUohFeLAeQOweZF4nSJgoeSX+Z5lOzW7w
-         w1Kh4U5cruF03Fr6NcBIc2mu420URojoYNetRwXEgPNIIXNvzdCfMX4cuXwBaod2hE8y
-         AcVWU+jdpmBSZ75RVzArG/oirAEeyO6gh8KNjZ7rVUrwOjObNx6lGpqFGYsn7BWv0Bz4
-         yPD+2/26OCSf5xX0lvA/2dklhzgpKqeKHWI2sajCsyjGu0mYRjb04/FHoNtrsslXB/MH
-         Fe+A==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=pNYDYF29KQTiDsLTir5ePdeguGYagzUQEsurF8lSHbY=;
+        b=i3YEIaQIHO/PR2+mMIFIpaGHrsGtdYQBTKhgEeVGdXy6IjrQUWW5WGYFsXSjxoy4Qa
+         5xlboHTgv9cyDLZ9V2BO/jEBAklDBwaVlu3TrXjcaV9JkSH4r/P/p1LzRbEzXM8NGGqh
+         aRossIettQVPYRP2lRDcOH67U+qYdSZGyj8FX4IOWj8uCAckk7xaZVr5GB9pAj4t4hz5
+         tsXRN5yNqBGxFb7yJ9dJbrVjuLxoYHIHNy5JGiw3cCLlaZQjNXt/bf4IpwEQgLEKf8BV
+         SFS4JqfbN/IHML9PTuVHjyceb1Le0/n+fA3YtuBOVoJ7+b6QgRQjGdnyBJBvvSOkAeon
+         Uifw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=ZQi/sjipIMJL03RXDXGUBdRsbi1X2/+nI6E1TTfR44o=;
-        b=pId8H6dF8VVv1bHhis5P8S/MFnX0+ouiHUyz/V/tgU/uaaSekD91hFzpYeZi4Y9QyL
-         3a2+16dW0ktvfqFHORD4vcDDZ3tPRq1XanPWpHKllVzSs+H4rWd6Y9YXulQvXZYeykSi
-         Wf9J5n4qR3JnbLsQbUFTAB+gX9vqlXxYQ/f9L83VarbNUismpIVjYV5J760MsZHLk99k
-         XsDld2Q7HtnudJz33AuGCei5KnnM06eNEMykGdqzktt9GzqKpuwiS5yRkPcoPDlIy/Kg
-         gq/DQUCrzeIThXSX0ojAnNqcrAxfFyYcl/70oBWhrvS1gp0lzyPllfJiCrWP7RgxqFt+
-         t8Uw==
-X-Gm-Message-State: APjAAAX5U2Z2S8QqfwJodDNaa/tR3En8+W6bHbTPA1259twj8gyrWsyP
-        cQLLqADahZFE4zwWWHo0riQP/y+/q2zITw==
-X-Google-Smtp-Source: APXvYqzwH4rxmIbxD+iMOiqD9UQKKFw9tWXDR5aDKuxRx6lP62JMAnkQ546tt3tD+hmPNt6X3Uoy8PlTi8nDoA==
-X-Received: by 2002:a67:dd0c:: with SMTP id y12mr1988351vsj.119.1557677381452;
- Sun, 12 May 2019 09:09:41 -0700 (PDT)
-Date:   Sun, 12 May 2019 09:09:26 -0700
-Message-Id: <20190512160927.80042-1-shakeelb@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=pNYDYF29KQTiDsLTir5ePdeguGYagzUQEsurF8lSHbY=;
+        b=pk7+FaA3p7SioqOIr68V5Am6I3PUZZ32ZSmg4heEc/lDSTaR1iNUlhtYruj9yUbhde
+         6LcXS2rjdZA2HnOXb9r5yxQ4m+vcSTX+mT3KemK+x34dw6G6vZf+RoRLHiz3xuEFHvZO
+         L8Xy79aWCw+aT3dcmHxQVj/2ytogy+wCTVLK8QCkWyHt9ueprVeEHtC4PYVgvImh72gD
+         10D0fW569/gFsfxK75CCY4ZgSsgvB3XQZ+V6sqJ0kC2MD4XgUz+wrLfYScMw8n1M0537
+         hhlOuaQoB2SqfjM/XOaAhl3g9ndBV3jdeoBAUkJlyvHPP11sGVoDUuxTVPZiDtpj1/IU
+         0fhw==
+X-Gm-Message-State: APjAAAXIx36YEB1f6utsQmtp8UuV4mu9E7lv0xxPAYiAtkF7aMQbJi2t
+        Nhe5Ru5eI9UeSbWHvyk3cSsnkT0Dcy+2DA==
+X-Google-Smtp-Source: APXvYqwFjUEgIaKr0kbwdw7yEWcBwWFgnrXBu4fdjexDy0pGsGSbQmVSEDWFzUFaVoq6HIRtK7D5ckxThWerQA==
+X-Received: by 2002:a25:585:: with SMTP id 127mr10890358ybf.60.1557677396951;
+ Sun, 12 May 2019 09:09:56 -0700 (PDT)
+Date:   Sun, 12 May 2019 09:09:27 -0700
+In-Reply-To: <20190512160927.80042-1-shakeelb@google.com>
+Message-Id: <20190512160927.80042-2-shakeelb@google.com>
 Mime-Version: 1.0
+References: <20190512160927.80042-1-shakeelb@google.com>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [RESEND PATCH v2 1/2] memcg, oom: no oom-kill for __GFP_RETRY_MAYFAIL
+Subject: [RESEND PATCH v2 2/2] memcg, fsnotify: no oom-kill for remote memcg charging
 From:   Shakeel Butt <shakeelb@google.com>
 To:     Johannes Weiner <hannes@cmpxchg.org>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
@@ -71,51 +75,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation of __GFP_RETRY_MAYFAIL clearly mentioned that the
-OOM killer will not be triggered and indeed the page alloc does not
-invoke OOM killer for such allocations. However we do trigger memcg
-OOM killer for __GFP_RETRY_MAYFAIL. Fix that. This flag will used later
-to not trigger oom-killer in the charging path for fanotify and inotify
-event allocations.
+The commit d46eb14b735b ("fs: fsnotify: account fsnotify metadata to
+kmemcg") added remote memcg charging for fanotify and inotify event
+objects. The aim was to charge the memory to the listener who is
+interested in the events but without triggering the OOM killer.
+Otherwise there would be security concerns for the listener. At the
+time, oom-kill trigger was not in the charging path. A parallel work
+added the oom-kill back to charging path i.e. commit 29ef680ae7c2
+("memcg, oom: move out_of_memory back to the charge path"). So to not
+trigger oom-killer in the remote memcg, explicitly add
+__GFP_RETRY_MAYFAIL to the fanotigy and inotify event allocations.
 
 Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
 ---
 Changelog since v1:
-- commit message updated.
+- Fixed usage of __GFP_RETRY_MAYFAIL flag.
 
- mm/memcontrol.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/notify/fanotify/fanotify.c        | 5 ++++-
+ fs/notify/inotify/inotify_fsnotify.c | 7 +++++--
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 2535e54e7989..9548dfcae432 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2294,7 +2294,6 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	unsigned long nr_reclaimed;
- 	bool may_swap = true;
- 	bool drained = false;
--	bool oomed = false;
- 	enum oom_status oom_status;
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index 6b9c27548997..f78fd4c8f12d 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -288,10 +288,13 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
+ 	/*
+ 	 * For queues with unlimited length lost events are not expected and
+ 	 * can possibly have security implications. Avoid losing events when
+-	 * memory is short.
++	 * memory is short. Also make sure to not trigger OOM killer in the
++	 * target memcg for the limited size queues.
+ 	 */
+ 	if (group->max_events == UINT_MAX)
+ 		gfp |= __GFP_NOFAIL;
++	else
++		gfp |= __GFP_RETRY_MAYFAIL;
  
- 	if (mem_cgroup_is_root(memcg))
-@@ -2381,7 +2380,7 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	if (nr_retries--)
- 		goto retry;
+ 	/* Whoever is interested in the event, pays for the allocation. */
+ 	memalloc_use_memcg(group->memcg);
+diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
+index ff30abd6a49b..17c08daa1ba7 100644
+--- a/fs/notify/inotify/inotify_fsnotify.c
++++ b/fs/notify/inotify/inotify_fsnotify.c
+@@ -99,9 +99,12 @@ int inotify_handle_event(struct fsnotify_group *group,
+ 	i_mark = container_of(inode_mark, struct inotify_inode_mark,
+ 			      fsn_mark);
  
--	if (gfp_mask & __GFP_RETRY_MAYFAIL && oomed)
-+	if (gfp_mask & __GFP_RETRY_MAYFAIL)
- 		goto nomem;
+-	/* Whoever is interested in the event, pays for the allocation. */
++	/*
++	 * Whoever is interested in the event, pays for the allocation. However
++	 * do not trigger the OOM killer in the target memcg.
++	 */
+ 	memalloc_use_memcg(group->memcg);
+-	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
++	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+ 	memalloc_unuse_memcg();
  
- 	if (gfp_mask & __GFP_NOFAIL)
-@@ -2400,7 +2399,6 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	switch (oom_status) {
- 	case OOM_SUCCESS:
- 		nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
--		oomed = true;
- 		goto retry;
- 	case OOM_FAILED:
- 		goto force;
+ 	if (unlikely(!event)) {
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
