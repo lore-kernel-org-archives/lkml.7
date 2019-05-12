@@ -2,102 +2,136 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605E4C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED428C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296892084F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 03:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC2D20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sp/d354X"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="mH00+FAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfELDul (ORCPT
+        id S1726171AbfELEEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 23:50:41 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54393 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfELDuk (ORCPT
+        Sun, 12 May 2019 00:04:23 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38082 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfELEEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 23:50:40 -0400
-Received: by mail-it1-f194.google.com with SMTP id a190so15384028ite.4;
-        Sat, 11 May 2019 20:50:40 -0700 (PDT)
+        Sun, 12 May 2019 00:04:23 -0400
+Received: by mail-oi1-f196.google.com with SMTP id u199so7135071oie.5
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 21:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KOEOI6gIRHaf5FORd84rjIs4AdvD824fbBk5i+JcVC4=;
-        b=sp/d354XUziiUlWOFirNHHht+x2j4uJyHrHkiJTJu8duyD4CJ4hl+tBgzolY4WdYUF
-         FcN3Y3QiUHGNEO92Q2ivtn0quwPpEBkMtSvjeYlWzGZnnv1N9AvTQcZKg6SknS01X4dx
-         Zv3BH6yW12uflvYmJhS7YkA/tv0uMq3yb1pu06m7RnYq0KER7eRia2dQQw8QzUr/j22t
-         ugsphAV7bCJQm2Qb32Sth8zgpPI6hvBYiNBCPzppTlN3tIP65VdGvjt+cw59ndSZ5yrT
-         2SE2CnteyZD5tU32mLVZjH52PJU2xcSk6fhVtGDRAap3w1FmeqwVH+NY6TtgfcPIVaFG
-         JZDA==
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RzgA+6+EFYb44zZTJjo6jx4GiNW1O3bLEXgu/Gl4EW0=;
+        b=mH00+FARm1cnffwncJnuHa/IEVhAurR8VlnHoIyiRa7gPnNWcsYnzaFXy/oVMbU+bg
+         TxxuFbIaa19bRZKWY7GfsDlwY8TS5qEJFN50c8eZt0b/Lkad3o1ylZ0RuBH4l+DSiBfj
+         5u/OLN81nsp+9ugAtwy9476uOl9anJFKjGhmLSqSKyoy9H1gdhcQVSiEK7ESPFI6Qlni
+         +5QhXXOqAcY9j9TYlW6d3zRrJtppXQNjDH14/RGume/B3FtZ1sh628ZPmfhh8NbXMHyJ
+         1TeqLYc4PdW+2DY6K0cLzJzTKm1naXM8enyjDICjQ1GP17oZhJnTgdMkb3lOig9V5dXK
+         Hrwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=KOEOI6gIRHaf5FORd84rjIs4AdvD824fbBk5i+JcVC4=;
-        b=JzEhZ/alnmzg9UV/EcWIwAayH2pNc4tJ5yqELWnTaya0HwE1YKn6Jq7wZkV+1CN5UN
-         9aBGEv51gVyFN/Lpa5QPmt8HEdpfCXBSQ5cOCfM+EH/axw3khhgBOpN+05urJ+GQImi8
-         4wGFLkIUmm+IshglGkKMVkrEOT0KSQ6oh+CN6ApMU3bNCc+6jiVQgOF1kuxEyAxAor91
-         vwlJL0cDEmFh2rXFjqrBSytuwVqBUMPxxj+uEoW5c/nLejGvhXd1TKPWgiPzmxJA4yrr
-         f1m51g65SuYLmUCovdYho20Fu+0hAFKMp/6TjcPWkTl4A+XdJU2bXL9EOt58W8TefWI+
-         646w==
-X-Gm-Message-State: APjAAAV2ykV4fJ8p925Z9nBaXrlTCa6cmRIfYEYNn50J6PDNVp0y0ehx
-        jxA7icrA/xK48lxiKq1EHuY=
-X-Google-Smtp-Source: APXvYqxtTdajmXEk7zEWki12uocFR3Eg8/Dsh5oU+jKO+JRTGnIwUcHTfehdKW27tlPY6Wv0Xkf4mw==
-X-Received: by 2002:a24:3f85:: with SMTP id d127mr13281932ita.38.1557633039846;
-        Sat, 11 May 2019 20:50:39 -0700 (PDT)
-Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id k76sm4248746ita.6.2019.05.11.20.50.37
+        bh=RzgA+6+EFYb44zZTJjo6jx4GiNW1O3bLEXgu/Gl4EW0=;
+        b=hQlAHHPtKevDSxB0X3Nn6EIeEeTzH/ERGFdrBtM10+DlBibZQCzZiAKlYDR5MNuWGA
+         JagqNykEaT/Fdg7sgo2fHYoMPtNBgvBb83VXANkwtL/vtvB4ROFpNnvvhL1lsL1aAZgV
+         5ZO/TKJD6AjF5mpvXxUyYGz4W/lrK7rCQQJxUpDSKaOLCXKTOOI3qSPWf9c1BG9b0Jfh
+         GKngj5D2c0YFqaPaLA6Rj4hYu/2JklZn8mYyAG7GDHNaguFZO7k1xUVUhv2riDChtf8M
+         RTXnI0PmCLtRW65GTGbOAy6RcwwApdEDquqxn+871ywdwdPy+L2EuJaZOufzMsvVQtWD
+         PZFg==
+X-Gm-Message-State: APjAAAXd9R5jg3/f6Vwzj/GNPLuWrFBHbn1xrqnovBCs258uuSgBtFF0
+        E/Ykpg347YhUw8+b4ls6eJ76qA==
+X-Google-Smtp-Source: APXvYqxY/B42HDdJiyzauyCigddH18X40ZSXGB7ycP8OI+mXnxCdV3RnVEgUugDeDm9FrNbRGk137w==
+X-Received: by 2002:a05:6808:46:: with SMTP id v6mr3990661oic.108.1557633862136;
+        Sat, 11 May 2019 21:04:22 -0700 (PDT)
+Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
+        by smtp.googlemail.com with ESMTPSA id w5sm3610467otg.34.2019.05.11.21.04.19
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 20:50:38 -0700 (PDT)
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Subject: [PATCH] selftests: bpf: Add files generated when compiled to .gitignore
-Date:   Sat, 11 May 2019 21:50:09 -0600
-Message-Id: <20190512035009.25451-1-skunberg.kelsey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 11 May 2019 21:04:21 -0700 (PDT)
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Andy Lutomirski <luto@kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        james.w.mcmechan@gmail.com
+References: <20190509112420.15671-1-roberto.sassu@huawei.com>
+ <CALCETrXy7gqmmy37=nrMAisGadZ+qbjZjXtWFF8Crq86xNpsfA@mail.gmail.com>
+From:   Rob Landley <rob@landley.net>
+Message-ID: <4aee6e10-0eec-1d76-af66-dc8c7b68b766@landley.net>
+Date:   Sat, 11 May 2019 23:04:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrXy7gqmmy37=nrMAisGadZ+qbjZjXtWFF8Crq86xNpsfA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following files are generated when /selftests/bpf/ is compiled and
-should be added to .gitignore:
+On 5/11/19 5:44 PM, Andy Lutomirski wrote:
+> I read some of those emails.  ISTM that adding TAR support should be
+> seriously considered.  Sure, it's baroque, but it's very, very well
+> supported, and it does exactly what we need.
 
-	- libbpf.pc
-	- libbpf.so.0
-	- libbpf.so.0.0.3
+Which means you now have two parsers supported in parallel forevermore, and are
+reversing the design decision initially made when this went in without new info.
 
-Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
----
- tools/testing/selftests/bpf/.gitignore | 3 +++
- 1 file changed, 3 insertions(+)
+Also, I just did a tar implementation for toybox: It took me a month to debug it
+(_not_ starting from scratch but from a submission), I only just added sparse
+file support (because something in the android build was generating a sparse
+file), there are historical tarballs I know it won't extract (I'm just testing
+against what the current one produces with the default flags), and I haven't
+even started on xattr support yet.
 
-diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
-index 41e8a689aa77..ceb11f98fe4f 100644
---- a/tools/testing/selftests/bpf/.gitignore
-+++ b/tools/testing/selftests/bpf/.gitignore
-@@ -32,3 +32,6 @@ test_tcpnotify_user
- test_libbpf
- test_tcp_check_syncookie_user
- alu32
-+libbpf.pc
-+libbpf.so.0
-+libbpf.so.0.0.3
---
-2.20.1
+Instead I was experimenting with corner cases like "S records replace the
+prefix[] field starting at byte 386 with an offset/length pair array, but
+prefix[] starts at 345, do those first 41 bytes still function as a prefix and
+is there any circumstance under which existing tar binaries will populate them?
+Also, why does every instance of an S record generated by gnu/tar end with a
+gratuitous length zero segment?"
 
+"cpio -H newc" is a _much_ simpler format. And posix no longer specifies
+_either_ format usefully, hasn't for years. From toybox tar's header comment:
+
+ * For the command, see
+ *   http://pubs.opengroup.org/onlinepubs/007908799/xcu/tar.html
+ * For the modern file format, see
+ *
+http://pubs.opengroup.org/onlinepubs/9699919799/utilities/pax.html#tag_20_92_13_06
+ *   https://en.wikipedia.org/wiki/Tar_(computing)#File_format
+ *   https://www.gnu.org/software/tar/manual/html_node/Tar-Internals.html
+
+And no, that isn't _enough_ information, you still have to "tar | hd" a lot and
+squint. (There's no current spec, it's pieced together from multiple sources
+because posix abdicated responsibility for this to Jorg Schilling.)
+
+Rob
+
+P.S. Yes that gnu/dammit page starts with a "this will be deleted" comment which
+according to archive.org has been there for over a dozen years.
+
+P.P.S. Sadly, if you want an actually standardized standard format where
+implementations adhere to the standard: IETF RFC 1991 was published in 1996 and
+remains compatible with files an archivers in service. Or we could stick with
+cpio and make minor changes to it, since we have to remain backwards compatible
+with it _anyway_....
