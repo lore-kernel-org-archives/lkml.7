@@ -2,70 +2,72 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82795C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF28C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4811C2089E
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930552133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:44:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="gtj/vqFS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o0K4NHK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbfELEfY (ORCPT
+        id S1726171AbfELEou (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 00:35:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42900 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfELEfX (ORCPT
+        Sun, 12 May 2019 00:44:50 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36180 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725897AbfELEot (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 00:35:23 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j53so11187729qta.9
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 21:35:22 -0700 (PDT)
+        Sun, 12 May 2019 00:44:49 -0400
+Received: by mail-io1-f65.google.com with SMTP id e19so7574500iob.3;
+        Sat, 11 May 2019 21:44:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dPdaQ04OQMGwU42dwLeynqlwiEFIdM5ipI+2HR6a1s4=;
-        b=gtj/vqFS/ws9nX0lxJcywKgYAZdqHJJb4vL/tZ+2R7I6Exl8SCCT7HaTwvmrB2Yj2H
-         SUzH4VhZPlI/HROyYk4qt6HtZSax9kDys+YNj6qhlXo4jBaMZaYiCbjf/5uDONIEBTy7
-         Tp9d0mTyCX5Gvb5vM7my+jvPZWPq9O5PD4D1kQmMhPS+CHgfrcJIZnzFZRiN5T0mtKUR
-         HnQ3U7MuG0YjkJFU/0tPcfOlZ6kShz+RVP1IB9GRzHKbwDIttPMGGRdwKjcDHKLPwyX7
-         aZO0Qw7FW/GyAjk5DLGfxwdJhinfsGKM+GpQyYc1PsRSn1XbOpRc6T1MJG7x0eA5GbfB
-         GpUw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zrHaTsnyO7X3lAG2Au5Uox0L6Yni+OkaJRXpY0skhfE=;
+        b=o0K4NHK1nlb721IvpP/v+EUPJBLrleV+3CVJWBapOqpriGzi71m8NfLSHF8myIOYPO
+         eNKV/7CAYtHvAM1mr2FSDtLJxrMFMb3jjRu2J7bow3CW574BDp4j59bDfMXVI+bkuPVG
+         xnWKQmXk5CdqLpg1grKQACoT731gv0W2xtXVIPMcD/4DeUn5KtFLyKnoH1yS4Sx6DvFt
+         N0CcxF8MwvHWw+Go29LOX4zi9Owhg6zE6BnJOUS8fZgWTPeC41pV3FbnOp949bIZCNJO
+         j61BY/dHxaVUpAXB434Q7BAp1Ko8Sny/0//4LOASek54xrKBp9+a3gkuNpqP4JIFwHrN
+         uaBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dPdaQ04OQMGwU42dwLeynqlwiEFIdM5ipI+2HR6a1s4=;
-        b=fZRPYPLCE7rUCMm/4QUEifUYlIs0rjadXZ3scWwd9loEy/n0p2SaQRftDDu7l3rYrI
-         b6/EqSBG84FWOjYgwZ21tjr1CYaIF5ijaIpGc26+CAF1SIRk0QZmb/+WyMuOB232nG4D
-         n8eKnAp/C2nghjWIUTu0vpFaiUS3ctTVittkGhzWPOaQd6CFMJ7qrrbqLuKDh1CAvJj/
-         jL904kNxpvBfLUhVqNsH865Z1jPdh4VqAwORGcR8YuOXM6J60OoI7WKSwD2utE4wYhJe
-         ftWy2SZFdEaMBq4Vlhu2KwSmsZw6GwiA+qPYTYESzSpEuHipRXzPDjkSob2hxoKOahd3
-         rKZg==
-X-Gm-Message-State: APjAAAWfbtrtbxdZz/Ucokn2zepxq/MOyBEIjrMz46UmM3Ix+PZW8PCG
-        zgeONHMwncB2tzlAIkZEaHIagg==
-X-Google-Smtp-Source: APXvYqzwDUmg+Md2mff4foee6rHIFv6KDP9kS5NCEcqkWVWSn/2AZSbj0Pa5JyccSK9BiECN+H5XrA==
-X-Received: by 2002:ac8:3785:: with SMTP id d5mr18133800qtc.166.1557635722507;
-        Sat, 11 May 2019 21:35:22 -0700 (PDT)
-Received: from ovpn-121-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t63sm4887472qka.33.2019.05.11.21.35.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zrHaTsnyO7X3lAG2Au5Uox0L6Yni+OkaJRXpY0skhfE=;
+        b=fjhI3jUu76sXbeM+kWq2vQ8TrXtoOSsKCGLX0t6GPGTYBqcwUHl4tK3CdNoxf2Zwsr
+         Dmz+UtygJ3yq3A/vZ/PcVT1a6eop8OK1NCVV3XbxyuZpzDpd45FT3Khb8U8hf6jA1dV1
+         8scx3+SPpDgABAHAYBsDeALFr3BkaOGfeWKX7vg1Jsd59ZPY8zphGYKNP1dg4OBlsRYB
+         h8a3Kxf5FWQvDHJJoO6UQeXpejGP+2zopU11PSOsSTBscjKALyxT1pmgFhX5twr3u/fS
+         ZBvlLJDQzhfUKNwSHQtn0UgpXlPQ3VvQ0vhmbrQ9p1A0I96n+kq/35EY1AxXqCCtt37j
+         tjpw==
+X-Gm-Message-State: APjAAAXne71ij/NyzCmPMgDlcxIA3b6Ksic3wLu7IMNuAuLdLgA1MEtB
+        43XaG4Muw7V3DAlUx6NOpS9Hd82NlJmNww==
+X-Google-Smtp-Source: APXvYqyaP9IUOfuGcpYWiahhnCbCyp6mdD6ZYcHgDuEIZZQVLxZEwMgObC7LOAFPyAVRr/m1Kptidg==
+X-Received: by 2002:a05:6602:1d6:: with SMTP id w22mr3217966iot.215.1557636288819;
+        Sat, 11 May 2019 21:44:48 -0700 (PDT)
+Received: from localhost.localdomain (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id f20sm3434642ioh.4.2019.05.11.21.44.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 21:35:21 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     mhocko@kernel.org, brho@google.com, kernelfans@gmail.com,
-        dave.hansen@intel.com, rppt@linux.ibm.com, peterz@infradead.org,
-        mpe@ellerman.id.au, mingo@elte.hu, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/hotplug: fix a null-ptr-deref during NUMA boot
-Date:   Sun, 12 May 2019 00:34:42 -0400
-Message-Id: <20190512043442.11212-1-cai@lca.pw>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Sat, 11 May 2019 21:44:48 -0700 (PDT)
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     shuah@kernel.org, pbonzini@redhat.com, rkrcmar@redhat.com,
+        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Cc:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Subject: [PATCH v2] selftests: kvm: Add files generated when compiled to .gitignore
+Date:   Sat, 11 May 2019 22:44:34 -0600
+Message-Id: <20190512044434.32627-1-skunberg.kelsey@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <5d60e7126803e9a11b51618e65966ba047eff7df>
+References: <5d60e7126803e9a11b51618e65966ba047eff7df>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,64 +75,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit ("x86, numa: always initialize all possible
-nodes") introduced a crash below during boot for systems with a
-memory-less node. This is due to CPUs that get onlined during SMP boot,
-but that onlining triggers a page fault in bus_add_device() during
-device registration:
+The following files are generated in /selftests/kvm/ after compiling and
+should be added to /selftests/kvm/.gitignore:
 
-	error = sysfs_create_link(&bus->p->devices_kset->kobj,
+        - /x86_64/hyperv_cpuid
+	- /x86_64/smm_test
+	- /clear_dirty_log_test
 
-bus->p is NULL. That "p" is the subsys_private struct, and it should
-have been set in,
-
-	postcore_initcall(register_node_type);
-
-but that happens in do_basic_setup() after smp_init().
-
-The old code had set this node online via alloc_node_data(), so when it
-came time to do_cpu_up() -> try_online_node(), the node was already up
-and nothing happened.
-
-Now, it attempts to online the node, which registers the node with
-sysfs, but that can't happen before the 'node' subsystem is registered.
-
-Since kernel_init() is running by a kernel thread that is in
-SYSTEM_SCHEDULINGi state, fixed this skipping registering with sysfs
-during the early boot in __try_online_node().
-
-Call Trace:
- device_add+0x43e/0x690
- device_register+0x107/0x110
- __register_one_node+0x72/0x150
- __try_online_node+0x8f/0xd0
- try_online_node+0x2b/0x50
- do_cpu_up+0x46/0xf0
- cpu_up+0x13/0x20
- smp_init+0x6e/0xd0
- kernel_init_freeable+0xe5/0x21f
- kernel_init+0xf/0x180
- ret_from_fork+0x1f/0x30
-
-Reported-by: Barret Rhoden <brho@google.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
 ---
- mm/memory_hotplug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+        - Included /clear_dirty_log_test to .gitignore
+        - Updated commit log to reflect file added
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index b236069ff0d8..5970dd65d698 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1034,7 +1034,7 @@ static int __try_online_node(int nid, u64 start, bool set_node_online)
- 	pg_data_t *pgdat;
- 	int ret = 1;
- 
--	if (node_online(nid))
-+	if (node_online(nid) || system_state == SYSTEM_SCHEDULING)
- 		return 0;
- 
- 	pgdat = hotadd_new_pgdat(nid, start);
--- 
-2.20.1 (Apple Git-117)
+ tools/testing/selftests/kvm/.gitignore | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/testing/selftests/kvm/.gitignore b/tools/testing/selftests/kvm/.gitignore
+index 2689d1ea6d7a..391a19231618 100644
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@ -6,4 +6,7 @@
+ /x86_64/vmx_close_while_nested_test
+ /x86_64/vmx_tsc_adjust_test
+ /x86_64/state_test
++/x86_64/hyperv_cpuid
++/x86_64/smm_test
++/clear_dirty_log_test
+ /dirty_log_test
+--
+2.20.1
 
