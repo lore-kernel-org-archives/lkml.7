@@ -2,99 +2,134 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B6AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE2E2133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDE62133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 12:53:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pM1wbJTa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfELMxK (ORCPT
+        id S1726773AbfELMxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 08:53:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43306 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726550AbfELMxK (ORCPT
+        Sun, 12 May 2019 08:53:39 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:25545 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbfELMxi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 08:53:10 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4CCpYpg077580
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:53:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2seaev662c-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:53:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 12 May 2019 13:53:06 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 12 May 2019 13:53:01 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4CCr0bW60817534
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 12 May 2019 12:53:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 786AE42047;
-        Sun, 12 May 2019 12:53:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83C6442041;
-        Sun, 12 May 2019 12:52:58 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.95.158])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 12 May 2019 12:52:58 +0000 (GMT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Dominik Brodowski <linux@dominikbrodowski.net>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, hpa@zytor.com,
-        arnd@arndb.de, rob@landley.net, james.w.mcmechan@gmail.com
-Date:   Sun, 12 May 2019 08:52:47 -0400
-In-Reply-To: <20190512091748.s6fvy2f5p2a2o6ja@isilmar-4.linta.de>
-References: <20190509112420.15671-1-roberto.sassu@huawei.com>
-         <20190512091748.s6fvy2f5p2a2o6ja@isilmar-4.linta.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051212-0028-0000-0000-0000036CD1EF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051212-0029-0000-0000-0000242C5BDA
-Message-Id: <1557665567.10635.222.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-12_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=889 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905120097
+        Sun, 12 May 2019 08:53:38 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x4CCq3eT005954;
+        Sun, 12 May 2019 21:52:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x4CCq3eT005954
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557665524;
+        bh=u+xPaVz4tIL7LFuq2RerwT0d5S+67UExAoc/i1B3fLw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pM1wbJTa9bsV3kshrbPpP4RE0iTD+XLun3QXPATVk0lWaojkJoOYZuOxEGyczIVn4
+         LJTFGLo0VeeEEHqdU10DuZ9AHZnDs2DZPxtBlT/7jv8jEVLM18tRAjD872A92hCXeI
+         Q5InFVveJdEMByh4lg243PXhpjBEHg6TY/PHbw4Cd6a8rh8AQcz+ntBb9s/A6/yykX
+         RqQu7BZ2w/+0snJe1TLVQaMcmXWILEcgLxcLqcfWiSSFfCDOSg51jtoFeCteegRTGb
+         uWDOrJQceHeM/RYqVTvRcZr6QZYIElebdwUbvs6sUgM3eXC60WSL41pqBXVe5el9cb
+         HbITLlvjNlqdw==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH] x86: disable CONFIG_GENERIC_HWEIGHT and remove __HAVE_ARCH_SW_HWEIGHT
+Date:   Sun, 12 May 2019 21:52:01 +0900
+Message-Id: <1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
-> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
-> > This proposal consists in marshaling pathnames and xattrs in a file called
-> > .xattr-list. They are unmarshaled by the CPIO parser after all files have
-> > been extracted.
-> 
-> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
-> be done equivalently by the initramfs' /init? Why is kernel involvement
-> actually required here?
+arch/x86/include/asm/arch_hweight.h uses __sw_hweight{32,64} as
+alternatives, and they are implemented in arch/x86/lib/hweight.S
 
-It's too late.  The /init itself should be signed and verified.
+x86 does not rely on the generic C implementation lib/hweight.c
+at all, so CONFIG_GENERIC_HWEIGHT should be disabled.
 
-Mimi
+__HAVE_ARCH_SW_HWEIGHT is not necessary either.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ arch/x86/Kconfig                    | 3 ---
+ arch/x86/include/asm/arch_hweight.h | 2 --
+ lib/hweight.c                       | 4 ----
+ 3 files changed, 9 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4725211..3692514 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -260,9 +260,6 @@ config GENERIC_BUG
+ config GENERIC_BUG_RELATIVE_POINTERS
+ 	bool
+ 
+-config GENERIC_HWEIGHT
+-	def_bool y
+-
+ config ARCH_MAY_HAVE_PC_FDC
+ 	def_bool y
+ 	depends on ISA_DMA_API
+diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+index fc06935..ba88edd 100644
+--- a/arch/x86/include/asm/arch_hweight.h
++++ b/arch/x86/include/asm/arch_hweight.h
+@@ -12,8 +12,6 @@
+ #define REG_OUT "a"
+ #endif
+ 
+-#define __HAVE_ARCH_SW_HWEIGHT
+-
+ static __always_inline unsigned int __arch_hweight32(unsigned int w)
+ {
+ 	unsigned int res;
+diff --git a/lib/hweight.c b/lib/hweight.c
+index 7660d88..c94586b 100644
+--- a/lib/hweight.c
++++ b/lib/hweight.c
+@@ -10,7 +10,6 @@
+  * The Hamming Weight of a number is the total number of bits set in it.
+  */
+ 
+-#ifndef __HAVE_ARCH_SW_HWEIGHT
+ unsigned int __sw_hweight32(unsigned int w)
+ {
+ #ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
+@@ -27,7 +26,6 @@ unsigned int __sw_hweight32(unsigned int w)
+ #endif
+ }
+ EXPORT_SYMBOL(__sw_hweight32);
+-#endif
+ 
+ unsigned int __sw_hweight16(unsigned int w)
+ {
+@@ -46,7 +44,6 @@ unsigned int __sw_hweight8(unsigned int w)
+ }
+ EXPORT_SYMBOL(__sw_hweight8);
+ 
+-#ifndef __HAVE_ARCH_SW_HWEIGHT
+ unsigned long __sw_hweight64(__u64 w)
+ {
+ #if BITS_PER_LONG == 32
+@@ -69,4 +66,3 @@ unsigned long __sw_hweight64(__u64 w)
+ #endif
+ }
+ EXPORT_SYMBOL(__sw_hweight64);
+-#endif
+-- 
+2.7.4
 
