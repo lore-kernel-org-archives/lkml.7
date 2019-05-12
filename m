@@ -2,37 +2,35 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00260C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F5C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD70520873
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA80920873
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:08:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfELPH3 (ORCPT
+        id S1726793AbfELPIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 11:07:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41406 "EHLO mx1.redhat.com"
+        Sun, 12 May 2019 11:08:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38782 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726478AbfELPH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 11:07:29 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        id S1726478AbfELPIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 11:08:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 66B913086275;
-        Sun, 12 May 2019 15:07:28 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 193658667B;
+        Sun, 12 May 2019 15:08:36 +0000 (UTC)
 Received: from redhat.com (ovpn-120-196.rdu2.redhat.com [10.10.120.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 84A3860C47;
-        Sun, 12 May 2019 15:07:26 +0000 (UTC)
-Date:   Sun, 12 May 2019 11:07:24 -0400
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82E1E1001E7D;
+        Sun, 12 May 2019 15:08:34 +0000 (UTC)
+Date:   Sun, 12 May 2019 11:08:32 -0400
 From:   Jerome Glisse <jglisse@redhat.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
-        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+To:     rcampbell@nvidia.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         John Hubbard <jhubbard@nvidia.com>,
         Ira Weiny <ira.weiny@intel.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -40,103 +38,55 @@ Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
         Balbir Singh <bsingharora@gmail.com>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 4/5] mm/hmm: hmm_vma_fault() doesn't always call
- hmm_range_unregister()
-Message-ID: <20190512150724.GA4238@redhat.com>
+Subject: Re: [PATCH 0/5] mm/hmm: HMM documentation updates and code fixes
+Message-ID: <20190512150832.GB4238@redhat.com>
 References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190506232942.12623-5-rcampbell@nvidia.com>
- <CAFqt6zbhLQuw2N5-=Nma-vHz1BkWjviOttRsPXmde8U1Oocz0Q@mail.gmail.com>
- <fa2078fd-3ec7-5503-94d7-c4d1a766029a@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <fa2078fd-3ec7-5503-94d7-c4d1a766029a@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190506232942.12623-1-rcampbell@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Sun, 12 May 2019 15:07:28 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Sun, 12 May 2019 15:08:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:12:14AM -0700, Ralph Campbell wrote:
+On Mon, May 06, 2019 at 04:29:37PM -0700, rcampbell@nvidia.com wrote:
+> From: Ralph Campbell <rcampbell@nvidia.com>
 > 
-> On 5/7/19 6:15 AM, Souptick Joarder wrote:
-> > On Tue, May 7, 2019 at 5:00 AM <rcampbell@nvidia.com> wrote:
-> > > 
-> > > From: Ralph Campbell <rcampbell@nvidia.com>
-> > > 
-> > > The helper function hmm_vma_fault() calls hmm_range_register() but is
-> > > missing a call to hmm_range_unregister() in one of the error paths.
-> > > This leads to a reference count leak and ultimately a memory leak on
-> > > struct hmm.
-> > > 
-> > > Always call hmm_range_unregister() if hmm_range_register() succeeded.
-> > 
-> > How about * Call hmm_range_unregister() in error path if
-> > hmm_range_register() succeeded* ?
+> I hit a use after free bug in hmm_free() with KASAN and then couldn't
+> stop myself from cleaning up a bunch of documentation and coding style
+> changes. So the first two patches are clean ups, the last three are
+> the fixes.
 > 
-> Sure, sounds good.
-> I'll include that in v2.
+> Ralph Campbell (5):
+>   mm/hmm: Update HMM documentation
+>   mm/hmm: Clean up some coding style and comments
+>   mm/hmm: Use mm_get_hmm() in hmm_range_register()
+>   mm/hmm: hmm_vma_fault() doesn't always call hmm_range_unregister()
+>   mm/hmm: Fix mm stale reference use in hmm_free()
 
-NAK for the patch see below why
+This patchset does not seems to be on top of
+https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
+
+So here we are out of sync, on documentation and code. If you
+have any fix for https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
+then please submit something on top of that.
+
+Cheers,
+Jérôme
 
 > 
-> > > 
-> > > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> > > Cc: Balbir Singh <bsingharora@gmail.com>
-> > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
-> > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
-> > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > ---
-> > >   include/linux/hmm.h | 3 ++-
-> > >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> > > index 35a429621e1e..fa0671d67269 100644
-> > > --- a/include/linux/hmm.h
-> > > +++ b/include/linux/hmm.h
-> > > @@ -559,6 +559,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
-> > >                  return (int)ret;
-> > > 
-> > >          if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
-> > > +               hmm_range_unregister(range);
-> > >                  /*
-> > >                   * The mmap_sem was taken by driver we release it here and
-> > >                   * returns -EAGAIN which correspond to mmap_sem have been
-> > > @@ -570,13 +571,13 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
-> > > 
-> > >          ret = hmm_range_fault(range, block);
-> > >          if (ret <= 0) {
-> > > +               hmm_range_unregister(range);
-> > 
-> > what is the reason to moved it up ?
+>  Documentation/vm/hmm.rst | 139 ++++++++++++++++++-----------------
+>  include/linux/hmm.h      |  84 ++++++++++------------
+>  mm/hmm.c                 | 151 ++++++++++++++++-----------------------
+>  3 files changed, 174 insertions(+), 200 deletions(-)
 > 
-> I moved it up because the normal calling pattern is:
->     down_read(&mm->mmap_sem)
->     hmm_vma_fault()
->         hmm_range_register()
->         hmm_range_fault()
->         hmm_range_unregister()
->     up_read(&mm->mmap_sem)
+> -- 
+> 2.20.1
 > 
-> I don't think it is a bug to unlock mmap_sem and then unregister,
-> it is just more consistent nesting.
-
-So this is not the usage pattern with HMM usage pattern is:
-
-hmm_range_register()
-hmm_range_fault()
-hmm_range_unregister()
-
-The hmm_vma_fault() is gonne so this patch here break thing.
-
-See https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
-
-
