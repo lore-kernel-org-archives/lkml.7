@@ -2,114 +2,113 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFE5C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D204C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31AAE20C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:32:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRNU8ttk"
+	by mail.kernel.org (Postfix) with ESMTP id 68F8D20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfELLcw (ORCPT
+        id S1726664AbfELLgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 07:32:52 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:42439 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfELLcw (ORCPT
+        Sun, 12 May 2019 07:36:13 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53147 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726307AbfELLgM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 07:32:52 -0400
-Received: by mail-pg1-f195.google.com with SMTP id 145so5264841pgg.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 04:32:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=9f00UOD9NYVcNSwcRACXhgj+F1rjTUSAOxdcAQilGeM=;
-        b=JRNU8ttkWu7WYhoYidiWjaf7gI8eubmh7Jdu0XhMfjo9ZJOXo7weoUF5vf5sHZHjSC
-         +xY05/2mnT0IRHTMvwwIVeeD/7LLfrIGnoyQYmRnx3L+N5itN2vk5K6LjvbShE0UkYuw
-         sZUWrmSizlJG+JD/HkOfAKinUMpTyfWH+aCmuVZScL3CubDfIxbqlDpoWl+XXCIP49Mp
-         NNr2Bz8nsV8LEUcGFhsFQe7YChx71iySn5pxFd79GklhnbqUrT3MGedQBBSdqSvqegqS
-         9HMIjmEXN7zy6ZHNAj7pZma3wElB0je+khcTsdjgd541Me0H0XyCTffHqwtcn9+wzewO
-         qYQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=9f00UOD9NYVcNSwcRACXhgj+F1rjTUSAOxdcAQilGeM=;
-        b=BXu2g6oaQWY4mbAdxo5RKLUIEVAykkxBq9jpBZH7wNclAfUWYbnm5TdfSLOdVPxUWZ
-         Vzvc6CiXrfohi+1A6jgLwbyVck28X5zVA1fyRRfcWo0B5ivY1/1jSfCLh9dIeueHxgk3
-         BVg9mfxbFoDHF1Vpn2E9wF/Cy1baKSkNXEYkXFuBOksPpkR9ZWdP/HdRY5ueRSQ/988E
-         TbCoyvP9sXTpvX7uqNHvZEEMXZGV4UxIu+WPhmyiBPNYBTfFgfM2jK9+qMSrbJLqsP36
-         Iz+NDrMt4N6rR1H+p4gcY3wXPsMN1rHbJ+7K/RyVEMfVajpJqcas2nHcqoru/VJ7MxNO
-         IIeA==
-X-Gm-Message-State: APjAAAW5pFYnUiiJgAe0rj7ZKpef53P8VzGdIE1h2ugMrioKY9U/o4h1
-        Ki6ZqJOIwKQ+O3szv7Fo+xc=
-X-Google-Smtp-Source: APXvYqyGJVBBZgQTr9jm/+R79kKhJgnd51p0UtxYhjrxIAptXX2ztH88Uv5uVfzeY9KfD9VFeIAxuA==
-X-Received: by 2002:a62:579b:: with SMTP id i27mr27587948pfj.205.1557660771833;
-        Sun, 12 May 2019 04:32:51 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.73])
-        by smtp.gmail.com with ESMTPSA id s137sm12577493pfc.119.2019.05.12.04.32.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 04:32:51 -0700 (PDT)
-Date:   Sun, 12 May 2019 17:02:45 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        viswanath.barenkala@gmail.com
-Subject: [PATCH] drivers: staging :rtl8723bs :os_dep Remove Unneeded variable
- ret
-Message-ID: <20190512113245.GA2221@hari-Inspiron-1545>
+        Sun, 12 May 2019 07:36:12 -0400
+X-Originating-IP: 93.29.109.196
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 73671C0004;
+        Sun, 12 May 2019 11:36:08 +0000 (UTC)
+Message-ID: <19804f842e80f1f8bd85b8eb49e75e149abf0062.camel@bootlin.com>
+Subject: Hardware-accelerated video decoders used through a firmware instead
+ of hardware registers
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Date:   Sun, 12 May 2019 13:35:55 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix below issue reported by coccicheck
+Hi,
 
-drivers/staging/rtl8723bs/os_dep/ioctl_linux.c:2685:5-8: Unneeded
-variable: "ret". Return "0" on line 3266
+With the work done on the media request API and the cedrus driver for
+Allwinner ARM SoCs, we now have a kernel interface for exposing fixed-
+hardware video decoding pipelines (currently MPEG-2 and H.264, with
+H.265 on the way). Some work remains on the per-format interface and we
+are looking to improve latency-related aspects, but we are all set to
+have a nice interface here, that plays well with e.g. ffmpeg.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+A specific situation came to my interest, which is apparently quite
+common: some platforms have general-purpose microcontrollers embedded,
+which can help with video decoding. They are however rarely to never
+used to do the decoding itself (since they are general-purpose, not
+DSPs) and just coordinate the decoding with the fixed-pipeline decoding
+hardware block. The advantage is that the interface is just a simple
+mailbox and the raw video bitstream from the file can be passed
+directly without the need for userspace to do any parsing that the
+codec requires.
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index e3d3569..3f1ab6e 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -2682,7 +2682,6 @@ static int rtw_dbg_port(struct net_device *dev,
-                                struct iw_request_info *info,
-                                union iwreq_data *wrqu, char *extra)
- {
--	int ret = 0;
- 	u8 major_cmd, minor_cmd;
- 	u16 arg;
- 	u32 extra_arg, *pdata, val32;
-@@ -3263,7 +3262,7 @@ static int rtw_dbg_port(struct net_device *dev,
- 	}
- 
- 
--	return ret;
-+	return 0;
- 
- }
- 
+One side-effect from this setup is that the actual hardware register
+layout of the decoder is hidden away in a non-free piece of
+microcontroller firmware, that's usually loaded at run-time.
+
+With the recent developments on the media interface, we could interface
+with these hardware decoders directly, which offers various advantages:
+- we no longer need a 3rd party external non-free firmware, which just
+  makes distribution easier for everyone and allows support in fully-
+  free setups;
+- all the usual advantages of having free code that can be fixed and
+  updated instead of an obscure binary that many not always be doing
+  the right thing;
+- parsing of the slices is probably best done in userspace, and I
+  heard that ffmpeg does this threaded, so there could be a latency
+  advantage there as well, not to mention that it avoids the drag of
+  a mailbox interface altogether;
+- the general-purpose micro-controller can then be reused for something
+  useful where it could actually make a performance difference.
+
+As far as I understand, it seems that the video decoder for MT8173
+fails in that category, where a MD32 general-purpose micro-controller
+is used to only do the parsing. We even have device-tree nodes about
+the decoder and encoder, but no register layout.
+
+So I was wondering if the linux-media community should set some
+boundaries here and push towards native implementations instead of
+firmware-based ones. My opininon is that it definitely should.
+
+It seems that other platforms (e.g. Tegra K1 and onwards) are in the
+same situation, and I think the ChromiumOS downstream kernel uses an
+obscure firmware on a general-purpose auxiliary ARM core (that's also
+used at boot time IIRC).
+
+What do you think?
+
+Cheers,
+
+Paul
+
 -- 
-2.7.4
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
