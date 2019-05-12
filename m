@@ -2,281 +2,141 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E0C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00260C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9703A20881
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD70520873
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfELOxL (ORCPT
+        id S1726742AbfELPH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 10:53:11 -0400
-Received: from mout2.fh-giessen.de ([212.201.18.46]:48710 "EHLO
-        mout2.fh-giessen.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfELOxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 10:53:10 -0400
-Received: from mx2.fh-giessen.de ([212.201.18.41])
-        by mout2.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hPpqd-0003d0-Gc; Sun, 12 May 2019 16:53:07 +0200
-Received: from mailgate-1.its.fh-giessen.de ([212.201.18.15])
-        by mx2.fh-giessen.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hPpqd-00E2sQ-Cl; Sun, 12 May 2019 16:53:07 +0200
-Received: from p2e56130f.dip0.t-ipconnect.de ([46.86.19.15] helo=[192.168.1.24])
-        by mailgate-1.its.fh-giessen.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <tobias.johannes.klausmann@mni.thm.de>)
-        id 1hPpqd-000Do4-3h; Sun, 12 May 2019 16:53:07 +0200
-Subject: Re: [PATCH] drivers/media/dvb-frontends: Implement probe/remove for
- stv6110x
-To:     linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        mchehab@kernel.org
-References: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
-From:   Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-Message-ID: <ba914388-04d1-8a57-77eb-3f303941b9bf@mni.thm.de>
-Date:   Sun, 12 May 2019 16:53:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.0a1
+        Sun, 12 May 2019 11:07:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41406 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726478AbfELPH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 11:07:29 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 66B913086275;
+        Sun, 12 May 2019 15:07:28 +0000 (UTC)
+Received: from redhat.com (ovpn-120-196.rdu2.redhat.com [10.10.120.196])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 84A3860C47;
+        Sun, 12 May 2019 15:07:26 +0000 (UTC)
+Date:   Sun, 12 May 2019 11:07:24 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux-MM <linux-mm@kvack.org>, linux-kernel@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/5] mm/hmm: hmm_vma_fault() doesn't always call
+ hmm_range_unregister()
+Message-ID: <20190512150724.GA4238@redhat.com>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-5-rcampbell@nvidia.com>
+ <CAFqt6zbhLQuw2N5-=Nma-vHz1BkWjviOttRsPXmde8U1Oocz0Q@mail.gmail.com>
+ <fa2078fd-3ec7-5503-94d7-c4d1a766029a@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509195118.23027-1-tobias.johannes.klausmann@mni.thm.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fa2078fd-3ec7-5503-94d7-c4d1a766029a@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Sun, 12 May 2019 15:07:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping,
+On Tue, May 07, 2019 at 11:12:14AM -0700, Ralph Campbell wrote:
+> 
+> On 5/7/19 6:15 AM, Souptick Joarder wrote:
+> > On Tue, May 7, 2019 at 5:00 AM <rcampbell@nvidia.com> wrote:
+> > > 
+> > > From: Ralph Campbell <rcampbell@nvidia.com>
+> > > 
+> > > The helper function hmm_vma_fault() calls hmm_range_register() but is
+> > > missing a call to hmm_range_unregister() in one of the error paths.
+> > > This leads to a reference count leak and ultimately a memory leak on
+> > > struct hmm.
+> > > 
+> > > Always call hmm_range_unregister() if hmm_range_register() succeeded.
+> > 
+> > How about * Call hmm_range_unregister() in error path if
+> > hmm_range_register() succeeded* ?
+> 
+> Sure, sounds good.
+> I'll include that in v2.
 
-comments for this patch are appreciated!
+NAK for the patch see below why
 
-Thanks,
+> 
+> > > 
+> > > Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+> > > Cc: John Hubbard <jhubbard@nvidia.com>
+> > > Cc: Ira Weiny <ira.weiny@intel.com>
+> > > Cc: Dan Williams <dan.j.williams@intel.com>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> > > Cc: Balbir Singh <bsingharora@gmail.com>
+> > > Cc: Dan Carpenter <dan.carpenter@oracle.com>
+> > > Cc: Matthew Wilcox <willy@infradead.org>
+> > > Cc: Souptick Joarder <jrdr.linux@gmail.com>
+> > > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > > ---
+> > >   include/linux/hmm.h | 3 ++-
+> > >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+> > > index 35a429621e1e..fa0671d67269 100644
+> > > --- a/include/linux/hmm.h
+> > > +++ b/include/linux/hmm.h
+> > > @@ -559,6 +559,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> > >                  return (int)ret;
+> > > 
+> > >          if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+> > > +               hmm_range_unregister(range);
+> > >                  /*
+> > >                   * The mmap_sem was taken by driver we release it here and
+> > >                   * returns -EAGAIN which correspond to mmap_sem have been
+> > > @@ -570,13 +571,13 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+> > > 
+> > >          ret = hmm_range_fault(range, block);
+> > >          if (ret <= 0) {
+> > > +               hmm_range_unregister(range);
+> > 
+> > what is the reason to moved it up ?
+> 
+> I moved it up because the normal calling pattern is:
+>     down_read(&mm->mmap_sem)
+>     hmm_vma_fault()
+>         hmm_range_register()
+>         hmm_range_fault()
+>         hmm_range_unregister()
+>     up_read(&mm->mmap_sem)
+> 
+> I don't think it is a bug to unlock mmap_sem and then unregister,
+> it is just more consistent nesting.
 
-Tobias
+So this is not the usage pattern with HMM usage pattern is:
+
+hmm_range_register()
+hmm_range_fault()
+hmm_range_unregister()
+
+The hmm_vma_fault() is gonne so this patch here break thing.
+
+See https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
 
 
-On 09.05.19 21:51, Tobias Klausmann wrote:
-> Refactor out the common parts of stv6110x_probe() and stv6110x_attach() into
-> separate functions.
->
-> This provides the needed functionality to use dvb_module_probe() instead of
-> dvb_attach()!
->
-> Signed-off-by: Tobias Klausmann <tobias.johannes.klausmann@mni.thm.de>
-> ---
->   drivers/media/dvb-frontends/stv6110x.c      | 125 ++++++++++++++++----
->   drivers/media/dvb-frontends/stv6110x.h      |   3 +
->   drivers/media/dvb-frontends/stv6110x_priv.h |   3 +-
->   3 files changed, 109 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/media/dvb-frontends/stv6110x.c b/drivers/media/dvb-frontends/stv6110x.c
-> index 82c002d3833a..17bc7adf3771 100644
-> --- a/drivers/media/dvb-frontends/stv6110x.c
-> +++ b/drivers/media/dvb-frontends/stv6110x.c
-> @@ -345,6 +345,33 @@ static void stv6110x_release(struct dvb_frontend *fe)
->   	kfree(stv6110x);
->   }
->   
-> +void st6110x_init_regs(struct stv6110x_state *stv6110x)
-> +{
-> +	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
-> +
-> +	memcpy(stv6110x->regs, default_regs, 8);
-> +}
-> +
-> +void stv6110x_setup_divider(struct stv6110x_state *stv6110x)
-> +{
-> +	switch (stv6110x->config->clk_div) {
-> +	default:
-> +	case 1:
-> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
-> +		break;
-> +	case 2:
-> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
-> +		break;
-> +	case 4:
-> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
-> +		break;
-> +	case 8:
-> +	case 0:
-> +		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
-> +		break;
-> +	}
-> +}
-> +
->   static const struct dvb_tuner_ops stv6110x_ops = {
->   	.info = {
->   		.name		  = "STV6110(A) Silicon Tuner",
-> @@ -354,7 +381,7 @@ static const struct dvb_tuner_ops stv6110x_ops = {
->   	.release		= stv6110x_release
->   };
->   
-> -static const struct stv6110x_devctl stv6110x_ctl = {
-> +static struct stv6110x_devctl stv6110x_ctl = {
->   	.tuner_init		= stv6110x_init,
->   	.tuner_sleep		= stv6110x_sleep,
->   	.tuner_set_mode		= stv6110x_set_mode,
-> @@ -368,39 +395,77 @@ static const struct stv6110x_devctl stv6110x_ctl = {
->   	.tuner_get_status	= stv6110x_get_status,
->   };
->   
-> +void stv6110x_set_frontend_opts(struct stv6110x_state *stv6110x)
-> +{
-> +	stv6110x->frontend->tuner_priv		= stv6110x;
-> +	stv6110x->frontend->ops.tuner_ops	= stv6110x_ops;
-> +}
-> +
-> +static struct stv6110x_devctl *stv6110x_get_devctl(struct i2c_client *client)
-> +{
-> +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
-> +
-> +	dev_dbg(&client->dev, "\n");
-> +
-> +	return stv6110x->devctl;
-> +}
-> +
-> +static int stv6110x_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct stv6110x_config *config = client->dev.platform_data;
-> +
-> +	struct stv6110x_state *stv6110x;
-> +
-> +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
-> +	if (!stv6110x)
-> +		return -ENOMEM;
-> +
-> +	stv6110x->frontend	= config->frontend;
-> +	stv6110x->i2c		= client->adapter;
-> +	stv6110x->config	= config;
-> +	stv6110x->devctl	= &stv6110x_ctl;
-> +
-> +	st6110x_init_regs(stv6110x);
-> +	stv6110x_setup_divider(stv6110x);
-> +	stv6110x_set_frontend_opts(stv6110x);
-> +
-> +	printk(KERN_INFO "%s: Probed STV6110x\n", __func__);
-> +
-> +	i2c_set_clientdata(client, stv6110x);
-> +
-> +	/* setup callbacks */
-> +	config->get_devctl = stv6110x_get_devctl;
-> +
-> +	return 0;
-> +}
-> +
-> +static int stv6110x_remove(struct i2c_client *client)
-> +{
-> +	struct stv6110x_state *stv6110x = i2c_get_clientdata(client);
-> +
-> +	stv6110x_release(stv6110x->frontend);
-> +	return 0;
-> +}
-> +
->   const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
->   					const struct stv6110x_config *config,
->   					struct i2c_adapter *i2c)
->   {
->   	struct stv6110x_state *stv6110x;
-> -	u8 default_regs[] = {0x07, 0x11, 0xdc, 0x85, 0x17, 0x01, 0xe6, 0x1e};
->   
-> -	stv6110x = kzalloc(sizeof (struct stv6110x_state), GFP_KERNEL);
-> +	stv6110x = kzalloc(sizeof(struct stv6110x_state), GFP_KERNEL);
->   	if (!stv6110x)
->   		return NULL;
->   
-> +	stv6110x->frontend	= fe;
->   	stv6110x->i2c		= i2c;
->   	stv6110x->config	= config;
->   	stv6110x->devctl	= &stv6110x_ctl;
-> -	memcpy(stv6110x->regs, default_regs, 8);
->   
-> -	/* setup divider */
-> -	switch (stv6110x->config->clk_div) {
-> -	default:
-> -	case 1:
-> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 0);
-> -		break;
-> -	case 2:
-> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 1);
-> -		break;
-> -	case 4:
-> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 2);
-> -		break;
-> -	case 8:
-> -	case 0:
-> -		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL2], CTRL2_CO_DIV, 3);
-> -		break;
-> -	}
-> +	st6110x_init_regs(stv6110x);
-> +	stv6110x_setup_divider(stv6110x);
-> +	stv6110x_set_frontend_opts(stv6110x);
->   
->   	fe->tuner_priv		= stv6110x;
->   	fe->ops.tuner_ops	= stv6110x_ops;
-> @@ -410,6 +475,24 @@ const struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,
->   }
->   EXPORT_SYMBOL(stv6110x_attach);
->   
-> +static const struct i2c_device_id stv6110x_id_table[] = {
-> +	{"stv6110x", 0},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(i2c, stv6110x_id_table);
-> +
-> +static struct i2c_driver stv6110x_driver = {
-> +	.driver = {
-> +		.name	= "stv6110x",
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe		= stv6110x_probe,
-> +	.remove		= stv6110x_remove,
-> +	.id_table	= stv6110x_id_table,
-> +};
-> +
-> +module_i2c_driver(stv6110x_driver);
-> +
->   MODULE_AUTHOR("Manu Abraham");
->   MODULE_DESCRIPTION("STV6110x Silicon tuner");
->   MODULE_LICENSE("GPL");
-> diff --git a/drivers/media/dvb-frontends/stv6110x.h b/drivers/media/dvb-frontends/stv6110x.h
-> index 696b6e5b9e7b..7714adea5242 100644
-> --- a/drivers/media/dvb-frontends/stv6110x.h
-> +++ b/drivers/media/dvb-frontends/stv6110x.h
-> @@ -27,6 +27,9 @@ struct stv6110x_config {
->   	u8	addr;
->   	u32	refclk;
->   	u8	clk_div; /* divisor value for the output clock */
-> +	struct dvb_frontend		*frontend;
-> +
-> +	struct stv6110x_devctl* (*get_devctl)(struct i2c_client *);
->   };
->   
->   enum tuner_mode {
-> diff --git a/drivers/media/dvb-frontends/stv6110x_priv.h b/drivers/media/dvb-frontends/stv6110x_priv.h
-> index 109dfaf4ba42..383549d25268 100644
-> --- a/drivers/media/dvb-frontends/stv6110x_priv.h
-> +++ b/drivers/media/dvb-frontends/stv6110x_priv.h
-> @@ -66,11 +66,12 @@
->   #define REFCLOCK_MHz				(stv6110x->config->refclk / 1000000)
->   
->   struct stv6110x_state {
-> +	struct dvb_frontend		*frontend;
->   	struct i2c_adapter		*i2c;
->   	const struct stv6110x_config	*config;
->   	u8				regs[8];
->   
-> -	const struct stv6110x_devctl	*devctl;
-> +	struct stv6110x_devctl	*devctl;
->   };
->   
->   #endif /* __STV6110x_PRIV_H */
