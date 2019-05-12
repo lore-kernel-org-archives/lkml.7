@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A274CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05AE2C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD7B2086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 09:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B432086A
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rnAmc+ht"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gdgN2Jw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfELJ5o (ORCPT
+        id S1726529AbfELKCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 05:57:44 -0400
-Received: from mail-eopbgr130070.outbound.protection.outlook.com ([40.107.13.70]:21894
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Sun, 12 May 2019 06:02:14 -0400
+Received: from mail-eopbgr150045.outbound.protection.outlook.com ([40.107.15.45]:46886
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726646AbfELJ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 05:57:40 -0400
+        id S1726100AbfELKCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 06:02:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1j4GrkYJGJaCopq1Bo1ev25twfw3wAgPM2sF4jtB3CI=;
- b=rnAmc+htGjLgAZRAIoyBiLYrG0Mk3T3APargPqwFKYlpCFxh7XWGrYlneKHXakDBZUBMYr5yQcTvpivva2YFIveWdlHBHL8PxfznxU6+HKm+pgZhKcfP6Gs/OT7G/X1rEPmSqEz3F1wcYg6aIYU1+UmRLHO+i6jMvIZqD3lt8lc=
+ bh=ipfCwv9ZGrRQAbgGfA1LX7k0pr41jHpEk8sRywnNoGA=;
+ b=gdgN2Jw22gf9kO7GfDtQWGXroV5KzyVz0/JYGDTWfNwG4L8O4fINEycaDrpua8wJzjl0jeantYmYSJGCuelJapsBKudvqFIB+uX+1saBuXqA1UstAwp3qd7GO9MkzgGg3NiPB2AhW3jy6p+HZaK2JWx7qb7gaC7Oj0MOjuiJ3wc=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3899.eurprd04.prod.outlook.com (52.134.71.154) with Microsoft SMTP
+ DB3PR0402MB3913.eurprd04.prod.outlook.com (52.134.65.143) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Sun, 12 May 2019 09:57:35 +0000
+ 15.20.1878.21; Sun, 12 May 2019 10:02:10 +0000
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1878.022; Sun, 12 May 2019
- 09:57:35 +0000
+ 10:02:10 +0000
 From:   Anson Huang <anson.huang@nxp.com>
 To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         "mark.rutland@arm.com" <mark.rutland@arm.com>,
@@ -47,156 +47,96 @@ To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH RESEND 5/5] ARM: dts: imx6sx-sdb: Assign corresponding power
- supply for LDOs
-Thread-Topic: [PATCH RESEND 5/5] ARM: dts: imx6sx-sdb: Assign corresponding
- power supply for LDOs
-Thread-Index: AQHVCKkf/aKba1UJM0u/ZHXguMTtHg==
-Date:   Sun, 12 May 2019 09:57:35 +0000
-Message-ID: <1557654739-12564-5-git-send-email-Anson.Huang@nxp.com>
-References: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1557654739-12564-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND 1/2] ARM: dts: imx6sl: Assign corresponding clocks
+ instead of dummy clock
+Thread-Topic: [PATCH RESEND 1/2] ARM: dts: imx6sl: Assign corresponding clocks
+ instead of dummy clock
+Thread-Index: AQHVCKnDFE3KnTXK60CX+PynU37z9A==
+Date:   Sun, 12 May 2019 10:02:10 +0000
+Message-ID: <1557655028-12654-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR0401CA0007.apcprd04.prod.outlook.com
- (2603:1096:202:2::17) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+x-clientproxiedby: HK0PR01CA0036.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::24) To DB3PR0402MB3916.eurprd04.prod.outlook.com
  (2603:10a6:8:10::18)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=anson.huang@nxp.com; 
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 06ac86d9-d449-4ece-fc37-08d6d6c04235
+x-ms-office365-filtering-correlation-id: 175e90f2-5db5-4a68-4cb0-08d6d6c0e5ba
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3899;
-x-ms-traffictypediagnostic: DB3PR0402MB3899:
-x-microsoft-antispam-prvs: <DB3PR0402MB3899AAC64F81F7AFF5C22F38F50E0@DB3PR0402MB3899.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3913;
+x-ms-traffictypediagnostic: DB3PR0402MB3913:
+x-microsoft-antispam-prvs: <DB3PR0402MB391367FBC92089E74517DC09F50E0@DB3PR0402MB3913.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:334;
 x-forefront-prvs: 0035B15214
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(189003)(199004)(446003)(66476007)(66556008)(25786009)(486006)(66446008)(8676002)(11346002)(2616005)(476003)(73956011)(4326008)(14454004)(64756008)(8936002)(50226002)(66946007)(6512007)(53936002)(2201001)(7736002)(26005)(102836004)(71190400001)(86362001)(71200400001)(6506007)(478600001)(386003)(81166006)(81156014)(305945005)(316002)(2906002)(110136005)(6116002)(3846002)(66066001)(256004)(5660300002)(68736007)(36756003)(186003)(76176011)(2501003)(99286004)(6436002)(52116002)(6486002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3899;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(376002)(39860400002)(136003)(189003)(199004)(36756003)(81156014)(52116002)(50226002)(81166006)(99286004)(4326008)(8936002)(25786009)(2906002)(486006)(110136005)(305945005)(7736002)(5660300002)(68736007)(316002)(6506007)(2201001)(14454004)(386003)(6116002)(73956011)(66066001)(256004)(6512007)(66556008)(14444005)(66476007)(3846002)(66946007)(66446008)(2616005)(64756008)(476003)(71190400001)(6486002)(53936002)(478600001)(186003)(71200400001)(8676002)(26005)(2501003)(86362001)(102836004)(6436002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3913;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: sRnHtq+jLMbVhKcLnfFMyj1b4hCDXZXRtxDaBIwL1Pmzqo0xMrKWq0Pq0w1wXrzFHeuSpXU+oTogfLbJtkGgUj6OAG8QjdOAl1EpusaAi8DGTShe8TJTUMIhmtI/VvuGxt4OsIoG0nNRp1OTT4KVxDuz7cU0zqmjXlYH+61YiyX1BqWV54TWkudPXjU3JO0cLI9TvTeOSCSQFMBtW9EFYPl9dysoxq0n2UP4rLWHQ+MmQ9ztH0nHObB04cAPafD26mqRVK2YtfDTbteMvqaMbidsHn6NfSnOEOYtQLf2IK6le8ZxRvDUjY2UtA6oU5tG62c/pEYsmtil0npBbpSmLEorv4ppvNPy0eP8zFfJD8GE/yFEu5bptDI9Pp9uPZXs8IBUHF5Q/CPUUbr872HucoBRWLc+gjky4rr4rEkLyLk=
+x-microsoft-antispam-message-info: voMw4XGAKroXiTZ+OYNfX8OHKmmW6YFnQED5ET0vjuL32lKHKA3x8amDPbKjsTLCoaaWVIrZy6gWNvTxi8OE/XJpZP22WvGquymSTnjW4pKInKPrcoRAnGu+IG/wHUDKHnoIwHfhbwVhXvewjbEMEvti8C9EJQfgkMH8cZLAuwWQrjmFKiRUVEVC6Dzai8N9yygvEtkBYzPT/hTFnNuOC2fvpna0m+doPRj1A5db0QqZcZTOt33oFounGCFU+KGbpSKTrCcSLx4cr4KRHFkjmejz4Hd6CfRSesY/DnhVRxCON9hZXJ4D3Ru2yjKcul107HqCAiyLT796fSKrEuABcEqEYuQn4r9QsLKcHxg2zsby+Ce2j07BqHkbogXtPnQ/OnJlvDuxDgKfFwUgTyIEd+zF991iJcmXsnQEtwlzd+E=
 Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <D0E80C7DABDA9F4681E1DD72542CF8DE@eurprd04.prod.outlook.com>
+Content-ID: <CD1BEFEE427A5F45AF85F55BD5282B8B@eurprd04.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06ac86d9-d449-4ece-fc37-08d6d6c04235
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2019 09:57:35.4774
+X-MS-Exchange-CrossTenant-Network-Message-Id: 175e90f2-5db5-4a68-4cb0-08d6d6c0e5ba
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2019 10:02:10.0984
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3899
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On i.MX6SX SDB board, vgen6 supplies vdd1p1/vdd2p5 LDO and
-sw2 supplies vdd3p0 LDO, this patch assigns corresponding power
-supply for vdd1p1/vdd2p5/vdd3p0 to avoid confusion by below log:
-
-vdd1p1: supplied by regulator-dummy
-vdd3p0: supplied by regulator-dummy
-vdd2p5: supplied by regulator-dummy
-
-With this patch, the power supply is more accurate:
-
-vdd1p1: supplied by VGEN6
-vdd3p0: supplied by SW2
-vdd2p5: supplied by VGEN6
+i.MX6SL's KPP and WDOG use IMX6SL_CLK_IPG as clock root,
+assign IMX6SL_CLK_IPG to them instead of IMX6SL_CLK_DUMMY.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
 No code change, just resend patch with correct encoding.
 ---
- arch/arm/boot/dts/imx6sx-sdb-reva.dts | 12 ++++++++++++
- arch/arm/boot/dts/imx6sx-sdb.dts      | 12 ++++++++++++
- arch/arm/boot/dts/imx6sx.dtsi         |  6 +++---
- 3 files changed, 27 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/imx6sl.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sx-sdb-reva.dts b/arch/arm/boot/dts/imx6=
-sx-sdb-reva.dts
-index 00c4854..5b3d6c10 100644
---- a/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb-reva.dts
-@@ -154,3 +154,15 @@
- 	enable-active-high;
- 	vin-supply =3D <&reg_can_en>;
- };
-+
-+&reg_vdd1p1 {
-+	vin-supply =3D <&vgen6_reg>;
-+};
-+
-+&reg_vdd3p0 {
-+	vin-supply =3D <&sw2_reg>;
-+};
-+
-+&reg_vdd2p5 {
-+	vin-supply =3D <&vgen6_reg>;
-+};
-diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sd=
-b.dts
-index 998e3e1..10f6da8 100644
---- a/arch/arm/boot/dts/imx6sx-sdb.dts
-+++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-@@ -137,6 +137,18 @@
- 	vin-supply =3D <&sw1a_reg>;
- };
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 9ddbeea..9393f03 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -495,7 +495,7 @@
+ 				compatible =3D "fsl,imx6sl-kpp", "fsl,imx21-kpp";
+ 				reg =3D <0x020b8000 0x4000>;
+ 				interrupts =3D <0 82 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6SL_CLK_IPG>;
+ 				status =3D "disabled";
+ 			};
 =20
-+&reg_vdd1p1 {
-+	vin-supply =3D <&vgen6_reg>;
-+};
-+
-+&reg_vdd3p0 {
-+	vin-supply =3D <&sw2_reg>;
-+};
-+
-+&reg_vdd2p5 {
-+	vin-supply =3D <&vgen6_reg>;
-+};
-+
- &reg_can_stby {
- 	/* Transceiver EN/STBY is active low on RevB board */
- 	gpio =3D <&gpio4 27 GPIO_ACTIVE_LOW>;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index b16a123..bbdfdd8 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -600,7 +600,7 @@
- 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
+@@ -503,14 +503,14 @@
+ 				compatible =3D "fsl,imx6sl-wdt", "fsl,imx21-wdt";
+ 				reg =3D <0x020bc000 0x4000>;
+ 				interrupts =3D <0 80 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6SL_CLK_IPG>;
+ 			};
 =20
--				regulator-1p1 {
-+				reg_vdd1p1: regulator-1p1 {
- 					compatible =3D "fsl,anatop-regulator";
- 					regulator-name =3D "vdd1p1";
- 					regulator-min-microvolt =3D <1000000>;
-@@ -615,7 +615,7 @@
- 					anatop-enable-bit =3D <0>;
- 				};
+ 			wdog2: wdog@20c0000 {
+ 				compatible =3D "fsl,imx6sl-wdt", "fsl,imx21-wdt";
+ 				reg =3D <0x020c0000 0x4000>;
+ 				interrupts =3D <0 81 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_DUMMY>;
++				clocks =3D <&clks IMX6SL_CLK_IPG>;
+ 				status =3D "disabled";
+ 			};
 =20
--				regulator-3p0 {
-+				reg_vdd3p0: regulator-3p0 {
- 					compatible =3D "fsl,anatop-regulator";
- 					regulator-name =3D "vdd3p0";
- 					regulator-min-microvolt =3D <2800000>;
-@@ -630,7 +630,7 @@
- 					anatop-enable-bit =3D <0>;
- 				};
-=20
--				regulator-2p5 {
-+				reg_vdd2p5: regulator-2p5 {
- 					compatible =3D "fsl,anatop-regulator";
- 					regulator-name =3D "vdd2p5";
- 					regulator-min-microvolt =3D <2250000>;
 --=20
 2.7.4
 
