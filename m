@@ -2,68 +2,70 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB682C04A6B
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E2FC46460
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FAB20C01
+	by mail.kernel.org (Postfix) with ESMTP id AAE3421019
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="CheLRUTY"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="P1GAUOYh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbfELTjo (ORCPT
+        id S1727050AbfELTjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 15:39:44 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55277 "EHLO
+        Sun, 12 May 2019 15:39:46 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40163 "EHLO
         mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfELTjo (ORCPT
+        with ESMTP id S1726909AbfELTjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 15:39:44 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i3so5993999wml.4
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 12:39:42 -0700 (PDT)
+        Sun, 12 May 2019 15:39:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h11so11620148wmb.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 12:39:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zWbggL32nqaK0NhKqHWoQpLdIs4e+dGRoCZHYZPIbWw=;
-        b=CheLRUTYkUJD4uIKFEVuBkQjHtO3lBcS1AaeqBXHUqPuP88Gt1W9V1I4fJ4UP8n7gL
-         dhIhygTfgfOBGRKiXKmLNjuhj7IO3mtvdbdzVXlOcLDuY2tYROT+vf34MXRmr0x8RefA
-         Vct4viSmUF32eqzZ9PIGSxVwktWjG0lbkiPvneict9qKjvZi80XhZomXetpTw6ien/gz
-         8qurMauy0UBKJJwsPJozT9X2JbXzFSj1K9Eyieuvrcz7l1QYJznEwlQPRUhZgCnKgZOl
-         5JkIzkbgrd06Xsq5VYLlo1vmpciJvKxE7oZYesxBeY4PZ3rSsuQrXdXC4uuoqmP5vJL9
-         xRwg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1xqj/Zo3AUFkVy0zRgFkVBz4uDdS8LIxp09mdTlXIys=;
+        b=P1GAUOYh6F5NDr6P/o2VZYBMKNU69JrmKXjrv0mJrQkAzO5Gr2ZqK2J5fTuim4vqug
+         4fAfYWtolMpC1tPgmmCeJglHw1ly3XD42CqglWnjR0o6WnnBX7XK/OJ2Rog1OXts6Djj
+         MNiT9SsNubOhKeCkH0Y354TJDzax+BPcAScpczaUsvHB2Fj04fBNbHVB2IRxuctX1jYv
+         7R6bKG3KsE9L5q5frbaVkYqo01SIA+WhGqv/dFkPRShaJvcjBQfrF+9iHUbERptfJUgv
+         p7sGaWqgfX9vK+od4cEAWG+x2fOZZnFDs2SkKhn7wxelYRAIoQnuXOIO9/k+ab5SZ3Tg
+         X6uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zWbggL32nqaK0NhKqHWoQpLdIs4e+dGRoCZHYZPIbWw=;
-        b=gHWxWFG6Lme7bYuu5nCY/neBrn2hkSb6U+2wt/s0wufS217eBDipUondMLEsjh03Dt
-         i+inPLOs2h27x7KfzUJTSrgJ+1BLuA30VUkxuA16GabsQLCYp+/kPorWz5h7T2N+E8SL
-         fTbXerNL9qFTEdLCg67pGTEohgI1g1i+7pmEO6BHQNcIej0deM1ROUbJXjUcK66jXqCN
-         7Z6fmvraNQEQxCs9HVXakHmRzA85dbF3IfI7zPfS7eE+uss3sL7JYNpWjn4zzS/HFLF5
-         VO9QxAO2zHfRf4alIYP9mjiDiR6vEnJ4RTz3Sgx657+A4945dTFAvpyWu24JsNrdYeHT
-         vRiQ==
-X-Gm-Message-State: APjAAAXOMlCSMe9Rpn8T1C5bk88VLqtWw1xQoLeec5w1uCrsc5NrSJoO
-        FRLmd9GE1TDY3qsNiIEZFTw=
-X-Google-Smtp-Source: APXvYqz1LfFTR+NI4oCDqTgGEFI0sGQW7NFKgq6Z4FgeSFXoVrKlwUANkBWfszsTPJM7zqaFz9yRag==
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr14085532wmh.32.1557689981825;
-        Sun, 12 May 2019 12:39:41 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1xqj/Zo3AUFkVy0zRgFkVBz4uDdS8LIxp09mdTlXIys=;
+        b=b1XT1KFbWOQpL++P8p/N8gu8ksWyP84WxLA+UAqp7882o3kujlkkWuziYcJ4GjfVr/
+         TUMRMWppxPYokwH/Fd59RXnb30gOFHmSBPa2wCSbi5YHRO2AlvUmTY42aO69ibThzurS
+         cP2dgkTaxsNIJnA9d66artJKe+spgncDpx/IT/+7u+m+tvh/clSqlOZb/9zGkbU0LR2k
+         dw+fcLaKPhUJlv5jThL7xeFNSsM9Fk2/NJBw3qg0+Ev6rFUWfG/1ZUAnzeeZ82eCvuP7
+         61yKEnwondpygMvLGNfmgC031qF7jDyNn4QsD1llEBucEEk4TNHIEXO0PnkjyOCb/Vxv
+         vtKA==
+X-Gm-Message-State: APjAAAWvmzlhjVNXo8Iqv/hO7teXVGqhZES+VbGemjmVunaCVCt9rUfC
+        RbK8eHIFMY3zbMefWA8auMo=
+X-Google-Smtp-Source: APXvYqyKsuCV1ihDzofQdBkbz/XAwhXROCx9jK/t1SKZit6sN6YlPxvB7us/FY/5Si4I7kbAyR9Omg==
+X-Received: by 2002:a1c:7e08:: with SMTP id z8mr13877489wmc.36.1557689983139;
+        Sun, 12 May 2019 12:39:43 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C8AD00ECBE9107EA8EB108.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:ecbe:9107:ea8e:b108])
-        by smtp.googlemail.com with ESMTPSA id c9sm8127719wrv.62.2019.05.12.12.39.40
+        by smtp.googlemail.com with ESMTPSA id c9sm8127719wrv.62.2019.05.12.12.39.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 12:39:40 -0700 (PDT)
+        Sun, 12 May 2019 12:39:42 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 0/1] ARM: dts: meson8b: another GPU fix
-Date:   Sun, 12 May 2019 21:39:35 +0200
-Message-Id: <20190512193936.26557-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/1] ARM: dts: meson8b: fix the operating voltage of the Mali GPU
+Date:   Sun, 12 May 2019 21:39:36 +0200
+Message-Id: <20190512193936.26557-2-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190512193936.26557-1-martin.blumenstingl@googlemail.com>
+References: <20190512193936.26557-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,28 +73,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently I am working on the PWM driver to complete .get_state()
-support. This allowed me to read the VDDEE voltage set by u-boot
-on my Meson8b boards (EC-100 and Odroid-C1). VDDEE supplies the
-Mali GPU.
+Amlogic's vendor kernel defines an OPP for the GPU on Meson8b boards
+with a voltage of 1.15V. It turns out that the vendor kernel relies on
+the bootloader to set up the voltage. The bootloader however sets a
+fixed voltage of 1.10V.
 
-It turns out that the bootloader configures a VDDEE voltage of 1.10V
-instead of 1.15V. 1.15V is actually out-of-range for that regulator
-design.
+Amlogic's patched u-boot sources (uboot-2015-01-15-23a3562521) confirm
+this:
+$ grep -oiE "VDD(EE|AO)_VOLTAGE[ ]+[0-9]+" board/amlogic/configs/m8b_*
+  board/amlogic/configs/m8b_m100_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m101_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m102_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m200_v1.h:VDDAO_VOLTAGE            1100
+  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+  board/amlogic/configs/m8b_m202_v1.h:VDDEE_VOLTAGE            1100
 
-This is meant to be applied on top of my other GPU fixes from [0]
-also targetting v5.2 if possible.
+Another hint at this is the VDDEE voltage on the EC-100 and Odroid-C1
+boards. The VDDEE regulator supplies the Mali GPU. It's basically a copy
+of the VCCK (CPU supply) which means it's limited to 0.86V to 1.14V.
 
+Update the operating voltage of the Mali GPU on Meson8b to 1.10V so it
+matches with what the vendor u-boot sets.
 
-[0] https://patchwork.kernel.org/cover/10910101/
-
-
-Martin Blumenstingl (1):
-  ARM: dts: meson8b: fix the operating voltage of the Mali GPU
-
+Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
  arch/arm/boot/dts/meson8b.dtsi | 10 +++++-----
  1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index 4b919590dae5..ec67f49116d9 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -163,23 +163,23 @@
+ 
+ 		opp-255000000 {
+ 			opp-hz = /bits/ 64 <255000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-364300000 {
+ 			opp-hz = /bits/ 64 <364300000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-425000000 {
+ 			opp-hz = /bits/ 64 <425000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-510000000 {
+ 			opp-hz = /bits/ 64 <510000000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 		};
+ 		opp-637500000 {
+ 			opp-hz = /bits/ 64 <637500000>;
+-			opp-microvolt = <1150000>;
++			opp-microvolt = <1100000>;
+ 			turbo-mode;
+ 		};
+ 	};
 -- 
 2.21.0
 
