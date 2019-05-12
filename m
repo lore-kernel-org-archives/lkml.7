@@ -2,291 +2,98 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6E3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87633C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CCB2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50649217D7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JRbbdvA0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0Ti20aN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfELN4C (ORCPT
+        id S1726687AbfELOIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 09:56:02 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57122 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726423AbfELN4B (ORCPT
+        Sun, 12 May 2019 10:08:54 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38892 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfELOIy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 09:56:01 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 616B52B6;
-        Sun, 12 May 2019 15:55:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1557669358;
-        bh=S+hZYXtoJjYSMo9K9sr81T/Awk02j+RyY6TH9RtOq2s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JRbbdvA0NkoO8nVWjccGDNpWycHJ6aS/S04QKO6dKBDw1lhDcIdK1e2/iVAEAalze
-         pDUDh+QIL++/ffjHW/uGi88OJIgPm+bXYqOc4CYJfEy2VAt/DweHBrEgNpZikbIHIJ
-         mqkh1JpHkFVUCLI4U307Qw/BMGV0VeU25eKPtRT8=
-Date:   Sun, 12 May 2019 16:55:42 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 5/6] drm: rcar-du: Create a group state object
-Message-ID: <20190512135542.GF4960@pendragon.ideasonboard.com>
-References: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
- <20190315170110.23280-6-kieran.bingham+renesas@ideasonboard.com>
+        Sun, 12 May 2019 10:08:54 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 14so8710380ljj.5;
+        Sun, 12 May 2019 07:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SsdMUibOgwZjuAll78GXO0IJFVu4htERDbgeRDvLGlY=;
+        b=k0Ti20aNFtGS8xI430w/FIJoeJ/iFF+ZwYq1+T2C6q1os18QLLQRQ+9r+hYvnde0vS
+         xGO1F0g6apQ+oO/9TqIRynGff91Q2jg4LozCz1B29NfJiF2rdojwzcHFMtddXd03e4Oj
+         ufXCFjKODWjJ2Bm3HpYS7y2JYpfOWgVng8rTMcdjp3zFpWVT2GIxrbSeQ35G5zsv4edU
+         Dp8f2txiy0wtZfweVPrZGlyqk9qY9Hpk7Z0ZOfVAvSu8HL5ItgwL17QWQeh1/Yzjp+iL
+         Aob2VxV+k6sWZwxzGPrW+nP6zBPBx+F8G+6HpCc6Ejo+m3TB0CEupw9wTTkwE6hrzA0m
+         NOqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SsdMUibOgwZjuAll78GXO0IJFVu4htERDbgeRDvLGlY=;
+        b=lkseNwomYDJTY0tYQpKCh4F8PxOFnNo5e1zetbScyufoOMc40CTMLRtW54H6Ihr6hI
+         J91aqHn3twphKpb8t5BcNZ4f8U6pHMbjaSqkGEES74fW97kBOGMD/31+usJplsweLaWt
+         BYc19BrDvRnVTGP8oRwQdbtB1h0CirpYWe7lpsTFPmChOMnVZf9ZC5o01WtDlFFftFg2
+         InX3ZiycFvwqXXtfs76YkN6DrPq8+hmC+tb+AHjjRqxnWFW3byvE5qgdVwpsQGD5UVrU
+         kwn8SSzM3s/+MdSJ6+tnZp3T8vqxOBYIb2hsLLt/go5bGSuhxUQQKglx/ufoHrD6Ly8d
+         0lHQ==
+X-Gm-Message-State: APjAAAXmXxxOeNAG15Z5b0lzpR4+ptrJFekL7b/JvlP8JwkzUGWJcNF8
+        HBz7Y6jxKO+dABEW8KoBkc/08GgU
+X-Google-Smtp-Source: APXvYqzBa0OuT3LFcawR/5VajeBvaBLitjWPtc4mROHTyB5IyW1EW1Vv/S4DRBixUg082YMTfhU6VA==
+X-Received: by 2002:a2e:5dcb:: with SMTP id v72mr11895351lje.54.1557670131187;
+        Sun, 12 May 2019 07:08:51 -0700 (PDT)
+Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
+        by smtp.googlemail.com with ESMTPSA id y19sm2745915lfl.40.2019.05.12.07.08.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 07:08:49 -0700 (PDT)
+Subject: Re: [PATCH v4 6/6] regulator: max77620: Support Maxim 77663
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mallikarjun Kasoju <mkasoju@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190505154325.30026-1-digetx@gmail.com>
+ <20190505154325.30026-7-digetx@gmail.com>
+Message-ID: <f8f67e00-0544-c999-92e0-3998c2f70ee7@gmail.com>
+Date:   Sun, 12 May 2019 17:08:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190505154325.30026-7-digetx@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190315170110.23280-6-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
-
-Thank you for the patch.
-
-On Fri, Mar 15, 2019 at 05:01:09PM +0000, Kieran Bingham wrote:
-> Create a new private state object for the DU groups, and move the
-> initialisation of a group object to a new function rcar_du_group_init().
+05.05.2019 18:43, Dmitry Osipenko пишет:
+> Add support for Maxim 77663.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Acked-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
-> v2:
->  - No change
-> 
->  drivers/gpu/drm/rcar-du/rcar_du_group.c | 81 +++++++++++++++++++++++++
->  drivers/gpu/drm/rcar-du/rcar_du_group.h | 22 +++++++
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c   | 27 ++-------
->  3 files changed, 107 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> index 9eee47969e77..9c82d666f170 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> @@ -26,6 +26,10 @@
->  #include <linux/clk.h>
->  #include <linux/io.h>
 
-Please include <linux/slab.h> for kzalloc() and kfree().
+Hello Mark,
 
->  
-> +#include <drm/drm_atomic.h>
-> +#include <drm/drm_atomic_state_helper.h>
-> +#include <drm/drm_device.h>
-> +
->  #include "rcar_du_drv.h"
->  #include "rcar_du_group.h"
->  #include "rcar_du_regs.h"
-> @@ -351,3 +355,80 @@ int rcar_du_group_set_routing(struct rcar_du_group *rgrp)
->  
->  	return rcar_du_set_dpad0_vsp1_routing(rgrp->dev);
->  }
-> +
-> +static struct drm_private_state *
-> +rcar_du_group_atomic_duplicate_state(struct drm_private_obj *obj)
-> +{
-> +	struct rcar_du_group_state *state;
-> +
-> +	if (WARN_ON(!obj->state))
-> +		return NULL;
-> +
-> +	state = kzalloc(sizeof(*state), GFP_KERNEL);
-> +	if (state == NULL)
-> +		return NULL;
-> +
-> +	__drm_atomic_helper_private_obj_duplicate_state(obj, &state->state);
-> +
-> +	return &state->state;
-> +}
-> +
-> +static void rcar_du_group_atomic_destroy_state(struct drm_private_obj *obj,
-> +					       struct drm_private_state *state)
-> +{
-> +	kfree(to_rcar_group_state(state));
-> +}
-> +
-> +static const struct drm_private_state_funcs rcar_du_group_state_funcs = {
-> +	.atomic_duplicate_state = rcar_du_group_atomic_duplicate_state,
-> +	.atomic_destroy_state = rcar_du_group_atomic_destroy_state,
-> +};
-> +
-> +/*
-> + * rcar_du_group_init - Initialise and reset a group object
-> + *
-> + * Return 0 in case of success or a negative error code otherwise.
-> + */
-> +int rcar_du_group_init(struct rcar_du_device *rcdu, struct rcar_du_group *rgrp,
-> +		       unsigned int index)
-> +{
-> +	static const unsigned int mmio_offsets[] = {
-> +		DU0_REG_OFFSET, DU2_REG_OFFSET
-> +	};
-> +
-> +	struct rcar_du_group_state *state;
-> +
-> +	state = kzalloc(sizeof(*state), GFP_KERNEL);
-> +	if (!state)
-> +		return -ENOMEM;
-> +
-> +	drm_atomic_private_obj_init(rcdu->ddev, &rgrp->private, &state->state,
-> +				    &rcar_du_group_state_funcs);
-> +
-> +	mutex_init(&rgrp->lock);
-> +
-> +	rgrp->dev = rcdu;
-> +	rgrp->mmio_offset = mmio_offsets[index];
-> +	rgrp->index = index;
-> +	/* Extract the channel mask for this group only. */
-> +	rgrp->channels_mask = (rcdu->info->channels_mask >> (2 * index))
-> +			    & GENMASK(1, 0);
-> +	rgrp->num_crtcs = hweight8(rgrp->channels_mask);
-> +
-> +	/*
-> +	 * If we have more than one CRTC in this group pre-associate
-> +	 * the low-order planes with CRTC 0 and the high-order planes
-> +	 * with CRTC 1 to minimize flicker occurring when the
-> +	 * association is changed.
-> +	 */
-> +	rgrp->dptsr_planes = rgrp->num_crtcs > 1
-> +			   ? (rcdu->info->gen >= 3 ? 0x04 : 0xf0)
-> +			   : 0;
-> +
-> +	return 0;
-> +}
-> +
-> +void rcar_du_group_cleanup(struct rcar_du_group *rgrp)
-> +{
-
-I would add a mutex_cleanup(&rgrp->lock) here. Apart from that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +	drm_atomic_private_obj_fini(&rgrp->private);
-> +}
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> index 87950c1f6a52..4b812e167987 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
-> @@ -12,12 +12,15 @@
->  
->  #include <linux/mutex.h>
->  
-> +#include <drm/drm_atomic.h>
-> +
->  #include "rcar_du_plane.h"
->  
->  struct rcar_du_device;
->  
->  /*
->   * struct rcar_du_group - CRTCs and planes group
-> + * @private: The base drm private object
->   * @dev: the DU device
->   * @mmio_offset: registers offset in the device memory map
->   * @index: group index
-> @@ -32,6 +35,8 @@ struct rcar_du_device;
->   * @need_restart: the group needs to be restarted due to a configuration change
->   */
->  struct rcar_du_group {
-> +	struct drm_private_obj private;
-> +
->  	struct rcar_du_device *dev;
->  	unsigned int mmio_offset;
->  	unsigned int index;
-> @@ -49,6 +54,19 @@ struct rcar_du_group {
->  	bool need_restart;
->  };
->  
-> +#define to_rcar_group(s) container_of(s, struct rcar_du_group, private)
-> +
-> +/**
-> + * struct rcar_du_group_state - Driver-specific group state
-> + * @state: base DRM private state
-> + */
-> +struct rcar_du_group_state {
-> +	struct drm_private_state state;
-> +};
-> +
-> +#define to_rcar_group_state(s) \
-> +	container_of(s, struct rcar_du_group_state, state)
-> +
->  u32 rcar_du_group_read(struct rcar_du_group *rgrp, u32 reg);
->  void rcar_du_group_write(struct rcar_du_group *rgrp, u32 reg, u32 data);
->  
-> @@ -60,4 +78,8 @@ int rcar_du_group_set_routing(struct rcar_du_group *rgrp);
->  
->  int rcar_du_set_dpad0_vsp1_routing(struct rcar_du_device *rcdu);
->  
-> +int rcar_du_group_init(struct rcar_du_device *rcdu, struct rcar_du_group *rgrp,
-> +		       unsigned int index);
-> +void rcar_du_group_cleanup(struct rcar_du_group *rgrp);
-> +
->  #endif /* __RCAR_DU_GROUP_H__ */
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index ece92cff2137..eb01bea1ab83 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -23,6 +23,7 @@
->  #include "rcar_du_crtc.h"
->  #include "rcar_du_drv.h"
->  #include "rcar_du_encoder.h"
-> +#include "rcar_du_group.h"
->  #include "rcar_du_kms.h"
->  #include "rcar_du_regs.h"
->  #include "rcar_du_vsp.h"
-> @@ -516,10 +517,6 @@ static int rcar_du_vsps_init(struct rcar_du_device *rcdu)
->  
->  int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  {
-> -	static const unsigned int mmio_offsets[] = {
-> -		DU0_REG_OFFSET, DU2_REG_OFFSET
-> -	};
-> -
->  	struct drm_device *dev = rcdu->ddev;
->  	struct drm_encoder *encoder;
->  	struct rcar_du_group *rgrp;
-> @@ -566,25 +563,9 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
->  
->  	/* Initialize the groups. */
->  	for_each_rcdu_group(rcdu, rgrp, i) {
-> -		mutex_init(&rgrp->lock);
-> -
-> -		rgrp->dev = rcdu;
-> -		rgrp->mmio_offset = mmio_offsets[i];
-> -		rgrp->index = i;
-> -		/* Extract the channel mask for this group only. */
-> -		rgrp->channels_mask = (rcdu->info->channels_mask >> (2 * i))
-> -				   & GENMASK(1, 0);
-> -		rgrp->num_crtcs = hweight8(rgrp->channels_mask);
-> -
-> -		/*
-> -		 * If we have more than one CRTCs in this group pre-associate
-> -		 * the low-order planes with CRTC 0 and the high-order planes
-> -		 * with CRTC 1 to minimize flicker occurring when the
-> -		 * association is changed.
-> -		 */
-> -		rgrp->dptsr_planes = rgrp->num_crtcs > 1
-> -				   ? (rcdu->info->gen >= 3 ? 0x04 : 0xf0)
-> -				   : 0;
-> +		ret = rcar_du_group_init(rcdu, rgrp, i);
-> +		if (ret < 0)
-> +			return ret;
->  
->  		if (!rcar_du_has(rcdu, RCAR_DU_FEATURE_VSP1_SOURCE)) {
->  			ret = rcar_du_planes_init(rgrp);
-
--- 
-Regards,
-
-Laurent Pinchart
+Just want to get yours attention to that Lee picked up the patches into
+the MFD tree, excluding this patch. I assume this one will have to go
+via the regulator's tree.
