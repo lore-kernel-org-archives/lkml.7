@@ -2,104 +2,101 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2256CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F815C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE67A2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="M1kb+HIz"
+	by mail.kernel.org (Postfix) with ESMTP id 247DE2146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557680745;
+	bh=KJwpJGQx7wMPwZuFQD4Xj5LQRS1Zg6qPUXTGykk0TqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FPjKmF+LmXFzsCh0rugXLp4m+joAWw5j/1HvMW6GsZu7p1tAdrF5IIL1swPINXsvo
+	 Hia6fNKYb+yfh1OQYRiDqoHbGfYdBiDRAKPqka3wCoG/FFPbcPSBlvmfoxnNMZzhYI
+	 ggHyuBBwK+YVfettEk7X5OX84Xe6G2xMRlqrl0Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfELRFT (ORCPT
+        id S1726989AbfELRFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 13:05:19 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38237 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfELRFT (ORCPT
+        Sun, 12 May 2019 13:05:44 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49326 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfELRFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 13:05:19 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u199so7719587oie.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 10:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QSdaCWlLqhcDnznsymm2aG1Z95spPWEN1cuWFhXTYhg=;
-        b=M1kb+HIzVOLjPCV4h6Pn4lve+FlnoRhh7JL/WOdRAHWhP7XRiXt2Sb1zCx+P73FWpH
-         KH+vO3XX2/+B76I47eV+x5dE3f6pnMgrTIJE7VNh4ZChznUcTJY9sLB9hecdROdExjmg
-         /JPQRL9+WNauQRy09PAuL4L+fpknOrj50gkModVL0BMNekoH7GBXdRdXfxoaLcWOG03L
-         Y+O3tl58C2QvVdDq9MUnLdKYMn7lI9M9GE8l5NKOH1AX/WldekcH2nLERHsnEiX4sVsK
-         tDUJ/uw9Na9lpPhy3YjlBknNgRsJ/+qzkinLg8HkU903BWLWhwIYA6J1YzU1WDzc0gEI
-         hjfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QSdaCWlLqhcDnznsymm2aG1Z95spPWEN1cuWFhXTYhg=;
-        b=WL9HWoF1PBIiEOK7gFwGJhHSf83frxUvlfWg8ju92sfIKTlrDf2HHD03lxBrBNGMHv
-         zEJr4wG4Nr/nfS4BJWFDlK5e9yWn/6JL1qTueMTMthzBzAGvikmO+sUAiJkkZG3K5Ql+
-         Nyc3nChvu5Ou6edOQgr3Pu0s62EY2TX+l9ppyA9HhkqKuFuab+R77OWvc+D2Za0fkZYN
-         4yidBrgrjZ7L1vFJMJSmSFPm8VaSIbmX/0rvGfr4nMngG9un/PjKPA5OTLnZMTO3OLbc
-         kRgWy7zcwvUB1V2a5NSbZniH9dLjvie0ijL/Y5TlBt2o2NbQzmBFAB1ATVluRmfWeW8n
-         cyIQ==
-X-Gm-Message-State: APjAAAWVZ6v9IVDNqYAdBrSPpL7m1qQZnRnb6EByCzJ1z0300YyfTt3C
-        h24j0uad1da0wV6Rdm/xtmiDAQ==
-X-Google-Smtp-Source: APXvYqyWbK23VrEkToZOwoQB+/N6sOOi7C92304sjVSrsw7En9uosUTt+tMWJRIvjnvIj1tmphPF2Q==
-X-Received: by 2002:aca:e594:: with SMTP id c142mr3854397oih.155.1557680718422;
-        Sun, 12 May 2019 10:05:18 -0700 (PDT)
-Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id w192sm4456571oiw.57.2019.05.12.10.05.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 10:05:17 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
-        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
-        takondra@cisco.com, kamensky@cisco.com, hpa@zytor.com,
-        arnd@arndb.de, james.w.mcmechan@gmail.com
-References: <20190509112420.15671-1-roberto.sassu@huawei.com>
- <20190512091748.s6fvy2f5p2a2o6ja@isilmar-4.linta.de>
- <1557665567.10635.222.camel@linux.ibm.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
-Date:   Sun, 12 May 2019 12:05:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Sun, 12 May 2019 13:05:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=KJwpJGQx7wMPwZuFQD4Xj5LQRS1Zg6qPUXTGykk0TqY=; b=ZTn4espIgdpj7vgG+IP2gEdT/
+        3KBCIf8lRU7WrYMs9tSJbOFEGsIbImm9aYrQjdxIVGDeEB8AFDUGyR2P1wXILCzaS7gb94P0LD5o4
+        7uF4dHa795ZlL7qVdllzhK5fmMz/0CrAJPVeUJsNpCIkxIRzGbb0TkO5QL84kNzHaqvSo=;
+Received: from [81.145.206.43] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hPruu-00044o-Ag; Sun, 12 May 2019 17:05:40 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 69893440064; Sun, 12 May 2019 10:06:27 +0100 (BST)
+Date:   Sun, 12 May 2019 18:06:27 +0900
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 5/6] soc/tegra: regulators: Add regulators coupler
+ for Tegra20
+Message-ID: <20190512090627.GO21483@sirena.org.uk>
+References: <20190414175939.12368-1-digetx@gmail.com>
+ <20190414175939.12368-6-digetx@gmail.com>
+ <20190508075706.GW14916@sirena.org.uk>
+ <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1557665567.10635.222.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DRfr/2Y1Zz/5r+Kb"
+Content-Disposition: inline
+In-Reply-To: <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
+X-Cookie: HOST SYSTEM RESPONDING, PROBABLY UP...
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/19 7:52 AM, Mimi Zohar wrote:
-> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
->> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
->>> This proposal consists in marshaling pathnames and xattrs in a file called
->>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
->>> been extracted.
->>
->> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
->> be done equivalently by the initramfs' /init? Why is kernel involvement
->> actually required here?
-> 
-> It's too late.  The /init itself should be signed and verified.
 
-If the initramfs cpio.gz image was signed and verified by the extractor, how is
-the init in it _not_ verified?
+--DRfr/2Y1Zz/5r+Kb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rob
+On Wed, May 08, 2019 at 04:10:58PM +0300, Dmitry Osipenko wrote:
+
+> 1) CORE and RTC have max-spread voltage of 170mV.
+> 2) CORE and RTC voltages must be higher than the CPU voltage by at least
+> 120mV.
+
+This seems like it should be easy enough to describe - we just need
+minimum and maximum spreads between pairs of rails.
+
+--DRfr/2Y1Zz/5r+Kb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzX4hIACgkQJNaLcl1U
+h9A5TQf/blHJSlXwfDTeB7y4cB421y3ptVKoJD6BlCl1CMMkfYxarqomyCybWbOs
+0Y15BUjBQCWrggGmMc05Z1gXwp4NqIzfrKWq7FXpUccH5lukp50IBMauQn9eDxsT
+pXP7ZwWNHvo7UXDODHoNahiAhBbLdOi6YnLKp9EarO4YD/TJ83NbqdtceQ1m8Upr
+z65FekjYssye1HXZWAqrOKl1eW/0UnvqAUuzJNuKmpeIHuppCNRuH/2SMM07f3WH
+b5B2oZZMSsFiVcpvTtO2iD4Zv01beijvLa5q05cozYGTGp4bjcA1keiMGMNwI8Po
+1jmOEzyyxn0nBbcQUuEU34pMIl+jbA==
+=cTGZ
+-----END PGP SIGNATURE-----
+
+--DRfr/2Y1Zz/5r+Kb--
