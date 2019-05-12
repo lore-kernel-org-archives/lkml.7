@@ -2,132 +2,114 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D185C46470
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3559C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211FA2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 921FB20882
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 15:42:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="c3yr7vG4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJiwm9+K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726787AbfELPdf (ORCPT
+        id S1726761AbfELPlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 11:33:35 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42397 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfELPde (ORCPT
+        Sun, 12 May 2019 11:41:45 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45444 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfELPlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 11:33:34 -0400
-Received: by mail-lf1-f66.google.com with SMTP id w23so7233349lfc.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:33:32 -0700 (PDT)
+        Sun, 12 May 2019 11:41:44 -0400
+Received: by mail-vs1-f67.google.com with SMTP id o10so6497742vsp.12
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 08:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9r+ZomokzdXWblU1eNUZVwuwrP8R96EBwqrRjwYeKr4=;
-        b=c3yr7vG4M7K5xO6VFHElKBbxnn1f8y+/R859KR3R4Q+eCCRf6i7FQqjUJtXERqfS8L
-         pZeqSaQQEtfvETWFk7y3oV10tk7gRfI+ntCJWymwSEeYX31EkK3waAQgqhz7Qmr3hIfZ
-         Gf4R79gUSgSa8xWSkRlzEi6uQZsEHqFkGy4hl6o/btTquMqgVKrwAxiC5OMkOMpXat+i
-         xtRqbuHzfK9Ltsi9Sl5U1VhnmyAwspJ7DStrK5ccV2gMudTyhVMSSKebpheGWu/I6Uyp
-         IhnuMDvXTgsx+oukCOK7Q0d3j2+wWtbhjbqKJPnkobfHFxk16vI3IK5sQTaPGXBd5Hkt
-         s9ug==
+        bh=1uG0bivhTUejUYCRrrklLeHk3N0BPLHnD725/cI68EM=;
+        b=sJiwm9+KPs7IRgLD8j4w62N2RmFZ1h0n4FhkeFXOTaRxUOiCyOT0/KzvQ3gLCEkUH1
+         1djUf7rJ9bpcpU6xPvfCUX5Y0ZNmrh8eC732/6AaHHvfIT9EoQ1lPCUm3uY2e24OKUnx
+         GsHCfsFTMVXBut+R3LrniecbHpz/QHeJ4h7IiA0HmzKAhp4rfu9a6Ya66Y2l0gsKYTCs
+         r+ZAeKLi6tKTwtcudZEOvvbFoXGdAhZRrBuPFC5NtJp9FemmZweDoAl1kIZEIp5vgek0
+         ceW2B0Tz6QDO6fI6CpzE7/vvXzOpOCdmwY1vzdhQXyYPXp5mDI6M5cju8XNhapYm7JRc
+         AdVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9r+ZomokzdXWblU1eNUZVwuwrP8R96EBwqrRjwYeKr4=;
-        b=p5DUaV7/K33yPNSprORsZnt3J0Qevs6omNG2KIImMmwj11XCYr0ZISoKK92XbLHk+T
-         Ge+XFrnFpNQUGWaqhIWORKgpiQx98+AX1GN0BK2bAf9ZWQfYFhxrf/E478XA2U6kMA4P
-         5in5kQpBHttv/WBJ/R/fNq1HTL3gzrN2e3Ggo0+2QHyMimsqxro1r3xVHkEZ/eAk66se
-         bn77969diTQLviiBf3QAx1c7v879Gt+6EQVWlZt6YEND8qLXVbsQ70LnEnFC4u/F9Gr+
-         bxuNQtitGltcsiuFFlve/mNzp6IbLdlL7WSX9rh2k4nPmfpmBb26CmgJckIFVERgRqy7
-         CySw==
-X-Gm-Message-State: APjAAAVcoAB9MadaaBncl2LZ0okO0xTAORY9UtpgP5Fba90olk6reeHK
-        BhB9FpH4SI3XVlU4hD0yTrsal3bLL3YKZsG7YLiR
-X-Google-Smtp-Source: APXvYqwssmfk79g0gXuyu6vL/pB+unVYXZl+YtSB3qWpfoKMUt9P1fd71z0mIORksqna2eKacd+sGg7pqj14k4Ji6Uw=
-X-Received: by 2002:a19:c394:: with SMTP id t142mr6613263lff.102.1557675211836;
- Sun, 12 May 2019 08:33:31 -0700 (PDT)
+        bh=1uG0bivhTUejUYCRrrklLeHk3N0BPLHnD725/cI68EM=;
+        b=aGCAvKWaDC9wuVZT5myWkz5lbybV6fX0ez67dtasp81KyUf9B5eQfHL8Cl3cq+S5WV
+         S2/Pz1enCqH+/9gjOmAHwthMzSUvgnd7tusiOeYdc1zZea+5xXBDpITBYVG/mlNfUAnx
+         vaXZogtmmxaPCz1Qd55L4OQS4AjFCsidXU3Vwd+mKZ0B/jfX9aqplU3eXkWBomDoMmE0
+         j1nK8zbDLIybeO/lMhzUj7RVwYY9VF/iFuUWsAuHNiChUCHm/kl1clrFFYEwjyohB+Zu
+         2RkQQatSP9siQN8ZObvWPmKYW8/F+MBeHjuELSSNWx3ouu8Rz9/aGb2krP3LhnhRuXuD
+         vsnA==
+X-Gm-Message-State: APjAAAUUURTk1TYKaq/PTB4pPTMddu8a/3kfsotrdeVgDBgD+mC8A7DE
+        K7uOVf3+e84H9oT6CGkfoQTmH2PNILK5j3GWQxU=
+X-Google-Smtp-Source: APXvYqwT2y7jDLgGNhBNA81qUTnKiEMzx8FUsJG2jY1R1VLHVs9RSkBhQHi/GzpncbnQfylq8oyUSgTVUgIjrMjbG4Y=
+X-Received: by 2002:a67:ca1c:: with SMTP id z28mr659462vsk.6.1557675703831;
+ Sun, 12 May 2019 08:41:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <alpine.LRH.2.21.1905110801350.9392@namei.org> <CAHk-=wg8UFHD_KmTWF3LMnDf_VN7cv_pofpc4eOHmx_8kmMPWw@mail.gmail.com>
- <CAHC9VhSSwYk6isqz8N3nOO_O17C30E2EyCHKf5OqsdESeMoT7g@mail.gmail.com> <24d602d2-a1a7-7b1e-9035-a2d732cd822b@schaufler-ca.com>
-In-Reply-To: <24d602d2-a1a7-7b1e-9035-a2d732cd822b@schaufler-ca.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Sun, 12 May 2019 11:33:20 -0400
-Message-ID: <CAHC9VhR-oqJwyvB2JhzTu2_nuZuENA=Y9f4rtfUrSGtLMnGZfw@mail.gmail.com>
-Subject: Re: [GIT PULL] security subsystem: Tomoyo updates for v5.2
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+References: <20190408163319.10382-1-vichy.kuo@gmail.com> <CAKv+Gu9gfq6PdwwLJd-zXYTiVT0oKtkhJHG4+AaOdD+N0k6c=Q@mail.gmail.com>
+In-Reply-To: <CAKv+Gu9gfq6PdwwLJd-zXYTiVT0oKtkhJHG4+AaOdD+N0k6c=Q@mail.gmail.com>
+From:   pierre kuo <vichy.kuo@gmail.com>
+Date:   Sun, 12 May 2019 23:41:30 +0800
+Message-ID: <CAOVJa8EGh2Unqok1JNhxmRUi4vU45G_d0W+cWupkmRaqRPk9NQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] kaslr: shift linear region randomization ahead of memory_limit
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 6:08 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> On 5/11/2019 11:13 AM, Paul Moore wrote:
-> > On Sat, May 11, 2019 at 10:38 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> >> On Fri, May 10, 2019 at 6:09 PM James Morris <jmorris@namei.org> wrote:
-> >>> These patches include fixes to enable fuzz testing, and a fix for
-> >>> calculating whether a filesystem is user-modifiable.
-> >> So now these have been very recently rebased (on top of a random
-> >> merge-window "tree of the day" version) instead of having multiple
-> >> merges.
-> >>
-> >> That makes the history cleaner, but has its own issues.
-> >>
-> >> We really need to find a different model for the security layer patches.
+hi Ard:
+> > The following is schematic diagram of the program before and after the
+> > modification.
 > >
-> > If it helps, the process I use for the SELinux and audit trees is
-> > documented below.  While it's far from perfect (I still don't like
-> > basing the -next trees on -rcX releases) it has seemed to work
-> > reasonably well for some time now.
+> > Before:
+> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+> > if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
+> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
 > >
-> > * https://github.com/SELinuxProject/selinux-kernel/blob/master/README.md
+> > After:
+> > if (memstart_addr + linear_region_size < memblock_end_of_DRAM()) {} --(a)
+> > if (IS_ENABLED(CONFIG_RANDOMIZE_BASE)) {}                           --(d)*
+> > if (memory_limit != PHYS_ADDR_MAX) {}                               --(b)
+> > if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {}       --(c)
+> >
+> > After grouping modification of memstart_address by moving linear region
+> > randomization ahead of memory_init, driver can safely using macro,
+> > __phys_to_virt, in (b) or (c), if necessary.
+> >
 >
-> On the whole this looks fine to me. I am less comfortable than Paul
-> is regarding changes that happen elsewhere, so I would be more likely
-> to base in the rc-1 than Paul. More developers test with SELinux than
-> Smack. I am in the process of putting an appropriate GPG environment
-> together for 5.3.
+> Why is this an advantage?
 
-I share your concern about external changes outside the subsystem
-breaking things; this doesn't happen all that often with the audit
-tree, but it seems to happen every couple of releases with the SELinux
-tree.  This is one of the reasons why I test linux/master +
-selinux/next + audit/next every few days, if not more often (see link
-below).  I've found this regular testing to be extremely helpful, and
-if anyone is interested I'd be happy to help you get something similar
-going.
+1st, by putting (d) right behind (a),  driver can safely uses macro,
+__phys_to_virt that depends on memstart_address, in (b) and (c) if necessary.
+That means:
+(a)
+(d)
+----- finish modification of memstart_address --------
+(b) --> can safely use __phys_to_virt
+(c) --> can safely use __phys_to_virt
 
-* http://www.paul-moore.com/blog/d/2019/04/kernel_secnext_repo.html
+2nd, it can make current driver more concise.
+Letting (d) right behind (a), as below v3 patch shows,
+https://lkml.org/lkml/2019/4/8/683
+it can put initrd_start/initrd_end to be calculated only when linear
+mapping check
+pass and concise the driver by eliminating
+"if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) " as patch shows.
 
-FWIW, the reason I don't like basing against -rc1 (or any -rcX tag for
-that matter) is that the -rcX releases tend to be buggier than the
-"proper" releases.  However, in practice I find myself basing the
-selinux/next and audit/next branches against -rc1 almost every release
-now; the rate of change outside the subsystem trees is simply too
-high.
-
-> The LSM infrastructure work I've been doing should still go through
-> James, as it has global implications.
-
-As far as I'm concerned, whatever makes it easier for Linus to consume
-the changes is the preferred path.  My guess is that you are right and
-any *significant* changes to the LSM layer itself, e.g. security/*, is
-best sent via James' tree.  For smaller changes to the LSM layer I
-think it's okay if they go in via an individual LSM tree so long as
-all the other LSMs agree-on/ack the changes; which pretty much fits
-what we've been doing for some time now and it seems to work well
-enough.
-
--- 
-paul moore
-www.paul-moore.com
+Thanks for your message.
