@@ -2,124 +2,102 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BDC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81815C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D9B2208C0
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52252208C0
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:12:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dOYPVs5d"
+	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="qU7Hwxn3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfELELr (ORCPT
+        id S1726375AbfELEMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 00:11:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59432 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfELELr (ORCPT
+        Sun, 12 May 2019 00:12:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41083 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfELEMP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 00:11:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=okCF2G2bDtULdDLlOPAao87uH7PkIsUp6GVlHHgydZ4=; b=dOYPVs5dvX8lEHg5muxxqJWqS
-        /xG2ZXX2IkLiYFXOYPm0Huc19L3yU4aCZIgQFRHUxCBV4LBYfFgRyTnCmzEIHsKGGSSTgq/Fhxmr6
-        K6lZERXbV2UvcE1awG3xBWu7fTQcDcoDFklJh/kgXo+sLdlhfw9a0eUIfLEOtRrWtFbQFBrEXWqGV
-        o6+vZUj1hZhJP9cd8RZpkp06mOndvxH698rVsoFicFOt02JUqRRqp5iPfojLVdTPMaOh1LnbQjUFn
-        6IUD6EtbtMfPK8dR+SvM7gNSYFXUGQvXSRU8vvE3LAIlDbDuRFZlC5wUp5u+k0uKI4pNEwABqvKXW
-        6xglXU9LA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hPfpv-0000Gh-1h; Sun, 12 May 2019 04:11:43 +0000
-Date:   Sat, 11 May 2019 21:11:42 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Laura Abbott <labbott@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usercopy: Remove HARDENED_USERCOPY_PAGESPAN
-Message-ID: <20190512041142.GA24542@bombadil.infradead.org>
-References: <201905101341.A17DDD7@keescook>
- <ead5e4ad-d911-3680-04a4-ae98507ba48c@redhat.com>
- <201905111657.76FE0BDCEC@keescook>
+        Sun, 12 May 2019 00:12:15 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y10so7120068oia.8
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 21:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zJ70OMmVoSATwQY41e9CXbzi4KY/zdWtiMcMVM3Rwn8=;
+        b=qU7Hwxn3IxhowOOfu6iETyWGYZ8uOWfxuuJuPTlmL+Y03uBkhDUwgp5bUKfrX/epWo
+         0uww+l5p/OJ8Z4Ih/GofL/hTS4N6CFyXva8Cw+THf7cRng8DBNDnknXZVkSgD/VCtNN6
+         Ib2SNx1i1Lf3l8B55YnzhcUXLzMUKfaps9/FMIBo36Qn/Q2KdhfvKi3hND8n6m5SQnM8
+         lDpAWVA4AJyuBfKTvjV3vFKRtu62eysICpVmEnKYNlK43xBzSH5evomPGQGUU3c5ks4p
+         3Lq/W3QCCg2HPCN5iG70FeC1ww0vMcsAEYEGJ6XnpLO+E7AAq4u1sE6TNEmiZcQ/tL5x
+         NhUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zJ70OMmVoSATwQY41e9CXbzi4KY/zdWtiMcMVM3Rwn8=;
+        b=X1sW3k7s721fMmqO6lqJ/HNin4CNUDgbuqUSCIDmYc5h8fJ+n0UbBhpr1Ac/1SSe2Y
+         FD+U1LoHVxDHkYigJFmYFaPPLl0okqzUdrOMxIzeohj2HpdiW5c0a4L5C+wB6W1gDwNh
+         U3p82ihvmGOubQj7aNSfG7cXH3QtSwqvLRcg8NIvWl7DWMsPbvod46YAmDepM4jvmNWA
+         4qVNErvXvL75h8ZDBJIqLrJvAb+51RrYK02byzWBOp+ciC2oSDOoWQ5vUdxRX3bPxiE5
+         Eoh1HuXT+A9UyYUKJQUrzG3aq3ZNrp+BT2SsfCqgYn2hwcmcsMzyetSp5px+0cQZrwq7
+         Ipig==
+X-Gm-Message-State: APjAAAVgz63uBObkAwd+aOu6Bf4x0YfAmHwqm6xSRHztnRE3YXnCGPk9
+        P+Hcf9hm0NvVwlhMo3SFcZTnnQ==
+X-Google-Smtp-Source: APXvYqwsz1sNEYQulaiAcNJtkVRe/vEPL7OP4OCFtAhzvdsHDEjbLD4uem3wP21mCcmLHlq8eNmslg==
+X-Received: by 2002:aca:3093:: with SMTP id w141mr10501165oiw.173.1557634334937;
+        Sat, 11 May 2019 21:12:14 -0700 (PDT)
+Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
+        by smtp.googlemail.com with ESMTPSA id t7sm3206053otq.16.2019.05.11.21.12.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 11 May 2019 21:12:14 -0700 (PDT)
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   Rob Landley <rob@landley.net>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        james.w.mcmechan@gmail.com
+References: <20190509112420.15671-1-roberto.sassu@huawei.com>
+ <CALCETrXy7gqmmy37=nrMAisGadZ+qbjZjXtWFF8Crq86xNpsfA@mail.gmail.com>
+ <4aee6e10-0eec-1d76-af66-dc8c7b68b766@landley.net>
+Message-ID: <c2b6e4d1-10a8-6ff7-44c9-55fe10fc7bb3@landley.net>
+Date:   Sat, 11 May 2019 23:12:44 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905111657.76FE0BDCEC@keescook>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <4aee6e10-0eec-1d76-af66-dc8c7b68b766@landley.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 05:03:08PM -0700, Kees Cook wrote:
-> On Fri, May 10, 2019 at 08:41:43PM -0400, Laura Abbott wrote:
-> > On 5/10/19 3:43 PM, Kees Cook wrote:
-> > > This feature continues to cause more problems than it solves[1]. Its
-> > > intention was to check the bounds of page-allocator allocations by using
-> > > __GFP_COMP, for which we would need to find all missing __GFP_COMP
-> > > markings. This work has been on hold and there is an argument[2]
-> > > that such markings are not even the correct signal for checking for
-> > > same-allocation pages. Instead of depending on BROKEN, this just removes
-> > > it entirely. It can be trivially reverted if/when a better solution for
-> > > tracking page allocator sizes is found.
-> > > 
-> > > [1] https://www.mail-archive.com/linux-crypto@vger.kernel.org/msg37479.html
-> > > [2] https://lkml.kernel.org/r/20190415022412.GA29714@bombadil.infradead.org
-> > 
-> > I agree the page spanning is broken but is it worth keeping the
-> > checks against __rodata __bss etc.?
-> 
-> They're all just white-listing later checks (except RODATA which is
-> doing a cheap RO test which is redundant on any architecture with actual
-> rodata...) so they don't have any value in staying without the rest of
-> the page allocator logic.
-> 
-> > > -	/* Is the object wholly within one base page? */
-> > > -	if (likely(((unsigned long)ptr & (unsigned long)PAGE_MASK) ==
-> > > -		   ((unsigned long)end & (unsigned long)PAGE_MASK)))
-> > > -		return;
-> > > -
-> > > -	/* Allow if fully inside the same compound (__GFP_COMP) page. */
-> > > -	endpage = virt_to_head_page(end);
-> > > -	if (likely(endpage == page))
-> > > -		return;
-> 
-> We _could_ keep the mixed CMA/reserved/neither check if we really wanted
-> to, but that's such a corner case of a corner case, I'm not sure it's
-> worth doing the virt_to_head_page() across the whole span to figure
-> it out.
+On 5/11/19 11:04 PM, Rob Landley wrote:
+> P.P.S. Sadly, if you want an actually standardized standard format where
+> implementations adhere to the standard: IETF RFC 1991 was published in 1996 and
 
-I'd delete that first check, because it's a subset of the second check,
+Nope, darn it, checked my notes and that wasn't it. I thought zip had an RFC,
+it's just zlib, deflate, and gzip, and that's not the number of any of them.
 
-	/* Is the object wholly within a single (base or compound) page? */
-	endpage = virt_to_head_page(end);
-	if (likely(endpage == page))
-		return;
+I still think sticking with a lightly modified cpio makes the most sense,
+just... in band signalling that _doesn't_ solve the y2038 problem, the file size
+limit, or address sparse files seems kinda silly.
 
-	/*
-	 * If the start and end are more than MAX_ORDER apart, they must
-	 * be from separate allocations
-	 */
-	if (n >= (PAGE_SIZE << MAX_ORDER))
-		usercopy_abort("spans too many pages", NULL, to_user, 0, n);
-
-	/*
-	 * If neither page is compound, we can't tell if the object is
-	 * within a single allocation or not
-	 */
-	if (!PageCompound(page) && !PageCompound(endpage))
-		return;
-
-> I really wish we had size of allocation reliably held somewhere. We'll
-> need it for doing memory tagging of the page allocator too...
-
-I think we'll need to store those allocations in a separate data structure
-on the side.  As far as the rest of the kernel is concerned, those struct
-pages belong to them once the page allocator has given them.
+Rob
