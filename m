@@ -2,70 +2,81 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05908C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27117C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 07:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09F52133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 06:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E915B21019
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 07:23:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfELG5B convert rfc822-to-8bit (ORCPT
+        id S1726274AbfELHPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 02:57:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57956 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfELG5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 02:57:01 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1E30C5945B;
-        Sun, 12 May 2019 06:57:01 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C69485C26A;
-        Sun, 12 May 2019 06:56:59 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <eb1862ebb97f41dcdf85abbea43a22d51ec94c9c.camel@perches.com>
-References: <eb1862ebb97f41dcdf85abbea43a22d51ec94c9c.camel@perches.com> <20190511123603.3265-1-colin.king@canonical.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     dhowells@redhat.com, Colin King <colin.king@canonical.com>,
-        linux-afs@lists.infradead.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs: remove redundant assignment to variable ret
+        Sun, 12 May 2019 03:15:31 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42528 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbfELHPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 03:15:31 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A420E1A8D9F99BE6D38F;
+        Sun, 12 May 2019 15:15:28 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Sun, 12 May 2019
+ 15:15:21 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <Matt.Sickler@daktronics.com>
+CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] staging: kpc2000: remove unused function kp2000_cdev_write
+Date:   Sun, 12 May 2019 14:46:15 +0800
+Message-ID: <20190512064615.7364-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <26839.1557644218.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Sun, 12 May 2019 07:56:58 +0100
-Message-ID: <26840.1557644218@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Sun, 12 May 2019 06:57:01 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joe Perches <joe@perches.com> wrote:
+There is no callers in tree, so can be removed.
 
-> @@ -71,11 +71,9 @@ static int afs_xattr_get_acl(const struct xattr_handler *handler,
->  	if (ret == 0) {
->  		ret = acl->size;
->  		if (size > 0) {
-> -			ret = -ERANGE;
->  			if (acl->size > size)
->  				return -ERANGE;
->  			memcpy(buffer, acl->data, acl->size);
-> -			ret = acl->size;
->  		}
->  		kfree(acl);
->  	}
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/kpc2000/kpc2000/fileops.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-This is also the wrong solution.  See my reply to Colin.
+diff --git a/drivers/staging/kpc2000/kpc2000/fileops.c b/drivers/staging/kpc2000/kpc2000/fileops.c
+index b3b0b763fa1e..f8774d8f69b8 100644
+--- a/drivers/staging/kpc2000/kpc2000/fileops.c
++++ b/drivers/staging/kpc2000/kpc2000/fileops.c
+@@ -74,11 +74,6 @@ ssize_t  kp2000_cdev_read(struct file *filp, char __user *buf, size_t count, lof
+ 	return count;
+ }
+ 
+-ssize_t  kp2000_cdev_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos)
+-{
+-	return -EINVAL;
+-}
+-
+ long  kp2000_cdev_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioctl_param)
+ {
+ 	struct kp2000_device *pcard = filp->private_data;
+@@ -122,9 +117,6 @@ struct file_operations  kp2000_fops = {
+ 	.open       = kp2000_cdev_open,
+ 	.release    = kp2000_cdev_close,
+ 	.read       = kp2000_cdev_read,
+-	//.write      = kp2000_cdev_write,
+-	//.poll       = kp2000_cdev_poll,
+-	//.fasync     = kp2000_cdev_fasync,
+ 	.llseek     = noop_llseek,
+ 	.unlocked_ioctl = kp2000_cdev_ioctl,
+ };
+-- 
+2.20.1
 
-David
+
