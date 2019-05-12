@@ -2,132 +2,193 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45511C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AB3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F3E82086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9512146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:10:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RP+XPM+S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbfELKHG (ORCPT
+        id S1726485AbfELKKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 06:07:06 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48496 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726027AbfELKHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 06:07:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id l6so7735288ioc.15
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 03:07:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=SwbK8/dps54l1dG2kcxdWF2w0m2EZhw7g0kf1iePc7Y=;
-        b=Vtpgq2lc7xwXXQ37rfEJLHecjDJCvS8+SPvt9+XaVk1p7eLM6wENoHxYtIaUFOMQVC
-         YJ3OA+tDARwfqaJblsDunt3vOktVNAOPsU3N2GED+eM+/LprxM//77dM1fqh9l7LErlN
-         XoLICp61hFW0wIDdVkhkKKTRkygb3L/sBk9iGnVIMSgNc2Or4yNQtdOCJIJmeVdsN5uD
-         mP5c87FqKoRxVE3BRIOGvwBGS3TgzfioDRUKeA1ZCwQc1psjKL+o3t5IyfZtuhNvYIQ8
-         Zl56iQUgboAjsbEsYIVWZEGL1fah0FBowkYvTrWygXnCdXDF/7UbxEocTMdYAsqeuZdQ
-         NxvQ==
-X-Gm-Message-State: APjAAAUG3rTinGoGEvyDE3pETTLUcJHedGxGb966YH2EAQJzDblWWA+C
-        hazOk8ZhplNlCc+72XsRXLvPZ0YgaSZBTTh3Iuy8J8svbfBf
-X-Google-Smtp-Source: APXvYqyOaMxthrTUjL1A0w5tUrIJpEtyHwJlm875IzMh2+D1D7El/3HjtS+KJDf4aWLep6vpgwTrIkBnjAkg3DwZTVsGIQ2r029V
+        Sun, 12 May 2019 06:10:36 -0400
+Received: from mail-eopbgr130049.outbound.protection.outlook.com ([40.107.13.49]:42360
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbfELKKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 06:10:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NfV7o7qB+GSQeZRyq9facVc0aNh6wxwa807rtSeVd40=;
+ b=RP+XPM+S88LyCEaFntBsxUIiPdKh35ETKvFU8SyBUHgPFw6WE82ne6SCNEFQyu0XUKfXhstB1bQl5qL9bkPnh9daJoYOfPM1ZtqBcE9yeURUvG1OcUyJcpqtQv4zQxDqGuKPYuuElT1qMIlEX+bW+9m6ta5eil+MJ/uj0ILhILI=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3913.eurprd04.prod.outlook.com (52.134.65.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Sun, 12 May 2019 10:10:30 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1878.022; Sun, 12 May 2019
+ 10:10:30 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH RESEND V4 1/3] dt-bindings: watchdog: move i.MX system
+ controller watchdog binding to SCU
+Thread-Topic: [PATCH RESEND V4 1/3] dt-bindings: watchdog: move i.MX system
+ controller watchdog binding to SCU
+Thread-Index: AQHVCKrtAYPvRNqPfE2cK0k7Czo+1A==
+Date:   Sun, 12 May 2019 10:10:30 +0000
+Message-ID: <1557655528-12816-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0P153CA0036.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:17::24) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8907832a-44cb-4f1a-22fd-08d6d6c2103f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3913;
+x-ms-traffictypediagnostic: DB3PR0402MB3913:
+x-microsoft-antispam-prvs: <DB3PR0402MB39131D731A385A86E5B3EEBEF50E0@DB3PR0402MB3913.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0035B15214
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(366004)(346002)(376002)(189003)(199004)(66556008)(66066001)(73956011)(256004)(6512007)(2616005)(66446008)(64756008)(476003)(3846002)(66476007)(14444005)(66946007)(14454004)(6506007)(2201001)(386003)(6116002)(2501003)(102836004)(86362001)(6436002)(478600001)(53936002)(6486002)(71190400001)(26005)(71200400001)(186003)(8676002)(4326008)(99286004)(25786009)(8936002)(81156014)(36756003)(50226002)(81166006)(52116002)(316002)(68736007)(5660300002)(110136005)(7416002)(2906002)(486006)(7736002)(305945005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3913;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: eg8PZ6ekXyfSgeADL+h824yUK+cb/qEzARQKqvR181pIJgzWwTlTN0MGGLbTajFTDOfUPH5421rtpGd8lTahzIve3c4iprRJYe5jMZOCi/lS1MBUofyTHU1cCTmvvZSWESR44HpcdMIKdRhfq2+7UVNtHdH++N6bRHtFNc9B20pp1iKXpc5CD0HBiEcPS7dl1fMrC3BpJY5OKhhAwhAIDqy53wkjww39GaB5LE2TDdA4SUaWMLATu+CkasZ6rl/Pqg0iX4+o/2lgpjN0hLcxdH4AkUSpk3yBjpJQ5t3V0VRDKzCCDZFjlCmOEY+cSFdD6uVvlzxmA+BNw/ZKhQP7CqsyYsr/DgwSRrPRuj4cVtYOqKP4/urwjsNSeLtMxQqCp2ssAduesyWQkeLGmS+WTNSYyALb1rTp+HcMmCYBtIQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <4BD8A2D60EC3E14C97C5590BA1ECE00F@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a24:7d45:: with SMTP id b66mr3216581itc.120.1557655625728;
- Sun, 12 May 2019 03:07:05 -0700 (PDT)
-Date:   Sun, 12 May 2019 03:07:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000410d500588adf637@google.com>
-Subject: KMSAN: kernel-infoleak in copy_siginfo_to_user (2)
-From:   syzbot <syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arnd@arndb.de, christian@brauner.io,
-        deepa.kernel@gmail.com, ebiederm@xmission.com, glider@google.com,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8907832a-44cb-4f1a-22fd-08d6d6c2103f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2019 10:10:30.6037
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3913
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+i.MX system controller watchdog depends on SCU driver to support
+interrupt function, so it needs to be subnode of SCU node in DT,
+binding doc should be moved to fsl,scu.txt as well.
 
-syzbot found the following crash on:
-
-HEAD commit:    d062d017 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=137348b4a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=67ebf8b3cce62ce7
-dashboard link: https://syzkaller.appspot.com/bug?extid=0d602a1b0d8c95bdf299
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175d65e0a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ae05c0a00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
-
-ptrace attach of "./syz-executor353086472"[10278] was attempted  
-by "./syz-executor353086472"[10279]
-ptrace attach of "./syz-executor353086472"[10280] was attempted  
-by "./syz-executor353086472"[10281]
-ptrace attach of "./syz-executor353086472"[10282] was attempted  
-by "./syz-executor353086472"[10283]
-==================================================================
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-CPU: 1 PID: 10284 Comm: syz-executor353 Not tainted 5.1.0-rc7+ #5
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:619
-  kmsan_internal_check_memory+0x974/0xa80 mm/kmsan/kmsan.c:713
-  kmsan_copy_to_user+0xa9/0xb0 mm/kmsan/kmsan_hooks.c:492
-  _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
-  copy_to_user include/linux/uaccess.h:174 [inline]
-  copy_siginfo_to_user+0x80/0x160 kernel/signal.c:3059
-  ptrace_peek_siginfo kernel/ptrace.c:742 [inline]
-  ptrace_request+0x24bd/0x2950 kernel/ptrace.c:913
-  arch_ptrace+0x9fa/0x1090 arch/x86/kernel/ptrace.c:868
-  __do_sys_ptrace kernel/ptrace.c:1155 [inline]
-  __se_sys_ptrace+0x2b9/0x7b0 kernel/ptrace.c:1120
-  __x64_sys_ptrace+0x56/0x70 kernel/ptrace.c:1120
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x441cc9
-Code: e8 bc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00000000007efdd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000065
-RAX: ffffffffffffffda RBX: 0000000000000063 RCX: 0000000000441cc9
-RDX: 00000000200000c0 RSI: 0000000000000007 RDI: 0000000000004209
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000716000 R11: 0000000000000246 R12: 0000000000000002
-R13: 0000000000402a00 R14: 0000000000000000 R15: 0000000000000000
-
-Local variable description: ----info.i@ptrace_request
-Variable was created at:
-  ptrace_peek_siginfo kernel/ptrace.c:714 [inline]
-  ptrace_request+0x2161/0x2950 kernel/ptrace.c:913
-  arch_ptrace+0x9fa/0x1090 arch/x86/kernel/ptrace.c:868
-
-Bytes 0-47 of 48 are uninitialized
-Memory access of size 48 starts at ffff8880a902fd70
-Data copied to user address 0000000000716000
-==================================================================
-
-
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+No change, just resend patch with correct encoding.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 15 ++++++++++++++
+ .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ------------------=
+----
+ 2 files changed, 15 insertions(+), 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-w=
+dt.txt
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
+Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 5d7dbab..1b56557 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -133,6 +133,16 @@ RTC bindings based on SCU Message Protocol
+ Required properties:
+ - compatible: should be "fsl,imx8qxp-sc-rtc";
+=20
++Watchdog bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible: should be:
++              "fsl,imx8qxp-sc-wdt"
++              followed by "fsl,imx-sc-wdt";
++Optional properties:
++- timeout-sec: contains the watchdog timeout in seconds.
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -185,6 +195,11 @@ firmware {
+ 		rtc: rtc {
+ 			compatible =3D "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		watchdog {
++			compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
++			timeout-sec =3D <60>;
++		};
+ 	};
+ };
+=20
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt =
+b/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
+deleted file mode 100644
+index 02b87e9..0000000
+--- a/Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* Freescale i.MX System Controller Watchdog
+-
+-i.MX system controller watchdog is for i.MX SoCs with system controller in=
+side,
+-the watchdog is managed by system controller, users can ONLY communicate w=
+ith
+-system controller from secure mode for watchdog operations, so Linux i.MX =
+system
+-controller watchdog driver will call ARM SMC API and trap into ARM-Trusted=
+-Firmware
+-for watchdog operations, ARM-Trusted-Firmware is running at secure EL3 mod=
+e and
+-it will request system controller to execute the watchdog operation passed=
+ from
+-Linux kernel.
+-
+-Required properties:
+-- compatible:	Should be :
+-		"fsl,imx8qxp-sc-wdt"
+-		followed by "fsl,imx-sc-wdt";
+-
+-Optional properties:
+-- timeout-sec : Contains the watchdog timeout in seconds.
+-
+-Examples:
+-
+-watchdog {
+-	compatible =3D "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+-	timeout-sec =3D <60>;
+-};
+--=20
+2.7.4
+
