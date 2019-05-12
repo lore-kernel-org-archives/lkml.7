@@ -2,620 +2,120 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7D0C04AB3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E52C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2131217F5
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47FB20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 10:51:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557658270;
+	bh=YBMHdCN5YlmAEwYJnIWMC90f2fh1HucmevIcoGnC4d0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qUkNch28AGi/OT2YcBnLWlN9MQHuu83KYPqryt1xA1g9LzVZ3ikq1K0Y0o+Tc0E1l
+	 AXmrGPnigKcK49MN/RBQpfesR75YMQ4wRZp88xZKvbutEAaSMNhUJRnyWGHNYYy2aD
+	 yUUOQe2aVtwBioe8zA0KgLp1G0fxXHnQEm6mu3o0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbfELKtE (ORCPT
+        id S1726691AbfELKvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 06:49:04 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:54157 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726355AbfELKtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 06:49:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 874BEFB02;
-        Sun, 12 May 2019 12:48:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oakrKwCjTNAG; Sun, 12 May 2019 12:48:55 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 94CDB47D5B; Sun, 12 May 2019 12:48:51 +0200 (CEST)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Hovold <johan@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v11 2/2] phy: Add driver for mixel mipi dphy found on NXP's i.MX8 SoCs
-Date:   Sun, 12 May 2019 12:48:51 +0200
-Message-Id: <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1557657814.git.agx@sigxcpu.org>
-References: <cover.1557657814.git.agx@sigxcpu.org>
+        Sun, 12 May 2019 06:51:09 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35882 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726375AbfELKvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 06:51:09 -0400
+Received: by mail-lj1-f193.google.com with SMTP id z1so8510999ljb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 03:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EBbnEnlSGI+YZhytxcBPyDwhUUf9hqUjJsyebbdCrcw=;
+        b=Bwee6W/aqjF3RtU9Pd++GRfF0phoAIMfmTwaL+3Nu8NDs6Et4DPm/F1C0PX7+IyOUI
+         fj41FT6ceV5M+P7SetVJPMyYDB7uFUcFKruvefh1bd2kvdataPMuobAmTp0v5Vb33/n5
+         WE2FQvUPk2ZhdYv1biJYsS7ilv3mBt2dX5GKU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EBbnEnlSGI+YZhytxcBPyDwhUUf9hqUjJsyebbdCrcw=;
+        b=E1gtHE97UI/btrCJ0ZlD8+Gx/H29+e23a835VCV0VqN7sQjdJoD6J+B7ayV6JrIhXh
+         symnBoAWSzwceMhRHsr4d8+xHpaHE/cx2qe6CsF6q5YUGav5pBCEZtLvbKdsfS+3qOtD
+         moJxEcH4jjwCBcxz2/Xk2Lsn4Gp5B3Xa1UUkUEkEVGHq3RQveUZGsOOlyXpQerGu7nlv
+         TBkf7udEKTHIDBo1PGU9KDWsJxzrxWo4HQHOIOGEXCufjC0R02TZcQjCq7YAp1239zUQ
+         ZTR2MpGyRxOH2IDQPGOCmaJ8sw/swXkDSE6uu1dHSW0HuNTA6CYmbqUuDrVmaovJluPi
+         i0mQ==
+X-Gm-Message-State: APjAAAUBQywZPdRtwZjMALhw9MsGrKrFMXt/OmGvKxHESc9WPPgBEpto
+        6HlTblr2pYnisTz8lMKbIBYqK2K0EJU=
+X-Google-Smtp-Source: APXvYqwcPvj2z+tEM66MYXyt5p+KRDOOf+EgVgfzsZ1/K+Kq1eA0LN9vE+o+ZBubeJZRbBILqHrw1w==
+X-Received: by 2002:a2e:980f:: with SMTP id a15mr10767269ljj.131.1557658266499;
+        Sun, 12 May 2019 03:51:06 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id k10sm2536822ljh.86.2019.05.12.03.51.06
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 03:51:06 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id y19so6995169lfy.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 03:51:06 -0700 (PDT)
+X-Received: by 2002:a19:ca02:: with SMTP id a2mr10604583lfg.88.1557657862375;
+ Sun, 12 May 2019 03:44:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190506165439.9155-1-cyphar@cyphar.com> <20190506165439.9155-6-cyphar@cyphar.com>
+ <CAG48ez0-CiODf6UBHWTaog97prx=VAd3HgHvEjdGNz344m1xKw@mail.gmail.com>
+ <20190506191735.nmzf7kwfh7b6e2tf@yavin> <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+ <20190510225527.GA59914@google.com> <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
+ <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
+ <CALCETrUOj=4VWp=B=QT0BQ8X_Ds_b+pt68oDwfjGb+K0StXmWA@mail.gmail.com>
+ <CAHk-=wg3+3GfHsHdB4o78jNiPh_5ShrzxBuTN-Y8EZfiFMhCvw@mail.gmail.com> <9CD2B97D-A6BD-43BE-9040-B410D996A195@amacapital.net>
+In-Reply-To: <9CD2B97D-A6BD-43BE-9040-B410D996A195@amacapital.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 12 May 2019 06:44:06 -0400
+X-Gmail-Original-Message-ID: <CAHk-=wh3dT7=SMjvSZreXSu36Cg7gsfSipLhfTz5ioDKXV5uHg@mail.gmail.com>
+Message-ID: <CAHk-=wh3dT7=SMjvSZreXSu36Cg7gsfSipLhfTz5ioDKXV5uHg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andrew Lutomirski <luto@kernel.org>, Jann Horn <jannh@google.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-this is an IP core it will likely be found on others in the future. So
-instead of adding this to the nwl host driver make it a generic PHY
-driver.
+On Sat, May 11, 2019 at 7:37 PM Andy Lutomirski <luto@amacapital.net> wrote:
+>
+> I bet this will break something that already exists. An execveat() flag to turn off /proc/self/exe would do the trick, though.
 
-The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-added once the necessary system controller bits are in via
-mixel_dphy_devdata.
+Thinking more about it, I suspect it is (once again) wrong to let the
+thing that does the execve() control that bit.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
-Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
----
- drivers/phy/freescale/Kconfig                 |  10 +
- drivers/phy/freescale/Makefile                |   1 +
- .../phy/freescale/phy-fsl-imx8-mipi-dphy.c    | 500 ++++++++++++++++++
- 3 files changed, 511 insertions(+)
- create mode 100644 drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
+Generally, the less we allow people to affect the lifetime and
+environment of a suid executable, the better off we are.
 
-diff --git a/drivers/phy/freescale/Kconfig b/drivers/phy/freescale/Kconfig
-index 832670b4952b..247be62d0981 100644
---- a/drivers/phy/freescale/Kconfig
-+++ b/drivers/phy/freescale/Kconfig
-@@ -3,3 +3,13 @@ config PHY_FSL_IMX8MQ_USB
- 	depends on OF && HAS_IOMEM
- 	select GENERIC_PHY
- 	default ARCH_MXC && ARM64
-+
-+config PHY_MIXEL_MIPI_DPHY
-+	tristate "Mixel MIPI DSI PHY support"
-+	depends on OF && HAS_IOMEM
-+	select GENERIC_PHY
-+	select GENERIC_PHY_MIPI_DPHY
-+	select REGMAP_MMIO
-+	help
-+	  Enable this to add support for the Mixel DSI PHY as found
-+	  on NXP's i.MX8 family of SOCs.
-diff --git a/drivers/phy/freescale/Makefile b/drivers/phy/freescale/Makefile
-index dc2b3f1f2f80..07491c926a2c 100644
---- a/drivers/phy/freescale/Makefile
-+++ b/drivers/phy/freescale/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_PHY_FSL_IMX8MQ_USB)	+= phy-fsl-imx8mq-usb.o
-+obj-$(CONFIG_PHY_MIXEL_MIPI_DPHY)	+= phy-fsl-imx8-mipi-dphy.o
-diff --git a/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-new file mode 100644
-index 000000000000..a2ec8b79249d
---- /dev/null
-+++ b/drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c
-@@ -0,0 +1,500 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2017,2018 NXP
-+ * Copyright 2019 Purism SPC
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* DPHY registers */
-+#define DPHY_PD_DPHY			0x00
-+#define DPHY_M_PRG_HS_PREPARE		0x04
-+#define DPHY_MC_PRG_HS_PREPARE		0x08
-+#define DPHY_M_PRG_HS_ZERO		0x0c
-+#define DPHY_MC_PRG_HS_ZERO		0x10
-+#define DPHY_M_PRG_HS_TRAIL		0x14
-+#define DPHY_MC_PRG_HS_TRAIL		0x18
-+#define DPHY_PD_PLL			0x1c
-+#define DPHY_TST			0x20
-+#define DPHY_CN				0x24
-+#define DPHY_CM				0x28
-+#define DPHY_CO				0x2c
-+#define DPHY_LOCK			0x30
-+#define DPHY_LOCK_BYP			0x34
-+#define DPHY_REG_BYPASS_PLL		0x4C
-+
-+#define MBPS(x) ((x) * 1000000)
-+
-+#define DATA_RATE_MAX_SPEED MBPS(1500)
-+#define DATA_RATE_MIN_SPEED MBPS(80)
-+
-+#define PLL_LOCK_SLEEP 10
-+#define PLL_LOCK_TIMEOUT 1000
-+
-+#define CN_BUF	0xcb7a89c0
-+#define CO_BUF	0x63
-+#define CM(x)	(				  \
-+		((x) <	32) ? 0xe0 | ((x) - 16) : \
-+		((x) <	64) ? 0xc0 | ((x) - 32) : \
-+		((x) < 128) ? 0x80 | ((x) - 64) : \
-+		((x) - 128))
-+#define CN(x)	(((x) == 1) ? 0x1f : (((CN_BUF) >> ((x) - 1)) & 0x1f))
-+#define CO(x)	((CO_BUF) >> (8 - (x)) & 0x03)
-+
-+/* PHY power on is active low */
-+#define PWR_ON	0
-+#define PWR_OFF	1
-+
-+enum mixel_dphy_devtype {
-+	MIXEL_IMX8MQ,
-+};
-+
-+struct mixel_dphy_devdata {
-+	u8 reg_tx_rcal;
-+	u8 reg_auto_pd_en;
-+	u8 reg_rxlprp;
-+	u8 reg_rxcdrp;
-+	u8 reg_rxhs_settle;
-+};
-+
-+static const struct mixel_dphy_devdata mixel_dphy_devdata[] = {
-+	[MIXEL_IMX8MQ] = {
-+		.reg_tx_rcal = 0x38,
-+		.reg_auto_pd_en = 0x3c,
-+		.reg_rxlprp = 0x40,
-+		.reg_rxcdrp = 0x44,
-+		.reg_rxhs_settle = 0x48,
-+	},
-+};
-+
-+struct mixel_dphy_cfg {
-+	/* DPHY PLL parameters */
-+	u32 cm;
-+	u32 cn;
-+	u32 co;
-+	/* DPHY register values */
-+	u8 mc_prg_hs_prepare;
-+	u8 m_prg_hs_prepare;
-+	u8 mc_prg_hs_zero;
-+	u8 m_prg_hs_zero;
-+	u8 mc_prg_hs_trail;
-+	u8 m_prg_hs_trail;
-+	u8 rxhs_settle;
-+};
-+
-+struct mixel_dphy_priv {
-+	struct mixel_dphy_cfg cfg;
-+	struct regmap *regmap;
-+	struct clk *phy_ref_clk;
-+	const struct mixel_dphy_devdata *devdata;
-+};
-+
-+static const struct regmap_config mixel_dphy_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = DPHY_REG_BYPASS_PLL,
-+	.name = "mipi-dphy",
-+};
-+
-+static int phy_write(struct phy *phy, u32 value, unsigned int reg)
-+{
-+	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = regmap_write(priv->regmap, reg, value);
-+	if (ret < 0)
-+		dev_err(&phy->dev, "Failed to write DPHY reg %d: %d\n", reg,
-+			ret);
-+	return ret;
-+}
-+
-+/*
-+ * Find a ratio close to the desired one using continued fraction
-+ * approximation ending either at exact match or maximum allowed
-+ * nominator, denominator.
-+ */
-+static void get_best_ratio(u32 *pnum, u32 *pdenom, u32 max_n, u32 max_d)
-+{
-+	u32 a = *pnum;
-+	u32 b = *pdenom;
-+	u32 c;
-+	u32 n[] = {0, 1};
-+	u32 d[] = {1, 0};
-+	u32 whole;
-+	unsigned int i = 1;
-+
-+	while (b) {
-+		i ^= 1;
-+		whole = a / b;
-+		n[i] += (n[i ^ 1] * whole);
-+		d[i] += (d[i ^ 1] * whole);
-+		if ((n[i] > max_n) || (d[i] > max_d)) {
-+			i ^= 1;
-+			break;
-+		}
-+		c = a - (b * whole);
-+		a = b;
-+		b = c;
-+	}
-+	*pnum = n[i];
-+	*pdenom = d[i];
-+}
-+
-+static int mixel_dphy_config_from_opts(struct phy *phy,
-+	       struct phy_configure_opts_mipi_dphy *dphy_opts,
-+	       struct mixel_dphy_cfg *cfg)
-+{
-+	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
-+	unsigned long ref_clk = clk_get_rate(priv->phy_ref_clk);
-+	u32 lp_t, numerator, denominator;
-+	unsigned long long tmp;
-+	u32 n;
-+	int i;
-+
-+	if (dphy_opts->hs_clk_rate > DATA_RATE_MAX_SPEED ||
-+	    dphy_opts->hs_clk_rate < DATA_RATE_MIN_SPEED)
-+		return -EINVAL;
-+
-+	numerator = dphy_opts->hs_clk_rate;
-+	denominator = ref_clk;
-+	get_best_ratio(&numerator, &denominator, 255, 256);
-+	if (!numerator || !denominator) {
-+		dev_err(&phy->dev, "Invalid %d/%d for %ld/%ld\n",
-+			numerator, denominator,
-+			dphy_opts->hs_clk_rate, ref_clk);
-+		return -EINVAL;
-+	}
-+
-+	while ((numerator < 16) && (denominator <= 128)) {
-+		numerator <<= 1;
-+		denominator <<= 1;
-+	}
-+	/*
-+	 * CM ranges between 16 and 255
-+	 * CN ranges between 1 and 32
-+	 * CO is power of 2: 1, 2, 4, 8
-+	 */
-+	i = __ffs(denominator);
-+	if (i > 3)
-+		i = 3;
-+	cfg->cn = denominator >> i;
-+	cfg->co = 1 << i;
-+	cfg->cm = numerator;
-+
-+	if (cfg->cm < 16 || cfg->cm > 255 ||
-+	    cfg->cn < 1 || cfg->cn > 32 ||
-+	    cfg->co < 1 || cfg->co > 8) {
-+		dev_err(&phy->dev, "Invalid CM/CN/CO values: %u/%u/%u\n",
-+			cfg->cm, cfg->cn, cfg->co);
-+		dev_err(&phy->dev, "for hs_clk/ref_clk=%ld/%ld ~ %d/%d\n",
-+			dphy_opts->hs_clk_rate, ref_clk,
-+			numerator, denominator);
-+		return -EINVAL;
-+	}
-+
-+	dev_dbg(&phy->dev, "hs_clk/ref_clk=%ld/%ld ~ %d/%d\n",
-+		dphy_opts->hs_clk_rate, ref_clk, numerator, denominator);
-+
-+	/* LP clock period */
-+	tmp = 1000000000000LL;
-+	do_div(tmp, dphy_opts->lp_clk_rate); /* ps */
-+	if (tmp > ULONG_MAX)
-+		return -EINVAL;
-+
-+	lp_t = tmp;
-+	dev_dbg(&phy->dev, "LP clock %lu, period: %u ps\n",
-+		dphy_opts->lp_clk_rate, lp_t);
-+
-+	/* hs_prepare: in lp clock periods */
-+	if (2 * dphy_opts->hs_prepare > 5 * lp_t) {
-+		dev_err(&phy->dev,
-+			"hs_prepare (%u) > 2.5 * lp clock period (%u)\n",
-+			dphy_opts->hs_prepare, lp_t);
-+		return -EINVAL;
-+	}
-+	/* 00: lp_t, 01: 1.5 * lp_t, 10: 2 * lp_t, 11: 2.5 * lp_t */
-+	if (dphy_opts->hs_prepare < lp_t) {
-+		n = 0;
-+	} else {
-+		tmp = 2 * (dphy_opts->hs_prepare - lp_t);
-+		do_div(tmp, lp_t);
-+		n = tmp;
-+	}
-+	cfg->m_prg_hs_prepare = n;
-+
-+	/* clk_prepare: in lp clock periods */
-+	if (2 * dphy_opts->clk_prepare > 3 * lp_t) {
-+		dev_err(&phy->dev,
-+			"clk_prepare (%u) > 1.5 * lp clock period (%u)\n",
-+			dphy_opts->clk_prepare, lp_t);
-+		return -EINVAL;
-+	}
-+	/* 00: lp_t, 01: 1.5 * lp_t */
-+	cfg->mc_prg_hs_prepare = dphy_opts->clk_prepare > lp_t ? 1 : 0;
-+
-+	/* hs_zero: formula from NXP BSP */
-+	n = (144 * (dphy_opts->hs_clk_rate / 1000000) - 47500) / 10000;
-+	cfg->m_prg_hs_zero = n < 1 ? 1 : n;
-+
-+	/* clk_zero: formula from NXP BSP */
-+	n = (34 * (dphy_opts->hs_clk_rate / 1000000) - 2500) / 1000;
-+	cfg->mc_prg_hs_zero = n < 1 ? 1 : n;
-+
-+	/* clk_trail, hs_trail: formula from NXP BSP */
-+	n = (103 * (dphy_opts->hs_clk_rate / 1000000) + 10000) / 10000;
-+	if (n > 15)
-+		n = 15;
-+	if (n < 1)
-+		n = 1;
-+	cfg->m_prg_hs_trail = n;
-+	cfg->mc_prg_hs_trail = n;
-+
-+	/* rxhs_settle: formula from NXP BSP */
-+	if (dphy_opts->hs_clk_rate < MBPS(80))
-+		cfg->rxhs_settle = 0x0d;
-+	else if (dphy_opts->hs_clk_rate < MBPS(90))
-+		cfg->rxhs_settle = 0x0c;
-+	else if (dphy_opts->hs_clk_rate < MBPS(125))
-+		cfg->rxhs_settle = 0x0b;
-+	else if (dphy_opts->hs_clk_rate < MBPS(150))
-+		cfg->rxhs_settle = 0x0a;
-+	else if (dphy_opts->hs_clk_rate < MBPS(225))
-+		cfg->rxhs_settle = 0x09;
-+	else if (dphy_opts->hs_clk_rate < MBPS(500))
-+		cfg->rxhs_settle = 0x08;
-+	else
-+		cfg->rxhs_settle = 0x07;
-+
-+	dev_dbg(&phy->dev, "hs_prepare: %u, clk_prepare: %u, "
-+		"hs_zero: %u, clk_zero: %u, "
-+		"hs_trail: %u, clk_trail: %u, "
-+		"rxhs_settle: %u\n",
-+		cfg->m_prg_hs_prepare, cfg->mc_prg_hs_prepare,
-+		cfg->m_prg_hs_zero, cfg->mc_prg_hs_zero,
-+		cfg->m_prg_hs_trail, cfg->mc_prg_hs_trail,
-+		cfg->rxhs_settle);
-+
-+	return 0;
-+}
-+
-+static void mixel_phy_set_hs_timings(struct phy *phy)
-+{
-+	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-+
-+	phy_write(phy, priv->cfg.m_prg_hs_prepare, DPHY_M_PRG_HS_PREPARE);
-+	phy_write(phy, priv->cfg.mc_prg_hs_prepare, DPHY_MC_PRG_HS_PREPARE);
-+	phy_write(phy, priv->cfg.m_prg_hs_zero, DPHY_M_PRG_HS_ZERO);
-+	phy_write(phy, priv->cfg.mc_prg_hs_zero, DPHY_MC_PRG_HS_ZERO);
-+	phy_write(phy, priv->cfg.m_prg_hs_trail, DPHY_M_PRG_HS_TRAIL);
-+	phy_write(phy, priv->cfg.mc_prg_hs_trail, DPHY_MC_PRG_HS_TRAIL);
-+	phy_write(phy, priv->cfg.rxhs_settle, priv->devdata->reg_rxhs_settle);
-+}
-+
-+static int mixel_dphy_set_pll_params(struct phy *phy)
-+{
-+	struct mixel_dphy_priv *priv = dev_get_drvdata(phy->dev.parent);
-+
-+	if (priv->cfg.cm < 16 || priv->cfg.cm > 255 ||
-+	    priv->cfg.cn < 1 || priv->cfg.cn > 32 ||
-+	    priv->cfg.co < 1 || priv->cfg.co > 8) {
-+		dev_err(&phy->dev, "Invalid CM/CN/CO values! (%u/%u/%u)\n",
-+			priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
-+		return -EINVAL;
-+	}
-+	dev_dbg(&phy->dev, "Using CM:%u CN:%u CO:%u\n",
-+		priv->cfg.cm, priv->cfg.cn, priv->cfg.co);
-+	phy_write(phy, CM(priv->cfg.cm), DPHY_CM);
-+	phy_write(phy, CN(priv->cfg.cn), DPHY_CN);
-+	phy_write(phy, CO(priv->cfg.co), DPHY_CO);
-+	return 0;
-+}
-+
-+static int mixel_dphy_configure(struct phy *phy, union phy_configure_opts *opts)
-+{
-+	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-+	struct mixel_dphy_cfg cfg = { 0 };
-+	int ret;
-+
-+	ret = mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+	if (ret)
-+		return ret;
-+
-+	/* Update the configuration */
-+	memcpy(&priv->cfg, &cfg, sizeof(struct mixel_dphy_cfg));
-+
-+	phy_write(phy, 0x00, DPHY_LOCK_BYP);
-+	phy_write(phy, 0x01, priv->devdata->reg_tx_rcal);
-+	phy_write(phy, 0x00, priv->devdata->reg_auto_pd_en);
-+	phy_write(phy, 0x02, priv->devdata->reg_rxlprp);
-+	phy_write(phy, 0x02, priv->devdata->reg_rxcdrp);
-+	phy_write(phy, 0x25, DPHY_TST);
-+
-+	mixel_phy_set_hs_timings(phy);
-+	ret = mixel_dphy_set_pll_params(phy);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int mixel_dphy_validate(struct phy *phy, enum phy_mode mode, int submode,
-+			       union phy_configure_opts *opts)
-+{
-+	struct mixel_dphy_cfg cfg = { 0 };
-+
-+	if (mode != PHY_MODE_MIPI_DPHY)
-+		return -EINVAL;
-+
-+	return mixel_dphy_config_from_opts(phy, &opts->mipi_dphy, &cfg);
-+}
-+
-+static int mixel_dphy_init(struct phy *phy)
-+{
-+	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
-+	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
-+
-+	return 0;
-+}
-+
-+static int mixel_dphy_exit(struct phy *phy)
-+{
-+	phy_write(phy, 0, DPHY_CM);
-+	phy_write(phy, 0, DPHY_CN);
-+	phy_write(phy, 0, DPHY_CO);
-+
-+	return 0;
-+}
-+
-+static int mixel_dphy_power_on(struct phy *phy)
-+{
-+	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-+	u32 locked;
-+	int ret;
-+
-+	ret = clk_prepare_enable(priv->phy_ref_clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	phy_write(phy, PWR_ON, DPHY_PD_PLL);
-+	ret = regmap_read_poll_timeout(priv->regmap, DPHY_LOCK, locked,
-+				       locked, PLL_LOCK_SLEEP,
-+				       PLL_LOCK_TIMEOUT);
-+	if (ret < 0) {
-+		dev_err(&phy->dev, "Could not get DPHY lock (%d)!\n", ret);
-+		goto clock_disable;
-+	}
-+	phy_write(phy, PWR_ON, DPHY_PD_DPHY);
-+
-+	return 0;
-+clock_disable:
-+	clk_disable_unprepare(priv->phy_ref_clk);
-+	return ret;
-+}
-+
-+static int mixel_dphy_power_off(struct phy *phy)
-+{
-+	struct mixel_dphy_priv *priv = phy_get_drvdata(phy);
-+
-+	phy_write(phy, PWR_OFF, DPHY_PD_PLL);
-+	phy_write(phy, PWR_OFF, DPHY_PD_DPHY);
-+
-+	clk_disable_unprepare(priv->phy_ref_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops mixel_dphy_phy_ops = {
-+	.init = mixel_dphy_init,
-+	.exit = mixel_dphy_exit,
-+	.power_on = mixel_dphy_power_on,
-+	.power_off = mixel_dphy_power_off,
-+	.configure = mixel_dphy_configure,
-+	.validate = mixel_dphy_validate,
-+	.owner = THIS_MODULE,
-+};
-+
-+static const struct of_device_id mixel_dphy_of_match[] = {
-+	{ .compatible = "fsl,imx8mq-mipi-dphy",
-+	  .data = &mixel_dphy_devdata[MIXEL_IMX8MQ] },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, mixel_dphy_of_match);
-+
-+static int mixel_dphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct phy_provider *phy_provider;
-+	struct mixel_dphy_priv *priv;
-+	struct resource *res;
-+	struct phy *phy;
-+	void __iomem *base;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->devdata = of_device_get_match_data(&pdev->dev);
-+	if (!priv->devdata)
-+		return -EINVAL;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-+					     &mixel_dphy_regmap_config);
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(dev, "Couldn't create the DPHY regmap\n");
-+		return PTR_ERR(priv->regmap);
-+	}
-+
-+	priv->phy_ref_clk = devm_clk_get(&pdev->dev, "phy_ref");
-+	if (IS_ERR(priv->phy_ref_clk)) {
-+		dev_err(dev, "No phy_ref clock found\n");
-+		return PTR_ERR(priv->phy_ref_clk);
-+	}
-+	dev_dbg(dev, "phy_ref clock rate: %lu\n",
-+		clk_get_rate(priv->phy_ref_clk));
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	phy = devm_phy_create(dev, np, &mixel_dphy_phy_ops);
-+	if (IS_ERR(phy)) {
-+		dev_err(dev, "Failed to create phy %ld\n", PTR_ERR(phy));
-+		return PTR_ERR(phy);
-+	}
-+	phy_set_drvdata(phy, priv);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct platform_driver mixel_dphy_driver = {
-+	.probe	= mixel_dphy_probe,
-+	.driver = {
-+		.name = "mixel-mipi-dphy",
-+		.of_match_table	= mixel_dphy_of_match,
-+	}
-+};
-+module_platform_driver(mixel_dphy_driver);
-+
-+MODULE_AUTHOR("NXP Semiconductor");
-+MODULE_DESCRIPTION("Mixel MIPI-DSI PHY driver");
-+MODULE_LICENSE("GPL");
--- 
-2.20.1
+But maybe we could limit /proc/*/exe to at least not honor suid'ness
+of the target? Or does chrome/runc depend on that too?
 
+             Linus
