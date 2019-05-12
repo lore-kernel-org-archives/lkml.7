@@ -2,105 +2,72 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DD8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D8C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788C320C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:43:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPKk/QKF"
+	by mail.kernel.org (Postfix) with ESMTP id 296B320873
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfELTn3 (ORCPT
+        id S1727050AbfELUG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 15:43:29 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35566 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfELTn2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 15:43:28 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c15so6803038qkl.2;
-        Sun, 12 May 2019 12:43:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FjkT8c0mYt5eWOwRncdXrIt5s86GnuaQ8y74QwZDscY=;
-        b=fPKk/QKFELPkBCrMzjUg8GR7sOcdZ3YXVrhQo5F48CjmM2qmUgTqM/kqml7HljtQ6u
-         WKtahah9PN3uW+IY8Wj35Pzz13qV1pHm2rOK9GeTHxa7P+tKhwkPbBT867K4kiidZMO5
-         oPfH+vk/OhFvYDSEGf5osin8Be7nAf9vXLL5T6Nmmwhxy8w39qf5nevbdYprmCeQymMu
-         1bGDYzT6DGQ3FSBKgbdvDcnk2MpbSY/63m9yd+eknnFwZ3O0pwxsaTMv0+utJQjb4G2E
-         cYx5CQ9XtjVSAuPa/QoVfLrOzRvH+2/oZdLB28w4AMIs0iAGrWeyIy0M+4qeRKQdv2To
-         j/Rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FjkT8c0mYt5eWOwRncdXrIt5s86GnuaQ8y74QwZDscY=;
-        b=AOluskE79iQebeEjcLVTKjfGxWcXwC2WmITR80BJTiagPDd17pg8LYzpSepfLc/NGA
-         lb9TlQa1ICHpss17oNzagkXtawbi+kVRb5Ye3DhYd9G676wlEm1tXrCmorlgOVrn17Fp
-         XxcNgmQX0VA6Qh+WDmQaKJEF3zOWh3SpbFSsoo6xZGQlFJ1n3uZ4zOIVMD6o5OuLEYSb
-         G5Ek07JbINT5FrbcnEoEl8sedaZTqvhW+lTO9kqdthgFwv5Z7MR81vfz3YSYAJkfVlnE
-         hYh2mt56X3/UArkSfTACaVhfop3vl+Q22vb2yJMaxthwozVi7ThMcyxgb4YOBd0K7pPC
-         KV9A==
-X-Gm-Message-State: APjAAAUEN/3FVM1bnJZTvi7Q9+G6rBPZNPARokQQ2d3qfV3Eqs59YVSN
-        tiTTMYKTYyeRaeffKmz+kcs=
-X-Google-Smtp-Source: APXvYqyF22Y4YKd94kUWZgDu03sl+kSYsut5UIiJVaJlD6bstj3k3HWXDt3m2dr+eVJxOhK72yIRqA==
-X-Received: by 2002:a37:9881:: with SMTP id a123mr19005060qke.72.1557690207088;
-        Sun, 12 May 2019 12:43:27 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id e4sm2266463qkl.17.2019.05.12.12.43.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 12:43:26 -0700 (PDT)
-Date:   Sun, 12 May 2019 15:43:25 -0400
-From:   Arvind Sankar <niveditas98@gmail.com>
-To:     Rob Landley <rob@landley.net>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190512194322.GA71658@rani.riverdale.lan>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+        Sun, 12 May 2019 16:06:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52180 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbfELUG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 16:06:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B0E0230821C0;
+        Sun, 12 May 2019 20:06:26 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C646A19C65;
+        Sun, 12 May 2019 20:06:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <5CD8697B.6010004@bfs.de>
+References: <5CD8697B.6010004@bfs.de> <5CD844B0.5060206@bfs.de> <155764714099.24080.1233326575922058381.stgit@warthog.procyon.org.uk> <155764714872.24080.15171754166782593095.stgit@warthog.procyon.org.uk> <31808.1557684645@warthog.procyon.org.uk>
+To:     wharms@bfs.de
+Cc:     dhowells@redhat.com, colin.king@canonical.com, joe@perches.com,
+        jaltman@auristor.com, linux-afs@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] afs: Fix afs_xattr_get_yfs() to not try freeing an error value
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6818.1557691584.1@warthog.procyon.org.uk>
+Date:   Sun, 12 May 2019 21:06:24 +0100
+Message-ID: <6819.1557691584@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Sun, 12 May 2019 20:06:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
-> On 5/12/19 7:52 AM, Mimi Zohar wrote:
-> > On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
-> >> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
-> >>> This proposal consists in marshaling pathnames and xattrs in a file called
-> >>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
-> >>> been extracted.
-> >>
-> >> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
-> >> be done equivalently by the initramfs' /init? Why is kernel involvement
-> >> actually required here?
-> > 
-> > It's too late.  The /init itself should be signed and verified.
-> 
-> If the initramfs cpio.gz image was signed and verified by the extractor, how is
-> the init in it _not_ verified?
-> 
-> Ro
+walter harms <wharms@bfs.de> wrote:
 
-Wouldn't the below work even before enforcing signatures on external
-initramfs:
-1. Create an embedded initramfs with an /init that does the xattr
-parsing/setting. This will be verified as part of the kernel image
-signature, so no new code required.
-2. Add a config option/boot parameter to panic the kernel if an external
-initramfs attempts to overwrite anything in the embedded initramfs. This
-prevents overwriting the embedded /init even if the external initramfs
-is unverified.
+> Sorry, you misunderstood me, my fault, i did not see that size is unsigned.
+> NTL i do not think size=0 is useful.
+
+Allow me to quote from the getxattr manpage:
+
+       If size is specified as zero, these calls return the  current  size  of
+       the  named extended attribute (and leave value unchanged).  This can be
+       used to determine the size of the buffer that should be supplied  in  a
+       subsequent  call.   [...]
+
+> while you are there:
+>   flags |= YFS_ACL_WANT_ACL is always flags = YFS_ACL_WANT_ACL;
+> since flags is 0 at this point.
+> IMHO that sould be moved to the strcmp() section.
+
+Why?  It makes the strcmp() section more complicated and means I now either
+have to cache flags in a variable or do the allocation of yacl first.
+
+David
