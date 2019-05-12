@@ -2,129 +2,90 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1184C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6358C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623BA20C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AAA20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:43:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5JZmF3C"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="mvbKPUtz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfELTll (ORCPT
+        id S1727088AbfELTnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 15:41:41 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43297 "EHLO
+        Sun, 12 May 2019 15:43:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37010 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfELTlk (ORCPT
+        with ESMTP id S1726931AbfELTnN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 15:41:40 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so12870634wro.10
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 12:41:39 -0700 (PDT)
+        Sun, 12 May 2019 15:43:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e15so497360wrs.4;
+        Sun, 12 May 2019 12:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=iCOE3Lx6Cb7K+puvEJ0JXXJFYGgFv7+7QeyyjnRyHs0=;
-        b=H5JZmF3ChVLTqTx0P8KprOZ3KNh5hnZbTTwGR5LwMWCBRj3rAR94sqVR9vIsofWowG
-         NCfhWcKo5LkHCT0q1TIeDzwyoNrqVzry7Slodb7yZJXHiw1e5gwGCtJRWZRfOr3ZKf9i
-         iE1VNIOYH51/CRKyx2jRjP4HEIHm9NHFTYAwxowFqkLmnTSCp1q9eoprBiT5xaJ3ONDn
-         zk+3m4AXbIWkxNzhDS8eMb+rB/CVYrJllAjKiaD/MMDDosmGYDxVHFjwM3Hxoza4mLyy
-         8Xc5u0ffImbkc0cie6TauVzWHBSunJC0/jzSoYTx/zqe8JOe9Md6hi0JA0q/bXWeWlrG
-         cYtg==
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YkKnBKUFEKkDHQcg46RtzXFD9NeWizWJPkqwcfN4Wh0=;
+        b=mvbKPUtz35AGODuQ9K5K6a9T+agne7rqu9/Qr6o1q6lNuwng+f59HDCKbvTvdMlJ6c
+         tay6/jDjraQPYW1yUkEX32PfpaWB9yXprec5o/OLr4xfqfIGtmLiFZNGzGQSZA1a/TX9
+         Kab/vzHiIfFZXzV4zrPTtr2VW74QWPjDHVeWcv2VDSmkOF/CD4WUficUaKu/UmHSgMsS
+         kM/USbd+tjhfVG0CvGBFR2hglW11J++QoSeo1I4E3zyeGR2JwPClPed6M5rDxkhr/AU2
+         IxDfmUb27bzNVkGpcVVo+otej5AgJqxc7JJm5pKUvRuyMiQBzJwsxG5XN9me8m7pS/ya
+         IZnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=iCOE3Lx6Cb7K+puvEJ0JXXJFYGgFv7+7QeyyjnRyHs0=;
-        b=OSlGrQ7gMSCys5FAIEVVvTCkbiX97ofv+//q78Te3ywyz7VEwlwk5UPWF1FouE3QIy
-         xaQXY8iivArti5YDo25Jfb8TSK/MpXVJMiJAWwCGUGOGMNpkHzMDwu26Tq41tRyNn+F1
-         sBKylyCqk9NtMtasupBU7SS7ixsLOszMPBUucqapJ6HTC6DQEoT0csIhLH9J9L6+z1WM
-         u484AKU1fGAVFIk+zspWU/1QzerWq9hDJnRSb9GIV+nJjnY08ffQomE2mtlyJxl7cFaf
-         5CagtBL6u+zDnfMsh+csQMLavb1OJmKgK41MC31SbZZ6N+DamBxn1RVximf4c6sKT8fI
-         Q4zQ==
-X-Gm-Message-State: APjAAAWz+fI3/uiBVp4DYDeLWaAYg+TC7VzO4ceUoRyyO0AeT5yPRMCP
-        T0y6f3TYe1ho+2ZTugT5E5/rj1I0
-X-Google-Smtp-Source: APXvYqyTFeAk51teRzTWTpvEPDB2inT7xme9sE4V8OaVTXWdLy+fpdxD4gefeY+Bx8Dcx/OLXPR4jQ==
-X-Received: by 2002:adf:ee01:: with SMTP id y1mr15089685wrn.51.1557690098891;
-        Sun, 12 May 2019 12:41:38 -0700 (PDT)
-Received: from ogabbay-VM ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o8sm24752552wra.4.2019.05.12.12.41.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 May 2019 12:41:38 -0700 (PDT)
-Date:   Sun, 12 May 2019 22:41:36 +0300
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [git pull] habanalabs fixes for 5.2-rc1/2
-Message-ID: <20190512194136.GA12189@ogabbay-VM>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YkKnBKUFEKkDHQcg46RtzXFD9NeWizWJPkqwcfN4Wh0=;
+        b=TMkizR6RPgEFoWqCHWxexAPHNCNal69SXmXbiXR0LWV2tEDZM4+L/fz0sD8nm2IIEt
+         LaGMM3kkvtEkafR6laGmkIPbOV4u03GTgBqN3wCdaNM8qyYZw8NjTgBPXNVEPMLBvJaV
+         0+zveCG13fmh8KvscZDLJmrUSUlYKiRu7KzrsBiVp4/TFM/P3zxcFIBZgFj9rtFeXXLb
+         r6EfuCUZ4yXzwPqKkjSYgiAeq8xv61wkxLapZA7cNugviXa4ZGLTsi0Qa9JSg0HbRs/X
+         SdJmEanEyL3QR/fujbjBc4oaHAaav0YKAJBv2Cvf4lkaLFV47T3vBPL6kpdY2CEO5HfE
+         6uVA==
+X-Gm-Message-State: APjAAAV/Dqn9t3dEGuoIP5ncG/5GMFu6mgXPrNSwlH0fyz6Zzh3IcEzc
+        4ra68YYFGejiKV/OtueTVwk=
+X-Google-Smtp-Source: APXvYqy1d05NDscbWQi/nz+Tj2aWJx8x7CvKkvlyeMlWGow/RSrPZ6ZGd7eG1OmLtgniNupyS7n6mA==
+X-Received: by 2002:adf:dd0d:: with SMTP id a13mr9410128wrm.153.1557690191211;
+        Sun, 12 May 2019 12:43:11 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C8AD00ECBE9107EA8EB108.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:ecbe:9107:ea8e:b108])
+        by smtp.googlemail.com with ESMTPSA id r23sm13685178wmh.29.2019.05.12.12.43.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 12:43:10 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, narmstrong@baylibre.com,
+        jbrunet@baylibre.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/1] typo fix for the Meson8b clock controller driver
+Date:   Sun, 12 May 2019 21:42:59 +0200
+Message-Id: <20190512194300.7445-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+This is a simple typo fix for a clock which was introduced with the
+v5.2 development cycle.
+Nothing critical, so I'm fine if it's queued for v5.3 (no need to send
+it as v5.2 fix).
 
-This is the pull request containing fixes for 5.2-rc1/2.
 
-It contains 2 fixes (1 of them for stable) and 1 change to a new IOCTL
-that was introduced to kernel 5.2 in the previous pull requests.
+Martin Blumenstingl (1):
+  clk: meson: meson8b: fix a typo in the VPU parent names array variable
 
-See the tag comment for more details.
+ drivers/clk/meson/meson8b.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
-Oded
+-- 
+2.21.0
 
-The following changes since commit 8ea5b2abd07e2280a332bd9c1a7f4dd15b9b6c13:
-
-  Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-05-09 19:35:41 -0700)
-
-are available in the Git repository at:
-
-  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-05-12
-
-for you to fetch changes up to 6800914b3a6dc11a08e7143f981c110aee439110:
-
-  habanalabs: fix debugfs code (2019-05-04 15:56:08 +0200)
-
-----------------------------------------------------------------
-This tag contains the following fixes:
-
-- Halt debug engines when user process closes the FD. We can't allow the
-  device to issue transactions for a user which doesn't exists anymore.
-
-- Fix various security holes in debugfs API.
-
-- Add a new opcode to the DEBUG IOCTL API. The opcode is designed
-  for setting the device into and out of debug mode. Although not a fix
-  per-se, because this is a new IOCTL which is upstreamed in kernel 5.2, I
-  think this is justified at this point because we won't be able to change
-  the API later.
-
-----------------------------------------------------------------
-Jann Horn (1):
-      habanalabs: fix debugfs code
-
-Oded Gabbay (1):
-      uapi/habanalabs: add opcode for enable/disable device debug mode
-
-Omer Shpigelman (1):
-      habanalabs: halt debug engines on user process close
-
- drivers/misc/habanalabs/context.c             |  6 +++
- drivers/misc/habanalabs/debugfs.c             | 60 ++++++++-------------------
- drivers/misc/habanalabs/goya/goya.c           |  3 +-
- drivers/misc/habanalabs/goya/goyaP.h          |  1 +
- drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++++++++
- drivers/misc/habanalabs/habanalabs.h          |  2 +
- include/uapi/misc/habanalabs.h                | 22 +++++++++-
- 7 files changed, 66 insertions(+), 45 deletions(-)
