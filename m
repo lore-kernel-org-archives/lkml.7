@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA1AC04AB3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C23BEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58AE921851
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733CD21851
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7CHoWWn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cfBZa96J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfELBZl (ORCPT
+        id S1726713AbfELBZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 21:25:41 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54448 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfELBZg (ORCPT
+        Sat, 11 May 2019 21:25:45 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33507 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfELBZm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 21:25:36 -0400
-Received: by mail-it1-f195.google.com with SMTP id a190so15169744ite.4
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:35 -0700 (PDT)
+        Sat, 11 May 2019 21:25:42 -0400
+Received: by mail-io1-f65.google.com with SMTP id z4so7437941iol.0
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=O+nUFC6cQZFpp93OxhMjcDjllvqEhXm9UXJsgqoN5M8=;
-        b=E7CHoWWnRQG59dHc5bUpoWUurm4hXo08RZmITK2SNTmiK50TGKto2egX8/xK7wHQPU
-         ToGztGT+rmQ2Bit5wy2gjUWoJQyF5OG8VuRqJynHgBDOwB9eF9iB1/CZ31LTVE3wFJCm
-         F/RZFS6r6105PQg0bArYNKu5DCxRA+fcCrfgy6PDRNn8UlxBogrUiTvSZQ0NrfjAW5xu
-         GVerLROy40zPEgVZ3YVsLZEAvvtrpkrwVo1Dd+40ieBq034K1gn6o3zSAIXbvC2EaDoM
-         1FYrjWXwPBwEePDGpbkng6H9rQkTtkFnWQu7GQoSl4t+UMDiLCgP5MGOfOt1mgC5guQW
-         dBOw==
+        bh=Z1vpsRw/Qv1PVg/5Liz57VgaRQaN+KbLk5lodQH6TDw=;
+        b=cfBZa96JjTLCleX9rHtjKSPZjVNLIMKBrGrDrCioSGAxcZJo38ptYGzlIfhhsq+NOm
+         0iysZGuibyIfnoX8TU81kNctmAir2bHF/LxNtdfCWkqoOtgTCAo/nIo8ySA22ySk3mUB
+         Ijb5tOmlKvhI+lqo5IaaGCF/abI+i92XgM9IdgLt0TWbWtwdXQ32wY7K9QnDZEZwyddU
+         BUKklLop8JlrlZP3cGrn+Kk0cI7wrO9OQSNfiG10/wE7NC6SIBgDsHoMzOJeMl28U9c7
+         9svfyCTUmQVX17AqiCyCa/EwmGYJxMd4wzYelviJVxoZLw4rtuq3Zk3DmiBEfTwqain2
+         KClA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O+nUFC6cQZFpp93OxhMjcDjllvqEhXm9UXJsgqoN5M8=;
-        b=n+6i++tUM2elcHaW45JWCkzaMlmqfc5e4n/ZGTFEfKB25rGDu7JH4UhmRT65SIhLzI
-         wdpB/mtFcUIc3cZ59HDULSdQMUszLI6+Xth1s6yCKZfP5V5AgcfcVgpEIYHdakzOPLmE
-         HVp3fdTRHGGmFC0jL3+D9WQ76cXL7QR7FUaJMWdB2UjMaPA3TofZT6ZVB0a/UMyqFyIF
-         RNm/Yjmg/77UkwHRygybsldnB6GR55TAM21J/kz9RFfbzHC1f+Ixywwtp2AZhd46hwtP
-         2VCrzqrehDBl2oHRnQnJ6ggCZuNmOjzKnm8UXGT/jWKm5e6KYb+l8k8Ow5cKZ1zq5t7T
-         ohNg==
-X-Gm-Message-State: APjAAAWJ+g8qB8ABoC+YB1TZE5nvCCFdg0HBd0OqjkOGZNPnTSlh2Jur
-        DIM+1kDNxY9KsvfdwTw71bBopg==
-X-Google-Smtp-Source: APXvYqx2oL+gPbPYVww6vDwWfPBI9Hxp8YCt7SKvi5CfQ4kS37kIzym47XGPiOJkZOWvFW7uyUTAlw==
-X-Received: by 2002:a24:9d46:: with SMTP id f67mr13250586itd.58.1557624334635;
-        Sat, 11 May 2019 18:25:34 -0700 (PDT)
+        bh=Z1vpsRw/Qv1PVg/5Liz57VgaRQaN+KbLk5lodQH6TDw=;
+        b=SLQ1mC4jFL3dSmtHXXqPx8F0OTdUOy2C1hXjpqBbiQ9X74nEec520YRv8soMXYYbsz
+         vasU3XxLTp1DMyEY3Vc3fFR3ShvLGvHyVxIMB/ByrALHThoUuc7+KPK096vgJKPxMwuy
+         0yJekBxwcQdKkvRUP831o/G52d3BbbwGm9k87CJdhSIStjapQ4Ff4wgX5FymzkC7q9Hq
+         f+U4t3myqWgE/t6xrxglx1hAgRYBuFfXgi8CvRcPpCcDWjDbwB4qAi1CLhE5L/VZ9TNW
+         Sz9ZvswckhPsnGAIdvrncgYNlakntfmjY16Mfu6qwO74Al3f+7Yt8SznOfCKzdKY27Kw
+         03eQ==
+X-Gm-Message-State: APjAAAUyzW4M5ITWmMWzS7f8KIRxTzPmADAvyp1+3D+vS0BhtmO9SdWc
+        lg5+H4/jBnG0Bj76o76XWayAJg==
+X-Google-Smtp-Source: APXvYqwxpJEKYmPQd7mezr0OGUKn+Wav9N1rSSVuN2TC/PK5K0RjIzyMTPWSTt3ucQXYfnEqjoCCiA==
+X-Received: by 2002:a05:6602:1d6:: with SMTP id w22mr2928270iot.215.1557624340875;
+        Sat, 11 May 2019 18:25:40 -0700 (PDT)
 Received: from shibby.hil-lafwehx.chi.wayport.net (hampton-inn.wintek.com. [72.12.199.50])
-        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.33
+        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 18:25:34 -0700 (PDT)
+        Sat, 11 May 2019 18:25:40 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
         ilias.apalodimas@linaro.org
@@ -63,9 +63,9 @@ Cc:     syadagir@codeaurora.org, mjavid@codeaurora.org,
         evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         abhishek.esse@gmail.com, linux-kernel@vger.kernel.org,
         Alex Elder <elder@linaro.org>
-Subject: [PATCH 05/18] soc: qcom: ipa: configuration data
-Date:   Sat, 11 May 2019 20:24:55 -0500
-Message-Id: <20190512012508.10608-6-elder@linaro.org>
+Subject: [PATCH 09/18] soc: qcom: ipa: GSI transactions
+Date:   Sat, 11 May 2019 20:24:59 -0500
+Message-Id: <20190512012508.10608-10-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190512012508.10608-1-elder@linaro.org>
 References: <20190512012508.10608-1-elder@linaro.org>
@@ -76,543 +76,759 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch defines configuration data that is used to specify some
-of the details of IPA hardware supported by the driver.  It is built
-as Device Tree match data, discovered at boot time.  Initially the
-driver only supports the Qualcomm SDM845 SoC.
+This patch implements GSI transactions.  A GSI transaction is a
+structure that represents a single request (consisting of one or
+more TREs) sent to the GSI hardware.  The last TRE in a transaction
+includes a flag requesting that the GSI interrupt the AP to notify
+that it has completed.
+
+TREs are executed and completed strictly in order.  For this reason,
+the completion of a single TRE implies that all previous TREs (in
+particular all of those "earlier" in a transaction) have completed.
+
+Whenever there is a need to send a request (a set of TREs) to the
+IPA, a GSI transaction is allocated, specifying the number of TREs
+that will be required.  Details of the request (e.g. transfer offsets
+and length) are represented by in a Linux scatterlist array that is
+incorporated in the transaction structure.
+
+Once "filled," the transaction is committed.  The GSI transaction
+layer performs all needed mapping (and unmapping) for DMA, and
+issues the request to the hardware.  When the hardware signals
+that the request has completed, a function in the IPA layer is
+called, allowing for cleanup or followup activity to be performed
+before the transaction is freed.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_data-sdm845.c | 245 +++++++++++++++++++++++++++
- drivers/net/ipa/ipa_data.h        | 267 ++++++++++++++++++++++++++++++
- 2 files changed, 512 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_data-sdm845.c
- create mode 100644 drivers/net/ipa/ipa_data.h
+ drivers/net/ipa/gsi_trans.c | 604 ++++++++++++++++++++++++++++++++++++
+ drivers/net/ipa/gsi_trans.h | 106 +++++++
+ 2 files changed, 710 insertions(+)
+ create mode 100644 drivers/net/ipa/gsi_trans.c
+ create mode 100644 drivers/net/ipa/gsi_trans.h
 
-diff --git a/drivers/net/ipa/ipa_data-sdm845.c b/drivers/net/ipa/ipa_data-sdm845.c
+diff --git a/drivers/net/ipa/gsi_trans.c b/drivers/net/ipa/gsi_trans.c
 new file mode 100644
-index 000000000000..62c0f25f5161
+index 000000000000..e35e8369d5d0
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_data-sdm845.c
-@@ -0,0 +1,245 @@
++++ b/drivers/net/ipa/gsi_trans.c
+@@ -0,0 +1,604 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019 Linaro Ltd.
 + */
 +
-+#include <linux/log2.h>
++#include <linux/types.h>
++#include <linux/bits.h>
++#include <linux/bitfield.h>
++#include <linux/refcount.h>
++#include <linux/scatterlist.h>
 +
 +#include "gsi.h"
++#include "gsi_private.h"
++#include "gsi_trans.h"
++#include "ipa_gsi.h"
 +#include "ipa_data.h"
-+#include "ipa_endpoint.h"
++#include "ipa_cmd.h"
 +
-+/* Differentiate Boolean from numerical options */
-+#define NO	0
-+#define YES	1
++/**
++ * DOC: GSI Transactions
++ *
++ * A GSI transaction abstracts the behavior of a GSI channel by representing
++ * everything about a related group of data transfers in a single structure.
++ * Most details of interaction with the GSI hardware are managed by the GSI
++ * transaction core, allowing users to simply describe transfers to be
++ * performed and optionally supply a callback function to run once the set
++ * of transfers has been completed.
++ *
++ * To perform a data transfer (or a related set of them), a user of the GSI
++ * transaction interface allocates a transaction, indicating the number of
++ * TREs required (one per data transfer).  If sufficient TREs are available,
++ * they are reserved for use in the transaction and the allocation succeeds.
++ * This way exhaustion of the available TREs in a channel ring is detected
++ * as early as possible.  All resources required to complete a transaction
++ * are allocated at transaction allocation time.
++ *
++ * Transfers performed as part of a transaction are represented in an array
++ * of Linux scatterlist structures.  This array is allocated with the
++ * transaction, and its entries must be initialized using standard
++ * scatterlist functions (such as sg_init_one() or skb_to_sgvec()).  The
++ * user must supply the total number of bytes represented by all transfers
++ * in the transaction.
++ *
++ * Once a transaction has been prepared, it is committed.  The GSI transaction
++ * layer is responsible for DMA mapping (and unmapping) memory described in
++ * the transaction's scatterlist array.  The only way committing a transaction
++ * fails is if this DMA mapping step returns an error.  Otherwise, ownership
++ * of the entire transaction is transferred to the GSI transaction core.  The
++ * GSI transaction code formats the content of the scatterlist array into the
++ * channel ring buffer and informs the hardware that new TREs are available
++ * to process.
++ *
++ * The last TRE in each transaction is marked to interrupt the AP when the
++ * GSI hardware has completed it.  Because transfers described by TREs are
++ * performed strictly in order, signaling the completion of just the last
++ * TRE in the transaction is sufficient to indicate the full transaction
++ * is complete.
++ *
++ * When a transaction is complete, ipa_gsi_trans_complete() is called by the
++ * GSI code into the IPA layer, allowing it to perform any final cleanup
++ * required before the transaction is freed.
++ *
++ * It is possible to await the completion of a transaction; only immediate
++ * commands currently use this functionality.
++ */
 +
-+/* Endpoint configuration for the SDM845 SoC. */
-+static const struct gsi_ipa_endpoint_data gsi_ipa_endpoint_data[] = {
-+	{
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 4,
-+		.endpoint_id	= IPA_ENDPOINT_AP_COMMAND_TX,
-+		.toward_ipa	= YES,
-+		.channel = {
-+			.tlv_count	= 20,
-+			.wrr_priority	= YES,
-+			.tre_count	= 256,
-+			.event_count	= 512,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_DMA_ONLY,
-+			.config = {
-+				.dma_mode	= YES,
-+				.dma_endpoint	= IPA_ENDPOINT_AP_LAN_RX,
-+			},
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 5,
-+		.endpoint_id	= IPA_ENDPOINT_AP_LAN_RX,
-+		.toward_ipa	= NO,
-+		.channel = {
-+			.tlv_count	= 8,
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.checksum	= YES,
-+				.aggregation	= YES,
-+				.status_enable	= YES,
-+				.rx = {
-+					.pad_align	= ilog2(sizeof(u32)),
-+				},
-+			},
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 3,
-+		.endpoint_id	= IPA_ENDPOINT_AP_MODEM_TX,
-+		.toward_ipa	= YES,
-+		.channel = {
-+			.tlv_count	= 16,
-+			.tre_count	= 512,
-+			.event_count	= 512,
-+		},
-+		.endpoint = {
-+			.support_flt	= YES,
-+			.seq_type	=
-+				IPA_SEQ_2ND_PKT_PROCESS_PASS_NO_DEC_UCP,
-+			.config = {
-+				.checksum	= YES,
-+				.qmap		= YES,
-+				.status_enable	= YES,
-+				.tx = {
-+					.delay	= YES,
-+					.status_endpoint =
-+						IPA_ENDPOINT_MODEM_AP_RX,
-+				},
-+			},
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_AP,
-+		.channel_id	= 6,
-+		.endpoint_id	= IPA_ENDPOINT_AP_MODEM_RX,
-+		.toward_ipa	= NO,
-+		.channel = {
-+			.tlv_count	= 8,
-+			.tre_count	= 256,
-+			.event_count	= 256,
-+		},
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_INVALID,
-+			.config = {
-+				.checksum	= YES,
-+				.qmap		= YES,
-+				.aggregation	= YES,
-+				.rx = {
-+					.aggr_close_eof	= YES,
-+				},
-+			},
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 1,
-+		.endpoint_id	= IPA_ENDPOINT_MODEM_COMMAND_TX,
-+		.toward_ipa	= YES,
-+		.endpoint = {
-+			.seq_type	= IPA_SEQ_PKT_PROCESS_NO_DEC_UCP,
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 0,
-+		.endpoint_id	= IPA_ENDPOINT_MODEM_LAN_TX,
-+		.toward_ipa	= YES,
-+		.endpoint = {
-+			.support_flt	= YES,
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 3,
-+		.endpoint_id	= IPA_ENDPOINT_MODEM_LAN_RX,
-+		.toward_ipa	= NO,
-+	},
-+	{
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 4,
-+		.endpoint_id	= IPA_ENDPOINT_MODEM_AP_TX,
-+		.toward_ipa	= YES,
-+		.endpoint = {
-+			.support_flt	= YES,
-+		},
-+	},
-+	{
-+		.ee_id		= GSI_EE_MODEM,
-+		.channel_id	= 2,
-+		.endpoint_id	= IPA_ENDPOINT_MODEM_AP_RX,
-+		.toward_ipa	= NO,
-+	},
++/* gsi_tre->flags mask values (in CPU byte order) */
++#define GSI_TRE_FLAGS_CHAIN_FMASK	GENMASK(0, 0)
++#define GSI_TRE_FLAGS_IEOB_FMASK	GENMASK(8, 8)
++#define GSI_TRE_FLAGS_IEOT_FMASK	GENMASK(9, 9)
++#define GSI_TRE_FLAGS_BEI_FMASK		GENMASK(10, 10)
++#define GSI_TRE_FLAGS_TYPE_FMASK	GENMASK(23, 16)
++
++/* Hardware values representing a transfer element type */
++enum gsi_tre_type {
++	GSI_RE_XFER	= 0x2,
++	GSI_RE_IMMD_CMD	= 0x3,
++	GSI_RE_NOP	= 0x4,
 +};
 +
-+static const struct ipa_resource_src ipa_resource_src[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 10,
-+			.max = 10,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 10,
-+			.max = 10,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 12,
-+			.max = 12,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 14,
-+			.max = 14,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 0,
-+			.max = 63,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 0,
-+			.max = 63,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 14,
-+			.max = 14,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 20,
-+			.max = 20,
-+		},
-+	},
-+};
++/* Map a given ring entry index to the transaction associated with it */
++static void gsi_channel_trans_map(struct gsi_channel *channel, u32 index,
++				  struct gsi_trans *trans)
++{
++	channel->trans_info.map[index] = trans;
++}
 +
-+static const struct ipa_resource_dst ipa_resource_dst[] = {
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 4,
-+			.max = 4,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 4,
-+			.max = 4,
-+		},
-+	},
-+	{
-+		.type = IPA_RESOURCE_TYPE_DST_DPS_DMARS,
-+		.limits[IPA_RESOURCE_GROUP_LWA_DL] = {
-+			.min = 2,
-+			.max = 63,
-+		},
-+		.limits[IPA_RESOURCE_GROUP_UL_DL] = {
-+			.min = 1,
-+			.max = 63,
-+		},
-+	},
-+};
++/* Return the transaction mapped to a given ring entry */
++struct gsi_trans *
++gsi_channel_trans_mapped(struct gsi_channel *channel, u32 index)
++{
++	return channel->trans_info.map[index];
++}
 +
-+/* Resource configuration for the SDM845 SoC. */
-+static const struct ipa_resource_data ipa_resource_data = {
-+	.resource_src		= ipa_resource_src,
-+	.resource_src_count	= ARRAY_SIZE(ipa_resource_src),
-+	.resource_dst		= ipa_resource_dst,
-+	.resource_dst_count	= ARRAY_SIZE(ipa_resource_dst),
-+};
++/* Return the oldest completed transaction for a channel (or null) */
++struct gsi_trans *gsi_channel_trans_complete(struct gsi_channel *channel)
++{
++	return list_first_entry_or_null(&channel->trans_info.complete,
++					struct gsi_trans, links);
++}
 +
-+/* Configuration data for the SDM845 SoC. */
-+const struct ipa_data ipa_data_sdm845 = {
-+	.endpoint_data		= gsi_ipa_endpoint_data,
-+	.endpoint_data_count	= ARRAY_SIZE(gsi_ipa_endpoint_data),
-+	.resource_data		= &ipa_resource_data,
-+};
-diff --git a/drivers/net/ipa/ipa_data.h b/drivers/net/ipa/ipa_data.h
++/* Move a transaction from the allocated list to the pending list */
++static void gsi_trans_move_pending(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	unsigned long flags;
++
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	list_move_tail(&trans->links, &trans_info->pending);
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++}
++
++/* Move a transaction and all of its predecessors from the pending list
++ * to the completed list.
++ */
++void gsi_trans_move_complete(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info;
++	struct list_head list;
++	unsigned long flags;
++
++	trans_info = &channel->trans_info;
++
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	/* Move this transaction and all predecessors to completed list */
++	list_cut_position(&list, &trans_info->pending, &trans->links);
++	list_splice_tail(&list, &trans_info->complete);
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++}
++
++/* Move a transaction from the completed list to the polled list */
++void gsi_trans_move_polled(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	unsigned long flags;
++
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	list_move_tail(&trans->links, &trans_info->polled);
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++}
++
++/* Allocate a GSI transaction on a channel */
++struct gsi_trans *
++gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id, u32 tre_count)
++{
++	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	struct gsi_trans *trans = NULL;
++	unsigned long flags;
++
++	/* Caller should know the limit is gsi_channel_trans_max() */
++	if (WARN_ON(tre_count > channel->data->tlv_count))
++		return NULL;
++
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	if (trans_info->tre_avail >= tre_count) {
++		u32 avail;
++
++		/* Allocate the transaction */
++		if (trans_info->pool_free == trans_info->pool_count)
++			trans_info->pool_free = 0;
++		trans = &trans_info->pool[trans_info->pool_free++];
++
++		/* Allocate the scatter/gather entries it will use.  If
++		 * what's needed would cross the end-of-pool boundary,
++		 * allocate them from the beginning.
++		 */
++		avail = trans_info->sg_pool_count - trans_info->sg_pool_free;
++		if (tre_count > avail)
++			trans_info->sg_pool_free = 0;
++		trans->sgl = &trans_info->sg_pool[trans_info->sg_pool_free];
++		trans->sgc = tre_count;
++		trans_info->sg_pool_free += tre_count;
++
++		/* We reserve the TREs now, but consume them at commit time */
++		trans_info->tre_avail -= tre_count;
++
++		list_add_tail(&trans->links, &trans_info->alloc);
++	}
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++
++	if (!trans)
++		return NULL;
++
++	trans->gsi = gsi;
++	trans->channel_id = channel_id;
++	refcount_set(&trans->refcount, 1);
++	trans->tre_count = tre_count;
++	init_completion(&trans->completion);
++
++	/* We're reusing, so make sure all fields are reinitialized */
++	trans->dev = gsi->dev;
++	trans->result = 0;	/* Success assumed unless overwritten */
++	trans->data = NULL;
++
++	return trans;
++}
++
++/* Free a previously-allocated transaction (used only in case of error) */
++void gsi_trans_free(struct gsi_trans *trans)
++{
++	struct gsi_trans_info *trans_info;
++	struct gsi_channel *channel;
++	unsigned long flags;
++
++	if (!refcount_dec_and_test(&trans->refcount))
++		return;
++
++	channel = &trans->gsi->channel[trans->channel_id];
++	trans_info = &channel->trans_info;
++
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	list_del(&trans->links);
++	trans_info->tre_avail += trans->tre_count;
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++}
++
++/* Compute the length/opcode value to use for a TRE */
++static __le16 gsi_tre_len_opcode(enum ipa_cmd_opcode opcode, u32 len)
++{
++	return opcode == IPA_CMD_NONE ? cpu_to_le16((u16)len)
++				      : cpu_to_le16((u16)opcode);
++}
++
++/* Compute the flags value to use for a given TRE */
++static __le32 gsi_tre_flags(bool last_tre, bool bei, enum ipa_cmd_opcode opcode)
++{
++	enum gsi_tre_type tre_type;
++	u32 tre_flags;
++
++	tre_type = opcode == IPA_CMD_NONE ? GSI_RE_XFER : GSI_RE_IMMD_CMD;
++	tre_flags = u32_encode_bits(tre_type, GSI_TRE_FLAGS_TYPE_FMASK);
++
++	/* Last TRE contains interrupt flags */
++	if (last_tre) {
++		/* All transactions end in a transfer completion interrupt */
++		tre_flags |= GSI_TRE_FLAGS_IEOT_FMASK;
++		/* Don't interrupt when outbound commands are acknowledged */
++		if (bei)
++			tre_flags |= GSI_TRE_FLAGS_BEI_FMASK;
++	} else {	/* All others indicate there's more to come */
++		tre_flags |= GSI_TRE_FLAGS_CHAIN_FMASK;
++	}
++
++	return cpu_to_le32(tre_flags);
++}
++
++static void gsi_trans_tre_fill(struct gsi_tre *dest_tre, dma_addr_t addr,
++			       u32 len, bool last_tre, bool bei,
++			       enum ipa_cmd_opcode opcode)
++{
++	struct gsi_tre tre;
++
++	tre.addr = cpu_to_le64(addr);
++	tre.len_opcode = gsi_tre_len_opcode(opcode, len);
++	tre.reserved = 0;
++	tre.flags = gsi_tre_flags(last_tre, bei, opcode);
++
++	*dest_tre = tre;	/* Write TRE as a single (16-byte) unit */
++}
++
++int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr)
++{
++	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct gsi_trans_info *trans_info;
++	struct gsi_evt_ring *evt_ring;
++	struct gsi_tre *dest_tre;
++	bool exhausted = false;
++	unsigned long flags;
++	u32 wp_local;
++
++	/* assert(!channel->toward_ipa); */
++
++	trans_info = &channel->trans_info;
++	spin_lock_irqsave(&trans_info->spinlock, flags);
++
++	if (trans_info->tre_avail)
++		trans_info->tre_avail--;
++	else
++		exhausted = true;
++
++	spin_unlock_irqrestore(&trans_info->spinlock, flags);
++
++	if (exhausted)
++		return -EBUSY;
++
++	evt_ring = &gsi->evt_ring[channel->evt_ring_id];
++	spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
++
++	wp_local = channel->tre_ring.wp_local;
++	if (wp_local == channel->tre_ring.end)
++		wp_local = channel->tre_ring.base;
++	dest_tre = gsi_ring_virt(&channel->tre_ring, wp_local);
++
++	gsi_trans_tre_fill(dest_tre, addr, 1, true, false, IPA_CMD_NONE);
++
++	gsi_ring_wp_local_add(&channel->tre_ring, 1);
++
++	gsi_channel_doorbell(channel);
++
++	spin_unlock_irqrestore(&evt_ring->ring.spinlock, flags);
++
++	return 0;
++}
++
++/**
++ * __gsi_trans_commit() - Common GSI transaction commit code
++ * @trans:	Transaction to commit
++ * @opcode:	Immediate command opcode, or IPA_CMD_NONE
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ *
++ * @Return:	0 if successful, or a negative error code
++ *
++ * Maps the transactions's scatterlist array for DMA, and returns -ENOMEM
++ * if that fails.  Formats channel ring TRE entries based on the content of
++ * the scatterlist.  Records the transaction pointer in the map entry for
++ * the last ring entry used for the transaction so it can be recovered when
++ * it completes, and moves the transaction to the pending list.  Updates the
++ * channel ring pointer and optionally rings the doorbell.
++ */
++static int __gsi_trans_commit(struct gsi_trans *trans,
++			      enum ipa_cmd_opcode opcode, bool ring_db)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	enum dma_data_direction direction;
++	bool bei = channel->toward_ipa;
++	struct gsi_evt_ring *evt_ring;
++	struct scatterlist *sg;
++	struct gsi_tre *dest_tre;
++	u32 queued_trans_count;
++	u32 queued_byte_count;
++	unsigned long flags;
++	u32 byte_count = 0;
++	u32 wp_local;
++	u32 index;
++	u32 avail;
++	int ret;
++	u32 i;
++
++	direction = channel->toward_ipa ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
++	ret = dma_map_sg(trans->dev, trans->sgl, trans->sgc, direction);
++	if (!ret)
++		return -ENOMEM;
++
++	evt_ring = &channel->gsi->evt_ring[channel->evt_ring_id];
++
++	spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
++
++	/* We'll consume the entries available at the end of the ring,
++	 * switching to the beginning to finish if necessary.
++	 */
++	wp_local = channel->tre_ring.wp_local;
++	dest_tre = gsi_ring_virt(&channel->tre_ring, wp_local);
++
++	avail = (channel->tre_ring.end - wp_local) / sizeof(*dest_tre);
++
++	for_each_sg(trans->sgl, sg, trans->sgc, i) {
++		bool last_tre = i == trans->tre_count - 1;
++		dma_addr_t addr = sg_dma_address(sg);
++		u32 len = sg_dma_len(sg);
++
++		byte_count += len;
++		if (!avail--)
++			dest_tre = gsi_ring_virt(&channel->tre_ring,
++						 channel->tre_ring.base);
++
++		gsi_trans_tre_fill(dest_tre, addr, len, last_tre, bei, opcode);
++		dest_tre++;
++	}
++
++	if (channel->toward_ipa) {
++		/* We record TX bytes when they are sent */
++		trans->len = byte_count;
++		trans->trans_count = channel->trans_count;
++		trans->byte_count = channel->byte_count;
++		channel->trans_count++;
++		channel->byte_count += byte_count;
++	}
++
++	/* Advance the write pointer; record info for last used element */
++	gsi_ring_wp_local_add(&channel->tre_ring, trans->tre_count - 1);
++	index = ring_index(&channel->tre_ring, channel->tre_ring.wp_local);
++	gsi_channel_trans_map(channel, index, trans);
++	gsi_ring_wp_local_add(&channel->tre_ring, 1);
++
++	gsi_trans_move_pending(trans);
++
++	/* Ring doorbell if requested, or if all TREs are allocated */
++	if (ring_db || !channel->trans_info.tre_avail) {
++		/* Report what we're handing off to hardware for TX channels */
++		if (channel->toward_ipa) {
++			queued_trans_count = channel->trans_count -
++						channel->doorbell_trans_count;
++			queued_byte_count = channel->byte_count -
++						channel->doorbell_byte_count;
++			channel->doorbell_trans_count = channel->trans_count;
++			channel->doorbell_byte_count = channel->byte_count;
++
++			ipa_gsi_channel_tx_queued(trans->gsi,
++						  gsi_channel_id(channel),
++						  queued_trans_count,
++						  queued_byte_count);
++		}
++
++		gsi_channel_doorbell(channel);
++	}
++
++	spin_unlock_irqrestore(&evt_ring->ring.spinlock, flags);
++
++	return 0;
++}
++
++/* Commit a GSI transaction */
++int gsi_trans_commit(struct gsi_trans *trans, bool ring_db)
++{
++	return __gsi_trans_commit(trans, IPA_CMD_NONE, ring_db);
++}
++
++/* Commit a GSI command transaction and wait for it to complete */
++int gsi_trans_commit_command(struct gsi_trans *trans,
++			     enum ipa_cmd_opcode opcode)
++{
++	int ret;
++
++	refcount_inc(&trans->refcount);
++
++	ret = __gsi_trans_commit(trans, opcode, true);
++	if (ret)
++		goto out_free_trans;
++
++	wait_for_completion(&trans->completion);
++
++out_free_trans:
++	gsi_trans_free(trans);
++
++	return ret;
++}
++
++/* Commit a GSI command transaction, wait for it to complete, with timeout */
++int gsi_trans_commit_command_timeout(struct gsi_trans *trans,
++				     enum ipa_cmd_opcode opcode,
++				     unsigned long timeout)
++{
++	unsigned long timeout_jiffies = msecs_to_jiffies(timeout);
++	unsigned long remaining;
++	int ret;
++
++	refcount_inc(&trans->refcount);
++
++	ret = __gsi_trans_commit(trans, opcode, true);
++	if (ret)
++		goto out_free_trans;
++
++	remaining = wait_for_completion_timeout(&trans->completion,
++						timeout_jiffies);
++out_free_trans:
++	gsi_trans_free(trans);
++
++	return ret ? ret : remaining ? 0 : -ETIMEDOUT;
++}
++
++/* Return a channel's next completed transaction (or NULL) */
++void gsi_trans_complete(struct gsi_trans *trans)
++{
++	struct gsi_channel *channel = &trans->gsi->channel[trans->channel_id];
++	enum dma_data_direction direction;
++
++	direction = channel->toward_ipa ? DMA_TO_DEVICE : DMA_FROM_DEVICE;
++
++	dma_unmap_sg(trans->dev, trans->sgl, trans->sgc, direction);
++
++	ipa_gsi_trans_complete(trans);
++
++	complete(&trans->completion);
++
++	gsi_trans_free(trans);
++}
++
++/* Cancel a channel's pending transactions */
++void gsi_channel_trans_cancel_pending(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	u32 evt_ring_id = channel->evt_ring_id;
++	struct gsi *gsi = channel->gsi;
++	struct gsi_evt_ring *evt_ring;
++	struct gsi_trans *trans;
++	unsigned long flags;
++
++	evt_ring = &gsi->evt_ring[evt_ring_id];
++
++	spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
++
++	list_for_each_entry(trans, &trans_info->pending, links)
++		trans->result = -ECANCELED;
++
++	list_splice_tail_init(&trans_info->pending, &trans_info->complete);
++
++	spin_unlock_irqrestore(&evt_ring->ring.spinlock, flags);
++
++	spin_lock_irqsave(&gsi->spinlock, flags);
++
++	if (gsi->event_enable_bitmap & BIT(evt_ring_id))
++		gsi_event_handle(gsi, evt_ring_id);
++
++	spin_unlock_irqrestore(&gsi->spinlock, flags);
++}
++
++/* Initialize a channel's GSI transaction info */
++int gsi_channel_trans_init(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++	u32 tre_count = channel->data->tre_count;
++
++	trans_info->map = kcalloc(tre_count, sizeof(*trans_info->map),
++				  GFP_KERNEL);
++	if (!trans_info->map)
++		return -ENOMEM;
++
++	/* We will never need more transactions than there are TRE
++	 * entries in the transfer ring.  For that reason, we can
++	 * preallocate an array of (at least) that many transactions,
++	 * and use a single free index to determine the next one
++	 * available for allocation.
++	 */
++	trans_info->pool_count = tre_count;
++	trans_info->pool = kcalloc(trans_info->pool_count,
++				   sizeof(*trans_info->pool), GFP_KERNEL);
++	if (!trans_info->pool)
++		goto err_free_map;
++	/* If we get extra memory from the allocator, use it */
++	trans_info->pool_count =
++		ksize(trans_info->pool) / sizeof(*trans_info->pool);
++	trans_info->pool_free = 0;
++
++	/* While transactions are allocated one at a time, a transaction
++	 * can have multiple TREs.  The number of TRE entries in a single
++	 * transaction is limited by the number of TLV FIFO entries the
++	 * channel has.  We reserve TREs when a transaction is allocated,
++	 * but we don't actually use them until the transaction is
++	 * committed.
++	 *
++	 * A transaction uses a scatterlist array to represent the data
++	 * transfers implemented by the transaction.  Each scatterliest
++	 * element is used to fill a single TRE when the transaction is
++	 * committed.  As a result, we need the same number of scatterlist
++	 * elements as there are TREs in the transfer ring, and we can
++	 * preallocate them in a pool.
++	 *
++	 * If we allocate a few (tlv_count - 1) extra entries in our pool
++	 * we can always satisfy requests without ever worrying about
++	 * straddling the end of the array.  If there aren't enough
++	 * entries starting at the free index, we just allocate free
++	 * entries from the beginning of the pool.
++	 */
++	trans_info->sg_pool_count = tre_count + channel->data->tlv_count - 1;
++	trans_info->sg_pool = kcalloc(trans_info->sg_pool_count,
++				      sizeof(*trans_info->sg_pool), GFP_KERNEL);
++	if (!trans_info->sg_pool)
++		goto err_free_pool;
++	/* Use any extra memory we get from the allocator */
++	trans_info->sg_pool_count =
++		ksize(trans_info->sg_pool) / sizeof(*trans_info->sg_pool);
++	trans_info->sg_pool_free = 0;
++
++	spin_lock_init(&trans_info->spinlock);
++	trans_info->tre_avail = tre_count;	/* maximum active */
++	INIT_LIST_HEAD(&trans_info->alloc);
++	INIT_LIST_HEAD(&trans_info->pending);
++	INIT_LIST_HEAD(&trans_info->complete);
++	INIT_LIST_HEAD(&trans_info->polled);
++
++	return 0;
++
++err_free_pool:
++	kfree(trans_info->pool);
++err_free_map:
++	kfree(trans_info->map);
++
++	return -ENOMEM;
++}
++
++/* Inverse of gsi_channel_trans_init() */
++void gsi_channel_trans_exit(struct gsi_channel *channel)
++{
++	struct gsi_trans_info *trans_info = &channel->trans_info;
++
++	kfree(trans_info->sg_pool);
++	kfree(trans_info->pool);
++	kfree(trans_info->map);
++}
+diff --git a/drivers/net/ipa/gsi_trans.h b/drivers/net/ipa/gsi_trans.h
 new file mode 100644
-index 000000000000..f7669f73efc3
+index 000000000000..160902b077a7
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_data.h
-@@ -0,0 +1,267 @@
++++ b/drivers/net/ipa/gsi_trans.h
+@@ -0,0 +1,106 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
 +/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
 + * Copyright (C) 2019 Linaro Ltd.
 + */
-+#ifndef _IPA_DATA_H_
-+#define _IPA_DATA_H_
++#ifndef _GSI_TRANS_H_
++#define _GSI_TRANS_H_
 +
 +#include <linux/types.h>
++#include <linux/refcount.h>
++#include <linux/completion.h>
 +
-+#include "ipa_endpoint.h"
++struct scatterlist;
++struct device;
 +
-+/**
-+ * DOC: IPA/GSI Configuration Data
-+ *
-+ * Boot-time configuration data is used to define the configuration of the
-+ * IPA and GSI resources to use for a given platform.  This data is supplied
-+ * via the Device Tree match table, associated with a particular compatible
-+ * string.  The data defines information about resources, endpoints, and
-+ * channels.  For endpoints and channels, the configuration data defines how
-+ * these hardware entities are initially configured, but in almost all cases,
-+ * this configuration never changes.
-+ *
-+ * Resources are data structures used internally by the IPA hardware.  The
-+ * configuration data defines the number (or limits of the number) of various
-+ * types of these resources.
-+ *
-+ * Endpoint configuration data defines properties of both IPA endpoints and
-+ * GSI channels.  A channel is a GSI construct, and represents a single
-+ * communication path between the IPA and a particular execution environment
-+ * (EE), such as the AP or Modem.  Each EE has a set of channels associated
-+ * with it, and each channel has an ID unique for that EE.  Only GSI channels
-+ * associated with the AP are of concern to this driver.
-+ *
-+ * An endpoint is an IPA construct representing a single channel anywhere
-+ * within the system.  As such, an IPA endpoint ID maps directly to an
-+ * (EE, channel_id) pair.  Generally, this driver is concerned with only
-+ * endpoints associated with the AP, however this will change when support
-+ * for routing (etc.) is added.  IPA endpoint and GSI channel configuration
-+ * data are defined together, establishing the endpoint_id->(EE, channel_id)
-+ * mapping.
-+ *
-+ * Endpoint configuration data consists of three parts:  properties that
-+ * are common to IPA and GSI (EE ID, channel ID, endpoint ID, and direction);
-+ * properties associated with the GSI channel; and properties associated with
-+ * the IPA endpoint.
-+ */
++struct gsi;
++struct gsi_trans;
++enum ipa_cmd_opcode;
 +
-+/**
-+ * struct gsi_channel_data - GSI channel configuration data
-+ * @tlv_count:		number of entries in channel's TLV FIFO
-+ * @wrr_priority:	whether channel gets priority (AP command TX only)
-+ * @tre_count:		number of TREs in the channel ring
-+ * @event_count:	number of slots in the associated event ring
-+ *
-+ * A GSI channel is a unidirectional means of transferring data to or from
-+ * (and through) the IPA.  A GSI channel has a fixed number of "transfer
-+ * elements" (TREs) that specify individual commands.  A set of commands
-+ * are provided to a GSI channel, and when they complete the GSI generates
-+ * an event (and an interrupt) to signal their completion.  These event
-+ * structures are managed in a fixed-size event ring.
-+ *
-+ * Each GSI channel is fed by a FIFO if type/length/value (TLV) structures,
-+ * and the number of entries in this FIFO limits the number of TREs that can
-+ * be included in a single transaction.
-+ *
-+ * The GSI does weighted round-robin servicing of its channels, and it's
-+ * possible to adjust a channel's priority of service.  Only the AP command
-+ * TX channel specifies that it should get priority.
-+ */
-+struct gsi_channel_data {
-+	u32 tlv_count;
++struct gsi_trans {
++	struct list_head links;		/* gsi_channel lists */
 +
-+	u32 wrr_priority;
-+	u32 tre_count;
-+	u32 event_count;
-+};
-+
-+/**
-+ * struct ipa_endpoint_tx_data - configuration data for TX endpoints
-+ * @delay:		whether endpoint starts in delay mode
-+ * @status_endpoint:	endpoint to which status elements are sent
-+ *
-+ * Delay mode prevents an endpoint from transmitting anything, even if
-+ * commands have been presented to the hardware.  Once the endpoint exits
-+ * delay mode, queued transfer commands are sent.
-+ *
-+ * The @status_endpoint is only valid if the endpoint's @status_enable
-+ * flag is set.
-+ */
-+struct ipa_endpoint_tx_data {
-+	u32 delay;
-+	enum ipa_endpoint_id status_endpoint;
-+};
-+
-+/**
-+ * struct ipa_endpoint_rx_data - configuration data for RX endpoints
-+ * @pad_align:	power-of-2 boundary to which packet payload is aligned
-+ * @aggr_close_eof: whether aggregation closes on end-of-frame
-+ *
-+ * With each packet it transfers, the IPA hardware can perform certain
-+ * transformations of its packet data.  One of these is adding pad bytes
-+ * to the end of the packet data so the result ends on a power-of-2 boundary.
-+ *
-+ * It is also able to aggregate multiple packets into a single receive buffer.
-+ * Aggregation is "open" while a buffer is being filled, and "closes" when
-+ * certain criteria are met.  One of those criteria is the sender indicating
-+ * a "frame" consisting of several transfers has ended.
-+ */
-+struct ipa_endpoint_rx_data {
-+	u32 pad_align;
-+	u32 aggr_close_eof;
-+};
-+
-+/**
-+ * struct ipa_endpoint_config_data - IPA endpoint hardware configuration
-+ * @checksum:		whether checksum offload is enabled
-+ * @qmap:		whether endpoint uses QMAP protocol
-+ * @aggregation:	whether endpoint supports aggregation
-+ * @dma_mode:		whether endpoint operates in DMA mode
-+ * @dma_endpoint:	peer endpoint, if operating in DMA mode
-+ * @status_enable:	whether status elements are generated for endpoint
-+ * @tx:			TX-specific endpoint information (see above)
-+ * @rx:			RX-specific endpoint information (see above)
-+ */
-+struct ipa_endpoint_config_data {
-+	u32 checksum;
-+	u32 qmap;
-+	u32 aggregation;
-+	u32 dma_mode;
-+	enum ipa_endpoint_id dma_endpoint;
-+	u32 status_enable;
-+	union {
-+		struct ipa_endpoint_tx_data tx;
-+		struct ipa_endpoint_rx_data rx;
-+	};
-+};
-+
-+/**
-+ * struct ipa_endpoint_data - IPA endpoint configuration data
-+ * @support_flt:	whether endpoint supports filtering
-+ * @seq_type:		hardware sequencer type used for endpoint
-+ * @config:		hardware configuration (see above)
-+ *
-+ * Not all endpoints support the IPA filtering capability.  A filter table
-+ * defines the filters to apply for those endpoints that support it.  The
-+ * AP is responsible for initializing this table, and it must include entries
-+ * for non-AP endpoints.  For this reason we define *all* endpoints used
-+ * in the system, and indicate whether they support filtering.
-+ *
-+ * The remaining endpoint configuration data applies only to AP endpoints.
-+ * The IPA hardware is implemented by sequencers, and the AP must program
-+ * the type(s) of these sequencers at initialization time.  The remaining
-+ * endpoint configuration data is defined above.
-+ */
-+struct ipa_endpoint_data {
-+	u32 support_flt;
-+	/* The rest are specified only for AP endpoints */
-+	enum ipa_seq_type seq_type;
-+	struct ipa_endpoint_config_data config;
-+};
-+
-+/**
-+ * struct gsi_ipa_endpoint_data - GSI channel/IPA endpoint data
-+ * ee:		GSI execution environment ID
-+ * channel_id:	GSI channel ID
-+ * endpoint_id:	IPA endpoint ID
-+ * toward_ipa:	direction of data transfer
-+ * gsi:		GSI channel configuration data (see above)
-+ * ipa:		IPA endpoint configuration data (see above)
-+ */
-+struct gsi_ipa_endpoint_data {
-+	u32 ee_id;
++	struct gsi *gsi;
 +	u32 channel_id;
-+	enum ipa_endpoint_id endpoint_id;
-+	u32 toward_ipa;
 +
-+	struct gsi_channel_data channel;
-+	struct ipa_endpoint_data endpoint;
-+};
++	u32 tre_count;			/* # TREs requested */
++	u32 len;			/* total # bytes in sgl */
++	struct scatterlist *sgl;
++	u32 sgc;			/* # entries in sgl[] */
 +
-+/** enum ipa_resource_group - IPA resource group */
-+enum ipa_resource_group {
-+	IPA_RESOURCE_GROUP_LWA_DL,	/* currently not used */
-+	IPA_RESOURCE_GROUP_UL_DL,
-+	IPA_RESOURCE_GROUP_MAX,
-+};
++	struct completion completion;
++	refcount_t refcount;
 +
-+/** enum ipa_resource_type_src - source resource types */
-+enum ipa_resource_type_src {
-+	IPA_RESOURCE_TYPE_SRC_PKT_CONTEXTS,
-+	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_LISTS,
-+	IPA_RESOURCE_TYPE_SRC_DESCRIPTOR_BUFF,
-+	IPA_RESOURCE_TYPE_SRC_HPS_DMARS,
-+	IPA_RESOURCE_TYPE_SRC_ACK_ENTRIES,
-+};
++	/* fields above are internal only */
 +
-+/** enum ipa_resource_type_dst - destination resource types */
-+enum ipa_resource_type_dst {
-+	IPA_RESOURCE_TYPE_DST_DATA_SECTORS,
-+	IPA_RESOURCE_TYPE_DST_DPS_DMARS,
++	struct device *dev;		/* Use this for DMA mapping */
++	long result;			/* RX count, 0, or error code */
++
++	u64 byte_count;			/* channel byte_count when committed */
++	u64 trans_count;		/* channel trans_count when committed */
++
++	void *data;
 +};
 +
 +/**
-+ * struct ipa_resource_limits - minimum and maximum resource counts
-+ * @min:	minimum number of resources of a given type
-+ * @max:	maximum number of resources of a given type
-+ */
-+struct ipa_resource_limits {
-+	u32 min;
-+	u32 max;
-+};
-+
-+/**
-+ * struct ipa_resource_src - source endpoint group resource usage
-+ * @type:	source group resource type
-+ * @limits:	array of limits to use for each resource group
-+ */
-+struct ipa_resource_src {
-+	enum ipa_resource_type_src type;
-+	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_MAX];
-+};
-+
-+/**
-+ * struct ipa_resource_dst - destination endpoint group resource usage
-+ * @type:	destination group resource type
-+ * @limits:	array of limits to use for each resource group
-+ */
-+struct ipa_resource_dst {
-+	enum ipa_resource_type_dst type;
-+	struct ipa_resource_limits limits[IPA_RESOURCE_GROUP_MAX];
-+};
-+
-+/**
-+ * struct ipa_resource_data - IPA resource configuration data
-+ * @resource_src:	source endpoint group resources
-+ * @resource_src_count:	number of entries in the resource_src array
-+ * @resource_dst:	destination endpoint group resources
-+ * @resource_dst_count:	number of entries in the resource_dst array
++ * gsi_channel_trans_alloc() - Allocate a GSI transaction on a channel
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel the transaction is associated with
++ * @tre_count:	Number of elements in the transaction
 + *
-+ * In order to manage quality of service between endpoints, certain resources
-+ * required for operation are allocated to groups of endpoints.  Generally
-+ * this information is invisible to the AP, but the AP is responsible for
-+ * programming it at initialization time, so we specify it here.
++ * @Return:	A GSI transaction structure, or a null pointer if all
++ *		available transactions are in use
 + */
-+struct ipa_resource_data {
-+	const struct ipa_resource_src *resource_src;
-+	u32 resource_src_count;
-+	const struct ipa_resource_dst *resource_dst;
-+	u32 resource_dst_count;
-+};
++struct gsi_trans *gsi_channel_trans_alloc(struct gsi *gsi, u32 channel_id,
++					  u32 tre_count);
 +
 +/**
-+ * struct ipa_data - combined IPA/GSI configuration data
-+ * @resource_data:		IPA resource configuration data
-+ * @endpoint_data:		IPA endpoint/GSI channel data
-+ * @endpoint_data_count:	number of entries in endpoint_data array
++ * gsi_trans_free() - Free a previously-allocated GSI transaction
++ * @trans:	Transaction to be freed
++ *
++ * Note: this should only be used in error paths, before the transaction is
++ * committed or in the event committing the transaction produces an error.
++ * Successfully committing a transaction passes ownership of the structure
++ * to the core transaction code.
 + */
-+struct ipa_data {
-+	const struct ipa_resource_data *resource_data;
-+	const struct gsi_ipa_endpoint_data *endpoint_data;
-+	u32 endpoint_data_count;	/* # entries in endpoint_data[] */
-+};
++void gsi_trans_free(struct gsi_trans *trans);
 +
-+extern const struct ipa_data ipa_data_sdm845;
++/**
++ * gsi_trans_commit() - Commit a GSI transaction
++ * @trans:	Transaction to commit
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ * @callback:	Function called when transaction has completed.
++ */
++int gsi_trans_commit(struct gsi_trans *trans, bool ring_db);
 +
-+#endif /* _IPA_DATA_H_ */
++/**
++ * gsi_trans_commit_command() - Commit a GSI command transaction and wait
++ *				wait for it to complete
++ * @trans:	Transaction to commit
++ */
++int gsi_trans_commit_command(struct gsi_trans *trans,
++			     enum ipa_cmd_opcode opcode);
++
++/**
++ * gsi_trans_commit_command_timeout() - Commit a GSI command transaction,
++ *					wait for it to complete, with timeout
++ * @trans:	Transaction to commit
++ * @ring_db:	Whether to tell the hardware about these queued transfers
++ * @timeout:	Timeout period (in milliseconds)
++ */
++int gsi_trans_commit_command_timeout(struct gsi_trans *trans,
++				     enum ipa_cmd_opcode opcode,
++				     unsigned long timeout);
++
++/**
++ * gsi_trans_read_byte() - Issue a single byte read TRE on a channel
++ * @gsi:	GSI pointer
++ * @channel_id:	Channel on which to read a byte
++ * @addr:	DMA address into which to transfer the one byte
++ *
++ * This is not a transaction operation at all.  It's defined here because
++ * it needs to be done in coordination with other transaction activity.
++ */
++int gsi_trans_read_byte(struct gsi *gsi, u32 channel_id, dma_addr_t addr);
++
++#endif /* _GSI_TRANS_H_ */
 -- 
 2.20.1
 
