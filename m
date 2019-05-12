@@ -6,63 +6,68 @@ X-Spam-Status: No, score=-1.5 required=3.0 tests=DATE_IN_PAST_06_12,
 	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F815C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5351C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247DE2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738522146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 17:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557680745;
-	bh=KJwpJGQx7wMPwZuFQD4Xj5LQRS1Zg6qPUXTGykk0TqY=;
+	s=default; t=1557680749;
+	bh=1bvOjC00t2PdCB0OtHAkAhVV/XUkBSzwpjjJ2dsBV/M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FPjKmF+LmXFzsCh0rugXLp4m+joAWw5j/1HvMW6GsZu7p1tAdrF5IIL1swPINXsvo
-	 Hia6fNKYb+yfh1OQYRiDqoHbGfYdBiDRAKPqka3wCoG/FFPbcPSBlvmfoxnNMZzhYI
-	 ggHyuBBwK+YVfettEk7X5OX84Xe6G2xMRlqrl0Tw=
+	b=2FjWTU6UMPK9dI0yFANH6l60L6LzXNmqE++11zv07R0UwegXu8Dl4pooweV7Y5ODE
+	 /nUAUMeO09nX13lobPigGUO0w7aHUpaFbDmJMz6YWQ0/tT1ZwY9zhTVHgnxYYwLDpF
+	 oFPSbRwyj9qMRzHCJOE3YBtjtbZINmMcBWI+a/vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726989AbfELRFo (ORCPT
+        id S1727014AbfELRFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 13:05:44 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49326 "EHLO
+        Sun, 12 May 2019 13:05:48 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49464 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726883AbfELRFn (ORCPT
+        with ESMTP id S1726883AbfELRFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 13:05:43 -0400
+        Sun, 12 May 2019 13:05:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KJwpJGQx7wMPwZuFQD4Xj5LQRS1Zg6qPUXTGykk0TqY=; b=ZTn4espIgdpj7vgG+IP2gEdT/
-        3KBCIf8lRU7WrYMs9tSJbOFEGsIbImm9aYrQjdxIVGDeEB8AFDUGyR2P1wXILCzaS7gb94P0LD5o4
-        7uF4dHa795ZlL7qVdllzhK5fmMz/0CrAJPVeUJsNpCIkxIRzGbb0TkO5QL84kNzHaqvSo=;
+         bh=ndywyr82/NFXN1lC+orQHknEu4sY+tlBor1wOLnwHSE=; b=Opwi9hM51BLy0cPkDfwO3cqSQ
+        9nRzofIkcNCQfT+hrTfUv8FrTcrP+2t9/YRayPL9C5CxWkqF87Eq4uLN6LmvutKsUXNq/MiTQgzp9
+        DR7LWfSifYzHzl7+qeL1P5R0BQJpvra4fXMJ5RWFfYbVK/mkELLD+MONxJ6qfYY786dVQ=;
 Received: from [81.145.206.43] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hPruu-00044o-Ag; Sun, 12 May 2019 17:05:40 +0000
+        id 1hPruu-00044k-9y; Sun, 12 May 2019 17:05:40 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 69893440064; Sun, 12 May 2019 10:06:27 +0100 (BST)
-Date:   Sun, 12 May 2019 18:06:27 +0900
+        id BB886440059; Sun, 12 May 2019 09:54:09 +0100 (BST)
+Date:   Sun, 12 May 2019 17:54:09 +0900
 From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 5/6] soc/tegra: regulators: Add regulators coupler
- for Tegra20
-Message-ID: <20190512090627.GO21483@sirena.org.uk>
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-6-digetx@gmail.com>
- <20190508075706.GW14916@sirena.org.uk>
- <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
+To:     Martin Sperl <kernel@martin.sperl.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi@vger.kernel.org
+Subject: Re: Regression: spi: core: avoid waking pump thread from spi_sync
+ instead run teardown delayed
+Message-ID: <20190512085409.GM21483@sirena.org.uk>
+References: <aabd916e-005e-6cda-25d7-8ab875afa7a0@nvidia.com>
+ <AAA7943B-B1F1-4389-AAC3-8621EC6E38B8@martin.sperl.org>
+ <20190115192619.GG5522@sirena.org.uk>
+ <5D3256B1-5DAE-4E3F-9099-5425F4BCA304@martin.sperl.org>
+ <20190115212539.GK5522@sirena.org.uk>
+ <EA757B47-A264-4B4D-9E5F-16611ABA0278@martin.sperl.org>
+ <20190118191202.GG6260@sirena.org.uk>
+ <EE52ED32-CBB4-40D4-8615-CA814158C826@martin.sperl.org>
+ <20190123175609.GG7503@sirena.org.uk>
+ <CB6BCD42-60F9-493A-B05B-FC27C125E982@martin.sperl.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DRfr/2Y1Zz/5r+Kb"
+        protocol="application/pgp-signature"; boundary="jB+02Y6wHc2pEa2x"
 Content-Disposition: inline
-In-Reply-To: <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
+In-Reply-To: <CB6BCD42-60F9-493A-B05B-FC27C125E982@martin.sperl.org>
 X-Cookie: HOST SYSTEM RESPONDING, PROBABLY UP...
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,32 +76,72 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---DRfr/2Y1Zz/5r+Kb
+--jB+02Y6wHc2pEa2x
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 08, 2019 at 04:10:58PM +0300, Dmitry Osipenko wrote:
+On Thu, May 09, 2019 at 09:47:08PM +0200, Martin Sperl wrote:
 
-> 1) CORE and RTC have max-spread voltage of 170mV.
-> 2) CORE and RTC voltages must be higher than the CPU voltage by at least
-> 120mV.
+> While thinking about this again maybe an idea:
+> What about implement a second spi_transfer_one implementation (together
+> with a message pump implementation) that would handle things correctly.
 
-This seems like it should be easy enough to describe - we just need
-minimum and maximum spreads between pairs of rails.
+> Any driver then can select the old (default) or new implementation and th=
+us
+> would allow the optimizations to take place only for verified working dri=
+vers...
 
---DRfr/2Y1Zz/5r+Kb
+I'd rather avoid having yet another interface for drivers to use, people
+already get confused trying to choose between the ones we already have.
+It'd have to be something where the existing drivers got actively
+converted and the old interface retired rather than something that hangs
+around.
+
+> What I would then also like to do for the new implementation is modify the
+> API a bit - ideally I would like to:
+> * Make spi_sync the primary interface which the message pump is also=20
+>   using directly
+> * move all the prepare stuff early into spi-sync, so that for example the
+>   Preparing (including dma mapping) would get done in the calling thread
+>   And only the prepared message would get submitted to the queue
+>   - special processing would be needed for the spi-async case.
+
+IIRC the mapping is deliberately done late in order to minimize the
+amount of time we're consuming resources for the mapping, there were
+some systems that had limited DMA channels.  However I don't know how
+big a concern that is in this day and age with even relatively old
+systems.  The idea of spi_async() having a separate path also makes me a
+bit nervous as it's much less widely used so more likely to get broken
+accidentially.
+
+Otherwise pushing things out to the caller makes sense, it should have
+no real impact in the majority of cases where the thread is just getting
+used to idle the controller and the actual work is all happening in the
+calling context anyway and if the pump is being used it means it's
+spending more time actually pushing transfers out.
+
+For the case where we do have the message pump going one thing it'd be
+good to do is overlap more of the admin work around the messages with
+other transfers - ideally we'd be able to kick off the next transfer
+=66rom within the completion of a DMA.  I need to have a dig around and
+figure out if I have any hardware that can actually support that, last
+time I looked at this my main system needed to kick everything up to the
+thread due to hardware requirements.
+
+--jB+02Y6wHc2pEa2x
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzX4hIACgkQJNaLcl1U
-h9A5TQf/blHJSlXwfDTeB7y4cB421y3ptVKoJD6BlCl1CMMkfYxarqomyCybWbOs
-0Y15BUjBQCWrggGmMc05Z1gXwp4NqIzfrKWq7FXpUccH5lukp50IBMauQn9eDxsT
-pXP7ZwWNHvo7UXDODHoNahiAhBbLdOi6YnLKp9EarO4YD/TJ83NbqdtceQ1m8Upr
-z65FekjYssye1HXZWAqrOKl1eW/0UnvqAUuzJNuKmpeIHuppCNRuH/2SMM07f3WH
-b5B2oZZMSsFiVcpvTtO2iD4Zv01beijvLa5q05cozYGTGp4bjcA1keiMGMNwI8Po
-1jmOEzyyxn0nBbcQUuEU34pMIl+jbA==
-=cTGZ
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzX3zAACgkQJNaLcl1U
+h9BPIQf+IXs6QkyGGEDlkcfJDDpZrmikAxecDDwRGwsR0dIdbhHaiZp+bNayRaaX
+ygo+j+63kO8AJ6fOHI3tPyLlCPcktVWeIMIbI2BGiOa5+Y58ZuJd1zCODDVOElK1
+YHmzWKZZaeYGsZ+3McBRBRjURVPVxKXkLYaVBOLskI4gS2t7qedUXQrwqX+75YIe
+jRI53hs7tuL1Hlq31Fpy9wqibKjb6L41WkbL1c4eTpYEM5zR5umw//HJXheDW84r
+94g7Q2+fvwaLt3fi7TXjJOMS6tRjQEupWfbxcd6bmySW65b5CNx/i3WaFs+26xbh
+yqrApK5wdTIXj637t8vHGfE9WpxMnQ==
+=22+6
 -----END PGP SIGNATURE-----
 
---DRfr/2Y1Zz/5r+Kb--
+--jB+02Y6wHc2pEa2x--
