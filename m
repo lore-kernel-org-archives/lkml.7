@@ -2,236 +2,362 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B11C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356F4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460172086A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11AA2173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:41:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d1pxzR9s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfELQcm (ORCPT
+        id S1726825AbfELQlV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 12:32:42 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:39397 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726604AbfELQcl (ORCPT
+        Sun, 12 May 2019 12:41:21 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39126 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726478AbfELQlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 12:32:41 -0400
-X-Originating-IP: 93.29.109.196
-Received: from collins (unknown [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 7F4EF240005;
-        Sun, 12 May 2019 16:32:36 +0000 (UTC)
-Message-ID: <bfe1680249569241227ab90d5736b228de7b10f9.camel@bootlin.com>
-Subject: Re: Hardware-accelerated video decoders used through a firmware
- instead of hardware registers
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Date:   Sun, 12 May 2019 18:32:23 +0200
-In-Reply-To: <69c10fdd26566049c523d4c8cfb1b8c35018b738.camel@ndufresne.ca>
-References: <19804f842e80f1f8bd85b8eb49e75e149abf0062.camel@bootlin.com>
-         <69c10fdd26566049c523d4c8cfb1b8c35018b738.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Sun, 12 May 2019 12:41:20 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 167CC2B6;
+        Sun, 12 May 2019 18:41:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1557679277;
+        bh=PrwIXJxT2dZCPmvZZ2l3MenWdQbURw9kGvyuKg22btc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d1pxzR9sIM+nbTgYlb0fqNy0vISFD9GYPMXXBOaMbj1Y9uvOzyIa2DvUAFzI/vbs8
+         4b+SSTMKEn4N78qcAhVkuEGjKn1CswFKK9qDRp5FCUqjKVyM72nkb0ftmt/TgLehIg
+         1wKjeSO4q+9UNSNraX2BWA1/Qo5MV8oAbcH72bnU=
+Date:   Sun, 12 May 2019 19:41:00 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 6/6] drm: rcar-du: Add group hooks for atomic-commit
+Message-ID: <20190512164100.GG4960@pendragon.ideasonboard.com>
+References: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190315170110.23280-7-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190315170110.23280-7-kieran.bingham+renesas@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+Hi Kieran,
 
-Le dimanche 12 mai 2019 à 10:17 -0400, Nicolas Dufresne a écrit :
-> Le dimanche 12 mai 2019 à 13:35 +0200, Paul Kocialkowski a écrit :
-> > Hi,
-> > 
-> > With the work done on the media request API and the cedrus driver for
-> > Allwinner ARM SoCs, we now have a kernel interface for exposing fixed-
-> > hardware video decoding pipelines (currently MPEG-2 and H.264, with
-> > H.265 on the way). Some work remains on the per-format interface and we
-> > are looking to improve latency-related aspects, but we are all set to
-> > have a nice interface here, that plays well with e.g. ffmpeg.
-> > 
-> > A specific situation came to my interest, which is apparently quite
-> > common: some platforms have general-purpose microcontrollers embedded,
-> > which can help with video decoding. They are however rarely to never
-> > used to do the decoding itself (since they are general-purpose, not
-> > DSPs) and just coordinate the decoding with the fixed-pipeline decoding
-> > hardware block. The advantage is that the interface is just a simple
-> > mailbox and the raw video bitstream from the file can be passed
-> > directly without the need for userspace to do any parsing that the
-> > codec requires.
-> > 
-> > One side-effect from this setup is that the actual hardware register
-> > layout of the decoder is hidden away in a non-free piece of
-> > microcontroller firmware, that's usually loaded at run-time.
-> > 
-> > With the recent developments on the media interface, we could interface
-> > with these hardware decoders directly, which offers various advantages:
-> > - we no longer need a 3rd party external non-free firmware, which just
-> >   makes distribution easier for everyone and allows support in fully-
-> >   free setups;
-> > - all the usual advantages of having free code that can be fixed and
-> >   updated instead of an obscure binary that many not always be doing
-> >   the right thing;
-> > - parsing of the slices is probably best done in userspace, and I
-> >   heard that ffmpeg does this threaded, so there could be a latency
-> >   advantage there as well, not to mention that it avoids the drag of
-> >   a mailbox interface altogether;
-> > - the general-purpose micro-controller can then be reused for something
-> >   useful where it could actually make a performance difference.
-> > 
-> > As far as I understand, it seems that the video decoder for MT8173
-> > fails in that category, where a MD32 general-purpose micro-controller
-> > is used to only do the parsing. We even have device-tree nodes about
-> > the decoder and encoder, but no register layout.
-> > 
-> > So I was wondering if the linux-media community should set some
-> > boundaries here and push towards native implementations instead of
-> > firmware-based ones. My opininon is that it definitely should.
-> > 
-> > It seems that other platforms (e.g. Tegra K1 and onwards) are in the
-> > same situation, and I think the ChromiumOS downstream kernel uses an
-> > obscure firmware on a general-purpose auxiliary ARM core (that's also
-> > used at boot time IIRC).
+Thank you for the patch.
+
+On Fri, Mar 15, 2019 at 05:01:10PM +0000, Kieran Bingham wrote:
+> The group can now be handled independently from the CRTC tracking its
+> own state.
 > 
-> I like the idea, but enforcing this now is likely going to prevent a
-> lot of mainline usage of CODECs (which are proprietary by patents to
-> start with).
+> Introduce an rcar_du_group_atomic_check() call which will iterate the
+> CRTCs to determine the per-state use-count of the group.
+> 
+> This use count then allows us to determine if the group should be
+> configured or disabled in our commit tail through the introduction of
+> two new calls rcar_du_group_atomic_{pre,post}_commit().
+> 
+> The existing rcar_du_group_{get,put}() functions are now redundant and
+> removed along with their interactions in the CRTC get/put calls.
+> 
+> The groups share clocking with the CRTCs within the group, and so are
+> accessible only when one of its CRTCs has been powered through
+> rcar_du_crtc_atomic_exit_standby().
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> ---
+> v2:
+>  - All register sequences now maintained.
+>  - Clock management is no longer handled by the group
+>    (_crtc_{exit,enter}_standby handles this for us)
+> 
+> 
+> 
+>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  |   8 --
+>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 101 ++++++++++++++++--------
+>  drivers/gpu/drm/rcar-du/rcar_du_group.h |  14 +++-
+>  drivers/gpu/drm/rcar-du/rcar_du_kms.c   |   6 ++
+>  4 files changed, 85 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> index 2606de788688..fce8bd1d9d25 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> @@ -511,14 +511,8 @@ static int rcar_du_crtc_enable(struct rcar_du_crtc *rcrtc)
+>  	if (ret < 0)
+>  		goto error_clock;
+>  
+> -	ret = rcar_du_group_get(rcrtc->group);
+> -	if (ret < 0)
+> -		goto error_group;
+> -
+>  	return 0;
+>  
+> -error_group:
+> -	clk_disable_unprepare(rcrtc->extclock);
+>  error_clock:
+>  	clk_disable_unprepare(rcrtc->clock);
+>  	return ret;
 
-This would probably be the general feeling of the industry, but the
-situation is turning anyway, now that we have already started exposing
-this for Allwinner and Rockchip, that things are already reversed for
-Tegra and there are docs about more platforms (e.g. the i.MX8 decoder).
+You can simplify this function further by inlining the
+clk_disable_unprepare() in the single error path and removing the
+error_clock label.
 
-So maybe companies need to understand that this is the proper way to do
-things at this point and re-think their approach. Right now, Linux as a
-project is in a situation where it has leverage over these entities to
-push them to do the right thing, by setting a high level of standards
-like it has often done in the past. So I see an opportunity to push
-against non-free firmware and bad software design in general, which
-will overall be beneficial in the long run.
+> @@ -526,8 +520,6 @@ static int rcar_du_crtc_enable(struct rcar_du_crtc *rcrtc)
+>  
+>  static void rcar_du_crtc_disable(struct rcar_du_crtc *rcrtc)
+>  {
+> -	rcar_du_group_put(rcrtc->group);
+> -
+>  	clk_disable_unprepare(rcrtc->extclock);
+>  	clk_disable_unprepare(rcrtc->clock);
+>  }
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> index 9c82d666f170..1f9504bca0f3 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
+> @@ -24,6 +24,7 @@
+>   */
+>  
+>  #include <linux/clk.h>
+> +#include <linux/err.h>
+>  #include <linux/io.h>
+>  
+>  #include <drm/drm_atomic.h>
+> @@ -172,38 +173,6 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
+>  	mutex_unlock(&rgrp->lock);
+>  }
+>  
+> -/*
+> - * rcar_du_group_get - Acquire a reference to the DU channels group
+> - *
+> - * Acquiring the first reference setups core registers. A reference must be held
+> - * before accessing any hardware registers.
+> - *
+> - * This function must be called with the DRM mode_config lock held.
+> - *
+> - * Return 0 in case of success or a negative error code otherwise.
+> - */
+> -int rcar_du_group_get(struct rcar_du_group *rgrp)
+> -{
+> -	if (rgrp->use_count)
+> -		goto done;
+> -
+> -	rcar_du_group_setup(rgrp);
+> -
+> -done:
+> -	rgrp->use_count++;
+> -	return 0;
+> -}
+> -
+> -/*
+> - * rcar_du_group_put - Release a reference to the DU
+> - *
+> - * This function must be called with the DRM mode_config lock held.
+> - */
+> -void rcar_du_group_put(struct rcar_du_group *rgrp)
+> -{
+> -	--rgrp->use_count;
+> -}
+> -
+>  static void __rcar_du_group_start_stop(struct rcar_du_group *rgrp, bool start)
+>  {
+>  	struct rcar_du_device *rcdu = rgrp->dev;
+> @@ -384,6 +353,74 @@ static const struct drm_private_state_funcs rcar_du_group_state_funcs = {
+>  	.atomic_destroy_state = rcar_du_group_atomic_destroy_state,
+>  };
+>  
+> +#define for_each_oldnew_group_in_state(__state, __obj, __old_state, __new_state, __i) \
+> +	for_each_oldnew_private_obj_in_state((__state), (__obj), (__old_state), (__new_state), (__i)) \
+> +		for_each_if((__obj)->funcs == &rcar_du_group_state_funcs)
+> +
+> +static struct rcar_du_group_state *
+> +rcar_du_get_group_state(struct drm_atomic_state *state,
+> +			struct rcar_du_group *rgrp)
+> +{
+> +	struct drm_private_state *pstate;
+> +
+> +	pstate = drm_atomic_get_private_obj_state(state, &rgrp->private);
+> +	if (IS_ERR(pstate))
+> +		return ERR_CAST(pstate);
+> +
+> +	return to_rcar_group_state(pstate);
+> +}
+> +
+> +int rcar_du_group_atomic_check(struct drm_device *dev,
+> +			       struct drm_atomic_state *state)
+> +{
+> +	struct drm_crtc *crtc;
+> +	struct drm_crtc_state *crtc_state;
+> +	unsigned int i;
+> +
+> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
+> +		struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
+> +		struct rcar_du_group_state *rstate;
+> +
+> +		if (crtc_state->active_changed || crtc_state->mode_changed) {
+> +			rstate = rcar_du_get_group_state(state, rcrtc->group);
+> +			if (IS_ERR(rstate))
+> +				return PTR_ERR(rstate);
+> +
+> +			if (crtc_state->active)
+> +				rstate->use_count++;
 
-> One thing to note, the CODEC accelerators may not be
-> accessible from CPU. So to support such idea, we'd need to develop
-> minimalist firmware to access these accelerators. That would require a
-> lot of reverse engineering as the third party codec vendors (e.g.
-> Chips&Media, Allegro etc.) don't document the accelerator or even the
-> architecture of the micro-controller. Compilation of these firmware can
-> also become tedious, specially if there is no Open Source compiler for
-> the chosen micro-controller architecture.
+This doesn't seem right to me. A commit with just a page flip will have
+neither active_changed not mode_changed set. The group use count will
+thus be 0. If the next commit enables the second CRTC in the group, then
+you will call rcar_du_group_setup() again in
+rcar_du_group_atomic_pre_commit().
 
-It would be interesting to start a collection of such free firmwares
-for cases where something absolutely needs to run on an auxiliary CPU.
-I think there are efforts by Intel to do something similar for audio
-DSPs with the Sound Open Firmware and our situation is not that much
-different.
+I think you should increment use_count when crtc_state->active
+regardless of active_changed and mode_changed.
 
-In our setup, the firmware would have considerably less to do (no
-parsing, just pushing values prepared by the driver to the actual
-registers), so perhaps some minimal assembly code with a simple
-assemblers could work out. There could be no need to bring-in
-equivalents to complex build software used for significant firmwares.
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int rcar_du_group_atomic_pre_commit(struct drm_device *dev,
+> +				    struct drm_atomic_state *state)
+> +{
+> +	struct drm_private_state *old_pstate, *new_pstate;
+> +	struct drm_private_obj *obj;
+> +	unsigned int i;
+> +
+> +	for_each_oldnew_group_in_state(state, obj, old_pstate, new_pstate, i) {
+> +		struct rcar_du_group *rgrp = to_rcar_group(obj);
+> +		struct rcar_du_group_state *old_state, *new_state;
+> +
+> +		old_state = to_rcar_group_state(old_pstate);
+> +		new_state = to_rcar_group_state(new_pstate);
+> +
+> +		if (!old_state->use_count && new_state->use_count)
+> +			rcar_du_group_setup(rgrp);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int rcar_du_group_atomic_post_commit(struct drm_device *dev,
+> +				     struct drm_atomic_state *state)
+> +{
+> +	return 0;
+> +}
 
-But that would also create incentive for bringing up these side-CPUs
-into our free compilers (and there's sdcc for devices that are not 32-
-bit or need custom C semantics). With that, one could write just any
-firmware for using the auxiliary processor to suit their needs and
-purposes. I think that's a great way to explode the "firmware that
-sucks" bubble we have today.
+As for the similar CRTC patch, I think you can drop
+rcar_du_group_atomic_post_commit(), turn
+rcar_du_group_atomic_pre_commit() into a void function, and rename it to
+rcar_du_group_atomic_setup().
 
-> I can comment on ChromeOS, current generation is mostly based on
-> Rockchip SoC. The CODEC on Rockchip are just accelators, and this is
-> what ChromeOS team implemented, and that's what the stateless you have
-> done is based upon. The first generation was Samsung Exynos, this one
-> uses a unknown source design that they call MFC. This runs on
-> proprietary blob, I have not found any information about this blob.
+The rest looks good to me, so with this fixed,
 
-My bet is that it's also backed by a hardware pipeline. From the looks
-of it, the whole block runs at 200 MHz on the Exynos 4 and does full HD
-H.264. Given the size of the firmware, there's just no way it's doing
-all that on the aux CPU.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-I would be curious to know what the situation is on the i.MX6 coda
-block, which also seems pretty obscure.
+> +
+>  /*
+>   * rcar_du_group_init - Initialise and reset a group object
+>   *
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.h b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> index 4b812e167987..288c09a6d7d0 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.h
+> @@ -26,7 +26,6 @@ struct rcar_du_device;
+>   * @index: group index
+>   * @channels_mask: bitmask of populated DU channels in this group
+>   * @num_crtcs: number of CRTCs in this group (1 or 2)
+> - * @use_count: number of users of the group (rcar_du_group_(get|put))
+>   * @used_crtcs: number of CRTCs currently in use
+>   * @lock: protects the dptsr_planes field and the DPTSR register
+>   * @dptsr_planes: bitmask of planes driven by dot-clock and timing generator 1
+> @@ -43,7 +42,6 @@ struct rcar_du_group {
+>  
+>  	unsigned int channels_mask;
+>  	unsigned int num_crtcs;
+> -	unsigned int use_count;
+>  	unsigned int used_crtcs;
+>  
+>  	struct mutex lock;
+> @@ -59,9 +57,12 @@ struct rcar_du_group {
+>  /**
+>   * struct rcar_du_group_state - Driver-specific group state
+>   * @state: base DRM private state
+> + * @use_count: number of users of the group
+>   */
+>  struct rcar_du_group_state {
+>  	struct drm_private_state state;
+> +
+> +	unsigned int use_count;
+>  };
+>  
+>  #define to_rcar_group_state(s) \
+> @@ -70,14 +71,19 @@ struct rcar_du_group_state {
+>  u32 rcar_du_group_read(struct rcar_du_group *rgrp, u32 reg);
+>  void rcar_du_group_write(struct rcar_du_group *rgrp, u32 reg, u32 data);
+>  
+> -int rcar_du_group_get(struct rcar_du_group *rgrp);
+> -void rcar_du_group_put(struct rcar_du_group *rgrp);
+>  void rcar_du_group_start_stop(struct rcar_du_group *rgrp, bool start);
+>  void rcar_du_group_restart(struct rcar_du_group *rgrp);
+>  int rcar_du_group_set_routing(struct rcar_du_group *rgrp);
+>  
+>  int rcar_du_set_dpad0_vsp1_routing(struct rcar_du_device *rcdu);
+>  
+> +int rcar_du_group_atomic_check(struct drm_device *dev,
+> +			       struct drm_atomic_state *state);
+> +int rcar_du_group_atomic_pre_commit(struct drm_device *dev,
+> +				    struct drm_atomic_state *state);
+> +int rcar_du_group_atomic_post_commit(struct drm_device *dev,
+> +				     struct drm_atomic_state *state);
+> +
+>  int rcar_du_group_init(struct rcar_du_device *rcdu, struct rcar_du_group *rgrp,
+>  		       unsigned int index);
+>  void rcar_du_group_cleanup(struct rcar_du_group *rgrp);
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> index eb01bea1ab83..77f0ff38298b 100644
+> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
+> @@ -271,6 +271,10 @@ static int rcar_du_atomic_check(struct drm_device *dev,
+>  	if (ret)
+>  		return ret;
+>  
+> +	ret = rcar_du_group_atomic_check(dev, state);
+> +	if (ret)
+> +		return ret;
+> +
+>  	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_VSP1_SOURCE))
+>  		return 0;
+>  
+> @@ -305,6 +309,7 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  
+>  	/* Apply the atomic update. */
+>  	rcar_du_crtc_atomic_exit_standby(dev, old_state);
+> +	rcar_du_group_atomic_pre_commit(dev, old_state);
+>  	rcar_du_crtc_atomic_pre_commit(dev, old_state);
+>  
+>  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
+> @@ -313,6 +318,7 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
+>  	drm_atomic_helper_commit_modeset_enables(dev, old_state);
+>  
+>  	rcar_du_crtc_atomic_post_commit(dev, old_state);
+> +	rcar_du_group_atomic_post_commit(dev, old_state);
+>  	rcar_du_crtc_atomic_enter_standby(dev, old_state);
+>  
+>  	drm_atomic_helper_commit_hw_done(old_state);
 
-> The early boot stage is not obscure, it's called CoreBoot. This code is
-> meant to initialize your CPU when you CPU isn't started yet.
+-- 
+Regards,
 
-Hehe, obscure was about the VPU firmware itself, not so much the ARM
-core and how it's used at boot :) And it so happens that I have been
-contributing to coreboot on Tegra K1 (and actually fixed mainline
-support for the nyan big and nyan blaze chromebooks, the Acer and HP
-Tegra K1 ones).
-
-Come to think of Tegra and nVidia, this could also apply to nouveau
-which currently relies on non-free firmware for video decoding, which
-is basically the same situation but on a GPU (in that case, a firmware
-to access the registers is probably required too). Not sure whether
-these cores are Falcon or not and if so we may already have our first
-candidate with an assembler available.
-
->  Notably on
-> Intel, there has been a lot of security concerns with this proprietary
-> blob, CoreBoot effort includes reverse engineering and replacing this
-> bit. At least on Intel blobs, the micro-controller is still running
-> after your main CPU is loaded, giving attackers a place to run with
-> true full access to your computer, without being detectable.
-
-I think you're talking about the Intel ME, which is indeed a major
-concern on Intel. Oh but guess what, they enabled JTAG on that ARC chip
-earlier than signature check time, so we could effectively manage to
-neuter that chip (or better, get it to run with a free firmware, since
-it needs one anyway to operate critical power stuff) by using a
-hardware JTAG add-on which would just skip the signature checking step
-in the bootrom at startup. That's an exploit that I've been thinking
-about recently and from the looks of it, a bunch of other platforms
-could be concerned regarding their "secure boot" mechanism.
-
-All the more opportunities for running free software at the boot and
-firmware levels and actually deciding on our own threat models (which
-may or may not include the chip manufacturer as trusted).
-
-It's incredible that after so much time they haven't figured out this
-basic thing about security, that it's not an absolute thing but depends
-on the thread model assigned by the user. Unless that whole security
-thing was just a scarecrow to push the pill of threat models where the
-user is considered a menace to the system to keep oh precious DRM keys
-safe and out of reach.
-
-And it's not like both are incompatible either, ChromeOS gets this
-quite right. Keep the root of trust a ground-wired pin of the boot SPI-
-NOR flash chip and you're good, add a RW screw there and everyone's
-happy. It's not that hard, really.
-
-> On some platforms it can be even more complex. Think of the Xilinx
-> ZynMP. Documentation is pretty sparse, it's clear the VCU is only
-> accessible from the FPGA, and that's probably why we need a MicroBlaze
-> firmware (micro blaze being a micro-controller architecture programmed
-> into some part of a Xilinx FPGA) in order to use it. But then, it is
-> not clear if the VCU is fully capable of decoding, or if the work is a
-> mix of FPA and circuit. So replacing the firmware could be the same as
-> rewriting the CODEC HW (or at least some bits of it).
-
-I guess there are a few examples of such complex cases, as well as DSPs
-being used for decoding (it's the case on OMAP3, not sure what it's
-like on 4 and 5, that IVA-HD thing could just be a firmware gateway to
-a hardware pipeline too).
-
-Cheers,
-
-Paul
-
+Laurent Pinchart
