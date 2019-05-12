@@ -2,43 +2,52 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC7AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 426D1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 756BA2084F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EDF2084F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 04:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbfELEaG (ORCPT
+        id S1726232AbfELEbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 00:30:06 -0400
-Received: from mail02.asahi-net.or.jp ([202.224.55.14]:41835 "EHLO
-        mail02.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfELEaG (ORCPT
+        Sun, 12 May 2019 00:31:40 -0400
+Received: from mail03.asahi-net.or.jp ([202.224.55.15]:33464 "EHLO
+        mail03.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfELEbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 00:30:06 -0400
+        Sun, 12 May 2019 00:31:40 -0400
 Received: from h61-195-96-97.vps.ablenet.jp (h61-195-96-97.vps.ablenet.jp [61.195.96.97])
         (Authenticated sender: PQ4Y-STU)
-        by mail02.asahi-net.or.jp (Postfix) with ESMTPA id DC9AB3DD6D;
-        Sun, 12 May 2019 13:30:00 +0900 (JST)
+        by mail03.asahi-net.or.jp (Postfix) with ESMTPA id C658241EDD;
+        Sun, 12 May 2019 13:31:38 +0900 (JST)
 Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
-        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id A2FFB240085;
-        Sun, 12 May 2019 13:29:59 +0900 (JST)
-Date:   Sun, 12 May 2019 13:29:56 +0900
-Message-ID: <87tve0qoqj.wl-ysato@users.sourceforge.jp>
+        by h61-195-96-97.vps.ablenet.jp (Postfix) with ESMTPSA id 96457240085;
+        Sun, 12 May 2019 13:31:37 +0900 (JST)
+Date:   Sun, 12 May 2019 13:31:37 +0900
+Message-ID: <87sgtkqonq.wl-ysato@users.sourceforge.jp>
 From:   Yoshinori Sato <ysato@users.sourceforge.jp>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     dalias@libc.org, geert@linux-m68k.org, luto@kernel.org,
-        clang-built-linux@googlegroups.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rich Felker <dalias@libc.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH v2] sh: vsyscall: drop unnecessary cc-ldoption
-In-Reply-To: <20190424180223.253025-1-ndesaulniers@google.com>
+In-Reply-To: <fd075ea4-5fc9-a015-e4ae-180451f9bea0@physik.fu-berlin.de>
 References: <CAK7LNASLBQ=w9YFBD80s7dit1bd_Tr+ggVyRNms0jf1pR9k=ZA@mail.gmail.com>
         <20190424180223.253025-1-ndesaulniers@google.com>
+        <CAKwvOd=5SVBFsfEgYc9Dpgr--h+pQgCwOnpAjg9B4HG2VY6kFg@mail.gmail.com>
+        <CAKwvOdkpjwgt3pP9rjZtm=rEK9MhEfQdc6PEr91Bnb9tMVDBEA@mail.gmail.com>
+        <CAK7LNASL+oNNbZ4YaPtGnwka06sRr3Pz8HjjM7oxUC-JkvqF2Q@mail.gmail.com>
+        <fc61a1c2-5503-b18d-e178-491952e059f6@physik.fu-berlin.de>
+        <CAK7LNATEizpakgj_UT4-OyUy8cs7C_kz8wEWDJAdoftfVK=uKw@mail.gmail.com>
+        <fd075ea4-5fc9-a015-e4ae-180451f9bea0@physik.fu-berlin.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/25.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -49,49 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Apr 2019 03:02:21 +0900,
-Nick Desaulniers wrote:
+On Thu, 09 May 2019 17:44:45 +0900,
+John Paul Adrian Glaubitz wrote:
 > 
-> Towards the goal of removing cc-ldoption, it seems that --hash-style=
-> was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> of binutils for the kernel according to
-> Documentation/process/changes.rst is 2.20.
+> Hi Masahiro!
 > 
-> Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> Cc: clang-built-linux@googlegroups.com
-> Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> On 5/9/19 9:07 AM, Masahiro Yamada wrote:
+> >> So, if in doubt, there are folks in Debian which can test your kernel patch
+> >> if you fear that it breaks something.
+> > 
+> > Thanks for taking care of them in Debian.
+> > 
+> > I am talking about the sh sub-system in the kernel here.
+> 
+> Yes, I'm aware of that :).
+> 
+> > SH patches occasionally fly around in LKML, but
+> > the SH maintainers are not picking up them these days.
+> 
+> Rich was normally the one maintaining the SH tree and collecting the patches,
+> not sure whether he is still active. It's been a while since he sent Linus
+> a pull request.
+> 
+> Sato-san was recently a patch himself, but I think he doesn't have a tree
+> himself.
+> 
+> @Sato: Could you have a look at the patch and ack it if it's okay?
 
-Acked-by: Yoshinori Sato <ysato@users.sourceforge.jp>
+I sent ack now.
+Sorry too late reply.
 
-> ---
-> Changes V1 -> V2:
-> * update commit subject and message as per Masahiro/Geert.
+> > This one is trivial from the build system point of view.
+> > So, I offer to apply it to my tree.
 > 
-> To Geert's question about minimum binutils versions; no change needed to
-> binutils.
+> I'm fine with that. If you need to test build the kernel for SH, Debian
+> has an easily installable cross-compiler for SH and every other architecture
+> except ia64 (working on fixing that) available.
 > 
+> In any case, thanks for taking care of SH in this case.
 > 
->  arch/sh/kernel/vsyscall/Makefile | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> Adrian
 > 
-> diff --git a/arch/sh/kernel/vsyscall/Makefile b/arch/sh/kernel/vsyscall/Makefile
-> index 5db6579bc44c..6e8664448048 100644
-> --- a/arch/sh/kernel/vsyscall/Makefile
-> +++ b/arch/sh/kernel/vsyscall/Makefile
-> @@ -15,8 +15,7 @@ quiet_cmd_syscall = SYSCALL $@
->  
->  export CPPFLAGS_vsyscall.lds += -P -C -Ush
->  
-> -vsyscall-flags = -shared -s -Wl,-soname=linux-gate.so.1 \
-> -		$(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
-> +vsyscall-flags = -shared -s -Wl,-soname=linux-gate.so.1 -Wl,--hash-style=sysv
->  
->  SYSCFLAGS_vsyscall-trapa.so	= $(vsyscall-flags)
->  
 > -- 
-> 2.21.0.593.g511ec345e18-goog
-> 
+>  .''`.  John Paul Adrian Glaubitz
+> : :' :  Debian Developer - glaubitz@debian.org
+> `. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
+>   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
 
 -- 
 Yosinori Sato
