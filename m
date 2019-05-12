@@ -2,150 +2,97 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1C8C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8194C04AB3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 677372146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:02:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557648173;
-	bh=tLFKkBC3yj+IjTDmFVxQeinzN1aQkBvFJVM8INnyVBQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZQWAwAxIVAjeopdDB/lq/ObryVSvZSdwE6b92+KeKCGKZVU8Cbl+9FZ1vR/Me23jl
-	 aUDb3oKiE6TNx1TiEwmFxHIK48lwzdMwtB6JF1amShX9FaJ3q05cZm6dhjz6BgjQkO
-	 UAJxlFTmvedINxytPP1P/BU1pv43IjowHdjmxLKc=
+	by mail.kernel.org (Postfix) with ESMTP id 9977021855
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:26:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LivOin7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726473AbfELICw (ORCPT
+        id S1726482AbfELI0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 04:02:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34623 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfELICv (ORCPT
+        Sun, 12 May 2019 04:26:20 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45839 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfELI0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 04:02:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id m20so9069038wmg.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 01:02:50 -0700 (PDT)
+        Sun, 12 May 2019 04:26:20 -0400
+Received: by mail-pf1-f193.google.com with SMTP id s11so5485712pfm.12;
+        Sun, 12 May 2019 01:26:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=az2NvBw/j6sKFx3ItUU3E4tKs04UFXT+eEsNSTjgcOk=;
-        b=MtG+xbcXBmHQ4IcxpcWKC11SCKZq+OSTqMHyXCPi3JpftuK38K7VD3qLs9v7st1HUT
-         KJslOQ3ydVQtYDnWPOnUn74A2rmXAspsgG4ef+88P39xZiYN/ow6lLsJOH5w3gMZY9Nj
-         gY3aNEThPCg8C+wk+VHUlSyLqq33JIrWrP7560qtrREcwChnxmckl5RJ4I8zMr4/GgNU
-         nYwGRjPdwu2BZ4ou5myfZIx1EWlV08tKcnX3BVPQ6Ac/pi6YYU0yP+FPO+PMvXDnFGTm
-         ieyt1XWOzRBdJpi6/4vBzXEcOr8KStrptVcwSmEj+bLl4j05vePYfEJURfCHNn3gqGGZ
-         bvQQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=z7fqRlGKomLBOv7X8ZNXyme9e+4ESlFc2IpZxYNJbQs=;
+        b=LivOin7NcHcNmpntbideMsybvPb498BcFq1ByK6j+Uq7qL0e0WJvVSp5vQ4Znq0DcI
+         ajxGhn/HbbuGzQLBXHpG6wochn8ootEPLp5sm7Zyd/FSIsQzntX/ux5er9FaJzEiMQBg
+         Rhq/rGnR3exp6P0UJa/AbHyPIxIIq0VkqmIS92Nvqt8Ugs/k+VP9SAVZwT/8VZHKsPxY
+         xqwpgMmSHatKLFtk75kXaKCMrHbiju+9KA9tBO8tzbVOYn32laQl9jA6UKTeNRTMOid4
+         9LO71V6c/jM6NdK38rwp2cU5N5tVX5UnRf600YpeivrxfL4DmzWPfsraXmWE2TzQVWQL
+         aWMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=az2NvBw/j6sKFx3ItUU3E4tKs04UFXT+eEsNSTjgcOk=;
-        b=lGHtbnbFw9u+ZGu6+0dX1WntNOcZPCNWLUiHbL8PWhwyDzBYZGcBpCNaDIuTp2CVGc
-         RDsyjRh8JakbWWrq0WmvZiSbJ4oKJ9Wm5SI2v78375AlsveOasxnvQRlofIORqmcVW50
-         EBqZHDQ6uXO6by7+afw6TVhaXKtBpPGMkg+YtRSNA9IjVNBPnwVxNUUgOHlP2F8QnlLD
-         SfbP7MAD85NAX3j9p7RfxSj9TYrVH3REQMBv04Gwk6OqE9fr5O5sh2JL9v2RqiNvTmvG
-         Kg+1Junket1QZOA6NBNScHYm/8Bex6ror57/+GOIuiJG+QMNA1pQiGOq4ilCc71ZhUt+
-         A8HA==
-X-Gm-Message-State: APjAAAW+9sKMHsvDbQ1l6bmNe/LLnl6SWXZStiJsbuuXhP5tsJcQRva1
-        XadWAIoy/2S07w/ZHInyaUU=
-X-Google-Smtp-Source: APXvYqxVXN7MHSj6wajDWsQfPzO42N7IX3nfYdRVBUuuioVQgP5x4hpPPyK3lHc3ny/5d82FAfWrew==
-X-Received: by 2002:a1c:7f10:: with SMTP id a16mr11686869wmd.30.1557648169896;
-        Sun, 12 May 2019 01:02:49 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id l14sm7040797wrt.57.2019.05.12.01.02.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=z7fqRlGKomLBOv7X8ZNXyme9e+4ESlFc2IpZxYNJbQs=;
+        b=AiegK+tG+WVGx6VyYdnkR3wnhOcB0N4LHo13xlSlVOiQPqn7Rrzq+RGhalDyJmdusv
+         lebeq3JLHwJZEyv0jgF/QmzXHMtgfSrwzIbzGn2vZgu19B8EPsdUlaUIZfYNcfudM5JU
+         qBQmZ62aBidm3w7fPdgPaCtyJSnniMxR3C9Kr4OV1eptH/4FRyeeRViG4jf4elRwxbwW
+         eJnH0QXZiGZ59oNwBrGBZOvZYOdIqDn1JC6HSj8XkAVPty07MMjxuKy0QvhwvyuiKWKG
+         e3g4c8vRY2Vhb9Jo6W7KTcTcgohisXKs5m/SLiTQCt8CGL8mRNPpNpp+eIrz0E8Fa6vA
+         dBTg==
+X-Gm-Message-State: APjAAAUftvekOAoTb8Qo+TbgoEN3WFqD2HH1sxX59gZaslL8r7gdBxnM
+        2ebkTKLBF0pPOiLxYasWACI=
+X-Google-Smtp-Source: APXvYqx1A1kbLI9y/5pUCwvMoNIIk19yu+EqQtr6gApatuYzdCzGhzmtCXnd5sRlZo9Rzt2csXEEeQ==
+X-Received: by 2002:a62:200f:: with SMTP id g15mr26215748pfg.7.1557649579414;
+        Sun, 12 May 2019 01:26:19 -0700 (PDT)
+Received: from localhost (68.168.130.77.16clouds.com. [68.168.130.77])
+        by smtp.gmail.com with ESMTPSA id j9sm30306887pfc.43.2019.05.12.01.26.18
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 May 2019 01:02:48 -0700 (PDT)
-Date:   Sun, 12 May 2019 10:02:45 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Eric Biggers <ebiggers3@gmail.com>,
-        "ebiggers@google.com" <ebiggers@google.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Message-ID: <20190512080245.GA7827@gmail.com>
-References: <2236FBA76BA1254E88B949DDB74E612BA4C6F523@IRSMSX102.ger.corp.intel.com>
- <e4fbad8c51284a0583b98c52de4a207d@AcuMS.aculab.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C760A7@IRSMSX102.ger.corp.intel.com>
- <20190508113239.GA33324@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C762F7@IRSMSX102.ger.corp.intel.com>
- <20190509055915.GA58462@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C7741F@IRSMSX102.ger.corp.intel.com>
- <20190509084352.GA96236@gmail.com>
- <CALCETrV1067Es=KEjkz=CtdoT79a2EJg4dJDae6oGDiTaubL1A@mail.gmail.com>
- <201905111703.5998DF5F@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201905111703.5998DF5F@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 12 May 2019 01:26:18 -0700 (PDT)
+From:   Yangtao Li <tiny.windzz@gmail.com>
+To:     tiny.windzz@gmail.com, rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, maxime.ripard@bootlin.com, wens@csie.org,
+        catalin.marinas@arm.com, will.deacon@arm.com, davem@davemloft.net,
+        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, andy.gross@linaro.org, olof@lixom.net,
+        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
+        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
+        enric.balletbo@collabora.com
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] add thermal driver for h6
+Date:   Sun, 12 May 2019 04:26:11 -0400
+Message-Id: <20190512082614.9045-1-tiny.windzz@gmail.com>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset support thermal driver of allwinner H6.
 
-* Kees Cook <keescook@chromium.org> wrote:
+Yangtao Li (3):
+  arm64: defconfig: add allwinner sid support
+  thermal: sun50i: add thermal driver for h6
+  dt-bindings: thermal: add binding document for h6 thermal controller
 
-> On Sat, May 11, 2019 at 03:45:19PM -0700, Andy Lutomirski wrote:
-> > ISTM maybe a better first step would be to make get_random_bytes() be
-> > much faster? :)
-> 
-> I'm not opposed to that, but I want to make sure we don't break it for
-> "real" crypto uses...
+ .../bindings/thermal/sun50i-thermal.txt       |  32 ++
+ MAINTAINERS                                   |   7 +
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/thermal/Kconfig                       |  14 +
+ drivers/thermal/Makefile                      |   1 +
+ drivers/thermal/sun50i_thermal.c              | 357 ++++++++++++++++++
+ 6 files changed, 412 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
+ create mode 100644 drivers/thermal/sun50i_thermal.c
 
-I'm quite sure Andy implied that.
+-- 
+2.17.0
 
-> I still think just using something very simply like rdtsc would be good 
-> enough.
->
-> This isn't meant to be a perfect defense: it's meant to disrupt the 
-> ability to trivially predict (usually another thread's) stack offset. 
-
-But aren't most local kernel exploit attacks against the current task? 
-Are there any statistics about this?
-
-> And any sufficiently well-positioned local attacker can defeat this no 
-> matter what the entropy source, given how small the number of bits 
-> actually ends up being, assuming they can just keep launching whatever 
-> they're trying to attack. (They can just hold still and try the same 
-> offset until the randomness aligns: but that comes back to us also 
-> needing a brute-force exec deterance, which is a separate subject...)
-> 
-> The entropy source bikeshedding doesn't seem helpful given how few bits 
-> we're dealing with.
-
-The low number of bits is still useful in terms of increasing the 
-probability of crashing the system if the attacker cannot guess the stack 
-offset.
-
-With 5 bits there's a ~96.9% chance of crashing the system in an attempt, 
-the exploit cannot be used for a range of attacks, including spear 
-attacks and fast-spreading worms, right? A crashed and inaccessible 
-system also increases the odds of leaving around unfinished attack code 
-and leaking a zero-day attack.
-
-Thanks,
-
-	Ingo
