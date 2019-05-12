@@ -2,124 +2,114 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A648EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C36C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:45:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E4E720C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1809520873
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="m3F9XCpE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTbau4Al"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbfELUdf (ORCPT
+        id S1727121AbfELUpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 16:33:35 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:15169 "EHLO mx4.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbfELUdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 16:33:35 -0400
-Received: (wp-smtpd smtp.wp.pl 31684 invoked from network); 12 May 2019 22:33:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1557693213; bh=xftwkTDo9SZxI2rru91s0TaDpgswdOqrM0zB8nAN/T4=;
-          h=From:To:Cc:Subject;
-          b=m3F9XCpEoccrlOWHgrE9z3WPkKgP80gonvIC+NOIqT7JxF82vsuvDI4CcLvsUrcmw
-           Rj8b5Ixbe0Uql701ZknYgvtv8Y3UaedN/yUVZa0TF5pCDNGn2z73qwXSb3oxAqtoCc
-           UBAtP4TNcesBZ398QWFaudRmFS+OxyDGTWj+UE5U=
-Received: from pc-201-108-240-185-static.strong-pc.com (HELO localhost.localdomain) (spaz16@wp.pl@[185.240.108.201])
-          (envelope-sender <spaz16@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <igorkuo@gmail.com>; 12 May 2019 22:33:33 +0200
-From:   =?UTF-8?q?B=C5=82a=C5=BCej=20Szczygie=C5=82?= <spaz16@wp.pl>
-Cc:     igorkuo@gmail.com, peter.hutterer@who-t.net,
-        =?UTF-8?q?B=C5=82a=C5=BCej=20Szczygie=C5=82?= <spaz16@wp.pl>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] HID: fix A4Tech horizontal scrolling
-Date:   Sun, 12 May 2019 22:33:13 +0200
-Message-Id: <20190512203313.18756-1-spaz16@wp.pl>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190507050029.GA5197@jelly>
-References: <20190507050029.GA5197@jelly>
+        Sun, 12 May 2019 16:45:01 -0400
+Received: from mail-yw1-f48.google.com ([209.85.161.48]:34765 "EHLO
+        mail-yw1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbfELUpA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 16:45:00 -0400
+Received: by mail-yw1-f48.google.com with SMTP id n76so9372397ywd.1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 13:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=rXTZLv/Z8jb2kzjcdk+NYdqir90CjcF1FIy5Z+1TlgE=;
+        b=eTbau4AlAAGdyg4cbB7cGIwK3X4MnhrpMB2A6lCDZQvtwbNz+Za2WH7BZmI2P2udd3
+         A4+EvTpH9CPFeFVC3Sx7KFvX0VOQmV5fuw3cjC0TxGbdDhzNbfjqAS+2expnQkfyx71u
+         P4dwyJB/KmobC+6w7Wft7JUgGHUc+VFfzBelCCC9+RMH8plas8cWN9Q7Xl4S1mU5YQfg
+         KwLGnbR5Gjp/i7MLlVa/lqulgbTpdD9WarE2x0um4tEewVYuwv0EDV12LZmRsIhjwwuc
+         kVfpU7dnxlV2cgk129+57KVjLdD6Hn7AQ2/B/kSrk6HS2/g7FJ7JUQw0y9cca4vP+0KQ
+         993w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=rXTZLv/Z8jb2kzjcdk+NYdqir90CjcF1FIy5Z+1TlgE=;
+        b=lplQfCFAaO8yiMrUzNDq6yU0gmqwMC2IU6CJmu7k7/ObqUoMKKQaIj0vRYAMQ5J7au
+         IWDt90nGxn9OcM98C749Tkf1Fa7EOddFtBZvoUZ6X2J/lMRX07VsuoAcr7/yGDPu2qCf
+         Bv/OzCLqxV20yy4UKKJXPVGY9gaeMtivQ1UfYSQ/RQc4Xd3d7Aufx+r4deoe0yS4p8Dc
+         Tqo7s3aFVTT+hk397N6mFhGMqn4px6BSm8CpGnPIpKxHo3kNjIIbLvp+SvuwnM76ekyj
+         8xCVRYuOoh6k45IDvwR1UISWo/mj0l7SBda+L43qoUvB1OqHV7euRbAwY+KEeKny3wGD
+         81Zg==
+X-Gm-Message-State: APjAAAVAcafycJ3EzxeTYVrn0dMVSxbSKN2rNGFC6YfCF9dMQ8lE6sV2
+        BUo1texV9utF3iExtKhJwAXYYzalz3BjLebjHHQ=
+X-Received: by 2002:a81:7c2:: with SMTP id 185mt13059385ywh.113.1557693900014;
+ Sun, 12 May 2019 13:45:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: 5384286f20c59aca34f956a0e2b44469
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000B [QUPk]                               
+References: <20190502074519.61272b42@canb.auug.org.au> <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
+In-Reply-To: <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
+From:   Carlo Pisani <carlojpisani@gmail.com>
+Date:   Sun, 12 May 2019 22:44:31 +0200
+Message-ID: <CA+QBN9A4PhPZ36otsk0TRaO9KKnKL=hfnskfFJGQJEbtb3=i=Q@mail.gmail.com>
+Subject: C3600, sata controller
+Cc:     Parisc List <linux-parisc@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since recent high resolution scrolling changes the A4Tech driver must
-check for the "REL_WHEEL_HI_RES" usage code.
+guys,
+I asked a friend to lend us his card, which is the card2 listed below
+and not things are becoming really weird
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203369
-Fixes: 2dc702c991e3774af9d7ce410eef410ca9e2357e ("HID: input: use the
-Resolution Multiplier for high-resolution scrolling")
+card1, Silicon Image, Inc. Adaptec AAR-1210SA
+card2, Silicon Image, Inc. SiI 3124 PCI-X Serial ATA
 
-Signed-off-by: Błażej Szczygieł <spaz16@wp.pl>
+the card1 is a PCI32 bit card, and uses the "sata_sil" driver
+the card2 is a PCI64 bit card, and uses the "sata_sil24" driver
+
+card1 is installed in a PCI32 slot, and it's moving 32Gbyte in a loop
+without any issue
+
+I have just tested card2 in each of the PCI-X slot (including the 3.3V
+one) and ... it has always triggered the HPMC unit, crashing the
+machine
+
+the hardware is different, and drivers are also different, but  ....
+maybe the problem is related to 32 vs 64bit?
+
+I am going to repeat the test with card2 installed in a PCI32 slot.
+This should force it to 32bit: will it work correctly?
+(hope this makes sense)
+
 ---
-Changes in v2:
-- changed commit message
 
-Changes in v3:
-- send also high resolution events
+we have also checked if the kernel is correctly handling the ram
+we have a C3600 with 8Gbyte of ram
 
- drivers/hid/hid-a4tech.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+mount -t tmpfs -o size=7G tmpfs /mnt/ramdrive/
+dd if=/dev/zero of=/mnt/ramdrive/test.bin
+badblocks -swv /mnt/ramdrive/test.bin
 
-diff --git a/drivers/hid/hid-a4tech.c b/drivers/hid/hid-a4tech.c
-index 9428ea7cdf8a..c3a6ce3613fe 100644
---- a/drivers/hid/hid-a4tech.c
-+++ b/drivers/hid/hid-a4tech.c
-@@ -38,8 +38,10 @@ static int a4_input_mapped(struct hid_device *hdev, struct hid_input *hi,
- {
- 	struct a4tech_sc *a4 = hid_get_drvdata(hdev);
- 
--	if (usage->type == EV_REL && usage->code == REL_WHEEL)
-+	if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
- 		set_bit(REL_HWHEEL, *bit);
-+		set_bit(REL_HWHEEL_HI_RES, *bit);
-+	}
- 
- 	if ((a4->quirks & A4_2WHEEL_MOUSE_HACK_7) && usage->hid == 0x00090007)
- 		return -1;
-@@ -60,7 +62,7 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 	input = field->hidinput->input;
- 
- 	if (a4->quirks & A4_2WHEEL_MOUSE_HACK_B8) {
--		if (usage->type == EV_REL && usage->code == REL_WHEEL) {
-+		if (usage->type == EV_REL && usage->code == REL_WHEEL_HI_RES) {
- 			a4->delayed_value = value;
- 			return 1;
- 		}
-@@ -68,6 +70,8 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 		if (usage->hid == 0x000100b8) {
- 			input_event(input, EV_REL, value ? REL_HWHEEL :
- 					REL_WHEEL, a4->delayed_value);
-+			input_event(input, EV_REL, value ? REL_HWHEEL_HI_RES :
-+					REL_WHEEL_HI_RES, a4->delayed_value * 120);
- 			return 1;
- 		}
- 	}
-@@ -77,8 +81,9 @@ static int a4_event(struct hid_device *hdev, struct hid_field *field,
- 		return 1;
- 	}
- 
--	if (usage->code == REL_WHEEL && a4->hw_wheel) {
-+	if (usage->code == REL_WHEEL_HI_RES && a4->hw_wheel) {
- 		input_event(input, usage->type, REL_HWHEEL, value);
-+		input_event(input, usage->type, REL_HWHEEL_HI_RES, value * 120);
- 		return 1;
- 	}
- 
--- 
-2.21.0
+checking for bad blocks in read-write mode
+From block 0 to 7340031
+Testing with pattern 0xaa: done
+Reading and comparing: done
+Testing with pattern 0x55: done
+Reading and comparing: done
+Testing with pattern 0xff: done
+Reading and comparing: done
+Testing with pattern 0x00: done
+Reading and comparing: done
+Pass completed, 0 bad blocks found.
 
+no problems found
