@@ -2,77 +2,103 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE2AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED076C04AB3
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE73217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52E72133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 14:31:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rhWhYEal"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfELOWS (ORCPT
+        id S1726752AbfELObD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 10:22:18 -0400
-Received: from smtprelay0012.hostedemail.com ([216.40.44.12]:59433 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726442AbfELOWS (ORCPT
+        Sun, 12 May 2019 10:31:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33409 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfELObC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 10:22:18 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 86C44182CF666;
-        Sun, 12 May 2019 14:22:16 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: skin28_8819c53057e61
-X-Filterd-Recvd-Size: 1760
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 12 May 2019 14:22:15 +0000 (UTC)
-Message-ID: <d00c1c42689e08df0ce7cd8b2c796eee5b9f5642.camel@perches.com>
-Subject: Re: [PATCH v4 07/12] Documentation: PCI: convert
- pci-error-recovery.txt to reST
-From:   Joe Perches <joe@perches.com>
-To:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
-        corbet@lwn.net
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org
-Date:   Sun, 12 May 2019 07:22:13 -0700
-In-Reply-To: <20190512125009.32079-8-changbin.du@gmail.com>
-References: <20190512125009.32079-1-changbin.du@gmail.com>
-         <20190512125009.32079-8-changbin.du@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 12 May 2019 10:31:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y3so5105359plp.0;
+        Sun, 12 May 2019 07:31:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8MmPir51Pep1QquiMlNrOGRX1Y2TZtpKY9viaAkjkQI=;
+        b=rhWhYEal8pAMHfedEvpe/VBQbVlKLqFtXxiQi/XHXYuwxAEt9D0juekW4ZFobDtJXQ
+         44oh2TGhUvx6yE/t+ilpT/WGKb0/DTK+h2WOhXvxp8TTaIkkeW+cKK4y7p+dSW7tmY5o
+         ktiEfu0TC5Ll2KqXN1KEHgdtYaIzNAohjSs5RsxOiKeOjZjnust9Vn9J3p1V2q5GVsvD
+         vJM2pOAkNyUS7obCx76y1hN6YownFya1JANnazvaCz/y3t2hlyUv3z8uSoCOxwFr1Inr
+         f3Ef8OXBgVB+ArWaaaLwqXAjynxcN7FgSAr9r8xloN1WhGyu/+2QxvCUMkRMghxMcpoY
+         kuvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8MmPir51Pep1QquiMlNrOGRX1Y2TZtpKY9viaAkjkQI=;
+        b=GFlx3vGsWuytvd7/rw05rhhrYXzmRFn669qUi56o2/ZRP3XhH9SBTiOTfQrQmuIdzA
+         aWq/omnV31/pM5rEo950F8mkmcFjPxC4n2gEmVF3SIckpe4q2qHzEazUs9lRhgKK8Yfo
+         E2Vv2++F/58CswYIlIRGEgpWhHPcxgmrV0eJXnGRj5xZ4tS1HA9IkkWuukaseINxiLGd
+         U+/5v/ZlFyru4+Xo68ChdNUETw28+MlVEiEtRMlwMWeGAXO1KGb6VIsWC9PQard0OXX4
+         NkrYLfxjDUInzT5X4cYFRcKBPo6ymtOxBsErL9/gRiUdEnb06HHLlxLY/EJNb29lmjsd
+         sJ0Q==
+X-Gm-Message-State: APjAAAU/uiXkwXLa9nntENCncNRerlLOAT83FrttqIrsn3mpD3UHbeBg
+        5dbfDP36S467I6BhCZW+Xx4=
+X-Google-Smtp-Source: APXvYqyHv4eu6dOl7ANFLZc88b1efraMSjQavaCvSp5oLIBuxCMPX9SS9p4rYP6iiwoMUxxTzZ0OmQ==
+X-Received: by 2002:a17:902:7594:: with SMTP id j20mr25677961pll.78.1557671461643;
+        Sun, 12 May 2019 07:31:01 -0700 (PDT)
+Received: from localhost ([123.213.206.190])
+        by smtp.gmail.com with ESMTPSA id z187sm15546976pfb.132.2019.05.12.07.31.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 May 2019 07:31:00 -0700 (PDT)
+Date:   Sun, 12 May 2019 23:30:58 +0900
+From:   Minwoo Im <minwoo.im.dev@gmail.com>
+To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        linux-pm <linux-pm@vger.kernel.org>,
+        "hange-folder>?" <toggle-mailboxes@minwooim-desktop>
+Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+Message-ID: <20190512143056.GA7761@minwooim-desktop>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <SN6PR04MB452735778FD952AA838E78C9860E0@SN6PR04MB4527.namprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR04MB452735778FD952AA838E78C9860E0@SN6PR04MB4527.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (ed9d7727) (2018-07-16)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2019-05-12 at 20:50 +0800, Changbin Du wrote:
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -12100,7 +12100,7 @@ M:	Sam Bobroff <sbobroff@linux.ibm.com>
->  M:	Oliver O'Halloran <oohall@gmail.com>
->  L:	linuxppc-dev@lists.ozlabs.org
->  S:	Supported
-> -F:	Documentation/PCI/pci-error-recovery.txt
-> +F:	Documentation/PCI/pci-error-recovery.rst
->  F:	drivers/pci/pcie/aer.c
->  F:	drivers/pci/pcie/dpc.c
->  F:	drivers/pci/pcie/err.c
+> > +	union nvme_result res;
+> > +	int ret;
+> > +
+> > +	if (!result)
+> > +		return -EINVAL;
+> > +
+> > +	memset(&c, 0, sizeof(c));
+> > +	c.features.opcode = nvme_admin_get_features;
+> > +	c.features.fid = cpu_to_le32(NVME_FEAT_POWER_MGMT);
+> > +
+> > +	ret = __nvme_submit_sync_cmd(ctrl->admin_q, &c, &res,
+> > +			NULL, 0, 0, NVME_QID_ANY, 0, 0, false);
+> > +	if (ret >= 0)
+> > +		*result = le32_to_cpu(res.u32);
+> May be add a check for result here in above if before deref pointer :-
+> 	if (ret >= 0 && result)
+> 
 
-There is another section to update as well:
-
-PCI ERROR RECOVERY
-M:	Linas Vepstas <linasvepstas@gmail.com>
-L:	linux-pci@vger.kernel.org
-S:	Supported
-F:	Documentation/PCI/pci-error-recovery.txt
-
-
+'result' already has been checked in a few lines above.
