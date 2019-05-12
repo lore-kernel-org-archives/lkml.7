@@ -7,66 +7,69 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D620DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E78FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A83E92184E
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1197D2184E
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inYC9kKQ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BM1olpLU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfELBZ4 (ORCPT
+        id S1726873AbfELB0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 21:25:56 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:33991 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfELBZy (ORCPT
+        Sat, 11 May 2019 21:26:01 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54136 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfELBZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 21:25:54 -0400
-Received: by mail-it1-f193.google.com with SMTP id p18so10781443itm.1
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:54 -0700 (PDT)
+        Sat, 11 May 2019 21:25:56 -0400
+Received: by mail-it1-f196.google.com with SMTP id m141so13819011ita.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HHRmV7yhtSWQbIFA/oMwKk8g276jL1Sz3uKi1jWy/30=;
-        b=inYC9kKQT2zZLFQjj9yjgmT6loR3m5ScDdmA670i9cD7AVrEI68Q7s037mEDlCjODd
-         QPYAOf8k5p4av4/ump2SBqlYlo6scjXApT0zEeJ1VXEdYPvET9jg4naxg2REbfBC96el
-         M/cf46haKHbF20wuzlSLPUFgMmpruexsfE+q0N1rF1dLr9JkA2dbbwBT5PpLkEqXjb0N
-         /biFzLSgOo2TFWIQGiWZvZ5IWnGSDgw+u5/sSgPpId/oDY2QLLGOAEFWb1UVXyODPe1R
-         jicp3UWv6BL4bdUMfEdbtPx/e40Aw/qIAtGwAUrqZ6pNvvLbAP3X0M3C/GojEevDLCA8
-         w57g==
+        bh=z5NnI56YEhBpccDrupNLnoq/PDM7aNqfb+ZvdWdM4KE=;
+        b=BM1olpLU6epTYjGJ/w3Y5wrCxFpt9gJr/IhjGEhDAP7XCp5jNnnTGkcrVXxvW7dyNR
+         d3cDmCrUJXPEsfDmJbVEdWa1ntXVkJkVH2WLVMGj9gcly/OZy8Rk9NTbsaTKIANzl/KD
+         bPjIqHpUfYBk1dgRp30F04dQ81WnGD3Hk81nXawuc6x5BPIAEYC4eJ5RYwjZqC/QCQR/
+         m/UyAGAJ6lfr35QFSvB0ZKDuHRY9nKGJ4bQjbYOx2J145l6vJCa5kAmSBBn3cVYD5knq
+         HouP0tE9DxJn7Fpc18wO4vvn+0rr52c9XUAFPbCWZDOhG+5DN+TtOFRUmWHfk9YypniD
+         GzVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HHRmV7yhtSWQbIFA/oMwKk8g276jL1Sz3uKi1jWy/30=;
-        b=Mzq7PqPzozF8pJY5AS1MWMjU7cMFjRfW5dC+AZfKgQqrwp6nZWZ2UsO6DZmqcGbkGB
-         Fa/fcVBUlifssd4gP16SsVIeDid4csx2lca1yzVvWoK7ujsxJt5rj5G2wPLVJYPCeSW0
-         qA2/8UcqoI4GT7vSUn5gs/RQZrXfmg4njHIKLkNTIFskSL0TU3hEK1VGsNc2IL2wBKf3
-         ghdpjX+epLzChqF/raGb94Z0AQaBRM+Xt17nmZAM+Hb5jK71YGqL9ujqmcFND6+IR2QR
-         cdvFmaCQIEfml4Lp9b6rma0WQwKUiEyjK7UjsjWI+g8gkyF1yhjbRrqJQ5Ew4P+5PHBY
-         eZUQ==
-X-Gm-Message-State: APjAAAUOdvyUr3slUQaP0vuoV2T2uOS19WhK3Ekdgykn31/GiSYLsdH1
-        Zmgt1zLF+HWggFNPxuGzibWI2w==
-X-Google-Smtp-Source: APXvYqw/lTTqibE0sJFT0USzQYgt2KgmXhcumESovS6B928dyKRnfmZphdi62DkP2cIUjtAvrremPg==
-X-Received: by 2002:a24:75d4:: with SMTP id y203mr13005033itc.142.1557624353765;
-        Sat, 11 May 2019 18:25:53 -0700 (PDT)
+        bh=z5NnI56YEhBpccDrupNLnoq/PDM7aNqfb+ZvdWdM4KE=;
+        b=SwnmPfWSgEdL+YRdnrfQ8W1ibwkMRKR4814+vYFx7CLNvOgckQDM2VmSKtOFsrU0Y9
+         +KWgZZdFeNXBGdEnTj65SSKDMlnC/zwSkZlS7A3SQkJEgLIhV6gFW+vQ665/oJZqerko
+         PcHPzwXBvQ/3Z8sNsshi7LAHr4qktDaMRlj51QAvCwhb+5ETZ2LJwWFfkPMlsaUg+d31
+         fct508T8yXfkXs21o+94GjB71b6SVT2iBdO7E/h1jiGDIMm0ReXPYy3aReYT56/yLrdu
+         NV12VDDNl0iMTOl2BhSWJA3RtkLT5NzICAFdn5BlYQcvXxZEPcYKPEtDi06B5IvzeaMo
+         K/Vw==
+X-Gm-Message-State: APjAAAVs3/35rdF+UuKnLdbw7kwjUXl2Q9b3Qw+OkldV33LbNetRApob
+        joo23zCzngBGjAQXL1WeYYv7sg==
+X-Google-Smtp-Source: APXvYqzUfA2OOPAJGbfEL4rDPAQ0VG+FqjjN9+mgxs1jQCY9O72PSvxRMkShMezOTWbh/ebHT0TL0g==
+X-Received: by 2002:a24:c347:: with SMTP id s68mr12557479itg.140.1557624355327;
+        Sat, 11 May 2019 18:25:55 -0700 (PDT)
 Received: from shibby.hil-lafwehx.chi.wayport.net (hampton-inn.wintek.com. [72.12.199.50])
-        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.52
+        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 18:25:53 -0700 (PDT)
+        Sat, 11 May 2019 18:25:54 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
-        ilias.apalodimas@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org
+        ilias.apalodimas@linaro.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, andy.gross@linaro.org, olof@lixom.net,
+        maxime.ripard@bootlin.com, horms+renesas@verge.net.au,
+        jagan@amarulasolutions.com, stefan.wahren@i2se.com,
+        marc.w.gonzalez@free.fr, enric.balletbo@collabora.com
 Cc:     syadagir@codeaurora.org, mjavid@codeaurora.org,
         evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         abhishek.esse@gmail.com, linux-kernel@vger.kernel.org,
         Alex Elder <elder@linaro.org>
-Subject: [PATCH 17/18] arm64: dts: sdm845: add IPA information
-Date:   Sat, 11 May 2019 20:25:07 -0500
-Message-Id: <20190512012508.10608-18-elder@linaro.org>
+Subject: [PATCH 18/18] arm64: defconfig: enable build of IPA code
+Date:   Sat, 11 May 2019 20:25:08 -0500
+Message-Id: <20190512012508.10608-19-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190512012508.10608-1-elder@linaro.org>
 References: <20190512012508.10608-1-elder@linaro.org>
@@ -77,89 +80,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add IPA-related nodes and definitions to "sdm845.dtsi".
+Add CONFIG_IPA to the 64-bit Arm defconfig.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5308f1671824..b8b2bb753710 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -18,6 +18,7 @@
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/interconnect/qcom,sdm845.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -342,6 +343,17 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 		};
-+
-+		ipa_smp2p_out: ipa-ap-to-modem {
-+			qcom,entry-name = "ipa";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		ipa_smp2p_in: ipa-modem-to-ap {
-+			qcom,entry-name = "ipa";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
- 	};
- 
- 	smp2p-slpi {
-@@ -1090,6 +1102,45 @@
- 			};
- 		};
- 
-+		ipa@1e40000 {
-+			compatible = "qcom,sdm845-ipa";
-+
-+			modem-init;
-+
-+			reg = <0 0x1e40000 0 0x7000>,
-+			      <0 0x1e47000 0 0x2000>,
-+			      <0 0x1e04000 0 0x2c000>;
-+			reg-names = "ipa-reg",
-+				    "ipa-shared",
-+				    "gsi";
-+
-+			interrupts-extended =
-+					<&intc 0 311 IRQ_TYPE_EDGE_RISING>,
-+					<&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
-+					<&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+					<&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "ipa",
-+					  "gsi",
-+					  "ipa-clock-query",
-+					  "ipa-setup-ready";
-+
-+			clocks = <&rpmhcc RPMH_IPA_CLK>;
-+			clock-names = "core";
-+
-+			interconnects =
-+				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
-+				<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
-+				<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
-+			interconnect-names = "memory",
-+					     "imem",
-+					     "config";
-+
-+			qcom,smem-states = <&ipa_smp2p_out 0>,
-+					   <&ipa_smp2p_out 1>;
-+			qcom,smem-state-names = "ipa-clock-enabled-valid",
-+						"ipa-clock-enabled";
-+		};
-+
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
- 			reg = <0 0x01f40000 0 0x40000>;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 2d9c39033c1a..4f4d803e563d 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -268,6 +268,7 @@ CONFIG_SMSC911X=y
+ CONFIG_SNI_AVE=y
+ CONFIG_SNI_NETSEC=y
+ CONFIG_STMMAC_ETH=m
++CONFIG_IPA=y
+ CONFIG_MDIO_BUS_MUX_MMIOREG=y
+ CONFIG_AT803X_PHY=m
+ CONFIG_MARVELL_PHY=m
 -- 
 2.20.1
 
