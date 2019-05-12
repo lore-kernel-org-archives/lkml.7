@@ -2,113 +2,85 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D204C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6221C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F8D20C01
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 976BE2146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 11:48:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfELLgN (ORCPT
+        id S1726604AbfELLsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 07:36:13 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53147 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfELLgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 07:36:12 -0400
-X-Originating-IP: 93.29.109.196
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 73671C0004;
-        Sun, 12 May 2019 11:36:08 +0000 (UTC)
-Message-ID: <19804f842e80f1f8bd85b8eb49e75e149abf0062.camel@bootlin.com>
-Subject: Hardware-accelerated video decoders used through a firmware instead
- of hardware registers
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Date:   Sun, 12 May 2019 13:35:55 +0200
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.1 
+        Sun, 12 May 2019 07:48:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36174 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726027AbfELLsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 07:48:43 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F4122B53C7888E2F4D59;
+        Sun, 12 May 2019 19:48:39 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sun, 12 May 2019
+ 19:48:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linux@armlinux.org.uk>, <rppt@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <geert+renesas@glider.be>,
+        <keescook@chromium.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ARM: mm: remove unused variables
+Date:   Sun, 12 May 2019 19:41:05 +0800
+Message-ID: <20190512114105.41792-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Fix gcc warnings:
 
-With the work done on the media request API and the cedrus driver for
-Allwinner ARM SoCs, we now have a kernel interface for exposing fixed-
-hardware video decoding pipelines (currently MPEG-2 and H.264, with
-H.265 on the way). Some work remains on the per-format interface and we
-are looking to improve latency-related aspects, but we are all set to
-have a nice interface here, that plays well with e.g. ffmpeg.
+arch/arm/mm/init.c: In function 'mem_init':
+arch/arm/mm/init.c:456:13: warning: unused variable 'itcm_end' [-Wunused-variable]
+  extern u32 itcm_end;
+             ^
+arch/arm/mm/init.c:455:13: warning: unused variable 'dtcm_end' [-Wunused-variable]
+  extern u32 dtcm_end;
+             ^
 
-A specific situation came to my interest, which is apparently quite
-common: some platforms have general-purpose microcontrollers embedded,
-which can help with video decoding. They are however rarely to never
-used to do the decoding itself (since they are general-purpose, not
-DSPs) and just coordinate the decoding with the fixed-pipeline decoding
-hardware block. The advantage is that the interface is just a simple
-mailbox and the raw video bitstream from the file can be passed
-directly without the need for userspace to do any parsing that the
-codec requires.
+They are not used any more since
+commit 1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
 
-One side-effect from this setup is that the actual hardware register
-layout of the decoder is hidden away in a non-free piece of
-microcontroller firmware, that's usually loaded at run-time.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ arch/arm/mm/init.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-With the recent developments on the media interface, we could interface
-with these hardware decoders directly, which offers various advantages:
-- we no longer need a 3rd party external non-free firmware, which just
-  makes distribution easier for everyone and allows support in fully-
-  free setups;
-- all the usual advantages of having free code that can be fixed and
-  updated instead of an obscure binary that many not always be doing
-  the right thing;
-- parsing of the slices is probably best done in userspace, and I
-  heard that ffmpeg does this threaded, so there could be a latency
-  advantage there as well, not to mention that it avoids the drag of
-  a mailbox interface altogether;
-- the general-purpose micro-controller can then be reused for something
-  useful where it could actually make a performance difference.
-
-As far as I understand, it seems that the video decoder for MT8173
-fails in that category, where a MD32 general-purpose micro-controller
-is used to only do the parsing. We even have device-tree nodes about
-the decoder and encoder, but no register layout.
-
-So I was wondering if the linux-media community should set some
-boundaries here and push towards native implementations instead of
-firmware-based ones. My opininon is that it definitely should.
-
-It seems that other platforms (e.g. Tegra K1 and onwards) are in the
-same situation, and I think the ChromiumOS downstream kernel uses an
-obscure firmware on a general-purpose auxiliary ARM core (that's also
-used at boot time IIRC).
-
-What do you think?
-
-Cheers,
-
-Paul
-
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index be0b429..c71ecbb 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -450,12 +450,6 @@ static void __init free_highpages(void)
+  */
+ void __init mem_init(void)
+ {
+-#ifdef CONFIG_HAVE_TCM
+-	/* These pointers are filled in on TCM detection */
+-	extern u32 dtcm_end;
+-	extern u32 itcm_end;
+-#endif
+-
+ 	set_max_mapnr(pfn_to_page(max_pfn) - mem_map);
+ 
+ 	/* this will put all unused low memory onto the freelists */
 -- 
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.7.4
+
 
