@@ -7,65 +7,66 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1DACC04AB1
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D79C04AB1
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F861217D7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFAB2146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 01:26:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENAKp6YI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AWXXSy/t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfELB0s (ORCPT
+        id S1726609AbfELBZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 May 2019 21:26:48 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:35158 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726612AbfELBZi (ORCPT
+        Sat, 11 May 2019 21:25:37 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54083 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfELBZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 May 2019 21:25:38 -0400
-Received: by mail-it1-f195.google.com with SMTP id u186so15155008ith.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:37 -0700 (PDT)
+        Sat, 11 May 2019 21:25:33 -0400
+Received: by mail-it1-f196.google.com with SMTP id m141so13818339ita.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2019 18:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=32b8I7bRpq9tzNw1WmITCVe1elQY3noD3WghUaCPdB8=;
-        b=ENAKp6YIApo74ohtyPShZ9kX5p7zy4SgyfaFl9vcBkOkWBKKCpH4BTXyqp41FDJe/9
-         62CNmdDusS1723+LJaid+f0K8yyyayYPBt1YonY0cETyjQmoU7foEbzfnqzC8hp/Fpn3
-         DvEDTmXGor+DnO8L6JvITMwsKfroidzkmtyxEG7vIZ3DkP1S8JL3wfQkxjjS82zon3r7
-         PtsYtHSLSGOaBsITutiAawxVYYPlhCw0EDiX1WVFi4zMgaWg6vNzF0evChE+0gfr4qIa
-         c1RuOVpBx5Y3dybAKPW5gHSNAVZzwwXHXgZN3OXJ3+fvym7aAaU5jZqKZ37QFxAmTbue
-         m0TQ==
+        bh=h9s9Psuy/E87ixvvmJRRBd63LEM82ud4Ysnws8m9DPo=;
+        b=AWXXSy/tHZxFMRnTUKsZJnn9/i8AXv0hS2HYZR6FQcrVjQrQ09I32/yoVtzsUR2uvV
+         7zFSuZ42IIityqAbgIch+MnZjykjf86pSvE3xK6T3DbJLy303eH3CTiokRPPw456N8xL
+         7rI3DRDo93kVQVqJEx4+iSJvkrcLeNnYP4jstVIDSaVJG+KMvmJzVubuadREOf9UCb8W
+         USnVNLzHRgNAXX2TjQLba4bBE2mOLm4VG47LigzSgco1g+vRs5H9TFKdWGAgoWbfuYl3
+         +Be+cvBJCbfwgeh+cHqB9JKmSpIV8MVT217A79khc94LPvZ/bvDo631/dJdIpWXfDX0V
+         7e+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=32b8I7bRpq9tzNw1WmITCVe1elQY3noD3WghUaCPdB8=;
-        b=LAFRNpdJB9Ck45sb1mXmd1JP/wcTZy6l4gmqeQQqQsFAcsrufpdvPhBOaJqHj2wBep
-         4iE54YXUPM8dPz4Ct1skCFUOTiPcEOsiNHF/WNk9lXRq0sfUNA0Ci0evk+x9rdIOQ+xM
-         JL3cJrLF2g0JX0vaS8aio+RbJvzBYmP53zZeJjiasqLha5ij+aCK+989FyvWX+voSwWv
-         R3CNGIJ+8fvTfIBpY6KxJDbfjlrw4XGLumkIb2j8Gs4rsM7/dG1lFJL/x6ZOKhkC+/gI
-         fqGaChVqtpa3RcidcGJRuj43X4xWSNMbTPFTzweZtCxXqS41iOzZO1ZJ7w4NqhA89lid
-         tVlg==
-X-Gm-Message-State: APjAAAVc48FOEIjTTqqJw1UJPZd/71aQapUCeF83ml7+2WX3yCRn7pP/
-        pLps1QqfVxWCgYoJh7N2TMc/Sg==
-X-Google-Smtp-Source: APXvYqyMrfdsoZTNAV4q6hMUX1g7jhd++oHUzoYccEN9QLhwk7xH76CqaiPKfFm52LZa3mUfo86DZA==
-X-Received: by 2002:a24:c3c2:: with SMTP id s185mr12133175itg.156.1557624336042;
-        Sat, 11 May 2019 18:25:36 -0700 (PDT)
+        bh=h9s9Psuy/E87ixvvmJRRBd63LEM82ud4Ysnws8m9DPo=;
+        b=kw/zkTu7GiIm3fTCO6ox4HkPdNt7mNnGf0ubfAQq0fRJQq3ArK69NsdbTs/V6rZPub
+         KD0zB4JntQNtiujE4RkA28FMhmZRG/w1Dul4gkUAIWRJEP7M8fsSljx740k31rGYsqHC
+         j6zcVYmKI1A3NAeZmHwqdBZCaALq1myeIEURPjBzTAfgsQMCCr51Rk7TUGeLb0H5gwWz
+         uLOyzDOODxTfrqqgxALzhB450APsz5fzW+BXY8eXpIm+s1zG+oPZCDeZfS68NT7wsMIn
+         JwVAS1Y0P10KidbCS2tSbaAs1cRsMJW5dVRXevuMXRRzxyO/csqeCGhBhFs5Hi3PqKeI
+         1Jhg==
+X-Gm-Message-State: APjAAAV+prhSmMzCcqvnfZrYlOgHa/lZ+O0zritSqKOXQkYmoirNAsAo
+        l6VqqMI9N1BQocQT/xkpK/bEEg==
+X-Google-Smtp-Source: APXvYqy1xZlzYsZGq/MuafbqYG4Jy0s7IuPBsGBC5KHMhJtjd+vzZyh69aFdSxcJthEZRtMgn3iiiA==
+X-Received: by 2002:a24:56c1:: with SMTP id o184mr815571itb.123.1557624331932;
+        Sat, 11 May 2019 18:25:31 -0700 (PDT)
 Received: from shibby.hil-lafwehx.chi.wayport.net (hampton-inn.wintek.com. [72.12.199.50])
-        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.34
+        by smtp.gmail.com with ESMTPSA id u134sm1579013itb.32.2019.05.11.18.25.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 11 May 2019 18:25:35 -0700 (PDT)
+        Sat, 11 May 2019 18:25:31 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, arnd@arndb.de, bjorn.andersson@linaro.org,
-        ilias.apalodimas@linaro.org
+        ilias.apalodimas@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org
 Cc:     syadagir@codeaurora.org, mjavid@codeaurora.org,
         evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
         abhishek.esse@gmail.com, linux-kernel@vger.kernel.org,
         Alex Elder <elder@linaro.org>
-Subject: [PATCH 06/18] soc: qcom: ipa: clocking, interrupts, and memory
-Date:   Sat, 11 May 2019 20:24:56 -0500
-Message-Id: <20190512012508.10608-7-elder@linaro.org>
+Subject: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
+Date:   Sat, 11 May 2019 20:24:53 -0500
+Message-Id: <20190512012508.10608-4-elder@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190512012508.10608-1-elder@linaro.org>
 References: <20190512012508.10608-1-elder@linaro.org>
@@ -76,1076 +77,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch incorporates three source files (and their headers).  They're
-grouped into one patch mainly for the purpose of making the number and
-size of patches in this series somewhat reasonable.
-
-  - "ipa_clock.c" and "ipa_clock.h" implement clocking for the IPA device.
-    The IPA has a single core clock managed by the common clock framework.
-    In addition, the IPA has three buses whose bandwidth is managed by the
-    Linux interconnect framework.  At this time the core clock and all
-    three buses are either on or off; we don't yet do any more fine-grained
-    management than that.  The core clock and interconnects are enabled
-    and disabled as a unit, using a unified clock-like abstraction,
-    ipa_clock_get()/ipa_clock_put().
-
-  - "ipa_interrupt.c" and "ipa_interrupt.h" implement IPA interrupts.
-    There are two hardware IRQs used by the IPA driver (the other is
-    the GSI interrupt, described in a separate patch).  Several types
-    of interrupt are handled by the IPA IRQ handler; these are not part
-    of data/fast path.
-
-  - The IPA has a region of local memory that is accessible by the AP
-    (and modem).  Within that region are areas with certain defined
-    purposes.  "ipa_mem.c" and "ipa_mem.h" define those regions, and
-    implement their initialization.
+Add the binding definitions for the "qcom,ipa" device tree node.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_clock.c     | 291 ++++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_clock.h     |  52 ++++++
- drivers/net/ipa/ipa_interrupt.c | 279 ++++++++++++++++++++++++++++++
- drivers/net/ipa/ipa_interrupt.h |  53 ++++++
- drivers/net/ipa/ipa_mem.c       | 237 ++++++++++++++++++++++++++
- drivers/net/ipa/ipa_mem.h       |  82 +++++++++
- 6 files changed, 994 insertions(+)
- create mode 100644 drivers/net/ipa/ipa_clock.c
- create mode 100644 drivers/net/ipa/ipa_clock.h
- create mode 100644 drivers/net/ipa/ipa_interrupt.c
- create mode 100644 drivers/net/ipa/ipa_interrupt.h
- create mode 100644 drivers/net/ipa/ipa_mem.c
- create mode 100644 drivers/net/ipa/ipa_mem.h
+ .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
+ 1 file changed, 164 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
 
-diff --git a/drivers/net/ipa/ipa_clock.c b/drivers/net/ipa/ipa_clock.c
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
 new file mode 100644
-index 000000000000..686f7ac2ce15
+index 000000000000..2705e198f12e
 --- /dev/null
-+++ b/drivers/net/ipa/ipa_clock.c
-@@ -0,0 +1,291 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+
-+#include <linux/atomic.h>
-+#include <linux/mutex.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/interconnect.h>
-+
-+#include "ipa.h"
-+#include "ipa_clock.h"
-+#include "ipa_netdev.h"
-+
-+/**
-+ * DOC: IPA Clocking
-+ *
-+ * The "IPA Clock" manages both the IPA core clock and the interconnects
-+ * (buses) the IPA depends on as a single logical entity.  A reference count
-+ * is incremented by "get" operations and decremented by "put" operations.
-+ * Transitions of that count from 0 to 1 result in the clock and interconnects
-+ * being enabled, and transitions of the count from 1 to 0 cause them to be
-+ * disabled.  We currently operate the core clock at a fixed clock rate, and
-+ * all buses at a fixed average and peak bandwidth.  As more advanced IPA
-+ * features are enabled, we can will better use of clock and bus scaling.
-+ *
-+ * An IPA clock reference must be held for any access to IPA hardware.
-+ */
-+
-+#define	IPA_CORE_CLOCK_RATE		(75UL * 1000 * 1000)	/* Hz */
-+
-+/* Interconnect path bandwidths (each times 1000 bytes per second) */
-+#define IPA_MEMORY_AVG			(80 * 1000)	/* 80 MBps */
-+#define IPA_MEMORY_PEAK			(600 * 1000)
-+
-+#define IPA_IMEM_AVG			(80 * 1000)
-+#define IPA_IMEM_PEAK			(350 * 1000)
-+
-+#define IPA_CONFIG_AVG			(40 * 1000)
-+#define IPA_CONFIG_PEAK			(40 * 1000)
-+
-+/**
-+ * struct ipa_clock - IPA clocking information
-+ * @core:		IPA core clock
-+ * @memory_path:	Memory interconnect
-+ * @imem_path:		Internal memory interconnect
-+ * @config_path:	Configuration space interconnect
-+ * @mutex;		Protects clock enable/disable
-+ * @count:		Clocking reference count
-+ */
-+struct ipa_clock {
-+	struct ipa *ipa;
-+	atomic_t count;
-+	struct mutex mutex; /* protects clock enable/disable */
-+	struct clk *core;
-+	struct icc_path *memory_path;
-+	struct icc_path *imem_path;
-+	struct icc_path *config_path;
-+};
-+
-+/* Initialize interconnects required for IPA operation */
-+static int ipa_interconnect_init(struct ipa_clock *clock, struct device *dev)
-+{
-+	struct icc_path *path;
-+
-+	path = of_icc_get(dev, "memory");
-+	if (IS_ERR(path))
-+		goto err_return;
-+	clock->memory_path = path;
-+
-+	path = of_icc_get(dev, "imem");
-+	if (IS_ERR(path))
-+		goto err_memory_path_put;
-+	clock->imem_path = path;
-+
-+	path = of_icc_get(dev, "config");
-+	if (IS_ERR(path))
-+		goto err_imem_path_put;
-+	clock->config_path = path;
-+
-+	return 0;
-+
-+err_imem_path_put:
-+	icc_put(clock->imem_path);
-+err_memory_path_put:
-+	icc_put(clock->memory_path);
-+err_return:
-+
-+	return PTR_ERR(path);
-+}
-+
-+/* Inverse of ipa_interconnect_init() */
-+static void ipa_interconnect_exit(struct ipa_clock *clock)
-+{
-+	icc_put(clock->config_path);
-+	icc_put(clock->imem_path);
-+	icc_put(clock->memory_path);
-+}
-+
-+/* Currently we only use one bandwidth level, so just "enable" interconnects */
-+static int ipa_interconnect_enable(struct ipa_clock *clock)
-+{
-+	int ret;
-+
-+	ret = icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
-+	if (ret)
-+		return ret;
-+
-+	ret = icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
-+	if (ret)
-+		goto err_disable_memory_path;
-+
-+	ret = icc_set_bw(clock->config_path, IPA_CONFIG_AVG, IPA_CONFIG_PEAK);
-+	if (ret)
-+		goto err_disable_imem_path;
-+
-+	return 0;
-+
-+err_disable_imem_path:
-+	(void)icc_set_bw(clock->imem_path, 0, 0);
-+err_disable_memory_path:
-+	(void)icc_set_bw(clock->memory_path, 0, 0);
-+
-+	return ret;
-+}
-+
-+/* To disable an interconnect, we just its bandwidth to 0 */
-+static int ipa_interconnect_disable(struct ipa_clock *clock)
-+{
-+	int ret;
-+
-+	ret = icc_set_bw(clock->memory_path, 0, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = icc_set_bw(clock->imem_path, 0, 0);
-+	if (ret)
-+		goto err_reenable_memory_path;
-+
-+	ret = icc_set_bw(clock->config_path, 0, 0);
-+	if (ret)
-+		goto err_reenable_imem_path;
-+
-+	return 0;
-+
-+err_reenable_imem_path:
-+	(void)icc_set_bw(clock->imem_path, IPA_IMEM_AVG, IPA_IMEM_PEAK);
-+err_reenable_memory_path:
-+	(void)icc_set_bw(clock->memory_path, IPA_MEMORY_AVG, IPA_MEMORY_PEAK);
-+
-+	return ret;
-+}
-+
-+/* Turn on IPA clocks, including interconnects */
-+static int ipa_clock_enable(struct ipa_clock *clock)
-+{
-+	int ret;
-+
-+	ret = ipa_interconnect_enable(clock);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(clock->core);
-+	if (ret)
-+		ipa_interconnect_disable(clock);
-+
-+	return ret;
-+}
-+
-+/* Inverse of ipa_clock_enable() */
-+static void ipa_clock_disable(struct ipa_clock *clock)
-+{
-+	clk_disable_unprepare(clock->core);
-+	(void)ipa_interconnect_disable(clock);
-+}
-+
-+/* Get an IPA clock reference, but only if the reference count is
-+ * already non-zero.  Returns true if the additional reference was
-+ * added successfully, or false otherwise.
-+ */
-+bool ipa_clock_get_additional(struct ipa_clock *clock)
-+{
-+	return !!atomic_inc_not_zero(&clock->count);
-+}
-+
-+/* Get an IPA clock reference.  If the reference count is non-zero, it is
-+ * incremented and return is immediate.  Otherwise it is checked again
-+ * under protection of the mutex, and enable clocks and resume RX endpoints
-+ * before returning.  For the first reference, the count is intentionally
-+ * not incremented until after these activities are complete.
-+ */
-+void ipa_clock_get(struct ipa_clock *clock)
-+{
-+	/* If the clock is running, just bump the reference count */
-+	if (ipa_clock_get_additional(clock))
-+		return;
-+
-+	/* Otherwise get the mutex and check again */
-+	mutex_lock(&clock->mutex);
-+
-+	/* A reference might have been added before we got the mutex. */
-+	if (!ipa_clock_get_additional(clock)) {
-+		int ret;
-+
-+		ret = ipa_clock_enable(clock);
-+		if (!WARN(ret, "error %d enabling IPA clock\n", ret)) {
-+			struct ipa *ipa = clock->ipa;
-+
-+			if (ipa->default_endpoint)
-+				ipa_endpoint_resume(ipa->default_endpoint);
-+
-+			if (ipa->modem_netdev)
-+				ipa_netdev_resume(ipa->modem_netdev);
-+
-+			atomic_inc(&clock->count);
-+		}
-+	}
-+
-+	mutex_unlock(&clock->mutex);
-+}
-+
-+/* Attempt to remove an IPA clock reference.  If this represents
-+ * the last reference, suspend endpoints and disable the clock
-+ * (and interconnects) under protection of a mutex.
-+ */
-+void ipa_clock_put(struct ipa_clock *clock)
-+{
-+	/* If this is not the last reference there's nothing more to do */
-+	if (!atomic_dec_and_mutex_lock(&clock->count, &clock->mutex))
-+		return;
-+
-+	if (clock->ipa->modem_netdev)
-+		ipa_netdev_suspend(clock->ipa->modem_netdev);
-+
-+	if (clock->ipa->default_endpoint)
-+		ipa_endpoint_suspend(clock->ipa->default_endpoint);
-+
-+	ipa_clock_disable(clock);
-+
-+	mutex_unlock(&clock->mutex);
-+}
-+
-+/* Initialize IPA clocking */
-+struct ipa_clock *ipa_clock_init(struct ipa *ipa)
-+{
-+	struct device *dev = &ipa->pdev->dev;
-+	struct ipa_clock *clock;
-+	int ret;
-+
-+	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
-+	if (!clock)
-+		return ERR_PTR(-ENOMEM);
-+
-+	clock->ipa = ipa;
-+	clock->core = clk_get(dev, "core");
-+	if (IS_ERR(clock->core)) {
-+		ret = PTR_ERR(clock->core);
-+		goto err_free_clock;
-+	}
-+
-+	ret = clk_set_rate(clock->core, IPA_CORE_CLOCK_RATE);
-+	if (ret)
-+		goto err_clk_put;
-+
-+	ret = ipa_interconnect_init(clock, dev);
-+	if (ret)
-+		goto err_clk_put;
-+
-+	mutex_init(&clock->mutex);
-+	atomic_set(&clock->count, 0);
-+
-+	return clock;
-+
-+err_clk_put:
-+	clk_put(clock->core);
-+err_free_clock:
-+	kfree(clock);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+/* Inverse of ipa_clock_init() */
-+void ipa_clock_exit(struct ipa_clock *clock)
-+{
-+	mutex_destroy(&clock->mutex);
-+	ipa_interconnect_exit(clock);
-+	clk_put(clock->core);
-+	kfree(clock);
-+}
-diff --git a/drivers/net/ipa/ipa_clock.h b/drivers/net/ipa/ipa_clock.h
-new file mode 100644
-index 000000000000..f38c3face29a
---- /dev/null
-+++ b/drivers/net/ipa/ipa_clock.h
-@@ -0,0 +1,52 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_CLOCK_H_
-+#define _IPA_CLOCK_H_
-+
-+struct ipa;
-+struct ipa_clock;
-+
-+/**
-+ * ipa_clock_init() - Initialize IPA clocking
-+ * @ipa:	IPA pointer
-+ *
-+ * @Return:	A pointer to an ipa_clock structure, or a pointer-coded error
-+ */
-+struct ipa_clock *ipa_clock_init(struct ipa *ipa);
-+
-+/**
-+ * ipa_clock_exit() - Inverse of ipa_clock_init()
-+ * @clock:	IPA clock pointer
-+ */
-+void ipa_clock_exit(struct ipa_clock *clock);
-+
-+/**
-+ * ipa_clock_get() - Get an IPA clock reference
-+ * @clock:	IPA clock pointer
-+ *
-+ * This call blocks if this is the first reference.
-+ */
-+void ipa_clock_get(struct ipa_clock *clock);
-+
-+/**
-+ * ipa_clock_get_additional() - Get an IPA clock reference if not first
-+ * @clock:	IPA clock pointer
-+ *
-+ * This returns immediately, and only takes a reference if not the first
-+ */
-+bool ipa_clock_get_additional(struct ipa_clock *clock);
-+
-+/**
-+ * ipa_clock_put() - Drop an IPA clock reference
-+ * @clock:	IPA clock pointer
-+ *
-+ * This drops a clock reference.  If the last reference is being dropped,
-+ * the clock is stopped and RX endpoints are suspended.  This call will
-+ * not block unless the last reference is dropped.
-+ */
-+void ipa_clock_put(struct ipa_clock *clock);
-+
-+#endif /* _IPA_CLOCK_H_ */
-diff --git a/drivers/net/ipa/ipa_interrupt.c b/drivers/net/ipa/ipa_interrupt.c
-new file mode 100644
-index 000000000000..5be6b3c762ed
---- /dev/null
-+++ b/drivers/net/ipa/ipa_interrupt.c
-@@ -0,0 +1,279 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+
-+/* DOC: IPA Interrupts
-+ *
-+ * The IPA has an interrupt line distinct from the interrupt used by the GSI
-+ * code.  Whereas GSI interrupts are generally related to channel events (like
-+ * transfer completions), IPA interrupts are related to other events related
-+ * to the IPA.  Some of the IPA interrupts come from a microcontroller
-+ * embedded in the IPA.  Each IPA interrupt type can be both masked and
-+ * acknowledged independent of the others.
-+ *
-+ * Two of the IPA interrupts are initiated by the microcontroller.  A third
-+ * can be generated to signal the need for a wakeup/resume when an IPA
-+ * endpoint has been suspended.  There are other IPA events defined, but at
-+ * this time only these three are supported.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+
-+#include "ipa.h"
-+#include "ipa_clock.h"
-+#include "ipa_reg.h"
-+#include "ipa_endpoint.h"
-+#include "ipa_interrupt.h"
-+
-+/* Maximum number of bits in an IPA interrupt mask */
-+#define IPA_INTERRUPT_MAX	(sizeof(u32) * BITS_PER_BYTE)
-+
-+struct ipa_interrupt_info {
-+	ipa_irq_handler_t handler;
-+	enum ipa_interrupt_id interrupt_id;
-+};
-+
-+/**
-+ * struct ipa_interrupt - IPA interrupt information
-+ * @ipa:		IPA pointer
-+ * @irq:		Linux IRQ number used for IPA interrupts
-+ * @interrupt_info:	Information for each IPA interrupt type
-+ */
-+struct ipa_interrupt {
-+	struct ipa *ipa;
-+	u32 irq;
-+	u32 enabled;
-+	struct ipa_interrupt_info info[IPA_INTERRUPT_MAX];
-+};
-+
-+/* Map a logical interrupt number to a hardware IPA IRQ number */
-+static const u32 ipa_interrupt_mapping[] = {
-+	[IPA_INTERRUPT_UC_0]		= 2,
-+	[IPA_INTERRUPT_UC_1]		= 3,
-+	[IPA_INTERRUPT_TX_SUSPEND]	= 14,
-+};
-+
-+static bool ipa_interrupt_uc(struct ipa_interrupt *interrupt, u32 ipa_irq)
-+{
-+	return ipa_irq == ipa_interrupt_mapping[IPA_INTERRUPT_UC_0] ||
-+		ipa_irq == ipa_interrupt_mapping[IPA_INTERRUPT_UC_1];
-+}
-+
-+static void ipa_interrupt_process(struct ipa_interrupt *interrupt, u32 ipa_irq)
-+{
-+	struct ipa_interrupt_info *info = &interrupt->info[ipa_irq];
-+	bool uc_irq = ipa_interrupt_uc(interrupt, ipa_irq);
-+	struct ipa *ipa = interrupt->ipa;
-+	u32 mask = BIT(ipa_irq);
-+
-+	/* For microcontroller interrupts, clear the interrupt right away,
-+	 * "to avoid clearing unhandled interrupts."
-+	 */
-+	if (uc_irq)
-+		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
-+
-+	if (info->handler)
-+		info->handler(interrupt->ipa, info->interrupt_id);
-+
-+	/* Clearing the SUSPEND_TX interrupt also clears the register
-+	 * that tells us which suspended endpoint(s) caused the interrupt,
-+	 * so defer clearing until after the handler's been called.
-+	 */
-+	if (!uc_irq)
-+		iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
-+}
-+
-+static void ipa_interrupt_process_all(struct ipa_interrupt *interrupt)
-+{
-+	struct ipa *ipa = interrupt->ipa;
-+	u32 enabled = interrupt->enabled;
-+	u32 mask;
-+
-+	/* The status register indicates which conditions are present,
-+	 * including conditions whose interrupt is not enabled.  Handle
-+	 * only the enabled ones.
-+	 */
-+	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
-+	while ((mask &= enabled)) {
-+		do {
-+			u32 ipa_irq = __ffs(mask);
-+
-+			mask ^= BIT(ipa_irq);
-+
-+			ipa_interrupt_process(interrupt, ipa_irq);
-+		} while (mask);
-+		mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
-+	}
-+}
-+
-+/* Threaded part of the IRQ handler */
-+static irqreturn_t ipa_isr_thread(int irq, void *dev_id)
-+{
-+	struct ipa_interrupt *interrupt = dev_id;
-+
-+	ipa_clock_get(interrupt->ipa->clock);
-+
-+	ipa_interrupt_process_all(interrupt);
-+
-+	ipa_clock_put(interrupt->ipa->clock);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/* Hard part of the IRQ handler */
-+static irqreturn_t ipa_isr(int irq, void *dev_id)
-+{
-+	struct ipa_interrupt *interrupt = dev_id;
-+	struct ipa *ipa = interrupt->ipa;
-+	u32 mask;
-+
-+	mask = ioread32(ipa->reg_virt + IPA_REG_IRQ_STTS_OFFSET);
-+	if (mask & interrupt->enabled)
-+		return IRQ_WAKE_THREAD;
-+
-+	/* Nothing in the mask was supposed to cause an interrupt */
-+	iowrite32(mask, ipa->reg_virt + IPA_REG_IRQ_CLR_OFFSET);
-+
-+	dev_err(&ipa->pdev->dev, "%s: unexpected interrupt, mask 0x%08x\n",
-+		__func__, mask);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void ipa_interrupt_suspend_control(struct ipa_interrupt *interrupt,
-+					  enum ipa_endpoint_id endpoint_id,
-+					  bool enable)
-+{
-+	u32 offset = IPA_REG_SUSPEND_IRQ_EN_OFFSET;
-+	u32 mask = BIT(endpoint_id);
-+	u32 val;
-+
-+	val = ioread32(interrupt->ipa->reg_virt + offset);
-+	if (enable)
-+		val |= mask;
-+	else
-+		val &= ~mask;
-+	iowrite32(val, interrupt->ipa->reg_virt + offset);
-+}
-+
-+void ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt,
-+				  enum ipa_endpoint_id endpoint_id)
-+{
-+	ipa_interrupt_suspend_control(interrupt, endpoint_id, true);
-+}
-+
-+void ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt,
-+				   enum ipa_endpoint_id endpoint_id)
-+{
-+	ipa_interrupt_suspend_control(interrupt, endpoint_id, false);
-+}
-+
-+/* Clear the suspend interrupt for all endpoints that signaled it */
-+void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt)
-+{
-+	struct ipa *ipa = interrupt->ipa;
-+	u32 val;
-+
-+	val = ioread32(ipa->reg_virt + IPA_REG_IRQ_SUSPEND_INFO_OFFSET);
-+	iowrite32(val, ipa->reg_virt + IPA_REG_SUSPEND_IRQ_CLR_OFFSET);
-+}
-+
-+/**
-+ * ipa_interrupt_simulate() - Simulate arrival of an IPA TX_SUSPEND interrupt
-+ *
-+ * This is needed to work around a problem that occurs if aggregation
-+ * is active on an endpoint when its underlying channel is suspended.
-+ */
-+void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt)
-+{
-+	u32 ipa_irq = ipa_interrupt_mapping[IPA_INTERRUPT_TX_SUSPEND];
-+
-+	ipa_interrupt_process(interrupt, ipa_irq);
-+}
-+
-+/**
-+ * ipa_interrupt_add() - Adds handler for an IPA interrupt
-+ * @interrupt_id:	IPA interrupt type
-+ * @handler:		The handler for that interrupt
-+ *
-+ * Adds handler for an IPA interrupt and enable it.  IPA interrupt
-+ * handlers are run in threaded interrupt context, so are allowed to
-+ * block.
-+ */
-+void ipa_interrupt_add(struct ipa_interrupt *interrupt,
-+		       enum ipa_interrupt_id interrupt_id,
-+		       ipa_irq_handler_t handler)
-+{
-+	u32 ipa_irq = ipa_interrupt_mapping[interrupt_id];
-+	struct ipa *ipa = interrupt->ipa;
-+
-+	interrupt->info[ipa_irq].handler = handler;
-+	interrupt->info[ipa_irq].interrupt_id = interrupt_id;
-+
-+	/* Update the IPA interrupt mask to enable it */
-+	interrupt->enabled |= BIT(ipa_irq);
-+	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
-+}
-+
-+/**
-+ * ipa_interrupt_remove() - Removes handler for an IPA interrupt type
-+ * @interrupt:		IPA interrupt type
-+ *
-+ * Remove an IPA interrupt handler and disable it.
-+ */
-+void ipa_interrupt_remove(struct ipa_interrupt *interrupt,
-+			  enum ipa_interrupt_id interrupt_id)
-+{
-+	u32 ipa_irq = ipa_interrupt_mapping[interrupt_id];
-+	struct ipa *ipa = interrupt->ipa;
-+
-+	/* Update the IPA interrupt mask to disable it */
-+	interrupt->enabled &= ~BIT(ipa_irq);
-+	iowrite32(interrupt->enabled, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
-+
-+	interrupt->info[ipa_irq].handler = NULL;
-+}
-+
-+/**
-+ * ipa_interrupts_init() - Initialize the IPA interrupts framework
-+ */
-+struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa)
-+{
-+	struct ipa_interrupt *interrupt;
-+	unsigned int irq;
-+	int ret;
-+
-+	ret = platform_get_irq_byname(ipa->pdev, "ipa");
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+	irq = ret;
-+
-+	interrupt = kzalloc(sizeof(*interrupt), GFP_KERNEL);
-+	if (!interrupt)
-+		return ERR_PTR(-ENOMEM);
-+	interrupt->ipa = ipa;
-+	interrupt->irq = irq;
-+
-+	/* Start with all IPA interrupts disabled */
-+	iowrite32(0, ipa->reg_virt + IPA_REG_IRQ_EN_OFFSET);
-+
-+	ret = request_threaded_irq(irq, ipa_isr, ipa_isr_thread, IRQF_ONESHOT,
-+				   "ipa", interrupt);
-+	if (ret)
-+		goto err_free_interrupt;
-+
-+	return interrupt;
-+
-+err_free_interrupt:
-+	kfree(interrupt);
-+
-+	return ERR_PTR(ret);
-+}
-+
-+void ipa_interrupt_teardown(struct ipa_interrupt *interrupt)
-+{
-+	free_irq(interrupt->irq, interrupt);
-+}
-diff --git a/drivers/net/ipa/ipa_interrupt.h b/drivers/net/ipa/ipa_interrupt.h
-new file mode 100644
-index 000000000000..6e452430c156
---- /dev/null
-+++ b/drivers/net/ipa/ipa_interrupt.h
-@@ -0,0 +1,53 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2018-2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_INTERRUPT_H_
-+#define _IPA_INTERRUPT_H_
-+
-+#include <linux/types.h>
-+#include <linux/bits.h>
-+
-+struct ipa;
-+struct ipa_interrupt;
-+
-+/**
-+ * enum ipa_interrupt_id - IPA Interrupt Type
-+ *
-+ * Used to register handlers for IPA interrupts.
-+ */
-+enum ipa_interrupt_id {
-+	IPA_INTERRUPT_UC_0,
-+	IPA_INTERRUPT_UC_1,
-+	IPA_INTERRUPT_TX_SUSPEND,
-+};
-+
-+/**
-+ * typedef ipa_irq_handler_t - irq handler/callback type
-+ * @param interrupt		- interrupt type
-+ * @param interrupt_data	- interrupt information data
-+ *
-+ * Callback function registered by ipa_interrupt_add() to handle a specific
-+ * interrupt type
-+ */
-+typedef void (*ipa_irq_handler_t)(struct ipa *ipa,
-+				  enum ipa_interrupt_id interrupt_id);
-+
-+struct ipa_interrupt *ipa_interrupt_setup(struct ipa *ipa);
-+void ipa_interrupt_teardown(struct ipa_interrupt *interrupt);
-+
-+void ipa_interrupt_add(struct ipa_interrupt *interrupt,
-+		       enum ipa_interrupt_id interrupt_id,
-+		       ipa_irq_handler_t handler);
-+void ipa_interrupt_remove(struct ipa_interrupt *interrupt,
-+			  enum ipa_interrupt_id interrupt_id);
-+
-+void ipa_interrupt_suspend_enable(struct ipa_interrupt *interrupt,
-+				  enum ipa_endpoint_id endpoint_id);
-+void ipa_interrupt_suspend_disable(struct ipa_interrupt *interrupt,
-+				   enum ipa_endpoint_id endpoint_id);
-+void ipa_interrupt_suspend_clear_all(struct ipa_interrupt *interrupt);
-+void ipa_interrupt_simulate_suspend(struct ipa_interrupt *interrupt);
-+
-+#endif /* _IPA_INTERRUPT_H_ */
-diff --git a/drivers/net/ipa/ipa_mem.c b/drivers/net/ipa/ipa_mem.c
-new file mode 100644
-index 000000000000..dc4190ddc9db
---- /dev/null
-+++ b/drivers/net/ipa/ipa_mem.c
-@@ -0,0 +1,237 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <linux/types.h>
-+#include <linux/bitfield.h>
-+#include <linux/bug.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+
-+#include "ipa.h"
-+#include "ipa_reg.h"
-+#include "ipa_cmd.h"
-+#include "ipa_mem.h"
-+
-+/* "Canary" value placed between memory regions to detect overflow */
-+#define IPA_SMEM_CANARY_VAL		cpu_to_le32(0xdeadbeef)
-+
-+/* Only used for IPA_SMEM_UC_EVENT_RING */
-+static __always_inline void smem_set_canary(struct ipa *ipa, u32 offset)
-+{
-+	__le32 *cp = ipa->shared_virt + offset;
-+
-+	BUILD_BUG_ON(offset < sizeof(*cp));
-+
-+	*--cp = IPA_SMEM_CANARY_VAL;
-+}
-+
-+static __always_inline void smem_set_canaries(struct ipa *ipa, u32 offset)
-+{
-+	__le32 *cp = ipa->shared_virt + offset;
-+
-+	BUILD_BUG_ON(offset < 2 * sizeof(*cp));
-+	BUILD_BUG_ON(offset % 8);
-+
-+	*--cp = IPA_SMEM_CANARY_VAL;
-+	*--cp = IPA_SMEM_CANARY_VAL;
-+}
-+
-+/* Initialize AP-owned areas in the shared memory by zero-filling them. */
-+static int ipa_smem_zero_ap(struct ipa *ipa)
-+{
-+	int ret = 0;
-+
-+	BUILD_BUG_ON(IPA_SMEM_AP_HDR_OFFSET % 8);
-+	BUILD_BUG_ON(IPA_SMEM_AP_HDR_PROC_CTX_OFFSET % 8);
-+
-+	if (IPA_SMEM_AP_HDR_SIZE) {
-+		ret = ipa_cmd_smem_dma_zero(ipa, IPA_SMEM_AP_HDR_OFFSET,
-+					    IPA_SMEM_AP_HDR_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_SMEM_AP_HDR_PROC_CTX_SIZE)
-+		ret = ipa_cmd_smem_dma_zero(ipa,
-+					    IPA_SMEM_AP_HDR_PROC_CTX_OFFSET,
-+					    IPA_SMEM_AP_HDR_PROC_CTX_SIZE);
-+
-+	return ret;
-+}
-+
-+/**
-+ * ipa_smem_setup() - Set up IPA AP and modem shared memory areas
-+ *
-+ * Configure the shared memory areas used for AP and modem header
-+ * structures.  Zero the AP areas; the modem areas will be zeroed
-+ * each time the modem comes up.
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+int ipa_smem_setup(struct ipa *ipa)
-+{
-+	int ret = 0;
-+	u32 val;
-+
-+	if (IPA_SMEM_AP_HDR_SIZE) {
-+		ret = ipa_cmd_hdr_init_local(ipa, IPA_SMEM_AP_HDR_OFFSET,
-+					     IPA_SMEM_AP_HDR_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_SMEM_MODEM_HDR_SIZE)
-+		ret = ipa_cmd_hdr_init_local(ipa, IPA_SMEM_MODEM_HDR_OFFSET,
-+					     IPA_SMEM_MODEM_HDR_SIZE);
-+
-+	val = ipa->shared_offset + IPA_SMEM_MODEM_HDR_PROC_CTX_OFFSET;
-+	iowrite32(val, ipa->reg_virt +
-+			IPA_REG_LOCAL_PKT_PROC_CNTXT_BASE_OFFSET);
-+
-+	/* Modem smem regions will be zeroed whenever modem comes up */
-+	ipa_smem_zero_ap(ipa);
-+
-+	return ret;
-+}
-+
-+void ipa_smem_teardown(struct ipa *ipa)
-+{
-+	/* Nothing to do */
-+}
-+
-+/**
-+ * ipa_smem_config() - Configure IPA shared memory
-+ *
-+ * Return:	0 if successful, or a negative error code
-+ */
-+int ipa_smem_config(struct ipa *ipa)
-+{
-+	u32 size;
-+	u32 val;
-+
-+	/* Check the advertised location and size of the shared memory area */
-+	val = ioread32(ipa->reg_virt + IPA_REG_SHARED_MEM_SIZE_OFFSET);
-+
-+	/* The fields in the register are in 8 byte units */
-+	ipa->shared_offset = 8 * u32_get_bits(val, SHARED_MEM_BADDR_FMASK);
-+	dev_dbg(&ipa->pdev->dev, "shared memory offset 0x%x bytes\n",
-+		ipa->shared_offset);
-+	if (WARN_ON(ipa->shared_offset))
-+		return -EINVAL;
-+
-+	/* The code assumes a certain minimum shared memory area size */
-+	size = 8 * u32_get_bits(val, SHARED_MEM_SIZE_FMASK);
-+	dev_dbg(&ipa->pdev->dev, "shared memory size 0x%x bytes\n", size);
-+	if (WARN_ON(size < IPA_SMEM_SIZE))
-+		return -EINVAL;
-+
-+	/* Now write "canary" values before each sub-section. */
-+	smem_set_canaries(ipa, IPA_SMEM_V4_FLT_HASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V4_FLT_NHASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V6_FLT_HASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V6_FLT_NHASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V4_RT_HASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V4_RT_NHASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V6_RT_HASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_V6_RT_NHASH_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_MODEM_HDR_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_MODEM_HDR_PROC_CTX_OFFSET);
-+	smem_set_canaries(ipa, IPA_SMEM_MODEM_OFFSET);
-+
-+	/* Only one canary precedes the microcontroller ring */
-+	BUILD_BUG_ON(IPA_SMEM_UC_EVENT_RING_OFFSET % 1024);
-+	smem_set_canary(ipa, IPA_SMEM_UC_EVENT_RING_OFFSET);
-+
-+	return 0;
-+}
-+
-+void ipa_smem_deconfig(struct ipa *ipa)
-+{
-+	/* Don't bother zeroing any of the shared memory on exit */
-+}
-+
-+/**
-+ * ipa_smem_zero_modem() - Initialize modem general memory and header memory
-+ */
-+int ipa_smem_zero_modem(struct ipa *ipa)
-+{
-+	int ret = 0;
-+
-+	if (IPA_SMEM_MODEM_SIZE) {
-+		ret = ipa_cmd_smem_dma_zero(ipa, IPA_SMEM_MODEM_OFFSET,
-+					    IPA_SMEM_MODEM_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_SMEM_MODEM_HDR_SIZE) {
-+		ret = ipa_cmd_smem_dma_zero(ipa, IPA_SMEM_MODEM_HDR_OFFSET,
-+					    IPA_SMEM_MODEM_HDR_SIZE);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (IPA_SMEM_MODEM_HDR_PROC_CTX_SIZE)
-+		ret = ipa_cmd_smem_dma_zero(ipa,
-+					    IPA_SMEM_MODEM_HDR_PROC_CTX_OFFSET,
-+					    IPA_SMEM_MODEM_HDR_PROC_CTX_SIZE);
-+
-+	return ret;
-+}
-+
-+int ipa_mem_init(struct ipa *ipa)
-+{
-+	struct resource *res;
-+	int ret;
-+
-+	ret = dma_set_mask_and_coherent(&ipa->pdev->dev, DMA_BIT_MASK(64));
-+	if (ret)
-+		return ret;
-+
-+	/* Set up IPA shared memory */
-+	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
-+					   "ipa-shared");
-+	if (!res)
-+		return -ENODEV;
-+
-+	/* The code assumes a certain minimum shared memory area size */
-+	if (WARN_ON(resource_size(res) < IPA_SMEM_SIZE))
-+		return -EINVAL;
-+
-+	ipa->shared_virt = memremap(res->start, resource_size(res),
-+				    MEMREMAP_WC);
-+	if (!ipa->shared_virt)
-+		ret = -ENOMEM;
-+	ipa->shared_phys = res->start;
-+
-+	/* Setup IPA register memory  */
-+	res = platform_get_resource_byname(ipa->pdev, IORESOURCE_MEM,
-+					   "ipa-reg");
-+	if (!res) {
-+		ret = -ENODEV;
-+		goto err_unmap_shared;
-+	}
-+
-+	ipa->reg_virt = ioremap(res->start, resource_size(res));
-+	if (!ipa->reg_virt) {
-+		ret = -ENOMEM;
-+		goto err_unmap_shared;
-+	}
-+	ipa->reg_phys = res->start;
-+
-+	return 0;
-+
-+err_unmap_shared:
-+	memunmap(ipa->shared_virt);
-+
-+	return ret;
-+}
-+
-+void ipa_mem_exit(struct ipa *ipa)
-+{
-+	iounmap(ipa->reg_virt);
-+	memunmap(ipa->shared_virt);
-+}
-diff --git a/drivers/net/ipa/ipa_mem.h b/drivers/net/ipa/ipa_mem.h
-new file mode 100644
-index 000000000000..53f32c32ac06
---- /dev/null
-+++ b/drivers/net/ipa/ipa_mem.h
-@@ -0,0 +1,82 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+#ifndef _IPA_MEM_H_
-+#define _IPA_MEM_H_
-+
-+struct ipa;
-+
-+/**
-+ * DOC:
-+ * The IPA has a block of shared memory, divided into regions used for
-+ * specific purposes.  The offset within the IPA address space of this shared
-+ * memory block is defined by the IPA_SMEM_DIRECT_ACCESS_OFFSET register.
-+ *
-+ * The regions within the shared block are bounded by an offset and size found
-+ * in the IPA_SHARED_MEM_SIZE register.  The first 128 bytes of the shared
-+ * memory block are shared with the microcontroller, and the first 40 bytes of
-+ * that contain a structure used to communicate between the microcontroller
-+ * and the AP.
-+ *
-+ * There is a set of filter and routing tables, and each is given a 128 byte
-+ * region in shared memory.  Each entry in a filter or route table is
-+ * IPA_TABLE_ENTRY_SIZE, or 8 bytes.  The first "slot" of every table is
-+ * filled with a "canary" value, and the table offsets defined below represent
-+ * the location of the first real entry in each table after this.
-+ *
-+ * The number of filter table entries depends on the number of endpoints that
-+ * support filtering.  The first non-canary slot of a filter table contains a
-+ * bitmap, with each set bit indicating an endpoint containing an entry in the
-+ * table.  Bit 0 is used to represent a global filter.
-+ *
-+ * About half of the routing table entries are reserved for modem use.
-+ */
-+
-+/* The maximum number of filter table entries (IPv4, IPv6; hashed and not) */
-+#define IPA_SMEM_FLT_COUNT			14
-+
-+/* The number of routing table entries (IPv4, IPv6; hashed and not) */
-+#define IPA_SMEM_RT_COUNT			15
-+
-+ /* Which routing table entries are for the modem */
-+#define IPA_SMEM_MODEM_RT_COUNT			8
-+#define IPA_SMEM_MODEM_RT_INDEX_MIN		0
-+#define IPA_SMEM_MODEM_RT_INDEX_MAX \
-+		(IPA_SMEM_MODEM_RT_INDEX_MIN + IPA_SMEM_MODEM_RT_COUNT - 1)
-+
-+/* Regions within the shared memory block.  Table sizes are 0x80 bytes. */
-+#define IPA_SMEM_V4_FLT_HASH_OFFSET		0x0288
-+#define IPA_SMEM_V4_FLT_NHASH_OFFSET		0x0308
-+#define IPA_SMEM_V6_FLT_HASH_OFFSET		0x0388
-+#define IPA_SMEM_V6_FLT_NHASH_OFFSET		0x0408
-+#define IPA_SMEM_V4_RT_HASH_OFFSET		0x0488
-+#define IPA_SMEM_V4_RT_NHASH_OFFSET		0x0508
-+#define IPA_SMEM_V6_RT_HASH_OFFSET		0x0588
-+#define IPA_SMEM_V6_RT_NHASH_OFFSET		0x0608
-+#define IPA_SMEM_MODEM_HDR_OFFSET		0x0688
-+#define IPA_SMEM_MODEM_HDR_SIZE			0x0140
-+#define IPA_SMEM_AP_HDR_OFFSET			0x07c8
-+#define IPA_SMEM_AP_HDR_SIZE			0x0000
-+#define IPA_SMEM_MODEM_HDR_PROC_CTX_OFFSET	0x07d0
-+#define IPA_SMEM_MODEM_HDR_PROC_CTX_SIZE	0x0200
-+#define IPA_SMEM_AP_HDR_PROC_CTX_OFFSET		0x09d0
-+#define IPA_SMEM_AP_HDR_PROC_CTX_SIZE		0x0200
-+#define IPA_SMEM_MODEM_OFFSET			0x0bd8
-+#define IPA_SMEM_MODEM_SIZE			0x1024
-+#define IPA_SMEM_UC_EVENT_RING_OFFSET		0x1c00	/* v3.5 and later */
-+#define IPA_SMEM_SIZE				0x2000
-+
-+int ipa_smem_config(struct ipa *ipa);
-+void ipa_smem_deconfig(struct ipa *ipa);
-+
-+int ipa_smem_setup(struct ipa *ipa);
-+void ipa_smem_teardown(struct ipa *ipa);
-+
-+int ipa_smem_zero_modem(struct ipa *ipa);
-+
-+int ipa_mem_init(struct ipa *ipa);
-+void ipa_mem_exit(struct ipa *ipa);
-+
-+#endif /* _IPA_SMEM_H_ */
++++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+@@ -0,0 +1,164 @@
++Qualcomm IP Accelerator (IPA)
++
++This binding describes the Qualcomm IPA.  The IPA is capable of offloading
++certain network processing tasks (e.g. filtering, routing, and NAT) from
++the main processor.
++
++The IPA sits between multiple independent "execution environments,"
++including the Application Processor (AP) and the modem.  The IPA presents
++a Generic Software Interface (GSI) to each execution environment.
++The GSI is an integral part of the IPA, but it is logically isolated
++and has a distinct interrupt and a separately-defined address space.
++
++	--------	     ---------
++	|      |	     |	     |
++	|  AP  +<---.	.----+ Modem |
++	|      +--. |	| .->+	     |
++	|      |  | |	| |  |	     |
++	--------  | |	| |  ---------
++		  v |	v |
++		--+-+---+-+--
++		|    GSI    |
++		|-----------|
++		|	    |
++		|    IPA    |
++		|	    |
++		-------------
++
++See also:
++  bindings/interrupt-controller/interrupts.txt
++  bindings/interconnect/interconnect.txt
++  bindings/soc/qcom/qcom,smp2p.txt
++  bindings/reserved-memory/reserved-memory.txt
++  bindings/clock/clock-bindings.txt
++
++All properties except "modem-init" defined below are required.
++
++- compatible:
++	Must be "qcom,sdm845-ipa".
++
++- modem-init:
++	This Boolean property is optional.  If present, it indicates that
++	the modem is responsible for performing early IPA initialization,
++	including loading and validating firwmare used by the GSI.  This
++	early initialization is performed by Trust Zone otherwise.
++
++- reg:
++	Resources specifying the physical address spaces of the IPA and GSI.
++
++- reg-names:
++	The names of the two address space ranges defined by the "reg"
++	property.  Must be:
++		"ipa-reg"
++		"ipa-shared"
++		"gsi"
++
++- interrupts:
++	Specifies the IRQs used by the IPA.  Four interrupts are required,
++	specifying: the IPA IRQ; the GSI IRQ; the clock query interrupt
++	from the modem; and the "ready for setup" interrupt from the modem.
++	The first two are hardware IRQs; the third and fourth are SMP2P
++	input interrupts.
++
++- interrupt-names:
++	The names of the interrupts defined by the "interrupts-extended"
++	property.  Must be:
++		"ipa"
++		"gsi"
++		"ipa-clock-query"
++		"ipa-setup-ready"
++
++- clocks:
++	Resource that defines the IPA core clock.
++
++- clock-names:
++	The name used for the IPA core clock.  Must be "core".
++
++- interconnects:
++	Specifies the interconnects used by the IPA.  Three interconnects
++	are required, specifying:  the path from the IPA to memory; from
++	IPA to internal (SoC resident) memory; and between the AP subsystem
++	and IPA for register access.
++
++- interconnect-names:
++	The names of the interconnects defined by the "interconnects"
++	property.  Must be:
++		"memory"
++		"imem"
++		"config"
++
++- qcom,smem-states
++	The state bits used for SMP2P output.  Two states must be specified.
++	The first indicates whether the value in the second bit is valid
++	(1 means valid).  The second, if valid, defines whether the IPA
++	clock is enabled (1 means enabled).
++
++- qcom,smem-state-names
++	The names of the state bits used for SMP2P output.  Must be:
++		"ipa-clock-enabled-valid"
++		"ipa-clock-enabled"
++
++- memory-region
++	A phandle for a reserved memory area that holds the firmware passed
++	to Trust Zone for authentication.  (Note, this is required
++	only when Trust Zone performs early initialization; that is,
++	it is required if "modem-init" is not defined.)
++
++= EXAMPLE
++
++The following example represents the IPA present in the SDM845 SoC.  It
++shows portions of the "modem-smp2p" node to indicate its relationship
++with the interrupts and SMEM states used by the IPA.
++
++	smp2p-mpss {
++		compatible = "qcom,smp2p";
++		. . .
++		ipa_smp2p_out: ipa-ap-to-modem {
++			qcom,entry-name = "ipa";
++			#qcom,smem-state-cells = <1>;
++		};
++
++		ipa_smp2p_in: ipa-modem-to-ap {
++			qcom,entry-name = "ipa";
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
++	ipa@1e40000 {
++		compatible = "qcom,sdm845-ipa";
++
++		modem-init;
++
++		reg = <0 0x1e40000 0 0x7000>,
++		      <0 0x1e47000 0 0x2000>,
++		      <0 0x1e04000 0 0x2c000>;
++		reg-names = "ipa-reg",
++			    "ipa-shared";
++			    "gsi";
++
++		interrupts-extended = <&intc 0 311 IRQ_TYPE_EDGE_RISING>,
++				      <&intc 0 432 IRQ_TYPE_LEVEL_HIGH>,
++				      <&ipa_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				      <&ipa_smp2p_in 1 IRQ_TYPE_EDGE_RISING>;
++		interrupt-names = "ipa",
++				   "gsi",
++				   "ipa-clock-query",
++				   "ipa-setup-ready";
++
++		clocks = <&rpmhcc RPMH_IPA_CLK>;
++		clock-names = "core";
++
++		interconnects =
++			<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_EBI1>,
++			<&rsc_hlos MASTER_IPA &rsc_hlos SLAVE_IMEM>,
++			<&rsc_hlos MASTER_APPSS_PROC &rsc_hlos SLAVE_IPA_CFG>;
++		interconnect-names = "memory",
++				     "imem",
++				     "config";
++
++		qcom,smem-states = <&ipa_smp2p_out 0>,
++				   <&ipa_smp2p_out 1>;
++		qcom,smem-state-names = "ipa-clock-enabled-valid",
++					"ipa-clock-enabled";
++	};
 -- 
 2.20.1
 
