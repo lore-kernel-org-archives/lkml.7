@@ -2,173 +2,149 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AC5C46470
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A4C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4FE2173B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:35:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="s9JlnEry"
+	by mail.kernel.org (Postfix) with ESMTP id 717D5216C4
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 13:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfELNfw (ORCPT
+        id S1726775AbfELNgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 09:35:52 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:56936 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfELNfv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 09:35:51 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 07B052B6;
-        Sun, 12 May 2019 15:35:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1557668150;
-        bh=zolNMCRQP9CsOD1EJ2sLNp4MGIGXNTFYv6ci/HE00hs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s9JlnEryuJi2G2MXIA1M6Fcqpq37XXM12Z9vNKsPi41dss9TiBhoKmh6cupT3D6nX
-         uaVndxhd0aMsr3v4q/ZCRa4kecKMUf06DP5txtRyHp+lV4nAL+Qchv8LT8Zknw3YMc
-         hx2M+Dv+Ueuhl7KRGY3bKWiqam80Qg5XDMG/LpqE=
-Date:   Sun, 12 May 2019 16:35:33 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/6] drm: rcar-du: Add pre/post commit CRTC helpers
-Message-ID: <20190512133533.GD4960@pendragon.ideasonboard.com>
-References: <20190315170110.23280-1-kieran.bingham+renesas@ideasonboard.com>
- <20190315170110.23280-4-kieran.bingham+renesas@ideasonboard.com>
+        Sun, 12 May 2019 09:36:31 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:30156 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726415AbfELNgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 09:36:31 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 189004D9D8;
+        Sun, 12 May 2019 15:36:28 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id Ju6mq5hMCESO; Sun, 12 May 2019 15:36:07 +0200 (CEST)
+Date:   Sun, 12 May 2019 23:35:49 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] binfmt_*: scope path resolution of interpreters
+Message-ID: <20190512133549.ymx5yg5rdqvavzyq@yavin>
+References: <20190506191735.nmzf7kwfh7b6e2tf@yavin>
+ <20190510204141.GB253532@google.com>
+ <CALCETrW2nn=omqJb4p+m-BDsCOhg+YZQ3ELd4BdhODV3G44gfA@mail.gmail.com>
+ <20190510225527.GA59914@google.com>
+ <C60DC580-854D-478D-AF23-5F29FB7C3E50@amacapital.net>
+ <CAHk-=wh1JJD_RabMaFfinsAQp1vHGJOQ1rKqihafY=r7yHc8sQ@mail.gmail.com>
+ <CALCETrUOj=4VWp=B=QT0BQ8X_Ds_b+pt68oDwfjGb+K0StXmWA@mail.gmail.com>
+ <CAHk-=wg3+3GfHsHdB4o78jNiPh_5ShrzxBuTN-Y8EZfiFMhCvw@mail.gmail.com>
+ <9CD2B97D-A6BD-43BE-9040-B410D996A195@amacapital.net>
+ <CAHk-=wh3dT7=SMjvSZreXSu36Cg7gsfSipLhfTz5ioDKXV5uHg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7ljvorpid7rujdy3"
 Content-Disposition: inline
-In-Reply-To: <20190315170110.23280-4-kieran.bingham+renesas@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wh3dT7=SMjvSZreXSu36Cg7gsfSipLhfTz5ioDKXV5uHg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kieran,
 
-Thank you for the patch.
+--7ljvorpid7rujdy3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 15, 2019 at 05:01:07PM +0000, Kieran Bingham wrote:
-> Provide helpers to allow CRTC configuration to be separated from the power
-> state handling. rcar_du_crtc_atomic_post_commit() is a no-op, but maintained
-> for API symmetry.
+On 2019-05-12, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Sat, May 11, 2019 at 7:37 PM Andy Lutomirski <luto@amacapital.net> wro=
+te:
+> > I bet this will break something that already exists. An execveat()
+> > flag to turn off /proc/self/exe would do the trick, though.
+>=20
+> Thinking more about it, I suspect it is (once again) wrong to let the
+> thing that does the execve() control that bit.
+>=20
+> Generally, the less we allow people to affect the lifetime and
+> environment of a suid executable, the better off we are.
+>=20
+> But maybe we could limit /proc/*/exe to at least not honor suid'ness
+> of the target? Or does chrome/runc depend on that too?
 
-Do you think we will need to fill rcar_du_crtc_atomic_post_commit()
-later ? If not I wouldn't add it, and I may even rename
-rcar_du_crtc_atomic_pre_commit() to rcar_du_crtc_atomic_setup() to make
-its purpose clearer.
+Speaking on the runc side, we don't depend on this. It's possible
+someone depends on this for fexecve(3) -- but as mentioned before in
+newer kernels glibc uses execve(AT_EMPTY_PATH).
 
-> 
+I would like to point out though that I'm a little bit cautious about
+/proc/self/exe-specific restrictions -- because a trivial way to get
+around them would be to just open it with O_PATH (and you end up with a
+/proc/self/fd/ which is equivalent). Unfortunately blocking setuid exec
+on all O_PATH descriptors would break even execve(AT_EMPTY_PATH) of
+setuid descriptors.
 
-Missing SoB line ?
+The patches I mentioned (which Andy and I discussed off-list) would
+effectively make the magiclink modes in /proc/ affect how you can
+operate on the path (no write bit in the mode, cannot re-open it write).
+One aspect of this is how to handle O_PATH and in particular how do we
+handle an O_PATH re-open of an already-restricted magiclink.
 
-> ---
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 25 +++++++++++++++++++++++--
->  drivers/gpu/drm/rcar-du/rcar_du_crtc.h |  5 +++++
->  drivers/gpu/drm/rcar-du/rcar_du_kms.c  |  2 ++
->  3 files changed, 30 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> index 6109a97b0bb9..2606de788688 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> @@ -515,8 +515,6 @@ static int rcar_du_crtc_enable(struct rcar_du_crtc *rcrtc)
->  	if (ret < 0)
->  		goto error_group;
->  
-> -	rcar_du_crtc_setup(rcrtc);
-> -
->  	return 0;
->  
->  error_group:
-> @@ -683,6 +681,29 @@ int rcar_du_crtc_atomic_enter_standby(struct drm_device *dev,
->  	return 0;
->  }
->  
-> +int rcar_du_crtc_atomic_pre_commit(struct drm_device *dev,
-> +				   struct drm_atomic_state *state)
-> +{
-> +	struct drm_crtc *crtc;
-> +	struct drm_crtc_state *crtc_state;
-> +	unsigned int i;
-> +
-> +	for_each_new_crtc_in_state(state, crtc, crtc_state, i) {
-> +		struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> +
-> +		if (crtc_state->active_changed && crtc_state->active)
-> +			rcar_du_crtc_setup(rcrtc);
+Maybe we could make it so that setuid is disallowed if you are dealing
+with an O_PATH fd which was a magiclink. Effectively, on O_PATH open you
+get an fmode_t saying FMODE_SETUID_EXEC_ALLOWED *but* if the path is a
+magiclink this fmode gets dropped and when the fd is given to
+execveat(AT_EMPTY_PATH) the fmode is checked and setuid-exec is not
+allowed.
 
-I wondered why you didn't merge this with the existing
-rcar_du_crtc_atomic_exit_standby() function, and saw in a later patch
-that you have to introduce another operation in-between. I would explain
-this in the commit message.
+[I assume in this discussion "setuid" means "setuid + setcap", right?]
 
-> +	}
-> +
-> +	return 0;
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-As this function and the next one are called in a context that can never
-fail, and as the functions never return a failure, I would make them
-void.
+--7ljvorpid7rujdy3
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+-----BEGIN PGP SIGNATURE-----
 
-> +}
-> +
-> +int rcar_du_crtc_atomic_post_commit(struct drm_device *dev,
-> +				    struct drm_atomic_state *state)
-> +{
-> +	return 0;
-> +}
-> +
->  static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
->  				       struct drm_crtc_state *old_state)
->  {
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> index d12d4a788e9f..0b60a6e0b753 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.h
-> @@ -105,6 +105,11 @@ int rcar_du_crtc_atomic_exit_standby(struct drm_device *dev,
->  int rcar_du_crtc_atomic_enter_standby(struct drm_device *dev,
->  				      struct drm_atomic_state *state);
->  
-> +int rcar_du_crtc_atomic_pre_commit(struct drm_device *dev,
-> +				   struct drm_atomic_state *state);
-> +int rcar_du_crtc_atomic_post_commit(struct drm_device *dev,
-> +				    struct drm_atomic_state *state);
-> +
->  void rcar_du_crtc_dsysr_clr_set(struct rcar_du_crtc *rcrtc, u32 clr, u32 set);
->  
->  #endif /* __RCAR_DU_CRTC_H__ */
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> index b8da4dfc79d2..e4befb1937f8 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> @@ -304,12 +304,14 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
->  
->  	/* Apply the atomic update. */
->  	rcar_du_crtc_atomic_exit_standby(dev, old_state);
-> +	rcar_du_crtc_atomic_pre_commit(dev, old_state);
->  
->  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
->  	drm_atomic_helper_commit_planes(dev, old_state,
->  					DRM_PLANE_COMMIT_ACTIVE_ONLY);
->  	drm_atomic_helper_commit_modeset_enables(dev, old_state);
->  
-> +	rcar_du_crtc_atomic_post_commit(dev, old_state);
->  	rcar_du_crtc_atomic_enter_standby(dev, old_state);
->  
->  	drm_atomic_helper_commit_hw_done(old_state);
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzYITIACgkQSnvnv3De
+m5+OKBAAiDKQq70XmSTMnQLoBSf5SB1ZyMZ3vJXt6n0euUe+wavft0DZtPTb0hY3
+uKd7u/g38zUZ7baljhnkEJQAyZy27SG+2/3EAKSAE9jtMS6pdksQWYwjOwXdMu50
+1lnSKVxGnLLWWFw223hgh9DFnoK4VcWVIclLW2h+Hvx0ZdOgGxJGN90e+E8bHjKi
+9M1A4asRFL84bm3wFqTwnYSulEKLlt2N6RsEg9jgtc4LSqkqniv3GqyFdtdfhJ4x
++6O80qPV9ZuPPhh9KH6lepHvlmJTUvHjrNbUbdfqqRmL1FaxvhOmLTezUWrpxOVB
+3Y5PlLCKAeIpILMMDhwKFwRKFv3rVaPV7hrF/7W3dhtaafsEiiOVPvR5EOibckW8
+Sjxjfk/9GMpojh4fQW8kMA6oUoK6t0C3whZ/lkIG5tHP5NfTmy0mAkM8792lMTCP
+fXoEREetPz7fTgqLSWIviE1B8R2639WE9U33+7szv091/9k5sF6IWIihgu76eCnK
+fYEULllNXG6rVrUFRi3TPQayufLiwtHBkS2EYmTI4LnMl8FF3epFieIxkuIT/CZl
+khWT2EXGmkflqCTR6pS3ctBPAZ+tHpzjSo9j0/U0r3moNUP7OBLhFPWWvZ1Qvo8i
+dZKy9IVwy3ycjoDurTWk3/UOfa4XFBgBb07HxAp8W5yE39Bk89s=
+=2vc5
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
-
-Laurent Pinchart
+--7ljvorpid7rujdy3--
