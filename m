@@ -2,119 +2,103 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E604EC04AB3
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC61EC04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C01972146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE822173B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 16:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6lmQ0g5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfELQwi (ORCPT
+        id S1726955AbfELQxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 12:52:38 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35220 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfELQwi (ORCPT
+        Sun, 12 May 2019 12:53:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35269 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfELQxS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 12:52:38 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c15so6666548qkl.2
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 09:52:37 -0700 (PDT)
+        Sun, 12 May 2019 12:53:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g5so5205311plt.2
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 09:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=pUkqfemPvj4U8k6I42VkBU64ojbl3SFKE12XTRr6nbI=;
+        b=f6lmQ0g5Dsaclu3LMgF/xUHC4LOXFD+rMnCi2sCWxkWNG/zOnY40KTn/HzL2/b4z+b
+         FcDmVU9vTZZTSjOOyRcLUytpkPekVuLT5bingKQzfpymJeX4qGjlVAHG4/RZxK4Qj6/+
+         W7epK0SRK/tU2M1KUg4l9+2sZN32VHS3eeyv3jF+PAszSLJO0hyiix2pkfHNXIzTMksS
+         7E6PugJ6NbXetbCGdw1tVGtvZyQm3tRFtIH1qhbmZ405RVV+tHC3J5jOsv8hGXCz2E5s
+         y+ehkhh2uKFA3ErVvOzht/oVAo2MfplvDgrvHYZxbJL9+ow2JgpbmohA+QV8ZiTbwv7r
+         Eh0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tv7+SbtJTW406Xn58+T3o8cNYwcZMfaM6OpdKpHHAGI=;
-        b=b9JKMEEbHkcV21Rbv0fgmmphGtnDmI7f5cyokGSdYOe1prvdG+SIZbt0c03BBWFJgo
-         6NAjiCkEKRwZSs3YDJb+W5GaI8PbG+l5/CvYyLLIH3Nd2BIS20Miq2LYF8/SrC9zBr1E
-         Q2xeh4vd+di999+7cnILfM0YFit6E5X/yLOiL4rj89VSi7/mjVaIIv0h633P/I6Q8QI1
-         FMtqeQHskKhxwLo4J7yGwJDPdZVFjw2Tx7GP6gL+yEMqhaSm6oHgxYDahSpf6LxXmgxq
-         Ki2Pi1mQEbRz2RfgsSDgyPJPtmUcsmcc4JssyYIWtias0GvhzIFrMhOTMG6y+ceIA986
-         HB1w==
-X-Gm-Message-State: APjAAAWNdXC+hs640IWh77e4UKex3x+37FP1TvQfd39IBglnQhQ1tWwG
-        Rn8ivHkrg+LFYxduqImZb0QU1A==
-X-Google-Smtp-Source: APXvYqxk9SXE+foxB/6DAoFm93oskr+MiF5xkYgB0SEkfaz8myE/mnL8/ZXigyA4Y2k8vy6g71yM+Q==
-X-Received: by 2002:a37:9fcb:: with SMTP id i194mr18869154qke.258.1557679957115;
-        Sun, 12 May 2019 09:52:37 -0700 (PDT)
-Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
-        by smtp.gmail.com with ESMTPSA id o37sm4708706qta.86.2019.05.12.09.52.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 12 May 2019 09:52:36 -0700 (PDT)
-Date:   Sun, 12 May 2019 12:52:33 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Subject: Re: [PATCH v8 0/6] virtio pmem driver
-Message-ID: <20190512125221-mutt-send-email-mst@kernel.org>
-References: <20190510155202.14737-1-pagupta@redhat.com>
- <CAPcyv4joEZaePvzc__N9Q3nozoHgQn7hNFPjBVo5BP6cc4rkEA@mail.gmail.com>
- <1909759746.28039539.1557531183427.JavaMail.zimbra@redhat.com>
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=pUkqfemPvj4U8k6I42VkBU64ojbl3SFKE12XTRr6nbI=;
+        b=lhUIGAVtmnt5969zbC9tJCyuGOl9VmJ6dJ5aJccBzvfNTKphL/J+3qB5Q6r9tuKx7c
+         LU8zxw18Guxero7SK4TVPLtgNsY+E2fr4P0z9aXX60PQBUfBJPhhWz48xlKocjpZPobC
+         OyEwQ7WYWZGiSXTLUR1ZSbvqo+D2lEJZegneMdw9dfmSDZTg2UFpu3KtMBVbkzRkZFby
+         3QF4lS2s+UNhAYY07sEdzav0yipWuv9LEOBDveuOfWVDCX9+kQNnJujECQXLQsSc3c5c
+         JQ6jeN0VB2ZmJBarhESIO7kDJnRtdaHH1Te9hJLlA8G4vJ/YNkaJTsV0lIO5S5jEWAGs
+         WEiQ==
+X-Gm-Message-State: APjAAAU9GBHd6cmjV4HuXsO5DMtwpX1x/ljez1TaLW5DP76t6x6kac9m
+        CqsGayjw5RqHBAFSEsZAUBM=
+X-Google-Smtp-Source: APXvYqwYCmX6Tq5bub63pCJHg/4b2SzIuKopJVV/+vqJXE6oUFHkbrlbInsKjC40nnm1qMbnMJltGQ==
+X-Received: by 2002:a17:902:2bca:: with SMTP id l68mr24857776plb.301.1557679997486;
+        Sun, 12 May 2019 09:53:17 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id g24sm17472311pfi.126.2019.05.12.09.53.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 09:53:16 -0700 (PDT)
+Date:   Sun, 12 May 2019 22:23:11 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging :rtl8723bs :core fix WARNING: Comparison to bool
+Message-ID: <20190512165311.GA27289@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1909759746.28039539.1557531183427.JavaMail.zimbra@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 07:33:03PM -0400, Pankaj Gupta wrote:
-> 
-> > >
-> > >  Hi Michael & Dan,
-> > >
-> > >  Please review/ack the patch series from LIBNVDIMM & VIRTIO side.
-> > >  We have ack on ext4, xfs patches(4, 5 & 6) patch 2. Still need
-> > >  your ack on nvdimm patches(1 & 3) & virtio patch 2.
-> > 
-> > I was planning to merge these via the nvdimm tree, not ack them. Did
-> > you have another maintainer lined up to take these patches?
-> 
-> Sorry! for not being clear on this. I wanted to say same.
-> 
-> Proposed the patch series to be merged via nvdimm tree as kindly agreed
-> by you. We only need an ack on virtio patch 2 from Micahel.
-> 
-> Thank you for all your help.
-> 
-> Best regards,
-> Pankaj Gupta
+fix below warning reported by coccicheck
 
-Fine by me.
+drivers/staging/rtl8723bs/core/rtw_pwrctrl.c:181:5-40: WARNING:
+Comparison to bool
 
-> > 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_pwrctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+index 5c468c5..c337a528 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
++++ b/drivers/staging/rtl8723bs/core/rtw_pwrctrl.c
+@@ -178,7 +178,7 @@ void rtw_ps_processor(struct adapter *padapter)
+ 	if (pwrpriv->ips_mode_req == IPS_NONE)
+ 		goto exit;
+ 
+-	if (rtw_pwr_unassociated_idle(padapter) == false)
++	if (!rtw_pwr_unassociated_idle(padapter))
+ 		goto exit;
+ 
+ 	if ((pwrpriv->rf_pwrstate == rf_on) && ((pwrpriv->pwr_state_check_cnts%4) == 0)) {
+-- 
+2.7.4
+
