@@ -2,181 +2,58 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131A3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33E3C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D915920989
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HWOb2t35"
+	by mail.kernel.org (Postfix) with ESMTP id 78F6620989
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfELUQ2 (ORCPT
+        id S1727117AbfELUVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 16:16:28 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40283 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbfELUQM (ORCPT
+        Sun, 12 May 2019 16:21:49 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56774 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726664AbfELUVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 16:16:12 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d15so9121061ljc.7;
-        Sun, 12 May 2019 13:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=54Cg2KVLeyPm5R5v7PD/4q6SqBNJQ7DqejFPZlBrBC4=;
-        b=HWOb2t35yhJBVcUxfI3fKcnBNckQur2cBj55IKa3BrM2roHViMTf8zB+eqJ86Qi7ph
-         Uh0L1eueQEM/dda78pNMBteXiO5jy2NPXhj4Oil26qq6Reh9pAU2HHlC2FWUg/ojMmiJ
-         KUimp5kcFQIjVDxJcLEC4vm43vDBZ0p5++p4mJfv9hLtgHUSpnZ4gio7GXYqwwK71eam
-         ICQl/0XQCgDb+lD2BxSU2RTSuKpYM6IfUpBqKS5PZlK1kQivVLxx852CBx2k3MubcdhC
-         0VK23wroRFWk/L0GucCHUvLYWcxdn8kmeSUaTXNKdZVT07fe32GA/2EeQ/civMQLj4MD
-         w88g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=54Cg2KVLeyPm5R5v7PD/4q6SqBNJQ7DqejFPZlBrBC4=;
-        b=t5LCDP3Nqzaj1h99FjAqoIdZJvG+b5ZBQ82loJumReZMdFxSa8T0Mb3/Iyh9TkypfX
-         KtxaO9admFLRWh50OtMQgiDOg1VKbZQYtUcrapfc40hA2sQYno19Cr6bGIeojfIitfPO
-         gWcOV5dTG00LrXjY1iH174u9yyBSphidSbwb/iAaK8Gi0CdfG/Qyrh4p+a5VqZwn2cTv
-         yKiaRhHH8D6ceZlzPePpvKwWwLrAvwjrCzU1k/N13Zb5dG2KzKuC+nbF6JKs9ZGR/Nxx
-         jQN4JNMIgic13ism5l7EAzzm4R+4GaWac0Aqd4J4yH0luNVoCezBp7ZUs7VbLIGOHfYZ
-         EkkA==
-X-Gm-Message-State: APjAAAW2cQeZcHG7bfkopBll0Dne9iShRKTEXNx8aIan1VSM6G0gEoe9
-        LzqNjowL/8gzF/7GrS3dxl4=
-X-Google-Smtp-Source: APXvYqxIgdt4t13bhYmF48J/CcJj6S2R2Pjb/30njayHKuirfp7Ug+x3xXxiciIH4h42cM36xbfuLg==
-X-Received: by 2002:a2e:9d12:: with SMTP id t18mr11852434lji.163.1557692170428;
-        Sun, 12 May 2019 13:16:10 -0700 (PDT)
-Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id w20sm2360533ljd.39.2019.05.12.13.16.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 13:16:09 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH v5 3/4] media: v4l2-subdev: Verify v4l2_subdev_call() pointer arguments
-Date:   Sun, 12 May 2019 22:15:50 +0200
-Message-Id: <20190512201551.18724-4-jmkrzyszt@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190512201551.18724-1-jmkrzyszt@gmail.com>
-References: <20190512201551.18724-1-jmkrzyszt@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 12 May 2019 16:21:49 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6B4B914BFDB5D;
+        Sun, 12 May 2019 13:21:48 -0700 (PDT)
+Date:   Sun, 12 May 2019 13:21:47 -0700 (PDT)
+Message-Id: <20190512.132147.2030976092394243720.davem@davemloft.net>
+To:     hariprasad.kelam@gmail.com
+Cc:     gerrit@erg.abdn.ac.uk, dccp@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dccp : proto: remove Unneeded variable "err"
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190512103949.GA2554@hari-Inspiron-1545>
+References: <20190512103949.GA2554@hari-Inspiron-1545>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 12 May 2019 13:21:48 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parameters passed to check helpers are now obtained by dereferencing
-unverified pointer arguments.  Check validity of those pointers first.
+From: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Date: Sun, 12 May 2019 16:09:49 +0530
 
-Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
----
- drivers/media/v4l2-core/v4l2-subdev.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+> Fix below issue reported by coccicheck
+> 
+> 
+> net/dccp/proto.c:266:5-8: Unneeded variable: "err". Return "0" on line
+> 310
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 5f2264575cd7..3fc07af26c5b 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -141,6 +141,9 @@ static int check_pad(struct v4l2_subdev *sd, __u32 pad)
- static int check_format(struct v4l2_subdev *sd,
- 			struct v4l2_subdev_format *format)
- {
-+	if (WARN_ON(!format))
-+		return -EINVAL;
-+
- 	return check_which(format->which) ? : check_pad(sd, format->pad);
- }
- 
-@@ -164,6 +167,9 @@ static int check_enum_mbus_code(struct v4l2_subdev *sd,
- 				struct v4l2_subdev_pad_config *cfg,
- 				struct v4l2_subdev_mbus_code_enum *code)
- {
-+	if (WARN_ON(!code))
-+		return -EINVAL;
-+
- 	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
- 	       sd->ops->pad->enum_mbus_code(sd, cfg, code);
- }
-@@ -172,6 +178,9 @@ static int check_enum_frame_size(struct v4l2_subdev *sd,
- 				 struct v4l2_subdev_pad_config *cfg,
- 				 struct v4l2_subdev_frame_size_enum *fse)
- {
-+	if (WARN_ON(!fse))
-+		return -EINVAL;
-+
- 	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
- 	       sd->ops->pad->enum_frame_size(sd, cfg, fse);
- }
-@@ -179,6 +188,9 @@ static int check_enum_frame_size(struct v4l2_subdev *sd,
- static int check_frame_interval(struct v4l2_subdev *sd,
- 				struct v4l2_subdev_frame_interval *fi)
- {
-+	if (WARN_ON(!fi))
-+		return -EINVAL;
-+
- 	return check_pad(sd, fi->pad);
- }
- 
-@@ -200,6 +212,9 @@ static int check_enum_frame_interval(struct v4l2_subdev *sd,
- 				struct v4l2_subdev_pad_config *cfg,
- 				struct v4l2_subdev_frame_interval_enum *fie)
- {
-+	if (WARN_ON(!fie))
-+		return -EINVAL;
-+
- 	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
- 	       sd->ops->pad->enum_frame_interval(sd, cfg, fie);
- }
-@@ -207,6 +222,9 @@ static int check_enum_frame_interval(struct v4l2_subdev *sd,
- static int check_selection(struct v4l2_subdev *sd,
- 			   struct v4l2_subdev_selection *sel)
- {
-+	if (WARN_ON(!sel))
-+		return -EINVAL;
-+
- 	return check_which(sel->which) ? : check_pad(sd, sel->pad);
- }
- 
-@@ -228,6 +246,9 @@ static int check_set_selection(struct v4l2_subdev *sd,
- 
- static int check_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
- {
-+	if (WARN_ON(!edid))
-+		return -EINVAL;
-+
- 	if (WARN_ON(edid->blocks && edid->edid == NULL))
- 		return -EINVAL;
- 
-@@ -247,6 +268,9 @@ static int check_set_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
- static int check_dv_timings_cap(struct v4l2_subdev *sd,
- 				struct v4l2_dv_timings_cap *cap)
- {
-+	if (WARN_ON(!cap))
-+		return -EINVAL;
-+
- 	return check_pad(sd, cap->pad) ? :
- 	       sd->ops->pad->dv_timings_cap(sd, cap);
- }
-@@ -254,6 +278,9 @@ static int check_dv_timings_cap(struct v4l2_subdev *sd,
- static int check_enum_dv_timings(struct v4l2_subdev *sd,
- 				 struct v4l2_enum_dv_timings *dvt)
- {
-+	if (WARN_ON(!dvt))
-+		return -EINVAL;
-+
- 	return check_pad(sd, dvt->pad) ? :
- 	       sd->ops->pad->enum_dv_timings(sd, dvt);
- }
--- 
-2.21.0
-
+Applied.
