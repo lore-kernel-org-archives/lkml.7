@@ -2,147 +2,133 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9D3C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8017C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD5D2146F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FD82146F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 08:51:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHEv75dl"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DwgfIf3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbfELItw (ORCPT
+        id S1726529AbfELIvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 04:49:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38420 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfELItv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 04:49:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y2so61996pfg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 01:49:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mTz8ks950uiG7ImKsofD9QejdtCMFcMllki0BP6A19A=;
-        b=bHEv75dl+OKs603PS82DK9Pm+GRFn3mrbC2f91/d7fdKN/cQz+lhUFmpTooptfYrIN
-         Wvp+PfHa4hqHZZhi8PXNbE980IDlD/FUW1Eis+GsLKy8O8rr1gFAlvkww2RgaXayToyD
-         KXjY4NGenyVzQm6GuS45drIkANbuPi1y+8Whedkr2kzgT3G/ne4l8soEkE1pG/LUY5M4
-         sQuIXgO/mDJ/C/OJt6woVoU5eLMNXOj42RTzoym67yUOctMD9TexJxuOboAv7Xxb5RmY
-         0pZnDH+0zeYQJyyTstaw3+LBYgzNUKgIYDqKHAyKB0gMb/w3gyA6v+JfILKr9FijcWR2
-         IvYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mTz8ks950uiG7ImKsofD9QejdtCMFcMllki0BP6A19A=;
-        b=qcW3eGctQ82G57T/dP+EOl0gv1AmZdT35tliWwZPQIiOWh9U4N6njGJ12D13pgZAFW
-         8ljceQ284CNm8WpiIWG4tngpW9+YF6peJnx42KbnJx01KjYSPTf9OSOpHSFJSqi8O/eb
-         25CGIihxCUgNbNCHcDNV+eozCJK7rux0GIVu3xFUszWSkT+eG9XgVqaFoVvQ4EbH3tR4
-         UHRskJRwsQRwEhF1MhxQiNX0rxY9zEhR11VkQH0fM6hUl2se5d0Rt9PcBC6Uscmq1+I9
-         8r5CVgO+X1WUVk35c2p/wC9Dpb7wcqtvy4LI64+y4bI+xr9rBrun35GuMITbU6jmGSyz
-         7oNw==
-X-Gm-Message-State: APjAAAXedwq2ZyVawtBIKupsMnnromhjsfmUv7gL4GkVTzAldxz5gHRU
-        lQwZj8iH1qj3cCDZusDqmMj6ckeffSnjTw==
-X-Google-Smtp-Source: APXvYqxIj6vqERyHfJXMm+0+nm7SXkrCsXh2HYpJ0i3OBy255KlbUVlug9kg/3FoIyvvCE5hgsFy6g==
-X-Received: by 2002:a65:5244:: with SMTP id q4mr24064154pgp.79.1557650990938;
-        Sun, 12 May 2019 01:49:50 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id v1sm16487204pgb.85.2019.05.12.01.49.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 01:49:50 -0700 (PDT)
-Date:   Sun, 12 May 2019 16:49:39 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file
- of Linux 5.0.14
-Message-ID: <20190512084916.GA4615@zhanggen-UX430UQ>
-References: <CAAie0ar11_mPipN=d=mrgnVdEMO1Np0cCYdqcRfZrij_d-5zaQ@mail.gmail.com>
- <20190510051415.GA6073@kroah.com>
- <CAAie0ao_O0hcUOuUf67oog+dSswdQRpAtX8NyQvDAr_XQr=xQg@mail.gmail.com>
- <20190510151206.GA31186@kroah.com>
- <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
- <20190511060741.GC18755@kroah.com>
- <20190512032719.GA16296@zhanggen-UX430UQ>
- <20190512062009.GA25153@kroah.com>
+        Sun, 12 May 2019 04:51:23 -0400
+Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:37700
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbfELIvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 04:51:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TDJ/qW6lbDzjrjMOB+Uej4+nV7CPKZuwtBnkVpbpyOI=;
+ b=DwgfIf3/MDhUYp/tVMrqf7XFIjt149QtQLnh3XcgAHQNrrHF0iOR+zlQa71Ncr9c/l33dUvUKTcR9iRzu2MsjQyp/XmmzNldikDy1hkzzDKGegKh9kbAWxtXPZGBl0b8WnC9AqQyydzvWPvu+4bIZF8d8p3s0cD3g6/cgHcoWQ8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3739.eurprd04.prod.outlook.com (52.134.67.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Sun, 12 May 2019 08:51:15 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1878.022; Sun, 12 May 2019
+ 08:51:15 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V12 RESEND 1/3] ARM: imx_v6_v7_defconfig: Add TPM PWM support
+ by default
+Thread-Topic: [PATCH V12 RESEND 1/3] ARM: imx_v6_v7_defconfig: Add TPM PWM
+ support by default
+Thread-Index: AQHVCJ/ba2U9z0dY2k6pxI/P2DhoFA==
+Date:   Sun, 12 May 2019 08:51:15 +0000
+Message-ID: <1557650772-11973-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0043.apcprd03.prod.outlook.com
+ (2603:1096:202:17::13) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b553a5ba-b060-4ace-8b11-08d6d6b6fddf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3739;
+x-ms-traffictypediagnostic: DB3PR0402MB3739:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB3PR0402MB37396650EA1D2665169013CEF50E0@DB3PR0402MB3739.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2150;
+x-forefront-prvs: 0035B15214
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(136003)(346002)(396003)(376002)(199004)(189003)(966005)(36756003)(186003)(66556008)(476003)(66446008)(66946007)(66476007)(64756008)(486006)(14454004)(2501003)(66066001)(2906002)(2616005)(256004)(73956011)(478600001)(4326008)(3846002)(6116002)(25786009)(26005)(102836004)(6436002)(7736002)(305945005)(53936002)(6506007)(386003)(6486002)(6512007)(6306002)(7416002)(2201001)(86362001)(4744005)(316002)(110136005)(68736007)(81156014)(81166006)(8676002)(8936002)(50226002)(71190400001)(71200400001)(52116002)(99286004)(5660300002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3739;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: uOXkVo64ZCmRcSVwKHFXssUjheR3ubvA3CfMc75m1hs5vZ+zMDy661YrnknEVvn8cKTVZVuzhR6cZ6t/En7qf7ScJ8phaj92FLKSA15TfVwW+rm2q8HY09knzpce91cCJX31h9VjUNiqpcGDKizpy42dtacZxE4i9+1jaRirlA+G2qqTV0Yum5vCWGRxAnV1Cv1mUlpxaeQq4hMh9oJm9oZcLvT0bZC3T/dMDlsXH7Q3vmXqIE27N0+BUFpUTcclv0UwpVpWlm9nVNrmQdDmaO4mzDbKwSPR0qHIKeqjK0L+zh/KpM8hDc+QU9EJ/A0ZQsVpZEpOTOQagnJtGzeHfK9PnLwJM92EQyhnO/kYSOLVwFfnQKkqwRD6N199nOlZEzmVagvecUU7g7dVy6dEdWx4KGAkFN920ZBm9TAWlB0=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <920B8BDFCC09454ABCA20E7BFC63ED42@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512062009.GA25153@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b553a5ba-b060-4ace-8b11-08d6d6b6fddf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 May 2019 08:51:15.7445
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3739
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 08:20:09AM +0200, Greg KH wrote:
-> Yes, that worked!  Now, can you resend it in a proper format that I can
-> apply it in?  (with changelog text, signed-off-by, etc.) as described in
-> Documentation/SubmittingPatches, I will be glad to review it after the
-> 5.2-rc1 release happens.
-> 
-> thanks,
-> 
-> greg k-h
-From: Gen Zhang <blackgod016574@gmail.com>
-Date: Sun, 11 May 2019 15:31:30 +0000
-Subject: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file of Linux 5.0.14
+Select CONFIG_PWM_IMX_TPM by default to support i.MX7ULP
+TPM PWM.
 
-Hi,
-I found this missing-check bug in drivers/tty/vt/vt.c when I was examining the source code. 
-
-In function con_init(), the pointer variable vc_cons[currcons].d, vc and vc->vc_screenbuf is allocated a memory space via kzalloc(). 
-And they are used in the following codes. 
-
-However, when there is a memory allocation error, kzalloc can  be failed. 
-Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf) dereference may happen. 
-And it will cause the kernel to crash. Therefore, we should check return value and handle an error.
-
-And this patch works in 5.1.1.
-
-Thank you!
-
-Kind regards
-Gen
-
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
---- drivers/tty/vt/vt.c
-+++ drivers/tty/vt/vt.c
-@@ -3349,10 +3349,14 @@ static int __init con_init(void)
- 
- 	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
- 		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-+		if (!vc_cons[currcons].d || !vc)
-+			goto err_vc;
- 		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
- 		tty_port_init(&vc->port);
- 		visual_init(vc, currcons, 1);
- 		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-+		if (!vc->vc_screenbuf)
-+			goto err_vc_screenbuf;
- 		vc_init(vc, vc->vc_rows, vc->vc_cols,
- 			currcons || !vc->vc_sw->con_save_screen);
- 	}
-@@ -3374,6 +3378,14 @@ static int __init con_init(void)
- 	register_console(&vt_console_driver);
- #endif
- 	return 0;
-+err_vc:
-+	console_unlock();
-+	return -ENOMEM;
-+err_vc_screenbuf:
-+	console_unlock();
-+	kfree(vc);
-+	vc_cons[currcons].d = NULL;
-+	return -ENOMEM;
- }
- console_initcall(con_init);
- 
+No change change, just resend the patch with correct encoding for patch ser=
+ies:
+https://patchwork.kernel.org/patch/10937147/
 ---
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6=
+_v7_defconfig
+index ea387cb..cee7c61 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -402,6 +402,7 @@ CONFIG_MPL3115=3Dy
+ CONFIG_PWM=3Dy
+ CONFIG_PWM_FSL_FTM=3Dy
+ CONFIG_PWM_IMX27=3Dy
++CONFIG_PWM_IMX_TPM=3Dy
+ CONFIG_NVMEM_IMX_OCOTP=3Dy
+ CONFIG_NVMEM_VF610_OCOTP=3Dy
+ CONFIG_TEE=3Dy
+--=20
+2.7.4
+
