@@ -2,139 +2,129 @@ Return-Path: <SRS0=t4ha=TM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E2FC46460
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1184C04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE3421019
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623BA20C01
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 19:41:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="P1GAUOYh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5JZmF3C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfELTjq (ORCPT
+        id S1727068AbfELTll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 15:39:46 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40163 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726909AbfELTjp (ORCPT
+        Sun, 12 May 2019 15:41:41 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43297 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726832AbfELTlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 15:39:45 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h11so11620148wmb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 12:39:43 -0700 (PDT)
+        Sun, 12 May 2019 15:41:40 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so12870634wro.10
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 12:41:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1xqj/Zo3AUFkVy0zRgFkVBz4uDdS8LIxp09mdTlXIys=;
-        b=P1GAUOYh6F5NDr6P/o2VZYBMKNU69JrmKXjrv0mJrQkAzO5Gr2ZqK2J5fTuim4vqug
-         4fAfYWtolMpC1tPgmmCeJglHw1ly3XD42CqglWnjR0o6WnnBX7XK/OJ2Rog1OXts6Djj
-         MNiT9SsNubOhKeCkH0Y354TJDzax+BPcAScpczaUsvHB2Fj04fBNbHVB2IRxuctX1jYv
-         7R6bKG3KsE9L5q5frbaVkYqo01SIA+WhGqv/dFkPRShaJvcjBQfrF+9iHUbERptfJUgv
-         p7sGaWqgfX9vK+od4cEAWG+x2fOZZnFDs2SkKhn7wxelYRAIoQnuXOIO9/k+ab5SZ3Tg
-         X6uA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=iCOE3Lx6Cb7K+puvEJ0JXXJFYGgFv7+7QeyyjnRyHs0=;
+        b=H5JZmF3ChVLTqTx0P8KprOZ3KNh5hnZbTTwGR5LwMWCBRj3rAR94sqVR9vIsofWowG
+         NCfhWcKo5LkHCT0q1TIeDzwyoNrqVzry7Slodb7yZJXHiw1e5gwGCtJRWZRfOr3ZKf9i
+         iE1VNIOYH51/CRKyx2jRjP4HEIHm9NHFTYAwxowFqkLmnTSCp1q9eoprBiT5xaJ3ONDn
+         zk+3m4AXbIWkxNzhDS8eMb+rB/CVYrJllAjKiaD/MMDDosmGYDxVHFjwM3Hxoza4mLyy
+         8Xc5u0ffImbkc0cie6TauVzWHBSunJC0/jzSoYTx/zqe8JOe9Md6hi0JA0q/bXWeWlrG
+         cYtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1xqj/Zo3AUFkVy0zRgFkVBz4uDdS8LIxp09mdTlXIys=;
-        b=b1XT1KFbWOQpL++P8p/N8gu8ksWyP84WxLA+UAqp7882o3kujlkkWuziYcJ4GjfVr/
-         TUMRMWppxPYokwH/Fd59RXnb30gOFHmSBPa2wCSbi5YHRO2AlvUmTY42aO69ibThzurS
-         cP2dgkTaxsNIJnA9d66artJKe+spgncDpx/IT/+7u+m+tvh/clSqlOZb/9zGkbU0LR2k
-         dw+fcLaKPhUJlv5jThL7xeFNSsM9Fk2/NJBw3qg0+Ev6rFUWfG/1ZUAnzeeZ82eCvuP7
-         61yKEnwondpygMvLGNfmgC031qF7jDyNn4QsD1llEBucEEk4TNHIEXO0PnkjyOCb/Vxv
-         vtKA==
-X-Gm-Message-State: APjAAAWvmzlhjVNXo8Iqv/hO7teXVGqhZES+VbGemjmVunaCVCt9rUfC
-        RbK8eHIFMY3zbMefWA8auMo=
-X-Google-Smtp-Source: APXvYqyKsuCV1ihDzofQdBkbz/XAwhXROCx9jK/t1SKZit6sN6YlPxvB7us/FY/5Si4I7kbAyR9Omg==
-X-Received: by 2002:a1c:7e08:: with SMTP id z8mr13877489wmc.36.1557689983139;
-        Sun, 12 May 2019 12:39:43 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C8AD00ECBE9107EA8EB108.dip0.t-ipconnect.de. [2003:f1:33c8:ad00:ecbe:9107:ea8e:b108])
-        by smtp.googlemail.com with ESMTPSA id c9sm8127719wrv.62.2019.05.12.12.39.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 12:39:42 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     khilman@baylibre.com, linux-amlogic@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 1/1] ARM: dts: meson8b: fix the operating voltage of the Mali GPU
-Date:   Sun, 12 May 2019 21:39:36 +0200
-Message-Id: <20190512193936.26557-2-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190512193936.26557-1-martin.blumenstingl@googlemail.com>
-References: <20190512193936.26557-1-martin.blumenstingl@googlemail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=iCOE3Lx6Cb7K+puvEJ0JXXJFYGgFv7+7QeyyjnRyHs0=;
+        b=OSlGrQ7gMSCys5FAIEVVvTCkbiX97ofv+//q78Te3ywyz7VEwlwk5UPWF1FouE3QIy
+         xaQXY8iivArti5YDo25Jfb8TSK/MpXVJMiJAWwCGUGOGMNpkHzMDwu26Tq41tRyNn+F1
+         sBKylyCqk9NtMtasupBU7SS7ixsLOszMPBUucqapJ6HTC6DQEoT0csIhLH9J9L6+z1WM
+         u484AKU1fGAVFIk+zspWU/1QzerWq9hDJnRSb9GIV+nJjnY08ffQomE2mtlyJxl7cFaf
+         5CagtBL6u+zDnfMsh+csQMLavb1OJmKgK41MC31SbZZ6N+DamBxn1RVximf4c6sKT8fI
+         Q4zQ==
+X-Gm-Message-State: APjAAAWz+fI3/uiBVp4DYDeLWaAYg+TC7VzO4ceUoRyyO0AeT5yPRMCP
+        T0y6f3TYe1ho+2ZTugT5E5/rj1I0
+X-Google-Smtp-Source: APXvYqyTFeAk51teRzTWTpvEPDB2inT7xme9sE4V8OaVTXWdLy+fpdxD4gefeY+Bx8Dcx/OLXPR4jQ==
+X-Received: by 2002:adf:ee01:: with SMTP id y1mr15089685wrn.51.1557690098891;
+        Sun, 12 May 2019 12:41:38 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id o8sm24752552wra.4.2019.05.12.12.41.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 May 2019 12:41:38 -0700 (PDT)
+Date:   Sun, 12 May 2019 22:41:36 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs fixes for 5.2-rc1/2
+Message-ID: <20190512194136.GA12189@ogabbay-VM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Amlogic's vendor kernel defines an OPP for the GPU on Meson8b boards
-with a voltage of 1.15V. It turns out that the vendor kernel relies on
-the bootloader to set up the voltage. The bootloader however sets a
-fixed voltage of 1.10V.
+Hi Greg,
 
-Amlogic's patched u-boot sources (uboot-2015-01-15-23a3562521) confirm
-this:
-$ grep -oiE "VDD(EE|AO)_VOLTAGE[ ]+[0-9]+" board/amlogic/configs/m8b_*
-  board/amlogic/configs/m8b_m100_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m101_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m102_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m200_v1.h:VDDAO_VOLTAGE            1100
-  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
-  board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
-  board/amlogic/configs/m8b_m202_v1.h:VDDEE_VOLTAGE            1100
+This is the pull request containing fixes for 5.2-rc1/2.
 
-Another hint at this is the VDDEE voltage on the EC-100 and Odroid-C1
-boards. The VDDEE regulator supplies the Mali GPU. It's basically a copy
-of the VCCK (CPU supply) which means it's limited to 0.86V to 1.14V.
+It contains 2 fixes (1 of them for stable) and 1 change to a new IOCTL
+that was introduced to kernel 5.2 in the previous pull requests.
 
-Update the operating voltage of the Mali GPU on Meson8b to 1.10V so it
-matches with what the vendor u-boot sets.
+See the tag comment for more details.
 
-Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b.dtsi | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks,
+Oded
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 4b919590dae5..ec67f49116d9 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -163,23 +163,23 @@
- 
- 		opp-255000000 {
- 			opp-hz = /bits/ 64 <255000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-364300000 {
- 			opp-hz = /bits/ 64 <364300000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-425000000 {
- 			opp-hz = /bits/ 64 <425000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-510000000 {
- 			opp-hz = /bits/ 64 <510000000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 		};
- 		opp-637500000 {
- 			opp-hz = /bits/ 64 <637500000>;
--			opp-microvolt = <1150000>;
-+			opp-microvolt = <1100000>;
- 			turbo-mode;
- 		};
- 	};
--- 
-2.21.0
+The following changes since commit 8ea5b2abd07e2280a332bd9c1a7f4dd15b9b6c13:
 
+  Merge branch 'fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs (2019-05-09 19:35:41 -0700)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-05-12
+
+for you to fetch changes up to 6800914b3a6dc11a08e7143f981c110aee439110:
+
+  habanalabs: fix debugfs code (2019-05-04 15:56:08 +0200)
+
+----------------------------------------------------------------
+This tag contains the following fixes:
+
+- Halt debug engines when user process closes the FD. We can't allow the
+  device to issue transactions for a user which doesn't exists anymore.
+
+- Fix various security holes in debugfs API.
+
+- Add a new opcode to the DEBUG IOCTL API. The opcode is designed
+  for setting the device into and out of debug mode. Although not a fix
+  per-se, because this is a new IOCTL which is upstreamed in kernel 5.2, I
+  think this is justified at this point because we won't be able to change
+  the API later.
+
+----------------------------------------------------------------
+Jann Horn (1):
+      habanalabs: fix debugfs code
+
+Oded Gabbay (1):
+      uapi/habanalabs: add opcode for enable/disable device debug mode
+
+Omer Shpigelman (1):
+      habanalabs: halt debug engines on user process close
+
+ drivers/misc/habanalabs/context.c             |  6 +++
+ drivers/misc/habanalabs/debugfs.c             | 60 ++++++++-------------------
+ drivers/misc/habanalabs/goya/goya.c           |  3 +-
+ drivers/misc/habanalabs/goya/goyaP.h          |  1 +
+ drivers/misc/habanalabs/goya/goya_coresight.c | 17 ++++++++
+ drivers/misc/habanalabs/habanalabs.h          |  2 +
+ include/uapi/misc/habanalabs.h                | 22 +++++++++-
+ 7 files changed, 66 insertions(+), 45 deletions(-)
