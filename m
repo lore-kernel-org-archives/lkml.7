@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC345C04A6B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB94DC04A6B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4FF21871
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77A1520989
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 May 2019 20:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrY1Wzjp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hY+EwV0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfELUQO (ORCPT
+        id S1727171AbfELUQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 16:16:14 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38370 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbfELUQL (ORCPT
+        Sun, 12 May 2019 16:16:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33922 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfELUQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 16:16:11 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 14so9123196ljj.5;
-        Sun, 12 May 2019 13:16:09 -0700 (PDT)
+        Sun, 12 May 2019 16:16:13 -0400
+Received: by mail-lf1-f68.google.com with SMTP id v18so7502170lfi.1;
+        Sun, 12 May 2019 13:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=EaY1su4hEWKGEwfPVblCSADrkO2FOUhq1ciLnu8ghzI=;
-        b=PrY1Wzjp46HKoTP4coQqHQyMrf/c6/KedYI4xU1E+ynvC7kwUW+7tlOxZcji2wFHao
-         +XUru6DIMTohHTaanpX0foJjCacrOAbUQzbA328kzPa0yblP6KNYFul7lZA+SSUCzyEd
-         FkbqC+PXTLR9bK1+plFDEBbjSDVwBsM4Ai0rVrQ7NxDPTrXEDTR00bh1XV9vervXUp/Y
-         2TI1NiXuaqSyaZbD+i1+Bob5T0ZkM6/dLUudpGKfbN98MHQvRgtTPAf8he7t6X1mR7jN
-         GkFCB7NVtlaI7wLghE5e7D0PY3InR8WFE+W6Rm97SRjuLueBkkOoe9ajNVMUo2j21XAE
-         wIFw==
+        bh=TtItGs0FkM3NnCnDWxQXotXpTul745ITl9R2PbQtgGs=;
+        b=hY+EwV0uZ3bHDdlvNexq9jALPBLzyYYhPWtScl0RqT+Kxrn4WN7X4Uk5g+6KexKaXK
+         X/HlmLwMNmTzsBu+KuABVQ0NqPPOXdjsxdayV1UCRHuQjB+84iThseDnyupHC43ydIsh
+         qpJFlzyvl4glJc4Vope2x4ZJg6v/o8PFCMEP6/wBUytAxSo+fjgRfDf27Tw5XocjVEvl
+         JDyLiSrzklrcdI9ExPUgnbr3MSDKcRUImD0Huyv8EXz9aix+U5KnQ/oc4p++9+GFuApU
+         8ILn1ySbYw5SV8XRMO7t1j9uT1Tl36eg9jGlhCSMwhXAp7lGHKWCXbFaq0UyB2AEX7VJ
+         n4pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EaY1su4hEWKGEwfPVblCSADrkO2FOUhq1ciLnu8ghzI=;
-        b=HlYKSV9j/cwzek65HbFdQNTzYQlByLjel79RtLwkSKhic35XPmbXxYQO8l2EW7FKSw
-         gLRNkRpFEnP0BfaMgXPV5cBIHeWCpdQCcXmpERYFbo0rHI/YY0WuyhKVJwnzRvFop3ml
-         8Q6pH0sdi2mwEbW5iKi7ap/k3aDA3uRaj7dzvVUSMaP1y9nWFa/a8KGhwgMaXtbUJtxA
-         /bCH/uEkAHGwDJniTibHJkeh5febFe16kEm9lfxxb7LxX5Ulx3QcuU6NIE1rScKIvg3U
-         6C6wDAutaLIqx+2BvVWeP5SmJSguND1xW3VIXxRZrmw/kgGz0UYi9ph8SanTuvZAaFg4
-         x7eA==
-X-Gm-Message-State: APjAAAUudlOI5aFsh7C8by+NvX5TlQgoALexOFci0PEpKkFyGZ3vjb3o
-        tZjWXwGqf6EUUHRMHEuDSyg=
-X-Google-Smtp-Source: APXvYqxuDS8jazRUOIjZxSKmwWmNMREJC4bx6CT8BNWtSKmQoF4sRSlLcCg6EEMMEk4ub6QxdSA7Yg==
-X-Received: by 2002:a2e:74f:: with SMTP id i15mr11424120ljd.156.1557692169180;
-        Sun, 12 May 2019 13:16:09 -0700 (PDT)
+        bh=TtItGs0FkM3NnCnDWxQXotXpTul745ITl9R2PbQtgGs=;
+        b=m9l7Z+gQwePj6Tjsk1P0oaJgX7deiM+Iai6v35JCtaY0YGjlO2JAjHI3Z8nNyDutNz
+         Sqh6AF936/FtMc5/QbdSX+CRpRxWr3Ftg4SwvpI1+/y+Ug8dmraPLmrm9dv8n3sgGDBX
+         puB2U5GOwIJx9q6N2R3mkFZeXuzHnhMtznhAy1oS9D7sz9PR7nyjPY67xsssa03pMGmu
+         EE6wm3LA7zxxHvCvHP1CsO5dkBdxZ8Hcoe99m7sGvcoxVzbI8NzbelK+OWNOcUqaLSeX
+         DCYEPDJozrlaayr0Ccm0yIhrgvrMoQVq7H0hRuHeFdGDEbnWUW2wFFqjxIZLkAaMY5Wy
+         rZjA==
+X-Gm-Message-State: APjAAAVlwHX7UvKNo0iEr12yWkT+ezbbVELi9HSVa2lOx1iikafnKRyQ
+        omy6TbNJilt/L109VidrYjQ=
+X-Google-Smtp-Source: APXvYqwR2ALS3zet1OsLsKMHvSUdN0Qlhth88/6Q+VTp82e83lzlk+FPwX3cb042SxwknKX28TrERg==
+X-Received: by 2002:a19:c394:: with SMTP id t142mr7034168lff.102.1557692171588;
+        Sun, 12 May 2019 13:16:11 -0700 (PDT)
 Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
-        by smtp.gmail.com with ESMTPSA id w20sm2360533ljd.39.2019.05.12.13.16.08
+        by smtp.gmail.com with ESMTPSA id w20sm2360533ljd.39.2019.05.12.13.16.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 May 2019 13:16:08 -0700 (PDT)
+        Sun, 12 May 2019 13:16:11 -0700 (PDT)
 From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
         Janusz Krzysztofik <jmkrzyszt@gmail.com>
-Subject: [PATCH v5 2/4] media: v4l2-subdev: WARN_ON invalid v4l2_subdev_call() arguments
-Date:   Sun, 12 May 2019 22:15:49 +0200
-Message-Id: <20190512201551.18724-3-jmkrzyszt@gmail.com>
+Subject: [PATCH v5 4/4] media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
+Date:   Sun, 12 May 2019 22:15:51 +0200
+Message-Id: <20190512201551.18724-5-jmkrzyszt@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190512201551.18724-1-jmkrzyszt@gmail.com>
 References: <20190512201551.18724-1-jmkrzyszt@gmail.com>
@@ -75,47 +75,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Invalid arguments passed to v4l2_subdev_call generally mean bugs.  Be
-noisy if that happens.
+Extend parameter checks performed by v4l2_subdev_call() with a check for
+a non-NULL pad config pointer if V4L2_SUBDEV_FORMAT_TRY format type is
+requested so drivers don't need to care.
 
 Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/v4l2-core/v4l2-subdev.c | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index 890916674d42..5f2264575cd7 100644
+index 3fc07af26c5b..fc8c308fb060 100644
 --- a/drivers/media/v4l2-core/v4l2-subdev.c
 +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -122,8 +122,8 @@ static int subdev_close(struct file *file)
- 
- static int check_which(__u32 which)
- {
--	if (which != V4L2_SUBDEV_FORMAT_TRY &&
--	    which != V4L2_SUBDEV_FORMAT_ACTIVE)
-+	if (WARN_ON(which != V4L2_SUBDEV_FORMAT_TRY &&
-+		    which != V4L2_SUBDEV_FORMAT_ACTIVE))
- 		return -EINVAL;
- 
+@@ -138,20 +138,30 @@ static int check_pad(struct v4l2_subdev *sd, __u32 pad)
  	return 0;
-@@ -132,7 +132,7 @@ static int check_which(__u32 which)
- static int check_pad(struct v4l2_subdev *sd, __u32 pad)
- {
- #if defined(CONFIG_MEDIA_CONTROLLER)
--	if (sd->entity.num_pads && pad >= sd->entity.num_pads)
-+	if (WARN_ON(sd->entity.num_pads && pad >= sd->entity.num_pads))
- 		return -EINVAL;
- #endif
- 	return 0;
-@@ -228,7 +228,7 @@ static int check_set_selection(struct v4l2_subdev *sd,
+ }
  
- static int check_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
++static int check_cfg(__u32 which, struct v4l2_subdev_pad_config *cfg)
++{
++	if (WARN_ON(which == V4L2_SUBDEV_FORMAT_TRY && !cfg))
++		return -EINVAL;
++
++	return 0;
++}
++
+ static int check_format(struct v4l2_subdev *sd,
++			struct v4l2_subdev_pad_config *cfg,
+ 			struct v4l2_subdev_format *format)
  {
--	if (edid->blocks && edid->edid == NULL)
-+	if (WARN_ON(edid->blocks && edid->edid == NULL))
+ 	if (WARN_ON(!format))
  		return -EINVAL;
  
- 	return check_pad(sd, edid->pad);
+-	return check_which(format->which) ? : check_pad(sd, format->pad);
++	return check_which(format->which) ? : check_pad(sd, format->pad) ? :
++	       check_cfg(format->which, cfg);
+ }
+ 
+ static int check_get_fmt(struct v4l2_subdev *sd,
+ 			 struct v4l2_subdev_pad_config *cfg,
+ 			 struct v4l2_subdev_format *format)
+ {
+-	return check_format(sd, format) ? :
++	return check_format(sd, cfg, format) ? :
+ 	       sd->ops->pad->get_fmt(sd, cfg, format);
+ }
+ 
+@@ -159,7 +169,7 @@ static int check_set_fmt(struct v4l2_subdev *sd,
+ 			 struct v4l2_subdev_pad_config *cfg,
+ 			 struct v4l2_subdev_format *format)
+ {
+-	return check_format(sd, format) ? :
++	return check_format(sd, cfg, format) ? :
+ 	       sd->ops->pad->set_fmt(sd, cfg, format);
+ }
+ 
+@@ -171,6 +181,7 @@ static int check_enum_mbus_code(struct v4l2_subdev *sd,
+ 		return -EINVAL;
+ 
+ 	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
++	       check_cfg(code->which, cfg) ? :
+ 	       sd->ops->pad->enum_mbus_code(sd, cfg, code);
+ }
+ 
+@@ -182,6 +193,7 @@ static int check_enum_frame_size(struct v4l2_subdev *sd,
+ 		return -EINVAL;
+ 
+ 	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
++	       check_cfg(fse->which, cfg) ? :
+ 	       sd->ops->pad->enum_frame_size(sd, cfg, fse);
+ }
+ 
+@@ -216,23 +228,26 @@ static int check_enum_frame_interval(struct v4l2_subdev *sd,
+ 		return -EINVAL;
+ 
+ 	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
++	       check_cfg(fie->which, cfg) ? :
+ 	       sd->ops->pad->enum_frame_interval(sd, cfg, fie);
+ }
+ 
+ static int check_selection(struct v4l2_subdev *sd,
++			   struct v4l2_subdev_pad_config *cfg,
+ 			   struct v4l2_subdev_selection *sel)
+ {
+ 	if (WARN_ON(!sel))
+ 		return -EINVAL;
+ 
+-	return check_which(sel->which) ? : check_pad(sd, sel->pad);
++	return check_which(sel->which) ? : check_pad(sd, sel->pad) ? :
++	       check_cfg(sel->which, cfg);
+ }
+ 
+ static int check_get_selection(struct v4l2_subdev *sd,
+ 			       struct v4l2_subdev_pad_config *cfg,
+ 			       struct v4l2_subdev_selection *sel)
+ {
+-	return check_selection(sd, sel) ? :
++	return check_selection(sd, cfg, sel) ? :
+ 	       sd->ops->pad->get_selection(sd, cfg, sel);
+ }
+ 
+@@ -240,7 +255,7 @@ static int check_set_selection(struct v4l2_subdev *sd,
+ 			       struct v4l2_subdev_pad_config *cfg,
+ 			       struct v4l2_subdev_selection *sel)
+ {
+-	return check_selection(sd, sel) ? :
++	return check_selection(sd, cfg, sel) ? :
+ 	       sd->ops->pad->set_selection(sd, cfg, sel);
+ }
+ 
 -- 
 2.21.0
 
