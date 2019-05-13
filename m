@@ -2,64 +2,54 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376C7C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE415C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D0F20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97111214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfEMRA2 (ORCPT
+        id S1731141AbfEMRBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:00:28 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:40174 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728822AbfEMRA1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:00:27 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id DB8D214E27EBA;
-        Mon, 13 May 2019 10:00:26 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:00:26 -0700 (PDT)
-Message-Id: <20190513.100026.93486365176104585.davem@davemloft.net>
-To:     clabbe@baylibre.com
-Cc:     alexandre.torgue@st.com, joabreu@synopsys.com,
-        maxime.ripard@bootlin.com, peppe.cavallaro@st.com, wens@csie.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH] net: ethernet: stmmac: dwmac-sun8i: enable support of
- unicast filtering
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
-References: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 13 May 2019 10:00:27 -0700 (PDT)
+        Mon, 13 May 2019 13:01:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49528 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbfEMRBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:01:38 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4733D59451;
+        Mon, 13 May 2019 17:01:38 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B486F19C68;
+        Mon, 13 May 2019 17:01:37 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 0/2] objtool: Fix function fallthrough detection
+Date:   Mon, 13 May 2019 12:01:30 -0500
+Message-Id: <cover.1557766718.git.jpoimboe@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 13 May 2019 17:01:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
-Date: Mon, 13 May 2019 13:06:39 +0000
+Patch 1 is a minor objtool cleanup which is a prereq for patch 2.
 
-> When adding more MAC address to a dwmac-sun8i interface, the device goes
-> directly in promiscuous mode.
-> This is due to IFF_UNICAST_FLT missing flag.
-> 
-> So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
-> 
-> Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Patch 2 fixes objtool function fallthrough detection.
 
-Applied with s/address/addresses/
+Josh Poimboeuf (2):
+  objtool: Don't use 'ignore' flag for fake jumps
+  objtool: Fix function fallthrough detection
 
-Thanks.
+ tools/objtool/check.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+-- 
+2.17.2
+
