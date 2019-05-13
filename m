@@ -7,60 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DFCC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA782C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC0921019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF7D20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557750655;
-	bh=HJyQxy1AWv+LUNl482OqcBtUTFXwQ16/tpULLaTP1VY=;
+	s=default; t=1557750659;
+	bh=WLnTwRjQLDy7cMJ4fO/Qi4I29n5zEE0jp8MQ1WQKZO4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=AKxWJ20yJK4AUZ+634geEYQaMCce4hx/2Jt7sCBu7umVN6pUqUJlSM/H3CYLu9E+i
-	 oi4XqlW5yV0P0o38feItja43zqzEZyrOcCGW5bw2LcXW4u94bc46xEzMyMJy+MUL4Z
-	 bcdZQtLvVVk3EjgWuYdfRxLzUGRV7Bn/pEwsz1rY=
+	b=nmcsjhN+BZViCkQo8lRb9bKtlwXmQJQoYEXKzl/NjmUXxSB4fSqHB9hyw7PmvkdDz
+	 GUvI+Tngm3/xw3CbdOXY5ib2MH6FNGZSyVa0Z7EjI3FqUDn4yMkXiQX4hLmlPVat4t
+	 SPjQUSixWaPRhaevb0PIu9g6Sav1Bosw7FLpFCyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfEMMax (ORCPT
+        id S1729354AbfEMMa6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:30:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57026 "EHLO
+        Mon, 13 May 2019 08:30:58 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57194 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729137AbfEMMau (ORCPT
+        with ESMTP id S1729137AbfEMMa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:30:50 -0400
+        Mon, 13 May 2019 08:30:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=kb1Z2URA6B9xUS5mqPgwhgx11+pmObIW0hPT5y8TU8I=; b=CmzCXhTABhRt
-        p51ENgvDM/Kr4qH+RiY6Oi4gUIESjD//644LkCQDrUzMo0E4dfLiHkj1mrK3GPLn++FVEVizEQDSX
-        872l5B1dAHHoy6pP+66WusSyUnCdbmrRv64mD1XpDJz8DPoO/NSUbwR4w9y/e6eCrjsgdomwzgEMK
-        wBXig=;
+        List-Archive; bh=fn3jzof4sQG3BHsIXJo+a5pXSTAy5nFc+jR4ZasQfdE=; b=UJB8V32POPml
+        aQjJPn+T0+YQJXIov/1JZs7EgQdBXDSZZUFVG1cTm+oqHFvmfLzzxsyS/3pjGr/+2VTe2Zi3r+03m
+        NBQF9qtprC+zqUD5aTH6aoRyVUTu0R+1vRz3H+1M5u5ZwtY6T/6bTVaFzmQy54eX1ll/hp6JeawT+
+        mwlxA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hQA6A-0006Wf-8M; Mon, 13 May 2019 12:30:30 +0000
+        id 1hQA6X-0006a4-Uj; Mon, 13 May 2019 12:30:54 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 821AB1129233; Mon, 13 May 2019 13:30:29 +0100 (BST)
+        id 2A29F1129232; Mon, 13 May 2019 13:30:53 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     alsa-devel@alsa-project.org, Ben Zhang <benzh@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Naveen M <naveen.m@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Rajat Jain <rajatja@chromium.org>,
-        Sathya Prakash <sathya.prakash.m.r@intel.com>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: SOF: Add Comet Lake PCI IDs" to the asoc tree
-In-Reply-To: <20190510223929.165569-2-evgreen@chromium.org>
+To:     Eric Jeong <eric.jeong.opensource@diasemi.com>
+Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190513123029.821AB1129233@debutante.sirena.org.uk>
-Date:   Mon, 13 May 2019 13:30:29 +0100 (BST)
+Message-Id: <20190513123053.2A29F1129232@debutante.sirena.org.uk>
+Date:   Mon, 13 May 2019 13:30:53 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,11 +59,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: SOF: Add Comet Lake PCI IDs
+   MAINTAINERS: slg51000 updates to the Dialog Semiconductor search terms
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -93,117 +84,41 @@ to this mail.
 Thanks,
 Mark
 
-From 927ce5c76e485e9d6e98b6ca29199a593d013793 Mon Sep 17 00:00:00 2001
-From: Evan Green <evgreen@chromium.org>
-Date: Fri, 10 May 2019 15:39:28 -0700
-Subject: [PATCH] ASoC: SOF: Add Comet Lake PCI IDs
+From 249825cc48ebe7d036a1200f6e5ad3d4dc1d2e25 Mon Sep 17 00:00:00 2001
+From: Eric Jeong <eric.jeong.opensource@diasemi.com>
+Date: Thu, 18 Apr 2019 15:09:43 +0900
+Subject: [PATCH] MAINTAINERS: slg51000 updates to the Dialog Semiconductor
+ search terms
 
-Add support for Intel Comet Lake platforms by adding a new Kconfig
-for CometLake and the appropriate PCI IDs.
+This patch adds the slg51000 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
+Signed-off-by: Eric Jeong <eric.jeong.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sof/intel/Kconfig | 32 ++++++++++++++++++++++++++++++++
- sound/soc/sof/sof-pci-dev.c | 28 ++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/sof/intel/Kconfig b/sound/soc/sof/intel/Kconfig
-index 32ee0fabab92..25c472e6bc22 100644
---- a/sound/soc/sof/intel/Kconfig
-+++ b/sound/soc/sof/intel/Kconfig
-@@ -24,6 +24,8 @@ config SND_SOC_SOF_INTEL_PCI
- 	select SND_SOC_SOF_CANNONLAKE  if SND_SOC_SOF_CANNONLAKE_SUPPORT
- 	select SND_SOC_SOF_COFFEELAKE  if SND_SOC_SOF_COFFEELAKE_SUPPORT
- 	select SND_SOC_SOF_ICELAKE     if SND_SOC_SOF_ICELAKE_SUPPORT
-+	select SND_SOC_SOF_COMETLAKE_LP if SND_SOC_SOF_COMETLAKE_LP_SUPPORT
-+	select SND_SOC_SOF_COMETLAKE_H if SND_SOC_SOF_COMETLAKE_H_SUPPORT
- 	help
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level
-@@ -179,6 +181,36 @@ config SND_SOC_SOF_ICELAKE
- 	  This option is not user-selectable but automagically handled by
- 	  'select' statements at a higher level
- 
-+config SND_SOC_SOF_COMETLAKE_LP
-+	tristate
-+	select SND_SOC_SOF_HDA_COMMON
-+	help
-+	  This option is not user-selectable but automagically handled by
-+	  'select' statements at a higher level
-+
-+config SND_SOC_SOF_COMETLAKE_LP_SUPPORT
-+	bool "SOF support for CometLake-LP"
-+	help
-+	  This adds support for Sound Open Firmware for Intel(R) platforms
-+	  using the Cometlake-LP processors.
-+	  Say Y if you have such a device.
-+	  If unsure select "N".
-+
-+config SND_SOC_SOF_COMETLAKE_H
-+	tristate
-+	select SND_SOC_SOF_HDA_COMMON
-+	help
-+	  This option is not user-selectable but automagically handled by
-+	  'select' statements at a higher level
-+
-+config SND_SOC_SOF_COMETLAKE_H_SUPPORT
-+	bool "SOF support for CometLake-H"
-+	help
-+	  This adds support for Sound Open Firmware for Intel(R) platforms
-+	  using the Cometlake-H processors.
-+	  Say Y if you have such a device.
-+	  If unsure select "N".
-+
- config SND_SOC_SOF_HDA_COMMON
- 	tristate
- 	select SND_SOC_SOF_INTEL_COMMON
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index b778dffb2d25..d736806c2e0d 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -129,6 +129,26 @@ static const struct sof_dev_desc cfl_desc = {
- };
- #endif
- 
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_LP) || \
-+	IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_H)
-+
-+static const struct sof_dev_desc cml_desc = {
-+	.machines		= snd_soc_acpi_intel_cnl_machines,
-+	.resindex_lpe_base	= 0,
-+	.resindex_pcicfg_base	= -1,
-+	.resindex_imr_base	= -1,
-+	.irqindex_host_ipc	= -1,
-+	.resindex_dma_base	= -1,
-+	.chip_info = &cnl_chip_info,
-+	.default_fw_path = "intel/sof",
-+	.default_tplg_path = "intel/sof-tplg",
-+	.nocodec_fw_filename = "sof-cnl.ri",
-+	.nocodec_tplg_filename = "sof-cnl-nocodec.tplg",
-+	.ops = &sof_cnl_ops,
-+	.arch_ops = &sof_xtensa_arch_ops
-+};
-+#endif
-+
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_ICELAKE)
- static const struct sof_dev_desc icl_desc = {
- 	.machines               = snd_soc_acpi_intel_icl_machines,
-@@ -353,6 +373,14 @@ static const struct pci_device_id sof_pci_ids[] = {
- #if IS_ENABLED(CONFIG_SND_SOC_SOF_ICELAKE)
- 	{ PCI_DEVICE(0x8086, 0x34C8),
- 		.driver_data = (unsigned long)&icl_desc},
-+#endif
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_LP)
-+	{ PCI_DEVICE(0x8086, 0x02c8),
-+		.driver_data = (unsigned long)&cml_desc},
-+#endif
-+#if IS_ENABLED(CONFIG_SND_SOC_SOF_COMETLAKE_H)
-+	{ PCI_DEVICE(0x8086, 0x06c8),
-+		.driver_data = (unsigned long)&cml_desc},
- #endif
- 	{ 0, }
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c2fce72e694..32c86779a900 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4605,6 +4605,7 @@ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+ F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
++F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+ F:	Documentation/devicetree/bindings/watchdog/da90??-wdt.txt
+ F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+ F:	drivers/gpio/gpio-da90??.c
+@@ -4620,6 +4621,7 @@ F:	drivers/power/supply/da9052-battery.c
+ F:	drivers/power/supply/da91??-*.c
+ F:	drivers/regulator/da903x.c
+ F:	drivers/regulator/da9???-regulator.[ch]
++F:	drivers/regulator/slg51000-regulator.[ch]
+ F:	drivers/thermal/da90??-thermal.c
+ F:	drivers/rtc/rtc-da90??.c
+ F:	drivers/video/backlight/da90??_bl.c
 -- 
 2.20.1
 
