@@ -2,96 +2,70 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D4C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C576EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F60C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DG/ioZxR"
+	by mail.kernel.org (Postfix) with ESMTP id 94BD7208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731130AbfEMPKp (ORCPT
+        id S1731138AbfEMPLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:10:45 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:36857 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfEMPKn (ORCPT
+        Mon, 13 May 2019 11:11:34 -0400
+Received: from smtprelay0036.hostedemail.com ([216.40.44.36]:56547 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726738AbfEMPLe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:10:43 -0400
-Received: by mail-yw1-f66.google.com with SMTP id q185so11274208ywe.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:10:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
-        bh=/ALChiOKnMbi5IPfVvBTTx9Afx2HTWGWhcKipkGBRc4=;
-        b=DG/ioZxRbc7Psl2Rwn2D9Ljvkt168cPnUdDyG2qr7woivVllgieIszsYuhKHWnIO4G
-         GCqPQrI+BpWFdHAIH/kt7DXJRxvMVOtgd6LJ9tBxFUToeqJVwyuR+mQ7tOzX4yuxxNYs
-         kk0CojDahTsS606dhWKKYke1XmI4IGjFmUjeNW4I5/wyV4JuNPDsewD1h2zNTq5rUiqS
-         I00jbiO0/5kw/mNW/eTXXm0uf6hHgE1V9ZRlMSzPVOJB/bwToMaHWbMPDinrfnWmzdEv
-         lSsVsECDhKyg6U6YZ9K/4TP4A8EvTZ5mi0jZOMHIS2HaSMYNOmETxYOoQZI2uAYidRrj
-         urig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc;
-        bh=/ALChiOKnMbi5IPfVvBTTx9Afx2HTWGWhcKipkGBRc4=;
-        b=saa4fqiVTtll0TSk0Ax5h0I1AgAoLWumtZr6yKhPTJcuI5CAKzHpZzwrvJPvb9Ij50
-         wMKOevrpT497fOBIpiUnFaFo8dxe/MtBzFceLALnd/qY2vsVspg7VPjqkdJrbJ1BjWPP
-         eiroH7WfCrVRCJ3HSxtu5AZ3fVdRNpYIdUIySst61joHbZOnSEICW6pscP3lL+b6vxdh
-         k57Xliu/VdVYFEs8sryhETH515QuDia78DiSucJNzMRH1VJcRYNBeOFzfN7vtCpwmd1G
-         pTbm+28SO7wsRiF/jWf9PxHfbdgk/abJLifdAhwrxv/cBiGO4/6d/pQnhihtYZNQWILO
-         YLUg==
-X-Gm-Message-State: APjAAAVBSJ6cv1yPuL2NzKfoW0xG4jbKxVrZ2ldZGzuTiMUJI6v8AjVK
-        Yikylp/he/7G1xDR3DnpaJ5/xGArHc3+Rv7Gd10=
-X-Received: by 2002:a81:9284:: with SMTP id j126mt12287877ywg.445.1557760243034;
- Mon, 13 May 2019 08:10:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190502074519.61272b42@canb.auug.org.au> <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
- <CA+QBN9A4PhPZ36otsk0TRaO9KKnKL=hfnskfFJGQJEbtb3=i=Q@mail.gmail.com>
-In-Reply-To: <CA+QBN9A4PhPZ36otsk0TRaO9KKnKL=hfnskfFJGQJEbtb3=i=Q@mail.gmail.com>
-From:   Carlo Pisani <carlojpisani@gmail.com>
-Date:   Mon, 13 May 2019 17:10:13 +0200
-Message-ID: <CA+QBN9CN=n556f0KYj2LZ4q9wY+wx9mbWpaMcC44GufUqbsgEg@mail.gmail.com>
-Subject: Re: C3600, sata controller
-Cc:     Parisc List <linux-parisc@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 13 May 2019 11:11:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 84F98180A8859;
+        Mon, 13 May 2019 15:11:32 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: toy82_2a4704a514822
+X-Filterd-Recvd-Size: 1704
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 13 May 2019 15:11:30 +0000 (UTC)
+Message-ID: <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
+Subject: Re: [PATCH v9 1/3] arm64: dts: fsl: librem5: Add a device tree for
+ the Librem5 devkit
+From:   Joe Perches <joe@perches.com>
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>, angus.ainslie@puri.sm
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 13 May 2019 08:11:29 -0700
+In-Reply-To: <20190513145539.28174-2-angus@akkea.ca>
+References: <20190513145539.28174-1-angus@akkea.ca>
+         <20190513145539.28174-2-angus@akkea.ca>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.1-1build1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi, good news!
-after a burn-in test of 8hours, we can affirm that Adaptec 1210SA does work
-The chip is "Silicon Image Sil31122", so the kernel module is
-"sata_sil" (not sata_sil24)
+On Mon, 2019-05-13 at 07:55 -0700, Angus Ainslie (Purism) wrote:
+> This is for the development kit board for the Librem 5. The current level
+> of support yields a working console and is able to boot userspace from
+> the network or eMMC.
+[]
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+> new file mode 100644
 
-while [ 1 ]
-do
-for item in `ls *.bin`
-    do
-        rm -f $copy.out
-        echo -n "$item ... "
-        mycp $item $copy.out
-        echo "done"
-    done
-done
+Perhaps add an entry in the MAINTAINERS file for this
+.dts file similar to other freescale boards?
 
-*.bin are giant files, 1GB, 2GB, 4GB, 8GB, 16GB, 32GB
 
-it has been tested on a PCI 32bit lost of a C3600
-with kernel /v4.16!!!
-
-"mycp" does a copy and then checks the md5 checksum
-
-I think this card can be added to the list!
-
-Our list has been already updated
-http://www.downthebunker.com/reloaded/space/viewtopic.php?f=50&p=1632
