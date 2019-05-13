@@ -2,155 +2,163 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C47AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02666C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468882146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AE22146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="NkxlSAj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728390AbfEMI7H (ORCPT
+        id S1728404AbfEMI7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:59:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52658 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727401AbfEMI7H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:59:07 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D8qlIk132744
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:59:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sf55rrvrw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:59:05 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 13 May 2019 09:59:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 May 2019 09:58:58 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4D8wvf637159054
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 08:58:57 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2957BAE056;
-        Mon, 13 May 2019 08:58:57 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 74B12AE055;
-        Mon, 13 May 2019 08:58:55 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.207.235])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 13 May 2019 08:58:55 +0000 (GMT)
-Date:   Mon, 13 May 2019 11:58:53 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        boot-architecture@lists.linaro.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 2/2] amr64: map FDT as RW for early_init_dt_scan()
-References: <20190513003819.356-1-hsinyi@chromium.org>
- <20190513003819.356-2-hsinyi@chromium.org>
+        Mon, 13 May 2019 04:59:24 -0400
+Received: from mout.web.de ([217.72.192.78]:54227 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbfEMI7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:59:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1557737944;
+        bh=UE+2FKqrv92g/rPKtyy4eMWvESNWG2N1LkFCK3GsKfc=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=NkxlSAj338EL0YmM5me+CxYd8yBl5+NSC4LzY//SG4KquLEq6KRmJCM4l9BxmcwZM
+         KM0SEw2AZzcP+DMu4OkKuQurjQMcYeACM1pw+beFOjO02MV5NugRiZnovTKu/mf1kg
+         N0b29t/9ERjHkWVfs9pnM3yehqFNsn+tWd3IPedg=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.135.147.80]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Ljrq1-1goa3N2kWX-00brCs; Mon, 13
+ May 2019 10:59:04 +0200
+Subject: [PATCH 1/5] Coccinelle: put_device: Adjust a message construction
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>
+Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
+        Yi Wang <wang.yi59@zte.com.cn>
+References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
+ <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <308f5571-68f3-7505-d5ad-59ee68091959@web.de>
+Date:   Mon, 13 May 2019 10:59:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513003819.356-2-hsinyi@chromium.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19051308-0028-0000-0000-0000036D0DA1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051308-0029-0000-0000-0000242C99BF
-Message-Id: <20190513085853.GB9271@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130064
+In-Reply-To: <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rwJwv4ETxr7FEwe200tk23kZPzjDIQpQf8O3ORayMX9Lzegsw9A
+ TWNA/OBByvmoiAAmB8ZR/roAgooG67en2nU8ceRGXeJMcSywHwJKXG9Si8cL0WDH/trBwDZ
+ y1/1oixRHrn+M85h+s81rwXTLXC7CqinrGmuXSeJWgqKf65k47qMt/DfiTkISSnMit67YgD
+ BwckAbzPm1vQuGNawgxqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z2PTme9SsVI=:yAtGzHwM2mVWkVnNDTz5mv
+ XLXP5+Hneka94/vRVbH9+PSkXODwnqTCz6wYqnL9hIcw2Xka4YgUs57fuX/X6+EQYjzie/ERj
+ n9VG5Ya3u9EqEOkLi+/RrjfTysNkL1sM9mal2UDJphHtptNgRgbjbt+LbskrPATmHIzabHWJN
+ FZzPf1r0oJhTs8Dqdf5kjMfUb0OUyOjpkaxlpaUuXqeDY9QyuE8e7qmy4AkNcbFmvheaDrYvQ
+ zRtvGhWe69PUkm5oj4iGEBoo+9N3Ut3VQO3LhRUoxyTr8YxSraSgmfWTj9IsQXBktfVvjX5+Z
+ y5QbCbhiLpDcrXrrWORdJbEubSg3wIk75/8O90IabTzWCrBBuG/QhmaAceNgVhYX6yJQtAFtY
+ rsnaOixrFL0PystBAOp0gvTGN/YDdGvnxIFcignfFfgM3smLMFGgqDSAYKX5v2/YlSajtGgIN
+ IOujir5CEjSNXftQmm/MmV1sS45hM00ewgnHj1ySKsHMUL+0lSEF5uapjB02piDc/FH3j+qD1
+ x7f7BGNhhKIdMIWXFQQoU1y2/glKEmcW2/cofcBj6f5winIfxtB0S3oWkJY5NN+eFm0j4lHPh
+ Bh35qOEedUMUGrDvxXvH8OeQn6MLEp0y7ntB596xVuBMSOej9leCucNy3cJWvR/Hl+aLCmYqe
+ zyWqVmUCw/9YvZ92IXns0ixQK3JGhDSIfSvLqjLBJp7RtibKUWdLzbIxNmHxnUIM3tDzWavWP
+ QRUg/CWt0XGKabGYuWvtPcNI/pTNrfGW0PQ8wNjEI91/XlUQOkFrvYq3dQdZXbDfc+GfRcdia
+ 9RvPvFRyubw791sQFl9Vxtpt+GnGymUQnqDG+u5e9RKoaUcMFZQm//jfQqgNkPfh8Oi4w3ZFL
+ 4Ber35kQYEl1vKHJIMAQKK7KPHBEQvzU/XwYv4FgeJJerfNj+9fzyxqwhrxvk4kz2sI9UpVpo
+ EVY2g9WpnCA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 08:38:19AM +0800, Hsin-Yi Wang wrote:
-> Currently in arm64, FDT is mapped to RO before it's passed to
-> early_init_dt_scan(). However, there might be some code that needs
-> to modify FDT during init. Map FDT to RW until unflatten DT.
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  arch/arm64/kernel/setup.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> index 413d566405d1..08b22c1e72a9 100644
-> --- a/arch/arm64/kernel/setup.c
-> +++ b/arch/arm64/kernel/setup.c
-> @@ -179,9 +179,13 @@ static void __init smp_build_mpidr_hash(void)
->  		pr_warn("Large number of MPIDR hash buckets detected\n");
->  }
->  
-> +extern void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size,
-> +				       pgprot_t prot);
-> +
->
->  static void __init setup_machine_fdt(phys_addr_t dt_phys)
->  {
-> -	void *dt_virt = fixmap_remap_fdt(dt_phys);
-> +	int size;
-> +	void *dt_virt = __fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
->  	const char *name;
-  
-This makes the fdt mapped without the call to meblock_reserve(fdt) which
-makes the fdt memory available for memblock allocations.
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Tue, 7 May 2019 11:20:48 +0200
 
-Chances that is will be actually allocated are small, but you know, things
-happen.
+The Linux coding style tolerates long string literals so that
+the provided information can be easier found also by search tools
+like grep.
+Thus simplify a message construction in a SmPL rule by concatenating text
+with two plus operators less.
 
-IMHO, instead of calling directly __fixmap_remap_fdt() it would be better
-to add pgprot parameter to fixmap_remap_fdt(). Then here and in kaslr.c it
-can be called with PAGE_KERNEL and below with PAGE_KERNEL_RO.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ scripts/coccinelle/free/put_device.cocci | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-There is no problem to call memblock_reserve() for the same area twice,
-it's essentially a NOP.
- 
->  	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
-> @@ -320,6 +324,9 @@ void __init setup_arch(char **cmdline_p)
->  	/* Parse the ACPI tables for possible boot-time configuration */
->  	acpi_boot_table_init();
->  
-> +	/* remap fdt to RO */
-> +	fixmap_remap_fdt(__fdt_pointer);
-> +
->  	if (acpi_disabled)
->  		unflatten_device_tree();
->  
-> -- 
-> 2.20.1
-> 
+diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle=
+/free/put_device.cocci
+index c9f071b0a0ab..3ebebc064f10 100644
+=2D-- a/scripts/coccinelle/free/put_device.cocci
++++ b/scripts/coccinelle/free/put_device.cocci
+@@ -42,11 +42,10 @@ p1 << search.p1;
+ p2 << search.p2;
+ @@
 
--- 
-Sincerely yours,
-Mike.
+-coccilib.report.print_report(p2[0], "ERROR: missing put_device; "
+-			      + "call of_find_device_by_node on line "
+-			      + p1[0].line
+-			      + ", but without a corresponding object release "
+-			      + "within this function.")
++coccilib.report.print_report(p2[0],
++                             "ERROR: missing put_device; call of_find_dev=
+ice_by_node on line "
++                             + p1[0].line
++                             + ", but without a corresponding object rele=
+ase within this function.")
+
+ @script:python depends on org@
+ p1 << search.p1;
+=2D-
+2.21.0
 
