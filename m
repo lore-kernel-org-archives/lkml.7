@@ -2,103 +2,91 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC0CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E693C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B680720818
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139EC206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:50:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="rPyRgNqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfEMHs6 (ORCPT
+        id S1728214AbfEMHuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:48:58 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32932 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727576AbfEMHs6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:48:58 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 7561DC2DECF36B16DA26;
-        Mon, 13 May 2019 08:48:56 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
- 2019 08:48:56 +0100
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Arvind Sankar <niveditas98@gmail.com>,
-        Rob Landley <rob@landley.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-        <initramfs@vger.kernel.org>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
-Date:   Mon, 13 May 2019 09:49:03 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 13 May 2019 03:50:15 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:33050 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbfEMHuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:50:14 -0400
+Received: from zn.tnic (p200300EC2F29E500E0EF2AA1CE3E4EBD.dip0.t-ipconnect.de [IPv6:2003:ec:2f29:e500:e0ef:2aa1:ce3e:4ebd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C5E561EC0380;
+        Mon, 13 May 2019 09:50:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557733812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=6D4CnAScIoeS9pJoUChZMx+t6OGcqUGcrnbQZkMlkII=;
+        b=rPyRgNqQXxs1vWh/ITXiBzXG7D+gWpV4kZLi7Y1THG3sNJi7H+FDRvPBPzUynfBCmuNJge
+        t36Jx9RSqZe9rA9LJ1U8pTgW8DcjNiS+YneBo/fHN9vdxqt7uZEDvYSr+lZU7Kbt+qrhEJ
+        4AaLvoFPBQV4sSTs6YVwvMVua4hLUFw=
+Date:   Mon, 13 May 2019 09:50:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
+        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190513075006.GB20105@zn.tnic>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv>
+ <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <20190512194322.GA71658@rani.riverdale.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190513073254.GB16774@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/2019 9:43 PM, Arvind Sankar wrote:
-> On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
->> On 5/12/19 7:52 AM, Mimi Zohar wrote:
->>> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
->>>> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
->>>>> This proposal consists in marshaling pathnames and xattrs in a file called
->>>>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
->>>>> been extracted.
->>>>
->>>> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
->>>> be done equivalently by the initramfs' /init? Why is kernel involvement
->>>> actually required here?
->>>
->>> It's too late.  The /init itself should be signed and verified.
->>
->> If the initramfs cpio.gz image was signed and verified by the extractor, how is
->> the init in it _not_ verified?
->>
->> Ro
-> 
-> Wouldn't the below work even before enforcing signatures on external
-> initramfs:
-> 1. Create an embedded initramfs with an /init that does the xattr
-> parsing/setting. This will be verified as part of the kernel image
-> signature, so no new code required.
-> 2. Add a config option/boot parameter to panic the kernel if an external
-> initramfs attempts to overwrite anything in the embedded initramfs. This
-> prevents overwriting the embedded /init even if the external initramfs
-> is unverified.
+On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
+> This is a critical bug which breaks memory hotplug,
 
-Unfortunately, it wouldn't work. IMA is already initialized and it would
-verify /init in the embedded initial ram disk. The only reason why
-opening .xattr-list works is that IMA is not yet initialized
-(late_initcall vs rootfs_initcall).
+Please concentrate and stop the blabla:
 
-Allowing a kernel with integrity enforcement to parse the CPIO image
-without verifying it first is the weak point. However, extracted files
-are not used, and before they are used they are verified. At the time
-they are verified, they (included /init) must already have a signature
-or otherwise access would be denied.
+36f0c423552d ("x86/boot: Disable RSDP parsing temporarily")
 
-This scheme relies on the ability of the kernel to not be corrupted in
-the event it parses a malformed CPIO image. Mimi suggested to use
-digital signatures to prevent this issue, but it cannot be used in all
-scenarios, since conventional systems generate the initial ram disk
-locally.
+already explains what the deal is. This code was *purposefully* disabled
+because we ran out of time and it broke a couple of machines. Don't make
+me repeat all that - you were on CC on *all* threads and messages!
 
-Roberto
+So we're going to try it again this cycle and if there's no fallout, it
+will go upstream. If not, it will have to be fixed. The usual thing.
+
+And I don't care if Kairui's patch fixes this one problem - judging by
+the fragility of this whole thing, it should be hammered on one more
+cycle on as many boxes as possible to make sure there's no other SNAFUs.
+
+So go test it on more machines instead. I've pushed it here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
 
 -- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
