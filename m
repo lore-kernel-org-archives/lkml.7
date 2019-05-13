@@ -2,96 +2,125 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB80CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5FFC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F84208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D533208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sUORp49v"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tnz5OKHn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbfEMWsS (ORCPT
+        id S1726663AbfEMWsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:48:18 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59404 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfEMWsP (ORCPT
+        Mon, 13 May 2019 18:48:36 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:37032 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfEMWsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:48:15 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DMdKBq023424;
-        Mon, 13 May 2019 22:48:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=zjBscyYhoqo0ehvX4byH/+PaJKK4bIKyHqh+c/loXLg=;
- b=sUORp49vFnFduamm92UUhtOaP8jDK3gERbCayp7tqQrE68N7GLqJ352IgE9oTeoFMemj
- pDFIg1BbMuJADB+wXlZjKvuhZKZ+NakZu5xE4JFPeDd0yWinEmC90edSsy4IlmFvzMwk
- m6SNJmO2cVrNQ3JzL+bows/NDDhwxDIJ9yvtZN3bnFr+s/aaN6otYntIwIPq3/Vc5+WP
- hCqbhVHEEp8mHC0SS1QRB/jRRQP7nRB0Cfss7iJp922gT/0P4snFomaE5ge5Ew3qMfY7
- +J61hSbiwNZo/UdRb8/Bfoz07UxizliVfYuz3KtfPWEpVCtDhMOoCNrv6pskDEQhKrIm hw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdjcf8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 22:48:03 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DMiIu8033321;
-        Mon, 13 May 2019 22:46:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2sf3cmx4bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 22:46:02 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4DMk01X023981;
-        Mon, 13 May 2019 22:46:00 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 15:46:00 -0700
-To:     Ondrej Zary <linux@zary.sk>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] fdomain: Remove BIOS-related code from core
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190510212335.14728-1-linux@zary.sk>
-Date:   Mon, 13 May 2019 18:45:58 -0400
-In-Reply-To: <20190510212335.14728-1-linux@zary.sk> (Ondrej Zary's message of
-        "Fri, 10 May 2019 23:23:34 +0200")
-Message-ID: <yq1r292ezx5.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 13 May 2019 18:48:35 -0400
+Received: by mail-vs1-f68.google.com with SMTP id o5so2822720vsq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:48:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6ZsjBt83vZW6+pdPdwVwbAfNO1Tv5TbEk4rycrbIYbM=;
+        b=Tnz5OKHnLPR6l118hvL+HTgPPNlqas3wlnC3peejx+OqWX4dLD+cDrKseKtykoAH9e
+         GLcRZfSqtv9xi3Ko60lAn/PLCJOfMAWSxymkyBglt2shWGuRu6sroABxXS9otN9gsBD4
+         7yvl0lsv06bq8HtkrCD8e7D0l3meHeTy2Grn4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6ZsjBt83vZW6+pdPdwVwbAfNO1Tv5TbEk4rycrbIYbM=;
+        b=F2LNM3y2ghj7RVfPXejvXccp1ClzJKTAIlNyQ9OV45HOHvxsULVN6HfoXgCVv2kngK
+         iDdoAOy2jDK0+orYzg8hLkoD1dmmQWhchskYejl8bv9vFz2qut+NF1sPz8evWq07BoS8
+         GCa7QGmrKtu8zh4k+CC3L2oATzhxjdkEoWTfjqu7JRt7yI5LyBFl7Rn72b+ybBl5n5vM
+         XezIT1kds0MfQFkzUBgI4t8RDJm0GjVpltKNwUAX3GcsGloq4+CNNmSNBBoAAc/5fiz+
+         y4lV/5/hNosf5vxuazklwiEceNTMFy/KhAn9rZKUQgJ69mvCoxHO2Tnv/AbzqbrJE58A
+         9jEg==
+X-Gm-Message-State: APjAAAUukf/IW6f01spiMrT3tNyea21D/yCx/IqcOoT+rhv5QfGI0Rnf
+        91i8O78PU217hLB5cMHFr6qB0UARUFA=
+X-Google-Smtp-Source: APXvYqwA8+scIakcI0Lo9JoCApZn93cuasdUfgUxLm4GVsc8qrFw4G/oZtQ23isnM5MHtqudBq6I8g==
+X-Received: by 2002:a67:f715:: with SMTP id m21mr4381157vso.219.1557787714756;
+        Mon, 13 May 2019 15:48:34 -0700 (PDT)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id 143sm6208641vki.20.2019.05.13.15.48.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 15:48:34 -0700 (PDT)
+Received: by mail-vs1-f44.google.com with SMTP id e2so9083638vsc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:48:33 -0700 (PDT)
+X-Received: by 2002:a67:b348:: with SMTP id b8mr7122321vsm.144.1557787713606;
+ Mon, 13 May 2019 15:48:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=950
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130152
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130152
+References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-3-robdclark@gmail.com>
+In-Reply-To: <20190509184415.11592-3-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 May 2019 15:48:22 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
+Message-ID: <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
+Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Hi Ondrej,
+On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
 
-> Move all BIOS signature and base handling to (currently not merged)
-> ISA bus driver.
+> From: Douglas Anderson <dianders@chromium.org>
+>
+> Let's fixup the reserved memory to re-add the things we deleted in
+> ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
+> reserved-mem changes") in a way that plays nicely with the new
+> upstream definitions.
 
-Please submit a complete (core/PCI/ISA) series with the kbuild warnings
-addressed and Christoph's tags added.
+The message above makes no sense since that commit you reference isn't
+in upstream.
 
-Thanks!
+...but in any case, why not squash this in with the previous commit?
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+
+Remove Stephen's Reviewed-by.  In general reviews that happen in the
+Chrome OS gerrit shouldn't be carried over when things are posted
+upstream.
+
+
+> +/* Increase the size from 2MB to 8MB */
+> +&rmtfs_mem {
+> +       reg = <0 0x88f00000 0 0x800000>;
+> +};
+> +
+> +/ {
+> +       reserved-memory {
+> +               venus_mem: memory@96000000 {
+> +                       reg = <0 0x96000000 0 0x500000>;
+> +                       no-map;
+> +               };
+> +       };
+> +};
+
+nit: blank line?
+
+-Doug
