@@ -2,96 +2,115 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51444C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC695C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5BC2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E7920818
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557734973;
+	bh=mMXq1FU271L0X9nBA2D6z+HudTH0tWQ7rvwhwxlR/2c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aplVFdmUo0/RkNiT6suPE5z77dwpc3F50mZElTsjVYekt+nmhjldJT2K04CLA7/C6
+	 QslgxFOEuRz9qmVlqtY9blCNxMKOQB05uZE2Qyx0BQdWI4LHvrURKvvd2OMrqL8ouq
+	 xjwMO3Vf6fvA+YsJhbXPt1XYl2K9m+GSywIGLD4M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfEMIHB (ORCPT
+        id S1728018AbfEMIJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:07:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54866 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfEMIHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:07:00 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62F6730842A0;
-        Mon, 13 May 2019 08:07:00 +0000 (UTC)
-Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5A4D1001DC0;
-        Mon, 13 May 2019 08:06:55 +0000 (UTC)
-Date:   Mon, 13 May 2019 16:06:53 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     dyoung@redhat.com, Borislav Petkov <bp@alien8.de>
-Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, tglx@linutronix.de
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190513080653.GD16774@MiWiFi-R3L-srv>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
- <20190513014248.GA16774@MiWiFi-R3L-srv>
- <20190513070725.GA20105@zn.tnic>
- <20190513073254.GB16774@MiWiFi-R3L-srv>
- <20190513075006.GB20105@zn.tnic>
+        Mon, 13 May 2019 04:09:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45696 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725928AbfEMIJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:09:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4E52ADAB;
+        Mon, 13 May 2019 08:09:30 +0000 (UTC)
+Date:   Mon, 13 May 2019 10:09:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        hughd@google.com, shakeelb@google.com,
+        william.kucharski@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
+Message-ID: <20190513080929.GC24036@dhcp22.suse.cz>
+References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190513075006.GB20105@zn.tnic>
+In-Reply-To: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 13 May 2019 08:07:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Sat 11-05-19 00:23:40, Yang Shi wrote:
+> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+> still gets inc'ed by one even though a whole THP (512 pages) gets
+> swapped out.
+> 
+> This doesn't make too much sense to memory reclaim.  For example, direct
+> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+> direct reclaim may just waste time to reclaim more pages,
+> SWAP_CLUSTER_MAX * 512 pages in worst case.
 
-On 05/13/19 at 09:50am, Borislav Petkov wrote:
-> On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
-> > This is a critical bug which breaks memory hotplug,
-> 
-> Please concentrate and stop the blabla:
-> 
-> 36f0c423552d ("x86/boot: Disable RSDP parsing temporarily")
-> 
-> already explains what the deal is. This code was *purposefully* disabled
-> because we ran out of time and it broke a couple of machines. Don't make
+You are technically right here. This has been a known issue for a while.
+I am wondering whether somebody actually noticed some misbehavior.
+Swapping out is a rare event and you have to have a considerable number
+of THPs to notice.
 
-I remember your machine is the one on whihc the issue is reported. Could
-you also test it and confirm if these all things found ealier are
-cleared out?
+> This change may result in more reclaimed pages than scanned pages showed
+> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
 
-Thanks
-Baoquan
+This is quite nasty and confusing. I am worried that having those two
+unsynced begs for subtle issues. Can we account THP as scanning 512 base
+pages as well?
 
-> me repeat all that - you were on CC on *all* threads and messages!
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+> ---
+> v2: Added Shakeel's Reviewed-by
+>     Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
 > 
-> So we're going to try it again this cycle and if there's no fallout, it
-> will go upstream. If not, it will have to be fixed. The usual thing.
+>  mm/vmscan.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> And I don't care if Kairui's patch fixes this one problem - judging by
-> the fragility of this whole thing, it should be hammered on one more
-> cycle on as many boxes as possible to make sure there's no other SNAFUs.
-> 
-> So go test it on more machines instead. I've pushed it here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
-> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index fd9de50..4226d6b 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  
+>  		unlock_page(page);
+>  free_it:
+> -		nr_reclaimed++;
+> +		/* 
+> +		 * THP may get swapped out in a whole, need account
+> +		 * all base pages.
+> +		 */
+> +		nr_reclaimed += hpage_nr_pages(page);
+>  
+>  		/*
+>  		 * Is there need to periodically free_page_list? It would
 > -- 
-> Regards/Gruss,
->     Boris.
+> 1.8.3.1
 > 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+
+-- 
+Michal Hocko
+SUSE Labs
