@@ -2,176 +2,201 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55EBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8593EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87165208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5B2208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CJ+Ri6Ly"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay4NVZxh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730410AbfEMOG1 (ORCPT
+        id S1730428AbfEMOGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:06:27 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46574 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbfEMOG0 (ORCPT
+        Mon, 13 May 2019 10:06:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42850 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727587AbfEMOGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:06:26 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so5884147qtz.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:06:25 -0700 (PDT)
+        Mon, 13 May 2019 10:06:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 188so11075516ljf.9;
+        Mon, 13 May 2019 07:06:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d8tZxdI15W1D6mJk0HAaFb0wo+ED+NRU5tORxMmllL4=;
-        b=CJ+Ri6Ly+a/q37XshOSG/9do5P5goVfnmqK0CuPVFmOrWq6huSadlQNMbvAHur+CrB
-         m4gA2LHBt+r6utYdHrb8yvETWRUXcxzfGFA08nq40duKGh3gGMsh4G15I4lA0xGkw8hn
-         oNoTeIBHt82uG+dxFmrjFiX9+YMJ68+edJ8AUP5JaLjCVYQzAwC/LcaWG7YeOq+feau1
-         f+UZyEYDRcxCwKV2ll0VoRjqQ4MXAteI58BvfurlKjZF02308sEaJ+smlMyRmXz8HHWq
-         uom2riUhCoYrZi3n9HkGmxS1KY7f84OVJR1Y/icWiWJ9lUmJM/brWzboZuPfnbYuumrV
-         g41A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=qsB8mONNRQdOykcbEvsV450l7EoJeG+DifZn5TSN7ps=;
+        b=Ay4NVZxhPPakV2Xa8ZzJZzt3f9h2e8RV0ysLwuqZz0ywIO4mjHDRP+QgbsWRG8UYaI
+         6CXEPjftNdlGuxQ/Q+CN6MFP4Oap/4Cfj12cN9xFnPMgdO4se0gSY6txfe1DwIrrg1OR
+         gNQcV+ZJhBpJqfHtK3Lvn8/jg2hhsBk4jdQjDe7N3kr//KZ+2YrmFkrzI2k5JH9bZn6m
+         iSMWPGK7l4Y1ONN16e5vprNbcQINWLuS3dT2UjK+klPjGxJ+kNKTTJSXoUFzJhix7HBR
+         fELI6THhsonzWifsdS+wn+FXrjDnANjHl0AMvidipn0DYWrUS80lUYFHqK6n1Gq4V2Lm
+         AxwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d8tZxdI15W1D6mJk0HAaFb0wo+ED+NRU5tORxMmllL4=;
-        b=n6nAw55ZLo7wVq5XNxTkD3lvMCSSdcjY1pdniQaZQ5aZ4lFaW8FHEwUYfNh7Lm5AIG
-         4JKs4SmKbi6EqPK8SX11DxJrWnVuntdkyElDgDDyazY9e/ktkJfj1A40qfJIaHImYhWI
-         h4+cNKzrf5Kt2K+uDunTNHD+BcMyhjylW1lOfcxXLswVjaQHxk8URtBXqDHGUbk7jdLL
-         FJh859ONSMMDokQwqrksOr5IUyH+aCd0vpYGXDwPLfBYTcQ0gv8tZjfqjBt3k/s4XHfR
-         l2hCY6raEXIuUJ38xdgHwjEvt425ZmSyPOOyPSCRZRDfDyP6xE32zrwob2JVLQaACeOy
-         I0AQ==
-X-Gm-Message-State: APjAAAWi9iL+T7MN3fVbReoXb2uo1kwaoPOG1eeBECD4s9iX6llvaLeR
-        +S6VxX2mqUbLlHM6FV7Ys6Zbnw/vg5DDMPfuYexoog==
-X-Google-Smtp-Source: APXvYqyxwQxdPtpP5BL6x5r/sbn5YT96liPwfUPaqcrfDSILFVVXKx4K0R0CAvSTLrdgNEoUaErFrlXhPhke+rskx0s=
-X-Received: by 2002:ac8:3884:: with SMTP id f4mr24754460qtc.300.1557756385298;
- Mon, 13 May 2019 07:06:25 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=qsB8mONNRQdOykcbEvsV450l7EoJeG+DifZn5TSN7ps=;
+        b=EeE5ZfbnglyJEAViSusKKSYF4fgyo5sN/JADSfEBEsle9FzrWjVQAz+EgP8jClATL/
+         hk1D/umJKwPuIBNBkZxP4PLR+dxKy+Ufef24NU5BWKBL5f5IgoWyK6/kF0JYkENimlMK
+         BRPiZls8MmHgnIqLM+ZZTWkqXwzqnAP69xyQEDqtoZjCXFdeWuhMnalFxR+MmLL30Shp
+         /k6RUgNORiS9FijRUE4BXm1+9c8d84Y6IKW+LQ3SPJjTa/4GA4d6BqwfY3fYmUvlc8Im
+         AKCLfRAoF7p8VeDXOYyhzXA4aPkEkzim5JzFcfahxlpMKMN/sSDbH8qXuxqh2vw9ZEDE
+         tghA==
+X-Gm-Message-State: APjAAAXHvQ0jqdxygoDRJI1ImtZ5HHj5Mi4Gg5ZEjlXRpli8122KljEe
+        hUrEsv3EQHq7wEeOWXOXxno=
+X-Google-Smtp-Source: APXvYqxbOCYtaSW8f/ZwP0g7HwGg/jGgpM0Vd5ZEOgfA8sSD15p2EbHv2MId7jo+xznWo3RmHG0TVQ==
+X-Received: by 2002:a2e:4555:: with SMTP id s82mr13823604lja.15.1557756387312;
+        Mon, 13 May 2019 07:06:27 -0700 (PDT)
+Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id h29sm3137491ljb.49.2019.05.13.07.06.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 07:06:26 -0700 (PDT)
+Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
+ region
+To:     Julien Grall <julien.grall@arm.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+ <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
+Date:   Mon, 13 May 2019 17:06:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190513135216.23540-1-yuehaibing@huawei.com>
-In-Reply-To: <20190513135216.23540-1-yuehaibing@huawei.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 13 May 2019 19:36:14 +0530
-Message-ID: <CAP245DXAjc1Ozg7HYRumJ7_Ys4pBry8O0Y5rj1hRsQeXqjX1sQ@mail.gmail.com>
-Subject: Re: [PATCH] thermal: tsens: Make some symbols static
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 7:31 PM YueHaibing <yuehaibing@huawei.com> wrote:
+
+On 13.05.19 12:19, Julien Grall wrote:
+> Hi,
+
+Hi, Julien, Geert
+
+
 >
-> Fix sparse warnings:
+> On 5/10/19 5:22 PM, Oleksandr Tyshchenko wrote:
+>> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+>>
+>> Don't use hardcoded address, retrieve it from device-tree instead.
+>>
+>> And besides, this patch fixes the memory error when running
+>> on top of Xen hypervisor:
+>>
+>> (XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000
+>>        gpa=0x000000e6080000
+>>
+>> Which shows that VCPU0 in Dom0 is trying to access an address in memory
+>> it is not allowed to access (0x000000e6080000).
+>> Put simply, Xen doesn't know that it is a device's register memory
+>> since it wasn't described in a host device tree (which Xen parses)
+>> and as the result this memory region wasn't assigned to Dom0 at
+>> domain creation time.
+>>
+>> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+>>
+>> ---
+>>
+>> This patch is meant to get feedback from the community before
+>> proceeding further. If we decide to go this direction, all Gen2
+>> device-trees should be updated (add memory region) before
+>> this patch going in.
+>>
+>> e.g. r8a7790.dtsi:
+>>
+>> ...
+>> timer {
+>>     compatible = "arm,armv7-timer";
+>>     interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | 
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>                   <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | 
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>                   <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | 
+>> IRQ_TYPE_LEVEL_LOW)>,
+>>                   <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | 
+>> IRQ_TYPE_LEVEL_LOW)>;
+>> +     reg = <0 0xe6080000 0 0x1000>;
 >
-> drivers/thermal/qcom/tsens-v0_1.c:322:29: warning: symbol 'tsens_v0_1_feat' was not declared. Should it be static?
-> drivers/thermal/qcom/tsens-v0_1.c:330:24: warning: symbol 'tsens_v0_1_regfields' was not declared. Should it be static?
-> drivers/thermal/qcom/tsens-v1.c:147:29: warning: symbol 'tsens_v1_feat' was not declared. Should it be static?
-> drivers/thermal/qcom/tsens-v1.c:155:24: warning: symbol 'tsens_v1_regfields' was not declared. Should it be static?
-> drivers/thermal/qcom/tsens-v2.c:30:29: warning: symbol 'tsens_v2_feat' was not declared. Should it be static?
-> drivers/thermal/qcom/tsens-v2.c:38:24: warning: symbol 'tsens_v2_regfields' was not declared. Should it be static?
+> This looks incorrect, the "arm,armv7-timer" bindings doesn't offer you 
+> the possibility to specify an MMIO region. This makes sense because it 
+> is meant to describe the Arch timer that is only access via 
+> co-processor registers.
 >
-> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Looking at the code, I think the MMIO region corresponds to the 
+> coresight (based on the register name). So you may want to describe 
+> the coresight in the Device-Tree.
+>
+> Also, AFAICT, the code is configuring and turning on the timer if it 
+> has not been done yet. If you are here running on Xen, then you have 
+> probably done something wrong. Indeed, it means Xen would not be able 
+> to use the timer until Dom0 has booted. But, shouldn't newer U-boot do 
+> it for you?
 
-Hi Hulk Robot,
+Let me elaborate a bit more on this...
 
-Thanks for the report. kbuild test robot beat you to catching these
-warnings (see email from 30th April). :-)
+Indeed, my PSCI patch series for U-Boot includes a patch [1] for 
+configuring that "counter module". So, if PSCI is available 
+(psci_smp_available() == true), then most likely we are running on 
+PSCI-enabled
+U-Boot which, we assume, has already taken care of configuring timer (as 
+well as resetting CNTVOFF). So, when running on Xen, the timer was 
+configured beforehand in U-Boot, and Xen is able to use it from the very 
+beginning, these is no need to wait for Dom0 to configure it.
 
-Good to see you're becoming bigger and look forward to you beating the
-kbuild test robot someday.
+(XEN) Generic Timer IRQ: phys=30 hyp=26 virt=27 Freq: 10000 KHz
 
+So, the code in brackets won't be called when using PSCI/running Xen, 
+since the timer is already both enabled and configured:
+
+if ((ioread32(base + CNTCR) & 1) == 0 ||
+         ioread32(base + CNTFID0) != freq) {
+         /* Update registers with correct frequency */
+         iowrite32(freq, base + CNTFID0);
+         asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (freq));
+
+         /* make sure arch timer is started by setting bit 0 of CNTCR */
+         iowrite32(1, base + CNTCR);
+}
+
+But, the problem here is the first read access from timer register (when 
+we check whether the timer requires enabling) results in hypervisor trap:
+
+(XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000 
+gpa=0x000000e6080000
+
+So, if the DT bindings for the counter module is not an option (if I 
+correctly understood a discussion pointed by Geert in another letter), 
+we should probably prevent all timer code here from being executed if 
+PSCI is in use.
+What I mean is to return to [2], but with the modification to use 
+psci_smp_available() helper as an indicator of PSCI usage.
+
+Julien, Geert, what do you think?
+
+
+[1] https://marc.info/?l=u-boot&m=154895714510154&w=2
+
+[2] https://lkml.org/lkml/2019/4/17/810
+
+
+>
+> Cheers,
+>
+-- 
 Regards,
-Amit
 
+Oleksandr Tyshchenko
 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/thermal/qcom/tsens-v0_1.c | 4 ++--
->  drivers/thermal/qcom/tsens-v1.c   | 4 ++--
->  drivers/thermal/qcom/tsens-v2.c   | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
-> index b3a63d7..a319283 100644
-> --- a/drivers/thermal/qcom/tsens-v0_1.c
-> +++ b/drivers/thermal/qcom/tsens-v0_1.c
-> @@ -319,7 +319,7 @@ static int calibrate_8974(struct tsens_priv *priv)
->
->  /* v0.1: 8916, 8974 */
->
-> -const struct tsens_features tsens_v0_1_feat = {
-> +static const struct tsens_features tsens_v0_1_feat = {
->         .ver_major      = VER_0_1,
->         .crit_int       = 0,
->         .adc            = 1,
-> @@ -327,7 +327,7 @@ const struct tsens_features tsens_v0_1_feat = {
->         .max_sensors    = 11,
->  };
->
-> -const struct reg_field tsens_v0_1_regfields[MAX_REGFIELDS] = {
-> +static const struct reg_field tsens_v0_1_regfields[MAX_REGFIELDS] = {
->         /* ----- SROT ------ */
->         /* No VERSION information */
->
-> diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
-> index a1221ef..10b595d 100644
-> --- a/drivers/thermal/qcom/tsens-v1.c
-> +++ b/drivers/thermal/qcom/tsens-v1.c
-> @@ -144,7 +144,7 @@ static int calibrate_v1(struct tsens_priv *priv)
->
->  /* v1.x: qcs404,405 */
->
-> -const struct tsens_features tsens_v1_feat = {
-> +static const struct tsens_features tsens_v1_feat = {
->         .ver_major      = VER_1_X,
->         .crit_int       = 0,
->         .adc            = 1,
-> @@ -152,7 +152,7 @@ const struct tsens_features tsens_v1_feat = {
->         .max_sensors    = 11,
->  };
->
-> -const struct reg_field tsens_v1_regfields[MAX_REGFIELDS] = {
-> +static const struct reg_field tsens_v1_regfields[MAX_REGFIELDS] = {
->         /* ----- SROT ------ */
->         /* VERSION */
->         [VER_MAJOR] = REG_FIELD(SROT_HW_VER_OFF, 28, 31),
-> diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
-> index 36fbfa6..1099069 100644
-> --- a/drivers/thermal/qcom/tsens-v2.c
-> +++ b/drivers/thermal/qcom/tsens-v2.c
-> @@ -27,7 +27,7 @@
->
->  /* v2.x: 8996, 8998, sdm845 */
->
-> -const struct tsens_features tsens_v2_feat = {
-> +static const struct tsens_features tsens_v2_feat = {
->         .ver_major      = VER_2_X,
->         .crit_int       = 1,
->         .adc            = 0,
-> @@ -35,7 +35,7 @@ const struct tsens_features tsens_v2_feat = {
->         .max_sensors    = 16,
->  };
->
-> -const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
-> +static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
->         /* ----- SROT ------ */
->         /* VERSION */
->         [VER_MAJOR] = REG_FIELD(SROT_HW_VER_OFF, 28, 31),
-> --
-> 2.7.4
->
->
