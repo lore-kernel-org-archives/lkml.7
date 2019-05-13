@@ -2,141 +2,121 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03C9C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C77C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3B2208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557732983;
-	bh=wc9NZUreQghyl3dBxtE5NSp2+xKrNiH/bPdVGNTC6YY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iLFtrEQJhrrFdsGc1C/lC3W/I7aV/Fr6rCxJ4rwAZyjxQLmxCeHHUBK6he+8ChMHf
-	 p6Yk3dEPWWiNT7abG4viYoR0vWbpHLewIW6W/8NIlPxUrIh0fuqlMc49dBAQHoWI2T
-	 83MLNPh5xJBujVHFpeKJD74YNWg55JexZXyWCTPk=
+	by mail.kernel.org (Postfix) with ESMTP id BCB5121019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:39:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZjZHRBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbfEMHgW (ORCPT
+        id S1728029AbfEMHj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:36:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbfEMHgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:36:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2EF3208C3;
-        Mon, 13 May 2019 07:36:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557732981;
-        bh=wc9NZUreQghyl3dBxtE5NSp2+xKrNiH/bPdVGNTC6YY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KW9nnrMDiQ9QRbJON9bnQe0/od4g6Masay1QNeqbLuGcN9nYUx/w8GA1JSaP3cffQ
-         irdprW0rkdmVKuPL3q//vxAvJTiiQ/3fEQvCPfaTblCZuf0GbwieYnz7+WA8aw0EZU
-         SxkRWgO2tcdQ1AogJNdbNv7pbKZVmkau2wSV6fh4=
-Date:   Mon, 13 May 2019 09:36:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gen Zhang <blackgod016574@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file
- of Linux 5.0.14
-Message-ID: <20190513073619.GA5580@kroah.com>
-References: <CAAie0ar11_mPipN=d=mrgnVdEMO1Np0cCYdqcRfZrij_d-5zaQ@mail.gmail.com>
- <20190510051415.GA6073@kroah.com>
- <CAAie0ao_O0hcUOuUf67oog+dSswdQRpAtX8NyQvDAr_XQr=xQg@mail.gmail.com>
- <20190510151206.GA31186@kroah.com>
- <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
- <20190511060741.GC18755@kroah.com>
- <20190512032719.GA16296@zhanggen-UX430UQ>
- <20190512062009.GA25153@kroah.com>
- <20190512084916.GA4615@zhanggen-UX430UQ>
+        Mon, 13 May 2019 03:39:58 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:50387 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727272AbfEMHj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:39:57 -0400
+Received: by mail-it1-f193.google.com with SMTP id i10so14879099ite.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OCBAgYZcl/Mx9I9kBUc9k0z+VS+2s/+/8BKjMe5L/4M=;
+        b=SZjZHRBaI2LN21jyRT5EZkLIQdXHRrkgReZnW+swFod0bdKDie3+g+WGtklY0kC311
+         D1KKaZ2x7uQDR0V2qnPwQzvKPDzqAA94Zpm8YHT/sOwgUG6HPRnEqu85XA+O1k0sypE5
+         bbop+wUKsZ4yMehyLmsJ9459MhRGj3LYgqRz4uO/ypZ8wYUyM8rWxxtLJhVeYmIoNPzJ
+         P0BGjN9KPs18zjGreU5S/Jg8qeugpnE19O6Fjj/RYomOU65m0ow3YaAVxRMZqaRgh++4
+         kfjbw31MpcBw/JJVWa6iRCoFOI7x3lquY0Qvqmfqv/Cd/3KZ+WPUFvwRRIVAPicbMYQz
+         mSPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OCBAgYZcl/Mx9I9kBUc9k0z+VS+2s/+/8BKjMe5L/4M=;
+        b=AX7UvDkgkSmtmgyXodgHSYbXwRTGijMs6cwLf+G6ct76I7hQfbQAfgwZejvYNTkj0Z
+         LbkATqQ6HO7TXeA1KLuuR+JKgCbbWSM4I5DoSUS8V0qut9GBnfu4X7q2HGkYd5i+XX8B
+         MZ1ZdPiF4u9e4JbMMQw5Wcr5Z/AF13XJ/iwIcOFvS6rJqbryGy31aezJCuXBM1T3Y2qA
+         XmuexOGHnRSccc9BgtjSAfthHoXw/SPgWT/XjTkh6CkOjPPokJ/cRQxX172/MrPV4E+X
+         5/39orImB6FtzliEDAX7Xx1eQ9clGAjr3XoJVNBAxZqbLEuc5a9l/gI4ha44xZQNKTVS
+         Prew==
+X-Gm-Message-State: APjAAAW8d7N0fdOacf/mtwJotjFPDLAhmfekwg5uyLxyZlR9GLjxruUf
+        WOYQOmch/z71PxBrfVeKXV0TcvVX0fzd9olebpSuqQ==
+X-Google-Smtp-Source: APXvYqx3ThZE+Yj0kNbVwe1j3uegPjtZ90tj9AYcwjCq3pZNd6Fh+sqbqj1PKRwpmit1sNvknwuQU89gTtGOhYZrWFU=
+X-Received: by 2002:a05:660c:10f:: with SMTP id w15mr11634340itj.166.1557733196690;
+ Mon, 13 May 2019 00:39:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512084916.GA4615@zhanggen-UX430UQ>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
+ <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
+ <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 13 May 2019 09:39:45 +0200
+Message-ID: <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com>
+Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Nick Kossifidis <mick@ics.forth.gr>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 04:49:39PM +0800, Gen Zhang wrote:
-> On Sun, May 12, 2019 at 08:20:09AM +0200, Greg KH wrote:
-> > Yes, that worked!  Now, can you resend it in a proper format that I can
-> > apply it in?  (with changelog text, signed-off-by, etc.) as described in
-> > Documentation/SubmittingPatches, I will be glad to review it after the
-> > 5.2-rc1 release happens.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> From: Gen Zhang <blackgod016574@gmail.com>
-> Date: Sun, 11 May 2019 15:31:30 +0000
-> Subject: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file of Linux 5.0.14
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Sat, May 11, 2019 at 2:51 AM
+To: Dmitry Vyukov
+Cc: Nick Kossifidis, Christoph Hellwig, Linus Torvalds, Andrew Morton,
+linux-arch, Linux Kernel Mailing List, linuxppc-dev
 
-Better, but no need for this to be in the body, just send it like any
-other patch on the mailing list.
-
-> 
-> Hi,
-> I found this missing-check bug in drivers/tty/vt/vt.c when I was examining the source code. 
-
-That doesn't need to be in the changelog text.
-
-> 
-> In function con_init(), the pointer variable vc_cons[currcons].d, vc and vc->vc_screenbuf is allocated a memory space via kzalloc(). 
-> And they are used in the following codes. 
-
-Properly wrap your lines at 72 columns please.
-
-> 
-> However, when there is a memory allocation error, kzalloc can  be failed. 
-> Thus null pointer (vc_cons[currcons].d, vc and vc->vc_screenbuf) dereference may happen. 
-> And it will cause the kernel to crash. Therefore, we should check return value and handle an error.
-> 
-> And this patch works in 5.1.1.
-
-No need to say that.
-
-> 
-> Thank you!
-> 
-> Kind regards
-> Gen
-
-Or that :)
+> On Fri, May 10, 2019 at 6:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > I think it's good to have a sanity check in-place for consistency.
+> >
+> >
+> > Hi,
+> >
+> > This broke our cross-builds from x86. I am using:
+> >
+> > $ powerpc64le-linux-gnu-gcc --version
+> > powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
+> >
+> > and it says that it's little-endian somehow:
+> >
+> > $ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
+> > #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
+> >
+> > Is it broke compiler? Or I always hold it wrong? Is there some
+> > additional flag I need to add?
+>
+> It looks like a bug in the kernel Makefiles to me. powerpc32 is always
+> big-endian,
+> powerpc64 used to be big-endian but is now usually little-endian. There are
+> often three separate toolchains that default to the respective user
+> space targets
+> (ppc32be, ppc64be, ppc64le), but generally you should be able to build
+> any of the
+> three kernel configurations with any of those compilers, and have the Makefile
+> pass the correct -m32/-m64/-mbig-endian/-mlittle-endian command line options
+> depending on the kernel configuration. It seems that this is not happening
+> here. I have not checked why, but if this is the problem, it should be
+> easy enough
+> to figure out.
 
 
-> 
-> Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> ---
-> --- drivers/tty/vt/vt.c
-> +++ drivers/tty/vt/vt.c
-> @@ -3349,10 +3349,14 @@ static int __init con_init(void)
->  
->  	for (currcons = 0; currcons < MIN_NR_CONSOLES; currcons++) {
->  		vc_cons[currcons].d = vc = kzalloc(sizeof(struct vc_data), GFP_NOWAIT);
-> +		if (!vc_cons[currcons].d || !vc)
-> +			goto err_vc;
-
-What about the other memory that was allocated?  You never free that.
-
->  		INIT_WORK(&vc_cons[currcons].SAK_work, vc_SAK);
->  		tty_port_init(&vc->port);
->  		visual_init(vc, currcons, 1);
->  		vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_NOWAIT);
-> +		if (!vc->vc_screenbuf)
-> +			goto err_vc_screenbuf;
-
-Same here, you are now leaking memory.
-
-Did you test this patch out with a kmalloc function that can fail?  If
-not, please try to do so.
-
-thanks,
-
-greg k-h
+Thanks! This clears a lot.
+This may be a bug in our magic as we try to build kernel files outside
+of make with own flags (required to extract parts of kernel
+interfaces).
+So don't spend time looking for the Makefile bugs yet.
