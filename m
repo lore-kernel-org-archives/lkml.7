@@ -3,79 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E58F9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A795CC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04C1208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A720208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557763086;
-	bh=MQrt7hk7GKWBs2p7TCVFsqZzTnTwmWoYq3R9MsShl68=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=TjEGiGtRMjdLjMANbWJpl+fRgBJ3y3kOfekhyICimMd/obgzwWcMWay9F2GyRdfHk
-	 FntDXDfjX54GJ/GoCfCvOZvGkOjd8YafcUB7sZwX2I/L5+z8ot0EBfcH/ilLN6EyDm
-	 7NmlYhqOReq0G4A6cS3jMqxddAhSAIEienlzh/JI=
+	s=default; t=1557763229;
+	bh=4bcLIFwRGdrxUSdLyYcDKBhiisD8Iba6LGdB6inApCI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FufOqi/TWbJmcXTTFsyObk5y7ErOaM8HLMXEFdXaLFNECUckSjlNGHEA70THaHWPD
+	 gzpa23gFyjqvdq61/1NZjtfQZmbflvsOtyc0mDc16Id9O0hbFW9hlq2OnylDmAGrg3
+	 uU18957xfkTrzvFof9jjjGkvcn2BwVb5+3BrTJQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730124AbfEMP6G (ORCPT
+        id S1729820AbfEMQA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40932 "EHLO mail.kernel.org"
+        Mon, 13 May 2019 12:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfEMP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:58:05 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        id S1726866AbfEMQA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:00:28 -0400
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF2E420873;
-        Mon, 13 May 2019 15:58:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F63C21537
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557763085;
-        bh=MQrt7hk7GKWBs2p7TCVFsqZzTnTwmWoYq3R9MsShl68=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=o5R3D0mgAlkwf6pyaLHh/21/h1y/Hgyom3AFUlqLvzy5YFAFCaMJp0yOcluPpS7zs
-         ybL53+kCkAKr6SUdAOKet1cha5beD4qF4M0I1+o7mqEbNPNol11tLlEd1Qto8Qh5cN
-         JvYlVOVIgCp296Qw1xpE/ixu84Crj/SdCXyrtSGI=
-Subject: Re: linux-next: Fixes tag needs some work in the kselftest tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <20190514010540.6fbe70e0@canb.auug.org.au>
-From:   shuah <shuah@kernel.org>
-Message-ID: <a4ecb5ac-86ec-ac8d-a250-7073351ad23b@kernel.org>
-Date:   Mon, 13 May 2019 09:57:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        s=default; t=1557763226;
+        bh=4bcLIFwRGdrxUSdLyYcDKBhiisD8Iba6LGdB6inApCI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AD3U09r7iadGQx9xKbeGtVco8OzKuPg56V0gCnVoJ/QhP1NKeI/l6NioJQod0RAw5
+         efv1W0cVsndHHYOXwwIWp0FMOC+k8HgKKyi06hYNpjbnnmrFVtYZKLTdjORICG+SZu
+         mNQUApnmoJ+bqhQLGnlM/Z/jq/ZnhSyCSOdz5iAQ=
+Received: by mail-wm1-f42.google.com with SMTP id o189so14472292wmb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:00:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAW6Lpwbc1uEIsRReRo5Fh0DTmT/c3MS6xTvdkMNL6o3azo0bmbd
+        L1z3udJG/RBkSlrVn19dstNDUI+GQKh9ypcz0KmrQA==
+X-Google-Smtp-Source: APXvYqyd+g/+4DZb2reYmQhd8ogKBbEXXDmgoGo0ruNMmraoSXzfuFYqbpdMTwD2u4rjVZ6Pb2GGB/07OeDLopopDBs=
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr17012407wmh.32.1557763224812;
+ Mon, 13 May 2019 09:00:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190514010540.6fbe70e0@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-20-git-send-email-alexandre.chartre@oracle.com> <a9198e28-abe1-b980-597e-2d82273a2c17@intel.com>
+In-Reply-To: <a9198e28-abe1-b980-597e-2d82273a2c17@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 13 May 2019 09:00:13 -0700
+X-Gmail-Original-Message-ID: <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
+Message-ID: <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
+Subject: Re: [RFC KVM 19/27] kvm/isolation: initialize the KVM page table with
+ core mappings
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/19 9:05 AM, Stephen Rothwell wrote:
-> Hi Shuah,
-> 
-> In commit
-> 
->    e64ee1f5dc1a ("selftests: fix bpf build/test workflow regression when KBUILD_OUTPUT is set")
-> 
-> Fixes tag
-> 
->    Fixes: commit 8ce72dc32578 ("selftests: fix headers_install circular dependency")
-> 
-> has these problem(s):
-> 
->    - leading word 'commit' unexpected
-> 
+On Mon, May 13, 2019 at 8:50 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> > +     /*
+> > +      * Copy the mapping for all the kernel text. We copy at the PMD
+> > +      * level since the PUD is shared with the module mapping space.
+> > +      */
+> > +     rv = kvm_copy_mapping((void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE,
+> > +          PGT_LEVEL_PMD);
+> > +     if (rv)
+> > +             goto out_uninit_page_table;
+>
+> Could you double-check this?  We (I) have had some repeated confusion
+> with the PTI code and kernel text vs. kernel data vs. __init.
+> KERNEL_IMAGE_SIZE looks to be 512MB which is quite a bit bigger than
+> kernel text.
+>
+> > +     /*
+> > +      * Copy the mapping for cpu_entry_area and %esp fixup stacks
+> > +      * (this is based on the PTI userland address space, but probably
+> > +      * not needed because the KVM address space is not directly
+> > +      * enterered from userspace). They can both be copied at the P4D
+> > +      * level since they each have a dedicated P4D entry.
+> > +      */
+> > +     rv = kvm_copy_mapping((void *)CPU_ENTRY_AREA_PER_CPU, P4D_SIZE,
+> > +          PGT_LEVEL_P4D);
+> > +     if (rv)
+> > +             goto out_uninit_page_table;
+>
+> cpu_entry_area is used for more than just entry from userspace.  The gdt
+> mapping, for instance, is needed everywhere.  You might want to go look
+> at 'struct cpu_entry_area' in some more detail.
+>
+> > +#ifdef CONFIG_X86_ESPFIX64
+> > +     rv = kvm_copy_mapping((void *)ESPFIX_BASE_ADDR, P4D_SIZE,
+> > +          PGT_LEVEL_P4D);
+> > +     if (rv)
+> > +             goto out_uninit_page_table;
+> > +#endif
+>
+> Why are these mappings *needed*?  I thought we only actually used these
+> fixup stacks for some crazy iret-to-userspace handling.  We're certainly
+> not doing that from KVM context.
+>
+> Am I forgetting something?
+>
+> > +#ifdef CONFIG_VMAP_STACK
+> > +     /*
+> > +      * Interrupt stacks are vmap'ed with guard pages, so we need to
+> > +      * copy mappings.
+> > +      */
+> > +     for_each_possible_cpu(cpu) {
+> > +             stack = per_cpu(hardirq_stack_ptr, cpu);
+> > +             pr_debug("IRQ Stack %px\n", stack);
+> > +             if (!stack)
+> > +                     continue;
+> > +             rv = kvm_copy_ptes(stack - IRQ_STACK_SIZE, IRQ_STACK_SIZE);
+> > +             if (rv)
+> > +                     goto out_uninit_page_table;
+> > +     }
+> > +
+> > +#endif
+>
+> I seem to remember that the KVM VMENTRY/VMEXIT context is very special.
+>  Interrupts (and even NMIs?) are disabled.  Would it be feasible to do
+> the switching in there so that we never even *get* interrupts in the KVM
+> context?
 
-Sorry this is my bad. I will fix it.
+That would be nicer.
 
-thanks,
--- Shuah
+Looking at this code, it occurs to me that mapping the IRQ stacks
+seems questionable.  As it stands, this series switches to a normal
+CR3 in some C code somewhere moderately deep in the APIC IRQ code.  By
+that time, I think you may have executed traceable code, and, if that
+happens, you lose.  i hate to say this, but any shenanigans like this
+patch does might need to happen in the entry code *before* even
+switching to the IRQ stack.  Or perhaps shortly thereafter.
+
+We've talked about moving context tracking to C.  If we go that route,
+then this KVM context mess could go there, too -- we'd have a
+low-level C wrapper for each entry that would deal with getting us
+ready to run normal C code.
+
+(We need to do something about terminology.  This kvm_mm thing isn't
+an mm in the normal sense.  An mm has normal kernel mappings and
+varying user mappings.  For example, the PTI "userspace" page tables
+aren't an mm.  And we really don't want a situation where the vmalloc
+fault code runs with the "kvm_mm" mm active -- it will totally
+malfunction.)
