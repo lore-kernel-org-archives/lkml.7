@@ -3,224 +3,133 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8A2C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4959C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B3208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0E7208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfEMBnM (ORCPT
+        id S1727336AbfEMBwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 21:43:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49174 "EHLO mx1.redhat.com"
+        Sun, 12 May 2019 21:52:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50154 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfEMBnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 21:43:11 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1727054AbfEMBwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 21:52:49 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0262A3086272;
-        Mon, 13 May 2019 01:43:11 +0000 (UTC)
-Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1BD1A10018FB;
-        Mon, 13 May 2019 01:43:07 +0000 (UTC)
-Date:   Mon, 13 May 2019 09:43:05 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com, dyoung@redhat.com,
-        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, tglx@linutronix.de
-Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
- and ACPI tables
-Message-ID: <20190513014248.GA16774@MiWiFi-R3L-srv>
-References: <20190424092944.30481-1-bhe@redhat.com>
- <20190424092944.30481-2-bhe@redhat.com>
- <20190429002318.GA25400@MiWiFi-R3L-srv>
- <20190429135536.GC2324@zn.tnic>
+        by mx1.redhat.com (Postfix) with ESMTPS id F08D13082132;
+        Mon, 13 May 2019 01:52:48 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-91.pek2.redhat.com [10.72.12.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EFAF05D9D2;
+        Mon, 13 May 2019 01:52:44 +0000 (UTC)
+Date:   Mon, 13 May 2019 09:52:41 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        Ganesh Goudar <ganeshgr@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
+Message-ID: <20190513015241.GA8515@dhcp-128-65.nay.redhat.com>
+References: <20190510102051.25647-1-kasong@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429135536.GC2324@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 13 May 2019 01:43:11 +0000 (UTC)
+In-Reply-To: <20190510102051.25647-1-kasong@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 13 May 2019 01:52:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On 05/10/19 at 06:20pm, Kairui Song wrote:
+> Device dump allow drivers to add device related dump data to vmcore as
+> they want. This have a potential issue, the data is stored in memory,
+> drivers may append too much data and use too much memory. The vmcore is
+> typically used in a kdump kernel which runs in a pre-reserved small
+> chunk of memory. So as a result it will make kdump unusable at all due
+> to OOM issues.
+> 
+> So introduce new device_dump_limit= kernel parameter, and set the
+> default limit to 0, so device dump is not enabled unless user specify
+> the accetable maxiam memory usage for device dump data. In this way user
+> will also have the chance to adjust the kdump reserved memory
+> accordingly.
 
-On 04/29/19 at 03:55pm, Borislav Petkov wrote:
-> From: Kairui Song <kasong@redhat.com>
-> Date: Mon, 29 Apr 2019 08:23:18 +0800
-> Subject: [PATCH] x86/kexec: Add the EFI system tables and ACPI tables to the ident map
+The device dump is only affective in kdump 2nd kernel, so add the
+limitation seems not useful.  One is hard to know the correct size
+unless one does some crash test.  If one did the test and want to eanble
+the device dump he needs increase crashkernel= size in 1st kernel and
+add the limit param in 2nd kernel.
+
+So a global on/off param sounds easier and better, something like
+vmcore_device_dump=on  (default is off) 
 
 > 
-> Currently, only the whole physical memory is identity-mapped for the
-> kexec kernel and the regions reserved by firmware are ignored.
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  fs/proc/vmcore.c | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> However, the recent addition of RSDP parsing in the decompression stage
-> and especially:
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 3fe90443c1bb..e28695ef2439 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
+>  /* Device Dump list and mutex to synchronize access to list */
+>  static LIST_HEAD(vmcoredd_list);
+>  static DEFINE_MUTEX(vmcoredd_mutex);
+> +
+> +/* Device Dump Limit */
+> +static size_t vmcoredd_limit;
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Device Dump Size */
+> @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+>  			    PAGE_SIZE);
+>  
+> +	if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
+> +		ret = -ENOMEM;
+> +		goto out_err;
+> +	}
+> +
+>  	/* Allocate buffer for driver's to write their dumps */
+>  	buf = vmcore_alloc_buf(data_size);
+>  	if (!buf) {
+> @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(vmcore_add_device_dump);
+> +
+> +static int __init parse_vmcoredd_limit(char *arg)
+> +{
+> +	char *end;
+> +
+> +	if (!arg)
+> +		return -EINVAL;
+> +	vmcoredd_limit = memparse(arg, &end);
+> +	return end > arg ? 0 : -EINVAL;
+> +
+> +}
+> +__setup("device_dump_limit=", parse_vmcoredd_limit);
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  /* Free all dumps in vmcore device dump list */
+> -- 
+> 2.20.1
 > 
->   33f0df8d843d ("x86/boot: Search for RSDP in the EFI tables")
-> 
-> which tries to access EFI system tables and to dig out the RDSP address
-> from there, becomes a problem because in certain configurations, they
-> might not be mapped in the kexec'ed kernel's address space.
-> 
-> What is more, this problem doesn't appear on all systems because the
-> kexec kernel uses gigabyte pages to build the identity mapping. And
-> the EFI system tables and ACPI tables can, depending on the system
-> configuration, end up being mapped as part of all physical memory, if
-> they share the same 1 GB area with the physical memory.
-> 
-> Therefore, make sure they're always mapped.
-> 
->  [ bp: productize half-baked patch:
->    - rewrite commit message.
->    - s/init_acpi_pgtable/map_acpi_tables/ in the !ACPI case. ]
-
-Can this patchset be merged, or picked into tip?
 
 Thanks
-Baoquan
-
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Cc: dyoung@redhat.com
-> Cc: fanc.fnst@cn.fujitsu.com
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: j-nomura@ce.jp.nec.com
-> Cc: kexec@lists.infradead.org
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Lianbo Jiang <lijiang@redhat.com>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: x86-ml <x86@kernel.org>
-> Link: https://lkml.kernel.org/r/20190429002318.GA25400@MiWiFi-R3L-srv
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 75 ++++++++++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
-> 
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index ceba408ea982..3c77bdf7b32a 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -18,6 +18,7 @@
->  #include <linux/io.h>
->  #include <linux/suspend.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/efi.h>
->  
->  #include <asm/init.h>
->  #include <asm/pgtable.h>
-> @@ -29,6 +30,43 @@
->  #include <asm/setup.h>
->  #include <asm/set_memory.h>
->  
-> +#ifdef CONFIG_ACPI
-> +/*
-> + * Used while adding mapping for ACPI tables.
-> + * Can be reused when other iomem regions need be mapped
-> + */
-> +struct init_pgtable_data {
-> +	struct x86_mapping_info *info;
-> +	pgd_t *level4p;
-> +};
-> +
-> +static int mem_region_callback(struct resource *res, void *arg)
-> +{
-> +	struct init_pgtable_data *data = arg;
-> +	unsigned long mstart, mend;
-> +
-> +	mstart = res->start;
-> +	mend = mstart + resource_size(res) - 1;
-> +
-> +	return kernel_ident_mapping_init(data->info, data->level4p, mstart, mend);
-> +}
-> +
-> +static int
-> +map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p)
-> +{
-> +	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	struct init_pgtable_data data;
-> +
-> +	data.info = info;
-> +	data.level4p = level4p;
-> +	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
-> +	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
-> +				   &data, mem_region_callback);
-> +}
-> +#else
-> +static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
-> +#endif
-> +
->  #ifdef CONFIG_KEXEC_FILE
->  const struct kexec_file_ops * const kexec_file_loaders[] = {
->  		&kexec_bzImage64_ops,
-> @@ -36,6 +74,31 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
->  };
->  #endif
->  
-> +static int
-> +map_efi_systab(struct x86_mapping_info *info, pgd_t *level4p)
-> +{
-> +#ifdef CONFIG_EFI
-> +	unsigned long mstart, mend;
-> +
-> +	if (!efi_enabled(EFI_BOOT))
-> +		return 0;
-> +
-> +	mstart = (boot_params.efi_info.efi_systab |
-> +			((u64)boot_params.efi_info.efi_systab_hi<<32));
-> +
-> +	if (efi_enabled(EFI_64BIT))
-> +		mend = mstart + sizeof(efi_system_table_64_t);
-> +	else
-> +		mend = mstart + sizeof(efi_system_table_32_t);
-> +
-> +	if (!mstart)
-> +		return 0;
-> +
-> +	return kernel_ident_mapping_init(info, level4p, mstart, mend);
-> +#endif
-> +	return 0;
-> +}
-> +
->  static void free_transition_pgtable(struct kimage *image)
->  {
->  	free_page((unsigned long)image->arch.p4d);
-> @@ -159,6 +222,18 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
->  			return result;
->  	}
->  
-> +	/*
-> +	 * Prepare EFI systab and ACPI tables for kexec kernel since they are
-> +	 * not covered by pfn_mapped.
-> +	 */
-> +	result = map_efi_systab(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
-> +	result = map_acpi_tables(&info, level4p);
-> +	if (result)
-> +		return result;
-> +
->  	return init_transition_pgtable(image, level4p);
->  }
->  
-> -- 
-> 2.21.0
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> Good mailing practices for 400: avoid top-posting and trim the reply.
+Dave
