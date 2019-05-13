@@ -2,100 +2,100 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3EBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B721C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0313621537
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C38221473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:36:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="Gr6lUiLU"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="gBlt9XMx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfEMPfj (ORCPT
+        id S1731404AbfEMPgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:35:39 -0400
-Received: from node.akkea.ca ([192.155.83.177]:38478 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729119AbfEMPfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:35:38 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 38E244E204B; Mon, 13 May 2019 15:35:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1557761738; bh=IA5QAKvFGl/GldPEQRgRzpBt5N4v+SgzFVD8uRxNccQ=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=Gr6lUiLUBt9Z2GOjRtJI5PlFgszE/UujExaNo5g6icub4nEHuS/ux+ZfMt6SYEMS8
-         ry99GHzRa1x4enT/IOYkAM7FqhxRIV8OWYf6u2+BpanqGQoQPJLboa8dRxZhC7VJQ/
-         KEpFFo4MgOEHr90KjPnImdi/poHDRSw4y/lXWaMQ=
-To:     Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v9 1/3] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
+        Mon, 13 May 2019 11:36:15 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38703 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729119AbfEMPgO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:36:14 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 14so11405010ljj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aBobX/gRQlSguqoBZZQLy/K1F4tBo5qMszjuejS20Co=;
+        b=gBlt9XMxpnYqx/4cyDasaIs3y4oMCc99NXC9pZof4vo3wRkQsQuOQBAmGySmbeIsnT
+         pGlcYsS4yR9ytTI6FC1eSjbPpj8iz4s9dZBkDcrSiPAPC7OMzW0Rt0OqIJrPgtasoPCC
+         r1LwRRJMyGIeT5nK+1RtGNaHi07nNrgYKip5lk0MdY8M8i+ortxgZcPNOlwIaF3i2knk
+         k8J9A+Kc8GGfGKhqh/R2ogQFyXVw8qLb70PRA9fmxiriz2JDhlOr9Yn/Kz/5CvFVx+L4
+         /j+HRZj4hBADoWB5wd5ni0jZq65JQozmkv8mwyQYZgxiIQZjdhUkU1QQujGdGVWS5gX9
+         Rbrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aBobX/gRQlSguqoBZZQLy/K1F4tBo5qMszjuejS20Co=;
+        b=IoSNkhOUPgSMx57L+tEcddNoWZ2EtRQOOjqr+HImUiUb2l4b/c+j75JmQ36fcWnPGS
+         bywSN2B9QQY4bjPornX44Bc11MVakHjHweyH0gKaMSAApfzeyllaMSRiRyvclPMGUeB5
+         NPLrt4B28bwqayQqMD57vxFI2xbTUl7hM7oaBRvvLDDXg0wuDvAAWQEfRvlOa3iIpElj
+         CtmS2XCaWOu71yuyOBCAjZ0b1JRHv2rBALnLRW4nrWd8RUG2NNuvcQoDHUrwXXjnKcHp
+         p9gs35HlxfVUXBnvtCAIz/B9w+7fbiDSD7vXgjNqNxw2LbndSizQqDKr50/wkl2B6bm/
+         /5ug==
+X-Gm-Message-State: APjAAAUcjtwkzsyXoVBQYXUGYh/ejHclrohwVZKfzuJ8/JvkGb7UEdns
+        CatvHKnOfE4tZgDcQONrfqRPNg==
+X-Google-Smtp-Source: APXvYqx7EAgiVp7E/GNOloy5P70soEYmNXt7Mr3QGKLLM+PPeltgJmRtjYkCOSVI8X18cOxFkFgHYw==
+X-Received: by 2002:a2e:9713:: with SMTP id r19mr14381849lji.189.1557761772644;
+        Mon, 13 May 2019 08:36:12 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.81.227])
+        by smtp.gmail.com with ESMTPSA id t23sm711845lfk.9.2019.05.13.08.36.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 08:36:11 -0700 (PDT)
+Subject: Re: [PATCH] net: ethernet: stmmac: dwmac-sun8i: enable support of
+ unicast filtering
+To:     Corentin Labbe <clabbe@baylibre.com>, alexandre.torgue@st.com,
+        davem@davemloft.net, joabreu@synopsys.com,
+        maxime.ripard@bootlin.com, peppe.cavallaro@st.com, wens@csie.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <a4c3f91a-cad2-29f8-841f-df1a0fee0781@cogentembedded.com>
+Date:   Mon, 13 May 2019 18:36:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 May 2019 08:35:38 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
-In-Reply-To: <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
-References: <20190513145539.28174-1-angus@akkea.ca>
- <20190513145539.28174-2-angus@akkea.ca>
- <0f355f524122cb4dd6388431495a9d182e3ed9d6.camel@perches.com>
-Message-ID: <11c9a715ee0599e50359eb5ad5bd093e@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
+Hello!
 
-On 2019-05-13 08:11, Joe Perches wrote:
-> On Mon, 2019-05-13 at 07:55 -0700, Angus Ainslie (Purism) wrote:
->> This is for the development kit board for the Librem 5. The current 
->> level
->> of support yields a working console and is able to boot userspace from
->> the network or eMMC.
-> []
->> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts 
->> b/arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->> new file mode 100644
+On 05/13/2019 04:06 PM, Corentin Labbe wrote:
+
+> When adding more MAC address to a dwmac-sun8i interface, the device goes
+
+   Addresses?
+
+> directly in promiscuous mode.
+> This is due to IFF_UNICAST_FLT missing flag.
 > 
-> Perhaps add an entry in the MAINTAINERS file for this
-> .dts file similar to other freescale boards?
+> So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
+> 
+> Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+[...]
 
-The MAINTAINERS files has this entry
-
-ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
-M:  Shawn Guo <shawnguo@kernel.org>
-M:  Sascha Hauer <s.hauer@pengutronix.de>
-R:  Pengutronix Kernel Team <kernel@pengutronix.de>
-R:  Fabio Estevam <festevam@gmail.com>
-R:  NXP Linux Team <linux-imx@nxp.com>
-L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-S:  Maintained
-T:  git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
-N:  imx
-N:  mxs
-X:  drivers/media/i2c/
-
-
-Shouldn't the "N: imx" cover this board already ?
-
-Maybe I misunderstood, are you suggesting I add an new entry for "F: 
-arch/arm64/boot/dts/freescale/*" ?
-
-Thanks
-Angus
+MBR, Sergei
