@@ -2,108 +2,158 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2014C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F996C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8579B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCCE2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWYIBEEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfEMSKF (ORCPT
+        id S1726238AbfEMSKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:10:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45844 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732361AbfEMSKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:10:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E75513087951;
-        Mon, 13 May 2019 18:10:04 +0000 (UTC)
-Received: from redhat.com (ovpn-112-54.rdu2.redhat.com [10.10.112.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B974E18A5D;
-        Mon, 13 May 2019 18:10:02 +0000 (UTC)
-Date:   Mon, 13 May 2019 14:10:00 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/5] mm/hmm: HMM documentation updates and code fixes
-Message-ID: <20190513181000.GA30726@redhat.com>
-References: <20190506232942.12623-1-rcampbell@nvidia.com>
- <20190512150832.GB4238@redhat.com>
- <89c6ce48-190b-65df-7c35-a0eb0f5d936f@nvidia.com>
+        Mon, 13 May 2019 14:10:42 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39827 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfEMSKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:10:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w8so13907978wrl.6;
+        Mon, 13 May 2019 11:10:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xjyfckHJXlC/6zqO/WdSPY75KVJYOZ3HNhKFYbdnIbo=;
+        b=BWYIBEEXjsHj1oidjl/F65UweVrtjxi2OX+8PffmndG44zVJPXE45BEzdIoSkGPwn2
+         uBeD4MwB6aBysQjYi63W8COfiBpI829rF8ixaTNFGo13w2bwi2JTkkFoO1OyhhaQF6zy
+         rCqA6a4wmE4gOAZ1+br3GgTWRO3SGbANremnTXDbea1qyisaGaUPscn2ZrXtYAD6oN1J
+         jNlyevDE0JNRprQHWfTuwD75kE7UfLesTtL1lZ70ldWozG+xGj25iGcgf8rz0qC+UYut
+         AZPP8/gH8G4ScYjqUTjzenH1XkFkXHFxBtVuaKDidrWLyERQu5SvuND1HZuidfUZDgDK
+         CB1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xjyfckHJXlC/6zqO/WdSPY75KVJYOZ3HNhKFYbdnIbo=;
+        b=T1SHayco1Gz6YGxwKKt6T6+CFl86wpRVECosayw7/SqGrahS4bs1TvMWc4gJKSGjDT
+         k+/3OynkXHdidNx85XkL+q0K9u/chaY/Q/JikPvA2mk74QnDBsfhHmDy/Z6W1dNfljNe
+         N2gX+aQ0lzmXVrCH6M53lg7memy+wz2SUjDwMeCqjyaT3ELlTNsz9bveMi/7/xbGjrYn
+         NE/q11mHvajqD8/ht6UZk0tl8ip9442qh6InOFbT0gW0ZSxO9NGBJCd9gElrN3W4VBDi
+         F8p3d0nQAanL3ocRPkgsu2nslwiSVuIK+QF7+oT4Z/67yKU1ROETx3Bu6Czt8SIFMIqh
+         w13A==
+X-Gm-Message-State: APjAAAWPL3i0ogT+Xtq/h5wuQd/ELAYbXOGBqWqJgOyHmWv8QU2TXMH/
+        QhzZOGqdQvI4h+FC4OYm0JH7Vovs
+X-Google-Smtp-Source: APXvYqzLjTvTiyfRetVn0eAL1SDTX7ISj1f41/LkJh68h9dYPIERJgzDpIt/O7VRqbY9wW69AWYntg==
+X-Received: by 2002:adf:cf05:: with SMTP id o5mr2817449wrj.262.1557771037720;
+        Mon, 13 May 2019 11:10:37 -0700 (PDT)
+Received: from [10.67.49.52] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id o81sm374215wmb.2.2019.05.13.11.10.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 11:10:36 -0700 (PDT)
+Subject: Re: [PATCH v5 2/2] hwmon: scmi: Scale values to target desired HWMON
+ units
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
+References: <20190508184635.5054-1-f.fainelli@gmail.com>
+ <20190508184635.5054-3-f.fainelli@gmail.com>
+ <20190508211017.GA29998@roeck-us.net>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ mQGiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
+ xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
+ X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
+ AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
+ ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
+ SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
+ nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
+ qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz7QnRmxvcmlhbiBG
+ YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+iGYEExECACYCGyMGCwkIBwMCBBUCCAME
+ FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
+ 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSC5BA0ESM+4EhAQAL/o09boR9D3Vk1Tt7+gpYr3
+ WQ6hgYVON905q2ndEoA2J0dQxJNRw3snabHDDzQBAcqOvdi7YidfBVdKi0wxHhSuRBfuOppu
+ pdXkb7zxuPQuSveCLqqZWRQ+Cc2QgF7SBqgznbe6Ngout5qXY5Dcagk9LqFNGhJQzUGHAsIs
+ hap1f0B1PoUyUNeEInV98D8Xd/edM3mhO9nRpUXRK9Bvt4iEZUXGuVtZLT52nK6Wv2EZ1TiT
+ OiqZlf1P+vxYLBx9eKmabPdm3yjalhY8yr1S1vL0gSA/C6W1o/TowdieF1rWN/MYHlkpyj9c
+ Rpc281gAO0AP3V1G00YzBEdYyi0gaJbCEQnq8Vz1vDXFxHzyhgGz7umBsVKmYwZgA8DrrB0M
+ oaP35wuGR3RJcaG30AnJpEDkBYHznI2apxdcuTPOHZyEilIRrBGzDwGtAhldzlBoBwE3Z3MY
+ 31TOpACu1ZpNOMysZ6xiE35pWkwc0KYm4hJA5GFfmWSN6DniimW3pmdDIiw4Ifcx8b3mFrRO
+ BbDIW13E51j9RjbO/nAaK9ndZ5LRO1B/8Fwat7bLzmsCiEXOJY7NNpIEpkoNoEUfCcZwmLrU
+ +eOTPzaF6drw6ayewEi5yzPg3TAT6FV3oBsNg3xlwU0gPK3v6gYPX5w9+ovPZ1/qqNfOrbsE
+ FRuiSVsZQ5s3AAMFD/9XjlnnVDh9GX/r/6hjmr4U9tEsM+VQXaVXqZuHKaSmojOLUCP/YVQo
+ 7IiYaNssCS4FCPe4yrL4FJJfJAsbeyDykMN7wAnBcOkbZ9BPJPNCbqU6dowLOiy8AuTYQ48m
+ vIyQ4Ijnb6GTrtxIUDQeOBNuQC/gyyx3nbL/lVlHbxr4tb6YkhkO6shjXhQh7nQb33FjGO4P
+ WU11Nr9i/qoV8QCo12MQEo244RRA6VMud06y/E449rWZFSTwGqb0FS0seTcYNvxt8PB2izX+
+ HZA8SL54j479ubxhfuoTu5nXdtFYFj5Lj5x34LKPx7MpgAmj0H7SDhpFWF2FzcC1bjiW9mjW
+ HaKaX23Awt97AqQZXegbfkJwX2Y53ufq8Np3e1542lh3/mpiGSilCsaTahEGrHK+lIusl6mz
+ Joil+u3k01ofvJMK0ZdzGUZ/aPMZ16LofjFA+MNxWrZFrkYmiGdv+LG45zSlZyIvzSiG2lKy
+ kuVag+IijCIom78P9jRtB1q1Q5lwZp2TLAJlz92DmFwBg1hyFzwDADjZ2nrDxKUiybXIgZp9
+ aU2d++ptEGCVJOfEW4qpWCCLPbOT7XBr+g/4H3qWbs3j/cDDq7LuVYIe+wchy/iXEJaQVeTC
+ y5arMQorqTFWlEOgRA8OP47L9knl9i4xuR0euV6DChDrguup2aJVU4hPBBgRAgAPAhsMBQJU
+ X9LxBQkeXB3fAAoJEGFXmRW1Y3YOj4UAn3nrFLPZekMeqX5aD/aq/dsbXSfyAKC45Go0YyxV
+ HGuUuzv+GKZ6nsysJ7kCDQRXG8fwARAA6q/pqBi5PjHcOAUgk2/2LR5LjjesK50bCaD4JuNc
+ YDhFR7Vs108diBtsho3w8WRd9viOqDrhLJTroVckkk74OY8r+3t1E0Dd4wHWHQZsAeUvOwDM
+ PQMqTUBFuMi6ydzTZpFA2wBR9x6ofl8Ax+zaGBcFrRlQnhsuXLnM1uuvS39+pmzIjasZBP2H
+ UPk5ifigXcpelKmj6iskP3c8QN6x6GjUSmYx+xUfs/GNVSU1XOZn61wgPDbgINJd/THGdqiO
+ iJxCLuTMqlSsmh1+E1dSdfYkCb93R/0ZHvMKWlAx7MnaFgBfsG8FqNtZu3PCLfizyVYYjXbV
+ WO1A23riZKqwrSJAATo5iTS65BuYxrFsFNPrf7TitM8E76BEBZk0OZBvZxMuOs6Z1qI8YKVK
+ UrHVGFq3NbuPWCdRul9SX3VfOunr9Gv0GABnJ0ET+K7nspax0xqq7zgnM71QEaiaH17IFYGS
+ sG34V7Wo3vyQzsk7qLf9Ajno0DhJ+VX43g8+AjxOMNVrGCt9RNXSBVpyv2AMTlWCdJ5KI6V4
+ KEzWM4HJm7QlNKE6RPoBxJVbSQLPd9St3h7mxLcne4l7NK9eNgNnneT7QZL8fL//s9K8Ns1W
+ t60uQNYvbhKDG7+/yLcmJgjF74XkGvxCmTA1rW2bsUriM533nG9gAOUFQjURkwI8jvMAEQEA
+ AYkCaAQYEQIACQUCVxvH8AIbAgIpCRBhV5kVtWN2DsFdIAQZAQIABgUCVxvH8AAKCRCH0Jac
+ RAcHBIkHD/9nmfog7X2ZXMzL9ktT++7x+W/QBrSTCTmq8PK+69+INN1ZDOrY8uz6htfTLV9+
+ e2W6G8/7zIvODuHk7r+yQ585XbplgP0V5Xc8iBHdBgXbqnY5zBrcH+Q/oQ2STalEvaGHqNoD
+ UGyLQ/fiKoLZTPMur57Fy1c9rTuKiSdMgnT0FPfWVDfpR2Ds0gpqWePlRuRGOoCln5GnREA/
+ 2MW2rWf+CO9kbIR+66j8b4RUJqIK3dWn9xbENh/aqxfonGTCZQ2zC4sLd25DQA4w1itPo+f5
+ V/SQxuhnlQkTOCdJ7b/mby/pNRz1lsLkjnXueLILj7gNjwTabZXYtL16z24qkDTI1x3g98R/
+ xunb3/fQwR8FY5/zRvXJq5us/nLvIvOmVwZFkwXc+AF+LSIajqQz9XbXeIP/BDjlBNXRZNdo
+ dVuSU51ENcMcilPr2EUnqEAqeczsCGpnvRCLfVQeSZr2L9N4svNhhfPOEscYhhpHTh0VPyxI
+ pPBNKq+byuYPMyk3nj814NKhImK0O4gTyCK9b+gZAVvQcYAXvSouCnTZeJRrNHJFTgTgu6E0
+ caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
+ 6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <1212a00f-76f8-8f21-d19a-a5681c3668a0@gmail.com>
+Date:   Mon, 13 May 2019 11:10:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <89c6ce48-190b-65df-7c35-a0eb0f5d936f@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 13 May 2019 18:10:05 +0000 (UTC)
+In-Reply-To: <20190508211017.GA29998@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 10:26:59AM -0700, Ralph Campbell wrote:
+On 5/8/19 2:10 PM, Guenter Roeck wrote:
+> On Wed, May 08, 2019 at 11:46:35AM -0700, Florian Fainelli wrote:
+>> If the SCMI firmware implementation is reporting values in a scale that
+>> is different from the HWMON units, we need to scale up or down the value
+>> according to how far appart they are.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > 
-> On 5/12/19 8:08 AM, Jerome Glisse wrote:
-> > On Mon, May 06, 2019 at 04:29:37PM -0700, rcampbell@nvidia.com wrote:
-> > > From: Ralph Campbell <rcampbell@nvidia.com>
-> > > 
-> > > I hit a use after free bug in hmm_free() with KASAN and then couldn't
-> > > stop myself from cleaning up a bunch of documentation and coding style
-> > > changes. So the first two patches are clean ups, the last three are
-> > > the fixes.
-> > > 
-> > > Ralph Campbell (5):
-> > >    mm/hmm: Update HMM documentation
-> > >    mm/hmm: Clean up some coding style and comments
-> > >    mm/hmm: Use mm_get_hmm() in hmm_range_register()
-> > >    mm/hmm: hmm_vma_fault() doesn't always call hmm_range_unregister()
-> > >    mm/hmm: Fix mm stale reference use in hmm_free()
-> > 
-> > This patchset does not seems to be on top of
-> > https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
-> > 
-> > So here we are out of sync, on documentation and code. If you
-> > have any fix for https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
-> > then please submit something on top of that.
-> > 
-> > Cheers,
-> > Jérôme
-> > 
-> > > 
-> > >   Documentation/vm/hmm.rst | 139 ++++++++++++++++++-----------------
-> > >   include/linux/hmm.h      |  84 ++++++++++------------
-> > >   mm/hmm.c                 | 151 ++++++++++++++++-----------------------
-> > >   3 files changed, 174 insertions(+), 200 deletions(-)
-> > > 
-> > > -- 
-> > > 2.20.1
-> 
-> The patches are based on top of Andrew's mmotm tree
-> git://git.cmpxchg.org/linux-mmotm.git v5.1-rc6-mmotm-2019-04-25-16-30.
-> They apply cleanly to that git tag as well as your hmm-5.2-v3 branch
-> so I guess I am confused where we are out of sync.
+> Question is which tree this series should go through. I am fine with arm.
 
-No disregard my email, i was trying to apply on top of wrong
-branch yesterday morning while catching up on big backlog of
-email. Failure was on my side.
-
-Cheers,
-Jérôme
+Fine with me as well, Sudeep are you picking up these patches or should
+they go through HWMON and Guenter?
+-- 
+Florian
