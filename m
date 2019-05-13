@@ -2,141 +2,76 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D06FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80759C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE85321019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5845620989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbfEMMEa (ORCPT
+        id S1729615AbfEMMEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:04:30 -0400
-Received: from foss.arm.com ([217.140.101.70]:54056 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727487AbfEMMEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:04:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32888374;
-        Mon, 13 May 2019 05:04:29 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 564573F703;
-        Mon, 13 May 2019 05:04:26 -0700 (PDT)
-Subject: Re: [PATCH v7 13/23] iommu/smmuv3: Implement
- attach/detach_pasid_table
-To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-14-eric.auger@redhat.com>
- <acde8b95-9cbc-c5e6-eb28-37bff7431e40@arm.com>
- <30020e0d-2164-5b39-f1ca-04a85263b7f3@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <1b700d41-71c3-a68d-58a5-4715a58c6b84@arm.com>
-Date:   Mon, 13 May 2019 13:04:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 08:04:53 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:57350 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729602AbfEMMEw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:04:52 -0400
+Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 4033B25AD63;
+        Mon, 13 May 2019 22:04:50 +1000 (AEST)
+Received: by penelope.horms.nl (Postfix, from userid 7100)
+        id EDB49E22B88; Mon, 13 May 2019 14:04:47 +0200 (CEST)
+Date:   Mon, 13 May 2019 14:04:47 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/5] irqchip/renesas-irqc: Remove unneeded inclusion of
+ <linux/spinlock.h>
+Message-ID: <20190513120447.l6gzewa5cb7riar7@verge.net.au>
+References: <20190429152006.22593-1-geert+renesas@glider.be>
+ <20190429152006.22593-2-geert+renesas@glider.be>
 MIME-Version: 1.0
-In-Reply-To: <30020e0d-2164-5b39-f1ca-04a85263b7f3@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190429152006.22593-2-geert+renesas@glider.be>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 15:35, Auger Eric wrote:
-> Hi Robin,
+On Mon, Apr 29, 2019 at 05:20:02PM +0200, Geert Uytterhoeven wrote:
+> The driver never used spinlocks, and thus does not need to include
+> <linux/spinlock.h>.
 > 
-> On 5/8/19 4:38 PM, Robin Murphy wrote:
->> On 08/04/2019 13:19, Eric Auger wrote:
->>> On attach_pasid_table() we program STE S1 related info set
->>> by the guest into the actual physical STEs. At minimum
->>> we need to program the context descriptor GPA and compute
->>> whether the stage1 is translated/bypassed or aborted.
->>>
->>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>
->>> ---
->>> v6 -> v7:
->>> - check versions and comment the fact we don't need to take
->>>     into account s1dss and s1fmt
->>> v3 -> v4:
->>> - adapt to changes in iommu_pasid_table_config
->>> - different programming convention at s1_cfg/s2_cfg/ste.abort
->>>
->>> v2 -> v3:
->>> - callback now is named set_pasid_table and struct fields
->>>     are laid out differently.
->>>
->>> v1 -> v2:
->>> - invalidate the STE before changing them
->>> - hold init_mutex
->>> - handle new fields
->>> ---
->>>    drivers/iommu/arm-smmu-v3.c | 121 ++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 121 insertions(+)
->>>
->>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>> index e22e944ffc05..1486baf53425 100644
->>> --- a/drivers/iommu/arm-smmu-v3.c
->>> +++ b/drivers/iommu/arm-smmu-v3.c
->>> @@ -2207,6 +2207,125 @@ static void arm_smmu_put_resv_regions(struct
->>> device *dev,
->>>            kfree(entry);
->>>    }
->>>    +static int arm_smmu_attach_pasid_table(struct iommu_domain *domain,
->>> +                       struct iommu_pasid_table_config *cfg)
->>> +{
->>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>> +    struct arm_smmu_master_data *entry;
->>> +    struct arm_smmu_s1_cfg *s1_cfg;
->>> +    struct arm_smmu_device *smmu;
->>> +    unsigned long flags;
->>> +    int ret = -EINVAL;
->>> +
->>> +    if (cfg->format != IOMMU_PASID_FORMAT_SMMUV3)
->>> +        return -EINVAL;
->>> +
->>> +    if (cfg->version != PASID_TABLE_CFG_VERSION_1 ||
->>> +        cfg->smmuv3.version != PASID_TABLE_SMMUV3_CFG_VERSION_1)
->>> +        return -EINVAL;
->>> +
->>> +    mutex_lock(&smmu_domain->init_mutex);
->>> +
->>> +    smmu = smmu_domain->smmu;
->>> +
->>> +    if (!smmu)
->>> +        goto out;
->>> +
->>> +    if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
->>> +          (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
->>> +        dev_info(smmu_domain->smmu->dev,
->>> +             "does not implement two stages\n");
->>> +        goto out;
->>> +    }
->>
->> That check is redundant (and frankly looks a little bit spammy). If the
->> one below is not enough, there is a problem elsewhere - if it's possible
->> for smmu_domain->stage to ever get set to ARM_SMMU_DOMAIN_NESTED without
->> both stages of translation present, we've already gone fundamentally wrong.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> ---
+>  drivers/irqchip/irq-renesas-irqc.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> Makes sense. Moved that check to arm_smmu_domain_finalise() instead and
-> remove redundant ones.
-
-Urgh, I forgot exactly how the crazy domain-allocation dance worked, 
-such that we're not in a position to refuse the domain_set_attr() call 
-itself, but that does sound like the best compromise for now.
-
-Thanks,
-Robin.
+> diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
+> index a449a7c839b3ec08..438a063c76156d98 100644
+> --- a/drivers/irqchip/irq-renesas-irqc.c
+> +++ b/drivers/irqchip/irq-renesas-irqc.c
+> @@ -7,7 +7,6 @@
+>  
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/ioport.h>
+>  #include <linux/io.h>
+> -- 
+> 2.17.1
+> 
