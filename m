@@ -2,102 +2,93 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95BE6C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6EAC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD0021019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6A52070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1fzvHen"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729476AbfEMLdo (ORCPT
+        id S1728967AbfEMLf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:33:44 -0400
-Received: from ozlabs.org ([203.11.71.1]:37433 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729381AbfEMLdo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:33:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 452dxK1vDjz9s4Y;
-        Mon, 13 May 2019 21:33:41 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Dmitry Vyukov <dvyukov@google.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Kossifidis <mick@ics.forth.gr>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
-In-Reply-To: <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com>
-References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com> <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com> <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com> <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com>
-Date:   Mon, 13 May 2019 21:33:39 +1000
-Message-ID: <87woiutwq4.fsf@concordia.ellerman.id.au>
+        Mon, 13 May 2019 07:35:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51734 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfEMLf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:35:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0jKHovWkj7cxIrQ0X5J93JzH+HcvbEjnDPDSVCLfbu0=; b=A1fzvHenWBFJTS5Js0S8GC2ip
+        2ijSnUjcwuRiy+YDeghv0WkTfiiQ8yglpfr7Dxp94Oi9X2BFQ/lubsruO1ywjbdF8J2dtAJe51n6D
+        BUHyEEtdJLb3/sGvv1RVC2zbtCtUzAspFX0dFZTzwaoHdUN9iBZ+mkBSSrs2RJCin2iKLLRcijHU8
+        ox3NqupE6nOmjFsA+ztnAu3XpE5i/jPmfjifXA242Q6oyxllO/RvcZ2Vlb1vNVj3BdjtRj8GyJn1v
+        hNyTOmxQfewaVH0yBWll7rOmiuZYjZm9wNXdo9cqx7Bl+w+m6HWv95Til0hJA99rEUsoZOq8uUPxC
+        B9fC2BYeQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ9En-0003v1-2u; Mon, 13 May 2019 11:35:21 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 410592029F87D; Mon, 13 May 2019 13:35:18 +0200 (CEST)
+Date:   Mon, 13 May 2019 13:35:18 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     songliubraving@fb.com, Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        quentin.perret@linaro.org, chris.redpath@arm.com,
+        Dietmar.Eggemann@arm.com, linux-kernel@vger.kernel.org,
+        steven.sistare@oracle.com
+Subject: Re: [RFC V2 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
+ isn't found
+Message-ID: <20190513113518.GQ2623@hirez.programming.kicks-ass.net>
+References: <cover.1556182964.git.viresh.kumar@linaro.org>
+ <59b37c56b8fcb834f7d3234e776eaeff74ad117f.1556182965.git.viresh.kumar@linaro.org>
+ <20190510072125.GG2623@hirez.programming.kicks-ass.net>
+ <20190513093418.altqhlhu4zsu75t4@vireshk-i7>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513093418.altqhlhu4zsu75t4@vireshk-i7>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Vyukov <dvyukov@google.com> writes:
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Sat, May 11, 2019 at 2:51 AM
-> To: Dmitry Vyukov
-> Cc: Nick Kossifidis, Christoph Hellwig, Linus Torvalds, Andrew Morton,
-> linux-arch, Linux Kernel Mailing List, linuxppc-dev
->
->> On Fri, May 10, 2019 at 6:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
->> > >
->> > > I think it's good to have a sanity check in-place for consistency.
->> >
->> >
->> > Hi,
->> >
->> > This broke our cross-builds from x86. I am using:
->> >
->> > $ powerpc64le-linux-gnu-gcc --version
->> > powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
->> >
->> > and it says that it's little-endian somehow:
->> >
->> > $ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
->> > #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
->> >
->> > Is it broke compiler? Or I always hold it wrong? Is there some
->> > additional flag I need to add?
->>
->> It looks like a bug in the kernel Makefiles to me. powerpc32 is always
->> big-endian,
->> powerpc64 used to be big-endian but is now usually little-endian. There are
->> often three separate toolchains that default to the respective user
->> space targets
->> (ppc32be, ppc64be, ppc64le), but generally you should be able to build
->> any of the
->> three kernel configurations with any of those compilers, and have the Makefile
->> pass the correct -m32/-m64/-mbig-endian/-mlittle-endian command line options
->> depending on the kernel configuration. It seems that this is not happening
->> here. I have not checked why, but if this is the problem, it should be
->> easy enough
->> to figure out.
->
->
-> Thanks! This clears a lot.
-> This may be a bug in our magic as we try to build kernel files outside
-> of make with own flags (required to extract parts of kernel
-> interfaces).
-> So don't spend time looking for the Makefile bugs yet.
+On Mon, May 13, 2019 at 03:04:18PM +0530, Viresh Kumar wrote:
+> On 10-05-19, 09:21, Peter Zijlstra wrote:
 
-OK :)
+> > I don't hate his per se; but the whole select_idle_sibling() thing is
+> > something that needs looking at.
+> > 
+> > There was the task stealing thing from Steve that looked interesting and
+> > that would render your apporach unfeasible.
+> 
+> I am surely missing something as I don't see how that patchset will
+> make this patchset perform badly, than what it already does.
 
-We did have some bugs in the past (~1-2 y/ago) but AFAIK they are all
-fixed now. These days I build most of my kernels with a bi-endian 64-bit
-toolchain, and switching endian without running `make clean` also works.
+Nah; I just misremembered. I know Oracle has a patch set poking at
+select_idle_siblings() _somewhere_ (as do I), and I just found the wrong
+one.
 
-cheers
+Basically everybody is complaining select_idle_sibling() is too
+expensive for checking the entire LLC domain, except for FB (and thus
+likely some other workloads too) that depend on it to kill their tail
+latency.
+
+But I suppose we could still do this, even if we scan only a subset of
+the LLC, just keep track of the last !idle CPU running only SCHED_IDLE
+tasks and pick that if you do not (in your limited scan) find a better
+candidate.
+
+
