@@ -3,70 +3,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED986C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21C6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEBA20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557718384;
-	bh=ET/nxc5T3hS4xHiJQN6H+m33XGRL+rwCE0JPxplu9mA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YVsDIU/rBfQevaSuHcxs/cm3N3lNs1Fmo2t9SUjRUY2Od1OBogdRuaYchSE1w1Tqk
-	 skUHdeJaGTEcxY6mRcCOIzwtxqxy4/R8SqQMr/pP1hZX+gKnISaxzjb2UsTDUXfMPI
-	 GDvNQ9+jZU+H4xV9uRcAC2MRV3V1noAyiUDIXhEM=
+	by mail.kernel.org (Postfix) with ESMTP id 5D00320862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:33:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hRT3IpcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfEMDdD (ORCPT
+        id S1727440AbfEMDdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 23:33:03 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46719 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727202AbfEMDdD (ORCPT
+        Sun, 12 May 2019 23:33:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35470 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727375AbfEMDdn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 23:33:03 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 487102210C;
-        Sun, 12 May 2019 23:33:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sun, 12 May 2019 23:33:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KzQDTRHUGlP2t4118
-        hjOq4x8DiBylDCwEn5gHvNCjD4=; b=fkWp6iAzsSQSLc1i5Vt20o71uCRAw931S
-        1rkWHLSc6OSAfxLci18Ey+KOcDQB6oa+7tEC/0T2eXrQtSfY/buih4LWmGNsSQWm
-        ALlraB9fYXjpymF9G1ha/E5L0zstBRH1ZJxHIHkiVhdnF1coESdFHmyF14jeb8lI
-        F9hFrqztt6SLL8snC8u7b+/Qf6fu/UyPkz1TgGOsrQhsHTiD55aslyou6Brs9Q0f
-        lKKTQYcxv1wDQ8vxap2/O87kOyKaxQ/yyhMxubsTKIGoO6YE1hpMA15X+8ilv3lR
-        OzTPOd4KDWK+G9K06g0k07UJxlNeDa0IRPMCkel9EuNfIVMpmrOrw==
-X-ME-Sender: <xms:beXYXIJv06QHrKsKULbDulmA5aKXgSoWdhUcbGynL5LwA7ol4S03nA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleefgdejtdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
-    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
-    dvgedrudeiledrudeirddukeehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
-    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:beXYXDSvgPBSeHFltfTu7RA--qVJvRN3dGnNfzi65w2l6xbS6vs6og>
-    <xmx:beXYXPH30DI3NeIHfAgDJCpTehoF2TYRvcug5_HbmAay37GFk7Q5Yw>
-    <xmx:beXYXAUIezQNS_6vJhp_uVefjTRgeGXHsopl6TW7bL7E4yWgy-JRhQ>
-    <xmx:buXYXCrZfw_kxckadxokm1vaDiyapIWTW3pTkQlaP5wf9OaePYJ2KA>
-Received: from eros.localdomain (124-169-16-185.dyn.iinet.net.au [124.169.16.185])
-        by mail.messagingengine.com (Postfix) with ESMTPA id DE4F910378;
-        Sun, 12 May 2019 23:32:58 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, cluster-devel@redhat.com,
+        Sun, 12 May 2019 23:33:43 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h1so6019085pgs.2
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 20:33:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ssvJqTtxKhAvLQPzQtpUqE8pWc5Fl+uFeyG3o3mGIG4=;
+        b=hRT3IpcPm+r4T4Tp/gntF0uo4Co799yVXIYapcJ32vTkYN7nrUdCVlLGOJXKF4nwOy
+         z9hUNBFPaCwgWjm2OfTCFA9Xh2KkdlAMmItYq0IJituQcXTbeJEBaqeKg6KGrWqgF8mg
+         24tIG+UNvYOv6Ge9Pq4AsvvrhN4llYMZJbNBO23Amb+7Lw0MZoJuRAemsbHy+gM62KDK
+         PJiZ3Iy/DlyAxOeMfxyWgjlbt7CM5sdJL/gXOhdIpBvOKRK6UCm8kBaCwEpWU6SMuTSn
+         LOplrvoPtTcLuPVaDR7UlOy12GznY3tuYaQkA02iGHkf35ppQ6MQFElSX5NTA5nmIdFi
+         Acpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ssvJqTtxKhAvLQPzQtpUqE8pWc5Fl+uFeyG3o3mGIG4=;
+        b=QM7YYI2b8QN/TZPtbXEBc8xl3IMz6DCUdYVGZ0deso8UAliJ/VKUksnvgsMw7lQExe
+         B7if4hJ+shTSyOEVOMyBC3hUFQEq7U0ymKwIr1wvgNOtc0Wg2Zx2srZwmqYxPmbC2rYO
+         4z4vE0JsHHpdOZuIKaAIcSjIYOnE6S0A683EXAUYbbUZTU2PyLdsUm2DGtS640IyTDTa
+         qKdbCaGXfJrxifa0Rsg8J09JC6esWgGJwEftf/YWlAWh873irNnfG+zqRswgrDe4oh+a
+         c7eYsvEHNW1JwaEiY71EVx2hszhs/EQ6Sb04it/RdaRLk9mVQoynvABKWsuonHdrNV/A
+         MtFA==
+X-Gm-Message-State: APjAAAXRybtHFd5iRXGJeMtXMH0muoQpWpJIJL9Q5ZmXZNL3t6hZwE0O
+        Wx974BRsXqvK+se3s9PofGE=
+X-Google-Smtp-Source: APXvYqz0YNkp3r1oW/cR5CLyk4nKsq08dG0CjUW/rr7bPspvFvqYqKgC38adXFG3pYZvhMR60rFrgQ==
+X-Received: by 2002:a63:8149:: with SMTP id t70mr28919889pgd.134.1557718422627;
+        Sun, 12 May 2019 20:33:42 -0700 (PDT)
+Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id k6sm10883791pfi.86.2019.05.12.20.33.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 May 2019 20:33:41 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Cory Tusar <cory.tusar@pid1solutions.com>,
+        Chris Healy <cphealy@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] gfs2: Fix error path kobject memory leak
-Date:   Mon, 13 May 2019 13:32:13 +1000
-Message-Id: <20190513033213.2468-1-tobin@kernel.org>
+Subject: [PATCH] mtd: spi-nor: Add Micron MT25QL02 support
+Date:   Sun, 12 May 2019 20:33:26 -0700
+Message-Id: <20190513033326.20352-1-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,57 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a call to kobject_init_and_add() fails we must call kobject_put()
-otherwise we leak memory.
+Add an entry for Micron MT25QL02 which is a 3V variant of already
+supported MT25QU02.
 
-Function always calls kobject_init_and_add() which always calls
-kobject_init().
+Testing was done on a ZII VF610 Dev Board (rev. B).
 
-It is safe to leave object destruction up to the kobject release
-function and never free it manually.
-
-Remove call to kfree() and always call kobject_put() in the error path.
-
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: Cory Tusar <cory.tusar@pid1solutions.com>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>
+Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
+Cc: linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 ---
 
-Is it ok to send patches during the merge window?
+Previous verion of the patch: https://lore.kernel.org/patchwork/patch/577372/
 
-Applies on top of Linus' mainline tag: v5.1
+ drivers/mtd/spi-nor/spi-nor.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Happy to rebase if there are conflicts.
-
-thanks,
-Tobin.
-
- fs/gfs2/sys.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index 1787d295834e..98586b139386 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -661,8 +661,6 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
- 	if (error)
- 		goto fail_reg;
+diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+index fae147452aff..2a644f01254c 100644
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -1881,6 +1881,7 @@ static const struct flash_info spi_nor_ids[] = {
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
++	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
  
--	sysfs_frees_sdp = 1; /* Freeing sdp is now done by sysfs calling
--				function gfs2_sbd_release. */
- 	error = sysfs_create_group(&sdp->sd_kobj, &tune_group);
- 	if (error)
- 		goto fail_reg;
-@@ -687,10 +685,7 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
- fail_reg:
- 	free_percpu(sdp->sd_lkstats);
- 	fs_err(sdp, "error %d adding sysfs files\n", error);
--	if (sysfs_frees_sdp)
--		kobject_put(&sdp->sd_kobj);
--	else
--		kfree(sdp);
-+	kobject_put(&sdp->sd_kobj);
- 	sb->s_fs_info = NULL;
- 	return error;
- }
+ 	/* Micron */
+ 	{
 -- 
 2.21.0
 
