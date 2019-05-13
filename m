@@ -2,149 +2,207 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C903C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764D6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C14621479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E82D20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="1xs1l8ip"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NRUEUnNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbfEMJVF (ORCPT
+        id S1728367AbfEMJVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:21:05 -0400
-Received: from mail-eopbgr700076.outbound.protection.outlook.com ([40.107.70.76]:64172
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727305AbfEMJVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:21:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wpQenlchEVhV4euQXTFLGGQfIy3VwdfKzHdbshG8Jls=;
- b=1xs1l8ip9XgGIbHrmiGznrt9OZMVA/nh7iinXKABA16dyA0aN6U17aRDSDBO+Ybv3g5rA3GsWTP47t1Bj9vOKj6M4zTKQ2guM6+7ncuevfCoGg4V8Bi+RStWfOHTfcnSIPzFCxio3OFGxxymaMUfdo6Y02NtqdpjCEq6DGNtbfM=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB4360.namprd05.prod.outlook.com (52.135.202.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.14; Mon, 13 May 2019 09:21:01 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.010; Mon, 13 May 2019
- 09:21:01 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Yang Shi <yang.shi@linux.alibaba.com>,
-        "jstancek@redhat.com" <jstancek@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Nick Piggin <npiggin@gmail.com>,
-        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
-        Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8AgAANcoCAAAcZgIAABfcAgAAkYwCABXN1AIAACg2AgAACfYA=
-Date:   Mon, 13 May 2019 09:21:01 +0000
-Message-ID: <847D4C2F-BD26-4BE0-A5BA-3C690D11BF77@vmware.com>
-References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190509083726.GA2209@brain-police>
- <20190509103813.GP2589@hirez.programming.kicks-ass.net>
- <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
- <20190509182435.GA2623@hirez.programming.kicks-ass.net>
- <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
- <20190509191120.GD2623@hirez.programming.kicks-ass.net>
- <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
- <20190513083606.GL2623@hirez.programming.kicks-ass.net>
- <20190513091205.GO2650@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190513091205.GO2650@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [50.204.119.4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8037cc0d-71c9-443a-c2a0-08d6d78450e8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4360;
-x-ms-traffictypediagnostic: BYAPR05MB4360:
-x-microsoft-antispam-prvs: <BYAPR05MB4360448DF978D529BCC10D81D00F0@BYAPR05MB4360.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(346002)(376002)(39860400002)(136003)(366004)(189003)(199004)(53546011)(14454004)(6246003)(305945005)(8676002)(186003)(8936002)(6506007)(82746002)(68736007)(53936002)(81156014)(66066001)(4326008)(81166006)(102836004)(478600001)(3846002)(66446008)(66556008)(316002)(91956017)(2906002)(6116002)(76116006)(86362001)(73956011)(64756008)(6916009)(7736002)(66476007)(99286004)(66946007)(7416002)(5660300002)(54906003)(25786009)(76176011)(33656002)(83716004)(26005)(71200400001)(71190400001)(14444005)(256004)(229853002)(6512007)(446003)(11346002)(6436002)(476003)(2616005)(6486002)(36756003)(486006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4360;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CelJo98N5BTvgBiCtmSEwR3SSuriFAV1AWdPS3GaWiwjgig3EQhZ3CyoLcbcj5z1hi5TD3MxaK+7aqwEGdasae4pADNL8lhEd6eB4jMrlCHoEVPe+xu27n5H1l2NdmTEXZTDSFAxePnHQ3/QgLyDcRJOFN/ZMHaxB4FrnZAIb5CpZRjz5ItTTSmWTweJXQYhNJE/XfMEuFj9Y3GrpzVzD4JAh92A5NHs5IVLzu+SXf8cciyV+nMFQfcK6ggYHs0dzSHfkTnUkOItkfH/oY4/s2YFf7OHevdw/R7rmnKK5NKBVJGcX8s1RUBurbwJnrGOBdG1vHRs1wSwHGizXfmlM1+fiO7Uw2iSu+Hm7k0IMy4YV6blEKppgyf3g8DzcDsUQ6vsELtdi8EDvarBfHdIhoLO6xa1WZg4R914HApNMXo=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2D5CBDD523036D4CB25AC81AC9005E04@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 May 2019 05:21:53 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:41127 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbfEMJVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:21:53 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m4so16553261edd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZvUBwLNO7ee4FxMaKAao/U9Adifw5Jc5EmFQrHAk9pc=;
+        b=NRUEUnNs3PgqaYTy3xzCy0Gua3VgJCYFyjhso55dkrrhuVEughlqeh+uJMTKB5YAfU
+         Elq19h+pLTOCw4Pg19q3/sADPz/OvJix8W9AgaJ+5scOSlWjB3i4VUQt/4wZVzOtewfh
+         +R0yEe4H7h7XDn7nZUbLGpJus5eXCfBsmqAdA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZvUBwLNO7ee4FxMaKAao/U9Adifw5Jc5EmFQrHAk9pc=;
+        b=HJcDklzfHb4dkneli/kYnLMfMl1yUFvkFx4jn21q0QF71IUGdIoys+2dKLlkzrMruZ
+         xhk+KwYBI9crPwOcal28lWsdvWLnXGENrcAfHDtjJF9LJppPaS6IdoN1azGJJ/PKVFRT
+         uze8DG3xAtjZ1XZ93VWqI7cCUn/0Qy4nXx/It1YTgVmpMBOSEHHUQveEk+BvnXo3enci
+         IlB2PDVMW0O+eUDlB+RzXRLDyLgVoDK1Z3OTSdLqUdCvtroWcljvmVOK10lENi2eTZXY
+         bKMm0A6Jgc4f9EelXd491Ik9bvm2wApUbQ/GneZXaNqDylMQC8B7u6FPrRHnSpMOnjRg
+         MYdg==
+X-Gm-Message-State: APjAAAXgPtOjHpWvMKLT1chE5gDVrJbJTjhFLsHqLkXH08XcGE3Qd9q+
+        x982Trzz+lnNBLVfqeRBdbJJWg==
+X-Google-Smtp-Source: APXvYqzm+Fllq+S8uJLlL9TpvqJpSHMIEztBcq1s3oxvsKnqIyNKQAS5ta85y9r68VuGUdRfEXYwSg==
+X-Received: by 2002:a17:906:314b:: with SMTP id e11mr20887402eje.259.1557739310962;
+        Mon, 13 May 2019 02:21:50 -0700 (PDT)
+Received: from [10.176.68.125] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id p52sm3601517eda.79.2019.05.13.02.21.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 02:21:50 -0700 (PDT)
+Subject: Re: [PATCH RFC] brcmfmac: sanitize DMI strings v2
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Victor Bravo <1905@spmblk.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+References: <cce7604e-2b02-80ed-1df5-6f304cada0cb@broadcom.com>
+ <20190504194440.4zcxjrtj2aft3ka4@localhost>
+ <16a87149068.2764.9b12b7fc0a3841636cfb5e919b41b954@broadcom.com>
+ <20190505150355.3fbng4ny34x255vk@localhost>
+ <0f75a3d4-94af-5503-94c3-e8af2364448d@redhat.com>
+ <20190506090609.msudhncj7e5vdtzw@localhost>
+ <70677dff-4336-28d5-7ab9-7ba7c3d74ebc@redhat.com>
+ <20190506102032.3ximjecado4mz62j@localhost>
+ <fb07ae01-4cca-98e7-1c2d-dfdf44909900@redhat.com>
+ <87d0kvvkej.fsf@codeaurora.org> <20190506152441.ifjcdi73elxuq5it@localhost>
+ <3f3cca6e-50b7-c61d-4a62-26ce508af9e7@redhat.com>
+ <95cd81ea-3970-92de-7983-5c1919e2bbd9@broadcom.com>
+ <02a6dc11-7def-7d72-4640-d9d42ccec47c@redhat.com>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <0f42608f-772e-356f-3ade-7ec1b38bd45f@broadcom.com>
+Date:   Mon, 13 May 2019 11:21:49 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8037cc0d-71c9-443a-c2a0-08d6d78450e8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 09:21:01.0171
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4360
+In-Reply-To: <02a6dc11-7def-7d72-4640-d9d42ccec47c@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 13, 2019, at 2:12 AM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Mon, May 13, 2019 at 10:36:06AM +0200, Peter Zijlstra wrote:
->> On Thu, May 09, 2019 at 09:21:35PM +0000, Nadav Amit wrote:
->>> It may be possible to avoid false-positive nesting indications (when th=
-e
->>> flushes do not overlap) by creating a new struct mmu_gather_pending, wi=
-th
->>> something like:
->>>=20
->>>  struct mmu_gather_pending {
->>> 	u64 start;
->>> 	u64 end;
->>> 	struct mmu_gather_pending *next;
->>>  }
->>>=20
->>> tlb_finish_mmu() would then iterate over the mm->mmu_gather_pending
->>> (pointing to the linked list) and find whether there is any overlap. Th=
-is
->>> would still require synchronization (acquiring a lock when allocating a=
-nd
->>> deallocating or something fancier).
->>=20
->> We have an interval_tree for this, and yes, that's how far I got :/
->>=20
->> The other thing I was thinking of is trying to detect overlap through
->> the page-tables themselves, but we have a distinct lack of storage
->> there.
->=20
-> We might just use some state in the pmd, there's still 2 _pt_pad_[12] in
-> struct page to 'use'. So we could come up with some tlb generation
-> scheme that would detect conflict.
+On 5/7/2019 5:38 PM, Hans de Goede wrote:
+> Hi,
+> 
+> On 06-05-19 21:30, Arend Van Spriel wrote:
+>> + Luis (for real this time)
+>>
+>> On 5/6/2019 6:05 PM, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 06-05-19 17:24, Victor Bravo wrote:
+>>>> On Mon, May 06, 2019 at 03:26:28PM +0300, Kalle Valo wrote:
+>>>>> Hans de Goede <hdegoede@redhat.com> writes:
+>>>>>
+>>>>>> If we're going to do some filtering, then I suggest we play it 
+>>>>>> safe and also
+>>>>>> disallow other chars which may be used as a separator somewhere, 
+>>>>>> specifically
+>>>>>> ':' and ','.
+>>>>>>
+>>>>>> Currently upstream linux-firmware has these files which rely on 
+>>>>>> the DMI
+>>>>>> matching:
+>>>>>>
+>>>>>> brcmfmac4330-sdio.Prowise-PT301.txt
+>>>>>> brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt
+>>>>>> brcmfmac43430a0-sdio.ONDA-V80 PLUS.txt
+>>>>>>
+>>>>>> The others are either part of the DMI override table for devices 
+>>>>>> with unsuitable
+>>>>>> DMI strings like "Default String"; or are device-tree based.
+>>>>>>
+>>>>>> So as long as we don't break those 3 (or break the ONDA one but 
+>>>>>> get a symlink
+>>>>>> in place) we can sanitize a bit more then just non-printable and '/'.
+>>>>>>
+>>>>>> Kalle, Arend, what is your opinion on this?
+>>>>>>
+>>>>>> Note I do not expect the ONDA V80 Plus to have a lot of Linux users,
+>>>>>> but it definitely has some.
+>>>>>
+>>>>> To me having spaces in filenames is a bad idea, but on the other 
+>>>>> hand we
+>>>>> do have the "don't break existing setups" rule, so it's not so 
+>>>>> simple. I
+>>>>> vote for not allowing spaces, I think that's the best for the long 
+>>>>> run,
+>>>>> but don't know what Arend thinks.
+>>
+>> Hi,
+>>
+>> Had a day off today so I did see some of the discussion, but was not 
+>> able to chime in until now.
+>>
+>> To be honest I always disliked spaces in filenames, but that does not 
+>> necessarily make it a bad idea. What I would like to know is why 
+>> built-in firmware can not deal with spaces in the firmware file names. 
+>> I think Hans mentioned it in the thread and it crossed my mind as well 
+>> last night. From driver perspective, being brcmfmac or any other for 
+>> that matter, there is only one API to request firmware and in my 
+>> opinion it should behave the same no matter where the firmware is 
+>> coming from. I would prefer to fix that for built-in firmware, but we 
+>> need to understand where this limitation is coming from. Hopefully 
+>> Luis can elaborate on that.
+> 
+> Ok.
 
-It is rather easy to come up with a scheme (and I did similar things) if yo=
-u
-flush the table while you hold the page-tables lock. But if you batch acros=
-s
-page-tables it becomes harder.
+The issue is probably that make does simply split the EXTRA_FIRMWARE 
+setting at each space character. I tried to use single quote so
+"'brcmfmac43340-sdio.ASUSTeK COMPUTER INC.-T100HAN.txt' 
+brcmfmac43340-sdio.bin". No luck. So all I could think of is patch below 
+which require the user to enter a special sequence, ie. _-_ where space 
+should be.
 
-Thinking about it while typing, perhaps it is simpler than I think - if you
-need to flush range that runs across more than a single table, you are very
-likely to flush a range of more than 33 entries, so anyhow you are likely t=
-o
-do a full TLB flush.
+"brcmfmac43340-sdio.ASUSTeK_-_COMPUTER_-_INC.-T100HAN.txt 
+brcmfmac43340-sdio.bin"
 
-So perhaps just avoiding the batching if only entries from a single table
-are flushed would be enough.
+It works but I had to drop the dependency so it's all a bit hacky.
+
+Regards,
+Arend
+
+diff --git a/firmware/Makefile b/firmware/Makefile
+index 37e5ae387400..a536e5d12d5f 100644
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -5,10 +5,11 @@
+  fwdir := $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE_DIR))
+  fwdir := $(addprefix $(srctree)/,$(filter-out /%,$(fwdir)))$(filter 
+/%,$(fwdir))
+
++fw_space_escape := _-_
+  obj-y  := $(addsuffix .gen.o, $(subst $(quote),,$(CONFIG_EXTRA_FIRMWARE)))
+
+-FWNAME    = $(patsubst $(obj)/%.gen.S,%,$@)
+-FWSTR     = $(subst /,_,$(subst .,_,$(subst -,_,$(FWNAME))))
++FWNAME    = $(subst $(fw_space_escape),$(space),$(patsubst 
+$(obj)/%.gen.S,%,$@))
++FWSTR     = $(subst $(space),_,$(subst /,_,$(subst .,_,$(subst 
+-,_,$(FWNAME)))))
+  ASM_WORD  = $(if $(CONFIG_64BIT),.quad,.long)
+  ASM_ALIGN = $(if $(CONFIG_64BIT),3,2)
+  PROGBITS  = $(if $(CONFIG_ARM),%,@)progbits
+@@ -34,7 +35,7 @@ $(obj)/%.gen.S: FORCE
+  	$(call filechk,fwbin)
+
+  # The .o files depend on the binaries directly; the .S files don't.
+-$(addprefix $(obj)/, $(obj-y)): $(obj)/%.gen.o: $(fwdir)/%
++$(addprefix $(obj)/, $(obj-y)): $(obj)/%.gen.o:
+
+  targets := $(patsubst $(obj)/%,%, \
+                                  $(shell find $(obj) -name \*.gen.S 
+2>/dev/null))
