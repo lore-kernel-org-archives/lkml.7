@@ -2,127 +2,108 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E927C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2014C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C03E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:09:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cfENz/5U"
+	by mail.kernel.org (Postfix) with ESMTP id 8579B2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732357AbfEMSJj (ORCPT
+        id S1732377AbfEMSKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:09:39 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33768 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732342AbfEMSJh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:09:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d9so7972971wrx.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WZBxw3BQbaqpNiHsdkbnukeHq4nKrz3shSsyzzNHd4M=;
-        b=cfENz/5UHqta8nz6XhqvxQcERP5bbinjZFJkloo4rlmvh+WnCitH0oRDl7eJD+6QYH
-         nFHh2CcabhbSUAH/MMGL7dY5LlHsO2f8cdB/I8qZHb9B0e0AOn4GJz1lwjLJETBW15Al
-         JTbbibvBOLCXHTGZn384Ulohsr5h2y8zEaXmJMUhOvDx+5MeYTygWYKYCXPSwUndPrhg
-         CiU5LCZ2FHV9SrjYBGsNDTNiA+54Gx5nOR+X4rPWXeFI+HArG66hJz/A31W4yEwdtKQs
-         0uPBqmM7a4/94wUNePKRHTckMn3O8h1fdks8slrLkcqTKHnzC5tPJfgCde+4+5jIOMzZ
-         nRZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WZBxw3BQbaqpNiHsdkbnukeHq4nKrz3shSsyzzNHd4M=;
-        b=JuXp2mot5spRVyGwyzuPkwUi5g4ko/HKuckY5N+h8wS6Ef962Oo96ne2SkRUuBgPej
-         hzGvijQEWVBQLo1fGEFmTBPhxsrpm20Q+VL6UftrKoNpxWswIfsQOB/RQkmVrp7tDK6l
-         69uxFBuv9jHMDWxUxE6hcEewk1dWIBhmZ0eTQy17uXnKqcv3Y+tFdXy/M6Chi7Zw3ovV
-         BHTR+nP6fnEbsdL61FFzCnjbuksOpJSlERVnJynCxexr7z2yFKfrBlBh+KytM7H4lPQ1
-         nAeiFo70tsTfR+VqddNSwjGMNqji3nZila3UJxUMPFj2I/fNxL//SzdyVYev3xN+nXnz
-         Ah8w==
-X-Gm-Message-State: APjAAAVZqKk/iqwvb+NnEHA3+lSh9lc5yAFPzoai7kju1yDXgYobaVDK
-        rb7SERLOVLRJBn43j+p7titDSQjKR2ahPdf4+PoPFQi33eo=
-X-Google-Smtp-Source: APXvYqzGMaGgYsxgysYiEyi7Oon8Zhg1rRup69UofSQu4xNqfLZshmMu0etOviRuzy8jC94vjH0ff8lakkLV+S9lpjY=
-X-Received: by 2002:adf:ef83:: with SMTP id d3mr6001055wro.253.1557770975789;
- Mon, 13 May 2019 11:09:35 -0700 (PDT)
+        Mon, 13 May 2019 14:10:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732361AbfEMSKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:10:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E75513087951;
+        Mon, 13 May 2019 18:10:04 +0000 (UTC)
+Received: from redhat.com (ovpn-112-54.rdu2.redhat.com [10.10.112.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B974E18A5D;
+        Mon, 13 May 2019 18:10:02 +0000 (UTC)
+Date:   Mon, 13 May 2019 14:10:00 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 0/5] mm/hmm: HMM documentation updates and code fixes
+Message-ID: <20190513181000.GA30726@redhat.com>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190512150832.GB4238@redhat.com>
+ <89c6ce48-190b-65df-7c35-a0eb0f5d936f@nvidia.com>
 MIME-Version: 1.0
-References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
- <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com> <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
- <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com> <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com>
-In-Reply-To: <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 13 May 2019 11:09:23 -0700
-Message-ID: <CALAqxLUgnTB7aZ4edXCaG8SJsJzfY1_yNEPc6Losssw5Xy9-XA@mail.gmail.com>
-Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
-To:     Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc:     Felipe Balbi <balbi@kernel.org>, "Yang, Fei" <fei.yang@intel.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Chen Yu <chenyu56@huawei.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux USB List <linux-usb@vger.kernel.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "kernel@collabora.com" <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <89c6ce48-190b-65df-7c35-a0eb0f5d936f@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 13 May 2019 18:10:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 7:08 AM Andrzej Pietrasiewicz
-<andrzej.p@collabora.com> wrote:
-> W dniu 09.05.2019 o 23:23, John Stultz pisze:
-> > So yes, the kzalloc/memset patch is a clear improvement, as it avoids
-> > the bootup crash on dwc2, and seems like it should go in.
-> >
-> > However, there is still the outstanding issue w/  functionfs sg
-> > support stalling on larger transfers.
->
-> Do you get "functionfs read size 512 > requested size 24, splitting
-> request into multiple reads" message when problems happen?
+On Mon, May 13, 2019 at 10:26:59AM -0700, Ralph Campbell wrote:
+> 
+> 
+> On 5/12/19 8:08 AM, Jerome Glisse wrote:
+> > On Mon, May 06, 2019 at 04:29:37PM -0700, rcampbell@nvidia.com wrote:
+> > > From: Ralph Campbell <rcampbell@nvidia.com>
+> > > 
+> > > I hit a use after free bug in hmm_free() with KASAN and then couldn't
+> > > stop myself from cleaning up a bunch of documentation and coding style
+> > > changes. So the first two patches are clean ups, the last three are
+> > > the fixes.
+> > > 
+> > > Ralph Campbell (5):
+> > >    mm/hmm: Update HMM documentation
+> > >    mm/hmm: Clean up some coding style and comments
+> > >    mm/hmm: Use mm_get_hmm() in hmm_range_register()
+> > >    mm/hmm: hmm_vma_fault() doesn't always call hmm_range_unregister()
+> > >    mm/hmm: Fix mm stale reference use in hmm_free()
+> > 
+> > This patchset does not seems to be on top of
+> > https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
+> > 
+> > So here we are out of sync, on documentation and code. If you
+> > have any fix for https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
+> > then please submit something on top of that.
+> > 
+> > Cheers,
+> > Jérôme
+> > 
+> > > 
+> > >   Documentation/vm/hmm.rst | 139 ++++++++++++++++++-----------------
+> > >   include/linux/hmm.h      |  84 ++++++++++------------
+> > >   mm/hmm.c                 | 151 ++++++++++++++++-----------------------
+> > >   3 files changed, 174 insertions(+), 200 deletions(-)
+> > > 
+> > > -- 
+> > > 2.20.1
+> 
+> The patches are based on top of Andrew's mmotm tree
+> git://git.cmpxchg.org/linux-mmotm.git v5.1-rc6-mmotm-2019-04-25-16-30.
+> They apply cleanly to that git tag as well as your hmm-5.2-v3 branch
+> so I guess I am confused where we are out of sync.
 
-Unfortunately no.
+No disregard my email, i was trying to apply on top of wrong
+branch yesterday morning while catching up on big backlog of
+email. Failure was on my side.
 
-> Is there anything in the kernel log?
-
-Nope. Just the transfers stall/hang and further attempts at adb
-connections fail until the USB cable is unplugged and replugged.
-
-> I'm unable to reproduce your problems. I thought I was able, but
-> it was another problem, which is fixed with:
->
-> 5acb4b970184d189d901192d075997c933b82260
-> dwc2: gadget: Fix completed transfer size calculation in DDMA
->
-> (or you can simply take upstream drivers/usb/dwc2).
-
-Yea, I'm able to test against mainline. I can give this a whirl, but
-since it affects multiple drivers, I suspect the trouble is in the
-f_fs code, not just dwc2.
-
-> Do your problems happen on dwc2 or dwc3?
-
-The transfer hangs happen on *both* dwc2 and dwc3. And on both we can
-use a similar workaround of disabling sg_supported to get by.
-
-https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey-mainline-WIP&id=21dfaac615f1f287377897804cbfe69450d489e3
-https://git.linaro.org/people/john.stultz/android-dev.git/commit/?h=dev/hikey960-mainline-WIP&id=5b70ec4ae1c06ae700fcca7141130c71e205fa1c
-
-
-> Is there a way to try your adb without building and running the
-> whole Android?
-
-Maybe? I have heard of folks doing it in the past, though I don't
-really know a quick path to get there.
-
-Is there anything else I can try for you?
-
-thanks
--john
+Cheers,
+Jérôme
