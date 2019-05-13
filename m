@@ -2,68 +2,69 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D03C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E725C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B712621479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3534A21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gz/tnqju"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSgEFRDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfEMJOQ (ORCPT
+        id S1728813AbfEMJOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:14:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44379 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728793AbfEMJOO (ORCPT
+        Mon, 13 May 2019 05:14:30 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43973 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728718AbfEMJNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:14:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g9so6850860pfo.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:14:14 -0700 (PDT)
+        Mon, 13 May 2019 05:13:54 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c6so6853958pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XquRGMdkWaM/DcOHkh5rTCme/nLS8Vh3kbKhYIl4Twg=;
-        b=gz/tnqjukIUD4RWThkSaxWdDlmQh8HywQm3QrUdGpOG5v4q6hy+r35pZBmCLpNBvP1
-         VysEnCoJv098YRymkvsVjA+XH6rkRFBQXsGU1til8+7jkjk23m0Zn+foSPF25SDsT2lG
-         fGDmhPTdzTFzZTSiuS9neZvUS96xjKdCie9CQdRMtOuH4K9VNuALxjoiGObDmNYBlu6i
-         Sde909IVUyXG1EYqxDALrJ2m4pKXKNO3slb58x2WrxBcnjvi3Q9efNZLmiG8d9WK6IAx
-         FNIxQPYHLSDb+zGFh7HJrH4a8OMPz4Xn6b+wLFGQsLbn4RnpNt8hEU+DeNezPjNHWa7O
-         E+DQ==
+        bh=yHYDQ9IZ8H2C7mCEc1bmyCJDNMEW+3FaB3NaC6RhOPw=;
+        b=TSgEFRDqbV4yo6asweU3jpq4qSl+BFyMCnpaYp+XeS3pR/qyVr3FFRzFAQYj1SXM5b
+         9jA97+jRmAfnIJ6CWhOGaB+ZvgnCj1Q3vwB4CVM6H/YY2yuDlKFgn8jcBteuiZkrGD8t
+         7pVNyinf+Rtb5gzMP/mjGrrHWXw5szdiDx8kEkSw6uSjCAYiAczQRSatbMvtYYtdSQXz
+         4pr0QtY7MzpdDBm0znZBhVXx2McpbHXCrENuJGO515PF3EBbxCU6hrtw1eiRrM59KIhp
+         +YuqIBF1bd6BHIKAotiPRIo42Qvm0lYdm+HtZXI5ZGinvcWXUFF9nre5F71dL5D59499
+         NHAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XquRGMdkWaM/DcOHkh5rTCme/nLS8Vh3kbKhYIl4Twg=;
-        b=BPBV+RWSMQOCwWUouEQH00d4CVhEBEke3a+cQwVUb/dYEgMXXgE3GXIbUsL5/1ETu6
-         AgE1/6i5irEkkEzT8YC6k7ClJq+Dt+/RK9A7waXrAUJCjXd1IyNvea64tvDbhhvbdI0q
-         CTbje8DYn6MIER+bLbSk/WH134zfgrwcBT94G3iQABXqfyQ0TlsvpxcpqHq9nbsXQulF
-         BE5z4M1Ib07q9S8cFtDCXfrnI2YyWp/CaG9oenvIO8mC5arbwHcYuD9Rf1ixfPviu+UI
-         nQrILEmJq36nl1hVbIxwb2gkVdgcbluOGe4kIUP7gFfdkr5mYnL3pbHXxrOHAbelkCzx
-         JEPw==
-X-Gm-Message-State: APjAAAWbFI9ZnCxPHI3Q1TZZV+Lt5Il/6CjPX53ire+n5Dng1vU+w42e
-        4tBlYqh3Ium8drrgeCqBr2Y=
-X-Google-Smtp-Source: APXvYqz8fg/gOGGQGPxmA0dBWWM80ayKbjIJVuacCPFHtBhjL6BeE6RM5qbjIOHO3/l/cj41qDHI0Q==
-X-Received: by 2002:a63:555a:: with SMTP id f26mr29982607pgm.197.1557738853804;
-        Mon, 13 May 2019 02:14:13 -0700 (PDT)
+        bh=yHYDQ9IZ8H2C7mCEc1bmyCJDNMEW+3FaB3NaC6RhOPw=;
+        b=RiHODayc2goQX89ngsrQ9OT72zJb/ULOYdVAb+JPCWgyAbetVGSfT6747HbszNjVHb
+         TqMWwodHPmJ0Oxd1xrPLh/UauvQWDnG/XwJC64B051JqMqEHqD6LgHk1VimP7/uTKaZb
+         3V3kKHGYM+C97tLF1EOETrWuSFAURji6q4ZXsiDQWbgwoo4i+Ep2m34xHY14WPpCaW0M
+         5K6VYPK22oK7idTB820R4Vvv9PaEg6kIPGJnbfDVQydVWV3z9+J8HZ6Vthak6mVVxpY0
+         sTLP/bhLHi0PfoKFqqOO7jmnlpYl6EtMbxj0sQtfc6DuODDkYuP+8+8Izj5QiNqiRS/y
+         8mQw==
+X-Gm-Message-State: APjAAAUnPM15iQ4lpMNwTB3OBCdHQiHn0NalERYGRPnPk+85RvCsHjUf
+        3FfFqfRwtr/TKKO+VALfhVM=
+X-Google-Smtp-Source: APXvYqwInDUY/fZ06Dgs3rrZMqrYL4Qv4n8mkxJkKYy0XaZ5RLnE2uo0KuT9DgvJMkMiYwj/KndGQQ==
+X-Received: by 2002:a62:56d9:: with SMTP id h86mr32688613pfj.195.1557738833987;
+        Mon, 13 May 2019 02:13:53 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.14.10
+        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.50
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:14:13 -0700 (PDT)
+        Mon, 13 May 2019 02:13:53 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 17/17] locking/lockdep: Remove irq-safe to irq-unsafe read check
-Date:   Mon, 13 May 2019 17:12:03 +0800
-Message-Id: <20190513091203.7299-18-duyuyang@gmail.com>
+Subject: [PATCH 11/17] locking/lockdep: Adjust lockdep selftest cases
+Date:   Mon, 13 May 2019 17:11:57 +0800
+Message-Id: <20190513091203.7299-12-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
 References: <20190513091203.7299-1-duyuyang@gmail.com>
@@ -74,106 +75,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a lockdep warning:
-
-  ========================================================
-  WARNING: possible irq lock inversion dependency detected
-  5.1.0-rc7+ #141 Not tainted
-  --------------------------------------------------------
-  kworker/8:2/328 just changed the state of lock:
-  0000000007f1a95b (&(&host->lock)->rlock){-...}, at: ata_bmdma_interrupt+0x27/0x1c0 [libata]
-  but this lock took another, HARDIRQ-READ-unsafe lock in the past:
-   (&trig->leddev_list_lock){.+.?}
-
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
-   Possible interrupt unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&trig->leddev_list_lock);
-                                 local_irq_disable();
-                                 lock(&(&host->lock)->rlock);
-                                 lock(&trig->leddev_list_lock);
-    <Interrupt>
-      lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-This splat is a false positive, which is enabled by the addition of
-recursive read locks in the graph. Specifically, trig->leddev_list_lock is a
-rwlock_t type, which was not in the graph before recursive read lock support
-was added in lockdep.
-
-This false positve is caused by a "false-positive" check in IRQ usage check.
-
-In mark_lock_irq(), the following checks are currently performed:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |    F* B*    |
-  |----------------------------------|
-  | read safe |  F* B* |      -      |
-   ----------------------------------
-
-Where:
-F: check_usage_forwards
-B: check_usage_backwards
-*: check enabled by STRICT_READ_CHECKS
-
-But actually the safe -> unsafe read dependency does not create a deadlock
-scenario.
-
-Fix this by simply removing those two checks, and since safe read -> unsafe
-is indeed a problem, these checks are not actually strict per se, so remove
-the macro STRICT_READ_CHECKS, and we have the following checks:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |      -      |
-  |----------------------------------|
-  | read safe |  F  B  |      -      |
-   ----------------------------------
+With read-write lock support, some read-write lock cases need to be updated,
+specifically, some read-lock involved deadlocks are actually not deadlocks.
+Hope I am not wildly wrong.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ lib/locking-selftest.c | 44 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 33 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 69d6bd6..62b454c 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3446,8 +3446,6 @@ static int SOFTIRQ_verbose(struct lock_class *class)
- 	return 0;
+diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
+index a170554..f83f047 100644
+--- a/lib/locking-selftest.c
++++ b/lib/locking-selftest.c
+@@ -424,7 +424,7 @@ static void rwsem_ABBA2(void)
+ 	ML(Y1);
+ 	RSL(X1);
+ 	RSU(X1);
+-	MU(Y1); // should fail
++	MU(Y1); // should NOT fail
  }
  
--#define STRICT_READ_CHECKS	1
+ 
+@@ -462,12 +462,13 @@ static void rwsem_ABBA3(void)
+ 
+ /*
+  * ABBA deadlock:
++ *
++ * Should fail except for either A or B is read lock.
+  */
 -
- static int (*state_verbose_f[])(struct lock_class *class) = {
- #define LOCKDEP_STATE(__STATE) \
- 	__STATE##_verbose,
-@@ -3493,7 +3491,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 	 * Validate that the lock dependencies don't have conflicting usage
- 	 * states.
- 	 */
--	if ((!read || STRICT_READ_CHECKS) &&
-+	if ((!read || !dir) &&
- 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
- 		return 0;
+ #define E()					\
+ 						\
+ 	LOCK_UNLOCK_2(A, B);			\
+-	LOCK_UNLOCK_2(B, A); /* fail */
++	LOCK_UNLOCK_2(B, A);
  
-@@ -3504,7 +3502,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 		if (!valid_state(curr, this, new_bit, excl_bit + LOCK_USAGE_READ_MASK))
- 			return 0;
+ /*
+  * 6 testcases:
+@@ -494,13 +495,15 @@ static void rwsem_ABBA3(void)
  
--		if (STRICT_READ_CHECKS &&
-+		if (dir &&
- 			!usage(curr, this, excl_bit + LOCK_USAGE_READ_MASK,
- 				state_name(new_bit + LOCK_USAGE_READ_MASK)))
- 			return 0;
+ /*
+  * AB BC CA deadlock:
++ *
++ * Should fail except for read or recursive-read locks.
+  */
+ 
+ #define E()					\
+ 						\
+ 	LOCK_UNLOCK_2(A, B);			\
+ 	LOCK_UNLOCK_2(B, C);			\
+-	LOCK_UNLOCK_2(C, A); /* fail */
++	LOCK_UNLOCK_2(C, A);
+ 
+ /*
+  * 6 testcases:
+@@ -527,13 +530,15 @@ static void rwsem_ABBA3(void)
+ 
+ /*
+  * AB CA BC deadlock:
++ *
++ * Should fail except for read or recursive-read locks.
+  */
+ 
+ #define E()					\
+ 						\
+ 	LOCK_UNLOCK_2(A, B);			\
+ 	LOCK_UNLOCK_2(C, A);			\
+-	LOCK_UNLOCK_2(B, C); /* fail */
++	LOCK_UNLOCK_2(B, C);
+ 
+ /*
+  * 6 testcases:
+@@ -560,6 +565,8 @@ static void rwsem_ABBA3(void)
+ 
+ /*
+  * AB BC CD DA deadlock:
++ *
++ * Should fail except for read or recursive-read locks.
+  */
+ 
+ #define E()					\
+@@ -567,7 +574,7 @@ static void rwsem_ABBA3(void)
+ 	LOCK_UNLOCK_2(A, B);			\
+ 	LOCK_UNLOCK_2(B, C);			\
+ 	LOCK_UNLOCK_2(C, D);			\
+-	LOCK_UNLOCK_2(D, A); /* fail */
++	LOCK_UNLOCK_2(D, A);
+ 
+ /*
+  * 6 testcases:
+@@ -594,13 +601,15 @@ static void rwsem_ABBA3(void)
+ 
+ /*
+  * AB CD BD DA deadlock:
++ *
++ * Should fail except for read or recursive-read locks.
+  */
+ #define E()					\
+ 						\
+ 	LOCK_UNLOCK_2(A, B);			\
+ 	LOCK_UNLOCK_2(C, D);			\
+ 	LOCK_UNLOCK_2(B, D);			\
+-	LOCK_UNLOCK_2(D, A); /* fail */
++	LOCK_UNLOCK_2(D, A);
+ 
+ /*
+  * 6 testcases:
+@@ -627,13 +636,15 @@ static void rwsem_ABBA3(void)
+ 
+ /*
+  * AB CD BC DA deadlock:
++ *
++ * Should fail except for read or recursive-read locks.
+  */
+ #define E()					\
+ 						\
+ 	LOCK_UNLOCK_2(A, B);			\
+ 	LOCK_UNLOCK_2(C, D);			\
+ 	LOCK_UNLOCK_2(B, C);			\
+-	LOCK_UNLOCK_2(D, A); /* fail */
++	LOCK_UNLOCK_2(D, A);
+ 
+ /*
+  * 6 testcases:
+@@ -1238,7 +1249,7 @@ static inline void print_testname(const char *testname)
+ /*
+  * 'read' variant: rlocks must not trigger.
+  */
+-#define DO_TESTCASE_6R(desc, name)				\
++#define DO_TESTCASE_6AA(desc, name)				\
+ 	print_testname(desc);					\
+ 	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
+ 	dotest(name##_wlock, FAILURE, LOCKTYPE_RWLOCK);		\
+@@ -1249,6 +1260,17 @@ static inline void print_testname(const char *testname)
+ 	dotest_rt(name##_rtmutex, FAILURE, LOCKTYPE_RTMUTEX);	\
+ 	pr_cont("\n");
+ 
++#define DO_TESTCASE_6R(desc, name)				\
++	print_testname(desc);					\
++	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
++	dotest(name##_wlock, FAILURE, LOCKTYPE_RWLOCK);		\
++	dotest(name##_rlock, SUCCESS, LOCKTYPE_RWLOCK);		\
++	dotest(name##_mutex, FAILURE, LOCKTYPE_MUTEX);		\
++	dotest(name##_wsem, FAILURE, LOCKTYPE_RWSEM);		\
++	dotest(name##_rsem, SUCCESS, LOCKTYPE_RWSEM);		\
++	dotest_rt(name##_rtmutex, FAILURE, LOCKTYPE_RTMUTEX);	\
++	pr_cont("\n");
++
+ #define DO_TESTCASE_2I(desc, name, nr)				\
+ 	DO_TESTCASE_1("hard-"desc, name##_hard, nr);		\
+ 	DO_TESTCASE_1("soft-"desc, name##_soft, nr);
+@@ -1991,7 +2013,7 @@ void locking_selftest(void)
+ 	debug_locks_silent = !debug_locks_verbose;
+ 	lockdep_set_selftest_task(current);
+ 
+-	DO_TESTCASE_6R("A-A deadlock", AA);
++	DO_TESTCASE_6AA("A-A deadlock", AA);
+ 	DO_TESTCASE_6R("A-B-B-A deadlock", ABBA);
+ 	DO_TESTCASE_6R("A-B-B-C-C-A deadlock", ABBCCA);
+ 	DO_TESTCASE_6R("A-B-C-A-B-C deadlock", ABCABC);
+@@ -2048,7 +2070,7 @@ void locking_selftest(void)
+ 	pr_cont("             |");
+ 	dotest(rlock_ABBA2, SUCCESS, LOCKTYPE_RWLOCK);
+ 	pr_cont("             |");
+-	dotest(rwsem_ABBA2, FAILURE, LOCKTYPE_RWSEM);
++	dotest(rwsem_ABBA2, SUCCESS, LOCKTYPE_RWSEM);
+ 
+ 	print_testname("mixed write-lock/lock-write ABBA");
+ 	pr_cont("             |");
 -- 
 1.8.3.1
 
