@@ -2,133 +2,262 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22187C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F84C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C3720645
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557754896;
-	bh=mpf6noeVSjq+GXEqDodranEq5VNhfPMu0quSOnPl96M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q98Bs2ALJxyVrxOHbdQkfQxuRDGB3mG0WpnGe+oS2v4158o2HTGQYotMs10SD/JCA
-	 sCTm7PqkT/tis/Hw20oMtgYZJ70cz8uk/catDOHfAOCN3R//mB7a0+Zq0YmZ/yAncB
-	 Vo4dG/V+EO/GYLlu7brH4TXPSI+etKQXr7WNJUes=
+	by mail.kernel.org (Postfix) with ESMTP id A2ACB20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfEMNlf (ORCPT
+        id S1729733AbfEMNmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:41:35 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31556 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbfEMNle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:41:34 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 06:41:33 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga004.fm.intel.com with ESMTP; 13 May 2019 06:41:33 -0700
-Date:   Mon, 13 May 2019 07:36:11 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Busch, Keith" <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-Message-ID: <20190513133611.GA15318@localhost.localdomain>
-References: <20190510212937.11661-1-keith.busch@intel.com>
- <20190511072258.GB14764@lst.de>
+        Mon, 13 May 2019 09:42:09 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56260 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfEMNmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:42:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AFCD80D;
+        Mon, 13 May 2019 06:42:08 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B52C3F71E;
+        Mon, 13 May 2019 06:42:06 -0700 (PDT)
+Date:   Mon, 13 May 2019 14:42:03 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v2 0/7] Add new tracepoints required for EAS testing
+Message-ID: <20190513134203.xmw6rsjwpj5b4tj6@e107158-lin.cambridge.arm.com>
+References: <20190510113013.1193-1-qais.yousef@arm.com>
+ <20190513122857.GU2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190511072258.GB14764@lst.de>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <20190513122857.GU2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 12:22:58AM -0700, Christoph Hellwig wrote:
-> A couple nitpicks, mostly leftover from the previous iteration
-> (I didn't see replies to those comments from you, despite seeing
-> a reply to my mail, assuming it didn't get lost):
-
-I thought you just meant the freeze/unfreeze sequence. I removed that
-part entirely, but yes, I can move all of this from the core. I will
-just need to export 'nvme_set_features'
- 
-> > +int nvme_set_power(struct nvme_ctrl *ctrl, unsigned ps)
-> > +{
-> > +	return nvme_set_features(ctrl, NVME_FEAT_POWER_MGMT, ps, NULL, 0, NULL);
-> > +}
-> > +EXPORT_SYMBOL_GPL(nvme_set_power);
-> > +
-> > +int nvme_get_power(struct nvme_ctrl *ctrl, u32 *result)
-> > +{
-> > +	struct nvme_command c;
-> > +	union nvme_result res;
-> > +	int ret;
-> > +
-> > +	if (!result)
-> > +		return -EINVAL;
-> > +
-> > +	memset(&c, 0, sizeof(c));
-> > +	c.features.opcode = nvme_admin_get_features;
-> > +	c.features.fid = cpu_to_le32(NVME_FEAT_POWER_MGMT);
-> > +
-> > +	ret = __nvme_submit_sync_cmd(ctrl->admin_q, &c, &res,
-> > +			NULL, 0, 0, NVME_QID_ANY, 0, 0, false);
-> > +	if (ret >= 0)
-> > +		*result = le32_to_cpu(res.u32);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(nvme_get_power);
+On 05/13/19 14:28, Peter Zijlstra wrote:
 > 
-> At this point I'd rather see those in the PCIe driver.  While the
-> power state feature is generic in the spec I don't see it actually
-> being used anytime anywhere else any time soon.
 > 
-> But maybe we can add a nvme_get_features helper ala nvme_set_features
-> in the core to avoid a little boilerplate code for the future?
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index c8c7c7efb487..11555f95a88e 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -594,6 +594,23 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+>  
+>  	TP_printk("cpu=%d", __entry->cpu)
+>  );
+> +
+> +/*
+> + * Following tracepoints are not exported in tracefs and provide hooking
+> + * mechanisms only for testing and debugging purposes.
+> + */
+> +DECLARE_TRACE(pelt_cfs_rq,
+> +	TP_PROTO(struct cfs_rq *cfs_rq),
+> +	TP_ARGS(cfs_rq));
+> +
+> +DECLARE_TRACE(pelt_se,
+> +	TP_PROTO(struct sched_entity *se),
+> +	TP_ARGS(se));
+> +
+> +DECLARE_TRACE(sched_overutilized,
+> +	TP_PROTO(int overutilized),
+> +	TP_ARGS(overutilized));
+> +
 
-Sounds good.
- 
-> > +	ret = nvme_set_power(&dev->ctrl, dev->ctrl.npss);
-> > +	if (ret < 0)
-> > +		return ret;
-> 
-> I can't find any wording in the spec that guarantees the highest
-> numerical power state is the deepest.  But maybe I'm just missing
-> something as such an ordering would be really helpful?
+If I decoded this patch correctly, what you're saying:
 
-I actually only noticed APST made this assumption, and I had to search
-the spec to see where it calls this out. It is in section 8.4:
+	1. Move struct cfs_rq to the exported sched.h header
+	2. Get rid of the fatty wrapper functions and export any necessary
+	   helper functions.
+	3. No need for RT and DL pelt tracking at the moment.
 
-  Power states are contiguously numbered starting with zero such that
-  each subsequent power state consumes less than or equal to the maximum
-  power consumed in the previous state.
+I'm okay with this. The RT and DL might need to be revisited later but we don't
+have immediate need for them now.
 
-> >  static int nvme_suspend(struct device *dev)
-> >  {
-> >  	struct pci_dev *pdev = to_pci_dev(dev);
-> >  	struct nvme_dev *ndev = pci_get_drvdata(pdev);
-> >  
-> > +	/*
-> > +	 * Try to use nvme if the device supports host managed power settings
-> > +	 * and platform firmware is not involved.
-> > +	 */
-> 
-> This just comments that what, but I think we need a why here as the
-> what is fairly obvious..
+I'll add to this passing rd->span to sched_overutilizied.
 
-Sounds good.
+Thanks
+
+--
+Qais Yousef
+
+>  #endif /* _TRACE_SCHED_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/sched/autogroup.c b/kernel/sched/autogroup.c
+> index 2d4ff5353ded..2067080bb235 100644
+> --- a/kernel/sched/autogroup.c
+> +++ b/kernel/sched/autogroup.c
+> @@ -259,7 +259,6 @@ void proc_sched_autogroup_show_task(struct task_struct *p, struct seq_file *m)
+>  }
+>  #endif /* CONFIG_PROC_FS */
+>  
+> -#ifdef CONFIG_SCHED_DEBUG
+>  int autogroup_path(struct task_group *tg, char *buf, int buflen)
+>  {
+>  	if (!task_group_is_autogroup(tg))
+> @@ -267,4 +266,3 @@ int autogroup_path(struct task_group *tg, char *buf, int buflen)
+>  
+>  	return snprintf(buf, buflen, "%s-%ld", "/autogroup", tg->autogroup->id);
+>  }
+> -#endif
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 102dfcf0a29a..629bbf4f4247 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -22,6 +22,14 @@
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/sched.h>
+>  
+> +/*
+> + * Export tracepoints that act as a bare tracehook (ie: have no trace event
+> + * associated with them) to allow external modules to probe them.
+> + */
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_cfs_rq);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(pelt_se);
+> +EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized);
+> +
+>  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+>  
+>  #if defined(CONFIG_SCHED_DEBUG) && defined(CONFIG_JUMP_LABEL)
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f35930f5e528..e7f82b1778b1 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -3334,6 +3334,9 @@ static inline int propagate_entity_load_avg(struct sched_entity *se)
+>  	update_tg_cfs_util(cfs_rq, se, gcfs_rq);
+>  	update_tg_cfs_runnable(cfs_rq, se, gcfs_rq);
+>  
+> +	trace_pelt_cfs_rq(cfs_rq);
+> +	trace_pelt_se(se);
+> +
+>  	return 1;
+>  }
+>  
+> @@ -3486,6 +3489,8 @@ static void attach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  	add_tg_cfs_propagate(cfs_rq, se->avg.load_sum);
+>  
+>  	cfs_rq_util_change(cfs_rq, flags);
+> +
+> +	trace_pelt_cfs_rq(cfs_rq);
+>  }
+>  
+>  /**
+> @@ -3505,6 +3510,8 @@ static void detach_entity_load_avg(struct cfs_rq *cfs_rq, struct sched_entity *s
+>  	add_tg_cfs_propagate(cfs_rq, -se->avg.load_sum);
+>  
+>  	cfs_rq_util_change(cfs_rq, 0);
+> +
+> +	trace_pelt_cfs_rq(cfs_rq);
+>  }
+>  
+>  /*
+> @@ -5153,8 +5160,10 @@ static inline bool cpu_overutilized(int cpu)
+>  
+>  static inline void update_overutilized_status(struct rq *rq)
+>  {
+> -	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
+> +	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+>  		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
+> +		trace_sched_overutilized(1);
+> +	}
+>  }
+>  #else
+>  static inline void update_overutilized_status(struct rq *rq) { }
+> @@ -8516,8 +8525,11 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+>  
+>  		/* Update over-utilization (tipping point, U >= 0) indicator */
+>  		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
+> +
+> +		trace_sched_overutilized(!!(sg_status & SG_OVERUTILIZED));
+>  	} else if (sg_status & SG_OVERUTILIZED) {
+>  		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
+> +		trace_sched_overutilized(1);
+>  	}
+>  }
+>  
+> @@ -10737,3 +10749,17 @@ __init void init_sched_fair_class(void)
+>  #endif /* SMP */
+>  
+>  }
+> +
+> +char *sched_trace_cfs_rq_path(struct cfs_rq *cfs_rq, char *str, size_t len)
+> +{
+> +	cfs_rq_tg_path(cfs_rq, path, len);
+> +	return str;
+> +}
+> +EXPORT_SYMBOL_GPL(sched_trace_cfs_rq_path);
+> +
+> +int sched_trace_cfs_rq_cpu(struct cfs_rq *cfs_rq)
+> +{
+> +	return cpu_of(rq_of(cfs_rq));
+> +}
+> +EXPORT_SYMBOL_GPL(sched_trace_cfs_rq_cpu);
+> +
+> diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+> index befce29bd882..ebca40ba71f3 100644
+> --- a/kernel/sched/pelt.c
+> +++ b/kernel/sched/pelt.c
+> @@ -25,6 +25,7 @@
+>   */
+>  
+>  #include <linux/sched.h>
+> +#include <trace/events/sched.h>
+>  #include "sched.h"
+>  #include "pelt.h"
+>  
+> @@ -265,6 +266,7 @@ int __update_load_avg_blocked_se(u64 now, struct sched_entity *se)
+>  {
+>  	if (___update_load_sum(now, &se->avg, 0, 0, 0)) {
+>  		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
+> +		trace_pelt_se(se);
+>  		return 1;
+>  	}
+>  
+> @@ -278,6 +280,7 @@ int __update_load_avg_se(u64 now, struct cfs_rq *cfs_rq, struct sched_entity *se
+>  
+>  		___update_load_avg(&se->avg, se_weight(se), se_runnable(se));
+>  		cfs_se_util_change(&se->avg);
+> +		trace_pelt_se(se);
+>  		return 1;
+>  	}
+>  
+> @@ -292,6 +295,7 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq)
+>  				cfs_rq->curr != NULL)) {
+>  
+>  		___update_load_avg(&cfs_rq->avg, 1, 1);
+> +		trace_pelt_cfs_rq(cfs_rq);
+>  		return 1;
+>  	}
+>  
+> @@ -317,6 +321,7 @@ int update_rt_rq_load_avg(u64 now, struct rq *rq, int running)
+>  				running)) {
+>  
+>  		___update_load_avg(&rq->avg_rt, 1, 1);
+> +//		sched_trace_pelt_rt_rq(rq);
+>  		return 1;
+>  	}
+>  
+> @@ -340,6 +345,7 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+>  				running)) {
+>  
+>  		___update_load_avg(&rq->avg_dl, 1, 1);
+> +//		sched_trace_pelt_dl_rq(rq);
+>  		return 1;
+>  	}
+>  
