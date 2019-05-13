@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C0C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6383C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840C82133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9484D2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qAq8bRmq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IIHbvoJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfEMOjp (ORCPT
+        id S1730796AbfEMOmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:39:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45408 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730235AbfEMOjo (ORCPT
+        Mon, 13 May 2019 10:42:37 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:36808 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730180AbfEMOji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:39:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd6qH181584;
-        Mon, 13 May 2019 14:39:08 GMT
+        Mon, 13 May 2019 10:39:38 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DESwxh183032;
+        Mon, 13 May 2019 14:38:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=wqdeci0HyBGB7YKvZMkvhcTkiB8MUENeuIRahUviMQQ=;
- b=qAq8bRmqjLI4ZmGhxqxLQzFJ+Y7ZGe9B4tzqFa4rSPttIDYPwO8CyJSVFyohA4WGqJmF
- PiEooyxx92pLb5i0rofSV4dZw0lAf84hAXIH/yxG0GncuXG6InmO4dJUyzjA+ryXZa3+
- kpAk+nls/3Op+xDAehiDEtWmVkdLl1RWyWJ2r/dqXCkn+On4KPyzKvKpd3t0q+Al/+8t
- OnREbE+Cqw+DpqL4613DUOyPi8UvLz/4anaHm7nytPek57wpfSd6QSOe3Wz14bi6e5IO
- vMHSdlEGcaFkmj7ADxMP0X19oYbCmNWG6TEextjbaF9y0FnEIo95HqGb3w9D+rgQ3QCW PQ== 
+ bh=1/A8dPg6N3BCp1dVVHZldE7IkiS+8kPsjdwBuin2g4s=;
+ b=IIHbvoJP5+K/6hJmjo6mwDCr+XYe5WkcmTj/jZgsHQd++1A3nrRugabuYhfepHXTNKMa
+ V+W5LQ4oABEgMC2/bRAoDFfs1URTJrv1FkjV3nZfJhEh3aTydJM7O9zVMLE+XCLnCNo0
+ mgaCYQLJsGwxxqQvTsOBwgrZT+TlGys5Y+xXj8Q2b2tjQKrJs5qkBiGxQsdVfxbT4cvm
+ AvsvkAn4MmTs1z4WmXxi/1KuzDaA9HLi5wH7yN5hYhVDuggPf0x5mUO+bX8AKL3WJ1Pd
+ Vh+iMejI0gUwJY+npXZCvzmO6WQnPg//1CrX7b7e8J9CRrNauyV7gxxNmcg6wsYTegjc qw== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2sdnttfeff-1
+        by aserp2130.oracle.com with ESMTP id 2sdkwdfksf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:07 +0000
+        Mon, 13 May 2019 14:38:50 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQA022780;
-        Mon, 13 May 2019 14:38:59 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQ4022780;
+        Mon, 13 May 2019 14:38:42 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,18 +50,18 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 07/27] KVM: x86: Switch to host address space when may access sensitive data
-Date:   Mon, 13 May 2019 16:38:15 +0200
-Message-Id: <1557758315-12667-8-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 01/27] kernel: Export memory-management symbols required for KVM address space isolation
+Date:   Mon, 13 May 2019 16:38:09 +0200
+Message-Id: <1557758315-12667-2-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=851 adultscore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130103
+ definitions=main-1905130102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,139 +69,97 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Liran Alon <liran.alon@oracle.com>
 
-Before this patch, we exited from KVM isolated address space to
-host address space as soon as we exit guest.
+Export symbols needed to create, manage, populate and switch
+a mm from a kernel module (kvm in this case).
 
-Change code such that most of KVM #VMExit handlers will run in KVM
-isolated address space and switch back to host address space
-only before accessing sensitive data. Sensitive data is defined
-as either host data or other VM data.
-
-Currently, we switch from kvm_mm to host_mm on the following scenarios:
-1) When handling guest page-faults:
-   As this will access SPTs which contains host PFNs.
-2) On schedule-out of vCPU thread
-3) On write to guest virtual memory
-   (kvm_write_guest_virt_system() can pull in tons of pages)
-4) On return to userspace (e.g. QEMU)
-5) On prelog of IRQ handlers
+This is a hacky way for now to start.
+This should be changed to some suitable memory-management API.
 
 Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/isolation.c |    7 ++++++-
- arch/x86/kvm/isolation.h |    3 +++
- arch/x86/kvm/mmu.c       |    3 ++-
- arch/x86/kvm/x86.c       |   12 +++++-------
- 4 files changed, 16 insertions(+), 9 deletions(-)
+ arch/x86/kernel/ldt.c |    1 +
+ arch/x86/mm/tlb.c     |    3 ++-
+ mm/memory.c           |    5 +++++
+ 3 files changed, 8 insertions(+), 1 deletions(-)
 
-diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index 22ff9c2..eeb60c4 100644
---- a/arch/x86/kvm/isolation.c
-+++ b/arch/x86/kvm/isolation.c
-@@ -5,7 +5,6 @@
-  * KVM Address Space Isolation
-  */
+diff --git a/arch/x86/kernel/ldt.c b/arch/x86/kernel/ldt.c
+index b2463fc..19a86e0 100644
+--- a/arch/x86/kernel/ldt.c
++++ b/arch/x86/kernel/ldt.c
+@@ -401,6 +401,7 @@ void destroy_context_ldt(struct mm_struct *mm)
+ 	free_ldt_struct(mm->context.ldt);
+ 	mm->context.ldt = NULL;
+ }
++EXPORT_SYMBOL_GPL(destroy_context_ldt);
  
--#include <linux/kvm_host.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/printk.h>
-@@ -133,6 +132,12 @@ void kvm_isolation_uninit(void)
- 	pr_info("KVM: x86: End of isolated address space\n");
+ void ldt_arch_exit_mmap(struct mm_struct *mm)
+ {
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 7f61431..a4db7f5 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -70,7 +70,7 @@ static void clear_asid_other(void)
  }
  
-+void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu)
-+{
-+	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_isolation_exit();
-+}
-+
- void kvm_isolation_enter(void)
- {
- 	if (address_space_isolation) {
-diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
-index 595f62c..1290d32 100644
---- a/arch/x86/kvm/isolation.h
-+++ b/arch/x86/kvm/isolation.h
-@@ -2,9 +2,12 @@
- #ifndef ARCH_X86_KVM_ISOLATION_H
- #define ARCH_X86_KVM_ISOLATION_H
- 
-+#include <linux/kvm_host.h>
-+
- extern int kvm_isolation_init(void);
- extern void kvm_isolation_uninit(void);
- extern void kvm_isolation_enter(void);
- extern void kvm_isolation_exit(void);
-+extern void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu);
- 
- #endif
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d9c7b45..a2b38de 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -23,6 +23,7 @@
- #include "x86.h"
- #include "kvm_cache_regs.h"
- #include "cpuid.h"
-+#include "isolation.h"
- 
- #include <linux/kvm_host.h>
- #include <linux/types.h>
-@@ -4059,7 +4060,7 @@ int kvm_handle_page_fault(struct kvm_vcpu *vcpu, u64 error_code,
- {
- 	int r = 1;
- 
--	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_may_access_sensitive_data(vcpu);
- 	switch (vcpu->arch.apf.host_apf_reason) {
- 	default:
- 		trace_kvm_page_fault(fault_address, error_code);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 85700e0..1db72c3 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3307,6 +3307,8 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 	 * guest. do_debug expects dr6 to be cleared after it runs, do the same.
- 	 */
- 	set_debugreg(0, 6);
-+
-+	kvm_may_access_sensitive_data(vcpu);
- }
- 
- static int kvm_vcpu_ioctl_get_lapic(struct kvm_vcpu *vcpu,
-@@ -5220,7 +5222,7 @@ int kvm_write_guest_virt_system(struct kvm_vcpu *vcpu, gva_t addr, void *val,
- 				unsigned int bytes, struct x86_exception *exception)
- {
- 	/* kvm_write_guest_virt_system can pull in tons of pages. */
--	vcpu->arch.l1tf_flush_l1d = true;
-+	kvm_may_access_sensitive_data(vcpu);
- 
- 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
- 					   PFERR_WRITE_MASK, exception);
-@@ -7948,12 +7950,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 
- 	vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
- 
--	/*
--	 * TODO: Move this to where we architectually need to access
--	 * host (or other VM) sensitive data
--	 */
--	kvm_isolation_exit();
+ atomic64_t last_mm_ctx_id = ATOMIC64_INIT(1);
 -
- 	vcpu->mode = OUTSIDE_GUEST_MODE;
- 	smp_wmb();
++EXPORT_SYMBOL_GPL(last_mm_ctx_id);
  
-@@ -8086,6 +8082,8 @@ static int vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	srcu_read_unlock(&kvm->srcu, vcpu->srcu_idx);
- 
-+	kvm_may_access_sensitive_data(vcpu);
-+
- 	return r;
+ static void choose_new_asid(struct mm_struct *next, u64 next_tlb_gen,
+ 			    u16 *new_asid, bool *need_flush)
+@@ -159,6 +159,7 @@ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	switch_mm_irqs_off(prev, next, tsk);
+ 	local_irq_restore(flags);
  }
++EXPORT_SYMBOL_GPL(switch_mm);
  
+ static void sync_current_stack_to_mm(struct mm_struct *mm)
+ {
+diff --git a/mm/memory.c b/mm/memory.c
+index 36aac68..ede9335 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -434,6 +434,7 @@ int __pte_alloc(struct mm_struct *mm, pmd_t *pmd)
+ 		pte_free(mm, new);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(__pte_alloc);
+ 
+ int __pte_alloc_kernel(pmd_t *pmd)
+ {
+@@ -453,6 +454,7 @@ int __pte_alloc_kernel(pmd_t *pmd)
+ 		pte_free_kernel(&init_mm, new);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(__pte_alloc_kernel);
+ 
+ static inline void init_rss_vec(int *rss)
+ {
+@@ -4007,6 +4009,7 @@ int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd, unsigned long address)
+ 	spin_unlock(&mm->page_table_lock);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(__p4d_alloc);
+ #endif /* __PAGETABLE_P4D_FOLDED */
+ 
+ #ifndef __PAGETABLE_PUD_FOLDED
+@@ -4039,6 +4042,7 @@ int __pud_alloc(struct mm_struct *mm, p4d_t *p4d, unsigned long address)
+ 	spin_unlock(&mm->page_table_lock);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(__pud_alloc);
+ #endif /* __PAGETABLE_PUD_FOLDED */
+ 
+ #ifndef __PAGETABLE_PMD_FOLDED
+@@ -4072,6 +4076,7 @@ int __pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+ 	spin_unlock(ptl);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(__pmd_alloc);
+ #endif /* __PAGETABLE_PMD_FOLDED */
+ 
+ static int __follow_pte_pmd(struct mm_struct *mm, unsigned long address,
 -- 
 1.7.1
 
