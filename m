@@ -2,149 +2,130 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36577C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C3BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:43:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0584F2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1CE52085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="BvZ23USq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hnx7+g5R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="C3RtlCdp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfEMVlQ (ORCPT
+        id S1726565AbfEMVng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:41:16 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:40285 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726174AbfEMVlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:41:15 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id E36E05C2;
-        Mon, 13 May 2019 17:41:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 13 May 2019 17:41:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=Vn/T/POBtkQCivubXNnOyOKOoXD
-        swoy+p7rd61BSZqE=; b=BvZ23USq+n0H6bFfinEnI042Scm2YF1IK4T/Ipy1oA7
-        EnMtmM24XOtJG3N6yUG9XfvPeAZ/DSmgYOungx4VobZ6ghiLq//Xwp0sr5EEG7tM
-        Chzj5aZKD6m7W1TvsCqEtWYJStcGCVl5G+L6L8KT4XKk/Q49y9FrPvwUw/u5w5D7
-        O5qDuZBkWjWLkA8eVdRxL4ZDD4N84oiQQg70BWtobahYl6yrquda8wBvHZGUs04V
-        KYsqffXOd3dFefZHvErodbuAPP7ralWwr5/PUjmwOHIPcRoJ33o8+xbuQoRLhy1b
-        S+15WBT9/o6/uFE9+rF5lgoLuJ8F+DzCb3RRLdnM1ww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Vn/T/P
-        OBtkQCivubXNnOyOKOoXDswoy+p7rd61BSZqE=; b=hnx7+g5RF4XXPsmU/JIrvk
-        trc7cyfb04VRdoTVoe6lKHx3US8i5l74WHwRKYREd8NxzoJ5f0nOTy1M+wkndKvQ
-        s36lQuteqU+wHNSrt27kx4eBalmY3U7wD/jg1Z5IgxEKOZZkUG1dAnxwkJKDRIZM
-        WGjxtno8qEf25ApyCQubPFDreAjW3PRnIJWgKKRg/RgBScFbfFagIq9ZZPRXGGMW
-        45UJP80rwyEROZa4jRQ3Xpd3vJ2I1jtMqXEB559MMNKKwZLuzZBzxPr7qofa7ejV
-        YkFZA7q3aCJ7IZ65bQZZS2tVhrsdzechSy+eWC2ALV6kf0kmor9G9G0gMsENPrkA
-        ==
-X-ME-Sender: <xms:d-TZXFRRkH-8e7vBJEPVZcl5TD4sDNFnspcIQp7fTLcc5I94HJLIGA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdduieefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
-    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduiedrudekheenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:d-TZXK5j0tX3LgYou62RdrIWuzXD-nvhFHkz-iUYE9ZiNbWDK7_OQw>
-    <xmx:d-TZXEHh35WyA_1MN-hDT2kJcyx-PXCTO7hDV8IbYGIDwM0JtHDAsw>
-    <xmx:d-TZXMGzgk4fcT7RSe5zg_VG4SvazSyA1wEV-tv5d0XbsyNngqy8xw>
-    <xmx:d-TZXOSeMpWkHt6eP0ekLynCg-eMfbDDpJmpcXY3eYLiYcfYacYm_Q>
-Received: from localhost (124-169-16-185.dyn.iinet.net.au [124.169.16.185])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9515E80063;
-        Mon, 13 May 2019 17:41:10 -0400 (EDT)
-Date:   Tue, 14 May 2019 07:40:39 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Bob Peterson <rpeterso@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
-Message-ID: <20190513214039.GA27187@eros.localdomain>
-References: <20190513033213.2468-1-tobin@kernel.org>
- <20190513071405.GF2868@kroah.com>
- <20190513103936.GA15053@eros.localdomain>
- <CAHc6FU7FCBn1CnzEjyj8W7LBu-Ths7bME2R3_GQ2ZmsFQxWEhA@mail.gmail.com>
+        Mon, 13 May 2019 17:43:36 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34587 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfEMVng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 17:43:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=z1/mEU0BH5C5OCDEDKNzem043jlI3NyAKsW8ae1HheE=; b=C3RtlCdpQwV99rSBCvKtGGYmLE
+        EPv1I9hwqL0Os246k//uL4GN4zRurs76jrxSLngxsnUQ5L2kqdL2pPByzxlIA1Rzhr3m1xss5Toqh
+        gOmbbuO5WWQyMWH2bZfTGL7KEkpSWLPXGhtkphHZPokBuoltVKkj2gUwkxatRxeKABts=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hQIjM-0004HU-UG; Mon, 13 May 2019 23:43:32 +0200
+Date:   Mon, 13 May 2019 23:43:32 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Trent Piepho <tpiepho@impinj.com>
+Cc:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+Message-ID: <20190513214332.GB12345@lunn.ch>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+ <20190510214550.18657-5-tpiepho@impinj.com>
+ <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+ <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+ <1557777496.4229.13.camel@impinj.com>
+ <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
+ <20190513204641.GA12345@lunn.ch>
+ <1557782787.4229.36.camel@impinj.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHc6FU7FCBn1CnzEjyj8W7LBu-Ths7bME2R3_GQ2ZmsFQxWEhA@mail.gmail.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1557782787.4229.36.camel@impinj.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 06:41:23PM +0200, Andreas Gruenbacher wrote:
-> On Mon, 13 May 2019 at 12:40, Tobin C. Harding <me@tobin.cc> wrote:
-> >
-> > On Mon, May 13, 2019 at 09:14:05AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, May 13, 2019 at 01:32:13PM +1000, Tobin C. Harding wrote:
-> > > > If a call to kobject_init_and_add() fails we must call kobject_put()
-> > > > otherwise we leak memory.
-> > > >
-> > > > Function always calls kobject_init_and_add() which always calls
-> > > > kobject_init().
-> > > >
-> > > > It is safe to leave object destruction up to the kobject release
-> > > > function and never free it manually.
-> > > >
-> > > > Remove call to kfree() and always call kobject_put() in the error path.
-> > > >
-> > > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > > > ---
-> > > >
-> > > > Is it ok to send patches during the merge window?
-> > > >
-> > > > Applies on top of Linus' mainline tag: v5.1
-> > > >
-> > > > Happy to rebase if there are conflicts.
-> > > >
-> > > > thanks,
-> > > > Tobin.
-> > > >
-> > > >  fs/gfs2/sys.c | 7 +------
-> > > >  1 file changed, 1 insertion(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-> > > > index 1787d295834e..98586b139386 100644
-> > > > --- a/fs/gfs2/sys.c
-> > > > +++ b/fs/gfs2/sys.c
-> > > > @@ -661,8 +661,6 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
-> > > >     if (error)
-> > > >             goto fail_reg;
-> > > >
-> > > > -   sysfs_frees_sdp = 1; /* Freeing sdp is now done by sysfs calling
-> > > > -                           function gfs2_sbd_release. */
-> > >
-> > > You should also delete this variable at the top of the function, as it
-> > > is now only set once there and never used.
-> >
-> > Thanks, I should have gotten a compiler warning for that.  I was feeling
-> > so confident with my builds this morning ... pays not to get too cocky
-> > I suppose.
-> >
-> > > With that:
-> > >
-> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > Thanks, will re-spin.
+> > Hi Trent
+> > 
+> > I already deleted the patches. For patch 3:
+> > 
+> > + 	  if (dp83867->clk_output_sel > DP83867_CLK_O_SEL_REF_CLK &&
+> > +	         dp83867->clk_output_sel != DP83867_CLK_O_SEL_OFF) {
+> > +		 	phydev_err(phydev, "ti,clk-output-sel value %u out of range\n",
+> > +				   dp83867->clk_output_sel);
+> > +			return -EINVAL;
+> > +		      }
+> > 
+> > This last bit looks odd. If it is not OFF, it is invalid?
 > 
-> Don't bother, I'll fix that up.
+> The valid values are in the range 0 to DP83867_CLK_O_SEL_REF_CLK and
+> also DP83867_CLK_O_SEL_OFF.  Thus invalid values are those greater than
+> DP83867_CLK_O_SEL_REF_CLK which are not DP83867_CLK_O_SEL_OFF.
 
-Thanks man!
+Hi Trent
+ 
+O.K.
+
+> > Are there any in tree users of DP83867_CLK_O_SEL_REF_CLK? We have to
+> > be careful changing its meaning. But if nobody is actually using it...
+> 
+> Nope.  I doubt this will affect anyone.  They'd need to strap the phy
+> to get a different configuration, and the explicitly add a property,
+> which isn't in the example DTS files, to change the configuration to
+> something they didn't want, and then depend on a driver bug ignoring
+> the erroneous setting they added.
+
+O.K, then this patch is O.K. Does the binding documentation need
+updating?
+ 
+> > Patch 4:
+> > 
+> > This is harder. Ideally we want to fix this. At some point, somebody
+> > is going to want 'rgmii' to actually mean 'rgmii', because that is
+> > what their hardware needs.
+> > 
+> > Could you add a WARN_ON() for 'rgmii' but the PHY is actually adding a
+> > delay? And add a comment about setting the correct thing in device
+> > tree?  Hopefully we will then get patches correcting DT blobs. And if
+> > we later do need to fix 'rgmii', we will break less board.
+> 
+> Yes I can do this.  Should it warn on any use of "rgmii"?
+
+No, i would only warn when there is a delay configured by
+strapping. If you want the PHY to be left alone, you should use
+PHY_INTERFACE_MODE_NA, which should be the default if there is no
+phy-mode property. If DT actually asked for "rgmii", it either means
+it is wrong and rgmii-id should be used to match the strapping, or
+both the strapping and the DT is wrong and somebody really does want
+"rgmii".
+
+> If so, how would someone make the warning go away if they actually
+> want rgmii mode with no delay?
+
+We take the warning out, and implement "rgmii" correctly, and let
+boards break which have broken DT. We have done this before, but
+without a period of time with a warning.
+
+> I suspect hsdk.dts is an example of an in-tree broken board that uses
+> "rgmii" would it should have used "rgmii-id".
+
+O.K, so when you submit the patch Cc: Alexey Brodkin <abrodkin@synopsys.com>
+
+     Andrew
