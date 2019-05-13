@@ -2,130 +2,72 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C3BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:43:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0699DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1CE52085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="C3RtlCdp"
+	by mail.kernel.org (Postfix) with ESMTP id C58652085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:45:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557783907;
+	bh=GYfCEU0kyuQm169jtAvImZKmPG44NqVW+asNGsa6F8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mLcKOGgL31MukQwWaxGTcSobrR+hSe6zJNS1+YixAfTI0A5dbQ9CXSFerC4dcWCEd
+	 umaRIvCs1TaFQK68sX4WV2A7Zq5aZQWynkXVOieaJYiCrp7vhIbLZ3gKtVhXj5mPF3
+	 4zpawY9oaZ4f7Gf+4ftwgi3f4orRcaH1gKtznQVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfEMVng (ORCPT
+        id S1726553AbfEMVpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:43:36 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34587 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfEMVng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=z1/mEU0BH5C5OCDEDKNzem043jlI3NyAKsW8ae1HheE=; b=C3RtlCdpQwV99rSBCvKtGGYmLE
-        EPv1I9hwqL0Os246k//uL4GN4zRurs76jrxSLngxsnUQ5L2kqdL2pPByzxlIA1Rzhr3m1xss5Toqh
-        gOmbbuO5WWQyMWH2bZfTGL7KEkpSWLPXGhtkphHZPokBuoltVKkj2gUwkxatRxeKABts=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hQIjM-0004HU-UG; Mon, 13 May 2019 23:43:32 +0200
-Date:   Mon, 13 May 2019 23:43:32 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Trent Piepho <tpiepho@impinj.com>
-Cc:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
- unsigned properties
-Message-ID: <20190513214332.GB12345@lunn.ch>
-References: <20190510214550.18657-1-tpiepho@impinj.com>
- <20190510214550.18657-5-tpiepho@impinj.com>
- <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
- <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
- <1557777496.4229.13.camel@impinj.com>
- <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
- <20190513204641.GA12345@lunn.ch>
- <1557782787.4229.36.camel@impinj.com>
+        Mon, 13 May 2019 17:45:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47880 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726174AbfEMVpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 17:45:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A9351AC94;
+        Mon, 13 May 2019 21:45:04 +0000 (UTC)
+Date:   Mon, 13 May 2019 23:45:03 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        hughd@google.com, shakeelb@google.com,
+        william.kucharski@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
+Message-ID: <20190513214503.GB25356@dhcp22.suse.cz>
+References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513080929.GC24036@dhcp22.suse.cz>
+ <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557782787.4229.36.camel@impinj.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Hi Trent
-> > 
-> > I already deleted the patches. For patch 3:
-> > 
-> > + 	  if (dp83867->clk_output_sel > DP83867_CLK_O_SEL_REF_CLK &&
-> > +	         dp83867->clk_output_sel != DP83867_CLK_O_SEL_OFF) {
-> > +		 	phydev_err(phydev, "ti,clk-output-sel value %u out of range\n",
-> > +				   dp83867->clk_output_sel);
-> > +			return -EINVAL;
-> > +		      }
-> > 
-> > This last bit looks odd. If it is not OFF, it is invalid?
+On Mon 13-05-19 14:09:59, Yang Shi wrote:
+[...]
+> I think we can just account 512 base pages for nr_scanned for
+> isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT
+> just use it.
 > 
-> The valid values are in the range 0 to DP83867_CLK_O_SEL_REF_CLK and
-> also DP83867_CLK_O_SEL_OFF.  Thus invalid values are those greater than
-> DP83867_CLK_O_SEL_REF_CLK which are not DP83867_CLK_O_SEL_OFF.
+> And, sc->nr_scanned should be accounted as 512 base pages too otherwise we
+> may have nr_scanned < nr_to_reclaim all the time to result in false-negative
+> for priority raise and something else wrong (e.g. wrong vmpressure).
 
-Hi Trent
- 
-O.K.
+Be careful. nr_scanned is used as a pressure indicator to slab shrinking
+AFAIR. Maybe this is ok but it really begs for much more explaining
+than "it should be fine". This should have happened when THP swap out
+was implemented...
 
-> > Are there any in tree users of DP83867_CLK_O_SEL_REF_CLK? We have to
-> > be careful changing its meaning. But if nobody is actually using it...
-> 
-> Nope.  I doubt this will affect anyone.  They'd need to strap the phy
-> to get a different configuration, and the explicitly add a property,
-> which isn't in the example DTS files, to change the configuration to
-> something they didn't want, and then depend on a driver bug ignoring
-> the erroneous setting they added.
-
-O.K, then this patch is O.K. Does the binding documentation need
-updating?
- 
-> > Patch 4:
-> > 
-> > This is harder. Ideally we want to fix this. At some point, somebody
-> > is going to want 'rgmii' to actually mean 'rgmii', because that is
-> > what their hardware needs.
-> > 
-> > Could you add a WARN_ON() for 'rgmii' but the PHY is actually adding a
-> > delay? And add a comment about setting the correct thing in device
-> > tree?  Hopefully we will then get patches correcting DT blobs. And if
-> > we later do need to fix 'rgmii', we will break less board.
-> 
-> Yes I can do this.  Should it warn on any use of "rgmii"?
-
-No, i would only warn when there is a delay configured by
-strapping. If you want the PHY to be left alone, you should use
-PHY_INTERFACE_MODE_NA, which should be the default if there is no
-phy-mode property. If DT actually asked for "rgmii", it either means
-it is wrong and rgmii-id should be used to match the strapping, or
-both the strapping and the DT is wrong and somebody really does want
-"rgmii".
-
-> If so, how would someone make the warning go away if they actually
-> want rgmii mode with no delay?
-
-We take the warning out, and implement "rgmii" correctly, and let
-boards break which have broken DT. We have done this before, but
-without a period of time with a warning.
-
-> I suspect hsdk.dts is an example of an in-tree broken board that uses
-> "rgmii" would it should have used "rgmii-id".
-
-O.K, so when you submit the patch Cc: Alexey Brodkin <abrodkin@synopsys.com>
-
-     Andrew
+-- 
+Michal Hocko
+SUSE Labs
