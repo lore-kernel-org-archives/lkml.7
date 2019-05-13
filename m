@@ -2,348 +2,298 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E074C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66887C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019C1208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F43208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CMVPwHtJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqcEwa0M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfEMShx (ORCPT
+        id S1727147AbfEMSh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:37:53 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36758 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfEMShi (ORCPT
+        Mon, 13 May 2019 14:37:58 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42546 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfEMSh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:37:38 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so7208754pgb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:37:38 -0700 (PDT)
+        Mon, 13 May 2019 14:37:56 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d4so8660311qkc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:37:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pksOvnyHpZN4MdrMWr5EO61V7mUvaoL7ZYP9ufezzeQ=;
-        b=CMVPwHtJ6snzx4UzujJmTFtWfRTVyZtIFTIpOCAQkdON+8elJ6pq5QtNNZkqUpgrce
-         daZsvXrkwTo/wkKpFngOEUs0EI+RA1rFNV6RpmA77m0VrfabRxEv+hhRhGMrIIwWffb1
-         k/usWGAzeJap3XwUL83aWRvhnOJcCpMCl7TDFH1FAnokwx0msaB5TmECI+hw1kTYTwcg
-         sEq7Yap1XSYRLf+DVo2ODXCtovP1m34e5xRk26glMXKhLofw9kv2i0iFqooZelfbdv8d
-         rVZaCiZvpYjMSPWuaEipIq1FTyp8VwxmooKE4KyM42i5qkxBQlGrvXLhqp5/q+UYfggI
-         AKPw==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=nE3PD9e6T24VYjxuYb6P/q7pahFGz0cuFfgvkz6nbCo=;
+        b=BqcEwa0MzmRZcfeQcqT7/mp6fi9/3EGt8UVLrC9gvfsfeeVdC+eqsQ29aTR9czQqnD
+         DR681UO4mBjndp7TZxQKVa0mbExd5JwKbB2auMlrudSxNd59YLaB5TT+nSr60qO8OnOx
+         sO39yFsApNDwMzXqZrZdwSXrxQHAY45e1jJFFHvx6dZV2xOlc2E/U/pijfQMva7PcDap
+         OFxeOkH4V/cfWMk6dkHPkMfx5+K+wisN1TJTWJdszLW6WjEf04MnkturaHmIaqsL81cz
+         rb24jkzFXO3GTC0g1+KVBYeZuhcw9y/wtNvPNNhGvOs/npOUSCpx/FSj05te+4kcwy3V
+         hAYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pksOvnyHpZN4MdrMWr5EO61V7mUvaoL7ZYP9ufezzeQ=;
-        b=tlLPE1xKTsGVWXGwp/QUF1FyuWQ3jz2kwccPJeoE2PCKYIAQj9hDJChaZi9Ou26RMt
-         T+m/22hZZ1r4FS4iauyWK5DnY9+J4i9YLSUZxYwS34wM4dNoP7n0qzyX+Qr4UDcn/91+
-         b4WIBYV/prn4VTcVueYpohPnQbpxuSXof+pGPObJVZtGhNRinYgSfOOxlNRrR42VqhEF
-         sMoGbVf2G109kwgP2MLyIFWNKt2TwXfiIe7VrJOXIgno42cff1oi718oIHQib3DCcR3S
-         E1cokBaVhD7JfYgZeNAjC5N523J8pCe4LF/TlE6oGIRgfCDKOsN2ElBdTrOgeY7j4S4W
-         FtCQ==
-X-Gm-Message-State: APjAAAW4NXWB849lOEnebRuCYM31nL0yO5GSWXRgukFEIuHpVXUEPveH
-        v4ddEtS0GcQNYyjVSNJF8NcSagVkz0A=
-X-Google-Smtp-Source: APXvYqxO+PQl4VMbDmDSLqWr2bN+xGoO+r1774xAKAHLpGcL+wPoVuj0udn5c8luvn3KwMtNtDMjkA==
-X-Received: by 2002:a63:1650:: with SMTP id 16mr33397157pgw.164.1557772657122;
-        Mon, 13 May 2019 11:37:37 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:4e72:b9ff:fe99:466a])
-        by smtp.gmail.com with ESMTPSA id u11sm17334881pfh.130.2019.05.13.11.37.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 11:37:36 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>,
-        "Xiaqing (A)" <saberlily.xia@hisilicon.com>,
-        Yudongbin <yudongbin@hisilicon.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel@lists.freedesktop.org
-Subject: [RFC][PATCH 3/5 v4] dma-buf: heaps: Add system heap to dmabuf heaps
-Date:   Mon, 13 May 2019 11:37:25 -0700
-Message-Id: <20190513183727.15755-4-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513183727.15755-1-john.stultz@linaro.org>
-References: <20190513183727.15755-1-john.stultz@linaro.org>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nE3PD9e6T24VYjxuYb6P/q7pahFGz0cuFfgvkz6nbCo=;
+        b=FzHeakbmyJNRj0NB6vJDzL9Zl5zPTXK0voN9JSbQGtLmivcA9XNhgkT8g6UEOf6AJm
+         ad8WDe7JzofTSrNLmYHVujgw7QF8gF/QT9xHJZNptWoUg3/yfVL8dG8vA2JoK3lxxS9v
+         06Rg6PKyXxHrrD/oOZKpTx3H1tuFKbXD0Y4lKo1ctPpgHxsfDvxuXs1wZ+AuyYb9zPhh
+         LXPEAvHYGXWaBSG8lfK/ZzVQ+lh4U9y6DozUj4L2uGuv8mBsvGgxUXoYBYJeGEoVlBnu
+         Q33tj0OKn0xi/0JFSQj6BWTXAPyKco5Tpcolx5bGDl4xZV3cqQLzsclycglhAG7d6oE4
+         1vaA==
+X-Gm-Message-State: APjAAAUdfpTXl+auxHJBRveg/dXnX1PRfdy/u8OVQG39ZGTAxdtUy5ne
+        zlX4WYuIpo43GuQs+l19ynR395fI
+X-Google-Smtp-Source: APXvYqxO9jZWqEXjFDI/XGghv5EouK1xwg8xFNWzqXJxPwzD7BFxu7RqoK/PzzHjrrpBztTZjK47ww==
+X-Received: by 2002:a37:8703:: with SMTP id j3mr23046740qkd.188.1557772674746;
+        Mon, 13 May 2019 11:37:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id k53sm8789307qtb.65.2019.05.13.11.37.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 11:37:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 890E3403AD; Mon, 13 May 2019 15:37:49 -0300 (-03)
+Date:   Mon, 13 May 2019 15:37:49 -0300
+To:     Kan Liang <kan.liang@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        ak@ghostprotocols.net
+Subject: Re: [RESEND PATCH 1/3] perf, tools: Add support for recording and
+ printing XMM registers
+Message-ID: <20190513182541.GC8003@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513173716.GA8003@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds system heap to the dma-buf heaps framework.
+Em Mon, May 13, 2019 at 01:37:16PM -0400, Arnaldo Carvalho de Melo escreveu:
+> Em Mon, May 06, 2019 at 07:19:24AM -0700, kan.liang@linux.intel.com escreveu:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > Icelake and later platforms support collecting XMM registers with PEBS
+> > event.
+> > Add support for perf script to dump them, and support
+> > for the register parser in perf record -I ... to configure them.
+> > For now they are just printed in hex, could potentially add
+> > other formats too.
+> 
+> So I noticed the sync warning about
+> tools/arch/x86/include/uapi/asm/perf_regs.h abd added a separate patch
+> for that, removing this part from this patch, applying it afterward.
 
-This allows applications to get a page-allocator backed dma-buf
-for non-contiguous memory.
+Also, when using 'perf record -I foobar' it should record all registers,
+which I think includes the xmm registers in capable platforms, from your
+'Add perf script support to dump them', so I tried running it here on a
+skylake notebook, i.e. where it fails when I ask for a specific xmm
+register:
 
-This code is an evolution of the Android ION implementation, so
-thanks to its original authors and maintainters:
-  Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
+  # perf record -Isi,di,xmm0 sleep 1
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cycles).
+  /bin/dmesg | grep -i perf may provide additional information.
 
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Liam Mark <lmark@codeaurora.org>
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Brian Starkey <Brian.Starkey@arm.com>
-Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-Cc: Andrew F. Davis <afd@ti.com>
-Cc: Xu YiPing <xuyiping@hisilicon.com>
-Cc: "Chenfeng (puck)" <puck.chen@hisilicon.com>
-Cc: butao <butao@hisilicon.com>
-Cc: "Xiaqing (A)" <saberlily.xia@hisilicon.com>
-Cc: Yudongbin <yudongbin@hisilicon.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Chenbo Feng <fengc@google.com>
-Cc: Alistair Strachan <astrachan@google.com>
-Cc: dri-devel@lists.freedesktop.org
-Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
-v2:
-* Switch allocate to return dmabuf fd
-* Simplify init code
-* Checkpatch fixups
-* Droped dead system-contig code
-v3:
-* Whitespace fixups from Benjamin
-* Make sure we're zeroing the allocated pages (from Liam)
-* Use PAGE_ALIGN() consistently (suggested by Brian)
-* Fold in new registration style from Andrew
-* Avoid needless dynamic allocation of sys_heap (suggested by
-  Christoph)
-* Minor cleanups
-* Folded in changes from Andrew to use simplified page list
-  from the heap helpers
-v4:
-* Optimization to allocate pages in chunks, similar to old
-  pagepool code
-* Use fd_flags when creating dmabuf fd (Suggested by Benjamin)
----
- drivers/dma-buf/Kconfig             |   2 +
- drivers/dma-buf/heaps/Kconfig       |   6 ++
- drivers/dma-buf/heaps/Makefile      |   1 +
- drivers/dma-buf/heaps/system_heap.c | 162 ++++++++++++++++++++++++++++
- 4 files changed, 171 insertions(+)
- create mode 100644 drivers/dma-buf/heaps/Kconfig
- create mode 100644 drivers/dma-buf/heaps/system_heap.c
+  # perf record -I?
+  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9 XMM10 XMM11 XMM12 XMM13 XMM14 XMM15 
 
-diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
-index 8344cdaaa328..e34b6e61b702 100644
---- a/drivers/dma-buf/Kconfig
-+++ b/drivers/dma-buf/Kconfig
-@@ -46,4 +46,6 @@ menuconfig DMABUF_HEAPS
- 	  this allows userspace to allocate dma-bufs that can be shared between
- 	  drivers.
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use -I ? to list register names
+    #
+
+But when I try asking for all those "available" registers, it doesn't
+seem to ask for the xmm registers, i.e. it works:
+
+[root@quaco ~]# perf record -I
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.812 MB perf.data (2036 samples) ]
+
+  # perf evlist -v
+  cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, sample_regs_intr: 0xff0fff
+  #
+
+  # perf script -F uregs
+  Samples for 'cycles' event do not have UREGS attribute set. Cannot print 'uregs' field.
+  # perf script -F iregs | head -1
+   ABI:2    AX:0xf    BX:0xffff9edc4620f3a0    CX:0x38f    DX:0x7    SI:0xf    DI:0x38f    BP:0x0    SP:0xffff9edc46203f68    IP:0xffffffffae069894 FLAGS:0xa    CS:0x10    SS:0x18    R8:0x0    R9:0x207c0   R10:0x7968cfe8776   R11:0x5   R12:0x0   R13:0xffffbaec16fb7d20   R14:0xffff9edc2b5ab000   R15:0x0 
+  # 
+
+So, can you please check all this and please consider sending a fix that
+comes with output for the steps used to test it, like above.
+
+I'm applying this now because it adds a ability that, used with the
+above caveats in mind, is useful, but please help improving the output
+so that users don't get confused.
+
+For instance, the 'perf record -I?' code should probe for the existence
+of these registers in the combo kernel+hardware, by creating an event,
+asking the kernel to record those registers and checking if the kernel
+supports this and the hardware has such registers.
+
+Thanks,
+
+- Arnaldo
  
-+source "drivers/dma-buf/heaps/Kconfig"
-+
- endmenu
-diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-new file mode 100644
-index 000000000000..205052744169
---- /dev/null
-+++ b/drivers/dma-buf/heaps/Kconfig
-@@ -0,0 +1,6 @@
-+config DMABUF_HEAPS_SYSTEM
-+	bool "DMA-BUF System Heap"
-+	depends on DMABUF_HEAPS
-+	help
-+	  Choose this option to enable the system dmabuf heap. The system heap
-+	  is backed by pages from the buddy allocator. If in doubt, say Y.
-diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-index de49898112db..d1808eca2581 100644
---- a/drivers/dma-buf/heaps/Makefile
-+++ b/drivers/dma-buf/heaps/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y					+= heap-helpers.o
-+obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)	+= system_heap.o
-diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
-new file mode 100644
-index 000000000000..60ee531e1a24
---- /dev/null
-+++ b/drivers/dma-buf/heaps/system_heap.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DMABUF System heap exporter
-+ *
-+ * Copyright (C) 2011 Google, Inc.
-+ * Copyright (C) 2019 Linaro Ltd.
-+ */
-+
-+#include <asm/page.h>
-+#include <linux/dma-buf.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dma-heap.h>
-+#include <linux/err.h>
-+#include <linux/highmem.h>
-+#include <linux/mm.h>
-+#include <linux/scatterlist.h>
-+#include <linux/slab.h>
-+
-+#include "heap-helpers.h"
-+
-+struct system_heap {
-+	struct dma_heap *heap;
-+} sys_heap;
-+
-+
-+#define NUM_ORDERS ARRAY_SIZE(orders)
-+#define HIGH_ORDER_GFP  (((GFP_HIGHUSER | __GFP_ZERO | __GFP_NOWARN \
-+				| __GFP_NORETRY) & ~__GFP_RECLAIM) \
-+				| __GFP_COMP)
-+#define LOW_ORDER_GFP (GFP_HIGHUSER | __GFP_ZERO | __GFP_COMP)
-+static gfp_t order_flags[] = {HIGH_ORDER_GFP, LOW_ORDER_GFP, LOW_ORDER_GFP};
-+static const unsigned int orders[] = {8, 4, 0};
-+
-+
-+static void system_heap_free(struct heap_helper_buffer *buffer)
-+{
-+	pgoff_t pg;
-+
-+	for (pg = 0; pg < buffer->pagecount; pg++)
-+		__free_page(buffer->pages[pg]);
-+	kfree(buffer->pages);
-+	kfree(buffer);
-+}
-+
-+static struct page *alloc_largest_available(unsigned long size,
-+					    unsigned int max_order)
-+{
-+	struct page *page;
-+	int i;
-+
-+	for (i = 0; i < NUM_ORDERS; i++) {
-+		if (size <  (PAGE_SIZE << orders[i]))
-+			continue;
-+		if (max_order < orders[i])
-+			continue;
-+
-+		page = alloc_pages(order_flags[i], orders[i]);
-+		if (!page)
-+			continue;
-+		return page;
-+	}
-+	return NULL;
-+}
-+
-+
-+static int system_heap_allocate(struct dma_heap *heap,
-+				unsigned long len,
-+				unsigned long fd_flags,
-+				unsigned long heap_flags)
-+{
-+	struct heap_helper_buffer *helper_buffer;
-+	DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-+	unsigned long size_remaining = len;
-+	unsigned int max_order = orders[0];
-+	struct dma_buf *dmabuf;
-+	int ret = -ENOMEM;
-+	pgoff_t pg;
-+
-+	helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-+	if (!helper_buffer)
-+		return -ENOMEM;
-+
-+	INIT_HEAP_HELPER_BUFFER(helper_buffer, system_heap_free);
-+	helper_buffer->heap_buffer.flags = heap_flags;
-+	helper_buffer->heap_buffer.heap = heap;
-+	helper_buffer->heap_buffer.size = len;
-+
-+	helper_buffer->pagecount = len / PAGE_SIZE;
-+	helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-+					     sizeof(*helper_buffer->pages),
-+					     GFP_KERNEL);
-+	if (!helper_buffer->pages) {
-+		ret = -ENOMEM;
-+		goto err0;
-+	}
-+
-+	pg = 0;
-+	while (size_remaining > 0) {
-+		struct page *page = alloc_largest_available(size_remaining,
-+							    max_order);
-+		int i;
-+
-+		if (!page)
-+			goto err1;
-+		size_remaining -= PAGE_SIZE << compound_order(page);
-+		max_order = compound_order(page);
-+		for (i = 0; i < 1 << max_order; i++)
-+			helper_buffer->pages[pg++] = page++;
-+	}
-+
-+	/* create the dmabuf */
-+	exp_info.ops = &heap_helper_ops;
-+	exp_info.size = len;
-+	exp_info.flags = fd_flags;
-+	exp_info.priv = &helper_buffer->heap_buffer;
-+	dmabuf = dma_buf_export(&exp_info);
-+	if (IS_ERR(dmabuf)) {
-+		ret = PTR_ERR(dmabuf);
-+		goto err1;
-+	}
-+
-+	helper_buffer->heap_buffer.dmabuf = dmabuf;
-+
-+	ret = dma_buf_fd(dmabuf, fd_flags);
-+	if (ret < 0) {
-+		dma_buf_put(dmabuf);
-+		/* just return, as put will call release and that will free */
-+		return ret;
-+	}
-+
-+	return ret;
-+
-+err1:
-+	while (pg > 0)
-+		__free_page(helper_buffer->pages[--pg]);
-+	kfree(helper_buffer->pages);
-+err0:
-+	kfree(helper_buffer);
-+
-+	return -ENOMEM;
-+}
-+
-+static struct dma_heap_ops system_heap_ops = {
-+	.allocate = system_heap_allocate,
-+};
-+
-+static int system_heap_create(void)
-+{
-+	struct dma_heap_export_info exp_info;
-+	int ret = 0;
-+
-+	exp_info.name = "system_heap";
-+	exp_info.ops = &system_heap_ops;
-+	exp_info.priv = &sys_heap;
-+
-+	sys_heap.heap = dma_heap_add(&exp_info);
-+	if (IS_ERR(sys_heap.heap))
-+		ret = PTR_ERR(sys_heap.heap);
-+
-+	return ret;
-+}
-+device_initcall(system_heap_create);
--- 
-2.17.1
+> - Arnaldo
+>  
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > ---
+> >  tools/arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++-
+> >  tools/perf/arch/x86/include/perf_regs.h     | 25 +++++++++++++++++++--
+> >  tools/perf/arch/x86/util/perf_regs.c        | 16 +++++++++++++
+> >  tools/perf/util/perf_regs.h                 |  1 +
+> >  4 files changed, 62 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+> > index f3329cabce5c..ac67bbea10ca 100644
+> > --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
+> > +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+> > @@ -27,8 +27,29 @@ enum perf_event_x86_regs {
+> >  	PERF_REG_X86_R13,
+> >  	PERF_REG_X86_R14,
+> >  	PERF_REG_X86_R15,
+> > -
+> > +	/* These are the limits for the GPRs. */
+> >  	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+> >  	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+> > +
+> > +	/* These all need two bits set because they are 128bit */
+> > +	PERF_REG_X86_XMM0  = 32,
+> > +	PERF_REG_X86_XMM1  = 34,
+> > +	PERF_REG_X86_XMM2  = 36,
+> > +	PERF_REG_X86_XMM3  = 38,
+> > +	PERF_REG_X86_XMM4  = 40,
+> > +	PERF_REG_X86_XMM5  = 42,
+> > +	PERF_REG_X86_XMM6  = 44,
+> > +	PERF_REG_X86_XMM7  = 46,
+> > +	PERF_REG_X86_XMM8  = 48,
+> > +	PERF_REG_X86_XMM9  = 50,
+> > +	PERF_REG_X86_XMM10 = 52,
+> > +	PERF_REG_X86_XMM11 = 54,
+> > +	PERF_REG_X86_XMM12 = 56,
+> > +	PERF_REG_X86_XMM13 = 58,
+> > +	PERF_REG_X86_XMM14 = 60,
+> > +	PERF_REG_X86_XMM15 = 62,
+> > +
+> > +	/* These include both GPRs and XMMX registers */
+> > +	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+> >  };
+> >  #endif /* _ASM_X86_PERF_REGS_H */
+> > diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+> > index 7f6d538f8a89..b7321337d100 100644
+> > --- a/tools/perf/arch/x86/include/perf_regs.h
+> > +++ b/tools/perf/arch/x86/include/perf_regs.h
+> > @@ -8,9 +8,9 @@
+> >  
+> >  void perf_regs_load(u64 *regs);
+> >  
+> > +#define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
+> >  #ifndef HAVE_ARCH_X86_64_SUPPORT
+> >  #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+> > -#define PERF_REGS_MAX PERF_REG_X86_32_MAX
+> >  #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+> >  #else
+> >  #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
+> > @@ -18,7 +18,6 @@ void perf_regs_load(u64 *regs);
+> >  		       (1ULL << PERF_REG_X86_FS) | \
+> >  		       (1ULL << PERF_REG_X86_GS))
+> >  #define PERF_REGS_MASK (((1ULL << PERF_REG_X86_64_MAX) - 1) & ~REG_NOSUPPORT)
+> > -#define PERF_REGS_MAX PERF_REG_X86_64_MAX
+> >  #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_64
+> >  #endif
+> >  #define PERF_REG_IP PERF_REG_X86_IP
+> > @@ -77,6 +76,28 @@ static inline const char *perf_reg_name(int id)
+> >  	case PERF_REG_X86_R15:
+> >  		return "R15";
+> >  #endif /* HAVE_ARCH_X86_64_SUPPORT */
+> > +
+> > +#define XMM(x) \
+> > +	case PERF_REG_X86_XMM ## x:	\
+> > +	case PERF_REG_X86_XMM ## x + 1:	\
+> > +		return "XMM" #x;
+> > +	XMM(0)
+> > +	XMM(1)
+> > +	XMM(2)
+> > +	XMM(3)
+> > +	XMM(4)
+> > +	XMM(5)
+> > +	XMM(6)
+> > +	XMM(7)
+> > +	XMM(8)
+> > +	XMM(9)
+> > +	XMM(10)
+> > +	XMM(11)
+> > +	XMM(12)
+> > +	XMM(13)
+> > +	XMM(14)
+> > +	XMM(15)
+> > +#undef XMM
+> >  	default:
+> >  		return NULL;
+> >  	}
+> > diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+> > index fead6b3b4206..71d7604dbf0b 100644
+> > --- a/tools/perf/arch/x86/util/perf_regs.c
+> > +++ b/tools/perf/arch/x86/util/perf_regs.c
+> > @@ -31,6 +31,22 @@ const struct sample_reg sample_reg_masks[] = {
+> >  	SMPL_REG(R14, PERF_REG_X86_R14),
+> >  	SMPL_REG(R15, PERF_REG_X86_R15),
+> >  #endif
+> > +	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+> > +	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+> > +	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+> > +	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
+> > +	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
+> > +	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
+> > +	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
+> > +	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
+> > +	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
+> > +	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
+> > +	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
+> > +	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
+> > +	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
+> > +	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
+> > +	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
+> > +	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
+> >  	SMPL_REG_END
+> >  };
+> >  
+> > diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> > index c9319f8d17a6..1a15a4bfc28d 100644
+> > --- a/tools/perf/util/perf_regs.h
+> > +++ b/tools/perf/util/perf_regs.h
+> > @@ -12,6 +12,7 @@ struct sample_reg {
+> >  	uint64_t mask;
+> >  };
+> >  #define SMPL_REG(n, b) { .name = #n, .mask = 1ULL << (b) }
+> > +#define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
+> >  #define SMPL_REG_END { .name = NULL }
+> >  
+> >  extern const struct sample_reg sample_reg_masks[];
+> > -- 
+> > 2.17.1
+> 
+> -- 
+> 
+> - Arnaldo
 
+-- 
+
+- Arnaldo
