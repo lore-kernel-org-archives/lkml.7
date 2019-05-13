@@ -2,122 +2,66 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E681C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6E7C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1BE20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E65720989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BvzblN72"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfEMHHG (ORCPT
+        id S1727669AbfEMHHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:07:06 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:51118 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfEMHHF (ORCPT
+        Mon, 13 May 2019 03:07:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49516 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbfEMHHP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:07:05 -0400
-Received: by mail-it1-f198.google.com with SMTP id o128so4700429ita.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:07:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HS7eXqtSjToahbF+8YGfUVULm5QmPVdr7jt+lugTFD0=;
-        b=Wvg+NpHRksWR69EApNrLTXrKAEloqn3Ujo4widu5OU7s17GDYgN5UfMT0+eEyMxaew
-         tRW3NWh9S/BiPXrEHKxBHuXSyFX3xdNsDfAYBHD02v429K8Ng9RmcoM6Abd7qZngzSkK
-         m2A9Zubklf8Up93JEGaCODHgCp7HbUons7ysYrUN0tcdN6Y3Y/iM0Zoklt5Kf9zbwXDi
-         7vVGSdc1q7dc1ef3v64xxtBlJkj8+zDXsLtNvW2zazaVAI+IVmGSo6nbszlLwibVz2+6
-         EdVSeWB6ocM/nUUe93Gdmv/57ikXv6w3Xtq94RE2fxiwbN3jK+tsu6x1jrqrkXccCzxe
-         ZXPg==
-X-Gm-Message-State: APjAAAVvF76mhYwYw1nBhItuLZ4jOotEyY+ttbl7qOMvM8gu/dRuQYKf
-        fKZD5eD4GKeW9ezk6cSOFk5Dn8NRCMXEdtvIM6TpopAETP2M
-X-Google-Smtp-Source: APXvYqxaG5duQ7HGiFc3gBEuHKSxI56NFqET64FcR9HPXB9WBzlCxAVv84TLU/32UsUNJ0ZOe+9LaDT6i+7In6KbmbgvVFdOkeY2
+        Mon, 13 May 2019 03:07:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wvkcqhynYP4xqS1DwKpC2GjLyrx8m7bCCdn1Vpt2fCU=; b=BvzblN72ltK4UWMiPX/NEmNGv
+        MzDQHyKxWkBt0LYa61U+KMayG3HM9YW2fBnoNL8a3M3skzEyDktizRL7gpgF1WrRzZ5vi5Cnrvj+v
+        f6/7HuL5wcDM72i5QW8Xqxp/VcKV9mhwyQjCpcvquVr/AcdyDkijXjlb7GgRsZr7qr3CdNeBgCk1W
+        NuhGF4r0s38GEKt+6777syR/9kkAerx41dBkNuaFUPNR0wnuu5GjWowF5lXJ/GZGH2XlxhwtKQiSo
+        PoY5OxDBb9MpMavYk6aWq3MwbCK91kKjc17gASEcp1skUC+++spKxBdEc2BuYuLUTFqV3uq+skBc5
+        C/UgTFGpw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ53E-0001ix-Jf; Mon, 13 May 2019 07:07:08 +0000
+Date:   Mon, 13 May 2019 00:07:08 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ondrej Zary <linux@zary.sk>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] fdomain: Remove BIOS-related code from core
+Message-ID: <20190513070708.GA31342@infradead.org>
+References: <20190510212335.14728-1-linux@zary.sk>
 MIME-Version: 1.0
-X-Received: by 2002:a02:8585:: with SMTP id d5mr18222190jai.69.1557731225226;
- Mon, 13 May 2019 00:07:05 -0700 (PDT)
-Date:   Mon, 13 May 2019 00:07:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000055d6590588bf90bf@google.com>
-Subject: linux-next test error: WARNING in remove_proc_entry
-From:   syzbot <syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com>
-To:     anna.schumaker@netapp.com, bfields@fieldses.org,
-        davem@davemloft.net, jlayton@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510212335.14728-1-linux@zary.sk>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, May 10, 2019 at 11:23:34PM +0200, Ondrej Zary wrote:
+> Move all BIOS signature and base handling to (currently not merged) ISA bus
+> driver.
+> 
+> Signed-off-by: Ondrej Zary <linux@zary.sk>
 
-syzbot found the following crash on:
+Looks good,
 
-HEAD commit:    04c4b677 Add linux-next specific files for 20190513
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a413c8a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b8e08a763b62ad3a
-dashboard link: https://syzkaller.appspot.com/bug?extid=4887e9dd9042fae2a9c2
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4887e9dd9042fae2a9c2@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-remove_proc_entry: removing non-empty directory 'net/rpc', leaking at  
-least 'use-gss-proxy'
-WARNING: CPU: 0 PID: 26 at fs/proc/generic.c:681  
-remove_proc_entry+0x367/0x410 fs/proc/generic.c:681
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 26 Comm: kworker/u4:2 Not tainted 5.1.0-next-20190513 #6
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x75a kernel/panic.c:218
-  __warn.cold+0x20/0x47 kernel/panic.c:575
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:remove_proc_entry+0x367/0x410 fs/proc/generic.c:681
-Code: 00 00 00 48 89 fa 48 c1 ea 03 80 3c 02 00 75 4c 49 8b 95 d0 00 00 00  
-48 c7 c6 80 85 97 87 48 c7 c7 00 85 97 87 e8 c7 b1 6d ff <0f> 0b e9 4b fe  
-ff ff e8 6d 54 d4 ff e9 b5 fd ff ff e8 23 55 d4 ff
-RSP: 0018:ffff8880a9a8fb10 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 1ffff11015351f64 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815b20a6 RDI: ffffed1015351f54
-RBP: ffff8880a9a8fbc0 R08: ffff8880a9a7c6c0 R09: ffff8880a9a7cfb0
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888099b87280
-R13: ffff8880a55c77c0 R14: ffff888099b87330 R15: dffffc0000000000
-  rpc_proc_exit+0x3e/0x50 net/sunrpc/stats.c:335
-  sunrpc_exit_net+0x187/0x2d0 net/sunrpc/sunrpc_syms.c:73
-  ops_exit_list.isra.0+0xb0/0x160 net/core/net_namespace.c:153
-  cleanup_net+0x3fb/0x960 net/core/net_namespace.c:552
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2268
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2414
-  kthread+0x357/0x430 kernel/kthread.c:254
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
