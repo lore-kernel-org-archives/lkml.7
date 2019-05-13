@@ -2,186 +2,102 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259FBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC86C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFF7208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D52C208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfEMMrC (ORCPT
+        id S1729542AbfEMMsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:47:02 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32934 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729976AbfEMMrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:47:00 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 5B80448035ABDDE81A3F;
-        Mon, 13 May 2019 13:46:58 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
- 2019 13:46:57 +0100
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Rob Landley <rob@landley.net>,
-        Arvind Sankar <niveditas98@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
-        <initramfs@vger.kernel.org>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
-Date:   Mon, 13 May 2019 14:47:04 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 13 May 2019 08:48:35 -0400
+Received: from foss.arm.com ([217.140.101.70]:55122 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728820AbfEMMse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:48:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41CE180D;
+        Mon, 13 May 2019 05:48:34 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 984B33F6C4;
+        Mon, 13 May 2019 05:48:32 -0700 (PDT)
+Date:   Mon, 13 May 2019 13:48:29 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v2 4/7] sched: Add pelt_rq tracepoint
+Message-ID: <20190513124829.aybnwdh74bsm7ugv@e107158-lin.cambridge.arm.com>
+References: <20190510113013.1193-1-qais.yousef@arm.com>
+ <20190510113013.1193-5-qais.yousef@arm.com>
+ <20190513121445.GT2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190513121445.GT2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/2019 11:07 AM, Rob Landley wrote:
+On 05/13/19 14:14, Peter Zijlstra wrote:
+> On Fri, May 10, 2019 at 12:30:10PM +0100, Qais Yousef wrote:
 > 
+> > +DECLARE_TRACE(pelt_rq,
+> > +	TP_PROTO(int cpu, const char *path, struct sched_avg *avg),
+> > +	TP_ARGS(cpu, path, avg));
+> > +
 > 
-> On 5/13/19 2:49 AM, Roberto Sassu wrote:
->> On 5/12/2019 9:43 PM, Arvind Sankar wrote:
->>> On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
->>>> On 5/12/19 7:52 AM, Mimi Zohar wrote:
->>>>> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
->>>>>> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
->>>>>>> This proposal consists in marshaling pathnames and xattrs in a file called
->>>>>>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
->>>>>>> been extracted.
->>>>>>
->>>>>> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
->>>>>> be done equivalently by the initramfs' /init? Why is kernel involvement
->>>>>> actually required here?
->>>>>
->>>>> It's too late.  The /init itself should be signed and verified.
->>>>
->>>> If the initramfs cpio.gz image was signed and verified by the extractor, how is
->>>> the init in it _not_ verified?
->>>>
->>>> Ro
->>>
->>> Wouldn't the below work even before enforcing signatures on external
->>> initramfs:
->>> 1. Create an embedded initramfs with an /init that does the xattr
->>> parsing/setting. This will be verified as part of the kernel image
->>> signature, so no new code required.
->>> 2. Add a config option/boot parameter to panic the kernel if an external
->>> initramfs attempts to overwrite anything in the embedded initramfs. This
->>> prevents overwriting the embedded /init even if the external initramfs
->>> is unverified.
->>
->> Unfortunately, it wouldn't work. IMA is already initialized and it would
->> verify /init in the embedded initial ram disk.
+> > +static __always_inline void sched_trace_pelt_cfs_rq(struct cfs_rq *cfs_rq)
+> > +{
+> > +	if (trace_pelt_rq_enabled()) {
+> > +		int cpu = cpu_of(rq_of(cfs_rq));
+> > +		char path[SCHED_TP_PATH_LEN];
+> > +
+> > +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
+> > +		trace_pelt_rq(cpu, path, &cfs_rq->avg);
+> > +	}
+> > +}
+> > +
+> > +static __always_inline void sched_trace_pelt_rt_rq(struct rq *rq)
+> > +{
+> > +	if (trace_pelt_rq_enabled()) {
+> > +		int cpu = cpu_of(rq);
+> > +
+> > +		trace_pelt_rq(cpu, NULL, &rq->avg_rt);
+> > +	}
+> > +}
+> > +
+> > +static __always_inline void sched_trace_pelt_dl_rq(struct rq *rq)
+> > +{
+> > +	if (trace_pelt_rq_enabled()) {
+> > +		int cpu = cpu_of(rq);
+> > +
+> > +		trace_pelt_rq(cpu, NULL, &rq->avg_dl);
+> > +	}
+> > +}
 > 
-> So you made broken infrastructure that's causing you problems. Sounds unfortunate.
+> Since it is only the one real tracepoint, how do we know which avg is
+> which?
 
-The idea is to be able to verify anything that is accessed, as soon as
-rootfs is available, without distinction between embedded or external
-initial ram disk.
+Good question. I missed that to be honest since we are mainly interested in cfs
+and I was focused into not adding too many tracepoints..
 
-Also, requiring an embedded initramfs for xattrs would be an issue for
-systems that use it for other purposes.
+I'm happy to create a tracepoint per class assuming that's what you're
+suggesting.
 
+Thanks
 
->> The only reason why
->> opening .xattr-list works is that IMA is not yet initialized
->> (late_initcall vs rootfs_initcall).
-> 
-> Launching init before enabling ima is bad because... you didn't think of it?
-
-No, because /init can potentially compromise the integrity of the
-system.
-
-
->> Allowing a kernel with integrity enforcement to parse the CPIO image
->> without verifying it first is the weak point.
-> 
-> If you don't verify the CPIO image then in theory it could have anything in it,
-> yes. You seem to believe that signing individual files is more secure than
-> signing the archive. This is certainly a point of view.
-
-As I wrote above, signing the CPIO image would be more secure, if this
-option is available. However, a disadvantage would be that you have to
-sign the CPIO image every time a file changes.
-
-
->> However, extracted files
->> are not used, and before they are used they are verified. At the time
->> they are verified, they (included /init) must already have a signature
->> or otherwise access would be denied.
-> 
-> You build infrastructure that works a certain way, the rest of the system
-> doesn't fit your assumptions, so you need to change the rest of the system to
-> fit your assumptions.
-
-Requiring file metadata to make decisions seems reasonable. Also
-mandatory access controls do that. The objective of this patch set is to
-have uniform behavior regardless of the filesystem used.
-
-
->> This scheme relies on the ability of the kernel to not be corrupted in
->> the event it parses a malformed CPIO image.
-> 
-> I'm unaware of any buffer overruns or wild pointer traversals in the cpio
-> extraction code. You can fill up all physical memory with initramfs and lock the
-> system hard, though.
-> 
-> It still only parses them at boot time before launching PID 1, right? So you
-> have a local physical exploit and you're trying to prevent people from working
-> around your Xbox copy protection without a mod chip?
-
-What do you mean exactly?
-
-
->> Mimi suggested to use
->> digital signatures to prevent this issue, but it cannot be used in all
->> scenarios, since conventional systems generate the initial ram disk
->> locally.
-> 
-> So you use a proprietary init binary you can't rebuild from source, and put it
-> in a cpio where /dev/urandom is a file with known contents? Clearly, not
-> exploitable at all. (And we update the initramfs.cpio but not the kernel because
-> clearly keeping the kernel up to date is less important to security...)
-
-By signing the CPIO image, the kernel wouldn't even attempt to parse it,
-as the image would be rejected by the boot loader if the signature is
-invalid.
-
-
-> Whatever happened to https://lwn.net/Articles/532778/ ? Modules are signed
-> in-band in the file, but you need xattrs for some reason?
-
-Appending just the signature would be possible. It won't work if you
-have multiple metadata for the same file.
-
-Also appending the signature alone won't solve the parsing issue. Still,
-the kernel has to parse something that could be malformed.
-
-Roberto
-
-
->> Roberto
-> 
-> Rob
-> 
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+--
+Qais Yousef
