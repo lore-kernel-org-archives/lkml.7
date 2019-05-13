@@ -2,87 +2,139 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C73EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B94C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB1021473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5442084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfEMQiT (ORCPT
+        id S1730608AbfEMQik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:38:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40336 "EHLO mx1.redhat.com"
+        Mon, 13 May 2019 12:38:40 -0400
+Received: from mga03.intel.com ([134.134.136.65]:17759 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbfEMQiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:38:18 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C7313001822;
-        Mon, 13 May 2019 16:38:18 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7526160856;
-        Mon, 13 May 2019 16:38:17 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 13 May 2019 18:38:16 +0200 (CEST)
-Date:   Mon, 13 May 2019 18:38:14 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc:     linux-kernel@vger.kernel.org, tj@kernel.org, guro@fb.com,
-        kernel-team@fb.com
-Subject: Re: [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer"
- (76f969e)
-Message-ID: <20190513163814.GA31756@redhat.com>
-References: <1557709124.798rxdb4l3.astroid@alex-desktop.none>
- <20190513121703.GA24724@redhat.com>
+        id S1730291AbfEMQij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:38:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 09:38:08 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 13 May 2019 09:38:07 -0700
+Date:   Mon, 13 May 2019 09:41:00 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com, alex.williamson@redhat.com,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 3/4] iommu/vt-d: Handle RMRR with PCI bridge device
+ scopes
+Message-ID: <20190513094100.6fd1276b@jacob-builder>
+In-Reply-To: <20190513071302.30718-4-eric.auger@redhat.com>
+References: <20190513071302.30718-1-eric.auger@redhat.com>
+        <20190513071302.30718-4-eric.auger@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513121703.GA24724@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 13 May 2019 16:38:18 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/13, Oleg Nesterov wrote:
->
-> Probably we add leave_frozen(true) after freezable_schedule() for now, then
-> think try to make something better...
+On Mon, 13 May 2019 09:13:01 +0200
+Eric Auger <eric.auger@redhat.com> wrote:
 
-And again, this is what I thought ptrace_stop() does, somehow I didn't notice
-that the last version doesn't have leave_frozen() in ptrace_stop().
-
-Perhaps we can do a bit better, change only tracehook_report_syscall_entry() and
-PTRACE_EVENT_EXIT/SECCOMP paths to do leave_frozen() ?
-
-At first glance other callers look fine in that they can do nothing "interesting"
-befor get_signal(), but we need to re-check...
-
-Oleg.
-
-> But I am not sure I 100% understand whats going on in this case, could you
-> try the patch below? (Just in case, of course it is wrong).
+> When reading the vtd specification and especially the
+> Reserved Memory Region Reporting Structure chapter,
+> it is not obvious a device scope element cannot be a
+> PCI-PCI bridge, in which case all downstream ports are
+> likely to access the reserved memory region. Let's handle
+> this case in device_has_rmrr.
 > 
-> Oleg.
+> Fixes: ea2447f700ca ("intel-iommu: Prevent devices with RMRRs from
+> being placed into SI Domain")
 > 
-> --- x/kernel/signal.c
-> +++ x/kernel/signal.c
-> @@ -149,8 +149,7 @@
->  {
->  	if ((t->jobctl & (JOBCTL_PENDING_MASK | JOBCTL_TRAP_FREEZE)) ||
->  	    PENDING(&t->pending, &t->blocked) ||
-> -	    PENDING(&t->signal->shared_pending, &t->blocked) ||
-> -	    cgroup_task_frozen(t)) {
-> +	    PENDING(&t->signal->shared_pending, &t->blocked) {
->  		set_tsk_thread_flag(t, TIF_SIGPENDING);
->  		return true;
->  	}
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> ---
+>  drivers/iommu/intel-iommu.c | 32 +++++++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index e2134b13c9ae..89d82a1d50b1 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -736,12 +736,31 @@ static int iommu_dummy(struct device *dev)
+>  	return dev->archdata.iommu == DUMMY_DEVICE_DOMAIN_INFO;
+>  }
+>  
+> +static bool
+> +is_downstream_to_pci_bridge(struct device *deva, struct device *devb)
+> +{
+> +	struct pci_dev *pdeva, *pdevb;
+> +
+is there a more illustrative name for these. i guess deva is is the
+bridge dev?
+> +	if (!dev_is_pci(deva) || !dev_is_pci(devb))
+> +		return false;
+> +
+> +	pdeva = to_pci_dev(deva);
+> +	pdevb = to_pci_dev(devb);
+> +
+> +	if (pdevb->subordinate &&
+> +	    pdevb->subordinate->number <= pdeva->bus->number &&
+> +	    pdevb->subordinate->busn_res.end >= pdeva->bus->number)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+this seems to be a separate cleanup patch.
+>  static struct intel_iommu *device_to_iommu(struct device *dev, u8
+> *bus, u8 *devfn) {
+>  	struct dmar_drhd_unit *drhd = NULL;
+>  	struct intel_iommu *iommu;
+>  	struct device *tmp;
+> -	struct pci_dev *ptmp, *pdev = NULL;
+> +	struct pci_dev *pdev = NULL;
+>  	u16 segment = 0;
+>  	int i;
+>  
+> @@ -787,13 +806,7 @@ static struct intel_iommu
+> *device_to_iommu(struct device *dev, u8 *bus, u8 *devf goto out;
+>  			}
+>  
+> -			if (!pdev || !dev_is_pci(tmp))
+> -				continue;
+> -
+> -			ptmp = to_pci_dev(tmp);
+> -			if (ptmp->subordinate &&
+> -			    ptmp->subordinate->number <=
+> pdev->bus->number &&
+> -			    ptmp->subordinate->busn_res.end >=
+> pdev->bus->number)
+> +			if (is_downstream_to_pci_bridge(dev, tmp))
+>  				goto got_pdev;
+>  		}
+>  
+> @@ -2886,7 +2899,8 @@ static bool device_has_rmrr(struct device *dev)
+>  		 */
+>  		for_each_active_dev_scope(rmrr->devices,
+>  					  rmrr->devices_cnt, i, tmp)
+> -			if (tmp == dev) {
+> +			if (tmp == dev ||
+> +			    is_downstream_to_pci_bridge(dev, tmp)) {
+>  				rcu_read_unlock();
+>  				return true;
+>  			}
 
+[Jacob Pan]
