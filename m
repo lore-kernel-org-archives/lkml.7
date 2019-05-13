@@ -2,124 +2,131 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 769F6C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A31520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:00:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ASPC0nz8"
+	by mail.kernel.org (Postfix) with ESMTP id 1DCBF2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557763295;
+	bh=lEibKcwC5gVE6uqe1w9PcI6jNFCNtyn0TO/fffg8YH8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DuG1BneiiAqZpZD4PK3aOnNLSZajOINO1QJgwCqP5Noz5uqKnaAj2OgcOpayHbdy/
+	 xemH9frAQFIqTAKU4sdtlBiTX3+EhtF9pB7j17/U7eglFMyOjRHJ3KCN3EL1oYIh9Y
+	 6b0IaUMQEJXaOPKHY5W3xQ+y0XeDNm+Bm5yij7Sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbfEMQAk (ORCPT
+        id S1730263AbfEMQBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:00:40 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36862 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfEMQAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:00:40 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y10so9493399lfl.3;
-        Mon, 13 May 2019 09:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=z8CoKhwBZZ+WN7WIq6kiZqXUYgO4LKmPTb53WftMZmU=;
-        b=ASPC0nz8z1rQoBUTP4uEWYF+eOTt27EeVCUCyrxVb5N1322we0ec/Pwlj5Y9SvYHGt
-         sAbtidOPRp8MPVWkRz3tM9QQUdfJmGuRGwEEXpxv0BTfeu41LcTueSMp0T1iyWyEKq9X
-         brwnZAkcrBBHhtq4Np12xJnXg9OKBZfWMGNASQgcfeUOKxkTs+xSMRDw7VYms7RCvrGg
-         FwXRTUEYfCMWFMnUqj1csAMwg/CxKAiwtZOPRYH93D4llYG1oOw1lh8AZH19oDjfSezY
-         TOGhVhRn2ZqlHWqQ2zZkEYbw/PlNIdZj5PRHH658+GnnTCaJ81+HIKOzHOmmCtWKxO72
-         tYxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=z8CoKhwBZZ+WN7WIq6kiZqXUYgO4LKmPTb53WftMZmU=;
-        b=rOKU0Zs8xoYHxNnRomyPlfLduMqIK6uJ9QWk+9+vcQCDCfLMB7G7Dq7CKN2jIHRtJo
-         Qc8034ZivE/LiwSHXNDwN53i9St5TrjD9TRC0AhxM6xPri79CA9QvvKfjEX1a6p27usi
-         3bGS/K5rf8VP0boFCl+2As9o0x78PVf8vTOTkJGv2PUyPxfCsR56SA9sfc9ek9WcxKry
-         uhtP8ed/LEr84L8K1/y6okQRf4Y7ndcwoKLZMDtrza/DQ5iIVhtvA7gZ8bymB9BYRcEd
-         d+e0+0iqziylvr3mvY8z64C1PjW//FZiKxhJYmnR6foxTQONbZsJap20ElZuLwCSBYH5
-         9c4w==
-X-Gm-Message-State: APjAAAUPgF0q7yTg3Vhmzu55Ty+LaCNnwg6NfQcYbWG/xkodndZ7H62v
-        7tHdK5mWnEFyr23VwcXf9lQ=
-X-Google-Smtp-Source: APXvYqyZJ+Orwj9Q22E9uhFuhDamxIJ9cXJWWS7hMjQ2z+c0b2OVuwCY/9R7JIydOZRnK1UjV09x+g==
-X-Received: by 2002:ac2:5612:: with SMTP id v18mr4565138lfd.15.1557763238025;
-        Mon, 13 May 2019 09:00:38 -0700 (PDT)
-Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id j27sm3209888lfk.97.2019.05.13.09.00.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 09:00:37 -0700 (PDT)
-Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
- region
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Julien Grall <julien.grall@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
- <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
- <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
- <CAMuHMdWODzaHSeXyB5CgGmq3ZumFGVZYOUT1v1_Ps-RguPLseA@mail.gmail.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <25f5f60e-46ff-18af-2a65-1e3f6719ef49@gmail.com>
-Date:   Mon, 13 May 2019 19:00:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 12:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729726AbfEMQBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:01:33 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80629216E3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557763292;
+        bh=lEibKcwC5gVE6uqe1w9PcI6jNFCNtyn0TO/fffg8YH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=k+z5lpybKEi6mIpFrCN17wQ9GoetmotYQ4i88fejJcVpMaoHOZbrljm2PEWhDSswf
+         06cEs3sA7iEdSg/w9f9tzMdQIooZs+IfZ3+LMzAYVslGXnDJ50vPScbKZ3yfmR0j61
+         V+5Fh+Qm2y15i11H0UpnUapfNJQgFELWxccdwEPU=
+Received: by mail-wm1-f48.google.com with SMTP id o189so14476556wmb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:01:32 -0700 (PDT)
+X-Gm-Message-State: APjAAAVabzk9T5/5m1nMh9gXwlgbCyBbK9FIJc0dYvikofp5kdGywWUq
+        WUB/oLzavTLF277Y2VLZMwc6HKZiwmDubw3ZiNMPAQ==
+X-Google-Smtp-Source: APXvYqySeak5d5b75+WeyRRha6bI26hiE/9igsHZ0v7N1L8hvam3cM49nnezAxrIoHS1OAg32CScL++8+THXngeTOP8=
+X-Received: by 2002:a7b:c844:: with SMTP id c4mr5457540wml.108.1557763286508;
+ Mon, 13 May 2019 09:01:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWODzaHSeXyB5CgGmq3ZumFGVZYOUT1v1_Ps-RguPLseA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com> <1557758315-12667-26-git-send-email-alexandre.chartre@oracle.com>
+In-Reply-To: <1557758315-12667-26-git-send-email-alexandre.chartre@oracle.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 13 May 2019 09:01:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrWmvcrO0bBEw7iL-GnCED6hTz=FD+nANZkdQRo2R-w_3Q@mail.gmail.com>
+Message-ID: <CALCETrWmvcrO0bBEw7iL-GnCED6hTz=FD+nANZkdQRo2R-w_3Q@mail.gmail.com>
+Subject: Re: [RFC KVM 25/27] kvm/isolation: implement actual KVM isolation enter/exit
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 13.05.19 18:13, Geert Uytterhoeven wrote:
-> Hi Oleksandr,
-
-Hi Geert
-
-
->> So, if the DT bindings for the counter module is not an option (if I
->> correctly understood a discussion pointed by Geert in another letter),
->> we should probably prevent all timer code here from being executed if
->> PSCI is in use.
->> What I mean is to return to [2], but with the modification to use
->> psci_smp_available() helper as an indicator of PSCI usage.
->>
->> Julien, Geert, what do you think?
-> Yes, that sounds good to me.
+On Mon, May 13, 2019 at 7:40 AM Alexandre Chartre
+<alexandre.chartre@oracle.com> wrote:
 >
-> Note that psci_smp_available() seems to return false if CONFIG_SMP=n,
-> so checking for that is not sufficient to avoid crashes when running a
-> uniprocessor kernel on a PSCI-enabled system.
+> From: Liran Alon <liran.alon@oracle.com>
+>
+> KVM isolation enter/exit is done by switching between the KVM address
+> space and the kernel address space.
+>
+> Signed-off-by: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+> ---
+>  arch/x86/kvm/isolation.c |   30 ++++++++++++++++++++++++------
+>  arch/x86/mm/tlb.c        |    1 +
+>  include/linux/sched.h    |    1 +
+>  3 files changed, 26 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
+> index db0a7ce..b0c789f 100644
+> --- a/arch/x86/kvm/isolation.c
+> +++ b/arch/x86/kvm/isolation.c
+> @@ -1383,11 +1383,13 @@ static bool kvm_page_fault(struct pt_regs *regs, unsigned long error_code,
+>         printk(KERN_DEFAULT "KVM isolation: page fault %ld at %pS on %lx (%pS) while switching mm\n"
+>                "  cr3=%lx\n"
+>                "  kvm_mm=%px pgd=%px\n"
+> -              "  active_mm=%px pgd=%px\n",
+> +              "  active_mm=%px pgd=%px\n"
+> +              "  kvm_prev_mm=%px pgd=%px\n",
+>                error_code, (void *)regs->ip, address, (void *)address,
+>                cr3,
+>                &kvm_mm, kvm_mm.pgd,
+> -              active_mm, active_mm->pgd);
+> +              active_mm, active_mm->pgd,
+> +              current->kvm_prev_mm, current->kvm_prev_mm->pgd);
+>         dump_stack();
+>
+>         return false;
+> @@ -1649,11 +1651,27 @@ void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu)
+>         kvm_isolation_exit();
+>  }
+>
+> +static void kvm_switch_mm(struct mm_struct *mm)
+> +{
+> +       unsigned long flags;
+> +
+> +       /*
+> +        * Disable interrupt before updating active_mm, otherwise if an
+> +        * interrupt occurs during the switch then the interrupt handler
+> +        * can be mislead about the mm effectively in use.
+> +        */
+> +       local_irq_save(flags);
+> +       current->kvm_prev_mm = current->active_mm;
 
-Indeed, you are right.
+Peter's NAK aside, why on Earth is this in task_struct?  You cannot
+possibly context switch while in isolation mode.
 
-
-Nothing than just check for psci_ops.cpu_on == NULL directly comes to 
-mind...
-
-Have already checked with CONFIG_SMP=n, it works.
-
-Sounds ok?
-
-
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+--Andy
