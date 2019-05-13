@@ -2,388 +2,212 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C274C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F1C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E37920873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:22:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ufpnXMjj"
+	by mail.kernel.org (Postfix) with ESMTP id 5D09A2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731611AbfEMRWC (ORCPT
+        id S1731635AbfEMRX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:22:02 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40032 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfEMRWB (ORCPT
+        Mon, 13 May 2019 13:23:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46665 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfEMRX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:22:01 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so7543378pfn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=E86U/OIq74Doq/AcvzrkKbLtbu6NqHfBiDf8ceyGPzM=;
-        b=ufpnXMjj3Ze0G4KfMCgpi48jxwKVpdK5ymTvdzOnrQWfrHx9VicBsLGwPpPbnrBJqr
-         wQnBYCgyqTuaZrJhHhVSu5IWAo97gPKaN2+UNtXs8aYTnY1uCJfOljPi9ZHCTF2LioBY
-         LBk2RKNsvc/yeb4A9w1CFQRe3sle5rCrOa9U7f/z07OBkPvEujmL4PZhl0mlcYQzz9sd
-         HtZofTufNC7VQgq23OX4F/AOo3VGEW9abUpb4fM46HQ7u94VjMewnjpn6o/gc/cNMq1V
-         Gtn7kgtYfQJ8HulmqiU25AvoU41m0z7ZYxM1WKPdrQbzbIS+Se5qDoHi83f8Me9ST3+J
-         oHmA==
+        Mon, 13 May 2019 13:23:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r7so15560019wrr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:23:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=E86U/OIq74Doq/AcvzrkKbLtbu6NqHfBiDf8ceyGPzM=;
-        b=FoX9Dj58GYAsMHwMHJ/p0v4YR1Zeli3H0L2qPUFkasy6S6yOuUyD8GtH0N/MlQEahH
-         sgg5MYFK2QijQB4UhG1igQt5kOaeZFol1PD/RU8BeaxwZ04mObcUX1U2Jev8m5WLnVyD
-         cWtJdU/VORH4jlX6IPQUaFlKQmvLi2WrdtgrOaG44HR0/XFCKsdQj+qWi4IMTeM/XGMI
-         P3vjRdVZZBTiHDqQpkm5DYuq3yAQzFQh3btx/oVPUuOxDJIDdhz76/CUOE/xku+bC674
-         kHBUJe+WroZXeVIfm57OEZJ4gT2Dk8NkqfeHuXscd4wpuifAZGAqdoG/ROlCBZZTXbOm
-         u8KQ==
-X-Gm-Message-State: APjAAAU1zFTkP2rCgx5sJjovjGN/WdASTPNiFd/l1/OqEYJdjaBlg4Il
-        v29ShL58AnG6jkqmZVL6fhKj3Q==
-X-Google-Smtp-Source: APXvYqw8ofyCfK4wZzU5CyY1sc1HePTBiSZxBwF5gS+T8vTW3It9lCKsEOmy451skw99VYMwHECrQQ==
-X-Received: by 2002:a62:4595:: with SMTP id n21mr35393430pfi.79.1557768120764;
-        Mon, 13 May 2019 10:22:00 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 10sm17383690pfh.14.2019.05.13.10.21.59
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=aOc6CBKw+RVeeMdGwIxa6uCL3lFsOT0Lwgti+Fi6e58=;
+        b=NXRHYIZOQWsrK1gHisuvsc4MBV1bHI5nfSP9MGxI1E53Mp6oWvOcViIhp9warJLCIP
+         VAvVDczXSlvkYUhN8kIcOLXRyrJBOD/o4G4HhKTfMLAGQn/OcYnWLEgGeHFzwxsaDMJN
+         losM/EOEcaNHWqWbDZUVHsXDabNBHiciJGBusMbTQfRsuzlVOjbndzAQOWZAwg85iVjb
+         X72sdm5BtbAPut7AWnvAJSw7KDkMBkDd//7ASIsloijTjLKOFrpVveWYqJHd2Y4F4ZIB
+         S9mo1Ve4on2H1ArHDW4th4ln52Sq+QWiHTklJZ61B1k5lcLCBYj5ncjy1r6GTN+R+noQ
+         Kdjg==
+X-Gm-Message-State: APjAAAWCLj0pvU9RheSJOtXvix2WmHLnONeEe5MT3KnqPgmm6Yurrmwk
+        G91SHx3RenwkiWGZYikjzwxLzw==
+X-Google-Smtp-Source: APXvYqyGLQfQ9qgYBMhBOROA3KDzQZd+2RzOsjvMydbObvwkA2lyVoOmT5x005cmHKCzFX+X+nkBqQ==
+X-Received: by 2002:adf:b35e:: with SMTP id k30mr2281815wrd.178.1557768205296;
+        Mon, 13 May 2019 10:23:25 -0700 (PDT)
+Received: from steredhat (host151-251-static.12-87-b.business.telecomitalia.it. [87.12.251.151])
+        by smtp.gmail.com with ESMTPSA id s7sm13859054wrn.84.2019.05.13.10.23.24
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 10:21:59 -0700 (PDT)
-Date:   Mon, 13 May 2019 11:21:57 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH v3 22/30] coresight: Rearrange platform data probing
-Message-ID: <20190513172157.GC16162@xps15>
-References: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
- <1557226378-10131-23-git-send-email-suzuki.poulose@arm.com>
+        Mon, 13 May 2019 10:23:24 -0700 (PDT)
+Date:   Mon, 13 May 2019 19:23:22 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
+Message-ID: <20190513172322.vcgenx7xk4v6r2ay@steredhat>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-2-sgarzare@redhat.com>
+ <3b275b52-63d9-d260-1652-8e8bf7dd679f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1557226378-10131-23-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3b275b52-63d9-d260-1652-8e8bf7dd679f@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:52:49AM +0100, Suzuki K Poulose wrote:
-> We are about to introduce methods to clean up the platform data
-> as we switch to tracking the device reference from "name" to "fwnode
-> handles" for device connections. This requires us to drop the fwnode
-> handle references when the data is no longer required - i.e, when
-> the device probe fails or the device gets unregistered.
+On Mon, May 13, 2019 at 05:58:53PM +0800, Jason Wang wrote:
 > 
-> In order to consolidate the invocation of the cleanup, we delay the
-> platform probing to the very last minute, possibly before invoking
-> the coresight_register. Then, we leave the coresight core code to
-> do the clean up. i.e, if the coresight_register fails, it takes
-> care of freeing the data. Otherwise, coresight_unregister will
-> do the necessary operations.
+> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+> > Since virtio-vsock was introduced, the buffers filled by the host
+> > and pushed to the guest using the vring, are directly queued in
+> > a per-socket list avoiding to copy it.
+> > These buffers are preallocated by the guest with a fixed
+> > size (4 KB).
+> > 
+> > The maximum amount of memory used by each socket should be
+> > controlled by the credit mechanism.
+> > The default credit available per-socket is 256 KB, but if we use
+> > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
+> > buffers, using up to 1 GB of memory per-socket. In addition, the
+> > guest will continue to fill the vring with new 4 KB free buffers
+> > to avoid starvation of other sockets.
+> > 
+> > This patch solves this issue copying the payload in a new buffer.
+> > Then it is queued in the per-socket list, and the 4KB buffer used
+> > by the host is freed.
+> > 
+> > In this way, the memory used by each socket respects the credit
+> > available, and we still avoid starvation, paying the cost of an
+> > extra memory copy. When the buffer is completely full we do a
+> > "zero-copy", moving the buffer directly in the per-socket list.
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-catu.c       | 14 +++++++-------
->  drivers/hwtracing/coresight/coresight-etb10.c      | 10 +++++-----
->  drivers/hwtracing/coresight/coresight-etm3x.c      | 12 +++++++-----
->  drivers/hwtracing/coresight/coresight-etm4x.c      | 12 +++++++-----
->  drivers/hwtracing/coresight/coresight-funnel.c     | 12 +++++++-----
->  drivers/hwtracing/coresight/coresight-replicator.c | 12 +++++++-----
->  drivers/hwtracing/coresight/coresight-stm.c        | 11 +++++++----
->  drivers/hwtracing/coresight/coresight-tmc.c        | 16 ++++++++--------
->  drivers/hwtracing/coresight/coresight-tpiu.c       | 10 +++++-----
->  9 files changed, 60 insertions(+), 49 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index 05c7304..1c1ad12 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -505,13 +505,6 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
->  	struct device *dev = &adev->dev;
->  	void __iomem *base;
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata)) {
-> -		ret = PTR_ERR(pdata);
-> -		goto out;
-> -	}
-> -	dev->platform_data = pdata;
-> -
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata) {
->  		ret = -ENOMEM;
-> @@ -544,6 +537,13 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (ret)
->  		goto out;
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto out;
-> +	}
-> +	dev->platform_data = pdata;
-> +
->  	drvdata->base = base;
->  	catu_desc.pdata = pdata;
->  	catu_desc.dev = dev;
-> diff --git a/drivers/hwtracing/coresight/coresight-etb10.c b/drivers/hwtracing/coresight/coresight-etb10.c
-> index 5e7ecc6..09df827 100644
-> --- a/drivers/hwtracing/coresight/coresight-etb10.c
-> +++ b/drivers/hwtracing/coresight/coresight-etb10.c
-> @@ -726,11 +726,6 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
->  	struct resource *res = &adev->res;
->  	struct coresight_desc desc = { 0 };
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	adev->dev.platform_data = pdata;
-> -
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata)
->  		return -ENOMEM;
-> @@ -765,6 +760,11 @@ static int etb_probe(struct amba_device *adev, const struct amba_id *id)
->  	/* This device is not associated with a session */
->  	drvdata->pid = -1;
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata))
-> +		return PTR_ERR(pdata);
-> +	adev->dev.platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_SINK;
->  	desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
->  	desc.ops = &etb_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-> index 101fb01..f2d4616 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm3x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-> @@ -795,11 +795,6 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -
-> -	adev->dev.platform_data = pdata;
->  	drvdata->use_cp14 = fwnode_property_read_bool(dev->fwnode, "arm,cp14");
->  	dev_set_drvdata(dev, drvdata);
->  
-> @@ -849,6 +844,13 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
->  	etm_init_trace_id(drvdata);
->  	etm_set_default(&drvdata->config);
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto err_arch_supported;
-> +	}
-> +	adev->dev.platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_SOURCE;
->  	desc.subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_PROC;
->  	desc.ops = &etm_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 8adc148..1609da1 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1089,11 +1089,6 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->  	if (!drvdata)
->  		return -ENOMEM;
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	adev->dev.platform_data = pdata;
-> -
->  	dev_set_drvdata(dev, drvdata);
->  
->  	/* Validity for the resource is already checked by the AMBA core */
-> @@ -1136,6 +1131,13 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->  	etm4_init_trace_id(drvdata);
->  	etm4_set_default(&drvdata->config);
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto err_arch_supported;
-> +	}
-> +	adev->dev.platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_SOURCE;
->  	desc.subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_PROC;
->  	desc.ops = &etm4_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index ded33f5..75fa2d3 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -188,11 +188,6 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  	struct funnel_drvdata *drvdata;
->  	struct coresight_desc desc = { 0 };
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	dev->platform_data = pdata;
-> -
->  	if (is_of_node(dev_fwnode(dev)) &&
->  	    of_device_is_compatible(dev->of_node, "arm,coresight-funnel"))
->  		pr_warn_once("Uses OBSOLETE CoreSight funnel binding\n");
-> @@ -224,6 +219,13 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  
->  	dev_set_drvdata(dev, drvdata);
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto out_disable_clk;
-> +	}
-> +	dev->platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_LINK;
->  	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_MERG;
->  	desc.ops = &funnel_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index f28bafd..64dfde7 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -179,11 +179,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	struct coresight_desc desc = { 0 };
->  	void __iomem *base;
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	dev->platform_data = pdata;
-> -
->  	if (is_of_node(dev_fwnode(dev)) &&
->  	    of_device_is_compatible(dev->of_node, "arm,coresight-replicator"))
->  		pr_warn_once("Uses OBSOLETE CoreSight replicator binding\n");
-> @@ -215,6 +210,13 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  
->  	dev_set_drvdata(dev, drvdata);
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto out_disable_clk;
-> +	}
-> +	dev->platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_LINK;
->  	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
->  	desc.ops = &replicator_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index 02031d9..03528f3 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -810,10 +810,6 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
->  	size_t bitmap_size;
->  	struct coresight_desc desc = { 0 };
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	adev->dev.platform_data = pdata;
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata)
->  		return -ENOMEM;
-> @@ -866,6 +862,13 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
->  		return -EPROBE_DEFER;
->  	}
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto stm_unregister;
-> +	}
-> +	adev->dev.platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_SOURCE;
->  	desc.subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE;
->  	desc.ops = &stm_cs_ops;
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc.c b/drivers/hwtracing/coresight/coresight-tmc.c
-> index 44a5719..212630e 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc.c
-> @@ -398,13 +398,6 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->  	struct resource *res = &adev->res;
->  	struct coresight_desc desc = { 0 };
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata)) {
-> -		ret = PTR_ERR(pdata);
-> -		goto out;
-> -	}
-> -	adev->dev.platform_data = pdata;
-> -
->  	ret = -ENOMEM;
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata)
-> @@ -434,7 +427,6 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->  	else
->  		drvdata->size = readl_relaxed(drvdata->base + TMC_RSZ) * 4;
->  
-> -	desc.pdata = pdata;
->  	desc.dev = dev;
->  	desc.groups = coresight_tmc_groups;
->  	desc.name = dev_name(dev);
-> @@ -467,6 +459,14 @@ static int tmc_probe(struct amba_device *adev, const struct amba_id *id)
->  		goto out;
->  	}
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata)) {
-> +		ret = PTR_ERR(pdata);
-> +		goto out;
-> +	}
-> +	adev->dev.platform_data = pdata;
-> +	desc.pdata = pdata;
-> +
->  	drvdata->csdev = coresight_register(&desc);
->  	if (IS_ERR(drvdata->csdev)) {
->  		ret = PTR_ERR(drvdata->csdev);
-> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-> index d8a2e39..b699d61 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-> @@ -125,11 +125,6 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
->  	struct resource *res = &adev->res;
->  	struct coresight_desc desc = { 0 };
->  
-> -	pdata = coresight_get_platform_data(dev);
-> -	if (IS_ERR(pdata))
-> -		return PTR_ERR(pdata);
-> -	dev->platform_data = pdata;
-> -
->  	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
->  	if (!drvdata)
->  		return -ENOMEM;
-> @@ -152,6 +147,11 @@ static int tpiu_probe(struct amba_device *adev, const struct amba_id *id)
->  	/* Disable tpiu to support older devices */
->  	tpiu_disable_hw(drvdata);
->  
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata))
-> +		return PTR_ERR(pdata);
-> +	dev->platform_data = pdata;
-> +
->  	desc.type = CORESIGHT_DEV_TYPE_SINK;
->  	desc.subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_PORT;
->  	desc.ops = &tpiu_cs_ops;
+> I wonder in the long run we should use generic socket accouting mechanism
+> provided by kernel (e.g socket, skb, sndbuf, recvbug, truesize) instead of
+> vsock specific thing to avoid duplicating efforts.
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+I agree, the idea is to switch to sk_buff but this should require an huge
+change. If we will use the virtio-net datapath, it will become simpler.
 
-> -- 
-> 2.7.4
 > 
+> 
+> > 
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > ---
+> >   drivers/vhost/vsock.c                   |  2 +
+> >   include/linux/virtio_vsock.h            |  8 +++
+> >   net/vmw_vsock/virtio_transport.c        |  1 +
+> >   net/vmw_vsock/virtio_transport_common.c | 95 ++++++++++++++++++-------
+> >   4 files changed, 81 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> > index bb5fc0e9fbc2..7964e2daee09 100644
+> > --- a/drivers/vhost/vsock.c
+> > +++ b/drivers/vhost/vsock.c
+> > @@ -320,6 +320,8 @@ vhost_vsock_alloc_pkt(struct vhost_virtqueue *vq,
+> >   		return NULL;
+> >   	}
+> > +	pkt->buf_len = pkt->len;
+> > +
+> >   	nbytes = copy_from_iter(pkt->buf, pkt->len, &iov_iter);
+> >   	if (nbytes != pkt->len) {
+> >   		vq_err(vq, "Expected %u byte payload, got %zu bytes\n",
+> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > index e223e2632edd..345f04ee9193 100644
+> > --- a/include/linux/virtio_vsock.h
+> > +++ b/include/linux/virtio_vsock.h
+> > @@ -54,9 +54,17 @@ struct virtio_vsock_pkt {
+> >   	void *buf;
+> >   	u32 len;
+> >   	u32 off;
+> > +	u32 buf_len;
+> >   	bool reply;
+> >   };
+> > +struct virtio_vsock_buf {
+> > +	struct list_head list;
+> > +	void *addr;
+> > +	u32 len;
+> > +	u32 off;
+> > +};
+> > +
+> >   struct virtio_vsock_pkt_info {
+> >   	u32 remote_cid, remote_port;
+> >   	struct vsock_sock *vsk;
+> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> > index 15eb5d3d4750..af1d2ce12f54 100644
+> > --- a/net/vmw_vsock/virtio_transport.c
+> > +++ b/net/vmw_vsock/virtio_transport.c
+> > @@ -280,6 +280,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+> >   			break;
+> >   		}
+> > +		pkt->buf_len = buf_len;
+> >   		pkt->len = buf_len;
+> >   		sg_init_one(&hdr, &pkt->hdr, sizeof(pkt->hdr));
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index 602715fc9a75..0248d6808755 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -65,6 +65,9 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
+> >   		pkt->buf = kmalloc(len, GFP_KERNEL);
+> >   		if (!pkt->buf)
+> >   			goto out_pkt;
+> > +
+> > +		pkt->buf_len = len;
+> > +
+> >   		err = memcpy_from_msg(pkt->buf, info->msg, len);
+> >   		if (err)
+> >   			goto out;
+> > @@ -86,6 +89,46 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
+> >   	return NULL;
+> >   }
+> > +static struct virtio_vsock_buf *
+> > +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_copy)
+> > +{
+> > +	struct virtio_vsock_buf *buf;
+> > +
+> > +	if (pkt->len == 0)
+> > +		return NULL;
+> > +
+> > +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
+> > +	if (!buf)
+> > +		return NULL;
+> > +
+> > +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
+> > +	 * the new virtio_vsock_buf avoiding the copy, because we are sure that
+> > +	 * we are not use more memory than that counted by the credit mechanism.
+> > +	 */
+> > +	if (zero_copy && pkt->len == pkt->buf_len) {
+> > +		buf->addr = pkt->buf;
+> > +		pkt->buf = NULL;
+> > +	} else {
+> 
+> 
+> Is the copy still needed if we're just few bytes less? We meet similar issue
+> for virito-net, and virtio-net solve this by always copy first 128bytes for
+> big packets.
+> 
+> See receive_big()
+
+I'm seeing, It is more sophisticated.
+IIUC, virtio-net allocates a sk_buff with 128 bytes of buffer, then copies the
+first 128 bytes, then adds the buffer used to receive the packet as a frag to
+the skb.
+
+Do you suggest to implement something similar, or for now we can use my
+approach and if we will merge the datapath we can reuse the virtio-net
+approach?
+
+Thanks,
+Stefano
