@@ -2,98 +2,114 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758CBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75C83C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4175D208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40926208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F20ApXni"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZvfH0are"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfEMWdP (ORCPT
+        id S1726525AbfEMWdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:33:15 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47604 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfEMWdO (ORCPT
+        Mon, 13 May 2019 18:33:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40302 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfEMWdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:33:14 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DMSsfw016962;
-        Mon, 13 May 2019 22:33:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=ZV4o2oWESAZaEilDpr6pTTuN3dbW0EDyebfCdSxOGmM=;
- b=F20ApXnio5AcHzHJscfXa9XwZfCI6Grzy4mq6xHV6izogsfzcqRX5ST7vWbfOQ5+FTNT
- cqOnnjl5RTA2TH7zV63ss+ObQ2bSQqlqpY+Ymi3mN2S5PxmGoFsyxuyUFjJ+uAxewgI9
- rljL/IYAdVKm7sfpa6XUCm8EORFJ+Hy8S/tdYxAcuNOpkBYUr3oyibeOZbtE8g+cme5j
- x+LaGTWLIQblzlybg8Ubzwz1Z92wR/R02fBNUsMguLc1yrZZGAlx/UyuB7eLjNdiJwWs
- RKn6ER9JPQZeVxHw7NESNk9EhVM4hp5mRHYEgtcoRnyJ9Vx3Mufoj26L7CMhVqw46X6t lw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2sdq1qa1qq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 22:33:07 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DMVGgp033002;
-        Mon, 13 May 2019 22:33:06 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2sdmeara61-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 22:33:06 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DMX4b7012947;
-        Mon, 13 May 2019 22:33:04 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 15:33:04 -0700
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     <QLogic-Storage-Upstream@cavium.com>, <jejb@linux.ibm.com>,
-        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-Subject: Re: [PATCH -next] scsi: qedi: remove set but not used variables 'cdev' and 'udev'
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190424080256.30012-1-yuehaibing@huawei.com>
-Date:   Mon, 13 May 2019 18:33:02 -0400
-In-Reply-To: <20190424080256.30012-1-yuehaibing@huawei.com> (Yue Haibing's
-        message of "Wed, 24 Apr 2019 16:02:56 +0800")
-Message-ID: <yq18svagf35.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 13 May 2019 18:33:40 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u17so7952773pfn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:33:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NvQvgfEGSLgUqO5Q9NdIyP63IIoIQn87HFDmXmj0MKc=;
+        b=ZvfH0arew0ocZDDdoYxHlTfwpsvBkycRrF4g9K2oR08xEh1FrVl57VdAJJPkME+NMp
+         CnltQ+dNfL78uYuw773bZ1MdSrn3fv/MV6zbZvj3N9ahhVZG/VdCLzStnA6T3j4NBURi
+         BIYZ6UKCrpcJOGmOeXM4aLeuR6egOfZ7e72aNGaARNzGiXP3tC0ieJTVKF0NR3DWo/C8
+         4NKcza9dATpUs139NFOpiFCb2D1Y3A4s4x+7A3PuetpM8acbqIHEUNhTSXiGjdefUBvA
+         QjLPBp4VWIXBKUObrYthE/FqVekPSDll7Ppwg5t08ouGxRZlZ2q0WCXL6Ri/j5GYkrPR
+         6FUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NvQvgfEGSLgUqO5Q9NdIyP63IIoIQn87HFDmXmj0MKc=;
+        b=h8Vt/akjUZZzOgCJg7rghx0LASUdGvwTa6h9ujbthsY/1GMONQcfLQ09c7V9MkOZDq
+         OjF9G14YxOLR9d91SbVfYNlH24/cdQy1QwToJt/R2dn0QsSBK0X2r5m9X+f9dnEbciuD
+         qntjPIJcI0o19Pz94xhFmt+vwNPITZ+oKELo9666yA0186SyeJtsZOPg6/v6ABeed08z
+         jCu1Gmf2Cmn9JRo16gfT7ut3JJYx+xcQq7nmyb2M1AEYC/pMQmjgKBcOsGYBwk3rPvm8
+         IZoCW5ag+eZ80R7qLLiHVE5b07+j4TSb6gk4aWwvVW10eJF+yVEK1VH+W2JWIBWeTPfS
+         oNPA==
+X-Gm-Message-State: APjAAAWP7PWkEtKxtqRL80y5LiwaU0TsyDnuOrzB8genANSVOHp1TDZS
+        Gt1fbmlxPkpPV9A1e9wPSbVgPw==
+X-Google-Smtp-Source: APXvYqxPHzPRhlNAh7fHXKNAPmAkVKGQ4nrfmtUr2JNvkogfwiYQFup8yN7ZBuVfBdEZjih2EbKnLg==
+X-Received: by 2002:a63:7552:: with SMTP id f18mr32376239pgn.234.1557786820042;
+        Mon, 13 May 2019 15:33:40 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id q20sm24595819pgq.66.2019.05.13.15.33.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 15:33:39 -0700 (PDT)
+Date:   Mon, 13 May 2019 16:33:37 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, rjw@rjwysocki.net
+Subject: Re: [PATCH v3 29/30] coresight: acpi: Support for AMBA components
+Message-ID: <20190513223337.GG16162@xps15>
+References: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
+ <1557226378-10131-30-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=869
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130150
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=906 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557226378-10131-30-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 07, 2019 at 11:52:56AM +0100, Suzuki K Poulose wrote:
+> All AMBA devices are handled via ACPI AMBA scan notifier
+> infrastructure. The platform devices get the ACPI id
+> added to their driver.
+> 
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/acpi/acpi_amba.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/drivers/acpi/acpi_amba.c b/drivers/acpi/acpi_amba.c
+> index 7f77c07..eef5a69 100644
+> --- a/drivers/acpi/acpi_amba.c
+> +++ b/drivers/acpi/acpi_amba.c
+> @@ -24,6 +24,15 @@
+>  
+>  static const struct acpi_device_id amba_id_list[] = {
+>  	{"ARMH0061", 0}, /* PL061 GPIO Device */
+> +	{"ARMHC500", 0}, /* ARM CoreSight ETM4x */
+> +	{"ARMHC501", 0}, /* ARM CoreSight ETR */
+> +	{"ARMHC502", 0}, /* ARM CoreSight STM */
+> +	{"ARMHC503", 0}, /* ARM CoreSight Debug */
+> +	{"ARMHC979", 0}, /* ARM CoreSight TPIU */
+> +	{"ARMHC97C", 0}, /* ARM CoreSight SoC-400 TMC, SoC-600 ETF/ETB */
+> +	{"ARMHC98D", 0}, /* ARM CoreSight Dynamic Replicator */
+> +	{"ARMHC9CA", 0}, /* ARM CoreSight CATU */
+> +	{"ARMHC9FF", 0}, /* ARM CoreSight Funnel */
+>  	{"", 0},
 
-Yue,
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
-> drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
-> drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
-
-Applied to 5.2/scsi-queue. Thanks!
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+>  };
+>  
+> -- 
+> 2.7.4
+> 
