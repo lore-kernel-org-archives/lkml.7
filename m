@@ -2,120 +2,149 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21AAC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36577C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4E52085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0584F2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UosvtbuZ"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="BvZ23USq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hnx7+g5R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfEMVlM (ORCPT
+        id S1726528AbfEMVlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:41:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37924 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfEMVlM (ORCPT
+        Mon, 13 May 2019 17:41:16 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:40285 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbfEMVlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:41:12 -0400
-Received: by mail-wm1-f66.google.com with SMTP id f2so755106wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 14:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ml5e5SvV7EOXRrwnyGezErXhiPZR2O3UcJlBIK9a7mo=;
-        b=UosvtbuZOLfQWGbKAQSLNFzjqFu3HvMBi5n+MqvZEiZslVZprGN96XE7HylDEqUC3r
-         zoypEsCeENepF6lXHlmeXeZjlgQW4x0nXWC9YSFOuVB0jU1Zyw6D63GOiOogO0TOjqtz
-         2MQ8cls6nIG+Qs/TsdmbKKaOTp0IaYsGZYQPx1M60qG4eyUJN1Bg4nAChBB0qrhv7wsw
-         EQhm9P4A6fGQ0Xrb4+FFDjWuCM6u7RB6RYEjPyHBHk6sRDf3uFEugFKqGIFenMV9GKRS
-         D/I1WM9P3h7Pq62/A+StGZuE06uqmrNlh0fY6CQLdV5DQlf/P11WFdTHFCqybRqPOaOw
-         386g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ml5e5SvV7EOXRrwnyGezErXhiPZR2O3UcJlBIK9a7mo=;
-        b=Ulla8MRvGR04KDVhKElNUBAXhHrDUsXzn9FSI76CFc9q2IBbPCTv8t+toJRaFPOM3Q
-         j9b7Xmyq0Xh51kb2EzX+8qozQUms4gIxsjnFf9RQW8vg43QiJJfHpiwMKmvqAKerNFhf
-         qI2Mg56kconJah0vpOWVpLSQV1DFvMirTwZlBKEEaJhW/Ltzzox1Ut9V1vvObZnfJ33T
-         N6nOEsHGDYl+NX5RBAfqhwjtVdkW+uoV7m+aZLYvE1wdPJBtI85pBSbcK3OdHYoBJwAh
-         g20ciUPRkd+FgUg0+EliowdGbUyQL0BuZf5YCAFk5Q6BEzGG+nV5eiTlD5+LDp/TEcCP
-         dQ9A==
-X-Gm-Message-State: APjAAAWTC07UtousUFkkljDBdTvp96xzbJplKOAJ6jV5rSDGoqpEdaDz
-        eW6kz3VoCMc5KWdTZ+9JtQdggaVuZX2ZcjL6NQ8=
-X-Google-Smtp-Source: APXvYqzni/E4Dhvw7yCFu+XIF07MLzzgBIFhXwcHPfbgbZQhGJijxeMMpKzr+DBWZG8wOsVvfiuS0fKSfYBvgleclrc=
-X-Received: by 2002:a7b:c4d1:: with SMTP id g17mr8053477wmk.103.1557783670098;
- Mon, 13 May 2019 14:41:10 -0700 (PDT)
+        Mon, 13 May 2019 17:41:15 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id E36E05C2;
+        Mon, 13 May 2019 17:41:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 13 May 2019 17:41:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=Vn/T/POBtkQCivubXNnOyOKOoXD
+        swoy+p7rd61BSZqE=; b=BvZ23USq+n0H6bFfinEnI042Scm2YF1IK4T/Ipy1oA7
+        EnMtmM24XOtJG3N6yUG9XfvPeAZ/DSmgYOungx4VobZ6ghiLq//Xwp0sr5EEG7tM
+        Chzj5aZKD6m7W1TvsCqEtWYJStcGCVl5G+L6L8KT4XKk/Q49y9FrPvwUw/u5w5D7
+        O5qDuZBkWjWLkA8eVdRxL4ZDD4N84oiQQg70BWtobahYl6yrquda8wBvHZGUs04V
+        KYsqffXOd3dFefZHvErodbuAPP7ralWwr5/PUjmwOHIPcRoJ33o8+xbuQoRLhy1b
+        S+15WBT9/o6/uFE9+rF5lgoLuJ8F+DzCb3RRLdnM1ww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=Vn/T/P
+        OBtkQCivubXNnOyOKOoXDswoy+p7rd61BSZqE=; b=hnx7+g5RF4XXPsmU/JIrvk
+        trc7cyfb04VRdoTVoe6lKHx3US8i5l74WHwRKYREd8NxzoJ5f0nOTy1M+wkndKvQ
+        s36lQuteqU+wHNSrt27kx4eBalmY3U7wD/jg1Z5IgxEKOZZkUG1dAnxwkJKDRIZM
+        WGjxtno8qEf25ApyCQubPFDreAjW3PRnIJWgKKRg/RgBScFbfFagIq9ZZPRXGGMW
+        45UJP80rwyEROZa4jRQ3Xpd3vJ2I1jtMqXEB559MMNKKwZLuzZBzxPr7qofa7ejV
+        YkFZA7q3aCJ7IZ65bQZZS2tVhrsdzechSy+eWC2ALV6kf0kmor9G9G0gMsENPrkA
+        ==
+X-ME-Sender: <xms:d-TZXFRRkH-8e7vBJEPVZcl5TD4sDNFnspcIQp7fTLcc5I94HJLIGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdduieefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdludehmdenucfjughrpeffhffvuffkfhggtggujgfofgesthdtredt
+    ofervdenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
+    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduiedrudekheenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:d-TZXK5j0tX3LgYou62RdrIWuzXD-nvhFHkz-iUYE9ZiNbWDK7_OQw>
+    <xmx:d-TZXEHh35WyA_1MN-hDT2kJcyx-PXCTO7hDV8IbYGIDwM0JtHDAsw>
+    <xmx:d-TZXMGzgk4fcT7RSe5zg_VG4SvazSyA1wEV-tv5d0XbsyNngqy8xw>
+    <xmx:d-TZXOSeMpWkHt6eP0ekLynCg-eMfbDDpJmpcXY3eYLiYcfYacYm_Q>
+Received: from localhost (124-169-16-185.dyn.iinet.net.au [124.169.16.185])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9515E80063;
+        Mon, 13 May 2019 17:41:10 -0400 (EDT)
+Date:   Tue, 14 May 2019 07:40:39 +1000
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        cluster-devel <cluster-devel@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
+Message-ID: <20190513214039.GA27187@eros.localdomain>
+References: <20190513033213.2468-1-tobin@kernel.org>
+ <20190513071405.GF2868@kroah.com>
+ <20190513103936.GA15053@eros.localdomain>
+ <CAHc6FU7FCBn1CnzEjyj8W7LBu-Ths7bME2R3_GQ2ZmsFQxWEhA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190510032144.15060-1-yuehaibing@huawei.com>
-In-Reply-To: <20190510032144.15060-1-yuehaibing@huawei.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 13 May 2019 23:40:58 +0200
-Message-ID: <CAFLxGvz4awNWpnb_hFxwpYy4X_w6Z6+aLqUZ5Zxu6fJKXsbJ9A@mail.gmail.com>
-Subject: Re: [PATCH] ubifs: Fix build error without CONFIG_UBIFS_FS_XATTR
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHc6FU7FCBn1CnzEjyj8W7LBu-Ths7bME2R3_GQ2ZmsFQxWEhA@mail.gmail.com>
+X-Mailer: Mutt 1.11.4 (2019-03-13)
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 5:22 AM YueHaibing <yuehaibing@huawei.com> wrote:
->
-> Fix gcc build error while CONFIG_UBIFS_FS_XATTR
-> is not set
->
-> fs/ubifs/dir.o: In function `ubifs_unlink':
-> dir.c:(.text+0x260): undefined reference to `ubifs_purge_xattrs'
-> fs/ubifs/dir.o: In function `do_rename':
-> dir.c:(.text+0x1edc): undefined reference to `ubifs_purge_xattrs'
-> fs/ubifs/dir.o: In function `ubifs_rmdir':
-> dir.c:(.text+0x2638): undefined reference to `ubifs_purge_xattrs'
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 9ca2d7326444 ("ubifs: Limit number of xattrs per inode")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/ubifs/ubifs.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
-> index 379b9f7..fd7f399 100644
-> --- a/fs/ubifs/ubifs.h
-> +++ b/fs/ubifs/ubifs.h
-> @@ -2015,13 +2015,17 @@ int ubifs_xattr_set(struct inode *host, const char *name, const void *value,
->                     size_t size, int flags, bool check_lock);
->  ssize_t ubifs_xattr_get(struct inode *host, const char *name, void *buf,
->                         size_t size);
-> -int ubifs_purge_xattrs(struct inode *host);
->
->  #ifdef CONFIG_UBIFS_FS_XATTR
->  void ubifs_evict_xattr_inode(struct ubifs_info *c, ino_t xattr_inum);
-> +int ubifs_purge_xattrs(struct inode *host);
->  #else
->  static inline void ubifs_evict_xattr_inode(struct ubifs_info *c,
->                                            ino_t xattr_inum) { }
-> +static inline int ubifs_purge_xattrs(struct inode *host)
-> +{
-> +       return 0;
-> +}
->  #endif
->
->  #ifdef CONFIG_UBIFS_FS_SECURITY
-> --
+On Mon, May 13, 2019 at 06:41:23PM +0200, Andreas Gruenbacher wrote:
+> On Mon, 13 May 2019 at 12:40, Tobin C. Harding <me@tobin.cc> wrote:
+> >
+> > On Mon, May 13, 2019 at 09:14:05AM +0200, Greg Kroah-Hartman wrote:
+> > > On Mon, May 13, 2019 at 01:32:13PM +1000, Tobin C. Harding wrote:
+> > > > If a call to kobject_init_and_add() fails we must call kobject_put()
+> > > > otherwise we leak memory.
+> > > >
+> > > > Function always calls kobject_init_and_add() which always calls
+> > > > kobject_init().
+> > > >
+> > > > It is safe to leave object destruction up to the kobject release
+> > > > function and never free it manually.
+> > > >
+> > > > Remove call to kfree() and always call kobject_put() in the error path.
+> > > >
+> > > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > > ---
+> > > >
+> > > > Is it ok to send patches during the merge window?
+> > > >
+> > > > Applies on top of Linus' mainline tag: v5.1
+> > > >
+> > > > Happy to rebase if there are conflicts.
+> > > >
+> > > > thanks,
+> > > > Tobin.
+> > > >
+> > > >  fs/gfs2/sys.c | 7 +------
+> > > >  1 file changed, 1 insertion(+), 6 deletions(-)
+> > > >
+> > > > diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+> > > > index 1787d295834e..98586b139386 100644
+> > > > --- a/fs/gfs2/sys.c
+> > > > +++ b/fs/gfs2/sys.c
+> > > > @@ -661,8 +661,6 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
+> > > >     if (error)
+> > > >             goto fail_reg;
+> > > >
+> > > > -   sysfs_frees_sdp = 1; /* Freeing sdp is now done by sysfs calling
+> > > > -                           function gfs2_sbd_release. */
+> > >
+> > > You should also delete this variable at the top of the function, as it
+> > > is now only set once there and never used.
+> >
+> > Thanks, I should have gotten a compiler warning for that.  I was feeling
+> > so confident with my builds this morning ... pays not to get too cocky
+> > I suppose.
+> >
+> > > With that:
+> > >
+> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > Thanks, will re-spin.
+> 
+> Don't bother, I'll fix that up.
 
-Applied.
-
--- 
-Thanks,
-//richard
+Thanks man!
