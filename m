@@ -2,298 +2,185 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC78C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A295C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F3421473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557779510;
-	bh=m+kY0Zgpyu0lel7EqL2gjXaT8+eVkAzD9H5M/7qk0Jo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bsC7D/ah34Eep5YsOlfpivSDgryABeDKELkuUy9j3DeChR9lZAbgiAE+VXYLBX+Y6
-	 V/aab+XkcG4+STXWPyHMz7aM5e9mECuTw4p1QCYDZWmEYrkaS0eHQjpegSIHOjyG6N
-	 +SDqftEeY9K5Fti5OT3MqcGQWyNHyqaR46TAJLHs=
+	by mail.kernel.org (Postfix) with ESMTP id 20D1220862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:32:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z60ibMFq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfEMUbt (ORCPT
+        id S1726529AbfEMUco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:31:49 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:41749 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEMUbt (ORCPT
+        Mon, 13 May 2019 16:32:44 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42058 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfEMUcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:31:49 -0400
-Received: by mail-oi1-f195.google.com with SMTP id y10so10386594oia.8;
-        Mon, 13 May 2019 13:31:48 -0700 (PDT)
+        Mon, 13 May 2019 16:32:43 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 13so7809449pfw.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UzVOW4+OtCm98/Ue4nBATFT7n58mc+iYO2oR5TpDKaQ=;
+        b=z60ibMFqK837aU0kMc2Ddajt/3OqcFSzX1UIPoUDq8qWWrTOiFXpyJ/1IRpvcwvTa9
+         xhdjmqTU6JNpbEZxeh4FBluO9Zf6lV/z/T1Hc1C/ic0sx/o5LsDkBSwpZ7msdo3PELiT
+         LzYyqbHzeKuue8Y4NqGNSFVyPcqasONQmj+OfRt1BmrPeCys+mtZty5iBx8XIodOQtaS
+         LEbi/3pDC4awXth8ohze0eqU0YVV86sTcwsjW63QA3nAkhCjvOZIWGAkW3maYlrr+BLL
+         2A5nv+fcAWz/UTxesDmaQ6fQ5liiC0mUg5Oxw/1KD5Mi0lx/8uoUfQIxgV1KNP5u83M/
+         LtIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QMwu8DgxJVgdXd3GFba+2fxziogY4dsXbaDcgxIT5Y8=;
-        b=qjCg34rWTV2+mvzNn+w31A94Ldy7gJO48efNHmQ8MzylR0wf+8lJdTv6SK0uh1cvSb
-         COyPttZFw0mo1lPjxPO6dUupPuPJyzTtP34GDobRqDcAFQ9jnKF9OGPqjrjRE0HMtjAh
-         XnrQgAzQoTxO0tCxZEBc8UX0OqMUaP0duihya8IG1uEj3jmZgk2aJT8qe3Wz6QfAK5iP
-         He1W3ewMdMwL7K8S0TXoMI2DK1Ms5IGXxdPWy/HWcJ5Y7QY8CAy57rfXomjOAn4dEmIV
-         qbwgoFv657fc0KIwZpT3FqyohsGG41Nb5mjZkJGt+9q0nA/0L3zTX864BmlEeQIpzjb7
-         dWXg==
-X-Gm-Message-State: APjAAAVIj3U5PbrMW0wDGsxMPixy1xXVw2HpTfHvO5loose82ztZ+zg3
-        /7vI8tqOI+DJkmPua4pzHI82/7k=
-X-Google-Smtp-Source: APXvYqzSADSgT0g7GGSCSubY4G8MUAxQgDIdsbP6OHhcEU0RTjMKQEa1eWxpjl5q8zZSqm1sI+1CCQ==
-X-Received: by 2002:aca:4282:: with SMTP id p124mr638485oia.175.1557779508351;
-        Mon, 13 May 2019 13:31:48 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 64sm5577713oth.47.2019.05.13.13.31.47
+        bh=UzVOW4+OtCm98/Ue4nBATFT7n58mc+iYO2oR5TpDKaQ=;
+        b=DyFlW8LxCxwuOplCnbp05QsJp8zaHVa3YAcqGYnRfCA+9h4Rp+9RQegTkfO0lwRfax
+         YGBjAr/QzjVCZVWFMQR1qC1GYEoCj92kqQSWHTcY/onimmlgZn4jnfj6uIrToGsqEETn
+         Y8FNP3ptRdBB4RbY2BKOlTtFalClVnXq2VB85zrnN0xres6pYZiiftSQgGPV4AJ4LnBg
+         n8Pv6ApfbwqvuOK8NaseVKcvHDrjnG8/x3LavOBvr4kux5obN50WVw7EgAzV/hKry/w1
+         eJy0i/UTTP7JeUlucO1R8q7D9J1pe2XFD9eL23fFkfjIuUT5tUtedhVtbL41RiCE1YBv
+         a0uQ==
+X-Gm-Message-State: APjAAAUygjorPdTZ7KD7jv1IJcQyJQP8PSz0lrw8sSQaQV3J4+wtDqbz
+        aK8EnyKGC6AS5Yrt45CCbmDjIQ==
+X-Google-Smtp-Source: APXvYqxJMGs7bxkaprwPMiopGVkKJYFQYtABq0nOE83dF3CaEG82kyxNc3hc/sd7R2gIo9zS+S9jiA==
+X-Received: by 2002:a63:fd4a:: with SMTP id m10mr34486700pgj.302.1557779562276;
+        Mon, 13 May 2019 13:32:42 -0700 (PDT)
+Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id v2sm8332088pgr.2.2019.05.13.13.32.40
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 13:31:47 -0700 (PDT)
-Date:   Mon, 13 May 2019 15:31:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Mike Looijmans <mike.looijmans@topic.nl>
-Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v2] dt-bindings: clock: Add silabs,si5341
-Message-ID: <20190513203146.GA24085@bogus>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl>
- <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
- <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
- <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com>
- <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
- <20190507140413.28335-1-mike.looijmans@topic.nl>
+        Mon, 13 May 2019 13:32:41 -0700 (PDT)
+Date:   Mon, 13 May 2019 13:32:39 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     robdclark@gmail.com, sean@poorly.run,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, airlied@linux.ie, daniel@ffwll.ch,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        jonathan@marek.ca, robh@kernel.org
+Subject: Re: [PATCH v2 1/6] drm: msm: remove resv fields from msm_gem_object
+ struct
+Message-ID: <20190513203239.GA9527@builder>
+References: <20190509020352.14282-1-masneyb@onstation.org>
+ <20190509020352.14282-2-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190507140413.28335-1-mike.looijmans@topic.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190509020352.14282-2-masneyb@onstation.org>
+User-Agent: Mutt/1.10.0 (2018-05-17)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 04:04:13PM +0200, Mike Looijmans wrote:
-> Adds the devicetree bindings for the Si5341 and Si5340 chips from
-> Silicon Labs. These are multiple-input multiple-output clock
-> synthesizers.
+On Wed 08 May 19:03 PDT 2019, Brian Masney wrote:
+
+> The msm_gem_object structure contains resv and _resv fields that are
+> no longer needed since the reservation object is now stored on
+> drm_gem_object. msm_atomic_prepare_fb() and msm_atomic_prepare_fb()
+> both referenced the wrong reservation object, and would lead to an
+> attempt to dereference a NULL pointer. Correct those two cases to
+> point to the correct reservation object.
 > 
-> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Fixes: dd55cf6929e6 ("drm: msm: Switch to use drm_gem_object reservation_object")
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+This resolves a NULL-pointer dereference about to show up in v5.2-rc1,
+so please pick this up for -rc.
+
+Regards,
+Bjorn
+
 > ---
-> v2: Add data sheet reference.
->     Restructured to enable use of "assigned-clock*" properties to set
->     up both outputs and internal synthesizers.
->     Nicer indentation.
->     Updated subject line and body of commit message.
->     If these bindings are (mostly) acceptable, I'll post an updated
->     driver patch v2 to implement these changes.
+> Patch introduced in v2
 > 
->  .../bindings/clock/silabs,si5341.txt          | 187 ++++++++++++++++++
->  1 file changed, 187 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 +---
+>  drivers/gpu/drm/msm/msm_atomic.c          | 4 +---
+>  drivers/gpu/drm/msm/msm_gem.c             | 3 ---
+>  drivers/gpu/drm/msm/msm_gem.h             | 4 ----
+>  4 files changed, 2 insertions(+), 13 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-> new file mode 100644
-> index 000000000000..6086dfcaeecf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-> @@ -0,0 +1,187 @@
-> +Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
-> +
-> +Reference
-> +[1] Si5341 Data Sheet
-> +    https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
-> +[2] Si5341 Reference Manual
-> +    https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
-> +
-> +The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
-> +clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
-> +in turn can be directed to any of the 10 (or 4) outputs through a divider.
-> +The internal structure of the clock generators can be found in [2].
-> +
-> +The driver can be used in "as is" mode, reading the current settings from the
-> +chip at boot, in case you have a (pre-)programmed device. If the PLL is not
-> +configured when the driver probes, it assumes the driver must fully initialize
-> +it.
-> +
-> +The device type, speed grade and revision are determined runtime by probing.
-> +
-> +The driver currently only supports XTAL input mode, and does not support any
-> +fancy input configurations. They can still be programmed into the chip and
-> +the driver will leave them "as is".
-> +
-> +==I2C device node==
-> +
-> +Required properties:
-> +- compatible: shall be one of the following:
-> +	"silabs,si5340" - Si5340 A/B/C/D
-> +	"silabs,si5341" - Si5341 A/B/C/D
-> +- reg: i2c device address, usually 0x74
-> +- #clock-cells: from common clock binding; shall be set to 2.
-> +	The first value is "0" for outputs, "1" for synthesizers.
-> +	The second value is the output or synthesizer index.
-> +- clocks: from common clock binding; list of parent clock  handles,
-> +	corresponding to inputs. Use a fixed clock for the "xtal" input.
-> +	At least one must be present.
-> +- clock-names: One of: "xtal", "in0", "in1", "in2"
-> +- vdd-supply: Regulator node for VDD
-> +
-> +Optional properties:
-> +- vdda-supply: Regulator node for VDDA
-> +- vdds-supply: Regulator node for VDDS
-> +- silabs,pll-m-num, silabs,pll-m-den: Numerator and denominator for PLL
-> +  feedback divider. Must be such that the PLL output is in the valid range. For
-> +  example, to create 14GHz from a 48MHz xtal, use m-num=14000 and m-den=48. Only
-> +  the fraction matters, using 3500 and 12 will deliver the exact same result.
-> +  If these are not specified, and the PLL is not yet programmed when the driver
-> +  probes, the PLL will be set to 14GHz.
-> +- silabs,reprogram: When present, the driver will always assume the device must
-> +  be initialized, and always performs the soft-reset routine. Since this will
-> +  temporarily stop all output clocks, don't do this if the chip is generating
-> +  the CPU clock for example.
-> +- interrupts: Interrupt for INTRb pin.
-> +
-> +== Child nodes: Synthesizers ==
-> +
-> +In order to refer to the internal synthesizers, there can be a child node named
-> +"synthesizers".
-> +
-> +Required synthesizers node properties:
-> +- #address-cells: shall be set to 1.
-> +- #size-cells: shall be set to 0.
-> +
-> +Each child of this node corresponds to a multisynth in the Si534X chip. This
-> +allows the synthesizer to be referred to with assigned-clocks.
-
-Why is this? It doesn't seem to me that you need this in DT. You can 
-define the clock ID to refer to it in assigned-clocks without these 
-nodes in DT.
-
-> +
-> +Required child node properties:
-> +- reg: synthesizer index in range 0..4 for Si5341 and 0..3 for Si5340.
-> +
-> +== Child nodes: Outputs ==
-> +
-> +The child node "outputs" lists the output clocks.
-> +
-> +Required outputs node properties:
-> +- #address-cells: shall be set to 1.
-> +- #size-cells: shall be set to 0.
-> +
-> +Each of the clock outputs can be overwritten individually by
-> +using a child node to the outputs child node. If a child node for a clock
-> +output is not set, the configuration remains unchanged.
-> +
-> +Required child node properties:
-> +- reg: number of clock output.
-> +
-> +Optional child node properties:
-> +- vdd-supply: Regulator node for VDD for this output. The driver selects default
-> +	values for common-mode and amplitude based on the voltage.
-> +- silabs,format: Output format, one of:
-> +	1 = differential (defaults to LVDS levels)
-> +	2 = low-power (defaults to HCSL levels)
-> +	4 = LVCMOS
-> +- silabs,common-mode: Manually overide output common mode, see [2] for values
-
-s/overide/override/
-
-> +- silabs,amplitude: Manually override output amplitude, see [2] for values
-> +- silabs,synth-master: boolean. If present, this output is allowed to change the
-> +	multisynth frequency dynamically.
-> +- silabs,disable-state : clock output disable state, shall be
-> +	0 = clock output is driven LOW when disabled
-> +	1 = clock output is driven HIGH when disabled
-> +
-> +==Example==
-> +
-> +/* 48MHz reference crystal */
-> +ref48: ref48M {
-> +	compatible = "fixed-clock";
-> +	#clock-cells = <0>;
-> +	clock-frequency = <48000000>;
-> +};
-> +
-> +i2c-master-node {
-> +	/* Programmable clock (for logic) */
-> +	si5341: clock-generator@74 {
-> +		reg = <0x74>;
-> +		compatible = "silabs,si5341";
-> +		#clock-cells = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&ref48>;
-> +		clock-names = "xtal";
-> +
-> +		silabs,pll-m-num = <14000>; /* PLL at 14.0 GHz */
-> +		silabs,pll-m-den = <48>;
-> +		silabs,reprogram; /* Chips are not programmed, always reset */
-> +
-> +		synthesizers {
-> +			synth@2 {
-> +				reg = <2>;
-> +			};
-> +		};
-> +
-> +		outputs {
-> +			out@0 {
-> +				reg = <0>;
-> +				silabs,format = <1>; /* LVDS 3v3 */
-> +				silabs,common-mode = <3>;
-> +				silabs,amplitude = <3>;
-> +				silabs,synth-master;
-> +			};
-> +
-> +			/*
-> +			 * Output 6 configuration:
-> +			 *  LVDS 1v8
-> +			 */
-> +			out@6 {
-> +				reg = <6>;
-> +				silabs,format = <1>; /* LVDS 1v8 */
-> +				silabs,common-mode = <13>;
-> +				silabs,amplitude = <3>;
-> +			};
-> +
-> +			/*
-> +			 * Output 8 configuration:
-> +			 *  HCSL 3v3
-> +			 */
-> +			out@8 {
-> +				reg = <8>;
-> +				silabs,format = <2>;
-> +				silabs,common-mode = <11>;
-> +				silabs,amplitude = <3>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +some-video-node {
-> +	/* Standard clock bindings */
-> +	clock-names = "pixel";
-> +	clocks = <&si5341 0 7>; /* Output 7 */
-> +
-> +	/* Set output 7 to use syntesizer 3 as its parent */
-> +	assigned-clocks = <&si5341 0 7>, <&si5341 1 3>;
-> +	assigned-clock-parents = <&si5341 1 3>;
-> +	/* Set output 7 to 148.5 MHz using a synth frequency of 594 MHz */
-> +	assigned-clock-rates = <148500000>, <594000000>;
-> +};
-> +
-> +some-audio-node {
-> +	clock-names = "i2s-clk";
-> +	clocks = <&si5341 0 0>;
-> +	/*
-> +	 * since output 0 is a synth-master, the synth will be automatically set
-> +	 * to an appropriate frequency when the audio driver requests another
-> +	 * frequency. We give control over synth 2 to this output here.
-> +	 */
-> +	assigned-clocks = <&si5341 0 0>;
-> +	assigned-clock-parents = <&si5341 1 2>;
-> +};
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index da1f727d7495..ce1a555e1f31 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -780,7 +780,6 @@ static int dpu_plane_prepare_fb(struct drm_plane *plane,
+>  	struct dpu_plane_state *pstate = to_dpu_plane_state(new_state);
+>  	struct dpu_hw_fmt_layout layout;
+>  	struct drm_gem_object *obj;
+> -	struct msm_gem_object *msm_obj;
+>  	struct dma_fence *fence;
+>  	struct dpu_kms *kms = _dpu_plane_get_kms(&pdpu->base);
+>  	int ret;
+> @@ -799,8 +798,7 @@ static int dpu_plane_prepare_fb(struct drm_plane *plane,
+>  	 *       implicit fence and fb prepare by hand here.
+>  	 */
+>  	obj = msm_framebuffer_bo(new_state->fb, 0);
+> -	msm_obj = to_msm_bo(obj);
+> -	fence = reservation_object_get_excl_rcu(msm_obj->resv);
+> +	fence = reservation_object_get_excl_rcu(obj->resv);
+>  	if (fence)
+>  		drm_atomic_set_fence_for_plane(new_state, fence);
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+> index f5b1256e32b6..131c23a267ee 100644
+> --- a/drivers/gpu/drm/msm/msm_atomic.c
+> +++ b/drivers/gpu/drm/msm/msm_atomic.c
+> @@ -49,15 +49,13 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
+>  	struct msm_drm_private *priv = plane->dev->dev_private;
+>  	struct msm_kms *kms = priv->kms;
+>  	struct drm_gem_object *obj;
+> -	struct msm_gem_object *msm_obj;
+>  	struct dma_fence *fence;
+>  
+>  	if (!new_state->fb)
+>  		return 0;
+>  
+>  	obj = msm_framebuffer_bo(new_state->fb, 0);
+> -	msm_obj = to_msm_bo(obj);
+> -	fence = reservation_object_get_excl_rcu(msm_obj->resv);
+> +	fence = reservation_object_get_excl_rcu(obj->resv);
+>  
+>  	drm_atomic_set_fence_for_plane(new_state, fence);
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+> index 31d5a744d84f..947508e8269d 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.c
+> +++ b/drivers/gpu/drm/msm/msm_gem.c
+> @@ -973,9 +973,6 @@ static int msm_gem_new_impl(struct drm_device *dev,
+>  	msm_obj->flags = flags;
+>  	msm_obj->madv = MSM_MADV_WILLNEED;
+>  
+> -	if (resv)
+> -		msm_obj->base.resv = resv;
+> -
+>  	INIT_LIST_HEAD(&msm_obj->submit_entry);
+>  	INIT_LIST_HEAD(&msm_obj->vmas);
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+> index c5ac781dffee..812d1b1369a5 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.h
+> +++ b/drivers/gpu/drm/msm/msm_gem.h
+> @@ -86,10 +86,6 @@ struct msm_gem_object {
+>  
+>  	struct llist_node freed;
+>  
+> -	/* normally (resv == &_resv) except for imported bo's */
+> -	struct reservation_object *resv;
+> -	struct reservation_object _resv;
+> -
+>  	/* For physically contiguous buffers.  Used when we don't have
+>  	 * an IOMMU.  Also used for stolen/splashscreen buffer.
+>  	 */
 > -- 
-> 2.17.1
+> 2.20.1
 > 
