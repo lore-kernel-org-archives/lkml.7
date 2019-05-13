@@ -2,180 +2,181 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72390C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542E1C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4458C208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACD2208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GGGhRxCL"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FSfBXyoh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEMVHw (ORCPT
+        id S1726422AbfEMVJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:07:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34262 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfEMVHw (ORCPT
+        Mon, 13 May 2019 17:09:33 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:50704 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfEMVJc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:07:52 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so7102075plz.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 14:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=VyWcWjrZXEyD6w07tvHm50fVGWK7lK6mM8u98FcSYoY=;
-        b=GGGhRxCLGCDe1tt+2HecuE4u75ZdWTyADg0qZXEsWP6EA7hGLVcgJgyKy41jgfrNgR
-         ZU50QVg1F3c2QdeRgYlOKY3O5aFVv0pNIwqw/ajzRsklhVFsguNbBpd8ElghBnVIb+33
-         xe8eBd32gzjcFINDMtM5uGleiX7/hFAPComeweZL4XDbUYnhO6dVdgtmEea1w/3l/15d
-         dv//EQsWEC+llGw6tX1s9F38gB1wpVJezOtAcXMRPjpe9RLKIKcpGgNmc+xuHkYDk876
-         +UVpckEfGohYz4oaDHpcpEaVTb+GP7cPQ9SHr+e3N7y9EgQiXt7oWn/INWuXzcIwGNPR
-         Z0VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VyWcWjrZXEyD6w07tvHm50fVGWK7lK6mM8u98FcSYoY=;
-        b=EIJL4hcASowmNzT8QLnZMXxqfls1kk8mMFOmjD2WUtRjwR9MNq3Km5So3AxDoy/1lg
-         mYXpDyQc1Up7Ct3S/Va9AdECFxvz+D7vYICh/E2VelRxhO9ZrAIKRIxFmVRtitiyI5N7
-         9Zd+9DNZWKpyIU3J5DeEiNIDkj5BfU3jl/RxWd1OoY0bV+gFvOFp27TQ7JV48zLyeD+2
-         bvbXws00Tlcu+4lHXpP+XYOFd1c2kIoXHIXeCLR6tRRVtNBCCigKRIrANykguyCfuxjL
-         HVktYmOUAaVE0ob9Eec/t1hoWH63plUB/xf/grR3pO9XCxA6yEXpLUBDHlLjbDLu062K
-         PTFQ==
-X-Gm-Message-State: APjAAAWHhJjPKCo/0vzysHsQb84sartpN4cEjdR4/b/ZoCsq9Me7MQYV
-        2683ICwXcA+nNVj3WSmLmGfKMw==
-X-Google-Smtp-Source: APXvYqy4RdMGzwqzFo1V/pbxH61eNqRNaPswK4JglVAPvy+TtjrmAjqxmKK8n1mSWWT4UrrI6/L6JQ==
-X-Received: by 2002:a17:902:a40b:: with SMTP id p11mr5883784plq.306.1557781671009;
-        Mon, 13 May 2019 14:07:51 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 85sm6939980pgb.52.2019.05.13.14.07.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 14:07:50 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Add Truly display
-Date:   Mon, 13 May 2019 14:07:47 -0700
-Message-Id: <20190513210747.22429-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Mon, 13 May 2019 17:09:32 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DL3koI146771;
+        Mon, 13 May 2019 21:08:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=etxC2fIO+k7WqJJbgmpaQKX6DDfUoMBtn3qTvkFV+tE=;
+ b=FSfBXyohrOkcDcJUQjU9IbWERTb6TScchNOdnSNATyPYzF7SZ0/RAhT0ZrdjyrPMnhQj
+ h4RPVcu565duvAFebok/LJcd3c+xOgFjoqRauIXFjbEJdhkRIGze08wA7ECcSvhk9i93
+ E6X7epEf32cPFEeU2/FPfvjsJ9PLMW1Sy5Pn/KT6EkP/xN5fE+ebLUMdOpjI3KJ6CHpK
+ TmS0Hmd3gx43vcCfYcH8WTla1Bup+aUHzerBHUIbKaD8IgaIATMHWplVrL8bftDDajWD
+ cNf3OemKPk7HniAOw7L0LkBrGsprAuU21bairPt9pBdhGlGDr+TYe4lgM+ZDHyPjmbeR nA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2sdkwdj031-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 21:08:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DL7aVk089303;
+        Mon, 13 May 2019 21:08:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2se0tvskr8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 21:08:42 +0000
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DL8TlR001785;
+        Mon, 13 May 2019 21:08:36 GMT
+Received: from [192.168.14.112] (/79.180.238.224)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 May 2019 14:08:29 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
+Date:   Tue, 14 May 2019 00:08:23 +0300
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
+To:     Andy Lutomirski <luto@kernel.org>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905130141
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bring in the Truly display and enable the DSI channels to make the
-mdss/gpu probe, even though we're lacking LABIB, preventing us from
-seeing anything on the screen.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 79 +++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index 02b8357c8ce8..83198a19ff57 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -352,6 +352,77 @@
- 	status = "okay";
- };
- 
-+&dsi0 {
-+	status = "okay";
-+	vdda-supply = <&vdda_mipi_dsi0_1p2>;
-+
-+	qcom,dual-dsi-mode;
-+	qcom,master-dsi;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&truly_in_0>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+
-+	panel@0 {
-+		compatible = "truly,nt35597-2K-display";
-+		reg = <0>;
-+		vdda-supply = <&vreg_l14a_1p88>;
-+
-+		reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-+		mode-gpios = <&tlmm 52 GPIO_ACTIVE_HIGH>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				truly_in_0: endpoint {
-+					remote-endpoint = <&dsi0_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				truly_in_1: endpoint {
-+					remote-endpoint = <&dsi1_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&dsi0_phy {
-+	status = "okay";
-+	vdds-supply = <&vdda_mipi_dsi0_pll>;
-+};
-+
-+&dsi1 {
-+	status = "okay";
-+	vdda-supply = <&vdda_mipi_dsi1_1p2>;
-+
-+	qcom,dual-dsi-mode;
-+
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&truly_in_1>;
-+				data-lanes = <0 1 2 3>;
-+			};
-+		};
-+	};
-+};
-+
-+&dsi1_phy {
-+	status = "okay";
-+	vdds-supply = <&vdda_mipi_dsi1_pll>;
-+};
-+
- &gcc {
- 	protected-clocks = <GCC_QSPI_CORE_CLK>,
- 			   <GCC_QSPI_CORE_CLK_SRC>,
-@@ -365,6 +436,14 @@
- 	clock-frequency = <400000>;
- };
- 
-+&mdss {
-+	status = "okay";
-+};
-+
-+&mdss_mdp {
-+	status = "okay";
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
--- 
-2.18.0
+> On 13 May 2019, at 21:17, Andy Lutomirski <luto@kernel.org> wrote:
+>=20
+>> I expect that the KVM address space can eventually be expanded to =
+include
+>> the ioctl syscall entries. By doing so, and also adding the KVM page =
+table
+>> to the process userland page table (which should be safe to do =
+because the
+>> KVM address space doesn't have any secret), we could potentially =
+handle the
+>> KVM ioctl without having to switch to the kernel pagetable (thus =
+effectively
+>> eliminating KPTI for KVM). Then the only overhead would be if a =
+VM-Exit has
+>> to be handled using the full kernel address space.
+>>=20
+>=20
+> In the hopefully common case where a VM exits and then gets re-entered
+> without needing to load full page tables, what code actually runs?
+> I'm trying to understand when the optimization of not switching is
+> actually useful.
+>=20
+> Allowing ioctl() without switching to kernel tables sounds...
+> extremely complicated.  It also makes the dubious assumption that user
+> memory contains no secrets.
+
+Let me attempt to clarify what we were thinking when creating this patch =
+series:
+
+1) It is never safe to execute one hyperthread inside guest while it=E2=80=
+=99s sibling hyperthread runs in a virtual address space which contains =
+secrets of host or other guests.
+This is because we assume that using some speculative gadget (such as =
+half-Spectrev2 gadget), it will be possible to populate *some* CPU core =
+resource which could then be *somehow* leaked by the hyperthread running =
+inside guest. In case of L1TF, this would be data populated to the L1D =
+cache.
+
+2) Because of (1), every time a hyperthread runs inside host kernel, we =
+must make sure it=E2=80=99s sibling is not running inside guest. i.e. We =
+must kick the sibling hyperthread outside of guest using IPI.
+
+3) =46rom (2), we should have theoretically deduced that for every =
+#VMExit, there is a need to kick the sibling hyperthread also outside of =
+guest until the #VMExit is completed. Such a patch series was =
+implemented at some point but it had (obviously) significant performance =
+hit.
+
+4) The main goal of this patch series is to preserve (2), but to avoid =
+the overhead specified in (3).
+
+The way this patch series achieves (4) is by observing that during the =
+run of a VM, most #VMExits can be handled rather quickly and locally =
+inside KVM and doesn=E2=80=99t need to reference any data that is not =
+relevant to this VM or KVM code. Therefore, if we will run these =
+#VMExits in an isolated virtual address space (i.e. KVM isolated address =
+space), there is no need to kick the sibling hyperthread from guest =
+while these #VMExits handlers run.
+The hope is that the very vast majority of #VMExit handlers will be able =
+to completely run without requiring to switch to full address space. =
+Therefore, avoiding the performance hit of (2).
+However, for the very few #VMExits that does require to run in full =
+kernel address space, we must first kick the sibling hyperthread outside =
+of guest and only then switch to full kernel address space and only once =
+all hyperthreads return to KVM address space, then allow then to enter =
+into guest.
+
+=46rom this reason, I think the above paragraph (that was added to my =
+original cover letter) is incorrect.
+I believe that we should by design treat all exits to userspace VMM =
+(e.g. QEMU) as slow-path that should not be optimised and therefore ok =
+to switch address space (and therefore also kick sibling hyperthread). =
+Similarly, all IOCTLs handlers are also slow-path and therefore it =
+should be ok for them to also not run in KVM isolated address space.
+
+-Liran
+
+
+
+
+
+
+
+
 
