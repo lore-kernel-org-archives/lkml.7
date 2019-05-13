@@ -2,174 +2,314 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227B8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C569420879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PI4evEZq"
+	by mail.kernel.org (Postfix) with ESMTP id DB19A21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfEMNoG (ORCPT
+        id S1729431AbfEMNrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:44:06 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36468 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbfEMNoD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:44:03 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c14so8015469qke.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2QDl6grKdXugMhxYUcRUEzKdYNWZg6vAUEjXwfnBzkw=;
-        b=PI4evEZqraBE8yNXPNwxp4xmE2NyijJHNSsC7SfViFNImDgZ1AAwHTvYYvHWNnR3wJ
-         aSKxM7KkC3kgtnIk0XhwIa9Wy74Fs+F3fSPL/0kxJVZtEeFWXdQ2wz8bmI8EanvPLJIa
-         JZGmIVsQxCvb995ZVHcttoajnCWTYDD8EDPma13jIZ3VsfeY/35hW1u0naTipeY/FbdC
-         WD/A6+vJpnsoMUu3I1UkxnfMD41foxCLv86sD7T25x/23bK7M4ZaXje2B4sZ10cAYNd2
-         7E4pUHmtjmKvXmNVSU5Yrc2FZTuQHuetU8uxVlWRieV8DcYBY8Bxom/M7BCLiGUdmUSk
-         68vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2QDl6grKdXugMhxYUcRUEzKdYNWZg6vAUEjXwfnBzkw=;
-        b=Q7o1ARwkxqiH5kjDyO1AYuvXLwiWJeenubqLCIXTL0WsJt4v+jG7BV19FyjtTGpDx3
-         1qw4fUjR+5eQqo0nAZF6SIcWLCXaaqfuncDytk3O3K7Gf1LPf7rTsaPJR9Dxb6IEdATf
-         MlL3zn+KmhjUYBmaD9agBh1hOA+MslXIlWPd8Q5VwRce1pyFVafaRsH+MuSobhUIyrcA
-         XIeE2Er5maNTsuH79bE5+i5ezwkWLhImIE+p/YHzKPeShtSkY5ySnu1wioYptCXIKMC9
-         4tIaDp19JJA77yhlDUi7E9QxZt7z3ze4k8kqeSvvpKStm3XgE1gLmz5VMzIX3TtMW0QO
-         7Mzg==
-X-Gm-Message-State: APjAAAVJXXh2hv7PTXwR4m5u+tGPpl83x3nILsR4VnGH5Kcm9k6K9huL
-        vl2Xxub/ik13yncSFkb+TgKrTg==
-X-Google-Smtp-Source: APXvYqxjHoiLVV5dDlLcG6KTaJ0fU0NM6dQoETxAspMtmKMogQvEfztN5TXLDgEyCZ8FB74Xzl9biA==
-X-Received: by 2002:a05:620a:13fc:: with SMTP id h28mr21824042qkl.164.1557755042373;
-        Mon, 13 May 2019 06:44:02 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d16sm4138827qtd.73.2019.05.13.06.44.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 06:44:01 -0700 (PDT)
-Message-ID: <1557755039.6132.23.camel@lca.pw>
-Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
- boot
-From:   Qian Cai <cai@lca.pw>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, brho@google.com, kernelfans@gmail.com,
-        dave.hansen@intel.com, rppt@linux.ibm.com, peterz@infradead.org,
-        mpe@ellerman.id.au, mingo@elte.hu, osalvador@suse.de,
-        luto@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 13 May 2019 09:43:59 -0400
-In-Reply-To: <20190513124112.GH24036@dhcp22.suse.cz>
-References: <20190512054829.11899-1-cai@lca.pw>
-         <20190513124112.GH24036@dhcp22.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Mon, 13 May 2019 09:47:13 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56382 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728116AbfEMNrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:47:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBD6180D;
+        Mon, 13 May 2019 06:47:11 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCB453F71E;
+        Mon, 13 May 2019 06:47:08 -0700 (PDT)
+Subject: Re: [PATCH v7 18/23] iommu/smmuv3: Report non recoverable faults
+To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-19-eric.auger@redhat.com>
+ <52dd9de0-67a9-0316-cfe1-83d855d26c66@arm.com>
+ <46f39a8e-a909-5493-b1eb-f8f082b0bb20@redhat.com>
+ <3119943e-30f1-823d-c6a2-157b26901a41@arm.com>
+ <6a78e67d-cc8b-6564-c122-b13c3a288d46@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <209d4f80-dbcb-a3ed-81bc-4050db2a74a1@arm.com>
+Date:   Mon, 13 May 2019 14:47:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <6a78e67d-cc8b-6564-c122-b13c3a288d46@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-13 at 14:41 +0200, Michal Hocko wrote:
-> On Sun 12-05-19 01:48:29, Qian Cai wrote:
-> > The linux-next commit ("x86, numa: always initialize all possible
-> > nodes") introduced a crash below during boot for systems with a
-> > memory-less node. This is due to CPUs that get onlined during SMP boot,
-> > but that onlining triggers a page fault in bus_add_device() during
-> > device registration:
-> > 
-> > 	error = sysfs_create_link(&bus->p->devices_kset->kobj,
-> > 
-> > bus->p is NULL. That "p" is the subsys_private struct, and it should
-> > have been set in,
-> > 
-> > 	postcore_initcall(register_node_type);
-> > 
-> > but that happens in do_basic_setup() after smp_init().
-> > 
-> > The old code had set this node online via alloc_node_data(), so when it
-> > came time to do_cpu_up() -> try_online_node(), the node was already up
-> > and nothing happened.
-> > 
-> > Now, it attempts to online the node, which registers the node with
-> > sysfs, but that can't happen before the 'node' subsystem is registered.
-> > 
-> > Since kernel_init() is running by a kernel thread that is in
-> > SYSTEM_SCHEDULING state, fixed this by skipping registering with sysfs
-> > during the early boot in __try_online_node().
+On 13/05/2019 13:32, Auger Eric wrote:
+> Hi Robin,
+> On 5/13/19 1:54 PM, Robin Murphy wrote:
+>> On 13/05/2019 08:46, Auger Eric wrote:
+>>> Hi Robin,
+>>>
+>>> On 5/8/19 7:20 PM, Robin Murphy wrote:
+>>>> On 08/04/2019 13:19, Eric Auger wrote:
+>>>>> When a stage 1 related fault event is read from the event queue,
+>>>>> let's propagate it to potential external fault listeners, ie. users
+>>>>> who registered a fault handler.
+>>>>>
+>>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>>>
+>>>>> ---
+>>>>> v4 -> v5:
+>>>>> - s/IOMMU_FAULT_PERM_INST/IOMMU_FAULT_PERM_EXEC
+>>>>> ---
+>>>>>     drivers/iommu/arm-smmu-v3.c | 169
+>>>>> +++++++++++++++++++++++++++++++++---
+>>>>>     1 file changed, 158 insertions(+), 11 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>>>>> index 8044445bc32a..1fd320788dcb 100644
+>>>>> --- a/drivers/iommu/arm-smmu-v3.c
+>>>>> +++ b/drivers/iommu/arm-smmu-v3.c
+>>>>> @@ -167,6 +167,26 @@
+>>>>>     #define ARM_SMMU_PRIQ_IRQ_CFG1        0xd8
+>>>>>     #define ARM_SMMU_PRIQ_IRQ_CFG2        0xdc
+>>>>>     +/* Events */
+>>>>> +#define ARM_SMMU_EVT_F_UUT        0x01
+>>>>> +#define ARM_SMMU_EVT_C_BAD_STREAMID    0x02
+>>>>> +#define ARM_SMMU_EVT_F_STE_FETCH    0x03
+>>>>> +#define ARM_SMMU_EVT_C_BAD_STE        0x04
+>>>>> +#define ARM_SMMU_EVT_F_BAD_ATS_TREQ    0x05
+>>>>> +#define ARM_SMMU_EVT_F_STREAM_DISABLED    0x06
+>>>>> +#define ARM_SMMU_EVT_F_TRANSL_FORBIDDEN    0x07
+>>>>> +#define ARM_SMMU_EVT_C_BAD_SUBSTREAMID    0x08
+>>>>> +#define ARM_SMMU_EVT_F_CD_FETCH        0x09
+>>>>> +#define ARM_SMMU_EVT_C_BAD_CD        0x0a
+>>>>> +#define ARM_SMMU_EVT_F_WALK_EABT    0x0b
+>>>>> +#define ARM_SMMU_EVT_F_TRANSLATION    0x10
+>>>>> +#define ARM_SMMU_EVT_F_ADDR_SIZE    0x11
+>>>>> +#define ARM_SMMU_EVT_F_ACCESS        0x12
+>>>>> +#define ARM_SMMU_EVT_F_PERMISSION    0x13
+>>>>> +#define ARM_SMMU_EVT_F_TLB_CONFLICT    0x20
+>>>>> +#define ARM_SMMU_EVT_F_CFG_CONFLICT    0x21
+>>>>> +#define ARM_SMMU_EVT_E_PAGE_REQUEST    0x24
+>>>>> +
+>>>>>     /* Common MSI config fields */
+>>>>>     #define MSI_CFG0_ADDR_MASK        GENMASK_ULL(51, 2)
+>>>>>     #define MSI_CFG2_SH            GENMASK(5, 4)
+>>>>> @@ -332,6 +352,15 @@
+>>>>>     #define EVTQ_MAX_SZ_SHIFT        7
+>>>>>       #define EVTQ_0_ID            GENMASK_ULL(7, 0)
+>>>>> +#define EVTQ_0_SSV            GENMASK_ULL(11, 11)
+>>>>> +#define EVTQ_0_SUBSTREAMID        GENMASK_ULL(31, 12)
+>>>>> +#define EVTQ_0_STREAMID            GENMASK_ULL(63, 32)
+>>>>> +#define EVTQ_1_PNU            GENMASK_ULL(33, 33)
+>>>>> +#define EVTQ_1_IND            GENMASK_ULL(34, 34)
+>>>>> +#define EVTQ_1_RNW            GENMASK_ULL(35, 35)
+>>>>> +#define EVTQ_1_S2            GENMASK_ULL(39, 39)
+>>>>> +#define EVTQ_1_CLASS            GENMASK_ULL(40, 41)
+>>>>> +#define EVTQ_3_FETCH_ADDR        GENMASK_ULL(51, 3)
+>>>>>       /* PRI queue */
+>>>>>     #define PRIQ_ENT_DWORDS            2
+>>>>> @@ -639,6 +668,64 @@ struct arm_smmu_domain {
+>>>>>         spinlock_t            devices_lock;
+>>>>>     };
+>>>>>     +/* fault propagation */
+>>>>> +
+>>>>> +#define IOMMU_FAULT_F_FIELDS    (IOMMU_FAULT_UNRECOV_PASID_VALID | \
+>>>>> +                 IOMMU_FAULT_UNRECOV_PERM_VALID | \
+>>>>> +                 IOMMU_FAULT_UNRECOV_ADDR_VALID)
+>>>>> +
+>>>>> +struct arm_smmu_fault_propagation_data {
+>>>>> +    enum iommu_fault_reason reason;
+>>>>> +    bool s1_check;
+>>>>> +    u32 fields; /* IOMMU_FAULT_UNRECOV_*_VALID bits */
+>>>>> +};
+>>>>> +
+>>>>> +/*
+>>>>> + * Describes how SMMU faults translate into generic IOMMU faults
+>>>>> + * and if they need to be reported externally
+>>>>> + */
+>>>>> +static const struct arm_smmu_fault_propagation_data
+>>>>> fault_propagation[] = {
+>>>>> +[ARM_SMMU_EVT_F_UUT]            = { },
+>>>>> +[ARM_SMMU_EVT_C_BAD_STREAMID]        = { },
+>>>>> +[ARM_SMMU_EVT_F_STE_FETCH]        = { },
+>>>>> +[ARM_SMMU_EVT_C_BAD_STE]        = { },
+>>>>> +[ARM_SMMU_EVT_F_BAD_ATS_TREQ]        = { },
+>>>>> +[ARM_SMMU_EVT_F_STREAM_DISABLED]    = { },
+>>>>> +[ARM_SMMU_EVT_F_TRANSL_FORBIDDEN]    = { },
+>>>>> +[ARM_SMMU_EVT_C_BAD_SUBSTREAMID]    =
+>>>>> {IOMMU_FAULT_REASON_PASID_INVALID,
+>>>>> +                       false,
+>>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_CD_FETCH]        = {IOMMU_FAULT_REASON_PASID_FETCH,
+>>>>> +                       false,
+>>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID |
+>>>>
+>>>> It doesn't make sense to presume validity here, or in any of the faults
+>>>> below...
+>>>
+>>>
+>>>>
+>>>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_C_BAD_CD]            =
+>>>>> {IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
+>>>>> +                       false,
+>>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_WALK_EABT]        = {IOMMU_FAULT_REASON_WALK_EABT,
+>>>>> true,
+>>>>> +                       IOMMU_FAULT_F_FIELDS |
+>>>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_TRANSLATION]        = {IOMMU_FAULT_REASON_PTE_FETCH,
+>>>>> true,
+>>>>> +                       IOMMU_FAULT_F_FIELDS
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_ADDR_SIZE]        = {IOMMU_FAULT_REASON_OOR_ADDRESS,
+>>>>> true,
+>>>>> +                       IOMMU_FAULT_F_FIELDS
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_ACCESS]            = {IOMMU_FAULT_REASON_ACCESS, true,
+>>>>> +                       IOMMU_FAULT_F_FIELDS
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_PERMISSION]        = {IOMMU_FAULT_REASON_PERMISSION,
+>>>>> true,
+>>>>> +                       IOMMU_FAULT_F_FIELDS
+>>>>> +                      },
+>>>>> +[ARM_SMMU_EVT_F_TLB_CONFLICT]        = { },
+>>>>> +[ARM_SMMU_EVT_F_CFG_CONFLICT]        = { },
+>>>>> +[ARM_SMMU_EVT_E_PAGE_REQUEST]        = { },
+>>>>> +};
+>>>>> +
+>>>>>     struct arm_smmu_option_prop {
+>>>>>         u32 opt;
+>>>>>         const char *prop;
+>>>>> @@ -1258,7 +1345,6 @@ static int arm_smmu_init_l2_strtab(struct
+>>>>> arm_smmu_device *smmu, u32 sid)
+>>>>>         return 0;
+>>>>>     }
+>>>>>     -__maybe_unused
+>>>>>     static struct arm_smmu_master_data *
+>>>>>     arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
+>>>>>     {
+>>>>> @@ -1284,24 +1370,85 @@ arm_smmu_find_master(struct arm_smmu_device
+>>>>> *smmu, u32 sid)
+>>>>>         return master;
+>>>>>     }
+>>>>>     +/* Populates the record fields according to the input SMMU event */
+>>>>> +static bool arm_smmu_transcode_fault(u64 *evt, u8 type,
+>>>>> +                     struct iommu_fault_unrecoverable *record)
+>>>>> +{
+>>>>> +    const struct arm_smmu_fault_propagation_data *data;
+>>>>> +    u32 fields;
+>>>>> +
+>>>>> +    if (type >= ARRAY_SIZE(fault_propagation))
+>>>>> +        return false;
+>>>>> +
+>>>>> +    data = &fault_propagation[type];
+>>>>> +    if (!data->reason)
+>>>>> +        return false;
+>>>>> +
+>>>>> +    fields = data->fields;
+>>>>> +
+>>>>> +    if (data->s1_check & FIELD_GET(EVTQ_1_S2, evt[1]))
+>>>>> +        return false; /* S2 related fault, don't propagate */
+>>>>> +
+>>>>> +    if (fields & IOMMU_FAULT_UNRECOV_PASID_VALID) {
+>>>>> +        if (FIELD_GET(EVTQ_0_SSV, evt[0]))
+>>>>> +            record->pasid = FIELD_GET(EVTQ_0_SUBSTREAMID, evt[0]);
+>>>>> +        else
+>>>>> +            fields &= ~IOMMU_FAULT_UNRECOV_PASID_VALID;
+>>>>
+>>>> ...because this logic then breaks for C_BAD_SUBSTREAMID, which ends up
+>>>> coming out of here *without* reporting the offending PASID.
+>>> Correct.
+>>>>
+>>>>> +    }
+>>>>> +    if (fields & IOMMU_FAULT_UNRECOV_PERM_VALID) {
+>>>>> +        if (!FIELD_GET(EVTQ_1_RNW, evt[1]))
+>>>>> +            record->perm |= IOMMU_FAULT_PERM_WRITE;
+>>>>> +        if (FIELD_GET(EVTQ_1_PNU, evt[1]))
+>>>>> +            record->perm |= IOMMU_FAULT_PERM_PRIV;
+>>>>> +        if (FIELD_GET(EVTQ_1_IND, evt[1]))
+>>>>> +            record->perm |= IOMMU_FAULT_PERM_EXEC;
+>>>>> +    }
+>>>>> +    if (fields & IOMMU_FAULT_UNRECOV_ADDR_VALID)
+>>>>> +        record->addr = evt[2];
+>>>>> +
+>>>>> +    if (fields & IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID)
+>>>>> +        record->fetch_addr = FIELD_GET(EVTQ_3_FETCH_ADDR, evt[3]);
+>>>>> +
+>>>>> +    record->flags = fields;
+>>>>> +    return true;
+>>>>> +}
+>>>>> +
+>>>>> +static void arm_smmu_report_event(struct arm_smmu_device *smmu, u64
+>>>>> *evt)
+>>>>> +{
+>>>>> +    u32 sid = FIELD_GET(EVTQ_0_STREAMID, evt[0]);
+>>>>> +    u8 type = FIELD_GET(EVTQ_0_ID, evt[0]);
+>>>>> +    struct arm_smmu_master_data *master;
+>>>>> +    struct iommu_fault_event event = {};
+>>>>> +    int i;
+>>>>> +
+>>>>> +    master = arm_smmu_find_master(smmu, sid);
+>>>>> +    if (WARN_ON(!master))
+>>>>> +        return;
+>>>>
+>>>> NAK. If I'm getting global faults like C_BAD_STE where a device almost
+>>>> certainly *isn't* configured (because hey, we would have initialised its
+>>>> STEs if we knew), then I sure as hell want to see the actual faults.
+>>>> Spamming a constant stream of stack traces *instead* of showing them is
+>>>> worse than useless.
+>>> Sure, if !master I will output the original traces.
+>>>>
+>>>>> +
+>>>>> +    event.fault.type = IOMMU_FAULT_DMA_UNRECOV;
+>>>>> +
+>>>>> +    if (arm_smmu_transcode_fault(evt, type, &event.fault.event)) {
+>>>>> +        iommu_report_device_fault(master->dev, &event);
+>>>>> +        return;
+>>>>
+>>>> And again, the vast majority of the time, there won't be a fault handler
+>>>> registered, so unconditionally suppressing the most common and useful
+>>>> stuff like translation and permission faults is very much not OK.
+>>> Going to test whether we are in nested mode before entering that path.
+>>
+>> I don't think this has to be exclusive to nesting - the generic
+>> reporting mechanism feels like it might ultimately be extensible to
+>> other things like Rob's case for generalised stalling. It's just that
+>> for robustness, even when a fault handler is present, we still want the
+>> driver to be able to report if it didn't actually handle a fault.
 > 
-> Relying on SYSTEM_SCHEDULING looks really hackish. Why cannot we simply
-> drop try_online_node from do_cpu_up? Your v2 remark below suggests that
-> we need to call node_set_online because something later on depends on
-> that. Btw. why do we even allocate a pgdat from this path? This looks
-> really messy.
+> 
+> Jean-Philippe pointed out in a previous review
+> (https://patchwork.kernel.org/patch/10751801/#22424047) that the guest
+> can flood the host log with S1 related faults. At the moment we do not
+> check that a fault handler is registered in nested mode. Maybe we
+> should? Even if the fault handler is registered, as it is based on a
+> circular buffer, this latter can be full and lead to a log flood.
 
-See the commit cf23422b9d76 ("cpu/mem hotplug: enable CPUs online before local
-memory online")
+Ah, right, I didn't quite have the full picture in mind, thanks for the 
+jog. I guess in that case we want some degree of special-casing for 
+nested configs - anything S1-related that we expect the fault handler to 
+simply inject back into the guest, we can indeed suppress on the host, 
+but I do think it's worth anticipating host-related faults (and entirely 
+host-owned fault-handlers in future) as well.
 
-It looks like try_online_node() in do_cpu_up() is needed for memory hotplug
-which is to put its node online if offlined and then hotadd_new_pgdat() calls
-build_all_zonelists() to initialize the zone list.
-
-> 
-> > Call Trace:
-> >  device_add+0x43e/0x690
-> >  device_register+0x107/0x110
-> >  __register_one_node+0x72/0x150
-> >  __try_online_node+0x8f/0xd0
-> >  try_online_node+0x2b/0x50
-> >  do_cpu_up+0x46/0xf0
-> >  cpu_up+0x13/0x20
-> >  smp_init+0x6e/0xd0
-> >  kernel_init_freeable+0xe5/0x21f
-> >  kernel_init+0xf/0x180
-> >  ret_from_fork+0x1f/0x30
-> > 
-> > Reported-by: Barret Rhoden <brho@google.com>
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> > 
-> > v2: Set the node online as it have CPUs. Otherwise, those memory-less nodes
-> > will
-> >     end up being not in sysfs i.e., /sys/devices/system/node/.
-> > 
-> >  mm/memory_hotplug.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index b236069ff0d8..6eb2331fa826 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -1037,6 +1037,18 @@ static int __try_online_node(int nid, u64 start, bool
-> > set_node_online)
-> >  	if (node_online(nid))
-> >  		return 0;
-> >  
-> > +	/*
-> > +	 * Here is called by cpu_up() to online a node without memory from
-> > +	 * kernel_init() which guarantees that "set_node_online" is true
-> > which
-> > +	 * will set the node online as it have CPUs but not ready to call
-> > +	 * register_one_node() as "node_subsys" has not been initialized
-> > +	 * properly yet.
-> > +	 */
-> > +	if (system_state == SYSTEM_SCHEDULING) {
-> > +		node_set_online(nid);
-> > +		return 0;
-> > +	}
-> > +
-> >  	pgdat = hotadd_new_pgdat(nid, start);
-> >  	if (!pgdat) {
-> >  		pr_err("Cannot online node %d due to NULL pgdat\n", nid);
-> > -- 
-> > 2.20.1 (Apple Git-117)
-> 
-> 
+Robin.
