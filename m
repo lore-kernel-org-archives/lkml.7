@@ -2,113 +2,97 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA875C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E65C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB7120989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA34620879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:08:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayvSBY5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbfEMMGe (ORCPT
+        id S1729650AbfEMMIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:06:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44203 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfEMMGe (ORCPT
+        Mon, 13 May 2019 08:08:20 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43867 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728239AbfEMMIU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:06:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id c5so14928713wrs.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:06:33 -0700 (PDT)
+        Mon, 13 May 2019 08:08:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u27so8831490lfg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ac4KtOUsNoDvhwtf3ctSxXYmUHfwscjlSjgUuFBgLgc=;
+        b=ayvSBY5SqK3dHApMglm4NnvF2Cn8ewBJkdkjrAXDUz05PQiGVjpvRF3+XClC/rS+7y
+         w2QwbSVX0QSgedqUHVt/NQLuHiTgd4KptSYM8ZX1KYkV21Zl0IVTfaSMMDJFZoDAxAKl
+         Ldcu6GHWpLq7D/sumOCb5st2LfbLau2MFhWF+Kd+KL5EJhPu8bNHI8deOpXLJoyKL/XH
+         8O+2OMgq6/bpFLORQ9v7LTfgUg3xQItT7YvqnX7babI/q8rsE/PhiwFWz895dv4dOzV4
+         NpUdxdjloCvZbXie5EAaqdpjddFcAqrteUSS1gqh6JESdh4Rw/CNX2yq4sefmVAkjQuw
+         j53A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=biNvHQKs15xbQFoeFpqb5Q0+JlVOB2+nGH0+sYLUzJo=;
-        b=GD+S7ka0kM15Ze/fuUhtbYZbv0JFfri7oLAk5pZCXzns9Bwxsn/t2h/1/Fbt+Q3YY1
-         0/DNoqUxRfSdlipIEd5oBi300jSle3tRttS6T9CghwBdO9tpHfvH8/bz6Kh+eFtT235q
-         7PoNxRU9lVrkPZuSBL7eEGzWrIlY18ST45jToFNyP168v6wlHIs92/oRBawvQzG/Cqzd
-         bylqSHNC6NFQvrVtSLZvEQ2twGOFZywut5ZMalZxeM4jHj0JKAGAwdpaLSm5jKERCNa8
-         PAgvTWQJcfOtDk7Ec7EEjTBrBeOqjY8WKCuFrEjr9RGWpzbZ/GyznD6zcRbvjHTjaI9K
-         UJDw==
-X-Gm-Message-State: APjAAAUx68hFZouESmUqFWOhJycF0P3/6Q7dwamLSFdKtUJWP/s6zwoN
-        BMfBmiHgMNzodMGNrbkun1i9NA==
-X-Google-Smtp-Source: APXvYqzR54BPsEiJ8auTB6b64uU/gwBWlUPQ8ai+VlYRzE6qMlhJjD4AcuX7KIg5zrVoiA8EDFzDrQ==
-X-Received: by 2002:adf:d089:: with SMTP id y9mr5913422wrh.239.1557749192996;
-        Mon, 13 May 2019 05:06:32 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o4sm12500619wmc.38.2019.05.13.05.06.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 05:06:31 -0700 (PDT)
-Date:   Mon, 13 May 2019 14:06:31 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Timofey Titovets <nefelim4ag@gmail.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
-Message-ID: <20190513120631.cm2mc5grkofvloyk@butterfly.localdomain>
-References: <20190510072125.18059-1-oleksandr@redhat.com>
- <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
- <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
- <CAGqmi744Vef7iF0tuBO3uBtXbNCKYxBV_c-T_Eg3LKPY0rKcWA@mail.gmail.com>
- <20190513120117.aeiij4v2ncu43yxt@butterfly.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ac4KtOUsNoDvhwtf3ctSxXYmUHfwscjlSjgUuFBgLgc=;
+        b=LfitJ4mG4RrhCJjxOEaEXvwdXEQtey9nvkAt5JQ9V33n6d0oCAx/Iwlv/AiBDYCNdq
+         dius0JF1YvzUnHOYqLbDOSvqkngdp54hG4Lzi4Uu4TXYC5SwO4UmoatDrfzgiKk6EgCQ
+         oFG8KNhBZR//3kMJnit57/uxGL2JHX+IgjeOj66Of9UqaNeRq0KeAWEiAdmopvU1jMQM
+         0lF9bEbb/0kvXOQFiTSkRvRHLQoUbrLeCSNwyT9I07aCJPDtu626+b8QoZAbr9z6stZ5
+         vgPD0hl5q718Ot3CMjbZO06V+NiH6AGRCCtj65XgDmAZ9F35rDWBnJrzKwCyI8GJF4HE
+         L38w==
+X-Gm-Message-State: APjAAAVkshgOm9ZL2Z4zE2z/tghJzGUM/tH2Z6fXmzUyVpThK+qvykb6
+        gDfgMzrZmyaWFdmd8Fq6NlCewBo7+bgVEdqTMQItow==
+X-Google-Smtp-Source: APXvYqwJF+xPBJwJm+E8FKTc14obKjNiPyvFkQedIXVqqN5g+cLaP46UDWt9HDKLLIbctb7iaU1MffjgsblDjMEnym4=
+X-Received: by 2002:ac2:5621:: with SMTP id b1mr14096133lff.27.1557749298694;
+ Mon, 13 May 2019 05:08:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513120117.aeiij4v2ncu43yxt@butterfly.localdomain>
-User-Agent: NeoMutt/20180716
+References: <5cd6d102.1c69fb81.b7df1.aae9@mx.google.com>
+In-Reply-To: <5cd6d102.1c69fb81.b7df1.aae9@mx.google.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Mon, 13 May 2019 17:38:06 +0530
+Message-ID: <CAFqt6zZie-ei1L6qNvDJc=BSmfy-3vbFq6cX5Q7GrY1V4ROR6g@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Remove duplicate header
+To:     Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 02:01:17PM +0200, Oleksandr Natalenko wrote:
-> On Mon, May 13, 2019 at 02:48:29PM +0300, Timofey Titovets wrote:
-> > > Also, just for the sake of another piece of stats here:
-> > >
-> > > $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> > > 526
-> > 
-> > IIRC, for calculate saving you must use (pages_shared - pages_sharing)
-> 
-> Based on Documentation/ABI/testing/sysfs-kernel-mm-ksm:
-> 
-> 	pages_shared: how many shared pages are being used.
-> 
-> 	pages_sharing: how many more sites are sharing them i.e. how
-> 	much saved.
-> 
-> and unless I'm missing something, this must be already accounted:
-> 
-> [~]$ echo "$(cat /sys/kernel/mm/ksm/pages_shared) * 4 / 1024" | bc
-> 69
-> 
-> [~]$ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> 563
+On Sat, May 11, 2019 at 7:11 PM Sabyasachi Gupta
+<sabyasachi.linux@gmail.com> wrote:
+>
+> Remove linux/tty.h which is included more than once
+>
+> Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
 
-Yup. To expand on this,
+Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
 
- 246 /* The number of nodes in the stable tree */
- 247 static unsigned long ksm_pages_shared;
- 248 
- 249 /* The number of page slots additionally sharing those nodes */
- 250 static unsigned long ksm_pages_sharing;
-
-2037     if (rmap_item->hlist.next)
-2038         ksm_pages_sharing++;
-2039     else
-2040         ksm_pages_shared++;
-
-IOW, first item is accounter in "shared", the rest will go to "sharing".
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+> ---
+>  arch/arm/mach-sa1100/hackkit.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/arm/mach-sa1100/hackkit.c b/arch/arm/mach-sa1100/hackkit.c
+> index 643d5f2..0016d25 100644
+> --- a/arch/arm/mach-sa1100/hackkit.c
+> +++ b/arch/arm/mach-sa1100/hackkit.c
+> @@ -22,7 +22,6 @@
+>  #include <linux/serial_core.h>
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/partitions.h>
+> -#include <linux/tty.h>
+>  #include <linux/gpio.h>
+>  #include <linux/leds.h>
+>  #include <linux/platform_device.h>
+> --
+> 2.7.4
+>
