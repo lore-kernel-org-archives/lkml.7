@@ -2,99 +2,130 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1B7FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E96208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kIjXz//g"
+	by mail.kernel.org (Postfix) with ESMTP id 8EA462084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbfEMQbd (ORCPT
+        id S1730458AbfEMQiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:31:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43846 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbfEMQbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:31:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c6so7472401pfa.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=B032wxaSxEpjK9pKdC74UIRXdzFCuNECesldV5G8LvM=;
-        b=kIjXz//gu34JmtpKR/dsJ1vaMB9L/2P9JKdACM4ZnrZf9kttODd7N98HnuFsEVpK3H
-         FIdjl/FRyZnbbOTRJRV8suMt4wVHzS4puVd+He2wCyZw86kYaE7PwGgE65mZKz8zpvx8
-         m16M2J/uGmFSVw12xYQdC2kH9O9BW+Ork2fQkP8Uz+GIaEyBXYZGvKooGAC274rZvpec
-         iGEg2CrUt4GjOXKRlv/7EX/hdlW6bMXdDr7+Uf60Re/nYOrwXNcSUN8C9hxWLypcorIv
-         KLxhUBL1CdM8nnMb1BjIQA4ek/gorM7PhHWs4EZxmiltYpeqqS6larlRaZ+Ggg0tqXRS
-         cAtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=B032wxaSxEpjK9pKdC74UIRXdzFCuNECesldV5G8LvM=;
-        b=ZXrBbbgTQiISSn9DirvfoAXuJoUhJLSguWLqzhldLvNLfQuGFCaXs2HZ5zhBbI6IuM
-         9yqyht9SZbyVMQz5fc291WFleUj/982uCTUoTuGwNY0DDAD7MwxwW2ZFZyogYM+/qVwM
-         k2EfNMBy7E2s1VkqnKcYRTX8calQIY/ZYx1pcMAPX1ks8b+9A39Z3IVQ41C4RSruasqR
-         B78NR4SrYGCsiruxGtth/qsgMQhrwitIfpQJrrWxdrxMZiTbdUTRf8E1Mi8Es3pqcwv6
-         FioojGp9NPrO9ZS9FPaAVE8TNrDE4B9pKDSoPwILwgMvlqigti7uRMV5SWe30qtlzZHw
-         Vg6w==
-X-Gm-Message-State: APjAAAUCTiAbw3U+3J1NsrazeKJ3iPF3o4NW2M9xksC4mvLiLiFmsAwT
-        QezYTYtWWRWvBLhxIvkBxFMPyQ==
-X-Google-Smtp-Source: APXvYqykyJVcUw9loEPh58IKDLQ8HHbmdX1X7MaIJ18vVl9tQx/WiDfdyA5qBoncQW+XhiG6PHGTUg==
-X-Received: by 2002:a63:fd50:: with SMTP id m16mr32686277pgj.192.1557765091630;
-        Mon, 13 May 2019 09:31:31 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
-        by smtp.googlemail.com with ESMTPSA id x17sm3939633pgh.47.2019.05.13.09.31.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 09:31:30 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
-In-Reply-To: <bf1360ab62a4e7bd3928052ebb6c969e8059f29e.camel@baylibre.com>
-References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-6-jbrunet@baylibre.com> <7ho94ac4jn.fsf@baylibre.com> <bf1360ab62a4e7bd3928052ebb6c969e8059f29e.camel@baylibre.com>
-Date:   Mon, 13 May 2019 09:31:30 -0700
-Message-ID: <7hftpico4d.fsf@baylibre.com>
+        Mon, 13 May 2019 12:38:00 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:32988 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728639AbfEMQiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:38:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65A81341;
+        Mon, 13 May 2019 09:37:59 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5067A3F71E;
+        Mon, 13 May 2019 09:37:57 -0700 (PDT)
+Date:   Mon, 13 May 2019 17:37:52 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190513163752.GA10754@fuggles.cambridge.arm.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+ <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+ <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Mon, May 13, 2019 at 09:11:38AM +0000, Nadav Amit wrote:
+> > On May 13, 2019, at 1:36 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > On Thu, May 09, 2019 at 09:21:35PM +0000, Nadav Amit wrote:
+> > 
+> >>>>> And we can fix that by having tlb_finish_mmu() sync up. Never let a
+> >>>>> concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
+> >>>>> have completed.
+> >>>>> 
+> >>>>> This should not be too hard to make happen.
+> >>>> 
+> >>>> This synchronization sounds much more expensive than what I proposed. But I
+> >>>> agree that cache-lines that move from one CPU to another might become an
+> >>>> issue. But I think that the scheme I suggested would minimize this overhead.
+> >>> 
+> >>> Well, it would have a lot more unconditional atomic ops. My scheme only
+> >>> waits when there is actual concurrency.
+> >> 
+> >> Well, something has to give. I didn’t think that if the same core does the
+> >> atomic op it would be too expensive.
+> > 
+> > They're still at least 20 cycles a pop, uncontended.
+> > 
+> >>> I _think_ something like the below ought to work, but its not even been
+> >>> near a compiler. The only problem is the unconditional wakeup; we can
+> >>> play games to avoid that if we want to continue with this.
+> >>> 
+> >>> Ideally we'd only do this when there's been actual overlap, but I've not
+> >>> found a sensible way to detect that.
+> >>> 
+> >>> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> >>> index 4ef4bbe78a1d..b70e35792d29 100644
+> >>> --- a/include/linux/mm_types.h
+> >>> +++ b/include/linux/mm_types.h
+> >>> @@ -590,7 +590,12 @@ static inline void dec_tlb_flush_pending(struct mm_struct *mm)
+> >>> 	 *
+> >>> 	 * Therefore we must rely on tlb_flush_*() to guarantee order.
+> >>> 	 */
+> >>> -	atomic_dec(&mm->tlb_flush_pending);
+> >>> +	if (atomic_dec_and_test(&mm->tlb_flush_pending)) {
+> >>> +		wake_up_var(&mm->tlb_flush_pending);
+> >>> +	} else {
+> >>> +		wait_event_var(&mm->tlb_flush_pending,
+> >>> +			       !atomic_read_acquire(&mm->tlb_flush_pending));
+> >>> +	}
+> >>> }
+> >> 
+> >> It still seems very expensive to me, at least for certain workloads (e.g.,
+> >> Apache with multithreaded MPM).
+> > 
+> > Is that Apache-MPM workload triggering this lots? Having a known
+> > benchmark for this stuff is good for when someone has time to play with
+> > things.
+> 
+> Setting Apache2 with mpm_worker causes every request to go through
+> mmap-writev-munmap flow on every thread. I didn’t run this workload after
+> the patches that downgrade the mmap_sem to read before the page-table
+> zapping were introduced. I presume these patches would allow the page-table
+> zapping to be done concurrently, and therefore would hit this flow.
 
-> On Fri, 2019-05-10 at 15:45 -0700, Kevin Hilman wrote:
->> Jerome Brunet <jbrunet@baylibre.com> writes:
->> 
->> > Enable the network interface of the SEI510 which use the internal PHY.
->> > 
->> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> 
->> I tried testing this series on SEI510, but I must still be missing some
->> defconfig options, as the default defconfig doesn't lead to a working
->> interface.
->
-> That's weird. AFAICT, the net part has hit Linus's tree.
+Hmm, I don't think so: munmap() still has to take the semaphore for write
+initially, so it will be serialised against other munmap() threads even
+after they've downgraded afaict.
 
-Ah, that's the key ingredient.  I was testing with a v5.1 baseline (not
-linus/master) along with all my queued up changes.  I just pulled in
-linus/master to test this series, and indeed, everything works, and I
-don't need my config fragment either.
+The initial bug report was about concurrent madvise() vs munmap().
 
-Thanks for clarifying.
-
-If repost needed, feel free to add
-
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-Kevin
+Will
