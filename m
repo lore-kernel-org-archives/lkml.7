@@ -5,36 +5,36 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C94C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC72C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10732146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 833A321479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="pDdjZShU"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rRQY5N/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbfEMJBy (ORCPT
+        id S1728463AbfEMJFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:01:54 -0400
-Received: from mout.web.de ([217.72.192.78]:47381 "EHLO mout.web.de"
+        Mon, 13 May 2019 05:05:25 -0400
+Received: from mout.web.de ([212.227.17.12]:37945 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbfEMJBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:01:54 -0400
+        id S1727401AbfEMJFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:05:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557738091;
-        bh=96bUbooF3B+8sxLuYsK0EdpTwFO/C05prC37Xuu/ldo=;
+        s=dbaedf251592; t=1557738308;
+        bh=jtrTYF8ULtsjM8wAgp4wSKoTfYfmnQXS/DVAPfI6gEM=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=pDdjZShUPUb2gQTjw4buTsUbRVN4s/tQ89LefGeHVyRlNNI6nN9WOr5x3YCMOo9Bh
-         J9SaxhkJ5uUq1YSijXNJCeWdq0SzPWKnvUF87rK8iaU58ECgcqm6ga3v238cxym7EG
-         ZTIa8WilYareBbwhWlqZfsvxF6fwyMZ+uYdkLBJY=
+        b=rRQY5N/5SF/f70up/pR8sWLFjySH+fLZIMMMWE0voXKfkPXAP1ItwD3tW3FZI/jrR
+         MjU5+V2DRjIY4TLlHL3HNFNw3pxRuA2bxLhadrx4JEVtqXIHORDmyVMYZovJu6/ikZ
+         M7bISruUzImjsD+Iq+Brh2wIp4rEHA5PupLN9mCc=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.135.147.80]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MOAnY-1hMnSJ2y0q-005YJW; Mon, 13
- May 2019 11:01:31 +0200
-Subject: [PATCH 2/5] Coccinelle: put_device: Add a cast to an expression for
- an assignment
+Received: from [192.168.1.3] ([93.135.147.80]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MFt8s-1hW6uw1SBa-00Eyrx; Mon, 13
+ May 2019 11:05:08 +0200
+Subject: [PATCH 3/5] Coccinelle: put_device: Merge four SmPL when constraints
+ into one
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     Julia Lawall <julia.lawall@lip6.fr>,
         Gilles Muller <Gilles.Muller@lip6.fr>,
@@ -90,8 +90,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <07e17d87-09ff-311f-015c-d201df053f56@web.de>
-Date:   Mon, 13 May 2019 11:01:30 +0200
+Message-ID: <6b62ecb5-ab88-22d9-eee2-db4f58b6d2ae@web.de>
+Date:   Mon, 13 May 2019 11:05:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -99,60 +99,60 @@ In-Reply-To: <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Vo1rukVlSGnUbTQVJ3lRvPy0SUDu7tTrElvBlW1phdO7awQu0SJ
- l0VOuqvgcUWZx+wZMH9hxPyiThpJSRRfykY/BK+95vofZ1PweZj/UAYndLr16t7ToPrek+D
- N5ns2tzQFwHFqTN4nlnTJu2BKHpl2wna3fNRjE9Cpw2lFWWdFxqlfMBezr/2FDoa63PUWtC
- pQeQZCeIHrmfnvYpgG5AA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:NKbfPHAGwVg=:8y3nQkjzAz8Xup55iVwCgv
- mMOcm3xi+OokDga40dIlZ9yDMmkxVxCbL5x6OfBrBkVpWlErPHWT6ic6gPHUdaogfbC9S5oHu
- ZChMlPVOJbScW8LNk/Jf47bZQ8+TpeQmfknIvqV9RjM6S3d5pGpQkoYMxSSH+QMgtbllIrpf4
- qxS3IqE93r0EQIJwuuisO597KA27jV6pZ2paB4RALLc0h+0bCenztkRyRAsxRNfwRQ9uvdOEn
- bchK2WQH2UQb6h6n9b1XN88rc5RpMxKxlKSOjRdAxmN9DPVAVVK4uzblnUG9nEWg3u6subn5W
- yH3rUQAzGCMbZDDQOyOph7ggpPtwXlM6v2Do2L2oxb0WdXN0K6ot9mA8+FCNf7JQbacvJRoZX
- zQCqRG+iMEOhN1UifVoQGKBMVkSUJw26lihdEimdCwAfquds2BSbz1uWFqM9USjPlCTjiqImC
- gUu3tDsAmsGJ+oTBK45EZBDHr9ZceN+OPjlpE1Lnh0AZAVwkic8QdjzGicMjZ//wGmNlSXaFH
- J+seXShlNaUQRERn5fdsPZLiMHHXvUzWojf/fjzi5KIrpeFPa6rsnlbbqtVkKJk8xQ+uMh7fl
- HqCsLb2Xvf89Yq9JKJGkzFN//wUksJMukZp4kF0jZ5UpT8BA0I7FhE9z/m/p/I4A4l4Qj8DGB
- uVaZSp9ZtLussBLL36uc7kvPA3XdVKobOUxgfobKdIfCDARhD6JqlVSy0CFKecA5h4UdHZmIc
- x3oT4xTPgCumNrmtLexUcRETs6lhiil+TPgW+UKHj9B0ccX6HIhFPau4fX/VB/y31bMpuRUsn
- fPFlapxny4urR4CuP6snL8weaYb1q49hUhRNl9N1E3WUIEgfBvEmfrwGm3gAFqpSiXM2GJ3Cy
- sgvCdWbgPsEtnaHsjsCfGoO4/AfpaDZnA0pvaCXxq+50nVpcwMiXpjH7JzGyFZd1d2oMVtJvi
- g60HGIaVGVw==
+X-Provags-ID: V03:K1:Nz5xzp//Z6dJYDz1KvmzWtT9rzafZK2Ooj1MSx2MexRRipeUtdh
+ e74PSMkvsEGIxb50Obt0Gy2xPoNo6u3ziBWjwZ8HK5ZWvB6VeaA9WJEtzcFAk48TyvNrssk
+ 9fi0ywEjF+HBamQID0KjUCuEUnFAxH9F3oTDfQsbk0wzdbL35ozPIQQoR3SEi3LDaOJqlK2
+ 1v8EEytEdMWtpXxBJIPSA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8+6CpDXOpp4=:53wTBdYgsz+Q3/zp+Aw62C
+ uH+SP8um78+4O6oWUWbpGpuWkXQ3dNInJ0eIUPrHYSKprUuh568IgWOnboO8O+hkxeFa4uGtd
+ X1byo8BQ932OMHq9t9cu5duWjNU0d5P6H8YmIw+IuHpr0Yfbtp1KJYPlR7kfxN06Fq3UJB17n
+ G4OLogQouB6HYQJoNvdjCUDDZ/4px8jF48Hoe9LuGVVzssIB8kB6PFRxu+HQDrWggGM7QH2uD
+ 2PjTisE1HTkaLMjC4h1zqkyAXOc4oWO0884VGNXfZYg9oj9rT0kS5zfZw2lAu2x4+K4GBsrk7
+ s3ADtyivTShDs8eXU3CPAjrlDHqdVtXTLINfkP6D0vPli28TfNSUJdtNvfAZVvq19cm2m62vn
+ a0pw96fovJ/Pp+ebhT6GbA9JYdQf76yAZPHrl8jU4a20NrbIJmbPbN40fBS/ml1Hjl0x/vhe2
+ TsS1qJkpr3Xn9bTBxB6rVBhYJG41c7L95Uw5UYXPVquRyIjbxpZdFtYGfP6YMVrweieht/772
+ cnsp7R82Scw8K2UVFfCAHWBwJIMjbsP9LtOtU9HzXzjb2C8ZPqZdtJusl7bNBDjHjApsBH7L1
+ W61o+JlC7UoJEeGmm9rmSa+GBBWBJkwPbx7TzFr5gfdj+Ctys/IrS47ycDxLAVdBstXv/zJf9
+ W265Lcd+9xzguEHdmKsSGOm1ETeqLgkzdNW9IuaSA6rtNvEXy0dIKdyL9gXS4AcX1fxcMddN7
+ RLG5rnvjx6J9RZ7iMwQrsCzfrC6+El8PWxzzir83YIoVkZU6mIly0fz4QGCeQeXbs8OeafiA8
+ WfWT/mrJbbvhNgDxaBdI4/MHFCDf/cTj9MU7HaCXQiI426WJbO1aJRQxWVIzDxsqmRqGuEfx8
+ imawGgxZDTHeYnnvpsyIUyHxFGG5nKnFc2O2I+YmPnW2JyVFXdnuQJ1hqwgtog50WWmnvEiaK
+ yJ5cKGI753Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 8 May 2019 13:50:49 +0200
+Date: Sun, 12 May 2019 18:32:46 +0200
 
-Extend a when constraint in a SmPL rule so that an additional cast
-is optionally excluded from source code searches for an expression
-in assignments.
+An assignment target was repeated in four SmPL when constraints.
+Combine the exclusion specifications into disjunctions for the semantic
+patch language so that this target is referenced only once there.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Suggested-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Link: https://lore.kernel.org/lkml/alpine.DEB.2.21.1902160934400.3212@hadr=
-ien/
-Link: https://systeme.lip6.fr/pipermail/cocci/2019-February/005592.html
 =2D--
- scripts/coccinelle/free/put_device.cocci | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/coccinelle/free/put_device.cocci | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle=
 /free/put_device.cocci
-index 3ebebc064f10..120921366e84 100644
+index 120921366e84..aae79c02c1e0 100644
 =2D-- a/scripts/coccinelle/free/put_device.cocci
 +++ b/scripts/coccinelle/free/put_device.cocci
-@@ -24,7 +24,7 @@ if (id =3D=3D NULL || ...) { ... return ...; }
+@@ -23,10 +23,7 @@ if (id =3D=3D NULL || ...) { ... return ...; }
+     when !=3D platform_device_put(id)
      when !=3D of_dev_put(id)
      when !=3D if (id) { ... put_device(&id->dev) ... }
-     when !=3D e1 =3D (T)id
--    when !=3D e1 =3D &id->dev
-+    when !=3D e1 =3D (T)(&id->dev)
-     when !=3D e1 =3D get_device(&id->dev)
-     when !=3D e1 =3D (T1)platform_get_drvdata(id)
+-    when !=3D e1 =3D (T)id
+-    when !=3D e1 =3D (T)(&id->dev)
+-    when !=3D e1 =3D get_device(&id->dev)
+-    when !=3D e1 =3D (T1)platform_get_drvdata(id)
++    when !=3D e1 =3D \( (T) \( id \| (&id->dev) \) \| get_device(&id->dev=
+) \| (T1)platform_get_drvdata(id) \)
  (
+   return
+ (    id
 =2D-
 2.21.0
 
