@@ -2,77 +2,100 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B274C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D820CC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:48:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21657208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC34B208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbfEMPrm (ORCPT
+        id S1729246AbfEMPsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:47:42 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:53768 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728712AbfEMPrm (ORCPT
+        Mon, 13 May 2019 11:48:22 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:37325 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfEMPsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:47:42 -0400
-Received: (qmail 4582 invoked by uid 2102); 13 May 2019 11:47:40 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 May 2019 11:47:40 -0400
-Date:   Mon, 13 May 2019 11:47:40 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Igor Plyatov <plyatov@gmail.com>
-cc:     linux-usb@vger.kernel.org,
+        Mon, 13 May 2019 11:48:22 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hQDBb-00024C-CH from George_Davis@mentor.com ; Mon, 13 May 2019 08:48:19 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Mon, 13 May
+ 2019 08:48:17 -0700
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Initialisation of SOC USB pads
-In-Reply-To: <607c6b4c-d53a-8115-aa60-2a8461607d40@gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1905131146380.1478-100000@iolanthe.rowland.org>
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     Chris Brandt <chris.brandt@renesas.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v2] serial: sh-sci: disable DMA for uart_console
+Date:   Mon, 13 May 2019 11:47:26 -0400
+Message-ID: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019, Igor Plyatov wrote:
+As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+console UART"), UART console lines use low-level PIO only access functions
+which will conflict with use of the line when DMA is enabled, e.g. when
+the console line is also used for systemd messages. So disable DMA
+support for UART console lines.
 
-> Dear developers,
-> 
-> can you please explain who must configure AT91SAM9G20 SOC pads to 
-> operate as USB Host port? Is it AT91Bootstrap, U-Boot bootloader, Linux 
-> kernel or this is not required at all?
-> 
-> I ask, because during connection of USB disk, my board complains
-> 
-> usb 1-1: device descriptor read/64, error -62
-> usb 1-1: device descriptor read/64, error -62
-> usb 1-1: device descriptor read/64, error -62
-> usb 1-1: device descriptor read/64, error -62
-> usb 1-1: device not accepting address 4, error -62
-> usb 1-1: device not accepting address 5, error -62
-> usb usb1-port1: unable to enumerate USB device
-> 
-> 
-> Looks like there is no connectivity between USB Host module of SOC and 
-> USB device. Or am I wrong?
-> 
-> 
-> My setup is:
-> 
-> 
-> * AT91SAM9G20 based custom board;
-> * Linux kernel 4.9.36, from LINUX4SAM project.
-> * USB disk connected to USB Host port 0 (HDPA, HDMA pins of SOC). 39 Ohm 
-> series resistors and 15 Kohm pull-down resistors added at these lines. 
-> Connectivity between SOC and USB device confirmed by Ohmmeter.
-> * USB_VBUS voltage measured at USB connector = 4.96 VDC.
+Fixes: https://patchwork.kernel.org/patch/10929511/
+Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+---
+v2: Clarify comment regarding DMA support on kernel console,
+    add {Tested,Reviewed}-by:, and Cc: linux-stable lines.
+---
+ drivers/tty/serial/sh-sci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-You probably should ask somebody at the LINUX4SAM project.
-
-Alan Stern
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 3cd139752d3f..abc705716aa0 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -1557,6 +1557,13 @@ static void sci_request_dma(struct uart_port *port)
+ 
+ 	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
+ 
++	/*
++	 * DMA on console may interfere with Kernel log messages which use
++	 * plain putchar(). So, simply don't use it with a console.
++	 */
++	if (uart_console(port))
++		return;
++
+ 	if (!port->dev->of_node)
+ 		return;
+ 
+-- 
+2.7.4
 
