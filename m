@@ -2,134 +2,179 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5851C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE96C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91512133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F4069208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:25:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="qSvI060C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfEMLXX (ORCPT
+        id S1728543AbfEMLZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:23:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42670 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfEMLXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:23:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD7893086202;
-        Mon, 13 May 2019 11:23:22 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10C571001DE1;
-        Mon, 13 May 2019 11:23:20 +0000 (UTC)
-Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
-To:     Barret Rhoden <brho@google.com>, Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        David Arcari <darcari@redhat.com>
-References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
- <20190510184204.225451-1-brho@google.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
-Date:   Mon, 13 May 2019 07:23:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190510184204.225451-1-brho@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 13 May 2019 11:23:22 +0000 (UTC)
+        Mon, 13 May 2019 07:25:01 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:41393 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbfEMLZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:25:00 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x4DBMtr3032513;
+        Mon, 13 May 2019 20:22:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x4DBMtr3032513
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557746576;
+        bh=EU/CK6RIzPKe+JRQJjURxe4pIo5LQHgjibXAtioSisQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qSvI060CSPYmLRBCA4iRYFXdm9PWeqD3oF7SUtVayRcD6QY7sg1HjCzEmcLXYdpA/
+         pjAw6StN5Mki/36nrnQLctAkGlx8ZwKhEzR+E74nxnnV2FJnMuwzZxks42K/aDQnVU
+         qIq3z/2Q5MFnAPGuqxgTCOSFPpSqdsP4X7SSL6c/TVkgCWBc5u5ou3E8TYP3rsU+RI
+         pOIf4h2MHLJIF1cCM3Ej4ZmJIfQ160kAncurfUDxkAa4Oa69jjytLRDVX/j9CI61ek
+         bIesGFYqfWEiXqJWs8vwtVpXfclw0mLdmEK0guUbLor/VOmvn7cmiygyPHG751OOe4
+         VTu5fprP9SDuw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Rob Herring <robh@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org,
+        "Rodrigo R. Galvao" <rosattig@linux.vnet.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Mark Greer <mgreer@animalcreek.com>
+Subject: [PATCH] powerpc/boot: fix broken way to pass CONFIG options
+Date:   Mon, 13 May 2019 20:22:54 +0900
+Message-Id: <20190513112254.22534-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 5e9dcb6188a4 ("powerpc/boot: Expose Kconfig symbols to wrapper")
+was wrong, but commit e41b93a6be57 ("powerpc/boot: Fix build failures
+with -j 1") was also wrong.
 
+Check-in source files never ever depend on build artifacts.
 
-On 5/10/19 2:42 PM, Barret Rhoden wrote:
-> When add_unformed_module() finds an existing module with the same name,
-> it waits until the preexisting module finished loading.  Prior to commit
-> f9a75c1d717f, this meant if the module was either UNFORMED or COMING,
-> we'd wait.  That commit changed the check to be !LIVE, so that we'd wait
-> for UNFORMED, COMING, or GOING.
+The correct dependency is:
 
-Hi Barret, thanks for the fix but I dropped that patch for other reasons.
-Please see below.
+  $(obj)/serial.o: $(obj)/autoconf.h
 
-> 
-> The problem with that commit was that we wait on finished_loading(), and
-> that function's state checks were not changed.  If a module was
-> GOING, finished_loading() was returning true, meaning to recheck the
-> state and presumably break out of the loop.  This mismatch between the
-> state checked by add_unformed_module() and the state checked in
-> finished_loading() could result in a hang.
-> 
-> Specifically, when a module was GOING, wait_event_interruptible() would
-> immediately return with no error, we'd goto 'again,' see the state !=
-> LIVE, and try again.
-> 
-> This commit changes finished_loading() such that we only consider a
-> module 'finished' when it doesn't exist or is LIVE, which are the cases
-> that break from the wait-loop in add_unformed_module().
-> 
-> Fixes: f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
-> Signed-off-by: Barret Rhoden <brho@google.com>
-> ---
->  kernel/module.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 410eeb7e4f1d..0744eea7bb90 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3407,8 +3407,7 @@ static bool finished_loading(const char *name)
->  	sched_annotate_sleep();
->  	mutex_lock(&module_mutex);
->  	mod = find_module_all(name, strlen(name), true);
-> -	ret = !mod || mod->state == MODULE_STATE_LIVE
-> -		|| mod->state == MODULE_STATE_GOING;
-> +	ret = !mod || mod->state == MODULE_STATE_LIVE;
->  	mutex_unlock(&module_mutex);
+However, copying autoconf.h to arch/power/boot/ is questionable
+in the first place.
 
-With your change the above my x86 system still locks up during boot and adds
-minutes to boot time because the many CPUs are sleeping waiting for the
-module_wq to be run.
+arch/powerpc/Makefile adopted multiple ways to pass CONFIG options.
 
-A module is loaded once for each cpu.
+arch/powerpc/boot/decompress.c references CONFIG_KERNEL_GZIP and
+CONFIG_KERNEL_XZ, which are passed via the command line.
 
-CPU 0 loads the module, adds the module to the modules list, and sets the module
-state to MODULE_STATE_UNFORMED.
+arch/powerpc/boot/serial.c includes the copied autoconf.h to
+reference a couple of CONFIG options.
 
-Simultaneously all the other CPUs also load the module and sleep in
-add_unformed_module().
+Do not do this.
 
-If CPU 0 is interrupted/rescheduled for any reason that means the other CPUs are
-stuck waiting until the module thread on CPU0 is executed again.  I mentioned
-earlier that on some systems systemd is launching greater than the number of CPU
-module loads so this occurs quite often on large CPU systems.  This is an odd
-bug that also needs to be resolved but I suspect that it is in systemd & not the
-kernel.
+We should have already learned that including autoconf.h from each
+source file is really fragile.
 
-My follow-up patch changes from wait_event_interruptible() to
-wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
-make progress on other tasks, which changes the return values from
-wait_event_interruptible().
+In fact, it is already broken.
 
-https://marc.info/?l=linux-kernel&m=155724085927589&w=2
+arch/powerpc/boot/ppc_asm.h references CONFIG_PPC_8xx, but
+arch/powerpc/boot/utils.S is not given any way to access CONFIG
+options. So, CONFIG_PPC_8xx is never defined here.
 
-I believe this also takes your concern into account?
+Just pass $(LINUXINCLUDE) and remove all broken code.
 
-Please correct me if I'm wrong and am not understanding your issue.
+I also removed the -traditional flag to make include/linux/kconfig.h
+work. I do not understand why it needs to imitate the behavior of
+pre-standard C preprocessors.
 
-P.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
->  
->  	return ret;
-> 
+ arch/powerpc/boot/.gitignore |  2 --
+ arch/powerpc/boot/Makefile   | 14 +++-----------
+ arch/powerpc/boot/serial.c   |  1 -
+ 3 files changed, 3 insertions(+), 14 deletions(-)
+
+diff --git a/arch/powerpc/boot/.gitignore b/arch/powerpc/boot/.gitignore
+index 32034a0cc554..6610665fcf5e 100644
+--- a/arch/powerpc/boot/.gitignore
++++ b/arch/powerpc/boot/.gitignore
+@@ -44,5 +44,3 @@ fdt_sw.c
+ fdt_wip.c
+ libfdt.h
+ libfdt_internal.h
+-autoconf.h
+-
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 73d1f3562978..b8a82be2af2a 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -20,9 +20,6 @@
+ 
+ all: $(obj)/zImage
+ 
+-compress-$(CONFIG_KERNEL_GZIP) := CONFIG_KERNEL_GZIP
+-compress-$(CONFIG_KERNEL_XZ)   := CONFIG_KERNEL_XZ
+-
+ ifdef CROSS32_COMPILE
+     BOOTCC := $(CROSS32_COMPILE)gcc
+     BOOTAR := $(CROSS32_COMPILE)ar
+@@ -34,7 +31,7 @@ endif
+ BOOTCFLAGS    := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+ 		 -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx \
+ 		 -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc \
+-		 -D$(compress-y)
++		 $(LINUXINCLUDE)
+ 
+ ifdef CONFIG_PPC64_BOOT_WRAPPER
+ BOOTCFLAGS	+= -m64
+@@ -51,7 +48,7 @@ BOOTCFLAGS	+= -mlittle-endian
+ BOOTCFLAGS	+= $(call cc-option,-mabi=elfv2)
+ endif
+ 
+-BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -traditional -nostdinc
++BOOTAFLAGS	:= -D__ASSEMBLY__ $(BOOTCFLAGS) -nostdinc
+ 
+ BOOTARFLAGS	:= -cr$(KBUILD_ARFLAGS)
+ 
+@@ -202,14 +199,9 @@ $(obj)/empty.c:
+ $(obj)/zImage.coff.lds $(obj)/zImage.ps3.lds : $(obj)/%: $(srctree)/$(src)/%.S
+ 	$(Q)cp $< $@
+ 
+-$(srctree)/$(src)/serial.c: $(obj)/autoconf.h
+-
+-$(obj)/autoconf.h: $(obj)/%: $(objtree)/include/generated/%
+-	$(Q)cp $< $@
+-
+ clean-files := $(zlib-) $(zlibheader-) $(zliblinuxheader-) \
+ 		$(zlib-decomp-) $(libfdt) $(libfdtheader) \
+-		autoconf.h empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
++		empty.c zImage.coff.lds zImage.ps3.lds zImage.lds
+ 
+ quiet_cmd_bootcc = BOOTCC  $@
+       cmd_bootcc = $(BOOTCC) -Wp,-MD,$(depfile) $(BOOTCFLAGS) -c -o $@ $<
+diff --git a/arch/powerpc/boot/serial.c b/arch/powerpc/boot/serial.c
+index b0491b8c0199..9457863147f9 100644
+--- a/arch/powerpc/boot/serial.c
++++ b/arch/powerpc/boot/serial.c
+@@ -18,7 +18,6 @@
+ #include "stdio.h"
+ #include "io.h"
+ #include "ops.h"
+-#include "autoconf.h"
+ 
+ static int serial_open(void)
+ {
+-- 
+2.17.1
+
