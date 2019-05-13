@@ -2,87 +2,215 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EE3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C197C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EED021473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3E32070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfEMLma (ORCPT
+        id S1729327AbfEMLnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:42:30 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:56708 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfEMLma (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:42:30 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id B8BAC25AD63;
-        Mon, 13 May 2019 21:42:27 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id 9FA36E2232E; Mon, 13 May 2019 13:42:25 +0200 (CEST)
-Date:   Mon, 13 May 2019 13:42:25 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     "George G. Davis" <ggdavisiv@gmail.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "George G. Davis" <george_davis@mentor.com>
-Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
-Message-ID: <20190513114225.jhd5in7zavd5wvbw@verge.net.au>
-References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
- <1557413011-1662-1-git-send-email-george_davis@mentor.com>
- <CAMuHMdUCcxfVdY1PqfYRZMjHN2eP_-NAsniCY39XyrDysAu1Pw@mail.gmail.com>
+        Mon, 13 May 2019 07:43:52 -0400
+Received: from foss.arm.com ([217.140.101.70]:53576 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbfEMLnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:43:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36B63374;
+        Mon, 13 May 2019 04:43:51 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A03D3F703;
+        Mon, 13 May 2019 04:43:48 -0700 (PDT)
+Subject: Re: [PATCH v7 12/23] iommu/smmuv3: Get prepared for nested stage
+ support
+To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-13-eric.auger@redhat.com>
+ <66f873eb-35c0-d1e9-794e-9150dbdb13fe@arm.com>
+ <a1099cec-a8ad-6efa-b7e8-77388814f7e2@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <424fc9bc-f040-d702-5a04-0faef1125989@arm.com>
+Date:   Mon, 13 May 2019 12:43:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUCcxfVdY1PqfYRZMjHN2eP_-NAsniCY39XyrDysAu1Pw@mail.gmail.com>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <a1099cec-a8ad-6efa-b7e8-77388814f7e2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 01:13:16PM +0200, Geert Uytterhoeven wrote:
-> Hi George,
+On 10/05/2019 15:34, Auger Eric wrote:
+> Hi Robin,
 > 
-> On Thu, May 9, 2019 at 4:44 PM George G. Davis <ggdavisiv@gmail.com> wrote:
-> > As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-> > console UART"), UART console lines use low-level PIO only access functions
-> > which will conflict with use of the line when DMA is enabled, e.g. when
-> > the console line is also used for systemd messages. So disable DMA
-> > support for UART console lines.
-> >
-> > Fixes: https://patchwork.kernel.org/patch/10929511/
-> > Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-> > Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-> > Signed-off-by: George G. Davis <george_davis@mentor.com>
-> 
-> I think this makes sense.  In addition to OMAP 8250, the same approach
-> is used in the Mediatek 8250 and iMX serial drivers.
-> 
-> Regardless, this is definitely better than removing the "dmas" properties
-> from DT, as DT describes hardware, not usage policies.
+> On 5/8/19 4:24 PM, Robin Murphy wrote:
+>> On 08/04/2019 13:19, Eric Auger wrote:
+>>> To allow nested stage support, we need to store both
+>>> stage 1 and stage 2 configurations (and remove the former
+>>> union).
+>>>
+>>> A nested setup is characterized by both s1_cfg and s2_cfg
+>>> set.
+>>>
+>>> We introduce a new ste.abort field that will be set upon
+>>> guest stage1 configuration passing. If s1_cfg is NULL and
+>>> ste.abort is set, traffic can't pass. If ste.abort is not set,
+>>> S1 is bypassed.
+>>>
+>>> arm_smmu_write_strtab_ent() is modified to write both stage
+>>> fields in the STE and deal with the abort field.
+>>>
+>>> In nested mode, only stage 2 is "finalized" as the host does
+>>> not own/configure the stage 1 context descriptor, guest does.
+>>>
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>
+>>> ---
+>>>
+>>> v4 -> v5:
+>>> - reset ste.abort on detach
+>>>
+>>> v3 -> v4:
+>>> - s1_cfg.nested_abort and nested_bypass removed.
+>>> - s/ste.nested/ste.abort
+>>> - arm_smmu_write_strtab_ent modifications with introduction
+>>>     of local abort, bypass and translate local variables
+>>> - comment updated
+>>>
+>>> v1 -> v2:
+>>> - invalidate the STE before moving from a live STE config to another
+>>> - add the nested_abort and nested_bypass fields
+>>> ---
+>>>    drivers/iommu/arm-smmu-v3.c | 35 ++++++++++++++++++++---------------
+>>>    1 file changed, 20 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>>> index 21d027695181..e22e944ffc05 100644
+>>> --- a/drivers/iommu/arm-smmu-v3.c
+>>> +++ b/drivers/iommu/arm-smmu-v3.c
+>>> @@ -211,6 +211,7 @@
+>>>    #define STRTAB_STE_0_CFG_BYPASS        4
+>>>    #define STRTAB_STE_0_CFG_S1_TRANS    5
+>>>    #define STRTAB_STE_0_CFG_S2_TRANS    6
+>>> +#define STRTAB_STE_0_CFG_NESTED        7
+>>>      #define STRTAB_STE_0_S1FMT        GENMASK_ULL(5, 4)
+>>>    #define STRTAB_STE_0_S1FMT_LINEAR    0
+>>> @@ -514,6 +515,7 @@ struct arm_smmu_strtab_ent {
+>>>         * configured according to the domain type.
+>>>         */
+>>>        bool                assigned;
+>>> +    bool                abort;
+>>>        struct arm_smmu_s1_cfg        *s1_cfg;
+>>>        struct arm_smmu_s2_cfg        *s2_cfg;
+>>>    };
+>>> @@ -628,10 +630,8 @@ struct arm_smmu_domain {
+>>>        bool                non_strict;
+>>>          enum arm_smmu_domain_stage    stage;
+>>> -    union {
+>>> -        struct arm_smmu_s1_cfg    s1_cfg;
+>>> -        struct arm_smmu_s2_cfg    s2_cfg;
+>>> -    };
+>>> +    struct arm_smmu_s1_cfg    s1_cfg;
+>>> +    struct arm_smmu_s2_cfg    s2_cfg;
+>>>          struct iommu_domain        domain;
+>>>    @@ -1108,12 +1108,13 @@ static void arm_smmu_write_strtab_ent(struct
+>>> arm_smmu_device *smmu, u32 sid,
+>>>                          __le64 *dst, struct arm_smmu_strtab_ent *ste)
+>>>    {
+>>>        /*
+>>> -     * This is hideously complicated, but we only really care about
+>>> -     * three cases at the moment:
+>>> +     * We care about the following transitions:
+>>>         *
+>>>         * 1. Invalid (all zero) -> bypass/fault (init)
+>>> -     * 2. Bypass/fault -> translation/bypass (attach)
+>>> -     * 3. Translation/bypass -> bypass/fault (detach)
+>>> +     * 2. Bypass/fault -> single stage translation/bypass (attach)
+>>> +     * 3. single stage Translation/bypass -> bypass/fault (detach)
+>>> +     * 4. S2 -> S1 + S2 (attach_pasid_table)
+>>> +     * 5. S1 + S2 -> S2 (detach_pasid_table)
+>>>         *
+>>>         * Given that we can't update the STE atomically and the SMMU
+>>>         * doesn't read the thing in a defined order, that leaves us
+>>> @@ -1124,7 +1125,7 @@ static void arm_smmu_write_strtab_ent(struct
+>>> arm_smmu_device *smmu, u32 sid,
+>>>         * 3. Update Config, sync
+>>>         */
+>>>        u64 val = le64_to_cpu(dst[0]);
+>>> -    bool ste_live = false;
+>>> +    bool abort, bypass, translate, ste_live = false;
+>>>        struct arm_smmu_cmdq_ent prefetch_cmd = {
+>>>            .opcode        = CMDQ_OP_PREFETCH_CFG,
+>>>            .prefetch    = {
+>>> @@ -1138,11 +1139,11 @@ static void arm_smmu_write_strtab_ent(struct
+>>> arm_smmu_device *smmu, u32 sid,
+>>>                break;
+>>>            case STRTAB_STE_0_CFG_S1_TRANS:
+>>>            case STRTAB_STE_0_CFG_S2_TRANS:
+>>> +        case STRTAB_STE_0_CFG_NESTED:
+>>>                ste_live = true;
+>>>                break;
+>>>            case STRTAB_STE_0_CFG_ABORT:
+>>> -            if (disable_bypass)
+>>> -                break;
+>>> +            break;
+>>>            default:
+>>>                BUG(); /* STE corruption */
+>>>            }
+>>> @@ -1152,8 +1153,13 @@ static void arm_smmu_write_strtab_ent(struct
+>>> arm_smmu_device *smmu, u32 sid,
+>>>        val = STRTAB_STE_0_V;
+>>>          /* Bypass/fault */
+>>> -    if (!ste->assigned || !(ste->s1_cfg || ste->s2_cfg)) {
+>>> -        if (!ste->assigned && disable_bypass)
+>>> +
+>>> +    abort = (!ste->assigned && disable_bypass) || ste->abort;
+>>> +    translate = ste->s1_cfg || ste->s2_cfg;
+>>> +    bypass = !abort && !translate;
+>>> +
+>>> +    if (abort || bypass) {
+>>> +        if (abort)
+>>>                val |= FIELD_PREP(STRTAB_STE_0_CFG,
+>>> STRTAB_STE_0_CFG_ABORT);
+>>>            else
+>>>                val |= FIELD_PREP(STRTAB_STE_0_CFG,
+>>> STRTAB_STE_0_CFG_BYPASS);
+>>> @@ -1172,7 +1178,6 @@ static void arm_smmu_write_strtab_ent(struct
+>>> arm_smmu_device *smmu, u32 sid,
+>>>        }
+>>>          if (ste->s1_cfg) {
+>>> -        BUG_ON(ste_live);
+>>
+>> Hmm, I'm a little uneasy about just removing these checks altogether, as
+>> there are still cases where rewriting a live entry is bogus, that we'd
+>> really like to keep catching. Is the problem that it's hard to tell when
+>> you're 'rewriting' the S2 config of a nested entry with the same thing
+>> on attaching/detaching its S1 context?
+> No, I restored the original checks in !nested mode and added a new check
+> to make sure we never update a live S1 in nested mode. Only S2 can be live.
 
-+1
+Right, either way it's fairly easy to enforce "!(cfg->s1 && ste->s1)", 
+but what I'm really concerned about is that fact where Stream IDs (or 
+possibly PASIDS) get messed up and we end up silently writing a nested 
+config over an STE which happens to already have an S2 configuration for 
+some other domain (or vice versa).
 
-> Anyone else with a comment?
+I guess it might suffice to verify that the VTTBRs match for S2<->nested 
+transitions, what do you reckon?
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Robin.
