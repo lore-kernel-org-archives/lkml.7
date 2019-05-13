@@ -2,144 +2,110 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DA7C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F127C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D832F2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504DA2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qi76d3v8"
+	dkim=pass (2048-bit key) header.d=zaltys-org.20150623.gappssmtp.com header.i=@zaltys-org.20150623.gappssmtp.com header.b="QyMS1Kkv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfEMLcp (ORCPT
+        id S1729073AbfEMLcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:32:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34318 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729011AbfEMLco (ORCPT
+        Mon, 13 May 2019 07:32:46 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35628 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbfEMLcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:32:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id j187so381858wma.1;
-        Mon, 13 May 2019 04:32:42 -0700 (PDT)
+        Mon, 13 May 2019 07:32:45 -0400
+Received: by mail-pg1-f196.google.com with SMTP id h1so6646185pgs.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:32:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=N3vik7kpNTRsh9J9JkdfJ7K6hkNP+zMhP7dl5wnKl8s=;
-        b=Qi76d3v88ocTYTCeV0AfqxPxLEUoZsoX3hkDUIgiYFqdlyRcMDO65M4cRs8h9NpMEZ
-         LJuySd9GY2AEdUoSqpEXoj5GDn2omBnCUyg6P5GyQwbOAYL/e6LAuLZ33vXmZuQOZ8+m
-         oVl6LIXL2B1rYPFarJ21X3WfUu8sgKaHj2FrLy0Pwmfc/QGfL/3Wmw38ubqS4hsIPzyq
-         bTas3hE+l6miSrOkBWQWXfF5I3YZ8/6APE/fz5z3XaFK9xb/Iu5hRI9MErNvCeowD4E9
-         vYR92gHiAJ7u3QHPxaJxqK2hbm5iUJzlnK95PoNqe1jh1+yIdQlUnBZDAaKaZg15P2uv
-         h37A==
+        d=zaltys-org.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:in-reply-to:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=oW2OGfo2kmTLuf4Kc5CGIE4FQWJunf5Se7PBzqxMT+k=;
+        b=QyMS1KkvVFMpgE8NWSvXdmK/oaHre2INuuntPie9HgV+miKlaRnV1PjPxBWhMwbA7Z
+         mvnM8/inBQ015PcrGGYELYZXcPIWZoEra7stEA33UbOdFDDqtafe3k0xWiL4xDMZfN14
+         oRgt0iFijQzgyJ7ipOWy8U4tPQYbqUhL8ZaEf3dYxSxdlacM2ix2wCyYRU9Hrvo5msIR
+         /PSDuzWF6cuZaqs0QEXOXSPx9jqBz/8kW0DKR0vP4TjoL/bOG5vAgTdKCTdDZO8UaZ4+
+         y8XSBnFPLCsmt9FbYFpuVEER9KiWJ5AmZdE/vwaD2c3yewD02JewIBif9h1kaLakn6ys
+         82XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=N3vik7kpNTRsh9J9JkdfJ7K6hkNP+zMhP7dl5wnKl8s=;
-        b=Gja8YOcfPDSL9Xl0m+R0K+ecDKjkXOlN+Mz/qH6I/BuFzRV4fWQE6ylijaQjhL5/6Y
-         YfAhP9WlVyuj4ejLPhzXEKyunfbWMIudgoczOGnmZCU+IIFRDvbwGeg+rbDlViinV61y
-         DiRVg4X4K0zRrRlfd8ZM2tLZ8Juunfp/xtS5LoKWr4tW6dYKA1T50FXqLi+kGOASfu7j
-         /F2VC987QEHPVnNJYQUX+aajBWVhctLRP+khH4jLxk6y747pfgEOct375RUrkC5QCUvw
-         h8rfwzcZWggdUQf4DgwbrbAHyewHLz9ZgULzaZE2Lf6lh9HOrIl19e26Ukjq/KCdolJY
-         Sy3w==
-X-Gm-Message-State: APjAAAXC/sSGtoQ67xSgtjI9ZohXfSNkc10dKH9lK26ZKiL7jGZfXsJq
-        3rZpbp/lJLjc1pgfGB4X4sVKGhZB
-X-Google-Smtp-Source: APXvYqyYyD6s1aVp6uZBLdmwopzTtyrO5j2w+tKQdDKQ0lz6v13YWVg0CYZRe3bMLP52qwSQJGZkWg==
-X-Received: by 2002:a1c:f311:: with SMTP id q17mr15514866wmq.144.1557747161635;
-        Mon, 13 May 2019 04:32:41 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id n15sm15989536wmi.42.2019.05.13.04.32.40
+        h=x-gm-message-state:from:subject:to:cc:in-reply-to:message-id:date
+         :user-agent:mime-version:content-transfer-encoding:content-language;
+        bh=oW2OGfo2kmTLuf4Kc5CGIE4FQWJunf5Se7PBzqxMT+k=;
+        b=VbFmEH2jEHX9djmZz9r7TMB0e6zVu6tCkhrrCbcGZy1kia1/t1HRd7KA2yEsVQSVxH
+         CZll6IY36WReZtS5ZhSFFopVFgpnrPFx9y+N50B3Kuq+uEqZGkjUZ0s27ckvYypre2i+
+         Ms4eH7hunFhLYLr/s9UTrFLZl4aFzX721MQbzM72GY/yq0sALX67J1JMZ3XibR7t5M/d
+         XiUgJFZdfqc/HxF70Mth352aP/TXOPsETJsrIXwrizCTrlt6WgzL6O5A7OJcbGvrTRD6
+         i3Djg34y7uZqjbcBlDNy3/x/jGn32oDV7bzGaq3WxCrcGLm4u9xbOgzg40AbHjlYtwfY
+         seFA==
+X-Gm-Message-State: APjAAAWxUCmMaBm/yPDmNSDMkYKYTvuHPeKNsGQ/38ykM61EJgszwWQi
+        M/oV6ezn6FbelvKYkcPoo7zQtA==
+X-Google-Smtp-Source: APXvYqxmZhyuK0mcNDMhg97F7hXXFjrF+5Xi3FPN/3a4oxJ4C/VPadqCq4QSeE7IoTblppgKCkskFw==
+X-Received: by 2002:a63:7989:: with SMTP id u131mr21610419pgc.180.1557747164024;
+        Mon, 13 May 2019 04:32:44 -0700 (PDT)
+Received: from [172.28.0.10] (122-59-127-127-fibre.sparkbb.co.nz. [122.59.127.127])
+        by smtp.googlemail.com with ESMTPSA id r9sm19107632pfc.173.2019.05.13.04.32.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 04:32:40 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, Tomer Tayar <ttayar@habana.ai>,
-        stable@vger.kernel.org
-Subject: [PATCH] habanalabs: Avoid using a non-initialized MMU cache mutex
-Date:   Mon, 13 May 2019 14:32:37 +0300
-Message-Id: <20190513113237.22425-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 May 2019 04:32:43 -0700 (PDT)
+From:   James Grant <jamesg@zaltys.org>
+Subject: Re: [PATCH 0/5] usb: gadget: udc: lpc32xx: add stotg04 phy support
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+In-Reply-To: <20190409120908.12079-1-alexandre.belloni@bootlin.com>
+Message-ID: <efaaff85-ac39-f0e2-e042-7d6fd0c59054@zaltys.org>
+Date:   Mon, 13 May 2019 23:32:38 +1200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomer Tayar <ttayar@habana.ai>
+Tested with a board containing LPC3250 SOC and STOTG04 PHY by using 
+serial gadget.
 
-The MMU cache mutex is used in the ASIC hw_init() functions, but it is
-initialized only later in hl_mmu_init().
-This patch prevents it by moving the initialization to the
-device_early_init() function.
+Needed patch "[PATCH] usb: gadget: udc: lpc32xx: allocate descriptor 
+with GFP_ATOMIC" also.
 
-Signed-off-by: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: stable@vger.kernel.org
----
- drivers/misc/habanalabs/device.c | 2 ++
- drivers/misc/habanalabs/mmu.c    | 8 +-------
- 2 files changed, 3 insertions(+), 7 deletions(-)
+Tested-by: James Grant <jamesg@zaltys.org>
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 91a9e47a3482..0b19d3eefb98 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -231,6 +231,7 @@ static int device_early_init(struct hl_device *hdev)
- 
- 	mutex_init(&hdev->fd_open_cnt_lock);
- 	mutex_init(&hdev->send_cpu_message_lock);
-+	mutex_init(&hdev->mmu_cache_lock);
- 	INIT_LIST_HEAD(&hdev->hw_queues_mirror_list);
- 	spin_lock_init(&hdev->hw_queues_mirror_lock);
- 	atomic_set(&hdev->in_reset, 0);
-@@ -260,6 +261,7 @@ static int device_early_init(struct hl_device *hdev)
-  */
- static void device_early_fini(struct hl_device *hdev)
- {
-+	mutex_destroy(&hdev->mmu_cache_lock);
- 	mutex_destroy(&hdev->send_cpu_message_lock);
- 
- 	hl_cb_mgr_fini(hdev, &hdev->kernel_cb_mgr);
-diff --git a/drivers/misc/habanalabs/mmu.c b/drivers/misc/habanalabs/mmu.c
-index 533d9315b6fb..10aee3141444 100644
---- a/drivers/misc/habanalabs/mmu.c
-+++ b/drivers/misc/habanalabs/mmu.c
-@@ -404,15 +404,12 @@ int hl_mmu_init(struct hl_device *hdev)
- 
- 	/* MMU H/W init was already done in device hw_init() */
- 
--	mutex_init(&hdev->mmu_cache_lock);
--
- 	hdev->mmu_pgt_pool =
- 			gen_pool_create(__ffs(prop->mmu_hop_table_size), -1);
- 
- 	if (!hdev->mmu_pgt_pool) {
- 		dev_err(hdev->dev, "Failed to create page gen pool\n");
--		rc = -ENOMEM;
--		goto err_pool_create;
-+		return -ENOMEM;
- 	}
- 
- 	rc = gen_pool_add(hdev->mmu_pgt_pool, prop->mmu_pgt_addr +
-@@ -436,8 +433,6 @@ int hl_mmu_init(struct hl_device *hdev)
- 
- err_pool_add:
- 	gen_pool_destroy(hdev->mmu_pgt_pool);
--err_pool_create:
--	mutex_destroy(&hdev->mmu_cache_lock);
- 
- 	return rc;
- }
-@@ -459,7 +454,6 @@ void hl_mmu_fini(struct hl_device *hdev)
- 
- 	kvfree(hdev->mmu_shadow_hop0);
- 	gen_pool_destroy(hdev->mmu_pgt_pool);
--	mutex_destroy(&hdev->mmu_cache_lock);
- 
- 	/* MMU H/W fini will be done in device hw_fini() */
- }
--- 
-2.17.1
+Regards,
+James Grant.
 
+On 09/04/2019 14:09, Alexandre Belloni Wrote:
+> Hi,
+>
+> This series starts to clean up the lpc32xx udc driver and also repairs
+> interrupt handling so hotplugging actually works. The design I tested
+> that on uses an stotg04 instead of the usual isp1301 so support for that
+> is also added.
+>
+> A bit more work is needed to get the RNDIS gadget driver to work.
+>
+> Alexandre Belloni (5):
+>    usb: gadget: udc: lpc32xx: simplify probe
+>    usb: gadget: udc: lpc32xx: simplify vbus handling
+>    usb: gadget: udc: lpc32xx: properly setup phy interrupts
+>    usb: gadget: udc: lpc32xx: add support for stotg04 phy
+>    usb: gadget: udc: lpc32xx: rework interrupt handling
+>
+>   drivers/usb/gadget/udc/lpc32xx_udc.c | 167 +++++++++++----------------
+>   1 file changed, 66 insertions(+), 101 deletions(-)
