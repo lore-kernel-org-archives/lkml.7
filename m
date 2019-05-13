@@ -2,125 +2,136 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF9EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79608C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A721520B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C3420B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557730939;
+	bh=bT3ak87mHPOn/6qzmCm3Jho7/L4DKAETYvoo3+eBUqY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zDW4wsbQ0LRlLsDLweroLp2cWtIjPnsa2uLds79v3MxKrqIxOEFLrwDsZufvUZ2mZ
+	 cUURe5CnVBz4vOcQG6F9u9cA9rjOJeHkrmwmSnEgiUg5K6xhest7lhOQwGpA3s4tyF
+	 bJoBIzYN6Tliu9KCdzztBEm3YnB+JPrIuUuIgZQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbfEMHB2 (ORCPT
+        id S1727733AbfEMHCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:01:28 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:39924 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfEMHB2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:01:28 -0400
-Received: by mail-vs1-f67.google.com with SMTP id m1so184649vsr.6;
-        Mon, 13 May 2019 00:01:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KZeUlM9HFwsoPba3BedCeGi13MK+EsvDzCuCOHnSeSU=;
-        b=tglJ4xUOY7AZqgm0J8qMlTgm8HcXbatXI4c0qw4kxx2eIKQaxlfamPWrr06J46KUnC
-         qbOK5/l66Y4TcNMDhVeOHjm/Wb0cQwFSLnKm7F4iARBf4Bppwx4RZm6cCtIlSa34TReW
-         kVIuxnm3ez2Xa/nOtwRbm4IyBdFLCDn9NMl7iT5cDE0vRwKR17KTeaHQSop/azJh+kpa
-         hJ2OwH3DEy01tDeqMRKI6DqnWwFObs1DqMpnaU/5SUkUjjf3P5WeNCaSA/6mlh9IHVT2
-         uS9KpxvpuV5TcbVJSiiawVoOVDTztxxNg9gJZUPFJKPMSu+SwW3FSaAyWaibGXrgMXxs
-         dgpA==
-X-Gm-Message-State: APjAAAXw3ro/WseG2ulbzPbD6Ov146oenYie8FJUch304PR/260M9twJ
-        Mw1YLLu6yPRLU/0021rH+LzC4Yy1cgcwT8jtA48=
-X-Google-Smtp-Source: APXvYqxs4U9cC6qSMiyVDwFNxNbvddkvfAvZ+WOBelGbmcS7WwGSJect4/Alo1+2rHfzk8JgMisDv2BcZmORdVLPpig=
-X-Received: by 2002:a67:770f:: with SMTP id s15mr4419527vsc.11.1557730886319;
- Mon, 13 May 2019 00:01:26 -0700 (PDT)
+        Mon, 13 May 2019 03:02:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbfEMHCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:02:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E960E20B7C;
+        Mon, 13 May 2019 07:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557730936;
+        bh=bT3ak87mHPOn/6qzmCm3Jho7/L4DKAETYvoo3+eBUqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jO7KprTNDJQMrxqqhWUNHHaFgScJGY1zYd9dCxmZPvnK+wiWF//WbPh18bDM/24nO
+         G5LYSxV2L7+/5DpYnaMegQlQSmMQdZzDOlhIAFkFgGLlzPhelwohmSgOmZYBtlAJAI
+         SRhqybZbIHjOEJecBGeqjLtEYL0NGJ7wxbbbdIRE=
+Date:   Mon, 13 May 2019 09:02:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Daniel Wagner <wagi@monom.org>
+Cc:     stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH v4.4.y] mm, vmstat: make quiet_vmstat lighter
+Message-ID: <20190513070214.GA26553@kroah.com>
+References: <20190513061237.4915-1-wagi@monom.org>
 MIME-Version: 1.0
-References: <20190508070148.23130-1-alastair@au1.ibm.com> <20190508070148.23130-4-alastair@au1.ibm.com>
-In-Reply-To: <20190508070148.23130-4-alastair@au1.ibm.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 May 2019 09:01:14 +0200
-Message-ID: <CAMuHMdVefYTgHzGKBc0ebku1z8V3wsM0ydN+6-S2nFKaB8eH_Q@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] lib/hexdump.c: Optionally suppress lines of
- repeated bytes
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     alastair@d-silva.org, Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        scsi <linux-scsi@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513061237.4915-1-wagi@monom.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alastair,
+On Mon, May 13, 2019 at 08:12:37AM +0200, Daniel Wagner wrote:
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> [ Upstream commit f01f17d3705bb6081c9e5728078f64067982be36 ]
+> 
+> Mike has reported a considerable overhead of refresh_cpu_vm_stats from
+> the idle entry during pipe test:
+> 
+>     12.89%  [kernel]       [k] refresh_cpu_vm_stats.isra.12
+>      4.75%  [kernel]       [k] __schedule
+>      4.70%  [kernel]       [k] mutex_unlock
+>      3.14%  [kernel]       [k] __switch_to
+> 
+> This is caused by commit 0eb77e988032 ("vmstat: make vmstat_updater
+> deferrable again and shut down on idle") which has placed quiet_vmstat
+> into cpu_idle_loop.  The main reason here seems to be that the idle
+> entry has to get over all zones and perform atomic operations for each
+> vmstat entry even though there might be no per cpu diffs.  This is a
+> pointless overhead for _each_ idle entry.
+> 
+> Make sure that quiet_vmstat is as light as possible.
+> 
+> First of all it doesn't make any sense to do any local sync if the
+> current cpu is already set in oncpu_stat_off because vmstat_update puts
+> itself there only if there is nothing to do.
+> 
+> Then we can check need_update which should be a cheap way to check for
+> potential per-cpu diffs and only then do refresh_cpu_vm_stats.
+> 
+> The original patch also did cancel_delayed_work which we are not doing
+> here.  There are two reasons for that.  Firstly cancel_delayed_work from
+> idle context will blow up on RT kernels (reported by Mike):
+> 
+>   CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.5.0-rt3 #7
+>   Hardware name: MEDION MS-7848/MS-7848, BIOS M7848W08.20C 09/23/2013
+>   Call Trace:
+>     dump_stack+0x49/0x67
+>     ___might_sleep+0xf5/0x180
+>     rt_spin_lock+0x20/0x50
+>     try_to_grab_pending+0x69/0x240
+>     cancel_delayed_work+0x26/0xe0
+>     quiet_vmstat+0x75/0xa0
+>     cpu_idle_loop+0x38/0x3e0
+>     cpu_startup_entry+0x13/0x20
+>     start_secondary+0x114/0x140
+> 
+> And secondly, even on !RT kernels it might add some non trivial overhead
+> which is not necessary.  Even if the vmstat worker wakes up and preempts
+> idle then it will be most likely a single shot noop because the stats
+> were already synced and so it would end up on the oncpu_stat_off anyway.
+> We just need to teach both vmstat_shepherd and vmstat_update to stop
+> scheduling the worker if there is nothing to do.
+> 
+> [mgalbraith@suse.de: cancel pending work of the cpu_stat_off CPU]
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
+> Reported-by: Mike Galbraith <umgwanakikbuti@gmail.com>
+> Acked-by: Christoph Lameter <cl@linux.com>
+> Signed-off-by: Mike Galbraith <mgalbraith@suse.de>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Daniel Wagner <wagi@monom.org>
+> ---
+> Hi Greg,
+> 
+> Upstream commmit 0eb77e988032 ("vmstat: make vmstat_updater deferrable
+> again and shut down on idle") was back ported in v4.4.178
+> (bdf3c006b9a2). For -rt we definitely need the bugfix f01f17d3705b
+> ("mm, vmstat: make quiet_vmstat lighter") as well.
+> 
+> Since the offending patch was back ported to v4.4 stable only, the
+> other stable branches don't need an update (offending patch and bug
+> fix are already in).
+> 
+> Could you please queue the above patch for v4.4.y?
 
-Thanks for your patch!
+Now queued up, thanks.
 
-On Wed, May 8, 2019 at 9:04 AM Alastair D'Silva <alastair@au1.ibm.com> wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
->
-> Some buffers may only be partially filled with useful data, while the rest
-> is padded (typically with 0x00 or 0xff).
->
-> This patch introduces a flag to allow the supression of lines of repeated
-> bytes,
-
-Given print_hex_dump() operates on entities of groupsize (1, 2, 4, or 8)
-bytes, wouldn't it make more sense to consider repeated groups instead
-of repeated bytes?
-
-> which are replaced with '** Skipped %u bytes of value 0x%x **'
-
-Using a custom message instead of just "*", like "hexdump" uses, will
-require preprocessing the output when recovering the original binary
-data by feeding it to e.g. "xxd".
-This may sound worse than it is, though, as I never got "xxd" to work
-without preprocessing anyway ;-)
-
-    $ cat $(type -p unhexdump)
-    #!/bin/sh
-    sed 's/^[0-9a-f]*//' $1 | xxd -r -p | dd conv=swab
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+greg k-h
