@@ -2,121 +2,162 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C77C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D225DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB5121019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982AC20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZjZHRBa"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1dX+Bf6L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbfEMHj6 (ORCPT
+        id S1728074AbfEMHlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:39:58 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:50387 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727272AbfEMHj5 (ORCPT
+        Mon, 13 May 2019 03:41:22 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35748 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbfEMHlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:39:57 -0400
-Received: by mail-it1-f193.google.com with SMTP id i10so14879099ite.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:39:57 -0700 (PDT)
+        Mon, 13 May 2019 03:41:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id q15so8555599wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OCBAgYZcl/Mx9I9kBUc9k0z+VS+2s/+/8BKjMe5L/4M=;
-        b=SZjZHRBaI2LN21jyRT5EZkLIQdXHRrkgReZnW+swFod0bdKDie3+g+WGtklY0kC311
-         D1KKaZ2x7uQDR0V2qnPwQzvKPDzqAA94Zpm8YHT/sOwgUG6HPRnEqu85XA+O1k0sypE5
-         bbop+wUKsZ4yMehyLmsJ9459MhRGj3LYgqRz4uO/ypZ8wYUyM8rWxxtLJhVeYmIoNPzJ
-         P0BGjN9KPs18zjGreU5S/Jg8qeugpnE19O6Fjj/RYomOU65m0ow3YaAVxRMZqaRgh++4
-         kfjbw31MpcBw/JJVWa6iRCoFOI7x3lquY0Qvqmfqv/Cd/3KZ+WPUFvwRRIVAPicbMYQz
-         mSPw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Qq+1zh48R9s3mIG2nc4a9h2Ms0c209pq+ZRzkVc8kK8=;
+        b=1dX+Bf6L5wNHNGMGjbtRi9eaDL4tvDeVB/qXZQ6v+I7ceG0euUVh20CaUnjU18GCVy
+         ZVWXq0p3HvjsFh5GyYfIUmD9bAd8bHJcTmolJ/u+yP3YEWVAio8MOMV4iRaLpPhbi1N6
+         p5cKBQNEvkyNW0Vrp9EGHRbStwdwVMVupXNzFQu4IbhiIzAvdzpEu3wDe+Kk0JwL93mh
+         6gjYx0mf6Namxv29gQxCcsBK4yMFwE0ShDnseWqLEYknAxVoI0Lf4qplswKZHNczIgsl
+         32DM+7aguJaE1JHbbghA3vIOo1VO35xOcXF+323QMabDs6N+KmsH0xNpn2AzB8GO1u/f
+         BCdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OCBAgYZcl/Mx9I9kBUc9k0z+VS+2s/+/8BKjMe5L/4M=;
-        b=AX7UvDkgkSmtmgyXodgHSYbXwRTGijMs6cwLf+G6ct76I7hQfbQAfgwZejvYNTkj0Z
-         LbkATqQ6HO7TXeA1KLuuR+JKgCbbWSM4I5DoSUS8V0qut9GBnfu4X7q2HGkYd5i+XX8B
-         MZ1ZdPiF4u9e4JbMMQw5Wcr5Z/AF13XJ/iwIcOFvS6rJqbryGy31aezJCuXBM1T3Y2qA
-         XmuexOGHnRSccc9BgtjSAfthHoXw/SPgWT/XjTkh6CkOjPPokJ/cRQxX172/MrPV4E+X
-         5/39orImB6FtzliEDAX7Xx1eQ9clGAjr3XoJVNBAxZqbLEuc5a9l/gI4ha44xZQNKTVS
-         Prew==
-X-Gm-Message-State: APjAAAW8d7N0fdOacf/mtwJotjFPDLAhmfekwg5uyLxyZlR9GLjxruUf
-        WOYQOmch/z71PxBrfVeKXV0TcvVX0fzd9olebpSuqQ==
-X-Google-Smtp-Source: APXvYqx3ThZE+Yj0kNbVwe1j3uegPjtZ90tj9AYcwjCq3pZNd6Fh+sqbqj1PKRwpmit1sNvknwuQU89gTtGOhYZrWFU=
-X-Received: by 2002:a05:660c:10f:: with SMTP id w15mr11634340itj.166.1557733196690;
- Mon, 13 May 2019 00:39:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Qq+1zh48R9s3mIG2nc4a9h2Ms0c209pq+ZRzkVc8kK8=;
+        b=uYlzCWgIUTBY+U3gezfgeR4LzsOHKxV5SlpHcS9srfSsMcB5oe12Yhf9hVDuI6/L2V
+         IPzQX94CMOFzCImU6y0rSQhD3ETskmO2sbOpJOgm6lrCY7O+BfWLsxn8pq3ZydPVMWTr
+         DjVxFkcTA9S+s3pHsmUd+LRfNYQnyV8JaTFyuYBFe0JEKbo5RShnef6OkDAuyn51s31F
+         r2LzrijsC4PZCEXjaVui9mRd7HroVItc/jQNg4ltsPmLowBjhYXmNe15b5P7Wj2+f70A
+         CAQjLToo7sQb8cl2D13TW0odqmK6DH7jA5U++H8q6/3KM4oAIIIYtBVWd5Fo9+VFABWv
+         M2Lg==
+X-Gm-Message-State: APjAAAUGlSMp6w0oeRHiK2q3TrEyZhQ7Vt123rqs4K01sPJ+HW2H4T5e
+        WChYXAnOvypmS2NF6k5Gz2sXR4/XUygW4Q==
+X-Google-Smtp-Source: APXvYqyif7mggPvT3UWR5Jw1XARgj3c5UAo4Lh+qHTvZNfQxobFzHaOPvYb5QiPKCzLgXllUgqnXrQ==
+X-Received: by 2002:a1c:7e8d:: with SMTP id z135mr4050946wmc.72.1557733279824;
+        Mon, 13 May 2019 00:41:19 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id y7sm38220302wrg.45.2019.05.13.00.41.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 00:41:18 -0700 (PDT)
+Subject: Re: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190510155327.5759-1-jbrunet@baylibre.com>
+ <20190510155327.5759-2-jbrunet@baylibre.com> <7h4l62dlyh.fsf@baylibre.com>
+ <3bad9dc8c53e50c4aea1212bf949215660259412.camel@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <b81b46f1-5e8f-26e8-399f-3baca8336e50@baylibre.com>
+Date:   Mon, 13 May 2019 09:41:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
- <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
- <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 13 May 2019 09:39:45 +0200
-Message-ID: <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com>
-Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nick Kossifidis <mick@ics.forth.gr>,
-        Christoph Hellwig <hch@lst.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3bad9dc8c53e50c4aea1212bf949215660259412.camel@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Sat, May 11, 2019 at 2:51 AM
-To: Dmitry Vyukov
-Cc: Nick Kossifidis, Christoph Hellwig, Linus Torvalds, Andrew Morton,
-linux-arch, Linux Kernel Mailing List, linuxppc-dev
+On 11/05/2019 17:52, Jerome Brunet wrote:
+> On Fri, 2019-05-10 at 14:43 -0700, Kevin Hilman wrote:
+>> minor nit: I kind of like "aliases" and "chosen" at the top since they
+>> are kind of special nodes, but honestly, I can't think of a really good
+>> reason other than personal preference, so keeping things sorted as
+>> you've done here is probably better.
+>>
+> 
+> You thought the same, then thought maybe memory was important too. But going
+> down that path, you end up sorting by feeling. It is going to be difficult
+> to all agree on which nodes are special.
+> 
+> In the end, we just want/need something that is easy to respect and verify.
 
-> On Fri, May 10, 2019 at 6:53 AM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > I think it's good to have a sanity check in-place for consistency.
-> >
-> >
-> > Hi,
-> >
-> > This broke our cross-builds from x86. I am using:
-> >
-> > $ powerpc64le-linux-gnu-gcc --version
-> > powerpc64le-linux-gnu-gcc (Debian 7.2.0-7) 7.2.0
-> >
-> > and it says that it's little-endian somehow:
-> >
-> > $ powerpc64le-linux-gnu-gcc -dM -E - < /dev/null | grep BYTE_ORDER
-> > #define __BYTE_ORDER__ __ORDER_LITTLE_ENDIAN__
-> >
-> > Is it broke compiler? Or I always hold it wrong? Is there some
-> > additional flag I need to add?
->
-> It looks like a bug in the kernel Makefiles to me. powerpc32 is always
-> big-endian,
-> powerpc64 used to be big-endian but is now usually little-endian. There are
-> often three separate toolchains that default to the respective user
-> space targets
-> (ppc32be, ppc64be, ppc64le), but generally you should be able to build
-> any of the
-> three kernel configurations with any of those compilers, and have the Makefile
-> pass the correct -m32/-m64/-mbig-endian/-mlittle-endian command line options
-> depending on the kernel configuration. It seems that this is not happening
-> here. I have not checked why, but if this is the problem, it should be
-> easy enough
-> to figure out.
+I think it would be better to have the same layout for aliases and memory over
+all the amlogic DTS, it's common over all socs to have these nodes on top.
 
+Neil
 
-Thanks! This clears a lot.
-This may be a bug in our magic as we try to build kernel files outside
-of make with own flags (required to extract parts of kernel
-interfaces).
-So don't spend time looking for the Makefile bugs yet.
+> 
+>> Kevin
+> 
+> 
+> 
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+
