@@ -2,58 +2,59 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD65C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1076EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A49F2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D155E2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:23:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mzo5I774"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JQDERog4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbfEMTXI (ORCPT
+        id S1729565AbfEMTXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:23:08 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44453 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727385AbfEMTXI (ORCPT
+        Mon, 13 May 2019 15:23:14 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37169 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729021AbfEMTXM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:23:08 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e13so12043473ljl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:23:06 -0700 (PDT)
+        Mon, 13 May 2019 15:23:12 -0400
+Received: by mail-lf1-f66.google.com with SMTP id h126so9929115lfh.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Gzzr3aPqnDTR4xJuZ6Dwo8dyXxy5sIUZgyMsJ7pPoY0=;
-        b=Mzo5I774dXYMHByU7wsqj3lng+uKL8knf8ObGK3ASOFvgRuuzH0EFF5DVfEKVc3CxF
-         heZjV67nx216HD5b+aMO7oOxn8Mi2KHLUf4q3asBIiQjlqZEUJb+b4N/0Td5sDbVKEfh
-         4a/uhflYJk2rXduqkIyG3LzIIWpcT6R2xYGpjMvItHNnUsjE6XKkXdtgC3vDs1ngYDWk
-         U0+Us+RYvk5sNGre/guOCQ77M3G6ShT42Lzu/+Uc1l7bxp6y0OvD5wposLorqen2+wsi
-         6prpNYZaww9EzNj4Q9CmAvS8TK7yfwVLUoiTMmVHLn8C2FQkuz9Dz1sTycuhe4rljnoF
-         7WVw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Y7css3ZNjj71s6qH3VZ02Gz19f8ZGlmnEuYgt6KvYro=;
+        b=JQDERog4rov3X+DqEg2H7/3Odpqc2zC02GWbC2dA3cdRByYxi61kDxumi6NKwfVrRo
+         MthcOUmpimuvOLKrvD0vrkrnD69QBrGcqvLE2ekX0Ag1GhHhK8CeFO3PPP/rY48StudY
+         uvMfjdjZJgcj/HMAcKg56hIjoXHwqFwxeas8Q/zJXHNh/9VUNbu2dAIaiKo7Pc+MwALa
+         9SWhEPexpgP2e3ql1zXtp3jydNVwmcUGR79PdmwSfMGqrslIYLqcKywJk7qgkw396soe
+         HPSSW/N9cuYmE47cwNMWq0RyVq2SCoJKdaaGjnwEZbeXCXeUlh1q2N/e+59FIltHYDFZ
+         Milg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Gzzr3aPqnDTR4xJuZ6Dwo8dyXxy5sIUZgyMsJ7pPoY0=;
-        b=PzohA/tziwnIhzEV8Q0ikoWvGjcxJwyaPe+ifiI33FeXnnLUerBzYqiPjMB8hh4o0P
-         4XbnrFU152/W11uzJFjjT7McLALILucJW3kauf35jwZ8rpBH6WffzTOeQEreXJqhJmvn
-         oZa85+t3g8PPfzlCL4BulwcgeJdT07UqaWP2A9TJzVE6Qfqb/gdRQY6WSnOEir3dWExA
-         JdZEgwQp6I29PS19orNelS4ZPzalQ6XgBkzgeIphOVjduFtdrFDoNU/sNf/p3U4suu/Y
-         /zZO00VLPsW91MrxUacfVaVtMEfgDNmk/CGYUULURPKRNJuMhg4P7jQqDDH6HyiliKKG
-         uT/Q==
-X-Gm-Message-State: APjAAAVT7ArO8uhxnduCna7WM/Pl7qLbhMGDtAjEEQya2/w7l8DLxB31
-        TgfVM60d1j0riuO7mlskdOTFRA==
-X-Google-Smtp-Source: APXvYqwitEWls33sFoMJJbAKOhzoDnMBmnyAJE/ot+GvPj1v5chGc9NXR/OeG4gvXkNOUG5EoPkgYg==
-X-Received: by 2002:a2e:9f44:: with SMTP id v4mr14425722ljk.72.1557775385746;
-        Mon, 13 May 2019 12:23:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Y7css3ZNjj71s6qH3VZ02Gz19f8ZGlmnEuYgt6KvYro=;
+        b=DJ08Erp+HKS1iUGx2zy0zTi/EPC5UZyoHp5vO1RbnYxQpBCYeiIxtZw6/K5kBK9PiD
+         PF2fq8FmC175VAUW1n46fjD0ZK//njf9oyswMewQTR1VwRd5yjU5OL01Csq7c/behWok
+         pUaT58aqoETdlC8OZ9vRfPpa+0ZLSrYHxEaIHreDIKtkXBvNsSQPyQNnljZdAWGgIKRY
+         QizGhAcfXg8yOrc8ZfmvaXyrO6dab+5b3GTUKplYsy2lMTROWjBc/4uTARBP3xUCcL16
+         w9lq8RYzyQqt8759j+4X42XwkmBeBKxiUS7tqYaCwyie475Z6+ymoX2PXKm2zhyXpVXG
+         7idQ==
+X-Gm-Message-State: APjAAAW9uUYMUnsgU83D4qXN4AuKAZg6yxh9PUE1JO6bCbwpG1q/mrfd
+        5mw4A+9fZqpLaRG6cVcVMf9x5w==
+X-Google-Smtp-Source: APXvYqwTyaAA0SKlYfwt/EkTngvPeOt4VBe6xlPqr7JTEF8fvJF80/c14TQZyy9mXnggagGHR0SUYw==
+X-Received: by 2002:ac2:457a:: with SMTP id k26mr14042867lfm.161.1557775389309;
+        Mon, 13 May 2019 12:23:09 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.04
+        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:23:04 -0700 (PDT)
+        Mon, 13 May 2019 12:23:08 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
@@ -74,128 +75,131 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Souvik Chakravarty <souvik.chakravarty@arm.com>,
         linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement for PSCI
-Date:   Mon, 13 May 2019 21:22:42 +0200
-Message-Id: <20190513192300.653-1-ulf.hansson@linaro.org>
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH 02/18] of: base: Add of_get_cpu_state_node() to get idle states for a CPU node
+Date:   Mon, 13 May 2019 21:22:44 +0200
+Message-Id: <20190513192300.653-3-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series enables support for hierarchical CPU arrangement, managed by PSCI
-for ARM/ARM64. It's based on using the generic PM domain (genpd), which
-recently was extended to manage devices belonging to CPUs.
+The CPU's idle state nodes are currently parsed at the common cpuidle DT
+library, but also when initializing back-end data for the arch specific CPU
+operations, as in the PSCI driver case.
 
-The last two DTS patches enables the hierarchical topology to be used for the
-Qcom 410c Dragonboard and the Hisilicon Hikey board. The former uses PSCI OS-
-initiated mode, while the latter uses the PSCI Platform-Coordinated mode. In
-other words, the hierarchical description of the topology in DT, is orthogonal
-to the supported PSCI CPU suspend mode.
+To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
+the device node for the CPU and the index to the requested idle state node,
+as in-parameters. In case a corresponding idle state node is found, it
+returns the node with the refcount incremented for it, else it returns
+NULL.
 
-Do note, these patches have been posted earlier, but then being part of bigger
-series, which at that point also included the needed infrastructure changes to
-genpd and cpuidle. Rather than continue to carry the old version history,
-which may be a bit confusing, I decided to start over. Although, for clarity,
-the changelog below explains what changes that have been made since the last
-submission was made.
+Moreover, for ARM, there are two generic methods, to describe the CPU's
+idle states, either via the flattened description through the
+"cpu-idle-states" binding [1] or via the hierarchical layout, using the
+"power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
+take both options into account.
 
-Changes since last submission:
- - Converted to use dev_pm_domain_attach_by_name() rather than
-   dev_pm_domain_attach(),when attaching a CPU to its PM domain. This is done to
-   cope with multiple PM domains per CPU, if that turns out to be needed in the
-   future. Changes mainly consisted of storing the returned struct device* from
-   dev_pm_domain_attach_by_name() into a per CPU struct.
- - Due to above changes, some simplification of the code became possible, in
-   particular the deployment of runtime PM became a bit nicer, I think.
- - Moved some of the new code inside "#ifdef CONFIG_CPU_IDLE".
- - Addressed various comments for each patch.
+[1]
+Documentation/devicetree/bindings/arm/idle-states.txt
+[2]
+Documentation/devicetree/bindings/arm/psci.txt
 
-The series is also available at:
-git.linaro.org/people/ulf.hansson/linux-pm.git next
+Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
 
-More background (if you are still awake):
-For ARM64/ARM based platforms CPUs are often arranged in a hierarchical manner.
-From a CPU idle state perspective, this means some states may be shared among a
-group of CPUs (aka CPU cluster).
+Changes:
+	- Fixed some kernel docs typos.
+	- Fall-back to use "cpu-idle-states" when "power-domains" is present but
+	  "domain-idle-states" is missing.
 
-To deal with idle management of a group of CPUs, sometimes the kernel needs to
-be involved to manage the last-man standing algorithm, simply because it can't
-rely solely on power management FWs to deal with this. Depending on the
-platform, of course.
+---
+ drivers/of/base.c  | 36 ++++++++++++++++++++++++++++++++++++
+ include/linux/of.h |  8 ++++++++
+ 2 files changed, 44 insertions(+)
 
-There are a couple of typical scenarios for when the kernel needs to be in
-control, dealing with synchronization of when the last CPU in a cluster is about
-to enter a deep idle state.
-
-1)
-The kernel needs to carry out so called last-man activities before the
-CPU cluster can enter a deep idle state. This may for example involve to
-configure external logics for wakeups, as the GIC may no longer be functional
-once a deep cluster idle state have been entered. Likewise, these operations
-may need to be restored, when the first CPU wakes up.
-
-2)
-Other more generic I/O devices, such as an MMC controller for example, may be a
-part of the same power domain as the CPU cluster, due to a shared power-rail.
-For these scenarios, when the MMC controller is in use dealing with an MMC
-request, a deeper idle state of the CPU cluster may needs to be temporarily
-disabled. This is needed to retain the MMC controller in a functional state,
-else it may loose its register-context in the middle of serving a request.
-
-Kind regards
-Ulf Hansson
-
-
-Lina Iyer (4):
-  dt: psci: Update DT bindings to support hierarchical PSCI states
-  cpuidle: dt: Support hierarchical CPU idle states
-  drivers: firmware: psci: Support hierarchical CPU idle states
-  arm64: dts: Convert to the hierarchical CPU topology layout for
-    MSM8916
-
-Ulf Hansson (14):
-  of: base: Add of_get_cpu_state_node() to get idle states for a CPU
-    node
-  ARM/ARM64: cpuidle: Let back-end init ops take the driver as input
-  drivers: firmware: psci: Simplify state node parsing
-  drivers: firmware: psci: Prepare to use OS initiated suspend mode
-  drivers: firmware: psci: Prepare to support PM domains
-  drivers: firmware: psci: Add support for PM domains using genpd
-  drivers: firmware: psci: Add hierarchical domain idle states converter
-  drivers: firmware: psci: Introduce psci_dt_topology_init()
-  drivers: firmware: psci: Add a helper to attach a CPU to its PM domain
-  drivers: firmware: psci: Attach the CPU's device to its PM domain
-  drivers: firmware: psci: Manage runtime PM in the idle path for CPUs
-  drivers: firmware: psci: Support CPU hotplug for the hierarchical
-    model
-  arm64: kernel: Respect the hierarchical CPU topology in DT for PSCI
-  arm64: dts: hikey: Convert to the hierarchical CPU topology layout
-
- .../devicetree/bindings/arm/psci.txt          | 166 ++++++++
- arch/arm/include/asm/cpuidle.h                |   4 +-
- arch/arm/kernel/cpuidle.c                     |   5 +-
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi     |  87 +++-
- arch/arm64/boot/dts/qcom/msm8916.dtsi         |  57 ++-
- arch/arm64/include/asm/cpu_ops.h              |   4 +-
- arch/arm64/include/asm/cpuidle.h              |   6 +-
- arch/arm64/kernel/cpuidle.c                   |   6 +-
- arch/arm64/kernel/setup.c                     |   3 +
- drivers/cpuidle/cpuidle-arm.c                 |   2 +-
- drivers/cpuidle/dt_idle_states.c              |   5 +-
- drivers/firmware/psci/Makefile                |   2 +-
- drivers/firmware/psci/psci.c                  | 219 ++++++++--
- drivers/firmware/psci/psci.h                  |  29 ++
- drivers/firmware/psci/psci_pm_domain.c        | 403 ++++++++++++++++++
- drivers/of/base.c                             |  36 ++
- drivers/soc/qcom/spm.c                        |   3 +-
- include/linux/of.h                            |   8 +
- include/linux/psci.h                          |   6 +-
- 19 files changed, 987 insertions(+), 64 deletions(-)
- create mode 100644 drivers/firmware/psci/psci.h
- create mode 100644 drivers/firmware/psci/psci_pm_domain.c
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 20e0e7ee4edf..05866f0c65b4 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -477,6 +477,42 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
+ }
+ EXPORT_SYMBOL(of_cpu_node_to_id);
+ 
++/**
++ * of_get_cpu_state_node - Get CPU's idle state node at the given index
++ *
++ * @cpu_node: The device node for the CPU
++ * @index: The index in the list of the idle states
++ *
++ * Two generic methods can be used to describe a CPU's idle states, either via
++ * a flattened description through the "cpu-idle-states" binding or via the
++ * hierarchical layout, using the "power-domains" and the "domain-idle-states"
++ * bindings. This function check for both and returns the idle state node for
++ * the requested index.
++ *
++ * In case an idle state node is found at @index, the refcount is incremented
++ * for it, so call of_node_put() on it when done. Returns NULL if not found.
++ */
++struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++					  int index)
++{
++	struct of_phandle_args args;
++	int err;
++
++	err = of_parse_phandle_with_args(cpu_node, "power-domains",
++					"#power-domain-cells", 0, &args);
++	if (!err) {
++		struct device_node *state_node =
++			of_parse_phandle(args.np, "domain-idle-states", index);
++
++		of_node_put(args.np);
++		if (state_node)
++			return state_node;
++	}
++
++	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
++}
++EXPORT_SYMBOL(of_get_cpu_state_node);
++
+ /**
+  * __of_device_is_compatible() - Check if the node matches given constraints
+  * @device: pointer to node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 0cf857012f11..6ae5c2c4b104 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -351,6 +351,8 @@ extern const void *of_get_property(const struct device_node *node,
+ 				int *lenp);
+ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
+ extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
++extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++						 int index);
+ 
+ #define for_each_property_of_node(dn, pp) \
+ 	for (pp = dn->properties; pp != NULL; pp = pp->next)
+@@ -765,6 +767,12 @@ static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++					int index)
++{
++	return NULL;
++}
++
+ static inline int of_n_addr_cells(struct device_node *np)
+ {
+ 	return 0;
 -- 
 2.17.1
 
