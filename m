@@ -6,84 +6,78 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940FEC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08754C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AF420818
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CC720818
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557761034;
-	bh=EVr4zhm0fqnZG6PraLw7Px7OGuAGXm+MfXSTL/taTXc=;
+	s=default; t=1557761094;
+	bh=2D4xERzKzdDoouixTrLSAoE6CLnToEkAa8inGENiWtg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Zu4x580OktlwwjlRe8E1miNrpy1Jja5XKF+xsS9kgzWm43iuwOYNg2hUb1K8bLnk8
-	 TbF4ulzB/lVt3BsxCXVwAM9YRpKBvA8mtUaF8Yaz3zP7f/os5bg6VEfmPNqmisAhT4
-	 n1JtP7w8JTflg0TKFFVOxo3lLEMxWi1ZaNJF1cmY=
+	b=kxrJClB5d3xUtkCyZgO3Lmun+sK2KOTrSiZJgjAFYsMYafMUYsyVyDWtdvAALV3Bv
+	 Ld3mTOyRnOWDzlPqexfW8LKCZD6fv+wIGOUY44EnnbQkQncUowZdnCEDZWfQtpPBxX
+	 I4TgLLERZodcAxffIgKD5oPJqk0NRVIqSWZ4EhAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbfEMPXx (ORCPT
+        id S1729959AbfEMPYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:23:53 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34742 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfEMPXw (ORCPT
+        Mon, 13 May 2019 11:24:54 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34051 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728351AbfEMPYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:23:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v10so9643173oib.1;
-        Mon, 13 May 2019 08:23:51 -0700 (PDT)
+        Mon, 13 May 2019 11:24:53 -0400
+Received: by mail-ot1-f68.google.com with SMTP id l17so12146484otq.1;
+        Mon, 13 May 2019 08:24:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XfGOlUQQ0BR8c4BsoZfFHQRJzybAooAiYyp3hXARCkQ=;
-        b=kgcK5itGGd5QIo9mqSMTdU4gZgAJAcDAvn4Xaze/S55Kv5nj6KT6CbistSdJHxAaUb
-         CHEiQzbHuYhofBeKQkVblZEWhzpYN8NIpq20Y1X14Rka/1EZsG95MQfQlANOSa/29yB1
-         vxZ3KzkIk/YTJhlIdPxFtwxremyAiXNFHvawa4uEG4tLrflaVpM8/5SHmlTxP4/BiZRD
-         OOSeVCaI6Ac/aXR6r/t+vo2pi6UwYdGBEIVRLt7PLiL6vZGUiAqd9Fgr0oCtM3Oqr6Bd
-         xugET5I+dq3BB6hb0KI4W4pVdzy5yHfXrRIH87H8NMEz1T8fbBskx8Mgv6isIN7wEuz8
-         L8IQ==
-X-Gm-Message-State: APjAAAWldRAi1W1HGvjVRqL1ean2Z0bOeDKu6rsUTclF7BBGrxxD740o
-        La34wVNDUAcehnwLpQ1aXuyjKsc=
-X-Google-Smtp-Source: APXvYqwogXG9j5/7+ZY36riOYzWM8WHj5Fegta9WZGu25wuD9gOfHcK9nAeELOAXUnR4igtZg//L2Q==
-X-Received: by 2002:aca:309:: with SMTP id 9mr14046095oid.94.1557761030441;
-        Mon, 13 May 2019 08:23:50 -0700 (PDT)
+        bh=Exa3++INrIvsO/2wwFbAr/g8BRRRca3wv4ypTrPlix8=;
+        b=Ilo6sAr75cJotXa5uUZj2FVEVtfv5xOt1s5wG9c24pfB3IgE0hiTLs57BQPQU5ajOY
+         ACTvrSIlU5duB0LHdD8ELs0VOhNWkDNQoQG41FmROcEv3bSMtz9dxxM8UiQ8AQt6YMC8
+         YGnAsl0+vISZCz8L3o0//5c6AdQFRlfmsqJOwNj4nOI4U+pIvkvrAJS6yG7U2AcFGCqO
+         Ok9Z/knRfhR/6M9PL47a9LTLhNlOn2T0hm8MKX2HUmZKIoxJp9q0yKj235bz1Npjbs9x
+         wsz/MHsbpU7F4TBCjueKRkfoGw6AOXi9y+4ewgR/gyJ9KnH4o+Iw89NZhR2lWxUZ61aU
+         EfnA==
+X-Gm-Message-State: APjAAAX7KMh4g2V+spZxEzTwkUudptP7VwbMnYq7YzfTXQBMBloWGCHt
+        nMB41qtthQGBZORVTlgBNX9HdOs=
+X-Google-Smtp-Source: APXvYqxD+j5Q4AEhVMyo/hXjCt0J0a+ijOKVDszq4Ce3lGoF83FSubFyFx1OarmubB6+GoPNGDdf3Q==
+X-Received: by 2002:a9d:3f61:: with SMTP id m88mr16458752otc.147.1557761092874;
+        Mon, 13 May 2019 08:24:52 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id m203sm5419883oib.45.2019.05.13.08.23.49
+        by smtp.gmail.com with ESMTPSA id a24sm196287otd.37.2019.05.13.08.24.51
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 08:23:49 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:23:49 -0500
+        Mon, 13 May 2019 08:24:52 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:24:51 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Rename and amend Hexagon
- v56 binding
-Message-ID: <20190513152349.GA23710@bogus>
-References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
- <20190510043421.31393-2-bjorn.andersson@linaro.org>
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     linus.walleij@linaro.org, khilman@baylibre.com,
+        jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] dt-bindings: pinctrl: add a
+ 'drive-strength-microamp' property
+Message-ID: <20190513152451.GA25690@bogus>
+References: <20190510082324.21181-1-glaroque@baylibre.com>
+ <20190510082324.21181-2-glaroque@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190510043421.31393-2-bjorn.andersson@linaro.org>
+In-Reply-To: <20190510082324.21181-2-glaroque@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  9 May 2019 21:34:14 -0700, Bjorn Andersson wrote:
-> The SDM845 Audio DSP peripheral image loader binding describes the
-> properties needed to load and boot firmware on a Hexagon v56. Rename the
-> file and add the Compute DSP (CDSP) found in QCS404 to the binding.
+On Fri, 10 May 2019 10:23:19 +0200, Guillaume La Roque wrote:
+> This property allow drive-strength parameter in uA instead of mA.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 > ---
->  ...qcom,adsp-pil.txt => qcom,hexagon-v56.txt} | 35 +++++++++++++------
->  1 file changed, 25 insertions(+), 10 deletions(-)
->  rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp-pil.txt => qcom,hexagon-v56.txt} (74%)
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
