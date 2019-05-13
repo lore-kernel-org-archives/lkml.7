@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DBDC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2944BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F6F21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF87721019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557788116;
-	bh=+zPRW+JURo3C0YMHDioMJatKoaiK50hC5/k8DnkRSUw=;
+	s=default; t=1557788119;
+	bh=zoUDwhLvAd1vhaGU8kBKsxlklp/ynJ4RVpUUR8CYCX0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=A5ntK3nNBuVWYNASWMFaz1ceERuK2BQSVgy8N9T0/NHOOBRxdZD9kk4FlDqx6QrBA
-	 PSCyo8TTdE3EM1SaFsSUJ6HkOYXt0n1yKc6eTy+aOlfpHR0IwWe/5SvfKaWORr9TDK
-	 sp0XcfCWYQGj7rCCuITKC86nq+YMVpWtAsdxPnzA=
+	b=IhiYOzOMcVPTRKt7YqYHmZpLG8r8HgLWw2t0T9s6LK+zIfw1Q+oKlY7OIMnci0ruq
+	 z9x93X2rQrjTdld5+Ig2t1zPA4pr04Cnt7MSycWSKBIN7GBlRKEVlBKYcExTxfuQ6y
+	 0F/E0J8EwwvnenWa7ibGIiedKoUqosym9AU4915w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfEMWzP (ORCPT
+        id S1726773AbfEMWzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59116 "EHLO mail.kernel.org"
+        Mon, 13 May 2019 18:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbfEMWzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:55:15 -0400
-Subject: Re: [GIT] Networking
+        id S1726739AbfEMWzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 18:55:16 -0400
+Subject: Re: [GIT PULL] percpu changes for v5.2-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557788114;
-        bh=+zPRW+JURo3C0YMHDioMJatKoaiK50hC5/k8DnkRSUw=;
+        s=default; t=1557788115;
+        bh=zoUDwhLvAd1vhaGU8kBKsxlklp/ynJ4RVpUUR8CYCX0=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VMWWuvMhL26hpLsRKlAwx+Z9WmZPh1rw0MvF3jC0tyP7dNoC4J5dUO7vOveIdHB1t
-         5eLTHI81jl2Xq/jKK8UbEo0jR+bbR6QOJSpZvPKQR2/FOpJB44BcVOjcLZdwVEuV5z
-         tOXydfmOUvHQ/8CDE6Sv6cYtARuQ659b5cgsHdLk=
+        b=KyFd5GNJcWCd8uLj33Y8/HURKSkaKNmVgzqUOGuiThMNJ7NFnfPjFWziVUxw8TUcz
+         5QPVZ2GhLw5TMrqMA/l2b/qKr3/+eIBQM1UKW6Z6BCW9Rpfx55qGqH2sRjQ2bW63Zx
+         SqsegLhcxqbDzDzUyRphYbsVO/L1NqRixMGDUFis=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190513.100808.446548500573250493.davem@davemloft.net>
-References: <20190513.100808.446548500573250493.davem@davemloft.net>
+In-Reply-To: <20190513185241.GA74787@dennisz-mbp>
+References: <20190513185241.GA74787@dennisz-mbp>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190513.100808.446548500573250493.davem@davemloft.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
-X-PR-Tracked-Commit-Id: d4c26eb6e721683a0f93e346ce55bc8dc3cbb175
+X-PR-Tracked-Message-Id: <20190513185241.GA74787@dennisz-mbp>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.2
+X-PR-Tracked-Commit-Id: 198790d9a3aeaef5792d33a560020861126edc22
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a3958f5e13e23f6e68c3cc1210639f63728a950f
-Message-Id: <155778811450.1812.5325827211696422391.pr-tracker-bot@kernel.org>
-Date:   Mon, 13 May 2019 22:55:14 +0000
-To:     David Miller <davem@davemloft.net>
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 3aff5fac54d722f363eac7db94536bffb55ca43f
+Message-Id: <155778811588.1812.12003345020716870482.pr-tracker-bot@kernel.org>
+Date:   Mon, 13 May 2019 22:55:15 +0000
+To:     Dennis Zhou <dennis@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 13 May 2019 10:08:08 -0700 (PDT):
+The pull request you sent on Mon, 13 May 2019 14:52:41 -0400:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git refs/heads/master
+> git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a3958f5e13e23f6e68c3cc1210639f63728a950f
+https://git.kernel.org/torvalds/c/3aff5fac54d722f363eac7db94536bffb55ca43f
 
 Thank you!
 
