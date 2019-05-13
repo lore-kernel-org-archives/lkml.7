@@ -2,112 +2,94 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313C8C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2C3C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078CE208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80182070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQuY2s+g"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="L1lZhrZG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfEMSrt (ORCPT
+        id S1728255AbfEMSs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:47:49 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:39278 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbfEMSrs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:47:48 -0400
-Received: by mail-qk1-f194.google.com with SMTP id z128so8693728qkb.6;
-        Mon, 13 May 2019 11:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=fcj7AotgrHgaGk9eGLmWk2zeSnn906Cpfa2iryM3DoI=;
-        b=SQuY2s+gOhhvRTsfAUBFH8LblnHzjFKVtQhD/ihRPsOB1DqyVzD7Xi9YbAmZb4Pvhp
-         kKP0V+5w7UIAUrpkSD9JLaZbwAXLCTHvW7eaQ/mEMTNGQB40/4n8tgbWfXZ/4G2zW6Ds
-         7E2h7E2DbLtKiFnN7K8LldVs7Hr00QujeCB/kKbDgjKuBjhTwnW+JBdrQm7JYY24v8RT
-         Tw7OIi/fi6263Hsrvk66MGEe7JsiyomynLBElEePKLWgjiQrw0eMU/E+u06hTFjxo6sb
-         Fqs08/Wd3j+ANlJUFbuqQHK0gbt7dVAKrvbS1KTWyBLhqFsLmeK7omiu8V5RLxEgjWe3
-         6WVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=fcj7AotgrHgaGk9eGLmWk2zeSnn906Cpfa2iryM3DoI=;
-        b=V4Qv5paOiCPG1ZORRwNyz11OuemVxy5uQ77xsV/rKlLqRGSsRP3pp7N7ZhNC1TMwCl
-         qaXThQ3ZGUa+vNuF9Em8c3ucTt4t53bNzhYOIW3ZIzvR4M9oVErrVSjvf4uaSsbGXX0j
-         DN5fx/1f5ff1AhksCFxx4ngD53OLntg60RjiwI1FFUAcjklwo8OYShJuPrFLNw9aMU6c
-         9fwdjaIw/ASkTSzpwVt359k2L6f9dUIhNG+mWbDLmoxy39TFlqLS+afQB7utSCtJk/sU
-         VxH9O5WOpfftQZpdwz2yuft9Vt4/TB40P9YwAwiZ7lY50YnbfT3/bi+RWxcJXYnETDoW
-         tUIw==
-X-Gm-Message-State: APjAAAUWhSzqqMr0kldpy9QNgW0kI+S4fsk0qNimFmnYzUnV9m20aWt2
-        WmQj2sWMREo0RrS+VLrjVdE=
-X-Google-Smtp-Source: APXvYqwdSDAkgQrSSL+3vDaE++UoYG/GcBJoF1ZeHnppvHfcB33cgnOZ30ylcxoJS9xjNysAaeQyLg==
-X-Received: by 2002:a05:620a:16b4:: with SMTP id s20mr23939911qkj.34.1557773267186;
-        Mon, 13 May 2019 11:47:47 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x6sm553163qti.88.2019.05.13.11.47.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 11:47:46 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 13 May 2019 14:47:45 -0400
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190513184744.GA12386@rani.riverdale.lan>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <20190513172007.GA69717@rani.riverdale.lan>
- <20190513175250.GC69717@rani.riverdale.lan>
- <1557772584.4969.62.camel@linux.ibm.com>
+        Mon, 13 May 2019 14:48:27 -0400
+Received: from node.akkea.ca ([192.155.83.177]:44998 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728190AbfEMSs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:48:27 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id E7EEC4E204B; Mon, 13 May 2019 18:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1557773306; bh=hCoM+MZKQxVEbks3ixHBaQdKIT5dEO7R/ECZ/P/HzIg=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=L1lZhrZGW3NlDnLKOxQtBMkkoB5wtFI1G3A5ejzzKIYpo4O8+B6Ez6gzNQ31dYsl/
+         3uTR/97QjiIYnMDdspJYpUbOlHujCTcXJEO944m7AU5X1RvvUBDLCy5v89zt6C9hbg
+         3VAbg4vCtiaz8EyvQJ60dL0umk3fnaUbon18aiQw=
+To:     Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v10 1/4] MAINTAINERS: add an entry for for arm64 imx  devicetrees
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557772584.4969.62.camel@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 May 2019 11:48:26 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
+References: <20190513174057.4410-1-angus@akkea.ca>
+ <20190513174057.4410-2-angus@akkea.ca>
+ <CAOMZO5BaQnrDOYogzgpmCExjB+uhYQ8SsxBiMWrSB-1KRtgeVQ@mail.gmail.com>
+Message-ID: <e61562bfc80e25bf233ae7fd7b032f83@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 02:36:24PM -0400, Mimi Zohar wrote:
+On 2019-05-13 11:01, Fabio Estevam wrote:
+> On Mon, May 13, 2019 at 2:41 PM Angus Ainslie (Purism) <angus@akkea.ca> 
+> wrote:
+>> 
+>> Add an explicit reference to imx* devicetrees
+>> 
+>> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+>> ---
+>>  MAINTAINERS | 1 +
+>>  1 file changed, 1 insertion(+)
+>> 
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 7707c28628b9..0871a21a5bbb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1648,6 +1648,7 @@ T:        git 
+>> git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+>>  F:     arch/arm/boot/dts/ls1021a*
+>>  F:     arch/arm64/boot/dts/freescale/fsl-*
+>>  F:     arch/arm64/boot/dts/freescale/qoriq-*
+>> +F:     arch/arm64/boot/dts/freescale/imx*
 > 
-> > > How does this work today then? Is it actually the case that initramfs
-> > > just cannot be used on an IMA-enabled system, or it can but it leaves
-> > > the initramfs unverified and we're trying to fix that? I had assumed the
-> > > latter.
-> > Oooh, it's done not by starting IMA appraisal later, but by loading a
-> > default policy to ignore initramfs?
+> No, please put this entry under ARM/FREESCALE IMX / MXC ARM 
+> ARCHITECTURE
 > 
-> Right, when rootfs is a tmpfs filesystem, it supports xattrs, allowing
-> for finer grained policies to be defined.  This patch set would allow
-> a builtin IMA appraise policy to be defined which includes tmpfs.
-> 
-> Mimi
-> 
-Ok, but wouldn't my idea still work? Leave the default compiled-in
-policy set to not appraise initramfs. The embedded /init sets all the
-xattrs, changes the policy to appraise tmpfs, and then exec's the real
-init? Then everything except the embedded /init and the file with the
-xattrs will be appraised, and the embedded /init was verified as part of
-the kernel image signature. The only additional kernel change needed
-then is to add a config option to the kernel to disallow overwriting the
-embedded initramfs (or at least the embedded /init).
+
+I believe order is important. Would you like it before or after the "N:" 
+entries ? Or just as the last entry.
+
+> Thanks
+
