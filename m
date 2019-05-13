@@ -4,80 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F63DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6737DC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6FC420818
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F7921473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557761130;
-	bh=QSG1xiuW94tGdhEChZT4kPyzJAv24Oh9EJPWAW0XkVg=;
+	s=default; t=1557761192;
+	bh=kjha8BKm8yBYsHEO2leNOEO2y7FhJqdeUCtT6WNzuS0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D64N5nWPwq1Jt1TXSLzqYmPm6ZX4uEf7aQB6iR16/sC1uErKyEFHIBl7MFJN3uOot
-	 PydF6mSIRw94pmfuVnKTrh9uPkGOjEzio6TODxMd8NS2gID+xL/EC8TxLyaAxoNh/r
-	 s3hsK78wIlcsvZGn0ZxMrIszAmzsvZKMfD/o6BlY=
+	b=Ld9sPycoE78gzauGbXFOcjLudJrZbU6RwdP7HIvpLhNtvCziszcRiNo/s4QkhH7Tp
+	 W8alLRj5e1xwWw0Zg0z70wvz3WIEOAQT7VR2i4N/AAAHQFSD/ibUbExtqIlH3Scp02
+	 3BXbtbHiE5Z9FV4I8mjR69AqOcMv6ohtPXRxqJeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfEMPZ3 (ORCPT
+        id S1731281AbfEMP0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:25:29 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36174 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfEMPZ2 (ORCPT
+        Mon, 13 May 2019 11:26:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37182 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbfEMP0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:25:28 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l203so9653046oia.3;
-        Mon, 13 May 2019 08:25:28 -0700 (PDT)
+        Mon, 13 May 2019 11:26:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r10so11389222otd.4;
+        Mon, 13 May 2019 08:26:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yR8LH1UTSOR53HlMWiY3fqhsPbeoHCRdKQtWqDUvbtE=;
-        b=SOJ8IuHT7EzZskDOb6sOowdwy/zxUlHbNX2r+gzy5wE8mQnEAcx2k4/vVdG6GVYJ6z
-         HRQ74ImK1hPImBV1mOedMmJ7eVnTEG1Lgl0skabDaf9BHZpiZs4/TPgKGe25cI2hQ8Bp
-         xinL9ZPF779gNDjOfCKT/bz4k/Xvt82+85lJBOzVmZ8pX73onbjesL8RtvPpQCt3YSlU
-         vrT0RYP+ukWwPelHXKuGuOn4hmzynpY1OWnSmjS9DOYSmqm6gbW8RFFueEsinxlkZrYI
-         45qL+Qf6WO8BK1FPreAlKuq99uBirZMcIPu12lOOh6jnVoNqRVqHsRtjpOHn47AAtuEo
-         O/1w==
-X-Gm-Message-State: APjAAAW4c83RENkjXCG57Lja4rCzUgXj1Rq4AQv6YXVUFXpEfpAXdA1i
-        kEMZt1QdSro+70TSgmBsbA==
-X-Google-Smtp-Source: APXvYqyDCnvry2vDAp1C4ugLHChFWp7RaybclhaNzP7J4oQYtwquxvbH4O3ICGW6/efwu871Ip/TpA==
-X-Received: by 2002:aca:5e04:: with SMTP id s4mr758645oib.32.1557761127630;
-        Mon, 13 May 2019 08:25:27 -0700 (PDT)
+        bh=nIvktfd4Hu4J+EanMaRcVbjL4KHwX8r4JOA04Ck3E04=;
+        b=Hkk8Nsb7hKIC2XFypkOJ+NTeBHPRV5M1j4o/SsS/Uld3iYc269r+WzYYPysGv3z/NK
+         p5OBnYsklBHyhOrrQ1aJc7CKrESB+Tr0T62P5yDXhAte64UzEc/tbX5dGn8ovE11+ePX
+         RQ4ZY8DbopY02xKZ2kztuCQg1MzpWRsADFB5wl4NJEQxDMdpfIDQy+eesS7G5blItYmC
+         Q7J/U/DS1YA3thfXpuH40w5s3QE13+Zmc8lxJn35DrW5bKH14O+wJdHsEwi8QOeEWZXM
+         VqXlIniAIzn33nyPPCjKvvo0Wki8/JFqbFMahLzaYj1rTHJy5PK0nqhEtdupuoE/LdxN
+         Y+tg==
+X-Gm-Message-State: APjAAAU0ir/UMiKCXlbfhtsI9Od87PrmbnMyuLdJc6l8FyO/WGaExV7j
+        Xi0YdfJ1otR9srHAOYO8Nw==
+X-Google-Smtp-Source: APXvYqzOz0IJhiSIHUggaPIhdUeY+8qUhUMxIUjErgTOEdtsFRFR0DWcAUAIS2pzGbes4imV56PH3w==
+X-Received: by 2002:a9d:12d7:: with SMTP id g81mr11173627otg.46.1557761190168;
+        Mon, 13 May 2019 08:26:30 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p189sm5298317oih.7.2019.05.13.08.25.26
+        by smtp.gmail.com with ESMTPSA id r15sm2003876oie.5.2019.05.13.08.26.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 08:25:26 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:25:26 -0500
+        Mon, 13 May 2019 08:26:29 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:26:28 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Guillaume La Roque <glaroque@baylibre.com>
-Cc:     linus.walleij@linaro.org, khilman@baylibre.com,
-        jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/6] dt-bindings: pinctrl: meson: Add
- drive-strength-microamp property
-Message-ID: <20190513152526.GA26772@bogus>
-References: <20190510082324.21181-1-glaroque@baylibre.com>
- <20190510082324.21181-4-glaroque@baylibre.com>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V4 1/3] dt-bindings: watchdog: move i.MX system
+ controller  watchdog binding to SCU
+Message-ID: <20190513152628.GA28757@bogus>
+References: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190510082324.21181-4-glaroque@baylibre.com>
+In-Reply-To: <1557192198-19640-1-git-send-email-Anson.Huang@nxp.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 10:23:21 +0200, Guillaume La Roque wrote:
-> Add optional drive-strength-microamp property
+On Tue, 7 May 2019 01:28:12 +0000, Anson Huang wrote:
+> i.MX system controller watchdog depends on SCU driver to support
+> interrupt function, so it needs to be subnode of SCU node in DT,
+> binding doc should be moved to fsl,scu.txt as well.
 > 
-> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+> No change.
+> ---
+>  .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 15 ++++++++++++++
+>  .../bindings/watchdog/fsl-imx-sc-wdt.txt           | 24 ----------------------
+>  2 files changed, 15 insertions(+), 24 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/watchdog/fsl-imx-sc-wdt.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
