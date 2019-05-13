@@ -2,101 +2,86 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434BCC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D748FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12DE8208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4CDC208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729282AbfEMLNa (ORCPT
+        id S1729285AbfEMLOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:13:30 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:36961 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfEMLNa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:13:30 -0400
-Received: by mail-vk1-f194.google.com with SMTP id o187so3191674vkg.4;
-        Mon, 13 May 2019 04:13:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/pd5isyFpDeE3AyBnCUJiWiqlznT6f7kJ6kW0m/JGv0=;
-        b=DgyZg9ozrEcJ/EnUGFSHoV8IdZEN2HlUrfFlXmK/lp9ZyepLBvsECfsnva1TSv3XZu
-         g72eABAwyL8RwofvIT7KLlu9dFFACmhYsBtKIzOyWpmXVLdfoWuGv4vVPhuii8nqRVTP
-         nHNG8tM74jU9HXp/oayGop0mSSP3xx6h9I6kGwyZmdb+w5Ae65UQGMxka9+Q3zpQUK+L
-         AYUg0vvdh5/q5pVCywqtMJoIrZWT5s8dtSnJXQXP0VjAPdSYJhs+KRTJuoO9yPqESRYu
-         E/btcqLrhTgzf/82yMbjK5IA828pB41DtfjqPDZMB+8e6InUFz9Zuu319CpPALPNE/6D
-         n/2A==
-X-Gm-Message-State: APjAAAVgyPeZOwbHD0tziHMX/wxH0TjEdNAmndbMzqd4EO3CR8tfAApL
-        yU7aNN01iTJ9cCCcBQkoh2eJcxKBJwDTxiY5Ohs=
-X-Google-Smtp-Source: APXvYqzGQGneFk2qC7z1BupEocV/I1PZSWp0WeD+iIZ6EKW9Py9AqeGvI70MJa2R3Izqb6b5XGD0VkEuo5ymCAzpPZc=
-X-Received: by 2002:a1f:3dc9:: with SMTP id k192mr3729750vka.74.1557746008863;
- Mon, 13 May 2019 04:13:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com> <1557413011-1662-1-git-send-email-george_davis@mentor.com>
-In-Reply-To: <1557413011-1662-1-git-send-email-george_davis@mentor.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 May 2019 13:13:16 +0200
-Message-ID: <CAMuHMdUCcxfVdY1PqfYRZMjHN2eP_-NAsniCY39XyrDysAu1Pw@mail.gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
-To:     "George G. Davis" <ggdavisiv@gmail.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 13 May 2019 07:14:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52610 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbfEMLOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:14:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6CFA374;
+        Mon, 13 May 2019 04:14:31 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92C9B3F703;
+        Mon, 13 May 2019 04:14:29 -0700 (PDT)
+Date:   Mon, 13 May 2019 12:14:27 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     John Garry <john.garry@huawei.com>, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
-        "George G. Davis" <george_davis@mentor.com>
-Content-Type: text/plain; charset="UTF-8"
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2] perf vendor events arm64: Add Cortex-A57 and
+ Cortex-A72 events
+Message-ID: <20190513111427.GC6711@fuggles.cambridge.arm.com>
+References: <20190502234704.7663-1-f.fainelli@gmail.com>
+ <5c04ebac-3e3c-fa53-d287-3a602a350091@huawei.com>
+ <a8a3c429-307c-40fc-12b4-d62374bfda1d@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8a3c429-307c-40fc-12b4-d62374bfda1d@gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
+On Fri, May 10, 2019 at 12:49:55PM -0700, Florian Fainelli wrote:
+> On 5/6/19 12:25 AM, John Garry wrote:
+> > On 03/05/2019 00:47, Florian Fainelli wrote:
+> >> The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
+> >> up to the RC_ST_SPEC (0x91) event with the exception of:
+> >>
+> >> - L1D_CACHE_REFILL_INNER (0x44)
+> >> - L1D_CACHE_REFILL_OUTER (0x45)
+> >> - L1D_TLB_RD (0x4E)
+> >> - L1D_TLB_WR (0x4F)
+> >> - L2D_TLB_REFILL_RD (0x5C)
+> >> - L2D_TLB_REFILL_WR (0x5D)
+> >> - L2D_TLB_RD (0x5E)
+> >> - L2D_TLB_WR (0x5F)
+> >> - STREX_SPEC (0x6F)
+> >>
+> >> Create an appropriate JSON file for mapping those events and update the
+> >> mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
+> >> file.
+> > 
+> > I suppose you could have also created separate a72 and a57 folders, and
+> > used a symbolic link for the json. That would have kept the folder
+> > structure consistent and neat.
+> 
+> Will, Mark, any preference on that? Either way works fine.
 
-On Thu, May 9, 2019 at 4:44 PM George G. Davis <ggdavisiv@gmail.com> wrote:
-> As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-> console UART"), UART console lines use low-level PIO only access functions
-> which will conflict with use of the line when DMA is enabled, e.g. when
-> the console line is also used for systemd messages. So disable DMA
-> support for UART console lines.
->
-> Fixes: https://patchwork.kernel.org/patch/10929511/
-> Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
+I'd personally avoid committing symbolic links if possible, so I'm fine
+with your patch as-is.
 
-I think this makes sense.  In addition to OMAP 8250, the same approach
-is used in the Mediatek 8250 and iMX serial drivers.
-
-Regardless, this is definitely better than removing the "dmas" properties
-from DT, as DT describes hardware, not usage policies.
-
-Anyone else with a comment?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Will
