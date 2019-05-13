@@ -3,109 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9E8C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24986C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A820208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABAB208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfEMNDq (ORCPT
+        id S1730059AbfEMNET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:03:46 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32935 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728743AbfEMNDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:03:46 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 134B4B112C6D8409069F;
-        Mon, 13 May 2019 14:03:44 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
- 2019 14:03:33 +0100
-Subject: Re: [PATCH v2 3/3] initramfs: introduce do_readxattrs()
-To:     Jann Horn <jannh@google.com>
-CC:     <viro@zeniv.linux.org.uk>, <linux-security-module@vger.kernel.org>,
-        <linux-integrity@vger.kernel.org>, <initramfs@vger.kernel.org>,
-        <linux-api@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <zohar@linux.vnet.ibm.com>,
-        <silviu.vlasceanu@huawei.com>, <dmitry.kasatkin@huawei.com>,
-        <takondra@cisco.com>, <kamensky@cisco.com>, <hpa@zytor.com>,
-        <arnd@arndb.de>, <rob@landley.net>, <james.w.mcmechan@gmail.com>
-References: <20190509112420.15671-1-roberto.sassu@huawei.com>
- <20190509112420.15671-4-roberto.sassu@huawei.com>
- <20190510213340.GE253532@google.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <bc72d312-07ce-51a3-4554-358d074f9c7d@huawei.com>
-Date:   Mon, 13 May 2019 15:03:40 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 13 May 2019 09:04:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59104 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727953AbfEMNET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:04:19 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8DAAA3084288;
+        Mon, 13 May 2019 13:04:18 +0000 (UTC)
+Received: from [10.72.12.50] (ovpn-12-50.pek2.redhat.com [10.72.12.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A6C618A47;
+        Mon, 13 May 2019 13:04:11 +0000 (UTC)
+Subject: Re: [PATCH 4/5] ceph: fix improper use of smp_mb__before_atomic()
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>,
+        "Yan, Zheng" <ukernel@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1556568902-12464-5-git-send-email-andrea.parri@amarulasolutions.com>
+ <20190430082332.GB2677@hirez.programming.kicks-ass.net>
+ <CAAM7YA=YOM79GJK8b7OOQbzT_-sYRD2UFHYithY7Li1yQt5Hog@mail.gmail.com>
+ <20190509205452.GA4359@andrea>
+From:   "Yan, Zheng" <zyan@redhat.com>
+Message-ID: <6956e700-ef56-7f20-4e6c-3ad86c9fd89e@redhat.com>
+Date:   Mon, 13 May 2019 21:04:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190510213340.GE253532@google.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20190509205452.GA4359@andrea>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 13 May 2019 13:04:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/2019 11:33 PM, Jann Horn wrote:
-> On Thu, May 09, 2019 at 01:24:20PM +0200, Roberto Sassu wrote:
->> This patch adds support for an alternative method to add xattrs to files in
->> the rootfs filesystem. Instead of extracting them directly from the ram
->> disk image, they are extracted from a regular file called .xattr-list, that
->> can be added by any ram disk generator available today.
-> [...]
->> +struct path_hdr {
->> +	char p_size[10]; /* total size including p_size field */
->> +	char p_data[];  /* <path>\0<xattrs> */
->> +};
->> +
->> +static int __init do_readxattrs(void)
->> +{
->> +	struct path_hdr hdr;
->> +	char str[sizeof(hdr.p_size) + 1];
->> +	unsigned long file_entry_size;
->> +	size_t size, name_buf_size, total_size;
->> +	struct kstat st;
->> +	int ret, fd;
->> +
->> +	ret = vfs_lstat(XATTR_LIST_FILENAME, &st);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	total_size = st.size;
->> +
->> +	fd = ksys_open(XATTR_LIST_FILENAME, O_RDONLY, 0);
->> +	if (fd < 0)
->> +		return fd;
->> +
->> +	while (total_size) {
->> +		size = ksys_read(fd, (char *)&hdr, sizeof(hdr));
-> [...]
->> +	ksys_close(fd);
->> +
->> +	if (ret < 0)
->> +		error("Unable to parse xattrs");
->> +
->> +	return ret;
->> +}
+On 5/10/19 4:55 AM, Andrea Parri wrote:
+> On Tue, Apr 30, 2019 at 05:08:43PM +0800, Yan, Zheng wrote:
+>> On Tue, Apr 30, 2019 at 4:26 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>>>
+>>> On Mon, Apr 29, 2019 at 10:15:00PM +0200, Andrea Parri wrote:
+>>>> This barrier only applies to the read-modify-write operations; in
+>>>> particular, it does not apply to the atomic64_set() primitive.
+>>>>
+>>>> Replace the barrier with an smp_mb().
+>>>>
+>>>
+>>>> @@ -541,7 +541,7 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
+>>>>                                           long long release_count,
+>>>>                                           long long ordered_count)
+>>>>   {
+>>>> -     smp_mb__before_atomic();
+>>>
+>>> same
+>>>          /*
+>>>           * XXX: the comment that explain this barrier goes here.
+>>>           */
+>>>
+>>
+>> makes sure operations that setup readdir cache (update page cache and
+>> i_size) are strongly ordered with following atomic64_set.
 > 
-> Please use something like filp_open()+kernel_read()+fput() instead of
-> ksys_open()+ksys_read()+ksys_close(). I understand that some of the init
-> code needs to use the syscall wrappers because no equivalent VFS
-> functions are available, but please use the VFS functions when that's
-> easy to do.
+> Thanks for the suggestion, Yan.
+> 
+> To be clear: would you like me to integrate your comment and resend?
+> any other suggestions?
+> 
 
-Ok. Thanks for the suggestion.
+Yes, please
 
-Roberto
+Regards
+Yan, Zheng
 
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+> Thanx,
+>    Andrea
+> 
+> 
+>>
+>>>> +     smp_mb();
+>>>
+>>>>        atomic64_set(&ci->i_complete_seq[0], release_count);
+>>>>        atomic64_set(&ci->i_complete_seq[1], ordered_count);
+>>>>   }
+>>>> --
+>>>> 2.7.4
+>>>>
+
