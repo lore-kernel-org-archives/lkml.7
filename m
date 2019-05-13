@@ -2,88 +2,140 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBB6C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F8FC46470
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F3C20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2A521473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfEMW5g (ORCPT
+        id S1726551AbfEMXBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:57:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34771 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfEMW5g (ORCPT
+        Mon, 13 May 2019 19:01:23 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:55044 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726233AbfEMXBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:57:36 -0400
-Received: by mail-ot1-f68.google.com with SMTP id l17so13447332otq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:57:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oZl+JJzZx2AFDb2lZBN8xQ+7GyeFp75okyysAoofKkw=;
-        b=n7Dybzy+kcj6HmdJBt2ma1mlozw3aOBXyKuIF4ZXdiczOUN9TyPneVFqE/0XPPTbIf
-         JnHzs5ePX1y6reIezETRnejpNfHZf5amsT8r1bGDXC1Q0p3Cn5eu2hzOh1JL45COb5o0
-         MKCwjP2ZjbNSMwfrDamXyLOXtedQXkH7l6ItzMuAnccZMjxb8z7kZ1pLdubqqW1sMA8J
-         qmeCM0903OSkGAfSl6k8sK/rvLNhBDFAtMNqvKqA61WfJquJqsVWOzS6KDj0jL1TRlog
-         cjN+iwC6qytBW3YkbfiiydfWdkRfJEOy8m98J6NS8gjaXY74wtDmnLflRC+FiAXqKzYs
-         ozGw==
-X-Gm-Message-State: APjAAAUfHPxicAQ30Eayz3jRiMGlcYH98L+5l0Z6hkdMxyxeasxRpHpi
-        NvoX9VGwYY8ZmcZkyJ9SzjxZE7B83f/o4JKH72ee/A==
-X-Google-Smtp-Source: APXvYqwXa/xUzbV2HecqFfqi9d2w5SpH6nk8apUHTk6bzR3d8Bzcbpr+9t1YrxaqHvhBUkP9YGkr0xw1NKR+yP3ShkU=
-X-Received: by 2002:a9d:6a58:: with SMTP id h24mr16790402otn.190.1557788255765;
- Mon, 13 May 2019 15:57:35 -0700 (PDT)
+        Mon, 13 May 2019 19:01:23 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R791e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TRe7atb_1557788475;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRe7atb_1557788475)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 May 2019 07:01:18 +0800
+Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     jstancek@redhat.com, peterz@infradead.org, namit@vmware.com,
+        minchan@kernel.org, mgorman@suse.de, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1557444414-12090-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513163804.GB10754@fuggles.cambridge.arm.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <360170d7-b16f-f130-f930-bfe54be9747a@linux.alibaba.com>
+Date:   Mon, 13 May 2019 16:01:09 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-References: <20190513195904.15726-1-agruenba@redhat.com> <CAHk-=wg=yz_=6oM1r5C4pWJPac8cD1kHiki73wDciuLLoRNY=w@mail.gmail.com>
- <CAHc6FU43Fv_b9hMiRscs+cPbwLmcCBM-9R32fSsK9gUtMVMGUQ@mail.gmail.com> <CAHk-=wipiSQ=+dTssFhjYXUS0VgJYRNqy8s_YNTL8HbZ6iKsYg@mail.gmail.com>
-In-Reply-To: <CAHk-=wipiSQ=+dTssFhjYXUS0VgJYRNqy8s_YNTL8HbZ6iKsYg@mail.gmail.com>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Tue, 14 May 2019 00:57:24 +0200
-Message-ID: <CAHc6FU7WsCx4B53d5=N114A7E22A=nmXX-4Sz=uSKEsf65v3-w@mail.gmail.com>
-Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190513163804.GB10754@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 at 00:47, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, May 13, 2019 at 3:37 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
-> >
-> > Sorry, I should have been more explicit. Would you mind taking this
-> > patch, please? If it's more convenient or more appropriate, I'll send
-> > a pull request instead.
->
-> Done.
->
-> However, I'd like to point out that when I see patches from people who
-> I normally get a pull request from, I usually ignore them.
->
-> Particularly when they are in some thread with discussion, I'll often
-> just assume that  the patch is part of the thread, not really meant
-> for me in particular.
->
-> In this case I happened to notice that suddenly my participation
-> status changed, which is why I asked, but in general I might have just
-> archived the thread with the assumption that I'll be getting the patch
-> later as a git pull.
->
-> Just so you'll be aware of this in the future, in case I don't react...
 
-Thanks.
 
-Copying Jon because this looks like useful information for other
-maintainers as well.
+On 5/13/19 9:38 AM, Will Deacon wrote:
+> On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
+>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+>> index 99740e1..469492d 100644
+>> --- a/mm/mmu_gather.c
+>> +++ b/mm/mmu_gather.c
+>> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>>   {
+>>   	/*
+>>   	 * If there are parallel threads are doing PTE changes on same range
+>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+>> -	 * forcefully if we detect parallel PTE batching threads.
+>> +	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
+>> +	 * flush by batching, one thread may end up seeing inconsistent PTEs
+>> +	 * and result in having stale TLB entries.  So flush TLB forcefully
+>> +	 * if we detect parallel PTE batching threads.
+>> +	 *
+>> +	 * However, some syscalls, e.g. munmap(), may free page tables, this
+>> +	 * needs force flush everything in the given range. Otherwise this
+>> +	 * may result in having stale TLB entries for some architectures,
+>> +	 * e.g. aarch64, that could specify flush what level TLB.
+>>   	 */
+>> -	if (mm_tlb_flush_nested(tlb->mm)) {
+>> -		__tlb_reset_range(tlb);
+>> -		__tlb_adjust_range(tlb, start, end - start);
+>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
+>> +		/*
+>> +		 * Since we can't tell what we actually should have
+>> +		 * flushed, flush everything in the given range.
+>> +		 */
+>> +		tlb->freed_tables = 1;
+>> +		tlb->cleared_ptes = 1;
+>> +		tlb->cleared_pmds = 1;
+>> +		tlb->cleared_puds = 1;
+>> +		tlb->cleared_p4ds = 1;
+>> +
+>> +		/*
+>> +		 * Some architectures, e.g. ARM, that have range invalidation
+>> +		 * and care about VM_EXEC for I-Cache invalidation, need force
+>> +		 * vma_exec set.
+>> +		 */
+>> +		tlb->vma_exec = 1;
+>> +
+>> +		/* Force vma_huge clear to guarantee safer flush */
+>> +		tlb->vma_huge = 0;
+>> +
+>> +		tlb->start = start;
+>> +		tlb->end = end;
+>>   	}
+> Whilst I think this is correct, it would be interesting to see whether
+> or not it's actually faster than just nuking the whole mm, as I mentioned
+> before.
+>
+> At least in terms of getting a short-term fix, I'd prefer the diff below
+> if it's not measurably worse.
 
-Andreas
+I did a quick test with ebizzy (96 threads with 5 iterations) on my x86 
+VM, it shows slightly slowdown on records/s but much more sys time spent 
+with fullmm flush, the below is the data.
+
+                                     nofullmm                 fullmm
+ops (records/s)              225606                  225119
+sys (s)                            0.69                        1.14
+
+It looks the slight reduction of records/s is caused by the increase of 
+sys time.
+
+>
+> Will
+>
+> --->8
+>
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..cc251422d307 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -251,8 +251,9 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>   	 * forcefully if we detect parallel PTE batching threads.
+>   	 */
+>   	if (mm_tlb_flush_nested(tlb->mm)) {
+> +		tlb->fullmm = 1;
+>   		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +		tlb->freed_tables = 1;
+>   	}
+>   
+>   	tlb_flush_mmu(tlb);
+
