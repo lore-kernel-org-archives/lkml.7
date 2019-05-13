@@ -2,192 +2,267 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5BDC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD82206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E26D206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:02:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEMU6U (ORCPT
+        id S1726413AbfEMVCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:58:20 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:54713 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfEMU6I (ORCPT
+        Mon, 13 May 2019 17:02:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37796 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfEMVCC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:58:08 -0400
-Received: by mail-it1-f200.google.com with SMTP id k8so635173itd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:58:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Yslc7EmeKC8FFaT5ARJWUZkiHPlpgWxz3eAXZXWm3jg=;
-        b=cab9EqiAeCKspXjvpOUSGIEi1VRrR5mUlJavT/XI/zD6HGQ6HkmAsUuru+MgxvH9E0
-         j46VVL6wjkVmClJC/vJ/ZibFw3LtVdeIk8FfVAjxExGMEUSYyiYpRCJyEaQP1G6NkAl8
-         rpIv7RBfQt3tqmOSg9OMbMWPsm2Ql/kpdOguo0ZeTwAvFK9RS65dwuiJSreV9neMGmyr
-         LMmnbry4YRp6swJrvoKaH8WqFZ1AG106mpZptFAn6FYHATHoGrLLPBvV5yzXIPFoRZF5
-         3/l9rEr5P4Ed3k+jo/ocFcfNKvJEgxpg8VYd019oXhFXmnuWkDSLu7wRuHQ9sShYu3ge
-         LQEQ==
-X-Gm-Message-State: APjAAAVZOZaxppt2jinmRmHXW5XWSaJ6Aak/9vlDJjhqBnIM96ONdVkm
-        I1A6uxyUPkb+96Q+9ha8UBmHl/fLIyqcVm3EVVpZLs4FfSPg
-X-Google-Smtp-Source: APXvYqzmYh0+rsZO3817u2bIOtvmrHkIKrv+CLRwlj6z2rZPuksRRdS5HdfBg4rSereA1hv1PaUfu5Ku+eko8mowqnj2vs1UxCGj
+        Mon, 13 May 2019 17:02:02 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DKwI2n116296
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 17:02:01 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sffcxhq50-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 17:02:01 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 13 May 2019 22:01:58 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 May 2019 22:01:53 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4DL1qrL54722776
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 21:01:52 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 420FFA404D;
+        Mon, 13 May 2019 21:01:52 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FEF5A4040;
+        Mon, 13 May 2019 21:01:50 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.207.233])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 13 May 2019 21:01:50 +0000 (GMT)
+Date:   Tue, 14 May 2019 00:01:48 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/12] mm: Sub-section memory hotplug support
+References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:1d07:: with SMTP id 7mr20456365jaj.122.1557781087590;
- Mon, 13 May 2019 13:58:07 -0700 (PDT)
-Date:   Mon, 13 May 2019 13:58:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005d36430588cb2cff@google.com>
-Subject: bpf boot error: WARNING: workqueue cpumask: online intersect >
- possible intersect
-From:   syzbot <syzbot+224b7c6385b8ab8d2a32@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19051321-4275-0000-0000-000003345D88
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051321-4276-0000-0000-00003843DADB
+Message-Id: <20190513210148.GA21574@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Dan,
 
-syzbot found the following crash on:
+On Mon, May 06, 2019 at 04:39:26PM -0700, Dan Williams wrote:
+> Changes since v7 [1]:
 
-HEAD commit:    69dda13f Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=152a7100a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=de3262a7df18d5ca
-dashboard link: https://syzkaller.appspot.com/bug?extid=224b7c6385b8ab8d2a32
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Sorry for jumping late, but presuming there will be v9, it'd be great if it
+would also include include updates to
+Documentation/admin-guide/mm/memory-hotplug.rst and
+Documentation/vm/memory-model.rst
+ 
+> - Make subsection helpers pfn based rather than physical-address based
+>   (Oscar and Pavel)
+> 
+> - Make subsection bitmap definition scalable for different section and
+>   sub-section sizes across architectures. As a result:
+> 
+>       unsigned long map_active
+> 
+>   ...is converted to:
+> 
+>       DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION)
+> 
+>   ...and the helpers are renamed with a 'subsection' prefix. (Pavel)
+> 
+> - New in this version is a touch of arch/powerpc/include/asm/sparsemem.h
+>   in "[PATCH v8 01/12] mm/sparsemem: Introduce struct mem_section_usage"
+>   to define ARCH_SUBSECTION_SHIFT.
+> 
+> - Drop "mm/sparsemem: Introduce common definitions for the size and mask
+>   of a section" in favor of Robin's "mm/memremap: Rename and consolidate
+>   SECTION_SIZE" (Pavel)
+> 
+> - Collect some more Reviewed-by tags. Patches that still lack review
+>   tags: 1, 3, 9 - 12
+> 
+> [1]: https://lore.kernel.org/lkml/155677652226.2336373.8700273400832001094.stgit@dwillia2-desk3.amr.corp.intel.com/
+> 
+> ---
+> [merge logistics]
+> 
+> Hi Andrew,
+> 
+> These are too late for v5.2, I'm posting this v8 during the merge window
+> to maintain the review momentum. 
+> 
+> ---
+> [cover letter]
+> 
+> The memory hotplug section is an arbitrary / convenient unit for memory
+> hotplug. 'Section-size' units have bled into the user interface
+> ('memblock' sysfs) and can not be changed without breaking existing
+> userspace. The section-size constraint, while mostly benign for typical
+> memory hotplug, has and continues to wreak havoc with 'device-memory'
+> use cases, persistent memory (pmem) in particular. Recall that pmem uses
+> devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
+> 'struct page' memmap for pmem. However, it does not use the 'bottom
+> half' of memory hotplug, i.e. never marks pmem pages online and never
+> exposes the userspace memblock interface for pmem. This leaves an
+> opening to redress the section-size constraint.
+> 
+> To date, the libnvdimm subsystem has attempted to inject padding to
+> satisfy the internal constraints of arch_add_memory(). Beyond
+> complicating the code, leading to bugs [2], wasting memory, and limiting
+> configuration flexibility, the padding hack is broken when the platform
+> changes this physical memory alignment of pmem from one boot to the
+> next. Device failure (intermittent or permanent) and physical
+> reconfiguration are events that can cause the platform firmware to
+> change the physical placement of pmem on a subsequent boot, and device
+> failure is an everyday event in a data-center.
+> 
+> It turns out that sections are only a hard requirement of the
+> user-facing interface for memory hotplug and with a bit more
+> infrastructure sub-section arch_add_memory() support can be added for
+> kernel internal usages like devm_memremap_pages(). Here is an analysis
+> of the current design assumptions in the current code and how they are
+> addressed in the new implementation:
+> 
+> Current design assumptions:
+> 
+> - Sections that describe boot memory (early sections) are never
+>   unplugged / removed.
+> 
+> - pfn_valid(), in the CONFIG_SPARSEMEM_VMEMMAP=y, case devolves to a
+>   valid_section() check
+> 
+> - __add_pages() and helper routines assume all operations occur in
+>   PAGES_PER_SECTION units.
+> 
+> - The memblock sysfs interface only comprehends full sections
+> 
+> New design assumptions:
+> 
+> - Sections are instrumented with a sub-section bitmask to track (on x86)
+>   individual 2MB sub-divisions of a 128MB section.
+> 
+> - Partially populated early sections can be extended with additional
+>   sub-sections, and those sub-sections can be removed with
+>   arch_remove_memory(). With this in place we no longer lose usable memory
+>   capacity to padding.
+> 
+> - pfn_valid() is updated to look deeper than valid_section() to also check the
+>   active-sub-section mask. This indication is in the same cacheline as
+>   the valid_section() so the performance impact is expected to be
+>   negligible. So far the lkp robot has not reported any regressions.
+> 
+> - Outside of the core vmemmap population routines which are replaced,
+>   other helper routines like shrink_{zone,pgdat}_span() are updated to
+>   handle the smaller granularity. Core memory hotplug routines that deal
+>   with online memory are not touched.
+> 
+> - The existing memblock sysfs user api guarantees / assumptions are
+>   not touched since this capability is limited to !online
+>   !memblock-sysfs-accessible sections.
+> 
+> Meanwhile the issue reports continue to roll in from users that do not
+> understand when and how the 128MB constraint will bite them. The current
+> implementation relied on being able to support at least one misaligned
+> namespace, but that immediately falls over on any moderately complex
+> namespace creation attempt. Beyond the initial problem of 'System RAM'
+> colliding with pmem, and the unsolvable problem of physical alignment
+> changes, Linux is now being exposed to platforms that collide pmem
+> ranges with other pmem ranges by default [3]. In short,
+> devm_memremap_pages() has pushed the venerable section-size constraint
+> past the breaking point, and the simplicity of section-aligned
+> arch_add_memory() is no longer tenable.
+> 
+> These patches are exposed to the kbuild robot on my libnvdimm-pending
+> branch [4], and a preview of the unit test for this functionality is
+> available on the 'subsection-pending' branch of ndctl [5].
+> 
+> [2]: https://lore.kernel.org/r/155000671719.348031.2347363160141119237.stgit@dwillia2-desk3.amr.corp.intel.com
+> [3]: https://github.com/pmem/ndctl/issues/76
+> [4]: https://git.kernel.org/pub/scm/linux/kernel/git/djbw/nvdimm.git/log/?h=libnvdimm-pending
+> [5]: https://github.com/pmem/ndctl/commit/7c59b4867e1c
+> 
+> ---
+> 
+> Dan Williams (11):
+>       mm/sparsemem: Introduce struct mem_section_usage
+>       mm/sparsemem: Add helpers track active portions of a section at boot
+>       mm/hotplug: Prepare shrink_{zone,pgdat}_span for sub-section removal
+>       mm/sparsemem: Convert kmalloc_section_memmap() to populate_section_memmap()
+>       mm/hotplug: Kill is_dev_zone() usage in __remove_pages()
+>       mm: Kill is_dev_zone() helper
+>       mm/sparsemem: Prepare for sub-section ranges
+>       mm/sparsemem: Support sub-section hotplug
+>       mm/devm_memremap_pages: Enable sub-section remap
+>       libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
+>       libnvdimm/pfn: Stop padding pmem namespaces to section alignment
+> 
+> Robin Murphy (1):
+>       mm/memremap: Rename and consolidate SECTION_SIZE
+> 
+> 
+>  arch/powerpc/include/asm/sparsemem.h |    3 
+>  arch/x86/mm/init_64.c                |    4 
+>  drivers/nvdimm/dax_devs.c            |    2 
+>  drivers/nvdimm/pfn.h                 |   15 -
+>  drivers/nvdimm/pfn_devs.c            |   95 +++------
+>  include/linux/memory_hotplug.h       |    7 -
+>  include/linux/mm.h                   |    4 
+>  include/linux/mmzone.h               |   93 +++++++--
+>  kernel/memremap.c                    |   63 ++----
+>  mm/hmm.c                             |    2 
+>  mm/memory_hotplug.c                  |  172 +++++++++-------
+>  mm/page_alloc.c                      |    8 -
+>  mm/sparse-vmemmap.c                  |   21 +-
+>  mm/sparse.c                          |  369 +++++++++++++++++++++++-----------
+>  14 files changed, 511 insertions(+), 347 deletions(-)
+> 
 
-Unfortunately, I don't have any reproducer for this crash yet.
+-- 
+Sincerely yours,
+Mike.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+224b7c6385b8ab8d2a32@syzkaller.appspotmail.com
-
-smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,  
-stepping: 0x0)
-Performance Events: unsupported p6 CPU model 63 no PMU driver, software  
-events only.
-rcu: Hierarchical SRCU implementation.
-NMI watchdog: Perf NMI watchdog permanently disabled
-smp: Bringing up secondary CPUs ...
-x86: Booting SMP configuration:
-.... node  #0, CPUs:      #1
-smp: Brought up 2 nodes, 2 CPUs
-smpboot: Max logical packages: 1
-smpboot: Total of 2 processors activated (9200.00 BogoMIPS)
-devtmpfs: initialized
-clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:  
-19112604462750000 ns
-futex hash table entries: 512 (order: 4, 65536 bytes)
-xor: automatically using best checksumming function   avx
-PM: RTC time: 19:27:05, date: 2019-05-13
-NET: Registered protocol family 16
-audit: initializing netlink subsys (disabled)
-cpuidle: using governor menu
-ACPI: bus type PCI registered
-dca service started, version 1.12.1
-PCI: Using configuration type 1 for base access
-WARNING: workqueue cpumask: online intersect > possible intersect
-HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
-HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
-cryptd: max_cpu_qlen set to 1000
-raid6: avx2x4   gen() 11340 MB/s
-raid6: avx2x4   xor()  6833 MB/s
-raid6: avx2x2   gen()  7098 MB/s
-raid6: avx2x2   xor()  3920 MB/s
-raid6: avx2x1   gen()  4157 MB/s
-raid6: avx2x1   xor()  2283 MB/s
-raid6: sse2x4   gen()  5797 MB/s
-raid6: sse2x4   xor()  3486 MB/s
-raid6: sse2x2   gen()  3562 MB/s
-raid6: sse2x2   xor()  2030 MB/s
-raid6: sse2x1   gen()  1947 MB/s
-raid6: sse2x1   xor()  1072 MB/s
-raid6: using algorithm avx2x4 gen() 11340 MB/s
-raid6: .... xor() 6833 MB/s, rmw enabled
-raid6: using avx2x2 recovery algorithm
-ACPI: Added _OSI(Module Device)
-ACPI: Added _OSI(Processor Device)
-ACPI: Added _OSI(3.0 _SCP Extensions)
-ACPI: Added _OSI(Processor Aggregator Device)
-ACPI: Added _OSI(Linux-Dell-Video)
-ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
-ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
-ACPI: 2 ACPI AML tables successfully acquired and loaded
-ACPI: Interpreter enabled
-ACPI: (supports S0 S3 S4 S5)
-ACPI: Using IOAPIC for interrupt routing
-PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and  
-report a bug
-ACPI: Enabled 16 GPEs in block 00 to 0F
-ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
-acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended  
-PCI configuration space under this bridge.
-PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
-ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
-ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
-ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
-vgaarb: loaded
-SCSI subsystem initialized
-ACPI: bus type USB registered
-usbcore: registered new interface driver usbfs
-usbcore: registered new interface driver hub
-usbcore: registered new device driver usb
-media: Linux media interface: v0.10
-videodev: Linux video capture interface: v2.00
-pps_core: LinuxPPS API ver. 1 registered
-pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti  
-<giometti@linux.it>
-PTP clock support registered
-EDAC MC: Ver: 3.0.0
-Advanced Linux Sound Architecture Driver Initialized.
-PCI: Using ACPI for IRQ routing
-Bluetooth: Core ver 2.22
-NET: Registered protocol family 31
-Bluetooth: HCI device and connection manager initialized
-Bluetooth: HCI socket layer initialized
-Bluetooth: L2CAP socket layer initialized
-Bluetooth: SCO socket layer initialized
-NET: Registered protocol family 8
-NET: Registered protocol family 20
-NetLabel: Initializing
-NetLabel:  domain hash size = 128
-NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
-NetLabel:  unlabeled traffic allowed by default
-nfc: nfc_init: NFC Core ver 0.1
-NET: Registered protocol family 39
-clocksource: Switched to clocksource kvm-clock
-VFS: Disk quotas dquot_6.6.0
-VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
-FS-Cache: Loaded
-*** VALIDATE hugetlbfs ***
-CacheFiles: Loaded
-TOMOYO: 2.6.0
-Profile 0 (used by '<kernel>') is not defined.
-Userland tools for TOMOYO 2.6 must be installed and policy must be  
-initialized.
-Please see https://tomoyo.osdn.jp/2.6/ for more information.
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
