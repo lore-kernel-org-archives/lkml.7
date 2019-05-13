@@ -2,126 +2,146 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A49C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8098C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F16C8208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Rq4UUNO0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ebnL0SxV"
+	by mail.kernel.org (Postfix) with ESMTP id B38D121537
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557780979;
+	bh=KiYse69UY3pLqx3u2f/ZadRbhZewiiANWvFYgbxBBfs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=efcCNKyapL3i1AfNLLCF5u8sQ0Vx2Z9DI3UpoZxZNngLL4ctzP3xP6o8wXbOYVlH3
+	 5hopifxiZSHa1FXvmJVjjVej6+aUKW1DPhOYfObYBapBzMr+a+ziby4kklruxelww+
+	 dhA6O8QdCocPqaCxTHWfLOtQFJwJE0MQNGRobsOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEMUsz (ORCPT
+        id S1726339AbfEMU4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:48:55 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:39977 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726179AbfEMUsz (ORCPT
+        Mon, 13 May 2019 16:56:18 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43513 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEMU4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:48:55 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 8BAEC26256;
-        Mon, 13 May 2019 16:48:54 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 13 May 2019 16:48:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=KNgp5jlCdpQelzZZ83zf0wjeuD+
-        zXHXWamPU2Yqam7w=; b=Rq4UUNO0tjyq4Nenc1iYwQ2c2jtno3yem8hiAa/wWcm
-        WayWCqQcSI2E4A7hPegebCFu3ZqcVhSmr1Tg4kINOe9a6L+2BdZgJmHBQ460Toh+
-        N70akY1B3KtrOa3lcsLEpesI6CR/n/DAB9O2gcK4dAmUiP712FLS+A14diRyokcu
-        ufAkXXONB755dt4CGLa87XELYM5g4UdCM6HaoDP3mrM8fEnBr5clp6DOFDDGQo+b
-        xK1pQVdM/RMrt1f1plBS560nFKZD3/cFMsCDbWJ4RA4XcNBiMZVqDyyWucb3/qCn
-        DvnVJF0LSxXyJ4wr+NlpBaTFGTahhY7ZXQ0aRmuHsOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=KNgp5j
-        lCdpQelzZZ83zf0wjeuD+zXHXWamPU2Yqam7w=; b=ebnL0SxVmSbGlN3XSP/uke
-        rcnBiwQlvlcjQJmeO/PwbWzj46+cRPr3XT6iYLdd+qTUEMTPavN+zJWxQpKTzp/V
-        KGMmCW4iegH78q2ygBSIShbfPqGsW3iyxQWxi6k3WNuCaOggvBg86pQxHzj6jKrf
-        1f9coSAOjaB4TQIkqgcapCURs2N7obDNJSratqOQbhzoWrl4Jv4iZ+9QYVx7URi4
-        hJ1n6n6buOY+K4ixhgjKxYBNBBB2ttg5iG5EXzKhP1h01dv4mW6qL+MmhnhnyeXk
-        WkTwFvT47HJE1qPXEnh0aaOenw62Vz/qQQpiett/tAqnCR5VlvfDJSra3WWXhKiw
-        ==
-X-ME-Sender: <xms:NtjZXPvpOaZ5qNxPeOf7TiuoA7iQppF5maaRu4bQc4mrcfn7MnQFRg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdduheefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:NtjZXCEpDUJAe7A1QZwyGYmEw1rKhSWjBUaK5SzYmAxvC4fdJKDaVQ>
-    <xmx:NtjZXG0OvOFAPuGkeGjD06BTlCnpVZQbUPsPWo_QUus1EWycsXBvdg>
-    <xmx:NtjZXEq5lar8DRQKcVlDRqw4i7eHhHPq3IrCDSuKQ_vsxS6uUHbXWw>
-    <xmx:NtjZXH8-kWT1QI_tWoWuvd68jOGzsOjz5mlgyPSB5UDBjJydTRg5RA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C752D10378;
-        Mon, 13 May 2019 16:48:53 -0400 (EDT)
-Date:   Mon, 13 May 2019 22:48:51 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     andreyknvl@google.com, gustavo@embeddedor.com,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, suwan.kim027@gmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] USB: Fix slab-out-of-bounds write in
- usb_get_bos_descriptor
-Message-ID: <20190513204851.GA20475@kroah.com>
-References: <00000000000061c7cd0588c6933c@google.com>
- <Pine.LNX.4.44L0.1905131313100.1478-100000@iolanthe.rowland.org>
+        Mon, 13 May 2019 16:56:18 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t187so7142904oie.10;
+        Mon, 13 May 2019 13:56:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mcXl3kCKb5KgymSfUTp36sQGmUpApKFd35PSjLLza2s=;
+        b=ZRy9KrMMUi03FUGU+K65kfdDhPQ71eZFL+HnqvRFx+LkZ7wtfzFOwKsT9DK0+hNP5C
+         FrhylP1HHCIj40hpvXzi/ReBAJAsX58NZQHPEceo09z5oU7Z3mq/2se2LlzFoTL43PZy
+         gD1nwxLdZLquGG+sIR9Pl9Ye26nyXgUt6HKcUdF0j9aE4bjwDs3qkLJ83DpCE9PXMJ87
+         gAuas9MS99KFFs50fnsdix8lHx84q4eNGmn2zEGDMtzaC4N7V8Vh2Mj8lX8rXCzpOt2f
+         JZkAm/oBVCDQAGPPQgnkuPS/c7tNu7UEvxgmK9b6+z6T/VW/HMPk/GnD1GPQb+5CaZ2M
+         8k0w==
+X-Gm-Message-State: APjAAAXmyqT2Rat1Mwgnc4ENct2kqeOcDoq0JVaXDxoW+d0uvWfCE4gh
+        DZjDbZZnsDr/us6dhlJ1Cg==
+X-Google-Smtp-Source: APXvYqzIsXcXQJgcJ9Z3I5TOGeERLXFISQjzhCutcR9o7qybv7IPuw5Qz8r2lvriy6XfNBbt3ZoU0Q==
+X-Received: by 2002:aca:c202:: with SMTP id s2mr742556oif.91.1557780977251;
+        Mon, 13 May 2019 13:56:17 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m203sm5706301oib.45.2019.05.13.13.56.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 13:56:16 -0700 (PDT)
+Date:   Mon, 13 May 2019 15:56:15 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     mark.rutland@arm.com, peter@korsgaard.com, andrew@lunn.ch,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore
+ bindings.
+Message-ID: <20190513205615.GA5844@bogus>
+References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+ <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1905131313100.1478-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 01:14:29PM -0400, Alan Stern wrote:
-> The syzkaller USB fuzzer found a slab-out-of-bounds write bug in the
-> USB core, caused by a failure to check the actual size of a BOS
-> descriptor.  This patch adds a check to make sure the descriptor is at
-> least as large as it is supposed to be, so that the code doesn't
-> inadvertently access memory beyond the end of the allocated region
-> when assigning to dev->bos->desc->bNumDeviceCaps later on.
+On Tue, May 07, 2019 at 08:45:06PM +0530, Sagar Shrikant Kadam wrote:
+> Add FU540-C000 specific device tree bindings to already
+> available i2-ocores file. This device is available on
+> HiFive Unleashed Rev A00 board.
 > 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> Reported-and-tested-by: syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com
-> CC: <stable@vger.kernel.org>
-> 
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 > ---
+>  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> 
-> [as1898]
-> 
-> 
->  drivers/usb/core/config.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Index: usb-devel/drivers/usb/core/config.c
-> ===================================================================
-> --- usb-devel.orig/drivers/usb/core/config.c
-> +++ usb-devel/drivers/usb/core/config.c
-> @@ -932,8 +932,8 @@ int usb_get_bos_descriptor(struct usb_de
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> index 17bef9a..f6bcf90 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> @@ -2,6 +2,7 @@ Device tree configuration for i2c-ocores
 >  
->  	/* Get BOS descriptor */
->  	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, bos, USB_DT_BOS_SIZE);
-> -	if (ret < USB_DT_BOS_SIZE) {
-> -		dev_err(ddev, "unable to get BOS descriptor\n");
-> +	if (ret < USB_DT_BOS_SIZE || bos->bLength < USB_DT_BOS_SIZE) {
-> +		dev_err(ddev, "unable to get BOS descriptor or descriptor too short\n");
+>  Required properties:
+>  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> +                    "sifive,fu540-c000-i2c" or "sifive,i2c0"
 
-Nice fix, I thought we had found all of these the last time we fuzzed
-this area :)
+If this is Opencores IP, does it really follow the Sifive versioning 
+convention? If so, please reference sifive-blocks-ip-versioning.txt 
+(which appears to have missed going upstream). Also, referencing the IP 
+repository would be good too. If this IP block doesn't follow the same 
+convention, then don't try using it for this binding.
 
-I'll queue this up once 5.2-rc1 is out, thanks.
+>  - reg             : bus address start and address range size of device
+>  - interrupts      : interrupt number
+>  - clocks          : handle to the controller clock; see the note below.
+> @@ -67,3 +68,22 @@ or
+>  			reg = <0x60>;
+>  		};
+>  	};
+> +or
 
-greg k-h
+Just a new compatible isn't really a reason to add an example.
+
+> +	/*
+> +	  An Opencore based I2C node in FU540-C000 chip from SiFive
+> +	  This chip has a hardware erratum for broken IRQ
+> +	  so it's recommended not to define interrupt in the device node
+
+Then interrupts needs to be optional.
+
+> +	*/
+> +	i2c@10030000 {
+> +			compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
+> +			reg = <0x0 0x10030000 0x0 0x1000>;
+> +			reg-names = "i2c-control";
+
+Not doucmented.
+
+> +			clocks = <&tlclk>;
+> +			clock-frequency = <100000>;
+> +
+> +			reg-shift = <2>;
+> +			reg-io-width = <1>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +	};
+> -- 
+> 1.9.1
+> 
+> 
+> -- 
+> The information transmitted is intended only for the person or entity to 
+> which it is addressed and may contain confidential and/or privileged 
+> material. If you are not the intended recipient of this message please do 
+> not read, copy, use or disclose this communication and notify the sender 
+> immediately. It should be noted that any review, retransmission, 
+> dissemination or other use of, or taking action or reliance upon, this 
+> information by persons or entities other than the intended recipient is 
+> prohibited.
