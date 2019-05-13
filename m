@@ -4,330 +4,220 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE44AC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC32C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CFF2146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DBB20882
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 01:11:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GHYjBaFw"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="FhgLFaQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfEMBCu (ORCPT
+        id S1727297AbfEMBLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 21:02:50 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42923 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727218AbfEMBCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 21:02:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 452MxL2dKTz9s00;
-        Mon, 13 May 2019 11:02:46 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557709366;
-        bh=Jxbu6ZzafDitOoWW/Of10h08cMn1BUXQ5mUu9eLdBIQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GHYjBaFwqxj0FDQ5AOl/QChDPU/JBJv8X8wWmEPjeKLaAxb95hNtLQuRwZiBKl+UQ
-         lfx7fphI47fn1JwK+Zq5gIj+KIiS/1U4jbaFGv9HyIZZQ4DL4cLGsdt+LN8LV6u/od
-         Tqt+AVKY9DDH6xKL5kVdwdQvcmlYsF1nF3pUVRjUNjhgehx4542IkrhfUensxuar3/
-         gG4iPQ3tNVXiCg4qJVpaUwj8dokaSipqR0+ItKosQ2iMb7E80QJZDMsld9jE9uuIkw
-         iywxvPLDmWV0OMeuOpw1/eMFvmB9z9+N/73YGgmeTQtMn6rfMD4kfwnHLPSXR6Ygby
-         0CNKYVRkecCOQ==
-Date:   Mon, 13 May 2019 11:02:44 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Eduardo Valentin <edubezval@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: linux-next: build failure after merge of the thermal-soc tree
-Message-ID: <20190513110244.0a0dc431@canb.auug.org.au>
+        Sun, 12 May 2019 21:11:51 -0400
+Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:57582
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727083AbfEMBLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 May 2019 21:11:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IbvwiC5g12ktlDMR5DznnFAsjMGpvLm+aOt2kY3Mtc8=;
+ b=FhgLFaQATH/Nx2ZqtP2ZP1VmIYfZ5Rm53d4qNTSmZKJBbVADUadi0a8nCfDmJfeFUBKyC+tjQWaBvGPF0LqJOa8VXusNkxEoXA+7wdhdY0mjebs+hPjJXF4wWIsjBgDo0VN0SCnk4xMCfVbj9+Mpz2xkFjk6Qbv5g0wXljtmMCo=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5311.eurprd05.prod.outlook.com (20.178.8.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Mon, 13 May 2019 01:11:42 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::711b:c0d6:eece:f044]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::711b:c0d6:eece:f044%5]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 01:11:42 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     David Miller <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: Annoying gcc / rdma / networking warnings
+Thread-Topic: Annoying gcc / rdma / networking warnings
+Thread-Index: AQHVCBnqId2qpywf80SpyVwZsFlKM6ZoQWSA
+Date:   Mon, 13 May 2019 01:11:42 +0000
+Message-ID: <20190513011131.GA7948@mellanox.com>
+References: <CAHk-=whbuwm5FbkPSfftZ3oHMWw43ZNFXqvW1b6KFMEj5wBipA@mail.gmail.com>
+In-Reply-To: <CAHk-=whbuwm5FbkPSfftZ3oHMWw43ZNFXqvW1b6KFMEj5wBipA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQBPR0101CA0058.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:1::35) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.49.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 110facee-c907-4fb2-cca5-08d6d73ff589
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5311;
+x-ms-traffictypediagnostic: VI1PR05MB5311:
+x-microsoft-antispam-prvs: <VI1PR05MB53115C1ECF5A9732BDAFD473CF0F0@VI1PR05MB5311.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(396003)(39860400002)(346002)(376002)(189003)(199004)(71190400001)(6436002)(71200400001)(68736007)(316002)(6486002)(53936002)(81166006)(8936002)(6116002)(3846002)(66946007)(33656002)(8676002)(81156014)(99286004)(1076003)(2906002)(64756008)(229853002)(7736002)(73956011)(66556008)(66476007)(6512007)(102836004)(14454004)(305945005)(66446008)(54906003)(4326008)(386003)(26005)(446003)(14444005)(186003)(256004)(5660300002)(66066001)(6246003)(52116002)(476003)(2616005)(76176011)(11346002)(6506007)(478600001)(36756003)(53546011)(486006)(6916009)(25786009)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5311;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XnVFaJ7qMb8KG8czPQLYydk9xMnvjFrrKfrPx+PzDDCzW4D76xXEa1fsy41aSFLuf3NeVdfFeGV9GQTJtgip5J2XcZSXXXcFsphoYq9D7li83m3fm845gE/S9BGzXKL7gzD8qypluoN9scQmvoXBWc09439Ktn3Ip3dma5Tl4gnPVfdd7J3r+Vo04SxvkKo2kCcJTTpDMMcYkUX7jEAhLpj+10C7B+VBxocBPs4TKZrYr+tKnK+NtwxhS/g93RE/5no0lpkUQIINcvAQ+tIC6k/kY4qf3aBGBvK5PCdeOmKVPc5wYQ4/V01jUiD6omAjIu6JDFa5Z23b8xeUTygkliEwTwhvyWR46BONT0Ug+TSBD+Ih1nbPuBLclaJs9zZ5iC+Q1F/Jv4QQs4JVZlA/VTvJABkgeHFjvO31QiZ0cb4=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <033C054F7D32E54F9DBDAE6C64BA08E5@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/m_dtFm01sMQ2bfcj.Jz6mZj"; protocol="application/pgp-signature"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 110facee-c907-4fb2-cca5-08d6d73ff589
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 01:11:42.4956
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5311
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/m_dtFm01sMQ2bfcj.Jz6mZj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, May 11, 2019 at 12:52:06PM -0400, Linus Torvalds wrote:
+> Jason and Davem,
+>  with gcc-9, I'm now seeing a number of annoying warnings from the
+> rdma layer. I think it depends on the exact gcc version, because I'm
+> seeing them on my laptop but didn't see them on my desktop, probably
+> due to updating at different times.
 
-Hi all,
+I can see them too on a latest FC30 compiler.. It is pretty amazing
+FC30 shipped this month with a compiler that was just released 10 days
+ago. :)
 
-After merging the thermal-soc tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+Also a lot of of 'taking address of a packed member' warnings in RDMA
+code for structs that probably should be aligned(4) not packed. I'll
+have to look at those more carefully this week and see what can be
+done.
 
-ld: drivers/infiniband/hw/cxgb4/cm.o: in function `.devm_thermal_of_cooling=
-_device_register':
-(.text+0x23f0): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined =
-here
-ld: drivers/infiniband/hw/cxgb4/cm.o:(.opd+0x2e8): multiple definition of `=
-devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/devic=
-e.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/provider.o: in function `.devm_thermal_of_c=
-ooling_device_register':
-(.text+0xf90): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined h=
-ere
-ld: drivers/infiniband/hw/cxgb4/provider.o:(.opd+0x198): multiple definitio=
-n of `devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4=
-/device.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/mem.o: in function `.devm_thermal_of_coolin=
-g_device_register':
-(.text+0x11c0): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined =
-here
-ld: drivers/infiniband/hw/cxgb4/mem.o:(.opd+0xa8): multiple definition of `=
-devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/devic=
-e.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/cq.o: in function `.devm_thermal_of_cooling=
-_device_register':
-(.text+0x1750): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined =
-here
-ld: drivers/infiniband/hw/cxgb4/cq.o:(.opd+0x90): multiple definition of `d=
-evm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/device=
-.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/qp.o: in function `.devm_thermal_of_cooling=
-_device_register':
-(.text+0x1550): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined =
-here
-ld: drivers/infiniband/hw/cxgb4/qp.o:(.opd+0x108): multiple definition of `=
-devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/devic=
-e.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/resource.o: in function `.devm_thermal_of_c=
-ooling_device_register':
-(.text+0x0): multiple definition of `.devm_thermal_of_cooling_device_regist=
-er'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined here
-ld: drivers/infiniband/hw/cxgb4/resource.o:(.opd+0x0): multiple definition =
-of `devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/d=
-evice.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/ev.o: in function `.devm_thermal_of_cooling=
-_device_register':
-(.text+0x0): multiple definition of `.devm_thermal_of_cooling_device_regist=
-er'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined here
-ld: drivers/infiniband/hw/cxgb4/ev.o:(.opd+0x18): multiple definition of `d=
-evm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/device=
-.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/id_table.o: in function `.devm_thermal_of_c=
-ooling_device_register':
-(.text+0x0): multiple definition of `.devm_thermal_of_cooling_device_regist=
-er'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined here
-ld: drivers/infiniband/hw/cxgb4/id_table.o:(.opd+0x0): multiple definition =
-of `devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/d=
-evice.o:(.opd+0x198): first defined here
-ld: drivers/infiniband/hw/cxgb4/restrack.o: in function `.devm_thermal_of_c=
-ooling_device_register':
-(.text+0x1590): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/infiniband/hw/cxgb4/device.o:(.text+0x28c0): first defined =
-here
-ld: drivers/infiniband/hw/cxgb4/restrack.o:(.opd+0xc0): multiple definition=
- of `devm_thermal_of_cooling_device_register'; drivers/infiniband/hw/cxgb4/=
-device.o:(.opd+0x198): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/l2t.o: in function `.devm_thermal_of=
-_cooling_device_register':
-(.text+0x1220): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/l2t.o:(.opd+0x120): multiple definit=
-ion of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/chel=
-sio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/smt.o: in function `.devm_thermal_of=
-_cooling_device_register':
-(.text+0x4d0): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/smt.o:(.opd+0x30): multiple definiti=
-on of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/chels=
-io/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/t4_hw.o: in function `.devm_thermal_=
-of_cooling_device_register':
-(.text+0x21f0): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/t4_hw.o:(.opd+0x198): multiple defin=
-ition of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/ch=
-elsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/sge.o: in function `.devm_thermal_of=
-_cooling_device_register':
-(.text+0x3a60): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/sge.o:(.opd+0x270): multiple definit=
-ion of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/chel=
-sio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/clip_tbl.o: in function `.devm_therm=
-al_of_cooling_device_register':
-(.text+0x990): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/clip_tbl.o:(.opd+0x90): multiple def=
-inition of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/=
-chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.o: in function `.devm_=
-thermal_of_cooling_device_register':
-(.text+0x2f80): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.o:(.opd+0x390): multip=
-le definition of `devm_thermal_of_cooling_device_register'; drivers/net/eth=
-ernet/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.o: in function `.devm_ther=
-mal_of_cooling_device_register':
-(.text+0x1f60): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_uld.o:(.opd+0x138): multiple d=
-efinition of `devm_thermal_of_cooling_device_register'; drivers/net/etherne=
-t/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/srq.o: in function `.devm_thermal_of=
-_cooling_device_register':
-(.text+0x1b0): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/srq.o:(.opd+0x18): multiple definiti=
-on of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/chels=
-io/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/sched.o: in function `.devm_thermal_=
-of_cooling_device_register':
-(.text+0x250): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/sched.o:(.opd+0x18): multiple defini=
-tion of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet/che=
-lsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.o: in function `.devm_t=
-hermal_of_cooling_device_register':
-(.text+0xf10): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.o:(.opd+0xc0): multiple=
- definition of `devm_thermal_of_cooling_device_register'; drivers/net/ether=
-net/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.o: in function `.devm_t=
-hermal_of_cooling_device_register':
-(.text+0x430): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_u32.o:(.opd+0x198): multipl=
-e definition of `devm_thermal_of_cooling_device_register'; drivers/net/ethe=
-rnet/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.o: in function `.devm_ther=
-mal_of_cooling_device_register':
-(.text+0x570): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_ptp.o:(.opd+0x78): multiple de=
-finition of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet=
-/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.o: in function `.dev=
-m_thermal_of_cooling_device_register':
-(.text+0x9a0): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_tc_flower.o:(.opd+0x78): multi=
-ple definition of `devm_thermal_of_cooling_device_register'; drivers/net/et=
-hernet/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o: in function `.devm_th=
-ermal_of_cooling_device_register':
-(.text+0xb00): multiple definition of `.devm_thermal_of_cooling_device_regi=
-ster'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): firs=
-t defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_cudbg.o:(.opd+0x30): multiple =
-definition of `devm_thermal_of_cooling_device_register'; drivers/net/ethern=
-et/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_common.o: in function `.devm_t=
-hermal_of_cooling_device_register':
-(.text+0x0): multiple definition of `.devm_thermal_of_cooling_device_regist=
-er'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): first =
-defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_common.o:(.opd+0x0): multiple =
-definition of `devm_thermal_of_cooling_device_register'; drivers/net/ethern=
-et/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.o: in function `.devm_ther=
-mal_of_cooling_device_register':
-(.text+0x1ae0): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_lib.o:(.opd+0xd8): multiple de=
-finition of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet=
-/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_zlib.o: in function `.devm_the=
-rmal_of_cooling_device_register':
-(.text+0x0): multiple definition of `.devm_thermal_of_cooling_device_regist=
-er'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): first =
-defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cudbg_zlib.o:(.opd+0x0): multiple de=
-finition of `devm_thermal_of_cooling_device_register'; drivers/net/ethernet=
-/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o: in function `.devm_=
-thermal_of_cooling_device_register':
-(.text+0xed00): multiple definition of `.devm_thermal_of_cooling_device_reg=
-ister'; drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.o:(.text+0x79a0): fir=
-st defined here
-ld: drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.o:(.opd+0x8d0): multip=
-le definition of `devm_thermal_of_cooling_device_register'; drivers/net/eth=
-ernet/chelsio/cxgb4/cxgb4_main.o:(.opd+0x708): first defined here
+> So if you look at the types like gcc does, then the rdma layer really
+> is passing a pointer to a 16-byte sockaddr, and then filling it with
+> (much bigger) sockaddr_ip6 data.
 
-Caused by commit
+It looks like gcc is assuming that since we started with the _sockaddr
+union member that the memory is actually bounded to that specific
+member. This doesn't seem unreasonable and matches a lot of uses of
+unions. However I wonder how that sort of analysis is going to work in
+the kernel, considering our container_of idiom breaks it in the same
+way, but maybe that is special case'd..
 
-  4e211e068ae9 ("thermal: Introduce devm_thermal_of_cooling_device_register=
-")
+So if we tell gcc the sockaddr memory is actually the whole union then
+it becomes happy, see below.
 
-I applied the following patch for today:
+> So David, arguably the kernel "struct sockaddr" is simply wrong, if it
+> can't contain a "struct sockaddr_in6". No? Is extending it a huge
+> problem for other users that don't need it (mainly stack, I assume..)?
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Mon, 13 May 2019 10:55:00 +1000
-Subject: [PATCH] thermal: use "static inline" for stub function
+We have sockaddr_storage for this, and arguably this code is just
+over-optimizing to save a few bytes of stack vs sockaddr_storage..
+=20
+> Also equally arguably, the rdma code could just use a "struct
+> sockaddr_in6 for this use and avoid the gcc issue, couldn't it?=20
 
-Fixes: 4e211e068ae9 ("thermal: Introduce devm_thermal_of_cooling_device_reg=
-ister")
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+I think the specific sockaddr types should only ever be used if we
+*know* the sa_family is that type. If the sa_family is not known then
+it should be sockaddr or sockaddr_storage. Otherwise things get very
+confusing.
+
+When using sockaddr_storage code always has the cast to sockaddr
+anyhow, as it is not a union, so this jaunty cast is not out of place
+in sockets code.
+
+Below silences the warning, and the warning continues to work in other
+cases, ie if I remove _sockaddr_in6 from the union I do get compile
+warnings about out of bound references.
+
+Jason
+
+From 38a4d7e4644a13378c11381feb3936aa1faf9f58 Mon Sep 17 00:00:00 2001
+From: Jason Gunthorpe <jgg@mellanox.com>
+Date: Sun, 12 May 2019 21:57:57 -0300
+Subject: [PATCH] RDMA: Directly cast the sockaddr union to sockaddr
+
+gcc 9 now does allocation size tracking and thinks that passing the member
+of a union and then accessing beyond that member's bounds is an overflow.
+
+Instead of using the union member, use the entire union with a cast to
+get to the sockaddr. gcc will now know that the memory extends the full
+size of the union.
+
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
- include/linux/thermal.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/addr.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index 6f78fa9238da..15a4ca5d7099 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -508,7 +508,7 @@ static inline struct thermal_cooling_device *
- thermal_of_cooling_device_register(struct device_node *np,
- 	char *type, void *devdata, const struct thermal_cooling_device_ops *ops)
- { return ERR_PTR(-ENODEV); }
--struct thermal_cooling_device *
-+static inline struct thermal_cooling_device *
- devm_thermal_of_cooling_device_register(struct device *dev,
- 				struct device_node *np,
- 				char *type, void *devdata,
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.=
+c
+index 0dce94e3c49561..d0b04b0d309fa6 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -730,8 +730,8 @@ int roce_resolve_route_from_path(struct sa_path_rec *re=
+c,
+ 	if (rec->roce.route_resolved)
+ 		return 0;
+=20
+-	rdma_gid2ip(&sgid._sockaddr, &rec->sgid);
+-	rdma_gid2ip(&dgid._sockaddr, &rec->dgid);
++	rdma_gid2ip((struct sockaddr *)&sgid, &rec->sgid);
++	rdma_gid2ip((struct sockaddr *)&dgid, &rec->dgid);
+=20
+ 	if (sgid._sockaddr.sa_family !=3D dgid._sockaddr.sa_family)
+ 		return -EINVAL;
+@@ -742,7 +742,7 @@ int roce_resolve_route_from_path(struct sa_path_rec *re=
+c,
+ 	dev_addr.net =3D &init_net;
+ 	dev_addr.sgid_attr =3D attr;
+=20
+-	ret =3D addr_resolve(&sgid._sockaddr, &dgid._sockaddr,
++	ret =3D addr_resolve((struct sockaddr *)&sgid, (struct sockaddr *)&dgid,
+ 			   &dev_addr, false, true, 0);
+ 	if (ret)
+ 		return ret;
+@@ -814,22 +814,22 @@ int rdma_addr_find_l2_eth_by_grh(const union ib_gid *=
+sgid,
+ 	struct rdma_dev_addr dev_addr;
+ 	struct resolve_cb_context ctx;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+ 	int ret;
+=20
+-	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
+-	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
++	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
++	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
+=20
+ 	memset(&dev_addr, 0, sizeof(dev_addr));
+ 	dev_addr.net =3D &init_net;
+ 	dev_addr.sgid_attr =3D sgid_attr;
+=20
+ 	init_completion(&ctx.comp);
+-	ret =3D rdma_resolve_ip(&sgid_addr._sockaddr, &dgid_addr._sockaddr,
+-			      &dev_addr, 1000, resolve_cb, true, &ctx);
++	ret =3D rdma_resolve_ip((struct sockaddr *)&sgid_addr,
++			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
++			      resolve_cb, true, &ctx);
+ 	if (ret)
+ 		return ret;
+=20
 --=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/m_dtFm01sMQ2bfcj.Jz6mZj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzYwjQACgkQAVBC80lX
-0GwbNQf8C3pVhWdy1/uW5jDFt8LDTHvxYZpLLPBs3r6LgAnSdLkoenxUA/FYr1s3
-lB0MuDt8QbsEXWUF2BTr2BBMXkBQBmBQw01cOER1LOSq4s3fQYNxB1jXkMgTekIs
-aIrq8V1iNVggjfmqD5Gm336ocVj+LqrHTXlU3NEVvlCy7mwn7Z3yHXhu7qVTRD1j
-/FD5HwQUVum/Jd0tQGR9sjbvoBzVcoOvVHKDJBotSzfzAluBeDUx9Oy0TtXroELF
-ibnCbbvvdgDH81G5leFNxHb0p3mVYfUKgnz42Ov8S4tMqd5mqqvk+UhrA1UtReEJ
-Zu4/xjMBGpO88+qNAu2YUggUO82Lhw==
-=DdEk
------END PGP SIGNATURE-----
-
---Sig_/m_dtFm01sMQ2bfcj.Jz6mZj--
+2.21.0
