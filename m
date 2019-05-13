@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD627C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4BAC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3B120989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD88E21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Be+VDtBe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ACv6VZoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbfEMJNe (ORCPT
+        id S1728671AbfEMJNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:13:34 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34212 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728640AbfEMJNb (ORCPT
+        Mon, 13 May 2019 05:13:37 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42194 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728657AbfEMJNe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c13so6465673pgt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:30 -0700 (PDT)
+        Mon, 13 May 2019 05:13:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 145so6445951pgg.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XavEEJR9UTWypsgwd5yo2KavnEoUPRTsn7OTRBW3tRc=;
-        b=Be+VDtBeofNsjOKfO70pqCMwr+tIJ2+kG6N+gQ5gUWv3BkN5myq/O2MPNL3WiAxeBE
-         RyVA3ACxXw0eL5d7KfchxTAaHwVN4lLknTvHEdIgC+vG43APGGAmmoZbhbGq1YSw7VnM
-         dbw9ObK4ZmCquc/s0iv4vOhtIxrSFcR6QEbei/0TCE+Nga4GKR1X5e/t/Q0RxR7jlG5n
-         /GU9QWeBbdCLPjRiGmD4bTNl/1apgn6YujccvbjNzMbai+An5Jrootx9QoWj8Fg/ZqQH
-         l6HqG2DSTfa8xfewaJX+U4yyOqegqTTsEGBYB7gG97UCUrOo0ND64gRFGnQvfwAI02p6
-         K3yA==
+        bh=cLJ1ldOM7IleRggUIq7aKinRSCo8rE9wEnfY75h347Q=;
+        b=ACv6VZoWCPqFKrhwTkbqNjypin55cwcva3nJN9j4cbou2rAm8cv4A+Q0q5foEgv9/R
+         35gyirq/JzkgED9/XzY7kFXu30fpoVvj1DgVJD8FVvX6sVVrQvgBYpubW9cFOIww8Bsc
+         Rs8oeHlDp/hff70dYy7vjWftm3b821vYtHy6cGSX8ohNGrlte5n9sz1xcSg9H/psuLXr
+         fwDS3HX7Jtfq6xrx7g2xQ9CYHCfUIJk2hF6jcyoLpWf0Yhq6sOaZRFOuo/pHDC+z1sr3
+         cAxIQo/d8oFLW7jeYg4IznZiEc/gbvYRwBsgeBIixEtTcPq1Ka9H+CzwLjg2qshYkw/h
+         UaKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XavEEJR9UTWypsgwd5yo2KavnEoUPRTsn7OTRBW3tRc=;
-        b=h+KsiAq/0lu5bWxYOrPBor6ZcqqVZkwn4+SHMIHlW7LAydflfLJuqxJZfCNzRJ1TgZ
-         ch2DII/APhsL9jK1PsbRjpCfU98z79afzmJfnFl3HNH1ffTIyvZrc4sM+l1UTC/ggn4y
-         Ny1H/RhQXlYuiLK170d11efLpOyy6uSonIjxYafL9FcprNytQLN0mxV/cmmAHHp2NQb0
-         BnAUAyjC5x9zbLJEuD3NatWmaZzwio21FsFfDgUD2EdIPDVy2WJ0cjUN2X2+Lj4x9osH
-         ZyL6J21InBwRh9DOYccNV//FcuOnV794B0VzLB/FxLfeSYN30Q/IDojSjPUjJeEB+zby
-         aeTQ==
-X-Gm-Message-State: APjAAAUet3rPjJSwP1Pym3oV2eKoMFqLVF9vG2+8jDtB0vOIGM0fZ69a
-        iEwATSaqNWEe7UJtJxJT2D0=
-X-Google-Smtp-Source: APXvYqwGBQyA3DVPamIEqpQGXw3qOjLI0YQEymWB8By+gZSMTb/8ghRIZUz9aLJELHIaZWJodNwBYw==
-X-Received: by 2002:a63:8b4b:: with SMTP id j72mr29568964pge.318.1557738810531;
-        Mon, 13 May 2019 02:13:30 -0700 (PDT)
+        bh=cLJ1ldOM7IleRggUIq7aKinRSCo8rE9wEnfY75h347Q=;
+        b=jWNTkFLAkMS0fSow8hD9labgMLO/iCWeLh6XljP5SZ+ynj+ZEOsNORCBYYcLSv6FLX
+         iyx9+jVV2hUEsDMC7Ir8qqIk7bL47e9jvo7jFTmVQGD7M9ThfWk23s6T76lTz9PvHY7A
+         9pQs1kxxCR1FI8CrEGHLwOZdUA0c8LmCXTmI0ULwkQXx4OJzHkflVK1KHI66sAN4SXa2
+         qdoYV52qPm3RQYighU2thNiwaX3wrBytl6dZ8U/qC3frvqT7YsP4hasFY4dv9fQ7bc1i
+         EnvrMcunbukbmnsLR5HF2nCa9xHrb388XPmoraHEkAmpaPFI7i5SCsJDpnebvVVAaENI
+         QxuA==
+X-Gm-Message-State: APjAAAUKawmsJD1+SiLuED5Y6bOmYZ65k8OMugoF1/S5VI2XjSOJe3r8
+        /96cMkFtNTm7P9Qsfeg+4a8=
+X-Google-Smtp-Source: APXvYqwZbB6se6HGY4NbadOsmi7ZuCImW+/4meH3D/zVn2OXZ7XrOR+oT6+QgE1BEDN0YGGg7DhVtQ==
+X-Received: by 2002:a62:3381:: with SMTP id z123mr32660077pfz.42.1557738813792;
+        Mon, 13 May 2019 02:13:33 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.27
+        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:13:29 -0700 (PDT)
+        Mon, 13 May 2019 02:13:33 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 04/17] locking/lockdep: Update direct dependency's read-write type if it exists
-Date:   Mon, 13 May 2019 17:11:50 +0800
-Message-Id: <20190513091203.7299-5-duyuyang@gmail.com>
+Subject: [PATCH 05/17] locking/lockdep: Rename deadlock check functions
+Date:   Mon, 13 May 2019 17:11:51 +0800
+Message-Id: <20190513091203.7299-6-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
 References: <20190513091203.7299-1-duyuyang@gmail.com>
@@ -74,116 +74,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When adding a dependency, if the dependency exists - be it direct or
-indirect - the dependency's read-write type may be updated.
+Deadlock checks are performed at two places:
 
-We can keep all different-typed dependencies, but for simplicity we just
-"upgrade" lock types if possible, making them more exlusive (in the order:
-recursive read -> read -> write.
+ - Within current's held lock stack, check for lock recursion deadlock.
+ - Within dependency graph, check for lock inversion deadlock.
 
-For indirect dependency, we do the redundancy check only when it has no
-read locks (i.e., write-lock ended dependency); this makes the redundancy
-check less complicated, which matters only when CONFIG_LOCKDEP_SMALL.
+Rename the two relevant functions for later use. Plus, with read locks,
+dependency circle in graph is not a sufficient condition for lock
+inversion deadlocks anymore, so check_noncircular() is not entirely
+accurate.
+
+No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 61 ++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 57 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 0617375..27ca55f 100644
+index 27ca55f..4adaf27 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1734,6 +1734,16 @@ static inline int get_lock_type2(struct lock_list *lock)
- 	return lock->lock_type[1];
+@@ -1771,8 +1771,8 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
+  * Print an error and return 0 if it does.
+  */
+ static noinline int
+-check_noncircular(struct held_lock *src, struct held_lock *target,
+-		  struct lock_trace *trace)
++check_deadlock_graph(struct held_lock *src, struct held_lock *target,
++		     struct lock_trace *trace)
+ {
+ 	int ret;
+ 	struct lock_list *uninitialized_var(target_entry);
+@@ -2385,7 +2385,8 @@ static inline void inc_chains(void)
  }
  
-+static inline void set_lock_type1(struct lock_list *lock, int read)
-+{
-+	lock->lock_type[0] = (u16)read;
-+}
-+
-+static inline void set_lock_type2(struct lock_list *lock, int read)
-+{
-+	lock->lock_type[1] = (u16)read;
-+}
-+
  /*
-  * Check that the dependency graph starting at <src> can lead to
-  * <target> or not. Print an error and return 0 if it does.
-@@ -1814,6 +1824,32 @@ static inline int get_lock_type2(struct lock_list *lock)
- 	ret = check_path(hlock_class(target), &src_entry, &target_entry);
+- * Check whether we are holding such a class already.
++ * Check whether we are holding such a class already in current
++ * context's held lock stack.
+  *
+  * (Note that this has to be done separately, because the graph cannot
+  * detect such classes of deadlocks.)
+@@ -2396,7 +2397,7 @@ static inline void inc_chains(void)
+  *  2: LOCK_TYPE_RECURSIVE on recursive read
+  */
+ static int
+-check_deadlock(struct task_struct *curr, struct held_lock *next)
++check_deadlock_current(struct task_struct *curr, struct held_lock *next)
+ {
+ 	struct held_lock *prev;
+ 	struct held_lock *nest = NULL;
+@@ -2480,7 +2481,7 @@ static inline void inc_chains(void)
  
- 	if (!ret) {
-+		struct lock_list *parent;
-+
-+		/*
-+		 * Do this indirect dependency has the same type as the
-+		 * direct dependency?
-+		 *
-+		 * Actually, we keep the more exclusive lock type
-+		 * between the indirect and direct dependencies by
-+		 * "upgrading" the indirect dependency's lock type if
-+		 * needed, and then consider this redundant.
-+		 */
-+
-+		/* Target end lock type: */
-+		if (target->read < get_lock_type2(target_entry))
-+			set_lock_type2(target_entry, target->read)
-+
-+		/* Source end lock type: */
-+		parent = find_next_dep_in_path(&src_entry, target_entry);
-+		if (!parent) {
-+			DEBUG_LOCKS_WARN_ON(1);
-+			return 0;
-+		}
-+
-+		if (src->read < get_lock_type1(parent))
-+			set_lock_type1(parent, src->read)
-+
- 		debug_atomic_inc(nr_redundant);
- 		ret = 2;
- 	} else if (ret < 0)
-@@ -2479,6 +2515,17 @@ static inline void inc_chains(void)
- 	 */
- 	list_for_each_entry(entry, &hlock_class(prev)->locks_after, entry) {
- 		if (entry->class == hlock_class(next)) {
-+			/*
-+			 * For direct dependency, smaller type value
-+			 * generally means more exlusive; we keep the
-+			 * more exlusive ones, in other words, we
-+			 * "upgrade" the dependency if we can.
-+			 */
-+			if (prev->read < get_lock_type1(entry))
-+				set_lock_type1(entry, prev->read);
-+			if (next->read < get_lock_type2(entry))
-+				set_lock_type2(entry, next->read);
-+
- 			if (distance == 1)
- 				entry->distance = 1;
- 			return 1;
-@@ -2487,11 +2534,17 @@ static inline void inc_chains(void)
- 
- #ifdef CONFIG_LOCKDEP_SMALL
  	/*
--	 * Is the <prev> -> <next> link redundant?
-+	 * Only when this dependency has no read lock/locks (i.e.,
-+	 * write-write dependency), we do redundancy check.
+ 	 * Prove that the new <prev> -> <next> dependency would not
+-	 * create a circular dependency in the graph. (We do this by
++	 * create a deadlock scenario in the graph. (We do this by
+ 	 * a breadth-first search into the graph starting at <next>,
+ 	 * and check whether we can reach <prev>.)
+ 	 *
+@@ -2488,7 +2489,7 @@ static inline void inc_chains(void)
+ 	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
+ 	 * in the graph whose neighbours are to be checked.
  	 */
--	ret = check_redundant(prev, next);
--	if (ret != 1)
--		return ret;
-+	if (!get_dep_type(prev, next)) {
-+		/*
-+		 * Is the <prev> -> <next> link redundant?
-+		 */
-+		ret = check_redundant(prev, next);
-+		if (ret != 1)
-+			return ret;
-+	}
- #endif
+-	ret = check_noncircular(next, prev, trace);
++	ret = check_deadlock_graph(next, prev, trace);
+ 	if (unlikely(ret <= 0))
+ 		return 0;
  
- 	if (!trace->nr_entries && !save_trace(trace))
+@@ -2983,7 +2984,7 @@ static int validate_chain(struct task_struct *curr,
+ 		 * The simple case: does the current hold the same lock
+ 		 * already?
+ 		 */
+-		int ret = check_deadlock(curr, hlock);
++		int ret = check_deadlock_current(curr, hlock);
+ 
+ 		if (!ret)
+ 			return 0;
 -- 
 1.8.3.1
 
