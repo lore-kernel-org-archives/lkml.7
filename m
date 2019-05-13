@@ -2,243 +2,102 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A28C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1FAC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2646120879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRwAAJf3"
+	by mail.kernel.org (Postfix) with ESMTP id 126E620879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557769882;
+	bh=ynIKTWN06OJPzN5vGj2a4r/O71RyIvtDR+im2Rc3yoA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rHLWXeAu4asIdUEJO9aALAySXgG0LFrtJIc5wylvJ/U700/BYGwYj8BOAReQCyQgH
+	 fKRV3uuvCovoaPWBWL7OkyMEu4K8S/9lZsmUtZajPhuSawl8aXwv3VEOhw63xB/gYe
+	 /gOIBJ3TltVQxaNhmGBlW8AJO3tzBmqVeZmrtn0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbfEMRvR (ORCPT
+        id S1731855AbfEMRvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:51:17 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32864 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728006AbfEMRvQ (ORCPT
+        Mon, 13 May 2019 13:51:21 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45711 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731830AbfEMRvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:51:16 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k189so8598225qkc.0;
-        Mon, 13 May 2019 10:51:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=B5lit/bpHedf80sYMuDGoqL+WRq05MQP3LUFocwmKj8=;
-        b=CRwAAJf3B+Jo51AmiQSTmmu3WgVp0umKtiWWhm4Zdu3fy2wFPHoSVZUGsizrpVaAIh
-         s/+98ifo0DoxHThLPk4bOL9ovM7HpqFUhXaFVzfx/QrCKsXrak8E09gN8+CE5uL8Dp9k
-         6B8fNz6u1rTw49VozW7Pb2GnBGpepAfJ32vmQ2Sbhq0CITX4WkpJAhCNLGDMK94eFpiK
-         jc/0fazbh4Xbfpo6zIoAJOGCSp1dgvFV20j8JtWbwHci4zmYQEH4mEETSqWdr9YCEOhg
-         otmS0DBS/EIxlza6hVC4g6yB8IL9YHawZiD8QWOtutuZsomFueyeNDV/HH7D5luHtEmM
-         /4yQ==
+        Mon, 13 May 2019 13:51:19 -0400
+Received: by mail-ot1-f66.google.com with SMTP id t24so3894762otl.12;
+        Mon, 13 May 2019 10:51:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=B5lit/bpHedf80sYMuDGoqL+WRq05MQP3LUFocwmKj8=;
-        b=s1R3ihEdsyb0sG5WE1JaKUcsxZcz+05gVDxOkgT9gUudjT6HwnsoyE9+cbakAurkM5
-         57yOrjOsNzv6Qag1FU/chwbF/xFeOKZyAqEOLY81FYuJBdq11HM8Acdi9VKUZ5xiTGGB
-         Illx1/0CMIpNhjBPmwXYJ2JYTRoJxqjeijeoFu9s3XCvgg7TSIBlUlSliB2KlwX9Gwww
-         si4gRr2tN5Zc/Af+HQrvV1y6AG6r8Pa//pUn507bjBGVpp8O7Y/NW/CIMXvt9Hzt7xm9
-         sQCMDvS7nqA9Nyfd5/XS/jxVmtqzS8d0wvP2uwfjGndZqVh/XxSbD0+iNFCZeYiEZezH
-         ZLwg==
-X-Gm-Message-State: APjAAAV1F0xUW2TTWQnz3oqAr+qUoKUJ0Bl/kXqkmNM6tea+qS/Hvq9+
-        qfUSagq9hLF7dTl42nOBQjc=
-X-Google-Smtp-Source: APXvYqyUY4w+Wla+84iQJR/Vcix/G59nt8meXFZPkm5FNlnAxOtDGQqdF6ARumPV661FXzBhGawm6A==
-X-Received: by 2002:a05:620a:132b:: with SMTP id p11mr21779997qkj.304.1557769874664;
-        Mon, 13 May 2019 10:51:14 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o44sm10222002qto.36.2019.05.13.10.51.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:51:14 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 13 May 2019 13:51:12 -0400
-To:     Arvind Sankar <niveditas98@gmail.com>
-Cc:     Roberto Sassu <roberto.sassu@huawei.com>,
-        Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190513175111.GB69717@rani.riverdale.lan>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <20190513172007.GA69717@rani.riverdale.lan>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=m4N4IZgDvzO5+VbOkAL+/qLpzVDWLu+YalUcmqAEWjc=;
+        b=jnwFH8UA94RdkkU6CHRBw5rimQjGO2zj1ZuICVrlxgXiYjbYUK7b4LtF+ejfmo22Xk
+         bQ8BAJ4rBW+Th20chDf3J2ld2TBO4Ea1V8N5rq77Re59zvMe119k9q9dUWuGtEIu+AJ2
+         tEEL3cUgWwkbMa6caJM7A2pQ5rB0uXJt0txXF95VpKGvT3NvwuFzv2/mDX+SiqvwhMwa
+         paDQqNHWNdIfdpUSsrfqN/ddMFwILEmcFaP4oqCaboGhvY6K0Sut+Qiy75qKqAqp337Z
+         t2ZvJabIsA6TiViBzrqWktAQxwJsyp3mWuSplsf2gJjoaeMnc5XGJncL4btRv5MBYpnv
+         HyvA==
+X-Gm-Message-State: APjAAAXpsXPy9aeV7ZsgMHqDpRRTHm7/+vTwyt9kr08r9OQIr+WxfNcz
+        n6onuQ8x3atYt5Cp8mHvoA==
+X-Google-Smtp-Source: APXvYqyi6vDqkZOF8NsHPlQ7yDvigtmGZCYFZkAc4wdlsemMKX21ODIa4vUe8/dokESav8OUMfKvnw==
+X-Received: by 2002:a9d:6d8c:: with SMTP id x12mr11381060otp.34.1557769878486;
+        Mon, 13 May 2019 10:51:18 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x21sm576703otk.4.2019.05.13.10.51.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 10:51:17 -0700 (PDT)
+Date:   Mon, 13 May 2019 12:51:17 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH v3 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums  binding
+Message-ID: <20190513175117.GA22288@bogus>
+References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+ <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+ <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190513172007.GA69717@rani.riverdale.lan>
+In-Reply-To: <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 01:20:08PM -0400, Arvind Sankar wrote:
-> On Mon, May 13, 2019 at 02:47:04PM +0200, Roberto Sassu wrote:
-> > On 5/13/2019 11:07 AM, Rob Landley wrote:
-> > > 
-> > > 
-> > > On 5/13/19 2:49 AM, Roberto Sassu wrote:
-> > >> On 5/12/2019 9:43 PM, Arvind Sankar wrote:
-> > >>> On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
-> > >>>> On 5/12/19 7:52 AM, Mimi Zohar wrote:
-> > >>>>> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
-> > >>>>>> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
-> > >>>>>>> This proposal consists in marshaling pathnames and xattrs in a file called
-> > >>>>>>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
-> > >>>>>>> been extracted.
-> > >>>>>>
-> > >>>>>> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
-> > >>>>>> be done equivalently by the initramfs' /init? Why is kernel involvement
-> > >>>>>> actually required here?
-> > >>>>>
-> > >>>>> It's too late.  The /init itself should be signed and verified.
-> > >>>>
-> > >>>> If the initramfs cpio.gz image was signed and verified by the extractor, how is
-> > >>>> the init in it _not_ verified?
-> > >>>>
-> > >>>> Ro
-> > >>>
-> > >>> Wouldn't the below work even before enforcing signatures on external
-> > >>> initramfs:
-> > >>> 1. Create an embedded initramfs with an /init that does the xattr
-> > >>> parsing/setting. This will be verified as part of the kernel image
-> > >>> signature, so no new code required.
-> > >>> 2. Add a config option/boot parameter to panic the kernel if an external
-> > >>> initramfs attempts to overwrite anything in the embedded initramfs. This
-> > >>> prevents overwriting the embedded /init even if the external initramfs
-> > >>> is unverified.
-> > >>
-> > >> Unfortunately, it wouldn't work. IMA is already initialized and it would
-> > >> verify /init in the embedded initial ram disk.
-> How does this work today then? Is it actually the case that initramfs
-> just cannot be used on an IMA-enabled system, or it can but it leaves
-> the initramfs unverified and we're trying to fix that? I had assumed the
-> latter.
-Oooh, it's done not by starting IMA later, but by loading a default
-policy that ignores the initramfs?
-> > > 
-> > > So you made broken infrastructure that's causing you problems. Sounds unfortunate.
-> > 
-> > The idea is to be able to verify anything that is accessed, as soon as
-> > rootfs is available, without distinction between embedded or external
-> > initial ram disk.
-> > 
-> > Also, requiring an embedded initramfs for xattrs would be an issue for
-> > systems that use it for other purposes.
-> > 
-> The embedded initramfs can do other things, it just has to do
-> the xattr stuff in addition, no?
-> > 
-> > >> The only reason why
-> > >> opening .xattr-list works is that IMA is not yet initialized
-> > >> (late_initcall vs rootfs_initcall).
-> > > 
-> > > Launching init before enabling ima is bad because... you didn't think of it?
-> > 
-> > No, because /init can potentially compromise the integrity of the
-> > system.
-> > 
-> How? The /init in the embedded initramfs is part of a trusted kernel
-> image that has been verified by the bootloader.
-> > 
-> > >> Allowing a kernel with integrity enforcement to parse the CPIO image
-> > >> without verifying it first is the weak point.
-> > > 
-> > > If you don't verify the CPIO image then in theory it could have anything in it,
-> > > yes. You seem to believe that signing individual files is more secure than
-> > > signing the archive. This is certainly a point of view.
-> > 
-> > As I wrote above, signing the CPIO image would be more secure, if this
-> > option is available. However, a disadvantage would be that you have to
-> > sign the CPIO image every time a file changes.
-> > 
-> > 
-> > >> However, extracted files
-> > >> are not used, and before they are used they are verified. At the time
-> > >> they are verified, they (included /init) must already have a signature
-> > >> or otherwise access would be denied.
-> > > 
-> > > You build infrastructure that works a certain way, the rest of the system
-> > > doesn't fit your assumptions, so you need to change the rest of the system to
-> > > fit your assumptions.
-> > 
-> > Requiring file metadata to make decisions seems reasonable. Also
-> > mandatory access controls do that. The objective of this patch set is to
-> > have uniform behavior regardless of the filesystem used.
-> > 
-> > 
-> > >> This scheme relies on the ability of the kernel to not be corrupted in
-> > >> the event it parses a malformed CPIO image.
-> > > 
-> > > I'm unaware of any buffer overruns or wild pointer traversals in the cpio
-> > > extraction code. You can fill up all physical memory with initramfs and lock the
-> > > system hard, though.
-> > > 
-> > > It still only parses them at boot time before launching PID 1, right? So you
-> > > have a local physical exploit and you're trying to prevent people from working
-> > > around your Xbox copy protection without a mod chip?
-> > 
-> > What do you mean exactly?
-> > 
-> > 
-> > >> Mimi suggested to use
-> > >> digital signatures to prevent this issue, but it cannot be used in all
-> > >> scenarios, since conventional systems generate the initial ram disk
-> > >> locally.
-> > > 
-> > > So you use a proprietary init binary you can't rebuild from source, and put it
-> > > in a cpio where /dev/urandom is a file with known contents? Clearly, not
-> > > exploitable at all. (And we update the initramfs.cpio but not the kernel because
-> > > clearly keeping the kernel up to date is less important to security...)
-> > 
-> > By signing the CPIO image, the kernel wouldn't even attempt to parse it,
-> > as the image would be rejected by the boot loader if the signature is
-> > invalid.
-> > 
-> If it were signed yes, but you just said that it isn't possible to sign
-> it in all cases (if initramfs is generated locally). I actually didn't
-> follow that bit -- if initramfs is generated locally, and it isn't
-> possible to sign locally, where would the IMA hashes for the contents of
-> the initramfs come from? Is the idea that each file within the initramfs
-> would be an existing, signed, file, but you could locally create an initramfs
-> with some subset of those unmodified files? Even assuming this is the
-> case, isn't the eventual intention to also appraise directories, to
-> prevent holes where files might be moved around/deleted/renamed etc, so
-> this problem would resurface anyway?
-> Also eventually we need to check special nodes like device nodes etc to
-> make sure they haven't been tampered with, as in Rob's urandom
-> suggestion?
-> > 
-> > > Whatever happened to https://lwn.net/Articles/532778/ ? Modules are signed
-> > > in-band in the file, but you need xattrs for some reason?
-> > 
-> > Appending just the signature would be possible. It won't work if you
-> > have multiple metadata for the same file.
-> > 
-> > Also appending the signature alone won't solve the parsing issue. Still,
-> > the kernel has to parse something that could be malformed.
-> > 
-> > Roberto
-> > 
-> > 
-> > >> Roberto
-> > > 
-> > > Rob
-> > > 
-> > 
-> > -- 
-> > HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-> > Managing Director: Bo PENG, Jian LI, Yanli SHI
+On Mon, 13 May 2019 11:14:58 +0000, Rasmus Villemoes wrote:
+> Reading table 4-30, and its footnotes, of the QUICC Engine Block
+> Reference Manual shows that the set of snum _values_ is not
+> necessarily just a function of the _number_ of snums, as given in the
+> fsl,qe-num-snums property.
+> 
+> As an alternative, to make it easier to add support for other variants
+> of the QUICC engine IP, this introduces a new binding fsl,qe-snums,
+> which automatically encodes both the number of snums and the actual
+> values to use.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+> Rob, thanks for the review of v2. However, since I moved the example
+> from the commit log to the binding (per Joakim's request), I didn't
+> add a Reviewed-by tag for this revision.
+> 
+>  .../devicetree/bindings/soc/fsl/cpm_qe/qe.txt       | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
