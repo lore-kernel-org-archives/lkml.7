@@ -2,222 +2,132 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0192C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7C9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 651DF20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA4D20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VqdScyXo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gc2j7Ld5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfEMJQL (ORCPT
+        id S1728180AbfEMJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:16:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39135 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728268AbfEMJQC (ORCPT
+        Mon, 13 May 2019 05:17:48 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:32973 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbfEMJRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:16:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id n25so12826757wmk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:16:01 -0700 (PDT)
+        Mon, 13 May 2019 05:17:47 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m32so10797282qtf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:17:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jAXMadcZb2swWUhVzTHNUEypl5NTFLbqbQDV1LmgQb8=;
-        b=VqdScyXowvctDJlC1aCl4asm0sjNlPtbHXr+6+n7i/ovoxmtMSiF84Z05uP1jvR2za
-         36kMBLVuOUAw5Otm1WCcQQAXX9yMlkXJav1M1wnsZr2NsGpXAi7CVzlJUt+QfZPGJ/dA
-         RS2wLK8kwmmrcsD1sHSL977S8pRRs3Czp4wry37Mk0tO+893gMfq/dxsUIQzteHKVCCC
-         zKVD++SNW219EukS0UHc2UUi/tywmp+Iy90dAbnLxUl+aTGl6iKv/KHodBtM8bOuGTz0
-         3l+18voIVm34cZSnGSc9TUnRzsR6WOwE8Avxf3Opta708oafTK/0rABCZehTY3uznofn
-         pURQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0TcyKMp5RYAO3Vmxht8Y8t9Cu1RXvH8j1oVgbu8WbE0=;
+        b=Gc2j7Ld5EOmCs5WXAmiJYgMs4MsvWQMCabwirwH+dQyYXmGfwXbVnnGaC5Rssz/FoX
+         91TCBdokTTTX7OaQtDOw3nqZc8FeGzA9gobMp/OErsWshyjTU4S5LvH7zp6KasihdBNN
+         J2jtXJbQ1h8mK6WJ8jn9qDAyPTucUOjRHyWKrJPRdDEar+YNvHR4V3Bwpep987TeQO2V
+         5Ot0zAjFUTSgoxWmB7s9818Z90dWrBFNDCjEBAJWcfAD+/OJevIAHe4W7wJwWoPVohRi
+         TiJOSQQ3+AHjP9sUhyww46Kg9m4fhHjCZIjWX7yyfrHvLbvLASUfaasVdDRjkhkt2sSp
+         NEnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jAXMadcZb2swWUhVzTHNUEypl5NTFLbqbQDV1LmgQb8=;
-        b=uZXgHFcr8os0jIRiOgQ7a5860YSeDJFsVr9XDFRRHN/2hm6jfiwFG/gkM0eoWK9dcv
-         2nTikiPK10OvxyMydQ1BMRWZSsQXeIjJsJnh55BFn2EfzsYOPLfltgE43oK/t2ws8rKN
-         BEgmnxXxoZx+bBZ4j283HrXwlsGtQitCmu8bl+vmXYNE+WqcKpyMnXQUAnj2se37eNvS
-         pl+fhGVRM8wJftlIzw6UG9a52SlwLFzt63KkQlbtUcFAv0tc++6jP7K8PUk4/59SJ/Fm
-         UKhlbYqShGnOsUv8LkcKJklK4q/VZcsXBZYB5yxQYrepqbSaQZ8YXp3d8P5N49tpLRxU
-         d7mA==
-X-Gm-Message-State: APjAAAUjtNFaFDNzRoNs+scvrvA+DTO/HNyrAz3kt6YGX1CiLRzveKjH
-        4v5XDroJ3lSS7Yvr4CxL/gawjg==
-X-Google-Smtp-Source: APXvYqxbi5LwxhWm9kEHGvLxVj1r/h8O5xxC8YSIs0fr67Go/lgGEdpy3JCLDM9/trkqCJz+k3iFmA==
-X-Received: by 2002:a1c:4145:: with SMTP id o66mr15465115wma.68.1557738960756;
-        Mon, 13 May 2019 02:16:00 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id g10sm10795091wrq.2.2019.05.13.02.15.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 13 May 2019 02:16:00 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     ulf.hansson@linaro.org, khilman@baylibre.com
-Cc:     baylibre-upstreaming@groups.io,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        linux-mmc@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] mmc: meson-gx: add ddr-access-quirk
-Date:   Mon, 13 May 2019 11:15:47 +0200
-Message-Id: <20190513091548.16674-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190513091548.16674-1-narmstrong@baylibre.com>
-References: <20190513091548.16674-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0TcyKMp5RYAO3Vmxht8Y8t9Cu1RXvH8j1oVgbu8WbE0=;
+        b=PVzq9kzl1GeZiy/e0Vt1W4zBzTrE+MObTPPOehCLRFztko6q4a6Fug/7uRDnfisifU
+         ZNjgUUb/d3lQl8NYWt6ApffjE5V75mgk288uyjuZ5PU3GaunrFtGV6jCOw7f3BHsj849
+         RV78qOtu2uPHpKAlnx3jWS26zAxzzcgo2RPRJN5kL3btTCA+z1ekKZASO25VNgWTk8yZ
+         CrancQu55rE+e5jZOwtowx7pOtrWGz59NFWIABkwVb43D5GwUVfDhusmxf087kWIAigB
+         TgpwGQEBjj6JofSq2jmv7O6KuJsviQ3V87hse2XzfS3be9IfJk5akp7bdtCAozlRXms/
+         1Flg==
+X-Gm-Message-State: APjAAAVA2Vg+Jdh6OZ4h9n1yOokJMYYSxEhKAebiXkEfoX6HnYRmHG08
+        lG7hAR5I4ncW5b/bowLaF6xy2rleII/hOQ3dVUU=
+X-Google-Smtp-Source: APXvYqwTHUMRmmn3A5wZ2qGCq+HiH72Fh7pW5KJ6ySsIgngMj6HKmZw7cxBgZBs5ynz8jf2ayUazzc8Bhl5QAjgarqE=
+X-Received: by 2002:ac8:701:: with SMTP id g1mr6091063qth.327.1557739066697;
+ Mon, 13 May 2019 02:17:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190513091203.7299-1-duyuyang@gmail.com>
+In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
+From:   Yuyang Du <duyuyang@gmail.com>
+Date:   Mon, 13 May 2019 17:17:35 +0800
+Message-ID: <CAHttsrZkYHU5vejptty=nJs67F4R07JjBJUsY8e4vtzOhgXe2A@mail.gmail.com>
+Subject: Re: [PATCH 00/17] Support for read-write lock deadlock detection
+To:     Peter Zijlstra <peterz@infradead.org>, will.deacon@arm.com,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
+        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
+        Boqun Feng <boqun.feng@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Amlogic G12A SoC family, (only) the SDIO controller fails to access
-the data from DDR, leading to a broken controller.
+Sorry, forgot to mention the patchset is based on my previous small
+improvements:
 
-But each MMC controller has 1,5KiB of SRAM after the registers, that can
-be used as bounce buffer to avoid direct DDR access from the integrated
-DMAs (this SRAM may be used by the boot ROM when DDR is not yet initialized).
+[PATCH v2 00/23] locking/lockdep: Small improvements
+(https://lkml.org/lkml/2019/5/6/106).
 
-The quirk is to disable the chained descriptor for this controller, and
-use this SRAM memory zone as buffer for the bounce buffer fallback mode.
-
-The performance hit hasn't been evaluated, but the fix has been tested
-using a WiFi AP6398S SDIO module, and the iperf3 Bandwidth measurement gave
-55.2 Mbits/sec over a 63 Hours long test, with the SDIO ios set as High-Speed
-at 50MHz clock. It gave 170 Mbits/sec as SDR104 and 200MHz clock.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/mmc/host/meson-gx-mmc.c | 65 ++++++++++++++++++++++++++-------
- 1 file changed, 52 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/mmc/host/meson-gx-mmc.c b/drivers/mmc/host/meson-gx-mmc.c
-index c5a8af4ca76b..6ef465304052 100644
---- a/drivers/mmc/host/meson-gx-mmc.c
-+++ b/drivers/mmc/host/meson-gx-mmc.c
-@@ -129,6 +129,9 @@
- #define SD_EMMC_TXD 0x94
- #define SD_EMMC_LAST_REG SD_EMMC_TXD
- 
-+#define SD_EMMC_SRAM_DATA_BUF_LEN 1536
-+#define SD_EMMC_SRAM_DATA_BUF_OFF 0x200
-+
- #define SD_EMMC_CFG_BLK_SIZE 512 /* internal buffer max: 512 bytes */
- #define SD_EMMC_CFG_RESP_TIMEOUT 256 /* in clock cycles */
- #define SD_EMMC_CMD_TIMEOUT 1024 /* in ms */
-@@ -168,6 +171,8 @@ struct meson_host {
- 	unsigned long req_rate;
- 	bool ddr;
- 
-+	bool ddr_access_quirk;
-+
- 	struct pinctrl *pinctrl;
- 	struct pinctrl_state *pins_default;
- 	struct pinctrl_state *pins_clk_gate;
-@@ -232,11 +237,20 @@ static struct mmc_command *meson_mmc_get_next_command(struct mmc_command *cmd)
- static void meson_mmc_get_transfer_mode(struct mmc_host *mmc,
- 					struct mmc_request *mrq)
- {
-+	struct meson_host *host = mmc_priv(mmc);
- 	struct mmc_data *data = mrq->data;
- 	struct scatterlist *sg;
- 	int i;
- 	bool use_desc_chain_mode = true;
- 
-+	/*
-+	 * When Controller DMA cannot directly access DDR memory, disable
-+	 * support for Chain Mode to directly use the internal SRAM using
-+	 * the bounce buffer mode.
-+	 */
-+	if (host->ddr_access_quirk)
-+		return;
-+
- 	/*
- 	 * Broken SDIO with AP6255-based WiFi on Khadas VIM Pro has been
- 	 * reported. For some strange reason this occurs in descriptor
-@@ -1049,6 +1063,10 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 	host->dev = &pdev->dev;
- 	dev_set_drvdata(&pdev->dev, host);
- 
-+	/* The G12A SDIO Controller needs an SRAM bounce buffer */
-+	host->ddr_access_quirk = device_property_read_bool(&pdev->dev,
-+					"amlogic,ddr-access-quirk");
-+
- 	/* Get regulators and the supported OCR mask */
- 	host->vqmmc_enabled = false;
- 	ret = mmc_regulator_get_supply(mmc);
-@@ -1146,9 +1164,16 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 		goto err_init_clk;
- 
- 	mmc->caps |= MMC_CAP_CMD23;
--	mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
-+	if (host->ddr_access_quirk) {
-+		/* Limit to the available sram memory */
-+		mmc->max_segs = SD_EMMC_SRAM_DATA_BUF_LEN / mmc->max_blk_size;
-+		mmc->max_blk_count = mmc->max_segs;
-+	} else {
-+		mmc->max_blk_count = CMD_CFG_LENGTH_MASK;
-+		mmc->max_segs = SD_EMMC_DESC_BUF_LEN /
-+				sizeof(struct sd_emmc_desc);
-+	}
- 	mmc->max_req_size = mmc->max_blk_count * mmc->max_blk_size;
--	mmc->max_segs = SD_EMMC_DESC_BUF_LEN / sizeof(struct sd_emmc_desc);
- 	mmc->max_seg_size = mmc->max_req_size;
- 
- 	/*
-@@ -1158,15 +1183,27 @@ static int meson_mmc_probe(struct platform_device *pdev)
- 	 */
- 	mmc->caps2 &= ~MMC_CAP2_HS400;
- 
--	/* data bounce buffer */
--	host->bounce_buf_size = mmc->max_req_size;
--	host->bounce_buf =
--		dma_alloc_coherent(host->dev, host->bounce_buf_size,
--				   &host->bounce_dma_addr, GFP_KERNEL);
--	if (host->bounce_buf == NULL) {
--		dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
--		ret = -ENOMEM;
--		goto err_free_irq;
-+	if (host->ddr_access_quirk) {
-+		/*
-+		 * The MMC Controller embeds 1,5KiB of internal SRAM
-+		 * that can be used to be used as bounce buffer.
-+		 * In the case of the G12A SDIO controller, use these
-+		 * instead of the DDR memory
-+		 */
-+		host->bounce_buf_size = SD_EMMC_SRAM_DATA_BUF_LEN;
-+		host->bounce_buf = host->regs + SD_EMMC_SRAM_DATA_BUF_OFF;
-+		host->bounce_dma_addr = res->start + SD_EMMC_SRAM_DATA_BUF_OFF;
-+	} else {
-+		/* data bounce buffer */
-+		host->bounce_buf_size = mmc->max_req_size;
-+		host->bounce_buf =
-+			dma_alloc_coherent(host->dev, host->bounce_buf_size,
-+					   &host->bounce_dma_addr, GFP_KERNEL);
-+		if (host->bounce_buf == NULL) {
-+			dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
-+			ret = -ENOMEM;
-+			goto err_free_irq;
-+		}
- 	}
- 
- 	host->descs = dma_alloc_coherent(host->dev, SD_EMMC_DESC_BUF_LEN,
-@@ -1208,8 +1245,10 @@ static int meson_mmc_remove(struct platform_device *pdev)
- 
- 	dma_free_coherent(host->dev, SD_EMMC_DESC_BUF_LEN,
- 			  host->descs, host->descs_dma_addr);
--	dma_free_coherent(host->dev, host->bounce_buf_size,
--			  host->bounce_buf, host->bounce_dma_addr);
-+
-+	if (!host->ddr_access_quirk)
-+		dma_free_coherent(host->dev, host->bounce_buf_size,
-+				  host->bounce_buf, host->bounce_dma_addr);
- 
- 	clk_disable_unprepare(host->mmc_clk);
- 	clk_disable_unprepare(host->core_clk);
--- 
-2.21.0
-
+On Mon, 13 May 2019 at 17:13, Yuyang Du <duyuyang@gmail.com> wrote:
+>
+> Hi Peter and Ingo,
+>
+> Historically, the read-write locks (recursive-read locks included) are not
+> well supported in lockdep. This patchset attempts to solve this problem
+> sound and complete.
+>
+> The bulk of the algorithm is in patch #10, which is actually not complex at
+> all. Hopefully, it simply works.
+>
+> Now that we have read-write locks suppported, we have all the 262 cases
+> passed, though I have to flip some cases which, I think, are wrong.
+>
+> P.S. To Boqun, I haven't got time to read your patchset except that I did
+> carefully read your design doc and learnt from it a lot. It is helpful.
+> Please give this patchset at least a look.
+>
+> Thanks,
+> Yuyang
+>
+> --
+>
+> Yuyang Du (17):
+>   locking/lockdep: Add lock type enum to explicitly specify read or
+>     write locks
+>   locking/lockdep: Add read-write type for dependency
+>   locking/lockdep: Add helper functions to operate on the searched path
+>   locking/lockdep: Update direct dependency's read-write type if it
+>     exists
+>   locking/lockdep: Rename deadlock check functions
+>   locking/lockdep: Adjust BFS algorithm to support multiple matches
+>   locking/lockdep: Introduce mark_lock_unaccessed()
+>   locking/lockdep: Introduce chain_hlocks_type for held lock's
+>     read-write type
+>   locking/lockdep: Hash held lock's read-write type into chain key
+>   locking/lockdep: Support read-write lock's deadlock detection
+>   locking/lockdep: Adjust lockdep selftest cases
+>   locking/lockdep: Remove useless lock type assignment
+>   locking/lockdep: Add nest lock type
+>   locking/lockdep: Support recursive read locks
+>   locking/lockdep: Adjust selftest case for recursive read lock
+>   locking/lockdep: Add more lockdep selftest cases
+>   locking/lockdep: Remove irq-safe to irq-unsafe read check
+>
+>  include/linux/lockdep.h            |   40 +-
+>  kernel/locking/lockdep.c           |  454 +++++++++++----
+>  kernel/locking/lockdep_internals.h |    4 +
+>  lib/locking-selftest.c             | 1099 +++++++++++++++++++++++++++++++++++-
+>  4 files changed, 1464 insertions(+), 133 deletions(-)
+>
+> --
+> 1.8.3.1
+>
