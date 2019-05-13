@@ -2,108 +2,83 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39497C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2349C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08894208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:33:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KuXvSRMY"
+	by mail.kernel.org (Postfix) with ESMTP id 973B1208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbfEMNdj (ORCPT
+        id S1729411AbfEMNfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:33:39 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35674 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbfEMNdi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:33:38 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h1so6805779pgs.2;
-        Mon, 13 May 2019 06:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dHB+2UT2SbFOUCgxQjFqk9pofSt4ba6bP6xlRWy9uz8=;
-        b=KuXvSRMYMKGzAylOkSf6HZsrUBzZMXGa86X+6uv3efqmd+6ImnKgro2FqOsBr2V44w
-         ELvJmk5nJEWhJjUmtdgHpYgUtNfZ1Fk9TKFzXNxMzQess1GQ3XObF0QfDHbhIEVtUUFB
-         dN2jQ3JgzsRrAGO49aEiYDrL956oBcs/o8kEoz46lQ2CSCQ6Eyrduhiiacr9lLcvUdvF
-         1NDIALBson6SKLJeebv1XRoNFMdl1sMLIoh1OPwXVBeOsbVacm8W/E7Ms9BxuWbWwOPk
-         Ab7BfgP9UmGxW2nVDG/z4uuffyE+gF6CsnxG7iF//EdmqheaG8SZwcVypUAUcZYNl2zo
-         CbSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dHB+2UT2SbFOUCgxQjFqk9pofSt4ba6bP6xlRWy9uz8=;
-        b=XiQ1SA6Kn8pHx4KuaPC633+HRy6da5+R+IDK6Qe+Lt/xjvBEeqrTk6LrGlL2hV3spu
-         6vA+kQEcoUf+ZBtDjoUzqDeyazZSS9yzUPkmVhKA1aYc8sHnhOFIJIHwBpQ+5Ky4NtFi
-         goAQyPmEBtyLhhlou1n5VJp3bwLp8C61GQ5njPTZ/yBZ/9buoICSsEp+XeeNlVtqQf4z
-         84GcDozcaIFvrZ5Xn/PoPyGTgYom4hZ/Yjmr8D5a7nkDlSh93hR76sgU19E1CAmyL6U9
-         bLbewU6Juw5Ioyv+Ynv7pUS57HJrIaUfy8GnBH81z6Qrm41E1kncgvVR4iqXDI6mlWxD
-         lvxA==
-X-Gm-Message-State: APjAAAXU5sZBB7Z8E+fh0HZD9A1hiC4Uhy8mC8mKQcYnZuM+58FVqd3f
-        VIZwT+fk5Yw1QhNivGPVTnI=
-X-Google-Smtp-Source: APXvYqzCHEBbsQ9j/TAQ9YLva9rBRXDXM3fwxild9xMkA+ykPkX3PCo9l3kUOGRoDUw95ZR47IUmEw==
-X-Received: by 2002:a62:1c06:: with SMTP id c6mr22162703pfc.168.1557754417788;
-        Mon, 13 May 2019 06:33:37 -0700 (PDT)
-Received: from localhost (36-225-62-102.dynamic-ip.hinet.net. [36.225.62.102])
-        by smtp.gmail.com with ESMTPSA id h6sm28582717pfk.188.2019.05.13.06.33.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 06:33:37 -0700 (PDT)
-From:   Cyrus Lien <cyruslien@gmail.com>
-X-Google-Original-From: Cyrus Lien <cyrus.lien@canonical.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Sara Sharon <sara.sharon@intel.com>,
-        Golan Ben Ami <golan.ben.ami@intel.com>,
-        Lior Cohen <lior2.cohen@intel.com>,
-        Shaul Triebitz <shaul.triebitz@intel.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Cyrus Lien <cyrus.lien@canonical.com>
-Subject: [PATCH] iwlwifi: trans: fix killer series loadded incorrect firmware
-Date:   Mon, 13 May 2019 21:33:35 +0800
-Message-Id: <20190513133335.14536-1-cyrus.lien@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 May 2019 09:35:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59096 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbfEMNfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:35:55 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E31D1552FC;
+        Mon, 13 May 2019 13:35:54 +0000 (UTC)
+Received: from flask (unknown [10.40.205.238])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 22DEB1001F54;
+        Mon, 13 May 2019 13:35:51 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 13 May 2019 15:35:51 +0200
+Date:   Mon, 13 May 2019 15:35:51 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH] KVM: X86: Enable IA32_MSIC_ENABLE MONITOR bit when
+ exposing mwait/monitor
+Message-ID: <20190513133548.GA6538@flask>
+References: <1557740799-5792-1-git-send-email-wanpengli@tencent.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557740799-5792-1-git-send-email-wanpengli@tencent.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 13 May 2019 13:35:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Killer series loadded IWL_22000_HR_B_FW_PRE prefixed firmware instead
-IWL_CC_A_FW_PRE prefixed firmware.
+2019-05-13 17:46+0800, Wanpeng Li:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> MSR IA32_MSIC_ENABLE bit 18, according to SDM:
+> 
+>  | When this bit is set to 0, the MONITOR feature flag is not set (CPUID.01H:ECX[bit 3] = 0). 
+>  | This indicates that MONITOR/MWAIT are not supported.
+>  | 
+>  | Software attempts to execute MONITOR/MWAIT will cause #UD when this bit is 0.
+>  | 
+>  | When this bit is set to 1 (default), MONITOR/MWAIT are supported (CPUID.01H:ECX[bit 3] = 1). 
+> 
+> This bit should be set to 1, if BIOS enables MONITOR/MWAIT support on host and 
+> we intend to expose mwait/monitor to the guest.
 
-Add killer series to the check logic as iwl_ax200_cfg_cc.
+The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit and
+as userspace has control of them both, I'd argue that it is userspace's
+job to configure both bits to match on the initial setup.
 
-Signed-off-by: Cyrus Lien <cyrus.lien@canonical.com>
----
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Also, CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
+kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
+guest visibility.
+Some weird migration cases might want MONITOR in CPUID without
+kvm_mwait_in_guest() and the MSR should be correct there as well.
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 79c1dc05f948..576c2186b6bf 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3565,7 +3565,9 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 		}
- 	} else if (CSR_HW_RF_ID_TYPE_CHIP_ID(trans->hw_rf_id) ==
- 		   CSR_HW_RF_ID_TYPE_CHIP_ID(CSR_HW_RF_ID_TYPE_HR) &&
--		   (trans->cfg != &iwl_ax200_cfg_cc ||
-+		   ((trans->cfg != &iwl_ax200_cfg_cc &&
-+		     trans->cfg != &killer1650x_2ax_cfg &&
-+		     trans->cfg != &killer1650w_2ax_cfg) ||
- 		    trans->hw_rev == CSR_HW_REV_TYPE_QNJ_B0)) {
- 		u32 hw_status;
- 
--- 
-2.17.1
+Missing the MSR bit shouldn't be a big problem for guests, so I am in
+favor of fixing the userspace code.
 
+Thanks.
+
+(For extra correctness in KVM, we could implement toggling of the CPUID
+ bit based on guest writes to the MSR.)
