@@ -2,90 +2,203 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35881C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D33C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058E2208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF5E206BF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bIbPRVQM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfEMRBm (ORCPT
+        id S1731259AbfEMRCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:01:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58794 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731145AbfEMRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:01:39 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2AC130054AB;
-        Mon, 13 May 2019 17:01:39 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2ED9819C68;
-        Mon, 13 May 2019 17:01:39 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 2/2] objtool: Fix function fallthrough detection
-Date:   Mon, 13 May 2019 12:01:32 -0500
-Message-Id: <546d143820cd08a46624ae8440d093dd6c902cae.1557766718.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1557766718.git.jpoimboe@redhat.com>
-References: <cover.1557766718.git.jpoimboe@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 13 May 2019 17:01:39 +0000 (UTC)
+        Mon, 13 May 2019 13:02:20 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:39344 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731045AbfEMRCU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:02:20 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGwgch132176;
+        Mon, 13 May 2019 17:00:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=4xiDPOzSHcQpk0xHvpIXFduYKLuE1ShLeQljNETPlH8=;
+ b=bIbPRVQMgiUHCVQwzQuqCiiZIMI38WFqpvE61wvkwdHcTyhzPfLq4oD3+D8wgtXVJoxY
+ 8pC1Vh0vbaJ30yemQlGtGrVuLAlyjkghNmAbqrM8fv46zQ94FvB757novPa3rKLV2imw
+ 0Rsln4Ilxb01BbtFroGEkx5twV4K/0dcJwz27KIIJVo9abCRYhOxxhQrvBsDBZRIO9Ty
+ fRd5tFBbwgLIO5OYE3zC4KfSunv09l19QUIWVVDyhKWbZBQOOX4YplDNz7gkK6j5i6n7
+ j89WdQO6nRc6bsocVSBH3ck1exCVyYHV40l8U51e46C4tjj5CNcjBeBCdDLOJw5BdN4S vA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2sdkwdgm9w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 17:00:37 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGxHjO090835;
+        Mon, 13 May 2019 17:00:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2se0tvp1hb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 17:00:36 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DH0ZfW031069;
+        Mon, 13 May 2019 17:00:35 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 May 2019 10:00:35 -0700
+Subject: Re: [RFC KVM 19/27] kvm/isolation: initialize the KVM page table with
+ core mappings
+To:     Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-20-git-send-email-alexandre.chartre@oracle.com>
+ <a9198e28-abe1-b980-597e-2d82273a2c17@intel.com>
+ <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <ec26a85f-ff1c-89d9-5e6c-ff42e834c48d@oracle.com>
+Date:   Mon, 13 May 2019 19:00:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
+MIME-Version: 1.0
+In-Reply-To: <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905130116
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a function falls through to the next function due to a compiler
-bug, objtool prints some obscure warnings.  For example:
 
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x95: return with modified stack frame
-  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
 
-Instead it should be printing:
+On 5/13/19 6:00 PM, Andy Lutomirski wrote:
+> On Mon, May 13, 2019 at 8:50 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>>
+>>> +     /*
+>>> +      * Copy the mapping for all the kernel text. We copy at the PMD
+>>> +      * level since the PUD is shared with the module mapping space.
+>>> +      */
+>>> +     rv = kvm_copy_mapping((void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE,
+>>> +          PGT_LEVEL_PMD);
+>>> +     if (rv)
+>>> +             goto out_uninit_page_table;
+>>
+>> Could you double-check this?  We (I) have had some repeated confusion
+>> with the PTI code and kernel text vs. kernel data vs. __init.
+>> KERNEL_IMAGE_SIZE looks to be 512MB which is quite a bit bigger than
+>> kernel text.
+>>
+>>> +     /*
+>>> +      * Copy the mapping for cpu_entry_area and %esp fixup stacks
+>>> +      * (this is based on the PTI userland address space, but probably
+>>> +      * not needed because the KVM address space is not directly
+>>> +      * enterered from userspace). They can both be copied at the P4D
+>>> +      * level since they each have a dedicated P4D entry.
+>>> +      */
+>>> +     rv = kvm_copy_mapping((void *)CPU_ENTRY_AREA_PER_CPU, P4D_SIZE,
+>>> +          PGT_LEVEL_P4D);
+>>> +     if (rv)
+>>> +             goto out_uninit_page_table;
+>>
+>> cpu_entry_area is used for more than just entry from userspace.  The gdt
+>> mapping, for instance, is needed everywhere.  You might want to go look
+>> at 'struct cpu_entry_area' in some more detail.
+>>
+>>> +#ifdef CONFIG_X86_ESPFIX64
+>>> +     rv = kvm_copy_mapping((void *)ESPFIX_BASE_ADDR, P4D_SIZE,
+>>> +          PGT_LEVEL_P4D);
+>>> +     if (rv)
+>>> +             goto out_uninit_page_table;
+>>> +#endif
+>>
+>> Why are these mappings *needed*?  I thought we only actually used these
+>> fixup stacks for some crazy iret-to-userspace handling.  We're certainly
+>> not doing that from KVM context.
+>>
+>> Am I forgetting something?
+>>
+>>> +#ifdef CONFIG_VMAP_STACK
+>>> +     /*
+>>> +      * Interrupt stacks are vmap'ed with guard pages, so we need to
+>>> +      * copy mappings.
+>>> +      */
+>>> +     for_each_possible_cpu(cpu) {
+>>> +             stack = per_cpu(hardirq_stack_ptr, cpu);
+>>> +             pr_debug("IRQ Stack %px\n", stack);
+>>> +             if (!stack)
+>>> +                     continue;
+>>> +             rv = kvm_copy_ptes(stack - IRQ_STACK_SIZE, IRQ_STACK_SIZE);
+>>> +             if (rv)
+>>> +                     goto out_uninit_page_table;
+>>> +     }
+>>> +
+>>> +#endif
+>>
+>> I seem to remember that the KVM VMENTRY/VMEXIT context is very special.
+>>   Interrupts (and even NMIs?) are disabled.  Would it be feasible to do
+>> the switching in there so that we never even *get* interrupts in the KVM
+>> context?
+> 
+> That would be nicer.
+> 
+> Looking at this code, it occurs to me that mapping the IRQ stacks
+> seems questionable.  As it stands, this series switches to a normal
+> CR3 in some C code somewhere moderately deep in the APIC IRQ code.  By
+> that time, I think you may have executed traceable code, and, if that
+> happens, you lose.  i hate to say this, but any shenanigans like this
+> patch does might need to happen in the entry code *before* even
+> switching to the IRQ stack.  Or perhaps shortly thereafter.
+>
+> We've talked about moving context tracking to C.  If we go that route,
+> then this KVM context mess could go there, too -- we'd have a
+> low-level C wrapper for each entry that would deal with getting us
+> ready to run normal C code.
+> 
+> (We need to do something about terminology.  This kvm_mm thing isn't
+> an mm in the normal sense.  An mm has normal kernel mappings and
+> varying user mappings.  For example, the PTI "userspace" page tables
+> aren't an mm.  And we really don't want a situation where the vmalloc
+> fault code runs with the "kvm_mm" mm active -- it will totally
+> malfunction.)
+> 
 
-  drivers/regulator/core.o: warning: objtool: regulator_supply_is_couple() falls through to next function regulator_count_voltages()
+One of my next step is to try to put the KVM page table in the PTI userspace
+page tables, and not switch CR3 on KVM_RUN ioctl. That way, we will run with
+a regular mm (but using the userspace page table). Then interrupt would switch
+CR3 to kernel page table (like paranoid idtentry currently do it).
 
-This used to work, but was broken by the following commit:
+alex.
 
-  13810435b9a7 ("objtool: Support GCC 8's cold subfunctions").
 
-The padding nops at the end of a function aren't actually part of the
-function, as defined by the symbol table.  So the 'func' variable in
-validate_branch() is getting cleared to NULL when a padding nop is
-encountered, breaking the fallthrough detection.
 
-If the current instruction doesn't have a function associated with it,
-just consider it to be part of the previously detected function by not
-overwriting the previous value of 'func'.
-
-Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/check.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 90226791df6b..7325d89ccad9 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1959,7 +1959,8 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
- 			return 1;
- 		}
- 
--		func = insn->func ? insn->func->pfunc : NULL;
-+		if (insn->func)
-+			func = insn->func->pfunc;
- 
- 		if (func && insn->ignore) {
- 			WARN_FUNC("BUG: why am I validating an ignored function?",
--- 
-2.17.2
 
