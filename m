@@ -2,49 +2,49 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C066FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9461FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F4B206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B05206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfEMU6J (ORCPT
+        id S1726460AbfEMU6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 13 May 2019 16:58:09 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42928 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfEMU6I (ORCPT
+Received: from mail-it1-f198.google.com ([209.85.166.198]:40686 "EHLO
+        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfEMU6I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 May 2019 16:58:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id i21so10858929iog.9
+Received: by mail-it1-f198.google.com with SMTP id d12so612330itl.5
         for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:58:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=8FT53rgyGg5gVZTjVRGlE1PW0QSMTx3+9FcWF+KtWEE=;
-        b=SpzOn9mQPeisq4vl4Ikju7F39w8dbI2HK4uwC5oNFvFblf6QwPutDkYC1AbrBD+DXH
-         x0oPW/tlWwDXf4XlXKkKco/kjbnfFI3k9iCi2Vcxzy5NMRYtjDu5/ibynCFOnwEk6jnK
-         RcIQQU2+PCzz4qaRQZqv083J1ynCKIMfTrh5K2Fvua/smD3It3BupAx86Bb6hHv/t5rl
-         AqdvTv+gtjOTo3a87PhVHR7viYm/PZLuISxgLFo3RbeuWQ5b7C4ztkuewRP+PiW0sDAw
-         vmL8jNE3S2yDwVcd6cTv+US9qZsicNm3JFFAxKEpm7V7Wk6aJICl0rO45szJHwkCO6pr
-         d72Q==
-X-Gm-Message-State: APjAAAUzH7P1ZTZdOkZXgi4d+PScfIrpnTUeXZVrZ62LEXBczK2dL8Xc
-        nggJxV1V5OZK5QHpFuSOHUe8RDmoZh+OF8UCV8wso2+zveAa
-X-Google-Smtp-Source: APXvYqxNHLc9pmNKOBWQqgiDbWARyKZ1/ALIv1rzJy0iTPbaFq7ptMY6XBm5NFQv8ajEVtmb2E0apA9NjphbxAua+R1iH/YZQU75
+        bh=bbGsyPpaPzBM/2LeZrsP+CQSLlhkVQRC0w3/i0bfAZs=;
+        b=r08X8DnHCiir0baSB4d4aFdo8ezr3mEMRjaUGbyW0MaBjY72wdvEudqs3S7vrJE8mM
+         /ZYujph5dr+0e8xndY3EIusQFQUkpLr1SD3EZaeEN/arT0Mm4dc5nbhqb6TwKZH83hEX
+         pfFMIE3upDQHNqdpOB/jCcoJvdKxzHEMKproPgsEoRthtkcJbvzChqYyDrtYDVqQPiIi
+         dubpcP343JCxZKbuMavt2q3JrRvhg6mxzFDASpPnDR44kkQbtP6fhmCvujxrkfrBC433
+         F7smiNKJQ+ru5Ql+TJSrdlFESumo9HNvLY3sb7aSmIt55TAV6RZ34UOXWZ0btjADrv4j
+         lIDg==
+X-Gm-Message-State: APjAAAVa3fkF4krhyLx3Ds9KLCPucf+KvuLOlQRiX3aNH78VKQHM4ceb
+        rcVj2tlBTf7dSMwe4xEq2d7LlbKHWu4zaoKu1HcaaHH8cMAh
+X-Google-Smtp-Source: APXvYqyal4BVY8eGkmcKUSs4p7GjFVJitkTebTiUaDtzzCWWtf3YNtbYp8LKGJLuxuQsZ8L4ekjpISXkQvUpz2G7DlHk8Q2Fj616
 MIME-Version: 1.0
-X-Received: by 2002:a5d:899a:: with SMTP id m26mr367889iol.268.1557781087045;
+X-Received: by 2002:a02:2b1d:: with SMTP id h29mr20228540jaa.76.1557781087290;
  Mon, 13 May 2019 13:58:07 -0700 (PDT)
 Date:   Mon, 13 May 2019 13:58:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000054d5650588cb2c27@google.com>
-Subject: bpf-next boot error: WARNING: workqueue cpumask: online intersect >
+Message-ID: <000000000000588f3c0588cb2c2c@google.com>
+Subject: net-next boot error: WARNING: workqueue cpumask: online intersect >
  possible intersect
-From:   syzbot <syzbot+9e532f90f6ca82f39854@syzkaller.appspotmail.com>
+From:   syzbot <syzbot+65b0bbc931abd6bd3b37@syzkaller.appspotmail.com>
 To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
@@ -57,17 +57,17 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    80f23212 Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=129cb09ca00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=62ac41ed59f810ed
-dashboard link: https://syzkaller.appspot.com/bug?extid=9e532f90f6ca82f39854
+HEAD commit:    b970afcf Merge tag 'powerpc-5.2-1' of ssh://gitolite.kerne..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1306c794a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=de3262a7df18d5ca
+dashboard link: https://syzkaller.appspot.com/bug?extid=65b0bbc931abd6bd3b37
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+9e532f90f6ca82f39854@syzkaller.appspotmail.com
+Reported-by: syzbot+65b0bbc931abd6bd3b37@syzkaller.appspotmail.com
 
 smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,  
 stepping: 0x0)
@@ -86,7 +86,7 @@ clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:
 19112604462750000 ns
 futex hash table entries: 512 (order: 4, 65536 bytes)
 xor: automatically using best checksumming function   avx
-PM: RTC time: 18:40:55, date: 2019-05-13
+PM: RTC time: 19:04:00, date: 2019-05-13
 NET: Registered protocol family 16
 audit: initializing netlink subsys (disabled)
 cpuidle: using governor menu
@@ -97,20 +97,20 @@ WARNING: workqueue cpumask: online intersect > possible intersect
 HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
 HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
 cryptd: max_cpu_qlen set to 1000
-raid6: avx2x4   gen() 11967 MB/s
-raid6: avx2x4   xor()  6567 MB/s
-raid6: avx2x2   gen()  6083 MB/s
-raid6: avx2x2   xor()  3848 MB/s
-raid6: avx2x1   gen()   938 MB/s
-raid6: avx2x1   xor()  2067 MB/s
-raid6: sse2x4   gen()  6232 MB/s
-raid6: sse2x4   xor()  3350 MB/s
-raid6: sse2x2   gen()  3820 MB/s
-raid6: sse2x2   xor()  1916 MB/s
-raid6: sse2x1   gen()   688 MB/s
-raid6: sse2x1   xor()  1011 MB/s
-raid6: using algorithm avx2x4 gen() 11967 MB/s
-raid6: .... xor() 6567 MB/s, rmw enabled
+raid6: avx2x4   gen() 11639 MB/s
+raid6: avx2x4   xor()  6528 MB/s
+raid6: avx2x2   gen()  7202 MB/s
+raid6: avx2x2   xor()  3845 MB/s
+raid6: avx2x1   gen()  3930 MB/s
+raid6: avx2x1   xor()  2222 MB/s
+raid6: sse2x4   gen()  5948 MB/s
+raid6: sse2x4   xor()  3449 MB/s
+raid6: sse2x2   gen()  3919 MB/s
+raid6: sse2x2   xor()  2021 MB/s
+raid6: sse2x1   gen()  1838 MB/s
+raid6: sse2x1   xor()  1127 MB/s
+raid6: using algorithm avx2x4 gen() 11639 MB/s
+raid6: .... xor() 6528 MB/s, rmw enabled
 raid6: using avx2x2 recovery algorithm
 ACPI: Added _OSI(Module Device)
 ACPI: Added _OSI(Processor Device)
