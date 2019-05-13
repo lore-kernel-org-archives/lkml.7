@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F8AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BBD6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD1D20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 589B020989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uZPIZYsT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eavWDj0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfEMJNk (ORCPT
+        id S1728694AbfEMJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:13:40 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33247 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728669AbfEMJNi (ORCPT
+        Mon, 13 May 2019 05:13:43 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34226 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728669AbfEMJNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h17so6468459pgv.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:37 -0700 (PDT)
+        Mon, 13 May 2019 05:13:40 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c13so6465893pgt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XS9V02iwZYKFW5YWeFlYklsBy1zrilgFnTAf30fgF0A=;
-        b=uZPIZYsT+WwBmM+dEpOWvv+if6ZEsfz0OoX9iStJUwS+5SgYY2cY0jzl+TMOVjNgBU
-         rvfmz5Zdingo92huXzKGecngdxt/S6SB30nE5aJPVV8nKmF80KsS3cmE30YYhuQK4hsh
-         ukTXvM5GZ3KLi7SOU6sjXFOTX/ESwS3T4+efjGvQrXZPYXx0G8yo8xSyjoWIet1j1vuI
-         YiF53pIg+HLf7ZCMO8q2XUCw77OiBlRYcK2yws6KIv48MZxuYH8UHKv1P9ERdPhk/6RI
-         Y3VtQMqeq8eQjfxyCO0QbUuhHyKfPe0hXOsV/BGAEIl+XcuaKYoS4tV8vR0uLUALVYlx
-         PEEQ==
+        bh=SdiRF7cmY2+TjzGTcChzgzJlbCutxASQzMbp0ZC+13I=;
+        b=eavWDj0tkUpwBOJomcDBEsvxr77LpmthAm3l0tEiRxVYetXL3d7CuGVCqPzsujS7eg
+         C75jZS83QZwYtmtJMrMRTcmlbyLULKuJ+iehtf8Pp4weDgssbxm67c+3dcc32L1tNt/+
+         C2VYQxAFmCAzIueiGAOsdpxz1GII8McQRY8dm5XTUwHhV1uWSt50NAg0IjomIC3S9WmG
+         6iNvA1XvHhHvwS+H9v7KfDY3zRVe1BEvQBgQBp+WS2R3a0NxiKNy4Ec+XJx6DpWeybfS
+         LuAthLCx/pZBvN9Lrhs/wB1//ujwrLBlic5JPpcixe7iz3M/pdWXQEEVaBYjClMDUDPQ
+         3izw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XS9V02iwZYKFW5YWeFlYklsBy1zrilgFnTAf30fgF0A=;
-        b=CK1qIsDyxiUyB6nS6YxKFqMhHgRBClUU5ag04LfAsK+ki/xGQEorDE3ICJ5HM2OZO/
-         jV2p4oUzDviA7p5hsmAfhpGbvyjqXzyccjiD/P7k4UCao5g+Cl82tXIHT7DyXsk0bfoe
-         ESTTdeGxq/v6KZ4DsC35ht3xl+iDCtIC1tgzEsF8lSwl+rWXM7r4kDiRZdRCNIz8EPK6
-         3d5XD0cMak8N0cXd2sTTTrmaMAG/bte86oSLWrXpMfiIGoWHq0hRJod3SAfWJ9hzf2Mr
-         LTh1RGYghcRmhG29PEQJwkfjGFbmKHX9HEnOLh8ROP8PHSX+pO3D6R6hPrHrgzUGzYPG
-         BLmQ==
-X-Gm-Message-State: APjAAAU/vglR+3+Jb8JsfariQUOs21bdEouL32QnmVRi+Ei7onTuiZ0Y
-        1Cug2+XcR+ytpX91lKGjI1U=
-X-Google-Smtp-Source: APXvYqzCoHagyMxXoP4fm9/OQMr5LuvfsBTF/9tPj3Uz6fPwbrHjK+dD43TlfoxZ6njNXOOpwQOgzw==
-X-Received: by 2002:a63:5421:: with SMTP id i33mr29972820pgb.257.1557738817085;
-        Mon, 13 May 2019 02:13:37 -0700 (PDT)
+        bh=SdiRF7cmY2+TjzGTcChzgzJlbCutxASQzMbp0ZC+13I=;
+        b=aFgNRLC20drlCjk7sfzjBpATO6PMAcy645RSfE7elKqp5sWVbjb7Dz4ioQslAG1aqs
+         qZRZl7QFBcU5ORHTtCGUD6EQtqG3Mid9LrBaYj7rOtIRuhv3rO7udUzwUYNcbsEma6FF
+         5l1wySNfctAGO+6AHFUUJkCchAi2Xi6o4xG+ZhxGZZse+NLlIWh60Tf2s/QtW6dvVCGK
+         UIb81QKq7PeprB75+ghdLweMUbqHU6OeeCytwUgcmfM/11DqHeKQKJTb6bSk70um4A2U
+         WwmHaILmzkZ65RJCElGnz6WM8AbCPZwen1LvBJX66Mst+pb5uI0bMFeFxR//vym4X164
+         2TMQ==
+X-Gm-Message-State: APjAAAUSa0HlWobL+RseynyVLYo+nK/e7vlZ4dvs/BhJs/xNVefpFJBo
+        7Gwu7NcNCmMSy6qmflY4Wa0=
+X-Google-Smtp-Source: APXvYqxMOAyKXOC8AZDyaR9eBcLFEXpgTtCDZhK62zE4wfBweys2zm+z9BYmgltRGYqgA/VXDL40Yw==
+X-Received: by 2002:a65:44c8:: with SMTP id g8mr29987962pgs.443.1557738820456;
+        Mon, 13 May 2019 02:13:40 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.33
+        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:13:36 -0700 (PDT)
+        Mon, 13 May 2019 02:13:40 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 06/17] locking/lockdep: Adjust BFS algorithm to support multiple matches
-Date:   Mon, 13 May 2019 17:11:52 +0800
-Message-Id: <20190513091203.7299-7-duyuyang@gmail.com>
+Subject: [PATCH 07/17] locking/lockdep: Introduce mark_lock_unaccessed()
+Date:   Mon, 13 May 2019 17:11:53 +0800
+Message-Id: <20190513091203.7299-8-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
 References: <20190513091203.7299-1-duyuyang@gmail.com>
@@ -74,168 +74,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With read locks, circle is not sufficient condition for a deadlock. As a
-result, we need to continue the search after a match but the match is not
-wanted. __bfs() is adjusted to that end. The basic idea is to enqueue a
-node's children before matching the node.
-
-No functional change.
+Since in graph search, multiple matches may be needed, a matched lock
+needs to rejoin the search for another match, thereby introduce
+mark_lock_unaccessed().
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 54 +++++++++++++++++++++++++-----------------------
- 1 file changed, 28 insertions(+), 26 deletions(-)
+ kernel/locking/lockdep.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4adaf27..4d96bdd 100644
+index 4d96bdd..a2d5148 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1417,7 +1417,7 @@ static int __bfs(struct lock_list *source_entry,
- 		 void *data,
- 		 int (*match)(struct lock_list *entry, void *data),
- 		 struct lock_list **target_entry,
--		 int offset)
-+		 int offset, bool init)
- {
- 	struct lock_list *entry;
- 	struct lock_list *lock;
-@@ -1425,19 +1425,11 @@ static int __bfs(struct lock_list *source_entry,
- 	struct circular_queue *cq = &lock_cq;
- 	int ret = 1;
- 
--	if (match(source_entry, data)) {
--		*target_entry = source_entry;
--		ret = 0;
--		goto exit;
-+	if (init) {
-+		__cq_init(cq);
-+		__cq_enqueue(cq, source_entry);
- 	}
- 
--	head = get_dep_list(source_entry, offset);
--	if (list_empty(head))
--		goto exit;
--
--	__cq_init(cq);
--	__cq_enqueue(cq, source_entry);
--
- 	while ((lock = __cq_dequeue(cq))) {
- 
- 		if (!lock->class) {
-@@ -1449,25 +1441,34 @@ static int __bfs(struct lock_list *source_entry,
- 
- 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
- 
-+		/*
-+		 * Enqueue a node's children before match() so that even
-+		 * this node matches but is not wanted, we can continue
-+		 * the search.
-+		 */
- 		list_for_each_entry_rcu(entry, head, entry) {
- 			if (!lock_accessed(entry)) {
- 				unsigned int cq_depth;
-+
- 				mark_lock_accessed(entry, lock);
--				if (match(entry, data)) {
--					*target_entry = entry;
--					ret = 0;
--					goto exit;
--				}
- 
- 				if (__cq_enqueue(cq, entry)) {
- 					ret = -1;
- 					goto exit;
- 				}
-+
- 				cq_depth = __cq_get_elem_count(cq);
- 				if (max_bfs_queue_depth < cq_depth)
- 					max_bfs_queue_depth = cq_depth;
- 			}
- 		}
-+
-+		if (match(lock, data)) {
-+			*target_entry = lock;
-+			ret = 0;
-+			goto exit;
-+		}
-+
- 	}
- exit:
- 	return ret;
-@@ -1476,10 +1477,10 @@ static int __bfs(struct lock_list *source_entry,
- static inline int __bfs_forwards(struct lock_list *src_entry,
- 			void *data,
- 			int (*match)(struct lock_list *entry, void *data),
--			struct lock_list **target_entry)
-+			struct lock_list **target_entry, bool init)
- {
- 	return __bfs(src_entry, data, match, target_entry,
--		     offsetof(struct lock_class, locks_after));
-+		     offsetof(struct lock_class, locks_after), init);
- 
+@@ -1338,6 +1338,15 @@ static inline void mark_lock_accessed(struct lock_list *lock,
+ 	lock->class->dep_gen_id = lockdep_dependency_gen_id;
  }
  
-@@ -1489,7 +1490,7 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
- 			struct lock_list **target_entry)
++static inline void mark_lock_unaccessed(struct lock_list *lock)
++{
++	unsigned long nr;
++
++	nr = lock - list_entries;
++	WARN_ON(nr >= ARRAY_SIZE(list_entries)); /* Out-of-bounds, input fail */
++	lock->class->dep_gen_id--;
++}
++
+ static inline unsigned long lock_accessed(struct lock_list *lock)
  {
- 	return __bfs(src_entry, data, match, target_entry,
--		     offsetof(struct lock_class, locks_before));
-+		     offsetof(struct lock_class, locks_before), true);
- 
- }
- 
-@@ -1662,7 +1663,7 @@ static unsigned long __lockdep_count_forward_deps(struct lock_list *this)
- 	unsigned long  count = 0;
- 	struct lock_list *uninitialized_var(target_entry);
- 
--	__bfs_forwards(this, (void *)&count, noop_count, &target_entry);
-+	__bfs_forwards(this, (void *)&count, noop_count, &target_entry, true);
- 
- 	return count;
- }
-@@ -1750,12 +1751,12 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
-  */
- static noinline int
- check_path(struct lock_class *target, struct lock_list *src_entry,
--	   struct lock_list **target_entry)
-+	   struct lock_list **target_entry, bool init)
- {
- 	int ret;
- 
- 	ret = __bfs_forwards(src_entry, (void *)target, class_equal,
--			     target_entry);
-+			     target_entry, init);
- 
- 	if (unlikely(ret < 0))
- 		print_bfs_bug(ret);
-@@ -1783,7 +1784,7 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
- 
- 	debug_atomic_inc(nr_cyclic_checks);
- 
--	ret = check_path(hlock_class(target), &src_entry, &target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry, true);
- 
- 	if (unlikely(!ret)) {
- 		if (!trace->nr_entries) {
-@@ -1821,7 +1822,7 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
- 
- 	debug_atomic_inc(nr_redundant_checks);
- 
--	ret = check_path(hlock_class(target), &src_entry, &target_entry);
-+	ret = check_path(hlock_class(target), &src_entry, &target_entry, true);
- 
- 	if (!ret) {
- 		struct lock_list *parent;
-@@ -1897,7 +1898,8 @@ static inline int usage_match(struct lock_list *entry, void *mask)
- 
- 	debug_atomic_inc(nr_find_usage_forwards_checks);
- 
--	result = __bfs_forwards(root, &usage_mask, usage_match, target_entry);
-+	result = __bfs_forwards(root, &usage_mask, usage_match,
-+				target_entry, true);
- 
- 	return result;
- }
+ 	unsigned long nr;
 -- 
 1.8.3.1
 
