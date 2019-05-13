@@ -3,94 +3,109 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4FDC04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5092C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D8620862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B395520862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:33:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tDGuX543"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbTWE556"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbfEMNck (ORCPT
+        id S1730131AbfEMNdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:32:40 -0400
-Received: from mail-lf1-f49.google.com ([209.85.167.49]:45921 "EHLO
-        mail-lf1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729039AbfEMNck (ORCPT
+        Mon, 13 May 2019 09:33:13 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46435 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728222AbfEMNdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:32:40 -0400
-Received: by mail-lf1-f49.google.com with SMTP id n22so9037946lfe.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:32:38 -0700 (PDT)
+        Mon, 13 May 2019 09:33:13 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so14667193wrr.13;
+        Mon, 13 May 2019 06:33:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=oVp43Sqjer+1Mnk6Z0VYs6mjgMQjqnIkKEhzZtbnb9Q=;
-        b=tDGuX543FaKiis5JIu0K6yHZUnYGszSy5/QKRscEBTPkyUx+UoxzMCda/f7NoAMCXs
-         NnId1Dpy0+p2OwRYqNdUW8B0Q9ZgmTPPRLFH08Y8Ioi07swsdwSC8tzPEsKEOKEamJqj
-         gT/Vz4YEL0/5DpBS87O6B2ToCKHpFCLejj/xQDME+AtG57xwr11T0CYu7sZfe3WWQ6uC
-         Jyky4QwURWEXTpeUF+4ysh9GuY6S9jstJt7+MLrpUFMC8P78oitqRadqfNbc10j9sDcZ
-         wEk4cZpnIYpoCxvVt7/1Wg3TXr9H9hvpVjqRLb0hGf6l5otIPkv0iOnrZ06bztaEDHYx
-         UFFQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:mime-version:message-id:in-reply-to
+         :references:user-agent:content-transfer-encoding;
+        bh=teT375bO6TJ8glZjydOwAY1PQ/QgD84rQrsAfXP4vYM=;
+        b=TbTWE556Lo3wxRG7VbC3OZetVO/UnrGPx2+xtcqDSVDPd2cD79JA0gf5S+HfVRaqxk
+         NCQ7zSu8RqSrA4ZGmeGY3OGdJzcGJymPm3rXWrhXa+a5fMqAfPcQB9bjNo9SpWSvO+7G
+         ygnOsun5B+yaBj4X51i6+vdawVyG3f10MyPdXEYl+FdYgXby4n2LMaijNIraPD2ySZMv
+         vuqPs/3KxzlOwb0bfsq24FoEubLiBm2yMf1zcszXVrHWQL9I9vCjuM62yEVnlZDve/NU
+         bqHYn/N9aua4Y6EmKkfgX0fb0UbYJwBvUb4RDgbmN8ooPNV3yaCRtW3bIVr6d3CSMsuZ
+         aqqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=oVp43Sqjer+1Mnk6Z0VYs6mjgMQjqnIkKEhzZtbnb9Q=;
-        b=aCWXZqhV4ikYJu3I/Rzmdi/mnPsJC5qeFNIwixxgXReGAVOpCVoCLP9WwvNB4hiqqc
-         oFdol281l0CYxwfIlGUITJbHf6WpwL9gMIxiqPlH+7cJINeaaQMP2os9nCumDHo8Kezx
-         Q2kkRfVFQA5bybT43eGIRewSt44s0UWTg0peLFeltFobzfvXYjHlG2158MQtBWOD+Our
-         pmbw3O4gWbQgGFrqnRbi8iSOwsLzs5ynsudm3h65t9YRmWUVlQIMIPw3YcGLxjE1D/js
-         S5bn0o8oY3rJGVcaIndP1k2IdfnLXksqq86MCWBEv1DepvBBEQ1+jly/Hl7p5u1rRz3x
-         2pIw==
-X-Gm-Message-State: APjAAAUslae0818mBbhDr9W1xF9ruBTifSBCagAtU9x3t8Zya3DsEoti
-        HkByHiXDD/WPPtYL+gsRQ4+e2+xgM0Q4kAGEnW/z1A==
-X-Google-Smtp-Source: APXvYqzs3d0cpCnpXUYy/HCWcuqMk6v3br1W7J29knRDRFtPEEfVrkkTiroqqAYfwnvhlnr9dDqBExHcoRhKAYA0yfY=
-X-Received: by 2002:a05:6512:309:: with SMTP id t9mr13369150lfp.103.1557754357968;
- Mon, 13 May 2019 06:32:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:mime-version:message-id
+         :in-reply-to:references:user-agent:content-transfer-encoding;
+        bh=teT375bO6TJ8glZjydOwAY1PQ/QgD84rQrsAfXP4vYM=;
+        b=AwS3N7IR3iL0A/Jw4HM+PITf+jF2RWq5zlW9EWEU87/xXnkqwIfyVs34i/aZXybUWa
+         b6mEwm5cV9m5WBmIffzRq71RLd22U7Ao9ZDxUyDAbBM3NIpmEcqZ7j0G1bd93u0jgb37
+         WfXBX5ukrZIwRegVD3m57YMEJTtyXN6AJfpEchF62RBnsFAuNCOrlKXBfQ5tSdiz5ENX
+         w1Fdbkn+yrEsMPJXWUfIbuWj+mh1WUqcMkuW7LehnmvUhlXPgVVFW2628OEwO+5/AB3C
+         kdlquVHJsHsYRHDVZnzjvGGHiXfrVJ55R/7wdd3hDehvmjudlU3rkxnlYeQOrR5xOpcJ
+         oTMQ==
+X-Gm-Message-State: APjAAAVIMbx+3PTRUAvGHCw4HYiWIKTmJe86VSPoaQ7PaqLaFPfGKLF2
+        +YyeW9aSk6el69hPgTBKFlI=
+X-Google-Smtp-Source: APXvYqwYtUSX9zu79tdi0kPPiamTeGqSrAqroxqOyT5KkeJwOle8naEnnh3aNM1yNp5qiaYgPXEKxw==
+X-Received: by 2002:adf:d4d0:: with SMTP id w16mr16976954wrk.244.1557754391619;
+        Mon, 13 May 2019 06:33:11 -0700 (PDT)
+Received: from localhost ([92.59.185.54])
+        by smtp.gmail.com with ESMTPSA id z9sm15423480wma.39.2019.05.13.06.33.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 06:33:10 -0700 (PDT)
+From:   Vicente Bergas <vicencb@gmail.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>, <g@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
+Date:   Mon, 13 May 2019 15:33:08 +0200
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 13 May 2019 19:02:26 +0530
-Message-ID: <CA+G9fYuC8dgKs04HmyCaKeQ_xwqKBxnh=zsOFjQK+3Fq7AZRyw@mail.gmail.com>
-Subject: test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
-To:     linux-media@vger.kernel.org
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
-        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
-        sakari.ailus@linux.intel.com,
-        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
-        lkft-triage@lists.linaro.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <0c90c9cd-880b-4834-86db-f3e61c91c5f4@gmail.com>
+In-Reply-To: <20190513130131.jiommbisqvydmzgw@mobilestation>
+References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
+ <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
+ <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
+ <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
+ <0f16b2c5-ef2a-42a1-acdc-08fa9971b347@gmail.com>
+ <20190513102941.4ocb3tz3wmh3pj4t@mobilestation>
+ <20190513105104.af7d7n337lxqac63@mobilestation>
+ <cf1e81d9-6f91-41fe-a390-b9688e5707f7@gmail.com>
+ <20190513124225.odm3shcfo3tsq6xk@mobilestation>
+ <20190513125103.GC28969@lunn.ch>
+ <20190513130131.jiommbisqvydmzgw@mobilestation>
+User-Agent: Trojita
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do you see test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
-kernel branches ?
+On Monday, May 13, 2019 3:01:33 PM CEST, Serge Semin wrote:
+> On Mon, May 13, 2019 at 02:51:03PM +0200, Andrew Lunn wrote:
+>>> Ahh, I see. Then using lock-less version of the access=20
+>>> methods must fix the
+>>> problem. You could try something like this:
+>>=20
+>> Kunihiko Hayash is way ahead of you.
+>>=20
+>> =09 Andrew
+>
+> I wouldn't say that five hours is "way ahead". But if something=20
+> fixes a bug in
+> a patch it would be good to be have the original author being Cc'ed.
+>
+> Vincente, here is a link to the patch, that fixes the problem.
+> https://lkml.org/lkml/2019/5/13/43
+>
+> -Segey
 
-test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1132):
-reserved not zeroed
-test VIDIOC_G/S_PARM: FAIL
-
-Test passes on mainline, -next, 5.0 and 4.19
-Test failed on 4.14, 4.9 and 4.4
-
-steps to reproduce:
-       # boot any 4.9/4.14 kernel on x86_64 / Juno / hikey  device
-       #  install v4l-utils package
-       # modprobe vivid.ko no_error_inj=1
-       # v4l2-compliance -v -d /dev/video0
-
-Full test log,
-https://lkft.validation.linaro.org/scheduler/job/708755#L1791
-
-Test results comparison on all branches,
-https://qa-reports.linaro.org/_/comparetest/?project=22&project=6&project=58&project=135&project=40&project=23&project=159&suite=v4l2-compliance&test=VIDIOC_G-S_PARM
-
-Best Regards
-Naresh Kamboju
+Tested and working OK now.
+Thanks for the link.
+Rgds.
