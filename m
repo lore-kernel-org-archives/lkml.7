@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657A4C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CB8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B7A121473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF282133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cackC5e/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z6slNgJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbfEMOkC (ORCPT
+        id S1730557AbfEMOkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:40:02 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:37252 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730420AbfEMOkA (ORCPT
+        Mon, 13 May 2019 10:40:11 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59876 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730542AbfEMOkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:40:00 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd28F193025;
-        Mon, 13 May 2019 14:39:16 GMT
+        Mon, 13 May 2019 10:40:09 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd2Gn194925;
+        Mon, 13 May 2019 14:39:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=3oQZsnmQ7NshrUK5gBFOiQdwJCmvyMk7rTDgLZ4eiR8=;
- b=cackC5e/rN14Atf5QlnsuYve24xrmHKk5OAv4LozaAp9vhiUL7E7xPH3kbnOM8VYLH+M
- qQZDMDajYAWzXDX4pYfxSi/cFR9+miTzGtpQvwsGANTuO936Hac7155wikox7cO9zHM6
- D6VSW0wFlH4kS9hhjEHDuhBzZL61Y1YPaaQ9QapuqevDj5phnii9KR4rMc6oFyvj+0cK
- chnwMcSACXVNjOAa1xqmZO14HcVVu9E4v0xi+ZQhdjbaq/Q1oelYLJg/hz12bN7CBmtg
- 1H1C0ZDiqvGmCSUtMdjVlrxOudApkaffggciBhogmTfWK5aks2i24a2IdgYkJ3LSxlPk OA== 
+ bh=+MaSC7D5NYyFHcoLlt21rqwn+ky+e8tS8duegev3cnQ=;
+ b=z6slNgJ9MrFp8uPsBPJmJU6GEaQ8wt3ZidHa0OAjWLM8dA3+hvZO3Q2zqNmvKu+Qfvha
+ f39YKjJiNdGzsIVZtiZmHgCAk3/RyTNp7XRWQJE/vV0AXPAhhrT+G+j8gHuyTYUQNX0f
+ AIhcCp0PH4W5K5mBi7O15eBaUEQLLjjyWKwdghJjGta7Pwvvxw11nROudMT9WBKTJRLS
+ bc5hFg0tiztOk+LrZZH2/SQPAOQVHBG6LvLcBcZDJcfhj/iVjW1L4APtEZtPI5sxvMGw
+ RUUksDo71NnDOv56zatbXlgzV01aZsNu7msINVw4f0f0NjXKNnCv8fOY+KxWkWNogtPN 5Q== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdfkwq-1
+        by userp2120.oracle.com with ESMTP id 2sdq1q7axg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:16 +0000
+        Mon, 13 May 2019 14:39:31 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQF022780;
-        Mon, 13 May 2019 14:39:13 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQK022780;
+        Mon, 13 May 2019 14:39:28 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,15 +50,15 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 12/27] kvm/isolation: add KVM page table entry allocation functions
-Date:   Mon, 13 May 2019 16:38:20 +0200
-Message-Id: <1557758315-12667-13-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 17/27] kvm/isolation: improve mapping copy when mapping is already present
+Date:   Mon, 13 May 2019 16:38:25 +0200
+Message-Id: <1557758315-12667-18-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905130103
@@ -67,119 +67,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions allocate p4d/pud/pmd/pte pages and ensure that
-pages are in the KVM page table.
+A mapping can already exist if a buffer was mapped in the KVM
+address space, and then the buffer was freed but there was no
+request to unmap from the KVM address space. In that case, clear
+the existing mapping before mapping the new buffer.
+
+Also if the new mapping is a subset of an already larger mapped
+range, then remap the entire larger map.
 
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/isolation.c |   94 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 94 insertions(+), 0 deletions(-)
+ arch/x86/kvm/isolation.c |   67 +++++++++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 63 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index b29a09b..6ec86df 100644
+index e494a15..539e287 100644
 --- a/arch/x86/kvm/isolation.c
 +++ b/arch/x86/kvm/isolation.c
-@@ -248,6 +248,100 @@ static inline void kvm_p4d_free(struct mm_struct *mm, p4d_t *p4d)
- 	p4d_free(mm, PGTD_ALIGN(p4d));
+@@ -88,6 +88,9 @@ struct mm_struct kvm_mm = {
+ DEFINE_STATIC_KEY_FALSE(kvm_isolation_enabled);
+ EXPORT_SYMBOL(kvm_isolation_enabled);
+ 
++static void kvm_clear_mapping(void *ptr, size_t size,
++			      enum page_table_level level);
++
+ /*
+  * When set to true, KVM #VMExit handlers run in isolated address space
+  * which maps only KVM required code and per-VM information instead of
+@@ -721,6 +724,7 @@ static int kvm_copy_mapping(void *ptr, size_t size, enum page_table_level level)
+ {
+ 	unsigned long addr = (unsigned long)ptr;
+ 	unsigned long end = addr + ((unsigned long)size);
++	unsigned long range_addr, range_end;
+ 	struct kvm_range_mapping *range_mapping;
+ 	bool subset;
+ 	int err;
+@@ -728,22 +732,77 @@ static int kvm_copy_mapping(void *ptr, size_t size, enum page_table_level level)
+ 	BUG_ON(current->mm == &kvm_mm);
+ 	pr_debug("KERNMAP COPY addr=%px size=%lx level=%d\n", ptr, size, level);
+ 
+-	range_mapping = kmalloc(sizeof(struct kvm_range_mapping), GFP_KERNEL);
+-	if (!range_mapping)
+-		return -ENOMEM;
++	mutex_lock(&kvm_range_mapping_lock);
++
++	/*
++	 * A mapping can already exist if the buffer was mapped and then
++	 * freed but there was no request to unmap it. We might also be
++	 * trying to map a subset of an already mapped buffer.
++	 */
++	range_mapping = kvm_get_range_mapping_locked(ptr, &subset);
++	if (range_mapping) {
++		if (subset) {
++			pr_debug("range %px/%lx/%d is a subset of %px/%lx/%d already mapped, remapping\n",
++				 ptr, size, level, range_mapping->ptr,
++				 range_mapping->size, range_mapping->level);
++			range_addr = (unsigned long)range_mapping->ptr;
++			range_end = range_addr +
++				((unsigned long)range_mapping->size);
++			err = kvm_copy_pgd_range(&kvm_mm, current->mm,
++						 range_addr, range_end,
++						 range_mapping->level);
++			if (end <= range_end) {
++				/*
++				 * We effectively have a subset, fully contained
++				 * in the superset. So we are done.
++				 */
++				mutex_unlock(&kvm_range_mapping_lock);
++				return err;
++			}
++			/*
++			 * The new range is larger than the existing mapped
++			 * range. So we need an extra mapping to map the end
++			 * of the range.
++			 */
++			addr = range_end;
++			range_mapping = NULL;
++			pr_debug("adding extra range %lx-%lx (%d)\n", addr,
++				 end, level);
++		} else {
++			pr_debug("range %px size=%lx level=%d already mapped, clearing\n",
++				 range_mapping->ptr, range_mapping->size,
++				 range_mapping->level);
++			kvm_clear_mapping(range_mapping->ptr,
++					  range_mapping->size,
++					  range_mapping->level);
++			list_del(&range_mapping->list);
++		}
++	}
++
++	if (!range_mapping) {
++		range_mapping = kmalloc(sizeof(struct kvm_range_mapping),
++		    GFP_KERNEL);
++		if (!range_mapping) {
++			mutex_unlock(&kvm_range_mapping_lock);
++			return -ENOMEM;
++		}
++		INIT_LIST_HEAD(&range_mapping->list);
++	}
+ 
+ 	err = kvm_copy_pgd_range(&kvm_mm, current->mm, addr, end, level);
+ 	if (err) {
++		mutex_unlock(&kvm_range_mapping_lock);
+ 		kfree(range_mapping);
+ 		return err;
+ 	}
+ 
+-	INIT_LIST_HEAD(&range_mapping->list);
+ 	range_mapping->ptr = ptr;
+ 	range_mapping->size = size;
+ 	range_mapping->level = level;
+ 	list_add(&range_mapping->list, &kvm_range_mapping_list);
+ 
++	mutex_unlock(&kvm_range_mapping_lock);
++
+ 	return 0;
  }
  
-+/*
-+ * kvm_pXX_alloc() functions are equivalent to kernel pXX_alloc()
-+ * functions but, in addition, they ensure that page table pointers
-+ * are in the KVM page table. Otherwise an error is returned.
-+ */
-+
-+static pte_t *kvm_pte_alloc(struct mm_struct *mm, pmd_t *pmd,
-+			    unsigned long addr)
-+{
-+	pte_t *pte;
-+
-+	if (pmd_none(*pmd)) {
-+		pte = pte_alloc_kernel(pmd, addr);
-+		if (!pte) {
-+			pr_debug("PTE: ERR ALLOC\n");
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		if (!kvm_add_pgt_directory(pte, PGT_LEVEL_PTE)) {
-+			kvm_pte_free(mm, pte);
-+			return ERR_PTR(-EINVAL);
-+		}
-+	} else {
-+		pte = kvm_pte_offset(pmd, addr);
-+	}
-+
-+	return pte;
-+}
-+
-+static pmd_t *kvm_pmd_alloc(struct mm_struct *mm, pud_t *pud,
-+			    unsigned long addr)
-+{
-+	pmd_t *pmd;
-+
-+	if (pud_none(*pud)) {
-+		pmd = pmd_alloc(mm, pud, addr);
-+		if (!pmd) {
-+			pr_debug("PMD: ERR ALLOC\n");
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		if (!kvm_add_pgt_directory(pmd, PGT_LEVEL_PMD)) {
-+			kvm_pmd_free(mm, pmd);
-+			return ERR_PTR(-EINVAL);
-+		}
-+	} else {
-+		pmd = kvm_pmd_offset(pud, addr);
-+	}
-+
-+	return pmd;
-+}
-+
-+static pud_t *kvm_pud_alloc(struct mm_struct *mm, p4d_t *p4d,
-+			    unsigned long addr)
-+{
-+	pud_t *pud;
-+
-+	if (p4d_none(*p4d)) {
-+		pud = pud_alloc(mm, p4d, addr);
-+		if (!pud) {
-+			pr_debug("PUD: ERR ALLOC\n");
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		if (!kvm_add_pgt_directory(pud, PGT_LEVEL_PUD)) {
-+			kvm_pud_free(mm, pud);
-+			return ERR_PTR(-EINVAL);
-+		}
-+	} else {
-+		pud = kvm_pud_offset(p4d, addr);
-+	}
-+
-+	return pud;
-+}
-+
-+static p4d_t *kvm_p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
-+			    unsigned long addr)
-+{
-+	p4d_t *p4d;
-+
-+	if (pgd_none(*pgd)) {
-+		p4d = p4d_alloc(mm, pgd, addr);
-+		if (!p4d) {
-+			pr_debug("P4D: ERR ALLOC\n");
-+			return ERR_PTR(-ENOMEM);
-+		}
-+		if (!kvm_add_pgt_directory(p4d, PGT_LEVEL_P4D)) {
-+			kvm_p4d_free(mm, p4d);
-+			return ERR_PTR(-EINVAL);
-+		}
-+	} else {
-+		p4d = kvm_p4d_offset(pgd, addr);
-+	}
-+
-+	return p4d;
-+}
-+
- 
- static int kvm_isolation_init_mm(void)
- {
 -- 
 1.7.1
 
