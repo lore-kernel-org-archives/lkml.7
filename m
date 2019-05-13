@@ -2,186 +2,111 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45896C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 713ABC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179602147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41860208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:24:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="HDtgWSAx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfEMOVx (ORCPT
+        id S1729283AbfEMOYq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:21:53 -0400
-Received: from 4.mo177.mail-out.ovh.net ([46.105.37.72]:44380 "EHLO
-        4.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730588AbfEMOVw (ORCPT
+        Mon, 13 May 2019 10:24:46 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:58032 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728566AbfEMOYp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:21:52 -0400
-X-Greylist: delayed 7800 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 May 2019 10:21:51 EDT
-Received: from player729.ha.ovh.net (unknown [10.108.54.87])
-        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 0072CF7501
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:56:15 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player729.ha.ovh.net (Postfix) with ESMTPSA id 1EAF25D72366;
-        Mon, 13 May 2019 11:56:07 +0000 (UTC)
-Date:   Mon, 13 May 2019 13:56:06 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH] powerpc/powernv/npu: Fix reference leak
-Message-ID: <20190513135606.7d9a0902@bahia.lan>
-In-Reply-To: <20190429123659.00c0622b@bahia.lan>
-References: <155568805354.600470.13376593185688810607.stgit@bahia.lan>
-        <962c1d9e-719c-cb82-cabc-1cf619e1510b@ozlabs.ru>
-        <20190429123659.00c0622b@bahia.lan>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 13 May 2019 10:24:45 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEK9U5000451;
+        Mon, 13 May 2019 10:24:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=AheufpGoAZmVN2qZEnWSLdnmv1iZb5Fww4rLoVmGa8s=;
+ b=HDtgWSAxj75cdt85mMJfupaHh1QhLcJsjdkZuGcUp2PNdb57K8GZvRwXqteQUDS3yj5f
+ lfFCCSK2OyHcgqTxqJfKXzLgPIV0LiVRcLymvKC+x/J9tkEU4Bz+D9dWT+/X6+VRQoAk
+ FpMQx31wRcqCdIUiWgQNfG16mYBu3QOXT34iNGmTJDfzBlT41e8Mdwbb3ecNseURpraz
+ JIoSnmLvqfMWyvAHfEv5D00InI6+EwYoh/Di6SqmH9fR16z8ml936ZKHveqq7mVR1zXz
+ qkVqWTBzqK85z74ejgnP75tOKpNjtIHJlY/szfgdFtkzSt6ppSe4IRB9RMomepuKFfu1 PQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0a-00154904.pphosted.com with ESMTP id 2sdshw4x0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 10:24:44 -0400
+Received: from pps.filterd (m0133268.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEIj29048061;
+        Mon, 13 May 2019 10:24:43 -0400
+Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
+        by mx0a-00154901.pphosted.com with ESMTP id 2sdrmrbnm5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 10:24:43 -0400
+X-LoopCount0: from 10.166.132.133
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="336316460"
+From:   <Mario.Limonciello@dell.com>
+To:     <keith.busch@intel.com>, <hch@lst.de>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>
+CC:     <rafael@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <kai.heng.feng@canonical.com>
+Subject: RE: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Topic: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Index: AQHVB3g9crBQ5iluoUuygL0xp1WIm6ZlFnpAgAQIfyA=
+Date:   Mon, 13 May 2019 14:24:41 +0000
+Message-ID: <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+In-Reply-To: <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 6583981181895154097
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130101
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael,
+> > Cc: Mario Limonciello <Mario.Limonciello@dell.com>
+> > Cc: Kai Heng Feng <kai.heng.feng@canonical.com>
+> > Signed-off-by: Keith Busch <keith.busch@intel.com>
+> > ---
+> > Disclaimer: I've tested only on emulation faking support for the featur=
+e.
+>=20
+> Thanks for sharing.  I'll arrange some testing with this with storage par=
+tners early
+> next week.
+>=20
 
-Any comments on this patch ? Should I repost with a shorter comment
-as suggested by Alexey ?
+I've received the result that from one of my partners this patch doesn't wo=
+rk properly
+and the platform doesn't go into a lower power state.  (The patch submitted=
+ by KH/me
+did work on said system to get it into a lower power state for them).
 
-Cheers,
-
---
-Greg
-
-On Mon, 29 Apr 2019 12:36:59 +0200
-Greg Kurz <groug@kaod.org> wrote:
-
-> On Mon, 29 Apr 2019 16:01:29 +1000
-> Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
-> 
-> > On 20/04/2019 01:34, Greg Kurz wrote:  
-> > > Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
-> > > has the effect of incrementing the reference count of the PCI device, as
-> > > explained in drivers/pci/search.c:
-> > > 
-> > >  * Given a PCI domain, bus, and slot/function number, the desired PCI
-> > >  * device is located in the list of PCI devices. If the device is
-> > >  * found, its reference count is increased and this function returns a
-> > >  * pointer to its data structure.  The caller must decrement the
-> > >  * reference count by calling pci_dev_put().  If no device is found,
-> > >  * %NULL is returned.
-> > > 
-> > > Nothing was done to call pci_dev_put() and the reference count of GPU and
-> > > NPU PCI devices rockets up.
-> > > 
-> > > A natural way to fix this would be to teach the callers about the change,
-> > > so that they call pci_dev_put() when done with the pointer. This turns
-> > > out to be quite intrusive, as it affects many paths in npu-dma.c,
-> > > pci-ioda.c and vfio_pci_nvlink2.c.    
-> > 
-> > 
-> > afaict this referencing is only done to protect the current traverser
-> > and what you've done is actually a natural way (and the generic
-> > pci_get_dev_by_id() does exactly the same), although this looks a bit weird.
-> >   
-> 
-> Not exactly the same: pci_get_dev_by_id() always increment the refcount
-> of the returned PCI device. The refcount is only decremented when this
-> device is passed to pci_get_dev_by_id() to continue searching.
-> 
-> That means that the users of the PCI device pointer returned by
-> pci_get_dev_by_id() or its exported variants pci_get_subsys(),
-> pci_get_device() and pci_get_class() do handle the refcount. They
-> all pass the pointer to pci_dev_put() or continue the search,
-> which calls pci_dev_put() internally.
-> 
-> Direct and indirect callers of get_pci_dev() don't care for the
-> refcount at all unless I'm missing something.
-> 
-> >   
-> > > Also, the issue appeared in 4.16 and
-> > > some affected code got moved around since then: it would be problematic
-> > > to backport the fix to stable releases.
-> > > 
-> > > All that code never cared for reference counting anyway. Call pci_dev_put()
-> > > from get_pci_dev() to revert to the previous behavior.    
-> > >> Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev    
-> > from pci_dn")  
-> > > Cc: stable@vger.kernel.org # v4.16
-> > > Signed-off-by: Greg Kurz <groug@kaod.org>
-> > > ---
-> > >  arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
-> > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-> > > index e713ade30087..d8f3647e8fb2 100644
-> > > --- a/arch/powerpc/platforms/powernv/npu-dma.c
-> > > +++ b/arch/powerpc/platforms/powernv/npu-dma.c
-> > > @@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock);
-> > >  static struct pci_dev *get_pci_dev(struct device_node *dn)
-> > >  {
-> > >  	struct pci_dn *pdn = PCI_DN(dn);
-> > > +	struct pci_dev *pdev;
-> > >  
-> > > -	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-> > > +	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-> > >  					   pdn->busno, pdn->devfn);
-> > > +
-> > > +	/*
-> > > +	 * pci_get_domain_bus_and_slot() increased the reference count of
-> > > +	 * the PCI device, but callers don't need that actually as the PE
-> > > +	 * already holds a reference to the device.    
-> > 
-> > Imho this would be just enough.
-> > 
-> > Anyway,
-> > 
-> > Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> >   
-> 
-> Thanks !
-> 
-> I now realize that I forgot to add the --cc option for stable on my stgit
-> command line :-\.
-> 
-> Cc'ing now.
-> 
-> > 
-> > How did you find it? :)
-> >   
-> 
-> While reading code to find some inspiration for OpenCAPI passthrough. :)
-> 
-> I saw the following in vfio_pci_ibm_npu2_init():
-> 
-> 	if (!pnv_pci_get_gpu_dev(vdev->pdev))
-> 		return -ENODEV;
-> 
-> and simply followed the function calls.
-> 
-> >   
-> > > Since callers aren't
-> > > +	 * aware of the reference count change, call pci_dev_put() now to
-> > > +	 * avoid leaks.
-> > > +	 */
-> > > +	if (pdev)
-> > > +		pci_dev_put(pdev);
-> > > +
-> > > +	return pdev;
-> > >  }
-> > >  
-> > >  /* Given a NPU device get the associated PCI device. */
-> > >     
-> >   
-> 
-
+This was not a disk with HMB, but with regard to the HMB I believe it needs=
+ to be
+removed during s0ix so that there isn't any mistake that SSD thinks it can =
+access HMB
+memory in s0ix.
