@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C7FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C1FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB8721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0A820989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h77jrrrg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhwRlW68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbfEMJNW (ORCPT
+        id S1728615AbfEMJN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:13:22 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33549 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfEMJNV (ORCPT
+        Mon, 13 May 2019 05:13:26 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39314 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727576AbfEMJNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id z28so6878817pfk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:20 -0700 (PDT)
+        Mon, 13 May 2019 05:13:24 -0400
+Received: by mail-pg1-f194.google.com with SMTP id w22so6450939pgi.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5Ut+0w3ota/GIP6ZIncC3MqeJGwljW+9P2Proi/wfSM=;
-        b=h77jrrrgB7F3Zkf2IdYum4v1Mm1PVZLsDytNfBYqxmWbjqUUQoxDIl9LUnQ27Dp94b
-         fjsKTf6AN1G9hikKwmLaxeikZv0ab+B90WX5DqlmsXj5Ka66Yb9hpQYCUpcEBxn+evfG
-         wYYKF2tlMWDZkFkefHVRE+iRnxk3e2r1215QT8eOxFjr1ZW31JC8SSIyh/ynwyLhKBPw
-         v0ybIWS+VjpL0tMpiZIuvivgDU6zcA5WmUYqBpmqotQq2Q0q3WiD5KWslT50rBPj3r0i
-         9DNpIQQfLqxcAv9DEnXoC8VDv7v6lKWdbAGJyIfxq6RYodOkghnD+O2OJEu8na4WZEE5
-         EDmA==
+        bh=QxtXj8UtQSYghHEfN3xnKKzkOFQGRnYE90nTsl6Ujjg=;
+        b=jhwRlW68xzcAAcGuoqMH5yNgAbFIu6vd+KomvwtilVIysTWq2oVqDTQApiqUDxI9pC
+         VtOzK33YPNcHJVvNppomR9Brki+JSDqX7qzUuE8FYDsj+RKA33Qj+gdN/ZE8v/PHNkkG
+         p5DJDYW+0iy1cQAqY/y/V8RoJCeSUbSWqnVD7od2Lj36cub8AXJYyzHcbMJctfltle8G
+         UhKDwnYHCVk/fUvDC5SfIV/c+1+KHGjXeveGzjmZze+qYkpCx/4zVFiH0iwsMcpX+iwK
+         2m9ehhovfHDmmbvPEhHKAk7WBS/daG1Ffg3OXPnGfgkan0sub5qQy3N2BZ/iIKBL0kMb
+         Ng+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5Ut+0w3ota/GIP6ZIncC3MqeJGwljW+9P2Proi/wfSM=;
-        b=IbbjXb5bETNiAC8Ki4w3OMvG6fLM2nwbNoRV7XVwVEcph5NLbsXd853flRjvbb4spQ
-         rXkOYlr/Au5aVX1iYwf/sxfZrzRTDEB2tfUu2AAJHLS09tsHOLLVZchx4F+EXGkPM8gL
-         X+S3KpfkcYzMvooRVT0mTCyEcfolEwR5yEt7f35viz4b5tRBIr+YW26lm1HNNfZXpdVl
-         CFoK9hSH7Gt1kdMTfq2GajpNmR2LiicH1/6bBsBtKiI1f+pbogu5fVXhyAwqTY/FVQKJ
-         +Qg6iu3o7k5vOmI6nGcEeJeJdOwtSLHoM35Gyyaow8qEwOISzfIK53BAhRXU+t+RpN5D
-         Mqsw==
-X-Gm-Message-State: APjAAAVimnR6D0Mwh1eXnoqogjseqR9it0PX35zQI/peskQxPrAGhkdw
-        1E2JDSdSflmLpe/HmLStF0g=
-X-Google-Smtp-Source: APXvYqwqgefeAUW5Ge0rqedEpfwTdx2CYT2hDxi7pE0KtaOcQZtp1lb3kE65KlrKVZNggoGNTabOGg==
-X-Received: by 2002:aa7:8f2f:: with SMTP id y15mr21106164pfr.124.1557738800634;
-        Mon, 13 May 2019 02:13:20 -0700 (PDT)
+        bh=QxtXj8UtQSYghHEfN3xnKKzkOFQGRnYE90nTsl6Ujjg=;
+        b=KuMhI+rHmFGXdp0S/rx4BQBHlAuXy5dpjc6u7Z/+9IHJUNJ1mM5mvvThG46afubB21
+         6mNZa9uwtOP1v8Ar+KHT9Xn+sUgY9FpDnY43Q9XSll4/lAP7bKIh8RIwk/MDLLsB3AnE
+         HFpTwwDLf7qMOMKKut7qLpryoF7OB+Al2H081ycf1obyaZKpfkHhtg6PuUXYfd3ouK58
+         sj9tMxXVSUTT/p920RBjEPFUwOqA7RQgln9EtZOuA8CWQ6d9K9KyLIXshqoFeW4+hilD
+         IMMMpJKkqV0uApgjy2WSwGrYxwk3EjslbiXU8RYjiUuXW8A6QlOFRkodD0UItXwqyk/8
+         gh2w==
+X-Gm-Message-State: APjAAAUdOP2ZhDso3Ixy2ExQvjSvpcCGA5kW4HWUy8ZuNYG/+nf/7hfO
+        5o+YNKOfIf/TkSoIo/n9BJA=
+X-Google-Smtp-Source: APXvYqzS6CutaQhgmW9u/OlX3akEfqIezW5lXM2ozxu6RsxsH/sBA8HGWMo6pKQouLVAJXn99Z6Kmg==
+X-Received: by 2002:a65:63d5:: with SMTP id n21mr29675339pgv.330.1557738803899;
+        Mon, 13 May 2019 02:13:23 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.17
+        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:13:20 -0700 (PDT)
+        Mon, 13 May 2019 02:13:23 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 01/17] locking/lockdep: Add lock type enum to explicitly specify read or write locks
-Date:   Mon, 13 May 2019 17:11:47 +0800
-Message-Id: <20190513091203.7299-2-duyuyang@gmail.com>
+Subject: [PATCH 02/17] locking/lockdep: Add read-write type for dependency
+Date:   Mon, 13 May 2019 17:11:48 +0800
+Message-Id: <20190513091203.7299-3-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
 References: <20190513091203.7299-1-duyuyang@gmail.com>
@@ -74,141 +74,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an enum to formalize lock types, as those type values now matter. No
-functional change.
+Direct dependency needs to keep track of its locks' read-write types.  A
+union field is added to lock_list struct so the type is stored there as
+this:
+
+	lock_type[1] (u16), lock_type[0] (u16)
+
+			or:
+
+	dep_type (int)
+
+where value:
+
+ 0: exclusive / write
+ 1: read
+ 2: recursive read
+
+Note that (int) dep_type value may vary with different architectural
+endianness, so use helpers to operate on these types.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- include/linux/lockdep.h  | 28 ++++++++++++++++++++++------
- kernel/locking/lockdep.c | 23 +++++++++++++----------
- 2 files changed, 35 insertions(+), 16 deletions(-)
+ include/linux/lockdep.h            | 12 ++++++++++++
+ kernel/locking/lockdep.c           | 34 +++++++++++++++++++++++++++++++---
+ kernel/locking/lockdep_internals.h |  3 +++
+ 3 files changed, 46 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 7c2fefa..441288c 100644
+index 441288c..6aa9af2 100644
 --- a/include/linux/lockdep.h
 +++ b/include/linux/lockdep.h
-@@ -339,10 +339,21 @@ static inline int lockdep_match_key(struct lockdep_map *lock,
-  *
-  * Values for "read":
-  *
-- *   0: exclusive (write) acquire
-- *   1: read-acquire (no recursion allowed)
-- *   2: read-acquire with same-instance recursion allowed
-+ *   LOCK_TYPE_EXCLUSIVE (LOCK_TYPE_WRITE): exclusive (write) acquire
-+ *   LOCK_TYPE_READ: read-acquire (no recursion allowed)
-+ *   LOCK_TYPE_RECURSIVE: read-acquire with same-instance recursion allowed
-  *
-+ * Note that we have an assumption that a lock class cannot ever be both
-+ * read and recursive-read.
-+ */
-+enum lock_type {
-+	LOCK_TYPE_EXCLUSIVE	= 0,
-+	LOCK_TYPE_WRITE		= 0,
-+	LOCK_TYPE_READ,
-+	LOCK_TYPE_RECURSIVE,
-+};
-+
-+/*
-  * Values for check:
-  *
-  *   0: simple checks (freeing, held-at-exit-time, etc.)
-@@ -588,9 +599,14 @@ static inline void print_irqtrace_events(struct task_struct *curr)
-  * on the per lock-class debug mode:
-  */
+@@ -195,6 +195,18 @@ struct lock_list {
+ 	struct lock_class		*links_to;
+ 	struct lock_trace		trace;
+ 	int				distance;
++	/*
++	 * This field keeps track of the read-write type of this dependency.
++	 *
++	 * With L1 -> L2:
++	 *
++	 * lock_type[0] stores the type of L1, while lock_type[1] stores the
++	 * type of L2.
++	 */
++	union {
++		int	dep_type;
++		u16	lock_type[2];
++	};
  
--#define lock_acquire_exclusive(l, s, t, n, i)		lock_acquire(l, s, t, 0, 1, n, i)
--#define lock_acquire_shared(l, s, t, n, i)		lock_acquire(l, s, t, 1, 1, n, i)
--#define lock_acquire_shared_recursive(l, s, t, n, i)	lock_acquire(l, s, t, 2, 1, n, i)
-+#define lock_acquire_exclusive(l, s, t, n, i)			\
-+	lock_acquire(l, s, t, LOCK_TYPE_EXCLUSIVE, 1, n, i)
-+
-+#define lock_acquire_shared(l, s, t, n, i)			\
-+	lock_acquire(l, s, t, LOCK_TYPE_READ, 1, n, i)
-+
-+#define lock_acquire_shared_recursive(l, s, t, n, i)		\
-+	lock_acquire(l, s, t, LOCK_TYPE_RECURSIVE, 1, n, i)
- 
- #define spin_acquire(l, s, t, i)		lock_acquire_exclusive(l, s, t, NULL, i)
- #define spin_acquire_nest(l, s, t, n, i)	lock_acquire_exclusive(l, s, t, n, i)
+ 	/*
+ 	 * The parent field is used to implement breadth-first search, and the
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 7275d6c..e9eafcf 100644
+index e9eafcf..4091002 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -2297,7 +2297,10 @@ static inline void inc_chains(void)
-  * (Note that this has to be done separately, because the graph cannot
-  * detect such classes of deadlocks.)
-  *
-- * Returns: 0 on deadlock detected, 1 on OK, 2 on recursive read
-+ * Returns:
-+ *  0: on deadlock detected;
-+ *  1: on OK;
-+ *  2: LOCK_TYPE_RECURSIVE on recursive read
-  */
- static int
- check_deadlock(struct task_struct *curr, struct held_lock *next)
-@@ -2319,15 +2322,15 @@ static inline void inc_chains(void)
- 		 * Allow read-after-read recursion of the same
- 		 * lock class (i.e. read_lock(lock)+read_lock(lock)):
- 		 */
--		if ((next->read == 2) && prev->read)
--			return 2;
-+		if ((next->read == LOCK_TYPE_RECURSIVE) && prev->read)
-+			return LOCK_TYPE_RECURSIVE;
- 
- 		/*
- 		 * We're holding the nest_lock, which serializes this lock's
- 		 * nesting behaviour.
- 		 */
- 		if (nest)
--			return 2;
-+			return LOCK_TYPE_RECURSIVE;
- 
- 		print_deadlock_bug(curr, prev, next);
- 		return 0;
-@@ -2407,7 +2410,7 @@ static inline void inc_chains(void)
- 	 * write-lock never takes any other locks, then the reads are
- 	 * equivalent to a NOP.
- 	 */
--	if (next->read == 2 || prev->read == 2)
-+	if (next->read == LOCK_TYPE_RECURSIVE || prev->read == LOCK_TYPE_RECURSIVE)
- 		return 1;
+@@ -1225,7 +1225,7 @@ static struct lock_list *alloc_list_entry(void)
+ static int add_lock_to_list(struct lock_class *this,
+ 			    struct lock_class *links_to, struct list_head *head,
+ 			    unsigned long ip, int distance,
+-			    struct lock_trace *trace)
++			    struct lock_trace *trace, int dep_type)
+ {
+ 	struct lock_list *entry;
  	/*
- 	 * Is the <prev> -> <next> dependency already present?
-@@ -2493,7 +2496,7 @@ static inline void inc_chains(void)
- 		 * Only non-recursive-read entries get new dependencies
- 		 * added:
- 		 */
--		if (hlock->read != 2 && hlock->check) {
-+		if (hlock->read != LOCK_TYPE_RECURSIVE && hlock->check) {
- 			int ret = check_prev_add(curr, hlock, next, distance,
- 						 &trace);
- 			if (!ret)
-@@ -2877,13 +2880,13 @@ static int validate_chain(struct task_struct *curr,
- 		 * building dependencies (just like we jump over
- 		 * trylock entries):
- 		 */
--		if (ret == 2)
--			hlock->read = 2;
-+		if (ret == LOCK_TYPE_RECURSIVE)
-+			hlock->read = LOCK_TYPE_RECURSIVE;
- 		/*
- 		 * Add dependency only if this lock is not the head
- 		 * of the chain, and if it's not a secondary read-lock:
- 		 */
--		if (!chain_head && ret != 2) {
-+		if (!chain_head && ret != LOCK_TYPE_RECURSIVE) {
- 			if (!check_prevs_add(curr, hlock))
- 				return 0;
- 		}
-@@ -4105,7 +4108,7 @@ static int __lock_downgrade(struct lockdep_map *lock, unsigned long ip)
- 	curr->curr_chain_key = hlock->prev_chain_key;
+@@ -1240,6 +1240,8 @@ static int add_lock_to_list(struct lock_class *this,
+ 	entry->links_to = links_to;
+ 	entry->distance = distance;
+ 	entry->trace = *trace;
++	entry->dep_type = dep_type;
++
+ 	/*
+ 	 * Both allocation and removal are done under the graph lock; but
+ 	 * iteration is under RCU-sched; see look_up_lock_class() and
+@@ -1677,6 +1679,30 @@ unsigned long lockdep_count_backward_deps(struct lock_class *class)
+ 	return ret;
+ }
  
- 	WARN(hlock->read, "downgrading a read lock");
--	hlock->read = 1;
-+	hlock->read = LOCK_TYPE_READ;
- 	hlock->acquire_ip = ip;
++static inline int get_dep_type(struct held_lock *lock1, struct held_lock *lock2)
++{
++	/*
++	 * With dependency lock1 -> lock2:
++	 *
++	 * lock_type[0] is lock1, while lock_type[1] is lock2.
++	 *
++	 * Avoid architectural endianness difference composing dep_type.
++	 */
++	u16 type[2] = { lock1->read, lock2->read };
++
++	return *(int *)type;
++}
++
++static inline int get_lock_type1(struct lock_list *lock)
++{
++	return lock->lock_type[0];
++}
++
++static inline int get_lock_type2(struct lock_list *lock)
++{
++	return lock->lock_type[1];
++}
++
+ /*
+  * Check that the dependency graph starting at <src> can lead to
+  * <target> or not. Print an error and return 0 if it does.
+@@ -2446,14 +2472,16 @@ static inline void inc_chains(void)
+ 	 */
+ 	ret = add_lock_to_list(hlock_class(next), hlock_class(prev),
+ 			       &hlock_class(prev)->locks_after,
+-			       next->acquire_ip, distance, trace);
++			       next->acquire_ip, distance, trace,
++			       get_dep_type(prev, next));
  
- 	if (reacquire_held_locks(curr, depth, i))
+ 	if (!ret)
+ 		return 0;
+ 
+ 	ret = add_lock_to_list(hlock_class(prev), hlock_class(next),
+ 			       &hlock_class(next)->locks_before,
+-			       next->acquire_ip, distance, trace);
++			       next->acquire_ip, distance, trace,
++			       get_dep_type(next, prev));
+ 	if (!ret)
+ 		return 0;
+ 
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 150ec3f..c287bcb 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -26,6 +26,9 @@ enum lock_usage_bit {
+ #define LOCK_USAGE_DIR_MASK  2
+ #define LOCK_USAGE_STATE_MASK (~(LOCK_USAGE_READ_MASK | LOCK_USAGE_DIR_MASK))
+ 
++#define LOCK_TYPE_BITS	16
++#define LOCK_TYPE_MASK	0xFFFF
++
+ /*
+  * Usage-state bitmasks:
+  */
 -- 
 1.8.3.1
 
