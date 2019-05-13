@@ -5,77 +5,76 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DF0C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C5AC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53FA20862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8544B20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXSMryiW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifwIc5Jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfEMUZn (ORCPT
+        id S1726584AbfEMUZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:25:43 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35902 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEMUZn (ORCPT
+        Mon, 13 May 2019 16:25:49 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39258 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEMUZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:25:43 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a8so19383448edx.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:25:42 -0700 (PDT)
+        Mon, 13 May 2019 16:25:47 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e24so19362054edq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:25:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=X21mAOGoYN+8cZIHmSdtLL/CvV/fwCagbBZkiJttwK4=;
-        b=jXSMryiWqISxtsYFYby3XTlqJ6RmmCgpop+OScSEXitjK2TiTG8wx6Ex48F0kjFwDd
-         aGGOex0N06MkzF9dOFthoEDGDYUcQH+uwUAD1fVK2yE0mYT3gwAzgKtEu7KRHaF+YqZV
-         x/zCRrN6+u1FI/0gumcbtWFw0r3nGGcUijtQ5rr9rzNaVxJdPjd13AeQ7ynk5JsY0BbF
-         48IbkbQZiuY2cNAEAQc8ZeyS4dEXj+8rB3DA/08HS4+L5yVaFk9beEmINKfBb3tJsHr2
-         JN2ZBgWr0met4KEriZBr/9wVAtusCf2zASo3kPD5Y966xN6j01heBCifmyvKwGYJe67B
-         WCLw==
+        bh=8cHvGiGICHWvlCnNFZkMnztAt4SRYlh07/8kyTvwxfI=;
+        b=ifwIc5Jl9rpjlX3fhAIgxoVxIKu9jCrGdf3een5QIY1Xqo73tsIpJAYvFOijwLaxkL
+         kAheog8s30qfF5jlrRapHuVCR2n+QuqW0WA8hXRG/zR5UHG+ykfa+8aknBYKkQC0qdxb
+         HWQADKEP3ARn8iMOr6CnDiiAy8nxmw9KSh6w8IkSg1efZJNxgZErO2djBMSuRpJtBQUC
+         6089pG1vH7QEJXD2fkErpQRPAcd3xKrXqZ+nthbQukgidqyAQmHPnvOwk01MBXE1fgqA
+         tW3qrzl9fbmrFo2SjpwPIMpvIi5MJf1hA7fRWb5em4txLTIEHq5vwZGjVtN8bzxcE9MD
+         v+ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=X21mAOGoYN+8cZIHmSdtLL/CvV/fwCagbBZkiJttwK4=;
-        b=EKS1oD1r7sqiTixa3D08lOw98mxPMAb5jaL+KTKel1QMBobxYqJ5GAIN0tSGDLKSVO
-         f1TiuK5qGst3qX7S93DoOUPiFTN17OeEz7PM54xOVDdjBNXqyAh/eOsqeyIi2LiPJ/H5
-         F6TmeuGLkPMOHDUWoJmS/gVjUoco2g7kelaks2qOiPwb+C9skdyGRf95lY7hAHbg9wCI
-         76aluiTkLBDAOSnr3DSG+gIYSbCNUU8COaciifu+5NZdYS9o9NGzpDf1sOPYy+ekdl4H
-         l/7iTOwIXikDnIE396z649HeTLrA7u5eMEQovsH/60wCqCGhmHHEwt46cFxukA0uqPmp
-         qw/A==
-X-Gm-Message-State: APjAAAVHNJQLyHgEp+LDxSCbQ2ApkN36SU4sO8grHC6vnykwHF/OwVfE
-        TAKWYGug24oJr5ySNmIEueg6e6zV
-X-Google-Smtp-Source: APXvYqyscfrrLasllLlS5bmvhzQfm4OxU9p693gex+v0fgr9f3QGjsYr3ie/NAK81+XhNPGmOxkvBg==
-X-Received: by 2002:a17:906:c50:: with SMTP id t16mr23848218ejf.296.1557779141252;
-        Mon, 13 May 2019 13:25:41 -0700 (PDT)
+        bh=8cHvGiGICHWvlCnNFZkMnztAt4SRYlh07/8kyTvwxfI=;
+        b=K1JzCHVrl26kvH/1Pm+4vZp8MLZ7fDzoLo/80CyQJbFeKsDPr1U3tF1kdtcmHLQoUB
+         MeD/14DkGqZaWq07ckfs/zm4azqOhpXY4H4fPV/bCFOHrfWWW6RPyIX2KnyhgXgKS7wJ
+         9HfEmf39N7vZ2RhVHD+7fAvP8B7VkMdaPMErIGkoU393VMA9r76EJGwylhD/O+5V0U7h
+         u7/j+RLZmA8xYBZp3HExTpfAQQFhi05XFX0ydTGsSEDvzo9uTahqRVjI5EWF35f412pQ
+         kGZQQZZDY7Npi9lMKuM/pjdCQK9aVwSSGpK/4PexlUPFSXcQVlzm+bsAK8hDnrG0/YlB
+         9PNA==
+X-Gm-Message-State: APjAAAXVz/qoY8U91FByb5yalvO9STrD8Ut0MqqR9L8Dey47O8AUeaAQ
+        ZoWTsvrxW1dEJ1qtMH8K3e3hs7B/
+X-Google-Smtp-Source: APXvYqzXibiukth/hujqJJOXRBf6/xOOtpttfR+325xvztSzuRGh5snE3FdJ73UBAg0wa6NYVmSI7A==
+X-Received: by 2002:a17:906:4dc7:: with SMTP id f7mr17120783ejw.207.1557779145347;
+        Mon, 13 May 2019 13:25:45 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id k37sm4036076edb.11.2019.05.13.13.25.37
+        by smtp.gmail.com with ESMTPSA id k37sm4036076edb.11.2019.05.13.13.25.41
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 13:25:40 -0700 (PDT)
+        Mon, 13 May 2019 13:25:44 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Will Deacon <will.deacon@arm.com>,
-        John Garry <john.garry@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING
+        AND DEBUGGING), John Garry <john.garry@huawei.com>,
         Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>,
         Sean V Kelley <seanvk.dev@oregontracks.org>
-Subject: [PATCH v2 2/3] perf vendor events arm64: Map Brahma-B53 CPUID to cortex-a53 events
-Date:   Mon, 13 May 2019 13:25:21 -0700
-Message-Id: <20190513202522.9050-3-f.fainelli@gmail.com>
+Subject: [PATCH v2 3/3] perf vendor events arm64: Add Cortex-A57 and Cortex-A72 events
+Date:   Mon, 13 May 2019 13:25:22 -0700
+Message-Id: <20190513202522.9050-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513202522.9050-1-f.fainelli@gmail.com>
 References: <20190513202522.9050-1-f.fainelli@gmail.com>
@@ -84,35 +83,226 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Broadcom's Brahma-B53 CPUs support the same type of events that the
-Cortex-A53 supports, recognize its CPUID and map it to the cortex-a53
-events.
+The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
+up to the RC_ST_SPEC (0x91) event with the exception of:
 
+- L1D_CACHE_REFILL_INNER (0x44)
+- L1D_CACHE_REFILL_OUTER (0x45)
+- L1D_TLB_RD (0x4E)
+- L1D_TLB_WR (0x4F)
+- L2D_TLB_REFILL_RD (0x5C)
+- L2D_TLB_REFILL_WR (0x5D)
+- L2D_TLB_RD (0x5E)
+- L2D_TLB_WR (0x5F)
+- STREX_SPEC (0x6F)
+
+Create an appropriate JSON file for mapping those events and update the
+mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
+file.
+
+Reviewed-by: John Garry <john.garry@huawei.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Will Deacon <will.deacon@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: bcm-kernel-feedback-list@broadcom.com
-Cc: linux-arm-kernel@lists.infradead.org (moderated list:arm pmu profiling and debugging)
-Link: http://lkml.kernel.org/r/20190405165047.15847-1-f.fainelli@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
- 1 file changed, 1 insertion(+)
+ .../arm/cortex-a57-a72/core-imp-def.json      | 179 ++++++++++++++++++
+ tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
+ 2 files changed, 181 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
 
+diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+new file mode 100644
+index 000000000000..0ac9b7927450
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+@@ -0,0 +1,179 @@
++[
++    {
++        "ArchStdEvent": "L1D_CACHE_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WR",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
++    },
++    {
++        "ArchStdEvent": "L1D_CACHE_INVAL",
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L1D_TLB_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_RD",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
++    },
++    {
++        "ArchStdEvent": "L2D_CACHE_INVAL",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_RD",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_WR",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_NORMAL",
++    },
++    {
++        "ArchStdEvent": "BUS_ACCESS_PERIPH",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_RD",
++    },
++    {
++        "ArchStdEvent": "MEM_ACCESS_WR",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDREX_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_PASS_SPEC",
++    },
++    {
++        "ArchStdEvent": "STREX_FAIL_SPEC",
++    },
++    {
++        "ArchStdEvent": "LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "ST_SPEC",
++    },
++    {
++        "ArchStdEvent": "LDST_SPEC",
++    },
++    {
++        "ArchStdEvent": "DP_SPEC",
++    },
++    {
++        "ArchStdEvent": "ASE_SPEC",
++    },
++    {
++        "ArchStdEvent": "VFP_SPEC",
++    },
++    {
++        "ArchStdEvent": "PC_WRITE_SPEC",
++    },
++    {
++        "ArchStdEvent": "CRYPTO_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_IMMED_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_RETURN_SPEC",
++    },
++    {
++        "ArchStdEvent": "BR_INDIRECT_SPEC",
++    },
++    {
++        "ArchStdEvent": "ISB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DSB_SPEC",
++    },
++    {
++        "ArchStdEvent": "DMB_SPEC",
++    },
++    {
++        "ArchStdEvent": "EXC_UNDEF",
++    },
++    {
++        "ArchStdEvent": "EXC_SVC",
++    },
++    {
++        "ArchStdEvent": "EXC_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_FIQ",
++    },
++    {
++        "ArchStdEvent": "EXC_SMC",
++    },
++    {
++        "ArchStdEvent": "EXC_HVC",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_PABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_DABORT",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_OTHER",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_IRQ",
++    },
++    {
++        "ArchStdEvent": "EXC_TRAP_FIQ",
++    },
++    {
++        "ArchStdEvent": "RC_LD_SPEC",
++    },
++    {
++        "ArchStdEvent": "RC_ST_SPEC",
++    },
++]
 diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index da5ff2204bf6..013155f1eb58 100644
+index 013155f1eb58..927fcddcb4aa 100644
 --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
 +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -13,6 +13,7 @@
- #
+@@ -14,6 +14,8 @@
  #Family-model,Version,Filename,EventType
  0x00000000410fd030,v1,arm/cortex-a53,core
-+0x00000000420f1000,v1,arm/cortex-a53,core
+ 0x00000000420f1000,v1,arm/cortex-a53,core
++0x00000000410fd070,v1,arm/cortex-a57-a72,core
++0x00000000410fd080,v1,arm/cortex-a57-a72,core
  0x00000000420f5160,v1,cavium/thunderx2,core
  0x00000000430f0af0,v1,cavium/thunderx2,core
  0x00000000480fd010,v1,hisilicon/hip08,core
