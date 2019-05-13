@@ -2,105 +2,286 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 316D7C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90043C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F13552084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540A52084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="br89Uott"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="QU3AGAOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfEMQDn (ORCPT
+        id S1730554AbfEMQEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:03:43 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:43932 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730250AbfEMQDn (ORCPT
+        Mon, 13 May 2019 12:04:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42874 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730250AbfEMQEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:03:43 -0400
-Received: by mail-ua1-f68.google.com with SMTP id u4so1559966uau.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:03:42 -0700 (PDT)
+        Mon, 13 May 2019 12:04:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l25so18309738eda.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:04:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LhqduOUwS+O6B5Ih2GpJJXA30cnrCE8y/7lD4jak7zA=;
-        b=br89Uottwez2IWUAknU6LNVFpUXyul6AjXPYo2WtfeR027fkRHL+kRf3UQD7snqoFU
-         QeaulT/nCD5jsWybxpHI/SLO0sdvx6XGQgtabNpbIld1CJlQ0/UTyNK2xxHsL/ICpODm
-         69A9I3JkhxSVco01rZ2p+C20qosS5jrtbVRT4=
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=snqBFnriVbm8W8k7NApKboEBr7CW/Swoidh2GaajigQ=;
+        b=QU3AGAOj5nZloxyDbnf9PFh9wlFFv8Mxca2CdK/fJtelZskmeJc44Fioz74UR9/1N1
+         MALEnI2ccq+0SCaYDAVZmHb2ynOxvz3Z1xL7w3wbaEh6orv3SP+Egx11yW1Ejsq02SEO
+         FX0s4EbfEMSRzY7LhEXmq9H1ReUYMpyrduIdrmTWt6loaclsL9eOVRWikKQdnWWDZg+a
+         ks7WPdKdOgoLfM53gBEBkkibCkDB3eWA4zgsMwcojKvHtuyDMQrMT5UNF3dRvNJKH94g
+         6t3dKNoGSzFNa5aUf5OEA+a6R9tHkPTXFXp4otuCg9qBMf5dV0KuCfTFlMSt3aB5R8JK
+         FUsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LhqduOUwS+O6B5Ih2GpJJXA30cnrCE8y/7lD4jak7zA=;
-        b=OaTRXAaUnrZvb2NXQaJI6gh7GDcILfY19dqZBgOXZ1afRYDvZX9F+ECXMFQdgc6Jw3
-         IjojJM4MwPBJSZeT+XWH7c4UgLfzE8a+zHqXdj7nXzUDIUhCkEhKfJeCpZT+gFeSAkno
-         FdIo5NRS4C47xX1tx6+fPibHG3wvvYCHQ9aOxkqUW5E/R3Bkj7XNvdoj2XULPaId9qZX
-         SkSsfrcL5cM7OACy1Jeqgl6rRhbspCbIelWY6PMXtFlhDjxkqmcygr/Ai4VyrAJoRrZR
-         M7B9Q0naIDCTz8V6z7FaLv+O4MX2IbDQ5GDopfXG3cZXTgr9tGcPACy/25gW+VHLo0mw
-         WrIg==
-X-Gm-Message-State: APjAAAUKLv5W8RA3N6S9n3f5/wwR4giwh4ZOUWsLKll3h33A7w8zKboc
-        mR2YuM3YE+5qz6WVSw189dT9Mwo1hk0=
-X-Google-Smtp-Source: APXvYqxR8RUFYDAN4d4ZlqXfO9qEDlf+PmHnb/SuYv3GZJI0CdpP6rUx+JDhyahVyAHM6BWsO7SSgg==
-X-Received: by 2002:ab0:2692:: with SMTP id t18mr7456668uao.106.1557763421317;
-        Mon, 13 May 2019 09:03:41 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id w136sm11022347vkw.18.2019.05.13.09.03.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 09:03:40 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id s30so5012677uas.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:03:40 -0700 (PDT)
-X-Received: by 2002:ab0:20c1:: with SMTP id z1mr12511820ual.109.1557763419691;
- Mon, 13 May 2019 09:03:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=snqBFnriVbm8W8k7NApKboEBr7CW/Swoidh2GaajigQ=;
+        b=atigdY/pnjsUSe4TYyvDYnkPodTbetl4PAng/LyrYv8rtqWSBY1ZXMhVulYEB5SPc7
+         7CYbmQorXBvDzy5pECOrOhq764InT5ZhcRw8DbqumGqB/Phbcwl/dHN3EtBlxjqPqpai
+         zIJaJYsdzVJygfwpLB42EswFYOfRB6jjDfLxaQGwD7N2+6Fb/EsoYujbTMyvj+HCCsTX
+         obyISgzBHK+kImGyjj2PNlMBdGgLIQsBWpcSQINXW9oOiJ6MFK3oLMkXWOtwEXacKiMv
+         Q6yvEJr4GxhWD7NI6PoiXYCu7E8+5qaAyj23NHt9oJeFNfntDOu2vj13KtXlWfyeAalR
+         lWrg==
+X-Gm-Message-State: APjAAAXXy4JvySFJ3OpSklB+lDZ4w72xevBbihj4OD+hVG+Vn2dAoNHV
+        zBRL2vSRne7DqbnxHf4GcGe4ug==
+X-Google-Smtp-Source: APXvYqzPY9FDAzI9mGKP/oPtH04uRI9fflJRlYDeLepRgrsMBe4xAQEQ+DdqicJO54HpWZDIVsnNrQ==
+X-Received: by 2002:a50:a886:: with SMTP id k6mr30253386edc.211.1557763457792;
+        Mon, 13 May 2019 09:04:17 -0700 (PDT)
+Received: from ben.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id k18sm3825581eda.92.2019.05.13.09.04.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 09:04:17 -0700 (PDT)
+From:   mcmahon@arista.com
+To:     davem@davemloft.net, dsahern@gmail.com, roopa@cumulusnetworks.com,
+        christian@brauner.io, khlebnikov@yandex-team.ru,
+        lzgrablic@arista.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mowat@arista.com, dmia@arista.com
+Cc:     Ben McMahon <mcmahon@arista.com>
+Subject: getneigh: add nondump to retrieve single entry
+Date:   Mon, 13 May 2019 17:03:35 +0100
+Message-Id: <20190513160335.24128-1-mcmahon@arista.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <mcmahon@arista.com>
+References: <mcmahon@arista.com>
 MIME-Version: 1.0
-References: <20190510223437.84368-1-dianders@chromium.org> <20190510223437.84368-5-dianders@chromium.org>
- <20190512074538.GE21483@sirena.org.uk> <CAD=FV=Xg96SGg-JDjEJRtC6jACcN9Xizcr-zV4rQwXYvuEvmRA@mail.gmail.com>
- <20190513160153.GD5168@sirena.org.uk>
-In-Reply-To: <20190513160153.GD5168@sirena.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 May 2019 09:03:28 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Xm-2oxit7doVAYJr28c-xHqUdt9PQC=WYpYfsAyUxuaw@mail.gmail.com>
-Message-ID: <CAD=FV=Xm-2oxit7doVAYJr28c-xHqUdt9PQC=WYpYfsAyUxuaw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] Revert "platform/chrome: cros_ec_spi: Transfer
- messages at high priority"
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Leonard Zgrablic <lzgrablic@arista.com>
 
-On Mon, May 13, 2019 at 9:02 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, May 13, 2019 at 08:57:12AM -0700, Doug Anderson wrote:
-> > On Sun, May 12, 2019 at 10:05 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > > It isn't clear to me that it's a bad thing to have this even with the
-> > > SPI thread at realime priority.
->
-> > The code that's there right now isn't enough.  As per the description
-> > in the original patch, it didn't solve all problems but just made
-> > things an order of magnitude better.  So if I don't do this revert I
->
-> I'm not saying the other changes aren't helping, I'm saying that it's
-> not clear that this revert is improving things.
+Currently there is only a dump version of RTM_GETNEIGH for PF_UNSPEC in
+RTNETLINK that dumps neighbor entries, no non-dump version that can be used to
+retrieve a single neighbor entry.
 
-If I add a call to force the pumping to happen on the SPI thread then
-the commit I'm reverting here is useless though, isn't it?
+Add support for the non-dump (doit) version of RTM_GETNEIGH for PF_UNSPEC so
+that a single neighbor entry can be retrieved.
 
--Doug
+Signed-off-by: Leonard Zgrablic <lzgrablic@arista.com>
+Signed-off-by: Ben McMahon <mcmahon@arista.com>
+---
+ net/core/neighbour.c | 160 +++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 147 insertions(+), 13 deletions(-)
+
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 30f6fd8f68e0..981f1568710b 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -2733,6 +2733,149 @@ static int neigh_dump_info(struct sk_buff *skb, struct netlink_callback *cb)
+ 	return skb->len;
+ }
+ 
++static inline size_t neigh_nlmsg_size(void)
++{
++		return NLMSG_ALIGN(sizeof(struct ndmsg))
++			+ nla_total_size(MAX_ADDR_LEN) /* NDA_DST */
++			+ nla_total_size(MAX_ADDR_LEN) /* NDA_LLADDR */
++			+ nla_total_size(sizeof(struct nda_cacheinfo))
++			+ nla_total_size(4); /* NDA_PROBES */
++}
++
++static int neigh_find_fill(struct neigh_table *tbl, const void *pkey,
++                           struct net_device *dev, struct sk_buff *skb, u32 pid,
++                           u32 seq)
++{
++	struct neighbour *neigh;
++	int key_len = tbl->key_len;
++	u32 hash_val;
++	struct neigh_hash_table *nht;
++	int err;
++	
++	if (dev == NULL)
++		return -EINVAL;
++	
++	NEIGH_CACHE_STAT_INC(tbl, lookups);
++
++	rcu_read_lock_bh();
++   nht = rcu_dereference_bh(tbl->nht);
++	hash_val = tbl->hash(pkey, dev, nht->hash_rnd) >>
++		(32 - nht->hash_shift);
++
++	for (neigh = rcu_dereference_bh(nht->hash_buckets[hash_val]);
++		neigh != NULL;
++		neigh = rcu_dereference_bh(neigh->next)) {
++		if (dev == neigh->dev &&
++			!memcmp(neigh->primary_key, pkey, key_len)) {
++				if (!atomic_read(&neigh->refcnt))
++					neigh = NULL;
++				NEIGH_CACHE_STAT_INC(tbl, hits);
++				break;
++		}
++	}
++	if (neigh == NULL) {
++		err = -ENOENT;
++		goto out_rcu_read_unlock;
++	}
++
++	err = neigh_fill_info(skb, neigh, pid, seq, RTM_NEWNEIGH, 0);
++
++out_rcu_read_unlock:
++	rcu_read_unlock_bh();
++	return err;
++}
++
++static int pneigh_find_fill(struct neigh_table *tbl, const void *pkey,
++			struct net_device *dev, struct net *net,
++			struct sk_buff *skb, u32 pid, u32 seq)
++{
++	struct pneigh_entry *pneigh;
++	int key_len = tbl->key_len;
++	u32 hash_val = pneigh_hash(pkey, key_len);
++	int err;
++
++	read_lock_bh(&tbl->lock);
++
++	pneigh = __pneigh_lookup_1(tbl->phash_buckets[hash_val], net, pkey,
++                                   key_len, dev);
++	if (pneigh == NULL) {
++		err = -ENOENT;
++		goto out_read_unlock;
++	}
++
++	err = pneigh_fill_info(skb, pneigh, pid, seq, RTM_NEWNEIGH, 0, tbl);
++
++out_read_unlock:
++	read_unlock_bh(&tbl->lock);
++	return err;
++}
++
++static int neigh_get(struct sk_buff *skb, struct nlmsghdr *nlh)
++{
++	struct net *net = sock_net(skb->sk);
++	struct ndmsg *ndm;
++	struct nlattr *dst_attr;
++	struct neigh_table *tbl;
++	struct net_device *dev = NULL;
++
++	ASSERT_RTNL();
++	if (nlmsg_len(nlh) < sizeof(*ndm))
++		return -EINVAL;
++
++	dst_attr = nlmsg_find_attr(nlh, sizeof(*ndm), NDA_DST);
++	if (dst_attr == NULL)
++		return -EINVAL;
++
++	ndm = nlmsg_data(nlh);
++	if (ndm->ndm_ifindex) {
++		dev = __dev_get_by_index(net, ndm->ndm_ifindex);
++		if (dev == NULL)
++			return -ENODEV;
++	}
++
++	read_lock(&neigh_tbl_lock);
++	for (tbl = neigh_tables; tbl; tbl = tbl->next) {
++		struct sk_buff *nskb;
++		int err;
++
++		if (tbl->family != ndm->ndm_family)
++			continue;
++
++		read_unlock(&neigh_tbl_lock);
++
++		if (nla_len(dst_attr) < tbl->key_len)
++			return -EINVAL;
++
++		nskb = nlmsg_new(neigh_nlmsg_size(), GFP_KERNEL);
++		if (nskb == NULL)
++			return -ENOBUFS;
++
++		if (ndm->ndm_flags & NTF_PROXY)
++			err = pneigh_find_fill(tbl, nla_data(dst_attr), dev,
++				net, nskb,
++				NETLINK_CB(skb).portid,
++				nlh->nlmsg_seq);
++		else
++			err = neigh_find_fill(tbl, nla_data(dst_attr), dev,
++				nskb, NETLINK_CB(skb).portid,
++				nlh->nlmsg_seq);
++
++		if (err < 0) {
++			/* -EMSGSIZE implies BUG in neigh_nlmsg_size */
++			WARN_ON(err == -EMSGSIZE);
++			kfree_skb(nskb);
++		} else {
++			err = rtnl_unicast(nskb, net, NETLINK_CB(skb).portid);
++		}
++
++		return err;
++	}
++	read_unlock(&neigh_tbl_lock);
++	return -EAFNOSUPPORT;
++}
++
++
++
+ static int neigh_valid_get_req(const struct nlmsghdr *nlh,
+ 			       struct neigh_table **tbl,
+ 			       void **dst, int *dev_idx, u8 *ndm_flags,
+@@ -2793,16 +2936,6 @@ static int neigh_valid_get_req(const struct nlmsghdr *nlh,
+ 	return 0;
+ }
+ 
+-static inline size_t neigh_nlmsg_size(void)
+-{
+-	return NLMSG_ALIGN(sizeof(struct ndmsg))
+-	       + nla_total_size(MAX_ADDR_LEN) /* NDA_DST */
+-	       + nla_total_size(MAX_ADDR_LEN) /* NDA_LLADDR */
+-	       + nla_total_size(sizeof(struct nda_cacheinfo))
+-	       + nla_total_size(4)  /* NDA_PROBES */
+-	       + nla_total_size(1); /* NDA_PROTOCOL */
+-}
+-
+ static int neigh_get_reply(struct net *net, struct neighbour *neigh,
+ 			   u32 pid, u32 seq)
+ {
+@@ -2827,8 +2960,8 @@ static int neigh_get_reply(struct net *net, struct neighbour *neigh,
+ static inline size_t pneigh_nlmsg_size(void)
+ {
+ 	return NLMSG_ALIGN(sizeof(struct ndmsg))
+-	       + nla_total_size(MAX_ADDR_LEN) /* NDA_DST */
+-	       + nla_total_size(1); /* NDA_PROTOCOL */
++		+ nla_total_size(MAX_ADDR_LEN) /* NDA_DST */
++		+ nla_total_size(1); /* NDA_PROTOCOL */
+ }
+ 
+ static int pneigh_get_reply(struct net *net, struct pneigh_entry *neigh,
+@@ -3703,7 +3836,8 @@ static int __init neigh_init(void)
+ {
+ 	rtnl_register(PF_UNSPEC, RTM_NEWNEIGH, neigh_add, NULL, 0);
+ 	rtnl_register(PF_UNSPEC, RTM_DELNEIGH, neigh_delete, NULL, 0);
+-	rtnl_register(PF_UNSPEC, RTM_GETNEIGH, neigh_get, neigh_dump_info, 0);
++	rtnl_register(PF_UNSPEC, RTM_GETNEIGH, neigh_get, neigh_dump_info, 
++		NULL);
+ 
+ 	rtnl_register(PF_UNSPEC, RTM_GETNEIGHTBL, NULL, neightbl_dump_info,
+ 		      0);
+-- 
+2.21.0
+
