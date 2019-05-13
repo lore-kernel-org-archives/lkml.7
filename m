@@ -2,139 +2,92 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4203C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDD22084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86D1208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ie0xtH/U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xErTWYAD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfEMTR2 (ORCPT
+        id S1729357AbfEMTVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:17:28 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:36269 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbfEMTR1 (ORCPT
+        Mon, 13 May 2019 15:21:37 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58368 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfEMTVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:17:27 -0400
-Received: by mail-qt1-f202.google.com with SMTP id j12so15486009qth.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:17:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qd758GC+tv+AefghvcuLnRgxqiTzW/XC7mQzkKY2rj4=;
-        b=Ie0xtH/UhJmKkwyMt3DIlOmfAWwFxcEfKEwn11rAWercN5KeYzBkDoSZgcdQpYMIv5
-         6d/Ch5aANElCl/1/DnBj7+ViUBYnbKEuLKDpi2lK/JFns0tO1DqfYsEdtSK4cNPB75rV
-         +LNDLfSKJUuEQ2DpfLfv9JffBzeMSq3OGAgBm3begLhWVN+0XfbWKpwOa6RCUDIXtNif
-         xweR5Eg/3hAtSfX5PHNppVjekv/tsaSBZ5Yrb+9x4SfU4UfiQ/er76Fottg7ARQnGMgi
-         RaSWK8r3KaOVVm7Yz8XShgND+oiFCYrpMMeBaxhEJMTluGOONH4qVWnmWk5D6WdINfke
-         m30Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qd758GC+tv+AefghvcuLnRgxqiTzW/XC7mQzkKY2rj4=;
-        b=iaMfssV/zD66zGre6MijEpXvfzidC+G65BswOKuKkNWjNc68oDZf7HgAtKA4BhB/7c
-         P4+xJmWLpREfxcCNiJP6LnwFawgKb7K6LPWkuAElv6pTgtip1wWm9V6BAdVAKKMH8Nkp
-         rgXQdn9axdus3w9YxoGcfm/RcwXkF7zoB98QShEL2Nsfd1cAbYpsUEpKSHDkQ4Lh+yZs
-         NW10sIr06tFAqPHwJ/9LAlhKziZpaMkCPvCjAr4eOjgpVVPfPa8zBL1TLRiehEWGdEtW
-         5WJjD9jlpIm+IttwJs+OLSLmgtQ0gxGyfq+RCYAMHlSiYvDCWkgS7dg+suvIS2X/877Q
-         9G/A==
-X-Gm-Message-State: APjAAAWRsi7dh7Za++vq6JCPoTlEAuvA2HuqM2sFZvY4MgRNXNKmQzEZ
-        pjT5E62i1XMJysa7pzyuCzDTyCpIhDs8
-X-Google-Smtp-Source: APXvYqw8t9O+HM3h+AllssTLnPtYtRgEr4WVIkwCW+cvChMq+eLSByMo/zwgfoWj1xtw64EWZqxqmDBG8MBS
-X-Received: by 2002:a37:a705:: with SMTP id q5mr23313599qke.123.1557775046895;
- Mon, 13 May 2019 12:17:26 -0700 (PDT)
-Date:   Mon, 13 May 2019 12:17:08 -0700
-Message-Id: <20190513191708.87956-1-rajatja@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [RFC PATCH] ACPI: PM: Enable wake-up device GPEs for suspend-to-idle
-From:   Rajat Jain <rajatja@google.com>
-To:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com,
-        furquan@google.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 May 2019 15:21:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=nU9LZDmTC34xYD5bAKs5rwkq2+XzEcWgxjqH5jBl+o0=; b=xErTWYADs+p5t/RClNFR+DvUJv
+        ym5WaNm3TdC70dHOrcyL9SUMXY7INUXtrigWBbux0Pu0l5e7cE6WnEn8rgmb1eXNbfaXrkhQu1gLo
+        G6kYPn6alFSRuvEr+Be+UtXO43iH9cJOWaQVq8TLT2vXo7pqWtGkQ8GFg0bW7VDHn2bV/Z4hXFbgM
+        oCCIb2/6MvQmn6HiJDWtF8DI+5VAUasPlhGDkjcTPHU5reLsCBCe57qWn6ygjgvr037/c34SZx1da
+        KyLwGoPuOgWOHxwAXafIBAbA6+XxF6m0sZctHperrq9lDHQJ3bmLdXgaU5FcpAj71GaSbcOAaKA98
+        fmILH7nw==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQGVw-0000zX-OF; Mon, 13 May 2019 19:21:33 +0000
+Subject: Re: linux-next: Tree for May 13 (drivers/pinctrl/pinctrl-stmfx)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20190513142525.43c0e826@canb.auug.org.au>
+ <9bfd6a01-1b08-a21b-64fe-ccbe6d5e2810@infradead.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <5d6d5c73-2af9-2455-d3d8-3c731019f578@infradead.org>
+Date:   Mon, 13 May 2019 12:21:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <9bfd6a01-1b08-a21b-64fe-ccbe6d5e2810@infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I noticed that recently multiple systems (chromebooks) couldn't wake
-from S0ix using LID or Keyboard after updating to a newer kernel, I
-bisected and the issue is seen starting the following commit:
+On 5/13/19 8:06 AM, Randy Dunlap wrote:
+> On 5/12/19 9:25 PM, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Please do not add any v5.3 material to your linux-next included
+>> trees/branches until after v5.2-rc1 has been released.
+>>
+>> Changes since 20190510:
+>>
+> 
+> on x86_64:
+> # CONFIG_OF is not set
+but CONFIG_COMPILE_TEST=y
 
-commit f941d3e41da7 ("ACPI: EC / PM: Disable non-wakeup GPEs for
-suspend-to-idle")
+> 
+> ../drivers/pinctrl/pinctrl-stmfx.c:410:20: error: ‘pinconf_generic_dt_node_to_map_pin’ undeclared here (not in a function)
+>   .dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
+>                     ^
+> ../drivers/pinctrl/pinctrl-stmfx.c: In function ‘stmfx_pinctrl_probe’:
+> ../drivers/pinctrl/pinctrl-stmfx.c:652:17: error: ‘struct gpio_chip’ has no member named ‘of_node’
+>   pctl->gpio_chip.of_node = np;
+>                  ^
+> 
+> 
+> Full randconfig file is attached.
+> 
+> 
 
-and found that the issue gets fixed if I revert it. I debugged and
-found that although PNP0C0D:00 (representing the LID) is wake capable
-and should wakeup the system per the code in acpi_wakeup_gpe_init()
-and in drivers/acpi/button.c:
 
-localhost /sys # cat /proc/acpi/wakeup
-Device  S-state   Status   Sysfs node
-LID0      S4    *enabled   platform:PNP0C0D:00
-CREC      S5    *disabled  platform:GOOG0004:00
-                *disabled  platform:cros-ec-dev.1.auto
-                *disabled  platform:cros-ec-accel.0
-                *disabled  platform:cros-ec-accel.1
-                *disabled  platform:cros-ec-gyro.0
-                *disabled  platform:cros-ec-ring.0
-                *disabled  platform:cros-usbpd-charger.2.auto
-                *disabled  platform:cros-usbpd-logger.3.auto
-D015      S3    *enabled   i2c:i2c-ELAN0000:00
-PENH      S3    *enabled   platform:PRP0001:00
-XHCI      S3    *enabled   pci:0000:00:14.0
-GLAN      S4    *disabled
-WIFI      S3    *disabled  pci:0000:00:14.3
-localhost /sys #
-
-On debugging, I found that its corresponding GPE is not being enabled.
-The particular GPE's "gpe_register_info->enable_for_wake" does not have any
-bits set when acpi_enable_all_wakeup_gpes() comes around to use it. I
-looked at code and could not find any other code path that should set the
-bits in "enable_for_wake" bitmask for the wake enabled devices for s2idle
-(I do see that it happens for S3 in acpi_sleep_prepare()).
-
-Thus I used the same call to enable the GPEs for wake enabled devices,
-and verified that this fixes the regression I was seeing on multiple of
-my devices.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203579
-Signed-off-by: Rajat Jain <rajatja@google.com>
----
- drivers/acpi/sleep.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-index 403c4ff15349..e52f1238d2d6 100644
---- a/drivers/acpi/sleep.c
-+++ b/drivers/acpi/sleep.c
-@@ -977,6 +977,8 @@ static int acpi_s2idle_prepare(void)
- 	if (acpi_sci_irq_valid())
- 		enable_irq_wake(acpi_sci_irq);
- 
-+	acpi_enable_wakeup_devices(ACPI_STATE_S0);
-+
- 	/* Change the configuration of GPEs to avoid spurious wakeup. */
- 	acpi_enable_all_wakeup_gpes();
- 	acpi_os_wait_events_complete();
-@@ -1027,6 +1029,8 @@ static void acpi_s2idle_restore(void)
- {
- 	acpi_enable_all_runtime_gpes();
- 
-+	acpi_disable_wakeup_devices(ACPI_STATE_S0);
-+
- 	if (acpi_sci_irq_valid())
- 		disable_irq_wake(acpi_sci_irq);
- 
 -- 
-2.21.0.1020.gf2820cf01a-goog
-
+~Randy
