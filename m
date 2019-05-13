@@ -2,59 +2,59 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40DDC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4ABC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9665E20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536EE20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PleXZ03X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrDb+TI/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfEMT3j (ORCPT
+        id S1727145AbfEMT3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:29:39 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:33532 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEMT3i (ORCPT
+        Mon, 13 May 2019 15:29:42 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34160 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727044AbfEMT3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:29:38 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w1so9523084ljw.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:29:37 -0700 (PDT)
+        Mon, 13 May 2019 15:29:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id j24so11286745ljg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:29:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=tL+sK5pEBsAoCFopnPPwt4es9T7EwxPGgYEkm8O7IBI=;
-        b=PleXZ03XqpXkNBmDfAycSfGQdOAnwKcgjPE/yvddT6ahyVQYQIimbvzlM0ZT24i2e5
-         LUFZWo+Tdttrv0PhN9+zyZsiyAIl0piyFql/WuOFoJwf6rT/ApfowwA2yVJk5ycqSnHJ
-         tVjZQ/8bSIufYfq7D+pcmCxP7awzaUFp1ndubavu4Rg3LGgEgIDKhT1v5im0eJXErzwM
-         yeE7sM0FGOsZqtCWMwGXPx4qW6dtJwALcEcJrbDFKC6sEY00Uvvm8/vcCf8KVozLm45m
-         GNwRj8IB28P/Qgq9gd8i2bHXXGget+HBMR2KuUq4pUtz49trTZoVO+c/X53DLD2flOHv
-         U9zg==
+        bh=x3HZaV7vcbo/XhlaM1d9i+kdcoQHiHqHOKB8XCuJnJg=;
+        b=YrDb+TI/qptrO7/5RXe8SeC+HyCzsJJl8ml3Jr2kE2brTGKdFR7/IJ+N4lXVtKfgGo
+         NAHroyR3jEv97wAFOv1N3DRBDosPKmtXcn1hEpIBtK5wsOrvMlCDRGJxZwA8Y/CGP+8R
+         ab2aAEL3gSBOsIHFKZCpimEz0v0pvvsft17f2AvJ1ojeV6J8wLK4ixd+AfhWKPZ/c7ZC
+         sQLCc6Vgosbnw6yG7ZCHQQ1u7R7deMgYPyyYMCopM3U1unF1AFl5Ap4t5OT1xuDe8t5f
+         uoNBPb8pfj6ZvLWRNfIZPJf9225Y1ujm2szcS0/1CCTN+KdvBfR2+owHypKzCboaNJCY
+         oIXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=tL+sK5pEBsAoCFopnPPwt4es9T7EwxPGgYEkm8O7IBI=;
-        b=YtmAYzUPuHJGbInv/DThGdIwMbS+P5xJ549I74qyqTca7CPz0Sro/es/J0HajSIv2Z
-         q5TAroBLD+2CnPI7faCbCkFODiKRQBnvL0XbMtGTyZGIJhnmfPl05AMaz2YBGNd6aNHo
-         DaGvtzajVwBPckjp6NYdW3PZnZLoBSgh9Nevi6jYFpYbQSjkJcY6CcZiXTMND2MG3pxS
-         f+rVDix0w+q5jjzic+pKRj92FRwMSuKHk+x9ZZl4MP9l4eIKDqVKI4/BImSGc/7DqOKD
-         EymQnZ8GD0Jbt5GzojadGXs6ZOiYX9j6/7WeFt8hRIw17b0cZ0kdbGil7z8bU8+ACf0U
-         adTQ==
-X-Gm-Message-State: APjAAAUOWdG4jIf+PUNv6nICun5m5IHl8O3pwDfrQHPTM+Cih60QkPrl
-        vonMsNMxI9hRCLfs3JdMC14VoQ==
-X-Google-Smtp-Source: APXvYqx4whMnRpTm4m80h2xmvQbwZJE+FnBv/f7E0p3WgnHRPkfQ9mN1Bj/AUSzvNa+UTmcvCbPkvw==
-X-Received: by 2002:a2e:81cf:: with SMTP id s15mr14626643ljg.193.1557775400776;
-        Mon, 13 May 2019 12:23:20 -0700 (PDT)
+        bh=x3HZaV7vcbo/XhlaM1d9i+kdcoQHiHqHOKB8XCuJnJg=;
+        b=e/yHWV97zD5dCXBO4+XMaZ9zXZaGAbjHV7EzB7GqB2o+dF8HW8sN5W642fZ68Vwe30
+         mcs4m4utEMd001MiKlaR3pRWVgyPkwTct0BFQXB7gOA9yptTHjsd/ZU6iMBEGnZwqiUP
+         EavCYeKot3/eKKc03DjVrvCUbY0NLdbNWIgWcF7lzaSM8sgF8Zf2/8/Naux/wfjcWHjs
+         y44CmHxfMck4MciA1+JCRqJ1oNGHA5OgPz5ie7Han/y9d6h4Kfgm0XWhh8Nd+/MvkglZ
+         70mAcekQ960J3SKBdlL01CO+/eFELtDChYDMcCaoKqGyCbYLgnRW2f7Zn1bp+Sv2iXQU
+         PjeA==
+X-Gm-Message-State: APjAAAUEJiYZ6E2DJ0BBQ9sm7iwIlBS4fFDqQfwSjhFEq/XbZwi93gLP
+        j98116K0h14cZMmsfazh4I+NZA==
+X-Google-Smtp-Source: APXvYqxhImmrN+c//ITxcw8U+57BeFavH+R85RVOLDvIyx6W8pcBzSGLx1AMwoyfzWMRSAkXmhUcdQ==
+X-Received: by 2002:a2e:206:: with SMTP id 6mr13170535ljc.59.1557775408048;
+        Mon, 13 May 2019 12:23:28 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.19
+        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:23:19 -0700 (PDT)
+        Mon, 13 May 2019 12:23:27 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
@@ -76,9 +76,9 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Souvik Chakravarty <souvik.chakravarty@arm.com>,
         linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 08/18] drivers: firmware: psci: Prepare to support PM domains
-Date:   Mon, 13 May 2019 21:22:50 +0200
-Message-Id: <20190513192300.653-9-ulf.hansson@linaro.org>
+Subject: [PATCH 12/18] drivers: firmware: psci: Add a helper to attach a CPU to its PM domain
+Date:   Mon, 13 May 2019 21:22:54 +0200
+Message-Id: <20190513192300.653-13-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
 References: <20190513192300.653-1-ulf.hansson@linaro.org>
@@ -87,104 +87,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subsequent changes implements support for PM domains to PSCI. Those changes
-are mainly implemented in a new separate c-file, hence a couple of the
-internal PSCI functions needs to be shared to be accessible. Let's do that
-via adding a new PSCI header file.
+Introduce a new PSCI DT helper function, psci_dt_attach_cpu(), which takes
+a CPU number as an in-parameter and tries to attach the CPU's struct device
+to its corresponding PM domain. Let's use dev_pm_domain_attach_by_name(),
+as to be able to specify "psci" as the required "power-domain-names".
 
-Moreover, to implement support for PM domains, switching the PSCI FW into
-the OS initiated mode is sometimes needed. Therefore, let's share a new
-function that implement this.
+Additionally, let the helper prepare the CPU to be power managed via
+runtime PM.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
 
 Changes:
-	- Convert psci_set_osi_mode() to return an int.
-	- Don't share psci_get_domain_state() as that's no longer needed.
-	- Update changelog.
+	- Take into account whether the CPU is online/offline.
+	- Convert from dev_pm_domain_attach() into using the more future proof
+	  dev_pm_domain_attach_by_name().
 
 ---
- drivers/firmware/psci/psci.c | 17 ++++++++++++++---
- drivers/firmware/psci/psci.h | 16 ++++++++++++++++
- 2 files changed, 30 insertions(+), 3 deletions(-)
- create mode 100644 drivers/firmware/psci/psci.h
+ drivers/firmware/psci/psci.h           |  3 +++
+ drivers/firmware/psci/psci_pm_domain.c | 17 +++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-index 4aec513136e4..0e91d864e346 100644
---- a/drivers/firmware/psci/psci.c
-+++ b/drivers/firmware/psci/psci.c
-@@ -34,6 +34,8 @@
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
- 
-+#include "psci.h"
-+
- /*
-  * While a 64-bit OS can make calls with SMC32 calling conventions, for some
-  * calls it is necessary to use SMC64 to pass or return 64-bit values.
-@@ -96,7 +98,7 @@ static inline bool psci_has_ext_power_state(void)
- 				PSCI_1_0_FEATURES_CPU_SUSPEND_PF_MASK;
- }
- 
--static inline bool psci_has_osi_support(void)
-+bool psci_has_osi_support(void)
- {
- 	return psci_cpu_suspend_feature & PSCI_1_0_OS_INITIATED;
- }
-@@ -161,6 +163,15 @@ static u32 psci_get_version(void)
- 	return invoke_psci_fn(PSCI_0_2_FN_PSCI_VERSION, 0, 0, 0);
- }
- 
-+int psci_set_osi_mode(void)
-+{
-+	int err;
-+
-+	err = invoke_psci_fn(PSCI_1_0_FN_SET_SUSPEND_MODE,
-+			     PSCI_1_0_SUSPEND_MODE_OSI, 0, 0);
-+	return psci_to_linux_errno(err);
-+}
-+
- static int psci_cpu_suspend(u32 state, unsigned long entry_point)
- {
- 	int err;
-@@ -292,12 +303,12 @@ static inline u32 psci_get_domain_state(void)
- 	return __this_cpu_read(domain_state);
- }
- 
--static inline void psci_set_domain_state(u32 state)
-+void psci_set_domain_state(u32 state)
- {
- 	__this_cpu_write(domain_state, state);
- }
- 
--static int psci_dt_parse_state_node(struct device_node *np, u32 *state)
-+int psci_dt_parse_state_node(struct device_node *np, u32 *state)
- {
- 	int err = of_property_read_u32(np, "arm,psci-suspend-param", state);
- 
 diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
-new file mode 100644
-index 000000000000..f2277c3ad405
---- /dev/null
+index c36e0e6649e9..b4254405b8ef 100644
+--- a/drivers/firmware/psci/psci.h
 +++ b/drivers/firmware/psci/psci.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+@@ -4,6 +4,7 @@
+ #define __PSCI_H
+ 
+ struct cpuidle_driver;
++struct device;
+ struct device_node;
+ 
+ int psci_set_osi_mode(void);
+@@ -16,10 +17,12 @@ int psci_dt_parse_state_node(struct device_node *np, u32 *state);
+ int psci_dt_init_pm_domains(struct device_node *np);
+ int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
+ 		struct device_node *cpu_node, u32 *psci_states);
++struct device *psci_dt_attach_cpu(int cpu);
+ #else
+ static inline int psci_dt_init_pm_domains(struct device_node *np) { return 0; }
+ static inline int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
+ 		struct device_node *cpu_node, u32 *psci_states) { return 0; }
++static inline struct device *psci_dt_attach_cpu(int cpu) { return NULL; }
+ #endif
+ #endif
+ 
+diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
+index 3aa645dba81b..1cbe745ee001 100644
+--- a/drivers/firmware/psci/psci_pm_domain.c
++++ b/drivers/firmware/psci/psci_pm_domain.c
+@@ -12,8 +12,10 @@
+ #include <linux/device.h>
+ #include <linux/kernel.h>
+ #include <linux/pm_domain.h>
++#include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+ #include <linux/string.h>
++#include <linux/cpu.h>
+ #include <linux/cpuidle.h>
+ #include <linux/cpu_pm.h>
+ 
+@@ -383,4 +385,19 @@ int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
+ 
+ 	return 0;
+ }
 +
-+#ifndef __PSCI_H
-+#define __PSCI_H
++struct device *psci_dt_attach_cpu(int cpu)
++{
++	struct device *dev, *cpu_dev = get_cpu_device(cpu);
 +
-+struct device_node;
++	dev = dev_pm_domain_attach_by_name(cpu_dev, "psci");
++	if (IS_ERR_OR_NULL(dev))
++		return dev;
 +
-+int psci_set_osi_mode(void);
-+bool psci_has_osi_support(void);
++	pm_runtime_irq_safe(dev);
++	if (cpu_online(cpu))
++		pm_runtime_get_sync(dev);
 +
-+#ifdef CONFIG_CPU_IDLE
-+void psci_set_domain_state(u32 state);
-+int psci_dt_parse_state_node(struct device_node *np, u32 *state);
-+#endif
-+
-+#endif /* __PSCI_H */
++	return dev;
++}
+ #endif
 -- 
 2.17.1
 
