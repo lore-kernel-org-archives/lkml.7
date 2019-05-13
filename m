@@ -2,158 +2,296 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F996C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F6EC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CCCE2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA592086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:10:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWYIBEEX"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="1NkacZsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfEMSKm (ORCPT
+        id S1726296AbfEMSKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:10:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39827 "EHLO
+        Mon, 13 May 2019 14:10:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36236 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfEMSKk (ORCPT
+        with ESMTP id S1726107AbfEMSKs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:10:40 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w8so13907978wrl.6;
-        Mon, 13 May 2019 11:10:38 -0700 (PDT)
+        Mon, 13 May 2019 14:10:48 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o4so16367117wra.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:10:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xjyfckHJXlC/6zqO/WdSPY75KVJYOZ3HNhKFYbdnIbo=;
-        b=BWYIBEEXjsHj1oidjl/F65UweVrtjxi2OX+8PffmndG44zVJPXE45BEzdIoSkGPwn2
-         uBeD4MwB6aBysQjYi63W8COfiBpI829rF8ixaTNFGo13w2bwi2JTkkFoO1OyhhaQF6zy
-         rCqA6a4wmE4gOAZ1+br3GgTWRO3SGbANremnTXDbea1qyisaGaUPscn2ZrXtYAD6oN1J
-         jNlyevDE0JNRprQHWfTuwD75kE7UfLesTtL1lZ70ldWozG+xGj25iGcgf8rz0qC+UYut
-         AZPP8/gH8G4ScYjqUTjzenH1XkFkXHFxBtVuaKDidrWLyERQu5SvuND1HZuidfUZDgDK
-         CB1A==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=LT5io5p8n1/c/LCwvTPkjtb4+X35+Q1HlvC4Y/qob20=;
+        b=1NkacZszdx7ZwkSEa92RAnOAhALFbWsnF8mGgjeRpGOGnd39E3wE0Uxrr7C7pFmGfO
+         qy3BKP5DqvHjy3c0zgYEci1RLKe+joxoNV7OnGQLeym8xfIegVO0rmjXKgw4ipqn6d48
+         nnxOSI2IUwRPKYcJF5hBm6ANGBw3rTT+qG3jSR77+DAcg9et7O1scFUWIyCN2FCroe1d
+         tdCEwt9K1DQ9eY+Pgl9zccGbGGsVryRhhMP3Y3S/3R2StWP9RrpsxeXdpOz6HQ9rw9XO
+         XMUvU/ALsresEEJimUNQchRpxoWaik2f3FoiL0PRQpWSHxoJ64boSNDHXIpqnpj8rDU7
+         Sslw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=xjyfckHJXlC/6zqO/WdSPY75KVJYOZ3HNhKFYbdnIbo=;
-        b=T1SHayco1Gz6YGxwKKt6T6+CFl86wpRVECosayw7/SqGrahS4bs1TvMWc4gJKSGjDT
-         k+/3OynkXHdidNx85XkL+q0K9u/chaY/Q/JikPvA2mk74QnDBsfhHmDy/Z6W1dNfljNe
-         N2gX+aQ0lzmXVrCH6M53lg7memy+wz2SUjDwMeCqjyaT3ELlTNsz9bveMi/7/xbGjrYn
-         NE/q11mHvajqD8/ht6UZk0tl8ip9442qh6InOFbT0gW0ZSxO9NGBJCd9gElrN3W4VBDi
-         F8p3d0nQAanL3ocRPkgsu2nslwiSVuIK+QF7+oT4Z/67yKU1ROETx3Bu6Czt8SIFMIqh
-         w13A==
-X-Gm-Message-State: APjAAAWPL3i0ogT+Xtq/h5wuQd/ELAYbXOGBqWqJgOyHmWv8QU2TXMH/
-        QhzZOGqdQvI4h+FC4OYm0JH7Vovs
-X-Google-Smtp-Source: APXvYqzLjTvTiyfRetVn0eAL1SDTX7ISj1f41/LkJh68h9dYPIERJgzDpIt/O7VRqbY9wW69AWYntg==
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr2817449wrj.262.1557771037720;
-        Mon, 13 May 2019 11:10:37 -0700 (PDT)
-Received: from [10.67.49.52] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id o81sm374215wmb.2.2019.05.13.11.10.34
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=LT5io5p8n1/c/LCwvTPkjtb4+X35+Q1HlvC4Y/qob20=;
+        b=FETQfDErGcr6ZUVtIQ+Kn4mB/F0Jh37Vz0rNgcHklhf4C95y8I/VVukNU+pQOpHR8q
+         nZ4zh0oScUtxcwCjjOhlPRjNYHLySeYQpmBT/LXBKoZinir7e4rejBv1QggB4xge46FP
+         IguwjA9Hre1lxfqDMJqzNF45YGPPDgLvZjtosg0sZUOVxFrKVzGKMBd/zYKtNI2hKflJ
+         nC1E80k0OZPY+HQKz8iKkuGZrvAiNMxUWRKWwzclQSoqySAsbt9ePgAF2ryENZBf+a6S
+         Z0ctPKyFBDAH5BnEZDZuwTAuyj/FAD9CAtgxTH/bSVOy+WAgsaNO6BDeJVEWHkvmEfWT
+         gOKg==
+X-Gm-Message-State: APjAAAV5T458PKP+5cIaJzVAW/6TodM7t2ON7MAqTiUJq1nx7wc5z+7y
+        ECcl8rp2BsUh5SySq88LFlHCcg==
+X-Google-Smtp-Source: APXvYqxxm7UUUHmTN1WVVjjYddXPsjbsEeWpAKSwqu+sK0m85FdbEzeZYJoyE3a5PgZSyXdMxqyKrg==
+X-Received: by 2002:adf:e311:: with SMTP id b17mr9530689wrj.11.1557771045698;
+        Mon, 13 May 2019 11:10:45 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id s2sm205534wmc.7.2019.05.13.11.10.44
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 11:10:36 -0700 (PDT)
-Subject: Re: [PATCH v5 2/2] hwmon: scmi: Scale values to target desired HWMON
- units
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>
-References: <20190508184635.5054-1-f.fainelli@gmail.com>
- <20190508184635.5054-3-f.fainelli@gmail.com>
- <20190508211017.GA29998@roeck-us.net>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <1212a00f-76f8-8f21-d19a-a5681c3668a0@gmail.com>
-Date:   Mon, 13 May 2019 11:10:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 11:10:44 -0700 (PDT)
+Message-ID: <5cd9b324.1c69fb81.b5d3f.1434@mx.google.com>
+Date:   Mon, 13 May 2019 11:10:44 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190508211017.GA29998@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Tree: next
+X-Kernelci-Lab-Name: lab-collabora
+X-Kernelci-Branch: master
+X-Kernelci-Kernel: next-20190513
+Subject: next/master boot bisection: next-20190513 on rk3288-veyron-jaq
+To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
+        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
+        khilman@baylibre.com, enric.balletbo@collabora.com,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        linux-arm-kernel@lists.infradead.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/8/19 2:10 PM, Guenter Roeck wrote:
-> On Wed, May 08, 2019 at 11:46:35AM -0700, Florian Fainelli wrote:
->> If the SCMI firmware implementation is reporting values in a scale that
->> is different from the HWMON units, we need to scale up or down the value
->> according to how far appart they are.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Question is which tree this series should go through. I am fine with arm.
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-Fine with me as well, Sudeep are you picking up these patches or should
-they go through HWMON and Guenter?
--- 
-Florian
+next/master boot bisection: next-20190513 on rk3288-veyron-jaq
+
+Summary:
+  Start:      04c4b6775d34 Add linux-next specific files for 20190513
+  Details:    https://kernelci.org/boot/id/5cd91b7859b514af767a3628
+  Plain log:  https://storage.kernelci.org//next/master/next-20190513/arm/m=
+ulti_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8/lab-collabora/bo=
+ot-rk3288-veyron-jaq.txt
+  HTML log:   https://storage.kernelci.org//next/master/next-20190513/arm/m=
+ulti_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8/lab-collabora/bo=
+ot-rk3288-veyron-jaq.html
+  Result:     691d4947face thermal: rockchip: fix up the tsadc pinctrl sett=
+ing error
+
+Checks:
+  revert:     PASS
+  verify:     PASS
+
+Parameters:
+  Tree:       next
+  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
+.git
+  Branch:     master
+  Target:     rk3288-veyron-jaq
+  CPU arch:   arm
+  Lab:        lab-collabora
+  Compiler:   gcc-8
+  Config:     multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy
+  Test suite: boot
+
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit 691d4947faceb8bd841900049e07c81c95ca4b0d
+Author: Elaine Zhang <zhangqing@rock-chips.com>
+Date:   Tue Apr 30 18:09:44 2019 +0800
+
+    thermal: rockchip: fix up the tsadc pinctrl setting error
+    =
+
+    Explicitly use the pinctrl to set/unset the right mode
+    instead of relying on the pinctrl init mode.
+    And it requires setting the tshut polarity before select pinctrl.
+    =
+
+    When the temperature sensor mode is set to 0, it will automatically
+    reset the board via the Clock-Reset-Unit (CRU) if the over temperature
+    threshold is reached. However, when the pinctrl initializes, it does a
+    transition to "otp_out" which may lead the SoC restart all the time.
+    =
+
+    "otp_out" IO may be connected to the RESET circuit on the hardware.
+    If the IO is in the wrong state, it will trigger RESET.
+    (similar to the effect of pressing the RESET button)
+    which will cause the soc to restart all the time.
+    =
+
+    Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+    Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+    Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
+
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_=
+thermal.c
+index 9c7643d62ed7..6dc7fc516abf 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
+ 	int tshut_temp;
+ 	enum tshut_mode tshut_mode;
+ 	enum tshut_polarity tshut_polarity;
++	struct pinctrl *pinctrl;
++	struct pinctrl_state *gpio_state;
++	struct pinctrl_state *otp_state;
+ };
+ =
+
+ /**
+@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_dev=
+ice *pdev)
+ 		return error;
+ 	}
+ =
+
++	thermal->chip->control(thermal->regs, false);
++
+ 	error =3D clk_prepare_enable(thermal->clk);
+ 	if (error) {
+ 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_de=
+vice *pdev)
+ 	thermal->chip->initialize(thermal->grf, thermal->regs,
+ 				  thermal->tshut_polarity);
+ =
+
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
++		thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
++		if (IS_ERR(thermal->pinctrl)) {
++			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
++			return PTR_ERR(thermal->pinctrl);
++		}
++
++		thermal->gpio_state =3D pinctrl_lookup_state(thermal->pinctrl,
++							   "gpio");
++		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
++			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
++			return -EINVAL;
++		}
++
++		thermal->otp_state =3D pinctrl_lookup_state(thermal->pinctrl,
++							  "otpout");
++		if (IS_ERR_OR_NULL(thermal->otp_state)) {
++			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
++			return -EINVAL;
++		}
++
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
++	}
++
+ 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
+ 		error =3D rockchip_thermal_register_sensor(pdev, thermal,
+ 						&thermal->sensors[i],
+@@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(st=
+ruct device *dev)
+ =
+
+ 	clk_disable(thermal->pclk);
+ 	clk_disable(thermal->clk);
+-
+-	pinctrl_pm_select_sleep_state(dev);
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
+ =
+
+ 	return 0;
+ }
+@@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(str=
+uct device *dev)
+ 	for (i =3D 0; i < thermal->chip->chn_num; i++)
+ 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
+ =
+
+-	pinctrl_pm_select_default_state(dev);
++	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
++		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
+ =
+
+ 	return 0;
+ }
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [d7a02fa0a8f9ec1b81d57628ca9834563208ef33] Merge tag 'upstream-5.2-=
+rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/rw/ubifs
+git bisect good d7a02fa0a8f9ec1b81d57628ca9834563208ef33
+# bad: [04c4b6775d34f12f196e056debed9e8718585342] Add linux-next specific f=
+iles for 20190513
+git bisect bad 04c4b6775d34f12f196e056debed9e8718585342
+# good: [c5d6b0b49382b9a81ac76e680af9d0d8943640e7] Merge remote-tracking br=
+anch 'pci/next'
+git bisect good c5d6b0b49382b9a81ac76e680af9d0d8943640e7
+# bad: [a8f3999da21582f933c597a5489e415b51195322] Merge remote-tracking bra=
+nch 'watchdog/master'
+git bisect bad a8f3999da21582f933c597a5489e415b51195322
+# bad: [8018a14af78918f9cc3ec419b87c8e3fa3f3a9ca] Merge remote-tracking bra=
+nch 'input/next'
+git bisect bad 8018a14af78918f9cc3ec419b87c8e3fa3f3a9ca
+# good: [f1bc5d2316d1b88675dcf799d88cb973f6508bee] Merge remote-tracking br=
+anch 'cpupower/cpupower'
+git bisect good f1bc5d2316d1b88675dcf799d88cb973f6508bee
+# bad: [a7257dd808e08b65ac8c3bee267c8a9d2e26e2b9] Merge remote-tracking bra=
+nch 'drm/drm-next'
+git bisect bad a7257dd808e08b65ac8c3bee267c8a9d2e26e2b9
+# bad: [be827ffd38ea1de8f61b1fce0b25801321a20b2e] thermal: rcar_gen3_therma=
+l: Fix to show correct trip points number
+git bisect bad be827ffd38ea1de8f61b1fce0b25801321a20b2e
+# good: [901c7225ca1170e5bcaca48cbbc580b18f754c0c] drivers: thermal: tsens:=
+ Introduce IP-specific max_sensor count
+git bisect good 901c7225ca1170e5bcaca48cbbc580b18f754c0c
+# good: [4e211e068ae955811ecfd1584275c704251637fe] thermal: Introduce devm_=
+thermal_of_cooling_device_register
+git bisect good 4e211e068ae955811ecfd1584275c704251637fe
+# good: [01dfda3fcc01c8f9989915742fc43ff137c58970] thermal: Fix build error=
+ of missing devm_ioremap_resource on UM
+git bisect good 01dfda3fcc01c8f9989915742fc43ff137c58970
+# bad: [fb27a6c55da7475509589a5fc4799c058679c5a7] dt-bindings: rockchip-the=
+rmal: Support the PX30 SoC compatible
+git bisect bad fb27a6c55da7475509589a5fc4799c058679c5a7
+# bad: [691d4947faceb8bd841900049e07c81c95ca4b0d] thermal: rockchip: fix up=
+ the tsadc pinctrl setting error
+git bisect bad 691d4947faceb8bd841900049e07c81c95ca4b0d
+# good: [f88f39be23c6cd65674e6d39ae268c7341960d96] thermal: broadcom: Remov=
+e ACPI support
+git bisect good f88f39be23c6cd65674e6d39ae268c7341960d96
+# first bad commit: [691d4947faceb8bd841900049e07c81c95ca4b0d] thermal: roc=
+kchip: fix up the tsadc pinctrl setting error
+---------------------------------------------------------------------------=
+----
