@@ -2,299 +2,108 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAF9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91907C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D749208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6361B2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557756293;
+	bh=aUAOUQmvO4x+HNaHFnjhkK7unWjertFMu6KRFOGoWeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PVmRbFc6IKFQycF53YYAot0hRS9bOdyLJFfozH6ccFJg//54DFeffXTYoOONMxBVJ
+	 MEs9tBWRrKQdYk7qXJXB6p/k1kJIaB8ijnfhkTJo946o3mmBiIBBqjvBR9oMXIoI8v
+	 t5fDhjv1ArOnPxon/dei0zCA0VLqDVlg1ZSg2gNA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730386AbfEMOEo (ORCPT
+        id S1730396AbfEMOEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:04:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56534 "EHLO huawei.com"
+        Mon, 13 May 2019 10:04:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55872 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729875AbfEMOEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:04:44 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8EB74F5C83569CF1B183;
-        Mon, 13 May 2019 22:04:40 +0800 (CST)
-Received: from [127.0.0.1] (10.177.23.164) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
- 22:04:32 +0800
-Subject: Re: [PATCH v6 1/1] iommu: enhance IOMMU dma mode build options
-To:     John Garry <john.garry@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
- <20190418135701.24668-2-thunder.leizhen@huawei.com>
- <ca30a698-8047-9a86-a2f1-0b3e1c8692bf@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <5CD9796E.3040000@huawei.com>
-Date:   Mon, 13 May 2019 22:04:30 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        id S1729875AbfEMOEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:04:52 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DAEDAAD0A;
+        Mon, 13 May 2019 14:04:49 +0000 (UTC)
+Date:   Mon, 13 May 2019 16:04:48 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, brho@google.com, kernelfans@gmail.com,
+        dave.hansen@intel.com, rppt@linux.ibm.com, peterz@infradead.org,
+        mpe@ellerman.id.au, mingo@elte.hu, osalvador@suse.de,
+        luto@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
+ boot
+Message-ID: <20190513140448.GJ24036@dhcp22.suse.cz>
+References: <20190512054829.11899-1-cai@lca.pw>
+ <20190513124112.GH24036@dhcp22.suse.cz>
+ <1557755039.6132.23.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <ca30a698-8047-9a86-a2f1-0b3e1c8692bf@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.23.164]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557755039.6132.23.camel@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon 13-05-19 09:43:59, Qian Cai wrote:
+> On Mon, 2019-05-13 at 14:41 +0200, Michal Hocko wrote:
+> > On Sun 12-05-19 01:48:29, Qian Cai wrote:
+> > > The linux-next commit ("x86, numa: always initialize all possible
+> > > nodes") introduced a crash below during boot for systems with a
+> > > memory-less node. This is due to CPUs that get onlined during SMP boot,
+> > > but that onlining triggers a page fault in bus_add_device() during
+> > > device registration:
+> > > 
+> > > 	error = sysfs_create_link(&bus->p->devices_kset->kobj,
+> > > 
+> > > bus->p is NULL. That "p" is the subsys_private struct, and it should
+> > > have been set in,
+> > > 
+> > > 	postcore_initcall(register_node_type);
+> > > 
+> > > but that happens in do_basic_setup() after smp_init().
+> > > 
+> > > The old code had set this node online via alloc_node_data(), so when it
+> > > came time to do_cpu_up() -> try_online_node(), the node was already up
+> > > and nothing happened.
+> > > 
+> > > Now, it attempts to online the node, which registers the node with
+> > > sysfs, but that can't happen before the 'node' subsystem is registered.
+> > > 
+> > > Since kernel_init() is running by a kernel thread that is in
+> > > SYSTEM_SCHEDULING state, fixed this by skipping registering with sysfs
+> > > during the early boot in __try_online_node().
+> > 
+> > Relying on SYSTEM_SCHEDULING looks really hackish. Why cannot we simply
+> > drop try_online_node from do_cpu_up? Your v2 remark below suggests that
+> > we need to call node_set_online because something later on depends on
+> > that. Btw. why do we even allocate a pgdat from this path? This looks
+> > really messy.
+> 
+> See the commit cf23422b9d76 ("cpu/mem hotplug: enable CPUs online before local
+> memory online")
+> 
+> It looks like try_online_node() in do_cpu_up() is needed for memory hotplug
+> which is to put its node online if offlined and then hotadd_new_pgdat() calls
+> build_all_zonelists() to initialize the zone list.
 
-
-On 2019/5/8 17:42, John Garry wrote:
-> On 18/04/2019 14:57, Zhen Lei wrote:
->> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
->> opportunity to set {lazy|strict} mode as default at build time. Then put
->> the three config options in an choice, make people can only choose one of
->> the three at a time.
->>
->> The default IOMMU dma modes on each ARCHs have no change.
->>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/ia64/kernel/pci-dma.c                |  2 +-
->>  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
->>  arch/s390/pci/pci_dma.c                   |  2 +-
->>  arch/x86/kernel/pci-dma.c                 |  7 ++---
->>  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
->>  drivers/iommu/amd_iommu_init.c            |  3 ++-
->>  drivers/iommu/intel-iommu.c               |  2 +-
->>  drivers/iommu/iommu.c                     |  3 ++-
->>  8 files changed, 48 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
->> index fe988c49f01ce6a..655511dbf3c3b34 100644
->> --- a/arch/ia64/kernel/pci-dma.c
->> +++ b/arch/ia64/kernel/pci-dma.c
->> @@ -22,7 +22,7 @@
->>  int force_iommu __read_mostly;
->>  #endif
->>
->> -int iommu_pass_through;
->> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->>
->>  static int __init pci_iommu_init(void)
->>  {
->> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
->> index 3ead4c237ed0ec9..383e082a9bb985c 100644
->> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
->> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
->> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->>      va_end(args);
->>  }
->>
->> -static bool pnv_iommu_bypass_disabled __read_mostly;
->> +static bool pnv_iommu_bypass_disabled __read_mostly =
->> +            !IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->>  static bool pci_reset_phbs __read_mostly;
->>
->>  static int __init iommu_setup(char *str)
->> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
->> index 9e52d1527f71495..784ad1e0acecfb1 100644
->> --- a/arch/s390/pci/pci_dma.c
->> +++ b/arch/s390/pci/pci_dma.c
->> @@ -17,7 +17,7 @@
->>
->>  static struct kmem_cache *dma_region_table_cache;
->>  static struct kmem_cache *dma_page_table_cache;
->> -static int s390_iommu_strict;
->> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->>
->>  static int zpci_refresh_global(struct zpci_dev *zdev)
->>  {
->> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
->> index d460998ae828514..fb2bab42a0a3173 100644
->> --- a/arch/x86/kernel/pci-dma.c
->> +++ b/arch/x86/kernel/pci-dma.c
->> @@ -43,11 +43,8 @@
->>   * It is also possible to disable by default in kernel config, and enable with
->>   * iommu=nopt at boot time.
->>   */
->> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
->> -int iommu_pass_through __read_mostly = 1;
->> -#else
->> -int iommu_pass_through __read_mostly;
->> -#endif
->> +int iommu_pass_through __read_mostly =
->> +            IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->>
->>  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
->>
->> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
->> index 6f07f3b21816c64..8a1f1793cde76b4 100644
->> --- a/drivers/iommu/Kconfig
->> +++ b/drivers/iommu/Kconfig
->> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
->>        debug/iommu directory, and then populate a subdirectory with
->>        entries as required.
->>
->> -config IOMMU_DEFAULT_PASSTHROUGH
->> -    bool "IOMMU passthrough by default"
->> +choice
->> +    prompt "IOMMU dma mode"
-> 
-> /s/dma/DMA/
-OK
-
-> 
-> And how about add "default", as in "Default IOMMU DMA mode" or "IOMMU default DMA mode"?
-Yes. I prefer "IOMMU default DMA mode".
-
-> 
->>      depends on IOMMU_API
->> -        help
->> -      Enable passthrough by default, removing the need to pass in
->> -      iommu.passthrough=on or iommu=pt through command line. If this
->> -      is enabled, you can still disable with iommu.passthrough=off
->> -      or iommu=nopt depending on the architecture.
->> +    default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
->> +    default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
->> +    default IOMMU_DEFAULT_STRICT
->> +    help
->> +      This option allows IOMMU dma mode to be chose at build time, to
-> 
-> again, capitalize acronyms, i.e. /s/dma/DMA/ (more of these above and below)
-OK, I will check it all. Thanks.
-
-> 
->> +      override the default dma mode of each ARCHs, removing the need to
->> +      pass in kernel parameters through command line. You can still use
->> +      ARCHs specific boot options to override this option again.
->> +
->> +config IOMMU_DEFAULT_PASSTHROUGH
-> 
-> I think that it may need to be indented, along with the other choices
-There is no problem. I referred to mm/Kconfig.
-
-> 
->> +    bool "passthrough"
->> +    help
->> +      In this mode, the dma access through IOMMU without any addresses
->> +      transformation. That means, the wrong or illegal dma access can not
-> 
-> transformation, or translation?
-I copied from somewhere. OK, "translation" will be more clear.
-
-> 
->> +      be caught, no error information will be reported.
->>
->>        If unsure, say N here.
->>
->> +config IOMMU_DEFAULT_LAZY
->> +    bool "lazy"
->> +    help
->> +      Support lazy mode, where for every IOMMU DMA unmap operation, the
->> +      flush operation of IOTLB and the free operation of IOVA are deferred.
->> +      They are only guaranteed to be done before the related IOVA will be
->> +      reused.
->> +
->> +config IOMMU_DEFAULT_STRICT
->> +    bool "strict"
->> +    help
->> +      For every IOMMU DMA unmap operation, the flush operation of IOTLB and
->> +      the free operation of IOVA are guaranteed to be done in the unmap
->> +      function.
->> +
->> +      This mode is safer than the two above, but it maybe slow in some high
-> 
-> slow, or slower? And passthough is not safe, so anything is implicitly safer.
-OK. I will change it to "slower".
-
-> 
->> +      performace scenarios.
->> +
->> +endchoice
->> +
->>  config OF_IOMMU
->>         def_bool y
->>         depends on OF && IOMMU_API
->> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
->> index ff40ba758cf365e..16c02b08adb4cb2 100644
->> --- a/drivers/iommu/amd_iommu_init.c
->> +++ b/drivers/iommu/amd_iommu_init.c
->> @@ -166,7 +166,8 @@ struct ivmd_header {
->>                         to handle */
->>  LIST_HEAD(amd_iommu_unity_map);        /* a list of required unity mappings
->>                         we find in ACPI */
->> -bool amd_iommu_unmap_flush;        /* if true, flush on every unmap */
->> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->> +                    /* if true, flush on every unmap */
->>
->>  LIST_HEAD(amd_iommu_list);        /* list of all AMD IOMMUs in the
->>                         system */
->> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
->> index 28cb713d728ceef..0c3cc716210f35a 100644
->> --- a/drivers/iommu/intel-iommu.c
->> +++ b/drivers/iommu/intel-iommu.c
->> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
->>
->>  static int dmar_map_gfx = 1;
->>  static int dmar_forcedac;
->> -static int intel_iommu_strict;
->> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->>  static int intel_iommu_superpage = 1;
->>  static int intel_iommu_sm;
->>  static int iommu_identity_mapping;
->> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
->> index 109de67d5d727c2..0ec5952ac60e2a3 100644
->> --- a/drivers/iommu/iommu.c
->> +++ b/drivers/iommu/iommu.c
->> @@ -43,7 +43,8 @@
->>  #else
->>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->>  #endif
->> -static bool iommu_dma_strict __read_mostly = true;
->> +static bool iommu_dma_strict __read_mostly =
->> +            IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->>
->>  struct iommu_callback_data {
->>      const struct iommu_ops *ops;
->> -- 
->> 1.8.3
->>
->>
->>
->> .
->>
-> 
-> 
-> 
-> .
-> 
-
+Well, do we still have to followthe logic that the above (unreviewed)
+commit has established? The hotplug code in general made a lot of ad-hoc
+design decisions which had to be revisited over time. If we are not
+allocating pgdats for newly added memory then we should really make sure
+to do so at a proper time and hook. I am not sure about CPU vs. memory
+init ordering but even then I would really prefer if we could make the
+init less obscure and _documented_.
+ 
 -- 
-Thanks!
-BestRegards
-
+Michal Hocko
+SUSE Labs
