@@ -2,59 +2,59 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4ABC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC6EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 536EE20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9940220850
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YrDb+TI/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sPy1xWva"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfEMT3m (ORCPT
+        id S1727163AbfEMT3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:29:42 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34160 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfEMT3l (ORCPT
+        Mon, 13 May 2019 15:29:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44042 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfEMT3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:29:41 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so11286745ljg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:29:40 -0700 (PDT)
+        Mon, 13 May 2019 15:29:46 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e13so12060976ljl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:29:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x3HZaV7vcbo/XhlaM1d9i+kdcoQHiHqHOKB8XCuJnJg=;
-        b=YrDb+TI/qptrO7/5RXe8SeC+HyCzsJJl8ml3Jr2kE2brTGKdFR7/IJ+N4lXVtKfgGo
-         NAHroyR3jEv97wAFOv1N3DRBDosPKmtXcn1hEpIBtK5wsOrvMlCDRGJxZwA8Y/CGP+8R
-         ab2aAEL3gSBOsIHFKZCpimEz0v0pvvsft17f2AvJ1ojeV6J8wLK4ixd+AfhWKPZ/c7ZC
-         sQLCc6Vgosbnw6yG7ZCHQQ1u7R7deMgYPyyYMCopM3U1unF1AFl5Ap4t5OT1xuDe8t5f
-         uoNBPb8pfj6ZvLWRNfIZPJf9225Y1ujm2szcS0/1CCTN+KdvBfR2+owHypKzCboaNJCY
-         oIXg==
+        bh=WrUBlQWQzfbgrdk7klxniFTaW91XaiQj55o38mlFd9s=;
+        b=sPy1xWvat53hABQ29ElA2SDvZnqfRV5oZCv6u9/BoxR2ZPqFXvyAG3a5TqRkJY1a78
+         ViroHIx+ON0jQRU/3UrEYHgnwsRgfEfK1eI6rvzBvxBl01A+l0VD3RNQr/pCLeiGgll5
+         oZk8WImmrSosBLIL5WDY5HKxk6DoQYAY3hOyay9Zaekc0Qx48OBqfoEIU9LOQbcuUzO9
+         y21fdWLhr9sVngZjVbZUtziI2z+WwnXK05qOJ7jaN6FqE68r4gmG+pebrx9IRchSta0X
+         VzfAclg9EtvAhwIfrDB0k8yyetyh5giqMkUfQdSjeFYl6oWMRIbrHygy50HEN/rtT2Ov
+         JANw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=x3HZaV7vcbo/XhlaM1d9i+kdcoQHiHqHOKB8XCuJnJg=;
-        b=e/yHWV97zD5dCXBO4+XMaZ9zXZaGAbjHV7EzB7GqB2o+dF8HW8sN5W642fZ68Vwe30
-         mcs4m4utEMd001MiKlaR3pRWVgyPkwTct0BFQXB7gOA9yptTHjsd/ZU6iMBEGnZwqiUP
-         EavCYeKot3/eKKc03DjVrvCUbY0NLdbNWIgWcF7lzaSM8sgF8Zf2/8/Naux/wfjcWHjs
-         y44CmHxfMck4MciA1+JCRqJ1oNGHA5OgPz5ie7Han/y9d6h4Kfgm0XWhh8Nd+/MvkglZ
-         70mAcekQ960J3SKBdlL01CO+/eFELtDChYDMcCaoKqGyCbYLgnRW2f7Zn1bp+Sv2iXQU
-         PjeA==
-X-Gm-Message-State: APjAAAUEJiYZ6E2DJ0BBQ9sm7iwIlBS4fFDqQfwSjhFEq/XbZwi93gLP
-        j98116K0h14cZMmsfazh4I+NZA==
-X-Google-Smtp-Source: APXvYqxhImmrN+c//ITxcw8U+57BeFavH+R85RVOLDvIyx6W8pcBzSGLx1AMwoyfzWMRSAkXmhUcdQ==
-X-Received: by 2002:a2e:206:: with SMTP id 6mr13170535ljc.59.1557775408048;
-        Mon, 13 May 2019 12:23:28 -0700 (PDT)
+        bh=WrUBlQWQzfbgrdk7klxniFTaW91XaiQj55o38mlFd9s=;
+        b=Orc8sY3wM1BUy1jnXzm1SubTuWkfNubsUHuYrI9F2yvqacyn8gDUVjPUBFYUMqdVZv
+         S67tJ3heMJIsJRbg67tJrarRBHfHY6e5wJasN37VF37MQOAKozezPEoBOtj7GLIebc7L
+         ilaLOUHPfvlKaoH5snSHrK6PZvtkBmUvV5oOCJ5uE3jGg5B/N7ZDFbKiOAMxr6mWE3J1
+         H/+sQq0/rnlSuoFczp8WxHKbyih4NePdV0yGyVFwesD2VN5QNwxAW6rmAHc7Y5kEDg4Z
+         VIuuzsk3zUyvOKWX3hJf85nA9qsFX43UsRdFyCgkdzYwo282/IN2jP3e5IUmTetRpxLZ
+         L2zw==
+X-Gm-Message-State: APjAAAXcpFiInXUeauTlLP2sxe6mxe+LZt2WagAZklEu+3FNF8FeZgkx
+        Os8skeYIr98FsCfAdTDF0L1fOA==
+X-Google-Smtp-Source: APXvYqwd8hFjFHeIWZMZf2tJMuRrNt9YuVmMQEmung/qTBri+UbFr4ziejpMmn/ZiqWmeUdPeQNSbw==
+X-Received: by 2002:a2e:2b58:: with SMTP id q85mr14768159lje.179.1557775413538;
+        Mon, 13 May 2019 12:23:33 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.26
+        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:23:27 -0700 (PDT)
+        Mon, 13 May 2019 12:23:32 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
@@ -76,9 +76,9 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Souvik Chakravarty <souvik.chakravarty@arm.com>,
         linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 12/18] drivers: firmware: psci: Add a helper to attach a CPU to its PM domain
-Date:   Mon, 13 May 2019 21:22:54 +0200
-Message-Id: <20190513192300.653-13-ulf.hansson@linaro.org>
+Subject: [PATCH 15/18] drivers: firmware: psci: Support CPU hotplug for the hierarchical model
+Date:   Mon, 13 May 2019 21:22:57 +0200
+Message-Id: <20190513192300.653-16-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
 References: <20190513192300.653-1-ulf.hansson@linaro.org>
@@ -87,87 +87,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new PSCI DT helper function, psci_dt_attach_cpu(), which takes
-a CPU number as an in-parameter and tries to attach the CPU's struct device
-to its corresponding PM domain. Let's use dev_pm_domain_attach_by_name(),
-as to be able to specify "psci" as the required "power-domain-names".
+When the hierarchical CPU topology is used and when a CPU has been put
+offline (hotplug), that same CPU prevents its PM domain and thus also
+potential master PM domains, from being powered off. This is because genpd
+observes the CPU's attached device as being active from a runtime PM point
+of view.
 
-Additionally, let the helper prepare the CPU to be power managed via
-runtime PM.
+To deal with this, let's decrease the runtime PM usage count by calling
+pm_runtime_put_sync_suspend() of the attached struct device when putting
+the CPU offline. Consequentially, we must then increase the runtime PM
+usage count, while putting the CPU online again.
 
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
 
 Changes:
-	- Take into account whether the CPU is online/offline.
-	- Convert from dev_pm_domain_attach() into using the more future proof
-	  dev_pm_domain_attach_by_name().
+	- Use get_logical_index() to find the CPU number.
+	- Verify that a corresponding struct device* has been attached to the
+	  PM domain before doing runtime PM refrence counting.
+	- Clear the domain state when the CPU goes offline, to start fresh.
+	- Move code to internal helper functions and move them inside
+	  "ifdef CONFIG_CPU_IDLE.
 
 ---
- drivers/firmware/psci/psci.h           |  3 +++
- drivers/firmware/psci/psci_pm_domain.c | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+)
+ drivers/firmware/psci/psci.c | 47 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/psci/psci.h b/drivers/firmware/psci/psci.h
-index c36e0e6649e9..b4254405b8ef 100644
---- a/drivers/firmware/psci/psci.h
-+++ b/drivers/firmware/psci/psci.h
-@@ -4,6 +4,7 @@
- #define __PSCI_H
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 2c4157d3a616..5ad93c3694b5 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -15,6 +15,7 @@
  
- struct cpuidle_driver;
-+struct device;
- struct device_node;
- 
- int psci_set_osi_mode(void);
-@@ -16,10 +17,12 @@ int psci_dt_parse_state_node(struct device_node *np, u32 *state);
- int psci_dt_init_pm_domains(struct device_node *np);
- int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
- 		struct device_node *cpu_node, u32 *psci_states);
-+struct device *psci_dt_attach_cpu(int cpu);
- #else
- static inline int psci_dt_init_pm_domains(struct device_node *np) { return 0; }
- static inline int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
- 		struct device_node *cpu_node, u32 *psci_states) { return 0; }
-+static inline struct device *psci_dt_attach_cpu(int cpu) { return NULL; }
- #endif
- #endif
- 
-diff --git a/drivers/firmware/psci/psci_pm_domain.c b/drivers/firmware/psci/psci_pm_domain.c
-index 3aa645dba81b..1cbe745ee001 100644
---- a/drivers/firmware/psci/psci_pm_domain.c
-+++ b/drivers/firmware/psci/psci_pm_domain.c
-@@ -12,8 +12,10 @@
- #include <linux/device.h>
- #include <linux/kernel.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/slab.h>
- #include <linux/string.h>
+ #include <linux/acpi.h>
+ #include <linux/arm-smccc.h>
 +#include <linux/cpu.h>
  #include <linux/cpuidle.h>
- #include <linux/cpu_pm.h>
+ #include <linux/errno.h>
+ #include <linux/linkage.h>
+@@ -93,6 +94,9 @@ static u32 psci_function_id[PSCI_FN_MAX];
+ static u32 psci_cpu_suspend_feature;
+ static bool psci_system_reset2_supported;
  
-@@ -383,4 +385,19 @@ int psci_dt_pm_domains_parse_states(struct cpuidle_driver *drv,
++static void psci_cpuidle_cpu_off(void);
++static void psci_cpuidle_cpu_on(unsigned long cpuid);
++
+ static inline bool psci_has_ext_power_state(void)
+ {
+ 	return psci_cpu_suspend_feature &
+@@ -188,6 +192,8 @@ static int psci_cpu_off(u32 state)
+ 	int err;
+ 	u32 fn;
  
- 	return 0;
++	psci_cpuidle_cpu_off();
++
+ 	fn = psci_function_id[PSCI_FN_CPU_OFF];
+ 	err = invoke_psci_fn(fn, state, 0, 0);
+ 	return psci_to_linux_errno(err);
+@@ -200,7 +206,13 @@ static int psci_cpu_on(unsigned long cpuid, unsigned long entry_point)
+ 
+ 	fn = psci_function_id[PSCI_FN_CPU_ON];
+ 	err = invoke_psci_fn(fn, cpuid, entry_point, 0);
+-	return psci_to_linux_errno(err);
++	err = psci_to_linux_errno(err);
++	if (err)
++		return err;
++
++	psci_cpuidle_cpu_on(cpuid);
++
++	return 0;
+ }
+ 
+ static int psci_migrate(unsigned long cpuid)
+@@ -540,8 +552,41 @@ static int __init _psci_dt_topology_init(struct device_node *np)
+ 
+ 	return ret;
  }
 +
-+struct device *psci_dt_attach_cpu(int cpu)
++static void psci_cpuidle_cpu_off(void)
 +{
-+	struct device *dev, *cpu_dev = get_cpu_device(cpu);
++	struct device *dev = __this_cpu_read(psci_cpuidle_data.dev);
 +
-+	dev = dev_pm_domain_attach_by_name(cpu_dev, "psci");
-+	if (IS_ERR_OR_NULL(dev))
-+		return dev;
-+
-+	pm_runtime_irq_safe(dev);
-+	if (cpu_online(cpu))
-+		pm_runtime_get_sync(dev);
-+
-+	return dev;
++	/*
++	 * Drop the runtime PM usage count if the CPU has been attached to a
++	 * CPU PM domain. This is needed to, for example, not prevent other
++	 * master domains in the hierarchy to remain powered on.
++	 */
++	if (dev)
++		pm_runtime_put_sync_suspend(dev);
 +}
++
++static void psci_cpuidle_cpu_on(unsigned long cpuid)
++{
++	struct device *dev;
++	int cpu;
++
++	if (!psci_dt_topology)
++		return;
++
++	cpu = get_logical_index(cpuid);
++	if (cpu < 0)
++		return;
++
++	dev = per_cpu(psci_cpuidle_data.dev, cpu);
++	if (dev)
++		pm_runtime_get_sync(dev);
++}
++
+ #else
+ static inline int _psci_dt_topology_init(struct device_node *np) { return 0; }
++static void psci_cpuidle_cpu_off(void) {}
++static void psci_cpuidle_cpu_on(unsigned long cpuid) {}
  #endif
+ 
+ static int psci_system_suspend(unsigned long unused)
 -- 
 2.17.1
 
