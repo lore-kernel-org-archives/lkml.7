@@ -2,128 +2,96 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC90EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545D4C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC9B2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557760242;
-	bh=m8WHXvW5sSNtNHjJWoZa7UKSTNGlaniAuY8HKPT+bIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTMpNlMV+UHhnICqtmjl+8ybuH/JQw2GyKoadWtKiMCe9o7gWiX89BXFTwUL+xXCL
-	 /iUOvwTc2YFZ4dZWqWH0bZIWgAt1volbra2nAklzxWTgZnzOcNDPshx/WnkUsdokbL
-	 OVdrGwvW5aThHrGN/uGmD0xQhb9HCvUfRYomeb8g=
+	by mail.kernel.org (Postfix) with ESMTP id 1F60C21473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:10:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DG/ioZxR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfEMPKl (ORCPT
+        id S1731130AbfEMPKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:10:41 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40137 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfEMPKl (ORCPT
+        Mon, 13 May 2019 11:10:45 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:36857 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727339AbfEMPKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:10:41 -0400
-Received: by mail-ot1-f68.google.com with SMTP id u11so1650957otq.7;
-        Mon, 13 May 2019 08:10:40 -0700 (PDT)
+        Mon, 13 May 2019 11:10:43 -0400
+Received: by mail-yw1-f66.google.com with SMTP id q185so11274208ywe.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc;
+        bh=/ALChiOKnMbi5IPfVvBTTx9Afx2HTWGWhcKipkGBRc4=;
+        b=DG/ioZxRbc7Psl2Rwn2D9Ljvkt168cPnUdDyG2qr7woivVllgieIszsYuhKHWnIO4G
+         GCqPQrI+BpWFdHAIH/kt7DXJRxvMVOtgd6LJ9tBxFUToeqJVwyuR+mQ7tOzX4yuxxNYs
+         kk0CojDahTsS606dhWKKYke1XmI4IGjFmUjeNW4I5/wyV4JuNPDsewD1h2zNTq5rUiqS
+         I00jbiO0/5kw/mNW/eTXXm0uf6hHgE1V9ZRlMSzPVOJB/bwToMaHWbMPDinrfnWmzdEv
+         lSsVsECDhKyg6U6YZ9K/4TP4A8EvTZ5mi0jZOMHIS2HaSMYNOmETxYOoQZI2uAYidRrj
+         urig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mrlBNb20gXfjogJL/vTxD9cKe2qkJA2/o6bt1fHbzvs=;
-        b=ZqR0MZh33/xDApqoKIwiJmvIMtYy70DHOVP2jdGRZbj0bOFmncoiPXQ3+qtwAICDNt
-         Z4l07sl0lTj1MK6arSv1BxokivfCS2LgJE+b/L6qLOWcq18jvHMpN14GWJ2tTs1GHEEd
-         sLH4Czy4yqw6G8/LJTtrGwPiZUBotCY+RFIVDN+9LoJ+j1Zg6tElNtjAxx47EG24vSZM
-         ULX+3moYYQYYmZYDoP1A8jgr4x9LTtyzEZ1rIG3c9yFAtwW7L2x5vifG0IJvQ2CbYysX
-         H81vA9Pbpx5Xlvqo7O7iEX6f1fHnuAPbg6U+BriyP34fEtMIRq90ghA338zAUkmn+0sJ
-         0Weg==
-X-Gm-Message-State: APjAAAUWv4q7K/s3lwd7RpNPsGx0yCJ4pAGqQaUmJDDTIV8/WoZH9TvD
-        iy7hKlB7cPkBgL+q0ejTiw==
-X-Google-Smtp-Source: APXvYqz9+00kzCXfTWCaYUMHUIJW4CqyQSVc0SoytOVsa8luLWoZm8aaMTmTn2waEWJZVCnDKf4BTw==
-X-Received: by 2002:a9d:4a98:: with SMTP id i24mr1395692otf.199.1557760240114;
-        Mon, 13 May 2019 08:10:40 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 64sm5294507oth.47.2019.05.13.08.10.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 08:10:39 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:10:38 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V6 06/15] dt-bindings: PCI: designware: Add binding for
- CDM register check
-Message-ID: <20190513151038.GA30653@bogus>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-7-vidyas@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:cc;
+        bh=/ALChiOKnMbi5IPfVvBTTx9Afx2HTWGWhcKipkGBRc4=;
+        b=saa4fqiVTtll0TSk0Ax5h0I1AgAoLWumtZr6yKhPTJcuI5CAKzHpZzwrvJPvb9Ij50
+         wMKOevrpT497fOBIpiUnFaFo8dxe/MtBzFceLALnd/qY2vsVspg7VPjqkdJrbJ1BjWPP
+         eiroH7WfCrVRCJ3HSxtu5AZ3fVdRNpYIdUIySst61joHbZOnSEICW6pscP3lL+b6vxdh
+         k57Xliu/VdVYFEs8sryhETH515QuDia78DiSucJNzMRH1VJcRYNBeOFzfN7vtCpwmd1G
+         pTbm+28SO7wsRiF/jWf9PxHfbdgk/abJLifdAhwrxv/cBiGO4/6d/pQnhihtYZNQWILO
+         YLUg==
+X-Gm-Message-State: APjAAAVBSJ6cv1yPuL2NzKfoW0xG4jbKxVrZ2ldZGzuTiMUJI6v8AjVK
+        Yikylp/he/7G1xDR3DnpaJ5/xGArHc3+Rv7Gd10=
+X-Received: by 2002:a81:9284:: with SMTP id j126mt12287877ywg.445.1557760243034;
+ Mon, 13 May 2019 08:10:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513050626.14991-7-vidyas@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190502074519.61272b42@canb.auug.org.au> <a645ff18-4c55-6b4c-0913-5b397ab83e03@gmx.de>
+ <CA+QBN9A4PhPZ36otsk0TRaO9KKnKL=hfnskfFJGQJEbtb3=i=Q@mail.gmail.com>
+In-Reply-To: <CA+QBN9A4PhPZ36otsk0TRaO9KKnKL=hfnskfFJGQJEbtb3=i=Q@mail.gmail.com>
+From:   Carlo Pisani <carlojpisani@gmail.com>
+Date:   Mon, 13 May 2019 17:10:13 +0200
+Message-ID: <CA+QBN9CN=n556f0KYj2LZ4q9wY+wx9mbWpaMcC44GufUqbsgEg@mail.gmail.com>
+Subject: Re: C3600, sata controller
+Cc:     Parisc List <linux-parisc@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 10:36:17AM +0530, Vidya Sagar wrote:
-> Add support to enable CDM (Configuration Dependent Module) registers check
-> for any data corruption. CDM registers include standard PCIe configuration
-> space registers, Port Logic registers and iATU and DMA registers.
-> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
-> Version 4.90a
-> 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v5]:
-> * None
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
-> * Added info about Port Logic and DMA registers being part of CDM
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index 5561a1c060d0..85b872c42a9f 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -34,6 +34,11 @@ Optional properties:
->  - clock-names: Must include the following entries:
->  	- "pcie"
->  	- "pcie_bus"
-> +- enable-cdm-check: This is a boolean property and if present enables
-> +   automatic checking of CDM (Configuration Dependent Module) registers
-> +   for data corruption. CDM registers include standard PCIe configuration
-> +   space registers, Port Logic registers, DMA and iATU (internal Address
-> +   Translation Unit) registers.
+hi, good news!
+after a burn-in test of 8hours, we can affirm that Adaptec 1210SA does work
+The chip is "Silicon Image Sil31122", so the kernel module is
+"sata_sil" (not sata_sil24)
 
-snps,enable-cdm-check
+while [ 1 ]
+do
+for item in `ls *.bin`
+    do
+        rm -f $copy.out
+        echo -n "$item ... "
+        mycp $item $copy.out
+        echo "done"
+    done
+done
 
->  RC mode:
->  - num-viewport: number of view ports configured in hardware. If a platform
->    does not specify it, the driver assumes 2.
-> -- 
-> 2.17.1
-> 
+*.bin are giant files, 1GB, 2GB, 4GB, 8GB, 16GB, 32GB
+
+it has been tested on a PCI 32bit lost of a C3600
+with kernel /v4.16!!!
+
+"mycp" does a copy and then checks the md5 checksum
+
+I think this card can be added to the list!
+
+Our list has been already updated
+http://www.downthebunker.com/reloaded/space/viewtopic.php?f=50&p=1632
