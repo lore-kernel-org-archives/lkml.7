@@ -2,104 +2,76 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC03C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CF120645
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602B92146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557754659;
+	bh=d9zV5NxRO983geJRFbQCgZJPUiqH8fIlmgOX6IEtKC0=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=rAYKi/N72kra6+fDYvshVtDxOR+4sl+8RpZdfwKzFNC0OVkJFbytr44FwmC9+4u3W
+	 VqikoS/tu9ajd/6eLl5WgASSUVR4qNhIPF3cKQLJ7YL4/7XuDw2QchWKkhIiJLrf9r
+	 nG+zzCdDNWfCers3MLqHJL2gEdcg4WrUtp5eMngo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbfEMNhb (ORCPT
+        id S1730255AbfEMNhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:37:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56132 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfEMNha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:37:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F29ED80D;
-        Mon, 13 May 2019 06:37:29 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CA693F71E;
-        Mon, 13 May 2019 06:37:27 -0700 (PDT)
-Subject: Re: [PATCH v2 4/7] sched: Add pelt_rq tracepoint
-To:     Qais Yousef <qais.yousef@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Quentin Perret <quentin.perret@arm.com>
-References: <20190510113013.1193-1-qais.yousef@arm.com>
- <20190510113013.1193-5-qais.yousef@arm.com>
- <20190513121445.GT2623@hirez.programming.kicks-ass.net>
- <20190513124829.aybnwdh74bsm7ugv@e107158-lin.cambridge.arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <da915e4d-07ce-2914-e090-0f8e3e9e9650@arm.com>
-Date:   Mon, 13 May 2019 15:37:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 09:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730234AbfEMNhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:37:38 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75A0321019;
+        Mon, 13 May 2019 13:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557754657;
+        bh=d9zV5NxRO983geJRFbQCgZJPUiqH8fIlmgOX6IEtKC0=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=aijBOMDb7JZM0E98uhcqkFlvetuou4pSY2/WVrWlKyh9Nc1z8C+0xkBzksEUJbbr3
+         omZUaLiNRbOAh7xIx5dY6UPD1Kxhlq8morYgLA0U1CGzQl2Sd2yHQDE07Iwm3/C2s3
+         nurBc0LKZ3RmLMWZuxNZed45/CG3N9EgkemTn7HE=
+Date:   Mon, 13 May 2019 09:37:36 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.0 92/99] btrfs: Switch memory allocations in
+ async csum calculation path to kvmalloc
+Message-ID: <20190513133736.GC11972@sasha-vm>
+References: <20190507053235.29900-1-sashal@kernel.org>
+ <20190507053235.29900-92-sashal@kernel.org>
+ <20190507074919.GM20156@twin.jikos.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190513124829.aybnwdh74bsm7ugv@e107158-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190507074919.GM20156@twin.jikos.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/19 2:48 PM, Qais Yousef wrote:
-> On 05/13/19 14:14, Peter Zijlstra wrote:
->> On Fri, May 10, 2019 at 12:30:10PM +0100, Qais Yousef wrote:
+On Tue, May 07, 2019 at 09:49:19AM +0200, David Sterba wrote:
+>On Tue, May 07, 2019 at 01:32:26AM -0400, Sasha Levin wrote:
+>> From: Nikolay Borisov <nborisov@suse.com>
 >>
->>> +DECLARE_TRACE(pelt_rq,
->>> +	TP_PROTO(int cpu, const char *path, struct sched_avg *avg),
->>> +	TP_ARGS(cpu, path, avg));
->>> +
+>> [ Upstream commit a3d46aea46f99d134b4e0726e4826b824c3e5980 ]
 >>
->>> +static __always_inline void sched_trace_pelt_cfs_rq(struct cfs_rq *cfs_rq)
->>> +{
->>> +	if (trace_pelt_rq_enabled()) {
->>> +		int cpu = cpu_of(rq_of(cfs_rq));
->>> +		char path[SCHED_TP_PATH_LEN];
->>> +
->>> +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
->>> +		trace_pelt_rq(cpu, path, &cfs_rq->avg);
->>> +	}
->>> +}
->>> +
->>> +static __always_inline void sched_trace_pelt_rt_rq(struct rq *rq)
->>> +{
->>> +	if (trace_pelt_rq_enabled()) {
->>> +		int cpu = cpu_of(rq);
->>> +
->>> +		trace_pelt_rq(cpu, NULL, &rq->avg_rt);
->>> +	}
->>> +}
->>> +
->>> +static __always_inline void sched_trace_pelt_dl_rq(struct rq *rq)
->>> +{
->>> +	if (trace_pelt_rq_enabled()) {
->>> +		int cpu = cpu_of(rq);
->>> +
->>> +		trace_pelt_rq(cpu, NULL, &rq->avg_dl);
->>> +	}
->>> +}
->>
->> Since it is only the one real tracepoint, how do we know which avg is
->> which?
-> 
-> Good question. I missed that to be honest since we are mainly interested in cfs
-> and I was focused into not adding too many tracepoints..
-> 
-> I'm happy to create a tracepoint per class assuming that's what you're
-> suggesting.
+>> Recent multi-page biovec rework allowed creation of bios that can span
+>> large regions - up to 128 megabytes in the case of btrfs.
+>
+>Not necessary for 5.0/4.x as it depends on 5.1 changes.
 
-IMHO, you should also consider irq (rq->avg_irq), so when people are 
-tracing asystem with 'IRQ' or 'paravirtual steal' time accounting, they 
-will get the full picture.
+Dropped it, thank you!
+
+--
+Thanks,
+Sasha
