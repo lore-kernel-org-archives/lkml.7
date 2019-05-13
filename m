@@ -8,74 +8,71 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08FCC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27DCC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E41920850
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ACDC2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZowbTbA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vDRBMuy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEMUJe (ORCPT
+        id S1726216AbfEMUMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:09:34 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35932 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfEMUJd (ORCPT
+        Mon, 13 May 2019 16:12:37 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41100 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfEMUMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:09:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a17so15065716qth.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:09:32 -0700 (PDT)
+        Mon, 13 May 2019 16:12:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y22so12897035qtn.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+s7lnSqwZyN597jPMc7dED4XuMMN0rMy+PtJcA3CCeM=;
-        b=eZowbTbAkuBko0GXaT2xe3AmrBf3lA7OYkV1aM5cHh/Vn64FvXLQyQziduDH5lJ72E
-         JKCbrQhvh2fRLNNu1mb/DHSQirJGFYi04E5dToCMeAnWn89gICQufDFgu7amYKACJKNq
-         hJoDJRz6LHVPuIITDu+ddr3XvUMTU8mghV3x82lQ2qA2cGpGeqYraHhmeIbjV00TGRPh
-         U0Dt+ujMAlpHiEy7/ob7lCRrLBo0wfBR+lNR1Cj6w+oH0mU/OkD/Oy6USgu5C3Oi9Z3+
-         qg6kUg53ZA7UKTj+k0PCama6BeqbXTMvMqRCHRP4zvkiHhBjKyedTXJg3tsvivYMt/5i
-         KTCQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=tjLmPUC5EYix8dBe332weUn+GEIBtnzy7IAoHgqZQC8=;
+        b=vDRBMuy7ra8kbjxQ2kCAnDhPQlhiGV4C5d5MN16CX2WgwH0gRsUjGKpxc04iDUB0H8
+         nMFNUayvus9ZXCT8b10eXzsmDbVHYh+r9SNkr7GThk2Q+CR6IsMvPKz2SjLsaEaoFOyE
+         vnGgTJzYfVaUhx7SkFjnzxeqjsm4gfvUwcRMviFxp4Wreg4OcjfgJPOm907DozuN4Lpf
+         5oNypSeGPmHhVK4vTC88M37ETLwsBmS9XsWDvNYfADXNgG3X/SgWzlQhrbe4nTFewO51
+         Q6xadT7wYELn0qlMCyI95sQNTYh4gWWhw9G2D4qLpdYdaq9z2vlDyxvC+8+5DnnfO2dD
+         cCaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+s7lnSqwZyN597jPMc7dED4XuMMN0rMy+PtJcA3CCeM=;
-        b=X4tL/95o3C0VNbyUSsu5PniLdhIW53jvtI9wpvef715ZOBR/2xDKvyqiE65RVTNIs7
-         ltsRJVc9FVEHCHgpASuAJUuDfgreQ5VdT6uEanzDEdz018deL2xcPM04DYD+NbthcM0O
-         D1zL8ngdeJiAjtMgsENLuoNcNm3dKYjskATCx4s11AHpEOVhtgumB98L5MI/hWOnWUcm
-         Qnmc2u/Svd/FfVUOwhC6XaDnKB8UOKTGgKA334qK5xmef8FOsONvt6n7gEpy+HjaNONZ
-         BoZni4gA8cn0EiJ+nCr8k1nkRE5vi+A90+q8RC5wU4W0tfI6pbHazceukKwok9/wqVTh
-         9BVQ==
-X-Gm-Message-State: APjAAAWZCdCSusUs5vm9BCnfQtLvTPpoaZssKP1b/I8TT+todcNByzLL
-        nJzXjZTvaCLJVhBNvPTyWW09kP7y
-X-Google-Smtp-Source: APXvYqy/uoxfwUxI4gNppU212Mawbo5JP2HUbyDpBODJm937ea6poZLF42jOMmBL5D+CkEy1+43pzg==
-X-Received: by 2002:a0c:d7cc:: with SMTP id g12mr24846548qvj.220.1557778172390;
-        Mon, 13 May 2019 13:09:32 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tjLmPUC5EYix8dBe332weUn+GEIBtnzy7IAoHgqZQC8=;
+        b=Bd4VruMKCJRmHTG7aJEZ6wDjbXQHfcYzzV1pmn28dIETtPSf++/B4QTgHc2649dy9d
+         Un3cIq7zB9mYrHHFAhgg7bgrQFps43H0FnZ1Wr/lLZ+Mrw+ln8miuMaR48OD5BJ5sWV8
+         EHFi0w6H1s3g1gYjtXEWuthd72TG9pzOTdpUqLQCYLbczEWLOkR44UHUbLkCec04RMpI
+         kJiJeWCkVuKFKXf8BpaLYZCQDCtgbWhP9edcfu7sNaM9sfH9O0r8coLGnydnIo8x39+u
+         2fh8YMmg3aVYjzyyovMExYLqFzIwymSzaBcat8qWJkkKTQfV6hjVEedC4aazQLbTX5EZ
+         nL9w==
+X-Gm-Message-State: APjAAAV1eDZTybZQlcHy2Fv8TN6f8ONiZNaLstaxN1b5NRFJ9gb+kiES
+        tRq6l5Pz5oe+ay3s01Cev8s=
+X-Google-Smtp-Source: APXvYqwePIubWAmnsrAfKQjf5kRVDzMyP7fz43w8jYYr3eJk1QmsZq7W3q3t2JABoioZjrAUj1pLzg==
+X-Received: by 2002:ac8:5218:: with SMTP id r24mr26694569qtn.177.1557778355478;
+        Mon, 13 May 2019 13:12:35 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id b123sm1174031qkd.45.2019.05.13.13.09.29
+        by smtp.gmail.com with ESMTPSA id g12sm7796643qkk.88.2019.05.13.13.12.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 13:09:30 -0700 (PDT)
+        Mon, 13 May 2019 13:12:34 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 41657403AD; Mon, 13 May 2019 17:09:27 -0300 (-03)
-Date:   Mon, 13 May 2019 17:09:27 -0300
+        id 32604403AD; Mon, 13 May 2019 17:12:31 -0300 (-03)
+Date:   Mon, 13 May 2019 17:12:31 -0300
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] perf scripts python: exported-sql-viewer.py: Add
- context menu
-Message-ID: <20190513200927.GE3198@kernel.org>
+Subject: Re: [PATCH 6/6] perf scripts python: exported-sql-viewer.py: Add
+ 'About' dialog box
+Message-ID: <20190513201231.GF3198@kernel.org>
 References: <20190503120828.25326-1-adrian.hunter@intel.com>
- <20190503120828.25326-6-adrian.hunter@intel.com>
+ <20190503120828.25326-7-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190503120828.25326-6-adrian.hunter@intel.com>
+In-Reply-To: <20190503120828.25326-7-adrian.hunter@intel.com>
 X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,127 +80,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 03, 2019 at 03:08:27PM +0300, Adrian Hunter escreveu:
-> Add a context menu (right-click) that provides options for copying to
-> clipboard, including, for trees, the ability to copy only the cell under
-> the mouse pointer.
+Em Fri, May 03, 2019 at 03:08:28PM +0300, Adrian Hunter escreveu:
+> With support for Python 2 or 3 and PySide 1 or 2 (Qt 4 or 5), it is useful
+> to see what versions are in use. Add an 'About' dialog box that displays
+> Python, PySide, Qt and database server (SQLite or PostgreSQL) version
+> numbers.
 
-Works as well:
+Works as well, here:
 
-    Committer testing:
+Committer testing:
 
-      $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
+  $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
 
-      Simply right click and pick "Copy selection", that at this point has
-      just the first line, not expanded, then see what was copied by pressing
-      shift+control+v on a terminal:
+  Then go to 'Help', then 'About', select all the lines with the mouse
+  press 'Control+C', then, on the same terminal press control+shift+V
+  which shows my current environment:
 
-    Call Path,Object,Count,Time (ns),Time (%),Branch Count,Branch Count (%)
-    ▶ simple-retpolin,,,,,,
+Python version:     2.7.16
+PySide version:     1
+Qt version:         4.8.7
+SQLite version:     3.26.0
 
-      Ditto after expanding, i.e. the selection continues to be just one
-      line:
 
-    Call Path           Object   Count   Time (ns)   Time (%)   Branch Count   Branch Count (%)
-    ▼ simple-retpolin
+-------------------
 
-       Now select all the lines with the mouse and control+shift+v again:
+Patchkit applied, thanks.
 
-    Call Path                     Object             Count   Time (ns)   Time (%)   Branch Count   Branch Count (%)
-      ▼ 14503:14503
-        ▼ _start                  ld-2.28.so             1      156267      100.0          10602              100.0
-          ▶ unknown               unknown                1        2276        1.5              1                0.0
-          ▶ _dl_start             ld-2.28.so             1      137047       87.7          10088               95.2
-          ▶ _dl_init              ld-2.28.so             1        9142        5.9            326                3.1
-          ▼ _start                simple-retpoline       1        7457        4.8            182                1.7
-            ▶ unknown             unknown                1         805       10.8              1                0.5
-            ▶ __libc_start_main   libc-2.28.so           1        6347       85.1            179               98.4
+- Arnaldo
  
 > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
->  .../scripts/python/exported-sql-viewer.py     | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  .../scripts/python/exported-sql-viewer.py     | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
 > 
 > diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-> index 5804d9705ab7..421f3828ea43 100755
+> index 421f3828ea43..6fe553258ce5 100755
 > --- a/tools/perf/scripts/python/exported-sql-viewer.py
 > +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-> @@ -901,6 +901,8 @@ class TreeWindowBase(QMdiSubWindow):
->  		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
->  		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
+> @@ -2927,6 +2927,60 @@ class HelpOnlyWindow(QMainWindow):
 >  
-> +		self.context_menu = TreeContextMenu(self.view)
-> +
->  	def DisplayFound(self, ids):
->  		if not len(ids):
->  			return False
-> @@ -1674,6 +1676,8 @@ class BranchWindow(QMdiSubWindow):
+>  		self.setCentralWidget(self.text)
 >  
->  		self.ResizeColumnsToContents()
+> +# PostqreSQL server version
+> +
+> +def PostqreSQLServerVersion(db):
+> +	query = QSqlQuery(db)
+> +	QueryExec(query, "SELECT VERSION()")
+> +	if query.next():
+> +		v_str = query.value(0)
+> +		v_list = v_str.strip().split(" ")
+> +		if v_list[0] == "PostgreSQL" and v_list[2] == "on":
+> +			return v_list[1]
+> +		return v_str
+> +	return "Unknown"
+> +
+> +# SQLite version
+> +
+> +def SQLiteVersion(db):
+> +	query = QSqlQuery(db)
+> +	QueryExec(query, "SELECT sqlite_version()")
+> +	if query.next():
+> +		return query.value(0)
+> +	return "Unknown"
+> +
+> +# About dialog
+> +
+> +class AboutDialog(QDialog):
+> +
+> +	def __init__(self, glb, parent=None):
+> +		super(AboutDialog, self).__init__(parent)
+> +
+> +		self.setWindowTitle("About Exported SQL Viewer")
+> +		self.setMinimumWidth(300)
+> +
+> +		pyside_version = "1" if pyside_version_1 else "2"
+> +
+> +		text = "<pre>"
+> +		text += "Python version:     " + sys.version.split(" ")[0] + "\n"
+> +		text += "PySide version:     " + pyside_version + "\n"
+> +		text += "Qt version:         " + qVersion() + "\n"
+> +		if glb.dbref.is_sqlite3:
+> +			text += "SQLite version:     " + SQLiteVersion(glb.db) + "\n"
+> +		else:
+> +			text += "PostqreSQL version: " + PostqreSQLServerVersion(glb.db) + "\n"
+> +		text += "</pre>"
+> +
+> +		self.text = QTextBrowser()
+> +		self.text.setHtml(text)
+> +		self.text.setReadOnly(True)
+> +		self.text.setOpenExternalLinks(True)
+> +
+> +		self.vbox = QVBoxLayout()
+> +		self.vbox.addWidget(self.text)
+> +
+> +		self.setLayout(self.vbox);
+> +
+>  # Font resize
 >  
-> +		self.context_menu = TreeContextMenu(self.view)
-> +
->  		self.find_bar = FindBar(self, self, True)
+>  def ResizeFont(widget, diff):
+> @@ -3024,6 +3078,7 @@ class MainWindow(QMainWindow):
 >  
->  		self.finder = ChildDataItemFinder(self.model.root)
-> @@ -2483,6 +2487,39 @@ def CopyCellsToClipboardHdr(view):
->  def CopyCellsToClipboardCSV(view):
->  	CopyCellsToClipboard(view, True, True)
+>  		help_menu = menu.addMenu("&Help")
+>  		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
+> +		help_menu.addAction(CreateAction("&About Exported SQL Viewer", "About this application", self.About, self))
 >  
-> +# Context menu
-> +
-> +class ContextMenu(object):
-> +
-> +	def __init__(self, view):
-> +		self.view = view
-> +		self.view.setContextMenuPolicy(Qt.CustomContextMenu)
-> +		self.view.customContextMenuRequested.connect(self.ShowContextMenu)
-> +
-> +	def ShowContextMenu(self, pos):
-> +		menu = QMenu(self.view)
-> +		self.AddActions(menu)
-> +		menu.exec_(self.view.mapToGlobal(pos))
-> +
-> +	def AddCopy(self, menu):
-> +		menu.addAction(CreateAction("&Copy selection", "Copy to clipboard", lambda: CopyCellsToClipboardHdr(self.view), self.view))
-> +		menu.addAction(CreateAction("Copy selection as CS&V", "Copy to clipboard as CSV", lambda: CopyCellsToClipboardCSV(self.view), self.view))
-> +
-> +	def AddActions(self, menu):
-> +		self.AddCopy(menu)
-> +
-> +class TreeContextMenu(ContextMenu):
-> +
-> +	def __init__(self, view):
-> +		super(TreeContextMenu, self).__init__(view)
-> +
-> +	def AddActions(self, menu):
-> +		i = self.view.currentIndex()
-> +		text = str(i.data()).strip()
-> +		if len(text):
-> +			menu.addAction(CreateAction('Copy "' + text + '"', "Copy to clipboard", lambda: QApplication.clipboard().setText(text), self.view))
-> +		self.AddCopy(menu)
-> +
->  # Table window
+>  	def Try(self, fn):
+>  		win = self.mdi_area.activeSubWindow()
+> @@ -3109,6 +3164,10 @@ class MainWindow(QMainWindow):
+>  	def Help(self):
+>  		HelpWindow(self.glb, self)
 >  
->  class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
-> @@ -2506,6 +2543,8 @@ class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
->  
->  		self.ResizeColumnsToContents()
->  
-> +		self.context_menu = ContextMenu(self.view)
+> +	def About(self):
+> +		dialog = AboutDialog(self.glb, self)
+> +		dialog.exec_()
 > +
->  		self.find_bar = FindBar(self, self, True)
+>  # XED Disassembler
 >  
->  		self.finder = ChildDataItemFinder(self.data_model)
-> @@ -2622,6 +2661,8 @@ class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
->  		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
->  		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
->  
-> +		self.context_menu = ContextMenu(self.view)
-> +
->  		self.ResizeColumnsToContents()
->  
->  		self.find_bar = FindBar(self, self, True)
+>  class xed_state_t(Structure):
 > -- 
 > 2.17.1
 
