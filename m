@@ -2,124 +2,140 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E9AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F827C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7AF921019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70C221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:44:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zyz0HHaj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NsdcE677"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfEMHoo (ORCPT
+        id S1728113AbfEMHot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:44:44 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40344 "EHLO
+        Mon, 13 May 2019 03:44:49 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45108 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727671AbfEMHoo (ORCPT
+        with ESMTP id S1728101AbfEMHor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:44:44 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so14006924wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:44:43 -0700 (PDT)
+        Mon, 13 May 2019 03:44:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b18so4023844wrq.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:44:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=OT71EAwxl4wA6+YtX4rN0OJahyazfPvJiN7l6rKFsek=;
-        b=Zyz0HHajuuueQ14dGBCAfnblxjKE63v6ovBq+xccC0TKAh0JGEjTZdmOOAyXfRourg
-         Hkm3tNCyg6tFgqLZVzY7Cq/q84ISaM+vYaAjjbRWOvqHXWzvyV9AmjqMOA7dH2tuPk98
-         b4vbcDt0GfpM9yfTGsQM5+ZlX9K2Vzj0irJIZoXo3WlwgGJcGaWEDv5zHknRy1fv2jLY
-         qz2bxVbyfYssedNu5+e8xERXXgXfNfHaTrojeAfBfY5ziL70MWZwXQnFJ1fyPgszLCwq
-         Q9QdMrBk0bb/0WlljPRgNAwCjGRVjSYDZ3lQinsYUf9o2PDsOCf7jhaB/7seBrb+GMsj
-         NWTQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=GbstJVyW1AtQn0uCOokyeICMnnihu2g5VNt0MV0fVRw=;
+        b=NsdcE677iiLa6/IG0QmYfUg1mJqtJgcJIBPmrYoGXf7HmCEJJIm0yONFrNG9JD73jM
+         7+dFIEL9HKpTCmVMlx7GoRq7P2BSklJhQ6v2MN+kVtpjc5sK+sBmnoiI61faAD3LOFpK
+         xm3JpbHXFaMd1B5lP9KyEtk7HO2ZghB061Oh7U3TIy7btqR295rwud6g3jAxJxnhwov1
+         nIqRnSqQF6YtMRZ1lUUm0Y6CJd1V80mJW1oeBc8KeNoUUQqGrEfO3dgnvir5pa3zrFzW
+         Spe9k2wBvyQhswd3H8VwU8YEDGW8bBtB6dHfeErWVrRKBnc4LF5a9XyXkSly9b13zOmq
+         jdvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=OT71EAwxl4wA6+YtX4rN0OJahyazfPvJiN7l6rKFsek=;
-        b=Cm54I8dbbEMPNSTvvcwxgtKQmnTzPcsF5BJ+o7tZBBE2++gbRjG3lVxuTGw/Kka4gH
-         J7Bau11ZQpQJRWwb/EPaY6ETJyY6wxiIPg6rFfdDOBAV14vqFez6oU8Lm+1CYN3+gRiX
-         eDsCpFxZ9XTLmbe4bQdOZv7k2tzPcXNVxhFnwoOPvp4E87fuG+6BNsxq9HGxzCUni/Bf
-         YUpQ57nNcQiSBvFburbT9y0uATV9Q3oexfIZpdHK26CQiQhBwqbwNPR7lUcynP4zVHFo
-         of4Mto8S0GjOzXsEF31/LbDioL22f9QO9poOPb8c6JRwqKZ1A2DWMkd7WHbNjxNt8E5p
-         lStw==
-X-Gm-Message-State: APjAAAXb/3g4SvMfnqtL28ZWrHilf/wTRxJjhmaU90V6enFch8hndahA
-        +y28PuSjqQhiIJVHUbNH13ub5Q==
-X-Google-Smtp-Source: APXvYqxAXI43awYbJUlo3tZn1JOtkzPnPJ5Kpu6uf5DsvNl0ikrAa2gpF4ov4OG9hj0nfcDVurgUjA==
-X-Received: by 2002:a5d:6cae:: with SMTP id a14mr1830626wra.214.1557733482420;
-        Mon, 13 May 2019 00:44:42 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id h12sm9258467wrq.95.2019.05.13.00.44.41
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GbstJVyW1AtQn0uCOokyeICMnnihu2g5VNt0MV0fVRw=;
+        b=HjYTQtuF4GLNC4jfNhoIUEZ4M3gEyblFrGpKmg7Xv6xqMe40jz2Nhp80PpO0xb4RHj
+         UDTuJMDLJNg03SaFUbuyyx159gQvjMPt8PDsV1kGkXI/c96GTmRmxYK3CmYxhs4ZFe4v
+         364hVKujjGxDyfY9LSxSYUtqYC33KMNUHlG4X6jX2y4XeujLKgRCJ7OEbEZs/9ffi7wL
+         vzFqeQjmwoapdijqKUlJfaEOi5mGfyMt+4IpVqZeSZ7fXEGEVVuRY5FFOQ+HtBSkUBsL
+         pa7LBPhDnHU41HjXOu7H6lFT1M+CMPbcdQveWzjrbCf0zosvlrym0/bhHKK+17M1Ymth
+         L9vw==
+X-Gm-Message-State: APjAAAU7yYkk3fpUQEhc4VWQiDR5ncgx4WDo9kj5jqX2MgD/Hwb3q5XN
+        9F+iaoiT/2ujdxYHUqvLkV7Eog==
+X-Google-Smtp-Source: APXvYqy26b5mNoq9PPPNs08FcGKst+gUyWf/A1XghrrIho6WmjLmmKyzPwn2tDVdt9/FuWw0mNY/aw==
+X-Received: by 2002:adf:f841:: with SMTP id d1mr9758107wrq.62.1557733486527;
+        Mon, 13 May 2019 00:44:46 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id g2sm3521885wru.37.2019.05.13.00.44.45
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 00:44:41 -0700 (PDT)
-Date:   Mon, 13 May 2019 08:44:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Amelie Delaunay <amelie.delaunay@st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com, kbuild-all@01.org,
-        Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH] pinctrl: stmfx: Fix comparison of unsigned expression
- warnings
-Message-ID: <20190513074440.GK4319@dell>
-References: <1557732606-14662-1-git-send-email-amelie.delaunay@st.com>
+        Mon, 13 May 2019 00:44:45 -0700 (PDT)
+Date:   Mon, 13 May 2019 08:44:44 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Wenlin Kang <wenlin.kang@windriver.com>
+Cc:     jason.wessel@windriver.com, prarit@redhat.com,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kdb: Fix bound check compiler warning
+Message-ID: <20190513074444.eftse5jimrl4xtc7@holly.lan>
+References: <1557280359-202637-1-git-send-email-wenlin.kang@windriver.com>
+ <20190508081640.tvtnazr4tf5jijh7@holly.lan>
+ <ac8af42c-e69d-6fd0-1d76-73a37e8a672c@windriver.com>
+ <20190512090003.de52davu55rrg7kn@wychelm.lan>
+ <0c5121f7-645c-3651-cccc-2ae836d415b6@windriver.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557732606-14662-1-git-send-email-amelie.delaunay@st.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0c5121f7-645c-3651-cccc-2ae836d415b6@windriver.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019, Amelie Delaunay wrote:
-
-> This patch fixes the following warnings:
+On Mon, May 13, 2019 at 11:39:47AM +0800, Wenlin Kang wrote:
+> On 5/12/19 5:00 PM, Daniel Thompson wrote:
+> > On Thu, May 09, 2019 at 10:56:03AM +0800, Wenlin Kang wrote:
+> > > On 5/8/19 4:16 PM, Daniel Thompson wrote:
+> > > > On Wed, May 08, 2019 at 09:52:39AM +0800, Wenlin Kang wrote:
+> > > > > The strncpy() function may leave the destination string buffer
+> > > > > unterminated, better use strlcpy() instead.
+> > > > > 
+> > > > > This fixes the following warning with gcc 8.2:
+> > > > > 
+> > > > > kernel/debug/kdb/kdb_io.c: In function 'kdb_getstr':
+> > > > > kernel/debug/kdb/kdb_io.c:449:3: warning: 'strncpy' specified bound 256 equals destination size [-Wstringop-truncation]
+> > > > >      strncpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+> > > > >      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > 
+> > > > > Signed-off-by: Wenlin Kang <wenlin.kang@windriver.com>
+> > > > > ---
+> > > > >    kernel/debug/kdb/kdb_io.c | 2 +-
+> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> > > > > index 6a4b414..7fd4513 100644
+> > > > > --- a/kernel/debug/kdb/kdb_io.c
+> > > > > +++ b/kernel/debug/kdb/kdb_io.c
+> > > > > @@ -446,7 +446,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
+> > > > >    char *kdb_getstr(char *buffer, size_t bufsize, const char *prompt)
+> > > > >    {
+> > > > >    	if (prompt && kdb_prompt_str != prompt)
+> > > > > -		strncpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+> > > > > +		strlcpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+> > > > Shouldn't that be strscpy?
+> > > 
+> > > Hi Daniel
+> > > 
+> > > I thought about strscpy, but I think strlcpy is better, because it only copy
+> > > the real number of characters if src string less than that size.
+> > Sorry, I'm confused by this. What behavior does strscpy() have that you
+> > consider undesirable in this case?
 > 
-> drivers/pinctrl/pinctrl-stmfx.c:225:5-8: WARNING: Unsigned expression
-> compared with zero: dir < 0
-> drivers/pinctrl/pinctrl-stmfx.c:231:5-9: WARNING: Unsigned expression
-> compared with zero: pupd < 0
-> drivers/pinctrl/pinctrl-stmfx.c:228:5-9: WARNING: Unsigned expression
-> compared with zero: type < 0
 > 
-> Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  drivers/pinctrl/pinctrl-stmfx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hi Daniel
+> 
+> I checked strscpy() again, and think either is fine to me, if you think
+> strscpy() is better, I can change it to this, and send v2, thanks for your
+> review.
 
-Already fixed up and pushed.
+I think strscpy() is better.
 
-> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-> index bcd8126..3bd5d6f 100644
-> --- a/drivers/pinctrl/pinctrl-stmfx.c
-> +++ b/drivers/pinctrl/pinctrl-stmfx.c
-> @@ -213,7 +213,7 @@ static int stmfx_pinconf_get(struct pinctrl_dev *pctldev,
->  	struct stmfx_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
->  	u32 param = pinconf_to_config_param(*config);
->  	struct pinctrl_gpio_range *range;
-> -	u32 dir, type, pupd;
-> +	int dir, type, pupd;
->  	u32 arg = 0;
->  	int ret;
->  
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Daniel.
+
+> 
+> 
+> > 
+> > Daniel.
+> > 
+> 
+> -- 
+> Thanks,
+> Wenlin Kang
+> 
