@@ -2,92 +2,66 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510D5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A278C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8CC2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6499B2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730860AbfEMOrg (ORCPT
+        id S1730885AbfEMOri convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:47:36 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:53580 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728916AbfEMOrf (ORCPT
+        Mon, 13 May 2019 10:47:38 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:64365 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728916AbfEMOri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:47:35 -0400
-Received: (qmail 3884 invoked by uid 2102); 13 May 2019 10:47:34 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 May 2019 10:47:34 -0400
-Date:   Mon, 13 May 2019 10:47:34 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <suwan.kim027@gmail.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in usb_get_bos_descriptor
-In-Reply-To: <00000000000086510e05888df8c8@google.com>
-Message-ID: <Pine.LNX.4.44L0.1905131046130.1478-100000@iolanthe.rowland.org>
+        Mon, 13 May 2019 10:47:38 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16541986-1500050 
+        for multiple; Mon, 13 May 2019 15:47:23 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Steven Price <steven.price@arm.com>
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190513143921.GP17751@phenom.ffwll.local>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>
+References: <20190513143244.16478-1-steven.price@arm.com>
+ <20190513143921.GP17751@phenom.ffwll.local>
+Message-ID: <155775884217.2165.11223399053598674062@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH] drm/panfrost: Use drm_gem_dump_map_offset()
+Date:   Mon, 13 May 2019 15:47:22 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019, syzbot wrote:
-
-> Hello,
+Quoting Daniel Vetter (2019-05-13 15:39:21)
+> On Mon, May 13, 2019 at 03:32:44PM +0100, Steven Price wrote:
+> > panfrost_ioctl_mmap_bo() contains a reimplementation of
+> > drm_gem_dump_map_offset() but with a bug - it allows mapping imported
+> > objects (without going through the exporter). Fix this by switching to
+> > use the generic drm_gem_dump_map_offset() function instead which has the
+> > bonus of simplifying the code.
 > 
-> syzbot found the following crash on:
+> gem_dumb stuff is for kms drivers, panfrost is a render driver. We're
+> generally trying to separate these two worlds somewhat cleanly.
 > 
-> HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=124794d8a00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
-> dashboard link: https://syzkaller.appspot.com/bug?extid=71f1e64501a309fcc012
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176a53d0a00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com
-> 
-> usb 1-1: Using ep0 maxpacket: 8
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in usb_get_bos_descriptor+0x8be/0x8fb  
-> drivers/usb/core/config.c:976
-> Write of size 1 at addr ffff8880a48e38ec by task kworker/0:2/533
+> I think it'd be good to have a non-dumb version of this in the core, and
+> use that. Or upgrade the dumb version to be that helper for everyone (and
+> drop the _dumb).
 
-Insufficient descriptor size check.
-
-Alan Stern
-
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
- drivers/usb/core/config.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-Index: usb-devel/drivers/usb/core/config.c
-===================================================================
---- usb-devel.orig/drivers/usb/core/config.c
-+++ usb-devel/drivers/usb/core/config.c
-@@ -932,8 +932,8 @@ int usb_get_bos_descriptor(struct usb_de
- 
- 	/* Get BOS descriptor */
- 	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, bos, USB_DT_BOS_SIZE);
--	if (ret < USB_DT_BOS_SIZE) {
--		dev_err(ddev, "unable to get BOS descriptor\n");
-+	if (ret < USB_DT_BOS_SIZE || bos->bLength < USB_DT_BOS_SIZE) {
-+		dev_err(ddev, "unable to get BOS descriptor or descriptor too short\n");
- 		if (ret >= 0)
- 			ret = -ENOMSG;
- 		kfree(bos);
-
-
+More specifically, since panfrost is using the drm_gem_shmem helper and
+vm_ops, it too can provide the wrapper as it is the drm_gem_shmem layer
+that implies that trying to mmap an imported object is an issue as that
+is not a universal problem.
+-Chris
