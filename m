@@ -2,164 +2,134 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5B8C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5851C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E81F208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="epSkvtG+"
+	by mail.kernel.org (Postfix) with ESMTP id A91512133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfEMLW6 (ORCPT
+        id S1728460AbfEMLXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:22:58 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39934 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfEMLW5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:22:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DBIv4I013955;
-        Mon, 13 May 2019 11:22:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : in-reply-to :
- references : mime-version : content-type : content-transfer-encoding :
- subject : to : cc : from : message-id; s=corp-2018-07-02;
- bh=YyOD4R+cUGXHIvSrSrImL/iUliwHRMLQcY1no+yZlE8=;
- b=epSkvtG+LfqG1AYO/SzU26NLtvuTHGba2tGUjmx9xEhmtGHPUvzB2qprakEG7MKwk+AK
- ZFzX0dppkViQK6SOrfziMdQl7qowZtX004IPvUItMfcVBt9/OL3iNEA53owUuLtlOTVv
- kpax/yfFcqLNa1M5PTiW9L7EejNq4oy439Lgf5IV/HURg/FmUgdCPjbSADFsODr0epM6
- rIMWLUPqUXcjypSPh4oydd1yFjmkSJyKcBrK+y5sNSXTX/ebNHbRa6kTVepx9LtBdMmw
- Uz3bWb6MgFgNIEs+sv43ZWOmmxa2DA2Qtk79LG/NtgjMNAu+FhBUSY7Z3ahQ7Ie8dvQN Mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2sdq1q6429-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 11:22:39 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DBLcU0093252;
-        Mon, 13 May 2019 11:22:38 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2sdnqhw8vj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 11:22:38 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DBMbCG027340;
-        Mon, 13 May 2019 11:22:37 GMT
-Received: from galaxy-s9.lan (/209.6.36.129)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 04:22:37 -0700
-Date:   Mon, 13 May 2019 07:22:32 -0400
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1557740799-5792-1-git-send-email-wanpengli@tencent.com>
-References: <1557740799-5792-1-git-send-email-wanpengli@tencent.com>
+        Mon, 13 May 2019 07:23:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42670 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbfEMLXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:23:23 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AD7893086202;
+        Mon, 13 May 2019 11:23:22 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10C571001DE1;
+        Mon, 13 May 2019 11:23:20 +0000 (UTC)
+Subject: Re: [PATCH] modules: fix livelock in add_unformed_module()
+To:     Barret Rhoden <brho@google.com>, Jessica Yu <jeyu@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        David Arcari <darcari@redhat.com>
+References: <be47ac01-a5ac-7be1-d387-5c841007b45f@google.com>
+ <20190510184204.225451-1-brho@google.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <dd48a3a4-9046-3917-55ba-d9eb391052b3@redhat.com>
+Date:   Mon, 13 May 2019 07:23:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] KVM: X86: Enable IA32_MSIC_ENABLE MONITOR bit when exposing mwait/monitor
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-CC:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Liran Alon <liran.alon@oracle.com>
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Message-ID: <0F74F27F-2403-441D-8702-373BDA21E3A7@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130082
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130082
+In-Reply-To: <20190510184204.225451-1-brho@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 13 May 2019 11:23:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On May 13, 2019 5:46:39 AM EDT, Wanpeng Li <kernellwp@gmail=2Ecom> wrote:
->From: Wanpeng Li <wanpengli@tencent=2Ecom>
->
->MSR IA32_MSIC_ENABLE bit 18, according to SDM:
->
-
- MSIC? (Also the $subject)
 
 
->| When this bit is set to 0, the MONITOR feature flag is not set
->(CPUID=2E01H:ECX[bit 3] =3D 0)=2E=20
-> | This indicates that MONITOR/MWAIT are not supported=2E
-> |=20
->| Software attempts to execute MONITOR/MWAIT will cause #UD when this
->bit is 0=2E
-> |=20
->| When this bit is set to 1 (default), MONITOR/MWAIT are supported
->(CPUID=2E01H:ECX[bit 3] =3D 1)=2E=20
->
->This bit should be set to 1, if BIOS enables MONITOR/MWAIT support on
->host and=20
->we intend to expose mwait/monitor to the guest=2E
->
->Cc: Paolo Bonzini <pbonzini@redhat=2Ecom>
->Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat=2Ecom>
->Cc: Sean Christopherson <sean=2Ej=2Echristopherson@intel=2Ecom>
->Cc: Liran Alon <liran=2Ealon@oracle=2Ecom>
->Signed-off-by: Wanpeng Li <wanpengli@tencent=2Ecom>
->---
-> arch/x86/kvm/x86=2Ec | 16 +++++++++-------
-> 1 file changed, 9 insertions(+), 7 deletions(-)
->
->diff --git a/arch/x86/kvm/x86=2Ec b/arch/x86/kvm/x86=2Ec
->index 1d89cb9=2E=2E664449e 100644
->--- a/arch/x86/kvm/x86=2Ec
->+++ b/arch/x86/kvm/x86=2Ec
->@@ -2723,6 +2723,13 @@ static int get_msr_mce(struct kvm_vcpu *vcpu,
->u32 msr, u64 *pdata, bool host)
-> 	return 0;
-> }
->=20
->+static inline bool kvm_can_mwait_in_guest(void)
->+{
->+	return boot_cpu_has(X86_FEATURE_MWAIT) &&
->+		!boot_cpu_has_bug(X86_BUG_MONITOR) &&
->+		boot_cpu_has(X86_FEATURE_ARAT);
->+}
->+
->int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data
->*msr_info)
-> {
-> 	switch (msr_info->index) {
->@@ -2801,6 +2808,8 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu,
->struct msr_data *msr_info)
-> 		msr_info->data =3D (u64)vcpu->arch=2Eia32_tsc_adjust_msr;
-> 		break;
-> 	case MSR_IA32_MISC_ENABLE:
->+		if (kvm_can_mwait_in_guest() && kvm_mwait_in_guest(vcpu->kvm))
->+			vcpu->arch=2Eia32_misc_enable_msr |=3D MSR_IA32_MISC_ENABLE_MWAIT;
-> 		msr_info->data =3D vcpu->arch=2Eia32_misc_enable_msr;
-> 		break;
-> 	case MSR_IA32_SMBASE:
->@@ -2984,13 +2993,6 @@ static int msr_io(struct kvm_vcpu *vcpu, struct
->kvm_msrs __user *user_msrs,
-> 	return r;
-> }
->=20
->-static inline bool kvm_can_mwait_in_guest(void)
->-{
->-	return boot_cpu_has(X86_FEATURE_MWAIT) &&
->-		!boot_cpu_has_bug(X86_BUG_MONITOR) &&
->-		boot_cpu_has(X86_FEATURE_ARAT);
->-}
->-
-> int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
-> {
-> 	int r =3D 0;
+On 5/10/19 2:42 PM, Barret Rhoden wrote:
+> When add_unformed_module() finds an existing module with the same name,
+> it waits until the preexisting module finished loading.  Prior to commit
+> f9a75c1d717f, this meant if the module was either UNFORMED or COMING,
+> we'd wait.  That commit changed the check to be !LIVE, so that we'd wait
+> for UNFORMED, COMING, or GOING.
 
+Hi Barret, thanks for the fix but I dropped that patch for other reasons.
+Please see below.
+
+> 
+> The problem with that commit was that we wait on finished_loading(), and
+> that function's state checks were not changed.  If a module was
+> GOING, finished_loading() was returning true, meaning to recheck the
+> state and presumably break out of the loop.  This mismatch between the
+> state checked by add_unformed_module() and the state checked in
+> finished_loading() could result in a hang.
+> 
+> Specifically, when a module was GOING, wait_event_interruptible() would
+> immediately return with no error, we'd goto 'again,' see the state !=
+> LIVE, and try again.
+> 
+> This commit changes finished_loading() such that we only consider a
+> module 'finished' when it doesn't exist or is LIVE, which are the cases
+> that break from the wait-loop in add_unformed_module().
+> 
+> Fixes: f9a75c1d717f ("modules: Only return -EEXIST for modules that have finished loading")
+> Signed-off-by: Barret Rhoden <brho@google.com>
+> ---
+>  kernel/module.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 410eeb7e4f1d..0744eea7bb90 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3407,8 +3407,7 @@ static bool finished_loading(const char *name)
+>  	sched_annotate_sleep();
+>  	mutex_lock(&module_mutex);
+>  	mod = find_module_all(name, strlen(name), true);
+> -	ret = !mod || mod->state == MODULE_STATE_LIVE
+> -		|| mod->state == MODULE_STATE_GOING;
+> +	ret = !mod || mod->state == MODULE_STATE_LIVE;
+>  	mutex_unlock(&module_mutex);
+
+With your change the above my x86 system still locks up during boot and adds
+minutes to boot time because the many CPUs are sleeping waiting for the
+module_wq to be run.
+
+A module is loaded once for each cpu.
+
+CPU 0 loads the module, adds the module to the modules list, and sets the module
+state to MODULE_STATE_UNFORMED.
+
+Simultaneously all the other CPUs also load the module and sleep in
+add_unformed_module().
+
+If CPU 0 is interrupted/rescheduled for any reason that means the other CPUs are
+stuck waiting until the module thread on CPU0 is executed again.  I mentioned
+earlier that on some systems systemd is launching greater than the number of CPU
+module loads so this occurs quite often on large CPU systems.  This is an odd
+bug that also needs to be resolved but I suspect that it is in systemd & not the
+kernel.
+
+My follow-up patch changes from wait_event_interruptible() to
+wait_event_interruptible_timeout() so the CPUs are no longer sleeping and can
+make progress on other tasks, which changes the return values from
+wait_event_interruptible().
+
+https://marc.info/?l=linux-kernel&m=155724085927589&w=2
+
+I believe this also takes your concern into account?
+
+Please correct me if I'm wrong and am not understanding your issue.
+
+P.
+
+>  
+>  	return ret;
+> 
