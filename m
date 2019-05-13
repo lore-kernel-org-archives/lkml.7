@@ -2,76 +2,104 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27E8C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1A4C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C5120578
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0CF20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557731649;
+	bh=u0FJlBS537HaHJw+5yUJoZ5Nb1A7lrTHIbeNy8X65VY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u4k/RMRXj58iwTHDRfvKAIycStA57lpvqf3jV7BM4cUFZ1jg2G8vb9ZnvB3/kemeE
+	 k/4eMC+ueyKZfiqbfZttYpWKsuFe3tPurB+89FS4krpx7vnbD4JrkKyzs6LiZFD4zL
+	 JnsyH/IVM4IYm596LudjghPAXc0YMdok+HzOJnYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfEMHN0 (ORCPT
+        id S1727913AbfEMHOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:13:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46669 "EHLO mx1.redhat.com"
+        Mon, 13 May 2019 03:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727791AbfEMHNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:13:25 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727791AbfEMHOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:14:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E417B30821FF;
-        Mon, 13 May 2019 07:13:24 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31C593844;
-        Mon, 13 May 2019 07:13:22 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
-        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
-        sudeep.holla@arm.com
-Cc:     alex.williamson@redhat.com
-Subject: [PATCH 4/4] iommu/vt-d: Handle PCI bridge RMRR device scopes in intel_iommu_get_resv_regions
-Date:   Mon, 13 May 2019 09:13:02 +0200
-Message-Id: <20190513071302.30718-5-eric.auger@redhat.com>
-In-Reply-To: <20190513071302.30718-1-eric.auger@redhat.com>
-References: <20190513071302.30718-1-eric.auger@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 259EC20578;
+        Mon, 13 May 2019 07:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557731647;
+        bh=u0FJlBS537HaHJw+5yUJoZ5Nb1A7lrTHIbeNy8X65VY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y/4vKkRQDVcgIpYrWEF7EXcG2x7CttfLYu4G55iSSZHUOy2F0Ihc27KfO9Xc9KOqb
+         yAySn/OXtNG9O4vj8wHogZYBawVcLTQOJvabbTYMpjECsCec8HjIadxTBV3Ayn4X71
+         KPQe9NGkr5e0Yna8ZFsKJgekUlzBQPZUTK3aajDs=
+Date:   Mon, 13 May 2019 09:14:05 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
+Message-ID: <20190513071405.GF2868@kroah.com>
+References: <20190513033213.2468-1-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 13 May 2019 07:13:25 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513033213.2468-1-tobin@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the case the RMRR device scope is a PCI-PCI bridge, let's check
-the device belongs to the PCI sub-hierarchy.
+On Mon, May 13, 2019 at 01:32:13PM +1000, Tobin C. Harding wrote:
+> If a call to kobject_init_and_add() fails we must call kobject_put()
+> otherwise we leak memory.
+> 
+> Function always calls kobject_init_and_add() which always calls
+> kobject_init().
+> 
+> It is safe to leave object destruction up to the kobject release
+> function and never free it manually.
+> 
+> Remove call to kfree() and always call kobject_put() in the error path.
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> ---
+> 
+> Is it ok to send patches during the merge window?
+> 
+> Applies on top of Linus' mainline tag: v5.1
+> 
+> Happy to rebase if there are conflicts.
+> 
+> thanks,
+> Tobin.
+> 
+>  fs/gfs2/sys.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+> index 1787d295834e..98586b139386 100644
+> --- a/fs/gfs2/sys.c
+> +++ b/fs/gfs2/sys.c
+> @@ -661,8 +661,6 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
+>  	if (error)
+>  		goto fail_reg;
+>  
+> -	sysfs_frees_sdp = 1; /* Freeing sdp is now done by sysfs calling
+> -				function gfs2_sbd_release. */
 
-Fixes: 0659b8dc45a6 ("iommu/vt-d: Implement reserved region get/put callbacks")
+You should also delete this variable at the top of the function, as it
+is now only set once there and never used.
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
----
- drivers/iommu/intel-iommu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+With that:
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index 89d82a1d50b1..9c1a765eca8b 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5289,7 +5289,8 @@ static void intel_iommu_get_resv_regions(struct device *device,
- 			struct iommu_resv_region *resv;
- 			size_t length;
- 
--			if (i_dev != device)
-+			if (i_dev != device &&
-+			    !is_downstream_to_pci_bridge(device, i_dev))
- 				continue;
- 
- 			length = rmrr->end_address - rmrr->base_address + 1;
--- 
-2.20.1
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
