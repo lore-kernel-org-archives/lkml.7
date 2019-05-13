@@ -2,129 +2,117 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1516CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A540C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:09:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D937C2084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8BD21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:09:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WTdZ/AER"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="R1oRvdRc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731332AbfEMQGp (ORCPT
+        id S1731307AbfEMQJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:06:45 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:60992 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730669AbfEMQGp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:06:45 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DFs3dw072771;
-        Mon, 13 May 2019 16:04:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=iQOB5KRWAw5aCrq5NScPGP6m3rv8ZkXQhJVOUTIv/ts=;
- b=WTdZ/AERAY8uumxJJXYsPTnreT70nlTdVm2Uk+gpoBLOvefKgPXnZt9lMTEMJFC7AElo
- brnBgKufzGI6G7SdHRYtY9DNe1fPL/lr6yYBtqTq1NwJweBx96/lEPw0gXQDChYYuGac
- U23W2zUNgmJsl+a+kAph+SzIcbarXxPaSKnGTuApMEm9SALHEWk4vYdLv6/q4htUkhgF
- WE7JQ9OasaE8W8U4eHRDazsIYBZLsFHVvieWyLy4O0VCbRsaFoOYmSRDO8ige/yanJ96
- 5o2bnR09qlNx9ZES5yobQvJ9oT4iiJzAV2mUdyrP8YoQNhZQX7fc7kZ/sA0B/Dpf0nCT +g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdg9ek-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 16:04:52 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DG4975087318;
-        Mon, 13 May 2019 16:04:51 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2sf3cmrhbq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 16:04:51 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4DG4mrx011596;
-        Mon, 13 May 2019 16:04:48 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 09:04:48 -0700
-Subject: Re: [RFC KVM 03/27] KVM: x86: Introduce KVM separate virtual address
- space
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-4-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrV9-VAMS2K3pmkqM--pr0AYcb38ASETvwsZ5YhLtLq-9w@mail.gmail.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <8dba7da4-8087-1d80-5b60-fe651a930bb8@oracle.com>
-Date:   Mon, 13 May 2019 18:04:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <CALCETrV9-VAMS2K3pmkqM--pr0AYcb38ASETvwsZ5YhLtLq-9w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 13 May 2019 12:09:45 -0400
+Received: from mail-eopbgr10059.outbound.protection.outlook.com ([40.107.1.59]:4487
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729246AbfEMQJo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:09:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IvVfZvDXhHgsToo9rsa2yRoEmdO/XZBarL2I0ixnMEM=;
+ b=R1oRvdRcApFq4o8ZV/+4UMG7SSWfobC5C9Yjebw/arozFwjeLI3CTJRuJtB2iefRfoAguc1lUJDyAoKKvF/J3naqr1OjoBQx/LHsS6jaN61yu3PGwGxk49j5xp7zeYwOrWukbEcWt/L+kQlnyFgw0E8BTyCKflhJIjlQWAkItms=
+Received: from DB6PR0402MB2727.eurprd04.prod.outlook.com (10.172.247.10) by
+ DB6PR0402MB2709.eurprd04.prod.outlook.com (10.172.246.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Mon, 13 May 2019 16:09:38 +0000
+Received: from DB6PR0402MB2727.eurprd04.prod.outlook.com
+ ([fe80::e194:a71a:3497:783e]) by DB6PR0402MB2727.eurprd04.prod.outlook.com
+ ([fe80::e194:a71a:3497:783e%8]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 16:09:38 +0000
+From:   Roy Pledge <roy.pledge@nxp.com>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Roy Pledge <roy.pledge@nxp.com>
+Subject: [PATCH v1 0/8] soc/fsl/qbman: Enable Kexec for DPAA1 devices
+Thread-Topic: [PATCH v1 0/8] soc/fsl/qbman: Enable Kexec for DPAA1 devices
+Thread-Index: AQHVCaZDNJ/dr3CnPEu8McjjpTjPxA==
+Date:   Mon, 13 May 2019 16:09:38 +0000
+Message-ID: <1557763756-24118-1-git-send-email-roy.pledge@nxp.com>
+Reply-To: Roy Pledge <roy.pledge@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130109
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130109
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: SN4PR0501CA0144.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::22) To DB6PR0402MB2727.eurprd04.prod.outlook.com
+ (2603:10a6:4:98::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=roy.pledge@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [72.142.119.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9eca5315-cdde-484b-99f1-08d6d7bd6639
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB6PR0402MB2709;
+x-ms-traffictypediagnostic: DB6PR0402MB2709:
+x-microsoft-antispam-prvs: <DB6PR0402MB27091F8FF49E9912538E4A2F860F0@DB6PR0402MB2709.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(366004)(376002)(396003)(39860400002)(189003)(199004)(81166006)(81156014)(8936002)(2201001)(110136005)(54906003)(316002)(476003)(2501003)(86362001)(2616005)(50226002)(2906002)(66556008)(64756008)(66446008)(66946007)(66476007)(73956011)(478600001)(3450700001)(6636002)(305945005)(5660300002)(386003)(6506007)(102836004)(43066004)(6486002)(7736002)(26005)(186003)(6436002)(66066001)(4326008)(36756003)(99286004)(486006)(25786009)(52116002)(53936002)(44832011)(6512007)(8676002)(14454004)(68736007)(71200400001)(14444005)(256004)(3846002)(71190400001)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0402MB2709;H:DB6PR0402MB2727.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: v+q+po0cCEZ1xYPTx6j+Hpe48x1KF8lVOXr79xc27Trm50F/g9KI47KGd+jdTzLHvl3E92yr7Lnhtuw9Dd7s0+RHU9fshSJZcILhcnj6Z0vX0Ms+tgebOYSkTbURltecMlL8fPb63wQsnPNz0gGmgJYYQnCGxkhiIgs1r1/nupWGrq0o8VG6nI68Bov3F1RbEm4Q7yYx5aLE1WFPtaSRZ0qBVfDF0rszrZqM1aPtEWqoO4u3yDBKc0GGTn6wR/2ajxBibO0YL7lG6zNbCIVdlXoqc50y3s5PYwQf50SbX5KA9JpJzp8ac+3TQnw3UKNbwU3iNYWVS/mXke/KYU1D1WGlg6m83E2kNE96qDEYRkflIn8u6VQBChVTQ3ZqnyaZOfDn4Ws/JfOWdGUM8EYa02ZEoH4Nv5phNHWqgSoWGwY=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9eca5315-cdde-484b-99f1-08d6d7bd6639
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 16:09:38.6828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2709
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/13/19 5:45 PM, Andy Lutomirski wrote:
-> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
-> <alexandre.chartre@oracle.com> wrote:
->>
->> From: Liran Alon <liran.alon@oracle.com>
->>
->> Create a separate mm for KVM that will be active when KVM #VMExit
->> handlers run. Up until the point which we architectully need to
->> access host (or other VM) sensitive data.
->>
->> This patch just create kvm_mm but never makes it active yet.
->> This will be done by next commits.
-> 
-> NAK to this whole pile of code.  KVM is not so special that it can
-> duplicate core infrastructure like this.  Use copy_init_mm() or
-> improve it as needed.
-> 
-> --Andy
-> 
-
-This was originally inspired from how efi_mm is built. If I remember
-correctly copy_init_mm() or other mm init functions do initialization
-we don't need in this case; we basically want a blank mm. I will have
-another look at copy_init_mm().
-
-In any case, if we really need a mm create/init function I agree it
-doesn't below to kvm. For now, this part of shortcuts used for the POC.
-
-alex.
+TW9zdCBEUEFBMSBkZXZpY2VzIGRvIG5vdCBzdXBwb3J0IGEgc29mdCByZXNldCB3aGljaCBpcyBh
+biBpc3N1ZSBpZg0KS2V4ZWMgc3RhcnRzIGEgbmV3IGtlcm5lbC4gVGhpcyBwYXRjaCBzZXJpZXMg
+YWxsb3dzIEtleGVjIHRvIGZ1bmN0aW9uDQpieSBkZXRlY3RpbmcgdGhhdCB0aGUgUUJNYW4gZGV2
+aWNlIHdhcyBwcmV2aW91c2x5IGluaXRpYWxpemVkLg0KDQpUaGUgcGF0Y2hlcyBmaXggc29tZSBp
+c3N1ZXMgd2l0aCBkZXZpY2UgY2xlYW51cCBhcyB3ZWxsIGFzIGVuc3VyaW5nDQp0aGF0IHRoZSBs
+b2NhdGlvbiBvZiB0aGUgUUJNYW4gcHJpdmF0ZSBtZW1vcmllcyBoYXMgbm90IGNoYW5nZWQNCmFm
+dGVyIHRoZSBleGVjdXRpb24gb2YgdGhlIEtleGVjLg0KDQpSb3kgUGxlZGdlICg4KToNCiAgc29j
+L2ZzbC9xYm1hbjogUmV3b3JrIFFCTWFuIHByaXZhdGUgbWVtb3J5IHNldHVwDQogIHNvYy9mc2wv
+cWJtYW46IENsZWFudXAgYnVmZmVyIHBvb2xzIGlmIEJNYW4gd2FzIGluaXRpYWxpemVkIHByaW9y
+IHRvDQogICAgYm9vdHVwDQogIHNvYy9mc2wvcWJtYW46IENsZWFudXAgUU1hbiBxdWV1ZXMgaWYg
+ZGV2aWNlIHdhcyBhbHJlYWR5IGluaXRpYWxpemVkDQogIHNvYy9mc2wvcWJtYW46IFVzZSBpbmRl
+eCB3aGVuIGFjY2Vzc2luZyBkZXZpY2UgdHJlZSBwcm9wZXJ0aWVzDQogIHNvYy9mc2wvcWJtYW46
+IEZpeCBkcmFpbl9tcl9mcW5pKCkNCiAgc29jL2ZzbC9xYm1hbjogRGlzYWJsZSBpbnRlcnJ1cHRz
+IGR1cmluZyBwb3J0YWwgcmVjb3ZlcnkNCiAgc29jL2ZzbC9xYm1hbjogRml4dXAgcW1hbl9zaHV0
+ZG93bl9mcSgpDQogIHNvYy9mc2wvcWJtYW46IFVwZGF0ZSBkZXZpY2UgdHJlZSB3aXRoIHJlc2Vy
+dmVkIG1lbW9yeQ0KDQogZHJpdmVycy9zb2MvZnNsL3FibWFuL2JtYW4uYyAgICAgICAgfCAxNyAr
+KysrLS0tLQ0KIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9ibWFuX2Njc3IuYyAgIHwgMzYgKysrKysr
+KysrKysrKysrLQ0KIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9ibWFuX3BvcnRhbC5jIHwgMTggKysr
+KysrKy0NCiBkcml2ZXJzL3NvYy9mc2wvcWJtYW4vYm1hbl9wcml2LmggICB8ICA1ICsrKw0KIGRy
+aXZlcnMvc29jL2ZzbC9xYm1hbi9kcGFhX3N5cy5jICAgIHwgNjMgKysrKysrKysrKysrKysrKy0t
+LS0tLS0tLS0tLQ0KIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9xbWFuLmMgICAgICAgIHwgODMgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0KIGRyaXZlcnMvc29jL2ZzbC9xYm1h
+bi9xbWFuX2Njc3IuYyAgIHwgNTkgKysrKysrKysrKysrKysrKysrKysrKystLS0NCiBkcml2ZXJz
+L3NvYy9mc2wvcWJtYW4vcW1hbl9wb3J0YWwuYyB8IDE4ICsrKysrKystDQogZHJpdmVycy9zb2Mv
+ZnNsL3FibWFuL3FtYW5fcHJpdi5oICAgfCAgOCArKysrDQogOSBmaWxlcyBjaGFuZ2VkLCAyNDYg
+aW5zZXJ0aW9ucygrKSwgNjEgZGVsZXRpb25zKC0pDQoNCi0tDQoyLjcuNA0KDQo=
