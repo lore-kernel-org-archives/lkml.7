@@ -2,139 +2,112 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C493C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:23:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD92C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED6D20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:23:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fyVsUIKW"
+	by mail.kernel.org (Postfix) with ESMTP id D061C20C01
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:24:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557732285;
+	bh=0YAA7IU7/dG9xXVCHjqkTm6IxMnCXy9ask+Skne63cE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=APzq3WOjHq2ZwAqlWC8G13ead9zOya+OLDZ6PkGPG1zHMxZ6nXS+8n+nEckDhpJUI
+	 FvpDIVE7jvzQNNUoChJp/1PKUh0U4IEmGmT4bHgsahAteVFh0GFGSfmiALWI9ywBl3
+	 JeGOkcVFEoLLbYymaGv4aF7DRSfh3U2FGLhTr+8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbfEMHXN (ORCPT
+        id S1727913AbfEMHYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:23:13 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:47992 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727568AbfEMHXM (ORCPT
+        Mon, 13 May 2019 03:24:44 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35152 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727568AbfEMHYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:23:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4D7N2gn050263;
-        Mon, 13 May 2019 02:23:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557732183;
-        bh=TFmyXWtIKo5SlABzx3xj66YrZaNuiNEc+e/r3gV7HIQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fyVsUIKWjQAok8Jwgteg99Wm6b39pcOjHWHBcnbDU0WIVFmcoT5bbLsxKPUi5NrQi
-         LlpvKHvVHp0pozi5eMb2pMyEloNZ7Yu2gM5i0bHHld7aOEBF3+1BDjBgrtySNriVGr
-         7nF/mcFwdHaEJ66R6bfzltFnrZ0woQj76zt+UBZQ=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4D7N2PF043042
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 May 2019 02:23:02 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 13
- May 2019 02:23:01 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 13 May 2019 02:23:01 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4D7MwCF018030;
-        Mon, 13 May 2019 02:22:59 -0500
-Subject: Re: [PATCH] clk: ti: Remove unused function
- ti_clk_build_component_gate
-To:     YueHaibing <yuehaibing@huawei.com>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20190512100328.27136-1-yuehaibing@huawei.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <5315442d-fd29-1fbe-694d-07627cc43c25@ti.com>
-Date:   Mon, 13 May 2019 10:22:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 03:24:44 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q15so8506018wmj.0;
+        Mon, 13 May 2019 00:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iVAt5iI6mqugtCiFXfzqwJmqTMe8MsRRRyCMlSkj7hY=;
+        b=gJpTiJVddmjubHzTpqyW93iYd9Kh5AcAkff5jWKHAN8Vzw8QdW4Wpv1hg2L5ckIC6c
+         LJj9EXpe0QpsKwtCxvb34cA2PMYbxzGUw9NKw7IMo6rox1/WdBZkP3ou+OGKLKrC6+GF
+         ExSe4dZij/GOUEgmvXkwFEivUecXtO497bi5UjC9HZaxrzYw3IdrZ9PQ8pqie2Igx6fk
+         9rKZMWnCs7xbaThb6hcNwG/XByHqPVEDmoOhf/A8f3mwHrabWBqPnOdomrUTdrn5t1yg
+         S6oF/BjZPAOxDwMTXANjWkWkirm/HFDBXYEG3RGLixuETX1092s9ioAJMImhdjmQxJrK
+         6oWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iVAt5iI6mqugtCiFXfzqwJmqTMe8MsRRRyCMlSkj7hY=;
+        b=X9xUiF9Ok5u8DG2Trn/lPzYHA/DBHB1WgssfQXnxH8biOJoebFW25FLK0Ke8cGJjPV
+         o1GdUmIrsz6FydiFYclORIMZwMtoLnoyje+hneO1Bnfofgk/XgaThMw0nwt8YLkY7N1F
+         sHf5bgpWuQi5s50xzlqRhaJVXiwC3jwzzeNZWseM4FG+DiIXCkNi/mOq+UovdzcCss+4
+         0QUjuOa1PtZKias/V34x270O7fnitnKDlgiE3mh44dqx19D4Z3ECI6h8eT37Od4gBeuA
+         7wQJmvDvz80J3K6zqqJBVH9FpTiINyfaBtg25/qkzuMK6Xm4v7q4Bwq6k9ws63Em6vOn
+         W1RA==
+X-Gm-Message-State: APjAAAVJoJu1L7GWMgKTq7gi0Y2YscW7ZfMUQuGKVmUP4N77usAgyBXu
+        ZWQzQlXe+L96+V8F0Eiv9Bg=
+X-Google-Smtp-Source: APXvYqwFcDG6bAeRkKLyQcnNYRRSRsAvc5yJRdcDA7W0BiPW2zrlnWqrtOG6bz1GpEkvce1AVTF5qQ==
+X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr7199285wmb.66.1557732282700;
+        Mon, 13 May 2019 00:24:42 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 19sm2595631wmk.3.2019.05.13.00.24.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 00:24:41 -0700 (PDT)
+Date:   Mon, 13 May 2019 09:24:39 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: Update MAINTAINERS to include schedutil governor
+Message-ID: <20190513072439.GA34303@gmail.com>
+References: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20190512100328.27136-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/05/2019 13:03, YueHaibing wrote:
-> There is no callers in tree, so can be removed.
 
-Looks ok to me, basically legacy code that we forgot to remove while doing:
+* Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-commit 7558562a70fbd6b3fa746fa33c76c9333aa0bb32
-Author: Tony Lindgren <tony@atomide.com>
-Date:   Thu Dec 14 08:32:06 2017 -0800
-
-     clk: ti: Drop legacy clk-3xxx-legacy code
-
-Could drop the same code for mux/div also though.
-
--Tero
-
+> List cpufreq maintainers as well for schedutil governor apart from
+> scheduler maintainers.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->   drivers/clk/ti/gate.c | 30 ------------------------------
->   1 file changed, 30 deletions(-)
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/clk/ti/gate.c b/drivers/clk/ti/gate.c
-> index 504c0e9..4238955 100644
-> --- a/drivers/clk/ti/gate.c
-> +++ b/drivers/clk/ti/gate.c
-> @@ -131,36 +131,6 @@ static struct clk *_register_gate(struct device *dev, const char *name,
->   	return clk;
->   }
->   
-> -struct clk_hw *ti_clk_build_component_gate(struct ti_clk_gate *setup)
-> -{
-> -	struct clk_hw_omap *gate;
-> -	struct clk_omap_reg *reg;
-> -	const struct clk_hw_omap_ops *ops = &clkhwops_wait;
-> -
-> -	if (!setup)
-> -		return NULL;
-> -
-> -	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-> -	if (!gate)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	reg = (struct clk_omap_reg *)&gate->enable_reg;
-> -	reg->index = setup->module;
-> -	reg->offset = setup->reg;
-> -
-> -	gate->enable_bit = setup->bit_shift;
-> -
-> -	if (setup->flags & CLKF_NO_WAIT)
-> -		ops = NULL;
-> -
-> -	if (setup->flags & CLKF_INTERFACE)
-> -		ops = &clkhwops_iclk_wait;
-> -
-> -	gate->ops = ops;
-> -
-> -	return &gate->hw;
-> -}
-> -
->   static void __init _of_ti_gate_clk_setup(struct device_node *node,
->   					 const struct clk_ops *ops,
->   					 const struct clk_hw_omap_ops *hw_ops)
-> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4244dd341eb7..7d4417d862a6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4093,7 +4093,9 @@ F:	Documentation/admin-guide/pm/intel_pstate.rst
+>  F:	Documentation/cpu-freq/
+>  F:	Documentation/devicetree/bindings/cpufreq/
+>  F:	drivers/cpufreq/
+> +F:	kernel/sched/cpufreq*.c
+>  F:	include/linux/cpufreq.h
+> +F:	include/linux/sched/cpufreq.h
+>  F:	tools/testing/selftests/cpufreq/
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Acked-by: Ingo Molnar <mingo@kernel.org>
+
+Thanks,
+
+	Ingo
