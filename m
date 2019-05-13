@@ -2,116 +2,133 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2586C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 05:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD89C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 05:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7206520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 05:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4427720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 05:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lxRRozX6"
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="b0VE/YeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfEMFJO (ORCPT
+        id S1727303AbfEMFO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 01:09:14 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5224 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbfEMFJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 01:09:14 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cd8fbd20000>; Sun, 12 May 2019 22:08:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 12 May 2019 22:09:13 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 12 May 2019 22:09:13 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 May
- 2019 05:09:12 +0000
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 May
- 2019 05:08:57 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 13 May 2019 05:08:57 +0000
-Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cd8fbe50000>; Sun, 12 May 2019 22:08:57 -0700
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>
-CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V6 15/15] arm64: Add Tegra194 PCIe driver to defconfig
-Date:   Mon, 13 May 2019 10:36:26 +0530
-Message-ID: <20190513050626.14991-16-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513050626.14991-1-vidyas@nvidia.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
+        Mon, 13 May 2019 01:14:28 -0400
+Received: from mx1.cock.li ([185.10.68.5]:53125 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725970AbfEMFO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 01:14:28 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557724114; bh=TG1BO7VjWyZ5GG8pPCGHN1pvhx441wUV7iT3GFGGVbE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=lxRRozX6pBepVMJOJ273eLYdxlNbaE2qE4eyFw9LbUQAtp5akRJYtv6zQcvbfgd2a
-         sZ5lVAbOitsfPF5sh57N6+WjnXnEycVPpi2BelrWx7CqJBsBekmEL77FEb74PfdmKi
-         68nKGMgDKhCOS+f4LDi9p7GboXDE+J7WyDBKmauapQ1Of9wb3uv6g4DMPq1+ZBwrfD
-         05ivXGeLMVcZ5wiQWvToEGG9Ba1+/DWZC9strw71hT7qw7OdqPDVlWg5UtOSi+Z9xb
-         mFZj3A0EjlvChWvYVbOTvgtczbT145QuBSLVfIJ7H8esA3ONUN4vj7FLkCJ6tfrWF3
-         svrsymJypc8Ng==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1557724464; bh=xUxvyDs6/5Faw+V5uDyUv2qxk/T1Hixe5Md1p7cOMPM=;
+        h=Date:From:To:Subject:From;
+        b=b0VE/YeA5FpYO275GE0REyyjLQNKb+aVQ/gGTrvJulmkoG4aIlxarJcBnBKZGKVS6
+         0WeL1nru3BdBda7RsLAlqfV/v8FwgUGvR8I6V9aZa3/XZbsWsmk9UIlEP5N7n6oDf9
+         bPweQ7f742DvABHlb3rf0G0ZkiCZetuFffKqcBIuZbHd4yx5gaMswu+s+lF1d4XkAD
+         etwX/fQjaPl/95AWjYneWyKaY8yvciZJSjyhT5xvE5VoIMdgqRaiZKzxcmHdyhvZ9g
+         3c0E/3/fDj8w93EC8M0x7krIrUTmRdchKy9qe43V/ca37jEoSdH35KtfVVtnVCgZ6U
+         pEMn/QtdNFOZA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 May 2019 05:14:24 +0000
+From:   informator@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: [License-discuss] Can a contributor take back open source code ? -
+ Yes, if he has not signed over the copyright.
+Message-ID: <93d470e7054eb9268179b60bc567e95e@redchan.it>
+X-Sender: informator@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe host controller driver for DesignWare core based
-PCIe controller IP present in Tegra194.
+Hello Kevin.
+> but there is no path which would force the project to do so.
+This is incorrect.
 
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
----
-Changes since [v5]:
-* None
+> If the contributions were legitimately provided under an OSI-approved 
+> (or similar) license, the license cannot be terminated for convenience.
+This is also incorrect. Free non-exclusive licenses can be terminated 
+at-will by the copyright owner. A non-exclusive license, in and of 
+itself, confers no enforceable rights against the grantor without being 
+merged into a contract - regardless of whatever assertions are made in 
+the text.
 
-Changes since [v4]:
-* None
+The very quality that makes opensource attractive makes any attempt to 
+create a mutually enforceable agreement an artifice - and one that will 
+fail.
 
-Changes since [v3]:
-* None
+(And, Yes I am an attorney)
 
-Changes since [v2]:
-* None
 
-Changes since [v1]:
-* Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
+----
+> I have a "not easy" question: is it possible for a contributor to 
+> remove his contributions (code, translations, ...) from an open source 
+> project?
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+In short: Yes the copyright holder can do just that in most cases we see 
+in the wild (where there is no copyright assignment and the licensees 
+are free-takers).
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c12c505dd24f..57097c2dd67d 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -195,6 +195,7 @@ CONFIG_PCIE_QCOM=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_HISI_STB=y
-+CONFIG_PCIE_TEGRA194=m
- CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_DEVTMPFS_MOUNT=y
--- 
-2.17.1
+It seems to the policy of the FSF, SFLC, etc to claim to you that 
+Illusory Promises are enforceable in the US courts, or to claim that 
+obeying a preexisting legal duty is valid consideration for a mutually 
+enforceable agreement (contract). Obviously you have an inkling to the 
+contrary since you are asking this question. Your suspicion is well 
+founded, as consideration, contrary to what interested parties may want 
+you to believe, is still generally a requirement for a promise to be 
+held enforceable, in the US.
+
+-----
+
+Assuming: Contributor has not signed over his copyrights, and the entity 
+did not pay consideration to the "contributor":
+
+Yes.
+
+Free Non-exclusive licenses are revocable.
+
+For a promise not to revoke or to revoke only under certain 
+circumstances to be binding against the grantor he must have received 
+some bargained-for consideration in exchange.
+
+"Nothing" is not valid consideration.
+
+Offering what you are trying to contract for as "consideration" for that 
+very contract is not valid consideration.
+
+Obeying a pre-existing legal duty (not violating the copyright holder's 
+copyright) is not valid consideration.
+
+You can read a lengthy explanation for the lay person here:
+lkml.org/lkml/2019/5/3/698
+(and it covers the 9th circuit
+Artifex case and 9th circuit Artistic License case which some people
+will try to make you think invalidates your proprietary rights)
+or here:
+lkml.org/lkml/2019/5/4/334
+
+
+Note: If you would like a nice expansive legal paper to read on this
+issue, Sapna Kumar's paper is good:
+scholarship.law.duke.edu/faculty_scholarship/1857/
+www.amazon.com/Open-Source-Licensing-Software-Intellectual/dp/0131487876
+papers.ssrn.com/sol3/papers.cfm?abstract_id=243237
+
+
+> And, if someone do that, is it possible for the project to continue to 
+> maintain the previous version, thanks to the license? (I mean, before 
+> the deletion)
+
+No. Once the license is revoked, if the licensee cannot show that it has 
+an attached interest (ie: a valid contract), by law the licensee 
+no-longer has permission from the copyright owner to 
+use/distribute/modify/etc the work of authorship. They may beg the court 
+under equity for some accommodation, of course.
+
 
