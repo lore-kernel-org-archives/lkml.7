@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F757C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A60C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8FB208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58D221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:30:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hlw7JzBt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KaMLGxq5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfEMKaH (ORCPT
+        id S1728607AbfEMKaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:30:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33078 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728118AbfEMKaG (ORCPT
+        Mon, 13 May 2019 06:30:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43619 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728118AbfEMKaJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:30:06 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so5806496wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 03:30:05 -0700 (PDT)
+        Mon, 13 May 2019 06:30:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so14588532wro.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 03:30:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=A0HzfJ8leQV9/Ia+5j4PgeiH8O0rzgjlyMwyBqLrNY4=;
-        b=hlw7JzBtrgh3/XIvBJP98kqEUKf77GmYZoHuNHj9UWkdTEP3+5ukxMxY/xE0wdVrpS
-         ij1IC/WHsr1VhutVOAyaZLEhE7uH1Ur+DlCo67iG8hS8kCmdyOWRMw5p0Sgn9lE4KE3C
-         CNRgx6KuK70TofcGPFp8eRCWjAGq0zZsLbx3Fmwm8QDNeUExNphDlWd0bcufY1J7oVW3
-         AW6xhVHbCraw/hUqjytBmMma0XUgWf4EfovjJwNAL8Ii6+NgjMsCPBB41YCc9LtcQutK
-         W9NCvRhBZH1xxMuyTOPm2EAu5SiPHqCiuOLR4uIZ/UlczNskIJ9KNfRD3R5Hq0W+e30y
-         JFwA==
+        bh=L7Wy/UoR346yun6rGdrn0w0Sk7Zt+3JLoV24BHUfklw=;
+        b=KaMLGxq5Wb940wNjeO7BJOduBqFwHX0vgpSfCZ+93hfjbyg7qWJg271Pn/VKXyd39w
+         bQCBsUYg1VvXJegV31qG8hLePpv0czgoGzUEMs4phtmeD/zmUC1nfEQJC8ogw28eG2bk
+         +An7yw8256pDJcinE/m0XLNIcmUeUAE4y2m9c4gUA0k5QBEPJpb+AkdYJlChJ+5gw1t3
+         tSRK6T23ZWmmujbo1eRKJF1zxUdU34dcaU/iPR3nEkUY5wwIkPRxWuJTrBBYsQt6fL3P
+         gSTqWb24e4RuKL5Jy3Dqu9SzUr4XxOABGUldg3IeYOApTUZlwsQTBHDdGq6GsTBGut5c
+         4IrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=A0HzfJ8leQV9/Ia+5j4PgeiH8O0rzgjlyMwyBqLrNY4=;
-        b=SsBEdjF0db/mcRt64PdW1p6HBLFS+77fXJTgKHAQSdJKNUb/vmBj2dayIVqYjASICS
-         HIHZUUbbFXuj8ViWQUrf8N8mf6liQDFDYPD8itsyo4ZpBftulFBM8JH52e5LLwecndpV
-         302UbihkrUPtcsGR3x8mAITTe4cTsyZBmRVLGTwfPYadqv81Msx9ySqyb1CIAvg0ZxZc
-         SVqMtC3SqrW7dGkzh3gxmZo6W/ofeYM2LWPaRtJNYFLbtZsuOK0y0GlykowXgFGYUNl+
-         8xfqU4lWyoaA5Qf0Cr1Brh2BAhM1kw69KihA8AawQDIpcuyAqe0ynmoCFr0EFevTY2XZ
-         NjhA==
-X-Gm-Message-State: APjAAAUwV5Au39whzehMjRpWCmwgWGfc4zBGTMGt3C4G+AZf0q/RZ+oZ
-        JOyhaedoXscEFyCwv2NsD86MA2SleCo=
-X-Google-Smtp-Source: APXvYqx4GdWOndFx/J4I7ir2QJnMFsg6tHWBmBTx7fc8YtUmv2gLbb5819rkFM42HoDBFT+LaQQLkg==
-X-Received: by 2002:a1c:3dd6:: with SMTP id k205mr10369340wma.109.1557743404664;
-        Mon, 13 May 2019 03:30:04 -0700 (PDT)
+        bh=L7Wy/UoR346yun6rGdrn0w0Sk7Zt+3JLoV24BHUfklw=;
+        b=NcpAtH/VZizNdO8a7DFvFEvnwlSa3C70cS/jXBfiTn/U0drxwA18U6rJbb9jMDMrVq
+         5xRLSnZ8raN8vF/fTlnd83X8vxgjfHtTJGx3pItWJKatTSAP18Hxe8Uj6/wzEUogmidk
+         xVn5diRwfMpkJjwormgZT1zumsJVoG8/HodDzO6+wyrMb9GacadJDdsHJbtIXmz770z8
+         PWa3hTp+MxVJt937WjvQnUTeatjXBQ41CqPT9y73gwttv5hahtzbOw1pVkBM3DvoPArk
+         WbCUnwTfYL4YDahPyrURcAGkX/KbhVmEsrmTT30ZZlRbENhQoh/g80KDm99LTEV/e/Gx
+         D0dg==
+X-Gm-Message-State: APjAAAUdIqXNF8q6mAAdQwCY0XRzoIjCvaSePquo9GPrUz9HbnG7MK9h
+        f1VZxvqBDdKee1yAskBv3rLO2g==
+X-Google-Smtp-Source: APXvYqzaKak2EGUlqbwSxfk+3WjuJ5CdCEmkmiyotWJ1fu298O3yTyiEct5iALI9pG8fbfhd906uWg==
+X-Received: by 2002:a05:6000:1209:: with SMTP id e9mr16196807wrx.205.1557743407366;
+        Mon, 13 May 2019 03:30:07 -0700 (PDT)
 Received: from clegane.local (205.29.129.77.rev.sfr.net. [77.129.29.205])
-        by smtp.gmail.com with ESMTPSA id v192sm13645238wme.24.2019.05.13.03.30.03
+        by smtp.gmail.com with ESMTPSA id v192sm13645238wme.24.2019.05.13.03.30.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 03:30:04 -0700 (PDT)
+        Mon, 13 May 2019 03:30:06 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] genirq/timings: Fix next event index function
-Date:   Mon, 13 May 2019 12:29:45 +0200
-Message-Id: <20190513102953.16424-2-daniel.lezcano@linaro.org>
+Subject: [PATCH 3/9] genirq/timings: Optimize the period detection speed
+Date:   Mon, 13 May 2019 12:29:47 +0200
+Message-Id: <20190513102953.16424-4-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513102953.16424-1-daniel.lezcano@linaro.org>
 References: <20190513102953.16424-1-daniel.lezcano@linaro.org>
@@ -69,97 +69,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code was luckily working with most of the interval samples
-testing but actually it fails to correctly detect pattern repeatition
-breaking at the end of the buffer.
+If we have a minimal period and if there is a period which is a
+multiple of it but lesser than the max period then it will be detected
+before and the minimal period will be never reached.
 
-Narrowing down the bug has been a real pain because of the pointers,
-so the routine is rewrite by using indexes instead.
+ 1 2 1 2 1 2 1 2 1 2 1 2
+ <-----> <-----> <----->
+ <-> <-> <-> <-> <-> <->
 
-Fixes: bbba0e7c5cda "genirq/timings: Add array suffix computation code"
+In our case, the minimum period is 2 and the maximum period is 5. That
+means all repeating pattern of 2 will be detected as repeating pattern
+of 4, it is pointless to go up to 2 when searching for the period as it
+will always fail.
+
+Remove one loop iteration by increasing the minimal period to 3.
+
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- kernel/irq/timings.c | 53 ++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 44 insertions(+), 9 deletions(-)
+ kernel/irq/timings.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/irq/timings.c b/kernel/irq/timings.c
-index 90c735da15d0..60362aca4ca4 100644
+index 250bb00ccd85..06bde5253a7d 100644
 --- a/kernel/irq/timings.c
 +++ b/kernel/irq/timings.c
-@@ -297,7 +297,18 @@ static u64 irq_timings_ema_new(u64 value, u64 ema_old)
+@@ -261,7 +261,7 @@ void irq_timings_disable(void)
+ #define EMA_ALPHA_VAL		64
+ #define EMA_ALPHA_SHIFT		7
  
- static int irq_timings_next_event_index(int *buffer, size_t len, int period_max)
- {
--	int i;
-+	int period;
-+
-+	/*
-+	 * Move the beginnning pointer to the end minus the max period
-+	 * x 3. We are at the point we can begin searching the pattern
-+	 */
-+	buffer = &buffer[len - (period_max * 3)];
-+
-+	/*
-+	 * Adjust the length to the maximum allowed period x 3
-+	 */
-+	len = period_max * 3;
- 
- 	/*
- 	 * The buffer contains the suite of intervals, in a ilog2
-@@ -306,21 +317,45 @@ static int irq_timings_next_event_index(int *buffer, size_t len, int period_max)
- 	 * period beginning at the end of the buffer. We do that for
- 	 * each suffix.
- 	 */
--	for (i = period_max; i >= PREDICTION_PERIOD_MIN ; i--) {
-+	for (period = period_max; period >= PREDICTION_PERIOD_MIN ; period--) {
- 
--		int *begin = &buffer[len - (i * 3)];
--		int *ptr = begin;
-+		/*
-+		 * The first comparison always succeed because the
-+		 * suffix is deduced from the first n-period bytes of
-+		 * the buffer and we compare the initial suffix with
-+		 * itself, so we can skip the first iteration.
-+		 */
-+		int idx = period;
-+		size_t size = period;
- 
- 		/*
- 		 * We look if the suite with period 'i' repeat
- 		 * itself. If it is truncated at the end, as it
- 		 * repeats we can use the period to find out the next
--		 * element.
-+		 * element with the modulo.
- 		 */
--		while (!memcmp(ptr, begin, i * sizeof(*ptr))) {
--			ptr += i;
--			if (ptr >= &buffer[len])
--				return begin[((i * 3) % i)];
-+		while (!memcmp(buffer, &buffer[idx], size * sizeof(int))) {
-+
-+			/*
-+			 * Move the index in a period basis
-+			 */
-+			idx += size;
-+
-+			/*
-+			 * If this condition is reached, all previous
-+			 * memcmp were successful, so the period is
-+			 * found.
-+			 */
-+			if (idx == len)
-+				return buffer[len % period];
-+
-+			/*
-+			 * If the remaining elements to compare are
-+			 * smaller than the period, readjust the size
-+			 * of the comparison for the last iteration.
-+			 */
-+			if (len - idx < period)
-+				size = len - idx;
- 		}
- 	}
- 
+-#define PREDICTION_PERIOD_MIN	2
++#define PREDICTION_PERIOD_MIN	3
+ #define PREDICTION_PERIOD_MAX	5
+ #define PREDICTION_FACTOR	4
+ #define PREDICTION_MAX		10 /* 2 ^ PREDICTION_MAX useconds */
 -- 
 2.17.1
 
