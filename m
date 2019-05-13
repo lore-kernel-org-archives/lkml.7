@@ -2,203 +2,199 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D33C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5865C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF5E206BF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:02:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C95A20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bIbPRVQM"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MKclIm69";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XRvugWw1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbfEMRCU (ORCPT
+        id S1730267AbfEMREF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:02:20 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39344 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731045AbfEMRCU (ORCPT
+        Mon, 13 May 2019 13:04:05 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35638 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730002AbfEMREE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:02:20 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGwgch132176;
-        Mon, 13 May 2019 17:00:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=4xiDPOzSHcQpk0xHvpIXFduYKLuE1ShLeQljNETPlH8=;
- b=bIbPRVQMgiUHCVQwzQuqCiiZIMI38WFqpvE61wvkwdHcTyhzPfLq4oD3+D8wgtXVJoxY
- 8pC1Vh0vbaJ30yemQlGtGrVuLAlyjkghNmAbqrM8fv46zQ94FvB757novPa3rKLV2imw
- 0Rsln4Ilxb01BbtFroGEkx5twV4K/0dcJwz27KIIJVo9abCRYhOxxhQrvBsDBZRIO9Ty
- fRd5tFBbwgLIO5OYE3zC4KfSunv09l19QUIWVVDyhKWbZBQOOX4YplDNz7gkK6j5i6n7
- j89WdQO6nRc6bsocVSBH3ck1exCVyYHV40l8U51e46C4tjj5CNcjBeBCdDLOJw5BdN4S vA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdgm9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 17:00:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGxHjO090835;
-        Mon, 13 May 2019 17:00:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2se0tvp1hb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 17:00:36 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DH0ZfW031069;
-        Mon, 13 May 2019 17:00:35 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 10:00:35 -0700
-Subject: Re: [RFC KVM 19/27] kvm/isolation: initialize the KVM page table with
- core mappings
-To:     Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-20-git-send-email-alexandre.chartre@oracle.com>
- <a9198e28-abe1-b980-597e-2d82273a2c17@intel.com>
- <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <ec26a85f-ff1c-89d9-5e6c-ff42e834c48d@oracle.com>
-Date:   Mon, 13 May 2019 19:00:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <CALCETrXYW-CfixanL3Wk5v_5Ex7WMe+7POV0VfBVHujfb6cvtQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 13 May 2019 13:04:04 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DH41bV030117;
+        Mon, 13 May 2019 10:04:02 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=j3j/rn2fnUQSGulhq+o5BZic2pM4QFoMHBCIdragw48=;
+ b=MKclIm69VpeaX3QJSNz0xCi+IaoEaVP4xnE+/Dvpb91utRu87VG8sdV3PTcpYDv/mCS4
+ cIJRt7+on5srfa6PARxWcxboBfHFHyLZUQxz1OOOCTpjlulVwfmMsjEEMoIye9hANjAu
+ FOj9rCmjJwPbnwaRQjNRJ4mccBrkJD/RI2w= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sfafbgja1-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 10:04:02 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 13 May 2019 10:04:00 -0700
+Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 13 May 2019 10:04:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j3j/rn2fnUQSGulhq+o5BZic2pM4QFoMHBCIdragw48=;
+ b=XRvugWw1fv0A3BZ0LPxKZ3tMrVSBMWg/tccFZ4fLdKEK2TnxCIHNjf1FK08AWqdyiHISi1beN5uh/AnlkXLjUbKQHdGf12ajyC36ADpSMp14AFB9Cn2KS7kGjWs6q6AegLl2iCfJj+kfx3+WKIXs/yP45dIZSazCyxKhnDYDzD8=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Mon, 13 May 2019 17:03:58 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 17:03:58 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "Kernel Team" <Kernel-team@fb.com>
+Subject: Re: [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer"
+ (76f969e)
+Thread-Topic: [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer"
+ (76f969e)
+Thread-Index: AQHVCSoMi3vTppklSEy7VGeoXNz2TaZpSV2A
+Date:   Mon, 13 May 2019 17:03:58 +0000
+Message-ID: <20190513170354.GB10982@tower.DHCP.thefacebook.com>
+References: <1557709124.798rxdb4l3.astroid@alex-desktop.none>
+In-Reply-To: <1557709124.798rxdb4l3.astroid@alex-desktop.none>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130116
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130116
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR2201CA0020.namprd22.prod.outlook.com
+ (2603:10b6:301:28::33) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::b4b6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c25e417-6857-4fca-279c-08d6d7c4fd41
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2631;
+x-ms-traffictypediagnostic: BYAPR15MB2631:
+x-microsoft-antispam-prvs: <BYAPR15MB26316498BA25259C4174EFA2BE0F0@BYAPR15MB2631.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39860400002)(346002)(376002)(199004)(189003)(52314003)(68736007)(186003)(102836004)(6512007)(9686003)(14454004)(99286004)(486006)(76176011)(478600001)(52116002)(476003)(54906003)(6506007)(46003)(11346002)(446003)(33656002)(386003)(81166006)(8676002)(81156014)(66476007)(66556008)(64756008)(66446008)(6916009)(2906002)(66946007)(6436002)(305945005)(6116002)(73956011)(229853002)(6486002)(7736002)(25786009)(8936002)(1076003)(5660300002)(71200400001)(71190400001)(4326008)(53936002)(6246003)(86362001)(256004)(14444005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2631;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: z5ItmpqZph8pWofrf3C5wlAKRXWRu0dvHNIRH/U/dX7lqEflXObiXnAJ6UN5x3OQaULNggAwHNPnKv46gAcH5KF4ZBWO2tx0NaPFzqxrsggcIJMkxUko4aapU9FkYobD7Bl14j+NPgDyRJnisrHTNscan7sTF5ETJrMV+/KH70UoD/1fvrR1Hno8uSsdOnNC3ALiPpgRIuB3V1lEakQOOC4w0afcq0i+gpJr4xeVfLucWcCdm0DvqycK9XpnmPZ3FcSPQ0Nxzc0znPVZGqhi/osuiJIq6b/9N4JXGkxx6asA2RqcrQWQF7HUYvvwCDlGvgidpls/rWAHrGukRA8NxKUhZAW26kciB/KOWQ8rt/ivs2W+xAIIsswMMM09E70TxKGrNoK/wuJ5Eg9QuCc+RPFVuEuR9QBfnOrxh4aAp0o=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C0ED03F7E52C8449B40B9AB3EED8246B@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c25e417-6857-4fca-279c-08d6d7c4fd41
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 17:03:58.4649
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2631
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alex!
 
-
-On 5/13/19 6:00 PM, Andy Lutomirski wrote:
-> On Mon, May 13, 2019 at 8:50 AM Dave Hansen <dave.hansen@intel.com> wrote:
->>
->>> +     /*
->>> +      * Copy the mapping for all the kernel text. We copy at the PMD
->>> +      * level since the PUD is shared with the module mapping space.
->>> +      */
->>> +     rv = kvm_copy_mapping((void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE,
->>> +          PGT_LEVEL_PMD);
->>> +     if (rv)
->>> +             goto out_uninit_page_table;
->>
->> Could you double-check this?  We (I) have had some repeated confusion
->> with the PTI code and kernel text vs. kernel data vs. __init.
->> KERNEL_IMAGE_SIZE looks to be 512MB which is quite a bit bigger than
->> kernel text.
->>
->>> +     /*
->>> +      * Copy the mapping for cpu_entry_area and %esp fixup stacks
->>> +      * (this is based on the PTI userland address space, but probably
->>> +      * not needed because the KVM address space is not directly
->>> +      * enterered from userspace). They can both be copied at the P4D
->>> +      * level since they each have a dedicated P4D entry.
->>> +      */
->>> +     rv = kvm_copy_mapping((void *)CPU_ENTRY_AREA_PER_CPU, P4D_SIZE,
->>> +          PGT_LEVEL_P4D);
->>> +     if (rv)
->>> +             goto out_uninit_page_table;
->>
->> cpu_entry_area is used for more than just entry from userspace.  The gdt
->> mapping, for instance, is needed everywhere.  You might want to go look
->> at 'struct cpu_entry_area' in some more detail.
->>
->>> +#ifdef CONFIG_X86_ESPFIX64
->>> +     rv = kvm_copy_mapping((void *)ESPFIX_BASE_ADDR, P4D_SIZE,
->>> +          PGT_LEVEL_P4D);
->>> +     if (rv)
->>> +             goto out_uninit_page_table;
->>> +#endif
->>
->> Why are these mappings *needed*?  I thought we only actually used these
->> fixup stacks for some crazy iret-to-userspace handling.  We're certainly
->> not doing that from KVM context.
->>
->> Am I forgetting something?
->>
->>> +#ifdef CONFIG_VMAP_STACK
->>> +     /*
->>> +      * Interrupt stacks are vmap'ed with guard pages, so we need to
->>> +      * copy mappings.
->>> +      */
->>> +     for_each_possible_cpu(cpu) {
->>> +             stack = per_cpu(hardirq_stack_ptr, cpu);
->>> +             pr_debug("IRQ Stack %px\n", stack);
->>> +             if (!stack)
->>> +                     continue;
->>> +             rv = kvm_copy_ptes(stack - IRQ_STACK_SIZE, IRQ_STACK_SIZE);
->>> +             if (rv)
->>> +                     goto out_uninit_page_table;
->>> +     }
->>> +
->>> +#endif
->>
->> I seem to remember that the KVM VMENTRY/VMEXIT context is very special.
->>   Interrupts (and even NMIs?) are disabled.  Would it be feasible to do
->> the switching in there so that we never even *get* interrupts in the KVM
->> context?
-> 
-> That would be nicer.
-> 
-> Looking at this code, it occurs to me that mapping the IRQ stacks
-> seems questionable.  As it stands, this series switches to a normal
-> CR3 in some C code somewhere moderately deep in the APIC IRQ code.  By
-> that time, I think you may have executed traceable code, and, if that
-> happens, you lose.  i hate to say this, but any shenanigans like this
-> patch does might need to happen in the entry code *before* even
-> switching to the IRQ stack.  Or perhaps shortly thereafter.
->
-> We've talked about moving context tracking to C.  If we go that route,
-> then this KVM context mess could go there, too -- we'd have a
-> low-level C wrapper for each entry that would deal with getting us
-> ready to run normal C code.
-> 
-> (We need to do something about terminology.  This kvm_mm thing isn't
-> an mm in the normal sense.  An mm has normal kernel mappings and
-> varying user mappings.  For example, the PTI "userspace" page tables
-> aren't an mm.  And we really don't want a situation where the vmalloc
-> fault code runs with the "kvm_mm" mm active -- it will totally
-> malfunction.)
-> 
-
-One of my next step is to try to put the KVM page table in the PTI userspace
-page tables, and not switch CR3 on KVM_RUN ioctl. That way, we will run with
-a regular mm (but using the userspace page table). Then interrupt would switch
-CR3 to kernel page table (like paranoid idtentry currently do it).
-
-alex.
+Thank you for the report!
+It's super clear, and contains all the details, so it took me 30s
+to reproduce the issue. Really appreciate your effort!
 
 
 
+On Sun, May 12, 2019 at 09:20:12PM -0400, Alex Xu (Hello71) wrote:
+> Hi,
+>=20
+> I was trying to use strace recently and found that it exhibited some=20
+> strange behavior. I produced this minimal test case:
+>=20
+> #include <unistd.h>
+>=20
+> int main() {
+>     write(1, "a", 1);
+>     return 0;
+> }
+>=20
+> which, when run using "gcc test.c && strace ./a.out" produces this=20
+> strace output:
+>=20
+> [ pre-main omitted ]
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
+d if SA_RESTART is set)
+> [ repeats forever ]
+>=20
+> The correct result is of course:
+>=20
+> [ pre-main omitted ]
+> write(1, "a", 1)                        =3D 1
+> exit_group(0)                           =3D ?
+> +++ exited with 0 +++
+>=20
+> Strangely, this only occurs when outputting to a tty-like output.=20
+> Running "strace ./a.out" from a native Linux x86 console or a terminal=20
+> emulator causes the abnormal behavior. However, the following commands=20
+> work correctly:
+>=20
+> - strace ./a.out >/dev/null
+> - strace ./a.out >/tmp/a # /tmp is a standard tmpfs
+> - strace ./a.out >&- # causes -1 EBADF (Bad file descriptor)
+>=20
+> "strace -o /tmp/a ./a.out" hangs and produces the above (infinite)=20
+> output to /tmp/a.
+>=20
+> I bisected this to 76f969e, "cgroup: cgroup v2 freezer". I reverted the=20
+> entire patchset (reverting only that one caused a conflict), which=20
+> resolved the issue. I skimmed the patch and came up with this=20
+> workaround, which also resolves the issue. I am not at all clear on the=20
+> technical workings of the patchset, but it seems to me like a process's=20
+> frozen status is supposed to be "suspended" when a frozen process is=20
+> ptraced, and "unsuspended" when ptracing ends. Therefore, it seems=20
+> suspicious to always "enter frozen" whether or not the cgroup is=20
+> actually frozen. It seems like the code should instead check if the=20
+> cgroup is actually frozen, and if so, restore the frozen status.
 
+So, the thing is that when the freezer tries to freeze all tasks
+in the cgroup, some tasks may sleep (e.g. being SIGSTOPPed),
+and the freezer can't get them out of this state and put them back correctl=
+y
+after unfreezing. So instead it leaves such tasks in the original state
+and treats them as frozen. This is why we need this unconditional
+cgroup_enter_frozen(). It's not the problem.
+
+Anyway, I'm sure that with great help from Oleg we'll be able
+to fix the issue very soon (I already posted a preliminary patch).
+
+Once again, thank you for the report!
+
+Roman
