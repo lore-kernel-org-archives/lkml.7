@@ -2,66 +2,138 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4BBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23E6C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D66D208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55817208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:01:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ju4mEqg8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfEMV5t (ORCPT
+        id S1726609AbfEMWBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:57:49 -0400
-Received: from smtprelay0164.hostedemail.com ([216.40.44.164]:56307 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726413AbfEMV5t (ORCPT
+        Mon, 13 May 2019 18:01:08 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42015 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbfEMWBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:57:49 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 513FB1802912A;
-        Mon, 13 May 2019 21:57:48 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: tramp93_6119a0acc5355
-X-Filterd-Recvd-Size: 1656
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 13 May 2019 21:57:47 +0000 (UTC)
-Message-ID: <ffbff01f239ec468af0b591638e019f3f8fc990e.camel@perches.com>
-Subject: Re: [PATCH 1/2] firmware: bcm47xx_nvram: Correct size_t printf
- format
-From:   Joe Perches <joe@perches.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>, linux-mips@linux-mips.org
-Cc:     =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 13 May 2019 14:57:45 -0700
-In-Reply-To: <20190513215250.19246-1-f.fainelli@gmail.com>
-References: <20190513215250.19246-1-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Mon, 13 May 2019 18:01:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 145so7454476pgg.9;
+        Mon, 13 May 2019 15:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=BmohReTs8oe9mx36kGEB4VnDpcgr/j26VHR2MYQ6DXc=;
+        b=Ju4mEqg8x5eYk6CHoWmkkEfGCg7glF/eJ8cLf3NnG25GPVs9B9/psWZdZWH0Z2S7C3
+         zz5mZ6JLp+tIFy6KJHdOtQzMJaGn278yLc2K79fcb/bZhgEz2GNOT7IhC40LbtBGGU84
+         IpS7AUKD5pgT3cSTg14JOTk48rIXnqAZL5QhUSIzFe8aH51Ti54BG64SLU9fx1dGhhqW
+         pflESkGO1KdHsf2TYVyLIlFY021oxyEbi1rlpM0BnVUJniWtGFq65e1YAQpw4L9jWdjY
+         1AVe1WQAyQ6VaTs17k7fMnAT11oitfyiM96miZe3FhB7u5Q+NA4iFtEFKDc0/CrLAS8d
+         aWPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BmohReTs8oe9mx36kGEB4VnDpcgr/j26VHR2MYQ6DXc=;
+        b=YTyBMKoGmCIPGv2qN+m+CaQYJI/7UEsKPnxxwDjcR3UaDuu8vUEwiuf91kZXesakJv
+         XsQNf1p4Y3fOdZHihd2Z1jeBGzIiV6QbTb8UUQH2WkNKjPyoPserdRtiH0aZZNeXfJns
+         jueOZfC/VZOasl8MXwHtuY4VuDA64mQFi56YrsSIWE+BOXfBltKjbFOkFjnNN+J554ST
+         AlKE4BUY7MmlcS3qhIqN/OHhe60MdbDxvFV7ncblEyypKX50CkljF3ZJlBzf11Z4xmOn
+         nFkR/dTWf7m04pKbDeFh70zXCYuYytb5d8oKILEL2ImnMK91Wnyhht1B5Lr9P6KGVets
+         7qGA==
+X-Gm-Message-State: APjAAAXe26yl1KBWNmmbHvocnsWZQU70CnpnUd3hFbpSNJEGVbnnhvZm
+        xFIL1/U9+bht3WsTqS1DBEc=
+X-Google-Smtp-Source: APXvYqy81lzMO2bK11iOnpqqTUPG1iup+4E7SDIPadrSejRVtOHbQHeJx+VL6icdi3oI011wIa7fdg==
+X-Received: by 2002:a63:cf0d:: with SMTP id j13mr35216766pgg.433.1557784867236;
+        Mon, 13 May 2019 15:01:07 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:5dd:49d5:5580:adf5? ([2601:282:800:fd80:5dd:49d5:5580:adf5])
+        by smtp.googlemail.com with ESMTPSA id q27sm10385684pfg.49.2019.05.13.15.01.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 15:01:06 -0700 (PDT)
+Subject: Re: getneigh: add nondump to retrieve single entry
+To:     mcmahon@arista.com, davem@davemloft.net, roopa@cumulusnetworks.com,
+        christian@brauner.io, khlebnikov@yandex-team.ru,
+        lzgrablic@arista.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mowat@arista.com, dmia@arista.com
+References: <mcmahon@arista.com> <20190513160335.24128-1-mcmahon@arista.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <d05e56d5-2677-3c03-7a25-df2ca2681a75@gmail.com>
+Date:   Mon, 13 May 2019 16:01:04 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190513160335.24128-1-mcmahon@arista.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-13 at 14:52 -0700, Florian Fainelli wrote:
-> When building on a 64-bit host, we will get warnings like those:
-> 
-> drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
->    pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->    ^~~~~~
-> drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
->    pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->                            ~^
->                            %li
-> 
-> Use %zi instead for that purpose.
+On 5/13/19 10:03 AM, mcmahon@arista.com wrote:
+> diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+> index 30f6fd8f68e0..981f1568710b 100644
+> --- a/net/core/neighbour.c
+> +++ b/net/core/neighbour.c
+> +static int neigh_find_fill(struct neigh_table *tbl, const void *pkey,
+> +                           struct net_device *dev, struct sk_buff *skb, u32 pid,
+> +                           u32 seq)
+> +{
+> +	struct neighbour *neigh;
+> +	int key_len = tbl->key_len;
+> +	u32 hash_val;
+> +	struct neigh_hash_table *nht;
+> +	int err;
 
-typically it is %zu
+reverse xmas tree ordering
 
+...
 
+> +static int neigh_get(struct sk_buff *skb, struct nlmsghdr *nlh)
+> +{
+> +	struct net *net = sock_net(skb->sk);
+> +	struct ndmsg *ndm;
+> +	struct nlattr *dst_attr;
+> +	struct neigh_table *tbl;
+> +	struct net_device *dev = NULL;
+> +
+> +	ASSERT_RTNL();
+> +	if (nlmsg_len(nlh) < sizeof(*ndm))
+> +		return -EINVAL;
+> +
+> +	dst_attr = nlmsg_find_attr(nlh, sizeof(*ndm), NDA_DST);
+> +	if (dst_attr == NULL)
+> +		return -EINVAL;
+> +
+> +	ndm = nlmsg_data(nlh);
+> +	if (ndm->ndm_ifindex) {
+> +		dev = __dev_get_by_index(net, ndm->ndm_ifindex);
+> +		if (dev == NULL)
+> +			return -ENODEV;
+> +	}
+> +
+> +	read_lock(&neigh_tbl_lock);
+
+this patch is clearly for a MUCH older kernel than 5.2 (like 3.18
+maybe?) as that lock no longer exists.
+
+> +	for (tbl = neigh_tables; tbl; tbl = tbl->next) {
+> +		struct sk_buff *nskb;
+> +		int err;
+> +
+> +		if (tbl->family != ndm->ndm_family)
+> +			continue;
+
+Use neigh_find_table.
+
+You need to update the patch to top of net-next tree and re-work the
+locking. Run tests with RCU and lock debugging enabled to make sure you
+have it right.
