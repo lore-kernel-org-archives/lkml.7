@@ -2,85 +2,68 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0103C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F302AC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7067321537
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557762562;
-	bh=iu0DvAJjkMh0MqQjI1Y4OdDJERot1b1WNhATGWADuGY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zyxv/zqCHWOCXK129oYO6romVzxOEQ1/3puYv9I9vpNjfDaGUxEC9PB9Desj1tPXA
-	 NIYk8R2lf4LFquP0Xclk8S5szyTexq+ezBPgE56F1DEFVxbYdyadjNab3M5z5N9AHb
-	 51FrePkLpqHKr9gv2JqyT5rZE4LvKA8XeMTWfuEI=
+	by mail.kernel.org (Postfix) with ESMTP id C1EBB208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbfEMPtV (ORCPT
+        id S1729548AbfEMPvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:49:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbfEMPtU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:49:20 -0400
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF752168B
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557762560;
-        bh=iu0DvAJjkMh0MqQjI1Y4OdDJERot1b1WNhATGWADuGY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rp9du5MO21nSayjZvEV1P+McQzueie510+aXWIwZDusr/NFBMwc8rezLPKhgqr32X
-         3bpPFK2yS1j9w8/gk2ZvrdLIpltbrgs5fP6MQ8XfN0XLNE6B/el429ftLpgsiSQPsv
-         LdGX/qAGGgoG1klNvY2ITJvDZvWta9cbZAHn6heo=
-Received: by mail-wm1-f42.google.com with SMTP id h11so14153002wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:49:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWqLpEHW0nXoBehbRYsPphfbClk9vs69ixxeslrP1jsK6S+eiCq
-        3gQQKP9Mfx4sGgE0S1gIkDbYqDYPrb4UhY4PM25GEA==
-X-Google-Smtp-Source: APXvYqyggSeuJFq1Eke91tNtR4SA4B4i+YkaoSBUhYCtCAsL8+cTTl0ofap3IWQH83A63l00cYsKpyKbuDbIwRau26E=
-X-Received: by 2002:a1c:486:: with SMTP id 128mr15280833wme.83.1557762558612;
- Mon, 13 May 2019 08:49:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com> <1557758315-12667-6-git-send-email-alexandre.chartre@oracle.com>
-In-Reply-To: <1557758315-12667-6-git-send-email-alexandre.chartre@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 13 May 2019 08:49:07 -0700
-X-Gmail-Original-Message-ID: <CALCETrXmHHjfa3tX2fxec_o165NB0qFBAG3q5i4BaKV==t7F2Q@mail.gmail.com>
-Message-ID: <CALCETrXmHHjfa3tX2fxec_o165NB0qFBAG3q5i4BaKV==t7F2Q@mail.gmail.com>
-Subject: Re: [RFC KVM 05/27] KVM: x86: Add handler to exit kvm isolation
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 May 2019 11:51:09 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38928 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbfEMPvI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:51:08 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9625514E11A09;
+        Mon, 13 May 2019 08:51:07 -0700 (PDT)
+Date:   Mon, 13 May 2019 08:51:04 -0700 (PDT)
+Message-Id: <20190513.085104.1611937467438995000.davem@davemloft.net>
+To:     maxime.chevallier@bootlin.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com,
+        gregory.clement@bootlin.com, miquel.raynal@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
+        linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org,
+        jakub.kicinski@netronome.com
+Subject: Re: [PATCH net v2] net: mvpp2: cls: Add missing NETIF_F_NTUPLE flag
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190513073033.15015-1-maxime.chevallier@bootlin.com>
+References: <20190513073033.15015-1-maxime.chevallier@bootlin.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 13 May 2019 08:51:08 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
-<alexandre.chartre@oracle.com> wrote:
->
-> From: Liran Alon <liran.alon@oracle.com>
->
-> Interrupt handlers will need this handler to switch from
-> the KVM address space back to the kernel address space
-> on their prelog.
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Date: Mon, 13 May 2019 09:30:33 +0200
 
-This patch doesn't appear to do anything at all.  What am I missing?
+> Now that the mvpp2 driver supports classification offloading, we must
+> add the NETIF_F_NTUPLE to the features list.
+> 
+> Since the current code doesn't allow disabling the feature, we don't set
+> the flag in dev->hw_features.
+> 
+> Fixes: 90b509b39ac9 ("net: mvpp2: cls: Add Classification offload support")
+> Reported-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+> V2: Rebased on latest -net, added Jakub's Ack, gave more details in the
+>     commit log about not adding the flag in hw_features.
+
+Applied, thanks.
