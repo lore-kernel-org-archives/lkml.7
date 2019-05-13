@@ -2,184 +2,113 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEA4C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3727C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F347F2146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4522146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="F3ixlg5D"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bxWpXWU/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbfEMOl6 (ORCPT
+        id S1730787AbfEMOmB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:41:58 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39134 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbfEMOle (ORCPT
+        Mon, 13 May 2019 10:42:01 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:37628 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730772AbfEMOl5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:41:34 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEdhZc193417;
-        Mon, 13 May 2019 14:40:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=WgSqF1N9AL8OkCOWJMjKijUQDrf/NZQ7sjOAy3KvX18=;
- b=F3ixlg5Del/kZFpkm5V339YqcYZIvytCmmZa2JMsPdT9dTNJdzNgJr2su3ZaFPX7+xSo
- OgE5doXVsWLJE6lg24N70KQRsqrw7KDlX0Lmv11xaiukFvSmC1PL9Z+pb6KOsPd3f9/Q
- TysNHNbYW17DUsb88Xzm+0xLKL38OFY7GPCscqM5Sr2RGXWabgevtm0BY8LIkE1hebHi
- ZDG3ZUmmf/4/2FsM+aInuyKqWofpo40CdOK/HySYEBTuzbf6QiQlJM7oxHIAKfyG/xd8
- 7z7TkAUzLmadWyiur41dp0GSyhTRruaBBuRMWSLXH6YSLiSP0FUqhXsgwlGrUBetwxxp pQ== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdfm1k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:40:01 +0000
-Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQT022780;
-        Mon, 13 May 2019 14:39:53 GMT
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com,
-        alexandre.chartre@oracle.com
-Subject: [RFC KVM 26/27] kvm/isolation: initialize the KVM page table with KVM memslots
-Date:   Mon, 13 May 2019 16:38:34 +0200
-Message-Id: <1557758315-12667-27-git-send-email-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=970
- adultscore=15 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130103
+        Mon, 13 May 2019 10:41:57 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 32332C0161;
+        Mon, 13 May 2019 14:41:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557758508; bh=Q4RwNBuD8FtLCQ9UQgg0ETBjXIo13TCHbTK17grz4lY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bxWpXWU/MCnS+mi6hZ8O3LDVNP667dIopzjPVf22P7/Otl8C1qtBdGdadJTe9Ur38
+         eoT3IFkJA7d3WG6IBfB8OKHbQ84RzY4Y5YtrmLjhebvKEWEAJdlaWXsZBeZyTl2mrF
+         KWOmN7SYBlqzZXBpjU8gLXO5X25c1U4k677uCw/jaoZm1MK0JijbxOE+V9bWUzv7qJ
+         6mQ0mLvbjd2PUvvxZGHG5gv3j3kG8ic+hYnEjzfBcTXCetaT5ARV9221nxnvcQyOTE
+         61c7NLlK6Ee3o/Xoh0oGGge7avtKuerJQWdZpei1N1giZkvju8/hwnv4jWwEuZ8skP
+         fq+OZWHIWp2ZQ==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
+        by mailhost.synopsys.com (Postfix) with ESMTP id B5A52A005A;
+        Mon, 13 May 2019 14:41:55 +0000 (UTC)
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH] ARC: Send SIGSEGV if userspace process accesses kernel virtual memory
+Date:   Mon, 13 May 2019 17:41:53 +0300
+Message-Id: <20190513144153.6112-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVM memslots can change after they have been created so new memslots
-have to be mapped when they are created.
+As of today if userspace process tries to access address which belongs
+to kernel virtual memory area and kernel have mapping for this address
+that process hangs instead of receiving SIGSEGV and being killed.
 
-TODO: we currently don't unmapped old memslots, they should be unmapped
-when they are freed.
+Steps to reproduce:
+Create userspace application which reads from the beginning of
+kernel-space virtual memory area (I.E. read from 0x7000_0000 on most
+of existing platforms):
+------------------------>8-----------------
+ #include <stdlib.h>
+ #include <stdint.h>
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+ int main(int argc, char *argv[])
+ {
+ 	volatile uint32_t temp;
+
+ 	temp = *(uint32_t *)(0x70000000);
+ }
+------------------------>8-----------------
+That application hangs after such memory access.
+
+Fix that by checking which access (user or kernel) caused the exception
+before handling kernel virtual address fault.
+
+Cc: <stable@vger.kernel.org> # 4.20+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/x86/kvm/isolation.c |   39 +++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/isolation.h |    1 +
- arch/x86/kvm/x86.c       |    3 +++
- 3 files changed, 43 insertions(+), 0 deletions(-)
+ arch/arc/mm/fault.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index b0c789f..255b2da 100644
---- a/arch/x86/kvm/isolation.c
-+++ b/arch/x86/kvm/isolation.c
-@@ -1593,13 +1593,45 @@ static void kvm_isolation_clear_handlers(void)
- 	kvm_page_fault_handler = NULL;
- }
- 
-+void kvm_isolation_check_memslots(struct kvm *kvm)
-+{
-+	struct kvm_range_mapping *rmapping;
-+	int i, err;
-+
-+	if (!kvm_isolation())
-+		return;
-+
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		rmapping = kvm_get_range_mapping(kvm->memslots[i], NULL);
-+		if (rmapping)
-+			continue;
-+		pr_debug("remapping kvm memslots[%d]\n", i);
-+		err = kvm_copy_ptes(kvm->memslots[i],
-+		    sizeof(struct kvm_memslots));
-+		if (err)
-+			pr_debug("failed to map kvm memslots[%d]\n", i);
-+	}
-+
-+}
-+
- int kvm_isolation_init_vm(struct kvm *kvm)
- {
-+	int err, i;
-+
- 	if (!kvm_isolation())
- 		return 0;
- 
- 	kvm_clear_page_fault();
- 
-+	pr_debug("mapping kvm memslots\n");
-+
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		err = kvm_copy_ptes(kvm->memslots[i],
-+		    sizeof(struct kvm_memslots));
-+		if (err)
-+			return err;
-+	}
-+
- 	pr_debug("mapping kvm srcu sda\n");
- 
- 	return (kvm_copy_percpu_mapping(kvm->srcu.sda,
-@@ -1608,9 +1640,16 @@ int kvm_isolation_init_vm(struct kvm *kvm)
- 
- void kvm_isolation_destroy_vm(struct kvm *kvm)
- {
-+	int i;
-+
- 	if (!kvm_isolation())
- 		return;
- 
-+	pr_debug("unmapping kvm memslots\n");
-+
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
-+		kvm_clear_range_mapping(kvm->memslots[i]);
-+
- 	pr_debug("unmapping kvm srcu sda\n");
- 
- 	kvm_clear_percpu_mapping(kvm->srcu.sda);
-diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
-index 2d7d016..1e55799 100644
---- a/arch/x86/kvm/isolation.h
-+++ b/arch/x86/kvm/isolation.h
-@@ -32,6 +32,7 @@ static inline bool kvm_isolation(void)
- extern void kvm_clear_range_mapping(void *ptr);
- extern int kvm_copy_percpu_mapping(void *percpu_ptr, size_t size);
- extern void kvm_clear_percpu_mapping(void *percpu_ptr);
-+extern void kvm_isolation_check_memslots(struct kvm *kvm);
- extern int kvm_add_task_mapping(struct task_struct *tsk);
- extern void kvm_cleanup_task_mapping(struct task_struct *tsk);
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index e1cc3a6..7d98e9f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9438,6 +9438,7 @@ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
- 	 * mmio generation may have reached its maximum value.
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 8df1638259f3..53fb4ba6cd08 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	struct vm_area_struct *vma = NULL;
+ 	struct task_struct *tsk = current;
+ 	struct mm_struct *mm = tsk->mm;
+-	int si_code = 0;
++	int si_code = SEGV_ACCERR;
+ 	int ret;
+ 	vm_fault_t fault;
+ 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+@@ -82,6 +82,10 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	 * nothing more.
  	 */
- 	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
-+	kvm_isolation_check_memslots(kvm);
- }
- 
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
-@@ -9537,6 +9538,8 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 */
- 	if (change != KVM_MR_DELETE)
- 		kvm_mmu_slot_apply_flags(kvm, (struct kvm_memory_slot *) new);
+ 	if (address >= VMALLOC_START) {
++		/* Forbid userspace to access kernel-space virtual memory */
++		if (unlikely(user_mode(regs)))
++			goto bad_area_nosemaphore;
 +
-+	kvm_isolation_check_memslots(kvm);
- }
- 
- void kvm_arch_flush_shadow_all(struct kvm *kvm)
+ 		ret = handle_kernel_vaddr_fault(address);
+ 		if (unlikely(ret))
+ 			goto bad_area_nosemaphore;
 -- 
-1.7.1
+2.14.5
 
