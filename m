@@ -2,116 +2,69 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4830DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F56C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E552086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E482086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="hs5Gxkxz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="20sa5qkL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfEMHyt (ORCPT
+        id S1728233AbfEMHzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:54:49 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:39406 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfEMHys (ORCPT
+        Mon, 13 May 2019 03:55:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52384 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727870AbfEMHzj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:54:48 -0400
-Received: by mail-it1-f193.google.com with SMTP id 9so11621573itf.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:54:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=hMKCJuK6rSD3LVExCwUPzA6XGItnU5aIo+GZfePKqHM=;
-        b=hs5GxkxzwleyU4quaW1XaB5N2OkDLJkgq+lGI0FcFJci/1eAZKILfcTeOU41yO28+D
-         fwL/Oi2xtPSEbV0SUPenURf7FD9v/ZRyw/fiAjj7LebCYANxuSzcTBV1XhmUllbOutzZ
-         Ix4BZZk39tF4/SvzxMHTnRAx1+i52/bMVHR5sw0OMIc/Xe8HDkW2hpEVuWg53V5sDsu9
-         F35vDENnn3gUuyx8gddD6dF8yvdEhn5ZoO/g/mZd7locpngtRvBv2YLSnbFIoulFcamX
-         dds2m/hH6GQUr463riVABAN/qjH2inBonheCriXHwhfDtZesiIVZRxe33CCBCS5T8blJ
-         XAzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=hMKCJuK6rSD3LVExCwUPzA6XGItnU5aIo+GZfePKqHM=;
-        b=oguo/QAecHEJWl6WI+N2LHKAWHvJw1jySLRKpSUjOSfipwF1CBF1j66ZZ6IJolocT0
-         d1rRKDr9LOyBLGl33uRWaWcUcAFnkacJwzcYBjFEyD17cOd3nhpg6u/CdI4wKnMszYA9
-         e75y01JCkTqE9mxiMbvYH3kYL3UQGcPSm0B3IQqF+gtEM26AStRm4TXBu1lsMOCMOFhb
-         0N4M6aDFacpq5ai59YKXLRD0pn7WeuPYq4EoOewCVVe+rPdSKPwymvgY/hOO1x3lCMar
-         M7F8af+zKHu4jMV8Ux9pFCNe8QL+ltWtZiC9YGV0bfM+50+2BK8yEsS1b0jv0XtSL0JB
-         DAlQ==
-X-Gm-Message-State: APjAAAWXT+nN4o7U2EbISGX2vZFEfJCqgTeynDFtVW1APHJFaGENOfqy
-        mdxafg7hbUO9GSiPtxcfQMdxvkFc605094ddQYm8Ow==
-X-Google-Smtp-Source: APXvYqyugyGW2l843vtjeo2K0Rw/fI3D/GR7RImYKoiL4vSMh/+fnOIfjAo8KCQWbriSiNcM+VNAPDDMS25ao3jTZFY=
-X-Received: by 2002:a24:3d8f:: with SMTP id n137mr18160227itn.96.1557734087743;
- Mon, 13 May 2019 00:54:47 -0700 (PDT)
+        Mon, 13 May 2019 03:55:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o6Rg9AFzu3xtSgxocTnQYX1DHwYY26QqjZV0zMsV5zQ=; b=20sa5qkL4roz196zuNWMbOgko
+        zyYrFWyBJbu9V8PhHZymhWNZqcSTplBpVeCN3VuYpOGqGFniF6Vt1wJjQ9k5e+DhH2JslBiCYVCd4
+        i2qddjoUfD/tkXqbmRrW3w5G3l4aNBG25cXR+KTtQF+mjaV/jjypU+8GgWv2ILcpRmFPRB1dKIst7
+        j4zcHMm6jIRf/sxtmgEZZx7M+mKjY7+bO+3d8F4TjO8oo31pTecy/NS8J7I76r2LyDQk+MwecQedQ
+        nJ5ARVskbeDBAq1AlVWXnhLSj7DVTBVVjw5EEySiZjI1BBlC+T1sjWUQjZIedlAR9V2pieq4T9VE3
+        5p+YeiAnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ5o8-0005Ge-JP; Mon, 13 May 2019 07:55:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 545E22029F87A; Mon, 13 May 2019 09:55:35 +0200 (CEST)
+Date:   Mon, 13 May 2019 09:55:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: remove redundant assignment to variable utime
+Message-ID: <20190513075535.GI2623@hirez.programming.kicks-ass.net>
+References: <20190511131849.4513-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190417144709.19588-1-brgl@bgdev.pl>
-In-Reply-To: <20190417144709.19588-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 13 May 2019 09:54:36 +0200
-Message-ID: <CAMRc=MdhfEM_CndCjCkY9kWeu+3VPTA7tmTy5PH=2XforZ6aLw@mail.gmail.com>
-Subject: Re: [RFC 0/2] clocksource: davinci-timer: new driver
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190511131849.4513-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 17 kwi 2019 o 16:47 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
-=82(a):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Hi Daniel,
->
-> as discussed - this is the davinci timer driver split into the clockevent
-> and clocksource parts.
->
-> Since it won't work without all the other (left out for now) changes, I'm
-> marking it as RFC.
->
-> The code has been simplified as requested, the duplicated enums and the
-> davinci_timer structure have been removed.
->
-> Please let me know if that's better. I retested it on da850-lcdk, da830-e=
-vm
-> and dm365-evm.
->
-> Bartosz Golaszewski (2):
->   clocksource: davinci-timer: add support for clockevents
->   clocksource: timer-davinci: add support for clocksource
->
->  drivers/clocksource/Kconfig         |   5 +
->  drivers/clocksource/Makefile        |   1 +
->  drivers/clocksource/timer-davinci.c | 342 ++++++++++++++++++++++++++++
->  include/clocksource/timer-davinci.h |  44 ++++
->  4 files changed, 392 insertions(+)
->  create mode 100644 drivers/clocksource/timer-davinci.c
->  create mode 100644 include/clocksource/timer-davinci.h
->
-> --
-> 2.21.0
->
+On Sat, May 11, 2019 at 02:18:49PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable utime is being assigned a value however this is never
+> read and later it is being reassigned to a new value. The assignment
+> is redundant and hence can be removed.
+> 
+> Addresses-Coverity: ("Unused Value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Hi Daniel,
-
-it's been almost a month so a gentle ping. Any comments on that?
-
-Best regards,
-Bartosz Golaszewski
+Argh. not again.. still no.
