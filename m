@@ -2,122 +2,130 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950F8C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02484C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6708F20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557769206;
-	bh=SrM4iNJmqoJMscAMH9MSZa273/S6iFsFRBCwJbdFkiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NLCPyhysCDRTU6PdEvn97/3raZz0HdBNH3dZqJuI3PFl5N8BkkxwEvq43sI8FIFxU
-	 J/wkr4HwVxATojPWdweafbth+xK7mRQPC9YRr/l5bXE176/gvY7yICWYteBKw0zBL5
-	 erxp+5HjcNh1nOZGboc3poP6201SGED5Uus+DgkU=
+	by mail.kernel.org (Postfix) with ESMTP id AFAB520879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UKkidZ0D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731796AbfEMRkF (ORCPT
+        id S1731804AbfEMRku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:40:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39722 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfEMRkF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:40:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Q8Ws9F8LuqNXJmuF056IOvQqVLZe5vGNwBdJxJpKZrE=; b=Lj3EC4zP2azv7daXeW00ojMnV
-        TQ5VDXE6mjJ4BxlgMmM5TsECB75OFZvSvRpyGSVbfc87Sughcm6sCle2EgMlBB/iyxSEAh6XfZuk9
-        UHmjqd/JfVORHto5SVaDs+jiaU/0rLMOB/leAuFqgXlWs6BrVCEmiGP7LazzcWtwe4fwY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQEvi-0007FN-95; Mon, 13 May 2019 17:40:02 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 8FAF61129232; Mon, 13 May 2019 18:40:00 +0100 (BST)
-Date:   Mon, 13 May 2019 18:40:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
- for Tegra30
-Message-ID: <20190513174000.GH5168@sirena.org.uk>
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-7-digetx@gmail.com>
- <20190508075848.GX14916@sirena.org.uk>
- <af6de446-ab45-1745-30e5-426c6b34421f@gmail.com>
- <20190512090446.GN21483@sirena.org.uk>
- <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
+        Mon, 13 May 2019 13:40:50 -0400
+Received: from mail-eopbgr40049.outbound.protection.outlook.com ([40.107.4.49]:11326
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbfEMRku (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:40:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TZdm1jzS4NfYO6Ve1ZOFhIDFDQye31NCzYq2gp1Gdvk=;
+ b=UKkidZ0D+VBSmeEqiMREnz4CRBbn4JCW9cq326va5+3mxqx+ykDn2UrHjUdFjDLBEVQT9yAohfKWwD0bWEs9Vbc1ZsEE4XHHac2ZiRTgix/yG4WHPeJO4buXUJRHTQtOaEtJG6yaodIQsZtBGE7fMIxaboZOeynhkMQPFvScwLs=
+Received: from DB6PR0402MB2727.eurprd04.prod.outlook.com (10.172.247.10) by
+ DB6PR0402MB2870.eurprd04.prod.outlook.com (10.172.248.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Mon, 13 May 2019 17:40:46 +0000
+Received: from DB6PR0402MB2727.eurprd04.prod.outlook.com
+ ([fe80::e194:a71a:3497:783e]) by DB6PR0402MB2727.eurprd04.prod.outlook.com
+ ([fe80::e194:a71a:3497:783e%8]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 17:40:46 +0000
+From:   Roy Pledge <roy.pledge@nxp.com>
+To:     "jocke@infinera.com" <joakim.tjernlund@infinera.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+CC:     Madalin-cristian Bucur <madalin.bucur@nxp.com>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
+ tree properties
+Thread-Topic: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
+ tree properties
+Thread-Index: AQHVCaZIiomHQCI79kqjC6Wc0PXpqw==
+Date:   Mon, 13 May 2019 17:40:46 +0000
+Message-ID: <DB6PR0402MB27278B23001A8965AE493CE3860F0@DB6PR0402MB2727.eurprd04.prod.outlook.com>
+References: <1557763756-24118-1-git-send-email-roy.pledge@nxp.com>
+ <1557763756-24118-5-git-send-email-roy.pledge@nxp.com>
+ <1afd837287cebccfc1dd68365870d0f5d1cf27f7.camel@infinera.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=roy.pledge@nxp.com; 
+x-originating-ip: [72.142.119.78]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1a06044f-cc39-4f81-0e58-08d6d7ca216a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB6PR0402MB2870;
+x-ms-traffictypediagnostic: DB6PR0402MB2870:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <DB6PR0402MB28704443C1E042FF213C77ED860F0@DB6PR0402MB2870.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(136003)(376002)(396003)(366004)(189003)(199004)(102836004)(66476007)(6116002)(66066001)(26005)(66946007)(476003)(64756008)(66446008)(5660300002)(66556008)(73956011)(446003)(91956017)(6436002)(71200400001)(71190400001)(9686003)(3846002)(76116006)(52536014)(25786009)(53546011)(44832011)(74316002)(186003)(486006)(7736002)(86362001)(76176011)(2201001)(53936002)(14444005)(6506007)(256004)(305945005)(4326008)(81166006)(8936002)(2501003)(6636002)(7696005)(110136005)(81156014)(99286004)(8676002)(54906003)(33656002)(229853002)(55016002)(316002)(2906002)(6246003)(14454004)(478600001)(68736007)(491001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0402MB2870;H:DB6PR0402MB2727.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: SRflkqzjBuziEhBL/L+gcsR/lDP0TMPxgmcOVGkMu/cdbSQ1QKY8KI/XCFbu7/h5MjxA0jrepdC4I5LLtGd1O6EhzbOUs/mXzloZO/MkwnYqR0xD05kFLs7wj2aqk1gbL5mUrD4btc9IAjsd/T7e+5YMP7C9IZQEg/X4SUicR2ehVE3v5WfpEIcutHnc9G/+AX3fcHL0Rmfdd9G7Z30c2Z1kzzVe3aEsmyG630Dz6WfDXK/anvmkL3xvgkFS2dxpQaCYoqVx0Mp8RUf8LDjaYnz1kEfenvydOstyTbaYBENlPoVnqg0/7M9SsYV60XVNWRwgoqO2gU4okkmfYMzJzZcSjy/d95f8YD3qL1SHZqjOWCG7N8W5LT8RIY1YJDobceBmILh+6e2bpVfbVy4F12vR4bd6VvAwnb8fFCq6rG8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4C6bbPZ6c/S1npyF"
-Content-Disposition: inline
-In-Reply-To: <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
-X-Cookie: Must be over 18.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a06044f-cc39-4f81-0e58-08d6d7ca216a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 17:40:46.1976
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2870
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---4C6bbPZ6c/S1npyF
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, May 12, 2019 at 09:29:54PM +0300, Dmitry Osipenko wrote:
-> 12.05.2019 12:04, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > On Wed, May 08, 2019 at 04:27:42PM +0300, Dmitry Osipenko wrote:
-
-> > Those seem like they should be doable in generic code, though the fact
-> > that the constraint is variable makes it annoying to specify - otherwise
-> > it'd just be a minimum and maximum spread.  I'm not really coming up
-> > with any great ideas right now, it's getting into OPP type territory but
-> > it sounds like there's more flexibility for ramping the core voltage so
-> > you'd end up with silly numbers of OPPs.
-
-> The OPP shouldn't have to do anything in regards to the regulators
-> coupling. The whole idea of the regulators coupling is to make device
-> drivers to not churn with the coupling. The coupling in this case is
-> specific to SoC and not to a particular board.
-
-The thing with OPPs is that they specify a whole table of values that
-work together including regulator settings, the result being that you
-have many fewer options but don't need to think about constraints.
-
-> I think the current approach with the customized regulators coupler is
-> the best solution for the time being. We may consider something more
-> generic if there will be other users with a similar coupling
-> requirements, otherwise it's quite difficult to judge what is "generic".
-> Do you agree?
-
-Some of the constraints (like having drivers loaded) are kind of fun...
-
---4C6bbPZ6c/S1npyF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzZq+8ACgkQJNaLcl1U
-h9Dtswf/f4sgl8pKS8cZdLJ7aTJAOm1gCl9vpwFvrhRXFUi7Zmj5BQyd/G1GAWXu
-OxtEoUI8JWPsrf9vk9UxD2Qk1xlVTBXIWt1UfGn7HXXAOcgAMmHya1QRYJSy7rNh
-2bUCy/+Sh+tjmz2fqWe+YnoecfV1GyxCoTXF0WgA6+k86sXKZT8SNss1F6MJCJ14
-5pgJmTikPDbjOR8g/Wdd+5x315iaAjY/zv6q6d2uxgwvybHYVIx+YMwowzEI8FyH
-y2keI9ZHfPbZtmAw2SuxCJ2+74W+4ffAu7xiVANCFtdr5F665+/wa3V4AM9t7k4L
-dBlGd+z0XFj1J7KCxxmllK1RSYwJIA==
-=1OqR
------END PGP SIGNATURE-----
-
---4C6bbPZ6c/S1npyF--
+On 5/13/2019 12:40 PM, Joakim Tjernlund wrote:=0A=
+> On Mon, 2019-05-13 at 16:09 +0000, Roy Pledge wrote:=0A=
+>> The index value should be passed to the of_parse_phandle()=0A=
+>> function to ensure the correct property is read.=0A=
+> Is this a bug fix? Maybe for stable too?=0A=
+>=0A=
+>  Jocke=0A=
+Yes this could go to stable.  I will include stable@vger.kernel.org when=0A=
+I send the next version.=0A=
+>=0A=
+>> Signed-off-by: Roy Pledge <roy.pledge@nxp.com>=0A=
+>> ---=0A=
+>>  drivers/soc/fsl/qbman/dpaa_sys.c | 2 +-=0A=
+>>  1 file changed, 1 insertion(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/drivers/soc/fsl/qbman/dpaa_sys.c b/drivers/soc/fsl/qbman/dp=
+aa_sys.c=0A=
+>> index 3e0a7f3..0b901a8 100644=0A=
+>> --- a/drivers/soc/fsl/qbman/dpaa_sys.c=0A=
+>> +++ b/drivers/soc/fsl/qbman/dpaa_sys.c=0A=
+>> @@ -49,7 +49,7 @@ int qbman_init_private_mem(struct device *dev, int idx=
+, dma_addr_t *addr,=0A=
+>>                         idx, ret);=0A=
+>>                 return -ENODEV;=0A=
+>>         }=0A=
+>> -       mem_node =3D of_parse_phandle(dev->of_node, "memory-region", 0);=
+=0A=
+>> +       mem_node =3D of_parse_phandle(dev->of_node, "memory-region", idx=
+);=0A=
+>>         if (mem_node) {=0A=
+>>                 ret =3D of_property_read_u64(mem_node, "size", &size64);=
+=0A=
+>>                 if (ret) {=0A=
+>> --=0A=
+>> 2.7.4=0A=
+>>=0A=
+>=0A=
+=0A=
