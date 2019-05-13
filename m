@@ -2,86 +2,225 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8257C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4F520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A797D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729745AbfEMNrs (ORCPT
+        id S1729707AbfEMNsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:47:48 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:44035 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbfEMNrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:47:47 -0400
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1hQBIq-0001mO-DH; Mon, 13 May 2019 15:47:40 +0200
-Message-ID: <1557755257.4442.8.camel@pengutronix.de>
-Subject: Re: Hardware-accelerated video decoders used through a firmware
- instead of hardware registers
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>
-Date:   Mon, 13 May 2019 15:47:37 +0200
-In-Reply-To: <bfe1680249569241227ab90d5736b228de7b10f9.camel@bootlin.com>
-References: <19804f842e80f1f8bd85b8eb49e75e149abf0062.camel@bootlin.com>
-         <69c10fdd26566049c523d4c8cfb1b8c35018b738.camel@ndufresne.ca>
-         <bfe1680249569241227ab90d5736b228de7b10f9.camel@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
+        Mon, 13 May 2019 09:48:50 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32936 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726866AbfEMNsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:48:50 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 65A5126E812FC56628AA;
+        Mon, 13 May 2019 14:48:46 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
+ 2019 14:48:42 +0100
+Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        <linux-integrity@vger.kernel.org>,
+        <inux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <zohar@linux.ibm.com>, <ebiederm@xmission.com>,
+        <vgoyal@redhat.com>, <prsriva@microsoft.com>
+References: <20190510223744.10154-1-prsriva02@gmail.com>
+ <20190510223744.10154-3-prsriva02@gmail.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
+Date:   Mon, 13 May 2019 15:48:49 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
+MIME-Version: 1.0
+In-Reply-To: <20190510223744.10154-3-prsriva02@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
+> From: Prakhar Srivastava <prsriva02@gmail.com>
+> 
+> The buffer(cmdline args) added to the ima log cannot be attested
+> without having the actual buffer. Thus to make the measured buffer
+> available to stroe/read a new ima temaplate (buf) is added.
 
-On Sun, 2019-05-12 at 18:32 +0200, Paul Kocialkowski wrote:
-[...]
-> I would be curious to know what the situation is on the i.MX6 coda
-> block, which also seems pretty obscure.
+Hi Prakhar
 
-FWIW, I had started collecting things I learned about the BIT processor
-in the CODA IP cores, mostly by looking at the firmware files
-distributed by Freescale/NXP: https://github.com/pH5/coda-bits
+please fix the typos. More comments below.
 
-It is a somewhat strange custom 16-bit DSP architecture. There is a
-rudimentary start for a disassembler in there as well, but large parts
-of the instruction set are still completely unknown, and I have no idea
-how the address generator / DMA units or bitstream accelerators work.
 
-I would be delighted if somebody would like to pick up analyzing the BIT
-processor ISA further. I think it could be fruitful to start
-systematically throwing instructions at it and see what happens, to
-learn more. I haven't had much motivation to play with this, recently.
+> The cmdline args used for soft reboot can then be read and attested
+> later.
+> 
+> The patch adds a new template field buf to store/read the buffer
+> used while measuring kexec_cmdline args in the
+> [PATCH 1/2 v5]: "add a new ima hook and policy to measure the cmdline".
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> ---
+>   security/integrity/ima/ima_main.c         | 23 +++++++++++++++++++++++
+>   security/integrity/ima/ima_template.c     |  2 ++
+>   security/integrity/ima/ima_template_lib.c | 21 +++++++++++++++++++++
+>   security/integrity/ima/ima_template_lib.h |  4 ++++
+>   security/integrity/integrity.h            |  1 +
+>   5 files changed, 51 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 1d186bda25fe..ca12885ca241 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -605,10 +605,32 @@ static int process_buffer_measurement(const void *buf, int size,
+>   	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+>   	int action = 0;
+>   
+> +	struct buffer_xattr {
+> +		enum evm_ima_xattr_type type;
+> +		u16 buf_length;
+> +		unsigned char buf[0];
+> +	};
+> +	struct buffer_xattr *buffer_event_data = NULL;
+> +	int alloc_length = 0;
+> +
+>   	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr);
+>   	if (!(action & IMA_AUDIT) && !(action & IMA_MEASURE))
+>   		goto out;
+>   
+> +	alloc_length = sizeof(struct buffer_xattr) + size;
+> +	buffer_event_data = kzalloc(alloc_length, GFP_KERNEL);
+> +	if (!buffer_event_data) {
+> +		ret = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	buffer_event_data->type = IMA_XATTR_BUFFER;
+> +	buffer_event_data->buf_length = size;
+> +	memcpy(buffer_event_data->buf, buf, size);
+> +
+> +	event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
+> +	event_data.xattr_len = alloc_length;
 
-About the internal connections and available accelerator units, there is
-a block diagram in the i.MX53 TRM, but I am not aware of any register
-level description for any of these.
+I would prefer that you introduce two new fields in the ima_event_data
+structure. You can initialize them directly with the parameters of
+process_buffer_measurement(). ima_write_template_field_data() will make
+a copy.
 
-regards
-Philipp
+
+> +
+>   	memset(iint, 0, sizeof(*iint));
+>   	memset(&hash, 0, sizeof(hash));
+>   
+> @@ -638,6 +660,7 @@ static int process_buffer_measurement(const void *buf, int size,
+>   	}
+>   
+>   out:
+> +	kfree(buffer_event_data);
+>   	return ret;
+>   }
+>   
+> diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+> index b631b8bc7624..a76d1c04162a 100644
+> --- a/security/integrity/ima/ima_template.c
+> +++ b/security/integrity/ima/ima_template.c
+> @@ -43,6 +43,8 @@ static const struct ima_template_field supported_fields[] = {
+>   	 .field_show = ima_show_template_string},
+>   	{.field_id = "sig", .field_init = ima_eventsig_init,
+>   	 .field_show = ima_show_template_sig},
+> +	{.field_id = "buf", .field_init = ima_eventbuf_init,
+> +	 .field_show = ima_show_template_buf},
+
+Please update Documentation/security/IMA-templates.rst
+
+Thanks
+
+Roberto
+
+
+>   };
+>   #define MAX_TEMPLATE_NAME_LEN 15
+>   
+> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
+> index 513b457ae900..95a827f42c18 100644
+> --- a/security/integrity/ima/ima_template_lib.c
+> +++ b/security/integrity/ima/ima_template_lib.c
+> @@ -162,6 +162,11 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
+>   	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
+>   }
+>   
+> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
+> +				struct ima_field_data *field_data)
+> +{
+> +	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
+> +}
+>   /**
+>    * ima_parse_buf() - Parses lengths and data from an input buffer
+>    * @bufstartp:       Buffer start address.
+> @@ -389,3 +394,19 @@ int ima_eventsig_init(struct ima_event_data *event_data,
+>   	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
+>   					     DATA_FMT_HEX, field_data);
+>   }
+> +
+> +/*
+> + *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
+> + *  template data.
+> + */
+> +int ima_eventbuf_init(struct ima_event_data *event_data,
+> +				struct ima_field_data *field_data)
+> +{
+> +	struct evm_ima_xattr_data *xattr_value = event_data->xattr_value;
+> +
+> +	if ((!xattr_value) || (xattr_value->type != IMA_XATTR_BUFFER))
+> +		return 0;
+> +
+> +	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
+> +					DATA_FMT_HEX, field_data);
+> +}
+> diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
+> index 6a3d8b831deb..12f1a8578b31 100644
+> --- a/security/integrity/ima/ima_template_lib.h
+> +++ b/security/integrity/ima/ima_template_lib.h
+> @@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
+>   			      struct ima_field_data *field_data);
+>   void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
+>   			   struct ima_field_data *field_data);
+> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
+> +			   struct ima_field_data *field_data);
+>   int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
+>   		  int maxfields, struct ima_field_data *fields, int *curfields,
+>   		  unsigned long *len_mask, int enforce_mask, char *bufname);
+> @@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
+>   			  struct ima_field_data *field_data);
+>   int ima_eventsig_init(struct ima_event_data *event_data,
+>   		      struct ima_field_data *field_data);
+> +int ima_eventbuf_init(struct ima_event_data *event_data,
+> +		      struct ima_field_data *field_data);
+>   #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
+> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
+> index 7de59f44cba3..14ef904f091d 100644
+> --- a/security/integrity/integrity.h
+> +++ b/security/integrity/integrity.h
+> @@ -74,6 +74,7 @@ enum evm_ima_xattr_type {
+>   	EVM_IMA_XATTR_DIGSIG,
+>   	IMA_XATTR_DIGEST_NG,
+>   	EVM_XATTR_PORTABLE_DIGSIG,
+> +	IMA_XATTR_BUFFER,
+>   	IMA_XATTR_LAST
+>   };
+>   
+> 
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
