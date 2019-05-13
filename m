@@ -2,167 +2,111 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E975C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689E0C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA853206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CD9206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:29:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xx1fZQI/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6RfnoI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726621AbfEMX3Q (ORCPT
+        id S1726715AbfEMX3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 19:29:16 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40134 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfEMX3P (ORCPT
+        Mon, 13 May 2019 19:29:36 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:35937 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfEMX3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 19:29:15 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j12so19226174eds.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:29:14 -0700 (PDT)
+        Mon, 13 May 2019 19:29:36 -0400
+Received: by mail-it1-f195.google.com with SMTP id e184so1876090ite.1;
+        Mon, 13 May 2019 16:29:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VLmuiK2x214buFhNi8OJWdBB57B0vN2ujFxtEwttig4=;
-        b=Xx1fZQI/rXwMk0DNEqY6HTpnrV0we9BxygLROkRRl5cZQTB26deou5ZOsHzCvYx1/C
-         i2TVMR2iMmukWTaajQI6iNTvJaF5JHuZmTlAOC+GNyFY+w9c2vrKU6hzB4S9xuYJbWuL
-         fsKn6zzk6sCtPvgZjI3iCIZedBkWlWJ0cMx22LzdSBNgiO6cABgPZtTJeGk2JN5hPMMC
-         w0lIkZAGiKeORlvON7+rD6kw8y1olPaZof20qZYMcxV+3X8StEeSz0AhVFIT0pHNzwzK
-         +jtSYi8V/qWdB7xZYr5RJt9m/1jiANR19MggCDUrU4IGLTbzemqbCQTaprbv3zpjvldT
-         3E9w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rtdS0CPt+KXs3fztvztze0GdhDynP5SWZdqJdsS7jhw=;
+        b=e6RfnoI3GvtRryuu49WvItVvfO2IBbxKR3quyPAmjt5/P9W19bXXmR+kJw7ggAdmY3
+         qv+AtbIdlc/vUkP+dZlc8e4Oxafq8S4ZfWQfzF2zo8/riGy79EbJO4CTaAcH7QfwU+oH
+         KNq5afDMwv1Gt4j5dldmh24HjJpsTX8xmTaFotkO30nYdg87ZaeOqpa1qYjnq8X//jXp
+         eCpVY5tnVFVKbga14dOa4PHMDZFnUfCnM1L4mYS9hCQIPjr1z3AfSdmHeg0d6/9FcjGu
+         UEmEHQcbaHfbaNHNQMXp/khFKUBMWdI0RNaUpM6SwToP74UDU5GIpPJpYY9MI+eyraFv
+         gqlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VLmuiK2x214buFhNi8OJWdBB57B0vN2ujFxtEwttig4=;
-        b=PA6Pg4WRMA29iiE3S4ac4qriNDY3YiuyOQ7e/BlnJdLk3+O2lE5kq6WRBLCweoPGxD
-         JuPMwy2AdMkcQiG3uPZs23weT7r7FqjFT2pkuieTpgAjv5IVY9IMRTc7I6WKhqZaPqMT
-         riQlQ129te6EtjOABwZPvj7kzu2kBFqd/uzUcUto7YwSQxiN5bQLRsW0gCfui3TCPhaV
-         D+1zZK4S/Ioq+n9LgfqUQzkYhJi2DYYnDRP6Lj3Dtvq2uFjZrpM27rKB/+++TVV2CnRR
-         utb1GwckOAPaQO2ei+CVlc5gVbCRvpYJEiUvH6UwovDSQ7GBxescEDTTL6xyMHDJUuag
-         7b6g==
-X-Gm-Message-State: APjAAAWQu+RQu12PMX744PfiSqDaJo3vb21ijxFLrZEu2kSHJ9U/dg7I
-        T5qgHezT7bVVN9QbkjYxXJM=
-X-Google-Smtp-Source: APXvYqxawMnpBISgLje6SFjg6qRJQc01qR3XlBp+sSIU+0r7yKb1YyuB6Reik9qT2gOQOddQvVSeXA==
-X-Received: by 2002:a17:906:aacb:: with SMTP id kt11mr10380582ejb.246.1557790153389;
-        Mon, 13 May 2019 16:29:13 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id dc1sm1984448ejb.14.2019.05.13.16.29.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 16:29:12 -0700 (PDT)
-Date:   Mon, 13 May 2019 16:29:10 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     keescook@chromium.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <nathanchance@gmail.com>,
-        Jordan Rupprect <rupprecht@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lkdtm: support llvm-objcopy
-Message-ID: <20190513232910.GA30209@archlinux-i9>
-References: <20190513222109.110020-1-ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rtdS0CPt+KXs3fztvztze0GdhDynP5SWZdqJdsS7jhw=;
+        b=j+kimHFylmwsQHo/Pu8FVIGnLoEbl7weilqjmbt+bbfMI8yAc8mRt8ZPxnzAO1ayx8
+         xQintYU+QUeIyYXFSPSEJbzWu1KdLuj9GKNXfNGJna8fm+2EET5fKdN0twdbSkkZcbGi
+         1QjyqWoVgq1w+ouC430Or6FF2D0BLAf6AiOd2QjQFEpsCOU2qYF8zUp8nXsEy6TLCYjU
+         2okjodiKjb2TUK8bRzOnD1YDaRVKOYkUn5i3XVVGmfC2FE5Yna9v3VeAtvOkA1aGGnAj
+         thj84mMUB0Agd9SWQlM9c3e/umY477Mh/xKaGypTZuLwYDKFuX6M06AZtrIaQXpxLhyr
+         ZDbw==
+X-Gm-Message-State: APjAAAV/z4Lu91APOGJbW8VZcuAFM5C6XFsIqUTNmUQ7jr7ECrnkmh9u
+        HS7McXnC6L3ogbMgUXKEVQRMaCEt3Gf19BUwiY0=
+X-Google-Smtp-Source: APXvYqwnZy0aPOhfxku+EZ3um3xxIXTiHzBDOghwwtE68RixOb6imSYi2wsYfJVc6aPDDe0pb10rVzg/JlbM8NRwGm8=
+X-Received: by 2002:a02:52c9:: with SMTP id d192mr21476496jab.53.1557790175103;
+ Mon, 13 May 2019 16:29:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513222109.110020-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190513220610.177489-1-ravisadineni@chromium.org>
+In-Reply-To: <20190513220610.177489-1-ravisadineni@chromium.org>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Mon, 13 May 2019 16:29:23 -0700
+Message-ID: <CAKdAkRQ_J6QWxtWpoRQnNWKcJpXox6xVDZWcWYOXkBhPSn99Rw@mail.gmail.com>
+Subject: Re: [PATCH V1] elan_i2c: Increment wakeup count if wake source.
+To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Cc:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Abhishek Bhardwaj <abhishekbh@google.com>,
+        Todd Broch <tbroch@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 03:21:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
-> llvm-objcopy: error: --set-section-flags=.text conflicts with
-> --rename-section=.text=.rodata
-> 
-> Rather than support setting flags then renaming sections vs renaming
-> then setting flags, it's simpler to just change both at the same time
-> via --rename-section.
-> 
-> This can be verified with:
-> $ readelf -S drivers/misc/lkdtm/rodata_objcopy.o
-> ...
-> Section Headers:
->   [Nr] Name              Type             Address           Offset
->        Size              EntSize          Flags  Link  Info  Align
-> ...
->   [ 1] .rodata           PROGBITS         0000000000000000  00000040
->        0000000000000004  0000000000000000   A       0     0     4
-> ...
-> 
-> Which shows in the Flags field that .text is now renamed .rodata, the
-> append flag A is set, and the section is not flagged as writeable W.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/448
-> Reported-by: Nathan Chancellor <nathanchance@gmail.com>
+Hi Ravi,
 
-This should be natechancellor@gmail.com (although I think I do own that
-email, just haven't been into it for 10+ years...)
+On Mon, May 13, 2019 at 3:06 PM Ravi Chandra Sadineni
+<ravisadineni@chromium.org> wrote:
+>
+> Notify the PM core that this dev is the wake source. This helps
+> userspace daemon tracking the wake source to identify the origin of the
+> wake.
 
-> Suggested-by: Jordan Rupprect <rupprecht@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+I wonder if we could do that form the i2c core instead of individual drivers?
+
+>
+> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
 > ---
->  drivers/misc/lkdtm/Makefile | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
-> index 951c984de61a..89dee2a9d88c 100644
-> --- a/drivers/misc/lkdtm/Makefile
-> +++ b/drivers/misc/lkdtm/Makefile
-> @@ -15,8 +15,7 @@ KCOV_INSTRUMENT_rodata.o	:= n
->  
->  OBJCOPYFLAGS :=
->  OBJCOPYFLAGS_rodata_objcopy.o	:= \
-> -			--set-section-flags .text=alloc,readonly \
-> -			--rename-section .text=.rodata
-> +			--rename-section .text=.rodata,alloc,readonly
->  targets += rodata.o rodata_objcopy.o
->  $(obj)/rodata_objcopy.o: $(obj)/rodata.o FORCE
->  	$(call if_changed,objcopy)
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+>  drivers/input/mouse/elan_i2c_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index f9525d6f0bfe..2c0561e20b7f 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -981,6 +981,8 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+>         if (error)
+>                 goto out;
+>
+> +       pm_wakeup_event(dev, 0);
+> +
+>         switch (report[ETP_REPORT_ID_OFFSET]) {
+>         case ETP_REPORT_ID:
+>                 elan_report_absolute(data, report);
+> --
+> 2.20.1
+>
 
-I ran this script to see if there was any change for GNU objcopy and it
-looks like .rodata's type gets changed, is this intentional? Otherwise,
-this works for llvm-objcopy like you show.
+Thanks.
 
------------
-
-1c1
-< There are 11 section headers, starting at offset 0x240:
----
-> There are 11 section headers, starting at offset 0x230:
-8c8
-<   [ 1] .rodata           PROGBITS         0000000000000000  00000040
----
->   [ 1] .rodata           NOBITS           0000000000000000  00000040
-10c10
-
------------
-
-#!/bin/bash
-
-TMP1=$(mktemp)
-TMP2=$(mktemp)
-
-git checkout next-20190513
-
-make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out mrproper allyesconfig drivers/misc/lkdtm/
-readelf -S out/drivers/misc/lkdtm/rodata_objcopy.o > ${TMP1}
-
-curl -LSs https://lore.kernel.org/lkml/20190513222109.110020-1-ndesaulniers@google.com/raw | git am -3
-
-make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out mrproper allyesconfig drivers/misc/lkdtm/
-readelf -S out/drivers/misc/lkdtm/rodata_objcopy.o > ${TMP2}
-
-diff ${TMP1} ${TMP2}
+-- 
+Dmitry
