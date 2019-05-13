@@ -2,163 +2,143 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B60C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4B8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09F5921473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2782085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="v8h8SgiZ";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="dks3mxVU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jKhuRwVH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbfEMUTw (ORCPT
+        id S1726342AbfEMUUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:19:52 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:54490 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbfEMUTv (ORCPT
+        Mon, 13 May 2019 16:20:54 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46039 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfEMUUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:19:51 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DKADuB012076;
-        Mon, 13 May 2019 13:16:53 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=8FSlz0GjC3PdOKK/ewJnq9q1qVk9z6fQdSQDgDPLZOs=;
- b=v8h8SgiZTm2Mrf3UKe715rKamNihd4Ywk9LCgclviNg51vqDvK8/3RvWaC5xJq+FRnyJ
- VlqRytZQWSER0seoEEL3JJD9lpESnkfSKDRe2nQuJIx0PM7wVgmeh9JiSRUcerIss9TM
- +wOxxxMGugafn9Am/EVOMhDTDnOQMTxgtVE2Oy8tIx3lyJTtuvEj8OPoxKJbgrPQU1uY
- l7xm5n/tUP6amIn1e+ILLBU96cT0FYJC9wJ2Jr8UCq1nYp9d4jZd3WdMakJmbzirH5/g
- 8SoY4yb7Dg39sBTj6an/Of82bbjH88cGICYQHOl3ITxmVKklZL1xCsZ1CgHwpMcJ/vk3 7Q== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2sf9xchp6t-11
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 13 May 2019 13:16:52 -0700
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 13 May
- 2019 13:16:22 -0700
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.53) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 13 May 2019 13:16:22 -0700
+        Mon, 13 May 2019 16:20:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i21so7319073pgi.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:20:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8FSlz0GjC3PdOKK/ewJnq9q1qVk9z6fQdSQDgDPLZOs=;
- b=dks3mxVUhOA91QILnn063NP916tvQ50FO0HuSlFouxKiM2NmHe7/J61cDuzv86U7wkwlelrnvjMwDWsUX1IDt6L0iNX5Na+Irjq3DZhlvQF+7dyI92gtqo9kCjQBhuOQidaPvHhQhrT4ciRIFbufee94Py6FAGmZEH68TyVdL5w=
-Received: from MN2PR18MB3086.namprd18.prod.outlook.com (20.179.21.74) by
- MN2PR18MB3328.namprd18.prod.outlook.com (10.255.238.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.21; Mon, 13 May 2019 20:16:18 +0000
-Received: from MN2PR18MB3086.namprd18.prod.outlook.com
- ([fe80::9407:14a6:29bf:d683]) by MN2PR18MB3086.namprd18.prod.outlook.com
- ([fe80::9407:14a6:29bf:d683%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 20:16:18 +0000
-From:   Yuri Norov <ynorov@marvell.com>
-To:     Andreas Schwab <schwab@suse.de>, Yury Norov <yury.norov@gmail.com>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>
-CC:     Yury Norov <ynorov@caviumnetworks.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        "Alexander Graf" <agraf@suse.de>,
-        Alexey Klimov <klimov.linux@gmail.com>,
-        Andrew Pinski <pinskia@gmail.com>,
-        Bamvor Zhangjian <bamv2005@gmail.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Florian Weimer" <fweimer@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        James Hogan <james.hogan@imgtec.com>,
-        James Morse <james.morse@arm.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Lin Yongting <linyongting@huawei.com>,
-        "Manuel Montezelo" <manuel.montezelo@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Nathan_Lynch <Nathan_Lynch@mentor.com>,
-        "Philipp Tomsich" <philipp.tomsich@theobroma-systems.com>,
-        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Steve Ellcey <sellcey@caviumnetworks.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: Re: [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
-Thread-Topic: [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
-Thread-Index: AQHUhpjH9to/8IYtJ0GO80mU13Jv5KZi1g0AgAbuLc2AAL0yKQ==
-Date:   Mon, 13 May 2019 20:16:17 +0000
-Message-ID: <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
-References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
-        <20190508225900.GA14091@yury-thinkpad>,<mvmtvdyoi33.fsf@suse.de>
-In-Reply-To: <mvmtvdyoi33.fsf@suse.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2601:640:9:8937:19d3:11c4:475e:3daa]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d63a7e5a-30b5-4c72-6c2e-08d6d7dfdb8f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR18MB3328;
-x-ms-traffictypediagnostic: MN2PR18MB3328:
-x-microsoft-antispam-prvs: <MN2PR18MB332863E675D3AFB0F5BEF1F1CB0F0@MN2PR18MB3328.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:826;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(39860400002)(346002)(199004)(189003)(55016002)(25786009)(9686003)(6246003)(316002)(64756008)(66556008)(66476007)(6116002)(66946007)(66446008)(76176011)(2501003)(7736002)(86362001)(73956011)(186003)(2906002)(476003)(76116006)(486006)(11346002)(4326008)(52536014)(446003)(46003)(229853002)(305945005)(99286004)(5660300002)(8936002)(68736007)(33656002)(8676002)(74316002)(6506007)(53936002)(4744005)(81166006)(7406005)(7416002)(7696005)(81156014)(6436002)(71200400001)(478600001)(102836004)(71190400001)(14454004)(54906003)(110136005)(14444005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3328;H:MN2PR18MB3086.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0BNA/4lGkwI/JlW9pnyosBaPDm721604g/Nf3FAJ0B/ROE9Hupn8TalOe1n6tAYKBDim/zKvwaubRL4labxcw8SscgAKrkz3NAY9IT8pwPQqCdoIhfvxdC+p0d7UMmZonRhz5O8qSt1NR37x5d6Q8ksZX5WcNMnR+FBN4iTbjqkO6PhExPk0DpVNmBzaE5FftIenOPUYMIbxzHe+bvHEQgZxHBjiHME+aFmfMpdmjDJ7+3xkWh51b+veSpXfSdLSW14XLPVYo20s6/c9dCbye7Yi/6xmMC76lhS2Vcnth7hRgBiwxiFiiWt3eswxlQ7+vdjDsya1CQjzCICCMUDKcv5hH32IXVRrkcJSS5MlhwGHZQiizlXIjUtGK7HABrJhnjUva8d8aP1ahEBGQ5CFagk/HuznHKSSaQ/sGRRSgHg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UXevDClJ1rO45drgBiu5kidYCiWEsQSHa18BKuPnW/Y=;
+        b=jKhuRwVHZ3BDtVl3GK1PW+UIy07oLOd5IrGmCdwWxvnXCmxeJzoFlxajPbhhCvYs5D
+         BiKtENMbOnb3jOZgBHcaSrZP/l9Q7h3Tk58SPzLplMitZrLm80I4da33Lr1TFoHeSAEt
+         6w+h3T+w38C2MNdgEkMVyS6QO1y00sDDyvCBo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UXevDClJ1rO45drgBiu5kidYCiWEsQSHa18BKuPnW/Y=;
+        b=TRRAtWFzfArMZg9yd68r9cQzouNBtiDW1S/rG+CXOPzacrnnkqPq+GB0W90FWR1Wtt
+         wrOg7NkR2OyV33Uoy9eS21yRfOqhNJcpet1vZoux8xouFUOzxB5LlSdmkjE5T8DDm7sk
+         XPUW0c3ny5+MFyh2ibcaMN7PFTt/ntjLCe9TfBVF6N/bil/IkLFkQc/DMfVMdjsgDFJl
+         KCl9PwIHYEkJBeku/1ZUMP9PNForO7TA6ccolH+vQsQhTVrE783FWSOpEGb/8qkMwSxR
+         gmfAgva5cAYx/G3ysDMTCmtIpDkLuZfWh8FUxvbm8yV0X5VvcbvT1mw8/YLFy+qGe3EC
+         yDgg==
+X-Gm-Message-State: APjAAAVxq+KrK1RNhuyzPRE4XZmjEsl4Wi4XOodw62T8v5vaE5q2F9C2
+        GxghqWcLEAtzqAHVKe7UFrixbQ==
+X-Google-Smtp-Source: APXvYqyLcsaawFWNgUONZhu9RhQR6qJPBSqV6S0MF4CC/aTGIeqwjn8gtglL9ZCx9wEKemTyfiSkBQ==
+X-Received: by 2002:a63:5c1c:: with SMTP id q28mr33373287pgb.45.1557778852872;
+        Mon, 13 May 2019 13:20:52 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id s198sm26356597pfs.34.2019.05.13.13.20.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 13:20:52 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
+        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
+        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH v2 0/3] spi: A better solution for cros_ec_spi reliability
+Date:   Mon, 13 May 2019 13:18:22 -0700
+Message-Id: <20190513201825.166969-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d63a7e5a-30b5-4c72-6c2e-08d6d7dfdb8f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 20:16:17.9821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3328
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_12:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ ltp@lists.linux.it
+This series is a much better solution for getting the Chrome OS EC to
+talk reliably and replaces commit 37a186225a0c ("platform/chrome:
+cros_ec_spi: Transfer messages at high priority").
 
-> There is a problem with the stack size accounting during execve when
-> there is no stack limit:
->
-> $ ulimit -s
-> 8192
-> $ ./hello.ilp32=20
-> Hello World!
-> $ ulimit -s unlimited
-> $ ./hello.ilp32=20
-> Segmentation fault
-> $ strace ./hello.ilp32=20
-> execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) =
-=3D -1 ENOMEM (Cannot allocate memory)
-> +++ killed by SIGSEGV +++
-> Segmentation fault (core dumped)
->
-> Andreas.
+Specifically note that even though the above commit made things
+better, we still saw some failures.
 
-Thanks Andreas, I will take a look. Do we have such test in LTP?
-   =20
-Yury=
+The majority of these failures were because we were competing for time
+with dm-crypt which also scheduled work on HIGHPRI workqueues.  While
+we can consider reverting the change that made dm-crypt run its work
+at HIGHPRI, the argument in commit a1b89132dc4f ("dm crypt: use
+WQ_HIGHPRI for the IO and crypt workqueues") is somewhat compelling.
+It does make sense for IO to be scheduled at a priority that's higher
+than the default user priority.
+
+It turns out that we could also see problems because loop devices also
+run at high priority.  See the set_user_nice() in
+loop_prepare_queue().
+
+Looking in more detail, it can be seen that the high priority
+workqueue isn't actually that high of a priority.  It runs at MIN_NICE
+which is _fairly_ high priority but still below all real time
+priority.  We can do better by using realtime priority.  That makes
+sense because cros_ec_spi actually needs to run quickly for
+correctness.  As I understand this is exactly what real time priority
+is for.  Note that there is a discussion going on about the dm-crypt
+priority [1].
+
+We also had other problems with the previous patch because sometimes
+we'd end up on the SPI pumping thread and had our priority downgraded.
+
+Both the competition with other high priority things and the priority
+downgrading are fixed by this new series.
+
+After this series I can run the following test on Chrome OS (which
+mounts /var as stateful encrypted) with no errors:
+  dd if=/dev/zero of=/var/log/foo.txt bs=4M count=512&
+  while true; do
+    ectool version > /dev/null;
+  done
+
+Special thanks to Guenter Roeck for pointing out the "realtime"
+feature of the SPI framework so I didn't re-invent the wheel.  I have
+no idea how I missed it.  :-/
+
+Also note: if you want some history on investigation done here, feel
+free to peruse the Chrome OS bug [2].
+
+[1] https://lkml.kernel.org/r/CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com
+[2] https://crbug.com/948742
+
+Changes in v2:
+- Now only force transfers to the thread for devices that want it.
+- Squashed patch #1 and #2 together.
+- Renamed variable to "force_rt_transfers".
+
+Douglas Anderson (3):
+  spi: Allow SPI devices to force transfers on a realtime thread
+  platform/chrome: cros_ec_spi: Force transfers to realtime priority
+  Revert "platform/chrome: cros_ec_spi: Transfer messages at high
+    priority"
+
+ drivers/platform/chrome/cros_ec_spi.c | 81 +++------------------------
+ drivers/spi/spi.c                     | 49 +++++++++++++---
+ include/linux/spi/spi.h               |  5 ++
+ 3 files changed, 52 insertions(+), 83 deletions(-)
+
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
