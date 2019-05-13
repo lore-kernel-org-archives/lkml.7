@@ -2,130 +2,153 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70EFC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFBDC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B79522086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EED32086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:01:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="izXUlhxc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ntAHxh8n"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OhBo05KG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfEMK5y (ORCPT
+        id S1729203AbfEMLBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:57:54 -0400
-Received: from wout4-smtp.messagingengine.com ([64.147.123.20]:53061 "EHLO
-        wout4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728114AbfEMK5y (ORCPT
+        Mon, 13 May 2019 07:01:33 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:38135 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfEMLBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:57:54 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id E7996499;
-        Mon, 13 May 2019 06:57:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 13 May 2019 06:57:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=J
-        QftPFBpexu4d8C8fzDQ8C49x4SU+NTGu5TVTjmRWIs=; b=izXUlhxc/wDyXZeMJ
-        uXsrq48nZKVQLheHQMuG6o6KwYivrD1B4zTXtWZbrO/Z3uS789PhaN+Bji3DNWcf
-        iz8uQ95fJnI2dhehT3uE21FOnSNXtJu0CipF4BKZvRXxkNQOBUvmtlYlDJouEE+0
-        k4+b51AQdQuMqlqaaZ6dMCYVgp+C2Gmc/S01unRusmLLaP0XZ2Z0TA+vbVHcTsUr
-        wuKqyNL8EIYjvAPLdxbMn37p4GKhdF3hoNapjg0mI6+DvFhwQ2j8cluMZYdSqLNY
-        rF06PafWjXpcYuOlaKq4wiFgTv251eqZVHSeYFAjItM/TFzbgmTJ/Bs+57hKZhAR
-        oDJpA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=JQftPFBpexu4d8C8fzDQ8C49x4SU+NTGu5TVTjmRW
-        Is=; b=ntAHxh8nfe76KiEWgBX4wGzJrUm7F7uywHiR7PAy0G4uwKzvsYG+RFpYt
-        Qdn/7J4Jnfymns4DY+DNEjnJ6qTTn0hi8YZa5Ey7ESs27oUgNEvZkq8vjoBkivaY
-        ortUfh6wo/SYzSBwjhM4ewm2E9o2gSePzo6PB64qerf9PoXCfZkBKirhQsUz7ACG
-        pOS+LTKrSga+yWFSwoOhs5VRqOHueFgnqWS2oyunEEusvTA9MTh7MIvLXR/fB6cB
-        mahsEevoDY9O6onSGW9B1qovGKWn0+lKngLevih93EhGZWb/WdJNax8X7v3j3nyC
-        keFi7Qj2LgiyHsuzUXnYzHSimxYvg==
-X-ME-Sender: <xms:sE3ZXEkWLei9g1hq4tUp5a1IuAF_M9Nbnv6ZJACogWAgeOB_VnEnNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdefgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculdeftddmnecujfgurhepfffhvffukfhfgggtugfgjgfofgesthekredt
-    oferjeenucfhrhhomhepfdfvohgsihhnucevrdcujfgrrhguihhnghdfuceomhgvsehtoh
-    gsihhnrdgttgeqnecukfhppeduvdegrdduieelrdduiedrudekheenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgvsehtohgsihhnrdgttgenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:sE3ZXJqqKmb34iqwy9XBdB84uXy1NUcK7049qgh7NkJe79gsKrCb0A>
-    <xmx:sE3ZXEsV28zaBOFqSlO_Pkc026qR5kO1fRE7wPoFeTLzF3ptOjq9xQ>
-    <xmx:sE3ZXJKJLqzAC4byab5ghQda398_GzYYurBQ43BwHaGSp8tflGfZXw>
-    <xmx:sE3ZXDkZt4jg7yQdl0CX6M9oVSkpkS1ZnjleSonWm3gDHLqy2UtFrg>
-Received: from localhost (124-169-16-185.dyn.iinet.net.au [124.169.16.185])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 3E18080061;
-        Mon, 13 May 2019 06:57:50 -0400 (EDT)
-Date:   Mon, 13 May 2019 20:57:20 +1000
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Nikolay Borisov <nborisov@suse.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] fs: btrfs: Don't leak memory when failing add fsid
-Message-ID: <20190513105720.GB15053@eros.localdomain>
-References: <20190513033912.3436-1-tobin@kernel.org>
- <20190513033912.3436-3-tobin@kernel.org>
- <3473fcfa-88cf-b372-3beb-69d59320d50a@suse.com>
+        Mon, 13 May 2019 07:01:32 -0400
+Received: by mail-vs1-f67.google.com with SMTP id v9so7725973vse.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3laysTfG58br9ekvMftLCflS2bw8W4QgtgThoJczg/k=;
+        b=OhBo05KGmUf9v7pWQWG2ym5VzciK3m8PAY7OCLMPlu6ajuOvl8hsdIR4ktGO+tfwZl
+         PjR20rgtE7om7EPFacQai80QmP6uZk5pby1EEaVmUXxjTt6Mz7+zzZ5iu8wW80qi5I9o
+         foT1oVXlmX9+sq/K74dm7TbFBOxgihNI3wwntlPd2t+8D5fEEMzj8h4LAzIy4n4C8WpB
+         Pkk6j/6qoX6yN6HEH/HV3Gq8tAJFDAHkw8W4a4a5qBsCHltyw120WKfvXocYBD+axxPZ
+         o6qfEGMerK6xUutpokiJ7Us7JSqUb3okCaB091vvHdYlJhe5MA/L98Zis5GlgN21VfPC
+         wEMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3laysTfG58br9ekvMftLCflS2bw8W4QgtgThoJczg/k=;
+        b=q58vm2rjd8JOkJEbL6WqYQzklfRimXXlvsWgNaiYP0EjBKV9lu/lglI1KVeYA2TgZf
+         pZG5wZDGbh+YY2H9L5eGa/OZFraLoNcurW130qgwNYCC+9C+fI0CSeN3h6j6ja3UjCyi
+         Ot2Sjb4JJ+iN61jULy5AwUEn0176BK6b62ZuPqwds9hewbnEtwqveu9o8fCsSdVAQo09
+         qiD7X5iIQ/bupaYeZZUepD9YK/QSKOMIjM8jTszNi5MLE2VjsBxXgjAnK2qSgMZV4Oev
+         G4utagmdaONRrLR7JFSATKQJOtzfwk4rL4SW8z473h0J1H8ICSpS7X0vgWj/DyYiJe0o
+         PsDQ==
+X-Gm-Message-State: APjAAAXwSmksrkQYFYFIy/x52j3uTuxa6g5pCVQe/O24kJ52NUq5pi0N
+        MaJq+Z6/xY9V3MJEunWauYj/y5ETbA+6/vf5nJhjEg==
+X-Google-Smtp-Source: APXvYqwV2DWLvk1wJJw3pvk0vpggagApxSMhez6K6Oy7eHi1sUKyejPrVUYCo8vRQVFz+4/5mCLluau/NDUjAhelBM0=
+X-Received: by 2002:a67:f48b:: with SMTP id o11mr4801333vsn.9.1557745291516;
+ Mon, 13 May 2019 04:01:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3473fcfa-88cf-b372-3beb-69d59320d50a@suse.com>
-X-Mailer: Mutt 1.11.4 (2019-03-13)
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190114184255.258318-1-mka@chromium.org>
+In-Reply-To: <20190114184255.258318-1-mka@chromium.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 13 May 2019 16:31:20 +0530
+Message-ID: <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:04:49AM +0300, Nikolay Borisov wrote:
-> 
-> 
-> On 13.05.19 г. 6:39 ч., Tobin C. Harding wrote:
-> > A failed call to kobject_init_and_add() must be followed by a call to
-> > kobject_put().  Currently in the error path when adding fs_devices we
-> > are missing this call.  This could be fixed by calling
-> > btrfs_sysfs_remove_fsid() if btrfs_sysfs_add_fsid() returns an error or
-> > by adding a call to kobject_put() directly in btrfs_sysfs_add_fsid().
-> > Here we choose the second option because it prevents the slightly
-> > unusual error path handling requirements of kobject from leaking out
-> > into btrfs functions.
-> > 
-> > Add a call to kobject_put() in the error path of kobject_add_and_init().
-> > This causes the release method to be called if kobject_init_and_add()
-> > fails.  open_tree() is the function that calls btrfs_sysfs_add_fsid()
-> > and the error code in this function is already written with the
-> > assumption that the release method is called during the error path of
-> > open_tree() (as seen by the call to btrfs_sysfs_remove_fsid() under the
-> > fail_fsdev_sysfs label).
-> 
-> I'm not familiar with the internals of kobject but
-> btrfs_sysfs_remove_fsid calls __btrfs_sysfs_remove_fsid which in turn
-> does kobject_del followed by kobject_put so its sequence is not exactly
-> identical with your change. Presumably kobject_del is only required if
-> you want to dispose of successfully registered sysfs node. This implies
-> that __btrfs_sysfs_remove_fsid is actually broken when it comes to
-> handling failed sysfs_add_fsid?
+On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> that describes this topology.
 
-kobject_del() is not technically required in __btrfs_sysfs_remove_fsid()
-since if kobject_put() drops the reference count to 0 and kobject_del()
-has not been called then the kobject infrastructure will call
-kobject_del() for us (and we get a pr_debug() message).  The code
-sequence is correct although not _exactly_ written as the kobject
-authors intended (I am not one of those authors, I'm just learning).
+This is partly true. There are two groups of gold and silver cores,
+but AFAICT they are in a single cluster, not two separate ones. SDM845
+is one of the early examples of ARM's Dynamiq architecture.
 
-Thanks for looking at this.
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-	Tobin
+I noticed that this patch sneaked through for this merge window but
+perhaps we can whip up a quick fix for -rc2?
+
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index c27cbd3bcb0a6..f6c0d87e663f3 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -192,6 +192,44 @@
+>                                 next-level-cache = <&L3_0>;
+>                         };
+>                 };
+> +
+> +               cpu-map {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       cpu = <&CPU0>;
+> +                               };
+> +
+> +                               core1 {
+> +                                       cpu = <&CPU1>;
+> +                               };
+> +
+> +                               core2 {
+> +                                       cpu = <&CPU2>;
+> +                               };
+> +
+> +                               core3 {
+> +                                       cpu = <&CPU3>;
+> +                               };
+> +                       };
+> +
+> +                       cluster1 {
+
+This shouldn't exist.
+
+> +                               core0 {
+
+Rename to core4, 5, etc...
+
+> +                                       cpu = <&CPU4>;
+> +                               };
+> +
+> +                               core1 {
+> +                                       cpu = <&CPU5>;
+> +                               };
+> +
+> +                               core2 {
+> +                                       cpu = <&CPU6>;
+> +                               };
+> +
+> +                               core3 {
+> +                                       cpu = <&CPU7>;
+> +                               };
+> +                       };
+> +               };
+>         };
+>
+>         pmu {
+> --
+> 2.20.1.97.g81188d93c3-goog
+>
