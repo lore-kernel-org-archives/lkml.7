@@ -2,266 +2,92 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED41C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 510D5C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161A12133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="MUHLKhpG"
+	by mail.kernel.org (Postfix) with ESMTP id 2C8CC2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730878AbfEMOrZ (ORCPT
+        id S1730860AbfEMOrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:47:25 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44006 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbfEMOrY (ORCPT
+        Mon, 13 May 2019 10:47:36 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:53580 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728916AbfEMOrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:47:24 -0400
-Received: by mail-qk1-f196.google.com with SMTP id z6so7302763qkl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=z7VBKyem/uSAaxPxkBQdn6zwT3GuO3CSomgcGPmQg0w=;
-        b=MUHLKhpGkekM6pDH/oO6xNv4KfE8YOxtxR+E3TJSMvW7RgITDPa4f8RH0qR2GKCRVA
-         QVKjrk8kct3oRAtv2HaVGpt0SOvm0cqqG43sPHK8vZAR+8yRaux7EBKy0pErU/Es8VG3
-         ujs70I0x04BU9xfCahT4akeHjdvTdlhQq2wZbCGeR+TB1yS3cPv6FgY83divtaKR47+8
-         tGtcrVc8wjB9yetqXXX8T3gofGSyLLne3rwsiQgVy1uy08lxnejO11GPYgoPgKzf5jEg
-         5ABodOHZIeSAnKQlFc7z4WGjJDTS7CdfBQaBHzl0B0iRW0HOE/TeSWrDYW+Gki6T+xDz
-         576Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=z7VBKyem/uSAaxPxkBQdn6zwT3GuO3CSomgcGPmQg0w=;
-        b=i3swV3muEteZsap4JBQrNCzbeaK9wt5exKq14I4ynwD/k8MHNhwDct0dj/weoHC++6
-         tVKHEUBtiiIQPmQnUsFFyS26xtnv/SaQ+tKkD+DqhTn7Kqz7UxHpwhjHnBTxdkZfrv26
-         i0kZCQsuOYXxjmWgRYk6ZGAIV9WOoSMH3xdZwcwNVB322mZxaHHllB1rb3+gQg5TTxZN
-         tDQ5DEL/DNZY18pkCqMsTK9iEV2KNAXnSN3by3AnZTTJp9CwWgom4WiaeDoRYTwfY8NW
-         h+cSsc9DzKDyoIfKASM2bue8s/NnAjRaVjwvPFOhEvXP4hFfxMRXvblYMZNVYpPfO3IT
-         V8fA==
-X-Gm-Message-State: APjAAAUAVr5kBTTiCEUbfSZ8B/+7MIJHGwaO0QhYjzjIHiwX6txmGITZ
-        8LKvP+qQfyZ6/sFqZBXgym5J4Q==
-X-Google-Smtp-Source: APXvYqyZpxOKW9IuTwdrRuoIe4iKpRImEF3M/7+rl9/y+s+4d6CJHkFNA7qCY76nj1ZhQvUEduX/4A==
-X-Received: by 2002:a37:9fcf:: with SMTP id i198mr22654938qke.49.1557758843565;
-        Mon, 13 May 2019 07:47:23 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id l16sm6610039qtj.60.2019.05.13.07.47.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 07:47:23 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:47:22 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Jayant Shekhar <jshekhar@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] drm/msm/dpu: Integrate interconnect API in MDSS
-Message-ID: <20190513144722.GO17077@art_vandelay>
-References: <20190508204219.31687-1-robdclark@gmail.com>
- <20190508204219.31687-3-robdclark@gmail.com>
+        Mon, 13 May 2019 10:47:35 -0400
+Received: (qmail 3884 invoked by uid 2102); 13 May 2019 10:47:34 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 May 2019 10:47:34 -0400
+Date:   Mon, 13 May 2019 10:47:34 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <suwan.kim027@gmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in usb_get_bos_descriptor
+In-Reply-To: <00000000000086510e05888df8c8@google.com>
+Message-ID: <Pine.LNX.4.44L0.1905131046130.1478-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508204219.31687-3-robdclark@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:42:12PM -0700, Rob Clark wrote:
-> From: Jayant Shekhar <jshekhar@codeaurora.org>
-> 
-> The interconnect framework is designed to provide a
-> standard kernel interface to control the settings of
-> the interconnects on a SoC.
-> 
-> The interconnect API uses a consumer/provider-based model,
-> where the providers are the interconnect buses and the
-> consumers could be various drivers.
-> 
-> MDSS is one of the interconnect consumers which uses the
-> interconnect APIs to get the path between endpoints and
-> set its bandwidth requirement for the given interconnected
-> path.
-> 
-> Changes in v2:
-> 	- Remove error log and unnecessary check (Jordan Crouse)
-> 
-> Changes in v3:
-> 	- Code clean involving variable name change, removal
-> 	  of extra paranthesis and variables (Matthias Kaehlcke)
-> 
-> Changes in v4:
-> 	- Add comments, spacings, tabs, proper port name
-> 	  and icc macro (Georgi Djakov)
-> 
-> Changes in v5:
-> 	- Commit text and parenthesis alignment (Georgi Djakov)
-> 
-> Changes in v6:
-> 	- Change to new icc_set API's (Doug Anderson)
-> 
-> Changes in v7:
-> 	- Fixed a typo
-> 
-> Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
-> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 49 ++++++++++++++++++++++--
->  1 file changed, 45 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> index 7316b4ab1b85..e3c56ccd7357 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-> @@ -4,11 +4,15 @@
->   */
->  
->  #include "dpu_kms.h"
-> +#include <linux/interconnect.h>
->  
->  #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
->  
->  #define HW_INTR_STATUS			0x0010
->  
-> +/* Max BW defined in KBps */
-> +#define MAX_BW				6800000
-> +
->  struct dpu_irq_controller {
->  	unsigned long enabled_mask;
->  	struct irq_domain *domain;
-> @@ -21,8 +25,30 @@ struct dpu_mdss {
->  	u32 hwversion;
->  	struct dss_module_power mp;
->  	struct dpu_irq_controller irq_controller;
-> +	struct icc_path *path[2];
-> +	u32 num_paths;
->  };
->  
-> +static int dpu_mdss_parse_data_bus_icc_path(struct drm_device *dev,
-> +						struct dpu_mdss *dpu_mdss)
-> +{
-> +	struct icc_path *path0 = of_icc_get(dev->dev, "mdp0-mem");
-> +	struct icc_path *path1 = of_icc_get(dev->dev, "mdp1-mem");
-> +
-> +	if (IS_ERR(path0))
+On Fri, 10 May 2019, syzbot wrote:
 
-of_icc_get can also return NULL, it looks like we also want to guard against
-this case and keep num_paths == 0.
-
-> +		return PTR_ERR(path0);
-> +
-> +	dpu_mdss->path[0] = path0;
-> +	dpu_mdss->num_paths = 1;
-> +
-> +	if (!IS_ERR(path1)) {
-> +		dpu_mdss->path[1] = path1;
-> +		dpu_mdss->num_paths++;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void dpu_mdss_irq(struct irq_desc *desc)
->  {
->  	struct dpu_mdss *dpu_mdss = irq_desc_get_handler_data(desc);
-> @@ -134,7 +160,11 @@ static int dpu_mdss_enable(struct msm_mdss *mdss)
->  {
->  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
->  	struct dss_module_power *mp = &dpu_mdss->mp;
-> -	int ret;
-> +	int ret, i;
-> +	u64 avg_bw = dpu_mdss->num_paths ? MAX_BW / dpu_mdss->num_paths : 0;
-> +
-> +	for (i = 0; i < dpu_mdss->num_paths; i++)
-> +		icc_set_bw(dpu_mdss->path[i], avg_bw, kBps_to_icc(MAX_BW));
->  
->  	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
->  	if (ret)
-> @@ -147,12 +177,15 @@ static int dpu_mdss_disable(struct msm_mdss *mdss)
->  {
->  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
->  	struct dss_module_power *mp = &dpu_mdss->mp;
-> -	int ret;
-> +	int ret, i;
->  
->  	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
->  	if (ret)
->  		DPU_ERROR("clock disable failed, ret:%d\n", ret);
->  
-> +	for (i = 0; i < dpu_mdss->num_paths; i++)
-> +		icc_set_bw(dpu_mdss->path[i], 0, 0);
-> +
->  	return ret;
->  }
->  
-> @@ -163,6 +196,7 @@ static void dpu_mdss_destroy(struct drm_device *dev)
->  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
->  	struct dss_module_power *mp = &dpu_mdss->mp;
->  	int irq;
-> +	int i;
->  
->  	pm_runtime_suspend(dev->dev);
->  	pm_runtime_disable(dev->dev);
-> @@ -172,6 +206,9 @@ static void dpu_mdss_destroy(struct drm_device *dev)
->  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
->  	devm_kfree(&pdev->dev, mp->clk_config);
->  
-> +	for (i = 0; i < dpu_mdss->num_paths; i++)
-> +		icc_put(dpu_mdss->path[i]);
-> +
->  	if (dpu_mdss->mmio)
->  		devm_iounmap(&pdev->dev, dpu_mdss->mmio);
->  	dpu_mdss->mmio = NULL;
-> @@ -211,6 +248,10 @@ int dpu_mdss_init(struct drm_device *dev)
->  	}
->  	dpu_mdss->mmio_len = resource_size(res);
->  
-> +	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
-> +	if (ret)
-> +		return ret;
-> +
->  	mp = &dpu_mdss->mp;
->  	ret = msm_dss_parse_clock(pdev, mp);
->  	if (ret) {
-> @@ -232,14 +273,14 @@ int dpu_mdss_init(struct drm_device *dev)
->  	irq_set_chained_handler_and_data(irq, dpu_mdss_irq,
->  					 dpu_mdss);
->  
-> +	priv->mdss = &dpu_mdss->base;
-> +
->  	pm_runtime_enable(dev->dev);
->  
->  	pm_runtime_get_sync(dev->dev);
->  	dpu_mdss->hwversion = readl_relaxed(dpu_mdss->mmio);
->  	pm_runtime_put_sync(dev->dev);
->  
-> -	priv->mdss = &dpu_mdss->base;
-> -
->  	return ret;
->  
->  irq_error:
-> -- 
-> 2.20.1
+> Hello,
 > 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    43151d6c usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=124794d8a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4183eeef650d1234
+> dashboard link: https://syzkaller.appspot.com/bug?extid=71f1e64501a309fcc012
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176a53d0a00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+71f1e64501a309fcc012@syzkaller.appspotmail.com
+> 
+> usb 1-1: Using ep0 maxpacket: 8
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in usb_get_bos_descriptor+0x8be/0x8fb  
+> drivers/usb/core/config.c:976
+> Write of size 1 at addr ffff8880a48e38ec by task kworker/0:2/533
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Insufficient descriptor size check.
+
+Alan Stern
+
+
+#syz test: https://github.com/google/kasan.git usb-fuzzer
+
+ drivers/usb/core/config.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+Index: usb-devel/drivers/usb/core/config.c
+===================================================================
+--- usb-devel.orig/drivers/usb/core/config.c
++++ usb-devel/drivers/usb/core/config.c
+@@ -932,8 +932,8 @@ int usb_get_bos_descriptor(struct usb_de
+ 
+ 	/* Get BOS descriptor */
+ 	ret = usb_get_descriptor(dev, USB_DT_BOS, 0, bos, USB_DT_BOS_SIZE);
+-	if (ret < USB_DT_BOS_SIZE) {
+-		dev_err(ddev, "unable to get BOS descriptor\n");
++	if (ret < USB_DT_BOS_SIZE || bos->bLength < USB_DT_BOS_SIZE) {
++		dev_err(ddev, "unable to get BOS descriptor or descriptor too short\n");
+ 		if (ret >= 0)
+ 			ret = -ENOMSG;
+ 		kfree(bos);
+
+
