@@ -2,106 +2,333 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2744C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B58C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE4DA208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557787665;
-	bh=6L7KfX8dUY/7hRxDOv8URyoP1PYD4rAOP3+qbgb0Md4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V+MM/I6+fzufn7nbHOQybmzI/mqip0T8Tvb3EczCAfXGuAxuDrbscgIhV9YktEdiS
-	 v5Ft4Vo4PLGPjxnTcLE7WIifVxawmQKr3/hlKz4NjN3XzptwR2vE6HUkfFr3qmQAoX
-	 AIcHULvIIbJlN2mZYPUWXzc4vCsoOmK5FOZDU9FU=
+	by mail.kernel.org (Postfix) with ESMTP id 6BC31208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="duILl6oE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbfEMWrp (ORCPT
+        id S1726605AbfEMWsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:47:45 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44260 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbfEMWrm (ORCPT
+        Mon, 13 May 2019 18:48:15 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:36323 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfEMWsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:47:42 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e13so12482972ljl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:47:41 -0700 (PDT)
+        Mon, 13 May 2019 18:48:14 -0400
+Received: by mail-vk1-f193.google.com with SMTP id l199so2277784vke.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=NOjzR5gzdUf/7ChCYCZCTq7x6PiCIoqFFNcqS/TXVfY=;
-        b=d/8OvGpKdy+Qzy6ImDfcGAuOZ997gQDh3TiXd97ZsIN2Ic67JkkXPFCPp406jfL4DR
-         jDG0hEpEBHVWWfdt6En4IlsM2wEN/2HdVDkCBDwD26a7Sv7D0LOw/8VfEnqTyjPEtGoU
-         EgLnDyJ7bnP+aEK9X2wKbf+082qeT2KWlO3d4=
+        bh=sl2bxQBq0FJaX8PNLC2L4yPk06CuTs7eUmIudjrlzPg=;
+        b=duILl6oEa8zPOaL3tH582Wk2zOTSP2K+lRjcJ3QFF4RO0uGqG00j8IsqcOamqaKf2i
+         LikEzhkdigtroTh3Vv5JNZ744burXNZGbVor6wSMq1aKIbJAnJustWh+xQXHcam1J3mM
+         fP6TcWCa23z0uubMm5hQk6x7sNt4BsaT7Jpw8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NOjzR5gzdUf/7ChCYCZCTq7x6PiCIoqFFNcqS/TXVfY=;
-        b=KsPfOXnqWwv+qPsu8Si04PJuvjInugdvD+7aAoJLADYa6w8XeIVbCZIoqOcxLj7/4T
-         Yr9oNOHQvwWNKOBi/fx42MVH2DVxxD/i8uft/b6pvrCIAnt5K2IJ+aoA0aDfoAXxkh/Y
-         tJ+VMPHVctugzVdAz+s5WqwFMum+lU1IYOsaQf2D8JiCUcJ/owsEFJ25VKNOBDKmO6oh
-         aXOv1VXoM19wreADzevka/NxePI+dCOzEk88T1wR9dvtAdK1jRehfPfIUWodAo1mYPUy
-         wLkT8nZhvENgAky/zIWETQiKi34Lbg4fVf5WGy45oncnFI/VoqVAeQhM3GET+o77O6WF
-         TAXw==
-X-Gm-Message-State: APjAAAXhvWPIM7skulYLtHvuCd0Fh5iLLuhEVUVZdqXis30mvkUOGlQ8
-        nNOAfahlOl6mBwXx+4x5NpW97m0X368=
-X-Google-Smtp-Source: APXvYqwyr0KjTyMEfvyFdGMPU5TWc32NBe1wQdBCVlwu6jEDsxKUPFSD4ji8J5GOADolfiEWCg9RhQ==
-X-Received: by 2002:a2e:94ca:: with SMTP id r10mr14738425ljh.33.1557787660349;
-        Mon, 13 May 2019 15:47:40 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id v3sm3329529lfi.44.2019.05.13.15.47.39
+        bh=sl2bxQBq0FJaX8PNLC2L4yPk06CuTs7eUmIudjrlzPg=;
+        b=Kp5QemfY3vVUhoucpU2KKTQRjXZLAKxND7WQx8J4723zNktcQ2CBc16rxpSHRNR5pI
+         XVJreYtHkqF2C1CxtHiHN5xSvzMgMJHs9/EY0bZ/HUfM8DS9ORivhAUucGXhEmYMg373
+         Rl6K6qpreMoNuqlHqlplBLVnOeqSi28pBJZSQEfUBJWBN97OPviZvJfdS87RRLBrCLKV
+         7BZQyM2Sy1l3ha8oUgQp74QGyT0w4FOIrefzByBFFluxxXOL9gPpDDMI5iFm8iAVfEUH
+         /WEIWI2DF91H6s+Io2Rb450SAdCvmNuqbND3X3WXKt6wrmvdQExslwTslgx8ME4RuxhH
+         Cgdg==
+X-Gm-Message-State: APjAAAWXScH/W6RWp0Voie53TptLDz4CGtycL2PhVaduT1Le1VoHuxY9
+        cAwJSLmVUch1oXui0P7JdT1pXK/3ooI=
+X-Google-Smtp-Source: APXvYqxDRy2TeQ+0Xvjze+QN94p98T8NFoD7peOC3I6Dt9nw0pzP+PyC1HgP+SLzkYToz1xyg4fxzg==
+X-Received: by 2002:a1f:491:: with SMTP id 139mr13746554vke.22.1557787692385;
+        Mon, 13 May 2019 15:48:12 -0700 (PDT)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id 2sm19497000vke.27.2019.05.13.15.48.10
         for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 15:47:39 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id y19so10286297lfy.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:47:39 -0700 (PDT)
-X-Received: by 2002:a19:5015:: with SMTP id e21mr15292317lfb.62.1557787659075;
- Mon, 13 May 2019 15:47:39 -0700 (PDT)
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 15:48:11 -0700 (PDT)
+Received: by mail-ua1-f45.google.com with SMTP id a95so5445747uaa.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:48:10 -0700 (PDT)
+X-Received: by 2002:ab0:2692:: with SMTP id t18mr8606464uao.106.1557787690493;
+ Mon, 13 May 2019 15:48:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190513195904.15726-1-agruenba@redhat.com> <CAHk-=wg=yz_=6oM1r5C4pWJPac8cD1kHiki73wDciuLLoRNY=w@mail.gmail.com>
- <CAHc6FU43Fv_b9hMiRscs+cPbwLmcCBM-9R32fSsK9gUtMVMGUQ@mail.gmail.com>
-In-Reply-To: <CAHc6FU43Fv_b9hMiRscs+cPbwLmcCBM-9R32fSsK9gUtMVMGUQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 13 May 2019 15:47:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wipiSQ=+dTssFhjYXUS0VgJYRNqy8s_YNTL8HbZ6iKsYg@mail.gmail.com>
-Message-ID: <CAHk-=wipiSQ=+dTssFhjYXUS0VgJYRNqy8s_YNTL8HbZ6iKsYg@mail.gmail.com>
-Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
-To:     Andreas Gruenbacher <agruenba@redhat.com>
-Cc:     cluster-devel <cluster-devel@redhat.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-2-robdclark@gmail.com>
+In-Reply-To: <20190509184415.11592-2-robdclark@gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 May 2019 15:47:59 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UcLs+FkPUeDUC2c=zg8e_MTFHB7=yiz-=W6L6y2+H4+A@mail.gmail.com>
+Message-ID: <CAD=FV=UcLs+FkPUeDUC2c=zg8e_MTFHB7=yiz-=W6L6y2+H4+A@mail.gmail.com>
+Subject: Re: [RFC 1/3] arm64: dts: qcom: sdm845-cheza: add initial cheza dt
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Evan Green <evgreen@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 3:37 PM Andreas Gruenbacher <agruenba@redhat.com> wrote:
+Hi,
+
+On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com>wrote:
+
+> From: Rob Clark <robdclark@chromium.org>
 >
-> Sorry, I should have been more explicit. Would you mind taking this
-> patch, please? If it's more convenient or more appropriate, I'll send
-> a pull request instead.
+> This is essentialy a squash of a bunch of history of cheza dt updates
+> from chromium kernel, some of which were themselves squashes of history
+> from older chromium kernels.
+>
+> I don't claim any credit other than wanting to more easily boot upstream
+> kernel on cheza to have an easier way to test upstream driver work ;-)
+>
+> I've added below in Cc tags all the original actual authors (apologies
+> if I missed any).
+>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Sibi Sankar <sibis@codeaurora.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Matthias Kaehlcke <mka@chromium.org>
+> Cc: Abhinav Kumar <abhinavk@codeaurora.org>
+> Cc: Brian Norris <briannorris@chromium.org>
+> Cc: Venkat Gopalakrishnan <venkatg@codeaurora.org>
+> Cc: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile            |    3 +
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dts |  238 ++++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dts |  238 ++++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dts |  180 +++
+>  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi   | 1317 ++++++++++++++++++
+>  5 files changed, 1976 insertions(+)
 
-Done.
+In general I am supportive of getting cheza dts landed upstream.
 
-However,I'd like to point out that when I see patches from people who
-I normally get a pull request from, I usually ignore them.
+One question is how much cleanup we want to do while landing upstream.
+We have a few TODO / HACK comments currently.  Do we want to land what
+we have and clean these up in separate commits, or should we try to do
+cleanup beforehand.  Bjron / Andy: do you have any opinions?  I've
+commented on a few below.
 
-Particularly when they are in some thread with discussion, I'll often
-just assume that  th epatch is part of the thread, not really meant
-for me in particular.
 
-In this case I happened to notice that suddenly my participation
-status changed, which is why I asked, but in general I might hav ejust
-archived the thread with the assumption that I'll be getting the patch
-later as a git pull.
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+> index b3fe72ff2955..7a038cf81543 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -8,6 +8,9 @@ dtb-$(CONFIG_ARCH_QCOM) += msm8994-angler-rev-101.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += msm8996-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += msm8998-mtp.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += sdm845-cheza-r1.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += sdm845-cheza-r2.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)        += sdm845-cheza-r3.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += sdm845-mtp.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-1000.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)        += qcs404-evb-4000.dtb
 
-Just so you'll be aware of this in the future, in case I don't react...
+Something about the above makes "git am" unhappy and "patch -p1" think
+this is a malformed patch.  When I delete the part touching the
+Makefile then I can apply OK.
 
-               Linus
+
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dts b/arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dts
+> new file mode 100644
+> index 000000000000..35bb4629edd4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dts
+> @@ -0,0 +1,238 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Cheza board device tree source
+> + *
+> + * Copyright 2018 Google LLC.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sdm845-cheza.dtsi"
+> +
+> +/ {
+> +       model = "Google Cheza (rev1)";
+> +       compatible = "google,cheza-rev1", "google,cheza", "qcom,sdm845";
+
+See below for rev 3, but I think this might be better as:
+
+compatible = "google,cheza-rev1", "qcom,sdm845";
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dts b/arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dts
+> new file mode 100644
+> index 000000000000..4359a82d4bb4
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dts
+> @@ -0,0 +1,238 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Cheza board device tree source
+> + *
+> + * Copyright 2018 Google LLC.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sdm845-cheza.dtsi"
+> +
+> +/ {
+> +       model = "Google Cheza (rev2)";
+> +       compatible = "google,cheza-rev2", "google,cheza", "qcom,sdm845";
+
+See above and below, but probably:
+
+compatible = "google,cheza-rev2", "qcom,sdm845";
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dts b/arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dts
+> new file mode 100644
+> index 000000000000..2c3f815b90c1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dts
+> @@ -0,0 +1,180 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Cheza board device tree source
+> + *
+> + * Copyright 2018 Google LLC.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sdm845-cheza.dtsi"
+> +
+> +/ {
+> +       model = "Google Cheza (rev3+)";
+> +       compatible = "google,cheza-rev15", "google,cheza-rev14",
+> +                    "google,cheza-rev13", "google,cheza-rev12",
+> +                    "google,cheza-rev11", "google,cheza-rev10",
+> +                    "google,cheza-rev9", "google,cheza-rev8",
+> +                    "google,cheza-rev7", "google,cheza-rev6",
+> +                    "google,cheza-rev5", "google,cheza-rev4",
+> +                    "google,cheza-rev3", "google,cheza", "qcom,sdm845";
+
+Julius Werner suggested that a better solution is that the newest dts
+should specify no revision.  Thus this should be just:
+
+compatible = "google,cheza", "qcom,sdm845";
+
+
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> new file mode 100644
+> index 000000000000..338c92ddd1c3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+> @@ -0,0 +1,1317 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Google Cheza device tree source (common between revisions)
+> + *
+> + * Copyright 2018 Google LLC.
+> + */
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> +#include "sdm845.dtsi"
+> +
+> +/* PMICs depend on spmi_bus label and so must come after SoC */
+> +#include "pm8005.dtsi"
+> +#include "pm8998.dtsi"
+> +
+> +/ {
+> +       aliases {
+> +               bluetooth0 = &bluetooth;
+> +               hsuart0 = &uart6;
+> +               serial0 = &uart9;
+> +               wifi0 = &wifi;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       backlight: backlight {
+> +               compatible = "pwm-backlight";
+> +               pwms = <&cros_ec_pwm 0>;
+> +               enable-gpios = <&tlmm 37 GPIO_ACTIVE_HIGH>;
+> +               power-supply = <&ppvar_sys>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&ap_edp_bklten>;
+> +       };
+> +
+> +       reserved-memory {
+> +               rmtfs@88f00000 {
+> +                       compatible = "qcom,rmtfs-mem";
+> +                       reg = <0x0 0x88f00000 0x0 0x800000>;
+> +                       no-map;
+> +
+> +                       qcom,client-id = <1>;
+> +               };
+> +       };
+
+You missed part of:
+
+https://crrev.com/c/1588964 - CHROMIUM: arm64: dts: qcom:
+sdm845-cheza: Temporarily delete reserved-mem changes
+
+...that should make the above "reserved-memory" section go away.
+
+
+> +&spi0 {
+> +       status = "okay";
+> +       spi-max-frequency = <3000000>;  /* TODO: Drop this? */
+
+Drop "spi-max-frequency".  That was part of original bindings but
+shouldn't be there anymore.
+
+
+> +};
+> +
+> +&spi5 {
+> +       status = "okay";
+> +       spi-max-frequency = <800000>; /* TODO: Drop this */
+> +       cr50@0 {
+> +               compatible = "google,cr50";
+> +               reg = <0>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&h1_ap_int_odl>;
+> +               spi-max-frequency = <800000>;
+> +               interrupt-parent = <&tlmm>;
+> +               interrupts = <129 IRQ_TYPE_EDGE_RISING>;
+> +       };
+> +};
+
+Presumably the above needs to be dropped since "google,cr50" isn't
+actually upstream.
+
+
+> +&spi10 {
+> +       status = "okay";
+> +       spi-max-frequency = <3000000>;  /* TODO: Drop this? */
+
+Drop "spi-max-frequency".  That was part of original bindings but
+shouldn't be there anymore.
+
+
+-Doug
