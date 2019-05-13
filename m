@@ -2,199 +2,163 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5865C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC06AC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C95A20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F603208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:06:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="MKclIm69";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="XRvugWw1"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="zIss71+o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfEMREF (ORCPT
+        id S1730632AbfEMRGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:04:05 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:35638 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730002AbfEMREE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:04:04 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DH41bV030117;
-        Mon, 13 May 2019 10:04:02 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=j3j/rn2fnUQSGulhq+o5BZic2pM4QFoMHBCIdragw48=;
- b=MKclIm69VpeaX3QJSNz0xCi+IaoEaVP4xnE+/Dvpb91utRu87VG8sdV3PTcpYDv/mCS4
- cIJRt7+on5srfa6PARxWcxboBfHFHyLZUQxz1OOOCTpjlulVwfmMsjEEMoIye9hANjAu
- FOj9rCmjJwPbnwaRQjNRJ4mccBrkJD/RI2w= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sfafbgja1-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 13 May 2019 10:04:02 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 13 May 2019 10:04:00 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 13 May 2019 10:04:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
+        Mon, 13 May 2019 13:06:18 -0400
+Received: from mail-eopbgr720074.outbound.protection.outlook.com ([40.107.72.74]:64209
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730268AbfEMRGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:06:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j3j/rn2fnUQSGulhq+o5BZic2pM4QFoMHBCIdragw48=;
- b=XRvugWw1fv0A3BZ0LPxKZ3tMrVSBMWg/tccFZ4fLdKEK2TnxCIHNjf1FK08AWqdyiHISi1beN5uh/AnlkXLjUbKQHdGf12ajyC36ADpSMp14AFB9Cn2KS7kGjWs6q6AegLl2iCfJj+kfx3+WKIXs/yP45dIZSazCyxKhnDYDzD8=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) with Microsoft SMTP
+ bh=eHLpfnWoWujPeilq2Vzxl8f6Oekfsot30OspAFhCnvA=;
+ b=zIss71+oKy+qkYWnO8iIPsiuerwJqUgQAT2ySU5TZnFJjPDu/z3rLw92rugKfP4UWcIj1sZH5gCZQA4oLBtTu6DLY+9kF9iDVNt6msCq9uLPwySXwaj7bsm8NamJEO+S+j1gr8hdDDJnyHxrL2XE2qT9S7hwNTI7vS0XFsqRxtw=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB5029.namprd05.prod.outlook.com (20.177.230.211) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.25; Mon, 13 May 2019 17:03:58 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 17:03:58 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "Kernel Team" <Kernel-team@fb.com>
-Subject: Re: [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer"
- (76f969e)
-Thread-Topic: [REGRESSION] ptrace broken from "cgroup: cgroup v2 freezer"
- (76f969e)
-Thread-Index: AQHVCSoMi3vTppklSEy7VGeoXNz2TaZpSV2A
-Date:   Mon, 13 May 2019 17:03:58 +0000
-Message-ID: <20190513170354.GB10982@tower.DHCP.thefacebook.com>
-References: <1557709124.798rxdb4l3.astroid@alex-desktop.none>
-In-Reply-To: <1557709124.798rxdb4l3.astroid@alex-desktop.none>
+ 15.20.1900.14; Mon, 13 May 2019 17:06:03 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.010; Mon, 13 May 2019
+ 17:06:03 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Will Deacon <will.deacon@arm.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8AgAANcoCAAAcZgIAABfcAgAAkYwCABXN1AIAACeyAgAB8rgCAAAfegA==
+Date:   Mon, 13 May 2019 17:06:03 +0000
+Message-ID: <43638259-8EDB-4B8D-A93D-A2E86D8B2489@vmware.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+ <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+ <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
+ <20190513163752.GA10754@fuggles.cambridge.arm.com>
+In-Reply-To: <20190513163752.GA10754@fuggles.cambridge.arm.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR2201CA0020.namprd22.prod.outlook.com
- (2603:10b6:301:28::33) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::b4b6]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [50.204.119.4]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9c25e417-6857-4fca-279c-08d6d7c4fd41
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2631;
-x-ms-traffictypediagnostic: BYAPR15MB2631:
-x-microsoft-antispam-prvs: <BYAPR15MB26316498BA25259C4174EFA2BE0F0@BYAPR15MB2631.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-office365-filtering-correlation-id: 47297cbe-ed62-467f-e6aa-08d6d7c547c8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB5029;
+x-ms-traffictypediagnostic: BYAPR05MB5029:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BYAPR05MB50293E7CEBC629E4E9DC7419D00F0@BYAPR05MB5029.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39860400002)(346002)(376002)(199004)(189003)(52314003)(68736007)(186003)(102836004)(6512007)(9686003)(14454004)(99286004)(486006)(76176011)(478600001)(52116002)(476003)(54906003)(6506007)(46003)(11346002)(446003)(33656002)(386003)(81166006)(8676002)(81156014)(66476007)(66556008)(64756008)(66446008)(6916009)(2906002)(66946007)(6436002)(305945005)(6116002)(73956011)(229853002)(6486002)(7736002)(25786009)(8936002)(1076003)(5660300002)(71200400001)(71190400001)(4326008)(53936002)(6246003)(86362001)(256004)(14444005)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2631;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(346002)(39860400002)(396003)(366004)(51444003)(199004)(189003)(6306002)(66476007)(66556008)(64756008)(66446008)(66946007)(33656002)(54906003)(53546011)(4326008)(229853002)(2906002)(6506007)(14454004)(76116006)(83716004)(53936002)(73956011)(478600001)(486006)(76176011)(99286004)(476003)(966005)(3846002)(6116002)(14444005)(256004)(6512007)(6246003)(6916009)(102836004)(7416002)(36756003)(71190400001)(2616005)(305945005)(68736007)(316002)(66066001)(11346002)(71200400001)(6436002)(25786009)(5660300002)(446003)(86362001)(26005)(81166006)(6486002)(186003)(82746002)(7736002)(8676002)(81156014)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5029;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: z5ItmpqZph8pWofrf3C5wlAKRXWRu0dvHNIRH/U/dX7lqEflXObiXnAJ6UN5x3OQaULNggAwHNPnKv46gAcH5KF4ZBWO2tx0NaPFzqxrsggcIJMkxUko4aapU9FkYobD7Bl14j+NPgDyRJnisrHTNscan7sTF5ETJrMV+/KH70UoD/1fvrR1Hno8uSsdOnNC3ALiPpgRIuB3V1lEakQOOC4w0afcq0i+gpJr4xeVfLucWcCdm0DvqycK9XpnmPZ3FcSPQ0Nxzc0znPVZGqhi/osuiJIq6b/9N4JXGkxx6asA2RqcrQWQF7HUYvvwCDlGvgidpls/rWAHrGukRA8NxKUhZAW26kciB/KOWQ8rt/ivs2W+xAIIsswMMM09E70TxKGrNoK/wuJ5Eg9QuCc+RPFVuEuR9QBfnOrxh4aAp0o=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C0ED03F7E52C8449B40B9AB3EED8246B@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: M3YMOwND2CWU6vsD5LVIT2NkqoWdZ80ZU1tBtqKXZPzu8maZSifKTkZZjd8cYNNk3+58zbxpU6wvvVxjdBGtSSA5ve9wjXbnQHUxihk0Pmz5qh+6yXgmnz4KeraotmRDkNtc2J411Wv+88sjkMYtpn4oCiul8LBmqQEASl+JUgUl1O3/8urnOisBFN3JGrdsQKPibL9o/xG1Cl122bPDDmGa37B8JkS8bvWJHL6XE5hJhETE/qavChdxvZ7GrQ5bBHHek82u/o3pKnmVnw9L1zbwlNxnoHfQTfzXYYcjrASIOmdsXjeiKxohaCcDY9DB2JQxSInuMGAcRg5Y/v3cRw5g8GYh+YNtGWtz2YWW/pFDNQiF20aRaAAFUWoWfqJIGRbl2+phHDO2wHhe1O2LcApMOjKS3eQjUeWL59zTte8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CE53F45D5AB1584CAB1191AD54213E73@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c25e417-6857-4fca-279c-08d6d7c4fd41
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 17:03:58.4649
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47297cbe-ed62-467f-e6aa-08d6d7c547c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 17:06:03.1242
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2631
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_09:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5029
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex!
-
-Thank you for the report!
-It's super clear, and contains all the details, so it took me 30s
-to reproduce the issue. Really appreciate your effort!
-
-
-
-On Sun, May 12, 2019 at 09:20:12PM -0400, Alex Xu (Hello71) wrote:
-> Hi,
->=20
-> I was trying to use strace recently and found that it exhibited some=20
-> strange behavior. I produced this minimal test case:
->=20
-> #include <unistd.h>
->=20
-> int main() {
->     write(1, "a", 1);
->     return 0;
-> }
->=20
-> which, when run using "gcc test.c && strace ./a.out" produces this=20
-> strace output:
->=20
-> [ pre-main omitted ]
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> write(1, "a", 1)                        =3D ? ERESTARTSYS (To be restarte=
-d if SA_RESTART is set)
-> [ repeats forever ]
->=20
-> The correct result is of course:
->=20
-> [ pre-main omitted ]
-> write(1, "a", 1)                        =3D 1
-> exit_group(0)                           =3D ?
-> +++ exited with 0 +++
->=20
-> Strangely, this only occurs when outputting to a tty-like output.=20
-> Running "strace ./a.out" from a native Linux x86 console or a terminal=20
-> emulator causes the abnormal behavior. However, the following commands=20
-> work correctly:
->=20
-> - strace ./a.out >/dev/null
-> - strace ./a.out >/tmp/a # /tmp is a standard tmpfs
-> - strace ./a.out >&- # causes -1 EBADF (Bad file descriptor)
->=20
-> "strace -o /tmp/a ./a.out" hangs and produces the above (infinite)=20
-> output to /tmp/a.
->=20
-> I bisected this to 76f969e, "cgroup: cgroup v2 freezer". I reverted the=20
-> entire patchset (reverting only that one caused a conflict), which=20
-> resolved the issue. I skimmed the patch and came up with this=20
-> workaround, which also resolves the issue. I am not at all clear on the=20
-> technical workings of the patchset, but it seems to me like a process's=20
-> frozen status is supposed to be "suspended" when a frozen process is=20
-> ptraced, and "unsuspended" when ptracing ends. Therefore, it seems=20
-> suspicious to always "enter frozen" whether or not the cgroup is=20
-> actually frozen. It seems like the code should instead check if the=20
-> cgroup is actually frozen, and if so, restore the frozen status.
-
-So, the thing is that when the freezer tries to freeze all tasks
-in the cgroup, some tasks may sleep (e.g. being SIGSTOPPed),
-and the freezer can't get them out of this state and put them back correctl=
-y
-after unfreezing. So instead it leaves such tasks in the original state
-and treats them as frozen. This is why we need this unconditional
-cgroup_enter_frozen(). It's not the problem.
-
-Anyway, I'm sure that with great help from Oleg we'll be able
-to fix the issue very soon (I already posted a preliminary patch).
-
-Once again, thank you for the report!
-
-Roman
+PiBPbiBNYXkgMTMsIDIwMTksIGF0IDk6MzcgQU0sIFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBh
+cm0uY29tPiB3cm90ZToNCj4gDQo+IE9uIE1vbiwgTWF5IDEzLCAyMDE5IGF0IDA5OjExOjM4QU0g
+KzAwMDAsIE5hZGF2IEFtaXQgd3JvdGU6DQo+Pj4gT24gTWF5IDEzLCAyMDE5LCBhdCAxOjM2IEFN
+LCBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+IHdyb3RlOg0KPj4+IA0KPj4+
+IE9uIFRodSwgTWF5IDA5LCAyMDE5IGF0IDA5OjIxOjM1UE0gKzAwMDAsIE5hZGF2IEFtaXQgd3Jv
+dGU6DQo+Pj4gDQo+Pj4+Pj4+IEFuZCB3ZSBjYW4gZml4IHRoYXQgYnkgaGF2aW5nIHRsYl9maW5p
+c2hfbW11KCkgc3luYyB1cC4gTmV2ZXIgbGV0IGENCj4+Pj4+Pj4gY29uY3VycmVudCB0bGJfZmlu
+aXNoX21tdSgpIGNvbXBsZXRlIHVudGlsIGFsbCBjb25jdXJyZW5jdCBtbXVfZ2F0aGVycw0KPj4+
+Pj4+PiBoYXZlIGNvbXBsZXRlZC4NCj4+Pj4+Pj4gDQo+Pj4+Pj4+IFRoaXMgc2hvdWxkIG5vdCBi
+ZSB0b28gaGFyZCB0byBtYWtlIGhhcHBlbi4NCj4+Pj4+PiANCj4+Pj4+PiBUaGlzIHN5bmNocm9u
+aXphdGlvbiBzb3VuZHMgbXVjaCBtb3JlIGV4cGVuc2l2ZSB0aGFuIHdoYXQgSSBwcm9wb3NlZC4g
+QnV0IEkNCj4+Pj4+PiBhZ3JlZSB0aGF0IGNhY2hlLWxpbmVzIHRoYXQgbW92ZSBmcm9tIG9uZSBD
+UFUgdG8gYW5vdGhlciBtaWdodCBiZWNvbWUgYW4NCj4+Pj4+PiBpc3N1ZS4gQnV0IEkgdGhpbmsg
+dGhhdCB0aGUgc2NoZW1lIEkgc3VnZ2VzdGVkIHdvdWxkIG1pbmltaXplIHRoaXMgb3ZlcmhlYWQu
+DQo+Pj4+PiANCj4+Pj4+IFdlbGwsIGl0IHdvdWxkIGhhdmUgYSBsb3QgbW9yZSB1bmNvbmRpdGlv
+bmFsIGF0b21pYyBvcHMuIE15IHNjaGVtZSBvbmx5DQo+Pj4+PiB3YWl0cyB3aGVuIHRoZXJlIGlz
+IGFjdHVhbCBjb25jdXJyZW5jeS4NCj4+Pj4gDQo+Pj4+IFdlbGwsIHNvbWV0aGluZyBoYXMgdG8g
+Z2l2ZS4gSSBkaWRu4oCZdCB0aGluayB0aGF0IGlmIHRoZSBzYW1lIGNvcmUgZG9lcyB0aGUNCj4+
+Pj4gYXRvbWljIG9wIGl0IHdvdWxkIGJlIHRvbyBleHBlbnNpdmUuDQo+Pj4gDQo+Pj4gVGhleSdy
+ZSBzdGlsbCBhdCBsZWFzdCAyMCBjeWNsZXMgYSBwb3AsIHVuY29udGVuZGVkLg0KPj4+IA0KPj4+
+Pj4gSSBfdGhpbmtfIHNvbWV0aGluZyBsaWtlIHRoZSBiZWxvdyBvdWdodCB0byB3b3JrLCBidXQg
+aXRzIG5vdCBldmVuIGJlZW4NCj4+Pj4+IG5lYXIgYSBjb21waWxlci4gVGhlIG9ubHkgcHJvYmxl
+bSBpcyB0aGUgdW5jb25kaXRpb25hbCB3YWtldXA7IHdlIGNhbg0KPj4+Pj4gcGxheSBnYW1lcyB0
+byBhdm9pZCB0aGF0IGlmIHdlIHdhbnQgdG8gY29udGludWUgd2l0aCB0aGlzLg0KPj4+Pj4gDQo+
+Pj4+PiBJZGVhbGx5IHdlJ2Qgb25seSBkbyB0aGlzIHdoZW4gdGhlcmUncyBiZWVuIGFjdHVhbCBv
+dmVybGFwLCBidXQgSSd2ZSBub3QNCj4+Pj4+IGZvdW5kIGEgc2Vuc2libGUgd2F5IHRvIGRldGVj
+dCB0aGF0Lg0KPj4+Pj4gDQo+Pj4+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tbV90eXBl
+cy5oIGIvaW5jbHVkZS9saW51eC9tbV90eXBlcy5oDQo+Pj4+PiBpbmRleCA0ZWY0YmJlNzhhMWQu
+LmI3MGUzNTc5MmQyOSAxMDA2NDQNCj4+Pj4+IC0tLSBhL2luY2x1ZGUvbGludXgvbW1fdHlwZXMu
+aA0KPj4+Pj4gKysrIGIvaW5jbHVkZS9saW51eC9tbV90eXBlcy5oDQo+Pj4+PiBAQCAtNTkwLDcg
+KzU5MCwxMiBAQCBzdGF0aWMgaW5saW5lIHZvaWQgZGVjX3RsYl9mbHVzaF9wZW5kaW5nKHN0cnVj
+dCBtbV9zdHJ1Y3QgKm1tKQ0KPj4+Pj4gCSAqDQo+Pj4+PiAJICogVGhlcmVmb3JlIHdlIG11c3Qg
+cmVseSBvbiB0bGJfZmx1c2hfKigpIHRvIGd1YXJhbnRlZSBvcmRlci4NCj4+Pj4+IAkgKi8NCj4+
+Pj4+IC0JYXRvbWljX2RlYygmbW0tPnRsYl9mbHVzaF9wZW5kaW5nKTsNCj4+Pj4+ICsJaWYgKGF0
+b21pY19kZWNfYW5kX3Rlc3QoJm1tLT50bGJfZmx1c2hfcGVuZGluZykpIHsNCj4+Pj4+ICsJCXdh
+a2VfdXBfdmFyKCZtbS0+dGxiX2ZsdXNoX3BlbmRpbmcpOw0KPj4+Pj4gKwl9IGVsc2Ugew0KPj4+
+Pj4gKwkJd2FpdF9ldmVudF92YXIoJm1tLT50bGJfZmx1c2hfcGVuZGluZywNCj4+Pj4+ICsJCQkg
+ICAgICAgIWF0b21pY19yZWFkX2FjcXVpcmUoJm1tLT50bGJfZmx1c2hfcGVuZGluZykpOw0KPj4+
+Pj4gKwl9DQo+Pj4+PiB9DQo+Pj4+IA0KPj4+PiBJdCBzdGlsbCBzZWVtcyB2ZXJ5IGV4cGVuc2l2
+ZSB0byBtZSwgYXQgbGVhc3QgZm9yIGNlcnRhaW4gd29ya2xvYWRzIChlLmcuLA0KPj4+PiBBcGFj
+aGUgd2l0aCBtdWx0aXRocmVhZGVkIE1QTSkuDQo+Pj4gDQo+Pj4gSXMgdGhhdCBBcGFjaGUtTVBN
+IHdvcmtsb2FkIHRyaWdnZXJpbmcgdGhpcyBsb3RzPyBIYXZpbmcgYSBrbm93bg0KPj4+IGJlbmNo
+bWFyayBmb3IgdGhpcyBzdHVmZiBpcyBnb29kIGZvciB3aGVuIHNvbWVvbmUgaGFzIHRpbWUgdG8g
+cGxheSB3aXRoDQo+Pj4gdGhpbmdzLg0KPj4gDQo+PiBTZXR0aW5nIEFwYWNoZTIgd2l0aCBtcG1f
+d29ya2VyIGNhdXNlcyBldmVyeSByZXF1ZXN0IHRvIGdvIHRocm91Z2gNCj4+IG1tYXAtd3JpdGV2
+LW11bm1hcCBmbG93IG9uIGV2ZXJ5IHRocmVhZC4gSSBkaWRu4oCZdCBydW4gdGhpcyB3b3JrbG9h
+ZCBhZnRlcg0KPj4gdGhlIHBhdGNoZXMgdGhhdCBkb3duZ3JhZGUgdGhlIG1tYXBfc2VtIHRvIHJl
+YWQgYmVmb3JlIHRoZSBwYWdlLXRhYmxlDQo+PiB6YXBwaW5nIHdlcmUgaW50cm9kdWNlZC4gSSBw
+cmVzdW1lIHRoZXNlIHBhdGNoZXMgd291bGQgYWxsb3cgdGhlIHBhZ2UtdGFibGUNCj4+IHphcHBp
+bmcgdG8gYmUgZG9uZSBjb25jdXJyZW50bHksIGFuZCB0aGVyZWZvcmUgd291bGQgaGl0IHRoaXMg
+Zmxvdy4NCj4gDQo+IEhtbSwgSSBkb24ndCB0aGluayBzbzogbXVubWFwKCkgc3RpbGwgaGFzIHRv
+IHRha2UgdGhlIHNlbWFwaG9yZSBmb3Igd3JpdGUNCj4gaW5pdGlhbGx5LCBzbyBpdCB3aWxsIGJl
+IHNlcmlhbGlzZWQgYWdhaW5zdCBvdGhlciBtdW5tYXAoKSB0aHJlYWRzIGV2ZW4NCj4gYWZ0ZXIg
+dGhleSd2ZSBkb3duZ3JhZGVkIGFmYWljdC4NCj4gDQo+IFRoZSBpbml0aWFsIGJ1ZyByZXBvcnQg
+d2FzIGFib3V0IGNvbmN1cnJlbnQgbWFkdmlzZSgpIHZzIG11bm1hcCgpLg0KDQpJIGd1ZXNzIHlv
+dSBhcmUgcmlnaHQgKGFuZCBJ4oCZbSB3cm9uZykuDQoNClNob3J0IHNlYXJjaCBzdWdnZXN0cyB0
+aGF0IGViaXp6eSBtaWdodCBiZSBhZmZlY3RlZCAoYSB0aHJlYWQgYnkgTWVsDQpHb3JtYW4pOiBo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS8yLzIvNDkzDQoNCg==
