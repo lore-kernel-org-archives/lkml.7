@@ -4,91 +4,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FD3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A02C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCC4218B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCB82146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:07:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V4Mavlc3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GslG7+cZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbfEMNFO (ORCPT
+        id S1730082AbfEMNHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:05:14 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37103 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727953AbfEMNFN (ORCPT
+        Mon, 13 May 2019 09:07:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54311 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730063AbfEMNG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:05:13 -0400
-Received: by mail-wr1-f67.google.com with SMTP id e15so2787918wrs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:05:12 -0700 (PDT)
+        Mon, 13 May 2019 09:06:59 -0400
+Received: by mail-wm1-f66.google.com with SMTP id i3so7983730wml.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EHZ/pld/sg8uAVGHhkkrEz44b+d5Izaa0pIrN3uQMwQ=;
-        b=V4Mavlc3cgLus5AEdOtVuk9qMM6lyQfOEkN0u8KEnhzsEd3hOX2fbV4GtwLj8hPyTr
-         5w8RiGcpINtPoxLXnVdAm0oI1oNa3aeEUWtEYVfvrcUFI3U0+jjrXIZiCsuisDtUPMld
-         9vONUn3cIyyVcXD6lY5KmmceWS+dH/4G9qYfvWMS79eBlFGzk3KO/lI7BBNO2GBHwgsy
-         t0qeX/DPl9xZPqzJOm/IRLrRcmMlGBN0vi+zyUcrJPFHywFLkC4O9+dYPjMcvo30DV4V
-         jwA+1nYBgDdV3KLAlU5L5mBfyEpcTgSPEPFkcn71adEJ5IWmDAtKIwIzK1mq6JKjCJ4P
-         VJcw==
+        h=from:to:cc:subject:date:message-id;
+        bh=CXM/sAS6gtztrX2ItBHaQh/rCG7OOeN6BL0gyVWj5Hs=;
+        b=GslG7+cZPvOdOZdTWehD3qyjIhEDcW2T5HIFyOCJTkkfLxc+l2hF9kWZo9gGxKg4Vr
+         YQOKf4PSb4ovF9se5btS2Jix6wf/siXTKB4yos83DlZOxnHPh2PzMbJMct/NZU/4NUkm
+         MPi+6cotGwhzHe7X2TycUvGBfdwS9wWD1n391CFVkHQ/A6JdBJOysmr5ofHJEkX2rts/
+         5OhlR7r+1fvMZ/So59hGa3lgmD2Jo8zuRhVf/oBoQjiEpa7cji8C9JGEzAzJyhIEhbkx
+         aLEeaeEKTpBTRvmL5eASQeQCBPGQvECRfhHzD7Bz+pJWAbTtVwu0Ft8rFek8NP1ULEB2
+         /d/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EHZ/pld/sg8uAVGHhkkrEz44b+d5Izaa0pIrN3uQMwQ=;
-        b=aeIsSM3QLcHxWxOktqnZ8UgWKaFv/3Xtfjdhpoy6WR1IuzzjJUn1Fv1hdA2NBT7Y9L
-         a4x+167jDkbDs9orCqUvkfyQ361T29ycAxX2lRt2gic5Tb1SfYahEOSEhcjZaWc4isGf
-         obBzQskRmCZJ9MYn7m+OFCpchEsQbTwpfmsefRYByLmtm7raEQHNybcevq8uHrYTQxh3
-         Q2kNCnBjsgeLCRtaJc+QMbf5xQe8aTrLYn0xUiQ39Yq5eguA+VdckuWXKZb1QaJUCcp3
-         /3DNGrp01lWwKOEG4kz41pt+V/zzH4cBA2BmrB3MxBE7Dw2UY9U9x99k01rjQlONYBtS
-         WZFQ==
-X-Gm-Message-State: APjAAAVxN7kUV3p2Khh6me2Ki5QPYkj3teNKlo39fnRIkzW6cZfkd06h
-        1Wa/JXPZMYqrIlx/PTuLG2K4SQ==
-X-Google-Smtp-Source: APXvYqzwWbqc3KgT6JSaZYy4PBV+LnjmUu0z+YVKtdpYi8JdgyGhKJ7ChUmglf1QZ12ESiwwE8oFiw==
-X-Received: by 2002:a5d:4245:: with SMTP id s5mr8742703wrr.147.1557752711799;
-        Mon, 13 May 2019 06:05:11 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id o6sm33701457wrh.55.2019.05.13.06.05.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 06:05:11 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson: nanopi k2: add sd DDR50
-Date:   Mon, 13 May 2019 15:05:07 +0200
-Message-Id: <20190513130507.22533-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CXM/sAS6gtztrX2ItBHaQh/rCG7OOeN6BL0gyVWj5Hs=;
+        b=kCGK+uIl4vpMVIc7IYpkACRDEPfT2iN5pFThEmGfxQdkdFkQPub5NMbwOm4IZXp6u+
+         wR/MXEP3E1XpkKpY3UVJ4sQA+UBSUfidzamz6Ypl68M1IyN/j5XedSmMID81UiNGCUsj
+         0Q1PxwYL44IVhiul2muSmjyILf4IM3DiNelnYMWHWxN6mILZPhajjco7RwJXh806FWRO
+         bXp2YRQS9LrDD4ibKasakmpsj2Gq0Jw9+tH4b7CwmOUOrFSmazqEmV50bJ1qwALA8bXk
+         0EzZcoUJtY1GOPvShd/PUtnT8I3ZiASGX2F1c55PEiIjLZenFe60CHp0CX8oXYMSpNbq
+         6ZhQ==
+X-Gm-Message-State: APjAAAWSgpCRm7nFRx0Bb9jOEh6NPhyih7AuSGlfr/c+YV9vAjApznXq
+        n75JOXQii/3A6fuqU4K3XfTHF/Dsa+k=
+X-Google-Smtp-Source: APXvYqzBz5EitlkDpf/Id1MzoeK9OnY9qfX/brhrBMq59YPXLx9oj7yX4jc4dlI7NopLVr++jeUGwg==
+X-Received: by 2002:a1c:4083:: with SMTP id n125mr11793765wma.54.1557752817725;
+        Mon, 13 May 2019 06:06:57 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id m17sm15699206wmc.6.2019.05.13.06.06.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 13 May 2019 06:06:56 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
+        maxime.ripard@bootlin.com, peppe.cavallaro@st.com, wens@csie.org
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
+Date:   Mon, 13 May 2019 13:06:39 +0000
+Message-Id: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add UHS ddr50 mode to the nanopi k2
+When adding more MAC address to a dwmac-sun8i interface, the device goes
+directly in promiscuous mode.
+This is due to IFF_UNICAST_FLT missing flag.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
+
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index be81f8958717..849c01650c4d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -301,6 +301,7 @@
- 	sd-uhs-sdr12;
- 	sd-uhs-sdr25;
- 	sd-uhs-sdr50;
-+	sd-uhs-ddr50;
- 	max-frequency = <100000000>;
- 	disable-wp;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+index ac19bf62db70..9d3112beb19f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -1018,6 +1018,8 @@ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
+ 	mac->mac = &sun8i_dwmac_ops;
+ 	mac->dma = &sun8i_dwmac_dma_ops;
  
++	priv->dev->priv_flags |= IFF_UNICAST_FLT;
++
+ 	/* The loopback bit seems to be re-set when link change
+ 	 * Simply mask it each time
+ 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
 -- 
-2.20.1
+2.21.0
 
