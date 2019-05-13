@@ -2,83 +2,93 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C73C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63D2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5FC21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557737043;
-	bh=ugMALw/O3cXPViqg+8RfbM4wNDJ1LAMUNwNjIhWmq3k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KJgCJlRUhIh3jYr4fl4tsDNEaJ9kLdmDP3PqMKJM3ro/wJv6vVht1VzJJB+UJsJQi
-	 Xymp95VpW1ASH3sAadZINZIf1al3PXZISXDZtyOiz61s8mZyTAl7+w6OnN0J6JuOzS
-	 Ckp8aATqmd5TDfanGb7bN4fbF8X5w2gsRjZTAUBE=
+	by mail.kernel.org (Postfix) with ESMTP id 76D3B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbfEMIoC (ORCPT
+        id S1728331AbfEMIsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfEMIoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:44:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20DD62084A;
-        Mon, 13 May 2019 08:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557737041;
-        bh=ugMALw/O3cXPViqg+8RfbM4wNDJ1LAMUNwNjIhWmq3k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oeReko0CXz8ySA+Ei2LgTAdAe8Wk/ng0mpVKNPA+6RSldcAGioXQhSeUFhBWJmADV
-         orKwl8F7ZL+OLqBZ6MLq7jOisf1eAXWm2uk/jZSejuh1FZFqYLTZV6wnGlGC7595+N
-         uVdEz78Hn6PTL2wN73zBvo7PeT1mOYiZdWB9AZ+Q=
-Date:   Mon, 13 May 2019 10:43:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Colin Ian King <colin.king@canonical.com>,
+        Mon, 13 May 2019 04:48:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52088 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726103AbfEMIsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:48:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E4E2BAECD;
+        Mon, 13 May 2019 08:48:51 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Yury Norov <ynorov@caviumnetworks.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Arnd Bergmann <arnd@arndb.de>,
-        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        viswanath.barenkala@gmail.com
-Subject: Re: [PATCH] staging: rtl8723bs: core fix warning  Comparison to bool
-Message-ID: <20190513084358.GB17959@kroah.com>
-References: <20190512122449.GA28268@hari-Inspiron-1545>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        Alexander Graf <agraf@suse.de>,
+        Alexey Klimov <klimov.linux@gmail.com>,
+        Andrew Pinski <pinskia@gmail.com>,
+        Bamvor Zhangjian <bamv2005@gmail.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Florian Weimer <fweimer@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        James Hogan <james.hogan@imgtec.com>,
+        James Morse <james.morse@arm.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Lin Yongting <linyongting@huawei.com>,
+        Manuel Montezelo <manuel.montezelo@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Nathan_Lynch <Nathan_Lynch@mentor.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
+        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
+        Steve Ellcey <sellcey@caviumnetworks.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Subject: Re: [PATCH v9 00/24] ILP32 for ARM64
+References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+        <20190508225900.GA14091@yury-thinkpad>
+X-Yow:  Is this ANYWHERE, USA?
+Date:   Mon, 13 May 2019 10:48:48 +0200
+In-Reply-To: <20190508225900.GA14091@yury-thinkpad> (Yury Norov's message of
+        "Wed, 8 May 2019 15:59:00 -0700")
+Message-ID: <mvmtvdyoi33.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512122449.GA28268@hari-Inspiron-1545>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 05:54:49PM +0530, Hariprasad Kelam wrote:
-> fix below issue reported by coccicheck
-> 
-> drivers/staging/rtl8723bs/core/rtw_mlme.c:1675:6-10: WARNING: Comparison
-> to bool
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/core/rtw_mlme.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+There is a problem with the stack size accounting during execve when
+there is no stack limit:
 
-You sent 3 patches that do different things, yet have the same subject
-line :(
+$ ulimit -s
+8192
+$ ./hello.ilp32 
+Hello World!
+$ ulimit -s unlimited
+$ ./hello.ilp32 
+Segmentation fault
+$ strace ./hello.ilp32 
+execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) = -1 ENOMEM (Cannot allocate memory)
++++ killed by SIGSEGV +++
+Segmentation fault (core dumped)
 
-Please fix up and send as a numbered patch series, or better yet, fix
-the same thing in the whole file all at ince.
+Andreas.
 
-thanks,
-
-greg k-h
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
