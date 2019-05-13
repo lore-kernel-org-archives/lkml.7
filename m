@@ -4,72 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F327C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD0CC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3DF217F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1CD321473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557778364;
-	bh=WCUFh+woPhcJEK6e8moOGrzwENC0TrzGg0GLcBimDv0=;
+	s=default; t=1557778375;
+	bh=hfkOxiyFGI7k7znQCUsj782Lg8QsyaKplKP4qu05XEk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JW0Qn6A2jdYpE5MFIz4pJpTz83nUH5HDEaMl+e4MzMr5u+Ej+8Vet5rgyYTyV5HDY
-	 B8+kXOjxIyElILRxE2dex1xCp1h4gIyI7M8cpUM/3cOs5nPQjqGvlWuwMFbGBfQ9hA
-	 Qr/kN9XYDbNMiGBFTtyXg7sg1muKXfiWWu4wijQE=
+	b=wXQgpleKUP3Om3IE/kTT1nup14yYAW3G2cixGLsxYM04D0NYMDO+QzxHUohYH51Sz
+	 vwC2BCEdh7qgk1iEqqmznWofpdsCOOEM93AQHehthB49HgDy2m++59ypemn5s+O/ed
+	 RA82TuKLjS1r1sU0FB8V+ekjvM+Krx/LuLSsg/gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfEMUMm (ORCPT
+        id S1726407AbfEMUMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        Mon, 13 May 2019 16:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfEMUMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:12:41 -0400
+        id S1726221AbfEMUMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 16:12:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AAD22085A;
-        Mon, 13 May 2019 20:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 085EA2085A;
+        Mon, 13 May 2019 20:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557778360;
-        bh=WCUFh+woPhcJEK6e8moOGrzwENC0TrzGg0GLcBimDv0=;
+        s=default; t=1557778372;
+        bh=hfkOxiyFGI7k7znQCUsj782Lg8QsyaKplKP4qu05XEk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0z6teznxoJKK51aNl9f25UfLlJqBuG+fqDz9q1N+bcHuTieX9gqac12jWJZX1kX1Q
-         kErrK5M8ptjrdBlZ0QWRonzYfS6/f6IT41vHfilgl6t1xeFwR/L7d2bCYojfQw8HTl
-         V8SrCeK+7M1XF9cJzPyEkbAInQvPqGv1TJ1B0e1U=
-Date:   Mon, 13 May 2019 22:12:35 +0200
+        b=sdrrUmYefGMHM5gD5o/9eruq+0zP7B8LB4OxYAmDlsDTHrg3C73R/1ImcFEjQsTWV
+         8laAsb9MUnegIhhUxd0cWhitvo3nQZrEJPVvrego0KtacMFcaXuRkPKH+Rx+D4J69k
+         boLmOkujothfR8kBlRHdfqcWPrw8KqkE44E08Fuw=
+Date:   Mon, 13 May 2019 22:12:48 +0200
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Raul E Rangel <rrangel@chromium.org>
 Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
         djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [stable/4.14.y PATCH 2/3] mmc: Fix null pointer dereference in
- mmc_init_request
-Message-ID: <20190513201235.GB17404@kroah.com>
+Subject: Re: [stable/4.14.y PATCH 3/3] mmc: Kill the request if the queuedata
+ has been removed
+Message-ID: <20190513201248.GC17404@kroah.com>
 References: <20190513175521.84955-1-rrangel@chromium.org>
- <20190513175521.84955-3-rrangel@chromium.org>
+ <20190513175521.84955-4-rrangel@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190513175521.84955-3-rrangel@chromium.org>
+In-Reply-To: <20190513175521.84955-4-rrangel@chromium.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 11:55:20AM -0600, Raul E Rangel wrote:
-> It is possible for queuedata to be cleared in mmc_cleanup_queue before
-> the request has been started. This will result in dereferencing a null
-> pointer.
+On Mon, May 13, 2019 at 11:55:21AM -0600, Raul E Rangel wrote:
+> No reason to even try processing the request if the queue is shutting
+> down.
 > 
 > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 > ---
 > 
->  drivers/mmc/core/queue.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  drivers/mmc/core/queue.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 <formletter>
 
