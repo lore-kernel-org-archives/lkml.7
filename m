@@ -2,67 +2,52 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7531CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03869C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E03E21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KmnhCz6N";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fIjyRT0P"
+	by mail.kernel.org (Postfix) with ESMTP id C36CE20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfEMV0k (ORCPT
+        id S1726586AbfEMV17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:26:40 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58894 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726338AbfEMV0i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:26:38 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C9649602B7; Mon, 13 May 2019 21:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557782796;
-        bh=e8LbiSB5Vy/aCdEzxSU89H8YcBojAjPigXyBPa/Iw9A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KmnhCz6Nd1j/g/IDuSSApERg5QKciYNKxy4AcyJQcxLuPfJ0SFH2FR59OWNhmtvke
-         rlwg4nXl68q04dbthLjlj7slXOGNcNJvXFMYR/TnrSKTSPbXNg9SGBHMKCfmBuuxJG
-         rm+shag35Ak/GrvtQFd7Itp5ndu1MAlRWag/I9z4=
-Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
+        Mon, 13 May 2019 17:27:59 -0400
+Received: from mga03.intel.com ([134.134.136.65]:37697 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbfEMV17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 17:27:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 14:27:58 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 13 May 2019 14:27:58 -0700
+Received: from [10.251.13.252] (kliang2-mobl.ccr.corp.intel.com [10.251.13.252])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: clew@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34E0B605FC;
-        Mon, 13 May 2019 21:26:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557782795;
-        bh=e8LbiSB5Vy/aCdEzxSU89H8YcBojAjPigXyBPa/Iw9A=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fIjyRT0P2d0/nk72mKRNK0C46M7X2gDgA+OlNJaJ3byJNS+jL3iNHrCF9dU/fJqFm
-         jy2jYAUz9EZjwEe+/GfjGmmO34ZRYbzZW+D5Aqng6t/QT+lbn+r7mzML6VuLdhwjbR
-         4Kc4O0zDK1GZCRMxfnN3YUihe/WJPQ7shsN2ZVdg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34E0B605FC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
-Subject: Re: [PATCH 2/5] net: qrtr: Implement outgoing flow control
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Arun Kumar Neelakantam <aneela@codeaurora.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190508060643.30936-1-bjorn.andersson@linaro.org>
- <20190508060643.30936-3-bjorn.andersson@linaro.org>
-From:   Chris Lew <clew@codeaurora.org>
-Message-ID: <81db3bc9-613a-8999-61ca-a340944750ca@codeaurora.org>
-Date:   Mon, 13 May 2019 14:26:34 -0700
+        by linux.intel.com (Postfix) with ESMTPS id 99F98580416;
+        Mon, 13 May 2019 14:27:57 -0700 (PDT)
+Subject: Re: [RESEND PATCH 1/3] perf, tools: Add support for recording and
+ printing XMM registers
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Kan Liang <kan.liang@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        ak@ghostprotocols.net
+References: <20190513182541.GC8003@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <d5363c4c-c8ad-1766-132d-4e97d339d999@linux.intel.com>
+Date:   Mon, 13 May 2019 17:27:56 -0400
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190508060643.30936-3-bjorn.andersson@linaro.org>
+In-Reply-To: <20190513182541.GC8003@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -73,277 +58,224 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 5/7/2019 11:06 PM, Bjorn Andersson wrote:
-> In order to prevent overconsumption of resources on the remote side QRTR
-> implements a flow control mechanism.
+On 5/13/2019 2:37 PM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, May 13, 2019 at 01:37:16PM -0400, Arnaldo Carvalho de Melo escreveu:
+>> Em Mon, May 06, 2019 at 07:19:24AM -0700, kan.liang@linux.intel.com escreveu:
+>>> From: Andi Kleen <ak@linux.intel.com>
+>>>
+>>> Icelake and later platforms support collecting XMM registers with PEBS
+>>> event.
+>>> Add support for perf script to dump them, and support
+>>> for the register parser in perf record -I ... to configure them.
+>>> For now they are just printed in hex, could potentially add
+>>> other formats too.
+>>
+>> So I noticed the sync warning about
+>> tools/arch/x86/include/uapi/asm/perf_regs.h abd added a separate patch
+>> for that, removing this part from this patch, applying it afterward.
 > 
-> The mechanism works by the sender keeping track of the number of
-> outstanding unconfirmed messages that has been transmitted to a
-> particular node/port pair.
+> Also, when using 'perf record -I foobar' it should record all registers,
+> which I think includes the xmm registers in capable platforms, from your
+> 'Add perf script support to dump them', so I tried running it here on a
+> skylake notebook, i.e. where it fails when I ask for a specific xmm
+> register:
 > 
-> Upon count reaching a low watermark (L) the confirm_rx bit is set in the
-> outgoing message and when the count reaching a high watermark (H)
-> transmission will be blocked upon the reception of a resume_tx message
-> from the remote, that resets the counter to 0.
+>    # perf record -Isi,di,xmm0 sleep 1
+>    Error:
+>    The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (cycles).
+>    /bin/dmesg | grep -i perf may provide additional information.
 > 
-> This guarantees that there will be at most 2H - L messages in flight.
-> Values chosen for L and H are 5 and 10 respectively.
+>    # perf record -I?
+>    available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9 XMM10 XMM11 XMM12 XMM13 XMM14 XMM15
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->   net/qrtr/qrtr.c | 143 +++++++++++++++++++++++++++++++++++++++++++++---
->   1 file changed, 136 insertions(+), 7 deletions(-)
+>     Usage: perf record [<options>] [<command>]
+>        or: perf record [<options>] -- <command> [<options>]
 > 
-> diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-> index 07a35362fba2..62abd622618d 100644
-> --- a/net/qrtr/qrtr.c
-> +++ b/net/qrtr/qrtr.c
-> @@ -16,6 +16,7 @@
->   #include <linux/qrtr.h>
->   #include <linux/termios.h>	/* For TIOCINQ/OUTQ */
->   #include <linux/numa.h>
-> +#include <linux/wait.h>
->   
->   #include <net/sock.h>
->   
-> @@ -121,6 +122,9 @@ static DEFINE_MUTEX(qrtr_port_lock);
->    * @ep: endpoint
->    * @ref: reference count for node
->    * @nid: node id
-> + * @qrtr_tx_flow: tree with tx counts per flow
-> + * @resume_tx: waiters for a resume tx from the remote
-> + * @qrtr_tx_lock: lock for qrtr_tx_flow
->    * @rx_queue: receive queue
->    * @work: scheduled work struct for recv work
->    * @item: list item for broadcast list
-> @@ -131,11 +135,26 @@ struct qrtr_node {
->   	struct kref ref;
->   	unsigned int nid;
->   
-> +	struct radix_tree_root qrtr_tx_flow;
-> +	struct wait_queue_head resume_tx;
-> +	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
-> +
->   	struct sk_buff_head rx_queue;
->   	struct work_struct work;
->   	struct list_head item;
->   };
->   
-> +/**
-> + * struct qrtr_tx_flow - tx flow control
-> + * @pending: number of waiting senders
-> + */
-> +struct qrtr_tx_flow {
-> +	atomic_t pending;
-> +};
-> +
-> +#define QRTR_TX_FLOW_HIGH	10
-> +#define QRTR_TX_FLOW_LOW	5
-> +
->   static int qrtr_local_enqueue(struct qrtr_node *node, struct sk_buff *skb,
->   			      int type, struct sockaddr_qrtr *from,
->   			      struct sockaddr_qrtr *to);
-> @@ -150,7 +169,9 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
->    */
->   static void __qrtr_node_release(struct kref *kref)
->   {
-> +	struct radix_tree_iter iter;
->   	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
-> +	void __rcu **slot;
->   
->   	if (node->nid != QRTR_EP_NID_AUTO)
->   		radix_tree_delete(&qrtr_nodes, node->nid);
-> @@ -158,6 +179,12 @@ static void __qrtr_node_release(struct kref *kref)
->   	list_del(&node->item);
->   	mutex_unlock(&qrtr_node_lock);
->   
-> +	/* Free tx flow counters */
-> +	radix_tree_for_each_slot(slot, &node->qrtr_tx_flow, &iter, 0) {
-> +		radix_tree_iter_delete(&node->qrtr_tx_flow, &iter, slot);
-> +		kfree(*slot);
-> +	}
-> +
->   	skb_queue_purge(&node->rx_queue);
->   	kfree(node);
->   }
-> @@ -178,15 +205,106 @@ static void qrtr_node_release(struct qrtr_node *node)
->   	kref_put_mutex(&node->ref, __qrtr_node_release, &qrtr_node_lock);
->   }
->   
-> +/**
-> + * qrtr_tx_resume() - reset flow control counter
-> + * @node:	qrtr_node that the QRTR_TYPE_RESUME_TX packet arrived on
-> + * @skb:	resume_tx packet
-> + */
-> +static void qrtr_tx_resume(struct qrtr_node *node, struct sk_buff *skb)
-> +{
-> +	struct qrtr_ctrl_pkt *pkt = (struct qrtr_ctrl_pkt *)skb->data;
-> +	struct qrtr_tx_flow *flow;
-> +	unsigned long key;
-> +	u64 remote_node = le32_to_cpu(pkt->client.node);
-> +	u32 remote_port = le32_to_cpu(pkt->client.port);
-> +
-> +	key = remote_node << 32 | remote_port;
-> +
-> +	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
-> +	if (flow)
-> +		atomic_set(&flow->pending, 0);
-> +
-> +	wake_up_interruptible_all(&node->resume_tx);
-> +
-> +	consume_skb(skb);
-> +}
-> +
-> +/**
-> + * qrtr_tx_wait() - flow control for outgoing packets
-> + * @node:	qrtr_node that the packet is to be send to
-> + * @dest_node:	node id of the destination
-> + * @dest_port:	port number of the destination
-> + * @type:	type of message
-> + *
-> + * The flow control scheme is based around the low and high "watermarks". When
-> + * the low watermark is passed the confirm_rx flag is set on the outgoing
-> + * message, which will trigger the remote to send a control message of the type
-> + * QRTR_TYPE_RESUME_TX to reset the counter. If the high watermark is hit
-> + * further transmision should be paused.
-> + *
-> + * Return: 1 if confirm_rx should be set, 0 otherwise or errno failure
-> + */
-> +static int qrtr_tx_wait(struct qrtr_node *node, int dest_node, int dest_port,
-> +			int type)
-> +{
-> +	struct qrtr_tx_flow *flow;
-> +	unsigned long key = (u64)dest_node << 32 | dest_port;
-> +	int confirm_rx = 0;
-> +	int ret;
-> +
-> +	/* Never set confirm_rx on non-data packets */
-> +	if (type != QRTR_TYPE_DATA)
-> +		return 0;
-> +
-> +	mutex_lock(&node->qrtr_tx_lock);
-> +	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
-> +	if (!flow) {
-> +		flow = kzalloc(sizeof(*flow), GFP_KERNEL);
-> +		if (!flow)
-> +			confirm_rx = 1;
-> +		else
-> +			radix_tree_insert(&node->qrtr_tx_flow, key, flow);
-> +	}
-> +	mutex_unlock(&node->qrtr_tx_lock);
-> +
-> +	for (;;) {
-> +		ret = wait_event_interruptible(node->resume_tx,
-> +					       atomic_read(&flow->pending) < QRTR_TX_FLOW_HIGH ||
-> +					       !node->ep);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (!node->ep)
-> +			return -EPIPE;
-> +
-> +		mutex_lock(&node->qrtr_tx_lock);
-> +		if (atomic_read(&flow->pending) < QRTR_TX_FLOW_HIGH) {
-> +			confirm_rx = atomic_inc_return(&flow->pending) == QRTR_TX_FLOW_LOW;
-> +			mutex_unlock(&node->qrtr_tx_lock);
-> +			break;
-> +		}
-> +		mutex_unlock(&node->qrtr_tx_lock);
-> +	}
-> +
-> +	return confirm_rx;
-> +}
-> +
->   /* Pass an outgoing packet socket buffer to the endpoint driver. */
->   static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
->   			     int type, struct sockaddr_qrtr *from,
->   			     struct sockaddr_qrtr *to)
->   {
->   	struct qrtr_hdr_v1 *hdr;
-> +	int confirm_rx;
->   	size_t len = skb->len;
->   	int rc = -ENODEV;
->   
-> +	confirm_rx = qrtr_tx_wait(node, to->sq_node, to->sq_port, type);
-> +	if (confirm_rx < 0) {
-> +		kfree_skb(skb);
-> +		return confirm_rx;
-> +	}
-> +
->   	hdr = skb_push(skb, sizeof(*hdr));
->   	hdr->version = cpu_to_le32(QRTR_PROTO_VER_1);
->   	hdr->type = cpu_to_le32(type);
-> @@ -201,7 +319,7 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
->   	}
->   
->   	hdr->size = cpu_to_le32(len);
-> -	hdr->confirm_rx = 0;
-> +	hdr->confirm_rx = !!confirm_rx;
->   
->   	skb_put_padto(skb, ALIGN(len, 4));
->   
+>        -I, --intr-regs[=<any register>]
+>                              sample selected machine registers on interrupt, use -I ? to list register names
+>      #
+> 
+> But when I try asking for all those "available" registers, it doesn't
+> seem to ask for the xmm registers, i.e. it works:
+> 
+> [root@quaco ~]# perf record -I
+> ^C[ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 1.812 MB perf.data (2036 samples) ]
+> 
+>    # perf evlist -v
+>    cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, sample_regs_intr: 0xff0fff
+>    #
+> 
+>    # perf script -F uregs
+>    Samples for 'cycles' event do not have UREGS attribute set. Cannot print 'uregs' field.
+>    # perf script -F iregs | head -1
+>     ABI:2    AX:0xf    BX:0xffff9edc4620f3a0    CX:0x38f    DX:0x7    SI:0xf    DI:0x38f    BP:0x0    SP:0xffff9edc46203f68    IP:0xffffffffae069894 FLAGS:0xa    CS:0x10    SS:0x18    R8:0x0    R9:0x207c0   R10:0x7968cfe8776   R11:0x5   R12:0x0   R13:0xffffbaec16fb7d20   R14:0xffff9edc2b5ab000   R15:0x0
+>    #
+> 
+> So, can you please check all this and please consider sending a fix that
+> comes with output for the steps used to test it, like above.
+> 
+> I'm applying this now because it adds a ability that, used with the
+> above caveats in mind, is useful, but please help improving the output
+> so that users don't get confused.
+> 
+> For instance, the 'perf record -I?' code should probe for the existence
+> of these registers in the combo kernel+hardware, by creating an event,
+> asking the kernel to record those registers and checking if the kernel
+> supports this and the hardware has such registers.
+>
 
-We had issues where the underlying transport layer failed to send the 
-packet but flow control count wasn't adjusted. Eventually we couldn't
-send to that remote port if the packet with the control flag bit was
-dropped by the transport.
+Thanks for the test. I will send a fix for the issue.
 
-> @@ -318,7 +436,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
->   	if (len != ALIGN(size, 4) + hdrlen)
->   		goto err;
->   
-> -	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA)
-> +	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA &&
-> +	    cb->type != QRTR_TYPE_RESUME_TX)
->   		goto err;
->   
->   	skb_put_data(skb, data + hdrlen, size);
-> @@ -377,14 +496,18 @@ static void qrtr_node_rx_work(struct work_struct *work)
->   
->   		qrtr_node_assign(node, cb->src_node);
->   
-> -		ipc = qrtr_port_lookup(cb->dst_port);
-> -		if (!ipc) {
-> -			kfree_skb(skb);
-> +		if (cb->type == QRTR_TYPE_RESUME_TX) {
-> +			qrtr_tx_resume(node, skb);
->   		} else {
-> -			if (sock_queue_rcv_skb(&ipc->sk, skb))
-> +			ipc = qrtr_port_lookup(cb->dst_port);
-> +			if (!ipc) {
->   				kfree_skb(skb);
-> +			} else {
-> +				if (sock_queue_rcv_skb(&ipc->sk, skb))
-> +					kfree_skb(skb);
->   
-> -			qrtr_port_put(ipc);
-> +				qrtr_port_put(ipc);
-> +			}
->   		}
->   	}
->   }
-> @@ -415,6 +538,9 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
->   	node->nid = QRTR_EP_NID_AUTO;
->   	node->ep = ep;
->   
-> +	INIT_RADIX_TREE(&node->qrtr_tx_flow, GFP_KERNEL);
-> +	init_waitqueue_head(&node->resume_tx);
-> +
->   	qrtr_node_assign(node, nid);
->   
->   	mutex_lock(&qrtr_node_lock);
-> @@ -449,6 +575,9 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep)
->   		qrtr_local_enqueue(NULL, skb, QRTR_TYPE_BYE, &src, &dst);
->   	}
->   
-> +	/* Wake up any transmitters waiting for resume-tx from the node */
-> +	wake_up_interruptible_all(&node->resume_tx);
-> +
->   	qrtr_node_release(node);
->   	ep->node = NULL;
->   }
+Thanks,
+Kan
+
+
+> Thanks,
 > 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> - Arnaldo
+>   
+>> - Arnaldo
+>>   
+>>> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>> ---
+>>>   tools/arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++-
+>>>   tools/perf/arch/x86/include/perf_regs.h     | 25 +++++++++++++++++++--
+>>>   tools/perf/arch/x86/util/perf_regs.c        | 16 +++++++++++++
+>>>   tools/perf/util/perf_regs.h                 |  1 +
+>>>   4 files changed, 62 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>>> index f3329cabce5c..ac67bbea10ca 100644
+>>> --- a/tools/arch/x86/include/uapi/asm/perf_regs.h
+>>> +++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+>>> @@ -27,8 +27,29 @@ enum perf_event_x86_regs {
+>>>   	PERF_REG_X86_R13,
+>>>   	PERF_REG_X86_R14,
+>>>   	PERF_REG_X86_R15,
+>>> -
+>>> +	/* These are the limits for the GPRs. */
+>>>   	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+>>>   	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
+>>> +
+>>> +	/* These all need two bits set because they are 128bit */
+>>> +	PERF_REG_X86_XMM0  = 32,
+>>> +	PERF_REG_X86_XMM1  = 34,
+>>> +	PERF_REG_X86_XMM2  = 36,
+>>> +	PERF_REG_X86_XMM3  = 38,
+>>> +	PERF_REG_X86_XMM4  = 40,
+>>> +	PERF_REG_X86_XMM5  = 42,
+>>> +	PERF_REG_X86_XMM6  = 44,
+>>> +	PERF_REG_X86_XMM7  = 46,
+>>> +	PERF_REG_X86_XMM8  = 48,
+>>> +	PERF_REG_X86_XMM9  = 50,
+>>> +	PERF_REG_X86_XMM10 = 52,
+>>> +	PERF_REG_X86_XMM11 = 54,
+>>> +	PERF_REG_X86_XMM12 = 56,
+>>> +	PERF_REG_X86_XMM13 = 58,
+>>> +	PERF_REG_X86_XMM14 = 60,
+>>> +	PERF_REG_X86_XMM15 = 62,
+>>> +
+>>> +	/* These include both GPRs and XMMX registers */
+>>> +	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+>>>   };
+>>>   #endif /* _ASM_X86_PERF_REGS_H */
+>>> diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+>>> index 7f6d538f8a89..b7321337d100 100644
+>>> --- a/tools/perf/arch/x86/include/perf_regs.h
+>>> +++ b/tools/perf/arch/x86/include/perf_regs.h
+>>> @@ -8,9 +8,9 @@
+>>>   
+>>>   void perf_regs_load(u64 *regs);
+>>>   
+>>> +#define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
+>>>   #ifndef HAVE_ARCH_X86_64_SUPPORT
+>>>   #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+>>> -#define PERF_REGS_MAX PERF_REG_X86_32_MAX
+>>>   #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+>>>   #else
+>>>   #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
+>>> @@ -18,7 +18,6 @@ void perf_regs_load(u64 *regs);
+>>>   		       (1ULL << PERF_REG_X86_FS) | \
+>>>   		       (1ULL << PERF_REG_X86_GS))
+>>>   #define PERF_REGS_MASK (((1ULL << PERF_REG_X86_64_MAX) - 1) & ~REG_NOSUPPORT)
+>>> -#define PERF_REGS_MAX PERF_REG_X86_64_MAX
+>>>   #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_64
+>>>   #endif
+>>>   #define PERF_REG_IP PERF_REG_X86_IP
+>>> @@ -77,6 +76,28 @@ static inline const char *perf_reg_name(int id)
+>>>   	case PERF_REG_X86_R15:
+>>>   		return "R15";
+>>>   #endif /* HAVE_ARCH_X86_64_SUPPORT */
+>>> +
+>>> +#define XMM(x) \
+>>> +	case PERF_REG_X86_XMM ## x:	\
+>>> +	case PERF_REG_X86_XMM ## x + 1:	\
+>>> +		return "XMM" #x;
+>>> +	XMM(0)
+>>> +	XMM(1)
+>>> +	XMM(2)
+>>> +	XMM(3)
+>>> +	XMM(4)
+>>> +	XMM(5)
+>>> +	XMM(6)
+>>> +	XMM(7)
+>>> +	XMM(8)
+>>> +	XMM(9)
+>>> +	XMM(10)
+>>> +	XMM(11)
+>>> +	XMM(12)
+>>> +	XMM(13)
+>>> +	XMM(14)
+>>> +	XMM(15)
+>>> +#undef XMM
+>>>   	default:
+>>>   		return NULL;
+>>>   	}
+>>> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+>>> index fead6b3b4206..71d7604dbf0b 100644
+>>> --- a/tools/perf/arch/x86/util/perf_regs.c
+>>> +++ b/tools/perf/arch/x86/util/perf_regs.c
+>>> @@ -31,6 +31,22 @@ const struct sample_reg sample_reg_masks[] = {
+>>>   	SMPL_REG(R14, PERF_REG_X86_R14),
+>>>   	SMPL_REG(R15, PERF_REG_X86_R15),
+>>>   #endif
+>>> +	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
+>>> +	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
+>>> +	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
+>>> +	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
+>>> +	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
+>>> +	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
+>>> +	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
+>>> +	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
+>>> +	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
+>>> +	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
+>>> +	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
+>>> +	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
+>>> +	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
+>>> +	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
+>>> +	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
+>>> +	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
+>>>   	SMPL_REG_END
+>>>   };
+>>>   
+>>> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+>>> index c9319f8d17a6..1a15a4bfc28d 100644
+>>> --- a/tools/perf/util/perf_regs.h
+>>> +++ b/tools/perf/util/perf_regs.h
+>>> @@ -12,6 +12,7 @@ struct sample_reg {
+>>>   	uint64_t mask;
+>>>   };
+>>>   #define SMPL_REG(n, b) { .name = #n, .mask = 1ULL << (b) }
+>>> +#define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
+>>>   #define SMPL_REG_END { .name = NULL }
+>>>   
+>>>   extern const struct sample_reg sample_reg_masks[];
+>>> -- 
+>>> 2.17.1
+>>
+>> -- 
+>>
+>> - Arnaldo
+> 
