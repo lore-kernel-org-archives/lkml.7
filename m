@@ -2,133 +2,109 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C02C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6246C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604E62086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:04:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sld5lvhm"
+	by mail.kernel.org (Postfix) with ESMTP id 80B822086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbfEMIE3 (ORCPT
+        id S1727924AbfEMIEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:04:29 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38270 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfEMIE2 (ORCPT
+        Mon, 13 May 2019 04:04:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725928AbfEMIEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:04:28 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v11so14084560wru.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 01:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FdczpF+HAtCkzG6jTzIfOqqlgewnqObJbWmhu1Fz2yM=;
-        b=Sld5lvhmRWIvM91ctJtd//tpVz1uloPeXyHekhDCoKSGrt3JP/Vx+70r8vP1bQGcwR
-         iuYJHi7x2/TnAnszH8u3hL9tssUToBtcKD1H102oNQG7gsGzal8StFurBHnmfiXuL9SQ
-         mvtTiKabDcfh+hEcAcdmmdAgMcZ8CdtsRAtMGqvi87YqAHOpnlZ/EFiM2TzaRf+KYfte
-         j0DKalgnO5CLWHl9KTE0y36Gue9BnTzanHx2T562Oiz9c1SaALAgOrPc2BVC5XPUq4LO
-         cvk9NZ21aRi846aiVdo271IK0QwDfJlQdVDMGZmD1repraLSDKZoqcZBam+wb9qoPkMa
-         hZAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FdczpF+HAtCkzG6jTzIfOqqlgewnqObJbWmhu1Fz2yM=;
-        b=FwPIt+yianXM5fVCGiMVbGiuu//UrByo4ckQoIqh9yQlNt4LU/Va8JyQTItoa6gCHG
-         QYUX+5VuxAgwFTAQS2tsupM2VUfQUpOu3f5Um65UCWuHLOhCW6HA2cpNzioI/KvPJnf8
-         UYHVngt6TO5aV9H7FwgD04ufboT0PLxPb50Uu8th0Vi6/kVDuyWReosel5zEI0JdQsqR
-         q+4lls7tjtTWJdiOZe1kSS5Mtc4UAWuw4LT+oTt9TP1VPW6i5DNp/ec+RhIMx9pQuNtS
-         /Y0ehzeOWXAbm1yKMHRj0W7l20nqBNahst7d9sY+0g36h+uKa6YpB6NH5gDz5vKy+U3t
-         Rhgw==
-X-Gm-Message-State: APjAAAVOLMgRD7JKtv/ZlhhCmQrYd5tbx/Qkd3RyZYihaqTO0Jy6XqQt
-        JHePEHaULd+V/pLSGaR7B6a6/Q==
-X-Google-Smtp-Source: APXvYqzvj8NuvJYWXTRnd2qzSR8XJHh9J+mCXfue5ISEeA4KA6HWrXpRsrTWXWt04RTsIrJWlms0Jw==
-X-Received: by 2002:a5d:434c:: with SMTP id u12mr17399442wrr.92.1557734667055;
-        Mon, 13 May 2019 01:04:27 -0700 (PDT)
-Received: from [192.168.0.41] (205.29.129.77.rev.sfr.net. [77.129.29.205])
-        by smtp.googlemail.com with ESMTPSA id e8sm29815369wrc.34.2019.05.13.01.04.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 01:04:26 -0700 (PDT)
-Subject: Re: [RFC 0/2] clocksource: davinci-timer: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sekhar Nori <nsekhar@ti.com>,
-        David Lechner <david@lechnology.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190417144709.19588-1-brgl@bgdev.pl>
- <CAMRc=MdhfEM_CndCjCkY9kWeu+3VPTA7tmTy5PH=2XforZ6aLw@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <861538a7-9ee4-307d-433e-54e51a54fb98@linaro.org>
-Date:   Mon, 13 May 2019 10:04:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAMRc=MdhfEM_CndCjCkY9kWeu+3VPTA7tmTy5PH=2XforZ6aLw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 13 May 2019 04:04:34 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D84Fli008939
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:04:33 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sf2cmnh5r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:04:24 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Mon, 13 May 2019 09:02:25 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 May 2019 09:02:23 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4D82MFX46399508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 08:02:22 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D9C9AE051;
+        Mon, 13 May 2019 08:02:22 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B9CBFAE065;
+        Mon, 13 May 2019 08:02:21 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 May 2019 08:02:21 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf docu: Add description for stderr
+Date:   Mon, 13 May 2019 10:02:20 +0200
+X-Mailer: git-send-email 2.16.4
+X-TM-AS-GCONF: 00
+x-cbid: 19051308-0020-0000-0000-0000033C05A2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051308-0021-0000-0000-0000218EB8F8
+Message-Id: <20190513080220.91966-1-tmricht@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 09:54, Bartosz Golaszewski wrote:
-> śr., 17 kwi 2019 o 16:47 Bartosz Golaszewski <brgl@bgdev.pl> napisał(a):
->>
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> Hi Daniel,
->>
->> as discussed - this is the davinci timer driver split into the clockevent
->> and clocksource parts.
->>
->> Since it won't work without all the other (left out for now) changes, I'm
->> marking it as RFC.
->>
->> The code has been simplified as requested, the duplicated enums and the
->> davinci_timer structure have been removed.
->>
->> Please let me know if that's better. I retested it on da850-lcdk, da830-evm
->> and dm365-evm.
->>
->> Bartosz Golaszewski (2):
->>   clocksource: davinci-timer: add support for clockevents
->>   clocksource: timer-davinci: add support for clocksource
->>
->>  drivers/clocksource/Kconfig         |   5 +
->>  drivers/clocksource/Makefile        |   1 +
->>  drivers/clocksource/timer-davinci.c | 342 ++++++++++++++++++++++++++++
->>  include/clocksource/timer-davinci.h |  44 ++++
->>  4 files changed, 392 insertions(+)
->>  create mode 100644 drivers/clocksource/timer-davinci.c
->>  create mode 100644 include/clocksource/timer-davinci.h
->>
->> --
->> 2.21.0
->>
-> 
-> Hi Daniel,
-> 
-> it's been almost a month so a gentle ping. Any comments on that?
+Perf report displays recorded data on the screen and emits
+warnings and debug messages in the status line (last one on screen).
+Perf also supports the possibility to write all debug messages
+to stderr (instead of writing them to the status line).
+This is achieved with the following command:
 
-Oh right, I've been distracted with other things, sorry for that. Let me
-review it today.
+ # ./perf --debug stderr=1 report -vvvvv -i ~/fast.data 2>/tmp/2
+ # ll /tmp/2
+ -rw-rw-r-- 1 tmricht tmricht 5420835 May  7 13:46 /tmp/2
+ #
 
+The usage of variable stderr=1 is not documented, so add it
+to the perf man page.
 
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/Documentation/perf.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index 864e37597252..401f0ed67439 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -22,6 +22,8 @@ OPTIONS
+ 	  verbose          - general debug messages
+ 	  ordered-events   - ordered events object debug messages
+ 	  data-convert     - data convert command debug messages
++	  stderr           - write debug output (option -v) to stderr
++	                     in browser mode
+ 
+ --buildid-dir::
+ 	Setup buildid cache directory. It has higher priority than
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.19.1
 
