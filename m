@@ -2,158 +2,145 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 098F6C04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE46C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE791208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CC3208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:22:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="MBCqaOYz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfEMCTU (ORCPT
+        id S1727339AbfEMCWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 22:19:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41395 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfEMCTU (ORCPT
+        Sun, 12 May 2019 22:22:15 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:38102 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfEMCWP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 22:19:20 -0400
-Received: by mail-io1-f67.google.com with SMTP id a17so8804592iot.8
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 19:19:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0YBhbwDYDQaaP8Q10VnTc/btcudJfr9E3ZfK2SxCdhk=;
-        b=PDZ0cczf/4UwcfxcPfFPDDqA/HrIwatWujHbWgbcjOPAo3jyhA88JOa7NERFRHCC9C
-         Wngf8sMm8xPBrywhsADMXK+B31b3+5Zz8AXHIcAD8cFyi770bDtXiGYFTm1aW5txij86
-         T9ngXUgcn/8LL5OcS6jrdieniy20cDylEm/7gLy90AE6h7jBnpJiSoENmiz83RnmUwXI
-         XkCd5ZMmel1xhN7lfbqNu7OrVYg2tjBGpXhxVj0/3q3z6K/trUfovXpdI4kQs5tx3Cag
-         2EBxrzSnRRijc/G0yV9KFMVnXEX+ooBlcr2S2ZkOcEjcwSSesdEfSg7ANOXaLUwnK5It
-         A9tw==
-X-Gm-Message-State: APjAAAV/EjHMFrxQWpMndLuxkvCJEB36Gr+Rm4Z6HxwGZFZ7pq3CsXpX
-        kHwSXsAUyilsfljJGZ8dTZVAps3Zl2SEtQT3xqthBw==
-X-Google-Smtp-Source: APXvYqxSjKkZk82Y54ujLVRJgcrrrKogjwMJkYhxpeZmx46iKS1c74Y9SdqcEl/G4NjTc0/EPvfw8FuBhmHk3VLVwAY=
-X-Received: by 2002:a5d:83c5:: with SMTP id u5mr14476328ior.137.1557713959523;
- Sun, 12 May 2019 19:19:19 -0700 (PDT)
+        Sun, 12 May 2019 22:22:15 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x4D2LuXb009723;
+        Mon, 13 May 2019 11:21:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4D2LuXb009723
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557714117;
+        bh=yQxCG37w6Ly7xjh2CwAY8QJdOyakDs9OiQbyZ0eAim0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MBCqaOYzYdWxF0AHi4tA46LHBqMqULIPASWNNej+mm0taGU3xhnjYQhmZe74r44Ht
+         r6zxoqlYtI+c3QCTQ1ToB57TNn+6I6w0ESI2KCH9c/qmK09j17KluqXLa/I+y5aKT9
+         UpzW7XT2cr27C8e8KzthxF2Dwz/ZsXuM0gI7NIoOpL3oTBfRKWOdhVTl0xFWRlOc28
+         lK72ilXsqwoCHZGWqqf33cXfpl+xkZVvYGIOQEWNGDJ1CfpY9mJ1T3EmyDaTPDFL/C
+         7BPogjdT2J64l1Ke5PdW1GP/a3fdrgEsPnhQ0AJK7Q9lJzt9MtQZ//zNTfbxQJFxfZ
+         iKhp6fjC8ZIxA==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id c24so7023323vsp.7;
+        Sun, 12 May 2019 19:21:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAV31pNYncHSagflqftvgqVCdJYFfvI2ZbvhJfKBv4fiu/njl6Mk
+        uV46Ny/UaajM/hWLc1vi+Z1MfLZqXappR3DvgeU=
+X-Google-Smtp-Source: APXvYqyDL5INPfRuGMICJarENkYbnXBma+o3Xq/qi1fMnEwrw4kXQhAiG1YYv/FhWyD/VowZ+DMssvlY2j9ztgx3wMM=
+X-Received: by 2002:a05:6102:3d9:: with SMTP id n25mr653917vsq.181.1557714115443;
+ Sun, 12 May 2019 19:21:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190510102051.25647-1-kasong@redhat.com> <20190513015241.GA8515@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190513015241.GA8515@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Mon, 13 May 2019 10:19:09 +0800
-Message-ID: <CACPcB9ezEbAzGadCwvVQGgCA+XP2tzCZbvT7ytiSk98O_unXZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        Bhupesh Sharma <bhsharma@redhat.com>
+References: <1557497409-18037-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1557497409-18037-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 13 May 2019 11:21:19 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASu5ef8TbhL5J4Mgw=ZH4fpGR34xPfbruOSW4frm0c6gQ@mail.gmail.com>
+Message-ID: <CAK7LNASu5ef8TbhL5J4Mgw=ZH4fpGR34xPfbruOSW4frm0c6gQ@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: add all Clang-specific flags unconditionally
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 9:52 AM Dave Young <dyoung@redhat.com> wrote:
+On Fri, May 10, 2019 at 11:11 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 >
-> On 05/10/19 at 06:20pm, Kairui Song wrote:
-> > Device dump allow drivers to add device related dump data to vmcore as
-> > they want. This have a potential issue, the data is stored in memory,
-> > drivers may append too much data and use too much memory. The vmcore is
-> > typically used in a kdump kernel which runs in a pre-reserved small
-> > chunk of memory. So as a result it will make kdump unusable at all due
-> > to OOM issues.
-> >
-> > So introduce new device_dump_limit= kernel parameter, and set the
-> > default limit to 0, so device dump is not enabled unless user specify
-> > the accetable maxiam memory usage for device dump data. In this way user
-> > will also have the chance to adjust the kdump reserved memory
-> > accordingly.
+> We do not support old Clang versions. Upgrade your clang version
+> if any of these flags is unsupported.
 >
-> The device dump is only affective in kdump 2nd kernel, so add the
-> limitation seems not useful.  One is hard to know the correct size
-> unless one does some crash test.  If one did the test and want to eanble
-> the device dump he needs increase crashkernel= size in 1st kernel and
-> add the limit param in 2nd kernel.
+> Let's add all flags within ifdef CONFIG_CC_IS_CLANG unconditionally.
 >
-> So a global on/off param sounds easier and better, something like
-> vmcore_device_dump=on  (default is off)
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Tested-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
 
-Yes, on/off could be another way to solve this issue, the size limit
-could being more flexibility, if device dump is not asking for too
-much memory then it would just work but bring extra complexity indeed.
-Considering it's actually hard to know how much memory is needed for
-the device dump drivers to work, I'll update to use the on/off cmdline
-then.
+Applied to linux-kbuild.
 
 >
-> >
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >  fs/proc/vmcore.c | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >
-> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> > index 3fe90443c1bb..e28695ef2439 100644
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
-> >  /* Device Dump list and mutex to synchronize access to list */
-> >  static LIST_HEAD(vmcoredd_list);
-> >  static DEFINE_MUTEX(vmcoredd_mutex);
-> > +
-> > +/* Device Dump Limit */
-> > +static size_t vmcoredd_limit;
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> >
-> >  /* Device Dump Size */
-> > @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
-> >                           PAGE_SIZE);
-> >
-> > +     if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
-> > +             ret = -ENOMEM;
-> > +             goto out_err;
-> > +     }
-> > +
-> >       /* Allocate buffer for driver's to write their dumps */
-> >       buf = vmcore_alloc_buf(data_size);
-> >       if (!buf) {
-> > @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       return ret;
-> >  }
-> >  EXPORT_SYMBOL(vmcore_add_device_dump);
-> > +
-> > +static int __init parse_vmcoredd_limit(char *arg)
-> > +{
-> > +     char *end;
-> > +
-> > +     if (!arg)
-> > +             return -EINVAL;
-> > +     vmcoredd_limit = memparse(arg, &end);
-> > +     return end > arg ? 0 : -EINVAL;
-> > +
-> > +}
-> > +__setup("device_dump_limit=", parse_vmcoredd_limit);
-> >  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
-> >
-> >  /* Free all dumps in vmcore device dump list */
-> > --
-> > 2.20.1
-> >
+> Changes in v2:
+>   - Rebase on top of Nathan's patch
+>      https://patchwork.kernel.org/patch/10937055/
 >
-> Thanks
-> Dave
-
+>  Makefile                   | 10 +++++-----
+>  scripts/Makefile.extrawarn | 12 ++++++------
+>  2 files changed, 11 insertions(+), 11 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 914a3ad..1152fc4 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -731,15 +731,15 @@ stackp-flags-$(CONFIG_STACKPROTECTOR_STRONG)      := -fstack-protector-strong
+>  KBUILD_CFLAGS += $(stackp-flags-y)
+>
+>  ifdef CONFIG_CC_IS_CLANG
+> -KBUILD_CPPFLAGS += $(call cc-option,-Qunused-arguments,)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, format-invalid-specifier)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
+> +KBUILD_CPPFLAGS += -Qunused-arguments
+> +KBUILD_CFLAGS += -Wno-format-invalid-specifier
+> +KBUILD_CFLAGS += -Wno-gnu
+>  # Quiet clang warning: comparison of unsigned expression < 0 is always false
+> -KBUILD_CFLAGS += $(call cc-disable-warning, tautological-compare)
+> +KBUILD_CFLAGS += -Wno-tautological-compare
+>  # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+>  # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+>  # See modpost pattern 2
+> -KBUILD_CFLAGS += $(call cc-option, -mno-global-merge,)
+> +KBUILD_CFLAGS += -mno-global-merge
+>  else
+>
+>  # These warnings generated too much noise in a regular build.
+> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+> index 768306a..523c4ca 100644
+> --- a/scripts/Makefile.extrawarn
+> +++ b/scripts/Makefile.extrawarn
+> @@ -66,11 +66,11 @@ KBUILD_CFLAGS += $(warning)
+>  else
+>
+>  ifdef CONFIG_CC_IS_CLANG
+> -KBUILD_CFLAGS += $(call cc-disable-warning, initializer-overrides)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, unused-value)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, format)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
+> -KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
+> +KBUILD_CFLAGS += -Wno-initializer-overrides
+> +KBUILD_CFLAGS += -Wno-unused-value
+> +KBUILD_CFLAGS += -Wno-format
+> +KBUILD_CFLAGS += -Wno-sign-compare
+> +KBUILD_CFLAGS += -Wno-format-zero-length
+> +KBUILD_CFLAGS += -Wno-uninitialized
+>  endif
+>  endif
+> --
+> 2.7.4
+>
 
 
 -- 
-Best Regards,
-Kairui Song
+Best Regards
+Masahiro Yamada
