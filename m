@@ -2,109 +2,183 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625A3C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB959C04AB3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221E12146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:11:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="yk3DRz8j"
+	by mail.kernel.org (Postfix) with ESMTP id 907912146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfEMHLP (ORCPT
+        id S1727786AbfEMHLf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:11:15 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:31572 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfEMHLP (ORCPT
+        Mon, 13 May 2019 03:11:35 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36200 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbfEMHLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:11:15 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D76Z3g018397;
-        Mon, 13 May 2019 09:11:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=JYRjcj+5cTxazjxY/B951yi7qS02YpZMEXM7PHXUwy4=;
- b=yk3DRz8jkDR7UA6D2eC8U4dsHgdTPmqaRYz8IjGjLOcH1jX1pB0SyAHUIJjl24K1zRir
- gTa4zIQm5w45UNYq3hGZqti1aoq0LUd7NAp5h+FQa0ErQ4B+Pn5SKKL+Xl+xgga3bPPr
- Vkp+10au+5USjn4foWaHAYETXA9y60PxWa7PsXTEtBr9RcHf470PDc97ZZGGFrrh2BKr
- fYtD0u9n8XJe6grNK5CQmy3S8PBSEBxFDnnMl8erehwfHP20IHz6D7RE0RFe9Wp0bTsx
- ByQLHvmQTB5fqzIALQRrobxDIynF0FipT0AtxkuYLGoRbOnPt4UiwMyg/UM0A4ykoM5M dQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdm5tsars-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 13 May 2019 09:11:01 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 37CF734;
-        Mon, 13 May 2019 07:11:00 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 153CB13AC;
-        Mon, 13 May 2019 07:11:00 +0000 (GMT)
-Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE1.st.com
- (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 13 May
- 2019 09:10:59 +0200
-Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
- SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
- 15.00.1347.000; Mon, 13 May 2019 09:10:59 +0200
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-CC:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "clang-built-linux@googlegroups.com" 
-        <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] mfd: stmfx: Fix macro definition spelling
-Thread-Topic: [PATCH] mfd: stmfx: Fix macro definition spelling
-Thread-Index: AQHVB5gud9k1UvxEHEasdnpmS8J2KqZohVCA
-Date:   Mon, 13 May 2019 07:10:59 +0000
-Message-ID: <954f759a-4e13-ef95-d461-03cdb385e0a3@st.com>
-References: <20190511012301.2661-1-natechancellor@gmail.com>
-In-Reply-To: <20190511012301.2661-1-natechancellor@gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A0B9C8FAB4FD1041A984A48DD3EB2CCC@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 May 2019 03:11:33 -0400
+Received: by mail-vs1-f66.google.com with SMTP id c76so7358097vsd.3;
+        Mon, 13 May 2019 00:11:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AwLnfNDWLBJHzIjiUSN0rlrxnWBlC6Tvjo4enXu1mhg=;
+        b=Egg7OwyxiZAhSSAOSbKVmc/SO5wdRM76/aQcvV1MdkP5n+zmM4uULUGS0k1vsllcVr
+         dfYF5kU28zxa9slh0/orKuPuzRaL+l4e1H2SjDQRB1yP622RjdtdNq47e+6mdeiARbBR
+         sFMs39d4c+gk0mgIyq3f9M07ec7apZMgEi+XrUbODCR03cT3VIeiNcP/zamnVmpo/5Xw
+         ILDXHv38owiMCxOkDdGR2e0jvwJoAy+CvsXOn9h9QtFdfwu1ZxekcVG3PjwM0VILzhCs
+         QPxVawQdo11AG/rVuN+oa7Lb1485MjqB7HD7D4AxVzpe+cCkk0r0tCMxQg1gWn+eD4W/
+         iWfQ==
+X-Gm-Message-State: APjAAAXZxWtUOgsugJ5+3qV1dC5J+nBtaKMlivG2AeneO1kQkW7aUMli
+        nk+2QoKKB2AO5h4EOnunjRhvBqAwI0prIU76FVA=
+X-Google-Smtp-Source: APXvYqzanTyYBb7c5ZEsyF0TeIoVR+0s3dXHYolBKBYY7ZsmE8E+iJt4sQJSjNZ8KUmEOmvsdnDYYZrEq2u+9BrrhNU=
+X-Received: by 2002:a67:f303:: with SMTP id p3mr1137935vsf.166.1557731491713;
+ Mon, 13 May 2019 00:11:31 -0700 (PDT)
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
- signatures=0
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+In-Reply-To: <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 May 2019 09:11:19 +0200
+Message-ID: <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNS8xMS8xOSAzOjIzIEFNLCBOYXRoYW4gQ2hhbmNlbGxvciB3cm90ZToNCj4gQ2xhbmcgd2Fy
-bnM6DQo+IA0KPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gZHJpdmVycy9tZmQvc3RtZnguYzoxMzoN
-Cj4gaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaDo3Ojk6IHdhcm5pbmc6ICdNRkRfU1RNRlhfSCcg
-aXMgdXNlZCBhcyBhDQo+IGhlYWRlciBndWFyZCBoZXJlLCBmb2xsb3dlZCBieSAjZGVmaW5lIG9m
-IGEgZGlmZmVyZW50IG1hY3JvDQo+IFstV2hlYWRlci1ndWFyZF0NCj4gDQo+IEZpeGVzOiAwNjI1
-MmFkZTkxNTYgKCJtZmQ6IEFkZCBTVCBNdWx0aS1GdW5jdGlvbiBlWHBhbmRlciAoU1RNRlgpIGNv
-cmUgZHJpdmVyIikNCj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL0NsYW5nQnVpbHRMaW51eC9s
-aW51eC9pc3N1ZXMvNDc1DQo+IFNpZ25lZC1vZmYtYnk6IE5hdGhhbiBDaGFuY2VsbG9yIDxuYXRl
-Y2hhbmNlbGxvckBnbWFpbC5jb20+DQoNClJldmlld2VkLWJ5OiBBbWVsaWUgRGVsYXVuYXkgPGFt
-ZWxpZS5kZWxhdW5heUBzdC5jb20+DQoNCj4gLS0tDQo+ICAgaW5jbHVkZS9saW51eC9tZmQvc3Rt
-ZnguaCB8IDIgKy0NCj4gICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRp
-b24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21mZC9zdG1meC5oIGIvaW5j
-bHVkZS9saW51eC9tZmQvc3RtZnguaA0KPiBpbmRleCBkODkwNTk1Yjg5YjYuLjNjNjc5ODM2Nzhl
-YyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tZmQvc3RtZnguaA0KPiArKysgYi9pbmNs
-dWRlL2xpbnV4L21mZC9zdG1meC5oDQo+IEBAIC01LDcgKzUsNyBAQA0KPiAgICAqLw0KPiAgIA0K
-PiAgICNpZm5kZWYgTUZEX1NUTUZYX0gNCj4gLSNkZWZpbmUgTUZYX1NUTUZYX0gNCj4gKyNkZWZp
-bmUgTUZEX1NUTUZYX0gNCj4gICANCj4gICAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQo+ICAg
-DQo+IA==
+Hi Mason,
+
+On Fri, May 10, 2019 at 3:09 AM <masonccyang@mxic.com.tw> wrote:
+> > "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
+> > 2019/05/10 上午 03:24
+> > mark.rutland@arm.com, "Rob Herring" <robh@kernel.org>, zhengxunli@mxic.com.tw
+> > On 05/09/2019 05:06 AM, masonccyang@mxic.com.tw wrote:
+> >
+> > [...]
+> > >> > >> > On 4/24/19 11:23 PM, Rob Herring wrote:
+> > >> > >> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
+> > >> > >> > >> Document the bindings used by the Renesas R-Car Gen3 RPC-IF MFD.
+> > >> > >> > >>
+> > >> > >> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> > >> > >> > >> ---
+> > >> > >> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt    | 40 ++++++
+> > >> > >> ++++++++++++++++
+> > >> > >> > >>  1 file changed, 40 insertions(+)
+> > >> > >> > >>  create mode 100644 Documentation/devicetree/bindings/mfd/mfd-
+> > >> > >> renesas-rpc.txt
+> > >> > >> > >>
+> > >> > >> > >> diff --git a/Documentation/devicetree/bindings/mfd/mfd-renesas-
+> > >> > >> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> > >> > >> > >> new file mode 100644
+> > >> > >> > >> index 0000000..668b822
+> > >> > >> > >> --- /dev/null
+> > >> > >> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-renesas-rpc.txt
+> > >> > >> > >> @@ -0,0 +1,40 @@
+> > >> > >> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
+> > >> > >> > >> +--------------------------------------------------
+> > >> > >> > >
+> > >> > >> > > Looks like a SPI flash controller from the example. What
+> > makes it an
+> > >> > >> > > MFD?
+> > >> > >> >
+> > >> > >> > It supports both SPI NOR and HyperFlash (CFI-compliant flash with
+> > >> > >> > different bus interface).
+> > >> > >>
+> > >> > >> Looks like you're registering one OR the other.
+> > >> > >>
+> > >> > >> Why don't you just do this from DT?
+> > >> > >>
+> > >> > >> No reason for this to be an MFD IMHO.
+> > >> > >
+> > >> > >
+> > >> > > okay, I will patch it back to SPI mode only.
+> > >> >
+> > >> > I don't think that's what Lee meant . The controller supports _both_
+> > >> > modes , hence it would have the same compatible string. You just need to
+> > >> > extract the mode of operation from the DT.
+> > >>
+> > >> HiSilicon attempted to upstream something similar, only their
+> > >> controller provided NAND and NOR functionality.  They used different
+> > >> compatible strings to differentiate between the varying
+> > >> technologies.
+> > >>
+> > >> They too tried to use MFD as a means to select between them (which was
+> > >> also NACKed).  Not sure what they ended up doing, but the original
+> > >> submission and (half of) the conversation can be found at [0].  Some
+> > >> more of the thread continues at [1].
+> > >>
+> > >> Hope that helps.
+> > >>
+> > >> [0] https://groups.google.com/forum/#!topic/fa.linux.kernel/F6i9o8sfOIw
+> > >> [1] https://marc.info/?l=devicetree&m=147669165104431&w=2
+> > >
+> > >
+> > > Hi Marek,
+> > >
+> > > By Jones's comments:
+> > > --------------------------------------------------------------------------
+> > >> From: Shunquan Lin <linshunquan1@hisilicon.com>
+> > >>
+> > >> This patch adds driver support for HiSilicon Flash Memory
+> > >> Controller(FMC). HiSilicon FMC is a multi-functions device which
+> > >> supports SPI Nor flash controller, SPI nand Flash controller and
+> > >> parallel nand flash controller.
+> > >
+> > > MFDs are for devices which span multiple subsystems.
+> >
+> >    And we do! One of the subdrivers will live under drivers/spi/, the other
+> > under drivers/mtd/...
+> >
+>
+> From my point of view, I think Jones mean to MFD's subsystems are working simultaneously
+> at the run-time, one period of time is working for sub-device-1 and later period of time
+> is working for sub-device-2 and so on.
+>
+> But for RPC-IF, SPI or HF mode is decided at boot time by pins configure and later in kernel
+> by dtb, RPC-IF can't switch SPI and HF mode at the run time.
+
+> So far, Jones seems don't agree RPC-IF to MFD and then RPC MFD will not applied
+> to mfd tree by him !
+
+There's precedence for such constructs being an MFD: please see
+drivers/mfd/at91-usart.c, which registers a single MFD cell for either
+serial or SPI.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
