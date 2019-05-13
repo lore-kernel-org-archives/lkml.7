@@ -2,93 +2,56 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A80C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE283C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61BD020B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA04120B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:06:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfEMHFH (ORCPT
+        id S1727533AbfEMHGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:05:07 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35950 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfEMHFH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:05:07 -0400
-Received: by mail-vs1-f68.google.com with SMTP id c76so7349349vsd.3;
-        Mon, 13 May 2019 00:05:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4gXmxzF/Po14uQPLggz4c13bFBQQgBSLY5M86BA4rHg=;
-        b=Jxq+qTXEvj2MfT8eJ8De8dK1yRKJhLB01iIFZJCztitgZ6LadyEqdEArvfQSnz7bwF
-         1lfNNIIYa7mYK14O0sMWglOWOeEnqRDxDDxczV4CzeyTnrcgkskD2NlwGgbpkmbEIMsF
-         bMsgcFRWlYQZGNCYRBRXzIQZekeLaPKb1s5F6xYJiMl6mTS9amdN3wfVGQf20wjg5Vwh
-         l9UqbSAJxojH2EVoKnVuzAknm5bBy45aY4y5i1tzx/i5em90iEt9OykmSwOHp7ZXEbEq
-         G0BB1XjapZE2auk9tfXuqJylLd3wZVCeJXLhcoyX9CakxPxN2hjSlpm+dUNrCgWySz22
-         vhXw==
-X-Gm-Message-State: APjAAAWC/nnA2eNWBgvkuUp8331Azvnkp3is3fLZaY2Mhy6R31o5cxtC
-        RZ9qAiBGifrxCrBynXqR0S9eDGWGzY+pKhxyUyU=
-X-Google-Smtp-Source: APXvYqxgfS2ynbKs1o+2aZa8e7ecnAhyI2eO9iqCen14keAf7VzmDKsxF/OAPpOIAq4KuP9J+HPN5ZGt1iA/54SjGCc=
-X-Received: by 2002:a67:fdd4:: with SMTP id l20mr8909563vsq.63.1557731105926;
- Mon, 13 May 2019 00:05:05 -0700 (PDT)
+        Mon, 13 May 2019 03:06:04 -0400
+Received: from verein.lst.de ([213.95.11.211]:37359 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbfEMHGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:06:04 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id A4EE268AFE; Mon, 13 May 2019 09:05:42 +0200 (CEST)
+Date:   Mon, 13 May 2019 09:05:42 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 02/10] swiotlb: Factor out slot allocation and free
+Message-ID: <20190513070542.GA18739@lst.de>
+References: <0c6e5983-312b-0d6b-92f5-64861cd6804d@linux.intel.com> <20190423061232.GB12762@lst.de> <dff50b2c-5e31-8b4a-7fdf-99d17852746b@linux.intel.com> <20190424144532.GA21480@lst.de> <a189444b-15c9-8069-901d-8cdf9af7fc3c@linux.intel.com> <20190426150433.GA19930@lst.de> <93b3d627-782d-cae0-2175-77a5a8b3fe6e@linux.intel.com> <90182d27-5764-7676-8ca6-b2773a40cfe1@arm.com> <20190429114401.GA30333@lst.de> <7033f384-7823-42ec-6bda-ae74ef689f4f@linux.intel.com>
 MIME-Version: 1.0
-References: <20190505180646.1442-2-radu_nicolae.pirea@upb.ro>
- <20190508090857.B7CB344003F@finisterre.sirena.org.uk> <20190508105105.GN3995@dell>
- <20190512075223.GF21483@sirena.org.uk>
-In-Reply-To: <20190512075223.GF21483@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 May 2019 09:04:54 +0200
-Message-ID: <CAMuHMdUOwff68bSjvG3vo5+HUjtRCNXLbAiUc7et4m+yfSCoFA@mail.gmail.com>
-Subject: Re: Applied "dt-bindings: mfd: atmel-usart: add DMA bindings for
- USART in SPI mode" to the spi tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7033f384-7823-42ec-6bda-ae74ef689f4f@linux.intel.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-On Sun, May 12, 2019 at 7:05 PM Mark Brown <broonie@kernel.org> wrote:
-> On Wed, May 08, 2019 at 11:51:05AM +0100, Lee Jones wrote:
-> > > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/mfd/atmel-usart.txt   | 20 ++++++++++++++-----
+On Mon, May 06, 2019 at 09:54:30AM +0800, Lu Baolu wrote:
+> Agreed. I will prepare the next version simply without the optimization, so 
+> the offset is not required.
 >
-> > Interesting!
->
-> For some reason the bindings for the SPI function got put in the MFD
-> directory, dunno why.
+> For your changes in swiotlb, will you formalize them in patches or want
+> me to do this?
 
-Because this is a block that can do either SPI or USART, hence MFD?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Please do it yourself given that you still need the offset and thus a
+rework of the patches anyway.
