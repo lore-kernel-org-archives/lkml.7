@@ -2,128 +2,174 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35A6C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1791BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D35B20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C569420879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BswZVRen"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PI4evEZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbfEMNoS (ORCPT
+        id S1729710AbfEMNoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:44:18 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40398 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729814AbfEMNoQ (ORCPT
+        Mon, 13 May 2019 09:44:06 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36468 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbfEMNoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:44:16 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so7240044pfn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:44:16 -0700 (PDT)
+        Mon, 13 May 2019 09:44:03 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c14so8015469qke.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:44:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mGX2Mr21OsC3Cf9X1D+KearNv+Y7HOxRT8DWKLBU5XU=;
-        b=BswZVRenIQoRa1xpUYuemfaD/LHQlw286KXz6QNHklzB74ZV6xOnMZlAz/Q706M91D
-         mFJwK0RgqLCtu1tGp3drl8f28I6Hu7jBtTKzf3FawwDc2gwq2uezFeIFqgjURdj6Uir/
-         27AwPiF8DenxGlYyN87IMaNu+1Mz5/HpZA5Ex+kOjjBMwvXnFa73BRnZpWMdRUlsPRpI
-         QEZmGFbEAduuGy4dwp2WJ3NagbWefQlSitYEwza4VDRu1L+c3VZp3nX/PZu7TYtMm1aD
-         L+8jlF6wcyInuqsL8r65S8fArDdkd3AkCfM5LcUGXJZWJ5m2BoRwTCk6VAKvi5xineDz
-         CzyA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2QDl6grKdXugMhxYUcRUEzKdYNWZg6vAUEjXwfnBzkw=;
+        b=PI4evEZqraBE8yNXPNwxp4xmE2NyijJHNSsC7SfViFNImDgZ1AAwHTvYYvHWNnR3wJ
+         aSKxM7KkC3kgtnIk0XhwIa9Wy74Fs+F3fSPL/0kxJVZtEeFWXdQ2wz8bmI8EanvPLJIa
+         JZGmIVsQxCvb995ZVHcttoajnCWTYDD8EDPma13jIZ3VsfeY/35hW1u0naTipeY/FbdC
+         WD/A6+vJpnsoMUu3I1UkxnfMD41foxCLv86sD7T25x/23bK7M4ZaXje2B4sZ10cAYNd2
+         7E4pUHmtjmKvXmNVSU5Yrc2FZTuQHuetU8uxVlWRieV8DcYBY8Bxom/M7BCLiGUdmUSk
+         68vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mGX2Mr21OsC3Cf9X1D+KearNv+Y7HOxRT8DWKLBU5XU=;
-        b=qDK8psO+xHDsb49ZmpuQDaUMS85tY6D8seSXY5jDdKM95bnVF+aVgcYq9oaVzlhsMZ
-         8lwKfX4ABZK+OdyrxIe99r3opIuNWKjJYjAWNEbx+C/TaBt8kVPvOic3Kb4jlcOCZOLf
-         ndvzw843YS2wOkbjb8oTYIX7F/fb9NH2qn+lQMA85AAcmqUx7eU+radZvEO7IBdk4PTp
-         s+H2sYyviYPrgsp933jzRGseyKIQOG560+iQdvlMyXVC/O6eUrdIm2IxgH0G9kJ0upt7
-         YsGKDNjWVwQbaIXstYe2gHqb1+Xql5GH06zWiN5/oTkpYwBAyF2zBV3iMkD+NDqye7UB
-         l+kg==
-X-Gm-Message-State: APjAAAUpGnxs9ehm3H0KVcMPljVJWw5TiLuOf3UEvD0XqrwXfdKmHoIy
-        XlPUu6DmX5LXZeZ1SKW/wZQ=
-X-Google-Smtp-Source: APXvYqwr4pPzQqbXmnklb6QjRpiYodUB+i9pz1rAxhjyHMvLN2r2B4x7igVYZjIluZEnKRLvXgTxkw==
-X-Received: by 2002:a63:9dc8:: with SMTP id i191mr30507243pgd.91.1557755056031;
-        Mon, 13 May 2019 06:44:16 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.72.152])
-        by smtp.gmail.com with ESMTPSA id e10sm10874261pfm.137.2019.05.13.06.44.12
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2QDl6grKdXugMhxYUcRUEzKdYNWZg6vAUEjXwfnBzkw=;
+        b=Q7o1ARwkxqiH5kjDyO1AYuvXLwiWJeenubqLCIXTL0WsJt4v+jG7BV19FyjtTGpDx3
+         1qw4fUjR+5eQqo0nAZF6SIcWLCXaaqfuncDytk3O3K7Gf1LPf7rTsaPJR9Dxb6IEdATf
+         MlL3zn+KmhjUYBmaD9agBh1hOA+MslXIlWPd8Q5VwRce1pyFVafaRsH+MuSobhUIyrcA
+         XIeE2Er5maNTsuH79bE5+i5ezwkWLhImIE+p/YHzKPeShtSkY5ySnu1wioYptCXIKMC9
+         4tIaDp19JJA77yhlDUi7E9QxZt7z3ze4k8kqeSvvpKStm3XgE1gLmz5VMzIX3TtMW0QO
+         7Mzg==
+X-Gm-Message-State: APjAAAVJXXh2hv7PTXwR4m5u+tGPpl83x3nILsR4VnGH5Kcm9k6K9huL
+        vl2Xxub/ik13yncSFkb+TgKrTg==
+X-Google-Smtp-Source: APXvYqxjHoiLVV5dDlLcG6KTaJ0fU0NM6dQoETxAspMtmKMogQvEfztN5TXLDgEyCZ8FB74Xzl9biA==
+X-Received: by 2002:a05:620a:13fc:: with SMTP id h28mr21824042qkl.164.1557755042373;
+        Mon, 13 May 2019 06:44:02 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id d16sm4138827qtd.73.2019.05.13.06.44.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 06:44:15 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        lukas.bulwahn@gmail.com
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH v4 8/8] Staging: kpc2000: kpc_dma: Resolve cast warning and use const for file_operation
-Date:   Mon, 13 May 2019 19:13:27 +0530
-Message-Id: <20190513134327.26320-8-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513134327.26320-1-bnvandana@gmail.com>
-References: <20190510193833.1051-1-bnvandana@gmail.com>
- <20190513134327.26320-1-bnvandana@gmail.com>
+        Mon, 13 May 2019 06:44:01 -0700 (PDT)
+Message-ID: <1557755039.6132.23.camel@lca.pw>
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
+ boot
+From:   Qian Cai <cai@lca.pw>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, brho@google.com, kernelfans@gmail.com,
+        dave.hansen@intel.com, rppt@linux.ibm.com, peterz@infradead.org,
+        mpe@ellerman.id.au, mingo@elte.hu, osalvador@suse.de,
+        luto@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 13 May 2019 09:43:59 -0400
+In-Reply-To: <20190513124112.GH24036@dhcp22.suse.cz>
+References: <20190512054829.11899-1-cai@lca.pw>
+         <20190513124112.GH24036@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This Patch resolves unnecessary cast warning and const file_operations
-reported by checkpath.pl
-WARNING: unnecessary cast may hide bugs
-WARNING: struct file_operations should normally be const
+On Mon, 2019-05-13 at 14:41 +0200, Michal Hocko wrote:
+> On Sun 12-05-19 01:48:29, Qian Cai wrote:
+> > The linux-next commit ("x86, numa: always initialize all possible
+> > nodes") introduced a crash below during boot for systems with a
+> > memory-less node. This is due to CPUs that get onlined during SMP boot,
+> > but that onlining triggers a page fault in bus_add_device() during
+> > device registration:
+> > 
+> > 	error = sysfs_create_link(&bus->p->devices_kset->kobj,
+> > 
+> > bus->p is NULL. That "p" is the subsys_private struct, and it should
+> > have been set in,
+> > 
+> > 	postcore_initcall(register_node_type);
+> > 
+> > but that happens in do_basic_setup() after smp_init().
+> > 
+> > The old code had set this node online via alloc_node_data(), so when it
+> > came time to do_cpu_up() -> try_online_node(), the node was already up
+> > and nothing happened.
+> > 
+> > Now, it attempts to online the node, which registers the node with
+> > sysfs, but that can't happen before the 'node' subsystem is registered.
+> > 
+> > Since kernel_init() is running by a kernel thread that is in
+> > SYSTEM_SCHEDULING state, fixed this by skipping registering with sysfs
+> > during the early boot in __try_online_node().
+> 
+> Relying on SYSTEM_SCHEDULING looks really hackish. Why cannot we simply
+> drop try_online_node from do_cpu_up? Your v2 remark below suggests that
+> we need to call node_set_online because something later on depends on
+> that. Btw. why do we even allocate a pgdat from this path? This looks
+> really messy.
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
----
-v2 - split changes to multiple patches
-v3 - edit commit message, subject line
-v4 - edit commit message
+See the commit cf23422b9d76 ("cpu/mem hotplug: enable CPUs online before local
+memory online")
 
- drivers/staging/kpc2000/kpc_dma/fileops.c        | 4 ++--
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+It looks like try_online_node() in do_cpu_up() is needed for memory hotplug
+which is to put its node online if offlined and then hotadd_new_pgdat() calls
+build_all_zonelists() to initialize the zone list.
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index c21672ea2b4f..54a1419728ce 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -59,7 +59,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 
- 	dev_dbg(&priv->ldev->pldev->dev, "%s(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", __func__, priv, kcb, (void *)iov_base, iov_len, ldev);
- 
--	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
-+	acd = kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
- 	if (!acd) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
- 		return -ENOMEM;
-@@ -418,7 +418,7 @@ long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioc
- 	return -ENOTTY;
- }
- 
--struct file_operations  kpc_dma_fops = {
-+const struct file_operations  kpc_dma_fops = {
- 	.owner      = THIS_MODULE,
- 	.open           = kpc_dma_open,
- 	.release        = kpc_dma_close,
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-index cf781940ac1b..ee47f43e71cf 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-@@ -57,7 +57,7 @@ struct dev_private_data {
- 
- struct kpc_dma_device *kpc_dma_lookup_device(int minor);
- 
--extern struct file_operations  kpc_dma_fops;
-+extern const struct file_operations  kpc_dma_fops;
- 
- #define ENG_CAP_PRESENT                 0x00000001
- #define ENG_CAP_DIRECTION               0x00000002
--- 
-2.17.1
-
+> 
+> > Call Trace:
+> >  device_add+0x43e/0x690
+> >  device_register+0x107/0x110
+> >  __register_one_node+0x72/0x150
+> >  __try_online_node+0x8f/0xd0
+> >  try_online_node+0x2b/0x50
+> >  do_cpu_up+0x46/0xf0
+> >  cpu_up+0x13/0x20
+> >  smp_init+0x6e/0xd0
+> >  kernel_init_freeable+0xe5/0x21f
+> >  kernel_init+0xf/0x180
+> >  ret_from_fork+0x1f/0x30
+> > 
+> > Reported-by: Barret Rhoden <brho@google.com>
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> > 
+> > v2: Set the node online as it have CPUs. Otherwise, those memory-less nodes
+> > will
+> >     end up being not in sysfs i.e., /sys/devices/system/node/.
+> > 
+> >  mm/memory_hotplug.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index b236069ff0d8..6eb2331fa826 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -1037,6 +1037,18 @@ static int __try_online_node(int nid, u64 start, bool
+> > set_node_online)
+> >  	if (node_online(nid))
+> >  		return 0;
+> >  
+> > +	/*
+> > +	 * Here is called by cpu_up() to online a node without memory from
+> > +	 * kernel_init() which guarantees that "set_node_online" is true
+> > which
+> > +	 * will set the node online as it have CPUs but not ready to call
+> > +	 * register_one_node() as "node_subsys" has not been initialized
+> > +	 * properly yet.
+> > +	 */
+> > +	if (system_state == SYSTEM_SCHEDULING) {
+> > +		node_set_online(nid);
+> > +		return 0;
+> > +	}
+> > +
+> >  	pgdat = hotadd_new_pgdat(nid, start);
+> >  	if (!pgdat) {
+> >  		pr_err("Cannot online node %d due to NULL pgdat\n", nid);
+> > -- 
+> > 2.20.1 (Apple Git-117)
+> 
+> 
