@@ -2,92 +2,103 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3A5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B25C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5E92085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557771449;
-	bh=lPPXPrlCXnec9ArL5Smn4WZ7XgjTRPHq0b2cg72c7do=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QDvMBJ8UpBcIownyXHFsqDdx0zPSzTH8m0o3+61ZLSYUoPGMr7Qj2hR7EWgJ25Hyg
-	 u3/InpKCCYm1wasCwWkb3e7UpWMrl033bgU5Km11PhkIJUz18z/Iz4EpzD45J5P10K
-	 6VYDvHXeYTnVZ/1WFhfNHf9U0Ji8ituBfj/OSio8=
+	by mail.kernel.org (Postfix) with ESMTP id B2D4E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:18:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXGitZOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfEMSR2 (ORCPT
+        id S1726567AbfEMSSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:17:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726142AbfEMSR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:17:27 -0400
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2FB42168B
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 18:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557771447;
-        bh=lPPXPrlCXnec9ArL5Smn4WZ7XgjTRPHq0b2cg72c7do=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M73groKWN7tiM88HUylA0BevMADMrkXxMAX5GrLV+GI8cDdt8upEqFbWjtmTbBtWf
-         B1fbMLLC4Ig6Ha6q/7u8EsjeSgkgTLTRZg/th8dDdkCQSgF5F8U6hLZj14iprJmgc3
-         c3GN5DwMXPdaJcryEnpckEV58wfnaOyIRu/KMP3g=
-Received: by mail-wm1-f47.google.com with SMTP id x64so291169wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:17:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAVN6Twft0DwaB/tm4RowrYa/wz11i6F2QtRFbTo2YY585CHlvgy
-        Ntk/Ydm7Ugxy65kKVaXIJNNP9CXH5pqAR4I7rj+ERg==
-X-Google-Smtp-Source: APXvYqx+EkWMgZAYXf7WLt7psTjiviAgkkYF4bdVHgGcH1wH1s9Zk+LiM9gHe43vF05EDuJif4nyuITlc2cZxxSsBDE=
-X-Received: by 2002:a1c:eb18:: with SMTP id j24mr17403247wmh.32.1557771445393;
- Mon, 13 May 2019 11:17:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 13 May 2019 11:17:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
-Message-ID: <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
-Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 May 2019 14:18:03 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40756 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfEMSSC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:18:02 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so7619522pfn.7;
+        Mon, 13 May 2019 11:18:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=36+jOu0ht7tlgiHoNQcp7BrubpLdVyc37a54it2Dibs=;
+        b=ZXGitZOPho3Rn1Br7WqzAUhcPugupfAOS1g1jzI9C/k6MNnQupN8xXXyG+u0VPh2cA
+         GUr82NXumWYb0hK3RcK+eY9sKTgqlzeqB8ZwGIcXsYym2r2SDXO81LP+c1EmEkg6gw3s
+         +nlDb+JWMFLwvO+nGc5yzf0+1fumqZlCF6gTh6ZMeGCdD35pvbbz947hRNa1+IDnBZUa
+         RbGAlkvycYuJFjb/xxzL+SYVdgmx6aYl6nnlr1+XPQgrpXhIrWamIaPZgJvmCI6dgZk7
+         FWhbcFj9YBxMe+DfxDlXoYwj0N2bT3dbu5MkG3LDWE2QtFBPg1poreozaMIBgv3F9bMs
+         HOdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=36+jOu0ht7tlgiHoNQcp7BrubpLdVyc37a54it2Dibs=;
+        b=bjjaVLOlKk9wB/WhIUcnJyOYUjB5ZjbgtmD/jZYgLNsQf5ov5jfASXr00Nzdjq9d10
+         sn3mtTCyGEolC4BnN24GK/CQHuK5lxTQinnrA+19GPPkpKYNG4p51Y6UQA7fj139fUjd
+         a9XRjbBxRdAr2ADIlm0+BgHSaKubg7EDs1zO79sC8zOzdxgCXbpHFJF7KE3a74dfPI0K
+         YEZz86BJh3J+IwXN4BH/6w+xU4IDLI0UqEIXlJI/YyzbocoYkVw0VwPGm5s6SIksgTVf
+         RfUXlZddY9S+pl8odevA37aDwokaKvUvOAs3e0ChfnwHxs8CdjixIblV+YkrWSosIvrx
+         OB6g==
+X-Gm-Message-State: APjAAAVGO1dk0jxTU0l1yufMNqElowwd3T3+DKxBumdMJYR77+LJuLBs
+        //zbbvQUJ+u8QnIoZETo+HB4LqHbRgb0RA==
+X-Google-Smtp-Source: APXvYqyT+RPYpysO9I0q51O/XMMsAZPo7tVSP5n8aXG0ZwVW929gbr4Muy5q7GpBDpTdubVwQnBhmQ==
+X-Received: by 2002:a63:6b06:: with SMTP id g6mr21891464pgc.346.1557771481734;
+        Mon, 13 May 2019 11:18:01 -0700 (PDT)
+Received: from localhost.localdomain ([122.179.175.43])
+        by smtp.googlemail.com with ESMTPSA id 140sm12257904pfw.123.2019.05.13.11.17.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 11:18:00 -0700 (PDT)
+From:   Jagdish Motwani <j.k.motwani@gmail.com>
+To:     netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     j.k.motwani@gmail.com,
+        Jagdish Motwani <jagdish.motwani@sophos.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] netfilter: nf_queue:fix reinject verdict handling
+Date:   Mon, 13 May 2019 23:47:40 +0530
+Message-Id: <20190513181740.5929-1-j.k.motwani@gmail.com>
+X-Mailer: git-send-email 2.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I expect that the KVM address space can eventually be expanded to include
-> the ioctl syscall entries. By doing so, and also adding the KVM page table
-> to the process userland page table (which should be safe to do because the
-> KVM address space doesn't have any secret), we could potentially handle the
-> KVM ioctl without having to switch to the kernel pagetable (thus effectively
-> eliminating KPTI for KVM). Then the only overhead would be if a VM-Exit has
-> to be handled using the full kernel address space.
->
+From: Jagdish Motwani <jagdish.motwani@sophos.com>
 
-In the hopefully common case where a VM exits and then gets re-entered
-without needing to load full page tables, what code actually runs?
-I'm trying to understand when the optimization of not switching is
-actually useful.
+This patch fixes netfilter hook traversal when there are more than 1 hooks
+returning NF_QUEUE verdict. When the first queue reinjects the packet,
+'nf_reinject' starts traversing hooks with a proper hook_index. However,
+if it again receives a NF_QUEUE verdict (by some other netfilter hook), it
+queues the packet with a wrong hook_index. So, when the second queue 
+reinjects the packet, it re-executes hooks in between.
 
-Allowing ioctl() without switching to kernel tables sounds...
-extremely complicated.  It also makes the dubious assumption that user
-memory contains no secrets.
+Fixes: 960632ece694 ("netfilter: convert hook list to an array")
+Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
+---
+ net/netfilter/nf_queue.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+index 9dc1d6e..b5b2be5 100644
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -255,6 +255,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
+ repeat:
+ 		verdict = nf_hook_entry_hookfn(hook, skb, state);
+ 		if (verdict != NF_ACCEPT) {
++			*index = i;
+ 			if (verdict != NF_REPEAT)
+ 				return verdict;
+ 			goto repeat;
+-- 
+2.9.5
+
