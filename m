@@ -4,163 +4,208 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE147C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9922AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877772085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602522146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="jh+XZyFx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/ooK/+0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbfEMLsy (ORCPT
+        id S1729528AbfEMLtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:48:54 -0400
-Received: from mout.web.de ([212.227.17.12]:33913 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbfEMLsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:48:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557748108;
-        bh=/TUElLrp3qrIx5JkytwpMcAYLDzBJ3PVW+f5ZLjI6K0=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=jh+XZyFxumy8eAkEuUtuyATchttP5zK6RXIXxLbfQMHjW+eoNMg9vXsKIi6bemdmu
-         BVmKTIfZNaS3KbhiHJZKrYcPIg9FqgTelQoe7zDohBuaBo8m3uxKepMEUprSVqJdQ2
-         RGYXCZwv2w5SWMxNSXfbwFLR5IWYfM7SFxSMqM6E=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.135.147.80]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lmu2K-1glZMe0d00-00h5Hd; Mon, 13
- May 2019 13:48:28 +0200
-Subject: Re: [3/5] Coccinelle: put_device: Merge four SmPL when constraints
- into one
-To:     Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>
-References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
- <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de>
- <6b62ecb5-ab88-22d9-eee2-db4f58b6d2ae@web.de>
- <alpine.DEB.2.20.1905131132250.3616@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <1c36d747-ac2d-0187-ddb7-d1a2bb18ddaf@web.de>
-Date:   Mon, 13 May 2019 13:48:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 07:49:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37901 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728716AbfEMLtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:49:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id u199so9056274oie.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:49:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4vhQMjONRCKV8VXJkEEAJgFRn01xSw31XodLnAxmh8Q=;
+        b=M/ooK/+0myGKsg80MKoPVHSY1U6mU84oLn3Dm2m+awcHyLaYMWbk6whjAvMGRdzauQ
+         thj7kpxttDC1sOeZEEpN1+/ApcqIA8Z20uXEiGjY3j7dKzOdeZl/+jssBZxie3VF8MYF
+         pouhx9Kjs7fm9WmArIUwn2+xPwN2yE7j5Bd/7UEAq3kubhkmVYjLXr3IX7pop5vk75n+
+         H5wuL+KaUDDTc8ib814+0P3LMyVGEIbdIeSxV7WG1BEivtpr8Mu2Mui+RV1PZFiNUzlG
+         L3JrYEpiCGo1uAEO0/Zdmkjdk7h9nYJItEbh55F4L2DgQp84IyEdlx8ptjqpK7XQdeAo
+         WLVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4vhQMjONRCKV8VXJkEEAJgFRn01xSw31XodLnAxmh8Q=;
+        b=RiAfGOGnnZi431HrPecg8pe+mIKJ4rgBnMBRHZh6vc4ASroJGgCiLu0b/l5BqxgpAg
+         RElBwTn5wRWjJKGeHTC5gW7hNWjcBe1VNxX1xqrrdmVkOqaXt7S0pw2Li9yE7OK+XQ4U
+         hUq57PGtk/wGAqNPhJwcyOmaAbV8gYh2d0nlRbqoR4JnSqtinA/6lQgplARuwsJbaqd5
+         4WAjfKb+ASeGnoZCn/D5CbVZzEi0ZHZ2QaPnCjs664OHJ9isJ48ENsNWCRKGAr5ETsYF
+         fQ1FHPsJf4OGfS4EtmDi3J4KUrikzqMqtThGHqcT9vKAbh30EieOYpqkKQY6LVd/aQq0
+         cYag==
+X-Gm-Message-State: APjAAAXY0W19DpYbpxGLh7t2wLycLXm4AJchsOXJElpkISd+m84DGggG
+        LnOMGMYpUc6gWUd0jlleRv40AC4aks9BYVwLDsI=
+X-Google-Smtp-Source: APXvYqyFcncD0mcOnz2gYfHCxsEgFwXbwF1p3GDLIw/UmxQFIOaK7mjff+Sy9Q/NTprljQ5gR2L67QJnJ5AfelFmEJw=
+X-Received: by 2002:aca:f007:: with SMTP id o7mr4454518oih.59.1557748145537;
+ Mon, 13 May 2019 04:49:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.20.1905131132250.3616@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <20190510072125.18059-1-oleksandr@redhat.com> <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
+ <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
+In-Reply-To: <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
+From:   Timofey Titovets <nefelim4ag@gmail.com>
+Date:   Mon, 13 May 2019 14:48:29 +0300
+Message-ID: <CAGqmi744Vef7iF0tuBO3uBtXbNCKYxBV_c-T_Eg3LKPY0rKcWA@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vSD67XGLgO+wivvtQxYLJVjr5fDaGu4rQaYeeRbFWeKx73QerqH
- +nUwLtDpGu5tE/xoP+ab63IFIowbBOSEqzGm6pYBMYrKjoQmXtPVVeWSVB+X7fm1E97vUn3
- d51mtP6PvhKG+TF9gj5Rf0iU9veOFrXUmpZvRexncHmWvwvCT0FpJ00AK9vrkQAayveMDPZ
- wimE+kbpNXptT68Xd9iig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9S4V4NW/RuU=:Z/pFMfGOLqCCScvJ/wIans
- d8W0MTx/p7ChuI1kki+rfRcxEbt4aHU7Nz//T0OGjKxQu3ZgNVrjRN/JLkNNxBESxe3ey9/ZR
- B0JQ4Nb5CrBrxz9idxvmVH3qjdMpturnkyuHvfjzS7L2pIahaxNKe+XPV1M1GB5+OfGEL8Hll
- 7lkyegG52YP7qcUHFwdeA5D8YVb9hAJ3ZtLjZFI/6mSC8mGARIwhbhXWSOo+otkl5lkV4Bdba
- 00kzXLACkAV8X46/P94KMhu1yks0FGVuSPyWB8eQkgKSVSV9DTeDsof5aww8nKzBFUFATT0N6
- kUr3j/Fi1D3DvLYtM5aYZw2C6/Gv2l3nmkHrK080uw5m/UAM/3y3VkKl6PpjRl3z4E2ntGzKP
- OpylmMfSxQB9YNHolzSARiwFFm+tMHXgz7CuW7g7iqz7xuKjUjzeZqwKmtelueQPM4kfbOJZA
- sBdT9ihAIw3A3tog/AXWvTOHjQSntf5ii6mrc80/JNM1Z/V8p7Ug8DDTd/WCcNeMiiPIjQOi8
- bWk4F58jZDU+nROQP6ieUwXNCwV1LfN46VD58J8qD7ADgTZd7rZCZ6DwWq8/aUdnVjnPgijGT
- F4m7yBcVmFMciuGQ4dqFIne0/avzAOueHjjQ+hdU2YcOMFJK/pXVWXF9D+3JQVE3I0AKjyQVx
- Ts2nAzx3nIdVRKSdWByneF81Na2u2VHMUOruLhghJRH8ETvJJFG3nL+FH2e9kRXBc3gLliqTU
- yef9MxvRhqoyDMpGFQnvUB0Q/FyASQj2Y7T4jbwB6wkm/x8c+0Ghk9Ai9J0LcdZQ55mnMtVdo
- 7jokXcSHh6tOIIHA9aZRRfnoSINkFEyXX6la59+JHZubSaX+UQQUDOl7op0JXrCIBR4kglIbW
- Yvm2VgtqdVNXAjZ2h5dkz1wisddrCiZDhXDw9D7qoj0kkx9OSr9uKHIebnG7pr2MYuTWb9OII
- wMNi7HHhH0A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> An assignment target was repeated in four SmPL when constraints.
->> Combine the exclusion specifications into disjunctions for the semantic
->> patch language so that this target is referenced only once there.
+=D0=BF=D0=BD, 13 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 14:33, Oleksandr Na=
+talenko <oleksandr@redhat.com>:
 >
-> NACK.
+> Hi.
+>
+> On Mon, May 13, 2019 at 01:38:43PM +0300, Kirill Tkhai wrote:
+> > On 10.05.2019 10:21, Oleksandr Natalenko wrote:
+> > > By default, KSM works only on memory that is marked by madvise(). And=
+ the
+> > > only way to get around that is to either:
+> > >
+> > >   * use LD_PRELOAD; or
+> > >   * patch the kernel with something like UKSM or PKSM.
+> > >
+> > > Instead, lets implement a so-called "always" mode, which allows marki=
+ng
+> > > VMAs as mergeable on do_anonymous_page() call automatically.
+> > >
+> > > The submission introduces a new sysctl knob as well as kernel cmdline=
+ option
+> > > to control which mode to use. The default mode is to maintain old
+> > > (madvise-based) behaviour.
+> > >
+> > > Due to security concerns, this submission also introduces VM_UNMERGEA=
+BLE
+> > > vmaflag for apps to explicitly opt out of automerging. Because of add=
+ing
+> > > a new vmaflag, the whole work is available for 64-bit architectures o=
+nly.
+> > >> This patchset is based on earlier Timofey's submission [1], but it d=
+oesn't
+> > > use dedicated kthread to walk through the list of tasks/VMAs.
+> > >
+> > > For my laptop it saves up to 300 MiB of RAM for usual workflow (brows=
+er,
+> > > terminal, player, chats etc). Timofey's submission also mentions
+> > > containerised workload that benefits from automerging too.
+> >
+> > This all approach looks complicated for me, and I'm not sure the shown =
+profit
+> > for desktop is big enough to introduce contradictory vma flags, boot op=
+tion
+> > and advance page fault handler. Also, 32/64bit defines do not look good=
+ for
+> > me. I had tried something like this on my laptop some time ago, and
+> > the result was bad even in absolute (not in memory percentage) meaning.
+> > Isn't LD_PRELOAD trick enough to desktop? Your workload is same all the=
+ time,
+> > so you may statically insert correct preload to /etc/profile and replac=
+e
+> > your mmap forever.
+> >
+> > Speaking about containers, something like this may have a sense, I thin=
+k.
+> > The probability of that several containers have the same pages are high=
+er,
+> > than that desktop applications have the same pages; also LD_PRELOAD for
+> > containers is not applicable.
+>
+> Yes, I get your point. But the intention is to avoid another hacky trick
+> (LD_PRELOAD), thus *something* should *preferably* be done on the
+> kernel level instead.
+>
+> > But 1)this could be made for trusted containers only (are there similar
+> > issues with KSM like with hardware side-channel attacks?!);
+>
+> Regarding side-channel attacks, yes, I think so. Were those openssl guys
+> who complained about it?..
+>
+> > 2) the most
+> > shared data for containers in my experience is file cache, which is not
+> > supported by KSM.
+> >
+> > There are good results by the link [1], but it's difficult to analyze
+> > them without knowledge about what happens inside them there.
+> >
+> > Some of tests have "VM" prefix. What the reason the hypervisor don't ma=
+rk
+> > their VMAs as mergeable? Can't this be fixed in hypervisor? What is the
+> > generic reason that VMAs are not marked in all the tests?
+>
+> Timofey, could you please address this?
 
-I find this rejection questionable.
+That's just a describe of machine,
+only to show difference in deduplication for application in small VM
+and real big server
+i.e. KSM enabled in VM for containers, not for hypervisor.
+
+> Also, just for the sake of another piece of stats here:
+>
+> $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+> 526
+
+IIRC, for calculate saving you must use (pages_shared - pages_sharing)
+
+> > In case of there is a fundamental problem of calling madvise, can't we
+> > just implement an easier workaround like a new write-only file:
+> >
+> > #echo $task > /sys/kernel/mm/ksm/force_madvise
+> >
+> > which will mark all anon VMAs as mergeable for a passed task's mm?
+> >
+> > A small userspace daemon may write mergeable tasks there from time to t=
+ime.
+> >
+> > Then we won't need to introduce additional vm flags and to change
+> > anon pagefault handler, and the changes will be small and only
+> > related to mm/ksm.c, and good enough for both 32 and 64 bit machines.
+>
+> Yup, looks appealing. Two concerns, though:
+>
+> 1) we are falling back to scanning through the list of tasks (I guess
+> this is what we wanted to avoid, although this time it happens in the
+> userspace);
+>
+> 2) what kinds of opt-out we should maintain? Like, what if force_madvise
+> is called, but the task doesn't want some VMAs to be merged? This will
+> required new flag anyway, it seems. And should there be another
+> write-only file to unmerge everything forcibly for specific task?
+>
+> Thanks.
+>
+> P.S. Cc'ing Pavel properly this time.
+>
+> --
+>   Best regards,
+>     Oleksandr Natalenko (post-factum)
+>     Senior Software Maintenance Engineer
 
 
-> This exceeds 80 characters
 
-The line became 105 characters long.
-14 space characters can eventually be omitted.
-
-
-> and provides no readability benefit.
-
-I try to stress SmPL functionality in this use case.
-
-
->> +++ b/scripts/coccinelle/free/put_device.cocci
->> @@ -23,10 +23,7 @@ if (id =3D=3D NULL || ...) { ... return ...; }
->>      when !=3D platform_device_put(id)
->>      when !=3D of_dev_put(id)
->>      when !=3D if (id) { ... put_device(&id->dev) ... }
->> -    when !=3D e1 =3D (T)id
->> -    when !=3D e1 =3D (T)(&id->dev)
->> -    when !=3D e1 =3D get_device(&id->dev)
->> -    when !=3D e1 =3D (T1)platform_get_drvdata(id)
->> +    when !=3D e1 =3D \( (T) \( id \| (&id->dev) \) \| get_device(&id->=
-dev) \| (T1)platform_get_drvdata(id) \)
-
-How do you think about to extend the Coccinelle software in the way
-that such a detailed constraint can be specified on separate lines
-(without duplicated SmPL code)?
-
-How long will it take to reconsider corresponding software limitations?
-
-Regards,
-Markus
+--=20
+Have a nice day,
+Timofey.
