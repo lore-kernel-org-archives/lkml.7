@@ -2,92 +2,92 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985FDC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9BEDC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69880208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E5E2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557758173;
+	bh=+p1LL6a9YNO3VX+VkASTeNF/zz1LlHDeeWMvxhdrs9E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NcvaBUYey7Od2U04U0+Hz8NGuh9khnqxcjcqfYiCFGItb/bMmJMeHZ/FpbgCZlD2d
+	 Wd12bKgomd+1CNDFXNhoV3nUeiSCsJb0a/w9OLHu7SJUNx7PhzDNlTKfj2ON50k8dk
+	 ClFlvyFHOZO4Fu3Q1IBhApcGItfVY4fFMGKmbKBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfEMOdJ (ORCPT
+        id S1729842AbfEMOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:33:09 -0400
-Received: from foss.arm.com ([217.140.101.70]:57580 "EHLO foss.arm.com"
+        Mon, 13 May 2019 10:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfEMOdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:33:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A11A341;
-        Mon, 13 May 2019 07:33:08 -0700 (PDT)
-Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E0153F71E;
-        Mon, 13 May 2019 07:33:06 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Subject: [PATCH] drm/panfrost: Use drm_gem_dump_map_offset()
-Date:   Mon, 13 May 2019 15:32:44 +0100
-Message-Id: <20190513143244.16478-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        id S1728990AbfEMOgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:36:12 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60EA9208C3;
+        Mon, 13 May 2019 14:36:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557758171;
+        bh=+p1LL6a9YNO3VX+VkASTeNF/zz1LlHDeeWMvxhdrs9E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ax1+o8VJoOoeAcDZcB2n9sg1i6iHgbfAS3ryPXOlPJ33tsilkA0aZQR+wrq5pyNU7
+         JR1eJgDUTkdZFBmVjyHO/0c3uZJVouO+5sOmJXGA+uItzXKclUjHgdwHiSp9DoCZQk
+         /dgvRQUGmqIbLVl96KBPkoQYIX/3/FSmbEvBE1+o=
+Date:   Mon, 13 May 2019 10:36:10 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH AUTOSEL 4.14 79/95] x86/asm: Remove dead __GNUC__
+ conditionals
+Message-ID: <20190513143610.GD11972@sasha-vm>
+References: <20190507053826.31622-1-sashal@kernel.org>
+ <20190507053826.31622-79-sashal@kernel.org>
+ <d18bba8c-0d2c-03bd-0098-5f39ad726b01@rasmusvillemoes.dk>
+ <20190507061503.GA20385@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190507061503.GA20385@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-panfrost_ioctl_mmap_bo() contains a reimplementation of
-drm_gem_dump_map_offset() but with a bug - it allows mapping imported
-objects (without going through the exporter). Fix this by switching to
-use the generic drm_gem_dump_map_offset() function instead which has the
-bonus of simplifying the code.
+On Tue, May 07, 2019 at 08:15:03AM +0200, Greg KH wrote:
+>On Tue, May 07, 2019 at 07:57:01AM +0200, Rasmus Villemoes wrote:
+>> On 07/05/2019 07.38, Sasha Levin wrote:
+>> > From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> >
+>> > [ Upstream commit 88ca66d8540ca26119b1428cddb96b37925bdf01 ]
+>> >
+>> > The minimum supported gcc version is >= 4.6, so these can be removed.
+>>
+>> Eh, that bump happened for the 4.19 kernel, so this is not true for the
+>> 4.14 branch. Has cafa0010cd51fb711fdcb50fc55f394c5f167a0a been applied
+>> to 4.14.y? Otherwise I don't think this is appropriate.
+>
+>No, that commit is not in 4.14, so we still have to "support" older
+>versions of gcc there :(
+>
+>Sasha, can you drop this?
 
-CC: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- drivers/gpu/drm/panfrost/panfrost_drv.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+Dropped, thanks!
 
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index 94b0819ad50b..d048250ad8ab 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -254,26 +254,14 @@ static int panfrost_ioctl_mmap_bo(struct drm_device *dev, void *data,
- 		      struct drm_file *file_priv)
- {
- 	struct drm_panfrost_mmap_bo *args = data;
--	struct drm_gem_object *gem_obj;
--	int ret;
- 
- 	if (args->flags != 0) {
- 		DRM_INFO("unknown mmap_bo flags: %d\n", args->flags);
- 		return -EINVAL;
- 	}
- 
--	gem_obj = drm_gem_object_lookup(file_priv, args->handle);
--	if (!gem_obj) {
--		DRM_DEBUG("Failed to look up GEM BO %d\n", args->handle);
--		return -ENOENT;
--	}
--
--	ret = drm_gem_create_mmap_offset(gem_obj);
--	if (ret == 0)
--		args->offset = drm_vma_node_offset_addr(&gem_obj->vma_node);
--	drm_gem_object_put_unlocked(gem_obj);
--
--	return ret;
-+	return drm_gem_dumb_map_offset(file_priv, dev, args->handle,
-+				       &args->offset);
- }
- 
- static int panfrost_ioctl_get_bo_offset(struct drm_device *dev, void *data,
--- 
-2.20.1
-
+--
+Thanks,
+Sasha
