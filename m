@@ -2,84 +2,188 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD627C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635A921479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3B120989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Be+VDtBe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfEMJNb convert rfc822-to-8bit (ORCPT
+        id S1728659AbfEMJNe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:13:31 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:51352 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728619AbfEMJN3 (ORCPT
+        Mon, 13 May 2019 05:13:34 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34212 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728640AbfEMJNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-136-_UGF8YZbNt6WPKgejzV5ow-1; Mon, 13 May 2019 10:13:26 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 13 May 2019 10:13:25 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 13 May 2019 10:13:25 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Ingo Molnar' <mingo@kernel.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: RE: FYI -ffreestanding shrinks kernel by 2% on x86_64
-Thread-Topic: FYI -ffreestanding shrinks kernel by 2% on x86_64
-Thread-Index: AQHVCWblbUBOOHnv10eqH+bQW22gjaZoxQGg
-Date:   Mon, 13 May 2019 09:13:25 +0000
-Message-ID: <3a3b9e840dbb456ab01815f7afdbb493@AcuMS.aculab.com>
-References: <20190511200223.GA14143@avx2> <20190511201344.GA11535@avx2>
- <20190512093228.GA8088@gmail.com>
-In-Reply-To: <20190512093228.GA8088@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 13 May 2019 05:13:31 -0400
+Received: by mail-pg1-f195.google.com with SMTP id c13so6465673pgt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XavEEJR9UTWypsgwd5yo2KavnEoUPRTsn7OTRBW3tRc=;
+        b=Be+VDtBeofNsjOKfO70pqCMwr+tIJ2+kG6N+gQ5gUWv3BkN5myq/O2MPNL3WiAxeBE
+         RyVA3ACxXw0eL5d7KfchxTAaHwVN4lLknTvHEdIgC+vG43APGGAmmoZbhbGq1YSw7VnM
+         dbw9ObK4ZmCquc/s0iv4vOhtIxrSFcR6QEbei/0TCE+Nga4GKR1X5e/t/Q0RxR7jlG5n
+         /GU9QWeBbdCLPjRiGmD4bTNl/1apgn6YujccvbjNzMbai+An5Jrootx9QoWj8Fg/ZqQH
+         l6HqG2DSTfa8xfewaJX+U4yyOqegqTTsEGBYB7gG97UCUrOo0ND64gRFGnQvfwAI02p6
+         K3yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XavEEJR9UTWypsgwd5yo2KavnEoUPRTsn7OTRBW3tRc=;
+        b=h+KsiAq/0lu5bWxYOrPBor6ZcqqVZkwn4+SHMIHlW7LAydflfLJuqxJZfCNzRJ1TgZ
+         ch2DII/APhsL9jK1PsbRjpCfU98z79afzmJfnFl3HNH1ffTIyvZrc4sM+l1UTC/ggn4y
+         Ny1H/RhQXlYuiLK170d11efLpOyy6uSonIjxYafL9FcprNytQLN0mxV/cmmAHHp2NQb0
+         BnAUAyjC5x9zbLJEuD3NatWmaZzwio21FsFfDgUD2EdIPDVy2WJ0cjUN2X2+Lj4x9osH
+         ZyL6J21InBwRh9DOYccNV//FcuOnV794B0VzLB/FxLfeSYN30Q/IDojSjPUjJeEB+zby
+         aeTQ==
+X-Gm-Message-State: APjAAAUet3rPjJSwP1Pym3oV2eKoMFqLVF9vG2+8jDtB0vOIGM0fZ69a
+        iEwATSaqNWEe7UJtJxJT2D0=
+X-Google-Smtp-Source: APXvYqwGBQyA3DVPamIEqpQGXw3qOjLI0YQEymWB8By+gZSMTb/8ghRIZUz9aLJELHIaZWJodNwBYw==
+X-Received: by 2002:a63:8b4b:: with SMTP id j72mr29568964pge.318.1557738810531;
+        Mon, 13 May 2019 02:13:30 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 02:13:29 -0700 (PDT)
+From:   Yuyang Du <duyuyang@gmail.com>
+To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
+Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
+        tglx@linutronix.de, boqun.feng@gmail.com,
+        linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
+Subject: [PATCH 04/17] locking/lockdep: Update direct dependency's read-write type if it exists
+Date:   Mon, 13 May 2019 17:11:50 +0800
+Message-Id: <20190513091203.7299-5-duyuyang@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
+References: <20190513091203.7299-1-duyuyang@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: _UGF8YZbNt6WPKgejzV5ow-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ingo Molnar
-> Sent: 12 May 2019 10:32
-...
-> Has anyone investigated by any chance where the -ffreestanding space
-> savings come from mostly - is it mostly in cold paths, or does it make or
-> hot codepaths more efficient as well?
-> 
-> If it's the latter then the kernel would be directly faster as well
-> (fewer instructions executed), not just indirectly from better cache
-> packing, I suppse?
+When adding a dependency, if the dependency exists - be it direct or
+indirect - the dependency's read-write type may be updated.
 
-My guess is that -ffreestanding stops gcc inlining memcpy() (etc).
-The calls can be smaller than the inline code, but will (probably)
-run more slowly.
+We can keep all different-typed dependencies, but for simplicity we just
+"upgrade" lock types if possible, making them more exlusive (in the order:
+recursive read -> read -> write.
 
-	David
+For indirect dependency, we do the redundancy check only when it has no
+read locks (i.e., write-lock ended dependency); this makes the redundancy
+check less complicated, which matters only when CONFIG_LOCKDEP_SMALL.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+---
+ kernel/locking/lockdep.c | 61 ++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 57 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 0617375..27ca55f 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -1734,6 +1734,16 @@ static inline int get_lock_type2(struct lock_list *lock)
+ 	return lock->lock_type[1];
+ }
+ 
++static inline void set_lock_type1(struct lock_list *lock, int read)
++{
++	lock->lock_type[0] = (u16)read;
++}
++
++static inline void set_lock_type2(struct lock_list *lock, int read)
++{
++	lock->lock_type[1] = (u16)read;
++}
++
+ /*
+  * Check that the dependency graph starting at <src> can lead to
+  * <target> or not. Print an error and return 0 if it does.
+@@ -1814,6 +1824,32 @@ static inline int get_lock_type2(struct lock_list *lock)
+ 	ret = check_path(hlock_class(target), &src_entry, &target_entry);
+ 
+ 	if (!ret) {
++		struct lock_list *parent;
++
++		/*
++		 * Do this indirect dependency has the same type as the
++		 * direct dependency?
++		 *
++		 * Actually, we keep the more exclusive lock type
++		 * between the indirect and direct dependencies by
++		 * "upgrading" the indirect dependency's lock type if
++		 * needed, and then consider this redundant.
++		 */
++
++		/* Target end lock type: */
++		if (target->read < get_lock_type2(target_entry))
++			set_lock_type2(target_entry, target->read)
++
++		/* Source end lock type: */
++		parent = find_next_dep_in_path(&src_entry, target_entry);
++		if (!parent) {
++			DEBUG_LOCKS_WARN_ON(1);
++			return 0;
++		}
++
++		if (src->read < get_lock_type1(parent))
++			set_lock_type1(parent, src->read)
++
+ 		debug_atomic_inc(nr_redundant);
+ 		ret = 2;
+ 	} else if (ret < 0)
+@@ -2479,6 +2515,17 @@ static inline void inc_chains(void)
+ 	 */
+ 	list_for_each_entry(entry, &hlock_class(prev)->locks_after, entry) {
+ 		if (entry->class == hlock_class(next)) {
++			/*
++			 * For direct dependency, smaller type value
++			 * generally means more exlusive; we keep the
++			 * more exlusive ones, in other words, we
++			 * "upgrade" the dependency if we can.
++			 */
++			if (prev->read < get_lock_type1(entry))
++				set_lock_type1(entry, prev->read);
++			if (next->read < get_lock_type2(entry))
++				set_lock_type2(entry, next->read);
++
+ 			if (distance == 1)
+ 				entry->distance = 1;
+ 			return 1;
+@@ -2487,11 +2534,17 @@ static inline void inc_chains(void)
+ 
+ #ifdef CONFIG_LOCKDEP_SMALL
+ 	/*
+-	 * Is the <prev> -> <next> link redundant?
++	 * Only when this dependency has no read lock/locks (i.e.,
++	 * write-write dependency), we do redundancy check.
+ 	 */
+-	ret = check_redundant(prev, next);
+-	if (ret != 1)
+-		return ret;
++	if (!get_dep_type(prev, next)) {
++		/*
++		 * Is the <prev> -> <next> link redundant?
++		 */
++		ret = check_redundant(prev, next);
++		if (ret != 1)
++			return ret;
++	}
+ #endif
+ 
+ 	if (!trace->nr_entries && !save_trace(trace))
+-- 
+1.8.3.1
 
