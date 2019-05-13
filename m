@@ -2,141 +2,177 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69D5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F75C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C682084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QW39YRQI"
+	by mail.kernel.org (Postfix) with ESMTP id ABA96208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557790701;
+	bh=KHo/8VO1q8PL3nZybC3R+kGEoBbsv8Y0Pf5QPxbCbzc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=pK3a1LJCEFHMnsavScTJs7XAhVqTVtmYuCe1xnsQ47+zUc04VgqCKRyzlr0x/0mzM
+	 PPSV4n9TNabcxDw2rN0hF/avLW1Rb+16HE5hFSWcA0hyUhYB1xZJ2fS7dXIhkejK/V
+	 anvSuG5a8l8tLNADWr40K0x76R/GBw4CgmBIp+n4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfEMXe5 (ORCPT
+        id S1726646AbfEMXiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 19:34:57 -0400
-Received: from mail-eopbgr30051.outbound.protection.outlook.com ([40.107.3.51]:42822
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbfEMXe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 19:34:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ivm63irdRJqw1B0UFl9vceTxhPPPFVUSmI9sdgJODZE=;
- b=QW39YRQIIjZw9+k+JSfb4nHP29JZCdAVp/VObEKKqL194N/UMbojPo2CawhknuDyB5XkWCEtI6EmYwriguZQDEHBUfjDgfI3IqidX1FLH2RW69Rs2fJTqN+7HjpFHxhrOy1o97VaR4ZWGDveGqu7glf917AXw3UxKqTzTl4+arU=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3835.eurprd04.prod.outlook.com (52.134.65.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Mon, 13 May 2019 23:34:13 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1900.010; Mon, 13 May 2019
- 23:34:13 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Baluta <daniel.baluta@gmail.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>
-Subject: RE: [PATCH RESEND 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Topic: [PATCH RESEND 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Index: AQHVCTfaYqtO/eSQ1UCSJJ4U0eiBlKZpHh8AgACXn+A=
-Date:   Mon, 13 May 2019 23:34:12 +0000
-Message-ID: <DB3PR0402MB3916A46BFFE5E6F3D4832A33F50F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557716049-22744-1-git-send-email-Anson.Huang@nxp.com>
- <CAEnQRZDSTuUMrc9AC1S2zfo0PdQ-v35GmNrf70Zoasid_XMJzw@mail.gmail.com>
-In-Reply-To: <CAEnQRZDSTuUMrc9AC1S2zfo0PdQ-v35GmNrf70Zoasid_XMJzw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1aa44f39-9874-46b3-46e1-08d6d7fb8196
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3835;
-x-ms-traffictypediagnostic: DB3PR0402MB3835:
-x-microsoft-antispam-prvs: <DB3PR0402MB3835373BD12968D5CC89C398F50F0@DB3PR0402MB3835.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(346002)(376002)(366004)(396003)(13464003)(199004)(189003)(7736002)(52536014)(71190400001)(81156014)(71200400001)(74316002)(6246003)(5660300002)(14454004)(44832011)(6506007)(53546011)(6116002)(3846002)(102836004)(256004)(8936002)(478600001)(8676002)(86362001)(76176011)(4326008)(7696005)(25786009)(33656002)(66066001)(6436002)(186003)(9686003)(55016002)(99286004)(305945005)(2906002)(6916009)(26005)(486006)(54906003)(11346002)(446003)(476003)(81166006)(66446008)(64756008)(66556008)(66476007)(73956011)(76116006)(53936002)(229853002)(66946007)(316002)(7416002)(68736007)(15866825006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3835;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YmSGZMdPXcAhbVm2Jbf/Rt0BD0lgzXpkgmYMGuZ0ssf3ZCRRxNbZs4VNkcA0FxQbpgpNpUAoFXbmUmGNjVb53FFz6PlmOFP8hV88Su1QAme/mXpo4Df97ucqYLH8SY2h36TmzStcmAzVv27sC+QVRVwlCwL4TM3fd2a+UCspj08DYNV0L6CMoJUFEp0dzlRb5bvzjSqgTpDT9dt+FMOpqXMX3YRGYBmvfNyWBxVsa/BA8oJSCnrQlduVc7p9yDiTqhcOB1Eombc4VZts2rQA6hOy+1fLeaAlNpc/EAW8I8zeyrVibETpEFTD8EEoUrY0Q424PIB8W/CyTHUwNgVL8ljW6kDXowpd1xlVjY76jyeJkzwNGtlfvelV0hFqtnqf+uPA41Lgf2vfGjafB3gMKOcvov7+voij9KxfBQnpiGA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 May 2019 19:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfEMXiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 19:38:20 -0400
+Received: from localhost (unknown [104.132.1.68])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34AA820879;
+        Mon, 13 May 2019 23:38:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557790699;
+        bh=KHo/8VO1q8PL3nZybC3R+kGEoBbsv8Y0Pf5QPxbCbzc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=gBNHMtoCfSVHnVCV2d0qIt792RO4t/cNNMbhD2pP5rfMubxxghzk65jcy8rBUXY/h
+         okAK8lDC6SiKq4pVzMhJS2SIsA4S+O7GQmbciN5EEWmU1dBWMu3Jrl7w472epO3fA/
+         HDXE9FOrJsZWoh4E+ea9BH3r/q5WuJf2uS7EsqLA=
+Date:   Mon, 13 May 2019 16:38:18 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux F2FS Dev Mailing List 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] f2fs-for-5.2
+Message-ID: <20190513233818.GA33287@jaegeuk-macbookpro.roam.corp.google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa44f39-9874-46b3-46e1-08d6d7fb8196
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 23:34:12.7924
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3835
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IERhbmll
-bCBCYWx1dGEgW21haWx0bzpkYW5pZWwuYmFsdXRhQGdtYWlsLmNvbV0NCj4gU2VudDogTW9uZGF5
-LCBNYXkgMTMsIDIwMTkgMTA6MzAgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0Bu
-eHAuY29tPg0KPiBDYzogY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5j
-b207DQo+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IHMuaGF1ZXJAcGVuZ3V0cm9uaXguZGU7IGtlcm5l
-bEBwZW5ndXRyb25peC5kZTsNCj4gZmVzdGV2YW1AZ21haWwuY29tOyBtYXhpbWUucmlwYXJkQGJv
-b3RsaW4uY29tOyBhZ3Jvc3NAa2VybmVsLm9yZzsNCj4gb2xvZkBsaXhvbS5uZXQ7IGhvcm1zK3Jl
-bmVzYXNAdmVyZ2UubmV0LmF1Ow0KPiBqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbTsgYmpvcm4u
-YW5kZXJzc29uQGxpbmFyby5vcmc7IExlb25hcmQgQ3Jlc3Rleg0KPiA8bGVvbmFyZC5jcmVzdGV6
-QG54cC5jb20+OyBtYXJjLncuZ29uemFsZXpAZnJlZS5mcjsNCj4gZGluZ3V5ZW5Aa2VybmVsLm9y
-ZzsgZW5yaWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsgQWlzaGVuZyBEb25nDQo+IDxhaXNoZW5n
-LmRvbmdAbnhwLmNvbT47IHJvYmhAa2VybmVsLm9yZzsgQWJlbCBWZXNhDQo+IDxhYmVsLnZlc2FA
-bnhwLmNvbT47IGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4
-LWlteA0KPiA8bGludXgtaW14QG54cC5jb20+OyBEYW5pZWwgQmFsdXRhIDxkYW5pZWwuYmFsdXRh
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggUkVTRU5EIDEvMl0gc29jOiBpbXg6IEFk
-ZCBTQ1UgU29DIGluZm8gZHJpdmVyIHN1cHBvcnQNCj4gDQo+IDxzbmlwPg0KPiANCj4gPiArDQo+
-ID4gK3N0YXRpYyB1MzIgaW14OHF4cF9zb2NfcmV2aXNpb24odm9pZCkgew0KPiA+ICsgICAgICAg
-c3RydWN0IGlteF9zY19tc2dfbWlzY19nZXRfc29jX2lkIG1zZzsNCj4gPiArICAgICAgIHN0cnVj
-dCBpbXhfc2NfcnBjX21zZyAqaGRyID0gJm1zZy5oZHI7DQo+ID4gKyAgICAgICB1MzIgcmV2ID0g
-MDsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgaGRyLT52ZXIgPSBJ
-TVhfU0NfUlBDX1ZFUlNJT047DQo+ID4gKyAgICAgICBoZHItPnN2YyA9IElNWF9TQ19SUENfU1ZD
-X01JU0M7DQo+ID4gKyAgICAgICBoZHItPmZ1bmMgPSBJTVhfU0NfTUlTQ19GVU5DX0dFVF9DT05U
-Uk9MOw0KPiA+ICsgICAgICAgaGRyLT5zaXplID0gMzsNCj4gPiArDQo+ID4gKyAgICAgICBtc2cu
-ZGF0YS5zZW5kLmNvbnRyb2wgPSBJTVhfU0NfQ19JRDsNCj4gPiArICAgICAgIG1zZy5kYXRhLnNl
-bmQucmVzb3VyY2UgPSBJTVhfU0NfUl9TWVNURU07DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0g
-aW14X3NjdV9jYWxsX3JwYyhzb2NfaXBjX2hhbmRsZSwgJm1zZywgdHJ1ZSk7DQo+ID4gKyAgICAg
-ICBpZiAocmV0KSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJmlteF9zY3Vfc29jX3Bk
-ZXYtPmRldiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAiZ2V0IHNvYyBpbmZvIGZhaWxl
-ZCwgcmV0ICVkXG4iLCByZXQpOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV2Ow0KPiAN
-Cj4gU28geW91IHJldHVybiAwIChyZXYgID0gMCkgaGVyZSBpbiBjYXNlIG9mIGVycm9yPyBUaGlz
-IGRvZXNuJ3Qgc2VlbSB0byBiZSByaWdodC4NCj4gTWF5YmUgcmV0dXJuIHJldD8NCg0KVGhpcyBp
-cyBpbnRlbnRpb25hbCwgc2ltaWxhciB3aXRoIGN1cnJlbnQgaS5NWDhNUSBzb2MgaW5mbyBkcml2
-ZXIsIHdoZW4gZ2V0dGluZyByZXZpc2lvbg0KZmFpbGVkLCBqdXN0IHJldHVybiAwIGFzIHJldmlz
-aW9uIGluZm8gYW5kIGl0IHdpbGwgc2hvdyAidW5rbm93biIgaW4gc3lzZnMuDQoNClRoYW5rcywN
-CkFuc29uLg0KDQo=
+Hi Linus,
+
+Could you please consider this pull request?
+
+Thanks as lways,
+
+The following changes since commit 8ed86627f715eacbd6db6862f9499d6d96ea4ad6:
+
+  Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid (2019-04-03 06:11:12 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git tags/f2fs-for-v5.2-rc1
+
+for you to fetch changes up to 2777e654371dd4207a3a7f4fb5fa39550053a080:
+
+  f2fs: fix to avoid accessing xattr across the boundary (2019-05-09 09:43:29 -0700)
+
+----------------------------------------------------------------
+f2fs-for-5.2-rc1
+
+Another round of various bug fixes came in. Damien improved SMR drive support a
+bit, and Chao replaced BUG_ON() with reporting errors to user since we've not
+hit from users but did hit from crafted images. We've found a disk layout bug
+in large_nat_bits feature which supports very large NAT entries enabled at mkfs.
+If the feature is enabled, it will give a notice to run fsck to correct the
+on-disk layout.
+
+Enhancement:
+ - reduce memory consumption for SMR drive
+ - better discard handling for multiple partitions
+ - tracepoints for f2fs_file_write_iter/f2fs_filemap_fault
+ - allow to change CP_CHKSUM_OFFSET
+ - detect wrong layout of large_nat_bitmap feature
+ - enhance checking valid data indices
+
+Bug fix:
+ - Multiple partition support for SMR drive
+ - deadlock problem in f2fs_balance_fs_bg
+ - add boundary checks to fix abnormal behaviors on fuzzed images
+ - inline_xattr space calculations
+ - replace f2fs_bug_on with errors
+
+In addition, this series contains various memory boundary check and sanity check
+of on-disk consistency.
+
+----------------------------------------------------------------
+Chao Yu (31):
+      f2fs: fix potential recursive call when enabling data_flush
+      f2fs: add comment for conditional compilation statement
+      f2fs: add tracepoint for f2fs_file_write_iter()
+      f2fs: fix to avoid deadloop in foreground GC
+      f2fs: fix error path of recovery
+      f2fs: fix to retrieve inline xattr space
+      f2fs: fix to use inline space only if inline_xattr is enable
+      f2fs: fix to avoid panic in dec_valid_block_count()
+      f2fs: fix to avoid panic in dec_valid_node_count()
+      f2fs: fix wrong __is_meta_io() macro
+      f2fs: remove new blank line of f2fs kernel message
+      f2fs: fix to clear dirty inode in error path of f2fs_iget()
+      f2fs: fix to avoid panic in f2fs_remove_inode_page()
+      f2fs: fix to do checksum even if inode page is uptodate
+      f2fs: fix to do sanity check on free nid
+      f2fs: fix to avoid panic in do_recover_data()
+      f2fs: fix to do sanity check on valid node/block count
+      f2fs: fix to do sanity check on valid block count of segment
+      f2fs: fix to avoid panic in f2fs_inplace_write_data()
+      f2fs: fix to set FI_UPDATE_WRITE correctly
+      f2fs: introduce f2fs_read_single_page() for cleanup
+      f2fs: allow address pointer number of dnode aligning to specified size
+      f2fs: allow unfixed f2fs_checkpoint.checksum_offset
+      f2fs: relocate chksum_offset for large_nat_bitmap feature
+      f2fs: fix to consider multiple device for readonly check
+      f2fs: fix to skip recovery on readonly device
+      f2fs: fix to be aware of readonly device in write_checkpoint()
+      f2fs: fix to handle error in f2fs_disable_checkpoint()
+      f2fs: introduce DATA_GENERIC_ENHANCE
+      f2fs: add tracepoint for f2fs_filemap_fault()
+      f2fs: fix to avoid potential race on sbi->unusable_block_count access/update
+
+Chengguang Xu (1):
+      f2fs: remove redundant check in f2fs_file_write_iter()
+
+Damien Le Moal (3):
+      f2fs: Fix use of number of devices
+      f2fs: Reduce zoned block device memory usage
+      f2fs: improve discard handling with multi-device volumes
+
+Hariprasad Kelam (1):
+      f2fs: data: fix warning Using plain integer as NULL pointer
+
+Park Ju Hyung (1):
+      f2fs: mark is_extension_exist() inline
+
+Randall Huang (1):
+      f2fs: fix to avoid accessing xattr across the boundary
+
+Youngjun Yoo (2):
+      f2fs: insert space before the open parenthesis '('
+      f2fs: Replace spaces with tab
+
+ fs/f2fs/acl.c               |   4 +-
+ fs/f2fs/checkpoint.c        | 108 +++++++++++++----
+ fs/f2fs/data.c              | 285 +++++++++++++++++++++++++-------------------
+ fs/f2fs/f2fs.h              | 127 +++++++++++++++-----
+ fs/f2fs/file.c              |  76 +++++++-----
+ fs/f2fs/gc.c                |  16 ++-
+ fs/f2fs/inline.c            |  17 +++
+ fs/f2fs/inode.c             |  12 +-
+ fs/f2fs/namei.c             |   2 +-
+ fs/f2fs/node.c              |  43 +++++--
+ fs/f2fs/recovery.c          |  37 +++++-
+ fs/f2fs/segment.c           |  71 ++++++-----
+ fs/f2fs/segment.h           |  16 +--
+ fs/f2fs/super.c             |  70 ++++++++---
+ fs/f2fs/xattr.c             |  36 ++++--
+ fs/f2fs/xattr.h             |   2 +
+ include/linux/f2fs_fs.h     |  11 +-
+ include/trace/events/f2fs.h |  57 +++++++++
+ 18 files changed, 688 insertions(+), 302 deletions(-)
