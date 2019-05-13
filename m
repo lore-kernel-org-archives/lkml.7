@@ -2,162 +2,67 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660F3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B5C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EB4921019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557770449;
-	bh=csfnspCqoGzSP36jG7KCsh/m3A3oYOGYQgo1X3YlEhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
-	 From;
-	b=Op9SaBX2e1J5EAaWAQsjtuqqAuJcAODQ6z/+3QMKHXwsJaaeYAViDANWpnhYhpu81
-	 FxStmVuSbM8dVT6C9hs9kA5fis21P4+xcS24GuxsAvyP1HVH/6xmE+gbFayp6EyUmy
-	 wcQvGzhU6b5nC0dJ4Q4ux8P8iBFj5Qr/fSDoio6k=
+	by mail.kernel.org (Postfix) with ESMTP id 8CDD121473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="b8UGgDxX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfEMSAs (ORCPT
+        id S1732227AbfEMSBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:00:48 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:45861 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732008AbfEMR7S (ORCPT
+        Mon, 13 May 2019 14:01:06 -0400
+Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:49352 "EHLO
+        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727668AbfEMSBG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:59:18 -0400
-Received: by mail-pf1-f195.google.com with SMTP id s11so7582122pfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :reply-to:organization;
-        bh=BllNv+GUuWAJ1ipV1p7Njrwna0Z9LQ0p08C6J8/Y2H0=;
-        b=jcbgy/DudN6raLsl0pJOcbUgofvULms0tUfHAJB5NUpQJubyre75w9QU+7YA6vlj6v
-         oegmgRCR20GxwKNvkigSX9jmJf3p0iiw1EQgaAxo2CErgYKHjpS+CEBJLIAbsd1/QvRt
-         qz939gOLs3dfpghiwlOqU4Vd91X62NfdU850jcl1fKfvyoX+rz6MTF6OyRVvqW0w7bHH
-         E4+r5JR8Jdxcxc2oq6yLrNOgTeABhr8oXoj874L3mqcTY6RRFAQb75u3NdpxWLrwmZgr
-         KLEY3ko0+kyNP+sCgNJ22A6FQTjdRRyJdByXQ5z15Q/oF3sHNn/TqsQlWvQhpYGc0/bB
-         giFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:reply-to:organization;
-        bh=BllNv+GUuWAJ1ipV1p7Njrwna0Z9LQ0p08C6J8/Y2H0=;
-        b=oo4x3ty7ifEAt1yg0dHXlwaM6agORxLhpQTF/ly3Sf/17eK3kB0CdpZwcO7xsY/Fp4
-         A8makp5xY5AeWPQ4lm/4oPFy7ouzwY1lvGMAXBPajq6PYU42xggcswdzFWYxnXYJaUZj
-         7zn16s8HyrBNJtVZwGFaQ/LdJYlJrGHIWLG/SQfJ/83Hbz6GEEdtmsp4U5oYXSl8JT6H
-         3flnhZg96iH6irIaNsso9mXT7ZycRRbSCvZ/UT7Vp/UT+yixkSE/jJCDZfgbblMaHKv1
-         X0Dxbnjm6untsGTPjRoAxskQyx+BEv5bdxwnbeiSvPJJG8vGKdQD7iwwqegtxU1yvh2I
-         y+Wg==
-X-Gm-Message-State: APjAAAWZXOjekRK2t7kRDoXIWmEIKNNSnPpD+2YAMSxmfxcRHchBfA+D
-        XKLwBcaD4dCJKrzfXGnWRLpoSdaM
-X-Google-Smtp-Source: APXvYqxwWhsHe/BxaHcOiZVhVn3Ikm6xcti2qgMVXbgLUUoQlMVXe6KlhGEaymRWi6EIKVySqY9dTg==
-X-Received: by 2002:a62:1a51:: with SMTP id a78mr34412637pfa.133.1557770358140;
-        Mon, 13 May 2019 10:59:18 -0700 (PDT)
-Received: from localhost.localdomain ([96.79.124.202])
-        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:59:17 -0700 (PDT)
-From:   Len Brown <lenb@kernel.org>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
-Subject: [PATCH 02/19] x86 topology: Create topology_max_die_per_package()
-Date:   Mon, 13 May 2019 13:58:46 -0400
-Message-Id: <e6eaf384571ae52ac7d0ca41510b7fb7d2fda0e4.1557769318.git.len.brown@intel.com>
-X-Mailer: git-send-email 2.18.0-rc0
-In-Reply-To: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
-References: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
-Reply-To: Len Brown <lenb@kernel.org>
-Organization: Intel Open Source Technology Center
+        Mon, 13 May 2019 14:01:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1557770465;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=PlYvmqxRpVISnjsRFpBbrKcWou6q8G660sOR1uIfQB8=;
+        b=b8UGgDxXFtgOe6/nHEgwLitQKKdP6MaTm72eml72TE9fnqIiPmXw8fT7pLun0Kck
+        rTcHdXuzgkeKJJQmYht5nMnPLcckFMsU/bqzVWYwIlrnDkBQuekNUTWLhxi0ugBfjUe
+        6vhOsZoNl7l4/KTlnny/6ogqiyJ4zFkjdnQwfoKQ=
+Date:   Mon, 13 May 2019 18:01:05 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Roman Gushchin <guro@fb.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] mm: unify SLAB and SLUB page accounting
+In-Reply-To: <20190508202458.550808-5-guro@fb.com>
+Message-ID: <0100016ab25aef20-4552213a-13e1-4aff-ba52-e970f3ac7fd4-000000@email.amazonses.com>
+References: <20190508202458.550808-1-guro@fb.com> <20190508202458.550808-5-guro@fb.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.05.13-54.240.9.30
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Len Brown <len.brown@intel.com>
+On Wed, 8 May 2019, Roman Gushchin wrote:
 
-topology_max_packages() is available to size resources to
-cover all packages in the system.
+> Currently the page accounting code is duplicated in SLAB and SLUB
+> internals. Let's move it into new (un)charge_slab_page helpers
+> in the slab_common.c file. These helpers will be responsible
+> for statistics (global and memcg-aware) and memcg charging.
+> So they are replacing direct memcg_(un)charge_slab() calls.
 
-But now we have multi-die/package systems, and some
-resources are per-die.
+Looks good.
 
-Create topology_max_die_per_package(), for detecting
-multi-die/package systems, and sizing any per-die resources.
-
-Signed-off-by: Len Brown <len.brown@intel.com>
----
- arch/x86/include/asm/processor.h |  1 -
- arch/x86/include/asm/topology.h  | 10 ++++++++++
- arch/x86/kernel/cpu/topology.c   |  5 ++++-
- 3 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 00fc03a8da59..87d42c0c6ccc 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -106,7 +106,6 @@ struct cpuinfo_x86 {
- 	unsigned long		loops_per_jiffy;
- 	/* cpuid returned max cores value: */
- 	u16			x86_max_cores;
--	u16			x86_max_dies;
- 	u16			apicid;
- 	u16			initial_apicid;
- 	u16			x86_clflush_size;
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 453cf38a1c33..e0232f7042c3 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -115,6 +115,13 @@ extern const struct cpumask *cpu_coregroup_mask(int cpu);
- extern unsigned int __max_logical_packages;
- #define topology_max_packages()			(__max_logical_packages)
- 
-+extern unsigned int __max_die_per_package;
-+
-+static inline int topology_max_die_per_package(void)
-+{
-+	return __max_die_per_package;
-+}
-+
- extern int __max_smt_threads;
- 
- static inline int topology_max_smt_threads(void)
-@@ -131,6 +138,9 @@ bool topology_smt_supported(void);
- static inline int
- topology_update_package_map(unsigned int apicid, unsigned int cpu) { return 0; }
- static inline int topology_phys_to_logical_pkg(unsigned int pkg) { return 0; }
-+static inline int topology_phys_to_logical_die(unsigned int die,
-+		unsigned int cpu) { return 0; }
-+static inline int topology_max_die_per_package(void) { return 1; }
- static inline int topology_max_smt_threads(void) { return 1; }
- static inline bool topology_is_primary_thread(unsigned int cpu) { return true; }
- static inline bool topology_smt_supported(void) { return false; }
-diff --git a/arch/x86/kernel/cpu/topology.c b/arch/x86/kernel/cpu/topology.c
-index 4d17e699657d..ee48c3fc8a65 100644
---- a/arch/x86/kernel/cpu/topology.c
-+++ b/arch/x86/kernel/cpu/topology.c
-@@ -26,6 +26,9 @@
- #define LEVEL_MAX_SIBLINGS(ebx)		((ebx) & 0xffff)
- 
- #ifdef CONFIG_SMP
-+unsigned int __max_die_per_package __read_mostly = 1;
-+EXPORT_SYMBOL(__max_die_per_package);
-+
- /*
-  * Check if given CPUID extended toplogy "leaf" is implemented
-  */
-@@ -146,7 +149,7 @@ int detect_extended_topology(struct cpuinfo_x86 *c)
- 	c->apicid = apic->phys_pkg_id(c->initial_apicid, 0);
- 
- 	c->x86_max_cores = (core_level_siblings / smp_num_siblings);
--	c->x86_max_dies = (die_level_siblings / core_level_siblings);
-+	__max_die_per_package = (die_level_siblings / core_level_siblings);
- #endif
- 	return 0;
- }
--- 
-2.18.0-rc0
-
+Acked-by: Christoph Lameter <cl@linux.com>
