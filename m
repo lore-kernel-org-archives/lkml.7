@@ -2,86 +2,80 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0136EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACB2C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D22EF208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:27:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C1EB208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbfEMO1o (ORCPT
+        id S1729448AbfEMO3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:27:44 -0400
-Received: from mga05.intel.com ([192.55.52.43]:33359 "EHLO mga05.intel.com"
+        Mon, 13 May 2019 10:29:25 -0400
+Received: from foss.arm.com ([217.140.101.70]:57490 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726481AbfEMO1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:27:44 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 07:27:43 -0700
-X-ExtLoop1: 1
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 13 May 2019 07:27:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-        id 489FE2B1; Mon, 13 May 2019 17:27:39 +0300 (EEST)
-Date:   Mon, 13 May 2019 17:27:39 +0300
-From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 03/62] mm/ksm: Do not merge pages with different
- KeyIDs
-Message-ID: <20190513142739.7v3cnrnnnsdldcuc@black.fi.intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-4-kirill.shutemov@linux.intel.com>
- <1697adad-6ae2-ea85-bab5-0144929ed2d9@intel.com>
+        id S1726481AbfEMO3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:29:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75B0080D;
+        Mon, 13 May 2019 07:29:24 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6442F3F71E;
+        Mon, 13 May 2019 07:29:23 -0700 (PDT)
+Subject: Re: linux-next: manual merge of the vhost tree with the iommu tree
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Lan Tianyu <Tianyu.Lan@microsoft.com>
+References: <20190227152506.4696a59f@canb.auug.org.au>
+ <2370af99-9dc1-b694-9f1c-1951d1e70435@arm.com>
+ <20190227085546-mutt-send-email-mst@kernel.org>
+ <20190228100442.GB1594@8bytes.org>
+ <20190512131410-mutt-send-email-mst@kernel.org>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <7b10be49-f379-c586-d8fd-d67bb932fabd@arm.com>
+Date:   Mon, 13 May 2019 15:29:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1697adad-6ae2-ea85-bab5-0144929ed2d9@intel.com>
-User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
+In-Reply-To: <20190512131410-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 06:07:11PM +0000, Dave Hansen wrote:
-> On 5/8/19 7:43 AM, Kirill A. Shutemov wrote:
-> > KeyID indicates what key to use to encrypt and decrypt page's content.
-> > Depending on the implementation a cipher text may be tied to physical
-> > address of the page. It means that pages with an identical plain text
-> > would appear different if KSM would look at a cipher text. It effectively
-> > disables KSM for encrypted pages.
-> > 
-> > In addition, some implementations may not allow to read cipher text at all.
-> > 
-> > KSM compares plain text instead (transparently to KSM code).
-> > 
-> > But we still need to make sure that pages with identical plain text will
-> > not be merged together if they are encrypted with different keys.
-> > 
-> > To make it work kernel only allows merging pages with the same KeyID.
-> > The approach guarantees that the merged page can be read by all users.
+On 12/05/2019 18:16, Michael S. Tsirkin wrote:
+> On Thu, Feb 28, 2019 at 11:04:42AM +0100, Joerg Roedel wrote:
+>> On Wed, Feb 27, 2019 at 08:58:36AM -0500, Michael S. Tsirkin wrote:
+>>> Even though it's not going into 5.1 I feel it's helpful to keep it in
+>>> the vhost tree until the next cycle, it helps make sure unrelated
+>>> changes don't break it.
+>>
+>> It is not going to 5.1, so it shouldn't be in linux-next, no? And when
+>> it is going upstream, it should do so through the iommu tree. If you
+>> keep it separatly in the vhost tree for testing purposes, please make
+>> sure it is not included into your linux-next branch.
+>>
+>> Regards,
+>>
+>> 	Joerg
 > 
-> I can't really parse this description.  Can I suggest replacement text?
+> Joerg, what are we doing with these patches?
+> It was tested in next with no bad effects.
+> I sent an ack - do you want to pick it up?
+> Or have me include it in my pull?
 
-Sure.
+I'll resend the driver for v5.3 with some changes. They should be minor
+but one of the changes (domain bits -> domain range) touches UAPI and
+isn't backward compatible, so it would be better not to merge it this
+time around.
 
--- 
- Kirill A. Shutemov
+Thanks,
+Jean
