@@ -2,118 +2,155 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C92BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5427CC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2921520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF10520578
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="h5zOQzfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfEMKHP (ORCPT
+        id S1728733AbfEMKMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:07:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728701AbfEMKHO (ORCPT
+        Mon, 13 May 2019 06:12:31 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:62958 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbfEMKMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:07:14 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DA2dFK142090
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:07:13 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sf3dsynbj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:07:13 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Mon, 13 May 2019 11:07:10 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 May 2019 11:07:07 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4DA76Kc48758894
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 10:07:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 666B3A405B;
-        Mon, 13 May 2019 10:07:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B01CA4053;
-        Mon, 13 May 2019 10:07:05 +0000 (GMT)
-Received: from [9.124.31.49] (unknown [9.124.31.49])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 May 2019 10:07:04 +0000 (GMT)
-Subject: Re: [PATCH 1/2] perf ioctl: Add check for the sample_period value
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     jolsa@redhat.com, mpe@ellerman.id.au, maddy@linux.vnet.ibm.com,
-        acme@kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190511024217.4013-1-ravi.bangoria@linux.ibm.com>
- <20190513074213.GH2623@hirez.programming.kicks-ass.net>
- <20190513085620.GN2650@hirez.programming.kicks-ass.net>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Mon, 13 May 2019 15:37:04 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 06:12:31 -0400
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4DACNKg031245
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 19:12:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4DACNKg031245
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557742344;
+        bh=ODlBAjHXxiCRJh7AQBv/FHzqUYiFWWcRz+GpxKhGA5A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h5zOQzfCmd1u2QQl0952acDb+JzIQYIxxmZmZBxJmVW2Df2pTpesEwFOmfE4PU0kl
+         cyhpKLJ3Ccjs6bKRSJxQg7651wS6AIawTpjrA772n8NUXZ8GndeeBKcjbaZ2FdqlFv
+         VSXtdN2Ea8AiI2Inq5h1FLsXp7mo99FpBriHI+OkJElPNoNB+8Zu4BJjWdjVNRMrUy
+         KnXw51DwpELDeNFGP11W0VwxnL7zTI/EDyEm1HQHSpi3VZdNTUHdmOl7rcCW3pc7V0
+         C7acs/ltRB80bMXJ4GSvpI9/N3BFRuYGAYpYa9L5Mpa6hv4rKkDx28oa5f01mHlKcT
+         pAyR5Lf9/4tnQ==
+X-Nifty-SrcIP: [209.85.221.173]
+Received: by mail-vk1-f173.google.com with SMTP id o187so3152704vkg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 03:12:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAWMkQUKFTC3F6IaV0L1NnKJgv/PcNCAHgS/NBQtAf22UAfoHNAx
+        kn7ftLP0kB65WOg4fGrBlP4uvhBwTU9EjN+Pwy0=
+X-Google-Smtp-Source: APXvYqw6bacaHxJG1iOv2EVzi86Es0K5+epo1z6muUhdOcfXs2zpwFFO+BV/D+GQAutw46pYQ0Yt0GNOCgvA5rTVcOM=
+X-Received: by 2002:a1f:6011:: with SMTP id u17mr4050525vkb.64.1557742342761;
+ Mon, 13 May 2019 03:12:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190513085620.GN2650@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051310-0012-0000-0000-0000031B1158
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051310-0013-0000-0000-00002153A35B
-Message-Id: <d2d34084-999d-9be2-511e-82625b80aa40@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130072
+References: <CAK7LNAR5j1ygbq9TLqUhbJ+tkMdrtD3BgQoUWZErUrnEoWKYMw@mail.gmail.com>
+ <b5e2a4d9eb49290d6dc3449c90cdf07797b1aba6.camel@perches.com>
+In-Reply-To: <b5e2a4d9eb49290d6dc3449c90cdf07797b1aba6.camel@perches.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 13 May 2019 19:11:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQxsUheo2dHn5E=4ACafcYL9zNubgiVkJkANuZkx2RgpA@mail.gmail.com>
+Message-ID: <CAK7LNAQxsUheo2dHn5E=4ACafcYL9zNubgiVkJkANuZkx2RgpA@mail.gmail.com>
+Subject: Re: [Proposal] end of file checks by checkpatch.pl
+To:     Joe Perches <joe@perches.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Joe,
+
+On Fri, May 10, 2019 at 2:20 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2019-05-10 at 00:27 +0900, Masahiro Yamada wrote:
+> > Hi Joe,
+> >
+> >
+> > Does it make sense to check the following
+> > by checkpatch.pl ?
+> >
+> >
+> > [1] blank line at end of file
+>
+>
+> > [2] no new line at end of file
+>
+> I'm pretty sure checkpatch does one this already.
+> (around line 3175)
+>
+> # check for adding lines without a newline.
+>                 if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/) {
+>                         WARN("MISSING_EOF_NEWLINE",
+>                              "adding a line without newline at end of file\n" . $herecurr);
+>                 }
 
 
-On 5/13/19 2:26 PM, Peter Zijlstra wrote:
-> On Mon, May 13, 2019 at 09:42:13AM +0200, Peter Zijlstra wrote:
->> On Sat, May 11, 2019 at 08:12:16AM +0530, Ravi Bangoria wrote:
->>> Add a check for sample_period value sent from userspace. Negative
->>> value does not make sense. And in powerpc arch code this could cause
->>> a recursive PMI leading to a hang (reported when running perf-fuzzer).
->>>
->>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->>> ---
->>>  kernel/events/core.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index abbd4b3b96c2..e44c90378940 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -5005,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
->>>  	if (perf_event_check_period(event, value))
->>>  		return -EINVAL;
->>>  
->>> +	if (!event->attr.freq && (value & (1ULL << 63)))
->>> +		return -EINVAL;
->>
->> Well, perf_event_attr::sample_period is __u64. Would not be the site
->> using it as signed be the one in error?
-> 
-> You forgot to mention commit: 0819b2e30ccb9, so I guess this just makes
-> it consistent and is fine.
-> 
+I did not know this. Thanks.
 
-Yeah, I was about to reply :)
+Looks like the report depends on the file type.
 
+scripts/checkpatch.pl  -f  arch/sparc/lib/NG4clear_page.S
+scripts/checkpatch.pl  -f  tools/power/cpupower/bench/cpufreq-bench_plot.sh
+
+reported it, but
+
+scripts/checkpatch.pl  -f  drivers/media/dvb-frontends/cxd2880/Kconfig
+scripts/checkpatch.pl  -f  drivers/parport/Makefile
+
+did not.
+
+>
+> > When I apply a patch,
+> > I sometimes see the following warning from 'git am'.
+> >
+> >
+> > Applying: kunit: test: add string_stream a std::stream like string builder
+> > .git/rebase-apply/patch:223: new blank line at EOF.
+> > +
+> >
+> >
+> > I just thought it could be checked
+> > before the patch submission.
+>
+> perhaps:
+> ---
+>  scripts/checkpatch.pl | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 1c421ac42b07..ceb32c584ee5 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3356,6 +3356,12 @@ sub process {
+>                         $last_blank_line = $linenr;
+>                 }
+>
+> +# check the last line isn't blank
+> +               if ($linenr >= $#rawlines && $line =~ /^\+\s*$/) {
+> +                       WARN("LINE_SPACING",
+> +                            "Avoid blank lines at EOF\n" . $herecurr);
+> +               }
+> +
+>  # check for missing blank lines after declarations
+>                 if ($sline =~ /^\+\s+\S/ &&                     #Not at char 1
+>                         # actual declarations
+>
+>
+
+Worked for me.
+(but Makefile, Kconfig were not checked though)
+
+
+Could you commit it ?
+
+Tested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Thanks.
+
+-- 
+Best Regards
+Masahiro Yamada
