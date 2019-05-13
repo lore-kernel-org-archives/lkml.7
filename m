@@ -4,101 +4,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C718C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2F4C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312AC21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8F521019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G5ldiDES"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nhBkFt4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfEMQSk (ORCPT
+        id S1729859AbfEMQWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:18:40 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:45444 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728954AbfEMQSh (ORCPT
+        Mon, 13 May 2019 12:22:12 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:50386 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728381AbfEMQWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:18:37 -0400
-Received: by mail-ua1-f67.google.com with SMTP id n7so5019034uap.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=L3LU3ww7WrkzHMtYsuuf2zQt4k+sdxI7TqmkMgaJQWU=;
-        b=G5ldiDESrOvAWWdLZwcE9A08+emS6Z8k1ss9348TCBOVWo0b+kvZ33MIL8uwQFrWvB
-         NQBx7bOD2QELaIzDyc8VnPKPk1lg5TsWLykqG6uOl/t2SD8cBr3w5RgoO8CN0li4eUrc
-         K4lKdveXJgH9wFsSlk11ljnT2LZTAuYXihltQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=L3LU3ww7WrkzHMtYsuuf2zQt4k+sdxI7TqmkMgaJQWU=;
-        b=oey/y+r3ySFayYQ+OxJquNnIXCpuHeFa/IMU9BKex6crHiqNyijbjZbCsmDmDJ1UnU
-         DKK+Nbqx3kziC/TTBmoAfnmKFD0ie+XWO7qnQ90HC0zKJdR28iVMEPrf4Ut+ThGY7O5r
-         JlFey2mcnM2TaPokwEqtyKFtHlk3mkip3y5vhnD85MROWsN0cxcmIXIHUdHLum/AYazB
-         w++spRknZwkPZMp0QtoS6vGsmZo39qY9XceG2o2fqnfbzau1yb7HA1LFUivVocSVt0dJ
-         fawkJt/Heez/uGlypB8lEnXsw+6f9W2emYGXh7rExKQaQ6y9DQ8svwoZwLJQ4/05I+zd
-         BCvA==
-X-Gm-Message-State: APjAAAWQFuuJyslZMcoG08782lUui1j9ZMxyVdEh7xlx7PPnfzEJsfX3
-        rqCD6QrcqgEIwNC7+NukbpH+cI+ZK30=
-X-Google-Smtp-Source: APXvYqwhLczgLZ30WyCtHCFiwgsEc/9gkqSv6mVJ6nt3K/58QiAZvTDXEhl6YBl6CpdcC4rYskqecg==
-X-Received: by 2002:a9f:3731:: with SMTP id z46mr1773207uad.16.1557764315574;
-        Mon, 13 May 2019 09:18:35 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id v141sm7477090vsc.8.2019.05.13.09.18.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 09:18:34 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id g16so5035576uad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:18:34 -0700 (PDT)
-X-Received: by 2002:ab0:2709:: with SMTP id s9mr13325214uao.21.1557764314196;
- Mon, 13 May 2019 09:18:34 -0700 (PDT)
+        Mon, 13 May 2019 12:22:11 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGJRLm096886;
+        Mon, 13 May 2019 16:21:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=Q1bINLnpf6kvvyhbh9wb20AMsLQSmmPWkmS1SRk8YqI=;
+ b=nhBkFt4TTWkWTnFgnFD71MoII8v8qNZFc6Elm77XUUgHXt3lp0q+2/oYlnroJQfovuZd
+ 7AUooQFDhTilIYxmjomt35bt4cZVDxxdgwpSMW70sZshbKz6Squu1fXsA1G9vv/f5HX6
+ GUWLYDKVlUnNnCTLw0oLk+RAWeJ0kPnHWByjzKFEJScb0qRO7Ka1kYZetAPUcCEbLmkN
+ 2Yivm6DE52Kq/b8YnYYbi/ZdNnrK91hgGkL8L2tlU/iQSMUGLSJ/Oq7IbFs13qTP9Ib+
+ H4dJvl0TnaXAPNrSsalPig97N1VCTTjKUF1rhuJRUxu3tNWO0Zp/0wnmeLwyR8zo5VcO Iw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2130.oracle.com with ESMTP id 2sdkwdgcje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 16:21:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGJZnA118286;
+        Mon, 13 May 2019 16:21:22 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2sdnqj2eqk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 16:21:22 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4DGLLLW011879;
+        Mon, 13 May 2019 16:21:21 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 May 2019 16:21:20 +0000
+Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrXADiujgE6HJ95P_da5OyB05Z5CqR028da50aCUHv4Agg@mail.gmail.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <0ed10cf2-d21f-3247-5b38-4cc1f78e38e1@oracle.com>
+Date:   Mon, 13 May 2019 18:21:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 13 May 2019 09:18:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
-Message-ID: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
-Subject: Problems caused by dm crypt: use WQ_HIGHPRI for the IO and crypt workqueues
-To:     Tim Murray <timmurray@google.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Guenter Roeck <groeck@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALCETrXADiujgE6HJ95P_da5OyB05Z5CqR028da50aCUHv4Agg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=984
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905130111
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-I wanted to jump on the bandwagon of people reporting problems with
-commit a1b89132dc4f ("dm crypt: use WQ_HIGHPRI for the IO and crypt
-workqueues").
-
-Specifically I've been tracking down communication errors when talking
-to our Embedded Controller (EC) over SPI.  I found that communication
-errors happened _much_ more frequently on newer kernels than older
-ones.  Using ftrace I managed to track the problem down to the dm
-crypt patch.  ...and, indeed, reverting that patch gets rid of the
-vast majority of my errors.
-
-If you want to see the ftrace of my high priority worker getting
-blocked for 7.5 ms, you can see:
-
-https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=392715
 
 
-In my case I'm looking at solving my problems by bumping the CrOS EC
-transfers fully up to real time priority.  ...but given that there are
-other reports of problems with the dm-crypt priority (notably I found
-https://bugzilla.kernel.org/show_bug.cgi?id=199857) maybe we should
-also come up with a different solution for dm-crypt?
+On 5/13/19 6:02 PM, Andy Lutomirski wrote:
+> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
+> <alexandre.chartre@oracle.com> wrote:
+>>
+>> The KVM page fault handler handles page fault occurring while using
+>> the KVM address space by switching to the kernel address space and
+>> retrying the access (except if the fault occurs while switching
+>> to the kernel address space). Processing of page faults occurring
+>> while using the kernel address space is unchanged.
+>>
+>> Page fault log is cleared when creating a vm so that page fault
+>> information doesn't persist when qemu is stopped and restarted.
+> 
+> Are you saying that a page fault will just exit isolation?  This
+> completely defeats most of the security, right?  Sure, it still helps
+> with side channels, but not with actual software bugs.
+> 
 
+Yes, page fault exit isolation so that the faulty instruction can be retried
+with the full kernel address space. When exiting isolation, we also want to
+kick the sibling hyperthread and pinned it so that it can't steal secret while
+we use the kernel address page, but that's not implemented in this serie
+(see TODO comment in kvm_isolation_exit() in patch 25 "kvm/isolation:
+implement actual KVM isolation enter/exit").
 
-Thanks!
-
--Doug
+alex.
