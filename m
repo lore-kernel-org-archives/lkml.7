@@ -2,118 +2,104 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7E6C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B47BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 291F3208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D3322084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YyIquQl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbfEMRcl (ORCPT
+        id S1731795AbfEMRdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:32:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42674 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728708AbfEMRck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:32:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8EF1530832E3;
-        Mon, 13 May 2019 17:32:35 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36EDE9CC8;
-        Mon, 13 May 2019 17:32:33 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7495018089CA;
-        Mon, 13 May 2019 17:32:28 +0000 (UTC)
-Date:   Mon, 13 May 2019 13:32:28 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     cohuck@redhat.com, Jan Kara <jack@suse.cz>,
-        KVM list <kvm@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, david <david@fromorbit.com>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        virtualization@lists.linux-foundation.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>, jstaron@google.com,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        jmoyer <jmoyer@redhat.com>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Rik van Riel <riel@surriel.com>,
-        yuval shaia <yuval.shaia@oracle.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        Kevin Wolf <kwolf@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Igor Mammedov <imammedo@redhat.com>
-Message-ID: <116369545.28425569.1557768748009.JavaMail.zimbra@redhat.com>
-In-Reply-To: <2003480558.28042237.1557537797923.JavaMail.zimbra@redhat.com>
-References: <20190510155202.14737-1-pagupta@redhat.com> <20190510155202.14737-4-pagupta@redhat.com> <CAPcyv4hbVNRFSyS2CTbmO88uhnbeH4eiukAng2cxgbDzLfizwg@mail.gmail.com> <864186878.28040999.1557535549792.JavaMail.zimbra@redhat.com> <CAPcyv4gL3ODfOr52Ztgq7BM4gVf1cih6cj0271gcpVvpi9aFSA@mail.gmail.com> <2003480558.28042237.1557537797923.JavaMail.zimbra@redhat.com>
-Subject: Re: [Qemu-devel] [PATCH v8 3/6] libnvdimm: add dax_dev sync flag
+        Mon, 13 May 2019 13:33:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40826 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729340AbfEMRdN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:33:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d31so7112846pgl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:33:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QD95B1iz0eiAT5zjhUHU5qaacoyWblK1gxHUrCAprjc=;
+        b=YyIquQl3x6IThms9Tne1idd1tJewYnFcxNEiCS5L0iYrMWAfgvCXGyB3dxX/C3c2iQ
+         YuoTamSiPQv5uwf73PrXm6zQk7Fyp0RrD6HKxI8EWG5ELtP1PXRVYF9G6ZPsszJe0Gti
+         mgSsNeaoLS4LGAZYuhG+6o3aj23LPDw3IJdt4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QD95B1iz0eiAT5zjhUHU5qaacoyWblK1gxHUrCAprjc=;
+        b=XFBZdvB8egYhM1TqUy/OZBNakEoYS+hZFo+AOASSaemwc3RamIl3pDxpynr3QFSn4A
+         X7zFCZLf+SVrrqbfeF6ejw6d3jnmdt3vDSQY2VSvtW70c3YBqGnuy7oVlN3lEjmAGvnj
+         oftLfPuSDd9Ti8BYdedf3kCR7xZUqbx5C13Qadd8po7P4KJRbpbK3/PXX8eByB/xZduv
+         jOIrPuI6kYh39/oKbGPQ6nhGqeEJxiaRJaR2+o/AvLmvUPgOWEzProM0GgxotTs2Jflz
+         Wrt5y5caKqCQvwHVwHdil7GKkPMDFX0Et0xXsXlnlK9o8N7nllmlHsbttbMjQzeGTU8j
+         rwqw==
+X-Gm-Message-State: APjAAAWqfQ7rKTCmKMZGWBWEB92oJFtmhzjcasUBWPvF0iFmxgswlEwC
+        EOqxdYn/YRb9brTNvP7Gi0CSuw==
+X-Google-Smtp-Source: APXvYqzfpVOja3frZMihnLcS65QApUeHpT/fme4zTNjWUqyvv9YKEY52RPJnjD+DGynB0+V9+u69eg==
+X-Received: by 2002:a62:b508:: with SMTP id y8mr35103187pfe.113.1557768793349;
+        Mon, 13 May 2019 10:33:13 -0700 (PDT)
+Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id 129sm18301755pff.140.2019.05.13.10.33.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 10:33:12 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:33:10 -0700
+From:   Brian Norris <briannorris@chromium.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Wei-Ning Huang <wnhuang@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/5] firmware: google: Add a module_coreboot_driver()
+ macro and use it
+Message-ID: <20190513173308.GA222195@google.com>
+References: <20190510180151.115254-1-swboyd@chromium.org>
+ <20190510180151.115254-2-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.16.148, 10.4.196.23, 10.5.101.130, 10.4.195.13]
-Thread-Topic: libnvdimm: add dax_dev sync flag
-Thread-Index: ptJfczfofLn7Sapjrtn0VT/vVA1TgWbBtP+u
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 13 May 2019 17:32:40 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510180151.115254-2-swboyd@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 10, 2019 at 11:01:47AM -0700, Stephen Boyd wrote:
+> --- a/drivers/firmware/google/coreboot_table.h
+> +++ b/drivers/firmware/google/coreboot_table.h
 
-Hi Dan,
+> @@ -91,4 +92,13 @@ int coreboot_driver_register(struct coreboot_driver *driver);
+>  /* Unregister a driver that uses the data from a coreboot table. */
+>  void coreboot_driver_unregister(struct coreboot_driver *driver);
+>  
+> +/* module_coreboot_driver() - Helper macro for drivers that don't do
 
-While testing device mapper with DAX, I faced a bug with the commit:
+Have you been writing too much net/ code recently? :) Or just copying
+from platform_device.h I guess. Oh well.
 
-commit ad428cdb525a97d15c0349fdc80f3d58befb50df
-Author: Dan Williams <dan.j.williams@intel.com>
-Date:   Wed Feb 20 21:12:50 2019 -0800
+Series looks fine to me.
 
-When I reverted the condition to old code[1] it worked for me. I 
-am thinking when we map two different devices (e.g with device mapper), will 
-start & end pfn still point to same pgmap? Or there is something else which
-I am missing here. 
+Brian
 
-Note: I tested only EXT4.
-
-[1]
-
--               if (pgmap && pgmap->type == MEMORY_DEVICE_FS_DAX)
-+               end_pgmap = get_dev_pagemap(pfn_t_to_pfn(end_pfn), NULL);
-+               if (pgmap && pgmap == end_pgmap && pgmap->type == MEMORY_DEVICE_FS_DAX
-+                               && pfn_t_to_page(pfn)->pgmap == pgmap
-+                               && pfn_t_to_page(end_pfn)->pgmap == pgmap
-+                               && pfn_t_to_pfn(pfn) == PHYS_PFN(__pa(kaddr))
-+                               && pfn_t_to_pfn(end_pfn) == PHYS_PFN(__pa(end_kaddr)))
-                        dax_enabled = true;
-                put_dev_pagemap(pgmap);
-
-Thanks,
-Pankaj
-
-
-
-
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces module_init() and module_exit()
+> + */
+> +#define module_coreboot_driver(__coreboot_driver) \
+> +	module_driver(__coreboot_driver, coreboot_driver_register, \
+> +			coreboot_driver_unregister)
+> +
+>  #endif /* __COREBOOT_TABLE_H */
