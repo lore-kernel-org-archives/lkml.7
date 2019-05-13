@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093BEC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A56CC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB99C20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 522CE21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:44:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ql2hmnxF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rU9D0uCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfEMNoK (ORCPT
+        id S1729813AbfEMNoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:44:10 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36766 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729751AbfEMNoJ (ORCPT
+        Mon, 13 May 2019 09:44:14 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36772 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729751AbfEMNoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:44:09 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a3so6819448pgb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:44:08 -0700 (PDT)
+        Mon, 13 May 2019 09:44:12 -0400
+Received: by mail-pg1-f196.google.com with SMTP id a3so6819516pgb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:44:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PQAI6siW4cNO+sOH4gruinsFaRFo34gNIcs15+r5RiM=;
-        b=ql2hmnxF9nJL0x8AgT95ZpQIxKW1hydgHFKjBe+CmdJjYztyN4k0pX/KfJst2CQptn
-         vvjH/ah7nWDZYWTyERZA7NMSwcPwiD51DZnWj//nrd5UdolSqRp9IB0GeXZ/vrldSM8q
-         lShhOkJceU1Dkqv4bKDLqaSkE25tcX96o9UWSgk9Y8ybhFzd6nTneUw/5xZ08TRcnY8W
-         jCFnEEQRDBBpG/w8s7cN1SoVkBpe/Mro2eToylKQ3LexaTx9iIHd7tCmUid6xv2JxSrI
-         pdZ7RoIdi4i5rFZLoccOE+BcDycMlcq6yCJEL7T8iv8CBamwJXB3aVmCmPeI1fk5KRnF
-         YLDg==
+        bh=Ch03VXzeM5wR7IvoDkjPQkr516mD30ugqwOM7HBwGLk=;
+        b=rU9D0uCGLPQ8jUT4uOu7iMc2xEQ8ieKEojEe/bD3t9pk0WoQ4GEmnmS302k7Y97eP7
+         S7ttTZNDaSpgf1HyaRZNcR6sk3PfHJDASjqK7NeWMN6j9LLEXwjoG4wQ1ozq5SMI8Uu4
+         ri/an63dKDHGsRbh4Njzrtl0sxXBnf5aKfcgmzWbukBqPU+dISKhZ3RaUnkvtR8ADToq
+         WljxWXUwNE/wHG/1RnLwTHO3jxK+6SgqQ9kQGTAwwz8epCd0cG496BKe428/MvqaiPh3
+         nrCODLhqIP0Aud/3f2f00PtL5Ec7NW6J0nCWkyPstKkG2ZlTXGhk2PT8eL882CvUB4pG
+         mnYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=PQAI6siW4cNO+sOH4gruinsFaRFo34gNIcs15+r5RiM=;
-        b=PyzFpIF5MvO/S4r+VwpAveztt7/A4+s+qxZDnsI6BKkUeU4pM4eJqMo6SXFLDp+eVk
-         kH/IXfpUOvYkExjKBSkwGE8wUtynO7R012JO6VNNy+Tai0RrcaRPd7SU08Y+QKSt1Wi9
-         Ljad5tI70NORaSPtug0pNm8TPh55UxLVQk34Rf8N9AfNaqhTEo4uqLlUQ1j9CuD6KD6c
-         3a4PQXO1eeb9VCemXUgOlIXP/lQtza0RQW8gmtKd4Z452F4YvbHIdq9CBnxpBI4O+U+N
-         dtv0EkKvWGAdJM9bpcSvxtufF7q128KxJZfD69KUXe7yek99sTKo9zzdyyA4BGBm1Vmj
-         KDHw==
-X-Gm-Message-State: APjAAAUmF+3tR/ZZmHavSmN2S1JzNjwfW8wsACAIOk5E2VqCGXJ+X+zO
-        zCTvwwx0emZhGLi2CaMW+fY=
-X-Google-Smtp-Source: APXvYqyKHHr0N6K5Comgq92EojomOyIprUVhZw5C9a8fuSVVDqMnJc/TYYl4imO0bVUNPgjcwhokSw==
-X-Received: by 2002:a63:fb45:: with SMTP id w5mr31297379pgj.397.1557755048248;
-        Mon, 13 May 2019 06:44:08 -0700 (PDT)
+        bh=Ch03VXzeM5wR7IvoDkjPQkr516mD30ugqwOM7HBwGLk=;
+        b=g6ZdyqS39pCR0ndA3Ji/EFJroX5ohW5MsHEvSXKtznChLcKFGqohN64p2M5Fho+84/
+         /en1zbNE4A2qwshBQmouTYVKLUm73HVjwjcSJ9bkIKQUcGSUtvFy6MFUaYHEe5aAg8Vc
+         T6vxHDKG9qBvzJpkUgvE8JZR+2f4msfq0YV9guVdEPyk/pP9Ya4LN8Rq4PpWjmvLyMag
+         t9b7KYeDnEAk1EkHfMfdc7xohXTQKHtNIWJN3DWDsXjRHIjp0ucydfkYMy3TvmGLDnVU
+         lN32epzqLLDsp8QzWQOuDemTSRAUOyEeNNDUgt7d8eRNKnTHzwuSe9ZTwiyKJtrnY8Al
+         1X/g==
+X-Gm-Message-State: APjAAAWwCvjhkwLNUrtx7yNaPhSifA2LIKPVaKvwD3yLGrf/fnNWSqEi
+        OrvoEkGNi6K/Z2ASU4u1Le8=
+X-Google-Smtp-Source: APXvYqwReyA9uPHUbBx0Y9Zt+qXQdsrLJjgII76mK7auTf8pHcO4KhUorp4HXYgbCgeVz/peUZonEQ==
+X-Received: by 2002:a63:610f:: with SMTP id v15mr31517713pgb.128.1557755051824;
+        Mon, 13 May 2019 06:44:11 -0700 (PDT)
 Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.72.152])
-        by smtp.gmail.com with ESMTPSA id e10sm10874261pfm.137.2019.05.13.06.44.04
+        by smtp.gmail.com with ESMTPSA id e10sm10874261pfm.137.2019.05.13.06.44.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 06:44:07 -0700 (PDT)
+        Mon, 13 May 2019 06:44:11 -0700 (PDT)
 From:   Vandana BN <bnvandana@gmail.com>
 To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
@@ -62,9 +62,9 @@ To:     dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
 Cc:     skhan@linuxfoundation.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH v4 6/8] Staging: kpc2000: kpc_dma: Resolve warning Missing blank line after declarations & labels not to be indented.
-Date:   Mon, 13 May 2019 19:13:25 +0530
-Message-Id: <20190513134327.26320-6-bnvandana@gmail.com>
+Subject: [PATCH v4 7/8] Staging: kpc2000: kpc_dma: Resolve warning to use __func__ insted of funtion name reported by checkpatch.
+Date:   Mon, 13 May 2019 19:13:26 +0530
+Message-Id: <20190513134327.26320-7-bnvandana@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513134327.26320-1-bnvandana@gmail.com>
 References: <20190510193833.1051-1-bnvandana@gmail.com>
@@ -74,12 +74,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch resloves below warnings reported by checkpath in kpc_dma
-WARNING: Missing a blank line after declarations
-WARNING: labels should not be indented
-CHECK: Please don't use multiple blank lines
-CHECK: Please use a blank line after function/struct/union/enum
-declarations
+This patch resolves warnings to use __func__ insted of funtion name.
+WARNING: Prefer using '"%s...", __func__' to using 'setup_dma_engine', this function's name, in a string
 
 Signed-off-by: Vandana BN <bnvandana@gmail.com>
 ---
@@ -87,303 +83,236 @@ v2 - split changes to multiple patches
 v3 - edit commit message, subject line
 v4 - edit commit message
 
- drivers/staging/kpc2000/kpc_dma/dma.c            |  8 +++++---
- drivers/staging/kpc2000/kpc_dma/fileops.c        | 11 ++++++++++-
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c | 15 ++++++++-------
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h |  8 ++++++--
- 4 files changed, 29 insertions(+), 13 deletions(-)
+ drivers/staging/kpc2000/kpc_dma/dma.c         |  6 ++---
+ drivers/staging/kpc2000/kpc_dma/fileops.c     | 26 +++++++++----------
+ .../staging/kpc2000/kpc_dma/kpc_dma_driver.c  | 18 ++++++-------
+ 3 files changed, 25 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc_dma/dma.c b/drivers/staging/kpc2000/kpc_dma/dma.c
-index 2053316009bc..ac842fa38c64 100644
+index ac842fa38c64..13687ab3e9c7 100644
 --- a/drivers/staging/kpc2000/kpc_dma/dma.c
 +++ b/drivers/staging/kpc2000/kpc_dma/dma.c
-@@ -27,6 +27,7 @@ void  ndd_irq_worker(struct work_struct *ws)
- {
- 	struct kpc_dma_descriptor *cur;
- 	struct kpc_dma_device *eng = container_of(ws, struct kpc_dma_device, irq_work);
-+
- 	lock_engine(eng);
- 
- 	if (GetEngineCompletePtr(eng) == 0)
-@@ -67,7 +68,6 @@ void  ndd_irq_worker(struct work_struct *ws)
- 	unlock_engine(eng);
- }
- 
--
- /**********  DMA Engine Init/Teardown  **********/
- void  start_dma_engine(struct kpc_dma_device *eng)
- {
-@@ -91,6 +91,7 @@ int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
- 	dma_addr_t head_handle;
- 	unsigned int i;
- 	int rv;
-+
- 	dev_dbg(&eng->pldev->dev, "Setting up DMA engine [%p]\n", eng);
+@@ -96,7 +96,7 @@ int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
  
  	caps = GetEngineCapabilities(eng);
-@@ -159,6 +160,7 @@ int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
- void  stop_dma_engine(struct kpc_dma_device *eng)
- {
- 	unsigned long timeout;
-+
- 	dev_dbg(&eng->pldev->dev, "Destroying DMA engine [%p]\n", eng);
  
- 	// Disable the descriptor engine
-@@ -220,6 +222,7 @@ void  destroy_dma_engine(struct kpc_dma_device *eng)
- 	for (i = 0 ; i < eng->desc_pool_cnt ; i++) {
- 		struct kpc_dma_descriptor *next = cur->Next;
- 		dma_addr_t next_handle = cur->DescNextDescPtr;
-+
- 		dma_pool_free(eng->desc_pool, cur, cur_handle);
- 		cur_handle = next_handle;
- 		cur = next;
-@@ -230,13 +233,12 @@ void  destroy_dma_engine(struct kpc_dma_device *eng)
- 	free_irq(eng->irq, eng);
- }
+-	if (WARN(!(caps & ENG_CAP_PRESENT), "setup_dma_engine() called for DMA Engine at %p which isn't present in hardware!\n", eng))
++	if (WARN(!(caps & ENG_CAP_PRESENT), "%s() called for DMA Engine at %p which isn't present in hardware!\n", __func__, eng))
+ 		return -ENXIO;
  
--
--
- /**********  Helper Functions  **********/
- int  count_descriptors_available(struct kpc_dma_device *eng)
- {
- 	u32 count = 0;
- 	struct kpc_dma_descriptor *cur = eng->desc_next;
-+
- 	while (cur != eng->desc_completed) {
- 		BUG_ON(cur == NULL);
- 		count++;
+ 	if (caps & ENG_CAP_DIRECTION) {
+@@ -110,7 +110,7 @@ int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
+ 
+ 	eng->desc_pool_first = dma_pool_alloc(eng->desc_pool, GFP_KERNEL | GFP_DMA, &head_handle);
+ 	if (!eng->desc_pool_first) {
+-		dev_err(&eng->pldev->dev, "setup_dma_engine: couldn't allocate desc_pool_first!\n");
++		dev_err(&eng->pldev->dev, "%s: couldn't allocate desc_pool_first!\n", __func__);
+ 		dma_pool_destroy(eng->desc_pool);
+ 		return -ENOMEM;
+ 	}
+@@ -146,7 +146,7 @@ int  setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt)
+ 	// Grab IRQ line
+ 	rv = request_irq(eng->irq, ndd_irq_handler, IRQF_SHARED, KP_DRIVER_NAME_DMA_CONTROLLER, eng);
+ 	if (rv) {
+-		dev_err(&eng->pldev->dev, "setup_dma_engine: failed to request_irq: %d\n", rv);
++		dev_err(&eng->pldev->dev, "%s: failed to request_irq: %d\n", __func__, rv);
+ 		return rv;
+ 	}
+ 
 diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index c09147aaa4ef..13c0e532437e 100644
+index 13c0e532437e..c21672ea2b4f 100644
 --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
 +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -21,6 +21,7 @@ unsigned int  count_pages(unsigned long iov_base, size_t iov_len)
- {
- 	unsigned long first = (iov_base             & PAGE_MASK) >> PAGE_SHIFT;
- 	unsigned long last  = ((iov_base+iov_len-1) & PAGE_MASK) >> PAGE_SHIFT;
-+
- 	return last - first + 1;
+@@ -57,7 +57,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
+ 	ldev = priv->ldev;
+ 	BUG_ON(ldev == NULL);
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", priv, kcb, (void *)iov_base, iov_len, ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", __func__, priv, kcb, (void *)iov_base, iov_len, ldev);
+ 
+ 	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
+ 	if (!acd) {
+@@ -209,7 +209,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
+ 	kfree(acd->user_pages);
+  err_alloc_userpages:
+ 	kfree(acd);
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer returning with error %ld\n", rv);
++	dev_dbg(&priv->ldev->pldev->dev, "%s returning with error %ld\n", __func__, rv);
+ 	return rv;
  }
  
-@@ -28,6 +29,7 @@ static inline
- unsigned int  count_parts_for_sge(struct scatterlist *sg)
- {
- 	unsigned int sg_length = sg_dma_len(sg);
-+
- 	sg_length += (0x80000-1);
- 	return (sg_length / 0x80000);
- }
-@@ -262,6 +264,7 @@ int  kpc_dma_open(struct inode *inode, struct file *filp)
- {
- 	struct dev_private_data *priv;
- 	struct kpc_dma_device *ldev = kpc_dma_lookup_device(iminor(inode));
-+
- 	if (ldev == NULL)
- 		return -ENODEV;
+@@ -223,7 +223,7 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
+ 	BUG_ON(acd->ldev == NULL);
+ 	BUG_ON(acd->ldev->pldev == NULL);
  
-@@ -287,6 +290,7 @@ int  kpc_dma_close(struct inode *inode, struct file *filp)
- 	struct kpc_dma_descriptor *cur;
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
- 	struct kpc_dma_device *eng = priv->ldev;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_close(inode = [%p], filp = [%p]) priv = [%p], ldev = [%p]\n", inode, filp, priv, priv->ldev);
+-	dev_dbg(&acd->ldev->pldev->dev, "transfer_complete_cb(acd = [%p])\n", acd);
++	dev_dbg(&acd->ldev->pldev->dev, "%s(acd = [%p])\n", __func__, acd);
  
- 	lock_engine(eng);
-@@ -321,6 +325,7 @@ static
- int  kpc_dma_aio_cancel(struct kiocb *kcb)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_cancel(kcb = [%p]) priv = [%p], ldev = [%p]\n", kcb, priv, priv->ldev);
+ 	for (i = 0 ; i < acd->page_count ; i++) {
+ 		if (!PageReserved(acd->user_pages[i])) {
+@@ -280,7 +280,7 @@ int  kpc_dma_open(struct inode *inode, struct file *filp)
+ 	priv->ldev = ldev;
+ 	filp->private_data = priv;
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_open(inode = [%p], filp = [%p]) priv = [%p] ldev = [%p]\n", inode, filp, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(inode = [%p], filp = [%p]) priv = [%p] ldev = [%p]\n", __func__, inode, filp, priv, priv->ldev);
  	return 0;
  }
-@@ -329,6 +334,7 @@ static
- ssize_t   kpc_dma_aio_read(struct kiocb *kcb, const struct iovec *iov, unsigned long iov_count, loff_t pos)
+ 
+@@ -291,7 +291,7 @@ int  kpc_dma_close(struct inode *inode, struct file *filp)
+ 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
+ 	struct kpc_dma_device *eng = priv->ldev;
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_close(inode = [%p], filp = [%p]) priv = [%p], ldev = [%p]\n", inode, filp, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(inode = [%p], filp = [%p]) priv = [%p], ldev = [%p]\n", __func__, inode, filp, priv, priv->ldev);
+ 
+ 	lock_engine(eng);
+ 
+@@ -326,7 +326,7 @@ int  kpc_dma_aio_cancel(struct kiocb *kcb)
  {
  	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_read(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
  
- 	if (priv->ldev->dir != DMA_FROM_DEVICE)
-@@ -348,6 +354,7 @@ static
- ssize_t  kpc_dma_aio_write(struct kiocb *kcb, const struct iovec *iov, unsigned long iov_count, loff_t pos)
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_cancel(kcb = [%p]) priv = [%p], ldev = [%p]\n", kcb, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p]) priv = [%p], ldev = [%p]\n", __func__, kcb, priv, priv->ldev);
+ 	return 0;
+ }
+ 
+@@ -335,13 +335,13 @@ ssize_t   kpc_dma_aio_read(struct kiocb *kcb, const struct iovec *iov, unsigned
  {
  	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_write(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
  
- 	if (priv->ldev->dir != DMA_TO_DEVICE)
-@@ -368,6 +375,7 @@ static
- ssize_t  kpc_dma_read(struct file *filp,       char __user *user_buf, size_t count, loff_t *ppos)
- {
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_read(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_read(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", __func__, kcb, iov, iov_count, pos, priv, priv->ldev);
  
  	if (priv->ldev->dir != DMA_FROM_DEVICE)
-@@ -380,6 +388,7 @@ static
- ssize_t  kpc_dma_write(struct file *filp, const char __user *user_buf, size_t count, loff_t *ppos)
+ 		return -EMEDIUMTYPE;
+ 
+ 	if (iov_count != 1) {
+-		dev_err(&priv->ldev->pldev->dev, "kpc_dma_aio_read() called with iov_count > 1!\n");
++		dev_err(&priv->ldev->pldev->dev, "%s() called with iov_count > 1!\n", __func__);
+ 		return -EFAULT;
+ 	}
+ 
+@@ -355,13 +355,13 @@ ssize_t  kpc_dma_aio_write(struct kiocb *kcb, const struct iovec *iov, unsigned
  {
- 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_write(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
+ 	struct dev_private_data *priv = (struct dev_private_data *)kcb->ki_filp->private_data;
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_aio_write(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", kcb, iov, iov_count, pos, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(kcb = [%p], iov = [%p], iov_count = %ld, pos = %lld) priv = [%p], ldev = [%p]\n", __func__, kcb, iov, iov_count, pos, priv, priv->ldev);
  
  	if (priv->ldev->dir != DMA_TO_DEVICE)
-@@ -392,6 +401,7 @@ static
- long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioctl_param)
+ 		return -EMEDIUMTYPE;
+ 
+ 	if (iov_count != 1) {
+-		dev_err(&priv->ldev->pldev->dev, "kpc_dma_aio_write() called with iov_count > 1!\n");
++		dev_err(&priv->ldev->pldev->dev, "%s() called with iov_count > 1!\n", __func__);
+ 		return -EFAULT;
+ 	}
+ 
+@@ -376,7 +376,7 @@ ssize_t  kpc_dma_read(struct file *filp,       char __user *user_buf, size_t cou
  {
  	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
-+
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_ioctl(filp = [%p], ioctl_num = 0x%x, ioctl_param = 0x%lx) priv = [%p], ldev = [%p]\n", filp, ioctl_num, ioctl_param, priv, priv->ldev);
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_read(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", __func__, filp, user_buf, count, ppos, priv, priv->ldev);
+ 
+ 	if (priv->ldev->dir != DMA_FROM_DEVICE)
+ 		return -EMEDIUMTYPE;
+@@ -389,7 +389,7 @@ ssize_t  kpc_dma_write(struct file *filp, const char __user *user_buf, size_t co
+ {
+ 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_write(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", filp, user_buf, count, ppos, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], user_buf = [%p], count = %zu, ppos = [%p]) priv = [%p], ldev = [%p]\n", __func__, filp, user_buf, count, ppos, priv, priv->ldev);
+ 
+ 	if (priv->ldev->dir != DMA_TO_DEVICE)
+ 		return -EMEDIUMTYPE;
+@@ -402,7 +402,7 @@ long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioc
+ {
+ 	struct dev_private_data *priv = (struct dev_private_data *)filp->private_data;
+ 
+-	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_ioctl(filp = [%p], ioctl_num = 0x%x, ioctl_param = 0x%lx) priv = [%p], ldev = [%p]\n", filp, ioctl_num, ioctl_param, priv, priv->ldev);
++	dev_dbg(&priv->ldev->pldev->dev, "%s(filp = [%p], ioctl_num = 0x%x, ioctl_param = 0x%lx) priv = [%p], ldev = [%p]\n", __func__, filp, ioctl_num, ioctl_param, priv, priv->ldev);
  
  	switch (ioctl_num) {
-@@ -408,7 +418,6 @@ long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioc
- 	return -ENOTTY;
- }
- 
--
- struct file_operations  kpc_dma_fops = {
- 	.owner      = THIS_MODULE,
- 	.open           = kpc_dma_open,
+ 	case KND_IOCTL_SET_CARD_ADDR:
 diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-index e996ced77bd6..135428e62f8e 100644
+index 135428e62f8e..cda057569163 100644
 --- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
 +++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
-@@ -19,11 +19,11 @@ static DEFINE_MUTEX(kpc_dma_mtx);
- static int assigned_major_num;
- static LIST_HEAD(kpc_dma_list);
- 
--
- /**********  kpc_dma_list list management  **********/
- struct kpc_dma_device *kpc_dma_lookup_device(int minor)
- {
- 	struct kpc_dma_device *c;
-+
- 	mutex_lock(&kpc_dma_mtx);
- 	list_for_each_entry(c, &kpc_dma_list, list) {
- 		if (c->pldev->id == minor) {
-@@ -31,7 +31,7 @@ struct kpc_dma_device *kpc_dma_lookup_device(int minor)
- 		}
- 	}
- 	c = NULL; // not-found case
--  out:
-+out:
- 	mutex_unlock(&kpc_dma_mtx);
- 	return c;
- }
-@@ -55,6 +55,7 @@ static ssize_t  show_engine_regs(struct device *dev, struct device_attribute *at
- {
- 	struct kpc_dma_device *ldev;
- 	struct platform_device *pldev = to_platform_device(dev);
-+
- 	if (!pldev)
- 		return 0;
- 	ldev = platform_get_drvdata(pldev);
-@@ -89,7 +90,6 @@ static const struct attribute *ndd_attr_list[] = {
- 
- struct class *kpc_dma_class;
- 
--
- /**********  Platform Driver Functions  **********/
- static
- int  kpc_dma_probe(struct platform_device *pldev)
-@@ -99,6 +99,7 @@ int  kpc_dma_probe(struct platform_device *pldev)
- 	dev_t dev;
- 
+@@ -101,12 +101,12 @@ int  kpc_dma_probe(struct platform_device *pldev)
  	struct kpc_dma_device *ldev = kzalloc(sizeof(struct kpc_dma_device), GFP_KERNEL);
-+
+ 
  	if (!ldev) {
- 		dev_err(&pldev->dev, "kpc_dma_probe: unable to kzalloc space for kpc_dma_device\n");
+-		dev_err(&pldev->dev, "kpc_dma_probe: unable to kzalloc space for kpc_dma_device\n");
++		dev_err(&pldev->dev, "%s: unable to kzalloc space for kpc_dma_device\n", __func__);
  		rv = -ENOMEM;
-@@ -178,6 +179,7 @@ static
- int  kpc_dma_remove(struct platform_device *pldev)
- {
- 	struct kpc_dma_device *ldev = platform_get_drvdata(pldev);
-+
+ 		goto err_rv;
+ 	}
+ 
+-	dev_dbg(&pldev->dev, "kpc_dma_probe(pldev = [%p]) ldev = [%p]\n", pldev, ldev);
++	dev_dbg(&pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
+ 
+ 	INIT_LIST_HEAD(&ldev->list);
+ 
+@@ -120,20 +120,20 @@ int  kpc_dma_probe(struct platform_device *pldev)
+ 	// Get Engine regs resource
+ 	r = platform_get_resource(pldev, IORESOURCE_MEM, 0);
+ 	if (!r) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: didn't get the engine regs resource!\n");
++		dev_err(&ldev->pldev->dev, "%s: didn't get the engine regs resource!\n", __func__);
+ 		rv = -ENXIO;
+ 		goto err_kfree;
+ 	}
+ 	ldev->eng_regs = ioremap_nocache(r->start, resource_size(r));
+ 	if (!ldev->eng_regs) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: failed to ioremap engine regs!\n");
++		dev_err(&ldev->pldev->dev, "%s: failed to ioremap engine regs!\n", __func__);
+ 		rv = -ENXIO;
+ 		goto err_kfree;
+ 	}
+ 
+ 	r = platform_get_resource(pldev, IORESOURCE_IRQ, 0);
+ 	if (!r) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: didn't get the IRQ resource!\n");
++		dev_err(&ldev->pldev->dev, "%s: didn't get the IRQ resource!\n", __func__);
+ 		rv = -ENXIO;
+ 		goto err_kfree;
+ 	}
+@@ -143,21 +143,21 @@ int  kpc_dma_probe(struct platform_device *pldev)
+ 	dev = MKDEV(assigned_major_num, pldev->id);
+ 	ldev->kpc_dma_dev = device_create(kpc_dma_class, &pldev->dev, dev, ldev, "kpc_dma%d", pldev->id);
+ 	if (IS_ERR(ldev->kpc_dma_dev)) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: device_create failed: %d\n", rv);
++		dev_err(&ldev->pldev->dev, "%s: device_create failed: %d\n", __func__, rv);
+ 		goto err_kfree;
+ 	}
+ 
+ 	// Setup the DMA engine
+ 	rv = setup_dma_engine(ldev, 30);
+ 	if (rv) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: failed to setup_dma_engine: %d\n", rv);
++		dev_err(&ldev->pldev->dev, "%s: failed to setup_dma_engine: %d\n", __func__, rv);
+ 		goto err_misc_dereg;
+ 	}
+ 
+ 	// Setup the sysfs files
+ 	rv = sysfs_create_files(&(ldev->pldev->dev.kobj), ndd_attr_list);
+ 	if (rv) {
+-		dev_err(&ldev->pldev->dev, "kpc_dma_probe: Failed to add sysfs files: %d\n", rv);
++		dev_err(&ldev->pldev->dev, "%s: Failed to add sysfs files: %d\n", __func__, rv);
+ 		goto err_destroy_eng;
+ 	}
+ 
+@@ -183,7 +183,7 @@ int  kpc_dma_remove(struct platform_device *pldev)
  	if (!ldev)
  		return -ENXIO;
  
-@@ -193,7 +195,6 @@ int  kpc_dma_remove(struct platform_device *pldev)
- 	return 0;
- }
+-	dev_dbg(&ldev->pldev->dev, "kpc_dma_remove(pldev = [%p]) ldev = [%p]\n", pldev, ldev);
++	dev_dbg(&ldev->pldev->dev, "%s(pldev = [%p]) ldev = [%p]\n", __func__, pldev, ldev);
  
--
- /**********  Driver Functions  **********/
- struct platform_driver kpc_dma_plat_driver_i = {
- 	.probe        = kpc_dma_probe,
-@@ -231,11 +232,11 @@ int __init kpc_dma_driver_init(void)
- 
- 	return err;
- 
--  fail_platdriver_register:
-+fail_platdriver_register:
- 	class_destroy(kpc_dma_class);
--  fail_class_create:
-+fail_class_create:
- 	__unregister_chrdev(KPC_DMA_CHAR_MAJOR, 0, KPC_DMA_NUM_MINORS, "kpc_dma");
--  fail_chrdev_register:
-+fail_chrdev_register:
- 	return err;
- }
- module_init(kpc_dma_driver_init);
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-index 8101601736a2..cf781940ac1b 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-@@ -18,7 +18,6 @@
- #include <linux/bitops.h>
- #include "../kpc.h"
- 
--
- struct kp2000_device;
- struct kpc_dma_device {
- 	struct list_head            list;
-@@ -157,15 +156,18 @@ void  WriteEngineControl(struct kpc_dma_device *eng, u32 value)
- {
- 	writel(value, eng->eng_regs + 1);
- }
-+
- static inline
- u32  GetEngineControl(struct kpc_dma_device *eng)
- {
- 	return readl(eng->eng_regs + 1);
- }
-+
- static inline
- void  SetClearEngineControl(struct kpc_dma_device *eng, u32 set_bits, u32 clear_bits)
- {
- 	u32 val = GetEngineControl(eng);
-+
- 	val |= set_bits;
- 	val &= ~clear_bits;
- 	WriteEngineControl(eng, val);
-@@ -176,16 +178,19 @@ void  SetEngineNextPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor *de
- {
- 	writel(desc->MyDMAAddr, eng->eng_regs + 2);
- }
-+
- static inline
- void  SetEngineSWPtr(struct kpc_dma_device *eng, struct kpc_dma_descriptor *desc)
- {
- 	writel(desc->MyDMAAddr, eng->eng_regs + 3);
- }
-+
- static inline
- void  ClearEngineCompletePtr(struct kpc_dma_device *eng)
- {
- 	writel(0, eng->eng_regs + 4);
- }
-+
- static inline
- u32  GetEngineCompletePtr(struct kpc_dma_device *eng)
- {
-@@ -206,7 +211,6 @@ void  unlock_engine(struct kpc_dma_device *eng)
- 	mutex_unlock(&eng->sem);
- }
- 
--
- /// Shared Functions
- void  start_dma_engine(struct kpc_dma_device *eng);
- int   setup_dma_engine(struct kpc_dma_device *eng, u32 desc_cnt);
+ 	lock_engine(ldev);
+ 	sysfs_remove_files(&(ldev->pldev->dev.kobj), ndd_attr_list);
 -- 
 2.17.1
 
