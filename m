@@ -2,176 +2,144 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B9AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AF0C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C89A20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QL/DqE5C";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Pe9G4XEE"
+	by mail.kernel.org (Postfix) with ESMTP id AA17220818
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557761030;
+	bh=WKvZPYcqB/75q+K7CyUjLYml1rF+NViq8uYLF2Ytfeo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0w8xoGCKHNnurownH/wREq7153ugHLEU41wrp1RjsAEg3a94+2GUC8nbrSPxq94xm
+	 tzR5ZUlw44ZR2dY2FqaOFVbA6gZE7VDlHZ1TaokpLlsmaQ3q+YlDz8qgLgOnf4lCbb
+	 TXrvYJPu8UwDkMxIyi56LMvufRt1+Owi35hQSM7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfEMPXh (ORCPT
+        id S1729662AbfEMPXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:23:37 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:23602 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbfEMPXh (ORCPT
+        Mon, 13 May 2019 11:23:49 -0400
+Received: from casper.infradead.org ([85.118.1.10]:54980 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728615AbfEMPXt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:23:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1557761016; x=1589297016;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=qOMlTtORDfEtXowtpsmMV4k9pulCLZtn0Ih/k7hdTaE=;
-  b=QL/DqE5C3tC+tDGp5rQhvPA7vHZ91LwtD0BlYHnoRdw6nJz6n69YGnbx
-   pGVm9L2F3N6AfZbr9dV1bXYIC4H2uBxrb0Sdxw19X3ejfPDgCoxK6lvL5
-   8cpaUoRSfeLK9/rNN/NXDapzJErefrBj42D7XKC53d4VQD2ZQSv/hAYpl
-   gQjbaTiFYx8KSGQ93u7eQ7jLJv6Wcp4kd6kHRLuhWuQ4G/F1Jv3pB1gee
-   iCet9fk37SSUx/WAdhsf2SsYuFVxca9n8YKJelK/zpdm1Ovg0PfTLpSgu
-   0LFepuwUual4eSL2Pa3r0hkle0QBZRcTEHCCiVDBy/y9INUvOTLl0K6sR
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.60,465,1549900800"; 
-   d="scan'208";a="214222742"
-Received: from mail-co1nam03lp2058.outbound.protection.outlook.com (HELO NAM03-CO1-obe.outbound.protection.outlook.com) ([104.47.40.58])
-  by ob1.hgst.iphmx.com with ESMTP; 13 May 2019 23:23:35 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BaPm5V1BnOM41I7mPlHmTbZTWTom/NXNGwav3sHgddI=;
- b=Pe9G4XEE655HylhpyIHdI5gHGY2RCjNDYve0sfPAnJGE+78pCUc9UnZuLae7lYAWnFXyFQl8RCve9ZZE3D5eI0fY/4lRbAz8v0tmNZYActxdftzgF9KbOcZAP9gU4ZmtA0WkISnLZHe4DkoDL/5VhtrIbK28bd0/a3H/texnFMk=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB4944.namprd04.prod.outlook.com (52.135.114.89) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Mon, 13 May 2019 15:23:32 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c4f:1604:178c:d974]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c4f:1604:178c:d974%5]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 15:23:32 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     "minwoo.im@samsung.com" <minwoo.im@samsung.com>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Jens Axboe <axboe@fb.com>, Minwoo Im <minwoo.im.dev@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 5/7] nvme-pci: add device coredump infrastructure
-Thread-Topic: [PATCH v3 5/7] nvme-pci: add device coredump infrastructure
-Thread-Index: AQHVCNsnTq1EcjR34keOomYpqyVeRw==
-Date:   Mon, 13 May 2019 15:23:32 +0000
-Message-ID: <SN6PR04MB4527DFC75838C3236F5D05B2860F0@SN6PR04MB4527.namprd04.prod.outlook.com>
-References: <1557676457-4195-6-git-send-email-akinobu.mita@gmail.com>
- <1557676457-4195-1-git-send-email-akinobu.mita@gmail.com>
- <CGME20190512155540epcas4p14c15eb86b08dcd281e9a93a4fc190800@epcms2p1>
- <20190513074601epcms2p12c0a32730a16be3b69b68e3c9d4d0b92@epcms2p1>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [199.255.45.63]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c22052b7-3352-4936-2d36-08d6d7b6f5c6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4944;
-x-ms-traffictypediagnostic: SN6PR04MB4944:
-x-ms-exchange-purlcount: 1
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB49443CE1CE7BE3B6A7A0DEED860F0@SN6PR04MB4944.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1247;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(136003)(39860400002)(346002)(199004)(189003)(486006)(186003)(54906003)(110136005)(66066001)(476003)(446003)(6436002)(26005)(305945005)(7736002)(33656002)(9686003)(99286004)(55016002)(6306002)(2906002)(316002)(68736007)(7416002)(73956011)(66946007)(66476007)(66556008)(64756008)(66446008)(53936002)(91956017)(76116006)(2501003)(229853002)(71200400001)(6246003)(81156014)(14454004)(5660300002)(72206003)(966005)(71190400001)(52536014)(81166006)(8676002)(76176011)(86362001)(4326008)(8936002)(25786009)(74316002)(7696005)(3846002)(6116002)(6506007)(256004)(53546011)(478600001)(102836004)(2201001);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4944;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lYaBlD+EQT1U6gK8Ey8NrcPX1dG0nHy0HQNIXzOwilYf6+fzohnAE0ViIAJOeas6lKmBWXg6zGvAb3BtiUwigvTpjh1MmpBNolLmGArCAXGBjTt6DxRzQfbekMpBcfkMkl9+uxYP4C9n/ow/JQXhZy34ZV3LKkfJ70P+uVuw0MtKIzVKtwNPj0cR71xtBKwV+Dk73rAMQYTWm8UW5gMYWMgj4SO6xKfDU6dSm9eab3fBK+IRLrMHPNvU3bOFxt9j97Rena6bPAa2/cbtgFJd4GWKSAlizpQb9rmZ1WCaR8/aGNlxr9dugpqOK7czCXL9yrg9IMdQxHkV2B/cAFSut38AtpgHoxm/YWUETyo/UadLgF7rqEndeoiInMDMpJN138hyTJcrWeUDjmgvTYPdwq5QFxwv8p4pVfSx+Mu3vaI=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 May 2019 11:23:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XecE39z5Wdv1UUdpgjNY8jEJraT3bchBosqiDVEwKac=; b=H0nmENQFZDrtsb3WGjL+nJ69KT
+        +fXIpU+tp4CIRwnV+GiOf2ZuYb/PjDqW+bH34swATcxiDuZnoXt0NgCWwwjUvKVVSV+4LSGTEDkxt
+        EgaBGgeQXLx3OmLBYd93SgbZClb1EJduca7Wg514zub9bi1EJbXXXPCqTyK2I0c5oZSObRWrlKlA8
+        Yy73fDr+lUmikIR3nYOUtTmYEXCm57xPb5KR/uYq4cNV6Flmow0OzvrHf0inaLH9aCMVeDwZh/iMp
+        OxxIfEOkSOZCIbnn6mxObPb4uof0Z1j+riFiG3a7d2eBftDChxE55rtGPvKR8IyyPgkKlMP78iBvH
+        REqmF3PA==;
+Received: from [179.179.44.200] (helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQCnd-0003iy-SA; Mon, 13 May 2019 15:23:34 +0000
+Date:   Mon, 13 May 2019 12:23:27 -0300
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        "open list:DMA BUFFER SHARING FRAMEWORK" 
+        <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+Message-ID: <20190513122327.57f9c6ea@coco.lan>
+In-Reply-To: <20190513145719.GS17751@phenom.ffwll.local>
+References: <20190417154121.GJ13337@phenom.ffwll.local>
+        <20190418062229.eyog4i62eg4pr6uf@flea>
+        <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
+        <20190418090221.e57dogn4yx5nwdni@flea>
+        <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
+        <20190420225904.GZ4964@pendragon.ideasonboard.com>
+        <20190423072554.GW13337@phenom.ffwll.local>
+        <20190423154527.GH16111@pendragon.ideasonboard.com>
+        <CAKMK7uEFco0LcmbZaSddcpSHwY8tSMhif5rKmqwANnt2zhtzpg@mail.gmail.com>
+        <20190511192632.GN13043@pendragon.ideasonboard.com>
+        <20190513145719.GS17751@phenom.ffwll.local>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c22052b7-3352-4936-2d36-08d6d7b6f5c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 15:23:32.5348
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4944
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/13/2019 12:46 AM, Minwoo Im wrote:=0A=
->> +static int nvme_get_telemetry_log_blocks(struct nvme_ctrl *ctrl, void *=
-buf,=0A=
->> +					 size_t bytes, loff_t offset)=0A=
->> +{=0A=
->> +	loff_t pos =3D 0;=0A=
->> +	u32 chunk_size;=0A=
->> +=0A=
->> +	if (check_mul_overflow(ctrl->max_hw_sectors, 512u, &chunk_size))=0A=
->> +		chunk_size =3D UINT_MAX;=0A=
->> +=0A=
->> +	while (pos < bytes) {=0A=
->> +		size_t size =3D min_t(size_t, bytes - pos, chunk_size);=0A=
->> +		int ret;=0A=
->> +=0A=
->> +		ret =3D nvme_get_log(ctrl, NVME_NSID_ALL,=0A=
->> NVME_LOG_TELEMETRY_CTRL,=0A=
->> +				   0, buf + pos, size, offset + pos);=0A=
->> +		if (ret)=0A=
->> +			return ret;=0A=
->> +=0A=
->> +		pos +=3D size;=0A=
->> +	}=0A=
->> +=0A=
->> +	return 0;=0A=
->> +}=0A=
->> +=0A=
->> +static int nvme_get_telemetry_log(struct nvme_ctrl *ctrl,=0A=
->> +				  struct sg_table *table, size_t bytes)=0A=
->> +{=0A=
->> +	int n =3D sg_nents(table->sgl);=0A=
->> +	struct scatterlist *sg;=0A=
->> +	size_t offset =3D 0;=0A=
->> +	int i;=0A=
->> +=0A=
-A little comment would be nice if you are using sg operations.=0A=
->> +	for_each_sg(table->sgl, sg, n, i) {=0A=
->> +		struct page *page =3D sg_page(sg);=0A=
->> +		size_t size =3D min_t(int, bytes - offset, sg->length);=0A=
->> +		int ret;=0A=
->> +=0A=
->> +		ret =3D nvme_get_telemetry_log_blocks(ctrl,=0A=
->> page_address(page),=0A=
->> +						    size, offset);=0A=
->> +		if (ret)=0A=
->> +			return ret;=0A=
->> +=0A=
->> +		offset +=3D size;=0A=
->> +	}=0A=
->> +=0A=
->> +	return 0;=0A=
->> +}=0A=
->=0A=
-> Can we have those two in nvme-core module instead of being in pci module?=
-=0A=
-=0A=
-Since they are based on the controller they should be moved next to =0A=
-nvme_get_log() in the ${KERN_DIR}/drivers/nvme/host/core.c.=0A=
-=0A=
->=0A=
-> _______________________________________________=0A=
-> Linux-nvme mailing list=0A=
-> Linux-nvme@lists.infradead.org=0A=
-> http://lists.infradead.org/mailman/listinfo/linux-nvme=0A=
->=0A=
-=0A=
+Em Mon, 13 May 2019 16:57:19 +0200
+Daniel Vetter <daniel@ffwll.ch> escreveu:
+
+> > > I think small boutique trees are a problem themselves, not a solution.
+> > > So if you're creating a new small boutique tree to fix a problem, you
+> > > then have 2. Yes, assuming sufficient expenditure of energy it can be
+> > > made to work, but I'd prefer to make my own life as easy and lazy as
+> > > possible :-) And I think I've been fairly successful at that within
+> > > drivers/gpu at least.
+> > > 
+> > > Imo the proper fix is to merge v4l and drm, at a process/maintainer
+> > > level. That would solve both the original issue and the 2ndary one of
+> > > the permanent topic branch.  
+> > 
+> > Proposals are welcome ;-)  
+> 
+> I'm already somewhat unpopular at LPC/lkml/kernel-at-large, I don't want
+> to make this worse.  That's why I don't want to officially push for
+> anything here myself, nor be in any other way involved in an effort to
+> figure out v4l governance and maintainership rules.
+> 
+> What I think is required for efficient collaboration with drm (no matter
+> how we implement that in the details once we're ready for that step) is
+> some kind of group maintainership model. Doesn't need to be as extreme as
+> drm-misc, but I think at least something like the soc tree (while it was
+> still a bit more limited as arm-soc). Otherwise the impendence mismatch
+> between how drm rolls and how v4l rolls is probably way too much. From my
+> understanding v4l is working differently.
+> 
+> Also, through sheer inertia of size, I don't think it'll be easier to
+> align drm with the v4l model. So that option is not realistic.
+
+I don't think it is realistic trying to align V4L2 model to every single 
+other subsystems we use. We have a lot of alignment with alsa, with even
+increased during this merge window due to some drivers on media sharing 
+media controller resources with usb-audio. We also have lots of alignment
+with i2c, as we use a lot of stuff there, and from time to time they
+need to add new features due to our needs. The same is true also for
+input and for other subsystems and arch/sub-arch trees.
+
+That doesn't mean at all that everybody should use the same maintainership
+model. Each subsystem should use whatever suits best.
+
+That's said, after following this thread for a while, I'm starting to
+convince that it wouldn't even be realistic to have a common fourcc 
+API for both subsystems. The internal requirements from each subsystem
+are different, and, as it was already pointed in this thread, that's
+basically why DRM ended by having their own way of doing that.
+
+Yet, it would make sense to have at least a single nomenclature for
+both systems to use, but it could be a simple as what we already do
+with other common resources, like:
+
+	Documentation/ioctl/ioctl-number.txt
+
+If we keep the fourcc codes there sorted, if one subsystem would
+add a conflicting code, it would be easy to notice at linux-next.
+
+Thanks,
+Mauro
