@@ -2,182 +2,118 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C03C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF30C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E052084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557765664;
-	bh=z2nY4PqK998hnVfcOEshBMYqpLqdsTjrZu4GVVYQteE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wFjgWTlmIPVLbCQ+NkQsr7cwjpxqM0t4H1mqQ2TjuU+AC9hjYsynm9r+t125+bPwE
-	 yZoWRvIEMAu8NdfICHcuXPqSDg/U3vdQ7HCbB0VoJiGLc6F6ujONyTKQn2oeu1S8m3
-	 ICRcnn8q5/ftLfIxZbScbnVhqC4o3UiJ9745qJEM=
+	by mail.kernel.org (Postfix) with ESMTP id 392D621473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbfEMQlD (ORCPT
+        id S1730718AbfEMQlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:41:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbfEMQlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:41:03 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67D472084E;
-        Mon, 13 May 2019 16:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557765661;
-        bh=z2nY4PqK998hnVfcOEshBMYqpLqdsTjrZu4GVVYQteE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iVDSpidIKANfGQqtt3ZtJUqlGDJE0KggG7Mslt/GxyYWV1nw/dbzBGsX7rXu2zcNZ
-         8EknEhl3iqkqP0Kcm70VkYbVgW1jKbRq3HTQhCF3bXUtFKcuJAw0rlns/txTX/grIV
-         chF/xpOzEyQobS5tvSSOdPn+1uC0z0TdzvhAeQHg=
-Date:   Mon, 13 May 2019 12:41:00 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Tomer Tayar <ttayar@habana.ai>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] habanalabs: Avoid using a non-initialized MMU cache mutex
-Message-ID: <20190513164100.GE11972@sasha-vm>
-References: <20190513113237.22425-1-oded.gabbay@gmail.com>
- <20190513141010.8EC6820862@mail.kernel.org>
- <CAFCwf10Ve9jpDZ8LnvFr=85ytHN8nhyBu9YJft0acTy5q3V_rg@mail.gmail.com>
+        Mon, 13 May 2019 12:41:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:33994 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730487AbfEMQlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:41:35 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l17so12413726otq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:41:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DTPzcVxKVm0Pc29DEn3cmhWP30Ec3xr80gOHbyh3pg4=;
+        b=QG2mbnD/pg43/wvci35BUJXBplXdFtkPUwxgiVtSRrOnbrAghEdN11U7jyH4HAtaLq
+         as/HKfkfkW/OagvryKGt/y8q90bU16aIJEzewQTwc10EWpOS8RDIG8p5XtWkltdzj/lk
+         DzlQL7ItOxwJOUZXAJSEyPxRKhP5m017gan6js+29Gpqubyu6q0xVB38fsatwrY537Yl
+         ELL0wvgiN0/3UfL6E6sEhrYK3Z4Bpprfue2R/eYBt+c0V/2o+iwJrnJC3hR+8xqPK9ZP
+         EkKB4X3aVHAniXwPmXbb1rRUhrnxfrS6b2aG58mpVydwHp3N//lHavbIMXP1U4dYZLjR
+         JRpQ==
+X-Gm-Message-State: APjAAAVX7OKfCfHRdC1TUkIBjMsoh+9xXFssLeOwAyenlYnfvCVXKZME
+        Qd7Jlb5eZEIzvYTGmrtbI9ea4JjNK2c3SoHJfuJW4w==
+X-Google-Smtp-Source: APXvYqxUEAOU5HMNLkjpIspTTmcgvg4drC7BA5RRkLRG+XXp7nK8EVV1nghClu0sQeMK46PxMdY+408xC4QGkKCpzJA=
+X-Received: by 2002:a9d:4808:: with SMTP id c8mr2886658otf.316.1557765694735;
+ Mon, 13 May 2019 09:41:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAFCwf10Ve9jpDZ8LnvFr=85ytHN8nhyBu9YJft0acTy5q3V_rg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190513033213.2468-1-tobin@kernel.org> <20190513071405.GF2868@kroah.com>
+ <20190513103936.GA15053@eros.localdomain>
+In-Reply-To: <20190513103936.GA15053@eros.localdomain>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Mon, 13 May 2019 18:41:23 +0200
+Message-ID: <CAHc6FU7FCBn1CnzEjyj8W7LBu-Ths7bME2R3_GQ2ZmsFQxWEhA@mail.gmail.com>
+Subject: Re: [PATCH] gfs2: Fix error path kobject memory leak
+To:     "Tobin C. Harding" <me@tobin.cc>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Tobin C. Harding" <tobin@kernel.org>,
+        Bob Peterson <rpeterso@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        cluster-devel <cluster-devel@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 05:22:30PM +0300, Oded Gabbay wrote:
->On Mon, May 13, 2019 at 5:10 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> Hi,
->>
->> [This is an automated email]
->>
->> This commit has been processed because it contains a -stable tag.
->> The stable tag indicates that it's relevant for the following trees: all
->>
->> The bot has tested the following trees: v5.0.15, v4.19.42, v4.14.118, v4.9.175, v4.4.179, v3.18.139.
->>
->> v5.0.15: Failed to apply! Possible dependencies:
->>     0861e41de530 ("habanalabs: add context and ASID modules")
->>     839c48030d27 ("habanalabs: add basic Goya h/w initialization")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     99b9d7b4970c ("habanalabs: add basic Goya support")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     d91389bc839d ("habanalabs: add sysfs and hwmon support")
->>     eff6f4a0e70b ("habanalabs: add command submission module")
->>
->> v4.19.42: Failed to apply! Possible dependencies:
->>     0861e41de530 ("habanalabs: add context and ASID modules")
->>     839c48030d27 ("habanalabs: add basic Goya h/w initialization")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     99b9d7b4970c ("habanalabs: add basic Goya support")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     fcb418cd567f ("pvpanic: move pvpanic to misc as common driver")
->>
->> v4.14.118: Failed to apply! Possible dependencies:
->>     01451ad47e27 ("powerpc/powermac: Use setup_timer() helper")
->>     8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
->>     83ad1e6a1dc0 ("powerpc/oprofile: Use setup_timer() helper")
->>     8d6b1bf20f61 ("powerpc/6xx: Use setup_timer() helper")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     b1fc2839d2f9 ("drm/msm: Implement preemption for A5XX targets")
->>     b9eaf1872222 ("treewide: init_timer() -> setup_timer()")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     cd414f3d9316 ("drm/msm: Move memptrs to msm_gpu")
->>     e455b69ddf9b ("misc: rtsx: Move Realtek Card Reader Driver to misc")
->>     e629cfa36ea0 ("MIPS: Lasat: Use setup_timer() helper")
->>     e99e88a9d2b0 ("treewide: setup_timer() -> timer_setup()")
->>     f97decac5f4c ("drm/msm: Support multiple ringbuffers")
->>
->> v4.9.175: Failed to apply! Possible dependencies:
->>     01451ad47e27 ("powerpc/powermac: Use setup_timer() helper")
->>     118f6523793d ("mfd: rtsx: Convert forgotten dev_info() statement to pcr_dbg()")
->>     53460c53b761 ("[media] au0828: Add timer to restart TS stream if no data arrives on bulk endpoint")
->>     7c96f59e0caf ("[media] s5p-mfc: Fix initialization of internal structures")
->>     8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
->>     83ad1e6a1dc0 ("powerpc/oprofile: Use setup_timer() helper")
->>     87d284443d07 ("mfd: rtsx: Do retry when DMA transfer error")
->>     8d6b1bf20f61 ("powerpc/6xx: Use setup_timer() helper")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     b9eaf1872222 ("treewide: init_timer() -> setup_timer()")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     cf43e6be865a ("block: add scalable completion tracking of requests")
->>     e26ae3660b9c ("mfd: rtsx: Make arrays depth and cd_mask static const")
->>     e455b69ddf9b ("misc: rtsx: Move Realtek Card Reader Driver to misc")
->>     e629cfa36ea0 ("MIPS: Lasat: Use setup_timer() helper")
->>     e806402130c9 ("block: split out request-only flags into a new namespace")
->>     e99e88a9d2b0 ("treewide: setup_timer() -> timer_setup()")
->>
->> v4.4.179: Failed to apply! Possible dependencies:
->>     118f6523793d ("mfd: rtsx: Convert forgotten dev_info() statement to pcr_dbg()")
->>     53460c53b761 ("[media] au0828: Add timer to restart TS stream if no data arrives on bulk endpoint")
->>     7c96f59e0caf ("[media] s5p-mfc: Fix initialization of internal structures")
->>     80c1bce9aa31 ("[media] au0828: Refactoring for start_urb_transfer()")
->>     8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
->>     87d284443d07 ("mfd: rtsx: Do retry when DMA transfer error")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     9815c7cf22da ("NFC: pn533: Separate physical layer from the core implementation")
->>     b9eaf1872222 ("treewide: init_timer() -> setup_timer()")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     e26ae3660b9c ("mfd: rtsx: Make arrays depth and cd_mask static const")
->>     e455b69ddf9b ("misc: rtsx: Move Realtek Card Reader Driver to misc")
->>     e99e88a9d2b0 ("treewide: setup_timer() -> timer_setup()")
->>
->> v3.18.139: Failed to apply! Possible dependencies:
->>     0523b8f41473 ("mfd: rtsx: Using pcr_dbg replace dev_dbg")
->>     0b271258544b ("mfd: rt5033: Add Richtek RT5033 driver core.")
->>     19f3bd548f27 ("mfd: rtsx: Remove LCTLR defination")
->>     338a12814297 ("mfd: Add support for Diolan DLN-2 devices")
->>     5cb5d9616a47 ("mfd: rtsx: Fix PM suspend for 5227 & 5249")
->>     663c425f2c8d ("mfd: rtsx: Add support for rts524A")
->>     8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
->>     9494a8dd8d22 ("habanalabs: add h/w queues module")
->>     9e33ce79f828 ("mfd: rtsx: Update PETXCFG address")
->>     a3b63979f8a3 ("mfd: rtsx: Add func to split u32 into register")
->>     b038538104d5 ("mfd: rtsx: Update phy register")
->>     b158b69a3765 ("mfd: rtsx: Simplify function return logic")
->>     be5d926b5c10 ("habanalabs: add command buffer module")
->>     c4d66343a46a ("habanalabs: add skeleton driver")
->>     ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
->>     e455b69ddf9b ("misc: rtsx: Move Realtek Card Reader Driver to misc")
->>     e89f231826a7 ("mfd: rtsx: Update driving settings")
->>
->>
->> How should we proceed with this patch?
->>
->> --
->> Thanks,
->> Sasha
+On Mon, 13 May 2019 at 12:40, Tobin C. Harding <me@tobin.cc> wrote:
 >
->ok, I see my mistake.
->How do I specify a specific kernel version ?
->Because this applies only to future 5.1.X, that aren't available yet.
+> On Mon, May 13, 2019 at 09:14:05AM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, May 13, 2019 at 01:32:13PM +1000, Tobin C. Harding wrote:
+> > > If a call to kobject_init_and_add() fails we must call kobject_put()
+> > > otherwise we leak memory.
+> > >
+> > > Function always calls kobject_init_and_add() which always calls
+> > > kobject_init().
+> > >
+> > > It is safe to leave object destruction up to the kobject release
+> > > function and never free it manually.
+> > >
+> > > Remove call to kfree() and always call kobject_put() in the error path.
+> > >
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > ---
+> > >
+> > > Is it ok to send patches during the merge window?
+> > >
+> > > Applies on top of Linus' mainline tag: v5.1
+> > >
+> > > Happy to rebase if there are conflicts.
+> > >
+> > > thanks,
+> > > Tobin.
+> > >
+> > >  fs/gfs2/sys.c | 7 +------
+> > >  1 file changed, 1 insertion(+), 6 deletions(-)
+> > >
+> > > diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
+> > > index 1787d295834e..98586b139386 100644
+> > > --- a/fs/gfs2/sys.c
+> > > +++ b/fs/gfs2/sys.c
+> > > @@ -661,8 +661,6 @@ int gfs2_sys_fs_add(struct gfs2_sbd *sdp)
+> > >     if (error)
+> > >             goto fail_reg;
+> > >
+> > > -   sysfs_frees_sdp = 1; /* Freeing sdp is now done by sysfs calling
+> > > -                           function gfs2_sbd_release. */
+> >
+> > You should also delete this variable at the top of the function, as it
+> > is now only set once there and never used.
+>
+> Thanks, I should have gotten a compiler warning for that.  I was feeling
+> so confident with my builds this morning ... pays not to get too cocky
+> I suppose.
+>
+> > With that:
+> >
+> > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> Thanks, will re-spin.
 
-Take a look at
-https://www.kernel.org/doc/Documentation/process/stable-kernel-rules.rst
+Don't bother, I'll fix that up.
 
-A "Fixes" tag also helps a lot.
-
---
 Thanks,
-Sasha
+Andreas
