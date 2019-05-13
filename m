@@ -2,139 +2,298 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D78C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC78C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC0320862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:30:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8nFyRFa"
+	by mail.kernel.org (Postfix) with ESMTP id 69F3421473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557779510;
+	bh=m+kY0Zgpyu0lel7EqL2gjXaT8+eVkAzD9H5M/7qk0Jo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bsC7D/ah34Eep5YsOlfpivSDgryABeDKELkuUy9j3DeChR9lZAbgiAE+VXYLBX+Y6
+	 V/aab+XkcG4+STXWPyHMz7aM5e9mECuTw4p1QCYDZWmEYrkaS0eHQjpegSIHOjyG6N
+	 +SDqftEeY9K5Fti5OT3MqcGQWyNHyqaR46TAJLHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfEMUad (ORCPT
+        id S1726515AbfEMUbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:30:33 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:38950 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEMUac (ORCPT
+        Mon, 13 May 2019 16:31:49 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41749 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEMUbt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:30:32 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m1so1732283vsr.6;
-        Mon, 13 May 2019 13:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jVLUCuvIkgHf1PJRweruJ3z4sfjR/n08csEPSkBQeiA=;
-        b=E8nFyRFa7hSDOzGPngvfVrHBMQ2geS+vTTr2QU0F1v2MFpx9RQK0A9P/q2QU2k2f+v
-         oP6iUKNKQsWRnqoMef92zWQ57knOTjw0RFBtPsDsRPSFsCj+OIEYcWNLMzOK40OlUc9C
-         WnkB7BNPFdpixtqtchVJpgXXrHxF9AJ2ySOQBKUxWygQWzAvqRznM7RJJ6yv2int/1sd
-         YOhed0gcnpVvkFVG/r6Ah9ji5TvcqKNEFqouVTxHt+E1PoAWj5cZNGTJiRTC0fNgpBiw
-         8ZAj9GdJ5szvHwDXb25JHB8tnilFN3zdUYZJe700sC+SwGwJhgXU6scFluoRoPNQtAZf
-         z88A==
+        Mon, 13 May 2019 16:31:49 -0400
+Received: by mail-oi1-f195.google.com with SMTP id y10so10386594oia.8;
+        Mon, 13 May 2019 13:31:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jVLUCuvIkgHf1PJRweruJ3z4sfjR/n08csEPSkBQeiA=;
-        b=MEn8X3q5pC+aWtxt8kMIPzPjRSTSbGT/TRvubbxYwsDMO2vSi4uKIJKpldrE8HNYaD
-         zjs+LcCGBDL2kWlMFYinYRS9TcCHazz1DM2XeM4qem5AMukqpnaFYQujPNS8XYiNOFAG
-         U1VbBGkLo0bXDAikB3/noq+JhtuG5RK/wFGBXHYLD6FKYVjP2wdWYSiV84DxMRIQuMrJ
-         4YAI993VGddef9oupqm2FJ9TtS+LIzGqaHKJWFMM2yHhxmHtK5Qyny9tC+u0oD6PkhA5
-         T6iv74t+NZzJrZCUe3zut3PhoNKjX9EVjAvQGVeLl+VbnW+3kYcp9RBhz/sK+3bmpsoc
-         dcJg==
-X-Gm-Message-State: APjAAAV9WEOgvfTKKsDx0REmNT28niff2nPEh6Dva9Ru/393Qm2mD63U
-        WPxVdns0EXKERkVagpbs6Q==
-X-Google-Smtp-Source: APXvYqwMryfqgImbiP13+/arDvUYMQDSct2MI76bgMrirL+kFL49BVKMSV1BVgRcsHsqBsKujSk0wA==
-X-Received: by 2002:a67:d71d:: with SMTP id p29mr16059536vsj.223.1557779430915;
-        Mon, 13 May 2019 13:30:30 -0700 (PDT)
-Received: from localhost.localdomain ([2601:902:c200:6512:37bd:d695:3a39:ceb9])
-        by smtp.gmail.com with ESMTPSA id 143sm1285120vkj.44.2019.05.13.13.30.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 13:30:30 -0700 (PDT)
-From:   Ayman Bagabas <ayman.bagabas@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kailang Yang <kailang@realtek.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Cc:     ayman.bagabas@gmail.com
-Subject: [PATCH v1 2/2] sound: Enable micmute led for Huawei laptops
-Date:   Mon, 13 May 2019 16:30:06 -0400
-Message-Id: <20190513203009.28686-3-ayman.bagabas@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190513203009.28686-1-ayman.bagabas@gmail.com>
-References: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QMwu8DgxJVgdXd3GFba+2fxziogY4dsXbaDcgxIT5Y8=;
+        b=qjCg34rWTV2+mvzNn+w31A94Ldy7gJO48efNHmQ8MzylR0wf+8lJdTv6SK0uh1cvSb
+         COyPttZFw0mo1lPjxPO6dUupPuPJyzTtP34GDobRqDcAFQ9jnKF9OGPqjrjRE0HMtjAh
+         XnrQgAzQoTxO0tCxZEBc8UX0OqMUaP0duihya8IG1uEj3jmZgk2aJT8qe3Wz6QfAK5iP
+         He1W3ewMdMwL7K8S0TXoMI2DK1Ms5IGXxdPWy/HWcJ5Y7QY8CAy57rfXomjOAn4dEmIV
+         qbwgoFv657fc0KIwZpT3FqyohsGG41Nb5mjZkJGt+9q0nA/0L3zTX864BmlEeQIpzjb7
+         dWXg==
+X-Gm-Message-State: APjAAAVIj3U5PbrMW0wDGsxMPixy1xXVw2HpTfHvO5loose82ztZ+zg3
+        /7vI8tqOI+DJkmPua4pzHI82/7k=
+X-Google-Smtp-Source: APXvYqzSADSgT0g7GGSCSubY4G8MUAxQgDIdsbP6OHhcEU0RTjMKQEa1eWxpjl5q8zZSqm1sI+1CCQ==
+X-Received: by 2002:aca:4282:: with SMTP id p124mr638485oia.175.1557779508351;
+        Mon, 13 May 2019 13:31:48 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 64sm5577713oth.47.2019.05.13.13.31.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 13:31:47 -0700 (PDT)
+Date:   Mon, 13 May 2019 15:31:46 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mike Looijmans <mike.looijmans@topic.nl>
+Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v2] dt-bindings: clock: Add silabs,si5341
+Message-ID: <20190513203146.GA24085@bogus>
+References: <20190424090216.18417-1-mike.looijmans@topic.nl>
+ <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com>
+ <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl>
+ <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com>
+ <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl>
+ <20190507140413.28335-1-mike.looijmans@topic.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507140413.28335-1-mike.looijmans@topic.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since this LED is found on huawei laptops, we can hook it to
-huawei-wmi platform driver which uses the common WMI interface present
-in these laptops to control the LED.
+On Tue, May 07, 2019 at 04:04:13PM +0200, Mike Looijmans wrote:
+> Adds the devicetree bindings for the Si5341 and Si5340 chips from
+> Silicon Labs. These are multiple-input multiple-output clock
+> synthesizers.
+> 
+> Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+> ---
+> v2: Add data sheet reference.
+>     Restructured to enable use of "assigned-clock*" properties to set
+>     up both outputs and internal synthesizers.
+>     Nicer indentation.
+>     Updated subject line and body of commit message.
+>     If these bindings are (mostly) acceptable, I'll post an updated
+>     driver patch v2 to implement these changes.
+> 
+>  .../bindings/clock/silabs,si5341.txt          | 187 ++++++++++++++++++
+>  1 file changed, 187 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+> new file mode 100644
+> index 000000000000..6086dfcaeecf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
+> @@ -0,0 +1,187 @@
+> +Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
+> +
+> +Reference
+> +[1] Si5341 Data Sheet
+> +    https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
+> +[2] Si5341 Reference Manual
+> +    https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
+> +
+> +The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
+> +clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
+> +in turn can be directed to any of the 10 (or 4) outputs through a divider.
+> +The internal structure of the clock generators can be found in [2].
+> +
+> +The driver can be used in "as is" mode, reading the current settings from the
+> +chip at boot, in case you have a (pre-)programmed device. If the PLL is not
+> +configured when the driver probes, it assumes the driver must fully initialize
+> +it.
+> +
+> +The device type, speed grade and revision are determined runtime by probing.
+> +
+> +The driver currently only supports XTAL input mode, and does not support any
+> +fancy input configurations. They can still be programmed into the chip and
+> +the driver will leave them "as is".
+> +
+> +==I2C device node==
+> +
+> +Required properties:
+> +- compatible: shall be one of the following:
+> +	"silabs,si5340" - Si5340 A/B/C/D
+> +	"silabs,si5341" - Si5341 A/B/C/D
+> +- reg: i2c device address, usually 0x74
+> +- #clock-cells: from common clock binding; shall be set to 2.
+> +	The first value is "0" for outputs, "1" for synthesizers.
+> +	The second value is the output or synthesizer index.
+> +- clocks: from common clock binding; list of parent clock  handles,
+> +	corresponding to inputs. Use a fixed clock for the "xtal" input.
+> +	At least one must be present.
+> +- clock-names: One of: "xtal", "in0", "in1", "in2"
+> +- vdd-supply: Regulator node for VDD
+> +
+> +Optional properties:
+> +- vdda-supply: Regulator node for VDDA
+> +- vdds-supply: Regulator node for VDDS
+> +- silabs,pll-m-num, silabs,pll-m-den: Numerator and denominator for PLL
+> +  feedback divider. Must be such that the PLL output is in the valid range. For
+> +  example, to create 14GHz from a 48MHz xtal, use m-num=14000 and m-den=48. Only
+> +  the fraction matters, using 3500 and 12 will deliver the exact same result.
+> +  If these are not specified, and the PLL is not yet programmed when the driver
+> +  probes, the PLL will be set to 14GHz.
+> +- silabs,reprogram: When present, the driver will always assume the device must
+> +  be initialized, and always performs the soft-reset routine. Since this will
+> +  temporarily stop all output clocks, don't do this if the chip is generating
+> +  the CPU clock for example.
+> +- interrupts: Interrupt for INTRb pin.
+> +
+> +== Child nodes: Synthesizers ==
+> +
+> +In order to refer to the internal synthesizers, there can be a child node named
+> +"synthesizers".
+> +
+> +Required synthesizers node properties:
+> +- #address-cells: shall be set to 1.
+> +- #size-cells: shall be set to 0.
+> +
+> +Each child of this node corresponds to a multisynth in the Si534X chip. This
+> +allows the synthesizer to be referred to with assigned-clocks.
 
-I've also made some renames and used product name instead of common name
-to avoid confusion.
+Why is this? It doesn't seem to me that you need this in DT. You can 
+define the clock ID to refer to it in assigned-clocks without these 
+nodes in DT.
 
-Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
----
- sound/pci/hda/patch_realtek.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+> +
+> +Required child node properties:
+> +- reg: synthesizer index in range 0..4 for Si5341 and 0..3 for Si5340.
+> +
+> +== Child nodes: Outputs ==
+> +
+> +The child node "outputs" lists the output clocks.
+> +
+> +Required outputs node properties:
+> +- #address-cells: shall be set to 1.
+> +- #size-cells: shall be set to 0.
+> +
+> +Each of the clock outputs can be overwritten individually by
+> +using a child node to the outputs child node. If a child node for a clock
+> +output is not set, the configuration remains unchanged.
+> +
+> +Required child node properties:
+> +- reg: number of clock output.
+> +
+> +Optional child node properties:
+> +- vdd-supply: Regulator node for VDD for this output. The driver selects default
+> +	values for common-mode and amplitude based on the voltage.
+> +- silabs,format: Output format, one of:
+> +	1 = differential (defaults to LVDS levels)
+> +	2 = low-power (defaults to HCSL levels)
+> +	4 = LVCMOS
+> +- silabs,common-mode: Manually overide output common mode, see [2] for values
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 42cd3945e0de..3661470766ba 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5684,7 +5684,7 @@ enum {
- 	ALC298_FIXUP_TPT470_DOCK,
- 	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
- 	ALC255_FIXUP_DELL_HEADSET_MIC,
--	ALC256_FIXUP_HUAWEI_MBXP_PINS,
-+	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
- 	ALC295_FIXUP_HP_X360,
- 	ALC221_FIXUP_HP_HEADSET_MIC,
- 	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-@@ -5975,7 +5975,7 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC269_FIXUP_HEADSET_MIC
- 	},
--	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
-+	[ALC256_FIXUP_HUAWEI_MACH_WX9_PINS] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
- 			{0x12, 0x90a60130},
-@@ -6996,9 +6996,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
- 	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
- 	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
--	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
--	SND_PCI_QUIRK(0x19e5, 0x3201, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
--	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
-+	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
- 	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
- 
- #if 0
-@@ -7057,6 +7055,7 @@ static const struct snd_pci_quirk alc269_fixup_vendor_tbl[] = {
- 	SND_PCI_QUIRK_VENDOR(0x103c, "HP", ALC269_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK_VENDOR(0x104d, "Sony VAIO", ALC269_FIXUP_SONY_VAIO),
- 	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", ALC269_FIXUP_THINKPAD_ACPI),
-+	SND_PCI_QUIRK_VENDOR(0x19e5, "Huawei Matebook", ALC255_FIXUP_MIC_MUTE_LED),
- 	{}
- };
- 
--- 
-2.20.1
+s/overide/override/
 
+> +- silabs,amplitude: Manually override output amplitude, see [2] for values
+> +- silabs,synth-master: boolean. If present, this output is allowed to change the
+> +	multisynth frequency dynamically.
+> +- silabs,disable-state : clock output disable state, shall be
+> +	0 = clock output is driven LOW when disabled
+> +	1 = clock output is driven HIGH when disabled
+> +
+> +==Example==
+> +
+> +/* 48MHz reference crystal */
+> +ref48: ref48M {
+> +	compatible = "fixed-clock";
+> +	#clock-cells = <0>;
+> +	clock-frequency = <48000000>;
+> +};
+> +
+> +i2c-master-node {
+> +	/* Programmable clock (for logic) */
+> +	si5341: clock-generator@74 {
+> +		reg = <0x74>;
+> +		compatible = "silabs,si5341";
+> +		#clock-cells = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		clocks = <&ref48>;
+> +		clock-names = "xtal";
+> +
+> +		silabs,pll-m-num = <14000>; /* PLL at 14.0 GHz */
+> +		silabs,pll-m-den = <48>;
+> +		silabs,reprogram; /* Chips are not programmed, always reset */
+> +
+> +		synthesizers {
+> +			synth@2 {
+> +				reg = <2>;
+> +			};
+> +		};
+> +
+> +		outputs {
+> +			out@0 {
+> +				reg = <0>;
+> +				silabs,format = <1>; /* LVDS 3v3 */
+> +				silabs,common-mode = <3>;
+> +				silabs,amplitude = <3>;
+> +				silabs,synth-master;
+> +			};
+> +
+> +			/*
+> +			 * Output 6 configuration:
+> +			 *  LVDS 1v8
+> +			 */
+> +			out@6 {
+> +				reg = <6>;
+> +				silabs,format = <1>; /* LVDS 1v8 */
+> +				silabs,common-mode = <13>;
+> +				silabs,amplitude = <3>;
+> +			};
+> +
+> +			/*
+> +			 * Output 8 configuration:
+> +			 *  HCSL 3v3
+> +			 */
+> +			out@8 {
+> +				reg = <8>;
+> +				silabs,format = <2>;
+> +				silabs,common-mode = <11>;
+> +				silabs,amplitude = <3>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +some-video-node {
+> +	/* Standard clock bindings */
+> +	clock-names = "pixel";
+> +	clocks = <&si5341 0 7>; /* Output 7 */
+> +
+> +	/* Set output 7 to use syntesizer 3 as its parent */
+> +	assigned-clocks = <&si5341 0 7>, <&si5341 1 3>;
+> +	assigned-clock-parents = <&si5341 1 3>;
+> +	/* Set output 7 to 148.5 MHz using a synth frequency of 594 MHz */
+> +	assigned-clock-rates = <148500000>, <594000000>;
+> +};
+> +
+> +some-audio-node {
+> +	clock-names = "i2s-clk";
+> +	clocks = <&si5341 0 0>;
+> +	/*
+> +	 * since output 0 is a synth-master, the synth will be automatically set
+> +	 * to an appropriate frequency when the audio driver requests another
+> +	 * frequency. We give control over synth 2 to this output here.
+> +	 */
+> +	assigned-clocks = <&si5341 0 0>;
+> +	assigned-clock-parents = <&si5341 1 2>;
+> +};
+> -- 
+> 2.17.1
+> 
