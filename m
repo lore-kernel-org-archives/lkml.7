@@ -2,130 +2,75 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E72C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34543C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025A920989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzC/5mp4"
+	by mail.kernel.org (Postfix) with ESMTP id 0F0E220989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfEMJPD (ORCPT
+        id S1728618AbfEMJPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:15:03 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41049 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728618AbfEMJN1 (ORCPT
+        Mon, 13 May 2019 05:15:12 -0400
+Received: from mail.windriver.com ([147.11.1.11]:41968 "EHLO
+        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728193AbfEMJPL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:27 -0400
-Received: by mail-pg1-f194.google.com with SMTP id z3so6451095pgp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TobEgud37AkGtwOzepZXi6SMrPv78tbjIgOahu678e4=;
-        b=nzC/5mp4R12YfKsXBdkXjp/pMF2No3/DKiw6YJMyiBnuLgMxkPNtsIRMHcW1zlea5X
-         7UqPQCVccqlCIUGYGdOcOUFn6hVzNn6euXGC7QyYYt4gXTlsfC9eo8M6uZLbm2ZIcaRh
-         /Ap7fGt3q5GxAoDuKFCLxgOrgIsE/eQVv0X7WZ55NlMfcymxtkIb1p+Uqj71PE1sSY6b
-         4jWL/6AEATSKzeIZerx7kfPsh5DRnIBlpm/n5tKStXJcuh+gfw7EbrQpFmn1yUyShTWt
-         b0xRugDNpcblCWDES3OJvVxdW7r/Gbeu5jBcpj51NENjWhlHteTwnTfk5CgGn2GonIor
-         y1vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TobEgud37AkGtwOzepZXi6SMrPv78tbjIgOahu678e4=;
-        b=QVUdX60To6bpdlqFzzZzN1N4bRYmf//ZxgblxOfBg7X6ZB5xWQgubroXw87P10UlbL
-         axfWmgF/OTMMDJax4q5LFE000LMvhVeqbVT1ivOVQhtpY+vJt1jXd6hKSA12b+kQGSUC
-         /PC2HuGzAzE9FY1G46PuM5DsXcecfI6he+4vu05THEevvsY3tZrRFAWEFKqzM1Iuw5cf
-         FQ1OlS5CpDt2WPFfATdBwPZd2suQBzs7/OwGsQKKobQHMO90etQthN5rU+HdPKrp5iAS
-         pTbYTZPgFEVfQrHhvIUPoNmI7Bh6lM3TSJfob2BIN0HwU30ndIe3HKJpRnp1tjRqF1CD
-         npug==
-X-Gm-Message-State: APjAAAUlNeKfLAhs69ybZUX+xL7rgkt3EInR46sgoV/TSlViT1mCB7vy
-        31OHBeatQA8tJIvRXLEoxXY=
-X-Google-Smtp-Source: APXvYqyTbq/Wr6EUR0i+iB22ZupBhh4NVmE65Q13SyIaRVMEgml42iqebzxneFl/9sUFKS0D6JyNDw==
-X-Received: by 2002:a63:8149:: with SMTP id t70mr30013740pgd.134.1557738807199;
-        Mon, 13 May 2019 02:13:27 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:13:26 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, boqun.feng@gmail.com,
-        linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 03/17] locking/lockdep: Add helper functions to operate on the searched path
-Date:   Mon, 13 May 2019 17:11:49 +0800
-Message-Id: <20190513091203.7299-4-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
-References: <20190513091203.7299-1-duyuyang@gmail.com>
+        Mon, 13 May 2019 05:15:11 -0400
+Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
+        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x4D9EuMe005288
+        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
+        Mon, 13 May 2019 02:14:56 -0700 (PDT)
+Received: from pek-lpggp2.wrs.com (128.224.153.75) by ALA-HCA.corp.ad.wrs.com
+ (147.11.189.50) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
+ 02:14:56 -0700
+From:   Wenlin Kang <wenlin.kang@windriver.com>
+To:     <jason.wessel@windriver.com>, <daniel.thompson@linaro.org>,
+        <prarit@redhat.com>
+CC:     <kgdb-bugreport@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] kdb: Fix bound check compiler warning
+Date:   Mon, 13 May 2019 16:57:20 +0800
+Message-ID: <1557737840-43258-1-git-send-email-wenlin.kang@windriver.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - find_lock_in_path() tries to find whether a lock class is in the path.
+The strncpy() function may leave the destination string buffer
+unterminated, better use strscpy() instead.
 
- - find_next_dep_in_path() returns the next dependency after a
-   given dependency in the path.
+This fixes the following warning with gcc 8.2:
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+kernel/debug/kdb/kdb_io.c: In function 'kdb_getstr':
+kernel/debug/kdb/kdb_io.c:449:3: warning: 'strncpy' specified bound 256 equals destination size [-Wstringop-truncation]
+   strncpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Signed-off-by: Wenlin Kang <wenlin.kang@windriver.com>
 ---
- kernel/locking/lockdep.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ kernel/debug/kdb/kdb_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4091002..0617375 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1365,6 +1365,37 @@ static inline int get_lock_depth(struct lock_list *child)
- }
- 
- /*
-+ * Return the dependency if @lock is in the path, otherwise NULL.
-+ */
-+static inline struct lock_list *
-+find_lock_in_path(struct lock_class *lock, struct lock_list *target)
-+{
-+	while ((target = get_lock_parent(target)))
-+		if (target->class == lock)
-+			return target;
-+
-+	return NULL;
-+}
-+
-+/*
-+ * Walk back to the next dependency after @source from @target. Note
-+ * that @source must be in the path, and @source can not be the same as
-+ * @target, otherwise this is going to fail and reutrn NULL.
-+ */
-+static inline struct lock_list *
-+find_next_dep_in_path(struct lock_list *source, struct lock_list *target)
-+{
-+	while (get_lock_parent(target) != source) {
-+		target = get_lock_parent(target);
-+
-+		if (!target)
-+			break;
-+	}
-+
-+	return target;
-+}
-+
-+/*
-  * Return the forward or backward dependency list.
-  *
-  * @lock:   the lock_list to get its class's dependency list
+diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+index 6a4b414..3a5184e 100644
+--- a/kernel/debug/kdb/kdb_io.c
++++ b/kernel/debug/kdb/kdb_io.c
+@@ -446,7 +446,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
+ char *kdb_getstr(char *buffer, size_t bufsize, const char *prompt)
+ {
+ 	if (prompt && kdb_prompt_str != prompt)
+-		strncpy(kdb_prompt_str, prompt, CMD_BUFLEN);
++		strscpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+ 	kdb_printf(kdb_prompt_str);
+ 	kdb_nextline = 1;	/* Prompt and input resets line number */
+ 	return kdb_read(buffer, bufsize);
 -- 
-1.8.3.1
+1.9.1
 
