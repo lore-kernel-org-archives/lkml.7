@@ -2,141 +2,98 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1304C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABA8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90427208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:15:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ryFblFXj"
+	by mail.kernel.org (Postfix) with ESMTP id 0368B21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbfEMIPV (ORCPT
+        id S1728263AbfEMIPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:15:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56524 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727355AbfEMIPV (ORCPT
+        Mon, 13 May 2019 04:15:33 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:47576 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727355AbfEMIPd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:15:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KnyNPpS3/IuZil8Uli/e5qg23u6Dh+UGd1Izdvt9Xl4=; b=ryFblFXjlXk+SBg6r2yrKzeaE
-        oNV1g8kuLX0GcGWBlWRn4+AGoZfop572rLjUfVXK2G5b8+oF57G4YLNQ3nTamzPjdSky5aPd7q74f
-        855iziskHlTtfgJZVmHqUHQFgsUyUVLw6q/Rz5qQ0fHSGAyw6Gbx5AO9zyp4lOyz/M2y5ij6/71J+
-        KjEK3HOHjMa85n313NabRj9GoTRj9eTaZz8e637X50fcPmaMnC9cd934Yd1SnWb5uE+LNBz8t3z6O
-        zO/avz/svOREVoXFSULdd5XfrmuJtEvANn8pk6XeYKVJZgcolRn3KmkxR6V9uxMc8OZmZwNIeawR+
-        LCBLlT/tA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQ670-000470-DV; Mon, 13 May 2019 08:15:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DCF902029FD7A; Mon, 13 May 2019 10:15:03 +0200 (CEST)
-Date:   Mon, 13 May 2019 10:15:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Nicolai Stange <nstange@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Joerg Roedel <jroedel@suse.de>, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/4] x86/kprobes: Fix frame pointer annotations
-Message-ID: <20190513081503.GK2623@hirez.programming.kicks-ass.net>
-References: <20190508124248.u5ukpbhnh4wpiccq@treble>
- <20190508153907.GM2589@hirez.programming.kicks-ass.net>
- <20190508184848.qerg3flv3ej3xsev@treble>
- <20190509102030.dfa62e058f09d0d8cbdd6053@kernel.org>
- <20190509081431.GO2589@hirez.programming.kicks-ass.net>
- <20190509230106.3551b08553440d125e437f66@kernel.org>
- <20190509171416.GY2623@hirez.programming.kicks-ass.net>
- <20190510135831.c4ad309c68fc254f819194fc@kernel.org>
- <20190510124054.GV2589@hirez.programming.kicks-ass.net>
- <20190511095655.405147cde331cd1da539d0e8@kernel.org>
+        Mon, 13 May 2019 04:15:33 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D89QCh015186;
+        Mon, 13 May 2019 03:15:23 -0500
+Authentication-Results: ppops.net;
+        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
+Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
+        by mx0a-001ae601.pphosted.com with ESMTP id 2sdusy2arj-1;
+        Mon, 13 May 2019 03:15:23 -0500
+Received: from EDIEX02.ad.cirrus.com (unknown [198.61.84.81])
+        by mail1.cirrus.com (Postfix) with ESMTP id 0A979611C8AD;
+        Mon, 13 May 2019 03:15:23 -0500 (CDT)
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Mon, 13 May
+ 2019 09:15:22 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
+ Transport; Mon, 13 May 2019 09:15:22 +0100
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id CA94F2A1;
+        Mon, 13 May 2019 09:15:21 +0100 (BST)
+Date:   Mon, 13 May 2019 09:15:21 +0100
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Daniel Gomez <dagmcr@gmail.com>
+CC:     Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "moderated list:CIRRUS LOGIC MADERA CODEC DRIVERS" 
+        <alsa-devel@alsa-project.org>,
+        "open list:CIRRUS LOGIC MADERA CODEC DRIVERS" 
+        <patches@opensource.cirrus.com>,
+        open list <linux-kernel@vger.kernel.org>, <javier@dowhile0.org>
+Subject: Re: [PATCH v2] mfd: madera: Add missing of table registration
+Message-ID: <20190513081521.GE45394@ediswmail.ad.cirrus.com>
+References: <1557569038-20340-1-git-send-email-dagmcr@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190511095655.405147cde331cd1da539d0e8@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557569038-20340-1-git-send-email-dagmcr@gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=988 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 09:56:55AM +0900, Masami Hiramatsu wrote:
-> On Fri, 10 May 2019 14:40:54 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Sat, May 11, 2019 at 12:03:58PM +0200, Daniel Gomez wrote:
+> MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+> OF mathing mechanism and register it.
 > 
-> > On Fri, May 10, 2019 at 01:58:31PM +0900, Masami Hiramatsu wrote:
-> > > On Thu, 9 May 2019 19:14:16 +0200
-> > > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > > > --- a/arch/x86/kernel/kprobes/core.c
-> > > > > > +++ b/arch/x86/kernel/kprobes/core.c
-> > > > > > @@ -731,29 +731,8 @@ asm(
-> > > > > >  	".global kretprobe_trampoline\n"
-> > > > > >  	".type kretprobe_trampoline, @function\n"
-> > > > > >  	"kretprobe_trampoline:\n"
-> > 
-> > > > > Here, we need a gap for storing ret-ip, because kretprobe_trampoline is
-> > > > > the address which is returned from the target function. We have no 
-> > > > > "ret-ip" here at this point. So something like
-> > > > > 
-> > > > > +	"push $0\n"	/* This is a gap, will be filled with real return address*/
-> > > > 
-> > > > The trampoline already provides a gap, trampoline_handler() will need to
-> > > > use int3_emulate_push() if it wants to inject something on the return
-> > > > stack.
-> > > 
-> > > I guess you mean the int3 case. This trampoline is used as a return destination.
-> > 
-> > > When the target function is called, kretprobe interrupts the first instruction,
-> > > and replace the return address with this trampoline. When a "ret" instruction
-> > > is done, it returns to this trampoline. Thus the stack frame start with
-> > > previous context here. As you described above,
-> > 
-> > I would prefer to change that to inject an extra return address, instead
-> > of replacing it. With the new exception stuff we can actually do that.
-> > 
-> > So on entry we then go from:
-> > 
-> > 	<previous context>
-> > 	RET-IP
-> > 
-> > to
-> > 
-> > 	<previous context>
-> > 	RET-IP
-> > 	return-trampoline
-> > 
-> > So when the function returns, it falls into the trampoline instead.
+> Before this patch:
+> modinfo ./drivers/mfd/madera.ko | grep alias
 > 
-> Is that really possible? On x86-64, most parameters are passed by registers,
-> but x86-32 (and x86-64 in rare case) some parameters can be passed by stack.
-> If we change the stack layout in the function prologue, the code in
-> function body can not access those parameters on stack.
+> After this patch:
+> modinfo ./drivers/mfd/madera.ko | grep alias
+> alias:          of:N*T*Ccirrus,wm1840C*
+> alias:          of:N*T*Ccirrus,wm1840
+> alias:          of:N*T*Ccirrus,cs47l91C*
+> alias:          of:N*T*Ccirrus,cs47l91
+> alias:          of:N*T*Ccirrus,cs47l90C*
+> alias:          of:N*T*Ccirrus,cs47l90
+> alias:          of:N*T*Ccirrus,cs47l85C*
+> alias:          of:N*T*Ccirrus,cs47l85
+> alias:          of:N*T*Ccirrus,cs47l35C*
+> alias:          of:N*T*Ccirrus,cs47l35
+> 
+> Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+> Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+> ---
 
-Ooh, I see what you mean... yes that might be trouble indeed. Damn..
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
