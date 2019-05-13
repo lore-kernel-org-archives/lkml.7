@@ -2,275 +2,172 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0964AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E306BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F4521019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AiXIHfU+"
+	by mail.kernel.org (Postfix) with ESMTP id A9E5C208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557770357;
+	bh=chthummUnDi6jF96XxZxwH7LSPk/OAQm22QGXLqF65E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Dyot2HOtiQhB4ON1P1O5/77aW722Z9kitFcawRd3Gs0WPtYMb9t1qPXXx7jGAzbZ5
+	 sdoCT9OjZNE1FitY/GUqipe4G/GPEJtjmsdtQMvWh82ganqvaQwGl+/5Lak6iOeknz
+	 3ecES7mO7nlgWVKwlzEOa5BZPLP/LcZ8ZLy89Pfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbfEMR7I (ORCPT
+        id S1732007AbfEMR7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:59:08 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45845 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727660AbfEMR7I (ORCPT
+        Mon, 13 May 2019 13:59:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33063 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727660AbfEMR7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:59:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id s11so7581869pfm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:07 -0700 (PDT)
+        Mon, 13 May 2019 13:59:16 -0400
+Received: by mail-pl1-f195.google.com with SMTP id y3so6853547plp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/zUdov0OQ/NW5Sijd1/dCa6E7OCrJGBQr3YA7lcDOxE=;
-        b=AiXIHfU+bKoH6/kAMNQE6cB+9Wt2xEWh+iiznkXopa00ut+DUJxXUGTn0RaiPfOJAl
-         sHFT+MrLgZbfROwJxnZMBOWoNkqoLtwY70D4HPsuVOVzTbBb7sR8kpVGC0TvhVUkICXG
-         B9/3eH7ypimaWmaDi0OCUQFS5OTJnVYKMq89DdylRD5B6v4W5Uq4kkX0GTA3jt/qsYKQ
-         IClEc2EmhDYbB44SMtegVLHu2aIN8tT7WEsaDLbof7fYKW4chEOmrOHFBoKCT89XBSFl
-         zjXsEFUnoeQvh+1NVbK5R59l1YN9BRAMUz6iTV2d6ITjIBGZevyrhxwJO2o3bvJEXJPy
-         GPnQ==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=PbTPqRIXK145J6jM9TocqCkiuKfdPns+VGcz+M9dsbI=;
+        b=JsCEMQ4gwm4R9QRKjmWrLKaExmuouBpOoQM7J1yCTjNoWQP+YBJQzuuJtEpl1pUkAb
+         kRXTtJ4efaL6aTwmrINNZl2UfuLDnQemA+pVqTTQ//jeZeyCNmaVbyqv8LkzCKYCtN4E
+         XCGF2oSSScy/3DXYwLsRDhxO4PVX3kawofDWo5fF9fi6Vb4RXRKqfl2FWghQ/u72wSXh
+         OEnvQ0bKvfhbGMxRBr0wrWuUXs4EVPPgzCkhoX8x+mqzIozABC0cpc4BR2bju+QAp/NG
+         HUnBG4YjYovGKq48CXD/bZeD6iI6IOmH+8GaqLf1JcPqEXlkXiWi+y8s1hcDiBifFx99
+         ugTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/zUdov0OQ/NW5Sijd1/dCa6E7OCrJGBQr3YA7lcDOxE=;
-        b=X+vPB3ztQ/pqqVfpIgRKerXKkftftZKHsCQ6W5taodxV+jNfVNyid0entLkKWwYDoQ
-         O7LpuQlcirdalf8Rzy6gJbpsMUWNnJQVcwVUfsgN2rfPsM//qdOwLzgLyThht774YpFY
-         RE1dociLrJeuzV3v8EXcRMBqbZvMqAq523mlvFn/OJaO5wS+eoJLeWouNoI//7NgTy1/
-         Mw1DzDqnywCIQeTgqRmUsHSXuwrdixTb4hgXXACElMdgf2RlZX3f1RGZSicOjoxgtR+Z
-         j/rlrWbhoVWEeILynZ/Yumb30R+/dtMGsPKlxL7VWvgNyYDhfe7b0mWRvKDuWKFoc7R0
-         o4vg==
-X-Gm-Message-State: APjAAAXS5oO+Z9HUZ492D7niovXmuJVh8ypTw8IbS8bCR1lDXnExqWvs
-        Ft2+AHynbJJwyntYQXXGZyHHTw==
-X-Google-Smtp-Source: APXvYqydg+uvznchvEzBdRbjqRXnmTIVJS5PDCV9rpk5KxlLCGyj13QJso3eM+zXoFH5ZyTBjnWExA==
-X-Received: by 2002:aa7:8251:: with SMTP id e17mr14647963pfn.147.1557770346959;
-        Mon, 13 May 2019 10:59:06 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id z7sm4109471pfr.23.2019.05.13.10.59.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 10:59:06 -0700 (PDT)
-Date:   Mon, 13 May 2019 11:59:04 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH v3 25/30] coresight: Use fwnode handle instead of device
- names
-Message-ID: <20190513175904.GE16162@xps15>
-References: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
- <1557226378-10131-26-git-send-email-suzuki.poulose@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557226378-10131-26-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=PbTPqRIXK145J6jM9TocqCkiuKfdPns+VGcz+M9dsbI=;
+        b=aLRlpp5kyby+mj8JGx2AV7U5cyvC1XDmpz3XtKpFiHC+BnBwXlRwvpgFtg+B2IsaDs
+         uFQOD1fJkiJJnjAGGnrsG0ARtsyVXrUyCh34K/TpqL0iqkN+hPjsz0FLFkUPIGQXC8+Q
+         PpLHKWIHl53+gEEj9KeBeoO7e3r74bfww5yypcRkJSnAS7sCs8WklpOMjUsLY6C7wt7G
+         96n0bTAHa0DSzXNOHOcPtEpncxqJ8DvD0qgUWHREmsP7yTyNhBLOdDfpkPW9b4mmL78W
+         pjwule8qTETrGm+NjQX/p0MmIJsfkDijM5zdXNrAUwnJy5KvuLvJCcvAfEtQp5m/2Cwh
+         Rv8Q==
+X-Gm-Message-State: APjAAAVDZlDDpcvrlrrhkP8OE4vQzLnbeqv40IpCGUVhh850SZHsdeti
+        a8YI41wJQyMRzULT/pIHkSE=
+X-Google-Smtp-Source: APXvYqzW2aD4HbQFpYeqNzLtrglqrp1Wcn6T/oBo2DESYMCoH/x3Lo4O5B20e4SMWCsfrD0nqbLJ4A==
+X-Received: by 2002:a17:902:720a:: with SMTP id ba10mr32544476plb.192.1557770354971;
+        Mon, 13 May 2019 10:59:14 -0700 (PDT)
+Received: from localhost.localdomain ([96.79.124.202])
+        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 10:59:13 -0700 (PDT)
+From:   Len Brown <lenb@kernel.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH 0/19] v6 multi-die/package topology support
+Date:   Mon, 13 May 2019 13:58:44 -0400
+Message-Id: <20190513175903.8735-1-lenb@kernel.org>
+X-Mailer: git-send-email 2.18.0-rc0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:52:52AM +0100, Suzuki K Poulose wrote:
-> We rely on the device names to find a CoreSight device on the
-> coresight bus. The device name however is obtained from the platform,
-> which is bound to the real platform/amba device. As we are about
-> to use different naming scheme for the coresight devices, we can't
-> rely on the platform device name to find the corresponding
-> coresight device. Instead we use the platform agnostic
-> "fwnode handle" of the parent device to find the devices.
-> We also reuse the same fwnode as the parent for the Coresight
-> device we create.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-platform.c | 14 +++++---
->  drivers/hwtracing/coresight/coresight-priv.h     |  6 ++--
->  drivers/hwtracing/coresight/coresight.c          | 42 +++++++++++++++++++-----
->  include/linux/coresight.h                        |  4 +--
->  4 files changed, 49 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 4394095..49112a5 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -36,7 +36,7 @@ static int coresight_alloc_conns(struct device *dev,
->  	return 0;
->  }
->  
-> -static int coresight_device_fwnode_match(struct device *dev, void *fwnode)
-> +int coresight_device_fwnode_match(struct device *dev, void *fwnode)
->  {
->  	return dev_fwnode(dev) == fwnode;
->  }
-> @@ -219,9 +219,15 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  		}
->  
->  		conn->outport = endpoint.port;
-> -		conn->child_name = devm_kstrdup(dev,
-> -						dev_name(rdev),
-> -						GFP_KERNEL);
-> +		/*
-> +		 * Hold the refcount to the target device. This could be
-> +		 * released via:
-> +		 * 1) coresight_release_platform_data() if the probe fails or
-> +		 *    this device is unregistered.
-> +		 * 2) While removing the target device via
-> +		 *    coresight_remove_match()
-> +		 */
-> +		conn->child_fwnode = fwnode_handle_get(rdev_fwnode);
->  		conn->child_port = rendpoint.port;
->  		/* Connection record updated */
->  		ret = 1;
-> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-> index c216421..8b07fe5 100644
-> --- a/drivers/hwtracing/coresight/coresight-priv.h
-> +++ b/drivers/hwtracing/coresight/coresight-priv.h
-> @@ -200,8 +200,8 @@ static inline void *coresight_get_uci_data(const struct amba_id *id)
->  	return 0;
->  }
->  
-> -static inline void
-> -coresight_release_platform_data(struct coresight_platform_data *pdata)
-> -{}
-> +void coresight_release_platform_data(struct coresight_platform_data *pdata);
-> +
-> +int coresight_device_fwnode_match(struct device *dev, void *fwnode);
->  
->  #endif
-> diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight.c
-> index 526141c..c9c8a8c 100644
-> --- a/drivers/hwtracing/coresight/coresight.c
-> +++ b/drivers/hwtracing/coresight/coresight.c
-> @@ -978,6 +978,7 @@ static void coresight_device_release(struct device *dev)
->  {
->  	struct coresight_device *csdev = to_coresight_device(dev);
->  
-> +	fwnode_handle_put(csdev->dev.fwnode);
->  	kfree(csdev->refcnt);
->  	kfree(csdev);
->  }
-> @@ -1009,13 +1010,11 @@ static int coresight_orphan_match(struct device *dev, void *data)
->  		/* We have found at least one orphan connection */
->  		if (conn->child_dev == NULL) {
->  			/* Does it match this newly added device? */
-> -			if (conn->child_name &&
-> -			    !strcmp(dev_name(&csdev->dev), conn->child_name)) {
-> +			if (conn->child_fwnode ==  csdev->dev.fwnode)
 
-There is one space too mnay after the '=='. 
+This patch series does 4 things.
 
->  				conn->child_dev = csdev;
-> -			} else {
-> +			else
->  				/* This component still has an orphan */
->  				still_orphan = true;
-> -			}
->  		}
->  	}
->  
-> @@ -1047,9 +1046,9 @@ static void coresight_fixup_device_conns(struct coresight_device *csdev)
->  		struct coresight_connection *conn = &csdev->pdata->conns[i];
->  		struct device *dev = NULL;
->  
-> -		if (conn->child_name)
-> -			dev = bus_find_device_by_name(&coresight_bustype, NULL,
-> -						      conn->child_name);
-> +		dev = bus_find_device(&coresight_bustype, NULL,
-> +				      (void *)conn->child_fwnode,
-> +				      coresight_device_fwnode_match);
->  		if (dev) {
->  			conn->child_dev = to_coresight_device(dev);
->  			/* and put reference from 'bus_find_device()' */
-> @@ -1084,9 +1083,15 @@ static int coresight_remove_match(struct device *dev, void *data)
->  		if (conn->child_dev == NULL)
->  			continue;
->  
-> -		if (!strcmp(dev_name(&csdev->dev), conn->child_name)) {
-> +		if (csdev->dev.fwnode == conn->child_fwnode) {
->  			iterator->orphan = true;
->  			conn->child_dev = NULL;
-> +			/*
-> +			 * Drop the reference to the handle for the remote
-> +			 * device acquired in parsing the connections from
-> +			 * platform data.
-> +			 */
-> +			fwnode_handle_put(conn->child_fwnode);
->  			/* No need to continue */
->  			break;
->  		}
-> @@ -1166,6 +1171,22 @@ static int __init coresight_init(void)
->  }
->  postcore_initcall(coresight_init);
->  
-> +/*
-> + * coresight_release_platform_data: Release references to the devices connected
-> + * to the output port of this device.
-> + */
-> +void coresight_release_platform_data(struct coresight_platform_data *pdata)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < pdata->nr_outport; i++) {
-> +		if (pdata->conns[i].child_fwnode) {
-> +			fwnode_handle_put(pdata->conns[i].child_fwnode);
-> +			pdata->conns[i].child_fwnode = 0;
+1. Parse the new CPUID.1F leaf to discover multi-die/package topology
 
-I know there isn't a set standard for using '0' or NULL but since the latter is
-used throughout the file I'd like to avoid an hybrid scheme.
+2. Export multi-die topology inside the kernel
 
-> +		}
-> +	}
-> +}
-> +
->  struct coresight_device *coresight_register(struct coresight_desc *desc)
->  {
->  	int ret;
-> @@ -1210,6 +1231,11 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->  	csdev->dev.parent = desc->dev;
->  	csdev->dev.release = coresight_device_release;
->  	csdev->dev.bus = &coresight_bustype;
-> +	/*
-> +	 * Hold the reference to our parent device. This will be
-> +	 * dropped only in coresight_device_release().
-> +	 */
-> +	csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
->  	dev_set_name(&csdev->dev, "%s", desc->name);
->  
->  	ret = device_register(&csdev->dev);
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index b67d507..b40544b 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -126,15 +126,15 @@ struct coresight_desc {
->  /**
->   * struct coresight_connection - representation of a single connection
->   * @outport:	a connection's output port number.
-> - * @chid_name:	remote component's name.
->   * @child_port:	remote component's port number @output is connected to.
-> + * @chid_fwnode: remote component's fwnode handle.
->   * @child_dev:	a @coresight_device representation of the component
->  		connected to @outport.
->   */
->  struct coresight_connection {
->  	int outport;
-> -	const char *child_name;
->  	int child_port;
-> +	struct fwnode_handle *child_fwnode;
->  	struct coresight_device *child_dev;
->  };
-> 
+3. Update 4 places (coretemp, pkgtemp, rapl, perf) that that need to know
+   the difference between die and package-scope MSR.
 
-With the above: 
+4. Export multi-die topology to user-space via sysfs
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
- 
-> -- 
-> 2.7.4
-> 
+These changes should have no impact on cache topology,
+NUMA topology, Linux scheduler, or system performance.
+
+These topology changes primarily impact parts of the kernel
+and some applications that care about package MSR scope.
+Also, some software is licensed per package, and other tools,
+such as benchmark reporting software sometimes cares about packages.
+
+Changes since v5:
+	
+	The patch numbers have decremented by 3, since the first 3 patches
+	in the original series are now upstream.
+
+	The last two "Cosmetic rename" patches have been replaced with
+	those by Kan, who did a more thorough variable rename than I had
+	originally proposed.
+
+
+	[PATCH 18/19] perf/x86/intel/uncore: Cosmetic renames in response to multi-die/pkg support
+	[PATCH 19/19] perf/x86/intel/rapl: Cosmetic rename internal variables in response to multi-die/pkg support
+
+I'm not aware of any outstanding feedback on this series,
+functional or cosmetic.
+
+thanks,
+Len Brown, Intel Opensource Technology Center
+
+--------------
+The following changes since commit a13f0655503a4a89df67fdc7cac6a7810795d4b3:
+
+  Merge tag 'iommu-updates-v5.2' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/joro/iommu (2019-05-13 09:23:18 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lenb/linux.git x86
+
+for you to fetch changes up to 0ddb97e121397d37933233da303556141814fa47:
+
+  perf/x86/intel/rapl: Cosmetic rename internal variables in response to multi-die/pkg support (2019-05-13 13:41:50 -0400)
+
+----------------------------------------------------------------
+Kan Liang (5):
+      perf/x86/intel/uncore: Support multi-die/package
+      perf/x86/intel/rapl: Support multi-die/package
+      perf/x86/intel/cstate: Support multi-die/package
+      perf/x86/intel/uncore: Cosmetic renames in response to multi-die/pkg support
+      perf/x86/intel/rapl: Cosmetic rename internal variables in response to multi-die/pkg support
+
+Len Brown (9):
+      x86 topology: Add CPUID.1F multi-die/package support
+      x86 topology: Create topology_max_die_per_package()
+      cpu topology: Export die_id
+      x86 topology: Define topology_die_id()
+      x86 topology: Define topology_logical_die_id()
+      topology: Create package_cpus sysfs attribute
+      topology: Create core_cpus and die_cpus sysfs attributes
+      thermal/x86_pkg_temp_thermal: Cosmetic: Rename internal variables to zones from packages
+      hwmon/coretemp: Cosmetic: Rename internal variables to zones from packages
+
+Zhang Rui (5):
+      powercap/intel_rapl: Simplify rapl_find_package()
+      powercap/intel_rapl: Support multi-die/package
+      thermal/x86_pkg_temp_thermal: Support multi-die/package
+      powercap/intel_rapl: Update RAPL domain name and debug messages
+      hwmon/coretemp: Support multi-die/package
+
+ Documentation/cputopology.txt                |  48 ++++++---
+ Documentation/x86/topology.rst               |   4 +
+ arch/x86/events/intel/cstate.c               |  14 ++-
+ arch/x86/events/intel/rapl.c                 |  20 ++--
+ arch/x86/events/intel/uncore.c               |  80 +++++++--------
+ arch/x86/events/intel/uncore.h               |   4 +-
+ arch/x86/events/intel/uncore_snbep.c         |   4 +-
+ arch/x86/include/asm/processor.h             |   4 +-
+ arch/x86/include/asm/smp.h                   |   1 +
+ arch/x86/include/asm/topology.h              |  17 ++++
+ arch/x86/kernel/cpu/common.c                 |   1 +
+ arch/x86/kernel/cpu/topology.c               |  88 +++++++++++++----
+ arch/x86/kernel/smpboot.c                    |  69 +++++++++++++
+ arch/x86/xen/smp_pv.c                        |   1 +
+ drivers/base/topology.c                      |  22 +++++
+ drivers/hwmon/coretemp.c                     |  36 +++----
+ drivers/powercap/intel_rapl.c                |  75 +++++++-------
+ drivers/thermal/intel/x86_pkg_temp_thermal.c | 142 ++++++++++++++-------------
+ include/linux/topology.h                     |   6 ++
+ 19 files changed, 422 insertions(+), 214 deletions(-)
+
+
