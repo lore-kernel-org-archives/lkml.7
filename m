@@ -2,148 +2,102 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE25C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD32C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E810120989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:21:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bWnAias+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PfTxizg/"
+	by mail.kernel.org (Postfix) with ESMTP id 6B4DD20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfEMKVJ (ORCPT
+        id S1729059AbfEMKVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:21:09 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:57216 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727982AbfEMKVI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:21:08 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C529F6029B; Mon, 13 May 2019 10:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557742867;
-        bh=o27eDQs8Ek4ezMIN7MbMFSjgb8ArAV7kG2SwqCvtZdA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWnAias+J9AckEoCMLevKws76NYrDXBBLj8I8PGjCUEQuoLrYsbqZlIVIgdwr7dE1
-         2XyLTTeLBuDhXtkrm8PrvpKUzszgbLUSqv7BDGrZt/+gxYcaN+kx1PvN+1IN6FszaM
-         GBXWLXAGDcSmJfyJUY93kEk5jdytBx4RCBglyN9M=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5966C609F3;
-        Mon, 13 May 2019 10:21:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557742865;
-        bh=o27eDQs8Ek4ezMIN7MbMFSjgb8ArAV7kG2SwqCvtZdA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PfTxizg/kMBTrp0EV71oXX3pM20MBjQ3xDij46m8IqP93Dh8tGVh0kqdTdLyL8XX3
-         0ykzSWXuCEXU9uqEQtHcf3axo54NLz06R2s7TFfBW4xZb/P1cPu2id6jV7mUKrzq3Q
-         A+s62N4FmJbKMt5Bb4wskVuSMVIeA9aulAcmohdI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5966C609F3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org
-Cc:     david.brown@linaro.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, rnayak@codeaurora.org,
-        marc.w.gonzalez@free.fr, Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 9/9] arm64: dts: qcom: msm8998: Add rpmpd node
-Date:   Mon, 13 May 2019 15:50:15 +0530
-Message-Id: <20190513102015.26551-10-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190513102015.26551-1-sibis@codeaurora.org>
-References: <20190513102015.26551-1-sibis@codeaurora.org>
+        Mon, 13 May 2019 06:21:25 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37138 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728848AbfEMKUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:20:39 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B2A51795AEB80AF6238C;
+        Mon, 13 May 2019 18:20:35 +0800 (CST)
+Received: from [127.0.0.1] (10.142.68.147) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
+ 18:20:24 +0800
+Subject: Re: [RFC PATCH V2] kvm: arm64: export memory error recovery
+ capability to user space
+To:     Peter Maydell <peter.maydell@linaro.org>
+CC:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>,
+        "Zheng Xiang" <zhengxiang9@huawei.com>
+References: <1557728917-49079-1-git-send-email-gengdongjiu@huawei.com>
+ <CAFEAcA-S6Kh8yUqVZVA8gtDdRscgVaTfC4CwxngoS2ZPt6K9ww@mail.gmail.com>
+From:   gengdongjiu <gengdongjiu@huawei.com>
+Message-ID: <da887bd0-75db-4ad8-cc7a-fa5df26c88fd@huawei.com>
+Date:   Mon, 13 May 2019 18:20:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFEAcA-S6Kh8yUqVZVA8gtDdRscgVaTfC4CwxngoS2ZPt6K9ww@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.142.68.147]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the rpmpd node on the msm8998 and define the available levels.
+On 2019/5/13 17:44, Peter Maydell wrote:
+> On Mon, 13 May 2019 at 07:32, Dongjiu Geng <gengdongjiu@huawei.com> wrote:
+>>
+>> When user space do memory recovery, it will check whether KVM and
+>> guest support the error recovery, only when both of them support,
+>> user space will do the error recovery. This patch exports this
+>> capability of KVM to user space.
+>>
+>> Cc: Peter Maydell <peter.maydell@linaro.org>
+>> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
+>> ---
+>> v1->v2:
+>> 1. check whether host support memory failure instead of RAS capability
+>>    https://patchwork.kernel.org/patch/10730827/
+>>
+>> v1:
+>> 1. User space needs to check this capability of host is suggested by Peter[1],
+>> this patch as RFC tag because user space patches are still under review,
+>> so this kernel patch is firstly sent out for review.
+>>
+>> [1]: https://patchwork.codeaurora.org/patch/652261/
+>> ---
+> 
+> I thought the conclusion of the thread on the v1 patch was that
+> userspace doesn't need to specifically ask the host kernel if
+> it has support for this -- if it does not, then the host kernel
+> will just never deliver userspace any SIGBUS with MCEERR code,
+> which is fine. Or am I still confused?
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/msm8998.dtsi | 51 +++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+thanks Peter's quick reply.
+yes, I think so, if it does not support,  then the host kernel
+will just never deliver userspace any SIGBUS with MCEERR code.
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 574be78a936e..aa501221ca4d 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -4,6 +4,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-msm8998.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-@@ -264,6 +265,56 @@
- 				compatible = "qcom,rpmcc-msm8998", "qcom,rpmcc";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmpd: power-controller {
-+				compatible = "qcom,msm8998-rpmpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmpd_opp_table>;
-+
-+				rpmpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmpd_opp_ret: opp1 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION>;
-+					};
-+
-+					rpmpd_opp_ret_plus: opp2 {
-+						opp-level = <RPM_SMD_LEVEL_RETENTION_PLUS>;
-+					};
-+
-+					rpmpd_opp_min_svs: opp3 {
-+						opp-level = <RPM_SMD_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmpd_opp_low_svs: opp4 {
-+						opp-level = <RPM_SMD_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmpd_opp_svs: opp5 {
-+						opp-level = <RPM_SMD_LEVEL_SVS>;
-+					};
-+
-+					rpmpd_opp_svs_plus: opp6 {
-+						opp-level = <RPM_SMD_LEVEL_SVS_PLUS>;
-+					};
-+
-+					rpmpd_opp_nom: opp7 {
-+						opp-level = <RPM_SMD_LEVEL_NOM>;
-+					};
-+
-+					rpmpd_opp_nom_plus: opp8 {
-+						opp-level = <RPM_SMD_LEVEL_NOM_PLUS>;
-+					};
-+
-+					rpmpd_opp_turbo: opp9 {
-+						opp-level = <RPM_SMD_LEVEL_TURBO>;
-+					};
-+
-+					rpmpd_opp_turbo_plus: opp10 {
-+						opp-level = <RPM_SMD_LEVEL_BINNING>;
-+					};
-+				};
-+			};
- 		};
- 	};
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+so maybe we do not need this patch.
+
+> 
+> thanks
+> -- PMM
+> .
+> 
 
