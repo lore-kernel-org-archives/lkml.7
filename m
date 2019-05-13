@@ -2,196 +2,141 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CBFC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7C6C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF747214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F18E2208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iESxXiQh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WyIG9DWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfEMT4x (ORCPT
+        id S1726369AbfEMT5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:56:53 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49854 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbfEMT4w (ORCPT
+        Mon, 13 May 2019 15:57:48 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33696 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725970AbfEMT5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:56:52 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DJlc2F001155
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:56:52 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=Q/m7r9oDhbabE7C5gARZpfLLlDj2HaUtKuQrbtPLsyQ=;
- b=iESxXiQh8mb73jrpFI7BpQ+227YydRv6Qyx7giJk6NgY/AibbJqMfp5B9+i5/DFDZmaJ
- xGCKpXW5AcggB98y/MQ6C2KMCqG4Nbiehiql13wiZ92CLvkMRjJqsDEnLv0GZvoYnso+
- zQwnhi7bI0MeWMwGDquYHiMIwQeIOulmK44= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sf94d1fce-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:56:51 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 13 May 2019 12:56:50 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 4F25311FD7D42; Mon, 13 May 2019 12:56:48 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Tejun Heo <tj@kernel.org>
-CC:     Oleg Nesterov <oleg@redhat.com>, Alex Xu <alex_y_xu@yahoo.ca>,
-        <kernel-team@fb.com>, <cgroups@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] signal: don't always leave task frozen after ptrace_stop()
-Date:   Mon, 13 May 2019 12:55:17 -0700
-Message-ID: <20190513195517.2289671-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Mon, 13 May 2019 15:57:48 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m32so13226389qtf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Bxx9qTEQPZCN6By8b0tqb6gxSLbpWnZePTX9GDWKGNA=;
+        b=WyIG9DWNoKGWKTOfK7IfWSWYYWkD64s4Z+NGsHP4f+n6jd1n8LCzCfyTY/LFd5Ux0E
+         AyHyea61j+xDN63EpzbFZY/TtI1MhiPwPvOlpID7HWDlW/moU4+PUDTXAgF7PpPuvVW3
+         Xak5i4WnRDcSgWEbg+hsXzuexe/e5awUJtxMxBJrVA5W12PUs6Rp7w2nfoS/poQsqvnx
+         mErZdHlM41ih6gPTIM8CHAzPNcJqlhu+VqNsscaloh4tAwTgImAzvFCnolRZmTsamM4r
+         3sh5duuCss1kOXnXAsC7EjZ+4/4wofQTIByj7cZ3uWrmwJua4fxpqMhsApkimuO8fjxK
+         VZnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Bxx9qTEQPZCN6By8b0tqb6gxSLbpWnZePTX9GDWKGNA=;
+        b=NKP7Xkf8FtzYL8hRNjLw7/4IoXHsE7W1miW2D/XploT6qxql5XvBnMG+Pn806KXkNi
+         8HOvJfkbHulYlHS8roJWgi/9QVWHaJpKuJt0GKb5qCSzlZX3oo2HW68YGQ8oVMJV4oz3
+         dnHJxj+3OQYnoSBSM/vhYx0LUdmLUIi/RFdGNObLol8oy1btekgvTw5RB5+VzvrUtWTo
+         5j4EJeu+DNBVnHU8PK1+eJKc2lTOI7RrQSY8Dy84symZ3ms3GRWh83z1N8f3MP6hGoW3
+         tggN8htj5JJ/AyRnoEVbBSP1mbqDOPJRAraUkmeRu13ffMiQyklZf5yp4yEY9nhFusMc
+         OSBQ==
+X-Gm-Message-State: APjAAAXdLAhWUqDEGfoPcl0zMBAUIDvG+4yWU8Ln6+rqNLYvI/o8TC3E
+        ddCyrjOfrKFIGDOJgpDK5fw=
+X-Google-Smtp-Source: APXvYqwqot8tE34mvP0GQ/5QVPNJZZIzO6eK0oVlc39k+IOLKOTbdTCHlLmeI1tH2wkF2YFfNfTfkA==
+X-Received: by 2002:a0c:b78a:: with SMTP id l10mr3468054qve.62.1557777467135;
+        Mon, 13 May 2019 12:57:47 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id 124sm6782932qkj.59.2019.05.13.12.57.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 12:57:46 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C26A4403AD; Mon, 13 May 2019 16:57:32 -0300 (-03)
+Date:   Mon, 13 May 2019 16:57:32 -0300
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] perf scripts python: exported-sql-viewer.py: Fix
+ error when shrinking / enlarging font
+Message-ID: <20190513195732.GC3198@kernel.org>
+References: <20190503120828.25326-1-adrian.hunter@intel.com>
+ <20190503120828.25326-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=352 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130133
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190503120828.25326-2-adrian.hunter@intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ptrace_stop() function contains the cgroup_enter_frozen() call,
-but no cgroup_leave_frozen(). When ptrace_stop() is called from the
-do_jobctl_trap() path, it's correct, because corresponding
-cgroup_leave_frozen() calls in get_signal() will guarantee that
-the task won't leave the signal handler loop frozen.
+Em Fri, May 03, 2019 at 03:08:23PM +0300, Adrian Hunter escreveu:
+> Fix the following error if shrink / enlarge font is used with the help
+> window.
+> 
+>   Traceback (most recent call last):
+>     File "tools/perf/scripts/python/exported-sql-viewer.py", line 2791, in ShrinkFont
+>       ShrinkFont(win.view)
+>   AttributeError: 'HelpWindow' object has no attribute 'view'
 
-However, if ptrace_stop() is called from ptrace_signal() or
-ptrace_notify(), there is no such guarantee, and the task may leave
-with the frozen bit set.
+Humm, this is kinda frustrating, I tried it and expected it to either
+enlarge/shrink or tell me that that is not possible, and why :-\
 
-It leads to the regression, reported by Alex Xu. Write system call
-gets mistakenly interrupted by fake TIF_SIGPENDING, which is set
-by recalc_sigpending_tsk() because of the set frozen bit.
+Anyway, if you think this is the best approach, applied.
 
-The regression can be reproduced by stracing the following simple
-program:
-
-  #include <unistd.h>
-
-  int main() {
-      write(1, "a", 1);
-      return 0;
-  }
-
-An attempt to run strace ./a.out leads to the infinite loop:
-  [ pre-main omitted ]
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
-  [ repeats forever ]
-
-With this patch applied, it works as expected:
-  [ pre-main omitted ]
-  write(1, "a", 1)                        = 1
-  exit_group(0)                           = ?
-  +++ exited with 0 +++
-
-Reported-by: Alex Xu <alex_y_xu@yahoo.ca>
-Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>
----
- kernel/signal.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 8607b11ff936..f12abbda4c4b 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2016,7 +2016,8 @@ static bool sigkill_pending(struct task_struct *tsk)
-  * If we actually decide not to stop at all because the tracer
-  * is gone, we keep current->exit_code unless clear_code.
-  */
--static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t *info)
-+static void ptrace_stop(int exit_code, int why, int clear_code,
-+			kernel_siginfo_t *info, bool may_remain_frozen)
- 	__releases(&current->sighand->siglock)
- 	__acquires(&current->sighand->siglock)
- {
-@@ -2112,6 +2113,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
- 		preempt_enable_no_resched();
- 		cgroup_enter_frozen();
- 		freezable_schedule();
-+		if (!may_remain_frozen)
-+			cgroup_leave_frozen(true);
- 	} else {
- 		/*
- 		 * By the time we got the lock, our tracer went away.
-@@ -2152,7 +2155,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
- 	recalc_sigpending_tsk(current);
- }
+- Arnaldo
  
--static void ptrace_do_notify(int signr, int exit_code, int why)
-+static void ptrace_do_notify(int signr, int exit_code, int why,
-+			     bool may_remain_frozen)
- {
- 	kernel_siginfo_t info;
- 
-@@ -2163,7 +2167,7 @@ static void ptrace_do_notify(int signr, int exit_code, int why)
- 	info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
- 
- 	/* Let the debugger run.  */
--	ptrace_stop(exit_code, why, 1, &info);
-+	ptrace_stop(exit_code, why, 1, &info, may_remain_frozen);
- }
- 
- void ptrace_notify(int exit_code)
-@@ -2173,7 +2177,7 @@ void ptrace_notify(int exit_code)
- 		task_work_run();
- 
- 	spin_lock_irq(&current->sighand->siglock);
--	ptrace_do_notify(SIGTRAP, exit_code, CLD_TRAPPED);
-+	ptrace_do_notify(SIGTRAP, exit_code, CLD_TRAPPED, false);
- 	spin_unlock_irq(&current->sighand->siglock);
- }
- 
-@@ -2328,10 +2332,10 @@ static void do_jobctl_trap(void)
- 			signr = SIGTRAP;
- 		WARN_ON_ONCE(!signr);
- 		ptrace_do_notify(signr, signr | (PTRACE_EVENT_STOP << 8),
--				 CLD_STOPPED);
-+				 CLD_STOPPED, true);
- 	} else {
- 		WARN_ON_ONCE(!signr);
--		ptrace_stop(signr, CLD_STOPPED, 0, NULL);
-+		ptrace_stop(signr, CLD_STOPPED, 0, NULL, true);
- 		current->exit_code = 0;
- 	}
- }
-@@ -2385,7 +2389,7 @@ static int ptrace_signal(int signr, kernel_siginfo_t *info)
- 	 * comment in dequeue_signal().
- 	 */
- 	current->jobctl |= JOBCTL_STOP_DEQUEUED;
--	ptrace_stop(signr, CLD_TRAPPED, 0, info);
-+	ptrace_stop(signr, CLD_TRAPPED, 0, info, false);
- 
- 	/* We're back.  Did the debugger cancel the sig?  */
- 	signr = current->exit_code;
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/scripts/python/exported-sql-viewer.py | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+> index c586abfb2b46..289e8dbd1444 100755
+> --- a/tools/perf/scripts/python/exported-sql-viewer.py
+> +++ b/tools/perf/scripts/python/exported-sql-viewer.py
+> @@ -2770,6 +2770,14 @@ class MainWindow(QMainWindow):
+>  		help_menu = menu.addMenu("&Help")
+>  		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
+>  
+> +	def Try(self, fn):
+> +		win = self.mdi_area.activeSubWindow()
+> +		if win:
+> +			try:
+> +				fn(win.view)
+> +			except:
+> +				pass
+> +
+>  	def Find(self):
+>  		win = self.mdi_area.activeSubWindow()
+>  		if win:
+> @@ -2787,12 +2795,10 @@ class MainWindow(QMainWindow):
+>  				pass
+>  
+>  	def ShrinkFont(self):
+> -		win = self.mdi_area.activeSubWindow()
+> -		ShrinkFont(win.view)
+> +		self.Try(ShrinkFont)
+>  
+>  	def EnlargeFont(self):
+> -		win = self.mdi_area.activeSubWindow()
+> -		EnlargeFont(win.view)
+> +		self.Try(EnlargeFont)
+>  
+>  	def EventMenu(self, events, reports_menu):
+>  		branches_events = 0
+> -- 
+> 2.17.1
+
 -- 
-2.20.1
 
+- Arnaldo
