@@ -2,111 +2,183 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AA9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA10FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C221208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A857C216FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Su1DQ2NT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah9G/JAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbfEMSEP (ORCPT
+        id S1732260AbfEMSE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:04:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43949 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729629AbfEMSEO (ORCPT
+        Mon, 13 May 2019 14:04:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46882 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729265AbfEMSE4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:04:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t22so7148413pgi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:04:14 -0700 (PDT)
+        Mon, 13 May 2019 14:04:56 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so15686444wrr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:04:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wpu18naFWlgtTqufqvjuipZH+1ZIKrnYEDY+wCZirDI=;
-        b=Su1DQ2NTL5anOFs65/rIBxXZTXEmw2eHtb7eiE+YTTvQST56qZuh6L+lUHM54HCHg6
-         wF17v5K5+kM0ua5oNZ6xvy5uvAm0PmxcGJ4qwqd3yy/PUy5S0hn6vJoOgakrwb/pvQZ9
-         WDcaGPYblYCjO/Nh/QPaa2f95xL2tzmtH05870FPj4yihzKn0jnKb75Z2S2jTECeIitq
-         rboKd2q9m7TXeuur6IJOrTWCl1NysaxceU30XbSe+iB3vRUw+YgdptfczQnNc2y5VTZT
-         KtcEaaIMJ2AsI/vdD88Jbr3SEaHmVdE7kojintJ8JAsG9Y5KjcFUshPfbV5S6vhAL4su
-         Q4EA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4ShfiSHZNiNvaog9lGofhsvzN9PjIHcO6bJwZMd5dm4=;
+        b=ah9G/JAAh9QSKb+xD+yCYFrE4FWXvb+tVkcazfNzSJBLYvzhjfxtRrQBv4ipnulXfH
+         ARm5Jk4HEhdlboQ9eXRZqSIsqt13LlD2Rte6TRHoR7dZs8N3+Egc6/ExCEDG32aWzpWy
+         HN6cJJvS7OqHWUoD3ZHmNMBc39JoYjdm0W2rH3V6Y4rR65q7z1kkEL4ujgBVcN3hp2X4
+         coZxPUFmwVdKXgApvxqffyptfV5EsRiuKl0ra2oKVGzN3x8Ct0XiyuuTJnWTAyeAUVQZ
+         qCpVEzNIm+ge2LS+PXV95LXpT/UudGPuc/+bbl5mzXochgpjP222yo1u+uoVVYn9et5w
+         saCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wpu18naFWlgtTqufqvjuipZH+1ZIKrnYEDY+wCZirDI=;
-        b=Wew7YnVBqZ1hs3ztY6ukEwR087YFwCXJL3drpnQ+32zOjA1j63xdaGD9jq3z+ApO3R
-         5a0dnL2sjiT3b/f8XkrcnifHB/JG+ZKuSk82E7GEQk3Vh7E9LAOpgkrJxdXrycaofNgL
-         lLJLfT6PPCSPeciCuYpN5S4OBjotySKu1csHA5pKELdH79SFh+Qo1z3o/w/IqTB1brnx
-         giyyXDwQmR0JGn6+ynPD8I+la3rEos8BkGcb8tv678PdLOABvsB5pIfp2zAf+daHwNb5
-         EO3uisLVFDek9yZrm9d0F3/KRQVHcUvpAteyEKzOZxpMhyIzAt1S9Bj3VpFemGNClBvl
-         cR0g==
-X-Gm-Message-State: APjAAAWDVsX6h1R3vVcfhuDjHB/LTid+COe0wN07inpcSwUYoSWzThNe
-        9rG7POZnrsrwQLALtL3jgc5ubvj7QpA+n4l3cOazxA==
-X-Google-Smtp-Source: APXvYqwVTW8vU6JAo+j/Ntm2ce8nBdARuG8R4ZkpRgVCALqgjtx2IHw8MNIMajSW9V4Q7dDl4BaUNklwtBOUm3wHgco=
-X-Received: by 2002:a63:fd4a:: with SMTP id m10mr33504119pgj.302.1557770653814;
- Mon, 13 May 2019 11:04:13 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4ShfiSHZNiNvaog9lGofhsvzN9PjIHcO6bJwZMd5dm4=;
+        b=N2yiAEWuQCMOVueaj1+mACfW2qic/utclHeI31eNb1bIB/75bi5c8J+PC3TFyZvym5
+         h9JkDL+Ya7hK8JR4eN3ul9DsfbWCPGP0r1QZVyfW+JMS+1gKXgkCfSRhYbebs+VMBTZJ
+         r9BwHxKF8vy3jxNKnfuM8xsUXvHFuBuOv8vgHGLOGzfp1n1xYTDhrjlHrpxk37QtbdyK
+         tzJ0YZxo758DAWMNihlhkQMv58+WlLAnNLeDgysEO5rKBEq3B7jCP+HjE4ULUeOgM+P6
+         nIvWJvtIFNhMi9lqPxQLkg27Re7NncZv4ukU4Myk33RaYC7ZStIvJBCs12nHk0yRHNnJ
+         Gyrw==
+X-Gm-Message-State: APjAAAXLr/TWhPHGanpBAPVpqPPhl5aS8VNTR0yMc3r4wtPgf/o0Enz1
+        tSbfVPdb+NGivKa6ddbDr2w=
+X-Google-Smtp-Source: APXvYqx64l6tyJ12+qIM+shSMPHdlGF3If68zQAcZMb9rC/EAv8bRYuwjAa+1aUfYV9HhOsHLk0FHg==
+X-Received: by 2002:adf:eb44:: with SMTP id u4mr18728854wrn.83.1557770694373;
+        Mon, 13 May 2019 11:04:54 -0700 (PDT)
+Received: from [10.67.49.52] ([192.19.223.250])
+        by smtp.googlemail.com with ESMTPSA id 88sm15824276wrc.33.2019.05.13.11.04.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 11:04:53 -0700 (PDT)
+Subject: Re: [PATCH] perf vendor events arm64: Map Brahma-B53 CPUID to
+ cortex-a53 events
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Will Deacon <will.deacon@arm.com>, Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190405165047.15847-1-f.fainelli@gmail.com>
+ <20190408162607.GB7872@fuggles.cambridge.arm.com>
+ <46ac3066-fa55-9fb8-dd54-32fb702030cb@gmail.com>
+ <20190502235725.GB22982@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <60f367b4-1c5b-0778-eaa6-1a78d58f33a1@gmail.com>
+Date:   Mon, 13 May 2019 11:04:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190509201925.189615-1-ndesaulniers@google.com>
- <20190511022458.GA7376@archlinux-i9> <CAK7LNARB_ds9-dF9n1jHD==JRWsnPYNGoKxLqb+FwKvTTC0bLQ@mail.gmail.com>
-In-Reply-To: <CAK7LNARB_ds9-dF9n1jHD==JRWsnPYNGoKxLqb+FwKvTTC0bLQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 13 May 2019 11:04:02 -0700
-Message-ID: <CAKwvOd=+h8oxyRwPPoHajXM_JicfZ3YV2rhw6Ee06xh5=82fEw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: add script check for cross compilation utilities
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Hines <srhines@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190502235725.GB22982@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 8:05 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Sat, May 11, 2019 at 11:25 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > Few comments below but nothing major, this seems to work fine as is.
-> >
-> > On Thu, May 09, 2019 at 01:19:21PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > > When cross compiling via setting CROSS_COMPILE, if the prefixed tools
-> > > are not found, then the host utilities are often instead invoked, and
-> > > produce often difficult to understand errors.  This is most commonly the
-> > > case for developers new to cross compiling the kernel that have yet to
-> > > install the proper cross compilation toolchain. Rather than charge
-> > > headlong into a build that will fail obscurely, check that the tools
-> > > exist before starting to compile, and fail with a friendly error
-> > > message.
-> >
-> > This part of the commit message makes it sound like this is a generic
-> > problem when it is actually specific to clang. make will fail on its
-> > own when building with gcc if CROSS_COMPILE is not properly set (since
-> > gcc won't be found).
-> >
-> > On a side note, seems kind of odd that clang falls back to the host
-> > tools when a non-host --target argument is used... (how in the world is
-> > that expected to work?)
->
->
-> I agree.
-> Failure is much better than falling back to host tools.
+On 5/2/19 4:57 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, May 02, 2019 at 02:28:02PM -0700, Florian Fainelli escreveu:
+>> On 4/8/19 9:26 AM, Will Deacon wrote:
+>>> On Fri, Apr 05, 2019 at 09:50:47AM -0700, Florian Fainelli wrote:
+>>>> Broadcom's Brahma-B53 CPUs support the same type of events that the
+>>>> Cortex-A53 supports, recognize its CPUID and map it to the cortex-a53
+>>>> events.
+>>>>
+>>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>>>> ---
+>>>>  tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>>> index 59cd8604b0bd..e97c12484bc6 100644
+>>>> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>>> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+>>>> @@ -13,6 +13,7 @@
+>>>>  #
+>>>>  #Family-model,Version,Filename,EventType
+>>>>  0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
+>>>> +0x00000000420f100[[:xdigit:]],v1,arm/cortex-a53,core
+>>>>  0x00000000420f5160,v1,cavium/thunderx2,core
+>>>>  0x00000000430f0af0,v1,cavium/thunderx2,core
+>>>>  0x00000000480fd010,v1,hisilicon/hip08,core
+>>>
+>>> Acked-by: Will Deacon <will.deacon@arm.com>
+>>
+>> Thanks! Can this be picked up?
+> 
+> Thanks, applied to perf/core.
 
-It was probably assumed that the default case is usually not cross
-compilation.  But I think we can add a check to Clang's driver where
-`if target_triple != host_triple then don't invoke host tools`.
-
+Thanks, I don't seem to be able to find it being pushed out to that tree
+or in linux-next.
 -- 
-Thanks,
-~Nick Desaulniers
+Florian
