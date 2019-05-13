@@ -2,80 +2,72 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA10FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3FCC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A857C216FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF9B2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:08:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah9G/JAA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrB8vVaa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbfEMSE5 (ORCPT
+        id S1732277AbfEMSIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:04:57 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46882 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729265AbfEMSE4 (ORCPT
+        Mon, 13 May 2019 14:08:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36391 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732266AbfEMSIQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:04:56 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r7so15686444wrr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:04:55 -0700 (PDT)
+        Mon, 13 May 2019 14:08:16 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so7168835pgb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:08:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4ShfiSHZNiNvaog9lGofhsvzN9PjIHcO6bJwZMd5dm4=;
-        b=ah9G/JAAh9QSKb+xD+yCYFrE4FWXvb+tVkcazfNzSJBLYvzhjfxtRrQBv4ipnulXfH
-         ARm5Jk4HEhdlboQ9eXRZqSIsqt13LlD2Rte6TRHoR7dZs8N3+Egc6/ExCEDG32aWzpWy
-         HN6cJJvS7OqHWUoD3ZHmNMBc39JoYjdm0W2rH3V6Y4rR65q7z1kkEL4ujgBVcN3hp2X4
-         coZxPUFmwVdKXgApvxqffyptfV5EsRiuKl0ra2oKVGzN3x8Ct0XiyuuTJnWTAyeAUVQZ
-         qCpVEzNIm+ge2LS+PXV95LXpT/UudGPuc/+bbl5mzXochgpjP222yo1u+uoVVYn9et5w
-         saCA==
+        bh=K0BaD+NrsEh6+hhl5e1yZHn+BVnxa67K8vY88TbvNJM=;
+        b=QrB8vVaaptehZaZgybS2apIM8RnqwIdA59VpdzinxguI8ffuSqGjVg8xmJzUmV6+FT
+         12jnx+QgPV8cq7M6+ZS4IlLGWTLbf1ZhyYemKANFPdAhnRgebC+urnqJyr3Tq20NWItD
+         pbZJkqYDHWh7lJ6Vug5xxlgt/0NeLtEd/Hwv0678XLZMbiw+H75Fq3elpWRyOGGrxRSx
+         N3Qz2jQ32GjYZQLkwxfLr8yUX02kQuSxanLvWhZ+8hUKUE7SdDx0Ia+jA1BAKyYWFtp1
+         AyVEXXVcu3pL4s/35uAxttbjqdr2WxuqRwcsezomAbn6YbY0VXG8xnQrmALtnmb5XaWL
+         4ydA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4ShfiSHZNiNvaog9lGofhsvzN9PjIHcO6bJwZMd5dm4=;
-        b=N2yiAEWuQCMOVueaj1+mACfW2qic/utclHeI31eNb1bIB/75bi5c8J+PC3TFyZvym5
-         h9JkDL+Ya7hK8JR4eN3ul9DsfbWCPGP0r1QZVyfW+JMS+1gKXgkCfSRhYbebs+VMBTZJ
-         r9BwHxKF8vy3jxNKnfuM8xsUXvHFuBuOv8vgHGLOGzfp1n1xYTDhrjlHrpxk37QtbdyK
-         tzJ0YZxo758DAWMNihlhkQMv58+WlLAnNLeDgysEO5rKBEq3B7jCP+HjE4ULUeOgM+P6
-         nIvWJvtIFNhMi9lqPxQLkg27Re7NncZv4ukU4Myk33RaYC7ZStIvJBCs12nHk0yRHNnJ
-         Gyrw==
-X-Gm-Message-State: APjAAAXLr/TWhPHGanpBAPVpqPPhl5aS8VNTR0yMc3r4wtPgf/o0Enz1
-        tSbfVPdb+NGivKa6ddbDr2w=
-X-Google-Smtp-Source: APXvYqx64l6tyJ12+qIM+shSMPHdlGF3If68zQAcZMb9rC/EAv8bRYuwjAa+1aUfYV9HhOsHLk0FHg==
-X-Received: by 2002:adf:eb44:: with SMTP id u4mr18728854wrn.83.1557770694373;
-        Mon, 13 May 2019 11:04:54 -0700 (PDT)
+        bh=K0BaD+NrsEh6+hhl5e1yZHn+BVnxa67K8vY88TbvNJM=;
+        b=nCmX9C/UFAIdzbBjaGjfj5iIPwFQdt1RfVPDa5VwFM+v/rt9ejH6KoencHTD/icG37
+         2DWeIUYMLxjbVRD8Eh4HgtUWNUMmP5ExKfr/q3C0KcA7hOxv9e355eBv32iiD8Iyh+9G
+         hXAAgmm5kA/ghNiwPImp3agHAPBBvdtZt3Tg1f/xDrLcJVFPRSOMj/EOr85jXm3Fyx59
+         JTqGkApTIZQE/+JKAJMTQS5kYh65PYetCZ0hBC8QPU1ZofMMF10ix3BrAIU0/WKOyazw
+         QF5JKVLwpSXVxlghKACnePp2zxbRtYk/g4CRflvjorA3NqsXhSNEP7FGFP2nF8H+/xWi
+         bPHQ==
+X-Gm-Message-State: APjAAAXLi6BMNMy58c5HZJpIIm85ExaBmcKwiVPykAM5Kx765qpF3FSJ
+        EXBdh7C7rKXNyRZRWwVep9UcQ9LV
+X-Google-Smtp-Source: APXvYqxn0l6/CgwXpYvR4Nbn89HJXwYqJMaCPTe98ufia9AUWVIIULF+8wRsh0ib7MhFq0JOU0bz4A==
+X-Received: by 2002:a65:64d9:: with SMTP id t25mr32707208pgv.130.1557770895525;
+        Mon, 13 May 2019 11:08:15 -0700 (PDT)
 Received: from [10.67.49.52] ([192.19.223.250])
-        by smtp.googlemail.com with ESMTPSA id 88sm15824276wrc.33.2019.05.13.11.04.51
+        by smtp.googlemail.com with ESMTPSA id 85sm6683279pgb.52.2019.05.13.11.08.13
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 11:04:53 -0700 (PDT)
-Subject: Re: [PATCH] perf vendor events arm64: Map Brahma-B53 CPUID to
- cortex-a53 events
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Will Deacon <will.deacon@arm.com>, Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190405165047.15847-1-f.fainelli@gmail.com>
- <20190408162607.GB7872@fuggles.cambridge.arm.com>
- <46ac3066-fa55-9fb8-dd54-32fb702030cb@gmail.com>
- <20190502235725.GB22982@kernel.org>
+        Mon, 13 May 2019 11:08:14 -0700 (PDT)
+Subject: Re: [PATCH] soc: bcm: brcmstb: biuctrl: Register writes require a
+ barrier
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Brian Norris <computersforpeace@gmail.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190510194633.9761-1-f.fainelli@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
@@ -132,12 +124,12 @@ Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
  caxTGgc5zzQHeX67eMzrGomG3ZnIxmd1sAbgvJUDaD2GrYlulfwGWwWyTNbWRvMighVdPkSF
  6XFgQaosWxkV0OELLy2N485YrTr2Uq64VKyxpncLh50e2RnyAJ9Za0Dx0yyp44iD1OvHtkEI
  M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <60f367b4-1c5b-0778-eaa6-1a78d58f33a1@gmail.com>
-Date:   Mon, 13 May 2019 11:04:49 -0700
+Message-ID: <515cc83b-51a3-025d-c9dd-b97db05bd558@gmail.com>
+Date:   Mon, 13 May 2019 11:08:13 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190502235725.GB22982@kernel.org>
+In-Reply-To: <20190510194633.9761-1-f.fainelli@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -146,39 +138,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/2/19 4:57 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 02, 2019 at 02:28:02PM -0700, Florian Fainelli escreveu:
->> On 4/8/19 9:26 AM, Will Deacon wrote:
->>> On Fri, Apr 05, 2019 at 09:50:47AM -0700, Florian Fainelli wrote:
->>>> Broadcom's Brahma-B53 CPUs support the same type of events that the
->>>> Cortex-A53 supports, recognize its CPUID and map it to the cortex-a53
->>>> events.
->>>>
->>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>> ---
->>>>  tools/perf/pmu-events/arch/arm64/mapfile.csv | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->>>> index 59cd8604b0bd..e97c12484bc6 100644
->>>> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
->>>> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
->>>> @@ -13,6 +13,7 @@
->>>>  #
->>>>  #Family-model,Version,Filename,EventType
->>>>  0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
->>>> +0x00000000420f100[[:xdigit:]],v1,arm/cortex-a53,core
->>>>  0x00000000420f5160,v1,cavium/thunderx2,core
->>>>  0x00000000430f0af0,v1,cavium/thunderx2,core
->>>>  0x00000000480fd010,v1,hisilicon/hip08,core
->>>
->>> Acked-by: Will Deacon <will.deacon@arm.com>
->>
->> Thanks! Can this be picked up?
+On 5/10/19 12:46 PM, Florian Fainelli wrote:
+> The BIUCTRL register writes require that a data barrier be inserted
+> after comitting the write to the register for the block to latch in the
+> recently written values. Reads have no such requirement and are not
+> changed.
 > 
-> Thanks, applied to perf/core.
+> Fixes: 34642650e5bc ("soc: Move brcmstb to bcm/brcmstb")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Thanks, I don't seem to be able to find it being pushed out to that tree
-or in linux-next.
+Applied to drivers/fixes, thanks!
 -- 
 Florian
