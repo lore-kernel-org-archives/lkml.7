@@ -2,137 +2,99 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0998C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BEC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC41206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjfi.cvut.cz header.i=@fjfi.cvut.cz header.b="QUhu2ETd"
+	by mail.kernel.org (Postfix) with ESMTP id 69317208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:13:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfEMWMj (ORCPT
+        id S1726521AbfEMWNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:12:39 -0400
-Received: from mailgw1.fjfi.cvut.cz ([147.32.9.3]:53296 "EHLO
-        mailgw1.fjfi.cvut.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfEMWMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:12:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mailgw1.fjfi.cvut.cz (Postfix) with ESMTP id 78F2BA2B2E;
-        Tue, 14 May 2019 00:12:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjfi.cvut.cz;
-        s=20151024; t=1557785556; i=@fjfi.cvut.cz;
-        bh=g9S36xbdW948QIK3JgulE0p3qRSyqlSp+JKJwveRQq8=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References;
-        b=QUhu2ETduwZWvfEErEJRovsjYZwIvZQOJT6bN6t+F/jcATlBDvig3vfcDVm5J+GO9
-         XLi1faC1MBp73LB9oi9Wv5pBcUK1G8Qvwr1eXmrXtbtV5TORWNH7xgEGmbEVt9czNU
-         Qd2bulSbzbXNF8iGNn+lOkwX67rDadZTbYSQEntQ=
-X-CTU-FNSPE-Virus-Scanned: amavisd-new at fjfi.cvut.cz
-Received: from mailgw1.fjfi.cvut.cz ([127.0.0.1])
-        by localhost (mailgw1.fjfi.cvut.cz [127.0.0.1]) (amavisd-new, port 10022)
-        with ESMTP id W_wKxaUaIzZh; Tue, 14 May 2019 00:12:34 +0200 (CEST)
-Received: from linux.fjfi.cvut.cz (linux.fjfi.cvut.cz [147.32.5.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailgw1.fjfi.cvut.cz (Postfix) with ESMTPS id 20EFFA2B1E;
-        Tue, 14 May 2019 00:12:34 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailgw1.fjfi.cvut.cz 20EFFA2B1E
-Received: by linux.fjfi.cvut.cz (Postfix, from userid 1001)
-        id 675B36004D; Tue, 14 May 2019 00:12:33 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by linux.fjfi.cvut.cz (Postfix) with ESMTP id 546F16002A;
-        Tue, 14 May 2019 00:12:33 +0200 (CEST)
-Date:   Tue, 14 May 2019 00:12:33 +0200 (CEST)
-From:   David Kozub <zub@linux.fjfi.cvut.cz>
-To:     Scott Bauer <sbauer@plzdonthack.me>
-cc:     Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonas Rabenstein <jonas.rabenstein@studium.uni-erlangen.de>
-Subject: Re: [PATCH 0/3] block: sed-opal: add support for shadow MBR done
- flag and write
-In-Reply-To: <20190505144330.GB1030@hacktheplanet>
-Message-ID: <alpine.LRH.2.21.1905132354150.6401@linux.fjfi.cvut.cz>
-References: <1556666459-17948-1-git-send-email-zub@linux.fjfi.cvut.cz> <20190501134917.GC24132@infradead.org> <alpine.LRH.2.21.1905032058110.30331@linux.fjfi.cvut.cz> <20190505144330.GB1030@hacktheplanet>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Mon, 13 May 2019 18:13:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56853 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726472AbfEMWNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 18:13:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 15:13:45 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 13 May 2019 15:13:44 -0700
+Date:   Mon, 13 May 2019 15:16:37 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
+Message-ID: <20190513151637.79c273e2@jacob-builder>
+In-Reply-To: <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
+        <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
+        <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
+        <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 May 2019, Scott Bauer wrote:
+On Mon, 13 May 2019 18:09:48 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-> On Fri, May 03, 2019 at 10:32:19PM +0200, David Kozub wrote:
->> On Wed, 1 May 2019, Christoph Hellwig wrote:
->>
->>>> I successfully tested toggling the MBR done flag and writing the shadow MBR
->>>> using some tools I hacked together[4] with a Samsung SSD 850 EVO drive.
->>>
->>> Can you submit the tool to util-linux so that we get it into distros?
->>
->> There is already Scott's sed-opal-temp[1] and a fork by Jonas that adds
->> support for older version of these new IOCTLs[2]. There was already some
->> discussion of getting that to util-linux.[3]
->>
->> While I like my hack, sed-opal-temp can do much more (my tool supports just
->> the few things I actually use). But there are two things which sed-opal-temp
->> currently lacks which my hack has:
->>
->> * It can use a PBKDF2 hash (salted by disk serial number) of the password
->>   rather than the password directly. This makes it compatible with sedutil
->>   and I think it's also better practice (as firmware can contain many
->>   surprises).
->>
->> * It contains a 'PBA' (pre-boot authorization) tool. A tool intended to be
->>   run from shadow mbr that asks for a password and uses it to unlock all
->>   disks and set shadow mbr done flag, so after restart the computer boots
->>   into the real OS.
->>
->> @Scott: What are your plans with sed-opal-temp? If you want I can update
->> Jonas' patches to the adapted IOCTLs. What are your thoughts on PW hashing
->> and a PBA tool?
->
-> I will accept any and all patches to sed opal tooling, I am not picky. I will
-> also give up maintainership of it is someone else feels they can (rightfully
-> so) do a better job.
->
-> Jon sent me a patch for the tool that will deal with writing to the shadow MBR,
-> so once we know these patches are going in i'll pull that patch into the tool.
->
-> Then I guess that leaves PBKDF2 which I don't think will be too hard to pull in.
+> On 13/05/2019 17:50, Auger Eric wrote:
+> >> struct iommu_inv_pasid_info {
+> >> #define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
+> >> #define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
+> >> 	__u32	flags;
+> >> 	__u32	archid;
+> >> 	__u64	pasid;
+> >> };  
+> > I agree it does the job now. However it looks a bit strange to do a
+> > PASID based invalidation in my case - SMMUv3 nested stage - where I
+> > don't have any PASID involved.
+> > 
+> > Couldn't we call it context based invalidation then? A context can
+> > be tagged by a PASID or/and an ARCHID.  
+> 
+> I think calling it "context" would be confusing as well (I shouldn't
+> have used it earlier), since VT-d uses that name for device table
+> entries (=STE on Arm SMMU). Maybe "addr_space"?
+> 
+I am still struggling to understand what ARCHID is after scanning
+through SMMUv3.1 spec. It seems to be a constant for a given SMMU. Why
+do you need to pass it down every time? Could you point to me the
+document or explain a little more on ARCHID use cases.
+We have three fileds called pasid under this struct
+iommu_cache_invalidate_info{}
+Gets confusing :)
+> Thanks,
+> Jean
+> 
+> > 
+> > Domain invalidation would invalidate all the contexts belonging to
+> > that domain.
+> > 
+> > Thanks
+> > 
+> > Eric  
 
-After (if) these patches are accepted, I can create a patch that adds it 
-to sed-opal-temp.
-
-> With regard to your PBA tool, is that actually being run post-uefi/pre-linux?
-> IE are we writing your tool into the SMBR and that's what is being run on bootup?
-
-It's actually nothing fancy: It's just a linux program that asks for a 
-password and then uses it to unlock all block devices. It's intended to be 
-run from an initramfs. So the idea is you build a kernel + initramfs with 
-the tool so that the tool it started and after the tool returns, initramfs 
-does a reboot. This could be replaced just by a shell script, though then 
-you'd have to pass the password from the shell script to e.g. 
-sed-opal-temp.
-
-But I think it covers the simple scenario: booting from a locked drive 
-with just one locking range. Possibly with other locked drives connected 
-that also have one locking range and use the same password (when using pwd 
-hash at least the Opal key is not the same).
-
-> Jon, if you think it's a good idea can you ask David if Revanth or you wants
-> to take over the tooling? Or if anyone else here wants to own it then let me know.
-
-I got invoved in this just to scratch an itch so I would not be a good 
-candidate.
-
-Best regards,
-David
+[Jacob Pan]
