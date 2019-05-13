@@ -2,213 +2,132 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26884C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3642C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0D6208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDDE21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfEMOBG (ORCPT
+        id S1730325AbfEMOBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:01:06 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56722 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727272AbfEMOBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:01:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B729380D;
-        Mon, 13 May 2019 07:01:05 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E0C743F71E;
-        Mon, 13 May 2019 07:01:02 -0700 (PDT)
-Subject: Re: [PATCH v7 14/23] iommu/smmuv3: Implement cache_invalidate
-To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-15-eric.auger@redhat.com>
- <a53d72f5-c8a2-a9e9-eb0b-2fac65964caf@arm.com>
- <edff2a6f-66e6-6d7e-49ca-3065e93a41a4@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a181689b-94b5-5ff6-9fec-66b3f319cbc4@arm.com>
-Date:   Mon, 13 May 2019 15:01:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 10:01:48 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7639 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727272AbfEMOBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:01:48 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 183C2B7D0CAF378CE88;
+        Mon, 13 May 2019 21:52:55 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
+ 21:52:44 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <agross@kernel.org>, <david.brown@linaro.org>,
+        <amit.kucheria@linaro.org>, <rui.zhang@intel.com>,
+        <edubezval@gmail.com>, <daniel.lezcano@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] thermal: tsens: Make some symbols static
+Date:   Mon, 13 May 2019 21:52:16 +0800
+Message-ID: <20190513135216.23540-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <edff2a6f-66e6-6d7e-49ca-3065e93a41a4@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 13:16, Auger Eric wrote:
-> Hi Robin,
-> On 5/8/19 5:01 PM, Robin Murphy wrote:
->> On 08/04/2019 13:19, Eric Auger wrote:
->>> Implement domain-selective and page-selective IOTLB invalidations.
->>>
->>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>
->>> ---
->>> v6 -> v7
->>> - check the uapi version
->>>
->>> v3 -> v4:
->>> - adapt to changes in the uapi
->>> - add support for leaf parameter
->>> - do not use arm_smmu_tlb_inv_range_nosync or arm_smmu_tlb_inv_context
->>>     anymore
->>>
->>> v2 -> v3:
->>> - replace __arm_smmu_tlb_sync by arm_smmu_cmdq_issue_sync
->>>
->>> v1 -> v2:
->>> - properly pass the asid
->>> ---
->>>    drivers/iommu/arm-smmu-v3.c | 60 +++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 60 insertions(+)
->>>
->>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>> index 1486baf53425..4366921d8318 100644
->>> --- a/drivers/iommu/arm-smmu-v3.c
->>> +++ b/drivers/iommu/arm-smmu-v3.c
->>> @@ -2326,6 +2326,65 @@ static void arm_smmu_detach_pasid_table(struct
->>> iommu_domain *domain)
->>>        mutex_unlock(&smmu_domain->init_mutex);
->>>    }
->>>    +static int
->>> +arm_smmu_cache_invalidate(struct iommu_domain *domain, struct device
->>> *dev,
->>> +              struct iommu_cache_invalidate_info *inv_info)
->>> +{
->>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>> +    struct arm_smmu_device *smmu = smmu_domain->smmu;
->>> +
->>> +    if (smmu_domain->stage != ARM_SMMU_DOMAIN_NESTED)
->>> +        return -EINVAL;
->>> +
->>> +    if (!smmu)
->>> +        return -EINVAL;
->>> +
->>> +    if (inv_info->version != IOMMU_CACHE_INVALIDATE_INFO_VERSION_1)
->>> +        return -EINVAL;
->>> +
->>> +    if (inv_info->cache & IOMMU_CACHE_INV_TYPE_IOTLB) {
->>> +        if (inv_info->granularity == IOMMU_INV_GRANU_PASID) {
->>> +            struct arm_smmu_cmdq_ent cmd = {
->>> +                .opcode = CMDQ_OP_TLBI_NH_ASID,
->>> +                .tlbi = {
->>> +                    .vmid = smmu_domain->s2_cfg.vmid,
->>> +                    .asid = inv_info->pasid,
->>> +                },
->>> +            };
->>> +
->>> +            arm_smmu_cmdq_issue_cmd(smmu, &cmd);
->>> +            arm_smmu_cmdq_issue_sync(smmu);
->>
->> I'd much rather make arm_smmu_tlb_inv_context() understand nested
->> domains than open-code commands all over the place.
-> 
-> 
->>
->>> +
->>> +        } else if (inv_info->granularity == IOMMU_INV_GRANU_ADDR) {
->>> +            struct iommu_inv_addr_info *info = &inv_info->addr_info;
->>> +            size_t size = info->nb_granules * info->granule_size;
->>> +            bool leaf = info->flags & IOMMU_INV_ADDR_FLAGS_LEAF;
->>> +            struct arm_smmu_cmdq_ent cmd = {
->>> +                .opcode = CMDQ_OP_TLBI_NH_VA,
->>> +                .tlbi = {
->>> +                    .addr = info->addr,
->>> +                    .vmid = smmu_domain->s2_cfg.vmid,
->>> +                    .asid = info->pasid,
->>> +                    .leaf = leaf,
->>> +                },
->>> +            };
->>> +
->>> +            do {
->>> +                arm_smmu_cmdq_issue_cmd(smmu, &cmd);
->>> +                cmd.tlbi.addr += info->granule_size;
->>> +            } while (size -= info->granule_size);
->>> +            arm_smmu_cmdq_issue_sync(smmu);
->>
->> An this in particular I would really like to go all the way through
->> io_pgtable_tlb_add_flush()/io_pgtable_sync() if at all possible. Hooking
->> up range-based invalidations is going to be a massive headache if the
->> abstraction isn't solid.
-> 
-> The concern is the host does not "own" the s1 config asid
-> (smmu_domain->s1_cfg.cd.asid is not set, practically). In our case the
-> asid only is passed by the userspace on CACHE_INVALIDATE ioctl call.
-> 
-> arm_smmu_tlb_inv_context and arm_smmu_tlb_inv_range_nosync use this field
+Fix sparse warnings:
 
-Right, but that's not exactly hard to solve. Even just something like 
-the (untested, purely illustrative) refactoring below would be beneficial.
+drivers/thermal/qcom/tsens-v0_1.c:322:29: warning: symbol 'tsens_v0_1_feat' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v0_1.c:330:24: warning: symbol 'tsens_v0_1_regfields' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v1.c:147:29: warning: symbol 'tsens_v1_feat' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v1.c:155:24: warning: symbol 'tsens_v1_regfields' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v2.c:30:29: warning: symbol 'tsens_v2_feat' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v2.c:38:24: warning: symbol 'tsens_v2_regfields' was not declared. Should it be static?
 
-Robin.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/thermal/qcom/tsens-v0_1.c | 4 ++--
+ drivers/thermal/qcom/tsens-v1.c   | 4 ++--
+ drivers/thermal/qcom/tsens-v2.c   | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
------>8-----
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index d3880010c6cf..31ef703cf671 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -1423,11 +1423,9 @@ static void arm_smmu_tlb_inv_context(void *cookie)
-  	arm_smmu_cmdq_issue_sync(smmu);
-  }
+diff --git a/drivers/thermal/qcom/tsens-v0_1.c b/drivers/thermal/qcom/tsens-v0_1.c
+index b3a63d7..a319283 100644
+--- a/drivers/thermal/qcom/tsens-v0_1.c
++++ b/drivers/thermal/qcom/tsens-v0_1.c
+@@ -319,7 +319,7 @@ static int calibrate_8974(struct tsens_priv *priv)
+ 
+ /* v0.1: 8916, 8974 */
+ 
+-const struct tsens_features tsens_v0_1_feat = {
++static const struct tsens_features tsens_v0_1_feat = {
+ 	.ver_major	= VER_0_1,
+ 	.crit_int	= 0,
+ 	.adc		= 1,
+@@ -327,7 +327,7 @@ const struct tsens_features tsens_v0_1_feat = {
+ 	.max_sensors	= 11,
+ };
+ 
+-const struct reg_field tsens_v0_1_regfields[MAX_REGFIELDS] = {
++static const struct reg_field tsens_v0_1_regfields[MAX_REGFIELDS] = {
+ 	/* ----- SROT ------ */
+ 	/* No VERSION information */
+ 
+diff --git a/drivers/thermal/qcom/tsens-v1.c b/drivers/thermal/qcom/tsens-v1.c
+index a1221ef..10b595d 100644
+--- a/drivers/thermal/qcom/tsens-v1.c
++++ b/drivers/thermal/qcom/tsens-v1.c
+@@ -144,7 +144,7 @@ static int calibrate_v1(struct tsens_priv *priv)
+ 
+ /* v1.x: qcs404,405 */
+ 
+-const struct tsens_features tsens_v1_feat = {
++static const struct tsens_features tsens_v1_feat = {
+ 	.ver_major	= VER_1_X,
+ 	.crit_int	= 0,
+ 	.adc		= 1,
+@@ -152,7 +152,7 @@ const struct tsens_features tsens_v1_feat = {
+ 	.max_sensors	= 11,
+ };
+ 
+-const struct reg_field tsens_v1_regfields[MAX_REGFIELDS] = {
++static const struct reg_field tsens_v1_regfields[MAX_REGFIELDS] = {
+ 	/* ----- SROT ------ */
+ 	/* VERSION */
+ 	[VER_MAJOR] = REG_FIELD(SROT_HW_VER_OFF, 28, 31),
+diff --git a/drivers/thermal/qcom/tsens-v2.c b/drivers/thermal/qcom/tsens-v2.c
+index 36fbfa6..1099069 100644
+--- a/drivers/thermal/qcom/tsens-v2.c
++++ b/drivers/thermal/qcom/tsens-v2.c
+@@ -27,7 +27,7 @@
+ 
+ /* v2.x: 8996, 8998, sdm845 */
+ 
+-const struct tsens_features tsens_v2_feat = {
++static const struct tsens_features tsens_v2_feat = {
+ 	.ver_major	= VER_2_X,
+ 	.crit_int	= 1,
+ 	.adc		= 0,
+@@ -35,7 +35,7 @@ const struct tsens_features tsens_v2_feat = {
+ 	.max_sensors	= 16,
+ };
+ 
+-const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
++static const struct reg_field tsens_v2_regfields[MAX_REGFIELDS] = {
+ 	/* ----- SROT ------ */
+ 	/* VERSION */
+ 	[VER_MAJOR] = REG_FIELD(SROT_HW_VER_OFF, 28, 31),
+-- 
+2.7.4
 
--static void arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
--					  size_t granule, bool leaf, void *cookie)
-+static void __arm_smmu_tlb_inv_range(struct arm_smmu_domain 
-*smmu_domain, u16 asid,
-+		unsigned long iova, size_t size, size_t granule, bool leaf)
-  {
--	struct arm_smmu_domain *smmu_domain = cookie;
--	struct arm_smmu_device *smmu = smmu_domain->smmu;
-  	struct arm_smmu_cmdq_ent cmd = {
-  		.tlbi = {
-  			.leaf	= leaf,
-@@ -1437,18 +1435,27 @@ static void 
-arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
 
-  	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
-  		cmd.opcode	= CMDQ_OP_TLBI_NH_VA;
--		cmd.tlbi.asid	= smmu_domain->s1_cfg.cd.asid;
-+		cmd.tlbi.asid	= asid;
-  	} else {
-  		cmd.opcode	= CMDQ_OP_TLBI_S2_IPA;
-  		cmd.tlbi.vmid	= smmu_domain->s2_cfg.vmid;
-  	}
-
-  	do {
--		arm_smmu_cmdq_issue_cmd(smmu, &cmd);
-+		arm_smmu_cmdq_issue_cmd(smmu_domain->smmu, &cmd);
-  		cmd.tlbi.addr += granule;
-  	} while (size -= granule);
-  }
-
-+static void arm_smmu_tlb_inv_range_nosync(unsigned long iova, size_t size,
-+					  size_t granule, bool leaf, void *cookie)
-+{
-+	struct arm_smmu_domain *smmu_domain = cookie;
-+
-+	__arm_smmu_tlb_inv_range(smmu_domain, smmu_domain->s1_cfg.cd.asid, iova,
-+			size, granule, leaf);
-+}
-+
-  static const struct iommu_gather_ops arm_smmu_gather_ops = {
-  	.tlb_flush_all	= arm_smmu_tlb_inv_context,
-  	.tlb_add_flush	= arm_smmu_tlb_inv_range_nosync,
