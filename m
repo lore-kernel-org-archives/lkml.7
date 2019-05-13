@@ -2,151 +2,169 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D674EC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBE1C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4973208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC560208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="P+lQyPvT"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="iRl0DBZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfEMC2X (ORCPT
+        id S1727331AbfEMCbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 22:28:23 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:59012 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727311AbfEMC2X (ORCPT
+        Sun, 12 May 2019 22:31:55 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43237 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727311AbfEMCby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 22:28:23 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4D2S32G020024;
-        Mon, 13 May 2019 11:28:03 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4D2S32G020024
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557714483;
-        bh=mKVTMOpXJZy0RBYuveQeK3SC7Jv9ekJhYPaluqciiaU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P+lQyPvTAMnh+TzsBqaX0nwerSmK/DrRoaAELUB/2lFhf783YzpA0qJNOliC72ihA
-         6MisFcer9iU5mDrM6fkbJG/MftKW49dRuXoXPgbcZaKpCWkRFPeEQPRf8OV+ciZlmy
-         9daiw6LuktXkJrXz7YUbSWrEjH2WfzEBYA255Phcjd1maYZDpPWbexSKsgP0RCyOFC
-         bLBCKagTcYNt8mxXn4Zz4NaIyUQmHawLX5BjjgeMSjFcnJl2WCJ+QaDUiPpS0mlnF6
-         Jc6NimZmEclYsB6xpchyHWeL/PRw8Y9HbLUvdmxFPTZbtlXMpw20EV4bTG0xQzexHX
-         z67nqQXql4tDQ==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id v9so7046410vse.5;
-        Sun, 12 May 2019 19:28:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAWGmqEvUFvGAAQAdspRTqtwWJUKEo56BV4FLTsQn+VZpRcrkpjy
-        /Oi8KMzqurjEGqAtLfx3XxzMbHVNq2fdMJwJsYY=
-X-Google-Smtp-Source: APXvYqyAkrFnURFlA7U3xveznlZxTCNXWwXEiVNn7STSnMKFZ7bossR+ykdWC8HLMnT9NAp8kXh8D19ost6K0aNHYzs=
-X-Received: by 2002:a67:fc4:: with SMTP id 187mr12256595vsp.215.1557714482609;
- Sun, 12 May 2019 19:28:02 -0700 (PDT)
+        Sun, 12 May 2019 22:31:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id n8so5643050plp.10
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 19:31:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GkmKn8xqtM5ZFNASHy3dhSS1TrKNKE1jNN1/7Rw3UKs=;
+        b=iRl0DBZnB84iNuFBTLWCeRyIpe0lPSsH15HCK6R6QA+PwO8exC1hHVjRgytri52y0q
+         AOdcHrBnb8unRWbDBfXAac3xtO2Pq/ni2zHg2H9doeRN/YbHX4x5lt0Z3vp3M99NadxD
+         E9/XMC0G2cO9/StbBL2Yw3EU2hvkVISGiw84w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GkmKn8xqtM5ZFNASHy3dhSS1TrKNKE1jNN1/7Rw3UKs=;
+        b=HMBGS8EHiJSojkx1mwhexseke8TbQyEB1ySoXjq+l1ABUcZr+myml6GTLbLDuwNWG+
+         V01O1Zg3GcxWvEY8SBxz9rKnEuGlM2NJbjxaKhTeSSq7UQVxw0NJGd9w6pmvu9mdHCE7
+         JouA0/8A1BB09z2iJhnvCsmsitoFwy2l/MQO6AiEQRKGJ+lSdALedwkoujw9kxxdOr4o
+         1YXycelBNYKqFZvNwDgQc0zRdxKbfSjCYdBh8iQ7K89HHZyOVV4JVeTGcUV70Vt5WKFb
+         rfYVbMtEYs8T2sUTneNKCgy/hXhYJiuJs12pG0FOIwC2pHlwPCUfnozFGMK8o3Z/kqBr
+         aZkg==
+X-Gm-Message-State: APjAAAWgwK36mzKKIBzrnvWsb0Vmtkm0fb/4BciML9My8bi8HcNS6hpC
+        PmabX3dcHNhf003xczCwlqU1Rw==
+X-Google-Smtp-Source: APXvYqxM3LbMIU9Q5iaT+nkjQfWHuEDGndPZntXzyCbgcmkhL7NypAv9mABJvVEnP0bGD1ZenD85DQ==
+X-Received: by 2002:a17:902:7406:: with SMTP id g6mr27017388pll.328.1557714713660;
+        Sun, 12 May 2019 19:31:53 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y14sm13984506pga.54.2019.05.12.19.31.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 12 May 2019 19:31:52 -0700 (PDT)
+Date:   Sun, 12 May 2019 22:31:50 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        paulmck@linux.ibm.com, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        corbet@lwn.net, tglx@linutronix.de, mingo@kernel.org,
+        gregkh@linuxfoundation.org, keescook@chromium.org,
+        srinivas.eeda@oracle.com
+Subject: Re: [PATCH 2/2] doc: kernel-parameters.txt: fix documentation of
+ nmi_watchdog parameter
+Message-ID: <20190513023150.GA192545@google.com>
+References: <1555211464-28652-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1555211464-28652-2-git-send-email-zhenzhong.duan@oracle.com>
+ <20190510144749.592f4249@gandalf.local.home>
 MIME-Version: 1.0
-References: <20190509073555.15545-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190509073555.15545-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Mon, 13 May 2019 11:27:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARotATDnShT-80Ect9XvSM98wYEbQRKHdUTuQBtvxG8aw@mail.gmail.com>
-Message-ID: <CAK7LNARotATDnShT-80Ect9XvSM98wYEbQRKHdUTuQBtvxG8aw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: terminate Kconfig when $(CC) or $(LD) is missing
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Joel Stanley <joel@jms.id.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510144749.592f4249@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 4:36 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> If the compiler specified by $(CC) is not present, the Kconfig stage
-> sprinkles 'not found' messages, then succeeds.
->
->   $ make CROSS_COMPILE=foo defconfig
->   /bin/sh: 1: foogcc: not found
->   /bin/sh: 1: foogcc: not found
->   *** Default configuration is based on 'x86_64_defconfig'
->   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
->   ./scripts/clang-version.sh: 11: ./scripts/clang-version.sh: foogcc: not found
->   ./scripts/gcc-plugin.sh: 11: ./scripts/gcc-plugin.sh: foogcc: not found
->   init/Kconfig:16:warning: 'GCC_VERSION': number is invalid
->   #
->   # configuration written to .config
->   #
->
-> Terminate parsing files immediately if $(CC) or $(LD) is not found.
-> "make *config" will fail more nicely.
->
->   $ make CROSS_COMPILE=foo defconfig
->   *** Default configuration is based on 'x86_64_defconfig'
->   scripts/Kconfig.include:34: compiler 'foogcc' not found
->   make[1]: *** [scripts/kconfig/Makefile;82: defconfig] Error 1
->   make: *** [Makefile;557: defconfig] Error 2
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+On Fri, May 10, 2019 at 02:47:49PM -0400, Steven Rostedt wrote:
+> 
+> As nobody else commented, I will ;)
+> 
+> Hi Zhenzhong!
+> 
+> On Sun, 14 Apr 2019 11:11:04 +0800
+> Zhenzhong Duan <zhenzhong.duan@oracle.com> wrote:
+> 
+> > As stated in "Documentation/lockup-watchdogs.txt:line 22", the default
+> > behaivor after 'hardlockup' is to stay locked up rather than panic.
+> 
+> That actually says:
+> 
+>  A 'hardlockup' is defined as a bug that causes the CPU to loop in
+>  kernel mode for more than 10 seconds (see "Implementation" below for 
+>  details), without letting other interrupts have a chance to run.
+>  Similarly to the softlockup case, the current stack trace is displayed
+>  upon detection and the system will stay locked up unless the default
+>  behavior is changed, which can be done through a sysctl,
+>  'hardlockup_panic', a compile time knob, "BOOTPARAM_HARDLOCKUP_PANIC",
+>  and a kernel parameter, "nmi_watchdog"
+> 
+> If your config has:
+> 
+>  CONFIG_BOOTPARAM_HARDLOCKUP_PANIC=y
+> 
+> The kernel will panic on hard lockup by default unless you add nopanic.
+> 
+> If your config has:
+> 
+>  # CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is not set
+> 
+> Then the default will be not to panic unless you add "panic" to the
+> kernel command line.
+> 
+> > 
+> > Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+> > ---
+> >  Documentation/admin-guide/kernel-parameters.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 2b8ee90..fcc9579 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -2769,7 +2769,7 @@
+> >  			0 - turn hardlockup detector in nmi_watchdog off
+> >  			1 - turn hardlockup detector in nmi_watchdog on
+> >  			When panic is specified, panic when an NMI watchdog
+> > -			timeout occurs (or 'nopanic' to override the opposite
+> > +			timeout occurs (or 'nopanic' which is the opposite
+> >  			default). To disable both hard and soft lockup detectors,
+> 
+> Honestly, I think the original text states what it does better than
+> your update. Because the nopanic is added to override the "opposite
+> default" which is if the config was set to do so.
+> 
+> That said, this all still can be explained better. What about:
+> 
+>         nmi_watchdog=   [KNL,BUGS=X86] Debugging features for SMP kernels
+>                         Format: [panic,][nopanic,][num]
+>                         Valid num: 0 or 1
+>                         0 - turn hardlockup detector in nmi_watchdog off
+>                         1 - turn hardlockup detector in nmi_watchdog on
+>                         When panic is specified, panic when an NMI watchdog
+>                         timeout occurs (or 'nopanic' to not panic on an NMI
+> 			watchdog, if CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is set)
+>                         To disable both hard and soft lockup detectors,
+>                         please see 'nowatchdog'.
+>                         This is useful when you use a panic=... timeout and
+>                         need the box quickly up again.
 
-Applied to linux-kbuild.
+Steven, your update makes it more clear to me. If patch is being written with
+such update, here is my Reviewed-by:
 
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
->  Makefile                | 2 +-
->  scripts/Kconfig.include | 8 ++++++++
->  2 files changed, 9 insertions(+), 1 deletion(-)
->
-> diff --git a/Makefile b/Makefile
-> index 28965187c528..bd7ae11947cb 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -537,7 +537,7 @@ endif
->  # Some architectures define CROSS_COMPILE in arch/$(SRCARCH)/Makefile.
->  # CC_VERSION_TEXT is referenced from Kconfig (so it needs export),
->  # and from include/config/auto.conf.cmd to detect the compiler upgrade.
-> -CC_VERSION_TEXT = $(shell $(CC) --version | head -n 1)
-> +CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
->
->  ifeq ($(config-targets),1)
->  # ===========================================================================
-> diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-> index 87ff1dcc6bd5..0b267fb27f07 100644
-> --- a/scripts/Kconfig.include
-> +++ b/scripts/Kconfig.include
-> @@ -18,6 +18,10 @@ if-success = $(shell,{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
->  # Return y if <command> exits with 0, n otherwise
->  success = $(if-success,$(1),y,n)
->
-> +# $(failure,<command>)
-> +# Return n if <command> exits with 0, y otherwise
-> +failure = $(if-success,$(1),n,y)
-> +
->  # $(cc-option,<flag>)
->  # Return y if the compiler supports <flag>, n otherwise
->  cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-> @@ -26,5 +30,9 @@ cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
->  # Return y if the linker supports <flag>, n otherwise
->  ld-option = $(success,$(LD) -v $(1))
->
-> +# check if $(CC) and $(LD) exist
-> +$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
-> +$(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
-> +
->  # gcc version including patch level
->  gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
-> --
-> 2.17.1
->
+thanks!
 
+ - Joel
 
--- 
-Best Regards
-Masahiro Yamada
+> 
+> -- Steve
+> 
+> 
+> >  			please see 'nowatchdog'.
+> >  			This is useful when you use a panic=... timeout and
+> 
