@@ -2,107 +2,149 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D7EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C903C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71D1820989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C14621479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:21:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="1xs1l8ip"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbfEMJT5 (ORCPT
+        id S1727953AbfEMJVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:19:57 -0400
-Received: from foss.arm.com ([217.140.101.70]:49932 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727576AbfEMJT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:19:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3836341;
-        Mon, 13 May 2019 02:19:55 -0700 (PDT)
-Received: from [10.37.12.148] (unknown [10.37.12.148])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 370653F703;
-        Mon, 13 May 2019 02:19:54 -0700 (PDT)
-Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
- region
-To:     Oleksandr Tyshchenko <olekstysh@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
-Date:   Mon, 13 May 2019 10:19:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 13 May 2019 05:21:05 -0400
+Received: from mail-eopbgr700076.outbound.protection.outlook.com ([40.107.70.76]:64172
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727305AbfEMJVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:21:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wpQenlchEVhV4euQXTFLGGQfIy3VwdfKzHdbshG8Jls=;
+ b=1xs1l8ip9XgGIbHrmiGznrt9OZMVA/nh7iinXKABA16dyA0aN6U17aRDSDBO+Ybv3g5rA3GsWTP47t1Bj9vOKj6M4zTKQ2guM6+7ncuevfCoGg4V8Bi+RStWfOHTfcnSIPzFCxio3OFGxxymaMUfdo6Y02NtqdpjCEq6DGNtbfM=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4360.namprd05.prod.outlook.com (52.135.202.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.14; Mon, 13 May 2019 09:21:01 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.010; Mon, 13 May 2019
+ 09:21:01 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8AgAANcoCAAAcZgIAABfcAgAAkYwCABXN1AIAACg2AgAACfYA=
+Date:   Mon, 13 May 2019 09:21:01 +0000
+Message-ID: <847D4C2F-BD26-4BE0-A5BA-3C690D11BF77@vmware.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+ <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+ <20190513091205.GO2650@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190513091205.GO2650@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [50.204.119.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8037cc0d-71c9-443a-c2a0-08d6d78450e8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB4360;
+x-ms-traffictypediagnostic: BYAPR05MB4360:
+x-microsoft-antispam-prvs: <BYAPR05MB4360448DF978D529BCC10D81D00F0@BYAPR05MB4360.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(346002)(376002)(39860400002)(136003)(366004)(189003)(199004)(53546011)(14454004)(6246003)(305945005)(8676002)(186003)(8936002)(6506007)(82746002)(68736007)(53936002)(81156014)(66066001)(4326008)(81166006)(102836004)(478600001)(3846002)(66446008)(66556008)(316002)(91956017)(2906002)(6116002)(76116006)(86362001)(73956011)(64756008)(6916009)(7736002)(66476007)(99286004)(66946007)(7416002)(5660300002)(54906003)(25786009)(76176011)(33656002)(83716004)(26005)(71200400001)(71190400001)(14444005)(256004)(229853002)(6512007)(446003)(11346002)(6436002)(476003)(2616005)(6486002)(36756003)(486006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4360;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CelJo98N5BTvgBiCtmSEwR3SSuriFAV1AWdPS3GaWiwjgig3EQhZ3CyoLcbcj5z1hi5TD3MxaK+7aqwEGdasae4pADNL8lhEd6eB4jMrlCHoEVPe+xu27n5H1l2NdmTEXZTDSFAxePnHQ3/QgLyDcRJOFN/ZMHaxB4FrnZAIb5CpZRjz5ItTTSmWTweJXQYhNJE/XfMEuFj9Y3GrpzVzD4JAh92A5NHs5IVLzu+SXf8cciyV+nMFQfcK6ggYHs0dzSHfkTnUkOItkfH/oY4/s2YFf7OHevdw/R7rmnKK5NKBVJGcX8s1RUBurbwJnrGOBdG1vHRs1wSwHGizXfmlM1+fiO7Uw2iSu+Hm7k0IMy4YV6blEKppgyf3g8DzcDsUQ6vsELtdi8EDvarBfHdIhoLO6xa1WZg4R914HApNMXo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2D5CBDD523036D4CB25AC81AC9005E04@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8037cc0d-71c9-443a-c2a0-08d6d78450e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 09:21:01.0171
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4360
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> On May 13, 2019, at 2:12 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Mon, May 13, 2019 at 10:36:06AM +0200, Peter Zijlstra wrote:
+>> On Thu, May 09, 2019 at 09:21:35PM +0000, Nadav Amit wrote:
+>>> It may be possible to avoid false-positive nesting indications (when th=
+e
+>>> flushes do not overlap) by creating a new struct mmu_gather_pending, wi=
+th
+>>> something like:
+>>>=20
+>>>  struct mmu_gather_pending {
+>>> 	u64 start;
+>>> 	u64 end;
+>>> 	struct mmu_gather_pending *next;
+>>>  }
+>>>=20
+>>> tlb_finish_mmu() would then iterate over the mm->mmu_gather_pending
+>>> (pointing to the linked list) and find whether there is any overlap. Th=
+is
+>>> would still require synchronization (acquiring a lock when allocating a=
+nd
+>>> deallocating or something fancier).
+>>=20
+>> We have an interval_tree for this, and yes, that's how far I got :/
+>>=20
+>> The other thing I was thinking of is trying to detect overlap through
+>> the page-tables themselves, but we have a distinct lack of storage
+>> there.
+>=20
+> We might just use some state in the pmd, there's still 2 _pt_pad_[12] in
+> struct page to 'use'. So we could come up with some tlb generation
+> scheme that would detect conflict.
 
-On 5/10/19 5:22 PM, Oleksandr Tyshchenko wrote:
-> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> 
-> Don't use hardcoded address, retrieve it from device-tree instead.
-> 
-> And besides, this patch fixes the memory error when running
-> on top of Xen hypervisor:
-> 
-> (XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000
->        gpa=0x000000e6080000
-> 
-> Which shows that VCPU0 in Dom0 is trying to access an address in memory
-> it is not allowed to access (0x000000e6080000).
-> Put simply, Xen doesn't know that it is a device's register memory
-> since it wasn't described in a host device tree (which Xen parses)
-> and as the result this memory region wasn't assigned to Dom0 at
-> domain creation time.
-> 
-> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-> 
-> ---
-> 
-> This patch is meant to get feedback from the community before
-> proceeding further. If we decide to go this direction, all Gen2
-> device-trees should be updated (add memory region) before
-> this patch going in.
-> 
-> e.g. r8a7790.dtsi:
-> 
-> ...
-> timer {
-> 	compatible = "arm,armv7-timer";
-> 	interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> 			      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> 			      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> 			      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +	 reg = <0 0xe6080000 0 0x1000>;
+It is rather easy to come up with a scheme (and I did similar things) if yo=
+u
+flush the table while you hold the page-tables lock. But if you batch acros=
+s
+page-tables it becomes harder.
 
-This looks incorrect, the "arm,armv7-timer" bindings doesn't offer you 
-the possibility to specify an MMIO region. This makes sense because it 
-is meant to describe the Arch timer that is only access via co-processor 
-registers.
+Thinking about it while typing, perhaps it is simpler than I think - if you
+need to flush range that runs across more than a single table, you are very
+likely to flush a range of more than 33 entries, so anyhow you are likely t=
+o
+do a full TLB flush.
 
-Looking at the code, I think the MMIO region corresponds to the 
-coresight (based on the register name). So you may want to describe the 
-coresight in the Device-Tree.
-
-Also, AFAICT, the code is configuring and turning on the timer if it has 
-not been done yet. If you are here running on Xen, then you have 
-probably done something wrong. Indeed, it means Xen would not be able to 
-use the timer until Dom0 has booted. But, shouldn't newer U-boot do it 
-for you?
-
-Cheers,
-
--- 
-Julien Grall
+So perhaps just avoiding the batching if only entries from a single table
+are flushed would be enough.
