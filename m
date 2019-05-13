@@ -2,112 +2,120 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF187C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85DAC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E0A208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792D2208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g8eRb+2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728960AbfEMNZw (ORCPT
+        id S1729415AbfEMN0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:25:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7748 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728434AbfEMNZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:25:51 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id F099C31F1596DC0FA4C0;
-        Mon, 13 May 2019 21:25:31 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
- 21:25:24 +0800
-Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-CC:     <kadlec@blackhole.kfki.hu>, <fw@strlen.de>, <davem@davemloft.net>,
-        <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dsahern@gmail.com>, Mingfangsen <mingfangsen@huawei.com>
-References: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
- <20190513094203.atnko3xbim5hzb7y@salvia>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <e5083883-27c7-e210-0f94-d8177264bd84@huawei.com>
-Date:   Mon, 13 May 2019 21:25:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 13 May 2019 09:26:42 -0400
+Received: from mail-wr1-f49.google.com ([209.85.221.49]:35436 "EHLO
+        mail-wr1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728973AbfEMN0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:26:42 -0400
+Received: by mail-wr1-f49.google.com with SMTP id w12so15294608wrp.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:26:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vPE3jxCO3dCQR+ybH4Gy+efpIpySYIwlVy/qEuYWDIY=;
+        b=g8eRb+2Ye5bChbQzqB5uao6VM8WXp8fKutdZSzNyT+KSAaYvR0EequtAtjOPxZAiPW
+         geHXsBfDa5q4YSH7jEEHce3pQ480eBTmAVgtGKTksz96oPgnZ9sDb3kXpi5Rxx7MUKD6
+         Q7x8NplJmezylTtJYTzw8t+vhFN0VRk93+whQ/cIJgosstN6HundDjINH409Xu2RTNn3
+         W92hgrAd/KiabsLQaEtIbKXWSlJ/2TIf3ueJ/qyec6sVPaMTV0YbGapLgU0Ywyh2VyVG
+         g/hPZvO9EVWWi4Uj6JvDdoVSzzu4JMRcTe3JaLFMj9aZpBmxMV7NdK18KkQysCDvKryy
+         29zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vPE3jxCO3dCQR+ybH4Gy+efpIpySYIwlVy/qEuYWDIY=;
+        b=o3f3m3QUyr4K3lR81IKliobicG6w1Nqh7Vrk0xpNUBxPc9tf/saQo/LaCMxfcOaWbQ
+         HzmhDQd/GjRFOdienRh8/lu2Ex7/loKE+8lhFHEkNKIFP7NJ2vA5s9hDcXP6e0OeqzFq
+         UP0j7+JyPvR9ErkqcvcEmpXRpUX3ZySQY1HtwMjbLyLM9M9uPTLAZn1mbtdl5pBGSCRO
+         GXFD84jjRjzIKqc4N6kRt1HI5E+R9AIB/dYD8yiYS2oj+xpMbJpR+o5ggHq1aTYbV2r+
+         6jZfChs/m2pQFM9AKXBcjRbQe2DU+PduN0TuY6rgrdQFcYWwJwTbIGSjqqY/novSRW04
+         L3fQ==
+X-Gm-Message-State: APjAAAXLfCzMF1/jy2pIgE8br7iDLbuhp6nzdOBMxfX6U49eviTRe831
+        tL3wmWDo4RfMP62JYlbzVJ9f2A==
+X-Google-Smtp-Source: APXvYqySFgPHBjr/wKnTqEBG02gIwRobVpzN22Zu5VUMEwIG0+8bMfpops6VWDvfUHaJpt3uXuot2g==
+X-Received: by 2002:adf:f6cb:: with SMTP id y11mr18657626wrp.67.1557754000110;
+        Mon, 13 May 2019 06:26:40 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id t13sm16400701wra.81.2019.05.13.06.26.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 06:26:39 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH/RFT] arm64: dts: meson: odroid-c2: add missing mmc modes
+Date:   Mon, 13 May 2019 15:26:27 +0200
+Message-Id: <20190513132627.25149-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190513094203.atnko3xbim5hzb7y@salvia>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add sdcard uhs modes up to DDR50 and push eMMC up to 200Mhz
+With the new tuning method, these modes appear to be stable
 
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
 
-On 2019/5/13 17:42, Pablo Neira Ayuso wrote:
-> On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
->> From: Miaohe Lin <linmiaohe@huawei.com>
->>
->> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
->> ipv4/ipv6 packets will be dropped because in device is
->> vrf but out device is an enslaved device. So failed with
->> the check of the rpfilter.
->>
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> ---
->>  net/ipv4/netfilter/ipt_rpfilter.c  |  1 +
->>  net/ipv6/netfilter/ip6t_rpfilter.c | 10 +++++++++-
->>  2 files changed, 10 insertions(+), 1 deletion(-)
->>
-> 
-> Suggestion: Could you just call l3mdev_master_ifindex_rcu() when
-> invoking rpfilter_lookup_reverse6() ?
-> 
-> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-> index c3c6b09acdc4..ce64ff5d6fb6 100644
-> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
-> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-> @@ -101,7 +101,8 @@ static bool rpfilter_mt(const struct sk_buff *skb,
-> struct xt_action_param *par)
->         if (unlikely(saddrtype == IPV6_ADDR_ANY))
->                 return true ^ invert; /* not routable: forward path will drop it */
->  
-> -       return rpfilter_lookup_reverse6(xt_net(par), skb, xt_in(par),
-> +       return rpfilter_lookup_reverse6(xt_net(par), skb,
-> +                                       l3mdev_master_ifindex_rcu(xt_in(par)),
->                                         info->flags) ^ invert;
->  }
-> 
-> .
->     rpfilter_lookup_reverse6 requests struct net_device *dev as third argument, so
-what you really mean is this ?
- diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
- index c3c6b09acdc4..ce64ff5d6fb6 100644
- --- a/net/ipv6/netfilter/ip6t_rpfilter.c
- +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
- @@ -101,7 +101,8 @@ static bool rpfilter_mt(const struct sk_buff *skb,
- struct xt_action_param *par)
-         if (unlikely(saddrtype == IPV6_ADDR_ANY))
-                 return true ^ invert; /* not routable: forward path will drop it */
+ This particular board has always been painful when it comes to
+ its eMMC modules. While testing the new tuning method introduced
+ in the last cycle, I have not seen any issue with HS200@200Mhz.
+ That being said, I only have the 16GB module.
 
- -       return rpfilter_lookup_reverse6(xt_net(par), skb, xt_in(par),
- +       return rpfilter_lookup_reverse6(xt_net(par), skb,
- +                                       l3mdev_master_dev_rcu(xt_in(par)) ? : xt_in(par),
-                                         info->flags) ^ invert;
-  }
-    I'am sorry but I tested this. It doesn't work. When flags with XT_RPFILTER_LOOSE set,
-we need set fl6.flowi6_oif to complete fib lookup in an l3mdev domain. And we need
-enslaved network device to compute rpfilter rather than l3 master device.
-    Many thanks for your suggestion.
-    Best regards.
+ In the past, problems have been reported with other modules while
+ it was fine on the one I have. Clearly, I don't have the full
+ picture.
+
+ Kevin, I don't know how you prefer to proceed. I am personally in
+ no rush to see this applied. I'm sending this mainly to make sure
+ it is shared and give people a chance to report issues.
+
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 1cc9dc68ef00..5a139e7b1c60 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -255,6 +255,10 @@
+ 
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
++	sd-uhs-sdr12;
++	sd-uhs-sdr25;
++	sd-uhs-sdr50;
++	sd-uhs-ddr50;
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+@@ -272,7 +276,7 @@
+ 	pinctrl-names = "default", "clk-gate";
+ 
+ 	bus-width = <8>;
+-	max-frequency = <100000000>;
++	max-frequency = <200000000>;
+ 	non-removable;
+ 	disable-wp;
+ 	cap-mmc-highspeed;
+-- 
+2.20.1
 
