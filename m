@@ -3,84 +3,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8575C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFFAC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D715208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCE7208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbfEMRKM (ORCPT
+        id S1731302AbfEMRK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:10:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:33826 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfEMRKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:10:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2DEE341;
-        Mon, 13 May 2019 10:10:11 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFA893F71E;
-        Mon, 13 May 2019 10:10:09 -0700 (PDT)
-Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
-To:     Auger Eric <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
- <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
- <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
- <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
-Date:   Mon, 13 May 2019 18:09:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 13:10:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50755 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731261AbfEMRKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:10:25 -0400
+Received: from c-67-160-6-8.hsd1.wa.comcast.net ([67.160.6.8] helo=famine.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <jay.vosburgh@canonical.com>)
+        id 1hQET0-0005K9-0o; Mon, 13 May 2019 17:10:22 +0000
+Received: by famine.localdomain (Postfix, from userid 1000)
+        id 000C75FF13; Mon, 13 May 2019 10:10:19 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+        by famine.localdomain (Postfix) with ESMTP id ED5F6A6E12;
+        Mon, 13 May 2019 10:10:19 -0700 (PDT)
+From:   Jay Vosburgh <jay.vosburgh@canonical.com>
+To:     David Miller <davem@davemloft.net>
+cc:     jarod@redhat.com, linux-kernel@vger.kernel.org, vfalico@gmail.com,
+        andy@greyhouse.net, netdev@vger.kernel.org
+Subject: Re: [PATCH] bonding: fix arp_validate toggling in active-backup mode
+In-reply-to: <20190513.094632.2251179341102416171.davem@davemloft.net>
+References: <26675.1557528809@famine> <2033e768-9e35-ac89-c526-4c28fc3f747e@redhat.com> <6720.1557765810@famine> <20190513.094632.2251179341102416171.davem@davemloft.net>
+Comments: In-reply-to David Miller <davem@davemloft.net>
+   message dated "Mon, 13 May 2019 09:46:32 -0700."
+X-Mailer: MH-E 8.6+git; nmh 1.6; GNU Emacs 27.0.50
 MIME-Version: 1.0
-In-Reply-To: <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7471.1557767419.1@famine>
+Date:   Mon, 13 May 2019 10:10:19 -0700
+Message-ID: <7472.1557767419@famine>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 17:50, Auger Eric wrote:
->> struct iommu_inv_pasid_info {
->> #define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
->> #define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
->> 	__u32	flags;
->> 	__u32	archid;
->> 	__u64	pasid;
->> };
-> I agree it does the job now. However it looks a bit strange to do a
-> PASID based invalidation in my case - SMMUv3 nested stage - where I
-> don't have any PASID involved.
-> 
-> Couldn't we call it context based invalidation then? A context can be
-> tagged by a PASID or/and an ARCHID.
+David Miller <davem@davemloft.net> wrote:
 
-I think calling it "context" would be confusing as well (I shouldn't
-have used it earlier), since VT-d uses that name for device table
-entries (=STE on Arm SMMU). Maybe "addr_space"?
+>From: Jay Vosburgh <jay.vosburgh@canonical.com>
+>Date: Mon, 13 May 2019 09:43:30 -0700
+>
+>> 	That would be my preference, as the 29c4948293bf commit looks to
+>> be the change actually being fixed.
+>
+>Sorry I pushed the original commit message out :-(
+>
+>But isn't the Fixes: tag he choose the one where the logic actually
+>causes problems?  That's kind of my real criteria for Fixes: tags.
 
-Thanks,
-Jean
+	I don't think so.  It looks like the problem being fixed here
+(clearing recv_probe when we shouldn't) was introduced at 29c4948293bf,
+but was not the only place the same problem existed.  3fe68df97c7f fixed
+the other occurrences of this problem, but missed the specific one added
+by 29c4948293bf, which is now fixed by this patch.
 
-> 
-> Domain invalidation would invalidate all the contexts belonging to that
-> domain.
-> 
-> Thanks
-> 
-> Eric
+	In any event, both of the commits in question are old enough
+that it's kind of moot, as -stable will presumably get the right thing
+regardless.
+
+	-J
+
+---
+	-Jay Vosburgh, jay.vosburgh@canonical.com
