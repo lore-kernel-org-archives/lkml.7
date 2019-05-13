@@ -2,141 +2,149 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DB7C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83053C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CE72084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 566022084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:41:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y9nXfUJN"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="HkidcekK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbfEMOlN (ORCPT
+        id S1730701AbfEMOlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:41:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47098 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730664AbfEMOlL (ORCPT
+        Mon, 13 May 2019 10:41:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34575 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729639AbfEMOlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:41:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd3dB181544;
-        Mon, 13 May 2019 14:39:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=bOd6NTuOO3w4Tse88wsGsS3lTxF7t3wBy812EA6WdBU=;
- b=Y9nXfUJNbdNXiy0WXZfnXcvJMfJnbW6Wd/jhOsfaH+Nku6LO73tegfk4kUXz6qGARmee
- jxG1wNCbZiHDX8SNNrTewc3cLIlDZsttlVSwGklecgW/HROVU+I3mtazS3Yvqh11anbo
- Zv4jHKjLPjfduxRLu4X8LAzZ3P36HyfHmP1W/DyLiXegpYJeMKnqKZFwITYW5qzlSHm5
- RtesqMSGG/6fDOLSNgWvXF9bfkYj0YrLp3UqSNuvKowRK44FvGuaRvjBi3RpZ0NPhj/l
- QmdYQ9IaU3TVKzTuW8I6wo8hxvktW9E/r6qI9QWOuBYsblTK3/WgBv+O9a9uDwsYhX/x cg== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2sdnttfeja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:39 +0000
-Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQL022780;
-        Mon, 13 May 2019 14:39:31 GMT
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com,
-        alexandre.chartre@oracle.com
-Subject: [RFC KVM 18/27] kvm/isolation: function to copy page table entries for percpu buffer
-Date:   Mon, 13 May 2019 16:38:26 +0200
-Message-Id: <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com>
-X-Mailer: git-send-email 1.7.1
-In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130103
+        Mon, 13 May 2019 10:41:22 -0400
+Received: by mail-qt1-f196.google.com with SMTP id h1so7188148qtp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AShDMcr6wP0O8DE+n5XbgpPJ5YloQ1/JdOPbCC8lARw=;
+        b=HkidcekKkBXgGOaNW72+pYp8w3VZS3ih8WWwPsmB/Ibu7CJs0yJAhBlEFyDteU5jD/
+         Ggoo0PZceRDrjWt0tLEYlbjYfSwyLT/alA67azusGTnakoNEqljeQPvLgsR43eR/k0dJ
+         hwQmGG4VdAGyHf6aGGvjhRmlPABjRvfA6qAmlY9QItuPNCGFEr0UGOx/SSuGMYaybjsX
+         e0RiJqx4nfZ+qUZeMz3KOL5ByyauTWA7X+lGpDwcVJ9iLMZEUAkVpM/syZlwxcrDStH7
+         3skFGnmq4XK5+6Jen+ktCVShwScLwsTp4uTSYT2sHTgh977o1y9tYN49jpYxV07QkqTx
+         VMng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AShDMcr6wP0O8DE+n5XbgpPJ5YloQ1/JdOPbCC8lARw=;
+        b=oofcbfTUxhJxguepQx2YPFiPcyPwKL6FUY+/GL5pdlTIeZ5U+yYQoCJVuatCDp3dax
+         l9A/tWq3lEfvZhO9dUjvYhYlzArnKmOr4PSNn/R3cP+cHr0sOzdHnr7o0fcMzUQXePcp
+         X6MD3NkHZaDzpuAb9TXfgLwExIcXeR6rA88ijlv1xryBBZgt0OkgFFJFwsyN3VH8bbzB
+         p0glWf8qxjR0MqeZBjac/Ogl8DnTD2mZpP6Z/HFJy4tD99GV+FV+wm16pSUrr5p/JGV7
+         h0V7FBpMYkQ+TgVIWobyphjOVduTcgmcKYYkiib4+/46SOcG4M/rRfIuaPnBbA+bURWp
+         /y4w==
+X-Gm-Message-State: APjAAAXRtYsY+cUXS5TAgfdBTYJwmM6WTMQOvPQzPnzZ/yLw7RT3Yfln
+        l4GMlATgr5tdGtmZqIiEGJLchw==
+X-Google-Smtp-Source: APXvYqykNJUXhSJgZA6vtUnxVCZWGlTPm+rCJaK1kqlt7UHvDAJRFjnm1qlB5I6AjuDJ8LtM1pVexg==
+X-Received: by 2002:ac8:3783:: with SMTP id d3mr21972886qtc.293.1557758481560;
+        Mon, 13 May 2019 07:41:21 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id o13sm6206257qtk.74.2019.05.13.07.41.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 07:41:20 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:41:20 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 1/6] drm/rockchip: Change the scl_vop_cal_scl_fac to
+ pass drm_format_info
+Message-ID: <20190513144120.GM17077@art_vandelay>
+References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1557486447.git-series.maxime.ripard@bootlin.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1557486447.git-series.maxime.ripard@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pcpu_base_addr is already mapped to the KVM address space, but this
-represents the first percpu chunk. To access a per-cpu buffer not
-allocated in the first chunk, add a function which maps all cpu
-buffers corresponding to that per-cpu buffer.
+On Fri, May 10, 2019 at 01:08:46PM +0200, Maxime Ripard wrote:
+> The Rockchip VOP driver has a function, scl_vop_cal_scl_fac, that will
+> lookup the drm_format_info structure from the fourcc passed to it by its
+> caller.
+> 
+> However, its only caller already derefences the drm_format_info structure
+> it has access to to retrieve that fourcc. Change the prototype of that
+> function to pass the drm_format_info structure directly, removing the need
+> for an extra lookup.
+> 
+> Suggested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Also add function to clear page table entries for a percpu buffer.
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
----
- arch/x86/kvm/isolation.c |   34 ++++++++++++++++++++++++++++++++++
- arch/x86/kvm/isolation.h |    2 ++
- 2 files changed, 36 insertions(+), 0 deletions(-)
+> ---
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 20a9c296d027..9c0d6b367709 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -315,14 +315,13 @@ static uint16_t scl_vop_cal_scale(enum scale_mode mode, uint32_t src,
+>  
+>  static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+>  			     uint32_t src_w, uint32_t src_h, uint32_t dst_w,
+> -			     uint32_t dst_h, uint32_t pixel_format)
+> +			     uint32_t dst_h, const struct drm_format_info *info)
+>  {
+>  	uint16_t yrgb_hor_scl_mode, yrgb_ver_scl_mode;
+>  	uint16_t cbcr_hor_scl_mode = SCALE_NONE;
+>  	uint16_t cbcr_ver_scl_mode = SCALE_NONE;
+> -	int hsub = drm_format_horz_chroma_subsampling(pixel_format);
+> -	int vsub = drm_format_vert_chroma_subsampling(pixel_format);
+> -	const struct drm_format_info *info;
+> +	int hsub = drm_format_horz_chroma_subsampling(info->format);
+> +	int vsub = drm_format_vert_chroma_subsampling(info->format);
+>  	bool is_yuv = false;
+>  	uint16_t cbcr_src_w = src_w / hsub;
+>  	uint16_t cbcr_src_h = src_h / vsub;
+> @@ -331,8 +330,6 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+>  	uint32_t val;
+>  	int vskiplines;
+>  
+> -	info = drm_format_info(pixel_format);
+> -
+>  	if (info->is_yuv)
+>  		is_yuv = true;
+>  
+> @@ -856,7 +853,7 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
+>  	if (win->phy->scl)
+>  		scl_vop_cal_scl_fac(vop, win, actual_w, actual_h,
+>  				    drm_rect_width(dest), drm_rect_height(dest),
+> -				    fb->format->format);
+> +				    fb->format);
+>  
+>  	VOP_WIN_SET(vop, win, act_info, act_info);
+>  	VOP_WIN_SET(vop, win, dsp_info, dsp_info);
+> 
+> base-commit: a802303934b3bd4df6e2fc8bf2e4ebced1c37556
+> -- 
+> git-series 0.9.1
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index 539e287..2052abf 100644
---- a/arch/x86/kvm/isolation.c
-+++ b/arch/x86/kvm/isolation.c
-@@ -990,6 +990,40 @@ void kvm_clear_range_mapping(void *ptr)
- EXPORT_SYMBOL(kvm_clear_range_mapping);
- 
- 
-+void kvm_clear_percpu_mapping(void *percpu_ptr)
-+{
-+	void *ptr;
-+	int cpu;
-+
-+	pr_debug("PERCPU CLEAR percpu=%px\n", percpu_ptr);
-+	for_each_possible_cpu(cpu) {
-+		ptr = per_cpu_ptr(percpu_ptr, cpu);
-+		kvm_clear_range_mapping(ptr);
-+	}
-+}
-+EXPORT_SYMBOL(kvm_clear_percpu_mapping);
-+
-+int kvm_copy_percpu_mapping(void *percpu_ptr, size_t size)
-+{
-+	void *ptr;
-+	int cpu, err;
-+
-+	pr_debug("PERCPU COPY percpu=%px size=%lx\n", percpu_ptr, size);
-+	for_each_possible_cpu(cpu) {
-+		ptr = per_cpu_ptr(percpu_ptr, cpu);
-+		pr_debug("PERCPU COPY cpu%d addr=%px\n", cpu, ptr);
-+		err = kvm_copy_ptes(ptr, size);
-+		if (err) {
-+			kvm_clear_range_mapping(percpu_ptr);
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(kvm_copy_percpu_mapping);
-+
-+
- static int kvm_isolation_init_mm(void)
- {
- 	pgd_t *kvm_pgd;
-diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
-index 7d3c985..3ef2060 100644
---- a/arch/x86/kvm/isolation.h
-+++ b/arch/x86/kvm/isolation.h
-@@ -18,5 +18,7 @@ static inline bool kvm_isolation(void)
- extern void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu);
- extern int kvm_copy_ptes(void *ptr, unsigned long size);
- extern void kvm_clear_range_mapping(void *ptr);
-+extern int kvm_copy_percpu_mapping(void *percpu_ptr, size_t size);
-+extern void kvm_clear_percpu_mapping(void *percpu_ptr);
- 
- #endif
 -- 
-1.7.1
-
+Sean Paul, Software Engineer, Google / Chromium OS
