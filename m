@@ -2,71 +2,70 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE51AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A4EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2C221473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8962146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PKz9xIzJ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aEfNnn+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfEMOVd (ORCPT
+        id S1730579AbfEMOVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:21:33 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34772 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730439AbfEMOVa (ORCPT
+        Mon, 13 May 2019 10:21:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33018 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729533AbfEMOVp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:21:30 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so6586422plz.1;
-        Mon, 13 May 2019 07:21:30 -0700 (PDT)
+        Mon, 13 May 2019 10:21:45 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d9so7144509wrx.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KPJyTDsfdBAYb4kysJw7JhftNxA9CSPFTGsSIHtwfqc=;
-        b=PKz9xIzJsV8FvKKhM32LY9tJ7AHA3ixuXLI1lNTCsneFKSdjEsR8if+ZA9ZIOTiCzy
-         KulwGbA0Ovs88qAmzVu9/0+OxJjpbVHNt9qhIFH8Xc3h7LVRo1dGypp8pR9RKvAi2l2y
-         Uj/mNgnhk6ioflcHfefO4PRGD2rXa3XuFsC3bN4g/iNKgWy0fGrfQ/1KTkPumxWq9enc
-         Zq2WqI+023SBJFKYLTLD+enzTC9B3HSodHqWwO4O9IrxniXUvzeepw/L3Gat8uIgX4A4
-         An1t8K4aLh3fUBq5stbtG8Z31AA99l+Ubu2uOk4aDNrrNKHZqlgj8e7hwtf/N6HUEQwl
-         hh6A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AUf8m75b1jcXgPG7N+MQYE2RSkYM8jBGz55TKb5hL3g=;
+        b=aEfNnn+IfrPwWIU5xkBCmp50TmqPUsCXSA6rTulbbQ2PC6DDXGfjkMXMgKuHliOvi0
+         b3NfiIJRaKglH08KEDtel0WexYxJv9i3cPCXmhFPqZIBGk+3fA1WVqJPot2RNKy++6Ld
+         oxSuktx/cNdc/RDX8VW1WKXf26U2yO5PtzKRpUS/JqrqWsUtz9UIHleIzxtpU0eB0tzy
+         od84ATyaVGGg2mjYZzCmhUvHiTaqt9I6dY+ps1eps8/wdjvoL5QNPD2M40tchmOkn9Lw
+         8Fz4SB5YjUsoh/Uoa7AYS3Ev7afXIUH3TR3+pR8y2oal81KVXzPFSGEzP95FKpEzLOgN
+         FaPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KPJyTDsfdBAYb4kysJw7JhftNxA9CSPFTGsSIHtwfqc=;
-        b=nnJY5OS465P3UXx4OxKSwwxcFa7JPEv1wlWXU9hx+2k1yv5vYWZVQ0KC6W9eLsNPpf
-         iefM5VqBS4PTD3/soU09GVO8ddKpoGjbCtysbW1Qn5918jArg8ljL7/GV0uMa0kO3vac
-         xXpirn4Z4GuERskPCnrHNdofQPi9eUY6C0TgYkGMpyhuqcuX7GRRjHbv/TK8smYXAQ9b
-         UFGFAHAspZKLF7E0q0taW1/dJNHoo68lYyX1GVWToDvKF6QAz/M33dXUR5nwm1RJ5LwR
-         nUSJmCWeETe8y/4ierKyHj4y5Q6TKmZCVOSJyqUlrY/0GyJo77WV14XCKlcAbLbhtvGG
-         p5Pw==
-X-Gm-Message-State: APjAAAVZWCBu9xuG3Mr4LQcASqOyECNs76hnKVor1ULJnIift2kpGlTY
-        Eu3YQj7clgHuVsL18BmWDHj/6Awi
-X-Google-Smtp-Source: APXvYqwYSqe/GEqOGH/lyLIgfVJAq5QTol2Yp2DjbbJT03ray/MdMiX9stOY2sF5Wfh2TU9SKAGsAw==
-X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr7447898plb.238.1557757289676;
-        Mon, 13 May 2019 07:21:29 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id x30sm15382513pgl.76.2019.05.13.07.21.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 07:21:29 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     bhelgaas@google.com, corbet@lwn.net
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v5 12/12] Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
-Date:   Mon, 13 May 2019 22:20:00 +0800
-Message-Id: <20190513142000.3524-13-changbin.du@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AUf8m75b1jcXgPG7N+MQYE2RSkYM8jBGz55TKb5hL3g=;
+        b=SplMIMDL14hwo4Z8s5yIZ/LxWdjHuxFquWZAtopAn/VmTku0eP+1s/AKzRKU6mlvYJ
+         i40bPgzCR/EGXdgONbGISKEScL2yuKFx+sfWGNpqwV3rWSmDiNYf2SsXm0iXFOD8/ij0
+         9pu0PhlBYHoCJW1CMBVxfLrXlYEYglejNThM0WE1BBzYx85A54ozR7xt3U21R/yCsxjR
+         gG9C8Y5K67zIDkcFkkhGdQvQiUhJeeQgmQjG6iOjGF8Pp3Z+dAVmKS7p8wdWj5dytetj
+         icI1nfZr0bnbqKZVlswEc0SAfOdAduBGkA+k0xjm6HmdSvoCA/iNpC0l1ZQ26gNL/s1w
+         fBpw==
+X-Gm-Message-State: APjAAAXpxWsLi//+yMr/tkE61UhSSKCXM+7WK1iZzXuINpQdlUloF+Hw
+        BG5ZlKZ7qNUTdmKYXXkb+VwBsA==
+X-Google-Smtp-Source: APXvYqzn91lD6eedmAzVssO5xswe1ZAQaefUBlpsZtRJs7YMayR6NIvT1sEdX34ZQ1nzfs4XhaBA1w==
+X-Received: by 2002:adf:ef50:: with SMTP id c16mr1707151wrp.296.1557757303963;
+        Mon, 13 May 2019 07:21:43 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-11-31.w90-86.abo.wanadoo.fr. [90.86.214.31])
+        by smtp.gmail.com with ESMTPSA id v184sm21133615wma.6.2019.05.13.07.21.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 07:21:43 -0700 (PDT)
+From:   Fabien Parent <fparent@baylibre.com>
+To:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com
+Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH 1/2] dt-bindings: input: mtk-pmic-keys: add MT6392 binding definition
+Date:   Mon, 13 May 2019 16:21:19 +0200
+Message-Id: <20190513142120.6527-1-fparent@baylibre.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190513142000.3524-1-changbin.du@gmail.com>
-References: <20190513142000.3524-1-changbin.du@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,204 +73,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+Add the binding documentation of the mtk-pmic-keys for the MT6392 PMICs.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
 ---
- Documentation/PCI/endpoint/index.rst          |  1 +
- ...{pci-test-howto.txt => pci-test-howto.rst} | 81 +++++++++++++------
- 2 files changed, 56 insertions(+), 26 deletions(-)
- rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+ .../devicetree/bindings/input/mtk-pmic-keys.txt       | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index b680a3fc4fec..d114ea74b444 100644
---- a/Documentation/PCI/endpoint/index.rst
-+++ b/Documentation/PCI/endpoint/index.rst
-@@ -10,3 +10,4 @@ PCI Endpoint Framework
-    pci-endpoint
-    pci-endpoint-cfs
-    pci-test-function
-+   pci-test-howto
-diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.rst
-similarity index 78%
-rename from Documentation/PCI/endpoint/pci-test-howto.txt
-rename to Documentation/PCI/endpoint/pci-test-howto.rst
-index 040479f437a5..909f770a07d6 100644
---- a/Documentation/PCI/endpoint/pci-test-howto.txt
-+++ b/Documentation/PCI/endpoint/pci-test-howto.rst
-@@ -1,38 +1,51 @@
--			    PCI TEST USERGUIDE
--		    Kishon Vijay Abraham I <kishon@ti.com>
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================
-+PCI Test User Guide
-+===================
-+
-+:Author: Kishon Vijay Abraham I <kishon@ti.com>
+diff --git a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+index 2888d07c2ef0..858f78e7262c 100644
+--- a/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
++++ b/Documentation/devicetree/bindings/input/mtk-pmic-keys.txt
+@@ -1,15 +1,18 @@
+-MediaTek MT6397/MT6323 PMIC Keys Device Driver
++MediaTek MT6397/MT6392/MT6323 PMIC Keys Device Driver
  
- This document is a guide to help users use pci-epf-test function driver
- and pci_endpoint_test host driver for testing PCI. The list of steps to
- be followed in the host side and EP side is given below.
+-There are two key functions provided by MT6397/MT6323 PMIC, pwrkey
++There are two key functions provided by MT6397/MT6392/MT6323 PMIC, pwrkey
+ and homekey. The key functions are defined as the subnode of the function
+ node provided by MT6397/MT6323 PMIC that is being defined as one kind
+ of Muti-Function Device (MFD)
  
--1. Endpoint Device
-+Endpoint Device
-+===============
+-For MT6397/MT6323 MFD bindings see:
++For MT6397/MT6392/MT6323 MFD bindings see:
+ Documentation/devicetree/bindings/mfd/mt6397.txt
  
--1.1 Endpoint Controller Devices
-+Endpoint Controller Devices
-+---------------------------
+ Required properties:
+-- compatible: "mediatek,mt6397-keys" or "mediatek,mt6323-keys"
++- compatible: Should be one of:
++	- "mediatek,mt6397-keys"
++	- "mediatek,mt6392-keys"
++	- "mediatek,mt6323-keys"
+ - linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
  
--To find the list of endpoint controller devices in the system:
-+To find the list of endpoint controller devices in the system::
- 
- 	# ls /sys/class/pci_epc/
- 	  51000000.pcie_ep
- 
--If PCI_ENDPOINT_CONFIGFS is enabled
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
- 	# ls /sys/kernel/config/pci_ep/controllers
- 	  51000000.pcie_ep
- 
--1.2 Endpoint Function Drivers
- 
--To find the list of endpoint function drivers in the system:
-+Endpoint Function Drivers
-+-------------------------
-+
-+To find the list of endpoint function drivers in the system::
- 
- 	# ls /sys/bus/pci-epf/drivers
- 	  pci_epf_test
- 
--If PCI_ENDPOINT_CONFIGFS is enabled
-+If PCI_ENDPOINT_CONFIGFS is enabled::
-+
- 	# ls /sys/kernel/config/pci_ep/functions
- 	  pci_epf_test
- 
--1.3 Creating pci-epf-test Device
-+
-+Creating pci-epf-test Device
-+----------------------------
- 
- PCI endpoint function device can be created using the configfs. To create
--pci-epf-test device, the following commands can be used
-+pci-epf-test device, the following commands can be used::
- 
- 	# mount -t configfs none /sys/kernel/config
- 	# cd /sys/kernel/config/pci_ep/
-@@ -42,7 +55,7 @@ The "mkdir func1" above creates the pci-epf-test function device that will
- be probed by pci_epf_test driver.
- 
- The PCI endpoint framework populates the directory with the following
--configurable fields.
-+configurable fields::
- 
- 	# ls functions/pci_epf_test/func1
- 	  baseclass_code	interrupt_pin	progif_code	subsys_id
-@@ -51,67 +64,83 @@ configurable fields.
- 
- The PCI endpoint function driver populates these entries with default values
- when the device is bound to the driver. The pci-epf-test driver populates
--vendorid with 0xffff and interrupt_pin with 0x0001
-+vendorid with 0xffff and interrupt_pin with 0x0001::
- 
- 	# cat functions/pci_epf_test/func1/vendorid
- 	  0xffff
- 	# cat functions/pci_epf_test/func1/interrupt_pin
- 	  0x0001
- 
--1.4 Configuring pci-epf-test Device
-+
-+Configuring pci-epf-test Device
-+-------------------------------
- 
- The user can configure the pci-epf-test device using configfs entry. In order
- to change the vendorid and the number of MSI interrupts used by the function
--device, the following commands can be used.
-+device, the following commands can be used::
- 
- 	# echo 0x104c > functions/pci_epf_test/func1/vendorid
- 	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
- 	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
- 	# echo 8 > functions/pci_epf_test/func1/msix_interrupts
- 
--1.5 Binding pci-epf-test Device to EP Controller
-+
-+Binding pci-epf-test Device to EP Controller
-+--------------------------------------------
- 
- In order for the endpoint function device to be useful, it has to be bound to
- a PCI endpoint controller driver. Use the configfs to bind the function
--device to one of the controller driver present in the system.
-+device to one of the controller driver present in the system::
- 
- 	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
- 
- Once the above step is completed, the PCI endpoint is ready to establish a link
- with the host.
- 
--1.6 Start the Link
-+
-+Start the Link
-+--------------
- 
- In order for the endpoint device to establish a link with the host, the _start_
--field should be populated with '1'.
-+field should be populated with '1'::
- 
- 	# echo 1 > controllers/51000000.pcie_ep/start
- 
--2. RootComplex Device
- 
--2.1 lspci Output
-+RootComplex Device
-+==================
-+
-+lspci Output
-+------------
- 
--Note that the devices listed here correspond to the value populated in 1.4 above
-+Note that the devices listed here correspond to the value populated in 1.4
-+above::
- 
- 	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
- 	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
- 
--2.2 Using Endpoint Test function Device
-+
-+Using Endpoint Test function Device
-+-----------------------------------
- 
- pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
--tests. To compile this tool the following commands should be used:
-+tests. To compile this tool the following commands should be used::
- 
- 	# cd <kernel-dir>
- 	# make -C tools/pci
- 
--or if you desire to compile and install in your system:
-+or if you desire to compile and install in your system::
- 
- 	# cd <kernel-dir>
- 	# make -C tools/pci install
- 
- The tool and script will be located in <rootfs>/usr/bin/
- 
--2.2.1 pcitest.sh Output
-+
-+pcitest.sh Output
-+~~~~~~~~~~~~~~~~~
-+::
-+
- 	# pcitest.sh
- 	BAR tests
- 
+ Optional Properties:
 -- 
 2.20.1
 
