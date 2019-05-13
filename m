@@ -2,128 +2,116 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C0C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF16C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81060208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsbkEv2+"
+	by mail.kernel.org (Postfix) with ESMTP id 9DC9221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:29:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfEMK1e (ORCPT
+        id S1728427AbfEMK3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:27:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:38241 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727132AbfEMK1d (ORCPT
+        Mon, 13 May 2019 06:29:13 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:60030 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727132AbfEMK3N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:27:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f97so1161218plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 03:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jCVFFIvk/dM3akUvv+q1GBXV3JQofCa1Kd1PS4pC1i4=;
-        b=WsbkEv2+u24qjjfmf5Q7lHIg7ZqB/Df3kEknjnkM6zUpRkL07KG025dbev1wr3tMm3
-         hHmHSWy2pZ2SIT0KxFuI8LuaxpkOMXgjkLT7YfBVpqNFf31HHlg+Bx5d8o6pqWvoNDyr
-         OBG0jcnDbHODSFWpmVam0d1S8qO5kfM6/yV2yb+zn90dVcw1E9QeuMHYwKGCxJxRj5jz
-         nkdqTEFQJjANCy9ubw9WO87Eba76vpXii3PMKYMaNXWGjCWbOiDF5UdGy/tkja2FDdmV
-         eOj/q6o7LDkFi8r3SIUnBFU0SIfT4sQvRTa4jBpYAYbyStyqom9+dPsx2xyDrZ2aqpbI
-         QRcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=jCVFFIvk/dM3akUvv+q1GBXV3JQofCa1Kd1PS4pC1i4=;
-        b=DgNqHUNa+upWUpT8+clY/BaTHnZRbMjn023fecOGTPvu8pajHk+pagYc71jdWimLHk
-         kYoSwbO60dQ79zMvJ+l/WHOxoIhJoOUKLIkwS2Cq9MTP2ceZy6ihR/ZQXjH2vroGz6J0
-         scF564HY/vlEL9dSZaN64eWFS2rdjlF97VKB51wPsQK+byMl6V7GHZaPnbTZbEQEyzQC
-         dLWm08WPz1jXSWbqC92MHflzCEwpzh5Q87XDaH7/XKaGTSPE0l5bMaYiZDV2kqMr2yXO
-         vUOKlbkD7K6/lAyBMr+nud59BMjj0JKMnJuG/uPwxswqF9Hr+BIuC4Lvo8YylP/PzrIz
-         LOoQ==
-X-Gm-Message-State: APjAAAXbQG7IQLzKiUkysdGXPXEL0m8WCyOri+cEE+VfOO8jV3b68HZY
-        4YaTB3FkSW6UchLllUOEBzGuRTSp6C4=
-X-Google-Smtp-Source: APXvYqymWvZ4WEVfo0YerAxV4IAUGp6ilTSVL4wfLHxcBZVZ0y3n26ysaI3oTx4uh2W0rOWxnXaavQ==
-X-Received: by 2002:a17:902:e305:: with SMTP id cg5mr29472095plb.112.1557743252621;
-        Mon, 13 May 2019 03:27:32 -0700 (PDT)
-Received: from bnva-HP-Pavilion-g6-Notebook-PC.domain.name ([117.248.72.152])
-        by smtp.gmail.com with ESMTPSA id r124sm11773487pgr.91.2019.05.13.03.27.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 03:27:32 -0700 (PDT)
-From:   Vandana BN <bnvandana@gmail.com>
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com
-Cc:     skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Vandana BN <bnvandana@gmail.com>
-Subject: [PATCH v3 8/8] Staging: kpc2000: kpc_dma: Resolve cast warning and use const for file_operation
-Date:   Mon, 13 May 2019 15:56:22 +0530
-Message-Id: <20190513102622.22398-8-bnvandana@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513102622.22398-1-bnvandana@gmail.com>
-References: <20190510193833.1051-1-bnvandana@gmail.com>
- <20190513102622.22398-1-bnvandana@gmail.com>
+        Mon, 13 May 2019 06:29:13 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5AD173C00D1;
+        Mon, 13 May 2019 12:29:09 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8oozwrA1y91j; Mon, 13 May 2019 12:29:02 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 9F0EF3C00BF;
+        Mon, 13 May 2019 12:29:02 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May
+ 2019 12:29:02 +0200
+Date:   Mon, 13 May 2019 12:28:59 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     "George G. Davis" <george_davis@mentor.com>
+CC:     "George G. Davis" <ggdavisiv@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
+Message-ID: <20190513102859.GA18462@vmlxhi-102.adit-jv.com>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+ <20190510171021.GA22691@vmlxhi-102.adit-jv.com>
+ <20190510183847.GB28648@mam-gdavis-lt>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190510183847.GB28648@mam-gdavis-lt>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This Patch resolves unnecessary cast warning and const file_operations
-reported by checkpath.pl
-WARNING: unnecessary cast may hide bugs
-WARNING: struct file_operations should normally be const
----
-v2 - split changes to multiple patches
-v3 - edit commit message
----
+Hi George,
 
-Signed-off-by: Vandana BN <bnvandana@gmail.com>
----
- drivers/staging/kpc2000/kpc_dma/fileops.c        | 4 ++--
- drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+On Fri, May 10, 2019 at 02:38:47PM -0400, George G. Davis wrote:
+> Hello Eugeniu,
+> 
+> On Fri, May 10, 2019 at 07:10:21PM +0200, Eugeniu Rosca wrote:
+> > Hi George,
+> > 
+> > I am able to reproduce the SCIF2 console freeze described in the
+> > referenced patchwork link using M3-ES1.1-Salvator-XS and recent
+> > v5.1-9573-gb970afcfcabd kernel.
+> > 
+> > I confirm the behavior is healed with this patch. Thanks!
+> > Hope to see it accepted soon, since it fixes a super annoying
+> > console breakage every fourth boot or so on lots of R-Car3 targets.
+> > 
+> > Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> 
+> Thanks for testing.
+> 
+> Also note, for the record, that the problem is not limited to SCIF2, e.g. try
+> setting console=ttySC<n> wheren <n> is not SCIF2 on any other board which
+> includes support for other serial ports, e.g. r8a7795-salvator-x, and you will
+> observe the same problem on other SCIF ports too. It's just a concidence that
+> most boards use SCIF2 as the default serial console where the console hangs
+> (resolved by this patch) have been observed on multiple boards.
 
-diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index c21672ea2b4f..54a1419728ce 100644
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -59,7 +59,7 @@ int  kpc_dma_transfer(struct dev_private_data *priv, struct kiocb *kcb, unsigned
- 
- 	dev_dbg(&priv->ldev->pldev->dev, "%s(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", __func__, priv, kcb, (void *)iov_base, iov_len, ldev);
- 
--	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
-+	acd = kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
- 	if (!acd) {
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
- 		return -ENOMEM;
-@@ -418,7 +418,7 @@ long  kpc_dma_ioctl(struct file *filp, unsigned int ioctl_num, unsigned long ioc
- 	return -ENOTTY;
- }
- 
--struct file_operations  kpc_dma_fops = {
-+const struct file_operations  kpc_dma_fops = {
- 	.owner      = THIS_MODULE,
- 	.open           = kpc_dma_open,
- 	.release        = kpc_dma_close,
-diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-index cf781940ac1b..ee47f43e71cf 100644
---- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-+++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.h
-@@ -57,7 +57,7 @@ struct dev_private_data {
- 
- struct kpc_dma_device *kpc_dma_lookup_device(int minor);
- 
--extern struct file_operations  kpc_dma_fops;
-+extern const struct file_operations  kpc_dma_fops;
- 
- #define ENG_CAP_PRESENT                 0x00000001
- #define ENG_CAP_DIRECTION               0x00000002
+Thanks for the additional level of detail.
+
+FTR, trying to track the origin of the problem, it looks to me that the
+issue was _unmasked_ by v4.16-rc1 commit be7e251d20e6c8 ("tty: serial:
+sh-sci: Hide DMA config question") which turned on DMA on SCIF by
+default.
+
+I wonder if it'd be helpful to resend the patch w/o using --in-reply-to,
+so that it appears as standalone entry in linux-renesas-soc patchwork.
+Currently, assuming that the R-Car maintainers filter out any "Rejected"
+patches (which is the default patchwork behavior), your patch would be
+hidden from their eye.
+
 -- 
-2.17.1
-
+Best Regards,
+Eugeniu.
