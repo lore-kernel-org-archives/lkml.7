@@ -2,269 +2,141 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA16BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8719EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81E7B2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D862146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="lGtHMrTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbfEMOnY (ORCPT
+        id S1730728AbfEMOnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:43:24 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39457 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729893AbfEMOnY (ORCPT
+        Mon, 13 May 2019 10:43:50 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:38390 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728203AbfEMOnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:43:24 -0400
-Received: by mail-vs1-f65.google.com with SMTP id m1so1003717vsr.6;
-        Mon, 13 May 2019 07:43:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ClzU7jZAryaIXzR+/qv1yEuyi15Ak7Jc5yYHkm+jUlE=;
-        b=UHSBnBwRKi2PsFkZS/Y1M9KW5l+UG/SNvzsM00vj10nq1Ur8+7/V1Ead9gAxfLWbW+
-         tAL2s0kU2TRouxv2tuXytbyyGrcg9s1iyh/8OrDSRzpEJY58MH/fEdn4HnhSvT7JxoMn
-         /3yb2yQ1KeWeqhLR8wf+C3SYwMB0BTDCAMksnfnninUpvJp4onyxWrb1apce6wvAmsgl
-         o/RBEa8ZxVfQLhNMJ0LPgMmtagsYhnUVzjRZzjNEMHwjYUqRFWmESVC2caKr54t2WDjN
-         ZaZjHe7aUhYNficbc7yxbHb0oYgguBCuXHwIyfO+Rhh2gBSQCb9NCMM7dAXMHN23VAIU
-         2cJQ==
-X-Gm-Message-State: APjAAAWrcC/Lee2T4klztruJtBjWFIE0toUaWi30BtobsuODaZhXcmUY
-        L5pducjb035/MF8CR1Gyv5GBXPpZE4Hb9RjLMs0=
-X-Google-Smtp-Source: APXvYqx6lgUfn+cBlcwFavQQI3d2TF3Qqkzwe2QJhqICSPH/EAbTfEMSktmNgiu1Yfxi3tdjXLT5ZhTyKRREk2FELMc=
-X-Received: by 2002:a67:f303:: with SMTP id p3mr2137246vsf.166.1557758602639;
- Mon, 13 May 2019 07:43:22 -0700 (PDT)
+        Mon, 13 May 2019 10:43:49 -0400
+Received: from pps.filterd (m0170395.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEeRjw018478;
+        Mon, 13 May 2019 10:43:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=aImZ5J/Q/lhWgc1+GpSNxDkEPKzeyAmtinwTFVJFtQA=;
+ b=lGtHMrTfFS94Yy/H4BjKhmjwkNzS9B3747GeyQ0+WmeU0LtpZT0H++KkBiTzSNJ5MRdY
+ Vj1dBvpr5Uduopv0SFUW1pooTELJNO5651kdV6sKu4+wFiM8TJbilkCypJJnsBnxZ9hX
+ cRbK/tu+3qeDwesX3ROcyWJxvmmzoW6MvfJhbdpNjhnwXopJFU9zt1Umn+aZ3oePugB+
+ hzplAD0kJibeSjmQHN2jsHIGRZyJqcfsgmaqloQVarCwpxR2hrh80lRi9pRNsM8nHVAV
+ E7t79OEpZVmkR35e4nqT5rZ2WwBM2CwqeCrdSZqDjX/MrMb7n99YykbdI6Mm+b7qbOgN GQ== 
+Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2sdu2mmvu0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 10:43:47 -0400
+Received: from pps.filterd (m0142699.ppops.net [127.0.0.1])
+        by mx0a-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEc9h0157401;
+        Mon, 13 May 2019 10:43:46 -0400
+Received: from ausxippc110.us.dell.com (AUSXIPPC110.us.dell.com [143.166.85.200])
+        by mx0a-00154901.pphosted.com with ESMTP id 2sf9411tj3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 10:43:46 -0400
+X-LoopCount0: from 10.166.132.127
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="793587289"
+From:   <Mario.Limonciello@dell.com>
+To:     <hch@lst.de>
+CC:     <keith.busch@intel.com>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <kai.heng.feng@canonical.com>
+Subject: RE: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Topic: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Index: AQHVB3g9crBQ5iluoUuygL0xp1WIm6ZlFnpAgAQIfyCAAFi+gP//rRIQ
+Date:   Mon, 13 May 2019 14:43:43 +0000
+Message-ID: <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143741.GA25500@lst.de>
+In-Reply-To: <20190513143741.GA25500@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
- <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
- <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
- <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
-In-Reply-To: <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 May 2019 16:43:09 +0200
-Message-ID: <CAMuHMdWsZPevpYg0HfbgaXPD89RFdOOEPawvvZDt3Kp4=PeLRQ@mail.gmail.com>
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-To:     Mason Yang <masonccyang@mxic.com.tw>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        zhengxunli@mxic.com.tw
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130103
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+> -----Original Message-----
+> From: Christoph Hellwig <hch@lst.de>
+> Sent: Monday, May 13, 2019 9:38 AM
+> To: Limonciello, Mario
+> Cc: keith.busch@intel.com; hch@lst.de; sagi@grimberg.me; linux-
+> nvme@lists.infradead.org; rafael@kernel.org; linux-kernel@vger.kernel.org=
+; linux-
+> pm@vger.kernel.org; kai.heng.feng@canonical.com
+> Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Mon, May 13, 2019 at 02:24:41PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > I've received the result that from one of my partners this patch doesn'=
+t
+> > work properly and the platform doesn't go into a lower power state.
+>=20
+> Well, it sounds like your partners device does not work properly in this
+> case.  There is nothing in the NVMe spec that says queues should be
+> torn down for deep power states, and that whole idea seems rather
+> counter productive to low-latency suspend/resume cycles.
 
-Note that if you send multipart/text+html emails, they will be dropped silently
-by most Linux mailing lists.
-Hence I'm quoting your last email fully, to give other people a chance
-reading it (and commenting).
+Well I've got a thought, quoting the NVME spec:
+"After a successful completion of a Set Features command for this feature, =
+the controller shall be in the
+Power State specified. If enabled, autonomous power state transitions conti=
+nue to occur from the new state."
 
-On Mon, May 13, 2019 at 11:37 AM <masonccyang@mxic.com.tw> wrote:
-> > > > [...]
-> > > > >> > >> > On 4/24/19 11:23 PM, Rob Herring wrote:
-> > > > >> > >> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
-> > > > >> > >> > >> Document the bindings used by the Renesas R-Car
-> > Gen3 RPC-IF MFD.
-> > > > >> > >> > >>
-> > > > >> > >> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > > > >> > >> > >> ---
-> > > > >> > >> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt
-> > | 40 ++++++
-> > > > >> > >> ++++++++++++++++
-> > > > >> > >> > >>  1 file changed, 40 insertions(+)
-> > > > >> > >> > >>  create mode 100644 Documentation/devicetree/
-> > bindings/mfd/mfd-
-> > > > >> > >> renesas-rpc.txt
-> > > > >> > >> > >>
-> > > > >> > >> > >> diff --git a/Documentation/devicetree/bindings/mfd/
-> > mfd-renesas-
-> > > > >> > >> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-
-> > renesas-rpc.txt
-> > > > >> > >> > >> new file mode 100644
-> > > > >> > >> > >> index 0000000..668b822
-> > > > >> > >> > >> --- /dev/null
-> > > > >> > >> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-
-> > renesas-rpc.txt
-> > > > >> > >> > >> @@ -0,0 +1,40 @@
-> > > > >> > >> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
-> > > > >> > >> > >> +--------------------------------------------------
-> > > > >> > >> > >
-> > > > >> > >> > > Looks like a SPI flash controller from the example. What
-> > > > makes it an
-> > > > >> > >> > > MFD?
-> > > > >> > >> >
-> > > > >> > >> > It supports both SPI NOR and HyperFlash (CFI-compliantflash with
-> > > > >> > >> > different bus interface).
-> > > > >> > >>
-> > > > >> > >> Looks like you're registering one OR the other.
-> > > > >> > >>
-> > > > >> > >> Why don't you just do this from DT?
-> > > > >> > >>
-> > > > >> > >> No reason for this to be an MFD IMHO.
-> > > > >> > >
-> > > > >> > >
-> > > > >> > > okay, I will patch it back to SPI mode only.
-> > > > >> >
-> > > > >> > I don't think that's what Lee meant . The controller supports _both_
-> > > > >> > modes , hence it would have the same compatible string. You
-> > just need to
-> > > > >> > extract the mode of operation from the DT.
-> > > > >>
-> > > > >> HiSilicon attempted to upstream something similar, only their
-> > > > >> controller provided NAND and NOR functionality.  They used different
-> > > > >> compatible strings to differentiate between the varying
-> > > > >> technologies.
-> > > > >>
-> > > > >> They too tried to use MFD as a means to select between them (which was
-> > > > >> also NACKed).  Not sure what they ended up doing, but the original
-> > > > >> submission and (half of) the conversation can be found at [0].  Some
-> > > > >> more of the thread continues at [1].
-> > > > >>
-> > > > >> Hope that helps.
-> > > > >>
-> > > > >> [0] https://groups.google.com/forum/#!topic/fa.linux.kernel/F6i9o8sfOIw
-> > > > >> [1] https://marc.info/?l=devicetree&m=147669165104431&w=2
-> > > > >
-> > > > >
-> > > > > Hi Marek,
-> > > > >
-> > > > > By Jones's comments:
-> > > > >
-> > --------------------------------------------------------------------------
-> > > > >> From: Shunquan Lin <linshunquan1@hisilicon.com>
-> > > > >>
-> > > > >> This patch adds driver support for HiSilicon Flash Memory
-> > > > >> Controller(FMC). HiSilicon FMC is a multi-functions device which
-> > > > >> supports SPI Nor flash controller, SPI nand Flash controller and
-> > > > >> parallel nand flash controller.
-> > > > >
-> > > > > MFDs are for devices which span multiple subsystems.
-> > > >
-> > > >    And we do! One of the subdrivers will live under drivers/
-> > spi/, the other
-> > > > under drivers/mtd/...
-> > > >
-> > >
-> > > From my point of view, I think Jones mean to MFD's subsystems are
-> > working simultaneously
-> > > at the run-time, one period of time is working for sub-device-1
-> > and later period of time
-> > > is working for sub-device-2 and so on.
-> > >
-> > > But for RPC-IF, SPI or HF mode is decided at boot time by pins
-> > configure and later in kernel
-> > > by dtb, RPC-IF can't switch SPI and HF mode at the run time.
-> >
-> > > So far, Jones seems don't agree RPC-IF to MFD and then RPC MFD
-> > will not applied
-> > > to mfd tree by him !
-> >
-> > There's precedence for such constructs being an MFD: please see
-> > drivers/mfd/at91-usart.c, which registers a single MFD cell for either
-> > serial or SPI.
->
-> okay, many thanks for your information.
->
-> How about to patch RPF-IF dts to:
-> -------------------------------------------------------------->
->
-> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> ---------------------------------------------------------
->
->   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
->
->   Required properties:
->   - compatible: should be an SoC-specific compatible value, followed by
->                   "renesas,rcar-gen3-rpc" as a fallback.
->                   supported SoC-specific values are:
->                   "renesas,r8a77995-rpc"  (R-Car D3)
->   - reg: should contain three register areas:
->           first for the base address of RPC-IF registers,
->           second for the direct mapping read mode and
->           third for the write buffer area.
->   - reg-names: should contain "regs", "dirmap" and "wbuf"
->   - clocks: should contain 1 entries for the module's clock
->   - clock-names: should contain "rpc"
->
->   Example:
->   - SPI mode:
->
->           rpc: rpc-if@ee200000 {
->                   compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
->                   reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
->                         <0 0xee208000 0 0x100>;
->                   reg-names = "regs", "dirmap", "wbuf";
->                   clocks = <&cpg CPG_MOD 917>;
->                   clock-names = "rpc";
->                   power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->                   resets = <&cpg 917>;
->                   #address-cells = <1>;
->                   #size-cells = <0>;
->
->                   flash@0 {
->                           compatible = "jedec,spi-nor";
->                           reg = <0>;
->                           spi-max-frequency = <40000000>;
->                           spi-tx-bus-width = <1>;
->                           spi-rx-bus-width = <1>;
->                   };
->           };
->
->   - HF mode:
->           rpc: rpc-if@ee200000 {
->                   compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
->                   reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
->                         <0 0xee208000 0 0x100>;
->                   reg-names = "regs", "dirmap", "wbuf";
->                   clocks = <&cpg CPG_MOD 917>;
->                   clock-names = "rpc";
->                   power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->                   resets = <&cpg 917>;
->                   #address-cells = <1>;
->                   #size-cells = <1>;
->
->                   flash@0 {
->                           compatible = "cfi-flash";
->                           reg = <0 0x4000000>;
->                   };
->           };
->
-> --------------------------------------------------------------<
->
-> Is it OK ?
+If APST is enabled on this disk, what is to stop an autonomous  reverse
+transition from queue activity on the way down?
 
-I'll defer to the MTD experts.
+>=20
+> > This was not a disk with HMB, but with regard to the HMB I believe it
+> > needs to be removed during s0ix so that there isn't any mistake that SS=
+D
+> > thinks it can access HMB memory in s0ix.
+>=20
+> There is no mistake - the device is allowed to use the HMB from the
+> point that we give it the memory range until the point where we either
+> disable it, or shut the controller down.  If something else requires the
+> device not to use the HMB after ->suspend is called we need to disable
+> the HMB, and we better have a good reason for that and document it in
+> the code.  Note that shutting down queues or having CPU memory barriers
+> is not going to help with any of that.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So maybe the CPU memory barriers were probably just working around it in te=
+rms of
+timing.
