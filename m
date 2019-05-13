@@ -2,132 +2,114 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67911C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B01C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFED208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:10:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6AC208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:12:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="DDH2tF8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfEMVKc (ORCPT
+        id S1726525AbfEMVMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:10:32 -0400
-Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:24784 "EHLO
-        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726218AbfEMVKb (ORCPT
+        Mon, 13 May 2019 17:12:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38326 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfEMVMH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:10:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TRdjdXM_1557781806;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRdjdXM_1557781806)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 14 May 2019 05:10:09 +0800
-Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     ying.huang@intel.com, hannes@cmpxchg.org,
-        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
-        hughd@google.com, shakeelb@google.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190513080929.GC24036@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
-Date:   Mon, 13 May 2019 14:09:59 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 13 May 2019 17:12:07 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s19so13181254otq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 14:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ehW85Lrv2Q48sCjGFVYU8EiJvcqJ/cEoN0rsLhKwFn4=;
+        b=DDH2tF8rRfIjsd+6p3tNZ6N0FrylBCHLkuudu7uIV1T1yuGKEfmS5nhaufD2LxCH0n
+         G845ptMmk8uLtcFNrOm9RJ/y5yUNcE06KAhjuzSEvjcwqluLZzThkkFoVLMzDS/GRFiQ
+         E3YJqmPgTJDanm2yChPEe9Htk6yEnKKy74gZ1xdIUD/wHzbHnBDGzYiaAisiKcyMiL43
+         a7ia7WeecOqq9//fSUFEgti9KcdEQBl+Yf08zwAb8MthphEbW8tsStK9BfeWjBslJy9P
+         /aU3hHSwS4cAoxn925mw+G8S7Zm+GNjhEPotnhkBeJGxfQcKkGFVGwhIkvS82qmcTcOv
+         6R5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ehW85Lrv2Q48sCjGFVYU8EiJvcqJ/cEoN0rsLhKwFn4=;
+        b=f/ArhlmWJVrjSyDEZ0uEZhTmaZPh7Jwh3AHgGLlf8GSzSMpRcGsEpvbKFbZhtT14pQ
+         A46LX+60YkyWT0DwlXT0zABWzZw2yUoD3QX8bbv0SKI4/bwV2HKWNfh7fBoIvnc7p5MN
+         PzRLkNGR3WjId3pynS28H2OI5R1CgxyY7ZO8IgaBBv+j/28PGYuzLsIlVLMG6dvm5J4L
+         1walGEhjKsxlsjMkR62mSIvELWrNCNfDryNzbL75sTfC/Rl8z1+ebGzn8Y05DdvHweMP
+         pTEvNrC07qLQ7YAOBcNxYeJktOBQclcfwrGki01MB1PAcyYtET91aGOEO0slj8FoO7KA
+         ni7g==
+X-Gm-Message-State: APjAAAXHvOj41SAJqjUQMislPofsWLRuoTiYzZ00rjIxklAcQR2+bSUt
+        qofULmLFhjU4YXtgQVNBZbTEeOlj/yDYa7lN5inPgg==
+X-Google-Smtp-Source: APXvYqwIGJ0PBLErnWxuRYnfK8Gzj1P5cw9UmR9BtnvGHQjAVMKGB06nxi/SpfU6EmNEkLZmuWLghYQYRcySk2jRhMk=
+X-Received: by 2002:a9d:6f19:: with SMTP id n25mr12997789otq.367.1557781926319;
+ Mon, 13 May 2019 14:12:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190513080929.GC24036@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190513210148.GA21574@rapoport-lnx>
+In-Reply-To: <20190513210148.GA21574@rapoport-lnx>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 13 May 2019 14:11:54 -0700
+Message-ID: <CAPcyv4he64-d=govm4+OEt75gxeuLZcrwrhow5dT=rA3KwQ4JA@mail.gmail.com>
+Subject: Re: [PATCH v8 00/12] mm: Sub-section memory hotplug support
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/13/19 1:09 AM, Michal Hocko wrote:
-> On Sat 11-05-19 00:23:40, Yang Shi wrote:
->> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
->> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
->> still gets inc'ed by one even though a whole THP (512 pages) gets
->> swapped out.
->>
->> This doesn't make too much sense to memory reclaim.  For example, direct
->> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
->> could fulfill it.  But, if nr_reclaimed is not increased correctly,
->> direct reclaim may just waste time to reclaim more pages,
->> SWAP_CLUSTER_MAX * 512 pages in worst case.
-> You are technically right here. This has been a known issue for a while.
-> I am wondering whether somebody actually noticed some misbehavior.
-> Swapping out is a rare event and you have to have a considerable number
-> of THPs to notice.
-
-The commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after 
-swapped out") was added in 4.14, it might be not used widely yet. And we 
-need swap + THPs to trigger it, furthermore the misbehavior might be 
-accumulative over time. I don't expect it will have any obvious 
-misbehavior for a single shot.
-
+On Mon, May 13, 2019 at 2:02 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
 >
->> This change may result in more reclaimed pages than scanned pages showed
->> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
-> This is quite nasty and confusing. I am worried that having those two
-> unsynced begs for subtle issues. Can we account THP as scanning 512 base
-> pages as well?
-
-Actually, such unsync has been there for a while. The 
-isolate_lru_pages() returns nr_taken which has THP accounted as 512 base 
-pages, but nr_scanned just shows 1. nr_taken is not showed via 
-/proc/vmstat, but it is showed via trace point.
-
-I think we can just account 512 base pages for nr_scanned for 
-isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT 
-just use it.
-
-And, sc->nr_scanned should be accounted as 512 base pages too otherwise 
-we may have nr_scanned < nr_to_reclaim all the time to result in 
-false-negative for priority raise and something else wrong (e.g. wrong 
-vmpressure).
-
+> Hi Dan,
 >
->> Cc: "Huang, Ying" <ying.huang@intel.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Mel Gorman <mgorman@suse.de>
->> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
->> Cc: Hugh Dickins <hughd@google.com>
->> Reviewed-by: Shakeel Butt <shakeelb@google.com>
->> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
->> ---
->> v2: Added Shakeel's Reviewed-by
->>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
->>
->>   mm/vmscan.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/vmscan.c b/mm/vmscan.c
->> index fd9de50..4226d6b 100644
->> --- a/mm/vmscan.c
->> +++ b/mm/vmscan.c
->> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
->>   
->>   		unlock_page(page);
->>   free_it:
->> -		nr_reclaimed++;
->> +		/*
->> +		 * THP may get swapped out in a whole, need account
->> +		 * all base pages.
->> +		 */
->> +		nr_reclaimed += hpage_nr_pages(page);
->>   
->>   		/*
->>   		 * Is there need to periodically free_page_list? It would
->> -- 
->> 1.8.3.1
->>
+> On Mon, May 06, 2019 at 04:39:26PM -0700, Dan Williams wrote:
+> > Changes since v7 [1]:
+>
+> Sorry for jumping late
 
+No worries, it needs to be rebased on David's "mm/memory_hotplug:
+Factor out memory block device handling" series which puts it firmly
+in v5.3 territory.
+
+> but presuming there will be v9, it'd be great if it
+> would also include include updates to
+> Documentation/admin-guide/mm/memory-hotplug.rst and
+
+If I've done my job right this series should be irrelevant to
+Documentation/admin-guide/mm/memory-hotplug.rst. The subsection
+capability is strictly limited to arch_add_memory() users that never
+online the memory, i.e. only ZONE_DEVICE / devm_memremap_pages()
+users. So this isn't "memory-hotplug" as much as it is "support for
+subsection vmemmap management".
+
+> Documentation/vm/memory-model.rst
+
+This looks more fitting and should probably include a paragraph on the
+general ZONE_DEVICE / devm_memremap_pages() use case.
