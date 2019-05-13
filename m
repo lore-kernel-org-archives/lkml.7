@@ -2,212 +2,171 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F1C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C9C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D09A2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B542084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S6jaG8Ep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfEMRX2 (ORCPT
+        id S1731648AbfEMRXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:23:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46665 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfEMRX1 (ORCPT
+        Mon, 13 May 2019 13:23:33 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19077 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731636AbfEMRX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:23:27 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r7so15560019wrr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:23:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=aOc6CBKw+RVeeMdGwIxa6uCL3lFsOT0Lwgti+Fi6e58=;
-        b=NXRHYIZOQWsrK1gHisuvsc4MBV1bHI5nfSP9MGxI1E53Mp6oWvOcViIhp9warJLCIP
-         VAvVDczXSlvkYUhN8kIcOLXRyrJBOD/o4G4HhKTfMLAGQn/OcYnWLEgGeHFzwxsaDMJN
-         losM/EOEcaNHWqWbDZUVHsXDabNBHiciJGBusMbTQfRsuzlVOjbndzAQOWZAwg85iVjb
-         X72sdm5BtbAPut7AWnvAJSw7KDkMBkDd//7ASIsloijTjLKOFrpVveWYqJHd2Y4F4ZIB
-         S9mo1Ve4on2H1ArHDW4th4ln52Sq+QWiHTklJZ61B1k5lcLCBYj5ncjy1r6GTN+R+noQ
-         Kdjg==
-X-Gm-Message-State: APjAAAWCLj0pvU9RheSJOtXvix2WmHLnONeEe5MT3KnqPgmm6Yurrmwk
-        G91SHx3RenwkiWGZYikjzwxLzw==
-X-Google-Smtp-Source: APXvYqyGLQfQ9qgYBMhBOROA3KDzQZd+2RzOsjvMydbObvwkA2lyVoOmT5x005cmHKCzFX+X+nkBqQ==
-X-Received: by 2002:adf:b35e:: with SMTP id k30mr2281815wrd.178.1557768205296;
-        Mon, 13 May 2019 10:23:25 -0700 (PDT)
-Received: from steredhat (host151-251-static.12-87-b.business.telecomitalia.it. [87.12.251.151])
-        by smtp.gmail.com with ESMTPSA id s7sm13859054wrn.84.2019.05.13.10.23.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 10:23:24 -0700 (PDT)
-Date:   Mon, 13 May 2019 19:23:22 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190513172322.vcgenx7xk4v6r2ay@steredhat>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-2-sgarzare@redhat.com>
- <3b275b52-63d9-d260-1652-8e8bf7dd679f@redhat.com>
+        Mon, 13 May 2019 13:23:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cd9a7e90000>; Mon, 13 May 2019 10:22:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 May 2019 10:23:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 May 2019 10:23:28 -0700
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 May
+ 2019 17:23:28 +0000
+Subject: Re: [PATCH 4/5] mm/hmm: hmm_vma_fault() doesn't always call
+ hmm_range_unregister()
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Linux-MM <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190506232942.12623-1-rcampbell@nvidia.com>
+ <20190506232942.12623-5-rcampbell@nvidia.com>
+ <CAFqt6zbhLQuw2N5-=Nma-vHz1BkWjviOttRsPXmde8U1Oocz0Q@mail.gmail.com>
+ <fa2078fd-3ec7-5503-94d7-c4d1a766029a@nvidia.com>
+ <20190512150724.GA4238@redhat.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <43d3eab0-acf9-e823-8b62-6e692e7b6ec5@nvidia.com>
+Date:   Mon, 13 May 2019 10:23:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3b275b52-63d9-d260-1652-8e8bf7dd679f@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190512150724.GA4238@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557768169; bh=n8vpRjGW5GPHF+IO0n302JSczsEWtzgDfOElD0ZndA8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=S6jaG8EpUHqREXnq/w6qes8gG0EhywAaS9pjrQa5P3fPTjRND/mXesGNWHI5zh5lS
+         MCAZhXIcQpxJz2UIHCdK1sL59SAJWTaEu7ZDnUT2d0A8dqAI/XxT4Yv+Y1wfM4y7Ql
+         JccyVUf0+urKTYCR3NG8sQn3XcNnn+f4txkkgZaL4DuBd1beY4b9uS0DRS58ifa2ZY
+         mEisv1qr0a8+ZfeXUTn/EvHyMtY1tPBgXuqwLTlWXICwW1Xru8PS3DUf6guSMS+nQF
+         dN/t4rnbMWPqrllLWmMx/goWpph2WFgLe9x6Hcm4NXGbdH5b7Kneot0A4EmuKA/Juh
+         J2mWd5McJixXg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 05:58:53PM +0800, Jason Wang wrote:
-> 
-> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
-> > Since virtio-vsock was introduced, the buffers filled by the host
-> > and pushed to the guest using the vring, are directly queued in
-> > a per-socket list avoiding to copy it.
-> > These buffers are preallocated by the guest with a fixed
-> > size (4 KB).
-> > 
-> > The maximum amount of memory used by each socket should be
-> > controlled by the credit mechanism.
-> > The default credit available per-socket is 256 KB, but if we use
-> > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > guest will continue to fill the vring with new 4 KB free buffers
-> > to avoid starvation of other sockets.
-> > 
-> > This patch solves this issue copying the payload in a new buffer.
-> > Then it is queued in the per-socket list, and the 4KB buffer used
-> > by the host is freed.
-> > 
-> > In this way, the memory used by each socket respects the credit
-> > available, and we still avoid starvation, paying the cost of an
-> > extra memory copy. When the buffer is completely full we do a
-> > "zero-copy", moving the buffer directly in the per-socket list.
-> 
-> 
-> I wonder in the long run we should use generic socket accouting mechanism
-> provided by kernel (e.g socket, skb, sndbuf, recvbug, truesize) instead of
-> vsock specific thing to avoid duplicating efforts.
 
-I agree, the idea is to switch to sk_buff but this should require an huge
-change. If we will use the virtio-net datapath, it will become simpler.
 
+On 5/12/19 8:07 AM, Jerome Glisse wrote:
+> On Tue, May 07, 2019 at 11:12:14AM -0700, Ralph Campbell wrote:
+>>
+>> On 5/7/19 6:15 AM, Souptick Joarder wrote:
+>>> On Tue, May 7, 2019 at 5:00 AM <rcampbell@nvidia.com> wrote:
+>>>>
+>>>> From: Ralph Campbell <rcampbell@nvidia.com>
+>>>>
+>>>> The helper function hmm_vma_fault() calls hmm_range_register() but is
+>>>> missing a call to hmm_range_unregister() in one of the error paths.
+>>>> This leads to a reference count leak and ultimately a memory leak on
+>>>> struct hmm.
+>>>>
+>>>> Always call hmm_range_unregister() if hmm_range_register() succeeded.
+>>>
+>>> How about * Call hmm_range_unregister() in error path if
+>>> hmm_range_register() succeeded* ?
+>>
+>> Sure, sounds good.
+>> I'll include that in v2.
 > 
+> NAK for the patch see below why
 > 
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> >   drivers/vhost/vsock.c                   |  2 +
-> >   include/linux/virtio_vsock.h            |  8 +++
-> >   net/vmw_vsock/virtio_transport.c        |  1 +
-> >   net/vmw_vsock/virtio_transport_common.c | 95 ++++++++++++++++++-------
-> >   4 files changed, 81 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > index bb5fc0e9fbc2..7964e2daee09 100644
-> > --- a/drivers/vhost/vsock.c
-> > +++ b/drivers/vhost/vsock.c
-> > @@ -320,6 +320,8 @@ vhost_vsock_alloc_pkt(struct vhost_virtqueue *vq,
-> >   		return NULL;
-> >   	}
-> > +	pkt->buf_len = pkt->len;
-> > +
-> >   	nbytes = copy_from_iter(pkt->buf, pkt->len, &iov_iter);
-> >   	if (nbytes != pkt->len) {
-> >   		vq_err(vq, "Expected %u byte payload, got %zu bytes\n",
-> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> > index e223e2632edd..345f04ee9193 100644
-> > --- a/include/linux/virtio_vsock.h
-> > +++ b/include/linux/virtio_vsock.h
-> > @@ -54,9 +54,17 @@ struct virtio_vsock_pkt {
-> >   	void *buf;
-> >   	u32 len;
-> >   	u32 off;
-> > +	u32 buf_len;
-> >   	bool reply;
-> >   };
-> > +struct virtio_vsock_buf {
-> > +	struct list_head list;
-> > +	void *addr;
-> > +	u32 len;
-> > +	u32 off;
-> > +};
-> > +
-> >   struct virtio_vsock_pkt_info {
-> >   	u32 remote_cid, remote_port;
-> >   	struct vsock_sock *vsk;
-> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> > index 15eb5d3d4750..af1d2ce12f54 100644
-> > --- a/net/vmw_vsock/virtio_transport.c
-> > +++ b/net/vmw_vsock/virtio_transport.c
-> > @@ -280,6 +280,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
-> >   			break;
-> >   		}
-> > +		pkt->buf_len = buf_len;
-> >   		pkt->len = buf_len;
-> >   		sg_init_one(&hdr, &pkt->hdr, sizeof(pkt->hdr));
-> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> > index 602715fc9a75..0248d6808755 100644
-> > --- a/net/vmw_vsock/virtio_transport_common.c
-> > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > @@ -65,6 +65,9 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
-> >   		pkt->buf = kmalloc(len, GFP_KERNEL);
-> >   		if (!pkt->buf)
-> >   			goto out_pkt;
-> > +
-> > +		pkt->buf_len = len;
-> > +
-> >   		err = memcpy_from_msg(pkt->buf, info->msg, len);
-> >   		if (err)
-> >   			goto out;
-> > @@ -86,6 +89,46 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
-> >   	return NULL;
-> >   }
-> > +static struct virtio_vsock_buf *
-> > +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_copy)
-> > +{
-> > +	struct virtio_vsock_buf *buf;
-> > +
-> > +	if (pkt->len == 0)
-> > +		return NULL;
-> > +
-> > +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-> > +	if (!buf)
-> > +		return NULL;
-> > +
-> > +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
-> > +	 * the new virtio_vsock_buf avoiding the copy, because we are sure that
-> > +	 * we are not use more memory than that counted by the credit mechanism.
-> > +	 */
-> > +	if (zero_copy && pkt->len == pkt->buf_len) {
-> > +		buf->addr = pkt->buf;
-> > +		pkt->buf = NULL;
-> > +	} else {
+>>
+>>>>
+>>>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>>> Cc: John Hubbard <jhubbard@nvidia.com>
+>>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>>> Cc: Balbir Singh <bsingharora@gmail.com>
+>>>> Cc: Dan Carpenter <dan.carpenter@oracle.com>
+>>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>>> ---
+>>>>    include/linux/hmm.h | 3 ++-
+>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+>>>> index 35a429621e1e..fa0671d67269 100644
+>>>> --- a/include/linux/hmm.h
+>>>> +++ b/include/linux/hmm.h
+>>>> @@ -559,6 +559,7 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+>>>>                   return (int)ret;
+>>>>
+>>>>           if (!hmm_range_wait_until_valid(range, HMM_RANGE_DEFAULT_TIMEOUT)) {
+>>>> +               hmm_range_unregister(range);
+>>>>                   /*
+>>>>                    * The mmap_sem was taken by driver we release it here and
+>>>>                    * returns -EAGAIN which correspond to mmap_sem have been
+>>>> @@ -570,13 +571,13 @@ static inline int hmm_vma_fault(struct hmm_range *range, bool block)
+>>>>
+>>>>           ret = hmm_range_fault(range, block);
+>>>>           if (ret <= 0) {
+>>>> +               hmm_range_unregister(range);
+>>>
+>>> what is the reason to moved it up ?
+>>
+>> I moved it up because the normal calling pattern is:
+>>      down_read(&mm->mmap_sem)
+>>      hmm_vma_fault()
+>>          hmm_range_register()
+>>          hmm_range_fault()
+>>          hmm_range_unregister()
+>>      up_read(&mm->mmap_sem)
+>>
+>> I don't think it is a bug to unlock mmap_sem and then unregister,
+>> it is just more consistent nesting.
 > 
+> So this is not the usage pattern with HMM usage pattern is:
 > 
-> Is the copy still needed if we're just few bytes less? We meet similar issue
-> for virito-net, and virtio-net solve this by always copy first 128bytes for
-> big packets.
+> hmm_range_register()
+> hmm_range_fault()
+> hmm_range_unregister()
 > 
-> See receive_big()
+> The hmm_vma_fault() is gonne so this patch here break thing.
+> 
+> See https://cgit.freedesktop.org/~glisse/linux/log/?h=hmm-5.2-v3
 
-I'm seeing, It is more sophisticated.
-IIUC, virtio-net allocates a sk_buff with 128 bytes of buffer, then copies the
-first 128 bytes, then adds the buffer used to receive the packet as a frag to
-the skb.
-
-Do you suggest to implement something similar, or for now we can use my
-approach and if we will merge the datapath we can reuse the virtio-net
-approach?
-
-Thanks,
-Stefano
+The patch series is on top of v5.1-rc6-mmotm-2019-04-25-16-30.
+hmm_vma_fault() is defined there and in your hmm-5.2-v3 branch as
+a backward compatibility transition function in include/linux/hmm.h.
+So I agree the new API is to use hmm_range_register(), etc.
+This is intended to cover the transition period.
+Note that hmm_vma_fault() is being called from
+drivers/gpu/drm/nouveau/nouveau_svm.c in both trees.
