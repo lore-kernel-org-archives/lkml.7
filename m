@@ -2,76 +2,60 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80759C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74462C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5845620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD512133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbfEMMEx (ORCPT
+        id S1729626AbfEMME5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:04:53 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:57350 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729602AbfEMMEw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:04:52 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id 4033B25AD63;
-        Mon, 13 May 2019 22:04:50 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id EDB49E22B88; Mon, 13 May 2019 14:04:47 +0200 (CEST)
-Date:   Mon, 13 May 2019 14:04:47 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] irqchip/renesas-irqc: Remove unneeded inclusion of
- <linux/spinlock.h>
-Message-ID: <20190513120447.l6gzewa5cb7riar7@verge.net.au>
-References: <20190429152006.22593-1-geert+renesas@glider.be>
- <20190429152006.22593-2-geert+renesas@glider.be>
+        Mon, 13 May 2019 08:04:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:38873 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728268AbfEMME4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:04:56 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 4D9D868AFE; Mon, 13 May 2019 14:04:35 +0200 (CEST)
+Date:   Mon, 13 May 2019 14:04:35 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel
+ endianess
+Message-ID: <20190513120435.GB22993@lst.de>
+References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com> <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com> <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com> <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com> <87woiutwq4.fsf@concordia.ellerman.id.au> <CACT4Y+YT52wGuARxe9RqUsMYGNZTwaBowWWUUawyqTBq4G1NDg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190429152006.22593-2-geert+renesas@glider.be>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CACT4Y+YT52wGuARxe9RqUsMYGNZTwaBowWWUUawyqTBq4G1NDg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 05:20:02PM +0200, Geert Uytterhoeven wrote:
-> The driver never used spinlocks, and thus does not need to include
-> <linux/spinlock.h>.
+On Mon, May 13, 2019 at 01:50:19PM +0200, Dmitry Vyukov wrote:
+> > We did have some bugs in the past (~1-2 y/ago) but AFAIK they are all
+> > fixed now. These days I build most of my kernels with a bi-endian 64-bit
+> > toolchain, and switching endian without running `make clean` also works.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> For the record, yes, it turn out to be a problem in our code (a latent
+> bug). We actually used host (x86) gcc to build as-if ppc code that can
+> run on the host, so it defined neither LE no BE macros. It just
+> happened to work in the past :)
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-> ---
->  drivers/irqchip/irq-renesas-irqc.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-renesas-irqc.c b/drivers/irqchip/irq-renesas-irqc.c
-> index a449a7c839b3ec08..438a063c76156d98 100644
-> --- a/drivers/irqchip/irq-renesas-irqc.c
-> +++ b/drivers/irqchip/irq-renesas-irqc.c
-> @@ -7,7 +7,6 @@
->  
->  #include <linux/init.h>
->  #include <linux/platform_device.h>
-> -#include <linux/spinlock.h>
->  #include <linux/interrupt.h>
->  #include <linux/ioport.h>
->  #include <linux/io.h>
-> -- 
-> 2.17.1
-> 
+So Nick was right and these checks actually are useful..
