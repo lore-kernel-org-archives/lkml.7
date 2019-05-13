@@ -3,89 +3,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C03C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316D7C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801DC21880
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557763368;
-	bh=beoZx4frclCxoXSfTxDXkTuSz0AY0hIAwe1mG3lYD+0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1DoL9OjKJ98qM1X1bv308UAdhp/GN4/xszH952fK9vxT+K6n3QylIGzsIJl72XYa+
-	 4LLufZppLHK1/NxIP5gFrHrjzWj36Hm31/alA6FNeWk0Ogsreayk66MIBRexTY9dxZ
-	 j2IHPoLChKCxHVsDS1ibHzX0moCzRSmFcW22q2ZM=
+	by mail.kernel.org (Postfix) with ESMTP id F13552084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="br89Uott"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbfEMQCr (ORCPT
+        id S1730436AbfEMQDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:02:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730250AbfEMQCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:02:47 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 111742168B
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:02:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557763366;
-        bh=beoZx4frclCxoXSfTxDXkTuSz0AY0hIAwe1mG3lYD+0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QnhBLyrlFAFdFMdYGjrxtpZTRix4ohkczb2rqgQsWALhgFd6D7tiD8w3qEuQjKa4t
-         6gACJ1mq+rjkrjjgv78C9L1ngGrELfh60U9CNvxeFR0bF4yIiw25vABiO2v6YO8nwh
-         2BOKdf6lHrzPUcK3M8mxJ2O4+dZiPBseqIuRUnko=
-Received: by mail-wr1-f48.google.com with SMTP id b18so5942405wrq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:02:46 -0700 (PDT)
-X-Gm-Message-State: APjAAAXVTghcHUeekLFqUl2ClpKc5SLuxdD2AL++L+cu8mNfmKldqJBn
-        zLqAswuLBqr4hIhFKB1a5mOloWcJqaSFTomedjImug==
-X-Google-Smtp-Source: APXvYqxYv7A+yu/f9CB06sBI0iU4dMZdZfKpnb+KSKIh95NmG1eMi1JsOLR0y6dsa/epkHBDB9VY2z7QBBDgfe/ptV8=
-X-Received: by 2002:adf:fb4a:: with SMTP id c10mr17614362wrs.309.1557763364695;
- Mon, 13 May 2019 09:02:44 -0700 (PDT)
+        Mon, 13 May 2019 12:03:43 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:43932 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730250AbfEMQDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:03:43 -0400
+Received: by mail-ua1-f68.google.com with SMTP id u4so1559966uau.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:03:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LhqduOUwS+O6B5Ih2GpJJXA30cnrCE8y/7lD4jak7zA=;
+        b=br89Uottwez2IWUAknU6LNVFpUXyul6AjXPYo2WtfeR027fkRHL+kRf3UQD7snqoFU
+         QeaulT/nCD5jsWybxpHI/SLO0sdvx6XGQgtabNpbIld1CJlQ0/UTyNK2xxHsL/ICpODm
+         69A9I3JkhxSVco01rZ2p+C20qosS5jrtbVRT4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LhqduOUwS+O6B5Ih2GpJJXA30cnrCE8y/7lD4jak7zA=;
+        b=OaTRXAaUnrZvb2NXQaJI6gh7GDcILfY19dqZBgOXZ1afRYDvZX9F+ECXMFQdgc6Jw3
+         IjojJM4MwPBJSZeT+XWH7c4UgLfzE8a+zHqXdj7nXzUDIUhCkEhKfJeCpZT+gFeSAkno
+         FdIo5NRS4C47xX1tx6+fPibHG3wvvYCHQ9aOxkqUW5E/R3Bkj7XNvdoj2XULPaId9qZX
+         SkSsfrcL5cM7OACy1Jeqgl6rRhbspCbIelWY6PMXtFlhDjxkqmcygr/Ai4VyrAJoRrZR
+         M7B9Q0naIDCTz8V6z7FaLv+O4MX2IbDQ5GDopfXG3cZXTgr9tGcPACy/25gW+VHLo0mw
+         WrIg==
+X-Gm-Message-State: APjAAAUKLv5W8RA3N6S9n3f5/wwR4giwh4ZOUWsLKll3h33A7w8zKboc
+        mR2YuM3YE+5qz6WVSw189dT9Mwo1hk0=
+X-Google-Smtp-Source: APXvYqxR8RUFYDAN4d4ZlqXfO9qEDlf+PmHnb/SuYv3GZJI0CdpP6rUx+JDhyahVyAHM6BWsO7SSgg==
+X-Received: by 2002:ab0:2692:: with SMTP id t18mr7456668uao.106.1557763421317;
+        Mon, 13 May 2019 09:03:41 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id w136sm11022347vkw.18.2019.05.13.09.03.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 09:03:40 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id s30so5012677uas.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:03:40 -0700 (PDT)
+X-Received: by 2002:ab0:20c1:: with SMTP id z1mr12511820ual.109.1557763419691;
+ Mon, 13 May 2019 09:03:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com> <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
-In-Reply-To: <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 13 May 2019 09:02:33 -0700
-X-Gmail-Original-Message-ID: <CALCETrXADiujgE6HJ95P_da5OyB05Z5CqR028da50aCUHv4Agg@mail.gmail.com>
-Message-ID: <CALCETrXADiujgE6HJ95P_da5OyB05Z5CqR028da50aCUHv4Agg@mail.gmail.com>
-Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
+References: <20190510223437.84368-1-dianders@chromium.org> <20190510223437.84368-5-dianders@chromium.org>
+ <20190512074538.GE21483@sirena.org.uk> <CAD=FV=Xg96SGg-JDjEJRtC6jACcN9Xizcr-zV4rQwXYvuEvmRA@mail.gmail.com>
+ <20190513160153.GD5168@sirena.org.uk>
+In-Reply-To: <20190513160153.GD5168@sirena.org.uk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 May 2019 09:03:28 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Xm-2oxit7doVAYJr28c-xHqUdt9PQC=WYpYfsAyUxuaw@mail.gmail.com>
+Message-ID: <CAD=FV=Xm-2oxit7doVAYJr28c-xHqUdt9PQC=WYpYfsAyUxuaw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] Revert "platform/chrome: cros_ec_spi: Transfer
+ messages at high priority"
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
-<alexandre.chartre@oracle.com> wrote:
->
-> The KVM page fault handler handles page fault occurring while using
-> the KVM address space by switching to the kernel address space and
-> retrying the access (except if the fault occurs while switching
-> to the kernel address space). Processing of page faults occurring
-> while using the kernel address space is unchanged.
->
-> Page fault log is cleared when creating a vm so that page fault
-> information doesn't persist when qemu is stopped and restarted.
+Hi,
 
-Are you saying that a page fault will just exit isolation?  This
-completely defeats most of the security, right?  Sure, it still helps
-with side channels, but not with actual software bugs.
+On Mon, May 13, 2019 at 9:02 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Mon, May 13, 2019 at 08:57:12AM -0700, Doug Anderson wrote:
+> > On Sun, May 12, 2019 at 10:05 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > It isn't clear to me that it's a bad thing to have this even with the
+> > > SPI thread at realime priority.
+>
+> > The code that's there right now isn't enough.  As per the description
+> > in the original patch, it didn't solve all problems but just made
+> > things an order of magnitude better.  So if I don't do this revert I
+>
+> I'm not saying the other changes aren't helping, I'm saying that it's
+> not clear that this revert is improving things.
+
+If I add a call to force the pumping to happen on the SPI thread then
+the commit I'm reverting here is useless though, isn't it?
+
+-Doug
