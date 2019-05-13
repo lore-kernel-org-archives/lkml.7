@@ -2,133 +2,109 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0777AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330D9C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29712146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20D42146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:44:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GQawiz8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbfEMJmM (ORCPT
+        id S1728696AbfEMJoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:42:12 -0400
-Received: from mail.us.es ([193.147.175.20]:51012 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728635AbfEMJmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:42:10 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id D2F433066A8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:42:07 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id BEC7BDA7B5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:42:07 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id BDB58DA79E; Mon, 13 May 2019 11:42:07 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 46703DA7B8;
-        Mon, 13 May 2019 11:42:04 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 13 May 2019 11:42:01 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 0F6F64067441;
-        Mon, 13 May 2019 11:42:04 +0200 (CEST)
-Date:   Mon, 13 May 2019 11:42:03 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dsahern@gmail.com, Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Message-ID: <20190513094203.atnko3xbim5hzb7y@salvia>
-References: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
+        Mon, 13 May 2019 05:44:17 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40975 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728133AbfEMJoR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:44:17 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g8so11116705otl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:44:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TXYVyM1elY/e/gwr441pJoxadHFYtIz0EH7uksaUA00=;
+        b=GQawiz8mlWxh/yf7/DiecVKQmIl48uHHnfbDs6NwSWdi9y+D4Kf5bCLwsxaGnEIUZf
+         nrUE6T/lrxJFWLvhe10ToW17PX+6WZ7PWEf4xSPOXb8k1DSLt7O2Juet2Lgt5lC759eq
+         g1/2yARQtJwd9CIw7tB136d5woqAAOHI8bNZLOCKr92a6YDS5/J3WlNpe+gEZ05/VpR8
+         xBK5t6xm5FLjWabkFaYeqqAUPHhVrHYsN5daplbQKzmXrU6omOOpWIp9oBDSDKGEQLEE
+         NVXTCZ3tJt/VjAwmPbgBz0t9AjLNN3OsPpyEBbIDeOrWVTKi2ZQkX7y2xbus1kqxTGmq
+         bnZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TXYVyM1elY/e/gwr441pJoxadHFYtIz0EH7uksaUA00=;
+        b=tRU4OyOjL5uQo9251/6GK5Yd1TVff9QBZnXWxIDFTr9MPrly/c3YtVZNKziUYVp/2X
+         6+2Ik1FdnGqqFhE6IRHu+JLWE/QfcmlVtbNexD4RJ14TN8dr2MjMXGnb3rRPMh0kCbWF
+         nwyZhTvKOoQzZNlgZ9nWPVOY9oewdTmuCA6DooLNZ3YH8uQmqDH+Bbjt2kFy6xD+J+eT
+         FXLfehZFi/qXVGRob4AxtBwP8GTfqYPrs9Sd5Zhwc3iTg7NFyOfaPQBOW8hmn2Iu7khL
+         KvaDFHR4LKxz4crcWxQidelHFRTjCoIXuPkiuXGEXEY9VtjD/gFjr55w/NWaHGcer7P7
+         vxmA==
+X-Gm-Message-State: APjAAAWz+rwU9arqdgsT0Lt9l3OE5ku846iZSnr8mfhR+L/vNoZRTo+/
+        POCB6nSnejv2nWJdbYjzYVc048mSCYhF06XOvDGc1Q==
+X-Google-Smtp-Source: APXvYqzaNT+TgVDjenXnFHOeex93upzugiVccOLalDaA6Ieg0c7UGMs4NUZH4TszrKklUoDkyyO8dIHeKn7h76sHRXU=
+X-Received: by 2002:a9d:6855:: with SMTP id c21mr14592075oto.151.1557740656833;
+ Mon, 13 May 2019 02:44:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <1557728917-49079-1-git-send-email-gengdongjiu@huawei.com>
+In-Reply-To: <1557728917-49079-1-git-send-email-gengdongjiu@huawei.com>
+From:   Peter Maydell <peter.maydell@linaro.org>
+Date:   Mon, 13 May 2019 10:44:05 +0100
+Message-ID: <CAFEAcA-S6Kh8yUqVZVA8gtDdRscgVaTfC4CwxngoS2ZPt6K9ww@mail.gmail.com>
+Subject: Re: [RFC PATCH V2] kvm: arm64: export memory error recovery
+ capability to user space
+To:     Dongjiu Geng <gengdongjiu@huawei.com>
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        arm-mail-list <linux-arm-kernel@lists.infradead.org>,
+        kvmarm@lists.cs.columbia.edu, Zheng Xiang <zhengxiang9@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
-> ipv4/ipv6 packets will be dropped because in device is
-> vrf but out device is an enslaved device. So failed with
-> the check of the rpfilter.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+On Mon, 13 May 2019 at 07:32, Dongjiu Geng <gengdongjiu@huawei.com> wrote:
+>
+> When user space do memory recovery, it will check whether KVM and
+> guest support the error recovery, only when both of them support,
+> user space will do the error recovery. This patch exports this
+> capability of KVM to user space.
+>
+> Cc: Peter Maydell <peter.maydell@linaro.org>
+> Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
 > ---
->  net/ipv4/netfilter/ipt_rpfilter.c  |  1 +
->  net/ipv6/netfilter/ip6t_rpfilter.c | 10 +++++++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
-> index 0b10d8812828..6e07cd0ecbec 100644
-> --- a/net/ipv4/netfilter/ipt_rpfilter.c
-> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
-> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
->  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
->  	flow.flowi4_tos = RT_TOS(iph->tos);
->  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
-> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
-> 
->  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
->  }
-> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-> index c3c6b09acdc4..a28c81322148 100644
-> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
-> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
->  	if (rpfilter_addr_linklocal(&iph->saddr)) {
->  		lookup_flags |= RT6_LOOKUP_F_IFACE;
->  		fl6.flowi6_oif = dev->ifindex;
-> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
-> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
-> +		   (netif_is_l3_master(dev)) ||
-> +		   (netif_is_l3_slave(dev)))
->  		fl6.flowi6_oif = dev->ifindex;
-> 
->  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
-> @@ -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
->  		goto out;
->  	}
-> 
-> +	if (netif_is_l3_master(dev)) {
-> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
-> +		if (!dev)
-> +			goto out;
-> +	}
+> v1->v2:
+> 1. check whether host support memory failure instead of RAS capability
+>    https://patchwork.kernel.org/patch/10730827/
+>
+> v1:
+> 1. User space needs to check this capability of host is suggested by Peter[1],
+> this patch as RFC tag because user space patches are still under review,
+> so this kernel patch is firstly sent out for review.
+>
+> [1]: https://patchwork.codeaurora.org/patch/652261/
+> ---
 
-Suggestion: Could you just call l3mdev_master_ifindex_rcu() when
-invoking rpfilter_lookup_reverse6() ?
+I thought the conclusion of the thread on the v1 patch was that
+userspace doesn't need to specifically ask the host kernel if
+it has support for this -- if it does not, then the host kernel
+will just never deliver userspace any SIGBUS with MCEERR code,
+which is fine. Or am I still confused?
 
-diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
-index c3c6b09acdc4..ce64ff5d6fb6 100644
---- a/net/ipv6/netfilter/ip6t_rpfilter.c
-+++ b/net/ipv6/netfilter/ip6t_rpfilter.c
-@@ -101,7 +101,8 @@ static bool rpfilter_mt(const struct sk_buff *skb,
-struct xt_action_param *par)
-        if (unlikely(saddrtype == IPV6_ADDR_ANY))
-                return true ^ invert; /* not routable: forward path will drop it */
- 
--       return rpfilter_lookup_reverse6(xt_net(par), skb, xt_in(par),
-+       return rpfilter_lookup_reverse6(xt_net(par), skb,
-+                                       l3mdev_master_ifindex_rcu(xt_in(par)),
-                                        info->flags) ^ invert;
- }
+thanks
+-- PMM
