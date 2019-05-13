@@ -2,136 +2,117 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEFEC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA76C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E6FA208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D961D208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 22:31:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lCF4YE1X"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mG/THQWe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfEMW34 (ORCPT
+        id S1726562AbfEMWbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 18:29:56 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44602 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfEMW34 (ORCPT
+        Mon, 13 May 2019 18:31:18 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:44728 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfEMWbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 18:29:56 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d3so7165494plj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:29:55 -0700 (PDT)
+        Mon, 13 May 2019 18:31:18 -0400
+Received: by mail-io1-f67.google.com with SMTP id f22so11224200iol.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 15:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references:from
-         :subject:cc:to:message-id:user-agent:date;
-        bh=ETQhQAaaEpynYwTuUBGU6E1kF1yOq255ZbmhFrac2JY=;
-        b=lCF4YE1X1gC3tjBCZVAp3rx/olsWV+J0XAb6jJx7FkuG9YOdGM/BbF8eJHo/allGDv
-         Xza4Bszn9mZYOtgpPYXpRbmXa0YiZXqUmAIf+TdTK41cPnxeyXgD1nTVhOEyntS6On/y
-         dZSHK3jML6Vc39MREPTHKjqPL4lmey9RcItFE=
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=ZTesufEDxec+5sA8PoolbYSfD3zUTYkwZ95SB2LoCtU=;
+        b=mG/THQWen8d9t08ReVXM/a4ba8YySpitPWAsXt/KNMLaALTtLfL2x+XjbBwHg6/dDT
+         jnYtVVRVZiYOeoCmL38LjdVXrHpbjVlR2mhfGp2mqAUlpw0/xYDUOhVJtk4U/HWSZQOi
+         s7kjzCf7KUV3xOayKwlKeYEMsMakNSWOX5xBAJto1mbmlTvsR0xZZwvojS5J3nkPvsDI
+         ZDLU2mAFOFKZNjd0kf8RCrCmHUgxoeC3XRa3ftrzRQot4vTvpKbK/WGUszS8qCEub6XR
+         WOJB4DHsMpVUJVqmuCCLG4FrfjPWqgt2mjRii/pYhZrPlSf3bKrUCgEZ75J3ns1zVyD+
+         TMlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
-         :date;
-        bh=ETQhQAaaEpynYwTuUBGU6E1kF1yOq255ZbmhFrac2JY=;
-        b=Zt5OoHWomlG6wxYnLChnZif7vBcIT6K4OlFTM5+Hhvi2utBXtKdLlPA0ZmL9/pEdz9
-         A7nkLyS0l1TIV8I6UI19ivoAjOvCUjBY+5M/fVCsjRnAvfsmav/ynZW0Bx7obVq+ecr+
-         I8JZTOGvKWi8OUCQ7qoVWJILJeJ3mIrkWTj/VXvXMJ/OIQwPBo9Tw1mcAP0MivJAAdzy
-         IqAPuz/Xa0hCNEpHNzwu+cDkVBV5dg5TSxs2RtQqGnnsAo8vwOm1YNebRwXg1J/8J2w5
-         UcNxUwgDGmGumZgXwMC67jpmmgH0LPKIxLsJnqq9XFCagyTBuKaimq7e6YnTXlYAlpOY
-         h+ZA==
-X-Gm-Message-State: APjAAAWjsPnUMwY56BJeT+HkCKOmZHLTF4a/WBL5riGseugK1IABVKrF
-        vlwCwMJ18TE2UL3jh9wMW0OW7g==
-X-Google-Smtp-Source: APXvYqySS1GyiV5EFWAvvxpDWM4HKOFcG2K2g8mylOnrI7fyLakxzGwBsPFhohtLtxgeH0oftSnzmQ==
-X-Received: by 2002:a17:902:f096:: with SMTP id go22mr35230296plb.49.1557786594965;
-        Mon, 13 May 2019 15:29:54 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id f87sm21668997pff.56.2019.05.13.15.29.53
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=ZTesufEDxec+5sA8PoolbYSfD3zUTYkwZ95SB2LoCtU=;
+        b=NlXK2At3exAPjc1OBGfLsnpewZTvrrtY1iawssvt1Fry1rLglX1qADuKozyd8IgCHW
+         JP9/dQYW1km49gN/LhJP4t+BmT4grThlvivdd1nFE2AZbddyMrPzhXRPwXDyQi+wOSvL
+         XG0bNHOVvP2l5jf3AMfiLeH6XP1gEoxruYE9ccJMvVSDkNFtEmSfwC8DYByXzqPMA4CZ
+         8VXlGOfTJGaRV6m7IwdMZgS904YFXtR0xGnynSZd0jGk8rQXwLNA65LghBs4S5y1OuOb
+         +xCuF+zT8d2UTD0bFNz925uv996ckuII12Q6G4cy5yUjPw368HPiVJTuEzxzAZofpyBK
+         8hGw==
+X-Gm-Message-State: APjAAAURcnKVBs1qO22rO1lxB3HsUf6vVdb+ZKCUSnLaihaJi0SI15W/
+        /PScxO3LGgntSOVUFh1weV1meg==
+X-Google-Smtp-Source: APXvYqxNdwk0XZB5PFfMdoQ14j5bk/oLnEmvEFIPFapRf1016EP0cu/TyH5p23c/PgySsZ6D9t5wCg==
+X-Received: by 2002:a5d:9948:: with SMTP id v8mr4043411ios.190.1557786677263;
+        Mon, 13 May 2019 15:31:17 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id c62sm368695itd.17.2019.05.13.15.31.16
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 15:29:54 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 13 May 2019 15:31:16 -0700 (PDT)
+Date:   Mon, 13 May 2019 15:31:16 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>, merker@debian.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [v2 PATCH] RISC-V: Add a PE/COFF compliant Image header.
+In-Reply-To: <20190501195607.32553-1-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1905131522370.21198@viisi.sifive.com>
+References: <20190501195607.32553-1-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190429035515.73611-3-drinkcat@chromium.org>
-References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
-Cc:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>, evgreen@chromium.org
-To:     Nicolas Boichat <drinkcat@chromium.org>,
-        linux-mediatek@lists.infradead.org
-Message-ID: <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Mon, 13 May 2019 15:29:53 -0700
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Nicolas Boichat (2019-04-28 20:55:15)
-> During suspend/resume, mtk_eint_mask may be called while
-> wake_mask is active. For example, this happens if a wake-source
-> with an active interrupt handler wakes the system:
-> irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-> that it can be handled later on in the resume flow.
->=20
-> However, this may happen before mtk_eint_do_resume is called:
-> in this case, wake_mask is loaded, and cur_mask is restored
-> from an older copy, re-enabling the interrupt, and causing
-> an interrupt storm (especially for level interrupts).
->=20
-> Instead, we just record mask/unmask changes in cur_mask. This
-> also avoids the need to read the current mask in eint_do_suspend,
-> and we can remove mtk_eint_chip_read_mask function.
->=20
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+On Wed, 1 May 2019, Atish Patra wrote:
 
-It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
-here. Isn't that what's happening? All non-wake irqs should be masked at
-the hardware level so they can't cause a wakeup during suspend and on
-resume they can be unmasked?
+> Currently, last stage boot loaders such as U-Boot can accept only
+> uImage which is an unnecessary additional step in automating boot flows.
+> 
+> Add a PE/COFF compliant image header that boot loaders can parse and
+> directly load kernel flat Image. The existing booting methods will continue
+> to work as it is.
+> 
+> Another goal of this header is to support EFI stub for RISC-V in future.
+> EFI specification needs PE/COFF image header in the beginning of the kernel
+> image in order to load it as an EFI application. In order to support
+> EFI stub, code0 should be replaced with "MZ" magic string and res5(at
+> offset 0x3c) should point to the rest of the PE/COFF header (which will
+> be added during EFI support).
+> 
+> Tested on both QEMU and HiFive Unleashed using OpenSBI + U-Boot + Linux.
+> 
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
 
-> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediat=
-ek/mtk-eint.c
-> index 737385e86beb807..7e526bcf5e0b55c 100644
-> --- a/drivers/pinctrl/mediatek/mtk-eint.c
-> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
-> @@ -113,6 +113,8 @@ static void mtk_eint_mask(struct irq_data *d)
->         void __iomem *reg =3D mtk_eint_get_offset(eint, d->hwirq,
->                                                 eint->regs->mask_set);
-> =20
-> +       eint->cur_mask[d->hwirq >> 5] &=3D ~mask;
-> +
->         writel(mask, reg);
->  }
-> =20
-> @@ -123,6 +125,8 @@ static void mtk_eint_unmask(struct irq_data *d)
->         void __iomem *reg =3D mtk_eint_get_offset(eint, d->hwirq,
->                                                 eint->regs->mask_clr);
-> =20
-> +       eint->cur_mask[d->hwirq >> 5] |=3D mask;
-> +
->         writel(mask, reg);
-> =20
->         if (eint->dual_edge[d->hwirq])
-> @@ -384,7 +375,6 @@ static void mtk_eint_irq_handler(struct irq_desc *des=
-c)
-> =20
->  int mtk_eint_do_suspend(struct mtk_eint *eint)
->  {
-> -       mtk_eint_chip_read_mask(eint, eint->base, eint->cur_mask);
->         mtk_eint_chip_write_mask(eint, eint->base, eint->wake_mask);
-> =20
+Seems like we're stuck with this basic format for EFI, etc.  Even though 
+we may be stuck with it, I think we should take the opportunity to add the 
+possibility to extending this header format by adding fields after the 
+basic PE/COFF header ends.
 
+In particular, at the very least, I'd suggest adding a u32 after the 
+PE/COFF header ends, to represent a "RISC-V header format version number".  
+Then if we add more fields that follow the PE/COFF header -- for example, 
+to represent the RISC-V instruction set extensions that are required to 
+run this binary -- we can just bump that RISC-V-specific version number 
+field to indicate to bootloaders that there's more there.
 
-This alone looks like, write out the mask to only allow wake interrupts.
+One other observation - if what's here was copied from some other 
+architecture, like ARM, please acknowledge the source in the patch 
+description.
 
+thanks
+
+- Paul
