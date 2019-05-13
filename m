@@ -2,225 +2,125 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8257C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46182C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A797D20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2200720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:51:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbfEMNsu (ORCPT
+        id S1729861AbfEMNvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:48:50 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32936 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726866AbfEMNsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:48:50 -0400
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 65A5126E812FC56628AA;
-        Mon, 13 May 2019 14:48:46 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
- 2019 14:48:42 +0100
-Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        <linux-integrity@vger.kernel.org>,
-        <inux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <zohar@linux.ibm.com>, <ebiederm@xmission.com>,
-        <vgoyal@redhat.com>, <prsriva@microsoft.com>
-References: <20190510223744.10154-1-prsriva02@gmail.com>
- <20190510223744.10154-3-prsriva02@gmail.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
-Date:   Mon, 13 May 2019 15:48:49 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Mon, 13 May 2019 09:51:17 -0400
+Received: from sauhun.de ([88.99.104.3]:40712 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729465AbfEMNvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:51:17 -0400
+Received: from localhost (p54B3324F.dip0.t-ipconnect.de [84.179.50.79])
+        by pokefinder.org (Postfix) with ESMTPSA id 745163E42F7;
+        Mon, 13 May 2019 15:51:14 +0200 (CEST)
+Date:   Mon, 13 May 2019 15:51:14 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     "George G. Davis" <ggdavisiv@gmail.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "George G. Davis" <george_davis@mentor.com>
+Subject: Re: [PATCH] serial: sh-sci: disable DMA for uart_console
+Message-ID: <20190513135114.GA20443@kunai>
+References: <20190506194233.GA32430@vmlxhi-102.adit-jv.com>
+ <1557413011-1662-1-git-send-email-george_davis@mentor.com>
 MIME-Version: 1.0
-In-Reply-To: <20190510223744.10154-3-prsriva02@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+In-Reply-To: <1557413011-1662-1-git-send-email-george_davis@mentor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
-> From: Prakhar Srivastava <prsriva02@gmail.com>
-> 
-> The buffer(cmdline args) added to the ima log cannot be attested
-> without having the actual buffer. Thus to make the measured buffer
-> available to stroe/read a new ima temaplate (buf) is added.
 
-Hi Prakhar
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-please fix the typos. More comments below.
-
-
-> The cmdline args used for soft reboot can then be read and attested
-> later.
-> 
-> The patch adds a new template field buf to store/read the buffer
-> used while measuring kexec_cmdline args in the
-> [PATCH 1/2 v5]: "add a new ima hook and policy to measure the cmdline".
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+On Thu, May 09, 2019 at 10:43:30AM -0400, George G. Davis wrote:
+> As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+> console UART"), UART console lines use low-level PIO only access functions
+> which will conflict with use of the line when DMA is enabled, e.g. when
+> the console line is also used for systemd messages. So disable DMA
+> support for UART console lines.
+>=20
+> Fixes: https://patchwork.kernel.org/patch/10929511/
+> Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+> Cc: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
 > ---
->   security/integrity/ima/ima_main.c         | 23 +++++++++++++++++++++++
->   security/integrity/ima/ima_template.c     |  2 ++
->   security/integrity/ima/ima_template_lib.c | 21 +++++++++++++++++++++
->   security/integrity/ima/ima_template_lib.h |  4 ++++
->   security/integrity/integrity.h            |  1 +
->   5 files changed, 51 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 1d186bda25fe..ca12885ca241 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -605,10 +605,32 @@ static int process_buffer_measurement(const void *buf, int size,
->   	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
->   	int action = 0;
->   
-> +	struct buffer_xattr {
-> +		enum evm_ima_xattr_type type;
-> +		u16 buf_length;
-> +		unsigned char buf[0];
-> +	};
-> +	struct buffer_xattr *buffer_event_data = NULL;
-> +	int alloc_length = 0;
-> +
->   	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr);
->   	if (!(action & IMA_AUDIT) && !(action & IMA_MEASURE))
->   		goto out;
->   
-> +	alloc_length = sizeof(struct buffer_xattr) + size;
-> +	buffer_event_data = kzalloc(alloc_length, GFP_KERNEL);
-> +	if (!buffer_event_data) {
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	buffer_event_data->type = IMA_XATTR_BUFFER;
-> +	buffer_event_data->buf_length = size;
-> +	memcpy(buffer_event_data->buf, buf, size);
-> +
-> +	event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
-> +	event_data.xattr_len = alloc_length;
+>  drivers/tty/serial/sh-sci.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> index 3cd139752d3f..885b56b1d4e4 100644
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -1557,6 +1557,9 @@ static void sci_request_dma(struct uart_port *port)
+> =20
+>  	dev_dbg(port->dev, "%s: port %d\n", __func__, port->line);
+> =20
+> +	if (uart_console(port))
+> +		return; /* Cannot use DMA on console */
 
-I would prefer that you introduce two new fields in the ima_event_data
-structure. You can initialize them directly with the parameters of
-process_buffer_measurement(). ima_write_template_field_data() will make
-a copy.
+Minor nit: maybe the comment can be made more specific?
+
+/*
+ * DMA on console may interfere with Kernel log messages which use
+ * plain putchar(). So, simply don't use it with a console.
+ */
+
+Other than that:
+
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+Much better than dropping the properties, as Geert noted.
 
 
-> +
->   	memset(iint, 0, sizeof(*iint));
->   	memset(&hash, 0, sizeof(hash));
->   
-> @@ -638,6 +660,7 @@ static int process_buffer_measurement(const void *buf, int size,
->   	}
->   
->   out:
-> +	kfree(buffer_event_data);
->   	return ret;
->   }
->   
-> diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-> index b631b8bc7624..a76d1c04162a 100644
-> --- a/security/integrity/ima/ima_template.c
-> +++ b/security/integrity/ima/ima_template.c
-> @@ -43,6 +43,8 @@ static const struct ima_template_field supported_fields[] = {
->   	 .field_show = ima_show_template_string},
->   	{.field_id = "sig", .field_init = ima_eventsig_init,
->   	 .field_show = ima_show_template_sig},
-> +	{.field_id = "buf", .field_init = ima_eventbuf_init,
-> +	 .field_show = ima_show_template_buf},
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please update Documentation/security/IMA-templates.rst
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
+iQIyBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlzZdk0ACgkQFA3kzBSg
+KbbUJg/0D+EF6AyzLCGEPsV3puYcRKlpa9CGvd9V4bDHTn0Ft4v3pq+VR8CZg8Xc
+GGERKTh4+uu5SAFeYT9ZamkFLTBcyrzJ+qJWVuSmkZROJg6OlRn10tMV5Vw1L5PY
+O4IHapY707vQb6c9Sey6xoF15n7sKWD3HeoNyTDKwncPPwdDulsri2Q0WLIwrq3T
+L5T+wDTVlAW+Vbw4TA3FBZVjWjWthT85hpTZW802YWyA+ZJMwS678BU6eL7UZFwN
++/raK/zqcTfyoY3vk03nG82BIQeZ4IVenLo7F9eXSYUY2d0JBzBbPqJOqINy2pbD
+j1eaOap+xS4TmlDNRSI9mIJb75AQXNaVz47P/tCQmLvJnNsFXREtzTlKT5pk489k
+FNQ0S1wpAf2clOUr+of53LKKnK2nS5vtWnoTcIE+g8dOztRDn2WkW20Ly0TgF8e1
+UPPOeoNkdGzeHHOQh0CA4yOlaKef0CV/WpxLTtRmlP+hPkyQOSbyYeVkipVd7TWu
+wwVBCSkIzUPnv6Ybmrrp0B0T6F5pZ3+c0Gy9SZH895dzYZF3ybnAqrRQ/T62UBvV
+7birU3vYq5sr4pyoQtnsrF2pAfcJecMcGem5WeQlbAlhRUkq7k89BJ91FNf73blL
+QsZr8CAATc7aCb/7Cj8O38Ify07O45dNe/djQ25GyP+rfrL+OA==
+=7vLz
+-----END PGP SIGNATURE-----
 
-Roberto
-
-
->   };
->   #define MAX_TEMPLATE_NAME_LEN 15
->   
-> diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-> index 513b457ae900..95a827f42c18 100644
-> --- a/security/integrity/ima/ima_template_lib.c
-> +++ b/security/integrity/ima/ima_template_lib.c
-> @@ -162,6 +162,11 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
->   	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
->   }
->   
-> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-> +				struct ima_field_data *field_data)
-> +{
-> +	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
-> +}
->   /**
->    * ima_parse_buf() - Parses lengths and data from an input buffer
->    * @bufstartp:       Buffer start address.
-> @@ -389,3 +394,19 @@ int ima_eventsig_init(struct ima_event_data *event_data,
->   	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
->   					     DATA_FMT_HEX, field_data);
->   }
-> +
-> +/*
-> + *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
-> + *  template data.
-> + */
-> +int ima_eventbuf_init(struct ima_event_data *event_data,
-> +				struct ima_field_data *field_data)
-> +{
-> +	struct evm_ima_xattr_data *xattr_value = event_data->xattr_value;
-> +
-> +	if ((!xattr_value) || (xattr_value->type != IMA_XATTR_BUFFER))
-> +		return 0;
-> +
-> +	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
-> +					DATA_FMT_HEX, field_data);
-> +}
-> diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
-> index 6a3d8b831deb..12f1a8578b31 100644
-> --- a/security/integrity/ima/ima_template_lib.h
-> +++ b/security/integrity/ima/ima_template_lib.h
-> @@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
->   			      struct ima_field_data *field_data);
->   void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
->   			   struct ima_field_data *field_data);
-> +void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-> +			   struct ima_field_data *field_data);
->   int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
->   		  int maxfields, struct ima_field_data *fields, int *curfields,
->   		  unsigned long *len_mask, int enforce_mask, char *bufname);
-> @@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
->   			  struct ima_field_data *field_data);
->   int ima_eventsig_init(struct ima_event_data *event_data,
->   		      struct ima_field_data *field_data);
-> +int ima_eventbuf_init(struct ima_event_data *event_data,
-> +		      struct ima_field_data *field_data);
->   #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 7de59f44cba3..14ef904f091d 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -74,6 +74,7 @@ enum evm_ima_xattr_type {
->   	EVM_IMA_XATTR_DIGSIG,
->   	IMA_XATTR_DIGEST_NG,
->   	EVM_XATTR_PORTABLE_DIGSIG,
-> +	IMA_XATTR_BUFFER,
->   	IMA_XATTR_LAST
->   };
->   
-> 
-
--- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+--d6Gm4EdcadzBjdND--
