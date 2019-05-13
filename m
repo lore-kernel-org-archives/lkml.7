@@ -7,65 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE0DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9F6C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F5621707
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5D8321473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lPXRNxME"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ARYpG6dN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731972AbfEMR4J (ORCPT
+        id S1731982AbfEMR4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:56:09 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35345 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbfEMR4H (ORCPT
+        Mon, 13 May 2019 13:56:12 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:37865 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731905AbfEMR4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:56:07 -0400
-Received: by mail-io1-f67.google.com with SMTP id p2so10784927iol.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:56:07 -0700 (PDT)
+        Mon, 13 May 2019 13:56:10 -0400
+Received: by mail-it1-f195.google.com with SMTP id l7so451409ite.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MOJlVvk72P8k3dgBOfAuZ6psp1YU3jhKdn1gghNxATc=;
-        b=lPXRNxMEfmEkBJ2JUsjOiFAB5IEvtszF9GsXLLMymQMTdTHjTPbfYklCtmKqqzsBsd
-         lri1kvgtlPeYqK0uEdFt59OYdYa92ka9CGgkut/59X+m+eEkSgzRWRakGDjBllvStYuu
-         JsxjEMd48GtJP9UCCx2xlye3dZGp2QpPbz1Ws=
+        bh=lPaL2VEX/hSzV1Wc4p9/qEgeMAItoGsdR21BQw+ZGgc=;
+        b=ARYpG6dN7VA7JmzpN7iB8t24Q93Bs6/DdHTBoAsd+5raGiTu7FqD+BYziUnlJ4Rp+Y
+         wCr/Yh+DJEHs+d9DKa3pvhCyovheuxA3h8Rki86q2vUhH9XapHiWstb7lKO5mGzAs4zQ
+         Y4RKB4BdHnyuR7Hhlae2ru23Jqhqd2tvCguB4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MOJlVvk72P8k3dgBOfAuZ6psp1YU3jhKdn1gghNxATc=;
-        b=jKcfsTlR2JsMRzdUo/6YihsSTKnW8X+iYmtWfQ/g8E35aTRUxaUDOfc4AOnKUwerlM
-         35UvKKv4h9/1c1LsKUdZXxDz/WlP6HWoYAv1anCD8EU97M2O4fIvy9ojNJTgfIdQuh2G
-         iAaQAYwN7/5wf7TAhY5BgnZA6FKfIY2YJMT5B6p/y25CD8Ikx4EbWY3+RLfyqFdBdKM3
-         5p7kWhaEeR2cTQsETB/i+a7C5blFaUVegJ16bYDTIOsH49Caj+m54QBks3+wbb7s1TDv
-         /PYNcMwfYVDrjG5gu2D1o2TstQBGEeHqk5Sz3LeKP89yrQ7CtT/fVgycQtVkMa0BBaWm
-         6MWw==
-X-Gm-Message-State: APjAAAVGhAjrCjPMX9Z+H+kDcQvIgPCIWgPRSa7NHi+0Xa/8MurowFx/
-        0Nxf0/8D3JLF54q1JW74zba+TQ==
-X-Google-Smtp-Source: APXvYqyjGAWAfDCCM4xTLO+p8nZzYQLlCZMDQSDHg94cFNw98HntOIFCUWAFBUlFJKi0x2U/1Ny1yw==
-X-Received: by 2002:a6b:e618:: with SMTP id g24mr14509690ioh.138.1557770166634;
-        Mon, 13 May 2019 10:56:06 -0700 (PDT)
+        bh=lPaL2VEX/hSzV1Wc4p9/qEgeMAItoGsdR21BQw+ZGgc=;
+        b=UXiaCZJ9EOROxdWblLm8zj7bQ4YWnhGQgKPN/v8v8avBcrbrTOnoiGhQHKB32G7e1F
+         uErj3Bu3+6r7kRbAh0nvKPmCCW2lbUYndQTKCZwvs3XD2iRz3sVDuqioe+hGoDB2wmma
+         7DWAUq7KKtkX5fgba9ng9T188LFbuCrj+VfoGDAaZVAuDXkhMS+Omqh30tzMWqjGbssw
+         VYGpgRZ0OlQKIMeodWb2UWAyhy2DmRl33bl7lCUTwvijhKU3LkYKFPDVFg6gdYfeWDd8
+         yAVqx63vs/DjeGHJPCn5R+OVpm2pi4OqSGG1PjiYFR86McOnComArIKLzAg405IMdxhM
+         uuoA==
+X-Gm-Message-State: APjAAAUZ8pQTxPClwx9Ami3PxKTT1XY8WB3nfe8VH/n5DnZ/1gZdk0GK
+        bF3zUvdKlJOU1MgWGfW8yv4wWA==
+X-Google-Smtp-Source: APXvYqwH4/GTy25BEvta0lp/d2+77OUftVtWL1TgrCCI35CS1y+6wKWgOoyZX4rEHnEhXACB7JjPRA==
+X-Received: by 2002:a05:660c:2ce:: with SMTP id j14mr336633itd.70.1557770169403;
+        Mon, 13 May 2019 10:56:09 -0700 (PDT)
 Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id l80sm78323ita.15.2019.05.13.10.56.05
+        by smtp.gmail.com with ESMTPSA id i203sm113538iti.7.2019.05.13.10.56.08
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:56:06 -0700 (PDT)
+        Mon, 13 May 2019 10:56:09 -0700 (PDT)
 From:   Raul E Rangel <rrangel@chromium.org>
 To:     stable@vger.kernel.org
 Cc:     linux-mmc@vger.kernel.org, djkurtz@google.com,
         adrian.hunter@intel.com, zwisler@chromium.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
         Raul E Rangel <rrangel@chromium.org>,
-        linux-kernel@vger.kernel.org, Chris Boot <bootc@bootc.net>,
-        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [stable/4.14.y PATCH 1/3] mmc: block: Simplify cleaning up the queue
-Date:   Mon, 13 May 2019 11:55:19 -0600
-Message-Id: <20190513175521.84955-2-rrangel@chromium.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [stable/4.14.y PATCH 3/3] mmc: Kill the request if the queuedata has been removed
+Date:   Mon, 13 May 2019 11:55:21 -0600
+Message-Id: <20190513175521.84955-4-rrangel@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190513175521.84955-1-rrangel@chromium.org>
 References: <20190513175521.84955-1-rrangel@chromium.org>
@@ -76,80 +73,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
-
-Use blk_cleanup_queue() to shutdown the queue when the driver is removed,
-and instead get an extra reference to the queue to prevent the queue being
-freed before the final mmc_blk_put().
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
+No reason to even try processing the request if the queue is shutting
+down.
 
 Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
-commit 41e3efd07d5a02c80f503e29d755aa1bbb4245de upstream.
 
- drivers/mmc/core/block.c | 17 ++++++++++++-----
- drivers/mmc/core/queue.c |  2 ++
- 2 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/mmc/core/queue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index ce6dd49fbb98d..203038fb85111 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -161,7 +161,7 @@ static void mmc_blk_put(struct mmc_blk_data *md)
- 	md->usage--;
- 	if (md->usage == 0) {
- 		int devidx = mmc_get_devidx(md->disk);
--		blk_cleanup_queue(md->queue.queue);
-+		blk_put_queue(md->queue.queue);
- 		ida_simple_remove(&mmc_blk_ida, devidx);
- 		put_disk(md->disk);
- 		kfree(md);
-@@ -2122,6 +2122,17 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 
- 	md->queue.blkdata = md;
- 
-+	/*
-+	 * Keep an extra reference to the queue so that we can shutdown the
-+	 * queue (i.e. call blk_cleanup_queue()) while there are still
-+	 * references to the 'md'. The corresponding blk_put_queue() is in
-+	 * mmc_blk_put().
-+	 */
-+	if (!blk_get_queue(md->queue.queue)) {
-+		mmc_cleanup_queue(&md->queue);
-+		goto err_putdisk;
-+	}
-+
- 	md->disk->major	= MMC_BLOCK_MAJOR;
- 	md->disk->first_minor = devidx * perdev_minors;
- 	md->disk->fops = &mmc_bdops;
-@@ -2272,10 +2283,6 @@ static void mmc_blk_remove_req(struct mmc_blk_data *md)
- 		 * from being accepted.
- 		 */
- 		card = md->queue.card;
--		spin_lock_irq(md->queue.queue->queue_lock);
--		queue_flag_set(QUEUE_FLAG_BYPASS, md->queue.queue);
--		spin_unlock_irq(md->queue.queue->queue_lock);
--		blk_set_queue_dying(md->queue.queue);
- 		mmc_cleanup_queue(&md->queue);
- 		if (md->disk->flags & GENHD_FL_UP) {
- 			device_remove_file(disk_to_dev(md->disk), &md->force_ro);
 diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
-index 0a4e77a5ba33f..d99fa4e63033c 100644
+index bd7d521d5ad9d..e7ac7163fafa4 100644
 --- a/drivers/mmc/core/queue.c
 +++ b/drivers/mmc/core/queue.c
-@@ -259,6 +259,8 @@ void mmc_cleanup_queue(struct mmc_queue *mq)
- 	blk_start_queue(q);
- 	spin_unlock_irqrestore(q->queue_lock, flags);
+@@ -30,7 +30,7 @@ static int mmc_prep_request(struct request_queue *q, struct request *req)
+ {
+ 	struct mmc_queue *mq = q->queuedata;
  
-+	blk_cleanup_queue(q);
-+
- 	mq->card = NULL;
- }
- EXPORT_SYMBOL(mmc_cleanup_queue);
+-	if (mq && (mmc_card_removed(mq->card) || mmc_access_rpmb(mq)))
++	if (!mq || mmc_card_removed(mq->card) || mmc_access_rpmb(mq))
+ 		return BLKPREP_KILL;
+ 
+ 	req->rq_flags |= RQF_DONTPREP;
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
