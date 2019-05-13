@@ -2,90 +2,92 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B7AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA84C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79ADE20989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14FB20989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557740008;
+	bh=Oh5xXg6uTFSzSLkeVykgO08l4nnAKG9rNXBddLbIWzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hRUhaC+UOG5Mnrebqp+kOjvU186QohI16rrDk8eilrHBdpMrpT0ENTiPF60mGDk9s
+	 v7f0scZj+H0Dttq3o1Y2h/ksolouLiSfdcHfacZd4W0wjNZlExIJEdy73lMWRPnE8g
+	 BTWTfG/1sanr9CWN5VxhxHIyBQ3kxTLO3jJyC694=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfEMJcu (ORCPT
+        id S1728464AbfEMJd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:32:50 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:2950 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726218AbfEMJcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:32:50 -0400
-X-IronPort-AV: E=Sophos;i="5.60,465,1549926000"; 
-   d="scan'208";a="382867874"
-Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 11:32:48 +0200
-Date:   Mon, 13 May 2019 11:32:45 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>
-Subject: Re: [PATCH 3/5] Coccinelle: put_device: Merge four SmPL when
- constraints into one
-In-Reply-To: <6b62ecb5-ab88-22d9-eee2-db4f58b6d2ae@web.de>
-Message-ID: <alpine.DEB.2.20.1905131132250.3616@hadrien>
-References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn> <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de> <6b62ecb5-ab88-22d9-eee2-db4f58b6d2ae@web.de>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 13 May 2019 05:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfEMJd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:33:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3365D20873;
+        Mon, 13 May 2019 09:33:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557740006;
+        bh=Oh5xXg6uTFSzSLkeVykgO08l4nnAKG9rNXBddLbIWzs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mxWEuWK7B06nvRkMIiatxxlv4Z+H8puDaQkfQ097Re5RMkyaxLMZGjHSQ2s2nlHsm
+         gOd/TnrushyhGYk+rRfigzDrZx5FyxZVssmt3AwZhDsuFNxp5XsfI+DI8mzRUAsxdl
+         BhefurJNWCigEz+aVb8rYZkIXbrl3+DEOqDmUm7o=
+Date:   Mon, 13 May 2019 11:33:24 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vatsala Narang <vatsalanarang@gmail.com>
+Cc:     devel@driverdev.osuosl.org, julia.lawall@lip6.fr,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        hadess@hadess.net
+Subject: Re: [PATCH v2 6/6] staging: rtl8723bs: core: Move logical operator
+ to previous line.
+Message-ID: <20190513093324.GA21213@kroah.com>
+References: <20190505132253.4516-1-vatsalanarang@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190505132253.4516-1-vatsalanarang@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 13 May 2019, Markus Elfring wrote:
-
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sun, 12 May 2019 18:32:46 +0200
->
-> An assignment target was repeated in four SmPL when constraints.
-> Combine the exclusion specifications into disjunctions for the semantic
-> patch language so that this target is referenced only once there.
-
-NACK.  This exceeds 80 characters and provides no readability benefit.
-
-julia
-
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+On Sun, May 05, 2019 at 06:52:53PM +0530, Vatsala Narang wrote:
+> Move logical operator to previous line to get rid of checkpatch warning.
+> 
+> Signed-off-by: Vatsala Narang <vatsalanarang@gmail.com>
 > ---
->  scripts/coccinelle/free/put_device.cocci | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
->
-> diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle/free/put_device.cocci
-> index 120921366e84..aae79c02c1e0 100644
-> --- a/scripts/coccinelle/free/put_device.cocci
-> +++ b/scripts/coccinelle/free/put_device.cocci
-> @@ -23,10 +23,7 @@ if (id == NULL || ...) { ... return ...; }
->      when != platform_device_put(id)
->      when != of_dev_put(id)
->      when != if (id) { ... put_device(&id->dev) ... }
-> -    when != e1 = (T)id
-> -    when != e1 = (T)(&id->dev)
-> -    when != e1 = get_device(&id->dev)
-> -    when != e1 = (T1)platform_get_drvdata(id)
-> +    when != e1 = \( (T) \( id \| (&id->dev) \) \| get_device(&id->dev) \| (T1)platform_get_drvdata(id) \)
->  (
->    return
->  (    id
-> --
-> 2.21.0
->
->
+>  drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> index 0b5bd047a552..b5e355de1199 100644
+> --- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> +++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+> @@ -5656,9 +5656,9 @@ static u8 chk_ap_is_alive(struct adapter *padapter, struct sta_info *psta)
+>  	);
+>  	#endif
+>  
+> -	if ((sta_rx_data_pkts(psta) == sta_last_rx_data_pkts(psta))
+> -		&& sta_rx_beacon_pkts(psta) == sta_last_rx_beacon_pkts(psta)
+> -		&& sta_rx_probersp_pkts(psta) == sta_last_rx_probersp_pkts(psta)
+> +	if ((sta_rx_data_pkts(psta) == sta_last_rx_data_pkts(psta)) &&
+> +	    sta_rx_beacon_pkts(psta) == sta_last_rx_beacon_pkts(psta) &&
+> +	     sta_rx_probersp_pkts(psta) == sta_last_rx_probersp_pkts(psta)
+
+Odd, you should align these two lines, right?
+
+>  	) {
+
+This should go on the previous line.
+
+thanks,
+
+greg k-h
