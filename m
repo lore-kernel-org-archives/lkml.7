@@ -2,103 +2,84 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD55CC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F6DC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DE520989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635A921479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:13:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfEMJN3 (ORCPT
+        id S1728645AbfEMJNb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 May 2019 05:13:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:51352 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728619AbfEMJN3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 May 2019 05:13:29 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34770 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbfEMJN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 02:13:26 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga007.jf.intel.com with ESMTP; 13 May 2019 02:13:21 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hQ71M-0007f0-23; Mon, 13 May 2019 12:13:20 +0300
-Date:   Mon, 13 May 2019 12:13:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'christophe leroy' <christophe.leroy@c-s.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>,
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-136-_UGF8YZbNt6WPKgejzV5ow-1; Mon, 13 May 2019 10:13:26 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 13 May 2019 10:13:25 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 13 May 2019 10:13:25 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Ingo Molnar' <mingo@kernel.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190513091320.GK9224@smile.fi.intel.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: RE: FYI -ffreestanding shrinks kernel by 2% on x86_64
+Thread-Topic: FYI -ffreestanding shrinks kernel by 2% on x86_64
+Thread-Index: AQHVCWblbUBOOHnv10eqH+bQW22gjaZoxQGg
+Date:   Mon, 13 May 2019 09:13:25 +0000
+Message-ID: <3a3b9e840dbb456ab01815f7afdbb493@AcuMS.aculab.com>
+References: <20190511200223.GA14143@avx2> <20190511201344.GA11535@avx2>
+ <20190512093228.GA8088@gmail.com>
+In-Reply-To: <20190512093228.GA8088@gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: _UGF8YZbNt6WPKgejzV5ow-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 08:52:41AM +0000, David Laight wrote:
-> From: christophe leroy
-> > Sent: 10 May 2019 18:35
-> > Le 10/05/2019 à 18:24, Steven Rostedt a écrit :
-> > > On Fri, 10 May 2019 10:42:13 +0200
-> > > Petr Mladek <pmladek@suse.com> wrote:
-
-> > >> -	if (probe_kernel_address(ptr, byte))
-> > >> +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
-> > >>   		return "(efault)";
+From: Ingo Molnar
+> Sent: 12 May 2019 10:32
+...
+> Has anyone investigated by any chance where the -ffreestanding space
+> savings come from mostly - is it mostly in cold paths, or does it make or
+> hot codepaths more efficient as well?
 > 
-> "efault" looks a bit like a spellling mistake for "default".
+> If it's the latter then the kernel would be directly faster as well
+> (fewer instructions executed), not just indirectly from better cache
+> packing, I suppse?
 
-It's a special, thus it's in parenthesis, though somebody can be
-misguided.
+My guess is that -ffreestanding stops gcc inlining memcpy() (etc).
+The calls can be smaller than the inline code, but will (probably)
+run more slowly.
 
-> > Usually, < PAGE_SIZE means NULL pointer dereference (via the member of a
-> > struct)
-> 
-> Maybe the caller should pass in a short buffer so that you can return
-> "(err-%d)"
-> or "(null+%#x)" ?
+	David
 
-In both cases it should be limited to the size of pointer (8 or 16
-characters). Something like "(e:%4d)" would work for error codes.
-
-The "(null)" is good enough by itself and already an established
-practice..
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
