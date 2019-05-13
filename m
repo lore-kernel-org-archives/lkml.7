@@ -2,106 +2,147 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A115C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7337DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD134208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:45:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Wd86UOuD"
+	by mail.kernel.org (Postfix) with ESMTP id 4D4DA208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbfEMMpm (ORCPT
+        id S1729496AbfEMMq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:45:42 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39309 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728820AbfEMMpm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:45:42 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w8so12676898wrl.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:45:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S2pz0rN5YxgIZ9+xKpj04TZfJLwVeh5ljwZlweZ4hEU=;
-        b=Wd86UOuDbF0LRCUA0cQW2+b/NtT84O02/WElU5v/n9SOjE7s3v5qeLFeA6JBNikdwO
-         oVlq4JKQjsGC0mwAYDc5cx1C8ZGfJw4yCxWkuF92n95LjcSPnAiD5ftTx1dgnCKl4ZhO
-         90EmirHh3vBH3gF23ScGRur/G9mC5IZ6Nx+iq5tuHlfMa8D66pYsYIKr2oIR1JXywamf
-         AZXGEB960rbq+9+aozNWZ+Ob7yVb5WszjUWteEiX1r3LWOtd61vnB8vDTspL0eGoN8zG
-         mHbF+suSjWN92YWGB8d6F6MP3zhD3HfE//bGQ0FFED8F6tW0B+w1X0PF62uwO+HrChtj
-         vyzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S2pz0rN5YxgIZ9+xKpj04TZfJLwVeh5ljwZlweZ4hEU=;
-        b=k2l/yvWl4rDQsQRPdf7JAHBj7ioNO6hFflPekCf9mCm3C5eFbgdvWyQeLOGn1Cc3dv
-         J4SHpetFwPRB0f54jp/an1xvRVd2trCFSwpbqLIDta/a7LoG1KJJ8KwlrJ78EMhgV16+
-         W8Hyj/9TDNoCfzmsyuDGMngI4FbbvRF6brpRoyos3fNqxq7Vzpv1oRNbEacAqZ+8Y+rR
-         UQ0oXH2nXuIGz6Nx3Z4lHcr3ulTCguyPXoaUJ4SqkxlEzSsfjTC/YvqQvtfqaPEqcn0b
-         GmBJ1p+CKBMGujgKx2Fil39r2cnLYzZNpDL5P/vCh74rVGDx/+LfCDFG2mllZ9Ue26OH
-         WaQg==
-X-Gm-Message-State: APjAAAUbEtnHQjAQ8FJEPhgomHpMqWCGhOIlZU/ay4dgeE51eea/1N4A
-        39f67JnAnXxLWIii2Nre4m+zhg==
-X-Google-Smtp-Source: APXvYqzdX4sus63iRBi+SDvq625L49jIdL3h6QcF7yHl4UQ6kOi8/umoeVTXOejZ1WjKuIabxQdcYw==
-X-Received: by 2002:a5d:448e:: with SMTP id j14mr18189595wrq.158.1557751540348;
-        Mon, 13 May 2019 05:45:40 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id m13sm11576677wrs.87.2019.05.13.05.45.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 05:45:39 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] clk: meson: g12a: fix gp0 and hifi ranges
-Date:   Mon, 13 May 2019 14:45:31 +0200
-Message-Id: <20190513124531.20334-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 May 2019 08:46:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41316 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728820AbfEMMq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:46:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 524E630832CC;
+        Mon, 13 May 2019 12:46:28 +0000 (UTC)
+Received: from [10.72.12.49] (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 551F36A48A;
+        Mon, 13 May 2019 12:46:21 +0000 (UTC)
+Subject: Re: [PATCH v2 8/8] vsock/virtio: make the RX buffer size tunable
+From:   Jason Wang <jasowang@redhat.com>
+To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-9-sgarzare@redhat.com>
+ <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
+Message-ID: <8e72ef5e-cf6a-a635-3f76-bdeac95761b8@redhat.com>
+Date:   Mon, 13 May 2019 20:46:19 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 13 May 2019 12:46:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While some SoC samples are able to lock with a PLL factor of 55, others
-samples can't. ATM, a minimum of 60 appears to work on all the samples
-I have tried.
 
-Even with 60, it sometimes takes a long time for the PLL to eventually
-lock. The documentation says that the minimum rate of these PLLs DCO
-should be 3GHz, a factor of 125. Let's use that to be on the safe side.
+On 2019/5/13 下午6:05, Jason Wang wrote:
+>
+> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+>> The RX buffer size determines the memory consumption of the
+>> vsock/virtio guest driver, so we make it tunable through
+>> a module parameter.
+>>
+>> The size allowed are between 4 KB and 64 KB in order to be
+>> compatible with old host drivers.
+>>
+>> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>
+>
+> I don't see much value of doing this through kernel command line. We 
+> should deal with them automatically like what virtio-net did. Or even 
+> a module parameter is better.
+>
+> Thanks
 
-With factor range changed, the PLL seems to lock quickly (enough) so far.
-It is still unclear if the range was the only reason for the delay.
 
-Fixes: 085a4ea93d54 ("clk: meson: g12a: add peripheral clock controller")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- drivers/clk/meson/g12a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, I misread the patch. But even module parameter is something not 
+flexible enough. We should deal with them transparently.
 
-diff --git a/drivers/clk/meson/g12a.c b/drivers/clk/meson/g12a.c
-index 206fafd299ea..d11606d5ddbd 100644
---- a/drivers/clk/meson/g12a.c
-+++ b/drivers/clk/meson/g12a.c
-@@ -463,7 +463,7 @@ static struct clk_regmap g12a_cpu_clk_trace = {
- };
- 
- static const struct pll_mult_range g12a_gp0_pll_mult_range = {
--	.min = 55,
-+	.min = 125,
- 	.max = 255,
- };
- 
--- 
-2.20.1
+Thanks
 
+
+>
+>
+>> ---
+>>   include/linux/virtio_vsock.h     |  1 +
+>>   net/vmw_vsock/virtio_transport.c | 27 ++++++++++++++++++++++++++-
+>>   2 files changed, 27 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>> index 5a9d25be72df..b9f8c3d91f80 100644
+>> --- a/include/linux/virtio_vsock.h
+>> +++ b/include/linux/virtio_vsock.h
+>> @@ -13,6 +13,7 @@
+>>   #define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE    (1024 * 64)
+>>   #define VIRTIO_VSOCK_MAX_BUF_SIZE        0xFFFFFFFFUL
+>>   #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE        (1024 * 64)
+>> +#define VIRTIO_VSOCK_MIN_PKT_BUF_SIZE        (1024 * 4)
+>>     enum {
+>>       VSOCK_VQ_RX     = 0, /* for host to guest data */
+>> diff --git a/net/vmw_vsock/virtio_transport.c 
+>> b/net/vmw_vsock/virtio_transport.c
+>> index af1d2ce12f54..732398b4e28f 100644
+>> --- a/net/vmw_vsock/virtio_transport.c
+>> +++ b/net/vmw_vsock/virtio_transport.c
+>> @@ -66,6 +66,31 @@ struct virtio_vsock {
+>>       u32 guest_cid;
+>>   };
+>>   +static unsigned int rx_buf_size = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+>> +
+>> +static int param_set_rx_buf_size(const char *val, const struct 
+>> kernel_param *kp)
+>> +{
+>> +    unsigned int size;
+>> +    int ret;
+>> +
+>> +    ret = kstrtouint(val, 0, &size);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    if (size < VIRTIO_VSOCK_MIN_PKT_BUF_SIZE ||
+>> +        size > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
+>> +        return -EINVAL;
+>> +
+>> +    return param_set_uint(val, kp);
+>> +};
+>> +
+>> +static const struct kernel_param_ops param_ops_rx_buf_size = {
+>> +    .set = param_set_rx_buf_size,
+>> +    .get = param_get_uint,
+>> +};
+>> +
+>> +module_param_cb(rx_buf_size, &param_ops_rx_buf_size, &rx_buf_size, 
+>> 0644);
+>> +
+>>   static struct virtio_vsock *virtio_vsock_get(void)
+>>   {
+>>       return the_virtio_vsock;
+>> @@ -261,7 +286,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>>     static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+>>   {
+>> -    int buf_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+>> +    int buf_len = rx_buf_size;
+>>       struct virtio_vsock_pkt *pkt;
+>>       struct scatterlist hdr, buf, *sgs[2];
+>>       struct virtqueue *vq;
