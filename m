@@ -2,113 +2,75 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D3CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE11C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEB6208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45BC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfEMRQ3 (ORCPT
+        id S1731336AbfEMRTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:16:29 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50850 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729468AbfEMRQ3 (ORCPT
+        Mon, 13 May 2019 13:19:15 -0400
+Received: from mail-it1-f174.google.com ([209.85.166.174]:52219 "EHLO
+        mail-it1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729503AbfEMRTP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:16:29 -0400
-Received: from mail-pg1-f198.google.com ([209.85.215.198])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hQEYt-0005pr-0n
-        for linux-kernel@vger.kernel.org; Mon, 13 May 2019 17:16:27 +0000
-Received: by mail-pg1-f198.google.com with SMTP id 123so3760038pgh.17
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:16:26 -0700 (PDT)
+        Mon, 13 May 2019 13:19:15 -0400
+Received: by mail-it1-f174.google.com with SMTP id s3so304712itk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:19:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=2WuRwt1BUMyiCONirk08ch3xQZwKTcRL8gA1P1lbcVY=;
-        b=GqbBcdFDlR6XL+Fwt21cd0sSgFWw5wgnwKgfBaMKiziFd0eEdQuYnYBx8QLI++VUWa
-         DAFf44KEWh3wKxartiZCiB4RnXIsQRdQx0p92N3lxPOD3llT/XALQPoYpbFbhbtsfKp1
-         EDhvxhY1/j4Vduim9dzAfearc8dAjC8a+ocVNDr/s0U5ATOe4I8B4dy2VYe0tDUoEo9S
-         fQDefkB8Pz39Ym+f0xBROzO8B6JMAZI08qj5Dmvv9luwagzpz4z9EYA8ukSxhNCGmsqi
-         zdu7K5F3jLAna/cWBk7OnK0kx3mqkIGqQ37fSWtNgUcS8Q0CoZ/uyVzG0LEK2rD5qvR0
-         I01A==
-X-Gm-Message-State: APjAAAXtxvyNUMECF6m5fCvxpQ7UfDGFsBrMy2XA+dDJwFN1Fcb1dLtr
-        YZAJ7ylY6QnfuHu1If9C569YvF17Xnd73PqXL9fDeqHaF/VEmcVxh9hdADuJ2ihyATH7qZIfDXr
-        KMnrPfCCpOUELi7nHctK224eQW+7JeCwi1Gj/RtDslg==
-X-Received: by 2002:a17:902:a415:: with SMTP id p21mr18635793plq.286.1557767785687;
-        Mon, 13 May 2019 10:16:25 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwMpzkZBKa20L76h9qBox5leOqsefklOh+TGG6aIlOpne804YEEwfQcwN3ICe6Tsy0hWCt7CA==
-X-Received: by 2002:a17:902:a415:: with SMTP id p21mr18635760plq.286.1557767785478;
-        Mon, 13 May 2019 10:16:25 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-a00c-6f16-94cc-5640.dynamic-ip6.hinet.net (2001-b011-380f-14b9-a00c-6f16-94cc-5640.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:a00c:6f16:94cc:5640])
-        by smtp.gmail.com with ESMTPSA id k3sm6695967pfa.36.2019.05.13.10.16.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:16:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20190513151652.GB15437@localhost.localdomain>
-Date:   Tue, 14 May 2019 01:16:22 +0800
-Cc:     Christoph Hellwig <hch@lst.de>, Mario.Limonciello@dell.com,
-        keith.busch@intel.com, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <9AE4A3E7-CDB8-4730-8B4E-43C93FC0C47F@canonical.com>
-References: <20190510212937.11661-1-keith.busch@intel.com>
- <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
- <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
- <20190513143754.GE15318@localhost.localdomain>
- <7ab8274ef1ce46fcae54a50abc76ae4a@AUSX13MPC105.AMER.DELL.COM>
- <20190513145708.GA25897@lst.de>
- <20190513151652.GB15437@localhost.localdomain>
-To:     Keith Busch <kbusch@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=edXm6nV8k9IKw8GN0v7pjwQG3EECmvNTVGBhaoXBOy8=;
+        b=ChpTdLD2hrfsYv3FwzTZYnib7JpErr2Jhdq9/VLejYGFLQxvwV8DPA6CacwTJDb/Eq
+         om1ETBptWbf7+hbDvODT+BPaiZA192S/d0/+unSX3DJ34LYSMOVhg4Tlt9TUVfM0asfd
+         evXSM6YcrZS0oBEaT0L0jgBMW+2LIQWToCofBYJFHpgrRiJt8oq6GZyh8yWtDry1vmfz
+         2B2c+siegSh2yZusHHacrvGeuQOwspouKL+qGzybpQqklJZWJwhxb0UtAjc/7cdz66jM
+         X/39raPUpo7h/PrIG5MhV1xierN4R3eWDMuT0yd9IkTAyou/B5wgNN5HGNp7xb/wZvaf
+         nRnQ==
+X-Gm-Message-State: APjAAAVNi/Qb8TsnXQq9v5Iy8tf78kegm3P0u6xs0TG1S25wSvjfblwA
+        1JYxeS6hw2Hvo4grW3lJIAvDew==
+X-Google-Smtp-Source: APXvYqzzkTdZunaul5S9hyndOLjl1eWjL1tIFwSvNm8zSLCNYZNkVziz0TnYEOaYSFGWvDFTOA5LHw==
+X-Received: by 2002:a05:6638:310:: with SMTP id w16mr12108468jap.130.1557767954280;
+        Mon, 13 May 2019 10:19:14 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id x11sm1190741ion.10.2019.05.13.10.19.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 10:19:12 -0700 (PDT)
+Date:   Mon, 13 May 2019 11:19:08 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-mmc@vger.kernel.org, djkurtz@google.com,
+        adrian.hunter@intel.com, zwisler@chromium.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/2] mmc: v4.14: Fix null pointer dereference in
+ mmc_init_request
+Message-ID: <20190513171908.GA37248@google.com>
+References: <20190508185833.187068-1-rrangel@chromium.org>
+ <20190509060456.GA17096@infradead.org>
+ <20190509184234.GA197434@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509184234.GA197434@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 23:16, Keith Busch <kbusch@kernel.org> wrote:
-
-> On Mon, May 13, 2019 at 04:57:08PM +0200, Christoph Hellwig wrote:
->> On Mon, May 13, 2019 at 02:54:49PM +0000, Mario.Limonciello@dell.com  
->> wrote:
->>> And NVME spec made it sound to me that while in a low power state it  
->>> shouldn't
->>> be available if the memory isn't available.
->>>
->>> NVME spec in 8.9:
->>>
->>> "Host software should request that the controller release the
->>> assigned ranges prior to a shutdown event, a Runtime D3 event, or any  
->>> other event
->>> that requires host software to reclaim the assigned ranges."
->>
->> The last part of the quoted text is the key - if the assigned range
->> is reclaimed, that is the memory is going to be used for something else,
->> we need to release the ranges.  But we do not release the ranges,
->> as we want to keep the memory in use so that we can quickly use it
->> again.
+> > Errm.  I think we need to fix that problem instead of working around it.
+> So mmc_request_fn already has a null check, it was just missing on
+> mmc_init_request.
 >
-> Yes, this. As far as I know, the host memory range is still accessible in
-> the idle suspend state. If there are states in which host memory is not
-> accessible, a reference explaining the requirement will be most helpful.
+So I got 189650 random connect/disconnect iterations over the weekend
+with these patches. I think they are fine. I'm going to send them to
+stable@ unless anyone has any objections.
 
-Disabling HMB prior suspend makes my original patch work without memory  
-barrier.
-
-However, using the same trick on this patch still freezes the system during  
-S2I.
-
-Kai-Heng
+Thanks,
+Raul
