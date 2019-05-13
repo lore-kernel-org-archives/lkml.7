@@ -2,314 +2,86 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227B8C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A22CC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB19A21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4F520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbfEMNrN (ORCPT
+        id S1729745AbfEMNrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:47:13 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56382 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbfEMNrM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:47:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBD6180D;
-        Mon, 13 May 2019 06:47:11 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCB453F71E;
-        Mon, 13 May 2019 06:47:08 -0700 (PDT)
-Subject: Re: [PATCH v7 18/23] iommu/smmuv3: Report non recoverable faults
-To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-19-eric.auger@redhat.com>
- <52dd9de0-67a9-0316-cfe1-83d855d26c66@arm.com>
- <46f39a8e-a909-5493-b1eb-f8f082b0bb20@redhat.com>
- <3119943e-30f1-823d-c6a2-157b26901a41@arm.com>
- <6a78e67d-cc8b-6564-c122-b13c3a288d46@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <209d4f80-dbcb-a3ed-81bc-4050db2a74a1@arm.com>
-Date:   Mon, 13 May 2019 14:47:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <6a78e67d-cc8b-6564-c122-b13c3a288d46@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Mon, 13 May 2019 09:47:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44035 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbfEMNrr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:47:47 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hQBIq-0001mO-DH; Mon, 13 May 2019 15:47:40 +0200
+Message-ID: <1557755257.4442.8.camel@pengutronix.de>
+Subject: Re: Hardware-accelerated video decoders used through a firmware
+ instead of hardware registers
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Date:   Mon, 13 May 2019 15:47:37 +0200
+In-Reply-To: <bfe1680249569241227ab90d5736b228de7b10f9.camel@bootlin.com>
+References: <19804f842e80f1f8bd85b8eb49e75e149abf0062.camel@bootlin.com>
+         <69c10fdd26566049c523d4c8cfb1b8c35018b738.camel@ndufresne.ca>
+         <bfe1680249569241227ab90d5736b228de7b10f9.camel@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 13:32, Auger Eric wrote:
-> Hi Robin,
-> On 5/13/19 1:54 PM, Robin Murphy wrote:
->> On 13/05/2019 08:46, Auger Eric wrote:
->>> Hi Robin,
->>>
->>> On 5/8/19 7:20 PM, Robin Murphy wrote:
->>>> On 08/04/2019 13:19, Eric Auger wrote:
->>>>> When a stage 1 related fault event is read from the event queue,
->>>>> let's propagate it to potential external fault listeners, ie. users
->>>>> who registered a fault handler.
->>>>>
->>>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>>>
->>>>> ---
->>>>> v4 -> v5:
->>>>> - s/IOMMU_FAULT_PERM_INST/IOMMU_FAULT_PERM_EXEC
->>>>> ---
->>>>>     drivers/iommu/arm-smmu-v3.c | 169
->>>>> +++++++++++++++++++++++++++++++++---
->>>>>     1 file changed, 158 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>>>> index 8044445bc32a..1fd320788dcb 100644
->>>>> --- a/drivers/iommu/arm-smmu-v3.c
->>>>> +++ b/drivers/iommu/arm-smmu-v3.c
->>>>> @@ -167,6 +167,26 @@
->>>>>     #define ARM_SMMU_PRIQ_IRQ_CFG1        0xd8
->>>>>     #define ARM_SMMU_PRIQ_IRQ_CFG2        0xdc
->>>>>     +/* Events */
->>>>> +#define ARM_SMMU_EVT_F_UUT        0x01
->>>>> +#define ARM_SMMU_EVT_C_BAD_STREAMID    0x02
->>>>> +#define ARM_SMMU_EVT_F_STE_FETCH    0x03
->>>>> +#define ARM_SMMU_EVT_C_BAD_STE        0x04
->>>>> +#define ARM_SMMU_EVT_F_BAD_ATS_TREQ    0x05
->>>>> +#define ARM_SMMU_EVT_F_STREAM_DISABLED    0x06
->>>>> +#define ARM_SMMU_EVT_F_TRANSL_FORBIDDEN    0x07
->>>>> +#define ARM_SMMU_EVT_C_BAD_SUBSTREAMID    0x08
->>>>> +#define ARM_SMMU_EVT_F_CD_FETCH        0x09
->>>>> +#define ARM_SMMU_EVT_C_BAD_CD        0x0a
->>>>> +#define ARM_SMMU_EVT_F_WALK_EABT    0x0b
->>>>> +#define ARM_SMMU_EVT_F_TRANSLATION    0x10
->>>>> +#define ARM_SMMU_EVT_F_ADDR_SIZE    0x11
->>>>> +#define ARM_SMMU_EVT_F_ACCESS        0x12
->>>>> +#define ARM_SMMU_EVT_F_PERMISSION    0x13
->>>>> +#define ARM_SMMU_EVT_F_TLB_CONFLICT    0x20
->>>>> +#define ARM_SMMU_EVT_F_CFG_CONFLICT    0x21
->>>>> +#define ARM_SMMU_EVT_E_PAGE_REQUEST    0x24
->>>>> +
->>>>>     /* Common MSI config fields */
->>>>>     #define MSI_CFG0_ADDR_MASK        GENMASK_ULL(51, 2)
->>>>>     #define MSI_CFG2_SH            GENMASK(5, 4)
->>>>> @@ -332,6 +352,15 @@
->>>>>     #define EVTQ_MAX_SZ_SHIFT        7
->>>>>       #define EVTQ_0_ID            GENMASK_ULL(7, 0)
->>>>> +#define EVTQ_0_SSV            GENMASK_ULL(11, 11)
->>>>> +#define EVTQ_0_SUBSTREAMID        GENMASK_ULL(31, 12)
->>>>> +#define EVTQ_0_STREAMID            GENMASK_ULL(63, 32)
->>>>> +#define EVTQ_1_PNU            GENMASK_ULL(33, 33)
->>>>> +#define EVTQ_1_IND            GENMASK_ULL(34, 34)
->>>>> +#define EVTQ_1_RNW            GENMASK_ULL(35, 35)
->>>>> +#define EVTQ_1_S2            GENMASK_ULL(39, 39)
->>>>> +#define EVTQ_1_CLASS            GENMASK_ULL(40, 41)
->>>>> +#define EVTQ_3_FETCH_ADDR        GENMASK_ULL(51, 3)
->>>>>       /* PRI queue */
->>>>>     #define PRIQ_ENT_DWORDS            2
->>>>> @@ -639,6 +668,64 @@ struct arm_smmu_domain {
->>>>>         spinlock_t            devices_lock;
->>>>>     };
->>>>>     +/* fault propagation */
->>>>> +
->>>>> +#define IOMMU_FAULT_F_FIELDS    (IOMMU_FAULT_UNRECOV_PASID_VALID | \
->>>>> +                 IOMMU_FAULT_UNRECOV_PERM_VALID | \
->>>>> +                 IOMMU_FAULT_UNRECOV_ADDR_VALID)
->>>>> +
->>>>> +struct arm_smmu_fault_propagation_data {
->>>>> +    enum iommu_fault_reason reason;
->>>>> +    bool s1_check;
->>>>> +    u32 fields; /* IOMMU_FAULT_UNRECOV_*_VALID bits */
->>>>> +};
->>>>> +
->>>>> +/*
->>>>> + * Describes how SMMU faults translate into generic IOMMU faults
->>>>> + * and if they need to be reported externally
->>>>> + */
->>>>> +static const struct arm_smmu_fault_propagation_data
->>>>> fault_propagation[] = {
->>>>> +[ARM_SMMU_EVT_F_UUT]            = { },
->>>>> +[ARM_SMMU_EVT_C_BAD_STREAMID]        = { },
->>>>> +[ARM_SMMU_EVT_F_STE_FETCH]        = { },
->>>>> +[ARM_SMMU_EVT_C_BAD_STE]        = { },
->>>>> +[ARM_SMMU_EVT_F_BAD_ATS_TREQ]        = { },
->>>>> +[ARM_SMMU_EVT_F_STREAM_DISABLED]    = { },
->>>>> +[ARM_SMMU_EVT_F_TRANSL_FORBIDDEN]    = { },
->>>>> +[ARM_SMMU_EVT_C_BAD_SUBSTREAMID]    =
->>>>> {IOMMU_FAULT_REASON_PASID_INVALID,
->>>>> +                       false,
->>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_CD_FETCH]        = {IOMMU_FAULT_REASON_PASID_FETCH,
->>>>> +                       false,
->>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID |
->>>>
->>>> It doesn't make sense to presume validity here, or in any of the faults
->>>> below...
->>>
->>>
->>>>
->>>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_C_BAD_CD]            =
->>>>> {IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
->>>>> +                       false,
->>>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_WALK_EABT]        = {IOMMU_FAULT_REASON_WALK_EABT,
->>>>> true,
->>>>> +                       IOMMU_FAULT_F_FIELDS |
->>>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_TRANSLATION]        = {IOMMU_FAULT_REASON_PTE_FETCH,
->>>>> true,
->>>>> +                       IOMMU_FAULT_F_FIELDS
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_ADDR_SIZE]        = {IOMMU_FAULT_REASON_OOR_ADDRESS,
->>>>> true,
->>>>> +                       IOMMU_FAULT_F_FIELDS
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_ACCESS]            = {IOMMU_FAULT_REASON_ACCESS, true,
->>>>> +                       IOMMU_FAULT_F_FIELDS
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_PERMISSION]        = {IOMMU_FAULT_REASON_PERMISSION,
->>>>> true,
->>>>> +                       IOMMU_FAULT_F_FIELDS
->>>>> +                      },
->>>>> +[ARM_SMMU_EVT_F_TLB_CONFLICT]        = { },
->>>>> +[ARM_SMMU_EVT_F_CFG_CONFLICT]        = { },
->>>>> +[ARM_SMMU_EVT_E_PAGE_REQUEST]        = { },
->>>>> +};
->>>>> +
->>>>>     struct arm_smmu_option_prop {
->>>>>         u32 opt;
->>>>>         const char *prop;
->>>>> @@ -1258,7 +1345,6 @@ static int arm_smmu_init_l2_strtab(struct
->>>>> arm_smmu_device *smmu, u32 sid)
->>>>>         return 0;
->>>>>     }
->>>>>     -__maybe_unused
->>>>>     static struct arm_smmu_master_data *
->>>>>     arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
->>>>>     {
->>>>> @@ -1284,24 +1370,85 @@ arm_smmu_find_master(struct arm_smmu_device
->>>>> *smmu, u32 sid)
->>>>>         return master;
->>>>>     }
->>>>>     +/* Populates the record fields according to the input SMMU event */
->>>>> +static bool arm_smmu_transcode_fault(u64 *evt, u8 type,
->>>>> +                     struct iommu_fault_unrecoverable *record)
->>>>> +{
->>>>> +    const struct arm_smmu_fault_propagation_data *data;
->>>>> +    u32 fields;
->>>>> +
->>>>> +    if (type >= ARRAY_SIZE(fault_propagation))
->>>>> +        return false;
->>>>> +
->>>>> +    data = &fault_propagation[type];
->>>>> +    if (!data->reason)
->>>>> +        return false;
->>>>> +
->>>>> +    fields = data->fields;
->>>>> +
->>>>> +    if (data->s1_check & FIELD_GET(EVTQ_1_S2, evt[1]))
->>>>> +        return false; /* S2 related fault, don't propagate */
->>>>> +
->>>>> +    if (fields & IOMMU_FAULT_UNRECOV_PASID_VALID) {
->>>>> +        if (FIELD_GET(EVTQ_0_SSV, evt[0]))
->>>>> +            record->pasid = FIELD_GET(EVTQ_0_SUBSTREAMID, evt[0]);
->>>>> +        else
->>>>> +            fields &= ~IOMMU_FAULT_UNRECOV_PASID_VALID;
->>>>
->>>> ...because this logic then breaks for C_BAD_SUBSTREAMID, which ends up
->>>> coming out of here *without* reporting the offending PASID.
->>> Correct.
->>>>
->>>>> +    }
->>>>> +    if (fields & IOMMU_FAULT_UNRECOV_PERM_VALID) {
->>>>> +        if (!FIELD_GET(EVTQ_1_RNW, evt[1]))
->>>>> +            record->perm |= IOMMU_FAULT_PERM_WRITE;
->>>>> +        if (FIELD_GET(EVTQ_1_PNU, evt[1]))
->>>>> +            record->perm |= IOMMU_FAULT_PERM_PRIV;
->>>>> +        if (FIELD_GET(EVTQ_1_IND, evt[1]))
->>>>> +            record->perm |= IOMMU_FAULT_PERM_EXEC;
->>>>> +    }
->>>>> +    if (fields & IOMMU_FAULT_UNRECOV_ADDR_VALID)
->>>>> +        record->addr = evt[2];
->>>>> +
->>>>> +    if (fields & IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID)
->>>>> +        record->fetch_addr = FIELD_GET(EVTQ_3_FETCH_ADDR, evt[3]);
->>>>> +
->>>>> +    record->flags = fields;
->>>>> +    return true;
->>>>> +}
->>>>> +
->>>>> +static void arm_smmu_report_event(struct arm_smmu_device *smmu, u64
->>>>> *evt)
->>>>> +{
->>>>> +    u32 sid = FIELD_GET(EVTQ_0_STREAMID, evt[0]);
->>>>> +    u8 type = FIELD_GET(EVTQ_0_ID, evt[0]);
->>>>> +    struct arm_smmu_master_data *master;
->>>>> +    struct iommu_fault_event event = {};
->>>>> +    int i;
->>>>> +
->>>>> +    master = arm_smmu_find_master(smmu, sid);
->>>>> +    if (WARN_ON(!master))
->>>>> +        return;
->>>>
->>>> NAK. If I'm getting global faults like C_BAD_STE where a device almost
->>>> certainly *isn't* configured (because hey, we would have initialised its
->>>> STEs if we knew), then I sure as hell want to see the actual faults.
->>>> Spamming a constant stream of stack traces *instead* of showing them is
->>>> worse than useless.
->>> Sure, if !master I will output the original traces.
->>>>
->>>>> +
->>>>> +    event.fault.type = IOMMU_FAULT_DMA_UNRECOV;
->>>>> +
->>>>> +    if (arm_smmu_transcode_fault(evt, type, &event.fault.event)) {
->>>>> +        iommu_report_device_fault(master->dev, &event);
->>>>> +        return;
->>>>
->>>> And again, the vast majority of the time, there won't be a fault handler
->>>> registered, so unconditionally suppressing the most common and useful
->>>> stuff like translation and permission faults is very much not OK.
->>> Going to test whether we are in nested mode before entering that path.
->>
->> I don't think this has to be exclusive to nesting - the generic
->> reporting mechanism feels like it might ultimately be extensible to
->> other things like Rob's case for generalised stalling. It's just that
->> for robustness, even when a fault handler is present, we still want the
->> driver to be able to report if it didn't actually handle a fault.
-> 
-> 
-> Jean-Philippe pointed out in a previous review
-> (https://patchwork.kernel.org/patch/10751801/#22424047) that the guest
-> can flood the host log with S1 related faults. At the moment we do not
-> check that a fault handler is registered in nested mode. Maybe we
-> should? Even if the fault handler is registered, as it is based on a
-> circular buffer, this latter can be full and lead to a log flood.
+Hi,
 
-Ah, right, I didn't quite have the full picture in mind, thanks for the 
-jog. I guess in that case we want some degree of special-casing for 
-nested configs - anything S1-related that we expect the fault handler to 
-simply inject back into the guest, we can indeed suppress on the host, 
-but I do think it's worth anticipating host-related faults (and entirely 
-host-owned fault-handlers in future) as well.
+On Sun, 2019-05-12 at 18:32 +0200, Paul Kocialkowski wrote:
+[...]
+> I would be curious to know what the situation is on the i.MX6 coda
+> block, which also seems pretty obscure.
 
-Robin.
+FWIW, I had started collecting things I learned about the BIT processor
+in the CODA IP cores, mostly by looking at the firmware files
+distributed by Freescale/NXP: https://github.com/pH5/coda-bits
+
+It is a somewhat strange custom 16-bit DSP architecture. There is a
+rudimentary start for a disassembler in there as well, but large parts
+of the instruction set are still completely unknown, and I have no idea
+how the address generator / DMA units or bitstream accelerators work.
+
+I would be delighted if somebody would like to pick up analyzing the BIT
+processor ISA further. I think it could be fruitful to start
+systematically throwing instructions at it and see what happens, to
+learn more. I haven't had much motivation to play with this, recently.
+
+About the internal connections and available accelerator units, there is
+a block diagram in the i.MX53 TRM, but I am not aware of any register
+level description for any of these.
+
+regards
+Philipp
