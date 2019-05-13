@@ -6,134 +6,84 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C57C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C14C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4219C2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A17120873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728406AbfEMJYv (ORCPT
+        id S1728395AbfEMJad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:24:51 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:53385 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727568AbfEMJYu (ORCPT
+        Mon, 13 May 2019 05:30:33 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:2642 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbfEMJac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:24:50 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id Q7COhiHa00YQeQ7CRhcWle; Mon, 13 May 2019 11:24:48 +0200
-Subject: Re: [PATCH v2 13/15] [media] mtk-mipicsi: add the function for
- Get/Set PARM for application
-To:     Stu Hsieh <stu.hsieh@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
- <1555407015-18130-14-git-send-email-stu.hsieh@mediatek.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8dcbaa14-29bb-8469-fc36-82e34df81737@xs4all.nl>
-Date:   Mon, 13 May 2019 11:24:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 05:30:32 -0400
+X-IronPort-AV: E=Sophos;i="5.60,465,1549926000"; 
+   d="scan'208";a="382867335"
+Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 11:30:31 +0200
+Date:   Mon, 13 May 2019 11:30:27 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>
+Subject: Re: [PATCH 5/5] Coccinelle: put_device: Merge two SmPL when constraints
+ into one
+In-Reply-To: <a29de02f-8726-c487-6d71-30979d153647@web.de>
+Message-ID: <alpine.DEB.2.20.1905131129440.3616@hadrien>
+References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn> <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de> <a29de02f-8726-c487-6d71-30979d153647@web.de>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-In-Reply-To: <1555407015-18130-14-git-send-email-stu.hsieh@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCfMFdvufpYlAoVkC6/FNWW97drMNqs9zzMyTIveUsIjoRhTAZz6jCYP+N8X20c09w4lo8FUspQkD+2oPhGYQTZzu2WEOh90nYKhmU2CmuyX13+n5SQv
- NtTtQ9ZiNK3Y7OWRJ14rFaq/zJtplNwHlvOGFMWE4ZQnbgMLmavgsMicqnqpWIz2uWzArRDsFKFNbDURDhXxN0TA5+Xhvk64qcRfTazx4EC409QcFbmxSMF6
- j2HyUMdR4qhn7uSi+aO5gW40JlUQKs7avOGmfq0+NLiZVjoYJ0nP9Oc/rlwfjmCC0aIHDvGfhKGoJq/zvYMucPHM1lg2Lhlmb5eQE6o1BonMkhsfzcdd8OtT
- GJVYq7W71fFh3Ysj4zzDuHbDB+RitRSZLvtBChQ2afHKdB64JHAgKxjv2XaGBgHkiD9GPYeDey6zwfPh1JsBhMBghUtrHXso+Ao5vyfH+RRy1OXyX0UiwN+y
- haivmh+uBdjzm82CPSAbZA2doMljXSuT0mP+5r1piFnfZaNR8Q+o/CByF54fRcRL6i0K0lycDgoZeXJwAQIbCS7zyv7AFUX7tWX7ABnHAIpEsZNq+8735Neu
- Re1DepiL6jzJfYazFiwy865SDnmZgaW8JwSYCPO6US6aqw==
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 11:30 AM, Stu Hsieh wrote:
-> This patch add the function for Get/Set PARM for application.
-> 
-> Application can get the information about number of link.
-> 
-> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+
+
+On Mon, 13 May 2019, Markus Elfring wrote:
+
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 13 May 2019 09:55:22 +0200
+>
+> A single parameter was repeated for a function call in two SmPL
+> when constraints.
+> Combine the exclusion specifications into a disjunction for the semantic
+> patch language so that this argument is referenced only once there.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+
+NACK.  This hurts readability and gives no practical benefit.
+
+julia
+
 > ---
->  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
-> 
-> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> index 5e4028d0d5e1..5db9c68b0da9 100644
-> --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-> @@ -346,6 +346,38 @@ static int get_subdev_link(const struct soc_camera_device *icd,
->  	return 0;
->  }
->  
-> +static int mtk_mipicsi_get_parm(struct soc_camera_device *icd,
-> +	struct v4l2_streamparm *a)
-> +{
-> +	unsigned int link = 0U;
-> +	u8 link_reg_val = 0x0U;
-> +	int ret = 0;
-> +
-> +	/*get camera link number*/
-> +	ret = get_subdev_link(icd, &link, &link_reg_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	a->parm.capture.timeperframe.numerator = 1;
-> +	a->parm.capture.timeperframe.denominator = 30;
-> +	a->parm.capture.reserved[0] = link_reg_val;
-> +	a->parm.capture.reserved[1] = (u32)(icd->use_count);
-
-No, no, don't use G/S_PARM for that. It's an awful API and other than
-getting/setting the frame period it shouldn't be used for anything else.
-
-I've CC-ed Sakari, he is the CSI specialist. I think some work was done
-(or is in progress) regarding providing more CSI lane information.
-
-> +	dev_info(icd->parent, "use count %d\n", icd->use_count);
-> +
-> +	return 0;
-> +}
-> +
-> +static int mtk_mipicsi_set_param(struct soc_camera_device *icd,
-> +	struct v4l2_streamparm *a)
-> +{
-> +	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
-> +
-> +	if (ici->ops->get_parm == NULL)
-> +		return ici->ops->get_parm(icd, a);
-
-This clearly was never tested since ici->ops->get_parm is NULL when
-you call it. I'd drop this function altogether since there is no
-point if you can make changes.
-
-Regards,
-
-	Hans
-
-> +
-> +	return 0;
-> +}
-> +
->  static u32 get_bytesperline(const u32 fmt, const u32 width)
->  {
->  	u32 bytesperline = 0;
-> @@ -884,6 +916,8 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
->  	.poll			= vb2_fop_poll,
->  	.querycap		= mtk_mipicsi_querycap,
->  	.set_bus_param		= mtk_mipicsi_set_bus_param,
-> +	.get_parm		= mtk_mipicsi_get_parm,
-> +	.set_parm		= mtk_mipicsi_set_param,
->  };
->  
->  static void mtk_mipicsi_ana_init(void __iomem *base)
-> 
-
+>  scripts/coccinelle/free/put_device.cocci | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/scripts/coccinelle/free/put_device.cocci b/scripts/coccinelle/free/put_device.cocci
+> index 28b0be53fb3f..975cabb97d01 100644
+> --- a/scripts/coccinelle/free/put_device.cocci
+> +++ b/scripts/coccinelle/free/put_device.cocci
+> @@ -22,8 +22,7 @@ id = of_find_device_by_node@p1(x)
+>  if (id == NULL || ...) { ... return ...; }
+>  ... when != put_device(&id->dev)
+>      when != id = (T6)(e)
+> -    when != platform_device_put(id)
+> -    when != of_dev_put(id)
+> +    when != \( platform_device_put \| of_dev_put \) (id)
+>      when != if (id) { ... put_device(&id->dev) ... }
+>      when != e1 = \( (T) \( id \| (&id->dev) \) \| get_device(&id->dev) \| (T1)platform_get_drvdata(id) \)
+>  (
+> --
+> 2.21.0
+>
+>
