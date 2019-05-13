@@ -2,186 +2,132 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6E2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1053C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEB82146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0A02146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbfEMJtp (ORCPT
+        id S1728183AbfEMJtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:49:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727414AbfEMJto (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:49:44 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D9lxdi099970
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:49:43 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sf4g5mj2k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:49:43 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Mon, 13 May 2019 10:49:41 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 May 2019 10:49:37 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4D9naI05570582
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 09:49:36 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AE954C044;
-        Mon, 13 May 2019 09:49:36 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F4B64C040;
-        Mon, 13 May 2019 09:49:35 +0000 (GMT)
-Received: from oc0383214508.ibm.com (unknown [9.124.35.159])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 May 2019 09:49:35 +0000 (GMT)
-Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
-        rjw@rjwysocki.net
-References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
- <1557291178.ow4spjzq5t.astroid@bobo.none>
-From:   Abhishek <huntbag@linux.vnet.ibm.com>
-Date:   Mon, 13 May 2019 15:19:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 13 May 2019 05:49:50 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50538 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728042AbfEMJtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:49:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9782C341;
+        Mon, 13 May 2019 02:49:48 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 18AEE3F703;
+        Mon, 13 May 2019 02:49:45 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:49:35 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Lina Iyer <lina.iyer@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+Message-ID: <20190513094935.GA4885@e107155-lin>
+References: <20190508145600.GA26843@centauri>
+ <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
+ <20190510091158.GA10284@e107155-lin>
+ <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1557291178.ow4spjzq5t.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19051309-0016-0000-0000-0000027B14D7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051309-0017-0000-0000-000032D7D821
-Message-Id: <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/08/2019 10:29 AM, Nicholas Piggin wrote:
-> Abhishek Goel's on April 22, 2019 4:32 pm:
->> Currently, the cpuidle governors determine what idle state a idling CPU
->> should enter into based on heuristics that depend on the idle history on
->> that CPU. Given that no predictive heuristic is perfect, there are cases
->> where the governor predicts a shallow idle state, hoping that the CPU will
->> be busy soon. However, if no new workload is scheduled on that CPU in the
->> near future, the CPU will end up in the shallow state.
->>
->> Motivation
->> ----------
->> In case of POWER, this is problematic, when the predicted state in the
->> aforementioned scenario is a lite stop state, as such lite states will
->> inhibit SMT folding, thereby depriving the other threads in the core from
->> using the core resources.
->>
->> So we do not want to get stucked in such states for longer duration. To
->> address this, the cpuidle-core can queue timer to correspond with the
->> residency value of the next available state. This timer will forcefully
->> wakeup the cpu. Few such iterations will essentially train the governor to
->> select a deeper state for that cpu, as the timer here corresponds to the
->> next available cpuidle state residency. Cpu will be kicked out of the lite
->> state and end up in a non-lite state.
->>
->> Experiment
->> ----------
->> I performed experiments for three scenarios to collect some data.
->>
->> case 1 :
->> Without this patch and without tick retained, i.e. in a upstream kernel,
->> It would spend more than even a second to get out of stop0_lite.
->>
->> case 2 : With tick retained in a upstream kernel -
->>
->> Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
->> it to take 8 sched tick to get out of stop0_lite. Experimentally,
->> observation was
->>
->> =========================================================
->> sample          min            max           99percentile
->> 20              4ms            12ms          4ms
->> =========================================================
->>
->> It would take atleast one sched tick to get out of stop0_lite.
->>
->> case 2 :  With this patch (not stopping tick, but explicitly queuing a
->>            timer)
->>
->> ============================================================
->> sample          min             max             99percentile
->> ============================================================
->> 20              144us           192us           144us
->> ============================================================
->>
->> In this patch, we queue a timer just before entering into a stop0_lite
->> state. The timer fires at (residency of next available state + exit latency
->> of next available state * 2). Let's say if next state(stop0) is available
->> which has residency of 20us, it should get out in as low as (20+2*2)*8
->> [Based on the forumla (residency + 2xlatency)*history length] microseconds
->> = 192us. Ideally we would expect 8 iterations, it was observed to get out
->> in 6-7 iterations. Even if let's say stop2 is next available state(stop0
->> and stop1 both are unavailable), it would take (100+2*10)*8 = 960us to get
->> into stop2.
->>
->> So, We are able to get out of stop0_lite generally in 150us(with this
->> patch) as compared to 4ms(with tick retained). As stated earlier, we do not
->> want to get stuck into stop0_lite as it inhibits SMT folding for other
->> sibling threads, depriving them of core resources. Current patch is using
->> forced-wakeup only for stop0_lite, as it gives performance benefit(primary
->> reason) along with lowering down power consumption. We may extend this
->> model for other states in future.
-> I still have to wonder, between our snooze loop and stop0, what does
-> stop0_lite buy us.
->
-> That said, the problem you're solving here is a generic one that all
-> stop states have, I think. Doesn't the same thing apply going from
-> stop0 to stop5? You might under estimate the sleep time and lose power
-> savings and therefore performance there too. Shouldn't we make it
-> generic for all stop states?
->
-> Thanks,
-> Nick
->
->
-When a cpu is in snooze, it takes both space and time of core. When in 
-stop0_lite,
-it free up time but it still takes space. When it is in stop0 or deeper, 
-it free up both
-space and time slice of core.
-In stop0_lite, cpu doesn't free up the core resources and thus inhibits 
-thread
-folding. When a cpu goes to stop0, it will free up the core resources 
-thus increasing
-the single thread performance of other sibling thread.
-Hence, we do not want to get stuck in stop0_lite for long duration, and 
-want to quickly
-move onto the next state.
-If we get stuck in any other state we would possibly be losing on to 
-power saving,
-but will still be able to gain the performance benefits for other 
-sibling threads.
+On Fri, May 10, 2019 at 11:58:40PM +0530, Amit Kucheria wrote:
+> On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
 
-Thanks,
-Abhishek
+[...]
+
+> >
+> > Yes entry-method="psci" is required as per DT binding but not checked
+> > in code on arm64. We have CPU ops with idle enabled only for "psci", so
+> > there's not need to check.
+>
+> I don't see it being checked on arm32 either.
+>
+
+arm_cpuidle_get_ops in arch/arm/kernel/cpuidle.c checks the method, has
+to match "psci" for drivers/firmware/psci.c to work on arm32
+
+[...]
+
+> >
+> > Why do you want to deprecated just because Linux kernel doesn't want to
+> > use it. That's not a valid reason IMO.
+>
+> Fair enough. Just want to make sure that it isn't some vestigial
+> property that was never used. Do you know if another OS is actually
+> using it?
+>
+
+Not that I am aware of. But Linux uses it on arm32, so it's not entirely
+unused.
+
+> > > Do we expect to support PSCI platforms that might have a different
+> > > entry-method for idle states?
+> >
+> > Not on ARM64, but same DT bindings can be used for idle-states on
+> > say RISC-V and have some value other than "psci".
+>
+> Both enable-method and entry-method properties are currently only used
+> (and documented) for ARM platforms. Hence this discussion about
+> deprecation of one of them.
+>
+
+Yes, it's used on arm32 as mentioned above.
+
+> > > Should I whip up a patch removing entry-method? Since we don't check
+> > > for it today, it won't break the old DTs either.
+> > >
+> >
+> > Nope, I don't think so. But if it's causing issues, we can look into it.
+> > I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
+>
+> Only a couple of minor issues:
+> 1. There is a trickle of DTs that need fixing up every now and then
+> because they don't use entry-method in their idle-states node. Schema
+> validation ought to fix that.
+
+I understand, scheme should fix it. This is not just restricted to this,
+it's generic DT problem. So let's hope we get schema based validation soon.
+
+> 2. A property that isn't ready by any code is a bit confusing. Perhaps
+> we can mention something to the effect in the documentation?
+>
+
+Not entirely true. We have quite a lot of bindings that are added just
+because downstream drivers use e.g. GPU and even standard ePAPR or DT
+specification has lots of bindings which OS like Linux may choose
+not to use at all. Same applies to ACPI, so I am not for removing bindings
+just because there are no users in Linux.
+
+--
+Regards,
+Sudeep
 
