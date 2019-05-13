@@ -2,101 +2,157 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082CCC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86F3C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DF420873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557778943;
-	bh=rUumpDM3UecrwQ7TBHU63Q7wVdRFdbY9R6pHgI3XXUU=;
-	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
-	b=kVXi/uJdituFoqsmL1jaDQooi0BcmY7lvX1Hz960lvWuSKP3zV7wqhJ/vntyaLQJb
-	 6YvdbuQY5JZk5mWwf5g0ZSIi9rNFJjz81VgwAH/UJT8Ul1/5GEI5FbAzrzRW1bHRf/
-	 3juMdNNisHy+XZUwxen7MvkWUOamgHwDTdK7GvvE=
+	by mail.kernel.org (Postfix) with ESMTP id 9F6A620873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:23:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="gabdQ6nl";
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="MC0uebJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEMUWW (ORCPT
+        id S1726429AbfEMUXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39896 "EHLO mail.kernel.org"
+        Mon, 13 May 2019 16:23:07 -0400
+Received: from node.akkea.ca ([192.155.83.177]:47882 "EHLO node.akkea.ca"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbfEMUWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:22:22 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A03F20862;
-        Mon, 13 May 2019 20:22:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557778941;
-        bh=rUumpDM3UecrwQ7TBHU63Q7wVdRFdbY9R6pHgI3XXUU=;
-        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
-        b=eWOcVhl7rhA8P+caYmgE348aRGNcCsgXWD4IWR9sejbueLJYMZW+Ge/7VqKgP81O+
-         34n12gx0kewuLnKO84a00k3U3iVXBCezrOPsWdkPt6ljwtxHoi5DuWkwLZNxXaFK9n
-         ozBcif5H1L+1jNZzB87yhgwjYRCRLrUMgDn6ZZHY=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190513200758.15241-1-paul.walmsley@sifive.com>
-References: <20190513200758.15241-1-paul.walmsley@sifive.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: sifive: restrict Kconfig scope for the FU540 PRCI driver
-Cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-clk@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>, mturquette@baylibre.com,
-        pavel@ucw.cz
-Message-ID: <155777894054.14659.13824195555713805550@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Mon, 13 May 2019 13:22:20 -0700
+        id S1726187AbfEMUXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 16:23:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by node.akkea.ca (Postfix) with ESMTP id 340FE4E204E;
+        Mon, 13 May 2019 20:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1557778986; bh=R/Iab2kHzqT3VFe2bGYTt6ErGRg9k86f231BlHPSYNI=;
+        h=From:To:Cc:Subject:Date;
+        b=gabdQ6nl2uiQ1mltcfmghOvkTgvL9sHBbiDZffWiXwV+7x6jpbv7LQIkDBjlGNtnb
+         tLMUDvnkVA0eAQEEKKcjgbHrc7z29d+CiU338tXjwglAW9WZHQ0+/6d44FyQS+C87M
+         lJF6hZk8zLK+YU0gn11ChAA2SkYCwtryI4riZ1FM=
+X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
+Received: from node.akkea.ca ([127.0.0.1])
+        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uhnCnLO08fWe; Mon, 13 May 2019 20:23:05 +0000 (UTC)
+Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
+        by node.akkea.ca (Postfix) with ESMTPSA id 425204E204B;
+        Mon, 13 May 2019 20:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1557778985; bh=R/Iab2kHzqT3VFe2bGYTt6ErGRg9k86f231BlHPSYNI=;
+        h=From:To:Cc:Subject:Date;
+        b=MC0uebJYr/s7lCFmLqhd3Gy4/jACyGwLoeSeo4uyuYp73qhKQvi0ZeqDske845Nvk
+         /6xA8W/qHlVbsqi9R8CWfrpr3MlcRBG73/32j1PKyI7luZ5RsKjSfe6/mzDS360Xvp
+         9TkyKwVhvPYjllBSqnAl7ofhE43O4v6SvRSgGWl8=
+From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
+To:     angus.ainslie@puri.sm
+Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>
+Subject: [PATCH v11 0/4] Add support for the Purism Librem5 devkit
+Date:   Mon, 13 May 2019 13:22:54 -0700
+Message-Id: <20190513202258.30949-1-angus@akkea.ca>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Walmsley (2019-05-13 13:07:58)
-> Restrict Kconfig scope for SiFive clock and reset IP block drivers
-> such that they won't appear on most configurations that are unlikely
-> to support them.  This is based on a suggestion from Pavel Machek
-> <pavel@ucw.cz>.  Ideally this should be dependent on
-> CONFIG_ARCH_SIFIVE, but since that Kconfig directive does not yet
-> exist, add dependencies on RISCV or COMPILE_TEST for now.
->=20
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Pavel Machek <pavel@ucw.cz>
+The Librem5 devkit is based on the imx8mq from NXP. This is a default
+devicetree to boot the board to a command prompt.
 
-Reported-by?
+Changes since v10:
 
-> ---
->  drivers/clk/sifive/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/clk/sifive/Kconfig b/drivers/clk/sifive/Kconfig
-> index 8db4a3eb4782..27a8fe531357 100644
-> --- a/drivers/clk/sifive/Kconfig
-> +++ b/drivers/clk/sifive/Kconfig
-> @@ -2,6 +2,7 @@
-> =20
->  menuconfig CLK_SIFIVE
->         bool "SiFive SoC driver support"
-> +       depends on RISCV || COMPILE_TEST
->         help
->           SoC drivers for SiFive Linux-capable SoCs.
-> =20
-> @@ -10,6 +11,7 @@ if CLK_SIFIVE
->  config CLK_SIFIVE_FU540_PRCI
->         bool "PRCI driver for SiFive FU540 SoCs"
->         select CLK_ANALOGBITS_WRPLL_CLN28HPC
-> +       depends on RISCV || COMPILE_TEST
+Moved MAINTAINERS entry to "ARM/FREESCALE IMX" section
 
-This isn't needed? The config already implicitly depends on CLK_SIFIVE
-which depends on RISCV || COMPILE_TEST. This line should be removed.
+Changes since v9:
+
+Added a MAINTAINERS entry for arm64 imx devicetree files.
+
+Changes since v8:
+
+Fixed license comment.
+Changed regulators to all lower case.
+Changed clock frequency for NXP errata e7805.
+Dropped blank line.
+
+Changes since v7:
+
+More regulators always on for USB.
+Add vbus regulator.
+Drop vbat regulator.
+Replace legacy "gpio-key,wakeup" with "wakeup-source".
+Add vbus-supply to get rid of warning
+imx8mq-usb-phy 382f0040.usb-phy: 382f0040.usb-phy supply vbus not found,
+using dummy regulator
+
+Changes since v6:
+
+Dropped unused regulators.
+Fix regulator phandles case.
+Dropped extra whitespace.
+
+Changes since v5:
+
+Added reviewed-by tags.
+Moved USB port links to USB controller node.
+
+Changes since v4:
+
+Compiled against linux-next next-20190415.
+Added imx8mq to the arm yaml file.
+Re-arrange regulator nodes to drop undefined supplies.
+Additional ordering for aesthetics.
+Split some long lines.
+Added lots of blank lines.
+Moved pinctl muxes to where they are used.
+Cleaned out reg defintions from regulator nodes.
+
+Changes since v3:
+
+Freshly sorted and pressed nodes.
+Change the backlight to an interpolated scale.
+Dropped i2c2.
+Dropped devkit version number to match debian MR.
+
+Changes since v2:
+
+Fixed incorrect phy-supply for the fsl-fec.
+Dropped unused regulator property.
+Fixup Makefile for linux-next.
+
+Changes since v1:
+
+Dropped config file.
+Updated the board compatible label.
+Changed node names to follow naming conventions.
+Added a more complete regulator hierachy.
+Removed unused nodes.
+Removed unknown devices.
+Fixed comment style.
+Dropped undocumented properties.
+
+Angus Ainslie (Purism) (4):
+  MAINTAINERS: add an entry for for arm63 imx devicetrees
+  arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
+  dt-bindings: Add an entry for Purism SPC
+  dt-bindings: arm: fsl: Add the imx8mq boards
+
+ .../devicetree/bindings/arm/fsl.yaml          |   7 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ MAINTAINERS                                   |   1 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx8mq-librem5-devkit.dts   | 821 ++++++++++++++++++
+ 5 files changed, 831 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
+
+-- 
+2.17.1
 
