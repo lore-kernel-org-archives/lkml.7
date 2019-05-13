@@ -2,180 +2,247 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC421C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84662C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E1F208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408D62146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tMtheo4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfEMLcF (ORCPT
+        id S1728996AbfEMLcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:32:05 -0400
-Received: from foss.arm.com ([217.140.101.70]:53306 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727598AbfEMLcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:32:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7EA215AB;
-        Mon, 13 May 2019 04:32:04 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2480C3F703;
-        Mon, 13 May 2019 04:32:03 -0700 (PDT)
-Subject: Re: [PATCH v4 1/1] iommu/io-pgtable-arm: Add support to use system
- cache
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>, will.deacon@arm.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org
-Cc:     pdaly@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        pratikp@codeaurora.org, linux-kernel@vger.kernel.org,
-        jcrouse@codeaurora.org
-References: <20190513100403.18981-1-vivek.gautam@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <dc53456d-027e-0ede-1ce9-1efa476937a9@arm.com>
-Date:   Mon, 13 May 2019 12:32:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 07:32:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49442 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727598AbfEMLcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:32:21 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DBTmO9022438;
+        Mon, 13 May 2019 11:31:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : in-reply-to :
+ references : mime-version : content-type : content-transfer-encoding :
+ subject : to : cc : from : message-id; s=corp-2018-07-02;
+ bh=mty2FTNVjpIhbBYL90IRRZYhieT+z0m3OF2KXzFfb4s=;
+ b=tMtheo4V5BPIrgk/ODsU8scP6HoOVFPZHjJPfpeg3YU9qzBq5VpsEAXEbSJmKFTU47ae
+ RCAe2v8N0gWK87Tj8gFnstZmnzz+cRMGBhIiKlv4XnqFL6g4e4WhKUXUJ2fgX1au1HAQ
+ Op7rFVGoaomAlPI8hOBpdZzcE0itGY1Vxiir44+WFlh9w68FQJ3L0k4/silHhunER6il
+ VhEUbBtFhI1I+wi6u5IE3t2fOFgGhK9l0lmIqj+zWtpqNSiuVuGwzjy9vHr4TvMhWtmE
+ P/nXn+0p82+OoJc/1MVcsKDMHFEh4Jn44Gau6t55QQBVSl7D9ZJzDcS27B3UyFxw5i+t 6w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2sdq1q65fw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 11:31:44 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DBVHUV176927;
+        Mon, 13 May 2019 11:31:43 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2se0tvga2q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 11:31:43 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DBVfXB010387;
+        Mon, 13 May 2019 11:31:41 GMT
+Received: from galaxy-s9.lan (/209.6.36.129)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 May 2019 04:31:40 -0700
+Date:   Mon, 13 May 2019 07:31:37 -0400
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
+References: <20190507185647.GA29409@amt.cnet> <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190513100403.18981-1-vivek.gautam@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+To:     Wanpeng Li <kernellwp@gmail.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+CC:     kvm-devel <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, ankur.a.arora@oracle.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Message-ID: <D655C66D-8C52-4CE3-A00B-697735CFA51D@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905130083
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 11:04, Vivek Gautam wrote:
-> Few Qualcomm platforms such as, sdm845 have an additional outer
-> cache called as System cache, aka. Last level cache (LLC) that
-> allows non-coherent devices to upgrade to using caching.
-> This cache sits right before the DDR, and is tightly coupled
-> with the memory controller. The clients using this cache request
-> their slices from this system cache, make it active, and can then
-> start using it.
-> 
-> There is a fundamental assumption that non-coherent devices can't
-> access caches. This change adds an exception where they *can* use
-> some level of cache despite still being non-coherent overall.
-> The coherent devices that use cacheable memory, and CPU make use of
-> this system cache by default.
-> 
-> Looking at memory types, we have following -
-> a) Normal uncached :- MAIR 0x44, inner non-cacheable,
->                        outer non-cacheable;
-> b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
->                        outer read write-back non-transient;
->                        attribute setting for coherenet I/O devices.
-> and, for non-coherent i/o devices that can allocate in system cache
-> another type gets added -
-> c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
->                          outer read write-back non-transient
-> 
-> Coherent I/O devices use system cache by marking the memory as
-> normal cached.
-> Non-coherent I/O devices should mark the memory as normal
-> sys-cached in page tables to use system cache.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
-> 
-> V3 version of this patch and related series can be found at [1].
-> 
-> This change is a realisation of following changes from downstream msm-4.9:
-> iommu: io-pgtable-arm: Implement IOMMU_USE_UPSTREAM_HINT[2]
-> 
-> Changes since v3:
->   - Dropping support to cache i/o page tables to system cache. Getting support
->     for data buffers is the first step.
->     Removed io-pgtable quirk and related change to add domain attribute.
-> 
-> Glmark2 numbers on SDM845 based cheza board:
-> 
-> S.No.|	with LLC support   |	without LLC support
->       |	for data buffers   |
-> ---------------------------------------------------		
-> 1    |	4480; 72.3fps      |	4042; 65.2fps
-> 2    |	4500; 72.6fps      |	4039; 65.1fps
-> 3    |	4523; 72.9fps	   |	4106; 66.2fps
-> 4    |	4489; 72.4fps	   |	4104; 66.2fps
-> 5    |	4518; 72.9fps	   |	4072; 65.7fps
-> 
-> [1] https://patchwork.kernel.org/cover/10772629/
-> [2] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/?h=msm-4.9&id=d4c72c413ea27c43f60825193d4de9cb8ffd9602
-> 
->   drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
->   include/linux/iommu.h          | 1 +
->   2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index d3700ec15cbd..2dbafe697531 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -167,10 +167,12 @@
->   #define ARM_LPAE_MAIR_ATTR_MASK		0xff
->   #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
->   #define ARM_LPAE_MAIR_ATTR_NC		0x44
-> +#define ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE	0xf4
->   #define ARM_LPAE_MAIR_ATTR_WBRWA	0xff
->   #define ARM_LPAE_MAIR_ATTR_IDX_NC	0
->   #define ARM_LPAE_MAIR_ATTR_IDX_CACHE	1
->   #define ARM_LPAE_MAIR_ATTR_IDX_DEV	2
-> +#define ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE	3
+On May 13, 2019 5:20:37 AM EDT, Wanpeng Li <kernellwp@gmail=2Ecom> wrote:
+>On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat=2Ecom>
+>wrote:
+>>
+>>
+>> Certain workloads perform poorly on KVM compared to baremetal
+>> due to baremetal's ability to perform mwait on NEED_RESCHED
+>> bit of task flags (therefore skipping the IPI)=2E
+>
+>KVM supports expose mwait to the guest, if it can solve this?
+>
 
-Here at the implementation level, I'd rather just call these what they 
-are, i.e. s/QCOM_SYS_CACHE/INC_OWBRWA/.
 
->   
->   /* IOPTE accessors */
->   #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
-> @@ -442,6 +444,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
->   		else if (prot & IOMMU_CACHE)
->   			pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
->   				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
-> +		else if (prot & IOMMU_QCOM_SYS_CACHE)
+There is a bit of problem with that=2E The host will see 100% CPU utilizat=
+ion even if the guest is idle and taking long naps=2E=2E
 
-Where in the call stack is this going to be decided? (I don't recall the 
-previous discussions ever really reaching a solid conclusion on how to 
-separate responsibilities).
+Which depending on your dashboard can look like the machine is on fire=2E
 
-> +			pte |= (ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE
-> +				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
->   	} else {
->   		pte = ARM_LPAE_PTE_HAP_FAULT;
->   		if (prot & IOMMU_READ)
-> @@ -841,7 +846,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
->   	      (ARM_LPAE_MAIR_ATTR_WBRWA
->   	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
->   	      (ARM_LPAE_MAIR_ATTR_DEVICE
-> -	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
-> +	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
-> +	      (ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE
-> +	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE));
->   
->   	cfg->arm_lpae_s1_cfg.mair[0] = reg;
->   	cfg->arm_lpae_s1_cfg.mair[1] = 0;
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index a815cf6f6f47..29dd2c624348 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -31,6 +31,7 @@
->   #define IOMMU_CACHE	(1 << 2) /* DMA cache coherency */
->   #define IOMMU_NOEXEC	(1 << 3)
->   #define IOMMU_MMIO	(1 << 4) /* e.g. things like MSI doorbells */
-> +#define IOMMU_QCOM_SYS_CACHE	(1 << 6)
+CCing Ankur and Boris
 
-Nit: 6 usually comes *after* 5 ;)
+>Regards,
+>Wanpeng Li
+>
+>>
+>> This patch introduces a configurable busy-wait delay before entering
+>the
+>> architecture delay routine, allowing wakeup IPIs to be skipped
+>> (if the IPI happens in that window)=2E
+>>
+>> The real-life workload which this patch improves performance
+>> is SAP HANA (by 5-10%) (for which case setting idle_spin to 30
+>> is sufficient)=2E
+>>
+>> This patch improves the attached server=2Epy and client=2Epy example
+>> as follows:
+>>
+>> Host:                           31=2E814230202231556
+>> Guest:                          38=2E17718765199993       (83 %)
+>> Guest, idle_spin=3D50us:          33=2E317709898000004      (95 %)
+>> Guest, idle_spin=3D220us:         32=2E27826551499999       (98 %)
+>>
+>> Signed-off-by: Marcelo Tosatti <mtosatti@redhat=2Ecom>
+>>
+>> ---
+>>  kernel/sched/idle=2Ec |   86
+>++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 86 insertions(+)
+>>
+>> diff --git a/kernel/sched/idle=2Ec b/kernel/sched/idle=2Ec
+>> index f5516bae0c1b=2E=2Ebca7656a7ea0 100644
+>> --- a/kernel/sched/idle=2Ec
+>> +++ b/kernel/sched/idle=2Ec
+>> @@ -216,6 +216,29 @@ static void cpuidle_idle_call(void)
+>>         rcu_idle_exit();
+>>  }
+>>
+>> +static unsigned int spin_before_idle_us;
+>>
+>> +static void do_spin_before_idle(void)
+>> +{
+>> +       ktime_t now, end_spin;
+>> +
+>> +       now =3D ktime_get();
+>> +       end_spin =3D ktime_add_ns(now, spin_before_idle_us*1000);
+>> +
+>> +       rcu_idle_enter();
+>> +       local_irq_enable();
+>> +       stop_critical_timings();
+>> +
+>> +       do {
+>> +               cpu_relax();
+>> +               now =3D ktime_get();
+>> +       } while (!tif_need_resched() && ktime_before(now, end_spin));
+>> +
+>> +       start_critical_timings();
+>> +       rcu_idle_exit();
+>> +       local_irq_disable();
+>> +}
+>> +
+>>  /*
+>>   * Generic idle loop implementation
+>>   *
+>> @@ -259,6 +282,8 @@ static void do_idle(void)
+>>                         tick_nohz_idle_restart_tick();
+>>                         cpu_idle_poll();
+>>                 } else {
+>> +                       if (spin_before_idle_us)
+>> +                               do_spin_before_idle();
+>>                         cpuidle_idle_call();
+>>                 }
+>>                 arch_cpu_idle_exit();
+>> @@ -465,3 +490,64 @@ const struct sched_class idle_sched_class =3D {
+>>         =2Eswitched_to            =3D switched_to_idle,
+>>         =2Eupdate_curr            =3D update_curr_idle,
+>>  };
+>> +
+>> +
+>> +static ssize_t store_idle_spin(struct kobject *kobj,
+>> +                              struct kobj_attribute *attr,
+>> +                              const char *buf, size_t count)
+>> +{
+>> +       unsigned int val;
+>> +
+>> +       if (kstrtouint(buf, 10, &val) < 0)
+>> +               return -EINVAL;
+>> +
+>> +       if (val > USEC_PER_SEC)
+>> +               return -EINVAL;
+>> +
+>> +       spin_before_idle_us =3D val;
+>> +       return count;
+>> +}
+>> +
+>> +static ssize_t show_idle_spin(struct kobject *kobj,
+>> +                             struct kobj_attribute *attr,
+>> +                             char *buf)
+>> +{
+>> +       ssize_t ret;
+>> +
+>> +       ret =3D sprintf(buf, "%d\n", spin_before_idle_us);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static struct kobj_attribute idle_spin_attr =3D
+>> +       __ATTR(idle_spin, 0644, show_idle_spin, store_idle_spin);
+>> +
+>> +static struct attribute *sched_attrs[] =3D {
+>> +       &idle_spin_attr=2Eattr,
+>> +       NULL,
+>> +};
+>> +
+>> +static const struct attribute_group sched_attr_group =3D {
+>> +       =2Eattrs =3D sched_attrs,
+>> +};
+>> +
+>> +static struct kobject *sched_kobj;
+>> +
+>> +static int __init sched_sysfs_init(void)
+>> +{
+>> +       int error;
+>> +
+>> +       sched_kobj =3D kobject_create_and_add("sched", kernel_kobj);
+>> +       if (!sched_kobj)
+>> +               return -ENOMEM;
+>> +
+>> +       error =3D sysfs_create_group(sched_kobj, &sched_attr_group);
+>> +       if (error)
+>> +               goto err;
+>> +       return 0;
+>> +
+>> +err:
+>> +       kobject_put(sched_kobj);
+>> +       return error;
+>> +}
+>> +postcore_initcall(sched_sysfs_init);
 
-Plus although it's fairly self-evident that this value has *something* 
-to do with Qcom system caches and isn't as generic as, say, IOMMU_PRIV, 
-it probably still warrants some degree of comment.
-
-Robin.
-
->   /*
->    * Where the bus hardware includes a privilege level as part of its access type
->    * markings, and certain devices are capable of issuing transactions marked as
-> 
