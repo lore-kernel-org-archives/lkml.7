@@ -7,92 +7,90 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36EFDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42D2C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024C1208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74776208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LnsKP2xU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phXvz26i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfEMHem (ORCPT
+        id S1728026AbfEMHer (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:34:42 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39279 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfEMHem (ORCPT
+        Mon, 13 May 2019 03:34:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35017 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbfEMHeq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:34:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id n25so12482793wmk.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:34:41 -0700 (PDT)
+        Mon, 13 May 2019 03:34:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id q15so8535681wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=haQ6ph677t8ZOscojVyK7EbyIxkmtAMauBV824XBBeM=;
-        b=LnsKP2xUW4/hQoqpIysOFuXia9Hapy8nU1BFolQOB8c0yH8K6GH3E9Hw8avty3dusE
-         8wi/2YHum+QcZjbajUO8I9CZlBT2k45swDJsrO09WVVCmbZ7ZPcC7Vzm83dE0mbBA6/8
-         hejV413jPBLpvIIyts3r7klerRF6MojuEY5BB5ndNPRWOHn/nLWaqMFDcvFpUjM3zcdX
-         HsdFfVmYylmD+gSxJ/H/ZpVVZQlff5Ir2Yzt4FG/3JJNZ7GzlaqM/JWe01rwDTUeuo/S
-         OPPw5y+eEeiBG+prVSapCyhbw6FJuZ94hDeRiyD3hmPuGIeXbJvcZ/sbVmEbM1VCSuJi
-         i/Qw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=SrKOrxCUTi42whkmh8C32Tg5zmMnBqJytzi0/en5Cy4=;
+        b=phXvz26iMBHGz1Fgu8fxkESf2xt31+02S9dZ5N6nuqO/Z0Y4+omR0nsmOJJb0TQkMX
+         XhzqVUVjdw1LOZzb3bhk+rNoKc6NsLvMTb0SZmodCPiVXZ/kyQvGD3BPz824PnLdW2pY
+         2TqPggNDFxGgZDzL9Ta7pcUmLPYMJsMZ+RjxWucyA14SHUk/4zEeksnBaOicyVK0PIAr
+         I1+1aozZH8VkwNb0+EqoRwMuczz59qw1WpZti7AQAaYXyn+PSW4h7shqCVTzOYGlPlzn
+         Z0BMtT8P9zQO4uCghRqT4aTP1AFHbIqW1H1E8wf/LQGvH6ncvPYAl1oWChf8y3Zx7MpY
+         S5KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=haQ6ph677t8ZOscojVyK7EbyIxkmtAMauBV824XBBeM=;
-        b=W0LABFGflUoAgv9OjpooOjeLHQSf8kHNpEuRGIP3UYn2dQPfq3hlbKEkemBPHiqBPb
-         zBQTnht70F2qIKQ9tVxT8pZx8BhsvgYWcSydAsjAMqVOjXx6rZRqaJ9RClO+UWiw8mSZ
-         zZmPDavxbJRa1mv2pRrOgh3igxmZIdcYQIQDnh/PqoPDeY2jguvdpnSj4O0jqrs+3Lgm
-         yhsXk7zmKUEjBnhl6/ITIDxlS0Azl/Wil4otKKX5nluRiLTmR1p56vFbWAiK6UZNL9Zj
-         L7iC9ZValJ6qvLJQ1FTmO4/vCgr20M+QWLKA7g9NLPWitpYz9j6bmpF4zeOHcVbZ2piG
-         8Osw==
-X-Gm-Message-State: APjAAAXyKOoFXqk2tL9Bdrzua+Xsoq2E1c8VHgExfBcwQFPdkxypeE6b
-        YJHiMSBZgADlhSx8POXJbyoFaA==
-X-Google-Smtp-Source: APXvYqyl0TFa/CfFW9dD95CEE4KE/zhIspeeDr2JlDf5B23WXtyzSecGRLezlu0d6oFZsauAreajcw==
-X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr15328423wmu.117.1557732880915;
-        Mon, 13 May 2019 00:34:40 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=SrKOrxCUTi42whkmh8C32Tg5zmMnBqJytzi0/en5Cy4=;
+        b=kljn+7VvVzS+G337AwozWFOQi7RAuAlCBjObtjsOGGMEAKvd49S5xladTMbfTpeC7C
+         6tVytxbLd4PhfUpozH8ZEBts6HnZBaO0JChE6pQnzjuwjfoMhkRbVxQrOna/HWLBXNde
+         hb3elyq5GeJi7AT1pdmUV5M7cJet69iASbcqShmdRRD9JsvGP9cwZTbep3a8ma+HBxBf
+         kD0lZ6NGDI56NSiNlBQb1IaMSWuzlOL6AqSYNSJbAxD/hlih8U1tGD2JfQMrvYK92NJ/
+         ABpzaHWLVge3mqUML58SJ+NlWhMypAwod2oMDIn/wyUE5o1HymDUbI7OFfv9+R6urbb+
+         YWmw==
+X-Gm-Message-State: APjAAAUGem6dzhNkvvTyaMepyEzikyr3YjI6QgGlElgqVcPImLi58TMo
+        mrEgTcSwiJD1ejEyYvk3H0OSrg==
+X-Google-Smtp-Source: APXvYqyxFA25Gtez8Oa7moTqe7JIAnTCxZbpNYt+pUAEHYfAL5o0skgCCz8F858El1d+hev5N8CdVw==
+X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr14338717wma.77.1557732884212;
+        Mon, 13 May 2019 00:34:44 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id h14sm1009883wrt.11.2019.05.13.00.34.40
+        by smtp.gmail.com with ESMTPSA id h14sm1009883wrt.11.2019.05.13.00.34.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 00:34:40 -0700 (PDT)
+        Mon, 13 May 2019 00:34:43 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         amelie.delaunay@st.com, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 1/2] pinctrl: stmfx: Fix 'warn: unsigned <VAR> is never less than zero'
-Date:   Mon, 13 May 2019 08:34:28 +0100
-Message-Id: <20190513073429.12023-1-lee.jones@linaro.org>
+Subject: [PATCH 2/2] pinctrl: stmfx: Fix 'warn: bitwise AND condition is false here'
+Date:   Mon, 13 May 2019 08:34:29 +0100
+Message-Id: <20190513073429.12023-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190513073429.12023-1-lee.jones@linaro.org>
+References: <20190513073429.12023-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-smatch warnings:
-drivers/pinctrl/pinctrl-stmfx.c:225 stmfx_pinconf_get() warn: unsigned 'dir' is never less than zero.
-drivers/pinctrl/pinctrl-stmfx.c:228 stmfx_pinconf_get() warn: unsigned 'type' is never less than zero.
-drivers/pinctrl/pinctrl-stmfx.c:231 stmfx_pinconf_get() warn: unsigned 'pupd' is never less than zero.
+drivers/pinctrl/pinctrl-stmfx.c:441 stmfx_pinctrl_irq_set_type() warn: bitwise AND condition is false here
 
 Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/pinctrl/pinctrl-stmfx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pinctrl/pinctrl-stmfx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index bcd81269445e..074c8fa3e75c 100644
+index 074c8fa3e75c..eba872ce4a7c 100644
 --- a/drivers/pinctrl/pinctrl-stmfx.c
 +++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -213,9 +213,8 @@ static int stmfx_pinconf_get(struct pinctrl_dev *pctldev,
- 	struct stmfx_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
- 	u32 param = pinconf_to_config_param(*config);
- 	struct pinctrl_gpio_range *range;
--	u32 dir, type, pupd;
- 	u32 arg = 0;
--	int ret;
-+	int ret, dir, type, pupd;
+@@ -437,7 +437,7 @@ static int stmfx_pinctrl_irq_set_type(struct irq_data *data, unsigned int type)
+ 	u32 reg = get_reg(data->hwirq);
+ 	u32 mask = get_mask(data->hwirq);
  
- 	range = pinctrl_find_gpio_range_from_pin_nolock(pctldev, pin);
- 	if (!range)
+-	if (type & IRQ_TYPE_NONE)
++	if (type == IRQ_TYPE_NONE)
+ 		return -EINVAL;
+ 
+ 	if (type & IRQ_TYPE_EDGE_BOTH) {
 -- 
 2.17.1
 
