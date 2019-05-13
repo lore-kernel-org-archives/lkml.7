@@ -2,290 +2,171 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA320C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18BFC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75E092070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:25:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Znmj+Rap"
+	by mail.kernel.org (Postfix) with ESMTP id 7E98720989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729541AbfEMTXN (ORCPT
+        id S1726982AbfEMTZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:23:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:43729 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726744AbfEMTXK (ORCPT
+        Mon, 13 May 2019 15:25:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:46866 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726931AbfEMTZ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:23:10 -0400
-Received: by mail-lj1-f196.google.com with SMTP id z5so12058560lji.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:23:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PRL03ayf+3gKTw6ZyGNmbuvOXDVJf1omVj5w82VYj+c=;
-        b=Znmj+Rap5uWxgIXFcTCRFXUCBeWlHqU14s7GfponHlIVTdIN7IzEc61HXMm4h5nMBl
-         pijn+Gtm6cLPHDMK+OyeGhMq851kXOyT9eVvz5Eyww1m2u+MiAMZ1ZmxhMmNVVYT67kD
-         mS34rNa0TU+vC/QIphSceYIH1L6a0ZvjhvREogDJycRMkS+Rs2TfV8eY8m+0ZbMStq5P
-         dk5lfkFlLuy6i4z/FJSh7h6pWspZbXExojy+vKqzYVKfbdd54IxWPB6JsuTVRCSLt0ye
-         MCtEkLESrZG/lkG0+OyQr8OvzGk5uYyHT8MItOwqjKlbO+fTi4c83DsDsSQhdL3amg2j
-         JoKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PRL03ayf+3gKTw6ZyGNmbuvOXDVJf1omVj5w82VYj+c=;
-        b=aNGyad4Fgd/7QL95y7Np7UudlKtL/bP8HUbnIyaqJjjm6D8jhWinhLLtqVJh+f3cHT
-         LN+n/EL55ur38Tma2vrY52Q2kEydMdoRiLxdFayIxZjngkhpXs/HJ8AIbNQwojN/EcOM
-         xGKehIpD1+hWjl4qXMPQcjm5g896wmr2awskS9jUOKKN0RBDpV7+AVfwkfOF5YkasTP/
-         x0lUhPm2p+PHWheIlfiolxhQdZOWvza/gVV12EY6Pfaz5MIlBYqZAjK2+JK3mRstN1J1
-         5CB+TD0dbvPdGNCIC4tX0CeiBRKSs/jL3gZFmhYHbJaH/87hkHRq7iJj3lmyn/BFRIF7
-         po2g==
-X-Gm-Message-State: APjAAAVvbw2J9Bn2aCucf99yTUaUpsSX5I9QhW2iE8gnOOZNKuORhIM2
-        ClYp6nxI7gtpU2FRKFq7A46j2A==
-X-Google-Smtp-Source: APXvYqw+k+LeWintu25cglIZU1CDGNn5D+9RA2OiP0AoKwBrDnOS5hnqd/Xey6gfGS2F/GmEje2j4w==
-X-Received: by 2002:a2e:86c5:: with SMTP id n5mr14855773ljj.184.1557775387446;
-        Mon, 13 May 2019 12:23:07 -0700 (PDT)
-Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:23:06 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lina Iyer <lina.iyer@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 01/18] dt: psci: Update DT bindings to support hierarchical PSCI states
-Date:   Mon, 13 May 2019 21:22:43 +0200
-Message-Id: <20190513192300.653-2-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
-References: <20190513192300.653-1-ulf.hansson@linaro.org>
+        Mon, 13 May 2019 15:25:57 -0400
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:d573:a076:d1fd:3417:b195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C545F281DC5;
+        Mon, 13 May 2019 20:25:52 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dm-devel@redhat.com
+Cc:     kernel@collabora.com, Helen Koike <helen.koike@collabora.com>,
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>
+Subject: [PATCH] dm ioctl: fix hang in early create error condition
+Date:   Mon, 13 May 2019 16:25:30 -0300
+Message-Id: <20190513192530.1167-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lina Iyer <lina.iyer@linaro.org>
+The dm_early_create() function (which deals with "dm-mod.create=" kernel
+command line option) calls dm_hash_insert() who gets an extra reference
+to the md object.
 
-Update DT bindings to represent hierarchical CPU and CPU PM domain idle
-states for PSCI. Also update the PSCI examples to clearly show how
-flattened and hierarchical idle states can be represented in DT.
+In case of failure, this reference wasn't being released, causing
+dm_destroy() to hang, thus hanging the whole boot process.
 
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Co-developed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
+Fix this by calling __hash_remove() in the error path.
 
-Changes:
-	- None.
+Fixes: 6bbc923dfcf57d ("dm: add support to directly boot to a mapped device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
 ---
- .../devicetree/bindings/arm/psci.txt          | 166 ++++++++++++++++++
- 1 file changed, 166 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
-index a2c4f1d52492..e6d3553c8df8 100644
---- a/Documentation/devicetree/bindings/arm/psci.txt
-+++ b/Documentation/devicetree/bindings/arm/psci.txt
-@@ -105,7 +105,173 @@ Case 3: PSCI v0.2 and PSCI v0.1.
- 		...
- 	};
+I tested this patch by adding a new test case in the following test
+script:
+
+https://gitlab.collabora.com/koike/dm-cmdline-test/commit/d2d7a0ee4a49931cdb59f08a837b516c2d5d743d
+
+This test was failing, but with this patch it works correctly.
+
+Thanks
+Helen
+
+ drivers/md/dm-ioctl.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index c740153b4e52..31da18611a21 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -205,7 +205,8 @@ static void free_cell(struct hash_cell *hc)
+  * The kdev_t and uuid of a device can never change once it is
+  * initially inserted.
+  */
+-static int dm_hash_insert(const char *name, const char *uuid, struct mapped_device *md)
++static struct hash_cell *dm_hash_insert(const char *name, const char *uuid,
++					struct mapped_device *md)
+ {
+ 	struct hash_cell *cell, *hc;
  
-+ARM systems can have multiple cores sometimes in hierarchical arrangement.
-+This often, but not always, maps directly to the processor power topology of
-+the system. Individual nodes in a topology have their own specific power states
-+and can be better represented in DT hierarchically.
-+
-+For these cases, the definitions of the idle states for the CPUs and the CPU
-+topology, must conform to the domain idle state specification [3]. The domain
-+idle states themselves, must be compatible with the defined 'domain-idle-state'
-+binding [1], and also need to specify the arm,psci-suspend-param property for
-+each idle state.
-+
-+DT allows representing CPUs and CPU idle states in two different ways -
-+
-+The flattened model as given in Example 1, lists CPU's idle states followed by
-+the domain idle state that the CPUs may choose. Note that the idle states are
-+all compatible with "arm,idle-state". Additionally, for the domain idle state
-+the "arm,psci-suspend-param" represents a superset of the CPU's idle state.
-+
-+Example 2 represents the hierarchical model of CPUs and domain idle states.
-+CPUs define their domain provider in their psci DT node. The domain controls
-+the power to the CPU and possibly other h/w blocks that would enter an idle
-+state along with the CPU. The CPU's idle states may therefore be considered as
-+the domain's idle states and have the compatible "arm,idle-state". Such domains
-+may also be embedded within another domain that may represent common h/w blocks
-+between these CPUs. The idle states of the CPU topology shall be represented as
-+the domain's idle states. Note that for the domain idle state, the
-+"arm,psci-suspend-param" represents idle states hierarchically.
-+
-+In PSCI firmware v1.0, the OS-Initiated mode is introduced. However, the
-+flattened vs hierarchical DT representation is orthogonal to the OS-Initiated
-+vs the platform-coordinated PSCI CPU suspend modes, thus should be considered
-+independent of each other.
-+
-+The hierarchical representation helps and makes it easy to implement OSI mode
-+and OS implementations may choose to mandate it. For the default platform-
-+coordinated mode, both representations are viable options.
-+
-+Example 1: Flattened representation of CPU and domain idle states
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
-+					  <&CLUSTER_PWRDN>;
-+		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57", "arm,armv8";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
-+					  <&CLUSTER_PWRDN>;
-+		};
-+
-+		idle-states {
-+			CPU_PWRDN: cpu-power-down {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0000001>;
-+				entry-latency-us = <10>;
-+				exit-latency-us = <10>;
-+				min-residency-us = <100>;
-+			};
-+
-+			CLUSTER_RET: cluster-retention {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x1000011>;
-+				entry-latency-us = <500>;
-+				exit-latency-us = <500>;
-+				min-residency-us = <2000>;
-+			};
-+
-+			CLUSTER_PWRDN: cluster-power-down {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x1000031>;
-+				entry-latency-us = <2000>;
-+				exit-latency-us = <2000>;
-+				min-residency-us = <6000>;
-+			};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+Example 2: Hierarchical representation of CPU and domain idle states
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			power-domains = <&CPU_PD0>;
-+			power-domain-names = "psci";
-+		};
-+
-+		CPU1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a57", "arm,armv8";
-+			reg = <0x100>;
-+			enable-method = "psci";
-+			power-domains = <&CPU_PD1>;
-+			power-domain-names = "psci";
-+		};
-+
-+		idle-states {
-+			CPU_PWRDN: cpu-power-down {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x0000001>;
-+				entry-latency-us = <10>;
-+				exit-latency-us = <10>;
-+				min-residency-us = <100>;
-+			};
-+
-+			CLUSTER_RET: cluster-retention {
-+				compatible = "domain-idle-state";
-+				arm,psci-suspend-param = <0x1000010>;
-+				entry-latency-us = <500>;
-+				exit-latency-us = <500>;
-+				min-residency-us = <2000>;
-+			};
-+
-+			CLUSTER_PWRDN: cluster-power-down {
-+				compatible = "domain-idle-state";
-+				arm,psci-suspend-param = <0x1000030>;
-+				entry-latency-us = <2000>;
-+				exit-latency-us = <2000>;
-+				min-residency-us = <6000>;
-+			};
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+
-+		CPU_PD0: cpu-pd0 {
-+			#power-domain-cells = <0>;
-+			domain-idle-states = <&CPU_PWRDN>;
-+			power-domains = <&CLUSTER_PD>;
-+		};
-+
-+		CPU_PD1: cpu-pd1 {
-+			#power-domain-cells = <0>;
-+			domain-idle-states =  <&CPU_PWRDN>;
-+			power-domains = <&CLUSTER_PD>;
-+		};
-+
-+		CLUSTER_PD: cluster-pd {
-+			#power-domain-cells = <0>;
-+			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWRDN>;
-+		};
-+	};
-+
- [1] Kernel documentation - ARM idle states bindings
-     Documentation/devicetree/bindings/arm/idle-states.txt
- [2] Power State Coordination Interface (PSCI) specification
-     http://infocenter.arm.com/help/topic/com.arm.doc.den0022c/DEN0022C_Power_State_Coordination_Interface.pdf
-+[3]. PM Domains description
-+    Documentation/devicetree/bindings/power/power_domain.txt
+@@ -214,7 +215,7 @@ static int dm_hash_insert(const char *name, const char *uuid, struct mapped_devi
+ 	 */
+ 	cell = alloc_cell(name, uuid, md);
+ 	if (!cell)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	/*
+ 	 * Insert the cell into both hash tables.
+@@ -243,12 +244,12 @@ static int dm_hash_insert(const char *name, const char *uuid, struct mapped_devi
+ 	mutex_unlock(&dm_hash_cells_mutex);
+ 	up_write(&_hash_lock);
+ 
+-	return 0;
++	return cell;
+ 
+  bad:
+ 	up_write(&_hash_lock);
+ 	free_cell(cell);
+-	return -EBUSY;
++	return ERR_PTR(-EBUSY);
+ }
+ 
+ static struct dm_table *__hash_remove(struct hash_cell *hc)
+@@ -747,6 +748,7 @@ static int dev_create(struct file *filp, struct dm_ioctl *param, size_t param_si
+ {
+ 	int r, m = DM_ANY_MINOR;
+ 	struct mapped_device *md;
++	struct hash_cell *hc;
+ 
+ 	r = check_name(param->name);
+ 	if (r)
+@@ -759,11 +761,11 @@ static int dev_create(struct file *filp, struct dm_ioctl *param, size_t param_si
+ 	if (r)
+ 		return r;
+ 
+-	r = dm_hash_insert(param->name, *param->uuid ? param->uuid : NULL, md);
+-	if (r) {
++	hc = dm_hash_insert(param->name, *param->uuid ? param->uuid : NULL, md);
++	if (IS_ERR(hc)) {
+ 		dm_put(md);
+ 		dm_destroy(md);
+-		return r;
++		return PTR_ERR(hc);
+ 	}
+ 
+ 	param->flags &= ~DM_INACTIVE_PRESENT_FLAG;
+@@ -2044,6 +2046,7 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 	int r, m = DM_ANY_MINOR;
+ 	struct dm_table *t, *old_map;
+ 	struct mapped_device *md;
++	struct hash_cell *hc;
+ 	unsigned int i;
+ 
+ 	if (!dmi->target_count)
+@@ -2062,14 +2065,14 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 		return r;
+ 
+ 	/* hash insert */
+-	r = dm_hash_insert(dmi->name, *dmi->uuid ? dmi->uuid : NULL, md);
+-	if (r)
++	hc = dm_hash_insert(dmi->name, *dmi->uuid ? dmi->uuid : NULL, md);
++	if (IS_ERR(hc))
+ 		goto err_destroy_dm;
+ 
+ 	/* alloc table */
+ 	r = dm_table_create(&t, get_mode(dmi), dmi->target_count, md);
+ 	if (r)
+-		goto err_destroy_dm;
++		goto err_hash_remove;
+ 
+ 	/* add targets */
+ 	for (i = 0; i < dmi->target_count; i++) {
+@@ -2116,6 +2119,8 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 
+ err_destroy_table:
+ 	dm_table_destroy(t);
++err_hash_remove:
++	__hash_remove(hc);
+ err_destroy_dm:
+ 	dm_put(md);
+ 	dm_destroy(md);
 -- 
-2.17.1
+2.20.1
 
