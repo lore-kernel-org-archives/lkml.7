@@ -2,162 +2,106 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1560C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE62FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED69208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:42:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1c9mdln"
+	by mail.kernel.org (Postfix) with ESMTP id B6B3F208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfEMMmc (ORCPT
+        id S1729373AbfEMMmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:42:32 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40347 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfEMMmb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:42:31 -0400
-Received: by mail-lf1-f65.google.com with SMTP id h13so8928169lfc.7;
-        Mon, 13 May 2019 05:42:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=H3taMqxBU0K9Z7JWPWErppWk/cQFzli83lP4SPDgixk=;
-        b=E1c9mdlnSxylCrM3JzyXAWmecuo6TySh6LfOTE+kKRtHqvlghD+09Emuvmnz5NGz68
-         Je2mYftt0k5AispadbzuLDxVyM4kYMVkdc7N25tPhAFONAywIIVvSWV/GeXfL2svm+L3
-         Fuypi/3S4ufdAgYnEl0dIWcyhgL9QY1APUcRkTBA8h9yRN3rgcgSJXY3l5GXAulAuPZ7
-         18A9QpsxdPjhjGn6KpM+K7xcibCi+LX3QZs2SMCptwSn3eTtg9EcQdAeX2pnR3tVAwQS
-         GKqI4bnq7c8mq/rMlto30SdCZgvEYEfVHCkiLVvxRvD3NS2BiaKEMlnzLxmPpuvkegcR
-         ozmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=H3taMqxBU0K9Z7JWPWErppWk/cQFzli83lP4SPDgixk=;
-        b=WxeeA6OWQfxQYuDUR/z988pjXTaiUtgkrDrmNBKbsqia0/za2vCGogX4q6y8+7HkzB
-         iYoFe+dVCe25/eik3CQF/rfbtKzi8LDTri0Y2k6GeJXHCe254po1KU1LZ4kuW31PNsCv
-         ryIeDa+/xgQ2rLfsevlj6O2OoAO+lFRAbwGxtedOQm8EGtmNDaOELhYq8ec/m3Ka2q/F
-         XdlBeGBSJutMc+qA9oQmoV9E8D3PX/GsMzNd6o3MgjEgTBmlhSW7qLT0uKMsvNMickCv
-         NIYr17PLCCy7/Ydg+nUcy9YXjnBQQSDtuHQlwb5dCdUuamFk1c9Ep9eEadZIAagGg1SW
-         vCdg==
-X-Gm-Message-State: APjAAAX1LVv+fTzWC4W+F/VRiwGWpQca3TCPbLKY8oQabixgHraMIorW
-        49tCoYyAJJKaCh0NATTCJq4=
-X-Google-Smtp-Source: APXvYqxgc8ZaUcFUJU+/qBd6Wfk6CiV2P6PU4MbqMnEF1AqufzJvSBtvpKByCS/hnWLFT06YdizJlA==
-X-Received: by 2002:a19:c746:: with SMTP id x67mr13253246lff.152.1557751349451;
-        Mon, 13 May 2019 05:42:29 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id o21sm3044405ljj.19.2019.05.13.05.42.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 05:42:28 -0700 (PDT)
-Date:   Mon, 13 May 2019 15:42:26 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vicente Bergas <vicencb@gmail.com>
-Cc:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Message-ID: <20190513124225.odm3shcfo3tsq6xk@mobilestation>
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
- <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
- <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
- <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
- <0f16b2c5-ef2a-42a1-acdc-08fa9971b347@gmail.com>
- <20190513102941.4ocb3tz3wmh3pj4t@mobilestation>
- <20190513105104.af7d7n337lxqac63@mobilestation>
- <cf1e81d9-6f91-41fe-a390-b9688e5707f7@gmail.com>
+        Mon, 13 May 2019 08:42:36 -0400
+Received: from foss.arm.com ([217.140.101.70]:54934 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbfEMMme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:42:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D98380D;
+        Mon, 13 May 2019 05:42:33 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3B4F3F6C4;
+        Mon, 13 May 2019 05:42:31 -0700 (PDT)
+Date:   Mon, 13 May 2019 13:42:29 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v2 6/7] sched: Add sched_overutilized tracepoint
+Message-ID: <20190513124228.a2imudj6ji3khnfg@e107158-lin.cambridge.arm.com>
+References: <20190510113013.1193-1-qais.yousef@arm.com>
+ <20190510113013.1193-7-qais.yousef@arm.com>
+ <20190513120830.GS2623@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cf1e81d9-6f91-41fe-a390-b9688e5707f7@gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190513120830.GS2623@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Mon, May 13, 2019 at 02:19:17PM +0200, Vicente Bergas wrote:
-> On Monday, May 13, 2019 12:51:05 PM CEST, Serge Semin wrote:
-> > On Mon, May 13, 2019 at 01:29:42PM +0300, Serge Semin wrote:
-> > > Hello Vincente,
-> > > 
-> > > On Sat, May 11, 2019 at 05:06:04PM +0200, Vicente Bergas wrote: ...
-> > 
-> > Hmm, just figured out, that in the datasheet RXDLY/TXDLY pins are
-> > actually grounded, so
-> > phy-mode="rgmii" should work for you. Are you sure that on your actual
-> > hardware the
-> > resistors aren't placed differently?
+On 05/13/19 14:08, Peter Zijlstra wrote:
+> On Fri, May 10, 2019 at 12:30:12PM +0100, Qais Yousef wrote:
 > 
-> That is correct, the schematic has pull-down resistors and placeholders for
-> pull-up resistors. On the board I can confirm the pull-ups are not
-> populated and the pull-downs are.
-> But the issue seems unrelated to this.
-> 
-> I have traced it down to a deadlock while trying to acquire a mutex.
-> It hangs here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/realtek.c?id=47782361aca2#n220
-> while waiting for this mutex:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/mdio_bus.c?id=47782361aca2#n692
-> 
-> Regards,
->  Vicenç.
-> 
-
-Ahh, I see. Then using lock-less version of the access methods must fix the
-problem. You could try something like this:
--------------------------------------------------------------------------------
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index 761ce3b1e7bd..14b61da1f32a 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -217,12 +217,12 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	if (oldpage < 0)
- 		goto err_restore_page;
- 
--	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-+	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
- 	if (ret)
- 		goto err_restore_page;
- 
--	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			 val);
-+	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-+			   val);
- 
- err_restore_page:
- 	return phy_restore_page(phydev, oldpage, ret);
--------------------------------------------------------------------------------
-
--Sergey
-
-> > The current config register state can be read from the 0x1c extension
-> > page. Something
-> > like this:
-> > --- a/drivers/net/phy/realtek.c
-> > +++ b/drivers/net/phy/realtek.c
-> > @@ -221,6 +221,9 @@ static int rtl8211e_config_init(struct phy_device
-> > *phydev)
-> >  	if (ret)
-> >  		goto err_restore_page;
-> > +	ret = phy_read(phydev, 0x1c);
-> > +	dev_info(&phydev->mdio.dev, "PHY config register %08x\n", ret);
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > index cbcb47972232..0cf42d13d6c4 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -600,6 +600,10 @@ DECLARE_TRACE(pelt_se,
+> >  	TP_PROTO(int cpu, const char *path, struct sched_entity *se),
+> >  	TP_ARGS(cpu, path, se));
+> >  
+> > +DECLARE_TRACE(sched_overutilized,
+> > +	TP_PROTO(int overutilized),
+> > +	TP_ARGS(overutilized));
 > > +
-> >  	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-> >  			 val);
-> > -Sergey
+> >  #endif /* _TRACE_SCHED_H */
+> >  
+> >  /* This part must be outside protection */
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 81036c34fd29..494032220fe7 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -4965,8 +4965,10 @@ static inline bool cpu_overutilized(int cpu)
+> >  
+> >  static inline void update_overutilized_status(struct rq *rq)
+> >  {
+> > -	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
+> > +	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+> >  		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
+> > +		trace_sched_overutilized(1);
+> > +	}
+> >  }
+> >  #else
+> >  static inline void update_overutilized_status(struct rq *rq) { }
+> > @@ -8330,8 +8332,11 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+> >  
+> >  		/* Update over-utilization (tipping point, U >= 0) indicator */
+> >  		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
+> > +
+> > +		trace_sched_overutilized(!!(sg_status & SG_OVERUTILIZED));
+> >  	} else if (sg_status & SG_OVERUTILIZED) {
+> >  		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
+> > +		trace_sched_overutilized(1);
+> >  	}
+> >  }
 > 
+> Note how the state is per root domain and the tracepoint doesn't
+> communicate that.
+
+Right! I can pass rd->span so that the probing function can use it to
+differentiate the root domains if they care?
+
+--
+Qais Yousef
