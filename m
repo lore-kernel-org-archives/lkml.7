@@ -2,61 +2,101 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5653EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 770B4C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3868D208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD7321019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:04:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gIf/diVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfEMSDr (ORCPT
+        id S1732245AbfEMSD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:03:47 -0400
-Received: from namei.org ([65.99.196.166]:38884 "EHLO namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728201AbfEMSDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:03:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by namei.org (8.14.4/8.14.4) with ESMTP id x4DI3gcn003503;
-        Mon, 13 May 2019 18:03:42 GMT
-Date:   Tue, 14 May 2019 04:03:42 +1000 (AEST)
-From:   James Morris <jmorris@namei.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] security subsystem: Tomoyo updates for v5.2
-In-Reply-To: <CAHk-=wh33PsgxtwXdzDgx13tARBnhzkPV9294L2g6OjOBeNvfA@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.1905140401320.14684@namei.org>
-References: <alpine.LRH.2.21.1905110801350.9392@namei.org> <CAHk-=wg8UFHD_KmTWF3LMnDf_VN7cv_pofpc4eOHmx_8kmMPWw@mail.gmail.com> <CAHC9VhSSwYk6isqz8N3nOO_O17C30E2EyCHKf5OqsdESeMoT7g@mail.gmail.com> <24d602d2-a1a7-7b1e-9035-a2d732cd822b@schaufler-ca.com>
- <CAHC9VhR-oqJwyvB2JhzTu2_nuZuENA=Y9f4rtfUrSGtLMnGZfw@mail.gmail.com> <CAHk-=wh33PsgxtwXdzDgx13tARBnhzkPV9294L2g6OjOBeNvfA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 13 May 2019 14:03:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45022 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfEMSD6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:03:58 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so7142760pgv.11;
+        Mon, 13 May 2019 11:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ntNFmfAba/mtS6B9QOAxkZnKC/SuijUpSJOLnJWUe5A=;
+        b=gIf/diVYLQfpHWD0bPwsMkLoCo/1aSXhQgBUgpK9jlngeTA1XXV5av+aM4OaFB/UWe
+         eRWGg9nFUKJp/afRbt6nwQCcMxEmkYgQFhmqHSm5Ciu+Kky2GEDIwVZmWs8O9TwP3/3K
+         Gw817R2tmS/YwyQDdqXGcMBWRW0WjAkF9/fGq44woj+ScRnsd3LPtFDKFOiqf2LQNNkE
+         tj14cqoVEv3yKvXaopgQ5hwrLCS4ejGojQX0dAT1CI8ji7WG5BdyUezJTLGuqwAJX7Kq
+         2RtRU5Lp0+yvKa5+25g6rR0qndigsOp1eQ9vIeNvG5JVRe8PUiz89iyOYrFKMgCbxfIZ
+         8trw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ntNFmfAba/mtS6B9QOAxkZnKC/SuijUpSJOLnJWUe5A=;
+        b=kH1mZe6pnuUWd6x0RzTGn5y6eaBg+hBk15ecQ8N/lWFyxUAJzFJ3TG/Ii1ZZKn+pe7
+         RRDuZHk/MRYtVV6//fNLHUG0KCgqK72DSIsFKkdKjxiVRtPj9PIUj69sKxwbHybfENSG
+         /zatbhTbS6u02yV8daU1/JclRxPVPFPy9H6Yk89cboboDJjETpU8Q6EACuRTfv5zHVh+
+         5WZRd572+nKaQHDL4cx6QRxcUbhAm8vP93fhiqZu3ASFZEsJ2HtfplhB0UShWDZhXgu2
+         wtolyvaRanCnYQ6eo+mhLnVMSS1Vz2E9g3c3YBqBIZJPuysNnAIqKqoCGEbAFv7iKpYs
+         tjdg==
+X-Gm-Message-State: APjAAAW5/sUo5nCKt5dO4nXdRpvm/ED4OmygN8JyDCpRPMzg36TNtgUI
+        kxN+gkb3fC6fd9xOETljuZs79rnebBClFg==
+X-Google-Smtp-Source: APXvYqzjeQclPcaH8//c6qT10PD1AHbrExP8TVeAi7n4n7gf1ut02OR69C+9hxoCIbog8za5Wzt7nA==
+X-Received: by 2002:a65:448b:: with SMTP id l11mr32453167pgq.185.1557770637532;
+        Mon, 13 May 2019 11:03:57 -0700 (PDT)
+Received: from localhost.localdomain ([122.179.175.43])
+        by smtp.googlemail.com with ESMTPSA id z6sm1076096pfr.135.2019.05.13.11.03.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 11:03:56 -0700 (PDT)
+From:   Jagdish Motwani <j.k.motwani@gmail.com>
+To:     netdev@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     j.k.motwani@gmail.com,
+        Jagdish Motwani <jagdish.motwani@sophos.com>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net v2] netfilter: nf_queue:fix reinject verdict handling
+Date:   Mon, 13 May 2019 23:32:25 +0530
+Message-Id: <20190513180225.5186-1-j.k.motwani@gmail.com>
+X-Mailer: git-send-email 2.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 12 May 2019, Linus Torvalds wrote:
+This patch fixes netfilter hook traversal when there are more than 1 hooks
+returning NF_QUEUE verdict. When the first queue reinjects the packet,
+'nf_reinject' starts traversing hooks with a proper hook_index. However, if it
+again receives a NF_QUEUE verdict (by some other netfilter hook), it queues the
+packet with a wrong hook_index. So, when the second queue reinjects the packet,
+it re-executes hooks in between.
 
-> >     My guess is that you are right and
-> > any *significant* changes to the LSM layer itself, e.g. security/*, is
-> > best sent via James' tree.  For smaller changes to the LSM layer I
-> > think it's okay if they go in via an individual LSM tree so long as
-> > all the other LSMs agree-on/ack the changes; which pretty much fits
-> > what we've been doing for some time now and it seems to work well
-> > enough.
-> 
-> Yeah, I think that's the sane model. And I think it's mostly been working.
+Fixes: 960632ece694 ("netfilter: convert hook list to an array")
+Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
+---
+ net/netfilter/nf_queue.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-New LSMs also need to be guided in, as part of a community effort.
-
+diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
+index 9dc1d6e..b5b2be5 100644
+--- a/net/netfilter/nf_queue.c
++++ b/net/netfilter/nf_queue.c
+@@ -255,6 +255,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
+ repeat:
+ 		verdict = nf_hook_entry_hookfn(hook, skb, state);
+ 		if (verdict != NF_ACCEPT) {
++			*index = i;
+ 			if (verdict != NF_REPEAT)
+ 				return verdict;
+ 			goto repeat;
 -- 
-James Morris
-<jmorris@namei.org>
+2.9.5
 
