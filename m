@@ -2,147 +2,186 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7337DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259FBC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4DA208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBFF7208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbfEMMq3 (ORCPT
+        id S1729999AbfEMMrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:46:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41316 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbfEMMq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:46:28 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 524E630832CC;
-        Mon, 13 May 2019 12:46:28 +0000 (UTC)
-Received: from [10.72.12.49] (ovpn-12-49.pek2.redhat.com [10.72.12.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 551F36A48A;
-        Mon, 13 May 2019 12:46:21 +0000 (UTC)
-Subject: Re: [PATCH v2 8/8] vsock/virtio: make the RX buffer size tunable
-From:   Jason Wang <jasowang@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-9-sgarzare@redhat.com>
- <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
-Message-ID: <8e72ef5e-cf6a-a635-3f76-bdeac95761b8@redhat.com>
-Date:   Mon, 13 May 2019 20:46:19 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 08:47:02 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32934 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729976AbfEMMrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:47:00 -0400
+Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 5B80448035ABDDE81A3F;
+        Mon, 13 May 2019 13:46:58 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.36) with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 13 May
+ 2019 13:46:57 +0100
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Rob Landley <rob@landley.net>,
+        Arvind Sankar <niveditas98@gmail.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+        <initramfs@vger.kernel.org>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+Date:   Mon, 13 May 2019 14:47:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-In-Reply-To: <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 13 May 2019 12:46:28 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2019/5/13 下午6:05, Jason Wang wrote:
->
-> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
->> The RX buffer size determines the memory consumption of the
->> vsock/virtio guest driver, so we make it tunable through
->> a module parameter.
+On 5/13/2019 11:07 AM, Rob Landley wrote:
+> 
+> 
+> On 5/13/19 2:49 AM, Roberto Sassu wrote:
+>> On 5/12/2019 9:43 PM, Arvind Sankar wrote:
+>>> On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
+>>>> On 5/12/19 7:52 AM, Mimi Zohar wrote:
+>>>>> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
+>>>>>> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
+>>>>>>> This proposal consists in marshaling pathnames and xattrs in a file called
+>>>>>>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
+>>>>>>> been extracted.
+>>>>>>
+>>>>>> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
+>>>>>> be done equivalently by the initramfs' /init? Why is kernel involvement
+>>>>>> actually required here?
+>>>>>
+>>>>> It's too late.  The /init itself should be signed and verified.
+>>>>
+>>>> If the initramfs cpio.gz image was signed and verified by the extractor, how is
+>>>> the init in it _not_ verified?
+>>>>
+>>>> Ro
+>>>
+>>> Wouldn't the below work even before enforcing signatures on external
+>>> initramfs:
+>>> 1. Create an embedded initramfs with an /init that does the xattr
+>>> parsing/setting. This will be verified as part of the kernel image
+>>> signature, so no new code required.
+>>> 2. Add a config option/boot parameter to panic the kernel if an external
+>>> initramfs attempts to overwrite anything in the embedded initramfs. This
+>>> prevents overwriting the embedded /init even if the external initramfs
+>>> is unverified.
 >>
->> The size allowed are between 4 KB and 64 KB in order to be
->> compatible with old host drivers.
->>
->> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
->> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
->
->
-> I don't see much value of doing this through kernel command line. We 
-> should deal with them automatically like what virtio-net did. Or even 
-> a module parameter is better.
->
-> Thanks
+>> Unfortunately, it wouldn't work. IMA is already initialized and it would
+>> verify /init in the embedded initial ram disk.
+> 
+> So you made broken infrastructure that's causing you problems. Sounds unfortunate.
+
+The idea is to be able to verify anything that is accessed, as soon as
+rootfs is available, without distinction between embedded or external
+initial ram disk.
+
+Also, requiring an embedded initramfs for xattrs would be an issue for
+systems that use it for other purposes.
 
 
-Sorry, I misread the patch. But even module parameter is something not 
-flexible enough. We should deal with them transparently.
+>> The only reason why
+>> opening .xattr-list works is that IMA is not yet initialized
+>> (late_initcall vs rootfs_initcall).
+> 
+> Launching init before enabling ima is bad because... you didn't think of it?
 
-Thanks
+No, because /init can potentially compromise the integrity of the
+system.
 
 
->
->
->> ---
->>   include/linux/virtio_vsock.h     |  1 +
->>   net/vmw_vsock/virtio_transport.c | 27 ++++++++++++++++++++++++++-
->>   2 files changed, 27 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
->> index 5a9d25be72df..b9f8c3d91f80 100644
->> --- a/include/linux/virtio_vsock.h
->> +++ b/include/linux/virtio_vsock.h
->> @@ -13,6 +13,7 @@
->>   #define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE    (1024 * 64)
->>   #define VIRTIO_VSOCK_MAX_BUF_SIZE        0xFFFFFFFFUL
->>   #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE        (1024 * 64)
->> +#define VIRTIO_VSOCK_MIN_PKT_BUF_SIZE        (1024 * 4)
->>     enum {
->>       VSOCK_VQ_RX     = 0, /* for host to guest data */
->> diff --git a/net/vmw_vsock/virtio_transport.c 
->> b/net/vmw_vsock/virtio_transport.c
->> index af1d2ce12f54..732398b4e28f 100644
->> --- a/net/vmw_vsock/virtio_transport.c
->> +++ b/net/vmw_vsock/virtio_transport.c
->> @@ -66,6 +66,31 @@ struct virtio_vsock {
->>       u32 guest_cid;
->>   };
->>   +static unsigned int rx_buf_size = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
->> +
->> +static int param_set_rx_buf_size(const char *val, const struct 
->> kernel_param *kp)
->> +{
->> +    unsigned int size;
->> +    int ret;
->> +
->> +    ret = kstrtouint(val, 0, &size);
->> +    if (ret)
->> +        return ret;
->> +
->> +    if (size < VIRTIO_VSOCK_MIN_PKT_BUF_SIZE ||
->> +        size > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
->> +        return -EINVAL;
->> +
->> +    return param_set_uint(val, kp);
->> +};
->> +
->> +static const struct kernel_param_ops param_ops_rx_buf_size = {
->> +    .set = param_set_rx_buf_size,
->> +    .get = param_get_uint,
->> +};
->> +
->> +module_param_cb(rx_buf_size, &param_ops_rx_buf_size, &rx_buf_size, 
->> 0644);
->> +
->>   static struct virtio_vsock *virtio_vsock_get(void)
->>   {
->>       return the_virtio_vsock;
->> @@ -261,7 +286,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
->>     static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
->>   {
->> -    int buf_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
->> +    int buf_len = rx_buf_size;
->>       struct virtio_vsock_pkt *pkt;
->>       struct scatterlist hdr, buf, *sgs[2];
->>       struct virtqueue *vq;
+>> Allowing a kernel with integrity enforcement to parse the CPIO image
+>> without verifying it first is the weak point.
+> 
+> If you don't verify the CPIO image then in theory it could have anything in it,
+> yes. You seem to believe that signing individual files is more secure than
+> signing the archive. This is certainly a point of view.
+
+As I wrote above, signing the CPIO image would be more secure, if this
+option is available. However, a disadvantage would be that you have to
+sign the CPIO image every time a file changes.
+
+
+>> However, extracted files
+>> are not used, and before they are used they are verified. At the time
+>> they are verified, they (included /init) must already have a signature
+>> or otherwise access would be denied.
+> 
+> You build infrastructure that works a certain way, the rest of the system
+> doesn't fit your assumptions, so you need to change the rest of the system to
+> fit your assumptions.
+
+Requiring file metadata to make decisions seems reasonable. Also
+mandatory access controls do that. The objective of this patch set is to
+have uniform behavior regardless of the filesystem used.
+
+
+>> This scheme relies on the ability of the kernel to not be corrupted in
+>> the event it parses a malformed CPIO image.
+> 
+> I'm unaware of any buffer overruns or wild pointer traversals in the cpio
+> extraction code. You can fill up all physical memory with initramfs and lock the
+> system hard, though.
+> 
+> It still only parses them at boot time before launching PID 1, right? So you
+> have a local physical exploit and you're trying to prevent people from working
+> around your Xbox copy protection without a mod chip?
+
+What do you mean exactly?
+
+
+>> Mimi suggested to use
+>> digital signatures to prevent this issue, but it cannot be used in all
+>> scenarios, since conventional systems generate the initial ram disk
+>> locally.
+> 
+> So you use a proprietary init binary you can't rebuild from source, and put it
+> in a cpio where /dev/urandom is a file with known contents? Clearly, not
+> exploitable at all. (And we update the initramfs.cpio but not the kernel because
+> clearly keeping the kernel up to date is less important to security...)
+
+By signing the CPIO image, the kernel wouldn't even attempt to parse it,
+as the image would be rejected by the boot loader if the signature is
+invalid.
+
+
+> Whatever happened to https://lwn.net/Articles/532778/ ? Modules are signed
+> in-band in the file, but you need xattrs for some reason?
+
+Appending just the signature would be possible. It won't work if you
+have multiple metadata for the same file.
+
+Also appending the signature alone won't solve the parsing issue. Still,
+the kernel has to parse something that could be malformed.
+
+Roberto
+
+
+>> Roberto
+> 
+> Rob
+> 
+
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
