@@ -2,96 +2,100 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A02C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0490AC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCB82146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:07:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GslG7+cZ"
+	by mail.kernel.org (Postfix) with ESMTP id CB65321473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557752960;
+	bh=KkqV3CLkW9DHGPmOz1StcnAUfjD+S3y9+yxgb3uPnoE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jSjuOSpMDNr3W2G0w1MUI8WXUzLM6a3DCjgCjRWlyjHdYcqdBeZ0rsDncg0flHICJ
+	 5TdQWr/dobonzCJrleHUVHupjMjdChzew33W0OVO6J7YjcIdMEu2QTpoYs0FtmjAJt
+	 o114GgpFJY2KNbgsO37aE0ItwlXUswBZsIm5FHWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbfEMNHA (ORCPT
+        id S1729897AbfEMNJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:07:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54311 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730063AbfEMNG7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:06:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id i3so7983730wml.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=CXM/sAS6gtztrX2ItBHaQh/rCG7OOeN6BL0gyVWj5Hs=;
-        b=GslG7+cZPvOdOZdTWehD3qyjIhEDcW2T5HIFyOCJTkkfLxc+l2hF9kWZo9gGxKg4Vr
-         YQOKf4PSb4ovF9se5btS2Jix6wf/siXTKB4yos83DlZOxnHPh2PzMbJMct/NZU/4NUkm
-         MPi+6cotGwhzHe7X2TycUvGBfdwS9wWD1n391CFVkHQ/A6JdBJOysmr5ofHJEkX2rts/
-         5OhlR7r+1fvMZ/So59hGa3lgmD2Jo8zuRhVf/oBoQjiEpa7cji8C9JGEzAzJyhIEhbkx
-         aLEeaeEKTpBTRvmL5eASQeQCBPGQvECRfhHzD7Bz+pJWAbTtVwu0Ft8rFek8NP1ULEB2
-         /d/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=CXM/sAS6gtztrX2ItBHaQh/rCG7OOeN6BL0gyVWj5Hs=;
-        b=kCGK+uIl4vpMVIc7IYpkACRDEPfT2iN5pFThEmGfxQdkdFkQPub5NMbwOm4IZXp6u+
-         wR/MXEP3E1XpkKpY3UVJ4sQA+UBSUfidzamz6Ypl68M1IyN/j5XedSmMID81UiNGCUsj
-         0Q1PxwYL44IVhiul2muSmjyILf4IM3DiNelnYMWHWxN6mILZPhajjco7RwJXh806FWRO
-         bXp2YRQS9LrDD4ibKasakmpsj2Gq0Jw9+tH4b7CwmOUOrFSmazqEmV50bJ1qwALA8bXk
-         0EzZcoUJtY1GOPvShd/PUtnT8I3ZiASGX2F1c55PEiIjLZenFe60CHp0CX8oXYMSpNbq
-         6ZhQ==
-X-Gm-Message-State: APjAAAWSgpCRm7nFRx0Bb9jOEh6NPhyih7AuSGlfr/c+YV9vAjApznXq
-        n75JOXQii/3A6fuqU4K3XfTHF/Dsa+k=
-X-Google-Smtp-Source: APXvYqzBz5EitlkDpf/Id1MzoeK9OnY9qfX/brhrBMq59YPXLx9oj7yX4jc4dlI7NopLVr++jeUGwg==
-X-Received: by 2002:a1c:4083:: with SMTP id n125mr11793765wma.54.1557752817725;
-        Mon, 13 May 2019 06:06:57 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id m17sm15699206wmc.6.2019.05.13.06.06.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 13 May 2019 06:06:56 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        maxime.ripard@bootlin.com, peppe.cavallaro@st.com, wens@csie.org
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
-Date:   Mon, 13 May 2019 13:06:39 +0000
-Message-Id: <1557752799-9989-1-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 May 2019 09:09:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728019AbfEMNJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:09:19 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE68D2084E;
+        Mon, 13 May 2019 13:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557752958;
+        bh=KkqV3CLkW9DHGPmOz1StcnAUfjD+S3y9+yxgb3uPnoE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SscWy4668nXYSqxL+8MfdysR79LlzGGhXYGhD0inJHqgry8Ngg4m2Cx8FyvKRWC1b
+         6p7widJk5L08+t3cVG62MJIfB5s46aM5yfgLWBHnQs79wNUWWlHfdLiAUtcZj8NwGV
+         cuUUXY8fMwFoz5CUKdxYIKLCrp2v1yqohT5CErso=
+Date:   Mon, 13 May 2019 09:09:16 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Eric Wheeler <stable@lists.ewheeler.net>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        "open list:BFQ I/O SCHEDULER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
+Subject: Re: [PATCH] bfq: backport: update internal depth state when queue
+ depth changes
+Message-ID: <20190513130916.GB11972@sasha-vm>
+References: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
+ <20190510201855.GB14410@sasha-vm>
+ <20190513070337.GB26553@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190513070337.GB26553@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When adding more MAC address to a dwmac-sun8i interface, the device goes
-directly in promiscuous mode.
-This is due to IFF_UNICAST_FLT missing flag.
+On Mon, May 13, 2019 at 09:03:37AM +0200, Greg KH wrote:
+>On Fri, May 10, 2019 at 04:18:55PM -0400, Sasha Levin wrote:
+>> On Fri, May 10, 2019 at 10:56:32AM -0700, Eric Wheeler wrote:
+>> > From: Jens Axboe <axboe@kernel.dk>
+>> >
+>> > commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
+>> >
+>> > A previous commit moved the shallow depth and BFQ depth map calculations
+>> > to be done at init time, moving it outside of the hotter IO path. This
+>> > potentially causes hangs if the users changes the depth of the scheduler
+>> > map, by writing to the 'nr_requests' sysfs file for that device.
+>> >
+>> > Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
+>> > the depth changes, so that the scheduler can update its internal state.
+>> >
+>> > Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
+>> > Tested-by: Kai Krakow <kai@kaishome.de>
+>> > Reported-by: Paolo Valente <paolo.valente@linaro.org>
+>> > Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
+>> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>> > Cc: stable@vger.kernel.org
+>>
+>> I wasn't clear on what was backported here, so I've queued the upstream
+>> version on 4.19 and 4.14, it doesn't seem to be relevant to older
+>> branches.
+>
+>I only see this added to the 5.0 and 4.19 queues, did you forget to push
+>the 4.14 update?
 
-So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
+Sorry, I meant to say that I applied it to 5.0 and 4.19. The patch it
+fixes, f0635b8a416e ("bfq: calculate shallow depths at init time"),
+isn't in 4.14 nor was it backported there by us.
 
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index ac19bf62db70..9d3112beb19f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1018,6 +1018,8 @@ static struct mac_device_info *sun8i_dwmac_setup(void *ppriv)
- 	mac->mac = &sun8i_dwmac_ops;
- 	mac->dma = &sun8i_dwmac_dma_ops;
- 
-+	priv->dev->priv_flags |= IFF_UNICAST_FLT;
-+
- 	/* The loopback bit seems to be re-set when link change
- 	 * Simply mask it each time
- 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
--- 
-2.21.0
-
+--
+Thanks,
+Sasha
