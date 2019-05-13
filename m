@@ -2,217 +2,107 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FD2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D7EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 879A020989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r+7/Uj5O"
+	by mail.kernel.org (Postfix) with ESMTP id 71D1820989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728459AbfEMJTY (ORCPT
+        id S1728395AbfEMJT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:19:24 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38105 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbfEMJTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:19:24 -0400
-Received: by mail-ot1-f67.google.com with SMTP id s19so11065497otq.5;
-        Mon, 13 May 2019 02:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ujdVx8/hOHAXTn+/pwv56Do81M/Ae/T+j37v3szZuZA=;
-        b=r+7/Uj5OgiHJVo6bYPKFZntd8/2VvY01FDvmq94a5OmI7/EDko/mWs3R7zpIVFzQQP
-         q3THuGsvjz0uYA6obt5vr1XQJX0c556O3TL2ED9WIGp2pIwKF08tee53h+fFSI4XacqW
-         r/kfdp4bZckqQCwloqhwpagPU4QTsH3hAhrMlt5HP3af5BYaCjHyRzdbq/ybTEURP43y
-         gCzAv5R8tPF5ABx6gWQectJCPEmIr2wgHMPsafq9MAQ4GlYq+pXN6NTT6Scq/KT3QcuT
-         vXyWSoGbVVgBtz55/+NbMCFDwxd6fPsMZBAI5EUGIl1pZhFZNOQIpXu0kboMdKxMUH3l
-         I58g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ujdVx8/hOHAXTn+/pwv56Do81M/Ae/T+j37v3szZuZA=;
-        b=YO90CznyKh/iDvst1CwSVmss2ZCEzR1DIWbuq6AVl0aV93tH24t6cWuPPWxELEoIvC
-         nLmC34a3f1xYOFrHxODBGllMNn9A0i765kVDvitdxw5aTMoFkzvbO+ZEjTkXY6nyEt0K
-         VZgD83qD+uVqJZ+jnjw35Dahp68MvLdVxCVR0dQZVmlAPSckFAHZzR7J+zdIyOFyV8Ei
-         Gdo80utiu0l2y7zvtx8gPUA/bEWMbYKX73//ei0m1dEf2lrIewNPDSHyPu22QVMeygxy
-         A92zRFTAbyfohOtKVMHJeqNcpwqTt6atFT+gbvX/+doMGK3D6snF2748Kv5YipZd3drK
-         lEGA==
-X-Gm-Message-State: APjAAAVU1FemMp8FFm24jEdKEeGGzYzAro6VymSG3Ap9n0x4miWgifn/
-        hwd+b7mnBnpuKnEiSZXseJ+yV4bBn5wAZIr/mjE=
-X-Google-Smtp-Source: APXvYqygNFs08oY/relMZpc/d09rofQMTkf7ccwOd7iCguFZlNc7h56VryKgAP6n9gMXy3DbSMnkFlg0/vX11zr1TXE=
-X-Received: by 2002:a05:6830:1389:: with SMTP id d9mr30479otq.329.1557739162822;
- Mon, 13 May 2019 02:19:22 -0700 (PDT)
+        Mon, 13 May 2019 05:19:57 -0400
+Received: from foss.arm.com ([217.140.101.70]:49932 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727576AbfEMJT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:19:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3836341;
+        Mon, 13 May 2019 02:19:55 -0700 (PDT)
+Received: from [10.37.12.148] (unknown [10.37.12.148])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 370653F703;
+        Mon, 13 May 2019 02:19:54 -0700 (PDT)
+Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
+ region
+To:     Oleksandr Tyshchenko <olekstysh@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+From:   Julien Grall <julien.grall@arm.com>
+Message-ID: <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
+Date:   Mon, 13 May 2019 10:19:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190507185647.GA29409@amt.cnet>
-In-Reply-To: <20190507185647.GA29409@amt.cnet>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 13 May 2019 17:20:37 +0800
-Message-ID: <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
-Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
-To:     Marcelo Tosatti <mtosatti@redhat.com>
-Cc:     kvm-devel <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
->
->
-> Certain workloads perform poorly on KVM compared to baremetal
-> due to baremetal's ability to perform mwait on NEED_RESCHED
-> bit of task flags (therefore skipping the IPI).
+Hi,
 
-KVM supports expose mwait to the guest, if it can solve this?
-
-Regards,
-Wanpeng Li
-
->
-> This patch introduces a configurable busy-wait delay before entering the
-> architecture delay routine, allowing wakeup IPIs to be skipped
-> (if the IPI happens in that window).
->
-> The real-life workload which this patch improves performance
-> is SAP HANA (by 5-10%) (for which case setting idle_spin to 30
-> is sufficient).
->
-> This patch improves the attached server.py and client.py example
-> as follows:
->
-> Host:                           31.814230202231556
-> Guest:                          38.17718765199993       (83 %)
-> Guest, idle_spin=50us:          33.317709898000004      (95 %)
-> Guest, idle_spin=220us:         32.27826551499999       (98 %)
->
-> Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
->
+On 5/10/19 5:22 PM, Oleksandr Tyshchenko wrote:
+> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+> 
+> Don't use hardcoded address, retrieve it from device-tree instead.
+> 
+> And besides, this patch fixes the memory error when running
+> on top of Xen hypervisor:
+> 
+> (XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000
+>        gpa=0x000000e6080000
+> 
+> Which shows that VCPU0 in Dom0 is trying to access an address in memory
+> it is not allowed to access (0x000000e6080000).
+> Put simply, Xen doesn't know that it is a device's register memory
+> since it wasn't described in a host device tree (which Xen parses)
+> and as the result this memory region wasn't assigned to Dom0 at
+> domain creation time.
+> 
+> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+> 
 > ---
->  kernel/sched/idle.c |   86 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index f5516bae0c1b..bca7656a7ea0 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -216,6 +216,29 @@ static void cpuidle_idle_call(void)
->         rcu_idle_exit();
->  }
->
-> +static unsigned int spin_before_idle_us;
->
-> +static void do_spin_before_idle(void)
-> +{
-> +       ktime_t now, end_spin;
-> +
-> +       now = ktime_get();
-> +       end_spin = ktime_add_ns(now, spin_before_idle_us*1000);
-> +
-> +       rcu_idle_enter();
-> +       local_irq_enable();
-> +       stop_critical_timings();
-> +
-> +       do {
-> +               cpu_relax();
-> +               now = ktime_get();
-> +       } while (!tif_need_resched() && ktime_before(now, end_spin));
-> +
-> +       start_critical_timings();
-> +       rcu_idle_exit();
-> +       local_irq_disable();
-> +}
-> +
->  /*
->   * Generic idle loop implementation
->   *
-> @@ -259,6 +282,8 @@ static void do_idle(void)
->                         tick_nohz_idle_restart_tick();
->                         cpu_idle_poll();
->                 } else {
-> +                       if (spin_before_idle_us)
-> +                               do_spin_before_idle();
->                         cpuidle_idle_call();
->                 }
->                 arch_cpu_idle_exit();
-> @@ -465,3 +490,64 @@ const struct sched_class idle_sched_class = {
->         .switched_to            = switched_to_idle,
->         .update_curr            = update_curr_idle,
->  };
-> +
-> +
-> +static ssize_t store_idle_spin(struct kobject *kobj,
-> +                              struct kobj_attribute *attr,
-> +                              const char *buf, size_t count)
-> +{
-> +       unsigned int val;
-> +
-> +       if (kstrtouint(buf, 10, &val) < 0)
-> +               return -EINVAL;
-> +
-> +       if (val > USEC_PER_SEC)
-> +               return -EINVAL;
-> +
-> +       spin_before_idle_us = val;
-> +       return count;
-> +}
-> +
-> +static ssize_t show_idle_spin(struct kobject *kobj,
-> +                             struct kobj_attribute *attr,
-> +                             char *buf)
-> +{
-> +       ssize_t ret;
-> +
-> +       ret = sprintf(buf, "%d\n", spin_before_idle_us);
-> +
-> +       return ret;
-> +}
-> +
-> +static struct kobj_attribute idle_spin_attr =
-> +       __ATTR(idle_spin, 0644, show_idle_spin, store_idle_spin);
-> +
-> +static struct attribute *sched_attrs[] = {
-> +       &idle_spin_attr.attr,
-> +       NULL,
-> +};
-> +
-> +static const struct attribute_group sched_attr_group = {
-> +       .attrs = sched_attrs,
-> +};
-> +
-> +static struct kobject *sched_kobj;
-> +
-> +static int __init sched_sysfs_init(void)
-> +{
-> +       int error;
-> +
-> +       sched_kobj = kobject_create_and_add("sched", kernel_kobj);
-> +       if (!sched_kobj)
-> +               return -ENOMEM;
-> +
-> +       error = sysfs_create_group(sched_kobj, &sched_attr_group);
-> +       if (error)
-> +               goto err;
-> +       return 0;
-> +
-> +err:
-> +       kobject_put(sched_kobj);
-> +       return error;
-> +}
-> +postcore_initcall(sched_sysfs_init);
+> 
+> This patch is meant to get feedback from the community before
+> proceeding further. If we decide to go this direction, all Gen2
+> device-trees should be updated (add memory region) before
+> this patch going in.
+> 
+> e.g. r8a7790.dtsi:
+> 
+> ...
+> timer {
+> 	compatible = "arm,armv7-timer";
+> 	interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> 			      <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> 			      <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> 			      <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +	 reg = <0 0xe6080000 0 0x1000>;
+
+This looks incorrect, the "arm,armv7-timer" bindings doesn't offer you 
+the possibility to specify an MMIO region. This makes sense because it 
+is meant to describe the Arch timer that is only access via co-processor 
+registers.
+
+Looking at the code, I think the MMIO region corresponds to the 
+coresight (based on the register name). So you may want to describe the 
+coresight in the Device-Tree.
+
+Also, AFAICT, the code is configuring and turning on the timer if it has 
+not been done yet. If you are here running on Xen, then you have 
+probably done something wrong. Indeed, it means Xen would not be able to 
+use the timer until Dom0 has booted. But, shouldn't newer U-boot do it 
+for you?
+
+Cheers,
+
+-- 
+Julien Grall
