@@ -6,69 +6,68 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C53C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF72C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9B421473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC414208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557770394;
-	bh=BdQ3Q19W8/HdqwRCoLeaBpx7PSAPDo5vvYCJuTQx3Mg=;
+	s=default; t=1557770400;
+	bh=B4QUduVoMCV84YYagV5qJ9RCTA5dFTFVSZG7fxQsbJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=pgdNStwSMyWrn8FVpkMcdWje2W5NAiNsrvxtT8x53Rcu9uZJoBlVKrst1zIOeE3cy
-	 iu6lCj5hJ0nak+U47rBjooyrq9+LDhL1BgLQwDuoCFeUsRHVta6BzjYbceohBJbAs9
-	 rZgujcsm4nA7eRtwIykZ7DHrWhdRR03096ZxRkHQ=
+	b=UiJ01vO34F6SpSe4tVHIg/58IiaydtegZ+DM1sUXtsUJa3KYuqOdmU+ZvrkfhM35v
+	 MY11B7rka0p6OQhHmA5yDoiR5KPVgQRWQGGWo3ksJZAAJPuPb98WFvY7gjjSTdM1gL
+	 wPJq55bWFhmOYtNikgyrp2aOagiMpoUhw7SkVnh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732194AbfEMR7x (ORCPT
+        id S1732206AbfEMR77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:59:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46780 "EHLO
+        Mon, 13 May 2019 13:59:59 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44384 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732162AbfEMR7n (ORCPT
+        with ESMTP id S1732152AbfEMR7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:59:43 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y11so7578884pfm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:42 -0700 (PDT)
+        Mon, 13 May 2019 13:59:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g9so7584807pfo.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=XzJ0MOK5gu2o7dPsVUYI0QhdHxzKB5E1BW/zTtDUxF8=;
-        b=bR9qgwy4+BjOp4elVzCA6LX9kIJfMbRhPGPbXIwqf7AvPcxTK6k6bWEuvxKDvnEgLV
-         dfUZwahCQ/uCbtYxmfpPa4Bd9cJrLFwxukqWX39w85C9hKmfQ0J4JdUdDUo2z6h1qfk5
-         PjktW89H3fwvj7nX2f2Brq/mUkGNeyjPyjN2NtYul6YGlLTE7RBGe2VOUWnEd8HqiHKl
-         +/m0RewwHzmsEES6/us910a9P/U5l6wXXFE61wzl+ZNLlV9qq+h5a4uF9lU+Rm4sTZap
-         P3K3ux5mDR4m7eUqFQAZq0haBSYnnbCobUJn8xGvusiHk/EBL+twqtIM3hN/wOpl0QCM
-         d6vg==
+        bh=VhvKAGUYOPwKbKSmPtz845CkshJTTuAXjzJ7SSJUdR4=;
+        b=QMcHjvr3lBrmESV1xppR+B/cs/3VNxDHNRx5Dmv9+y4yfTfUqNX2uw0jt3yuxUGhc8
+         8e7XsqhZwZOTUNMO8f/hbFNufVwQrG0K6RDwGz3wHs5M7zbox/QEDYeJrhexwLRLW7FO
+         PwpnldGD+xhLpCJt2ZrLftyP/QdG29joo42OVSg2HM0IiDA358J1GE1DW5IUr53h5Z2M
+         Q61phOuL5dQBfAJ1vWE6zjqFRZl+rydctgaVjHuxtDv+dEHUI1SlgwJOEIE3rh1ansmE
+         b6vHHUy/3nstWRY2nVT+RT3AIWMREU6YTAGgRNHY4kV8DMBh8nXlS4vHLV/oS0bytYq5
+         I+GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=XzJ0MOK5gu2o7dPsVUYI0QhdHxzKB5E1BW/zTtDUxF8=;
-        b=RrJ9WRV4+Z8H7PLnTDP/VHlfn3PqmT7uU7gqrIeDFH8sUiGXkdkPjNYZ2mZYH7ru+k
-         ZjnZ9eaVsCgu+OorZn3KjRRLKBLFBW4im9hLoIKp8ROklWSoqqQtGeXULR3HaRLSoRNC
-         UmSw5KIF5FUBCFXC7Pj1lU9GJRn3lGrodYdEwXJr6XdJvYwPQJTfbxCAuGe3T1XzFBgw
-         y2SexnOAtf1swSt2WXEs6A2MX+arn7YUuC6MEwg1cKnvY5Mt6deFhlLnDSGUpeb5XDwI
-         LCQcitnqyzQ3JtqHP+HXwFTY8tf67xvOOdUvkLal41O3eMQ1Dq7N2D8lx1caeThSN+dV
-         O1Ew==
-X-Gm-Message-State: APjAAAUtD9MLHZJxrkB/WQvWFbz5DbG83hNlClmQkSX/aHJjdlP95CyE
-        Dwv7ynzlAP2zxIPJLJhiX/o=
-X-Google-Smtp-Source: APXvYqwpHYX4NvUVrjChZKcw+TBm+rFu86ziRMbXGkUBG5FvPvfEtI0XqwhbZqcJipP8B6H5UCgypA==
-X-Received: by 2002:a65:610a:: with SMTP id z10mr33221674pgu.54.1557770382428;
-        Mon, 13 May 2019 10:59:42 -0700 (PDT)
+        bh=VhvKAGUYOPwKbKSmPtz845CkshJTTuAXjzJ7SSJUdR4=;
+        b=DC31HdnQ5Wb2s2gQuN+PSTzTpjhUI8eA998lBTYxBqszzMqZfdq5L4mPkjcnYRnmrm
+         2F675ZCnU7BGP4Y7vY1cgMzOM3oBr/KFlcS/XSYR1gTudEfNr5TlXTReB/z/ZUa8YBsv
+         U99dN3SNjYkPM6/Id4yxzgoTJXndZNQMJwARWyZrarmSXQJOtj6LpYM1ChE1OMfY6XS9
+         HYzj77R9xUjFfVa7DDhHq+ed5q4eF+KueENYItiRkkMIxYyi07aqWcEqznuXywkUflFv
+         O5Sc0Y98TG/monLVi/qKG5jREvapPnJDBBRQ/atKN/mpe3Um767qg7kNF7wqppg0oLzN
+         uOgg==
+X-Gm-Message-State: APjAAAXvGuGceGFEIZOmeFBVztvUeAZkPFCnKGscp5KIw16ekom1v52A
+        Rx+nCH6rGy13qsqXTlV3T9w=
+X-Google-Smtp-Source: APXvYqwmTs2fJWC+YTH1h6l+DELhuARjZUQWSsJ1XdVoq/GypfYw9FH7exeUq0Rt0WXmQiOt3hbuAg==
+X-Received: by 2002:a62:1c06:: with SMTP id c6mr24226938pfc.168.1557770380689;
+        Mon, 13 May 2019 10:59:40 -0700 (PDT)
 Received: from localhost.localdomain ([96.79.124.202])
-        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.40
+        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:59:41 -0700 (PDT)
+        Mon, 13 May 2019 10:59:39 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Len Brown <len.brown@intel.com>
-Subject: [PATCH 18/19] perf/x86/intel/uncore: Cosmetic renames in response to multi-die/pkg support
-Date:   Mon, 13 May 2019 13:59:02 -0400
-Message-Id: <f0ea5e501288329135e94f51969ff54a03c50e2e.1557769318.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH 17/19] hwmon/coretemp: Cosmetic: Rename internal variables to zones from packages
+Date:   Mon, 13 May 2019 13:59:01 -0400
+Message-Id: <facecfd3525d55c2051f63a7ec709aeb03cc1dc1.1557769318.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
 In-Reply-To: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
 References: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
@@ -79,326 +78,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Len Brown <len.brown@intel.com>
 
 Syntax update only -- no logical or functional change.
 
 In response to the new multi-die/package changes, update variable names
-to use "die" terminology, instead of "pkg".
+to use the more generic thermal "zone" terminology, instead of "package",
+as the zones can refer to either packages or die.
 
-For previous platforms which doesn't have multi-die, "die" is identical
-as "pkg".
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
+Cc: Zhang Rui <rui.zhang@intel.com>
 ---
- arch/x86/events/intel/uncore.c       | 74 ++++++++++++++--------------
- arch/x86/events/intel/uncore.h       |  4 +-
- arch/x86/events/intel/uncore_snbep.c |  4 +-
- 3 files changed, 41 insertions(+), 41 deletions(-)
+ drivers/hwmon/coretemp.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index aeb5eae83750..f943e4d0e66c 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -14,7 +14,7 @@ struct pci_driver *uncore_pci_driver;
- DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
- struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
- struct pci_extra_dev *uncore_extra_pci_dev;
--static int max_packages;
-+static int max_dies;
+diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
+index c64ce32d3214..4ebed90d81aa 100644
+--- a/drivers/hwmon/coretemp.c
++++ b/drivers/hwmon/coretemp.c
+@@ -109,10 +109,10 @@ struct platform_data {
+ 	struct device_attribute name_attr;
+ };
  
- /* mask of cpus that collect uncore events */
- static cpumask_t uncore_cpu_mask;
-@@ -100,13 +100,13 @@ ssize_t uncore_event_show(struct kobject *kobj,
+-/* Keep track of how many package pointers we allocated in init() */
+-static int max_packages __read_mostly;
+-/* Array of package pointers. Serialized by cpu hotplug lock */
+-static struct platform_device **pkg_devices;
++/* Keep track of how many zone pointers we allocated in init() */
++static int max_zones __read_mostly;
++/* Array of zone pointers. Serialized by cpu hotplug lock */
++static struct platform_device **zone_devices;
  
- struct intel_uncore_box *uncore_pmu_to_box(struct intel_uncore_pmu *pmu, int cpu)
+ static ssize_t show_label(struct device *dev,
+ 				struct device_attribute *devattr, char *buf)
+@@ -435,10 +435,10 @@ static int chk_ucode_version(unsigned int cpu)
+ 
+ static struct platform_device *coretemp_get_pdev(unsigned int cpu)
  {
--	unsigned int pkgid = topology_logical_die_id(cpu);
-+	unsigned int dieid = topology_logical_die_id(cpu);
+-	int pkgid = topology_logical_die_id(cpu);
++	int id = topology_logical_die_id(cpu);
  
- 	/*
- 	 * The unsigned check also catches the '-1' return value for non
- 	 * existent mappings in the topology map.
- 	 */
--	return pkgid < max_packages ? pmu->boxes[pkgid] : NULL;
-+	return dieid < max_dies ? pmu->boxes[dieid] : NULL;
+-	if (pkgid >= 0 && pkgid < max_packages)
+-		return pkg_devices[pkgid];
++	if (id >= 0 && id < max_zones)
++		return zone_devices[id];
+ 	return NULL;
  }
  
- u64 uncore_msr_read_counter(struct intel_uncore_box *box, struct perf_event *event)
-@@ -311,7 +311,7 @@ static struct intel_uncore_box *uncore_alloc_box(struct intel_uncore_type *type,
- 	uncore_pmu_init_hrtimer(box);
- 	box->cpu = -1;
- 	box->pci_phys_id = -1;
--	box->pkgid = -1;
-+	box->dieid = -1;
+@@ -544,7 +544,7 @@ static int coretemp_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct platform_data *pdata;
  
- 	/* set default hrtimer timeout */
- 	box->hrtimer_duration = UNCORE_PMU_HRTIMER_INTERVAL;
-@@ -826,10 +826,10 @@ static void uncore_pmu_unregister(struct intel_uncore_pmu *pmu)
- 
- static void uncore_free_boxes(struct intel_uncore_pmu *pmu)
- {
--	int pkg;
-+	int die;
- 
--	for (pkg = 0; pkg < max_packages; pkg++)
--		kfree(pmu->boxes[pkg]);
-+	for (die = 0; die < max_dies; die++)
-+		kfree(pmu->boxes[die]);
- 	kfree(pmu->boxes);
- }
- 
-@@ -866,7 +866,7 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
- 	if (!pmus)
+-	/* Initialize the per-package data structures */
++	/* Initialize the per-zone data structures */
+ 	pdata = devm_kzalloc(dev, sizeof(struct platform_data), GFP_KERNEL);
+ 	if (!pdata)
  		return -ENOMEM;
+@@ -579,13 +579,13 @@ static struct platform_driver coretemp_driver = {
  
--	size = max_packages * sizeof(struct intel_uncore_box *);
-+	size = max_dies * sizeof(struct intel_uncore_box *);
- 
- 	for (i = 0; i < type->num_boxes; i++) {
- 		pmus[i].func_id	= setid ? i : -1;
-@@ -936,21 +936,21 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu = NULL;
- 	struct intel_uncore_box *box;
--	int phys_id, pkg, ret;
-+	int phys_id, die, ret;
- 
- 	phys_id = uncore_pcibus_to_physid(pdev->bus);
- 	if (phys_id < 0)
- 		return -ENODEV;
- 
--	pkg = (topology_max_die_per_package() > 1) ? phys_id :
-+	die = (topology_max_die_per_package() > 1) ? phys_id :
- 					topology_phys_to_logical_pkg(phys_id);
--	if (pkg < 0)
-+	if (die < 0)
- 		return -EINVAL;
- 
- 	if (UNCORE_PCI_DEV_TYPE(id->driver_data) == UNCORE_EXTRA_PCI_DEV) {
- 		int idx = UNCORE_PCI_DEV_IDX(id->driver_data);
- 
--		uncore_extra_pci_dev[pkg].dev[idx] = pdev;
-+		uncore_extra_pci_dev[die].dev[idx] = pdev;
- 		pci_set_drvdata(pdev, NULL);
- 		return 0;
- 	}
-@@ -989,7 +989,7 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 		pmu = &type->pmus[UNCORE_PCI_DEV_IDX(id->driver_data)];
- 	}
- 
--	if (WARN_ON_ONCE(pmu->boxes[pkg] != NULL))
-+	if (WARN_ON_ONCE(pmu->boxes[die] != NULL))
- 		return -EINVAL;
- 
- 	box = uncore_alloc_box(type, NUMA_NO_NODE);
-@@ -1003,13 +1003,13 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 
- 	atomic_inc(&box->refcnt);
- 	box->pci_phys_id = phys_id;
--	box->pkgid = pkg;
-+	box->dieid = die;
- 	box->pci_dev = pdev;
- 	box->pmu = pmu;
- 	uncore_box_init(box);
- 	pci_set_drvdata(pdev, box);
- 
--	pmu->boxes[pkg] = box;
-+	pmu->boxes[die] = box;
- 	if (atomic_inc_return(&pmu->activeboxes) > 1)
- 		return 0;
- 
-@@ -1017,7 +1017,7 @@ static int uncore_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
- 	ret = uncore_pmu_register(pmu);
- 	if (ret) {
- 		pci_set_drvdata(pdev, NULL);
--		pmu->boxes[pkg] = NULL;
-+		pmu->boxes[die] = NULL;
- 		uncore_box_exit(box);
- 		kfree(box);
- 	}
-@@ -1028,17 +1028,17 @@ static void uncore_pci_remove(struct pci_dev *pdev)
+ static struct platform_device *coretemp_device_add(unsigned int cpu)
  {
- 	struct intel_uncore_box *box;
- 	struct intel_uncore_pmu *pmu;
--	int i, phys_id, pkg;
-+	int i, phys_id, die;
+-	int err, pkgid = topology_logical_die_id(cpu);
++	int err, zoneid = topology_logical_die_id(cpu);
+ 	struct platform_device *pdev;
  
- 	phys_id = uncore_pcibus_to_physid(pdev->bus);
+-	if (pkgid < 0)
++	if (zoneid < 0)
+ 		return ERR_PTR(-ENOMEM);
  
- 	box = pci_get_drvdata(pdev);
- 	if (!box) {
--		pkg = (topology_max_die_per_package() > 1) ? phys_id :
-+		die = (topology_max_die_per_package() > 1) ? phys_id :
- 					topology_phys_to_logical_pkg(phys_id);
- 		for (i = 0; i < UNCORE_EXTRA_PCI_DEV_MAX; i++) {
--			if (uncore_extra_pci_dev[pkg].dev[i] == pdev) {
--				uncore_extra_pci_dev[pkg].dev[i] = NULL;
-+			if (uncore_extra_pci_dev[die].dev[i] == pdev) {
-+				uncore_extra_pci_dev[die].dev[i] = NULL;
- 				break;
- 			}
- 		}
-@@ -1051,7 +1051,7 @@ static void uncore_pci_remove(struct pci_dev *pdev)
- 		return;
+-	pdev = platform_device_alloc(DRVNAME, pkgid);
++	pdev = platform_device_alloc(DRVNAME, zoneid);
+ 	if (!pdev)
+ 		return ERR_PTR(-ENOMEM);
  
- 	pci_set_drvdata(pdev, NULL);
--	pmu->boxes[box->pkgid] = NULL;
-+	pmu->boxes[box->dieid] = NULL;
- 	if (atomic_dec_return(&pmu->activeboxes) == 0)
- 		uncore_pmu_unregister(pmu);
- 	uncore_box_exit(box);
-@@ -1063,7 +1063,7 @@ static int __init uncore_pci_init(void)
- 	size_t size;
- 	int ret;
+@@ -595,7 +595,7 @@ static struct platform_device *coretemp_device_add(unsigned int cpu)
+ 		return ERR_PTR(err);
+ 	}
  
--	size = max_packages * sizeof(struct pci_extra_dev);
-+	size = max_dies * sizeof(struct pci_extra_dev);
- 	uncore_extra_pci_dev = kzalloc(size, GFP_KERNEL);
- 	if (!uncore_extra_pci_dev) {
- 		ret = -ENOMEM;
-@@ -1110,11 +1110,11 @@ static void uncore_change_type_ctx(struct intel_uncore_type *type, int old_cpu,
- {
- 	struct intel_uncore_pmu *pmu = type->pmus;
- 	struct intel_uncore_box *box;
--	int i, pkg;
-+	int i, die;
- 
--	pkg = topology_logical_die_id(old_cpu < 0 ? new_cpu : old_cpu);
-+	die = topology_logical_die_id(old_cpu < 0 ? new_cpu : old_cpu);
- 	for (i = 0; i < type->num_boxes; i++, pmu++) {
--		box = pmu->boxes[pkg];
-+		box = pmu->boxes[die];
- 		if (!box)
- 			continue;
- 
-@@ -1147,7 +1147,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 	struct intel_uncore_type *type, **types = uncore_msr_uncores;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
--	int i, pkg, target;
-+	int i, die, target;
- 
- 	/* Check if exiting cpu is used for collecting uncore events */
- 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
-@@ -1166,12 +1166,12 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 
- unref:
- 	/* Clear the references */
--	pkg = topology_logical_die_id(cpu);
-+	die = topology_logical_die_id(cpu);
- 	for (; *types; types++) {
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[pkg];
-+			box = pmu->boxes[die];
- 			if (box && atomic_dec_return(&box->refcnt) == 0)
- 				uncore_box_exit(box);
- 		}
-@@ -1180,7 +1180,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
+-	pkg_devices[pkgid] = pdev;
++	zone_devices[zoneid] = pdev;
+ 	return pdev;
  }
  
- static int allocate_boxes(struct intel_uncore_type **types,
--			 unsigned int pkg, unsigned int cpu)
-+			 unsigned int die, unsigned int cpu)
- {
- 	struct intel_uncore_box *box, *tmp;
- 	struct intel_uncore_type *type;
-@@ -1193,20 +1193,20 @@ static int allocate_boxes(struct intel_uncore_type **types,
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			if (pmu->boxes[pkg])
-+			if (pmu->boxes[die])
- 				continue;
- 			box = uncore_alloc_box(type, cpu_to_node(cpu));
- 			if (!box)
- 				goto cleanup;
- 			box->pmu = pmu;
--			box->pkgid = pkg;
-+			box->dieid = die;
- 			list_add(&box->active_list, &allocated);
- 		}
+@@ -703,7 +703,7 @@ static int coretemp_cpu_offline(unsigned int cpu)
+ 	 * the rest.
+ 	 */
+ 	if (cpumask_empty(&pd->cpumask)) {
+-		pkg_devices[topology_logical_die_id(cpu)] = NULL;
++		zone_devices[topology_logical_die_id(cpu)] = NULL;
+ 		platform_device_unregister(pdev);
+ 		return 0;
  	}
- 	/* Install them in the pmus */
- 	list_for_each_entry_safe(box, tmp, &allocated, active_list) {
- 		list_del_init(&box->active_list);
--		box->pmu->boxes[pkg] = box;
-+		box->pmu->boxes[die] = box;
- 	}
- 	return 0;
- 
-@@ -1223,10 +1223,10 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 	struct intel_uncore_type *type, **types = uncore_msr_uncores;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
--	int i, ret, pkg, target;
-+	int i, ret, die, target;
- 
--	pkg = topology_logical_die_id(cpu);
--	ret = allocate_boxes(types, pkg, cpu);
-+	die = topology_logical_die_id(cpu);
-+	ret = allocate_boxes(types, die, cpu);
- 	if (ret)
- 		return ret;
- 
-@@ -1234,7 +1234,7 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[pkg];
-+			box = pmu->boxes[die];
- 			if (box && atomic_inc_return(&box->refcnt) == 1)
- 				uncore_box_init(box);
- 		}
-@@ -1419,7 +1419,7 @@ static int __init intel_uncore_init(void)
- 	if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+@@ -741,10 +741,10 @@ static int __init coretemp_init(void)
+ 	if (!x86_match_cpu(coretemp_ids))
  		return -ENODEV;
  
 -	max_packages = topology_max_packages() * topology_max_die_per_package();
-+	max_dies = topology_max_packages() * topology_max_die_per_package();
+-	pkg_devices = kcalloc(max_packages, sizeof(struct platform_device *),
++	max_zones = topology_max_packages() * topology_max_die_per_package();
++	zone_devices = kcalloc(max_zones, sizeof(struct platform_device *),
+ 			      GFP_KERNEL);
+-	if (!pkg_devices)
++	if (!zone_devices)
+ 		return -ENOMEM;
  
- 	uncore_init = (struct intel_uncore_init_fun *)id->driver_data;
- 	if (uncore_init->pci_init) {
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 79eb2e21e4f0..33aba2504cb1 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -108,7 +108,7 @@ struct intel_uncore_extra_reg {
+ 	err = platform_driver_register(&coretemp_driver);
+@@ -760,7 +760,7 @@ static int __init coretemp_init(void)
  
- struct intel_uncore_box {
- 	int pci_phys_id;
--	int pkgid;	/* Logical package ID */
-+	int dieid;	/* Logical die ID */
- 	int n_active;	/* number of active events */
- 	int n_events;
- 	int cpu;	/* cpu to collect events */
-@@ -467,7 +467,7 @@ static inline void uncore_box_exit(struct intel_uncore_box *box)
- 
- static inline bool uncore_box_is_fake(struct intel_uncore_box *box)
- {
--	return (box->pkgid < 0);
-+	return (box->dieid < 0);
+ outdrv:
+ 	platform_driver_unregister(&coretemp_driver);
+-	kfree(pkg_devices);
++	kfree(zone_devices);
+ 	return err;
  }
+ module_init(coretemp_init)
+@@ -769,7 +769,7 @@ static void __exit coretemp_exit(void)
+ {
+ 	cpuhp_remove_state(coretemp_hp_online);
+ 	platform_driver_unregister(&coretemp_driver);
+-	kfree(pkg_devices);
++	kfree(zone_devices);
+ }
+ module_exit(coretemp_exit)
  
- static inline struct intel_uncore_pmu *uncore_event_to_pmu(struct perf_event *event)
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10e04387f38..bbe89bc589f9 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -1058,8 +1058,8 @@ static void snbep_qpi_enable_event(struct intel_uncore_box *box, struct perf_eve
- 
- 	if (reg1->idx != EXTRA_REG_NONE) {
- 		int idx = box->pmu->pmu_idx + SNBEP_PCI_QPI_PORT0_FILTER;
--		int pkg = box->pkgid;
--		struct pci_dev *filter_pdev = uncore_extra_pci_dev[pkg].dev[idx];
-+		int die = box->dieid;
-+		struct pci_dev *filter_pdev = uncore_extra_pci_dev[die].dev[idx];
- 
- 		if (filter_pdev) {
- 			pci_write_config_dword(filter_pdev, reg1->reg,
 -- 
 2.18.0-rc0
 
