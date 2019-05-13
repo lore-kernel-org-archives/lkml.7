@@ -2,93 +2,103 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A63D2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D71C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D3B2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEAB21479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557737478;
+	bh=z64fTty09J+ze652b8Ro4nMYClhF2toa+sANVIPy/Uc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Cqlqd/ua19tOday1L6Efcg209uc1ezJKzo7y8EeL5Y9Gw/fXM3x6WAYo2Su1R08A4
+	 gsACAspeRquRaQdeV7AKpCiXR8ZKozG3brWHRvyUiKq0x4usdNPXVjMw3KolEV+24Q
+	 ipF6JUgPNMgVlSWW0LzSzD69B5xpVajsZJzQnrVM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfEMIsz (ORCPT
+        id S1728353AbfEMIvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:48:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52088 "EHLO mx1.suse.de"
+        Mon, 13 May 2019 04:51:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52442 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726103AbfEMIsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:48:54 -0400
+        id S1727967AbfEMIvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:51:16 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E4E2BAECD;
-        Mon, 13 May 2019 08:48:51 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Yury Norov <ynorov@caviumnetworks.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        Alexander Graf <agraf@suse.de>,
-        Alexey Klimov <klimov.linux@gmail.com>,
-        Andrew Pinski <pinskia@gmail.com>,
-        Bamvor Zhangjian <bamv2005@gmail.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Florian Weimer <fweimer@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        James Hogan <james.hogan@imgtec.com>,
-        James Morse <james.morse@arm.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Lin Yongting <linyongting@huawei.com>,
-        Manuel Montezelo <manuel.montezelo@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Nathan_Lynch <Nathan_Lynch@mentor.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Steve Ellcey <sellcey@caviumnetworks.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-Subject: Re: [PATCH v9 00/24] ILP32 for ARM64
-References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
-        <20190508225900.GA14091@yury-thinkpad>
-X-Yow:  Is this ANYWHERE, USA?
-Date:   Mon, 13 May 2019 10:48:48 +0200
-In-Reply-To: <20190508225900.GA14091@yury-thinkpad> (Yury Norov's message of
-        "Wed, 8 May 2019 15:59:00 -0700")
-Message-ID: <mvmtvdyoi33.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mx1.suse.de (Postfix) with ESMTP id 12230AECD;
+        Mon, 13 May 2019 08:51:15 +0000 (UTC)
+Date:   Mon, 13 May 2019 10:51:14 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RESEND PATCH v2 2/2] memcg, fsnotify: no oom-kill for remote
+ memcg charging
+Message-ID: <20190513085114.GD24036@dhcp22.suse.cz>
+References: <20190512160927.80042-1-shakeelb@google.com>
+ <20190512160927.80042-2-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190512160927.80042-2-shakeelb@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a problem with the stack size accounting during execve when
-there is no stack limit:
+On Sun 12-05-19 09:09:27, Shakeel Butt wrote:
+[...]
+> diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+> index 6b9c27548997..f78fd4c8f12d 100644
+> --- a/fs/notify/fanotify/fanotify.c
+> +++ b/fs/notify/fanotify/fanotify.c
+> @@ -288,10 +288,13 @@ struct fanotify_event *fanotify_alloc_event(struct fsnotify_group *group,
+>  	/*
+>  	 * For queues with unlimited length lost events are not expected and
+>  	 * can possibly have security implications. Avoid losing events when
+> -	 * memory is short.
+> +	 * memory is short. Also make sure to not trigger OOM killer in the
+> +	 * target memcg for the limited size queues.
+>  	 */
+>  	if (group->max_events == UINT_MAX)
+>  		gfp |= __GFP_NOFAIL;
+> +	else
+> +		gfp |= __GFP_RETRY_MAYFAIL;
+>  
+>  	/* Whoever is interested in the event, pays for the allocation. */
+>  	memalloc_use_memcg(group->memcg);
+> diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/inotify_fsnotify.c
+> index ff30abd6a49b..17c08daa1ba7 100644
+> --- a/fs/notify/inotify/inotify_fsnotify.c
+> +++ b/fs/notify/inotify/inotify_fsnotify.c
+> @@ -99,9 +99,12 @@ int inotify_handle_event(struct fsnotify_group *group,
+>  	i_mark = container_of(inode_mark, struct inotify_inode_mark,
+>  			      fsn_mark);
+>  
+> -	/* Whoever is interested in the event, pays for the allocation. */
+> +	/*
+> +	 * Whoever is interested in the event, pays for the allocation. However
+> +	 * do not trigger the OOM killer in the target memcg.
 
-$ ulimit -s
-8192
-$ ./hello.ilp32 
-Hello World!
-$ ulimit -s unlimited
-$ ./hello.ilp32 
-Segmentation fault
-$ strace ./hello.ilp32 
-execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) = -1 ENOMEM (Cannot allocate memory)
-+++ killed by SIGSEGV +++
-Segmentation fault (core dumped)
+Both comments would be much more helpful if they mentioned _why_ we do
+not want to trigger the OOM iller.
 
-Andreas.
-
+> +	 */
+>  	memalloc_use_memcg(group->memcg);
+> -	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT);
+> +	event = kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+>  	memalloc_unuse_memcg();
+>  
+>  	if (unlikely(!event)) {
 -- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Michal Hocko
+SUSE Labs
