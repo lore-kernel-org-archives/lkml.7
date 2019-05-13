@@ -2,167 +2,117 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123BEC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF32C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D89EA2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17B421019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zaltys-org.20150623.gappssmtp.com header.i=@zaltys-org.20150623.gappssmtp.com header.b="Tot6V3up"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729452AbfEMLdU (ORCPT
+        id S1729441AbfEMLdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:33:20 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54078 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729391AbfEMLdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 May 2019 07:33:19 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so13454788wme.3
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45786 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbfEMLdR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:33:17 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a5so6335826pls.12
         for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:33:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=zaltys-org.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=vIAiIlRHFlvzv9k+xH8nEYUaTAu5zyVCWpRcJP2mCII=;
+        b=Tot6V3up2+HWtknpsoM4dHvQa7QQqbVninOPpnopo2wzgPQUAtmIPR0dsqOARVECTG
+         K97IFaLXAZx/3L6Rw9Vk12yDr0VM9rR/4+eI6mUIKZssBdcQ1E5+evvEn9o3vdaGN7uO
+         ut5FnC0LFECAz1oyoCOghV1Q27MHaHqouNqZH9wX54oQHFME8GnUcXKqiMoCgscnaivW
+         aN7g33w4UYFpW2BrrNaepLE2akGZYkmaboYLaXH/+YR6Q+HyIAPH6s9srT0DzeLghCg5
+         zU0D/Nk8pmjUlcsXkdQe3Y+FP++WAkzz9cp0//FzG3p3GWmpUwA28cFyZoGoyvk07rVO
+         BCQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fXonh0Cb0dxgFIhZGmnGLJLJ19PHXe+EhVuhVcJmlIQ=;
-        b=GDvnrvznA2q0O1S0tIsoUG8KnDWncvcHk0Og3wG+k0qSaXBv8Qu7iGJEvqCOPD8fcG
-         9K0jxiEBvj8fqUzdHfl7fbSssUQLC9XjNGXmFBtPOUagj7TR8tl1kxD79KVcWJXpzcRu
-         vTiA5KJ5t+ntDUdGznCSJFERkrsNmdvzGHhhC9JjPsyJvfTJ9GGtYSXmZ6Bd4AgvnqeC
-         vUUtDfrs+v8voD9IbNTcnQX1pWB1y5McTTfkMbqWDKSsTObqT8kFp3mKiJV44tQLoBdY
-         7T89cHzg5IrjA2nI1o5eY+CACXXea0Mzn7u5otMGih2Zb2UzibUEG/XTlw6E7VVy1nbs
-         doxQ==
-X-Gm-Message-State: APjAAAWNyIbLNwOCJF/6mCB6+XMg0njhkRud17aQmLSosQPKZfKazpM9
-        y3PQU5k9bzbC5NBWnEqGfuGAMA==
-X-Google-Smtp-Source: APXvYqz2dQvSKTRhbYgpf8EaPeGyBogsabl2KJS/nxo3WNhTWQ3dR2zEafUguNyew7X63XOkuKYT7w==
-X-Received: by 2002:a1c:3cc2:: with SMTP id j185mr15630534wma.26.1557747196861;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=vIAiIlRHFlvzv9k+xH8nEYUaTAu5zyVCWpRcJP2mCII=;
+        b=EAUk5vEUiHezHJXM7DIgIt+2dSaIzNNJPqlyZqVi5N+b2j9J33X9leRoIQ/mbrNIx0
+         /pir6ix1xs7hfGSOh48PvMIZduRdzr3Sk6QJf9oWWytatU+6AmUeA2ninaafELvOaUk/
+         2MnTih4443JP7dZu8PuQ652l9kImauS6838kB/19VeLPtIVVJRky8vhzamzrETpEJtl0
+         25045fOalMlJcJMHKclbAINMtvtXOu+NuLgg/AN+8TjoplEKHw3FljZ8AzYlk+59htQh
+         aUzCmRAcgACa6tprK7rJNLc4TdfNVgAA3WP+eSO6qG4VViYgVRjrF3dWfyZ8+Znsx05K
+         kAqg==
+X-Gm-Message-State: APjAAAX5FW4yasbyQKp27zWQx1cc5NJvR22V8Q7XLhN6T+p6La+a7L7A
+        h6/woCNbBevqTp8sja0UTkfnDw==
+X-Google-Smtp-Source: APXvYqwAEFg6Wul3VsCH7RrW8iX3qzuipuHAYVcRiGC6fovckro06GFeujxxW1Fd612upFEtypRy0Q==
+X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr30192640pls.80.1557747197055;
+        Mon, 13 May 2019 04:33:17 -0700 (PDT)
+Received: from [172.28.0.10] (122-59-127-127-fibre.sparkbb.co.nz. [122.59.127.127])
+        by smtp.googlemail.com with ESMTPSA id r124sm12699914pgr.91.2019.05.13.04.33.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Mon, 13 May 2019 04:33:16 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id i17sm13493947wrr.46.2019.05.13.04.33.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 04:33:15 -0700 (PDT)
-Date:   Mon, 13 May 2019 13:33:15 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
-Message-ID: <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
-References: <20190510072125.18059-1-oleksandr@redhat.com>
- <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
+From:   James Grant <jamesg@zaltys.org>
+Subject: Re: [PATCH] usb: gadget: udc: lpc32xx: allocate descriptor with
+ GFP_ATOMIC
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        James Grant <james.grant@jci.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190510124248.2430-1-alexandre.belloni@bootlin.com>
+Message-ID: <417966d0-e656-b4e6-c1ea-b53bf687a870@zaltys.org>
+Date:   Mon, 13 May 2019 23:33:11 +1200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190510124248.2430-1-alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+Tested with a board containing LPC3250 SOC and STOTG04 PHY by using 
+serial gadget.
 
-On Mon, May 13, 2019 at 01:38:43PM +0300, Kirill Tkhai wrote:
-> On 10.05.2019 10:21, Oleksandr Natalenko wrote:
-> > By default, KSM works only on memory that is marked by madvise(). And the
-> > only way to get around that is to either:
-> > 
-> >   * use LD_PRELOAD; or
-> >   * patch the kernel with something like UKSM or PKSM.
-> >
-> > Instead, lets implement a so-called "always" mode, which allows marking
-> > VMAs as mergeable on do_anonymous_page() call automatically.
-> >
-> > The submission introduces a new sysctl knob as well as kernel cmdline option
-> > to control which mode to use. The default mode is to maintain old
-> > (madvise-based) behaviour.
-> >
-> > Due to security concerns, this submission also introduces VM_UNMERGEABLE
-> > vmaflag for apps to explicitly opt out of automerging. Because of adding
-> > a new vmaflag, the whole work is available for 64-bit architectures only.
-> >> This patchset is based on earlier Timofey's submission [1], but it doesn't
-> > use dedicated kthread to walk through the list of tasks/VMAs.
-> > 
-> > For my laptop it saves up to 300 MiB of RAM for usual workflow (browser,
-> > terminal, player, chats etc). Timofey's submission also mentions
-> > containerised workload that benefits from automerging too.
-> 
-> This all approach looks complicated for me, and I'm not sure the shown profit
-> for desktop is big enough to introduce contradictory vma flags, boot option
-> and advance page fault handler. Also, 32/64bit defines do not look good for
-> me. I had tried something like this on my laptop some time ago, and
-> the result was bad even in absolute (not in memory percentage) meaning.
-> Isn't LD_PRELOAD trick enough to desktop? Your workload is same all the time,
-> so you may statically insert correct preload to /etc/profile and replace
-> your mmap forever.
+Needed patch series starting with "[PATCH 0/5] usb: gadget: udc: 
+lpc32xx: add stotg04 phy support" also.
+
+Tested-by: James Grant <jamesg@zaltys.org>
+
+Regards,
+James Grant.
+
+On 11/05/2019 00:42, Alexandre Belloni wrote:
+> Gadget drivers may queue request in interrupt context. This would lead to
+> a descriptor allocation in that context. In that case we would hit
+> BUG_ON(in_interrupt()) in __get_vm_area_node.
 >
-> Speaking about containers, something like this may have a sense, I think.
-> The probability of that several containers have the same pages are higher,
-> than that desktop applications have the same pages; also LD_PRELOAD for
-> containers is not applicable. 
-
-Yes, I get your point. But the intention is to avoid another hacky trick
-(LD_PRELOAD), thus *something* should *preferably* be done on the
-kernel level instead.
-
-> But 1)this could be made for trusted containers only (are there similar
-> issues with KSM like with hardware side-channel attacks?!);
-
-Regarding side-channel attacks, yes, I think so. Were those openssl guys
-who complained about it?..
-
-> 2) the most
-> shared data for containers in my experience is file cache, which is not
-> supported by KSM.
-> 
-> There are good results by the link [1], but it's difficult to analyze
-> them without knowledge about what happens inside them there.
-> 
-> Some of tests have "VM" prefix. What the reason the hypervisor don't mark
-> their VMAs as mergeable? Can't this be fixed in hypervisor? What is the
-> generic reason that VMAs are not marked in all the tests?
-
-Timofey, could you please address this?
-
-Also, just for the sake of another piece of stats here:
-
-$ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-526
-
-> In case of there is a fundamental problem of calling madvise, can't we
-> just implement an easier workaround like a new write-only file:
-> 
-> #echo $task > /sys/kernel/mm/ksm/force_madvise
-> 
-> which will mark all anon VMAs as mergeable for a passed task's mm?
-> 
-> A small userspace daemon may write mergeable tasks there from time to time.
-> 
-> Then we won't need to introduce additional vm flags and to change
-> anon pagefault handler, and the changes will be small and only
-> related to mm/ksm.c, and good enough for both 32 and 64 bit machines.
-
-Yup, looks appealing. Two concerns, though:
-
-1) we are falling back to scanning through the list of tasks (I guess
-this is what we wanted to avoid, although this time it happens in the
-userspace);
-
-2) what kinds of opt-out we should maintain? Like, what if force_madvise
-is called, but the task doesn't want some VMAs to be merged? This will
-required new flag anyway, it seems. And should there be another
-write-only file to unmerge everything forcibly for specific task?
-
-Thanks.
-
-P.S. Cc'ing Pavel properly this time.
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+> Signed-off-by: Alexandre Belloni<alexandre.belloni@bootlin.com>
+> ---
+>   drivers/usb/gadget/udc/lpc32xx_udc.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
+> index d8f1c60793ed..b706d9c85a35 100644
+> --- a/drivers/usb/gadget/udc/lpc32xx_udc.c
+> +++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+> @@ -938,7 +938,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struct lpc32xx_udc *udc)
+>   	struct lpc32xx_usbd_dd_gad	*dd;
+>   
+>   	dd = (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
+> -			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
+> +			udc->dd_cache, (GFP_ATOMIC | GFP_DMA), &dma);
+>   	if (dd)
+>   		dd->this_dma = dma;
+>   
