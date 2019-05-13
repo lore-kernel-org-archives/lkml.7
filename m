@@ -2,112 +2,71 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD92C04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C92B9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D061C20C01
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557732285;
-	bh=0YAA7IU7/dG9xXVCHjqkTm6IxMnCXy9ask+Skne63cE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=APzq3WOjHq2ZwAqlWC8G13ead9zOya+OLDZ6PkGPG1zHMxZ6nXS+8n+nEckDhpJUI
-	 FvpDIVE7jvzQNNUoChJp/1PKUh0U4IEmGmT4bHgsahAteVFh0GFGSfmiALWI9ywBl3
-	 JeGOkcVFEoLLbYymaGv4aF7DRSfh3U2FGLhTr+8Y=
+	by mail.kernel.org (Postfix) with ESMTP id 90EDA20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:25:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QpVQM9nH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbfEMHYo (ORCPT
+        id S1727949AbfEMHZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:24:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35152 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727568AbfEMHYo (ORCPT
+        Mon, 13 May 2019 03:25:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54426 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727608AbfEMHZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:24:44 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q15so8506018wmj.0;
-        Mon, 13 May 2019 00:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=iVAt5iI6mqugtCiFXfzqwJmqTMe8MsRRRyCMlSkj7hY=;
-        b=gJpTiJVddmjubHzTpqyW93iYd9Kh5AcAkff5jWKHAN8Vzw8QdW4Wpv1hg2L5ckIC6c
-         LJj9EXpe0QpsKwtCxvb34cA2PMYbxzGUw9NKw7IMo6rox1/WdBZkP3ou+OGKLKrC6+GF
-         ExSe4dZij/GOUEgmvXkwFEivUecXtO497bi5UjC9HZaxrzYw3IdrZ9PQ8pqie2Igx6fk
-         9rKZMWnCs7xbaThb6hcNwG/XByHqPVEDmoOhf/A8f3mwHrabWBqPnOdomrUTdrn5t1yg
-         S6oF/BjZPAOxDwMTXANjWkWkirm/HFDBXYEG3RGLixuETX1092s9ioAJMImhdjmQxJrK
-         6oWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iVAt5iI6mqugtCiFXfzqwJmqTMe8MsRRRyCMlSkj7hY=;
-        b=X9xUiF9Ok5u8DG2Trn/lPzYHA/DBHB1WgssfQXnxH8biOJoebFW25FLK0Ke8cGJjPV
-         o1GdUmIrsz6FydiFYclORIMZwMtoLnoyje+hneO1Bnfofgk/XgaThMw0nwt8YLkY7N1F
-         sHf5bgpWuQi5s50xzlqRhaJVXiwC3jwzzeNZWseM4FG+DiIXCkNi/mOq+UovdzcCss+4
-         0QUjuOa1PtZKias/V34x270O7fnitnKDlgiE3mh44dqx19D4Z3ECI6h8eT37Od4gBeuA
-         7wQJmvDvz80J3K6zqqJBVH9FpTiINyfaBtg25/qkzuMK6Xm4v7q4Bwq6k9ws63Em6vOn
-         W1RA==
-X-Gm-Message-State: APjAAAVJoJu1L7GWMgKTq7gi0Y2YscW7ZfMUQuGKVmUP4N77usAgyBXu
-        ZWQzQlXe+L96+V8F0Eiv9Bg=
-X-Google-Smtp-Source: APXvYqwFcDG6bAeRkKLyQcnNYRRSRsAvc5yJRdcDA7W0BiPW2zrlnWqrtOG6bz1GpEkvce1AVTF5qQ==
-X-Received: by 2002:a05:600c:23d2:: with SMTP id p18mr7199285wmb.66.1557732282700;
-        Mon, 13 May 2019 00:24:42 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 19sm2595631wmk.3.2019.05.13.00.24.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 00:24:41 -0700 (PDT)
-Date:   Mon, 13 May 2019 09:24:39 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: Update MAINTAINERS to include schedutil governor
-Message-ID: <20190513072439.GA34303@gmail.com>
-References: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
+        Mon, 13 May 2019 03:25:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FepseJqUtrkKupverYm+/3v6WT5gLzsS2oUTxOu7nu4=; b=QpVQM9nHiNVRQNFKtFyPsQ7Xf
+        C6KLxnEjuKDh+KHifrD4YZABIjsToiOM4LMHMdD0BAY1he1JJJnM/aBUaUfi/wUpMYlXJ1sD0VfhJ
+        pzCt/ZiMcluQqV8BU4O8JzpwMvzy0oiDE16GgPxrKcN8RS5t0Wx10mFXdDS8fHO9zBFhg29swgyQO
+        4BgI3iAakOQz9jz/JPwQbJX2/MfYNYAHIOEpFqeDLFfCwuXwYlbIgtAfAjHY42B6pZVa/ruT7yZw/
+        GizKSLihsDXgyP0feeE7HTGY9pMpZBjnEXTcjvLe5a3oq9cseV/wNhbFy/dmebEHnLOhB5hRQdvQA
+        3JUJVNXtA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ5L9-00006V-Nu; Mon, 13 May 2019 07:25:39 +0000
+Date:   Mon, 13 May 2019 00:25:39 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Message-ID: <20190513072539.GA27708@infradead.org>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-3-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190513050626.14991-3-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
+> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+> using these APIs be able to build as loadable modules.
 
-* Viresh Kumar <viresh.kumar@linaro.org> wrote:
-
-> List cpufreq maintainers as well for schedutil governor apart from
-> scheduler maintainers.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4244dd341eb7..7d4417d862a6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4093,7 +4093,9 @@ F:	Documentation/admin-guide/pm/intel_pstate.rst
->  F:	Documentation/cpu-freq/
->  F:	Documentation/devicetree/bindings/cpufreq/
->  F:	drivers/cpufreq/
-> +F:	kernel/sched/cpufreq*.c
->  F:	include/linux/cpufreq.h
-> +F:	include/linux/sched/cpufreq.h
->  F:	tools/testing/selftests/cpufreq/
-
-Acked-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+But this is a global setting.  If you root port is broken you need
+a per-rootport quirk instead.
