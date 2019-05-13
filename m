@@ -2,94 +2,285 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F38C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28194C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F9F2084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E592B2084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730899AbfEMQqk convert rfc822-to-8bit (ORCPT
+        id S1730918AbfEMQqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:46:40 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:61776 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728347AbfEMQqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:46:39 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16543216-1500050 
-        for multiple; Mon, 13 May 2019 17:46:32 +0100
-Content-Type: text/plain; charset="utf-8"
+        Mon, 13 May 2019 12:46:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58568 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728347AbfEMQqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:46:42 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B5C536887;
+        Mon, 13 May 2019 16:46:42 +0000 (UTC)
+Received: from treble (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A66419926;
+        Mon, 13 May 2019 16:46:38 +0000 (UTC)
+Date:   Mon, 13 May 2019 11:46:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] livepatch: Remove duplicate warning about missing
+ reliable stacktrace support
+Message-ID: <20190513164636.bm32vygasta6lmsa@treble>
+References: <20190430091049.30413-1-pmladek@suse.com>
+ <20190430091049.30413-2-pmladek@suse.com>
+ <20190507004032.2fgddlsycyypqdsn@treble>
+ <20190507014332.l5pmvjyfropaiui2@treble>
+ <20190507112950.wejw6nmfwzmm3vaf@pathway.suse.cz>
+ <20190507120350.gpazr6xivzwvd3az@treble>
+ <20190507142847.pre7tvm4oysimfww@pathway.suse.cz>
+ <20190507212425.7gfqx5e3yc4fbdfy@treble>
+ <20190513104318.5wt2hyg7jf5uikhl@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Steven Price <steven.price@arm.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <0b7f0b7f-3e14-f5bb-368a-08037c2a8529@arm.com>
-Cc:     David Airlie <airlied@linux.ie>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-References: <20190513143244.16478-1-steven.price@arm.com>
- <20190513143921.GP17751@phenom.ffwll.local>
- <155775884217.2165.11223399053598674062@skylake-alporthouse-com>
- <0b7f0b7f-3e14-f5bb-368a-08037c2a8529@arm.com>
-Message-ID: <155776599144.2165.15056323416635154840@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [PATCH] drm/panfrost: Use drm_gem_dump_map_offset()
-Date:   Mon, 13 May 2019 17:46:31 +0100
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190513104318.5wt2hyg7jf5uikhl@pathway.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 13 May 2019 16:46:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Steven Price (2019-05-13 16:14:01)
-> On 13/05/2019 15:47, Chris Wilson wrote:
-> > Quoting Daniel Vetter (2019-05-13 15:39:21)
-> >> On Mon, May 13, 2019 at 03:32:44PM +0100, Steven Price wrote:
-> >>> panfrost_ioctl_mmap_bo() contains a reimplementation of
-> >>> drm_gem_dump_map_offset() but with a bug - it allows mapping imported
-> >>> objects (without going through the exporter). Fix this by switching to
-> >>> use the generic drm_gem_dump_map_offset() function instead which has the
-> >>> bonus of simplifying the code.
-> >>
-> >> gem_dumb stuff is for kms drivers, panfrost is a render driver. We're
-> >> generally trying to separate these two worlds somewhat cleanly.
-> >>
-> >> I think it'd be good to have a non-dumb version of this in the core, and
-> >> use that. Or upgrade the dumb version to be that helper for everyone (and
-> >> drop the _dumb).
+On Mon, May 13, 2019 at 12:43:18PM +0200, Petr Mladek wrote:
+> On Tue 2019-05-07 16:24:25, Josh Poimboeuf wrote:
+> > On Tue, May 07, 2019 at 04:28:47PM +0200, Petr Mladek wrote:
+> > > > > > > Also this check is effectively the same as the klp_have_reliable_stack()
+> > > > > > > check which is done in kernel/livepatch/core.c.  So I think it would be
+> > > > > > > clearer and more consistent if the same check is done here:
+> > > > > > > 
+> > > > > > > 	if (!klp_have_reliable_stack())
+> > > > > > > 		return -ENOSYS;
+> > > > > 
+> > > > > Huh, it smells with over engineering to me.
+> > > > 
+> > > > How so?  It makes the code more readable and the generated code should
+> > > > be much better because it becomes a build-time check.
+> > > 
+> > > save_stack_trace_tsk_reliable() returns various error codes.
+> > > We catch a specific one because otherwise the message below
+> > > might be misleading.
+> > > 
+> > > I do not see why we should prevent this error by calling
+> > > a custom hack: klp_have_reliable_stack()?
+> > 
+> > I wouldn't call it a hack.  It's a simple build-time check.
+> > 
+> > > Regarding reliability. If anyone changes semantic of
+> > > save_stack_trace_tsk_reliable() error codes, they would likely
+> > > check if all users (one at the moment) handle it correctly.
+> > > 
+> > > On the other hand, the dependency between the -ENOSYS
+> > > return value and klp_have_reliable_stack() is far from
+> > > obvious.
+> > 
+> > I don't follow your point.
 > 
-> I'm slightly confused by what you think is the best course of action here.
+> We implement klp_have_reliable_stack() in livepatch subsystem.
+> It checks config options that defines behavior of the
+> stacktrace subsystem.
 > 
-> I can create a patch dropping the '_dumb' from drm_gem_dump_map_offset()
-> if that's the objection. Or do you want a helper function with two
-> callers (the 'dump' and the 'shmem' versions)?
+> We use the above livepatch-specific function to warn about
+> that a function from stacktrace subsustem will not work.
+> You even suggest to use it to ignore result from
+> the stacktrace subsystem.
 > 
-> > More specifically, since panfrost is using the drm_gem_shmem helper and
-> > vm_ops, it too can provide the wrapper as it is the drm_gem_shmem layer
-> > that implies that trying to mmap an imported object is an issue as that
-> > is not a universal problem.
-> mmap'ing an imported object isn't a problem as such. But rather than
-> going behind the exporter's back we would need to call dma_buf_mmap() to
-> ensure that the exporter can do whatever is necessary.
+> OK, using klp_have_reliable_stack() on both locations
+> would keep it consistent.
 > 
-> I could add a wrapper in drm_gem_shmem_helper, but I'm not sure what the
-> benefit of a wrapper here is?
+> My point is that the check itself is not reliable because
+> it is "hard" to maintain.
 
-No, my point is that the pagefaulting is being provided by drm_gem_shmem
-and that is relying on direct access to struct page, hence that is
-imposing the restriction that it can only handle its own shmem objects.
-The driver should not guess the helper, but ask the helper if it can
-perform an mmap of this object, and since this object is not an shmem
-object it will say no.
+I don't see how it would be "hard" to maintain.  If an arch implements
+reliable stack tracing, but forgets to set HAVE_RELIABLE_STACKTRACE then
+they will notice the warning immediately when they try to livepatch.
 
-Different drivers can use their HW to fault in indirect access to dmabuf
-(treating the dmabuf as a conveyance of a sglist and not struct page)
-and so do not need to different/reject foreign objects from their
-specialised mmap routines and are oblivious to them.
--Chris
+> Instead, I suggest to remove klp_have_reliable_stack() and use
+> the following in klp_enable_patch().
+> 
+> 
+> 	if (stack_trace_save_tsk_reliable(current, NULL, 0) == -ENOSYS) {
+> 		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
+> 		pr_warn("The livepatch transition may never complete.\n");
+> 	}
+
+It seems confusing to call that function where it isn't needed, since
+klp_enable_patch() isn't doing stack tracing yet at that location.
+
+Calling klp_have_reliable_stack() is more readable, and is exactly the
+check we want to make.
+
+> Also I suggest to remove the check in klp_check_stack() completely.
+> We will always print that the stack is not reliable but only when
+> the debug message is enabled. It is slightly misleading
+> message for -ENOSYS. But I doubt that it could cause much
+> troubles in reality. This situation should be really rare
+> and easy to debug.
+
+If you want to remove the specific check in klp_check_stack(), that's
+fine with me.  I slightly prefer just reverting Kamalesh's commit, but I
+don't have a strong feeling either way.
+
+> > > If we want to discuss and fix this to the death. We should change
+> > > the return value from -ENOSYS to -EOPNOTSUPP. The reason
+> > > is the same as in the commit 375bfca3459db1c5596
+> > > ("livepatch: core: Return EOPNOTSUPP instead of ENOSYS").
+> > > 
+> > > Note that EOPNOTSUPP is the same errno as ENOTSUP, see
+> > > man 3 errno.
+> > 
+> > Sure, but that's a separate issue.
+> 
+> I just wanted to show that we might spend even more time with
+> making this code briliant.
+> 
+> 
+> > > > But I think Miroslav's suggestion to revert 1d98a69e5cef would be even
+> > > > better.
+> > > 
+> > > AFAIK, Miroslav wanted to point out that your opinion was inconsistent.
+> > 
+> > How is my opinion inconsistent?
+
+I don't guarantee that I will always be consistent with my past self.
+My thinking may evolve (or devolve?) over time.  And there's nothing
+wrong with that.  But none of the below is actually inconsistent.
+
+> 1. You have already acked the removal of WARN_ON() in
+>    klp_have_reliable_stack(),
+>    see https://lkml.kernel.org/r/20190424155154.h62wc3nt7ib2phdy@treble
+> 
+>    You even suggested it, see
+>    https://lkml.kernel.org/r/20190418135858.n3lzq2oxkj52m6bi@treble
+> 
+>    But you suggest to put it back now.
+
+Maybe I wasn't clear.  If we're not planning on calling the weak version
+of the function, then the warning makes sense.
+
+> 2. You suggested to remove the warning when klp_check_stack() because
+>    it was superfluous. There was a discussion about keeping
+>    the check for -ENOSYS there and you did not react, see
+>    https://lkml.kernel.org/r/20190424155532.3uyxyxwm4c5dqsf5@treble
+
+But then (I thought) Miroslav suggested reverting 1d98a69e5cef, which is
+a better idea.
+
+>    You even acked the commit 1d98a69e5cef3aeb68bcef ("livepatch:
+>    Remove reliable stacktrace check in klp_try_switch_task()").
+> 
+>    And you suddenly want to revert it.
+
+The circumstances have changed since that commit: now we are going back
+to allowing non-reliable arches to load livepatches.
+
+> > Is there something wrong with the original approach, which was reverted
+> > with
+> > 
+> >   1d98a69e5cef ("livepatch: Remove reliable stacktrace check in klp_try_switch_task()")
+> > 
+> > ?
+> > 
+> > As I mentioned, that has some advantages:
+> > 
+> > - The generated code is simpler/faster because it uses a build-time
+> >   check.
+> > 
+> > - The code is more readable IMO.  Especially if the check is done higher
+> >   up the call stack by reverting 1d98a69e5cef.  That way the arch
+> >   support short-circuiting is done in the logical place, before doing
+> >   any more unnecessary work.  It's faster, but also, more importantly,
+> >   it's less surprising.
+> > 
+> > - It's also more consistent with other code, since the intent of this
+> >   check is the same as the klp_have_reliable_stack() use in
+> >   klp_enabled_patch().
+> > 
+> > If you disagree with those, please explain why.
+> 
+> As I said. I think that it is less reliable because we check config
+> options of an unrelated subsystem.
+
+There's no harm in checking the config option of another subsystem.
+Livepatch very much relies on stacktrace.
+
+> Also I think that it is overengineered.
+> save_stack_trace_tsk_reliable() is able to tell when it failed.
+> This particular failure is superfast. IMHO, it is not worth such
+> an optimization.
+
+Sure, performance isn't a concern, but code simplicity, readability, and
+consistency certainly are.
+
+> In fact, it is a compile time check as well because the inline
+> from include/linux/stacktrace.h
+> 
+> 
+> > > PS: This is my last mail in the thread this week. I will eventually
+> > > return to it with a clear head next week. It is all nitpicking from
+> > > my POV and I have better things to do.
+> > 
+> > I don't think it's helpful to characterize it as nitpicking.  The
+> > details of the code are important.
+> 
+> 1. You had issues with almost all my printk() messages, comments,
+>    and commit messages. I know that my English is not perfect.
+>    And that you might want to highlight another information.
+>    But was is it really that bad?
+
+It's just code review.
+
+> 2. This entire patchset is about adding and removing messages
+>    and checks. We have 3rd version and you are still not happy.
+>    Not to say that you suggest something else each time.
+
+That's how review works.  If the code improves with each iteration then
+how is that a problem?
+
+> Frankly, I do mind too much about this code path, which and how
+> many warnings are printed. I am not aware about any complains.
+> IMHO, only people adding support for new architecture
+> might go this way.
+> 
+> I just wanted to switch the error to warning because Thomas
+> Gleixner wondered about unused code on s390 when refactoring
+> the stacktrace code.
+> 
+> I really did not expect that I would spend hours/days on this.
+> I do not think that it is worth it.
+> 
+> I consider most of the requests as nitpicking because
+> they requests extra work just because it looks like
+> a good idea.
+> 
+> My take is that we should accept changes when they improve
+> the situation and go in the right direction. Further clean up
+> might be done later by anyone who does not have anything
+> more important on the plate or gets annoyed enough.
+> 
+> Yes, you have many great ideas. But I am not a trained
+> monkey. And I do not know how to stop this when it is
+> looking endless.
+
+I'm just trying to help improve the code.  That's how open source works.
+And it's my responsibility as a maintainer.  If you're not open to
+review, don't bother posting the code in the first place.
+
+-- 
+Josh
