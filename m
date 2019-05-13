@@ -2,123 +2,112 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B22BC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313C8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E37208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078CE208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:47:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZWZUGjja"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQuY2s+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfEMSj2 (ORCPT
+        id S1728065AbfEMSrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:39:28 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39323 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727248AbfEMSj2 (ORCPT
+        Mon, 13 May 2019 14:47:49 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:39278 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbfEMSrs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:39:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id g9so6903964plm.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:39:27 -0700 (PDT)
+        Mon, 13 May 2019 14:47:48 -0400
+Received: by mail-qk1-f194.google.com with SMTP id z128so8693728qkb.6;
+        Mon, 13 May 2019 11:47:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OHoX7oCDIxtnl3NxtTVvKViiqkZglgOas/g1Rubunpw=;
-        b=ZWZUGjjawgSeblVhgOyDlCAGehMU/Z0twGz6rujUUg+RLiCUzlrAnTLFcPy3TgWvfU
-         Fd0UT+okOXosraWP4hGiz8yB04ZmpU2BsxQRd46mO6PNoqx9TsGDiJEtV4lxbPJ36ex/
-         undy3vtilTIBNn4Y4yuefGrOfxV+XQhh2dKnvDf9hnscJrHAnjVSeALFFT+AMWCW4Y9h
-         Jhu6wF0JwP2e1KmW5KLrnrbFPn19cVSLTD1kKx3wOx8Ofp+KpQZsBdtHK9Ql00vuWihH
-         LExnK/hNrae/YOtkyv7dzAx+3QR52XAF+I8RMbJoQndRs6tFofXaU4Z4yETkZJkd1BhX
-         e9sw==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fcj7AotgrHgaGk9eGLmWk2zeSnn906Cpfa2iryM3DoI=;
+        b=SQuY2s+gOhhvRTsfAUBFH8LblnHzjFKVtQhD/ihRPsOB1DqyVzD7Xi9YbAmZb4Pvhp
+         kKP0V+5w7UIAUrpkSD9JLaZbwAXLCTHvW7eaQ/mEMTNGQB40/4n8tgbWfXZ/4G2zW6Ds
+         7E2h7E2DbLtKiFnN7K8LldVs7Hr00QujeCB/kKbDgjKuBjhTwnW+JBdrQm7JYY24v8RT
+         Tw7OIi/fi6263Hsrvk66MGEe7JsiyomynLBElEePKLWgjiQrw0eMU/E+u06hTFjxo6sb
+         Fqs08/Wd3j+ANlJUFbuqQHK0gbt7dVAKrvbS1KTWyBLhqFsLmeK7omiu8V5RLxEgjWe3
+         6WVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OHoX7oCDIxtnl3NxtTVvKViiqkZglgOas/g1Rubunpw=;
-        b=gurbGCvhB3GVoFM1hFPY/IYwKa7V7zTUrKAkcvIljyJxlmsRxKYawF8GTxEdYsfrnC
-         wYG0P6u95paw3PuvOqam+ajFIOklHh10VBCUwqHw7HdjzC2GOnxYK4IK/9NQIcxDfYdg
-         I/MBo4JG4X3lUWZbdnTORbGY2cUY9rcLcgEbpI27IppT0C7sUORWrYuXNSg2Qtd34bvL
-         GxK14jE4x0WLw7Nb10xmzIf4uL3PgXHIOdlIKZMF8apokoo3NOCwp3S9JaQtFjxjoHtT
-         FWQoFUs0GleZM2cwOh1vrn8CZH3HlwZQc2I+wPq8b9nGjSzobKLo3SSQQmmHXUEgXsdK
-         yKKA==
-X-Gm-Message-State: APjAAAWGPB1S7O+TC70OLBEAm/5oxR+6hBIPDoAY8nY+av0KXADBXErB
-        iLPOP2sxhTQnSCf79Kj7C+WO1w==
-X-Google-Smtp-Source: APXvYqynr2g6ljNTN5TU7b36goVbopwPwI4vVSq9IFQfsOzsCc5jpeiEx5UIY/EXqC5dgrtP7joR6w==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr16401267plb.300.1557772766932;
-        Mon, 13 May 2019 11:39:26 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id b23sm5116335pfi.6.2019.05.13.11.39.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 11:39:26 -0700 (PDT)
-Date:   Mon, 13 May 2019 11:39:47 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        andy.gross@linaro.org, David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
- reflect documentation
-Message-ID: <20190513183947.GJ2085@tuxbook-pro>
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=fcj7AotgrHgaGk9eGLmWk2zeSnn906Cpfa2iryM3DoI=;
+        b=V4Qv5paOiCPG1ZORRwNyz11OuemVxy5uQ77xsV/rKlLqRGSsRP3pp7N7ZhNC1TMwCl
+         qaXThQ3ZGUa+vNuF9Em8c3ucTt4t53bNzhYOIW3ZIzvR4M9oVErrVSjvf4uaSsbGXX0j
+         DN5fx/1f5ff1AhksCFxx4ngD53OLntg60RjiwI1FFUAcjklwo8OYShJuPrFLNw9aMU6c
+         9fwdjaIw/ASkTSzpwVt359k2L6f9dUIhNG+mWbDLmoxy39TFlqLS+afQB7utSCtJk/sU
+         VxH9O5WOpfftQZpdwz2yuft9Vt4/TB40P9YwAwiZ7lY50YnbfT3/bi+RWxcJXYnETDoW
+         tUIw==
+X-Gm-Message-State: APjAAAUWhSzqqMr0kldpy9QNgW0kI+S4fsk0qNimFmnYzUnV9m20aWt2
+        WmQj2sWMREo0RrS+VLrjVdE=
+X-Google-Smtp-Source: APXvYqwdSDAkgQrSSL+3vDaE++UoYG/GcBJoF1ZeHnppvHfcB33cgnOZ30ylcxoJS9xjNysAaeQyLg==
+X-Received: by 2002:a05:620a:16b4:: with SMTP id s20mr23939911qkj.34.1557773267186;
+        Mon, 13 May 2019 11:47:47 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x6sm553163qti.88.2019.05.13.11.47.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 11:47:46 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 13 May 2019 14:47:45 -0400
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Arvind Sankar <niveditas98@gmail.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190513184744.GA12386@rani.riverdale.lan>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <20190513172007.GA69717@rani.riverdale.lan>
+ <20190513175250.GC69717@rani.riverdale.lan>
+ <1557772584.4969.62.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557772584.4969.62.camel@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 10 May 04:29 PDT 2019, Amit Kucheria wrote:
-
-Subject indicates pluralism, but this fixes a specific platform
-(board?). I think you should update that.
-
-> The idle-states binding documentation[1] mentions that the
-> 'entry-method' property is required on 64-bit platforms and must be set
-> to "psci".
+On Mon, May 13, 2019 at 02:36:24PM -0400, Mimi Zohar wrote:
 > 
-> We fixed up all uses of the entry-method property in
-> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
-> reflect documentation"). But a new one has appeared. Fix it up.
+> > > How does this work today then? Is it actually the case that initramfs
+> > > just cannot be used on an IMA-enabled system, or it can but it leaves
+> > > the initramfs unverified and we're trying to fix that? I had assumed the
+> > > latter.
+> > Oooh, it's done not by starting IMA appraisal later, but by loading a
+> > default policy to ignore initramfs?
 > 
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-
-The message looks good though, so with a new subject you have my:
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Right, when rootfs is a tmpfs filesystem, it supports xattrs, allowing
+> for finer grained policies to be defined.  This patch set would allow
+> a builtin IMA appraise policy to be defined which includes tmpfs.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> index 2896bbcfa3bb..42e7822a0227 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> @@ -51,7 +51,7 @@
->  		 * PSCI node is not added default, U-boot will add missing
->  		 * parts if it determines to use PSCI.
->  		 */
-> -		entry-method = "arm,psci";
-> +		entry-method = "psci";
->  
->  		CPU_PH20: cpu-ph20 {
->  			compatible = "arm,idle-state";
-> -- 
-> 2.17.1
+> Mimi
 > 
+Ok, but wouldn't my idea still work? Leave the default compiled-in
+policy set to not appraise initramfs. The embedded /init sets all the
+xattrs, changes the policy to appraise tmpfs, and then exec's the real
+init? Then everything except the embedded /init and the file with the
+xattrs will be appraised, and the embedded /init was verified as part of
+the kernel image signature. The only additional kernel change needed
+then is to add a config option to the kernel to disallow overwriting the
+embedded initramfs (or at least the embedded /init).
