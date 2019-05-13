@@ -2,89 +2,88 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D699DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AC5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27DA208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B47721019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mmoIZ6UX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mKtDdwld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfEML2r (ORCPT
+        id S1728948AbfEMLaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:28:47 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33933 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726866AbfEML2r (ORCPT
+        Mon, 13 May 2019 07:30:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53710 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfEMLaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:28:47 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f8so5178557wrt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=OnH/4nMvaMi3VQRujj8nm/jF+XYCQszeAWgJCcFUmEo=;
-        b=mmoIZ6UXobbUMpQw3nzYycuxwp+5y7k0B4ypB2048OSe2AyCHXff2Fb/oa/E+L2SeM
-         9RpramwydA0CLAbKsBuZU1ACHffOCCGYPX9+x/uaVU4wEfND7VI4B4dbctm2/euBTN5c
-         8eMa42pnmrEomkuL7hzwW4SzBpWC45nYzA1WHWW9HyDRP8bkvm+iwwlig8edb5Sv6Un8
-         V2KaUh/c0yxnZZ3Tj3xrRGZg5ERe5U1wQDH7XcKdVGxwd+kZOdioxMUwGb4N6B+uMEx2
-         YaO3Lo+HgXhKdIqXWSH52ksm9Y1Iy/qH58TWAZ06aAQJ36S1B3zMwVdLCHfzEhBTrQuw
-         qwhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=OnH/4nMvaMi3VQRujj8nm/jF+XYCQszeAWgJCcFUmEo=;
-        b=K2A/XwU9kAivJqHivL0MbymDz7Cvr9BazZ77Aw+rJd3+BhVjirdRO2Ox0vfT50bvjv
-         rE19v39gHUBPBeW40bRuBpUHfa0xrY2iizfk0ROumbq+usXjhRY62DXCHt5Nyy5Em/xe
-         ezeXFLJAv1lrsZTzl/IZBd1FCezutcBghKmkflNmrrCrHsR/B1dMwFxrA1KnqH2s244D
-         W04MqQelIMAScauaxla99cypW4zL3h1HeXzGspbHm4JUzTipfaxXTzFRAbX77PBu7ylD
-         Uro5hClxmNQ0KVud4fXgPujdXaopT2pWcV4egYcJ6IBAf17X4BgJgSZwfz/Fv75pM1KU
-         PkQg==
-X-Gm-Message-State: APjAAAXiA/Sz+1yzUG7tQhWKxeTmZ8H2GSg7MNEdB2D05UjYvYgALUe8
-        sD4E+cjIO172+LvlILxeXsAPtw==
-X-Google-Smtp-Source: APXvYqxER6ionZR5dWUWPafoltmghKq39SdTXF/QPkvTy92PPli9V9NxGsvjCPySp2bn16BrcE682g==
-X-Received: by 2002:a5d:4089:: with SMTP id o9mr13229228wrp.6.1557746925751;
-        Mon, 13 May 2019 04:28:45 -0700 (PDT)
-Received: from boomer.baylibre.com (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id z9sm15023246wma.39.2019.05.13.04.28.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 04:28:44 -0700 (PDT)
-Message-ID: <10e588ae1e259c2c2bc9cfd0e788aa41735f0f66.camel@baylibre.com>
-Subject: Re: [PATCH 0/3] mmc: meson-gx: add ddr-access-quirk support
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>, ulf.hansson@linaro.org,
-        khilman@baylibre.com
-Cc:     baylibre-upstreaming@groups.io, linux-mmc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date:   Mon, 13 May 2019 13:28:43 +0200
-In-Reply-To: <24b8cd2eb2879378ca0cac6ddfd9c5cae68699bc.camel@baylibre.com>
-References: <20190513091548.16674-1-narmstrong@baylibre.com>
-         <24b8cd2eb2879378ca0cac6ddfd9c5cae68699bc.camel@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 13 May 2019 07:30:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tSqs9AMTThdU8qxkTIlNJvkPD11kfEkOfLcrJZGQml0=; b=mKtDdwldcN/kKtSFZ0OV1rUjFo
+        L0YIrcHbDGvnobIZdBJsGGRK/3OtPHsv+pwLV+N1crHBYJixbIy69FalNoT/p/4bcCN1cV5IHVsPx
+        1dNG/4Vk/9aCZc92b8CJgD+YNhgSRAcPNl3KZ/TLk9E74FIR2Az+lbD+LU+GGH7oobSmE/E+yuxCj
+        3pUqBNcyeOrlFbqTfaU5n1OAQ1KlarZ24EXN5aLfmwf9029FrgMZyw06lw2T8ATqOEKpW1Zl5e5dr
+        XA37mg6cSNUgXrYFzhKxP6jHEXXxL378IkxE64xhKU9bPeNOsQZxvzCakjNE7FqeoqOM0Usnku0qB
+        J1UbWAYw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ99k-0006em-4j; Mon, 13 May 2019 11:30:08 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E04FD2029F87D; Mon, 13 May 2019 13:30:06 +0200 (CEST)
+Date:   Mon, 13 May 2019 13:30:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190513113006.GP2623@hirez.programming.kicks-ass.net>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+ <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+ <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-13 at 11:58 +0200, Jerome Brunet wrote:
-> > The performance hit hasn't been evaluated, but the fix has been tested
-> > using a WiFi AP6398S SDIO module, and the iperf3 Bandwidth measurement gave
-> > 55.2 Mbits/sec over a 63 Hours long test, with the SDIO ios set as High-Speed
-> > at 50MHz clock. It gave around 170 Mbits/sec as SDR104 and 200MHz clock.
-> 
-> These numbers looks to be limited by the MMC bandwidth of the related modes.
-> So, if the SRAM quirk introduce a penalty for the controller, it does not appear
-> to be a limiting factor, AFAICT.
+On Mon, May 13, 2019 at 09:11:38AM +0000, Nadav Amit wrote:
+> BTW: sometimes you don’t see the effect of these full TLB flushes as much in
+> VMs. I encountered a strange phenomenon at the time - INVLPG for an
+> arbitrary page cause my Haswell machine flush the entire TLB, when the
+> INVLPG was issued inside a VM. It took me quite some time to analyze this
+> problem. Eventually Intel told me that’s part of what is called “page
+> fracturing” - if the host uses 4k pages in the EPT, they (usually) need to
+> flush the entire TLB for any INVLPG. That’s happens since they don’t know
+> the size of the flushed page.
 
-Got confused. This comment is completely wrong, please ignore
-
+Cute... if only they'd given us an interface to tell them... :-)
