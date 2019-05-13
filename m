@@ -2,102 +2,145 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13295C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70356C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB23720879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B1820879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sa5hTJoE"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="MKAflvfH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEMXku (ORCPT
+        id S1726778AbfEMXlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 19:40:50 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35901 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfEMXku (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 19:40:50 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v80so8048125pfa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:40:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=J8kVwdfKryVwhVTqGuXeaVb2n8/8oNSbahQ/YtWP1xI=;
-        b=sa5hTJoEG20bTMXXVU6g1aEoSJCap4+nQDLEavj4IVB0Q0WvFwch1WnSeHVzCeOf+6
-         NozdunUylZsJGkfbUevW1O5aRpxemgsu+Cqap9XkehWY73/n/SPIStbxuSlubLpk9jO8
-         EdTkhBdYfxzPwyCGLxp2WbiGrvxaRjzX4/otJYQd5sWrbLfmRbKm2YU867GS5Dd/D4wL
-         sEP7BY3gwMRxi4fSJYa94KNLcP7twzqhYFbbRVeIS9dTm0jHaiLBh/MT3Yl0gpPfxKJf
-         HYYblv/KEjMtWT0fDBkwACZ8qic4unhuM16gzLYZvPBFkhWVRoY/Gu6KOnbpTQz2XUao
-         VVzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=J8kVwdfKryVwhVTqGuXeaVb2n8/8oNSbahQ/YtWP1xI=;
-        b=OzLjvNLjSpjBEWL1yOOBmSndADvwFNIodhelRN2rZsbCfjd+t+t5oi7ZJQ2EBxYzi3
-         iuL9lEozjB251jDvsjvXGEonMxQRR3ogcT3QWA9pLASvNjYsVKmMk/49gRxXVvwRrK0z
-         IyfYDkT4I3q4AQyEM+aJFG0hj4wkXMNo8XOFjtqVAz1//3YA/xHRWajEJ1qOpODbTO7R
-         g+zJDTvLS2RRYCNWlCiKVVaMXdo3WzeJdXMAJakymvvIN13fIe16aVghfK47KLjtpIGa
-         ja5K6784423T5zknGtTNE1gGM+FEvgTWvHavTeajdGTU5MjR3QMeRfU6NVFn19h3qvpW
-         nVuA==
-X-Gm-Message-State: APjAAAWBONae5pbg3F7SwX+Hk5tte2oe2uwVMLj/Tc4jvPN3PRrikfu7
-        3iTmR6DzE1Gd8zo+z0ur9J22YshOB//f1w==
-X-Google-Smtp-Source: APXvYqxJza/f7WkrQm4MQNmOM8P+Yp7+nyNFIKDtT5FejuIGuzHjEwFK6tl1nzjsKXvMKfPowpL0mg==
-X-Received: by 2002:a65:5682:: with SMTP id v2mr34932877pgs.100.1557790849488;
-        Mon, 13 May 2019 16:40:49 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
-        by smtp.googlemail.com with ESMTPSA id e14sm12696269pff.60.2019.05.13.16.40.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 16:40:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] arm64: dts: meson: sei510: consistently order nodes
-In-Reply-To: <b81b46f1-5e8f-26e8-399f-3baca8336e50@baylibre.com>
-References: <20190510155327.5759-1-jbrunet@baylibre.com> <20190510155327.5759-2-jbrunet@baylibre.com> <7h4l62dlyh.fsf@baylibre.com> <3bad9dc8c53e50c4aea1212bf949215660259412.camel@baylibre.com> <b81b46f1-5e8f-26e8-399f-3baca8336e50@baylibre.com>
-Date:   Mon, 13 May 2019 16:40:47 -0700
-Message-ID: <7hef51c48w.fsf@baylibre.com>
+        Mon, 13 May 2019 19:41:22 -0400
+Received: from onstation.org ([52.200.56.107]:41244 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbfEMXlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 19:41:20 -0400
+Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 2F68944970;
+        Mon, 13 May 2019 23:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1557790879;
+        bh=+8cCOED4KfTSbRV3k/MxI++S4PHLOBvuYlL8f5b9qMU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MKAflvfHm+VJdLDjRXpxyQ9Q882xYwizApj14wo6NB8V27Gc9f8HB8DqbkiTokWlW
+         /19A8C9U1RIM1hc3JiByxR4A33X1M2gopJH2XOqHMRoCAbcgRMPU8/cRTFAmbyM2sI
+         RfiE1EvJ5a6wXzYWVEvY8NGMgeCFSBqe19CwwI00=
+From:   Brian Masney <masneyb@onstation.org>
+To:     robdclark@gmail.com, sean@poorly.run
+Cc:     bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        airlied@linux.ie, daniel@ffwll.ch, linux-kernel@vger.kernel.org,
+        linus.walleij@linaro.org, jonathan@marek.ca, robh@kernel.org
+Subject: [PATCH v2.1 1/2] drm/msm: remove resv fields from msm_gem_object struct
+Date:   Mon, 13 May 2019 19:41:04 -0400
+Message-Id: <20190513234105.7531-1-masneyb@onstation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+The msm_gem_object structure contains resv and _resv fields that are
+no longer needed since the reservation object is now stored on
+drm_gem_object. msm_atomic_prepare_fb() and msm_atomic_prepare_fb()
+both referenced the wrong reservation object, and would lead to an
+attempt to dereference a NULL pointer. Correct those two cases to
+point to the correct reservation object.
 
-> On 11/05/2019 17:52, Jerome Brunet wrote:
->> On Fri, 2019-05-10 at 14:43 -0700, Kevin Hilman wrote:
->>> minor nit: I kind of like "aliases" and "chosen" at the top since they
->>> are kind of special nodes, but honestly, I can't think of a really good
->>> reason other than personal preference, so keeping things sorted as
->>> you've done here is probably better.
->>>
->> 
->> You thought the same, then thought maybe memory was important too. But going
->> down that path, you end up sorting by feeling. It is going to be difficult
->> to all agree on which nodes are special.
->> 
->> In the end, we just want/need something that is easy to respect and verify.
->
-> I think it would be better to have the same layout for aliases and memory over
-> all the amlogic DTS, it's common over all socs to have these nodes on top.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: dd55cf6929e6 ("drm: msm: Switch to use drm_gem_object reservation_object")
+---
+This is a split out version of this patch from where I am working to get
+the display working on the Nexus 5:
 
-aliases, chosen, memory and reserved-memory are ones that are typically
-on the top for convience sake, but looking around we have not been
-terribly consistent there either.
+https://lore.kernel.org/lkml/20190509020352.14282-2-masneyb@onstation.org/
 
-At this point, to continue the tradition, I'm not going to be too picky
-about enforcing "standards" that are loosely defined (or undefined) and
-will generally accept cleanups that are moving us towards consistency
-and ease of rebasing.
+Bjorn asks:
+    This resolves a NULL-pointer dereference about to show up in v5.2-rc1,
+    so please pick this up for -rc.
 
-Kevin
+In this version, I dropped the change to msm_gem_new_impl() that
+mistakenly removed 'msm_obj->base.resv = resv;'. I did not put a v3 on
+this patch since I wanted to keep that version number for the larger work
+to get the display working on the Nexus 5 so I went with 2.1 here. :)
+
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 +---
+ drivers/gpu/drm/msm/msm_atomic.c          | 4 +---
+ drivers/gpu/drm/msm/msm_gem.h             | 4 ----
+ 3 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 4fca24b8702c..f3d009a3dc63 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -781,7 +781,6 @@ static int dpu_plane_prepare_fb(struct drm_plane *plane,
+ 	struct dpu_plane_state *pstate = to_dpu_plane_state(new_state);
+ 	struct dpu_hw_fmt_layout layout;
+ 	struct drm_gem_object *obj;
+-	struct msm_gem_object *msm_obj;
+ 	struct dma_fence *fence;
+ 	struct dpu_kms *kms = _dpu_plane_get_kms(&pdpu->base);
+ 	int ret;
+@@ -800,8 +799,7 @@ static int dpu_plane_prepare_fb(struct drm_plane *plane,
+ 	 *       implicit fence and fb prepare by hand here.
+ 	 */
+ 	obj = msm_framebuffer_bo(new_state->fb, 0);
+-	msm_obj = to_msm_bo(obj);
+-	fence = reservation_object_get_excl_rcu(msm_obj->resv);
++	fence = reservation_object_get_excl_rcu(obj->resv);
+ 	if (fence)
+ 		drm_atomic_set_fence_for_plane(new_state, fence);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+index f5b1256e32b6..131c23a267ee 100644
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@ -49,15 +49,13 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
+ 	struct msm_drm_private *priv = plane->dev->dev_private;
+ 	struct msm_kms *kms = priv->kms;
+ 	struct drm_gem_object *obj;
+-	struct msm_gem_object *msm_obj;
+ 	struct dma_fence *fence;
+ 
+ 	if (!new_state->fb)
+ 		return 0;
+ 
+ 	obj = msm_framebuffer_bo(new_state->fb, 0);
+-	msm_obj = to_msm_bo(obj);
+-	fence = reservation_object_get_excl_rcu(msm_obj->resv);
++	fence = reservation_object_get_excl_rcu(obj->resv);
+ 
+ 	drm_atomic_set_fence_for_plane(new_state, fence);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index c5ac781dffee..812d1b1369a5 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -86,10 +86,6 @@ struct msm_gem_object {
+ 
+ 	struct llist_node freed;
+ 
+-	/* normally (resv == &_resv) except for imported bo's */
+-	struct reservation_object *resv;
+-	struct reservation_object _resv;
+-
+ 	/* For physically contiguous buffers.  Used when we don't have
+ 	 * an IOMMU.  Also used for stolen/splashscreen buffer.
+ 	 */
+-- 
+2.20.1
+
