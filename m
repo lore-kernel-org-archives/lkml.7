@@ -2,124 +2,139 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C3BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871CEC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E12A5208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DDD22084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:17:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkJr9A6B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ie0xtH/U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729277AbfEMTPH (ORCPT
+        id S1729321AbfEMTR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:15:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37403 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729234AbfEMTPH (ORCPT
+        Mon, 13 May 2019 15:17:28 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:36269 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729169AbfEMTR1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:15:07 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 7so441909wmo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:15:05 -0700 (PDT)
+        Mon, 13 May 2019 15:17:27 -0400
+Received: by mail-qt1-f202.google.com with SMTP id j12so15486009qth.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=PxThcXQElVI91fi7m64BrSH6eJF9eKRKuatu0rpXtiA=;
-        b=NkJr9A6BNcXWpAQOkQGs5yi+BsqG4+jd1NwObELbXnetvTywfesP6FGR7fRX8oN4p0
-         F3gdptrv3yvWC9QgGz1NKXwpOEtuSMgPrF3FGNoyk6ASphdkzr5BKUUkZlKSNjWjhed2
-         nXRSQTiaSCyXZfHbRh7s4dc49zOsKrV0xNgQckeadFVC1WOP3oxET0zuaRWiN9HQlDRU
-         +K/00YfO8CFeQ3NSmR1AP5INJ5YoYe8TLzfVK27rKvoQ4JcQ4pRuHXofZulH48CH5UvG
-         u7ptofrbRq4zsC5i2VomP9XnWae3DDw1bZ+cEAqXLCtbYfh+iLmUhaSAp5gOwMYhaopO
-         AyiQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=qd758GC+tv+AefghvcuLnRgxqiTzW/XC7mQzkKY2rj4=;
+        b=Ie0xtH/UhJmKkwyMt3DIlOmfAWwFxcEfKEwn11rAWercN5KeYzBkDoSZgcdQpYMIv5
+         6d/Ch5aANElCl/1/DnBj7+ViUBYnbKEuLKDpi2lK/JFns0tO1DqfYsEdtSK4cNPB75rV
+         +LNDLfSKJUuEQ2DpfLfv9JffBzeMSq3OGAgBm3begLhWVN+0XfbWKpwOa6RCUDIXtNif
+         xweR5Eg/3hAtSfX5PHNppVjekv/tsaSBZ5Yrb+9x4SfU4UfiQ/er76Fottg7ARQnGMgi
+         RaSWK8r3KaOVVm7Yz8XShgND+oiFCYrpMMeBaxhEJMTluGOONH4qVWnmWk5D6WdINfke
+         m30Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=PxThcXQElVI91fi7m64BrSH6eJF9eKRKuatu0rpXtiA=;
-        b=Mth/lmX6VfKgaQUfSNRMvOzA/eGi6u1kABsIuzuXBoC/kJ6SUxoatiCYW5KkhYu3ni
-         thsnxyxWwwVHA1TcFKWx8Sd2sey1MHqRzPwzDM0TODxz0nwiMreBrfuoCQDtQVH+HZSm
-         o29FO6U6hQ6SRdEXORIpnJuqeWaYDKxe7IS7JEwHyKqgh2woAKZEnSc9S7HfscXCI7+o
-         TKjks8hYs0AMeRReGL05/SavulklZp+ySWasZNixtUd2eB1qKXXf87Ezgvy0ukc/fiXP
-         IMAl3DB8SZcQXU6A5qImsBzmA0/yHSrqywSlPF08oZUfwAwb3GYUMdEQL6MFyfHh39ck
-         bxqQ==
-X-Gm-Message-State: APjAAAUkpbGcVv1oQt9T+n+HHW5bdS76CvKe5hJPLNbjQjd8K3a2pYE/
-        pJNlHi/Pa10BKsc4ADlSFXsXFkI=
-X-Google-Smtp-Source: APXvYqx4dIMN7CzriD9A4cTd7ina5RxiwjqvDU3bJ3Zr0XndeMDk3N+t9f84fF/FJMhCUYWcYz6yFQ==
-X-Received: by 2002:a1c:1ad6:: with SMTP id a205mr4355150wma.80.1557774905276;
-        Mon, 13 May 2019 12:15:05 -0700 (PDT)
-Received: from avx2 ([46.53.253.112])
-        by smtp.gmail.com with ESMTPSA id 4sm16264208wrf.61.2019.05.13.12.15.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:15:04 -0700 (PDT)
-Date:   Mon, 13 May 2019 22:15:02 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     segoon@openwall.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] tweak LIST_POISON2 for better code generation on x86_64
-Message-ID: <20190513191502.GA8492@avx2>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=qd758GC+tv+AefghvcuLnRgxqiTzW/XC7mQzkKY2rj4=;
+        b=iaMfssV/zD66zGre6MijEpXvfzidC+G65BswOKuKkNWjNc68oDZf7HgAtKA4BhB/7c
+         P4+xJmWLpREfxcCNiJP6LnwFawgKb7K6LPWkuAElv6pTgtip1wWm9V6BAdVAKKMH8Nkp
+         rgXQdn9axdus3w9YxoGcfm/RcwXkF7zoB98QShEL2Nsfd1cAbYpsUEpKSHDkQ4Lh+yZs
+         NW10sIr06tFAqPHwJ/9LAlhKziZpaMkCPvCjAr4eOjgpVVPfPa8zBL1TLRiehEWGdEtW
+         5WJjD9jlpIm+IttwJs+OLSLmgtQ0gxGyfq+RCYAMHlSiYvDCWkgS7dg+suvIS2X/877Q
+         9G/A==
+X-Gm-Message-State: APjAAAWRsi7dh7Za++vq6JCPoTlEAuvA2HuqM2sFZvY4MgRNXNKmQzEZ
+        pjT5E62i1XMJysa7pzyuCzDTyCpIhDs8
+X-Google-Smtp-Source: APXvYqw8t9O+HM3h+AllssTLnPtYtRgEr4WVIkwCW+cvChMq+eLSByMo/zwgfoWj1xtw64EWZqxqmDBG8MBS
+X-Received: by 2002:a37:a705:: with SMTP id q5mr23313599qke.123.1557775046895;
+ Mon, 13 May 2019 12:17:26 -0700 (PDT)
+Date:   Mon, 13 May 2019 12:17:08 -0700
+Message-Id: <20190513191708.87956-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [RFC PATCH] ACPI: PM: Enable wake-up device GPEs for suspend-to-idle
+From:   Rajat Jain <rajatja@google.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com,
+        furquan@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-list_del() poisoning can generate 2 64-bit immediate loads but it also
-can generate one 64-bit immediate load and an addition:
+I noticed that recently multiple systems (chromebooks) couldn't wake
+from S0ix using LID or Keyboard after updating to a newer kernel, I
+bisected and the issue is seen starting the following commit:
 
-	48 b8 00 01 00 00 00 00 ad de	movabs rax,0xdead000000000100
-	48 89 47 58			mov    QWORD PTR [rdi+0x58],rax
-	48 05 00 01 00 00   <=====>	add    rax,0x100
-	48 89 47 60			mov    QWORD PTR [rdi+0x60],rax
+commit f941d3e41da7 ("ACPI: EC / PM: Disable non-wakeup GPEs for
+suspend-to-idle")
 
-However on x86_64 not all constants are equal: those within [-128, 127]
-range can be added with shorter "add r64, imm32" instruction:
+and found that the issue gets fixed if I revert it. I debugged and
+found that although PNP0C0D:00 (representing the LID) is wake capable
+and should wakeup the system per the code in acpi_wakeup_gpe_init()
+and in drivers/acpi/button.c:
 
-	48 b8 00 01 00 00 00 00 ad de	movabs rax,0xdead000000000100
-	48 89 47 58			mov    QWORD PTR [rdi+0x58],rax
-	48 83 c0 22	<======>	add    rax,0x22
-	48 89 47 60			mov    QWORD PTR [rdi+0x60],rax
+localhost /sys # cat /proc/acpi/wakeup
+Device  S-state   Status   Sysfs node
+LID0      S4    *enabled   platform:PNP0C0D:00
+CREC      S5    *disabled  platform:GOOG0004:00
+                *disabled  platform:cros-ec-dev.1.auto
+                *disabled  platform:cros-ec-accel.0
+                *disabled  platform:cros-ec-accel.1
+                *disabled  platform:cros-ec-gyro.0
+                *disabled  platform:cros-ec-ring.0
+                *disabled  platform:cros-usbpd-charger.2.auto
+                *disabled  platform:cros-usbpd-logger.3.auto
+D015      S3    *enabled   i2c:i2c-ELAN0000:00
+PENH      S3    *enabled   platform:PRP0001:00
+XHCI      S3    *enabled   pci:0000:00:14.0
+GLAN      S4    *disabled
+WIFI      S3    *disabled  pci:0000:00:14.3
+localhost /sys #
 
-Patch saves 2 bytes per some LIST_POISON2 usage.
+On debugging, I found that its corresponding GPE is not being enabled.
+The particular GPE's "gpe_register_info->enable_for_wake" does not have any
+bits set when acpi_enable_all_wakeup_gpes() comes around to use it. I
+looked at code and could not find any other code path that should set the
+bits in "enable_for_wake" bitmask for the wake enabled devices for s2idle
+(I do see that it happens for S3 in acpi_sleep_prepare()).
 
-(Slightly disappointing) space savings on F29 x86_64 config:
+Thus I used the same call to enable the GPEs for wake enabled devices,
+and verified that this fixes the regression I was seeing on multiple of
+my devices.
 
-	add/remove: 0/0 grow/shrink: 0/2164 up/down: 0/-5184 (-5184)
-	Function                                     old     new   delta
-	zstd_get_workspace                           548     546      -2
-		...
-	mlx4_delete_all_resources_for_slave         4826    4804     -22
-	Total: Before=83304131, After=83298947, chg -0.01%
-
-New constants are:
-
-	0xdead000000000100
-	0xdead000000000122
-
-Note: LIST_POISON1 can't be changed to ...11 because something in page
-allocator requires low bit unset.
-
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203579
+Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
+ drivers/acpi/sleep.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- include/linux/poison.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -21,7 +21,7 @@
-  * non-initialized list entries.
-  */
- #define LIST_POISON1  ((void *) 0x100 + POISON_POINTER_DELTA)
--#define LIST_POISON2  ((void *) 0x200 + POISON_POINTER_DELTA)
-+#define LIST_POISON2  ((void *) 0x122 + POISON_POINTER_DELTA)
+diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+index 403c4ff15349..e52f1238d2d6 100644
+--- a/drivers/acpi/sleep.c
++++ b/drivers/acpi/sleep.c
+@@ -977,6 +977,8 @@ static int acpi_s2idle_prepare(void)
+ 	if (acpi_sci_irq_valid())
+ 		enable_irq_wake(acpi_sci_irq);
  
- /********** include/linux/timer.h **********/
- /*
++	acpi_enable_wakeup_devices(ACPI_STATE_S0);
++
+ 	/* Change the configuration of GPEs to avoid spurious wakeup. */
+ 	acpi_enable_all_wakeup_gpes();
+ 	acpi_os_wait_events_complete();
+@@ -1027,6 +1029,8 @@ static void acpi_s2idle_restore(void)
+ {
+ 	acpi_enable_all_runtime_gpes();
+ 
++	acpi_disable_wakeup_devices(ACPI_STATE_S0);
++
+ 	if (acpi_sci_irq_valid())
+ 		disable_irq_wake(acpi_sci_irq);
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
