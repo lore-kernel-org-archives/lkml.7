@@ -2,108 +2,93 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24986C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FD3C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EABAB208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCC4218B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:05:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V4Mavlc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfEMNET (ORCPT
+        id S1730065AbfEMNFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:04:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59104 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727953AbfEMNET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:04:19 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8DAAA3084288;
-        Mon, 13 May 2019 13:04:18 +0000 (UTC)
-Received: from [10.72.12.50] (ovpn-12-50.pek2.redhat.com [10.72.12.50])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A6C618A47;
-        Mon, 13 May 2019 13:04:11 +0000 (UTC)
-Subject: Re: [PATCH 4/5] ceph: fix improper use of smp_mb__before_atomic()
-To:     Andrea Parri <andrea.parri@amarulasolutions.com>,
-        "Yan, Zheng" <ukernel@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-5-git-send-email-andrea.parri@amarulasolutions.com>
- <20190430082332.GB2677@hirez.programming.kicks-ass.net>
- <CAAM7YA=YOM79GJK8b7OOQbzT_-sYRD2UFHYithY7Li1yQt5Hog@mail.gmail.com>
- <20190509205452.GA4359@andrea>
-From:   "Yan, Zheng" <zyan@redhat.com>
-Message-ID: <6956e700-ef56-7f20-4e6c-3ad86c9fd89e@redhat.com>
-Date:   Mon, 13 May 2019 21:04:10 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 09:05:14 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37103 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbfEMNFN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:05:13 -0400
+Received: by mail-wr1-f67.google.com with SMTP id e15so2787918wrs.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:05:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EHZ/pld/sg8uAVGHhkkrEz44b+d5Izaa0pIrN3uQMwQ=;
+        b=V4Mavlc3cgLus5AEdOtVuk9qMM6lyQfOEkN0u8KEnhzsEd3hOX2fbV4GtwLj8hPyTr
+         5w8RiGcpINtPoxLXnVdAm0oI1oNa3aeEUWtEYVfvrcUFI3U0+jjrXIZiCsuisDtUPMld
+         9vONUn3cIyyVcXD6lY5KmmceWS+dH/4G9qYfvWMS79eBlFGzk3KO/lI7BBNO2GBHwgsy
+         t0qeX/DPl9xZPqzJOm/IRLrRcmMlGBN0vi+zyUcrJPFHywFLkC4O9+dYPjMcvo30DV4V
+         jwA+1nYBgDdV3KLAlU5L5mBfyEpcTgSPEPFkcn71adEJ5IWmDAtKIwIzK1mq6JKjCJ4P
+         VJcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EHZ/pld/sg8uAVGHhkkrEz44b+d5Izaa0pIrN3uQMwQ=;
+        b=aeIsSM3QLcHxWxOktqnZ8UgWKaFv/3Xtfjdhpoy6WR1IuzzjJUn1Fv1hdA2NBT7Y9L
+         a4x+167jDkbDs9orCqUvkfyQ361T29ycAxX2lRt2gic5Tb1SfYahEOSEhcjZaWc4isGf
+         obBzQskRmCZJ9MYn7m+OFCpchEsQbTwpfmsefRYByLmtm7raEQHNybcevq8uHrYTQxh3
+         Q2kNCnBjsgeLCRtaJc+QMbf5xQe8aTrLYn0xUiQ39Yq5eguA+VdckuWXKZb1QaJUCcp3
+         /3DNGrp01lWwKOEG4kz41pt+V/zzH4cBA2BmrB3MxBE7Dw2UY9U9x99k01rjQlONYBtS
+         WZFQ==
+X-Gm-Message-State: APjAAAVxN7kUV3p2Khh6me2Ki5QPYkj3teNKlo39fnRIkzW6cZfkd06h
+        1Wa/JXPZMYqrIlx/PTuLG2K4SQ==
+X-Google-Smtp-Source: APXvYqzwWbqc3KgT6JSaZYy4PBV+LnjmUu0z+YVKtdpYi8JdgyGhKJ7ChUmglf1QZ12ESiwwE8oFiw==
+X-Received: by 2002:a5d:4245:: with SMTP id s5mr8742703wrr.147.1557752711799;
+        Mon, 13 May 2019 06:05:11 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id o6sm33701457wrh.55.2019.05.13.06.05.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 06:05:11 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: meson: nanopi k2: add sd DDR50
+Date:   Mon, 13 May 2019 15:05:07 +0200
+Message-Id: <20190513130507.22533-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190509205452.GA4359@andrea>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 13 May 2019 13:04:19 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/10/19 4:55 AM, Andrea Parri wrote:
-> On Tue, Apr 30, 2019 at 05:08:43PM +0800, Yan, Zheng wrote:
->> On Tue, Apr 30, 2019 at 4:26 PM Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>> On Mon, Apr 29, 2019 at 10:15:00PM +0200, Andrea Parri wrote:
->>>> This barrier only applies to the read-modify-write operations; in
->>>> particular, it does not apply to the atomic64_set() primitive.
->>>>
->>>> Replace the barrier with an smp_mb().
->>>>
->>>
->>>> @@ -541,7 +541,7 @@ static inline void __ceph_dir_set_complete(struct ceph_inode_info *ci,
->>>>                                           long long release_count,
->>>>                                           long long ordered_count)
->>>>   {
->>>> -     smp_mb__before_atomic();
->>>
->>> same
->>>          /*
->>>           * XXX: the comment that explain this barrier goes here.
->>>           */
->>>
->>
->> makes sure operations that setup readdir cache (update page cache and
->> i_size) are strongly ordered with following atomic64_set.
-> 
-> Thanks for the suggestion, Yan.
-> 
-> To be clear: would you like me to integrate your comment and resend?
-> any other suggestions?
-> 
+Add UHS ddr50 mode to the nanopi k2
 
-Yes, please
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards
-Yan, Zheng
-
-> Thanx,
->    Andrea
-> 
-> 
->>
->>>> +     smp_mb();
->>>
->>>>        atomic64_set(&ci->i_complete_seq[0], release_count);
->>>>        atomic64_set(&ci->i_complete_seq[1], ordered_count);
->>>>   }
->>>> --
->>>> 2.7.4
->>>>
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+index be81f8958717..849c01650c4d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+@@ -301,6 +301,7 @@
+ 	sd-uhs-sdr12;
+ 	sd-uhs-sdr25;
+ 	sd-uhs-sdr50;
++	sd-uhs-ddr50;
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-- 
+2.20.1
 
