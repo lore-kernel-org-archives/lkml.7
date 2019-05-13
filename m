@@ -2,420 +2,150 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00275C46470
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9951BC46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70DC2133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C1EE2133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aJ5F9ui0"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="gilxhSCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730907AbfEMOry (ORCPT
+        id S1730921AbfEMOsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:47:54 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:34106 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbfEMOry (ORCPT
+        Mon, 13 May 2019 10:48:06 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38402 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbfEMOsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:47:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p27so17990822eda.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:47:52 -0700 (PDT)
+        Mon, 13 May 2019 10:48:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d13so7895009qth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:48:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=WqQ/qu8bZdDV5lZ2yPHRjHV3GQh6xwRfGdAbU3fEx0E=;
-        b=aJ5F9ui0kU0KSOeEWvrjxRvpb4YP1Ob1ES7Ncrh79m4Mp5Hj3dqh6wrL8zaZ461Mn1
-         dZ0+YcdSISw/cpalO3F6tsyB0S5wcwfkqzjSn0vyXzMtf8BFyW9F/6cbmpP8KFjcEUZa
-         p9RsktIPCwLd4XOkQ7AkbtFa3aubeEMg6zQXo=
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8IHMOkhmEb6QT/ZiWX3DdDfZLIknej7rKf5m2D6xNuc=;
+        b=gilxhSCldOJPRo4SMSKe6WlhN7JItK+oQioLxN8lSziUeONl5Y/Y8STILpTSOUhhMU
+         DyTKkxvSUFOLOt3yBLSenRYoZHKnOgX10A2zizp9IxWx3HVCpRbhHd3yH4CT1Ydsqhhz
+         YX8h4KWHHSU+gRbGwEIXP6UG6sBabn8tDeUSoNlyvm5ba/2z58W1dJMOJFWQ9wgpk0ap
+         IrKOlg4dEYpHpDifZ/kaNjyVI8evx3Xr/R66baPU71WCa8FnP4U+7GE5ZlVACa2ds2im
+         e8mDbcRkn/By+hPdkKROpknY+9Qn7Z2JsEBKIDxCnhJ9/tExJHH1Kv0W9N0lP5xbS/jq
+         Kscg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=WqQ/qu8bZdDV5lZ2yPHRjHV3GQh6xwRfGdAbU3fEx0E=;
-        b=WOxZKQ6EWDrsIhchFWRlApXEHqdBt7g4g/dQ0BEIjhAa2ky8qheZ5hJaRGmGWkIZgn
-         47nTrcsOM09xflu7RlVfGqKjEzSZ8YnIYLfHjFwI8brOqtnrbKise7Id+EIXbJzydZC8
-         xKGyLPPM9E4xFzLtGfTjCpY9CTcoDahLhXcAqcpi8mKg/RFyHUnJLhTLwNUTveQcfg4F
-         zGzOydrUY4+/l5n5OdshGRLy/7uWCuhxknnJDrMrmHh+dCLxxtx62TkbLS4gIuOsu6IU
-         9Tf+we2xQkANyWADzcxzMEhl/g/W/0Y5sxuvE4u1Xwov/IY96626vMqDLrdsszfpN3Wq
-         kMxA==
-X-Gm-Message-State: APjAAAUHWKUFZ8bBHLaCeQ+ls+P65R4ssf00vNxgMTrwprlqfa/CE5iI
-        vaYS9Tl7bIbN6wVNuWQb1yWvZQ==
-X-Google-Smtp-Source: APXvYqyFohbvNV9wPYq799uADbtu2hY1tKIMJFUoh98gOKzRIX79U2iaPjORtMvOOVhNNk7zE54imw==
-X-Received: by 2002:a50:9430:: with SMTP id p45mr29070661eda.257.1557758871693;
-        Mon, 13 May 2019 07:47:51 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id z10sm3796611edl.35.2019.05.13.07.47.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8IHMOkhmEb6QT/ZiWX3DdDfZLIknej7rKf5m2D6xNuc=;
+        b=LRTBw90p6l3QFRPviXNB14OfU7dZQ0l+O/N5WRSFYS0BOXTehxE0+7mH6k3LieSOki
+         3udmOMMnvLamHqeE78lMLvCJeVLRAL7x5D/chU159g1Pk472+DWWSP8j/EGhhIZYANhR
+         bOo27iegpGOZU2fKq50bwGaq1wyKelRdpfJyn25fSoSujt+AAzb2xweicngiNMN+2zOm
+         PmK3RZLwjxIsRp2RD/N+QP5Q4or0UV4Sp0mYXlLG7qG32G8j2tWIg50Y9JDaP3VAOupL
+         YZCm5C7P+GOg9XT0Siyp3VodOxCOQcu5w1+Ym0pSOqIywX7H4eLsSrgmLbZI8XDh+hp9
+         vU2g==
+X-Gm-Message-State: APjAAAXyT4pDrWGjbeGJC8HTUm349LkkrSwKNfR8t+7HVVIQdRWmHd5p
+        yKHheRnPeoAZwub3Xp5b8jx+EA==
+X-Google-Smtp-Source: APXvYqxNdvAKxfxX7AKNCeVbrRHlGE3pAiuxcTmOZ5y5s0sru4T1T0lw8xsnCCgpIxTSa2x70VK59w==
+X-Received: by 2002:ac8:3509:: with SMTP id y9mr24571513qtb.336.1557758885215;
+        Mon, 13 May 2019 07:48:05 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 22sm4038205qkl.4.2019.05.13.07.48.04
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 07:47:51 -0700 (PDT)
-Date:   Mon, 13 May 2019 16:47:47 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        Sean Paul <seanpaul@chromium.org>,
+        Mon, 13 May 2019 07:48:04 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:48:03 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Eric Anholt <eric@anholt.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] drm: Convert
- connector_helper_funcs->atomic_check to accept drm_atomic_state
-Message-ID: <20190513144747.GR17751@phenom.ffwll.local>
-Mail-Followup-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>, dri-devel@lists.freedesktop.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Eric Anholt <eric@anholt.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org
-References: <20190502194956.218441-1-sean@poorly.run>
- <20190502194956.218441-5-sean@poorly.run>
- <20190511191202.GL13043@pendragon.ideasonboard.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] dt-bindings: msm/disp: Introduce interconnect
+ bindings for MDSS on SDM845
+Message-ID: <20190513144803.GP17077@art_vandelay>
+References: <20190508204219.31687-1-robdclark@gmail.com>
+ <20190508204219.31687-4-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190511191202.GL13043@pendragon.ideasonboard.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
+In-Reply-To: <20190508204219.31687-4-robdclark@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 10:12:02PM +0300, Laurent Pinchart wrote:
-> Hi Sean,
+On Wed, May 08, 2019 at 01:42:13PM -0700, Rob Clark wrote:
+> From: Jayant Shekhar <jshekhar@codeaurora.org>
 > 
-> Thank you for the patch.
+> Add interconnect properties such as interconnect provider specifier
+> , the edge source and destination ports which are required by the
+> interconnect API to configure interconnect path for MDSS.
 > 
-> On Thu, May 02, 2019 at 03:49:46PM -0400, Sean Paul wrote:
-> > From: Sean Paul <seanpaul@chromium.org>
-> > 
-> > Everyone who implements connector_helper_funcs->atomic_check reaches
-> > into the connector state to get the atomic state. Instead of continuing
-> > this pattern, change the callback signature to just give atomic state
-> > and let the driver determine what it does and does not need from it.
-> > 
-> > Eventually all atomic functions should do this, but that's just too much
-> > busy work for me.
+> Changes in v2:
+> 	- None
 > 
-> Given that drivers also access the connector state, isn't this slightly
-> more inefficient ?
+> Changes in v3:
+> 	- Remove common property definitions (Rob Herring)
+> 
+> Changes in v4:
+> 	- Use port macros and change port string names (Georgi Djakov)
+> 
+> Changes in v5-v7:
+> 	- None
+> 
+> Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-It's atomic code, we're trying to optimize for clean code at the expense
-of a bit of runtime overhead due to more pointer chasing. And I agree with
-the general push, the pile of old/new_state pointers of various objects
-we're passing around is confusing. Passing the overall drm_atomic_state
-seems much more reasonable, and with that we can get everything else. Plus
-it's much more obvious whether you have the old/new state (since that's
-explicit when you look it up from the drm_atomic_state).
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-If we ever see this show up in profile, and it starts mattering, first
-thing we need is a hashtable I think (atm it's list walking, which is just
-terrible). But thus far no one cares.
--Daniel
-
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/display/msm/dpu.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> > Changes in v3:
-> > - Added to the set
-> > 
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> > Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> > Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> > Cc: Ben Skeggs <bskeggs@redhat.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > Cc: Eric Anholt <eric@anholt.net>
-> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > ---
-> >  drivers/gpu/drm/drm_atomic_helper.c      |  4 ++--
-> >  drivers/gpu/drm/i915/intel_atomic.c      |  8 +++++---
-> >  drivers/gpu/drm/i915/intel_dp_mst.c      |  7 ++++---
-> >  drivers/gpu/drm/i915/intel_drv.h         |  2 +-
-> >  drivers/gpu/drm/i915/intel_sdvo.c        |  9 +++++----
-> >  drivers/gpu/drm/i915/intel_tv.c          |  8 +++++---
-> >  drivers/gpu/drm/nouveau/dispnv50/disp.c  |  5 +++--
-> >  drivers/gpu/drm/rcar-du/rcar_lvds.c      | 12 +++++++-----
-> >  drivers/gpu/drm/vc4/vc4_txp.c            |  7 ++++---
-> >  include/drm/drm_modeset_helper_vtables.h |  2 +-
-> >  10 files changed, 37 insertions(+), 27 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > index 9d9e47276839..fa5a367507c1 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -683,7 +683,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
-> >  		}
-> >  
-> >  		if (funcs->atomic_check)
-> > -			ret = funcs->atomic_check(connector, new_connector_state);
-> > +			ret = funcs->atomic_check(connector, state);
-> >  		if (ret)
-> >  			return ret;
-> >  
-> > @@ -725,7 +725,7 @@ drm_atomic_helper_check_modeset(struct drm_device *dev,
-> >  			continue;
-> >  
-> >  		if (funcs->atomic_check)
-> > -			ret = funcs->atomic_check(connector, new_connector_state);
-> > +			ret = funcs->atomic_check(connector, state);
-> >  		if (ret)
-> >  			return ret;
-> >  	}
-> > diff --git a/drivers/gpu/drm/i915/intel_atomic.c b/drivers/gpu/drm/i915/intel_atomic.c
-> > index b844e8840c6f..e8a5b82e9242 100644
-> > --- a/drivers/gpu/drm/i915/intel_atomic.c
-> > +++ b/drivers/gpu/drm/i915/intel_atomic.c
-> > @@ -103,12 +103,14 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
-> >  }
-> >  
-> >  int intel_digital_connector_atomic_check(struct drm_connector *conn,
-> > -					 struct drm_connector_state *new_state)
-> > +					 struct drm_atomic_state *state)
-> >  {
-> > +	struct drm_connector_state *new_state =
-> > +		drm_atomic_get_new_connector_state(state, conn);
-> >  	struct intel_digital_connector_state *new_conn_state =
-> >  		to_intel_digital_connector_state(new_state);
-> >  	struct drm_connector_state *old_state =
-> > -		drm_atomic_get_old_connector_state(new_state->state, conn);
-> > +		drm_atomic_get_old_connector_state(state, conn);
-> >  	struct intel_digital_connector_state *old_conn_state =
-> >  		to_intel_digital_connector_state(old_state);
-> >  	struct drm_crtc_state *crtc_state;
-> > @@ -118,7 +120,7 @@ int intel_digital_connector_atomic_check(struct drm_connector *conn,
-> >  	if (!new_state->crtc)
-> >  		return 0;
-> >  
-> > -	crtc_state = drm_atomic_get_new_crtc_state(new_state->state, new_state->crtc);
-> > +	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
-> >  
-> >  	/*
-> >  	 * These properties are handled by fastset, and might not end
-> > diff --git a/drivers/gpu/drm/i915/intel_dp_mst.c b/drivers/gpu/drm/i915/intel_dp_mst.c
-> > index 19d81cef2ab6..89cfec128ba0 100644
-> > --- a/drivers/gpu/drm/i915/intel_dp_mst.c
-> > +++ b/drivers/gpu/drm/i915/intel_dp_mst.c
-> > @@ -143,9 +143,10 @@ static int intel_dp_mst_compute_config(struct intel_encoder *encoder,
-> >  
-> >  static int
-> >  intel_dp_mst_atomic_check(struct drm_connector *connector,
-> > -			  struct drm_connector_state *new_conn_state)
-> > +			  struct drm_atomic_state *state)
-> >  {
-> > -	struct drm_atomic_state *state = new_conn_state->state;
-> > +	struct drm_connector_state *new_conn_state =
-> > +		drm_atomic_get_new_connector_state(state, connector);
-> >  	struct drm_connector_state *old_conn_state =
-> >  		drm_atomic_get_old_connector_state(state, connector);
-> >  	struct intel_connector *intel_connector =
-> > @@ -155,7 +156,7 @@ intel_dp_mst_atomic_check(struct drm_connector *connector,
-> >  	struct drm_dp_mst_topology_mgr *mgr;
-> >  	int ret;
-> >  
-> > -	ret = intel_digital_connector_atomic_check(connector, new_conn_state);
-> > +	ret = intel_digital_connector_atomic_check(connector, state);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > diff --git a/drivers/gpu/drm/i915/intel_drv.h b/drivers/gpu/drm/i915/intel_drv.h
-> > index f8c7b291fdc3..88571b8e8d62 100644
-> > --- a/drivers/gpu/drm/i915/intel_drv.h
-> > +++ b/drivers/gpu/drm/i915/intel_drv.h
-> > @@ -2481,7 +2481,7 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
-> >  						struct drm_property *property,
-> >  						u64 val);
-> >  int intel_digital_connector_atomic_check(struct drm_connector *conn,
-> > -					 struct drm_connector_state *new_state);
-> > +					 struct drm_atomic_state *state);
-> >  struct drm_connector_state *
-> >  intel_digital_connector_duplicate_state(struct drm_connector *connector);
-> >  
-> > diff --git a/drivers/gpu/drm/i915/intel_sdvo.c b/drivers/gpu/drm/i915/intel_sdvo.c
-> > index 68f497493d43..72ea164b971c 100644
-> > --- a/drivers/gpu/drm/i915/intel_sdvo.c
-> > +++ b/drivers/gpu/drm/i915/intel_sdvo.c
-> > @@ -2342,9 +2342,10 @@ static const struct drm_connector_funcs intel_sdvo_connector_funcs = {
-> >  };
-> >  
-> >  static int intel_sdvo_atomic_check(struct drm_connector *conn,
-> > -				   struct drm_connector_state *new_conn_state)
-> > +				   struct drm_atomic_state *state)
-> >  {
-> > -	struct drm_atomic_state *state = new_conn_state->state;
-> > +	struct drm_connector_state *new_conn_state =
-> > +		drm_atomic_get_new_connector_state(state, conn);
-> >  	struct drm_connector_state *old_conn_state =
-> >  		drm_atomic_get_old_connector_state(state, conn);
-> >  	struct intel_sdvo_connector_state *old_state =
-> > @@ -2356,13 +2357,13 @@ static int intel_sdvo_atomic_check(struct drm_connector *conn,
-> >  	    (memcmp(&old_state->tv, &new_state->tv, sizeof(old_state->tv)) ||
-> >  	     memcmp(&old_conn_state->tv, &new_conn_state->tv, sizeof(old_conn_state->tv)))) {
-> >  		struct drm_crtc_state *crtc_state =
-> > -			drm_atomic_get_new_crtc_state(new_conn_state->state,
-> > +			drm_atomic_get_new_crtc_state(state,
-> >  						      new_conn_state->crtc);
-> >  
-> >  		crtc_state->connectors_changed = true;
-> >  	}
-> >  
-> > -	return intel_digital_connector_atomic_check(conn, new_conn_state);
-> > +	return intel_digital_connector_atomic_check(conn, state);
-> >  }
-> >  
-> >  static const struct drm_connector_helper_funcs intel_sdvo_connector_helper_funcs = {
-> > diff --git a/drivers/gpu/drm/i915/intel_tv.c b/drivers/gpu/drm/i915/intel_tv.c
-> > index 3924c4944e1f..a41c5b467c14 100644
-> > --- a/drivers/gpu/drm/i915/intel_tv.c
-> > +++ b/drivers/gpu/drm/i915/intel_tv.c
-> > @@ -1817,16 +1817,18 @@ static const struct drm_connector_funcs intel_tv_connector_funcs = {
-> >  };
-> >  
-> >  static int intel_tv_atomic_check(struct drm_connector *connector,
-> > -				 struct drm_connector_state *new_state)
-> > +				 struct drm_atomic_state *state)
-> >  {
-> > +	struct drm_connector_state *new_state;
-> >  	struct drm_crtc_state *new_crtc_state;
-> >  	struct drm_connector_state *old_state;
-> >  
-> > +	new_state = drm_atomic_get_new_connector_state(state, connector);
-> >  	if (!new_state->crtc)
-> >  		return 0;
-> >  
-> > -	old_state = drm_atomic_get_old_connector_state(new_state->state, connector);
-> > -	new_crtc_state = drm_atomic_get_new_crtc_state(new_state->state, new_state->crtc);
-> > +	old_state = drm_atomic_get_old_connector_state(state, connector);
-> > +	new_crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
-> >  
-> >  	if (old_state->tv.mode != new_state->tv.mode ||
-> >  	    old_state->tv.margins.left != new_state->tv.margins.left ||
-> > diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > index 4b1650f51955..7ba373f493b2 100644
-> > --- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > +++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-> > @@ -948,11 +948,12 @@ nv50_mstc_get_modes(struct drm_connector *connector)
-> >  
-> >  static int
-> >  nv50_mstc_atomic_check(struct drm_connector *connector,
-> > -		       struct drm_connector_state *new_conn_state)
-> > +		       struct drm_atomic_state *state)
-> >  {
-> > -	struct drm_atomic_state *state = new_conn_state->state;
-> >  	struct nv50_mstc *mstc = nv50_mstc(connector);
-> >  	struct drm_dp_mst_topology_mgr *mgr = &mstc->mstm->mgr;
-> > +	struct drm_connector_state *new_conn_state =
-> > +		drm_atomic_get_new_connector_state(state, connector);
-> >  	struct drm_connector_state *old_conn_state =
-> >  		drm_atomic_get_old_connector_state(state, connector);
-> >  	struct drm_crtc_state *crtc_state;
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_lvds.c b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > index 620b51aab291..5b81ba2a7f27 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_lvds.c
-> > @@ -92,13 +92,15 @@ static int rcar_lvds_connector_get_modes(struct drm_connector *connector)
-> >  }
-> >  
-> >  static int rcar_lvds_connector_atomic_check(struct drm_connector *connector,
-> > -					    struct drm_connector_state *state)
-> > +					    struct drm_atomic_state *state)
-> >  {
-> >  	struct rcar_lvds *lvds = connector_to_rcar_lvds(connector);
-> >  	const struct drm_display_mode *panel_mode;
-> > +	struct drm_connector_state *conn_state;
-> >  	struct drm_crtc_state *crtc_state;
-> >  
-> > -	if (!state->crtc)
-> > +	conn_state = drm_atomic_get_new_connector_state(state, connector);
-> > +	if (!conn_state->crtc)
-> >  		return 0;
-> >  
-> >  	if (list_empty(&connector->modes)) {
-> > @@ -110,9 +112,9 @@ static int rcar_lvds_connector_atomic_check(struct drm_connector *connector,
-> >  				      struct drm_display_mode, head);
-> >  
-> >  	/* We're not allowed to modify the resolution. */
-> > -	crtc_state = drm_atomic_get_crtc_state(state->state, state->crtc);
-> > -	if (IS_ERR(crtc_state))
-> > -		return PTR_ERR(crtc_state);
-> > +	crtc_state = drm_atomic_get_crtc_state(state, conn_state->crtc);
-> > +	if (!crtc_state)
-> > +		return -EINVAL;
-> >  
-> >  	if (crtc_state->mode.hdisplay != panel_mode->hdisplay ||
-> >  	    crtc_state->mode.vdisplay != panel_mode->vdisplay)
-> > diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
-> > index c8b89a78f9f4..96f91c1b4b6e 100644
-> > --- a/drivers/gpu/drm/vc4/vc4_txp.c
-> > +++ b/drivers/gpu/drm/vc4/vc4_txp.c
-> > @@ -221,17 +221,18 @@ static const u32 txp_fmts[] = {
-> >  };
-> >  
-> >  static int vc4_txp_connector_atomic_check(struct drm_connector *conn,
-> > -					struct drm_connector_state *conn_state)
-> > +					  struct drm_atomic_state *state)
-> >  {
-> > +	struct drm_connector_state *conn_state;
-> >  	struct drm_crtc_state *crtc_state;
-> >  	struct drm_framebuffer *fb;
-> >  	int i;
-> >  
-> > +	conn_state = drm_atomic_get_new_connector_state(state, conn);
-> >  	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
-> >  		return 0;
-> >  
-> > -	crtc_state = drm_atomic_get_new_crtc_state(conn_state->state,
-> > -						   conn_state->crtc);
-> > +	crtc_state = drm_atomic_get_new_crtc_state(state, conn_state->crtc);
-> >  
-> >  	fb = conn_state->writeback_job->fb;
-> >  	if (fb->width != crtc_state->mode.hdisplay ||
-> > diff --git a/include/drm/drm_modeset_helper_vtables.h b/include/drm/drm_modeset_helper_vtables.h
-> > index de57fb40cb6e..adc8b7cf64b5 100644
-> > --- a/include/drm/drm_modeset_helper_vtables.h
-> > +++ b/include/drm/drm_modeset_helper_vtables.h
-> > @@ -1020,7 +1020,7 @@ struct drm_connector_helper_funcs {
-> >  	 * deadlock.
-> >  	 */
-> >  	int (*atomic_check)(struct drm_connector *connector,
-> > -			    struct drm_connector_state *state);
-> > +			    struct drm_atomic_state *state);
-> >  
-> >  	/**
-> >  	 * @atomic_commit:
-> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> index ad2e8830324e..a61dd40f3792 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> @@ -28,6 +28,11 @@ Required properties:
+>  - #address-cells: number of address cells for the MDSS children. Should be 1.
+>  - #size-cells: Should be 1.
+>  - ranges: parent bus address space is the same as the child bus address space.
+> +- interconnects : interconnect path specifier for MDSS according to
+> +  Documentation/devicetree/bindings/interconnect/interconnect.txt. Should be
+> +  2 paths corresponding to 2 AXI ports.
+> +- interconnect-names : MDSS will have 2 port names to differentiate between the
+> +  2 interconnect paths defined with interconnect specifier.
+>  
+>  Optional properties:
+>  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
+> @@ -86,6 +91,11 @@ Example:
+>  		interrupt-controller;
+>  		#interrupt-cells = <1>;
+>  
+> +		interconnects = <&rsc_hlos MASTER_MDP0 &rsc_hlos SLAVE_EBI1>,
+> +				<&rsc_hlos MASTER_MDP1 &rsc_hlos SLAVE_EBI1>;
+> +
+> +		interconnect-names = "mdp0-mem", "mdp1-mem";
+> +
+>  		iommus = <&apps_iommu 0>;
+>  
+>  		#address-cells = <2>;
 > -- 
-> Regards,
+> 2.20.1
 > 
-> Laurent Pinchart
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Sean Paul, Software Engineer, Google / Chromium OS
