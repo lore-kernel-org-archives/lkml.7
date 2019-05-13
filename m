@@ -2,121 +2,144 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F3EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220C1C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410FF20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CB22147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:26:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="grovnzlG"
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="EJt4a/jy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfEMV0c (ORCPT
+        id S1726554AbfEMV0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:26:32 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42578 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfEMV0b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:26:31 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DLOIfI163779;
-        Mon, 13 May 2019 21:25:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=565YBW81DzfaRDIS43k2HzjR+yOfbcWDWWoM7zcskn0=;
- b=grovnzlGNhoWxg5qTfZqqCe1IbYlscPPaFCoCsuR8tt3ASzDgZxK2+mT55ONjtQpCEzY
- kfB5uJIm7OzXwBf4+8TE3xSbFPPVcOCDVWNVFli9RyNtmRNYhiKlGCNLURZHUOscPclr
- IYNal+CRZA/SCX4yPG2Zpsri3AT60IdEClhmHHTYUgtZ3dAmQr+9vx9HV06zYb8AszYn
- 9FRvfVgMvL0QV+oO4S7ODYaqwUl2XjF2+9Wo5jDYi7dTaDvu181uHwWAfiIBxuoIDcUx
- 2VvBeh+jiKiBWjHJ9ibL/22dVxSBMC832kGL/8a4Y5k8XxNOcY+NvuyxL2Iy8p7Lf8mn RQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2sdq1q9ry6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 21:25:54 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DLPIdA126929;
-        Mon, 13 May 2019 21:25:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2se0tvsthj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 21:25:53 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4DLPpxg006777;
-        Mon, 13 May 2019 21:25:52 GMT
-Received: from [192.168.14.112] (/79.180.238.224)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 14:25:51 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20190513151500.GY2589@hirez.programming.kicks-ass.net>
-Date:   Tue, 14 May 2019 00:25:44 +0300
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        jwadams@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
- <20190513151500.GY2589@hirez.programming.kicks-ass.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130142
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130142
+        Mon, 13 May 2019 17:26:36 -0400
+Received: from mail-eopbgr720126.outbound.protection.outlook.com ([40.107.72.126]:38338
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbfEMV0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 17:26:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uHCP/IgkV9JDW9zD/gfQRZzVOinUXUNC1+l5QFJO3yc=;
+ b=EJt4a/jy8C0NVFsv72bxJGk80QR2MHY3CPwUvyaRiOWja7V7n3xfeS48JfW1nrmo4evDy8AoE9uzLJZibVZ0pTv3aOe1YWxj7GD4kDcab4sYMFJwfTsl4TQpuKtKyUNi9N5KdzQCqzWCIpvC+TAk2bq3+mhgebJScYgWysxvCi4=
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3609.namprd06.prod.outlook.com (10.167.236.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Mon, 13 May 2019 21:26:28 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876%2]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 21:26:28 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+Thread-Topic: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
+ unsigned properties
+Thread-Index: AQHVB3nKLczzbyv1Ekyx8+zOFp2aoKZlvT2AgAAe/wCAA6E4AIAABBwAgAAJa4CAAAsdgA==
+Date:   Mon, 13 May 2019 21:26:28 +0000
+Message-ID: <1557782787.4229.36.camel@impinj.com>
+References: <20190510214550.18657-1-tpiepho@impinj.com>
+         <20190510214550.18657-5-tpiepho@impinj.com>
+         <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
+         <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
+         <1557777496.4229.13.camel@impinj.com>
+         <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
+         <20190513204641.GA12345@lunn.ch>
+In-Reply-To: <20190513204641.GA12345@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tpiepho@impinj.com; 
+x-originating-ip: [216.207.205.253]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fab894f7-5ce2-4222-b5d1-08d6d7e9a91b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3609;
+x-ms-traffictypediagnostic: MWHPR0601MB3609:
+x-microsoft-antispam-prvs: <MWHPR0601MB3609250789FD7E70D648A187D30F0@MWHPR0601MB3609.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(396003)(136003)(366004)(39850400004)(189003)(199004)(476003)(229853002)(76176011)(486006)(68736007)(2616005)(2501003)(4326008)(102836004)(8676002)(103116003)(8936002)(81166006)(14454004)(478600001)(81156014)(53936002)(6506007)(71190400001)(71200400001)(446003)(6246003)(11346002)(5660300002)(91956017)(14444005)(73956011)(76116006)(2906002)(256004)(66476007)(66556008)(64756008)(66446008)(66946007)(26005)(86362001)(36756003)(6486002)(316002)(54906003)(110136005)(6436002)(3846002)(305945005)(7736002)(66066001)(6512007)(99286004)(6116002)(186003)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3609;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: impinj.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iRUPLiIFK/snASSFPfbpzsTJ3dVh9qs7MV8NSw8VWi/k71L/b8d4B7oEj7mTopXJHsCqNTIYrCcGiLLbIEpAHVcHNHUBqJbweE2t/PNE6qXkDWLw7jv6FCtzh4AYQSbs++fOC/3DqW0y/o91ETLkpuFXk7G9N5wMvmUf7FnCLMWp9t2g+u12qKlfVRQCYtHMC9pIcXLLWFVQjziRB3q9MHY/uI1PWjGPNtpEEd0M9Mzh5XAh1bCzADv/ZsfH5LMirOKFEEFERvod7vuhjq9OxautB59XZnEg2UkByqUjkRk5mm74NXg0M9oW5s2+MFP+cp5alRkSmjn9iMaFkmko3Rw/XrwzNSu6V9SENG2db80LTVdAuOvnxZbbmuhXvah+rdHJ5HgsjQOarn7OUguW8mCnBwzzapzjUoDI1bXAxlQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <BBD6CD64ABF63E4DB485EB55C500E53B@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fab894f7-5ce2-4222-b5d1-08d6d7e9a91b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 21:26:28.1699
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3609
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On 13 May 2019, at 18:15, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Mon, May 13, 2019 at 04:38:32PM +0200, Alexandre Chartre wrote:
->> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
->> index 46df4c6..317e105 100644
->> --- a/arch/x86/mm/fault.c
->> +++ b/arch/x86/mm/fault.c
->> @@ -33,6 +33,10 @@
->> #define CREATE_TRACE_POINTS
->> #include <asm/trace/exceptions.h>
->>=20
->> +bool (*kvm_page_fault_handler)(struct pt_regs *regs, unsigned long =
-error_code,
->> +			       unsigned long address);
->> +EXPORT_SYMBOL(kvm_page_fault_handler);
->=20
-> NAK NAK NAK NAK
->=20
-> This is one of the biggest anti-patterns around.
-
-I agree.
-I think that mm should expose a mm_set_kvm_page_fault_handler() or =
-something (give it a better name).
-Similar to how arch/x86/kernel/irq.c have =
-kvm_set_posted_intr_wakeup_handler().
-
--Liran
-
-
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDIyOjQ2ICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+PiA+IFBlcmhhcHMgeW91IGNvdWxkIHRlbGwgbWUgaWYgdGhlIGFwcHJvYWNoIEkndmUgdGFrZW4g
+aW4gcGF0Y2ggMywgDQo+ID4gPiAiQWRkIGFiaWxpdHkgdG8gZGlzYWJsZSBvdXRwdXQgY2xvY2si
+LCBhbmQgcGF0Y2ggNCwgIkRpc2FibGUgdHgvcngNCj4gPiA+IGRlbGF5IHdoZW4gbm90IGNvbmZp
+Z3VyZWQiLCBhcmUgY29uc2lkZXJlZCBhY2NlcHRhYmxlPyAgSSBjYW4gY29uY2VpdmUNCj4gPiA+
+IG9mIGFyZ3VtZW50cyBmb3IgYWx0ZXJuYXRlIGFwcHJvYWNoZXMuICBJIHdvdWxkIGxpa2UgdG8g
+YWRkIHN1cHBvcnQgZm9yDQo+ID4gPiAgdGhlc2UgaW50byB1LWJvb3QgdG9vLCBidXQgdHlwaWNh
+bGx5IHUtYm9vdCBmb2xsb3dzIHRoZSBrZXJuZWwgRFQNCj4gPiA+IGJpbmRpbmdzLCBzbyBJIHdh
+bnQgdG8gZmluYWxpemUgdGhlIGtlcm5lbCBEVCBzZW1hbnRpY3MgYmVmb3JlIHNlbmRpbmcNCj4g
+PiA+IHBhdGNoZXMgdG8gdS1ib290Lg0KPiA+ID4gDQo+ID4gDQo+ID4gSSBsYWNrIGV4cGVyaWVu
+Y2Ugd2l0aCB0aGVzZSBUSSBQSFkncy4gTWF5YmUgQW5kcmV3IG9yIEZsb3JpYW4gY2FuIGFkdmlz
+ZS4NCj4gDQo+IEhpIFRyZW50DQo+IA0KPiBJIGFscmVhZHkgZGVsZXRlZCB0aGUgcGF0Y2hlcy4g
+Rm9yIHBhdGNoIDM6DQo+IA0KPiArIAkgIGlmIChkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCA+IERQ
+ODM4NjdfQ0xLX09fU0VMX1JFRl9DTEsgJiYNCj4gKwkgICAgICAgICBkcDgzODY3LT5jbGtfb3V0
+cHV0X3NlbCAhPSBEUDgzODY3X0NMS19PX1NFTF9PRkYpIHsNCj4gKwkJIAlwaHlkZXZfZXJyKHBo
+eWRldiwgInRpLGNsay1vdXRwdXQtc2VsIHZhbHVlICV1IG91dCBvZiByYW5nZVxuIiwNCj4gKwkJ
+CQkgICBkcDgzODY3LT5jbGtfb3V0cHV0X3NlbCk7DQo+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4g
+KwkJICAgICAgfQ0KPiANCj4gVGhpcyBsYXN0IGJpdCBsb29rcyBvZGQuIElmIGl0IGlzIG5vdCBP
+RkYsIGl0IGlzIGludmFsaWQ/DQoNClRoZSB2YWxpZCB2YWx1ZXMgYXJlIGluIHRoZSByYW5nZSAw
+IHRvIERQODM4NjdfQ0xLX09fU0VMX1JFRl9DTEsgYW5kDQphbHNvIERQODM4NjdfQ0xLX09fU0VM
+X09GRi4gIFRodXMgaW52YWxpZCB2YWx1ZXMgYXJlIHRob3NlIGdyZWF0ZXIgdGhhbg0KRFA4Mzg2
+N19DTEtfT19TRUxfUkVGX0NMSyB3aGljaCBhcmUgbm90IERQODM4NjdfQ0xLX09fU0VMX09GRi4N
+Cg0KPiANCj4gQXJlIHRoZXJlIGFueSBpbiB0cmVlIHVzZXJzIG9mIERQODM4NjdfQ0xLX09fU0VM
+X1JFRl9DTEs/IFdlIGhhdmUgdG8NCj4gYmUgY2FyZWZ1bCBjaGFuZ2luZyBpdHMgbWVhbmluZy4g
+QnV0IGlmIG5vYm9keSBpcyBhY3R1YWxseSB1c2luZyBpdC4uLg0KDQpOb3BlLiAgSSBkb3VidCB0
+aGlzIHdpbGwgYWZmZWN0IGFueW9uZS4gIFRoZXknZCBuZWVkIHRvIHN0cmFwIHRoZSBwaHkNCnRv
+IGdldCBhIGRpZmZlcmVudCBjb25maWd1cmF0aW9uLCBhbmQgdGhlIGV4cGxpY2l0bHkgYWRkIGEg
+cHJvcGVydHksDQp3aGljaCBpc24ndCBpbiB0aGUgZXhhbXBsZSBEVFMgZmlsZXMsIHRvIGNoYW5n
+ZSB0aGUgY29uZmlndXJhdGlvbiB0bw0Kc29tZXRoaW5nIHRoZXkgZGlkbid0IHdhbnQsIGFuZCB0
+aGVuIGRlcGVuZCBvbiBhIGRyaXZlciBidWcgaWdub3JpbmcNCnRoZSBlcnJvbmVvdXMgc2V0dGlu
+ZyB0aGV5IGFkZGVkLg0KDQo+IFBhdGNoIDQ6DQo+IA0KPiBUaGlzIGlzIGhhcmRlci4gSWRlYWxs
+eSB3ZSB3YW50IHRvIGZpeCB0aGlzLiBBdCBzb21lIHBvaW50LCBzb21lYm9keQ0KPiBpcyBnb2lu
+ZyB0byB3YW50ICdyZ21paScgdG8gYWN0dWFsbHkgbWVhbiAncmdtaWknLCBiZWNhdXNlIHRoYXQg
+aXMNCj4gd2hhdCB0aGVpciBoYXJkd2FyZSBuZWVkcy4NCj4gDQo+IENvdWxkIHlvdSBhZGQgYSBX
+QVJOX09OKCkgZm9yICdyZ21paScgYnV0IHRoZSBQSFkgaXMgYWN0dWFsbHkgYWRkaW5nIGENCj4g
+ZGVsYXk/IEFuZCBhZGQgYSBjb21tZW50IGFib3V0IHNldHRpbmcgdGhlIGNvcnJlY3QgdGhpbmcg
+aW4gZGV2aWNlDQo+IHRyZWU/ICBIb3BlZnVsbHkgd2Ugd2lsbCB0aGVuIGdldCBwYXRjaGVzIGNv
+cnJlY3RpbmcgRFQgYmxvYnMuIEFuZCBpZg0KPiB3ZSBsYXRlciBkbyBuZWVkIHRvIGZpeCAncmdt
+aWknLCB3ZSB3aWxsIGJyZWFrIGxlc3MgYm9hcmQuDQoNClllcyBJIGNhbiBkbyB0aGlzLiAgU2hv
+dWxkIGl0IHdhcm4gb24gYW55IHVzZSBvZiAicmdtaWkiPyAgSWYgc28sIGhvdw0Kd291bGQgc29t
+ZW9uZSBtYWtlIHRoZSB3YXJuaW5nIGdvIGF3YXkgaWYgdGhleSBhY3R1YWxseSB3YW50IHJnbWlp
+IG1vZGUNCndpdGggbm8gZGVsYXk/DQoNCkkgc3VzcGVjdCBoc2RrLmR0cyBpcyBhbiBleGFtcGxl
+IG9mIGFuIGluLXRyZWUgYnJva2VuIGJvYXJkIHRoYXQgdXNlcw0KInJnbWlpIiB3b3VsZCBpdCBz
+aG91bGQgaGF2ZSB1c2VkICJyZ21paS1pZCIuICBVbmZvcnR1bmF0ZWx5LCBwaHkgZHRzDQpub2Rl
+cyBkb24ndCB1c3VhbGx5IHByb3ZpZGUgYSBjb21wYXRpYmxlIHRoYXQgaWRlbnRpZmllcyB0aGUg
+cGh5LCB1c2luZw0KaW5zdGVhZCBydW4tdGltZSBhdXRvLWRldGVjdGlvbiBiYXNlZCBvbiBQSFkg
+aWQgcmVnaXN0ZXJzLCBzbyB0aGVyZSdzDQpubyB3YXkgdG8gdGVsbCBmcm9tIHRoZSBkdHMgZmls
+ZXMgd2hhdCBib2FyZHMgdXNlIHRoaXMgcGh5IHVubGVzcyB0aGV5DQphbHNvIHNwZWNpZnkgb25l
+IG9mIHRoZSBwaHkgc3BlY2lmaWMgcHJvcGVydGllcy4gIFdoaWNoIGlzIGhvdyBJIGZvdW5kDQpo
+c2RrLmR0cyAoYW5kIG5vIG90aGVyIGJvYXJkcykuDQo=
