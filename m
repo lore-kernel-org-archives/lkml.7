@@ -2,93 +2,138 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADECC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD68C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1742146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426972146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:20:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhJhEZZF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKMtRnkl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbfEMOTj (ORCPT
+        id S1730203AbfEMOUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:19:39 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38991 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728867AbfEMOTj (ORCPT
+        Mon, 13 May 2019 10:20:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34673 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730152AbfEMOUS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:19:39 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z26so7302070pfg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:19:39 -0700 (PDT)
+        Mon, 13 May 2019 10:20:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w7so6584883plz.1;
+        Mon, 13 May 2019 07:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=awWr7CqE/VI7koIkZm/vLnS/8LIohJ8DzEhbOAp8yVw=;
-        b=YhJhEZZFYzK8XrLCBR7QP0KcHYkAuOejGc2vAR+p/yDUiI91M/U/3U6IMsgfeHDpC5
-         lGb5YJw1eKXj9ujYsOZAcoPWhDZh5rL/TwHHAnbaTHC1ai7zzyoQlgD8Ot9oUaBVwQwh
-         bvWq89sDRgn8BzFN11K90Ihj/6Pv/HaI9jfZo0JLcC7RKDqTBaBddjcV07UDs5HX7HH+
-         q+UdWb1tSqk3J71c9RnSuWdR+aOiUDrY3HURn9p0PBvnZlnsf9Cj8NRxr9RDqXAV7XgO
-         kwnVdxFi4YPVsdF09GWLheBH12yz+7Wrd4IRRcCc6tueU6F16tVSse9GbLefeY97/aAk
-         Pc+w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NlhYJ90ofQ2Zr9Y+SOGQmX2unDhBRzK1V3FREqlRH+I=;
+        b=AKMtRnklH+seg+WEw3Qyba/aDLReD06wyiitmqq4ZD72fRzwB9b0cyu/YszACKxEPb
+         uZGiAcKFqzsrKiaBoZdiozfUVwhQbIATQ/zuSwZ58m+qPgyKZCW5gVbvZXI2AnD8SKly
+         n9n7ujMAkzGD7x2eM2bxYsWMTra3iTj4ZsIaEEo+LRGxc/6dnW9cqI2k8PmVt1Nc2qVY
+         nxPyfWHo58yxv7cYUfxneIKyFRCRhDxqVCfyD33WG+Xtkc830urXfXEhUgGnYzNFnHM4
+         pOXKu7x5Vho6c+WHsR1WEviXiYit7VEiefjoeOPnnJiDNpBHe2JXW/L9kZpgCykQ4nQj
+         Cj+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=awWr7CqE/VI7koIkZm/vLnS/8LIohJ8DzEhbOAp8yVw=;
-        b=kcOeOFJFIqjAqrMlBc5K3K2Uv1sJPTDvsIaqKFQLwCfX0HL/m537wG+4snineRrTWc
-         9eJHJa8CNjf6jUAbgZgJcknT2flXb1/GHvwQdY9ZrI+RNakP8giRrSlFQ9bYvQa1xg22
-         BgVUMdPNDYoCJJhMfFrInL5ApM4oWDBiHi9flguwYhNW/kEsGGPuP6YuK9qC/UvN210j
-         p/oNneCV8vo6yG4Ew9SsToyU1LjlR0cKhX8BrRwrzJqA0pVk9r+OAPiDkX7IlZmoGQx7
-         lJdLtxOonjEFstpZG8d0dTenc8wANc4hXd41j5/fmkPm0zKsWG30lDlH+3W2qA2MkNwQ
-         om6g==
-X-Gm-Message-State: APjAAAXKh+VXETkc1TmXC543NDra95Z6uclQ2wN+oaLfZoHh1Zrtxk1g
-        dqvb3M7dAo9aspECM+F1aodbRhrK0Ww=
-X-Google-Smtp-Source: APXvYqzlc6WpBu1ovDt5qLotSI3ZHAMwdNn46iz3VXhpG/lJ6WuCWBqKjbbjNsFWauntYagcfC7rDg==
-X-Received: by 2002:a65:6559:: with SMTP id a25mr7534897pgw.33.1557757178744;
-        Mon, 13 May 2019 07:19:38 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id p2sm16907604pgd.63.2019.05.13.07.19.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 07:19:38 -0700 (PDT)
-Date:   Mon, 13 May 2019 22:18:31 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     cl@linux.com, penberg@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [Patch] slub: Fix a missing-check bug in mm/slub.c file of Linux
- 5.1.1
-Message-ID: <20190513141831.GA9502@zhanggen-UX430UQ>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NlhYJ90ofQ2Zr9Y+SOGQmX2unDhBRzK1V3FREqlRH+I=;
+        b=piDFPkula0ZYJ/w7Vz5yWMlJU+Ir4k6acRnDv0/a8hg/OZqjMx897Sr1Y/Ci9oh688
+         cPSa+LXxcKe5NA7mNQXu76PM+YlnlXX6Ktbd6e3dixTAYvl/Bl2T4ad5Aqa/LeajVSm+
+         cwHwvqTkoSpsXibmIyx01ibjMuVs4QvsShVvfhchVS6QNho+COqfjjhabiBqSOJVdfD1
+         HQW/RSvytqe9OZgiLAMOdX37EHQuVIR3fkZ8DfBqcFjGA1TFT79YveUcee6DhJARxKnj
+         uWhC9UK0OHgrkwB08hp/1bM5+R6YOtZ6+kRDATUG71kt8mUH4SNbxyPhSbxD5JtSiJMQ
+         h9JQ==
+X-Gm-Message-State: APjAAAXkvVwNVlZfyMJK3nrwVZJx6V2xCFrNmDfhrfDZUPiw5mIJFrAE
+        X/hiizvg3KpVkUT6sgMz9+sNAGC+
+X-Google-Smtp-Source: APXvYqyk4gV/sp19JogOd/chm45Y4hPNu2PzX9sLqdp1AeoZk6HbnY0K43/n73YnCjAjLcw83NK8jw==
+X-Received: by 2002:a17:902:b412:: with SMTP id x18mr31197262plr.304.1557757216857;
+        Mon, 13 May 2019 07:20:16 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id x30sm15382513pgl.76.2019.05.13.07.20.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 07:20:16 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     bhelgaas@google.com, corbet@lwn.net
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v5 00/12] Include linux PCI docs into Sphinx TOC tree
+Date:   Mon, 13 May 2019 22:19:48 +0800
+Message-Id: <20190513142000.3524-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointer s is allocated with kmem_cache_zalloc(). And s is used in the 
-follwoing codes. However, when kmem_cache_zalloc fails, using s will
-cause null pointer dereference and the kernel will go wrong. Thus we 
-check whether the kmem_cache_zalloc fails.
+Hi all,
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+The kernel now uses Sphinx to generate intelligent and beautiful documentation
+from reStructuredText files. I converted most of the Linux PCI docs to rst
+format in this serias.
 
----
---- mm/slub.c
-+++ mm/slub.c
-@@ -4201,6 +4201,8 @@ static struct kmem_cache * __init bootst
- {
- 	int node;
- 	struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
-+	if (!s)
-+		return ERR_PTR(-ENOMEM);
- 	struct kmem_cache_node *n;
- 
- 	memcpy(s, static_cache, kmem_cache->object_size);
----
+For you to preview, please visit below url:
+http://www.bytemem.com:8080/kernel-doc/PCI/index.html
+
+Thank you!
+
+v2: trivial style update.
+v3: update titles. (Bjorn Helgaas)
+v4: fix comments from Mauro Carvalho Chehab
+v5: update MAINTAINERS (Joe Perches)
+
+Changbin Du (12):
+  Documentation: add Linux PCI to Sphinx TOC tree
+  Documentation: PCI: convert pci.txt to reST
+  Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
+  Documentation: PCI: convert pci-iov-howto.txt to reST
+  Documentation: PCI: convert MSI-HOWTO.txt to reST
+  Documentation: PCI: convert acpi-info.txt to reST
+  Documentation: PCI: convert pci-error-recovery.txt to reST
+  Documentation: PCI: convert pcieaer-howto.txt to reST
+  Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
+  Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
+  Documentation: PCI: convert endpoint/pci-test-function.txt to reST
+  Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
+
+ .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
+ Documentation/PCI/endpoint/index.rst          |  13 +
+ ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
+ .../{pci-endpoint.txt => pci-endpoint.rst}    |  96 +++--
+ ...est-function.txt => pci-test-function.rst} |  34 +-
+ ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
+ Documentation/PCI/index.rst                   |  18 +
+ .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
+ ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
+ .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
+ Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
+ .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
+ .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
+ Documentation/index.rst                       |   1 +
+ MAINTAINERS                                   |   4 +-
+ include/linux/mod_devicetable.h               |  19 +
+ include/linux/pci.h                           |  37 ++
+ 17 files changed, 913 insertions(+), 689 deletions(-)
+ rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
+ create mode 100644 Documentation/PCI/endpoint/index.rst
+ rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+ rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (82%)
+ rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+ rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+ create mode 100644 Documentation/PCI/index.rst
+ rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
+ rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
+ rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
+ rename Documentation/PCI/{pci.txt => pci.rst} (68%)
+ rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
+ rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
+
+-- 
+2.20.1
+
