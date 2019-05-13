@@ -2,183 +2,80 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC18AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F327C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CA420850
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBREkDOp"
+	by mail.kernel.org (Postfix) with ESMTP id 1C3DF217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:12:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557778364;
+	bh=WCUFh+woPhcJEK6e8moOGrzwENC0TrzGg0GLcBimDv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JW0Qn6A2jdYpE5MFIz4pJpTz83nUH5HDEaMl+e4MzMr5u+Ej+8Vet5rgyYTyV5HDY
+	 B8+kXOjxIyElILRxE2dex1xCp1h4gIyI7M8cpUM/3cOs5nPQjqGvlWuwMFbGBfQ9hA
+	 Qr/kN9XYDbNMiGBFTtyXg7sg1muKXfiWWu4wijQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEMUMl (ORCPT
+        id S1726349AbfEMUMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 May 2019 16:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfEMUMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 May 2019 16:12:41 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33070 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725928AbfEMUMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:12:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z28so7800969pfk.0;
-        Mon, 13 May 2019 13:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=f0OLh/RrP6a7zNlExIIeXXVPr8btdj53wDym/U3VQuM=;
-        b=FBREkDOpTRj+5leh3qC1tZItJLT4F+R+B+F0EETTiXczu4K3z943bBVR+bFdHwgkMo
-         o5SGCNR0Hd9Ys6IbfxOR31j3B7SDm6/ETdzYYX/DUFPps4v6NhIH/Gnh+RRpH7Eza5Gk
-         aZiDDGkNfBzNqgxlPBjOR1iJhZjQPqTud2UxXxmsrSu3/N/R41tVPzhTMqfqfPRqhtMR
-         vF/VF1ZubcBEUU38FXfd11exydpDEwCo6DDUIy/y8hV4kI6lK1WsLLUUa/rBc3DtOJWx
-         Xn5wiHfE49eXzfirUejf6GVNd83B/82b4T0dbNDrQKkIdKjtsSi7q3UUGYkLXnX0i8rE
-         W2+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=f0OLh/RrP6a7zNlExIIeXXVPr8btdj53wDym/U3VQuM=;
-        b=gFXtvBgbS1fm2Fs2GsrjdrMUfzii/3LZtSjgZWkUyq7JVqbqJ2pOVfzw4CxUfX41Ko
-         mF7Z66k0qrUC85Oz8mn7YkdWxOCmJgEl1Zv5eHhVXiCLEVic6hzS0fIo8cXzApQrBfEA
-         fFn24oNCRvix+sAEtyjt5ZTC6GXcLdSSP9PAmCRcQu2lQpt2TO/jBBehTIrQdkMYwtqY
-         HxgeFhE0gGUE8R/8ENsbvevxGbeiHc/qZL2H602e3uxJpcXsG+kaInckD1xCVlc6ez6s
-         xJJD04SQR7JULgDisC5NHBmNGuA/ckwrr2h1zconr9cnRu542piBPU4WdbivdeA7T77Q
-         86MA==
-X-Gm-Message-State: APjAAAV/k3SnRPvr1FsYSogkjxqTGxrKOHEt6rVqtf9nzunQ1kTYLG3u
-        H3/XLUbAneUJ35Fj1ehkfv8=
-X-Google-Smtp-Source: APXvYqwTok3C98yvPhmU1IYHB6s5BsqbJp7oMKdIW3rhfZYZMM2isF4ciT+XTg8516SvLfZ/lB6jFA==
-X-Received: by 2002:a63:5c25:: with SMTP id q37mr34590080pgb.263.1557778358251;
-        Mon, 13 May 2019 13:12:38 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id e12sm16302619pfl.122.2019.05.13.13.12.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 13:12:37 -0700 (PDT)
-Date:   Mon, 13 May 2019 13:12:35 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [git pull] Input updates for v5.2-rc0
-Message-ID: <20190513201235.GA87488@dtor-ws>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AAD22085A;
+        Mon, 13 May 2019 20:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557778360;
+        bh=WCUFh+woPhcJEK6e8moOGrzwENC0TrzGg0GLcBimDv0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0z6teznxoJKK51aNl9f25UfLlJqBuG+fqDz9q1N+bcHuTieX9gqac12jWJZX1kX1Q
+         kErrK5M8ptjrdBlZ0QWRonzYfS6/f6IT41vHfilgl6t1xeFwR/L7d2bCYojfQw8HTl
+         V8SrCeK+7M1XF9cJzPyEkbAInQvPqGv1TJ1B0e1U=
+Date:   Mon, 13 May 2019 22:12:35 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
+        djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [stable/4.14.y PATCH 2/3] mmc: Fix null pointer dereference in
+ mmc_init_request
+Message-ID: <20190513201235.GB17404@kroah.com>
+References: <20190513175521.84955-1-rrangel@chromium.org>
+ <20190513175521.84955-3-rrangel@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190513175521.84955-3-rrangel@chromium.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Mon, May 13, 2019 at 11:55:20AM -0600, Raul E Rangel wrote:
+> It is possible for queuedata to be cleared in mmc_cleanup_queue before
+> the request has been started. This will result in dereferencing a null
+> pointer.
+> 
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> ---
+> 
+>  drivers/mmc/core/queue.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
-Please pull from:
+<formletter>
 
-	git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git for-linus
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-to receive updates for the input subsystem. You will get a few new
-drivers:
-
-- driver for Azoteq IQS550/572/525 touch controllers
-- driver for Microchip AT42QT1050 keys
-- driver for GPIO controllable vibrators
-- support for GT5663 in Goodix driver
-
-along with miscellaneous driver fixes.
-
-
-Changelog:
----------
-
-Andy Shevchenko (2):
-      Input: edt-ft5x06 - enable ACPI enumeration
-      Input: edt-ft5x06 - convert to use SPDX identifier
-
-Anson Huang (1):
-      Input: snvs_pwrkey - use dev_pm_set_wake_irq() to simplify code
-
-Dmitry Torokhov (3):
-      Input: i8042 - signal wakeup from atkbd/psmouse
-      Input: add KEY_KBD_LAYOUT_NEXT
-      HID: input: add mapping for KEY_KBD_LAYOUT_NEXT
-
-Gustavo A. R. Silva (2):
-      Input: evdev - use struct_size() in kzalloc() and vzalloc()
-      Input: libps2 - mark expected switch fall-through
-
-Jagan Teki (2):
-      Input: goodix - add regulators suppot
-      Input: goodix - add GT5663 CTP support
-
-Jean Delvare (1):
-      Input: olpc_apsp - depend on ARCH_MMP
-
-Jeff LaBundy (1):
-      Input: add support for Azoteq IQS550/572/525
-
-Joseph Salisbury (1):
-      Input: hyperv-keyboard - add module description
-
-Luca Weiss (1):
-      Input: add a driver for GPIO controllable vibrators
-
-Marco Felsch (1):
-      Input: qt1050 - add Microchip AT42QT1050 support
-
-Philipp Zabel (2):
-      Input: synaptics-rmi4 - fill initial format
-      Input: synaptics-rmi4 - fix enum_fmt
-
-Vladimir Zapolskiy (1):
-      Input: lpc32xx-key - add clocks property and fix DT binding example
-
-Ziping Chen (1):
-      Input: sun4i-a10-lradc-keys - add support for A83T
-
-Diffstat:
---------
-
- .../devicetree/bindings/input/gpio-vibrator.yaml   |   37 +
- .../devicetree/bindings/input/lpc32xx-key.txt      |    5 +-
- .../devicetree/bindings/input/microchip,qt1050.txt |   78 ++
- .../devicetree/bindings/input/sun4i-lradc-keys.txt |    6 +-
- .../bindings/input/touchscreen/goodix.txt          |    3 +
- .../bindings/input/touchscreen/iqs5xx.txt          |   80 ++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/hid/hid-input.c                            |    2 +
- drivers/input/evdev.c                              |    7 +-
- drivers/input/keyboard/Kconfig                     |   11 +
- drivers/input/keyboard/Makefile                    |    1 +
- drivers/input/keyboard/atkbd.c                     |    2 +
- drivers/input/keyboard/qt1050.c                    |  598 +++++++++++
- drivers/input/keyboard/snvs_pwrkey.c               |   30 +-
- drivers/input/keyboard/sun4i-lradc-keys.c          |   38 +-
- drivers/input/misc/Kconfig                         |   12 +
- drivers/input/misc/Makefile                        |    1 +
- drivers/input/misc/gpio-vibra.c                    |  207 ++++
- drivers/input/mouse/psmouse-base.c                 |    2 +
- drivers/input/rmi4/rmi_f54.c                       |   21 +-
- drivers/input/serio/Kconfig                        |    1 +
- drivers/input/serio/hyperv-keyboard.c              |    2 +
- drivers/input/serio/i8042.c                        |    3 -
- drivers/input/serio/libps2.c                       |    1 +
- drivers/input/touchscreen/Kconfig                  |   10 +
- drivers/input/touchscreen/Makefile                 |    1 +
- drivers/input/touchscreen/edt-ft5x06.c             |   23 +-
- drivers/input/touchscreen/goodix.c                 |   54 +
- drivers/input/touchscreen/iqs5xx.c                 | 1133 ++++++++++++++++++++
- include/uapi/linux/input-event-codes.h             |    1 +
- 30 files changed, 2297 insertions(+), 74 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-vibrator.yaml
- create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
- create mode 100644 drivers/input/keyboard/qt1050.c
- create mode 100644 drivers/input/misc/gpio-vibra.c
- create mode 100644 drivers/input/touchscreen/iqs5xx.c
-
-Thanks.
-
-
--- 
-Dmitry
+</formletter>
