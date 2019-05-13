@@ -2,185 +2,465 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58761C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF79C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8F320850
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:50:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BnRnycVR"
+	by mail.kernel.org (Postfix) with ESMTP id 1D8F921019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 23:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557791848;
+	bh=QEMo7hBuvlqR87qOsJeMWIseN68EACHYDLmNBGCXyP8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=TuVBbsnkeZvBuq/6LVN4alW0Axf3pS7absR9POCOq9AEsFW8IzU+/4+KJi8BHEWDS
+	 rlq77OCM9SonYtK2gux2YScdkdawjvehiTpB+sjy0K/spR84LsPC2OyeKm9TXHbmhW
+	 hK2oZyl2+B1IL6k37E9twRq7pHwc9QcY/MEFkis0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbfEMXuT (ORCPT
+        id S1726736AbfEMX51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 19:50:19 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34459 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfEMXuS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 19:50:18 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n19so8056411pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 16:50:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eVB0b08V+iV97wPIWUm2BRD09cpVNg8KttImvAT945c=;
-        b=BnRnycVRBLCcbjrO+DCabev1FN748p3YJ4sVMKSBouwL48K02qdjRru2FcOMGm6jht
-         8bXzR6QB/blHX/FCRqCNMCXA576i4K97masi2yfqN3RTZyAamAUlP2hIBzbFfuMHNayg
-         wSiqAMQFppjSPwK4chAhTk4KzwABjkbN2ridwapx+aqzCgiuubguSr5PSYRoeklJOp0b
-         BoYNI24HXEqR7sjxrSqR8KApLaj0qXY7UEQVOlH+w6VQb+uGQfwPASX7/g3fgPAXqXfQ
-         NvHLm0/lmq9A6B3i1vzRpoXaydziUd2Ivo/JaOZi4LB+kFBOC2wV9nZ0bAIXvh6jundU
-         UWTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eVB0b08V+iV97wPIWUm2BRD09cpVNg8KttImvAT945c=;
-        b=pVgJ8Kqe8U5mwDeqnz/FK86byZmnp9B9dt3k3Lj+r+i55oRTOvsjNBGKyB/OhPXDs0
-         TV4APRz/vfRY3jvD59zGHBtaWC4zzYHUiqMhu2y75TMB9YFqvV7ZDZ2XhI6Ob+5gXEUO
-         CFcP/NG1w92JJ7M51ESth3thNTMWvJjn26r3Raa7wdKawAMkpwTnmAtUAnupzccRjsM6
-         MNBzkT14qE+JqghaJxj+GUdLmLew8ftyamCS6tTp2uYesrf+K1g8x3nqQ0+afE21bHoD
-         m6sJmkrXFM8bge2qts67XP2fmD/+8ie7qXLKbbkv/BEm1AObypUnxFif4SaWZI4uvd4G
-         JPyg==
-X-Gm-Message-State: APjAAAUU2AXLm9DNhCGI4wy4s0xX/hKwRHzlZp2c9Kwkg4goXkcF22H+
-        sJE5+RHcXk7CT724cAO771INIbRtaLh05f6iX2ePVg==
-X-Google-Smtp-Source: APXvYqxNP6fvuZQfd2Rf+OGnDB3qVc+HsVu1E1p4H7T1IEnsHAvCO+yqIdlErr0QXoOUAfPnWG59mWmcFkLJWSnsa0o=
-X-Received: by 2002:a63:fd4a:: with SMTP id m10mr35345718pgj.302.1557791417272;
- Mon, 13 May 2019 16:50:17 -0700 (PDT)
+        Mon, 13 May 2019 19:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726541AbfEMX51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 19:57:27 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D0682084D;
+        Mon, 13 May 2019 23:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557791845;
+        bh=QEMo7hBuvlqR87qOsJeMWIseN68EACHYDLmNBGCXyP8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=upUsuinCqQ3KDgd75QPYMfPrQ/Q7xR0BDoRrXjBD6sDh1o3237Hcb+XdiZGcelOuk
+         2ZDOUiXOddeImckvNesG5kFcCI8UmmjF8mcKxYBu4sL9qw7MsRVEDxbWn2eiPkxIXv
+         QJP4VpH8DtEW4/jaahT37k+geja6Bm+NNBouzzS4=
+Date:   Mon, 13 May 2019 18:57:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [GIT PULL] PCI changes for v5.2
+Message-ID: <20190513235721.GA157967@google.com>
 MIME-Version: 1.0
-References: <20190513222109.110020-1-ndesaulniers@google.com> <20190513232910.GA30209@archlinux-i9>
-In-Reply-To: <20190513232910.GA30209@archlinux-i9>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 13 May 2019 16:50:05 -0700
-Message-ID: <CAKwvOd=W9nm04zvRQ3iu=AGHnitongZ7VQ9S32U9hBZKwNyeMw@mail.gmail.com>
-Subject: Re: [PATCH] lkdtm: support llvm-objcopy
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <nathanchance@gmail.com>,
-        Jordan Rupprect <rupprecht@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 4:29 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Mon, May 13, 2019 at 03:21:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> > With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
-> > llvm-objcopy: error: --set-section-flags=.text conflicts with
-> > --rename-section=.text=.rodata
-> >
-> > Rather than support setting flags then renaming sections vs renaming
-> > then setting flags, it's simpler to just change both at the same time
-> > via --rename-section.
-> >
-> > This can be verified with:
-> > $ readelf -S drivers/misc/lkdtm/rodata_objcopy.o
-> > ...
-> > Section Headers:
-> >   [Nr] Name              Type             Address           Offset
-> >        Size              EntSize          Flags  Link  Info  Align
-> > ...
-> >   [ 1] .rodata           PROGBITS         0000000000000000  00000040
-> >        0000000000000004  0000000000000000   A       0     0     4
-> > ...
-> >
-> > Which shows in the Flags field that .text is now renamed .rodata, the
-> > append flag A is set, and the section is not flagged as writeable W.
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/448
-> > Reported-by: Nathan Chancellor <nathanchance@gmail.com>
->
-> This should be natechancellor@gmail.com (although I think I do own that
-> email, just haven't been into it for 10+ years...)
+Enumeration changes:
 
-Sorry, I should have looked it up.  I'll just fix this, my earlier
-mistake, and collect Kee's reviewed by tag in a v2 sent directly to
-GKH.
+  - Add _HPX Type 3 settings support, which gives firmware more influence
+    over device configuration (Alexandru Gagniuc)
 
->
-> > Suggested-by: Jordan Rupprect <rupprecht@google.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> > ---
-> >  drivers/misc/lkdtm/Makefile | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
-> > index 951c984de61a..89dee2a9d88c 100644
-> > --- a/drivers/misc/lkdtm/Makefile
-> > +++ b/drivers/misc/lkdtm/Makefile
-> > @@ -15,8 +15,7 @@ KCOV_INSTRUMENT_rodata.o    := n
-> >
-> >  OBJCOPYFLAGS :=
-> >  OBJCOPYFLAGS_rodata_objcopy.o        := \
-> > -                     --set-section-flags .text=alloc,readonly \
-> > -                     --rename-section .text=.rodata
-> > +                     --rename-section .text=.rodata,alloc,readonly
-> >  targets += rodata.o rodata_objcopy.o
-> >  $(obj)/rodata_objcopy.o: $(obj)/rodata.o FORCE
-> >       $(call if_changed,objcopy)
-> > --
-> > 2.21.0.1020.gf2820cf01a-goog
-> >
->
-> I ran this script to see if there was any change for GNU objcopy and it
-> looks like .rodata's type gets changed, is this intentional? Otherwise,
-> this works for llvm-objcopy like you show.
->
-> -----------
->
-> 1c1
-> < There are 11 section headers, starting at offset 0x240:
-> ---
-> > There are 11 section headers, starting at offset 0x230:
-> 8c8
-> <   [ 1] .rodata           PROGBITS         0000000000000000  00000040
-> ---
-> >   [ 1] .rodata           NOBITS           0000000000000000  00000040
-> 10c10
+  - Support fixed bus numbers from bridge Enhanced Allocation capabilities
+    (Subbaraya Sundeep)
 
-Interesting find.  the .rodata of vmlinux itself is marked PROGBITS,
-so its curious that GNU binutils changes the "Type" after the rename.
-I doubt the code in question relies on NOBITS for this section.  Kees,
-can you clarify?  Jordan, do you know what the differences are between
-PROGBITS vs NOBITS?
-https://people.redhat.com/mpolacek/src/devconf2012.pdf seems to
-suggest NOBITS zero initializes data but I'm not sure that's what this
-code wants.
+  - Add "external-facing" DT property to identify cases where we require
+    IOMMU protection against untrusted devices (Jean-Philippe Brucker)
 
->
-> -----------
->
-> #!/bin/bash
->
-> TMP1=$(mktemp)
-> TMP2=$(mktemp)
->
-> git checkout next-20190513
->
-> make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out mrproper allyesconfig drivers/misc/lkdtm/
-> readelf -S out/drivers/misc/lkdtm/rodata_objcopy.o > ${TMP1}
->
-> curl -LSs https://lore.kernel.org/lkml/20190513222109.110020-1-ndesaulniers@google.com/raw | git am -3
->
-> make -j$(nproc) ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- O=out mrproper allyesconfig drivers/misc/lkdtm/
-> readelf -S out/drivers/misc/lkdtm/rodata_objcopy.o > ${TMP2}
->
-> diff ${TMP1} ${TMP2}
+  - Enable PCIe services for host controller drivers that use managed host
+    bridge alloc (Jean-Philippe Brucker)
+
+  - Log PCIe port service messages with pci_dev, not the pcie_device
+    (Frederick Lawler)
+
+  - Convert pciehp from pciehp_debug module parameter to generic dynamic
+    debug (Frederick Lawler)
+
+Peer-to-peer DMA:
+
+  - Add whitelist of Root Complexes that support peer-to-peer DMA between
+    Root Ports (Christian König)
+
+Native controller drivers:
+
+  - Add PCI host bridge DMA ranges for bridges that can't DMA everywhere,
+    e.g., iProc (Srinath Mannam)
+
+  - Add Amazon Annapurna Labs PCIe host controller driver (Jonathan
+    Chocron)
+
+  - Fix Tegra MSI target allocation so DMA doesn't generate unwanted MSIs
+    (Vidya Sagar)
+
+  - Fix of_node reference leaks (Wen Yang)
+
+  - Fix Hyper-V module unload & device removal issues (Dexuan Cui)
+
+  - Cleanup R-Car driver (Marek Vasut)
+
+  - Cleanup Keystone driver (Kishon Vijay Abraham I)
+
+  - Cleanup i.MX6 driver (Andrey Smirnov)
+
+Significant bug fixes:
+
+  - Reset Lenovo ThinkPad P50 GPU so nouveau works after reboot (Lyude
+    Paul)
+
+  - Fix Switchtec firmware update performance issue (Wesley Sheng)
+
+  - Work around Pericom switch link retraining erratum (Stefan Mätje)
 
 
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
 
--- 
-Thanks,
-~Nick Desaulniers
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.2-changes
+
+for you to fetch changes up to c7a1c2bbb65e25551d585fba0fd36a01e0a22690:
+
+  Merge branch 'pci/trivial' (2019-05-13 18:34:48 -0500)
+
+----------------------------------------------------------------
+pci-v5.2-changes
+
+----------------------------------------------------------------
+Alexandru Gagniuc (4):
+      PCI/ACPI: Do not export pci_get_hp_params()
+      PCI/ACPI: Remove the need for 'struct hotplug_params'
+      PCI/ACPI: Implement _HPX Type 3 Setting Record
+      PCI/ACPI: Advertise _HPX Type 3 support via _OSC
+
+Andrey Smirnov (11):
+      PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
+      PCI: imx6: Drop imx6_pcie_wait_for_link()
+      PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
+      PCI: imx6: Remove PCIE_PL_PFLR_* constants
+      PCI: dwc: imx6: Share PHY debug register definitions
+      PCI: imx6: Make use of BIT() in constant definitions
+      PCI: imx6: Simplify bit operations in PHY functions
+      PCI: imx6: Simplify pcie_phy_poll_ack()
+      PCI: imx6: Restrict PHY register data to 16-bit
+      PCI: imx6: Use flags to indicate support for suspend
+      PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
+
+Bjorn Helgaas (35):
+      PCI/MSI: Remove unused __write_msi_msg() and write_msi_msg()
+      PCI/MSI: Remove unused mask_msi_irq() and unmask_msi_irq()
+      PCI: Cleanup register definition width and whitespace
+      PCI: Fix comment typos
+      CPER: Add UEFI spec references
+      CPER: Remove unnecessary use of user-space types
+      PCI: Use dev_printk() when possible
+      PCI: pciehp: Remove pciehp_debug uses
+      PCI: pciehp: Remove pointless PCIE_MODULE_NAME definition
+      PCI: pciehp: Remove pointless MY_NAME definition
+      Merge branch 'pci/aer'
+      Merge branch 'pci/enumeration'
+      Merge branch 'pci/hotplug'
+      Merge branch 'pci/msi'
+      Merge branch 'pci/misc'
+      Merge branch 'pci/peer-to-peer'
+      Merge branch 'pci/portdrv'
+      Merge branch 'pci/switchtec'
+      Merge branch 'pci/virtualization'
+      Merge branch 'pci/host/al'
+      Merge branch 'remotes/lorenzo/pci/controller-fixes'
+      Merge branch 'pci/dwc'
+      Merge branch 'remotes/lorenzo/pci/imx'
+      Merge branch 'remotes/lorenzo/pci/iproc'
+      Merge branch 'remotes/lorenzo/pci/keystone'
+      Merge branch 'remotes/lorenzo/pci/mediatek'
+      Merge branch 'remotes/lorenzo/pci/rcar'
+      Merge branch 'remotes/lorenzo/pci/rockchip'
+      Merge branch 'remotes/lorenzo/pci/tegra'
+      Merge branch 'remotes/lorenzo/pci/xilinx'
+      Merge branch 'remotes/lorenzo/pci/misc'
+      Merge branch 'pci/iova-dma-ranges'
+      Merge branch 'pci/printk'
+      Merge branch 'pci/printk-portdrv'
+      Merge branch 'pci/trivial'
+
+Christian König (1):
+      PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex
+
+Chunfeng Yun (1):
+      PCI: mediatek: Get optional clocks with devm_clk_get_optional()
+
+Colin Ian King (1):
+      PCI: rockchip: Fix rockchip_pcie_ep_assert_intx() bitwise operations
+
+Dexuan Cui (3):
+      PCI: hv: Fix a memory leak in hv_eject_device_work()
+      PCI: hv: Add hv_pci_remove_slots() when we unload the driver
+      PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+
+Frederick Lawler (7):
+      PCI/AER: Replace dev_printk(KERN_DEBUG) with dev_info()
+      PCI/PME: Replace dev_printk(KERN_DEBUG) with dev_info()
+      PCI/DPC: Log messages with pci_dev, not pcie_device
+      PCI/AER: Log messages with pci_dev, not pcie_device
+      PCI: pciehp: Replace pciehp_debug module param with dyndbg
+      PCI: pciehp: Log messages with pci_dev, not pcie_device
+      PCI: pciehp: Remove unused dbg/err/info/warn() wrappers
+
+Gustavo A. R. Silva (1):
+      PCI: Mark expected switch fall-throughs
+
+Heiner Kallweit (8):
+      PCI: Add pci_dev_id() helper
+      r8169: use pci_dev_id() helper
+      powerpc/powernv/npu: Use pci_dev_id() helper
+      drm/amdkfd: Use pci_dev_id() helper
+      iommu/amd: Use pci_dev_id() helper
+      iommu/vt-d: Use pci_dev_id() helper
+      stmmac: pci: Use pci_dev_id() helper
+      platform/chrome: chromeos_laptop: use pci_dev_id() helper
+
+Honghui Zhang (1):
+      arm64: dts: mt2712: Remove un-used property for PCIe
+
+James Prestwood (1):
+      PCI: Mark Atheros AR9462 to avoid bus reset
+
+Jean-Jacques Hiblot (1):
+      tools: PCI: Exit with error code when test fails
+
+Jean-Philippe Brucker (3):
+      PCI: Init PCIe feature bits for managed host bridge alloc
+      dt-bindings: Add "external-facing" PCIe port property
+      PCI: OF: Support "external-facing" property
+
+Jisheng Zhang (6):
+      PCI/AER: Change pci_aer_init() stub to return void
+      PCI: dwc: Fix dw_pcie_free_msi() if msi_irq is invalid
+      PCI: dwc: Free MSI IRQ page in dw_pcie_free_msi()
+      PCI: dwc: Free MSI in dw_pcie_host_init() error path
+      PCI: dwc: Use devm_pci_alloc_host_bridge() to simplify code
+      PCI: dwc: Save root bus for driver remove hooks
+
+Johannes Thumshirn (1):
+      PCI: Remove unused pci_request_region_exclusive()
+
+Jonathan Chocron (1):
+      PCI: al: Add Amazon Annapurna Labs PCIe host controller driver
+
+Kangjie Lu (3):
+      PCI: xilinx: Check for __get_free_pages() failure
+      PCI: rcar: Fix a potential NULL pointer dereference
+      PCI: endpoint: Fix a potential NULL pointer dereference
+
+Kazufumi Ikeda (1):
+      PCI: rcar: Add the initialization of PCIe link in resume_noirq()
+
+Kishon Vijay Abraham I (37):
+      PCI: keystone: Cleanup interrupt related macros
+      PCI: keystone: Add separate functions for configuring MSI and legacy interrupt
+      PCI: keystone: Use hwirq to get the MSI IRQ number offset
+      PCI: keystone: Cleanup ks_pcie_msi_irq_handler()
+      PCI: dwc: Add support to use non default msi_irq_chip
+      PCI: keystone: Use Keystone specific msi_irq_chip
+      PCI: dwc: Remove Keystone specific dw_pcie_host_ops
+      PCI: dwc: Remove default MSI initialization for platform specific MSI chips
+      tools: PCI: Add 'h' in optstring of getopt()
+      tools: PCI: Handle pcitest.sh independently from pcitest
+      PCI: keystone: Add start_link()/stop_link() dw_pcie_ops
+      PCI: keystone: Cleanup error_irq configuration
+      dt-bindings: PCI: keystone: Add "reg-names" binding information
+      PCI: keystone: Perform host initialization in a single function
+      PCI: keystone: Use platform_get_resource_byname() to get memory resources
+      PCI: keystone: Move resources initialization to prepare for EP support
+      dt-bindings: PCI: Add dt-binding to configure PCIe mode
+      PCI: keystone: Explicitly set the PCIe mode
+      dt-bindings: PCI: Document "atu" reg-names
+      PCI: dwc: Enable iATU unroll for endpoint too
+      PCI: dwc: Fix ATU identification for designware version >= 4.80
+      PCI: keystone: Prevent ARM32 specific code to be compiled for ARM64
+      dt-bindings: PCI: Add PCI RC DT binding documentation for AM654
+      PCI: keystone: Add support for PCIe RC in AM654x Platforms
+      PCI: keystone: Invoke phy_reset() API before enabling PHY
+      PCI: OF: Allow of_pci_get_max_link_speed() to be used by PCI Endpoint drivers
+      PCI: keystone: Add support to set the max link speed from DT
+      PCI: endpoint: Add support to specify alignment for buffers allocated to BARs
+      PCI: dwc: Add const qualifier to struct dw_pcie_ep_ops
+      PCI: dwc: Fix dw_pcie_ep_find_capability() to return correct capability offset
+      PCI: dwc: Add callbacks for accessing dbi2 address space
+      dt-bindings: PCI: Add PCI EP DT binding documentation for AM654
+      PCI: keystone: Add support for PCIe EP in AM654x Platforms
+      PCI: designware-ep: Configure Resizable BAR cap to advertise the smallest size
+      PCI: designware-ep: Use aligned ATU window for raising MSI interrupts
+      misc: pci_endpoint_test: Add support to test PCI EP in AM654x
+      misc: pci_endpoint_test: Fix test_reg_bar to be updated in pci_endpoint_test
+
+Lucas Stach (1):
+      PCI: imx6: Allow asynchronous probing
+
+Lyude Paul (1):
+      PCI: Reset Lenovo ThinkPad P50 nvgpu at boot if necessary
+
+Marc Gonzalez (1):
+      PCI: qcom: Use default config space read function
+
+Marek Vasut (6):
+      PCI: rcar: Clean up remaining macros defining bits
+      PCI: rcar: Replace unsigned long with u32/unsigned int in register accessors
+      PCI: rcar: Replace various variable types with unsigned ones for register values
+      PCI: rcar: Replace (8 * n) with (BITS_PER_BYTE * n)
+      PCI: rcar: Clean up debug messages
+      PCI: rcar: Fix 64bit MSI message address handling
+
+Mika Westerberg (1):
+      PCI/LINK: Disable bandwidth notification interrupt during suspend
+
+Mohan Kumar (2):
+      PCI: Replace printk(KERN_INFO) with pr_info(), etc
+      PCI: Replace dev_printk(KERN_DEBUG) with dev_info(), etc
+
+Nicholas Johnson (1):
+      PCI: Cleanup setup-bus.c comments and whitespace
+
+Nikolai Kostrigin (1):
+      PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken
+
+Srinath Mannam (6):
+      PCI: iproc: Add CRS check in config read
+      PCI: iproc: Allow outbound configuration for 32-bit I/O region
+      PCI: iproc: Enable iProc config read for PAXBv2
+      PCI: Add dma_ranges window list
+      iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+      PCI: iproc: Add sorted dma ranges resource entries to host bridge
+
+Stefan Mätje (3):
+      PCI: Factor out pcie_retrain_link() function
+      PCI: Work around Pericom PCIe-to-PCI bridge Retrain Link erratum
+      PCI: Rework pcie_retrain_link() wait loop
+
+Subbaraya Sundeep (1):
+      PCI: Assign bus numbers present in EA capability for bridges
+
+Subrahmanya Lingappa (1):
+      MAINTAINERS: Add Karthikeyan Mitran and Hou Zhiqiang for Mobiveil PCI
+
+Tyrel Datwyler (2):
+      PCI: rpadlpar: Fix leaked device_node references in add/remove paths
+      PCI: rpaphp: Get/put device node reference during slot alloc/dealloc
+
+Vidya Sagar (1):
+      PCI: tegra: Use the DMA-API to get the MSI address
+
+Wen Yang (7):
+      PCI: dwc: pci-dra7xx: Fix a leaked reference by adding missing of_node_put()
+      PCI: uniphier: Fix a leaked reference by adding missing of_node_put()
+      PCI: dwc: layerscape: Fix a leaked reference by adding missing of_node_put()
+      PCI: rockchip: Fix a leaked reference by adding missing of_node_put()
+      PCI: aardvark: Fix a leaked reference by adding missing of_node_put()
+      PCI: iproc: Fix a leaked reference by adding missing of_node_put()
+      PCI: mediatek: Fix a leaked reference by adding missing of_node_put()
+
+Wenwen Wang (1):
+      x86/PCI: Fix PCI IRQ routing table memory leak
+
+Wesley Sheng (2):
+      switchtec: Increase PFF limit from 48 to 255
+      switchtec: Fix unintended mask of MRPC event
+
+Wolfram Sang (1):
+      PCI: rcar: Do not shadow the 'irq' variable
+
+ .../devicetree/bindings/pci/designware-pcie.txt    |   7 +-
+ .../devicetree/bindings/pci/pci-keystone.txt       |  58 +-
+ Documentation/devicetree/bindings/pci/pci.txt      |  50 ++
+ MAINTAINERS                                        |   9 +-
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   2 -
+ arch/powerpc/platforms/powernv/npu-dma.c           |  14 +-
+ arch/x86/pci/irq.c                                 |  10 +-
+ drivers/acpi/pci_mcfg.c                            |  12 +
+ drivers/acpi/pci_root.c                            |   2 +
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c          |   3 +-
+ drivers/iommu/amd_iommu.c                          |   2 +-
+ drivers/iommu/dma-iommu.c                          |  35 +-
+ drivers/iommu/intel-iommu.c                        |   2 +-
+ drivers/iommu/intel_irq_remapping.c                |   2 +-
+ drivers/misc/pci_endpoint_test.c                   |  18 +
+ drivers/net/ethernet/realtek/r8169.c               |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   |   2 +-
+ drivers/pci/Makefile                               |   2 +-
+ drivers/pci/bus.c                                  |   5 +-
+ drivers/pci/controller/dwc/Kconfig                 |  29 +-
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pci-dra7xx.c            |   3 +-
+ drivers/pci/controller/dwc/pci-imx6.c              | 144 ++--
+ drivers/pci/controller/dwc/pci-keystone.c          | 926 +++++++++++++++------
+ drivers/pci/controller/dwc/pci-layerscape-ep.c     |   2 +-
+ drivers/pci/controller/dwc/pci-layerscape.c        |   1 +
+ drivers/pci/controller/dwc/pcie-al.c               |  93 +++
+ drivers/pci/controller/dwc/pcie-artpec6.c          |   2 +-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |  55 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  | 157 ++--
+ drivers/pci/controller/dwc/pcie-designware-plat.c  |   2 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |  64 +-
+ drivers/pci/controller/dwc/pcie-designware.h       |  26 +-
+ drivers/pci/controller/dwc/pcie-qcom.c             |  23 +-
+ drivers/pci/controller/dwc/pcie-uniphier.c         |  11 +-
+ drivers/pci/controller/pci-aardvark.c              |  13 +-
+ drivers/pci/controller/pci-host-generic.c          |   2 +-
+ drivers/pci/controller/pci-hyperv.c                |  23 +
+ drivers/pci/controller/pci-tegra.c                 |  37 +-
+ drivers/pci/controller/pcie-iproc-msi.c            |   2 +-
+ drivers/pci/controller/pcie-iproc.c                |  98 ++-
+ drivers/pci/controller/pcie-mediatek.c             |  51 +-
+ drivers/pci/controller/pcie-rcar.c                 |  85 +-
+ drivers/pci/controller/pcie-rockchip-ep.c          |   2 +-
+ drivers/pci/controller/pcie-rockchip-host.c        |   1 +
+ drivers/pci/controller/pcie-xilinx-nwl.c           |   9 +-
+ drivers/pci/controller/pcie-xilinx.c               |  12 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c      |  10 +-
+ drivers/pci/endpoint/pci-epf-core.c                |  10 +-
+ drivers/pci/hotplug/pciehp.h                       |  31 +-
+ drivers/pci/hotplug/pciehp_core.c                  |  18 +-
+ drivers/pci/hotplug/pciehp_ctrl.c                  |   2 +
+ drivers/pci/hotplug/pciehp_hpc.c                   |  17 +-
+ drivers/pci/hotplug/pciehp_pci.c                   |   2 +
+ drivers/pci/hotplug/rpadlpar_core.c                |   4 +
+ drivers/pci/hotplug/rpaphp_slot.c                  |   3 +-
+ drivers/pci/msi.c                                  |   6 +-
+ drivers/pci/of.c                                   |  58 +-
+ drivers/pci/p2pdma.c                               |  38 +-
+ drivers/pci/pci-acpi.c                             | 183 ++--
+ drivers/pci/pci-stub.c                             |  10 +-
+ drivers/pci/pci-sysfs.c                            |   3 +-
+ drivers/pci/pci.c                                  | 344 ++++----
+ drivers/pci/pci.h                                  |   2 +-
+ drivers/pci/pcie/aer.c                             |  30 +-
+ drivers/pci/pcie/aer_inject.c                      |  20 +-
+ drivers/pci/pcie/aspm.c                            |  47 +-
+ drivers/pci/pcie/bw_notification.c                 |  14 +
+ drivers/pci/pcie/dpc.c                             |  37 +-
+ drivers/pci/pcie/pme.c                             |  10 +-
+ drivers/pci/probe.c                                | 230 ++++-
+ drivers/pci/proc.c                                 |   1 +
+ drivers/pci/quirks.c                               |  92 +-
+ drivers/pci/search.c                               |  10 +-
+ drivers/pci/setup-bus.c                            | 526 ++++++------
+ drivers/pci/slot.c                                 |   2 +-
+ drivers/pci/switch/switchtec.c                     |  42 +-
+ drivers/pci/xen-pcifront.c                         |   9 +-
+ drivers/platform/chrome/chromeos_laptop.c          |   2 +-
+ include/linux/acpi.h                               |   3 +-
+ include/linux/cper.h                               | 336 ++++----
+ include/linux/msi.h                                |  18 -
+ include/linux/pci-ecam.h                           |   1 +
+ include/linux/pci-epc.h                            |   2 +
+ include/linux/pci-epf.h                            |   3 +-
+ include/linux/pci.h                                |   9 +-
+ include/linux/pci_hotplug.h                        |  66 +-
+ include/linux/switchtec.h                          |   2 +-
+ include/uapi/linux/pci_regs.h                      | 138 +--
+ include/uapi/linux/switchtec_ioctl.h               |  13 +-
+ tools/pci/Makefile                                 |   8 +-
+ tools/pci/pcitest.c                                |   8 +-
+ 92 files changed, 2911 insertions(+), 1621 deletions(-)
+ create mode 100644 drivers/pci/controller/dwc/pcie-al.c
