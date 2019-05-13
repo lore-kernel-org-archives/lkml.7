@@ -2,144 +2,88 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8AF0C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940FEC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA17220818
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66AF420818
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557761030;
-	bh=WKvZPYcqB/75q+K7CyUjLYml1rF+NViq8uYLF2Ytfeo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0w8xoGCKHNnurownH/wREq7153ugHLEU41wrp1RjsAEg3a94+2GUC8nbrSPxq94xm
-	 tzR5ZUlw44ZR2dY2FqaOFVbA6gZE7VDlHZ1TaokpLlsmaQ3q+YlDz8qgLgOnf4lCbb
-	 TXrvYJPu8UwDkMxIyi56LMvufRt1+Owi35hQSM7M=
+	s=default; t=1557761034;
+	bh=EVr4zhm0fqnZG6PraLw7Px7OGuAGXm+MfXSTL/taTXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Zu4x580OktlwwjlRe8E1miNrpy1Jja5XKF+xsS9kgzWm43iuwOYNg2hUb1K8bLnk8
+	 TbF4ulzB/lVt3BsxCXVwAM9YRpKBvA8mtUaF8Yaz3zP7f/os5bg6VEfmPNqmisAhT4
+	 n1JtP7w8JTflg0TKFFVOxo3lLEMxWi1ZaNJF1cmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbfEMPXt (ORCPT
+        id S1729947AbfEMPXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:23:49 -0400
-Received: from casper.infradead.org ([85.118.1.10]:54980 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728615AbfEMPXt (ORCPT
+        Mon, 13 May 2019 11:23:53 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34742 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbfEMPXw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XecE39z5Wdv1UUdpgjNY8jEJraT3bchBosqiDVEwKac=; b=H0nmENQFZDrtsb3WGjL+nJ69KT
-        +fXIpU+tp4CIRwnV+GiOf2ZuYb/PjDqW+bH34swATcxiDuZnoXt0NgCWwwjUvKVVSV+4LSGTEDkxt
-        EgaBGgeQXLx3OmLBYd93SgbZClb1EJduca7Wg514zub9bi1EJbXXXPCqTyK2I0c5oZSObRWrlKlA8
-        Yy73fDr+lUmikIR3nYOUtTmYEXCm57xPb5KR/uYq4cNV6Flmow0OzvrHf0inaLH9aCMVeDwZh/iMp
-        OxxIfEOkSOZCIbnn6mxObPb4uof0Z1j+riFiG3a7d2eBftDChxE55rtGPvKR8IyyPgkKlMP78iBvH
-        REqmF3PA==;
-Received: from [179.179.44.200] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQCnd-0003iy-SA; Mon, 13 May 2019 15:23:34 +0000
-Date:   Mon, 13 May 2019 12:23:27 -0300
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        "open list:DMA BUFFER SHARING FRAMEWORK" 
-        <linux-media@vger.kernel.org>
-Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
- common place
-Message-ID: <20190513122327.57f9c6ea@coco.lan>
-In-Reply-To: <20190513145719.GS17751@phenom.ffwll.local>
-References: <20190417154121.GJ13337@phenom.ffwll.local>
-        <20190418062229.eyog4i62eg4pr6uf@flea>
-        <CAKMK7uHwSjqXwWGt+wQ6oMFWoPqmBxYHL7r+vTOXdYt9KMCYLQ@mail.gmail.com>
-        <20190418090221.e57dogn4yx5nwdni@flea>
-        <CAKMK7uHN6QfYyzx4DjRT+7VLRi6N9DorQtw2GoDiNGTgie=DXA@mail.gmail.com>
-        <20190420225904.GZ4964@pendragon.ideasonboard.com>
-        <20190423072554.GW13337@phenom.ffwll.local>
-        <20190423154527.GH16111@pendragon.ideasonboard.com>
-        <CAKMK7uEFco0LcmbZaSddcpSHwY8tSMhif5rKmqwANnt2zhtzpg@mail.gmail.com>
-        <20190511192632.GN13043@pendragon.ideasonboard.com>
-        <20190513145719.GS17751@phenom.ffwll.local>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 13 May 2019 11:23:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v10so9643173oib.1;
+        Mon, 13 May 2019 08:23:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XfGOlUQQ0BR8c4BsoZfFHQRJzybAooAiYyp3hXARCkQ=;
+        b=kgcK5itGGd5QIo9mqSMTdU4gZgAJAcDAvn4Xaze/S55Kv5nj6KT6CbistSdJHxAaUb
+         CHEiQzbHuYhofBeKQkVblZEWhzpYN8NIpq20Y1X14Rka/1EZsG95MQfQlANOSa/29yB1
+         vxZ3KzkIk/YTJhlIdPxFtwxremyAiXNFHvawa4uEG4tLrflaVpM8/5SHmlTxP4/BiZRD
+         OOSeVCaI6Ac/aXR6r/t+vo2pi6UwYdGBEIVRLt7PLiL6vZGUiAqd9Fgr0oCtM3Oqr6Bd
+         xugET5I+dq3BB6hb0KI4W4pVdzy5yHfXrRIH87H8NMEz1T8fbBskx8Mgv6isIN7wEuz8
+         L8IQ==
+X-Gm-Message-State: APjAAAWldRAi1W1HGvjVRqL1ean2Z0bOeDKu6rsUTclF7BBGrxxD740o
+        La34wVNDUAcehnwLpQ1aXuyjKsc=
+X-Google-Smtp-Source: APXvYqwogXG9j5/7+ZY36riOYzWM8WHj5Fegta9WZGu25wuD9gOfHcK9nAeELOAXUnR4igtZg//L2Q==
+X-Received: by 2002:aca:309:: with SMTP id 9mr14046095oid.94.1557761030441;
+        Mon, 13 May 2019 08:23:50 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m203sm5419883oib.45.2019.05.13.08.23.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 08:23:49 -0700 (PDT)
+Date:   Mon, 13 May 2019 10:23:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] dt-bindings: remoteproc: Rename and amend Hexagon
+ v56 binding
+Message-ID: <20190513152349.GA23710@bogus>
+References: <20190510043421.31393-1-bjorn.andersson@linaro.org>
+ <20190510043421.31393-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510043421.31393-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 13 May 2019 16:57:19 +0200
-Daniel Vetter <daniel@ffwll.ch> escreveu:
-
-> > > I think small boutique trees are a problem themselves, not a solution.
-> > > So if you're creating a new small boutique tree to fix a problem, you
-> > > then have 2. Yes, assuming sufficient expenditure of energy it can be
-> > > made to work, but I'd prefer to make my own life as easy and lazy as
-> > > possible :-) And I think I've been fairly successful at that within
-> > > drivers/gpu at least.
-> > > 
-> > > Imo the proper fix is to merge v4l and drm, at a process/maintainer
-> > > level. That would solve both the original issue and the 2ndary one of
-> > > the permanent topic branch.  
-> > 
-> > Proposals are welcome ;-)  
+On Thu,  9 May 2019 21:34:14 -0700, Bjorn Andersson wrote:
+> The SDM845 Audio DSP peripheral image loader binding describes the
+> properties needed to load and boot firmware on a Hexagon v56. Rename the
+> file and add the Compute DSP (CDSP) found in QCS404 to the binding.
 > 
-> I'm already somewhat unpopular at LPC/lkml/kernel-at-large, I don't want
-> to make this worse.  That's why I don't want to officially push for
-> anything here myself, nor be in any other way involved in an effort to
-> figure out v4l governance and maintainership rules.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  ...qcom,adsp-pil.txt => qcom,hexagon-v56.txt} | 35 +++++++++++++------
+>  1 file changed, 25 insertions(+), 10 deletions(-)
+>  rename Documentation/devicetree/bindings/remoteproc/{qcom,adsp-pil.txt => qcom,hexagon-v56.txt} (74%)
 > 
-> What I think is required for efficient collaboration with drm (no matter
-> how we implement that in the details once we're ready for that step) is
-> some kind of group maintainership model. Doesn't need to be as extreme as
-> drm-misc, but I think at least something like the soc tree (while it was
-> still a bit more limited as arm-soc). Otherwise the impendence mismatch
-> between how drm rolls and how v4l rolls is probably way too much. From my
-> understanding v4l is working differently.
-> 
-> Also, through sheer inertia of size, I don't think it'll be easier to
-> align drm with the v4l model. So that option is not realistic.
 
-I don't think it is realistic trying to align V4L2 model to every single 
-other subsystems we use. We have a lot of alignment with alsa, with even
-increased during this merge window due to some drivers on media sharing 
-media controller resources with usb-audio. We also have lots of alignment
-with i2c, as we use a lot of stuff there, and from time to time they
-need to add new features due to our needs. The same is true also for
-input and for other subsystems and arch/sub-arch trees.
-
-That doesn't mean at all that everybody should use the same maintainership
-model. Each subsystem should use whatever suits best.
-
-That's said, after following this thread for a while, I'm starting to
-convince that it wouldn't even be realistic to have a common fourcc 
-API for both subsystems. The internal requirements from each subsystem
-are different, and, as it was already pointed in this thread, that's
-basically why DRM ended by having their own way of doing that.
-
-Yet, it would make sense to have at least a single nomenclature for
-both systems to use, but it could be a simple as what we already do
-with other common resources, like:
-
-	Documentation/ioctl/ioctl-number.txt
-
-If we keep the fourcc codes there sorted, if one subsystem would
-add a conflicting code, it would be easy to notice at linux-next.
-
-Thanks,
-Mauro
+Reviewed-by: Rob Herring <robh@kernel.org>
