@@ -2,310 +2,102 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C5AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143CDC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8544B20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B7920862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifwIc5Jl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S5QBRMRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfEMUZt (ORCPT
+        id S1726338AbfEMUaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:25:49 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39258 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbfEMUZr (ORCPT
+        Mon, 13 May 2019 16:30:24 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36563 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbfEMUaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:25:47 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e24so19362054edq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:25:46 -0700 (PDT)
+        Mon, 13 May 2019 16:30:24 -0400
+Received: by mail-ua1-f68.google.com with SMTP id z17so5346936uar.3;
+        Mon, 13 May 2019 13:30:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8cHvGiGICHWvlCnNFZkMnztAt4SRYlh07/8kyTvwxfI=;
-        b=ifwIc5Jl9rpjlX3fhAIgxoVxIKu9jCrGdf3een5QIY1Xqo73tsIpJAYvFOijwLaxkL
-         kAheog8s30qfF5jlrRapHuVCR2n+QuqW0WA8hXRG/zR5UHG+ykfa+8aknBYKkQC0qdxb
-         HWQADKEP3ARn8iMOr6CnDiiAy8nxmw9KSh6w8IkSg1efZJNxgZErO2djBMSuRpJtBQUC
-         6089pG1vH7QEJXD2fkErpQRPAcd3xKrXqZ+nthbQukgidqyAQmHPnvOwk01MBXE1fgqA
-         tW3qrzl9fbmrFo2SjpwPIMpvIi5MJf1hA7fRWb5em4txLTIEHq5vwZGjVtN8bzxcE9MD
-         v+ig==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SJi5lC96vbQ5kIDUFpwE/Nznn3R+YuYl3oTaGEijmGo=;
+        b=S5QBRMRX4vmrvpFOpauCjHSowRBDI2/0TAffVvirzFa/nPY24bqEHrREytwdPcvSYN
+         o+qQYHgehn8maKl4MddbHnstr3QvNheBiQGW0FxJLIamFX5e4GZmNAzmSEAjiUi/cBqn
+         zuolDQMJwm6UZwRAvbc5S6soxCDYxAf87EUPMV+a0IHNiRmAGgsUZAzpPkhdODdIo1x7
+         FhR1pMxwwP0sYyhwIlidp5farRaisKDmattJtPtPFKLmlojODZT+la/GZPTMba9fJBMK
+         UmqG3y6PtpLCCjnZRcY+TIlU+XIwSe7Yt6XTZjjd+wxGPvFnZDYldTPnpHErwGMRM5du
+         YV5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8cHvGiGICHWvlCnNFZkMnztAt4SRYlh07/8kyTvwxfI=;
-        b=K1JzCHVrl26kvH/1Pm+4vZp8MLZ7fDzoLo/80CyQJbFeKsDPr1U3tF1kdtcmHLQoUB
-         MeD/14DkGqZaWq07ckfs/zm4azqOhpXY4H4fPV/bCFOHrfWWW6RPyIX2KnyhgXgKS7wJ
-         9HfEmf39N7vZ2RhVHD+7fAvP8B7VkMdaPMErIGkoU393VMA9r76EJGwylhD/O+5V0U7h
-         u7/j+RLZmA8xYBZp3HExTpfAQQFhi05XFX0ydTGsSEDvzo9uTahqRVjI5EWF35f412pQ
-         kGZQQZZDY7Npi9lMKuM/pjdCQK9aVwSSGpK/4PexlUPFSXcQVlzm+bsAK8hDnrG0/YlB
-         9PNA==
-X-Gm-Message-State: APjAAAXVz/qoY8U91FByb5yalvO9STrD8Ut0MqqR9L8Dey47O8AUeaAQ
-        ZoWTsvrxW1dEJ1qtMH8K3e3hs7B/
-X-Google-Smtp-Source: APXvYqzXibiukth/hujqJJOXRBf6/xOOtpttfR+325xvztSzuRGh5snE3FdJ73UBAg0wa6NYVmSI7A==
-X-Received: by 2002:a17:906:4dc7:: with SMTP id f7mr17120783ejw.207.1557779145347;
-        Mon, 13 May 2019 13:25:45 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id k37sm4036076edb.11.2019.05.13.13.25.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 13:25:44 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PMU PROFILING
-        AND DEBUGGING), John Garry <john.garry@huawei.com>,
-        Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>,
-        Sean V Kelley <seanvk.dev@oregontracks.org>
-Subject: [PATCH v2 3/3] perf vendor events arm64: Add Cortex-A57 and Cortex-A72 events
-Date:   Mon, 13 May 2019 13:25:22 -0700
-Message-Id: <20190513202522.9050-4-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513202522.9050-1-f.fainelli@gmail.com>
-References: <20190513202522.9050-1-f.fainelli@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SJi5lC96vbQ5kIDUFpwE/Nznn3R+YuYl3oTaGEijmGo=;
+        b=ui5JdT9OXufn0gQGlQLfgpLz7xX9mkExkjro+M7b4LI81ck6zgP1Jx4atZNiAMiz0+
+         OV6RZ9jXFEDNag3PO7mVFRxi6MfcWISFfTDsK6tNDUa7mXldLaReam7aZqsUtvOoj8gi
+         ynveUaVqFJ7cOgwHrnYr0jUMpG9eTcjvSsssD67m3aq4ou7H4g8dOdfrrUhWfxYzbOCe
+         VTv6l6O5L6QJZS7a5FnMye4499jGGrng0Hj77bu2BF6sLhXnMeCvd9h0fLcRhg0VyocK
+         2bgxsUhSzSOuIiryjP7vRCQw6fp17kHUN0FUFei5JxYm2bDTZhoPRFh0bfMGG2NKsUvq
+         yaJQ==
+X-Gm-Message-State: APjAAAUmsqyjvbu0r0kw98ZmeSWQwu95LbxYWe6EtsTkOI9rNi95HGz0
+        5wPcXNT8ulo4WD9/YjDNDg==
+X-Google-Smtp-Source: APXvYqxvp+g2jLmI6bVnZkxN8U7wCgP69Ut4cq3E97D7jH4E16GiHN1oRAPx1KXUw3b992Gn8RKZTg==
+X-Received: by 2002:ab0:6783:: with SMTP id v3mr14845341uar.8.1557779422261;
+        Mon, 13 May 2019 13:30:22 -0700 (PDT)
+Received: from localhost.localdomain ([2601:902:c200:6512:37bd:d695:3a39:ceb9])
+        by smtp.gmail.com with ESMTPSA id 143sm1285120vkj.44.2019.05.13.13.30.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 13:30:21 -0700 (PDT)
+From:   Ayman Bagabas <ayman.bagabas@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Cc:     ayman.bagabas@gmail.com
+Subject: [PATCH v1 0/2] Huawei WMI laptop extras driver
+Date:   Mon, 13 May 2019 16:30:04 -0400
+Message-Id: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
-up to the RC_ST_SPEC (0x91) event with the exception of:
+Using the WMI BIOS management interface found on Huawei laptops, extra features
+such as micmute LED, charging thresholds, and fn-lock can be controlled.
 
-- L1D_CACHE_REFILL_INNER (0x44)
-- L1D_CACHE_REFILL_OUTER (0x45)
-- L1D_TLB_RD (0x4E)
-- L1D_TLB_WR (0x4F)
-- L2D_TLB_REFILL_RD (0x5C)
-- L2D_TLB_REFILL_WR (0x5D)
-- L2D_TLB_RD (0x5E)
-- L2D_TLB_WR (0x5F)
-- STREX_SPEC (0x6F)
+A platform driver has been implemented along with the existing WMI driver. The
+platform driver controls the LED, battery charging thresholds, and fn-lock.
 
-Create an appropriate JSON file for mapping those events and update the
-mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
-file.
+We enable sound micmute hooks to platform driver on Huawei laptops to get the
+LED to work.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../arm/cortex-a57-a72/core-imp-def.json      | 179 ++++++++++++++++++
- tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
- 2 files changed, 181 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+Ayman Bagabas (2):
+  platform/x86: Huawei WMI laptop extras driver update
+  sound: Enable micmute led for Huawei laptops
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
-new file mode 100644
-index 000000000000..0ac9b7927450
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
-@@ -0,0 +1,179 @@
-+[
-+    {
-+        "ArchStdEvent": "L1D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_INVAL",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_INVAL",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_RD",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_WR",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_SHARED",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_NORMAL",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_PERIPH",
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_RD",
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_WR",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_ST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LDREX_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "STREX_PASS_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "STREX_FAIL_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LDST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DP_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "VFP_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "PC_WRITE_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "CRYPTO_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETURN_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_INDIRECT_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ISB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DSB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DMB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_UNDEF",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SVC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_PABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_DABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_IRQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_FIQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SMC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_HVC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_PABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_DABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_OTHER",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_IRQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_FIQ",
-+    },
-+    {
-+        "ArchStdEvent": "RC_LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "RC_ST_SPEC",
-+    },
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 013155f1eb58..927fcddcb4aa 100644
---- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -14,6 +14,8 @@
- #Family-model,Version,Filename,EventType
- 0x00000000410fd030,v1,arm/cortex-a53,core
- 0x00000000420f1000,v1,arm/cortex-a53,core
-+0x00000000410fd070,v1,arm/cortex-a57-a72,core
-+0x00000000410fd080,v1,arm/cortex-a57-a72,core
- 0x00000000420f5160,v1,cavium/thunderx2,core
- 0x00000000430f0af0,v1,cavium/thunderx2,core
- 0x00000000480fd010,v1,hisilicon/hip08,core
+ drivers/platform/x86/Kconfig      |   8 +-
+ drivers/platform/x86/huawei-wmi.c | 578 +++++++++++++++++++++++++-----
+ sound/pci/hda/patch_realtek.c     |   9 +-
+ 3 files changed, 504 insertions(+), 91 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
