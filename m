@@ -2,94 +2,78 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D452C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B969C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E067F20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBtb+af4"
+	by mail.kernel.org (Postfix) with ESMTP id 2E6732133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557759649;
+	bh=ILmhQ2QK/WxmPdkHQISBgY8FQ9Ydm+VpcAwCfLiiOd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bRdO6+qrerGTkRiQfUaT5TJprX7W6osnH2dNZenjN/p/7ZbyZjixb5aBHzve8a90M
+	 WM/F+YJWTxPgtv5wlHKTi7f9IXY7YDagk9atLkVHPySKbilQKISLp1ZceStl92R3Og
+	 z7eE1Mjolazl+iadFBlzR3l9G/DxlgnL/UCBdHxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbfEMPAE (ORCPT
+        id S1730553AbfEMPAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:00:04 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46884 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbfEMPAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:00:04 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y11so7334358pfm.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:00:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YI4apKyiwzoFZU9dVSAV6s8pxksTddQsWQQ+ARnfARM=;
-        b=JBtb+af429BMLQX05LwJk8JyOCUcuisqVMvds2IepDPWQ4T7iQPRmjoxCt+OzbTyZA
-         0OzkFc8aVQDvX8kZDPvpWf4bCLcg3KesiorRr38oxdLqSD+B00cwewrGLz62bHlIpKUc
-         TMCN7hCmIYAe3sIpuihGBXXQgciC2o59CibnfIgrDHmFQn4vD/G9H5OiXqA5XRCj2QDS
-         9X7aU7C35jI+R16YqXYqvNvuF0VcbkLTK5kAgod/EdCsJVluWmQsu8HeDr6smtazlAND
-         /pM51IjnI4tDc26JdRz6qjBm71/PeQ5CEFBbgIkiRNe/tNw2h73hJ9XX4WtrJ3xpRXxs
-         WkgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YI4apKyiwzoFZU9dVSAV6s8pxksTddQsWQQ+ARnfARM=;
-        b=rcFjOaW/s+KEHdvDHcnoHa1AhIE3uYesvRZ2Iklu3ogRfeXIg7H/WnSE4E0892q3JC
-         XTBj3G811Fh9zZnWSHU0Yl86eD28zqx3jUBSm12h/VvmTplpNF9ReTwkSQIlbALxN/Yh
-         A4MHGz17V+zEKwTJs2io4S7mrcZVLJD/jLJdt3ac8V04f7dLkX+y5JcUdx5HZG5XMN/R
-         rlmoIi5rsHZTR/pAvipnumu3k/ChVsVUUpVJhOC+HVg+TCqN2635pO4Z/441m4H/oCHJ
-         /e/oBH2mE17iLtPcXpQerm6R3eerhbwuMOaPWu1PfOwhb6s0Jl1zABEYnAYXeouaPWLS
-         gE0Q==
-X-Gm-Message-State: APjAAAUBLNwOMH9kXqbC763tMMi5dVVFewGbCGuGVOWictuHys67YfNn
-        mO1iMEHxgTRc7DFiY5u0aeFabf4+QSpTmonVEpU=
-X-Google-Smtp-Source: APXvYqzJ6A54mX7dVEAFcM8N5fVArCSi1kuwY1aghL9QrCXbIKtdp2qyX/J4n9J6kPT3aYHMfMCq/YUVsmN9YLAsCQg=
-X-Received: by 2002:aa7:9214:: with SMTP id 20mr33381833pfo.202.1557759603675;
- Mon, 13 May 2019 08:00:03 -0700 (PDT)
+        Mon, 13 May 2019 11:00:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:42469 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726738AbfEMPAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:00:48 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 08:00:47 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga006.jf.intel.com with ESMTP; 13 May 2019 08:00:46 -0700
+Date:   Mon, 13 May 2019 08:55:24 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Mario.Limonciello@dell.com
+Cc:     hch@lst.de, keith.busch@intel.com, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kai.heng.feng@canonical.com
+Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+Message-ID: <20190513145522.GA15421@localhost.localdomain>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143741.GA25500@lst.de>
+ <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-References: <1557676457-4195-1-git-send-email-akinobu.mita@gmail.com>
- <CGME20190512155533epcas4p110edff15ebf5b2efae32e43f0f10ab59@epcms2p5>
- <1557676457-4195-7-git-send-email-akinobu.mita@gmail.com> <20190513074120epcms2p54e3a031668274ac1ebace6c5edc0a3f7@epcms2p5>
-In-Reply-To: <20190513074120epcms2p54e3a031668274ac1ebace6c5edc0a3f7@epcms2p5>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Mon, 13 May 2019 23:59:52 +0900
-Message-ID: <CAC5umyjrYddqtQY8LdoXG8S7s7xaAO3oZz7WRDkfnjrkUj2AcQ@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] nvme-pci: trigger device coredump on command timeout
-To:     minwoo.im@samsung.com
-Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=8813=E6=97=A5(=E6=9C=88) 16:41 Minwoo Im <minwoo.im@sa=
-msung.com>:
->
-> > -static void __maybe_unused nvme_coredump_init(struct nvme_dev *dev);
-> > -static void __maybe_unused nvme_coredump_logs(struct nvme_dev *dev);
-> > -static void __maybe_unused nvme_coredump_complete(struct nvme_dev
-> > *dev);
-> > +static void nvme_coredump_init(struct nvme_dev *dev);
-> > +static void nvme_coredump_logs(struct nvme_dev *dev);
-> > +static void nvme_coredump_complete(struct nvme_dev *dev);
->
-> You just have added those three prototypes in previous patch.  Did I miss
-> something here?
+On Mon, May 13, 2019 at 02:43:43PM +0000, Mario.Limonciello@dell.com wrote:
+> > Well, it sounds like your partners device does not work properly in this
+> > case.  There is nothing in the NVMe spec that says queues should be
+> > torn down for deep power states, and that whole idea seems rather
+> > counter productive to low-latency suspend/resume cycles.
+> 
+> Well I've got a thought, quoting the NVME spec:
+> "After a successful completion of a Set Features command for this feature, the controller shall be in the
+> Power State specified. If enabled, autonomous power state transitions continue to occur from the new state."
+> 
+> If APST is enabled on this disk, what is to stop an autonomous  reverse
+> transition from queue activity on the way down?
 
-These __maybe_unused are needed only in the patch 5/7.
-Because these functions are still unused before applying patch 6/7.
+Regardless of whether APST is enabled or not, the controller may
+autonomously transition out of a host requested low power state in
+response to host activity. Exiting a low power state should mean some
+other task is actively using the device, and if that's the case, why are
+you trying to enter a low power state in the first place? Alternatively,
+if host activity really is idle, then why is the device autonomously
+leaving the requested state?
