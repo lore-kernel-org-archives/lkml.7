@@ -2,129 +2,138 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43371C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51B9C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08895208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBB1208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:34:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="RmrhatQn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uJr+lWVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEMSbE (ORCPT
+        id S1726771AbfEMSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:31:04 -0400
-Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:33755
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725928AbfEMSbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:31:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nk8jaHYGsSWK1eIH8yAc0z2BL1JDFaYNAzM5F8bywak=;
- b=RmrhatQna84j7UeCcOw7N4BxYZ21KK9t5Tr6DKmr5kCzBhskx07Jj7Nbx5vmCOWAoZy9xA7KH3FGND95UrhrLWjfIBFk6wo0Pj5RN9MwJ7PGKZJf9xW9+wzYZqoNiHi02LKE++hrUFwRluK8pyhpn7s4vcDoNf5wpUzOSjoDN6w=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5981.eurprd05.prod.outlook.com (20.178.127.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.21; Mon, 13 May 2019 18:30:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::711b:c0d6:eece:f044]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::711b:c0d6:eece:f044%5]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 18:30:58 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     David Miller <davem@davemloft.net>,
-        "g@mellanox.com" <g@mellanox.com>
-CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "dledford@redhat.com" <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Annoying gcc / rdma / networking warnings
-Thread-Topic: Annoying gcc / rdma / networking warnings
-Thread-Index: AQHVCBnqId2qpywf80SpyVwZsFlKM6ZoQWSAgAAjEYCAAP9VgA==
-Date:   Mon, 13 May 2019 18:30:58 +0000
-Message-ID: <20190513183053.GI7948@mellanox.com>
-References: <CAHk-=whbuwm5FbkPSfftZ3oHMWw43ZNFXqvW1b6KFMEj5wBipA@mail.gmail.com>
- <20190513011131.GA7948@mellanox.com>
- <20190512.201701.1918995863082655897.davem@davemloft.net>
-In-Reply-To: <20190512.201701.1918995863082655897.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0062.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::39) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.49.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ea7b320a-c8a5-4e0c-e7d9-08d6d7d12454
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB5981;
-x-ms-traffictypediagnostic: VI1PR05MB5981:
-x-microsoft-antispam-prvs: <VI1PR05MB5981F771F889C0DD98308273CF0F0@VI1PR05MB5981.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(396003)(39860400002)(366004)(199004)(189003)(66066001)(66446008)(86362001)(66556008)(66476007)(256004)(64756008)(14444005)(14454004)(478600001)(66946007)(316002)(110136005)(54906003)(68736007)(102836004)(8936002)(6246003)(386003)(6506007)(99286004)(8676002)(52116002)(6436002)(486006)(7736002)(6486002)(11346002)(446003)(476003)(4326008)(71190400001)(71200400001)(2616005)(53936002)(186003)(305945005)(26005)(81156014)(81166006)(76176011)(6512007)(2501003)(3846002)(6116002)(25786009)(33656002)(1076003)(36756003)(73956011)(6636002)(2906002)(5660300002)(229853002)(781001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5981;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: eahiYIZS4Pibe0y6pyATzi6IVnzolXzbshzcbIEwq5zmxHQQexrjcNSHEaqsU1bfrMXGLq+eeb2VANJ8Los7hW6yMtk3NEFumJQtCsbdzFTNNJu8IkuKuIiM02agnzE1LPhED+IaZ/uRXgK1viMRunTVXY6pOAPjF387fQ1AFi/6k+xGcHchceuWTdVOGeP/F40MSDe3cADVJ1gaO03Z3qJ/6LmWRf+wIcuySqzjRMfhfjfb6LGlTgJlFzwKkolyVtp+NZ+bYF1iAP0J8gPIIxT/nDe2wuI/g03QKCMO9T9whUfe4HIvHsJBaA6aGrgNROawIqz5IeuCLO2TaJfevA/dRbvf5oUtc7yE7XxwgDY6eZtZJIk55G0ggiH7MM3sbrZk2rTpJPCZK5HR6UE2pCg1kPGanKNzWVi+gFHsf50=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <93EB29960ADB1A469EF8B5521F803208@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 May 2019 14:34:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55875 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfEMSeY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:34:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4DIY4XH3649437
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 13 May 2019 11:34:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4DIY4XH3649437
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557772445;
+        bh=JRFthHKRGdLsHt7WrJA6BStb40SdgIvL9/qz0B0lmos=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=uJr+lWVZARoAJ5vfvf9oHNCGwWpmb6TJCk/d1RBJEJD1DW0KWT/8snLWhxgZN4K0I
+         TYKDo2d7XTegcchHP/7DIMs+HbxkTNvzTTKX9kLSYERBoubA1dGs5kq6K2KIkqviYc
+         aOoeeiWmlNk4PmIz89hM1rJTsyiHh214fbTOcelDc2uQqz6ZTj+fMcLj5VmayDlI3W
+         eEJwYcoMFb9PLuODGx6jVs8VVatBnIsZb/rJ2kc3eJ/oRiOADdvHMHvEfxPhrioqpX
+         +2RpFZ7jndfwyGPHnmwQrXnb/kqxJSfVLaeGaQ2P6N8NK++/KnInUN8VRugmqN7JR/
+         I9M6AL+8UKBhA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4DIY4xr3649434;
+        Mon, 13 May 2019 11:34:04 -0700
+Date:   Mon, 13 May 2019 11:34:04 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-e6da9567959e164f82bc81967e0d5b10dee870b4@git.kernel.org>
+Cc:     jpoimboe@redhat.com, mingo@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, hpa@zytor.com
+Reply-To: torvalds@linux-foundation.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          peterz@infradead.org, mingo@kernel.org, jpoimboe@redhat.com
+In-Reply-To: <71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com>
+References: <71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/urgent] objtool: Don't use ignore flag for fake jumps
+Git-Commit-ID: e6da9567959e164f82bc81967e0d5b10dee870b4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea7b320a-c8a5-4e0c-e7d9-08d6d7d12454
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 18:30:58.2248
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5981
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 08:17:01PM -0700, David Miller wrote:
-> From: Jason Gunthorpe <jgg@mellanox.com>
-> Date: Mon, 13 May 2019 01:11:42 +0000
->=20
-> > I think the specific sockaddr types should only ever be used if we
-> > *know* the sa_family is that type. If the sa_family is not known then
-> > it should be sockaddr or sockaddr_storage. Otherwise things get very
-> > confusing.
-> >=20
-> > When using sockaddr_storage code always has the cast to sockaddr
-> > anyhow, as it is not a union, so this jaunty cast is not out of place
-> > in sockets code.
->=20
-> From what I can see, each and every call side of these helpers like
-> rdma_gid2ip() et al. redefine this union type over and over and over
-> again in the local function.
+Commit-ID:  e6da9567959e164f82bc81967e0d5b10dee870b4
+Gitweb:     https://git.kernel.org/tip/e6da9567959e164f82bc81967e0d5b10dee870b4
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Mon, 13 May 2019 12:01:31 -0500
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 13 May 2019 20:31:17 +0200
 
-Yes, the repeated union is very ugly and could be consolidated - or
-should just use sockaddr_storage in the first place.
+objtool: Don't use ignore flag for fake jumps
 
-> It seems that if we just defined it explicitly in one place, like
-> include/rdma/ib_addr.h, then we could have tdma_gid2ip(), addr_resolve(),
-> and rdma_resolve_ip() take that type explcitily.
+The ignore flag is set on fake jumps in order to keep
+add_jump_destinations() from setting their jump_dest, since it already
+got set when the fake jump was created.
 
-I pulled on this thread for a while and the number of places that
-would need to convert to use a global 'union rdma_sockaddr_inet'
-started to become pretty silly and weird. I eventually reached a point
-where I had to cast a sockaddr * to the union - which is something
-that makes no sense and I gave up.
+But using the ignore flag is a bit of a hack.  It's normally used to
+skip validation of an instruction, which doesn't really make sense for
+fake jumps.
 
-So, I think this feels simpler to follow the usual sockaddr_storage
-pattern and only use the union to declare the initial storage. Then
-everything else just uses the sockaddr * plus casts..
+Also, after the next patch, using the ignore flag for fake jumps can
+trigger a false "why am I validating an ignored function?" warning.
 
-Jason
+Instead just add an explicit check in add_jump_destinations() to skip
+fake jumps.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ tools/objtool/check.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index ac743a1d53ab..90226791df6b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -28,6 +28,8 @@
+ #include <linux/hashtable.h>
+ #include <linux/kernel.h>
+ 
++#define FAKE_JUMP_OFFSET -1
++
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -568,7 +570,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 		    insn->type != INSN_JUMP_UNCONDITIONAL)
+ 			continue;
+ 
+-		if (insn->ignore)
++		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
+ 			continue;
+ 
+ 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
+@@ -745,10 +747,10 @@ static int handle_group_alt(struct objtool_file *file,
+ 		clear_insn_state(&fake_jump->state);
+ 
+ 		fake_jump->sec = special_alt->new_sec;
+-		fake_jump->offset = -1;
++		fake_jump->offset = FAKE_JUMP_OFFSET;
+ 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
+ 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
+-		fake_jump->ignore = true;
++		fake_jump->func = orig_insn->func;
+ 	}
+ 
+ 	if (!special_alt->new_len) {
