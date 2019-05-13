@@ -2,197 +2,94 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A37D3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A651DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DBB820879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557759873;
-	bh=xZ9IaynyTlndLM9Q4u+ZsBvgUPYp4/qvD7XbuGTs2hQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1PM/xD+kR6wzZB3WdJ/gXvdSd9IaCdeMkd2krziBEzhjeH/yoxvNX6ub3zxHysdM1
-	 vG68ckyOQhF54i7Ku+Yk2WsNP6zxEmiee74pZhmAxX/cZO9o3BB4wG7DQxmizsOe5W
-	 ccI5Q2w8Qkx4GaSneAv/cg710zxTZIVE9utTW7t8=
+	by mail.kernel.org (Postfix) with ESMTP id 6BB9720879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PrRpceaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731097AbfEMPEc (ORCPT
+        id S1729471AbfEMPFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:04:32 -0400
-Received: from casper.infradead.org ([85.118.1.10]:53256 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbfEMPEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:04:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lmw8m2PcC49iVQvnEnxuI/mETRA7iB8j56Jy/bAQ+Wo=; b=Q1jTmjhz40l91KdKl+IJkHGplw
-        ym+QdE1zGPpm/ylCVzlMkanuTYV43agbp+BADE5rmLYvBSWdsvGZFheRLtIyVmpf2YQJ7O4BEG7Kh
-        aKjwdG4wa1FWaacy23Nq2G3buC+XyLLZoMSgvc2cnz7UNn/K9B5Sc+RHvWemCDREkXbT1HQ2MUfRg
-        BqfqtT3SgkLQCOxvsVKP73MexrsvPOMF8WIs4O3TVUhtLfSERdx+8tQEAK7WZ1RuF/FWAVwlJqD/m
-        2U9gY3DmYc8LRA8v/FgzZSSI1algA/nk16BIik5ih+A3tQ6qvnK2XQlElCCOVPA7Hr/69AAhMgU+h
-        4pz3Q33g==;
-Received: from [179.179.44.200] (helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQCV9-000331-I0; Mon, 13 May 2019 15:04:28 +0000
-Date:   Mon, 13 May 2019 12:04:23 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     bhelgaas@google.com, corbet@lwn.net, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 11/12] Documentation: PCI: convert
- endpoint/pci-test-function.txt to reST
-Message-ID: <20190513120423.159b971f@coco.lan>
-In-Reply-To: <20190513142000.3524-12-changbin.du@gmail.com>
-References: <20190513142000.3524-1-changbin.du@gmail.com>
-        <20190513142000.3524-12-changbin.du@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 13 May 2019 11:05:43 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53099 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727725AbfEMPFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:05:43 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 452kdx20Rcz9s4Y;
+        Tue, 14 May 2019 01:05:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557759941;
+        bh=tqS4kzx2hydYJAX+s68gQPYezEl4dU/R2ruoPAnE1RM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PrRpceaI+SqwnzTdPU1p3SiLf0xOKmZMGz885BgBNW7PjKFabzPHMZPOQojs6eZPR
+         PVdDEDsRa16DDQ7OpWbbzsEkwHAlc1FqaITIDlMt/HguHdemUqXkQjK3Vh3QdzFxis
+         nBzuZ5HpV25MrJ0KzsY3v4HfcLR4fqtmgIgif9g4Gw1SnLpVe6S34Bv/tQvW1UMYve
+         WyPUdnvcGJavoBaD4rypjWrPY/SXVQvzRIMMRlQDIOGGju55aPwS6kxxpCOE1CTDbx
+         JKmZkaspjH054reLgtaujRxSzDJ0yImOoKEq39vizbNMwoSD5qlpxcDg+ZLr8oi5gZ
+         zPuCxEFMUPYvA==
+Date:   Tue, 14 May 2019 01:05:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Shuah Khan <shuah@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the kselftest tree
+Message-ID: <20190514010540.6fbe70e0@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/42zB5IixV86pkMF=x7h5+V1"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 13 May 2019 22:19:59 +0800
-Changbin Du <changbin.du@gmail.com> escreveu:
+--Sig_/42zB5IixV86pkMF=x7h5+V1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> This converts the plain text documentation to reStructuredText format and
-> add it to Sphinx TOC tree. No essential content change.
-> 
-> Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  Documentation/PCI/endpoint/index.rst          |  1 +
->  ...est-function.txt => pci-test-function.rst} | 34 ++++++++++++-------
->  2 files changed, 22 insertions(+), 13 deletions(-)
->  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
-> 
-> diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-> index 3951de9f923c..b680a3fc4fec 100644
-> --- a/Documentation/PCI/endpoint/index.rst
-> +++ b/Documentation/PCI/endpoint/index.rst
-> @@ -9,3 +9,4 @@ PCI Endpoint Framework
->  
->     pci-endpoint
->     pci-endpoint-cfs
-> +   pci-test-function
-> diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
-> similarity index 84%
-> rename from Documentation/PCI/endpoint/pci-test-function.txt
-> rename to Documentation/PCI/endpoint/pci-test-function.rst
-> index 5916f1f592bb..63148df97232 100644
-> --- a/Documentation/PCI/endpoint/pci-test-function.txt
-> +++ b/Documentation/PCI/endpoint/pci-test-function.rst
-> @@ -1,5 +1,10 @@
-> -				PCI TEST
-> -		    Kishon Vijay Abraham I <kishon@ti.com>
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=================
-> +PCI Test Function
-> +=================
-> +
-> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
->  
->  Traditionally PCI RC has always been validated by using standard
->  PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
-> @@ -23,30 +28,31 @@ The PCI endpoint test device has the following registers:
->  	8) PCI_ENDPOINT_TEST_IRQ_TYPE
->  	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
->  
-> -*) PCI_ENDPOINT_TEST_MAGIC
-> +* PCI_ENDPOINT_TEST_MAGIC
->  
->  This register will be used to test BAR0. A known pattern will be written
->  and read back from MAGIC register to verify BAR0.
->  
-> -*) PCI_ENDPOINT_TEST_COMMAND:
-> +* PCI_ENDPOINT_TEST_COMMAND
->  
->  This register will be used by the host driver to indicate the function
->  that the endpoint device must perform.
->  
-> -Bitfield Description:
-> +Bitfield Description::
-> +
->    Bit 0		: raise legacy IRQ
->    Bit 1		: raise MSI IRQ
->    Bit 2		: raise MSI-X IRQ
->    Bit 3		: read command (read data from RC buffer)
->    Bit 4		: write command (write data to RC buffer)
-> -  Bit 5		: copy command (copy data from one RC buffer to another
-> -		  RC buffer)
-> +  Bit 5		: copy command (copy data from one RC buffer to another RC buffer)
+Hi Shuah,
 
-Why not use a table instead?
+In commit
 
->  
-> -*) PCI_ENDPOINT_TEST_STATUS
-> +* PCI_ENDPOINT_TEST_STATUS
->  
->  This register reflects the status of the PCI endpoint device.
->  
-> -Bitfield Description:
-> +Bitfield Description::
-> +
->    Bit 0		: read success
->    Bit 1		: read fail
->    Bit 2		: write success
-> @@ -57,31 +63,33 @@ Bitfield Description:
->    Bit 7		: source address is invalid
->    Bit 8		: destination address is invalid
+  e64ee1f5dc1a ("selftests: fix bpf build/test workflow regression when KBU=
+ILD_OUTPUT is set")
 
-Same here.
+Fixes tag
 
-If you replace the two bitfield descriptions to table:
-	Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+  Fixes: commit 8ce72dc32578 ("selftests: fix headers_install circular depe=
+ndency")
 
->  
-> -*) PCI_ENDPOINT_TEST_SRC_ADDR
-> +* PCI_ENDPOINT_TEST_SRC_ADDR
->  
->  This register contains the source address (RC buffer address) for the
->  COPY/READ command.
->  
-> -*) PCI_ENDPOINT_TEST_DST_ADDR
-> +* PCI_ENDPOINT_TEST_DST_ADDR
->  
->  This register contains the destination address (RC buffer address) for
->  the COPY/WRITE command.
->  
-> -*) PCI_ENDPOINT_TEST_IRQ_TYPE
-> +* PCI_ENDPOINT_TEST_IRQ_TYPE
->  
->  This register contains the interrupt type (Legacy/MSI) triggered
->  for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
->  
->  Possible types:
-> +
->   - Legacy	: 0
->   - MSI		: 1
->   - MSI-X	: 2
->  
-> -*) PCI_ENDPOINT_TEST_IRQ_NUMBER
-> +* PCI_ENDPOINT_TEST_IRQ_NUMBER
->  
->  This register contains the triggered ID interrupt.
->  
->  Admissible values:
-> +
->   - Legacy	: 0
->   - MSI		: [1 .. 32]
->   - MSI-X	: [1 .. 2048]
+has these problem(s):
 
+  - leading word 'commit' unexpected
 
+--=20
+Cheers,
+Stephen Rothwell
 
-Thanks,
-Mauro
+--Sig_/42zB5IixV86pkMF=x7h5+V1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzZh8QACgkQAVBC80lX
+0Gw33Af7BwLykcsFSxaJ4zhM0iYij121ix2a15JOsKMlKLJXEi8IGOd+8vw1CeWQ
+z65oEGTieWwIqp0j4YAXiDeRTVKYRV3X0ndcl3zLLW7bz4dKGcK7SRzfrs+nSVOH
+y+X/pHke+fQ63bful+d52Os3SSBdjslqq92AxtrJVqIKXkOnDxc2waZqqde/K8Jf
+LjlQ7KZ7cMZtLZWq1ZAcWg4LZVMWO7yzhbmnjIWeji+weIwHTYQyBFsLXKwe3ZVz
+UhIRDgfJ9WCUvaYai7VrT2jnxCAkxQ0YxKmZGhecfgSv5k04E8bxYQZF9qcnp9zD
+5JKQvhknM9OCkD5sM94JmO+MRxrE2Q==
+=SyBd
+-----END PGP SIGNATURE-----
+
+--Sig_/42zB5IixV86pkMF=x7h5+V1--
