@@ -2,173 +2,141 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF71C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3442EC04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB9620879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b8POFUNt"
+	by mail.kernel.org (Postfix) with ESMTP id 076FC20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557750731;
+	bh=B4RDdPRHGGkjGFiAeUHjOWTzNvI2apmqrHZZBb/1NHo=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=O/h/tIlzQs6c+E7HJQQyfK6T4OOoaUNE84chEBqrpbcRGfQWhLASstYQuUhwiijni
+	 r/kck6UPADJsKf45VZJEvzNtX5Wb6CN2HD9Tv/swmAZ0rY3upa3IINOrDPi4SFMjM5
+	 H830BAI/6l9iss+G/uJihyVM0KbQaPbsr3GOLH6I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729924AbfEMMcG (ORCPT
+        id S1729929AbfEMMcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:32:06 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34033 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729848AbfEMMba (ORCPT
+        Mon, 13 May 2019 08:32:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59144 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbfEMMcC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:31:30 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so5408203wrt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:31:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4iwsD3U3np8IEFD+xTq9Et1jrPwGjexYK1TesQwMIZ0=;
-        b=b8POFUNthuvdlpyMAvkz/XPAZYSPESkYHVHrRsGD/I32mzJ09+S9i3Ktn/Iqf0CN5e
-         eXNw9ANuWYo8/i8SL0pEagFcNTCv93/n0ORqEmb5I2K2xaCNEU/d2yjQks/B/8wSDyAW
-         /r18vTn6m5K+nQoLd5zViswByZF48gxxHIgU5HBH6NH1amFjBFP1R9vqLwMaM/oIVYyg
-         10xxLLdLF0O/ejD3lGhw/7YDhCE9sKJviaNDyJaxML+EgtQH5MJwIOkMAv1JljUI9q2b
-         LzuvBa77ygJMnX/ZnUmOeXkHAU9bXme+N9/WDu9099QCMnn6M9DzKZnT4kR5OWheER7j
-         WfPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4iwsD3U3np8IEFD+xTq9Et1jrPwGjexYK1TesQwMIZ0=;
-        b=pzZySNUVF+U0T8xaFXlaqcA2E33SCAXZqUvrbfjsmEhatOXfj0ed7+fUhQkBvmRLeE
-         V9pi06iEm6qfhMyg4TGQ/C5pgytwH7EQvf9lJf1jy+7/lVULA9d2dBUA0nLddTnSw/oT
-         HXTcF5gDB8E0Rg9CL+vUEO7VGaGHwvO0JEHQPFMbavNpJX5b+Ie6xlpjxiLws0dAtTTS
-         8V1k17zaS/0wIh4WLteV5dZ60CEVuY/h82R/uGjEJE7ghpweW5JJkD4ZK7cXv444i0Id
-         bgtu9+aUw0BK44fFgkKoKjJVnKfv3RngfxXqiZ19LIqgpx/iJ+p9PKxL3DpeNYM/V6rQ
-         Av1Q==
-X-Gm-Message-State: APjAAAVZQOVTW9ZltOonCLtM0VzP1j63r+FLTKQG/2lLJuT4PdUhqSKD
-        SdTqtkEQqcjLxebhsx71om6hwA==
-X-Google-Smtp-Source: APXvYqzbRgH8TxkyaTtXi+U2BxwbBAXcKGSfcjnlnf1UOwMIO+s/0Olaj1fC2ez7G+vkB7d/5d63Ng==
-X-Received: by 2002:adf:dece:: with SMTP id i14mr18177889wrn.138.1557750687429;
-        Mon, 13 May 2019 05:31:27 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id t13sm16175584wra.81.2019.05.13.05.31.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 05:31:26 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] clk: meson: mpll: add init callback and regs
-Date:   Mon, 13 May 2019 14:31:12 +0200
-Message-Id: <20190513123115.18145-5-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190513123115.18145-1-jbrunet@baylibre.com>
-References: <20190513123115.18145-1-jbrunet@baylibre.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 13 May 2019 08:32:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=DyTZZDy5htEJd2c/YmV8wjqlvgY0f2BXhVkZBBNvqiE=; b=IV919rFLx6om
+        DyIVwo56mxJ6+h6MnNq6mGysv0T4liq5xv+7APMr00Zo7QjeuiX8ECkHnjImlnqjUtpx8B2f7FCZk
+        IwteVlmk2WbDvGa3N787pcjfzjPZOeTPDNYnLDE6dx/9zMnituqhl9af1OpalungI3u986EibQnVh
+        cu78U=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQA7T-0006aR-QN; Mon, 13 May 2019 12:31:51 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 6CC771129232; Mon, 13 May 2019 13:31:51 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     bcm-kernel-feedback-list@broadcom.com,
+        Eric Anholt <eric@anholt.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Applied "spi: bcm2835: only split transfers that exceed DLEN if DMA available" to the spi tree
+In-Reply-To: <20190509144000.681-1-nsaenzjulienne@suse.de>
+X-Patchwork-Hint: ignore
+Message-Id: <20190513123151.6CC771129232@debutante.sirena.org.uk>
+Date:   Mon, 13 May 2019 13:31:51 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Until now (gx and axg), the mpll setting on boot (whatever the
-bootloader) was good enough to generate a clean fractional division.
+The patch
 
-It is not the case on the g12a. While moving away from the vendor u-boot,
-it was noticed the fractional part of the divider was no longer applied.
-Like on the pll, some magic settings need to applied on the mpll
-register.
+   spi: bcm2835: only split transfers that exceed DLEN if DMA available
 
-This change adds the ability to do that on the mpll driver.
+has been applied to the spi tree at
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 3393f7d924510cfdb2ff9594eac2590d5de16d92 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Thu, 9 May 2019 16:39:59 +0200
+Subject: [PATCH] spi: bcm2835: only split transfers that exceed DLEN if DMA
+ available
+
+There is no use for this when performing non DMA operations. So we
+bypass the split.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/clk/meson/clk-mpll.c | 35 ++++++++++++++++++++++++-----------
- drivers/clk/meson/clk-mpll.h |  2 ++
- 2 files changed, 26 insertions(+), 11 deletions(-)
+ drivers/spi/spi-bcm2835.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clk/meson/clk-mpll.c b/drivers/clk/meson/clk-mpll.c
-index d3f42e086431..2d39a8bc367c 100644
---- a/drivers/clk/meson/clk-mpll.c
-+++ b/drivers/clk/meson/clk-mpll.c
-@@ -115,8 +115,30 @@ static int mpll_set_rate(struct clk_hw *hw,
- 	else
- 		__acquire(mpll->lock);
+diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
+index 3a9b2187787a..f87a023a445a 100644
+--- a/drivers/spi/spi-bcm2835.c
++++ b/drivers/spi/spi-bcm2835.c
+@@ -895,15 +895,17 @@ static int bcm2835_spi_prepare_message(struct spi_master *master,
+ 	u32 cs = bcm2835_rd(bs, BCM2835_SPI_CS);
+ 	int ret;
  
--	/* Enable and set the fractional part */
-+	/* Set the fractional part */
- 	meson_parm_write(clk->map, &mpll->sdm, sdm);
-+
-+	/* Set the integer divider part */
-+	meson_parm_write(clk->map, &mpll->n2, n2);
-+
-+	if (mpll->lock)
-+		spin_unlock_irqrestore(mpll->lock, flags);
-+	else
-+		__release(mpll->lock);
-+
-+	return 0;
-+}
-+
-+static void mpll_init(struct clk_hw *hw)
-+{
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_clk_mpll_data *mpll = meson_clk_mpll_data(clk);
-+
-+	if (mpll->init_count)
-+		regmap_multi_reg_write(clk->map, mpll->init_regs,
-+				       mpll->init_count);
-+
-+	/* Enable the fractional part */
- 	meson_parm_write(clk->map, &mpll->sdm_en, 1);
+-	/*
+-	 * DMA transfers are limited to 16 bit (0 to 65535 bytes) by the SPI HW
+-	 * due to DLEN. Split up transfers (32-bit FIFO aligned) if the limit is
+-	 * exceeded.
+-	 */
+-	ret = spi_split_transfers_maxsize(master, msg, 65532,
+-					  GFP_KERNEL | GFP_DMA);
+-	if (ret)
+-		return ret;
++	if (master->can_dma) {
++		/*
++		 * DMA transfers are limited to 16 bit (0 to 65535 bytes) by
++		 * the SPI HW due to DLEN. Split up transfers (32-bit FIFO
++		 * aligned) if the limit is exceeded.
++		 */
++		ret = spi_split_transfers_maxsize(master, msg, 65532,
++						  GFP_KERNEL | GFP_DMA);
++		if (ret)
++			return ret;
++	}
  
- 	/* Set spread spectrum if possible */
-@@ -126,19 +148,9 @@ static int mpll_set_rate(struct clk_hw *hw,
- 		meson_parm_write(clk->map, &mpll->ssen, ss);
- 	}
+ 	cs &= ~(BCM2835_SPI_CS_CPOL | BCM2835_SPI_CS_CPHA);
  
--	/* Set the integer divider part */
--	meson_parm_write(clk->map, &mpll->n2, n2);
--
- 	/* Set the magic misc bit if required */
- 	if (MESON_PARM_APPLICABLE(&mpll->misc))
- 		meson_parm_write(clk->map, &mpll->misc, 1);
--
--	if (mpll->lock)
--		spin_unlock_irqrestore(mpll->lock, flags);
--	else
--		__release(mpll->lock);
--
--	return 0;
- }
- 
- const struct clk_ops meson_clk_mpll_ro_ops = {
-@@ -151,6 +163,7 @@ const struct clk_ops meson_clk_mpll_ops = {
- 	.recalc_rate	= mpll_recalc_rate,
- 	.round_rate	= mpll_round_rate,
- 	.set_rate	= mpll_set_rate,
-+	.init		= mpll_init,
- };
- EXPORT_SYMBOL_GPL(meson_clk_mpll_ops);
- 
-diff --git a/drivers/clk/meson/clk-mpll.h b/drivers/clk/meson/clk-mpll.h
-index 0f948430fed4..a991d568c43a 100644
---- a/drivers/clk/meson/clk-mpll.h
-+++ b/drivers/clk/meson/clk-mpll.h
-@@ -18,6 +18,8 @@ struct meson_clk_mpll_data {
- 	struct parm n2;
- 	struct parm ssen;
- 	struct parm misc;
-+	const struct reg_sequence *init_regs;
-+	unsigned int init_count;
- 	spinlock_t *lock;
- 	u8 flags;
- };
 -- 
 2.20.1
 
