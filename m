@@ -2,226 +2,100 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A9CC04A6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E157C04A6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5784D20879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3320420879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 02:37:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="nMLC7fk2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gzy2uqxx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfEMCfi (ORCPT
+        id S1727451AbfEMChO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 22:35:38 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40790 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727148AbfEMCfh (ORCPT
+        Sun, 12 May 2019 22:37:14 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38060 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727148AbfEMChO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 22:35:37 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k24so8087952qtq.7;
-        Sun, 12 May 2019 19:35:36 -0700 (PDT)
+        Sun, 12 May 2019 22:37:14 -0400
+Received: by mail-pg1-f195.google.com with SMTP id j26so5952403pgl.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 19:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y0ZH7EmWDmGyDb6BIpvnIVA/+/gXTuajAezfGcXNja8=;
-        b=nMLC7fk2jUjWZuyUE7OV83X/g0pp5ylpZCrfGxwaVZPKqNy+DABj/g+Q0scYnoZW9E
-         cNOh7elbR10+O/PY433UkLuQZs2mMZZfzmFd46hChrkpSzXi4aMZAEV3/8op6HM1nYO3
-         NvSDCPDh2iXvw5OEnckkgGieX5c0yd5MQ0dBk=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=VU3aFBFKq8lpBvO42+887yBZzGyg8zhfJfkDGxXu1Ng=;
+        b=Gzy2uqxxKJL0QrBwHfIoV5pxtyqY4VmkeOTa+76twY0ZJ8upgNTDskZo9rx4cP27qp
+         9hUy8Nkp73tyKHT/QWmRpZHemAUb0bcFXYh7TLUVKXQvaH/GFgeReSOI9AmA+RPbZZPx
+         oWYlpo8XJA7ayia7IY6bMzWr0ZqAtLcfsKN9V6vSSeLo8mIqTTVRRg3pm8O9TRiP7jI7
+         kwjcgFTFNc+aIjSqwEfeOUoD/R69+R2k1opHKZ54e4YesggcyOAO4uxkujJeUsgnRS30
+         dQnI+fd4JCeda83rvmZcNtWu+uKuU8u5VQn9Oo18OQeZx6PKuLJXRNcLVK48REhOxJQ+
+         Nf3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y0ZH7EmWDmGyDb6BIpvnIVA/+/gXTuajAezfGcXNja8=;
-        b=nAqYkDvT9ome7exWe3EMWSx9M1OsaJCihLESVbpDai0XHv5yrq/HwakynJzq4S5VIf
-         ZhExnmvRfFFBK/LuwggMy1pFdk01aXryBMslRBciVq1M9GH/ouxZ4MYGE65S2jd5WcjG
-         twW8zvSQEJkHPi/J5OLbMoPX3pD5xf2/YiPxX7z1ycICEo4hWf+BSW3FrGOpBIJNyaPr
-         ecmp1s2WHXxIMvPOrv6ptIDDfhrSvCkiB6cQIFxFIPawx2k5D2f88o2b/3HwNzl//LhG
-         PsBzmSnskc08xXQYQepZ3UT/yBkku83Gj2aLOEU5oD8cwpg4ag4GDFryvTTHp2ajPPEw
-         /gkg==
-X-Gm-Message-State: APjAAAWA2u9xtBMoP+57yRuXdzTgGHm6yLDF+HtvwOaOkvL9rZ/sx9oW
-        BbqwregKTuCDzTbY4YZPgPlRb4nBeE4624A7El0hEYDB
-X-Google-Smtp-Source: APXvYqzTxT/Qw+JqYrZgxGgHyMFtSKRkbGK4Slq68uOnqJ4S2xG9MFaV9bcZvZiF9swkNvgi7wrnvFUwfL/ZD7nnCXc=
-X-Received: by 2002:ac8:2d48:: with SMTP id o8mr21846072qta.136.1557714936178;
- Sun, 12 May 2019 19:35:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509073555.15545-1-yamada.masahiro@socionext.com> <CAK7LNARotATDnShT-80Ect9XvSM98wYEbQRKHdUTuQBtvxG8aw@mail.gmail.com>
-In-Reply-To: <CAK7LNARotATDnShT-80Ect9XvSM98wYEbQRKHdUTuQBtvxG8aw@mail.gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 13 May 2019 02:35:23 +0000
-Message-ID: <CACPK8XdVZHtCtHzv9vmt8C877SBbZNqRPxT9iUe0+8-o7X9W7g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: terminate Kconfig when $(CC) or $(LD) is missing
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=VU3aFBFKq8lpBvO42+887yBZzGyg8zhfJfkDGxXu1Ng=;
+        b=WaWNBa4Pe5NZi1/gdNMZsf942t660GMlNInfg2cxPLSxChNJ9jJK+JcuZU72QkbGRZ
+         QVMckhJicUrRyipwn2oYWELOtwuES7YrOFUVIKQft9AeJ5kCEXEnxtd2Nfo2+qKDVe3C
+         e3Lq5rp3jPxoX0bcjieRkMyONiKSivd3egJzzoWPxgGDjvNUkAwRS2RyfS2sqPXyZWXm
+         ujc4EflFBJS2wusXOsB50fUnnWfpIIW35jS5iEkaXv4HWnxQGyjsktTRcT4J44HO12Jn
+         ThAIJDvBn79zk+beFJJBaHqpoVEfuX2GOiv4eNQFi9tZfZyVj7up5Eo+jVb7quW6KbCz
+         8Jgg==
+X-Gm-Message-State: APjAAAV5c4vLYoNldkivcp8hlE65Ee9yCyE8E0w5ygzQjLCSVR6E1fkP
+        CwFerprn+jQJWOIKLpSgbwQ=
+X-Google-Smtp-Source: APXvYqxhWOdP+Qg7MYa7LiwMgL/NiBSA0QM3Qjo0JeTAZOTI6qeHYKqjn2tCm4dcvaMlaBODAARnRQ==
+X-Received: by 2002:a63:c50c:: with SMTP id f12mr28107838pgd.71.1557715033479;
+        Sun, 12 May 2019 19:37:13 -0700 (PDT)
+Received: from localhost.localdomain ([185.241.43.160])
+        by smtp.gmail.com with ESMTPSA id d186sm11070342pfd.183.2019.05.12.19.37.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 12 May 2019 19:37:12 -0700 (PDT)
+From:   Weikang shi <swkhack@gmail.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, swkhack <swkhack@gmail.com>
+Subject: [PATCH] mm: Change count_mm_mlocked_page_nr return type
+Date:   Mon, 13 May 2019 10:37:01 +0800
+Message-Id: <20190513023701.83056-1-swkhack@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019 at 02:28, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> On Thu, May 9, 2019 at 4:36 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > If the compiler specified by $(CC) is not present, the Kconfig stage
-> > sprinkles 'not found' messages, then succeeds.
-> >
-> >   $ make CROSS_COMPILE=foo defconfig
-> >   /bin/sh: 1: foogcc: not found
-> >   /bin/sh: 1: foogcc: not found
-> >   *** Default configuration is based on 'x86_64_defconfig'
-> >   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/clang-version.sh: 11: ./scripts/clang-version.sh: foogcc: not found
-> >   ./scripts/gcc-plugin.sh: 11: ./scripts/gcc-plugin.sh: foogcc: not found
-> >   init/Kconfig:16:warning: 'GCC_VERSION': number is invalid
-> >   #
-> >   # configuration written to .config
-> >   #
-> >
-> > Terminate parsing files immediately if $(CC) or $(LD) is not found.
-> > "make *config" will fail more nicely.
-> >
-> >   $ make CROSS_COMPILE=foo defconfig
-> >   *** Default configuration is based on 'x86_64_defconfig'
-> >   scripts/Kconfig.include:34: compiler 'foogcc' not found
-> >   make[1]: *** [scripts/kconfig/Makefile;82: defconfig] Error 1
-> >   make: *** [Makefile;557: defconfig] Error 2
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
->
-> Applied to linux-kbuild.
+From: swkhack <swkhack@gmail.com>
 
-Thanks Masahiro! I had this in my inbox to test but you're too efficient.
+In 64-bit machine,the value of "vma->vm_end - vma->vm_start"
+maybe negative in 32bit int and the "count >> PAGE_SHIFT"'s result
+will be wrong.So change the local variable and return
+value to unsigned long will fix the problem.
 
-Testing your patch on linus' tree as of today (d7a02fa0a8f9) gives me
-this output:
+Signed-off-by: swkhack <swkhack@gmail.com>
+---
+ mm/mlock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-$ CROSS_COMPILE=foo  make
-make: foogcc: Command not found
-scripts/kconfig/conf  --syncconfig Kconfig
-scripts/Kconfig.include:34: compiler 'foogcc' not found
-make[2]: *** [scripts/kconfig/Makefile:69: syncconfig] Error 1
-make[1]: *** [Makefile:557: syncconfig] Error 2
-make: *** [include/config/auto.conf.cmd] Deleting file
-'include/config/tristate.conf'
-make: Failed to remake makefile 'include/config/auto.conf'.
-  SYSTBL  arch/x86/include/generated/asm/syscalls_32.h
-  SYSHDR  arch/x86/include/generated/asm/unistd_32_ia32.h
-  SYSHDR  arch/x86/include/generated/asm/unistd_64_x32.h
-  SYSTBL  arch/x86/include/generated/asm/syscalls_64.h
-  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_32.h
-  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_64.h
-  SYSHDR  arch/x86/include/generated/uapi/asm/unistd_x32.h
-  HOSTCC  arch/x86/tools/relocs_32.o
-  HOSTCC  arch/x86/tools/relocs_64.o
-  HOSTCC  arch/x86/tools/relocs_common.o
-  HOSTLD  arch/x86/tools/relocs
-  UPD     include/config/kernel.release
-  WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
-  WRAP    arch/x86/include/generated/uapi/asm/poll.h
-  WRAP    arch/x86/include/generated/uapi/asm/socket.h
-  WRAP    arch/x86/include/generated/uapi/asm/sockios.h
-  WRAP    arch/x86/include/generated/asm/dma-contiguous.h
-  WRAP    arch/x86/include/generated/asm/early_ioremap.h
-  WRAP    arch/x86/include/generated/asm/export.h
-  WRAP    arch/x86/include/generated/asm/mcs_spinlock.h
-  WRAP    arch/x86/include/generated/asm/mm-arch-hooks.h
-  WRAP    arch/x86/include/generated/asm/mmiowb.h
-  UPD     include/generated/uapi/linux/version.h
-  UPD     include/generated/utsrelease.h
-  HOSTCC  scripts/selinux/genheaders/genheaders
-  HOSTCC  scripts/selinux/mdp/mdp
-  HOSTCC  scripts/kallsyms
-  HOSTCC  scripts/pnmtologo
-  HOSTCC  scripts/conmakehash
-  HOSTCC  scripts/sortextable
-  HOSTCC  scripts/asn1_compiler
-  HOSTCC  scripts/extract-cert
-You are building kernel with non-retpoline compiler.
-Please update your compiler.
-make: *** [arch/x86/Makefile:308: checkbin] Error 1
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 080f3b364..d614163f5 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -636,11 +636,11 @@ static int apply_vma_lock_flags(unsigned long start, size_t len,
+  * is also counted.
+  * Return value: previously mlocked page counts
+  */
+-static int count_mm_mlocked_page_nr(struct mm_struct *mm,
++static unsigned long count_mm_mlocked_page_nr(struct mm_struct *mm,
+ 		unsigned long start, size_t len)
+ {
+ 	struct vm_area_struct *vma;
+-	int count = 0;
++	unsigned long count = 0;
+ 
+ 	if (mm == NULL)
+ 		mm = current->mm;
+-- 
+2.17.1
 
-Which is a little confusing.
-
-The second time is shorter, but the retpoline message is not ideal:
-
-$ CROSS_COMPILE=foo  make
-make: foogcc: Command not found
-scripts/kconfig/conf  --syncconfig Kconfig
-scripts/Kconfig.include:34: compiler 'foogcc' not found
-make[2]: *** [scripts/kconfig/Makefile:69: syncconfig] Error 1
-make[1]: *** [Makefile:557: syncconfig] Error 2
-make: Failed to remake makefile 'include/config/auto.conf'.
-You are building kernel with non-retpoline compiler.
-Please update your compiler.
-
-Cheers,
-
-Joel
-
->
->
-> >  Makefile                | 2 +-
-> >  scripts/Kconfig.include | 8 ++++++++
-> >  2 files changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 28965187c528..bd7ae11947cb 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -537,7 +537,7 @@ endif
-> >  # Some architectures define CROSS_COMPILE in arch/$(SRCARCH)/Makefile.
-> >  # CC_VERSION_TEXT is referenced from Kconfig (so it needs export),
-> >  # and from include/config/auto.conf.cmd to detect the compiler upgrade.
-> > -CC_VERSION_TEXT = $(shell $(CC) --version | head -n 1)
-> > +CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
-> >
-> >  ifeq ($(config-targets),1)
-> >  # ===========================================================================
-> > diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-> > index 87ff1dcc6bd5..0b267fb27f07 100644
-> > --- a/scripts/Kconfig.include
-> > +++ b/scripts/Kconfig.include
-> > @@ -18,6 +18,10 @@ if-success = $(shell,{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
-> >  # Return y if <command> exits with 0, n otherwise
-> >  success = $(if-success,$(1),y,n)
-> >
-> > +# $(failure,<command>)
-> > +# Return n if <command> exits with 0, y otherwise
-> > +failure = $(if-success,$(1),n,y)
-> > +
-> >  # $(cc-option,<flag>)
-> >  # Return y if the compiler supports <flag>, n otherwise
-> >  cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-> > @@ -26,5 +30,9 @@ cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-> >  # Return y if the linker supports <flag>, n otherwise
-> >  ld-option = $(success,$(LD) -v $(1))
-> >
-> > +# check if $(CC) and $(LD) exist
-> > +$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
-> > +$(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
-> > +
-> >  # gcc version including patch level
-> >  gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
-> > --
-> > 2.17.1
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
