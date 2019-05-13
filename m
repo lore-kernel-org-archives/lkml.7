@@ -3,99 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6D5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35881C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B9120879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058E2208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731188AbfEMRBm (ORCPT
+        id S1731166AbfEMRBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 13 May 2019 13:01:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36904 "EHLO mx1.redhat.com"
+Received: from mx1.redhat.com ([209.132.183.28]:58794 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbfEMRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731145AbfEMRBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 May 2019 13:01:39 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02AD23082E69;
+        by mx1.redhat.com (Postfix) with ESMTPS id B2AC130054AB;
         Mon, 13 May 2019 17:01:39 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-123-166.rdu2.redhat.com [10.10.123.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 75B8819C72;
-        Mon, 13 May 2019 17:01:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2ED9819C68;
+        Mon, 13 May 2019 17:01:39 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 1/2] objtool: Don't use ignore flag for fake jumps
-Date:   Mon, 13 May 2019 12:01:31 -0500
-Message-Id: <71abc072ff48b2feccc197723a9c52859476c068.1557766718.git.jpoimboe@redhat.com>
+Subject: [PATCH 2/2] objtool: Fix function fallthrough detection
+Date:   Mon, 13 May 2019 12:01:32 -0500
+Message-Id: <546d143820cd08a46624ae8440d093dd6c902cae.1557766718.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1557766718.git.jpoimboe@redhat.com>
 References: <cover.1557766718.git.jpoimboe@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 13 May 2019 17:01:39 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 13 May 2019 17:01:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ignore flag is set on fake jumps in order to keep
-add_jump_destinations() from setting their jump_dest, since it already
-got set when the fake jump was created.
+When a function falls through to the next function due to a compiler
+bug, objtool prints some obscure warnings.  For example:
 
-But using the ignore flag is a bit of a hack.  It's normally used to
-skip validation of an instruction, which doesn't really make sense for
-fake jumps.
+  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x95: return with modified stack frame
+  drivers/regulator/core.o: warning: objtool: regulator_count_voltages()+0x0: stack state mismatch: cfa1=7+32 cfa2=7+8
 
-Also, after the next patch, using the ignore flag for fake jumps can
-trigger a false "why am I validating an ignored function?" warning.
+Instead it should be printing:
 
-Instead just add an explicit check in add_jump_destinations() to skip
-fake jumps.
+  drivers/regulator/core.o: warning: objtool: regulator_supply_is_couple() falls through to next function regulator_count_voltages()
 
+This used to work, but was broken by the following commit:
+
+  13810435b9a7 ("objtool: Support GCC 8's cold subfunctions").
+
+The padding nops at the end of a function aren't actually part of the
+function, as defined by the symbol table.  So the 'func' variable in
+validate_branch() is getting cleared to NULL when a padding nop is
+encountered, breaking the fallthrough detection.
+
+If the current instruction doesn't have a function associated with it,
+just consider it to be part of the previously detected function by not
+overwriting the previous value of 'func'.
+
+Fixes: 13810435b9a7 ("objtool: Support GCC 8's cold subfunctions")
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/check.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/objtool/check.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index ac743a1d53ab..90226791df6b 100644
+index 90226791df6b..7325d89ccad9 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -28,6 +28,8 @@
- #include <linux/hashtable.h>
- #include <linux/kernel.h>
+@@ -1959,7 +1959,8 @@ static int validate_branch(struct objtool_file *file, struct instruction *first,
+ 			return 1;
+ 		}
  
-+#define FAKE_JUMP_OFFSET -1
-+
- struct alternative {
- 	struct list_head list;
- 	struct instruction *insn;
-@@ -568,7 +570,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 		    insn->type != INSN_JUMP_UNCONDITIONAL)
- 			continue;
+-		func = insn->func ? insn->func->pfunc : NULL;
++		if (insn->func)
++			func = insn->func->pfunc;
  
--		if (insn->ignore)
-+		if (insn->ignore || insn->offset == FAKE_JUMP_OFFSET)
- 			continue;
- 
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
-@@ -745,10 +747,10 @@ static int handle_group_alt(struct objtool_file *file,
- 		clear_insn_state(&fake_jump->state);
- 
- 		fake_jump->sec = special_alt->new_sec;
--		fake_jump->offset = -1;
-+		fake_jump->offset = FAKE_JUMP_OFFSET;
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
--		fake_jump->ignore = true;
-+		fake_jump->func = orig_insn->func;
- 	}
- 
- 	if (!special_alt->new_len) {
+ 		if (func && insn->ignore) {
+ 			WARN_FUNC("BUG: why am I validating an ignored function?",
 -- 
 2.17.2
 
