@@ -2,84 +2,150 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C9DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5B8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71691208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE284208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Ytf5rDGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731144AbfEMPOF (ORCPT
+        id S1731158AbfEMPOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:14:05 -0400
-Received: from foss.arm.com ([217.140.101.70]:59052 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfEMPOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:14:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B5C7341;
-        Mon, 13 May 2019 08:14:04 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 655D03F71E;
-        Mon, 13 May 2019 08:14:03 -0700 (PDT)
-Subject: Re: [PATCH] drm/panfrost: Use drm_gem_dump_map_offset()
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     David Airlie <airlied@linux.ie>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-References: <20190513143244.16478-1-steven.price@arm.com>
- <20190513143921.GP17751@phenom.ffwll.local>
- <155775884217.2165.11223399053598674062@skylake-alporthouse-com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <0b7f0b7f-3e14-f5bb-368a-08037c2a8529@arm.com>
-Date:   Mon, 13 May 2019 16:14:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 11:14:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33750 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731145AbfEMPOK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:14:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id n17so18103557edb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=b3ZsxbY91h2byIdigyViRztW48WAaM07J61Fsufp2zg=;
+        b=Ytf5rDGs1k8Tv4JCFwOIHXj93yat5az5zLREOibB9Io7ACItmsO2sG1iDQpG8Qa9I1
+         zSDszGlTwMs7OT8u2Y6VhPYJ5IcwuPJfsKri52BI1GSq3l5D4Sp15bYGVRl2/wVArCTL
+         na9u1qZRUsjLMa5jtO89frg3gLnKi5Hwt+lBw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=b3ZsxbY91h2byIdigyViRztW48WAaM07J61Fsufp2zg=;
+        b=sAeyifUM+3pAZPZgkAlAOf8J4sjcSyjAnqOQlvGxt+RYYh0LBOQRtYxOxJZTwT+eaV
+         6tJlfedPyLTdDM1ulG5u9/eDxLj/iU3whrqJ2cLqXkClFGSGmRyFmAMUTlWsW0S4iLrG
+         IT3+1eKLSSj/ZluELkQhZ2+kvj599QLUqoNUg/X0fDSfL5WJy4dHOwQFjrHN9e4WR+9m
+         ZD2m9HJ7jpccmv86bRL2LE4reitnN3S35VCn/NS9q6UhpcffE/uB1jhuujSItkiUVgwU
+         foyApLY2cwJL6oPyDK1y3f9Ic5hSpEgUUilxn/Pb7laDbJz6TfYUD+KxRYHiw38f6Hv0
+         HjKA==
+X-Gm-Message-State: APjAAAWFpSnPJO7rsusn7GzaHgUiudBYEitbfrJuvnCsXQw5FA/aWJ0q
+        TnFgj+k0t0VbFie4XDLCH9s8wg==
+X-Google-Smtp-Source: APXvYqz90G91DTeR9OP/EpXrfldPUD2lfY202QZGhScBhFkopAxaDjX2LA1QA1yYZgJhko7DSYIOJg==
+X-Received: by 2002:a17:906:4244:: with SMTP id r4mr8073761ejl.211.1557760449369;
+        Mon, 13 May 2019 08:14:09 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id gt16sm909611ejb.60.2019.05.13.08.14.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 08:14:08 -0700 (PDT)
+Date:   Mon, 13 May 2019 17:14:05 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     peron.clem@gmail.com
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
+Message-ID: <20190513151405.GW17751@phenom.ffwll.local>
+Mail-Followup-To: peron.clem@gmail.com, David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+References: <20190512174608.10083-1-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <155775884217.2165.11223399053598674062@skylake-alporthouse-com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190512174608.10083-1-peron.clem@gmail.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/05/2019 15:47, Chris Wilson wrote:
-> Quoting Daniel Vetter (2019-05-13 15:39:21)
->> On Mon, May 13, 2019 at 03:32:44PM +0100, Steven Price wrote:
->>> panfrost_ioctl_mmap_bo() contains a reimplementation of
->>> drm_gem_dump_map_offset() but with a bug - it allows mapping imported
->>> objects (without going through the exporter). Fix this by switching to
->>> use the generic drm_gem_dump_map_offset() function instead which has the
->>> bonus of simplifying the code.
->>
->> gem_dumb stuff is for kms drivers, panfrost is a render driver. We're
->> generally trying to separate these two worlds somewhat cleanly.
->>
->> I think it'd be good to have a non-dumb version of this in the core, and
->> use that. Or upgrade the dumb version to be that helper for everyone (and
->> drop the _dumb).
+On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com wrote:
+> From: Clément Péron <peron.clem@gmail.com>
+> 
+> Hi,
+> 
+> The Allwinner H6 has a Mali-T720 MP2. The drivers are
+> out-of-tree so this series only introduce the dt-bindings.
 
-I'm slightly confused by what you think is the best course of action here.
+We do have an in-tree midgard driver now (since 5.2). Does this stuff work
+together with your dt changes here?
+-Daniel
 
-I can create a patch dropping the '_dumb' from drm_gem_dump_map_offset()
-if that's the objection. Or do you want a helper function with two
-callers (the 'dump' and the 'shmem' versions)?
+> The first patch is from Neil Amstrong and has been already
+> merged in linux-amlogic. It is required for this series.
+> 
+> The second patch is from Icenowy Zheng where I changed the
+> order has required by Rob Herring.
+> See: https://patchwork.kernel.org/patch/10699829/
+> 
+> Thanks,
+> Clément
+> 
+> Changes in v4:
+>  - Add Rob Herring reviewed-by tag
+>  - Resent with correct Maintainers
+> 
+> Changes in v3 (Thanks to Maxime Ripard):
+>  - Reauthor Icenowy for her patch
+> 
+> Changes in v2 (Thanks to Maxime Ripard):
+>  - Drop GPU OPP Table
+>  - Add clocks and clock-names in required
+> 
+> Clément Péron (6):
+>   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
+>   arm64: dts: allwinner: Add ARM Mali GPU node for H6
+>   arm64: dts: allwinner: Add mali GPU supply for Pine H64
+>   arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
+>   arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
+>   arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
+> 
+> Icenowy Zheng (1):
+>   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
+> 
+> Neil Armstrong (1):
+>   dt-bindings: gpu: mali-midgard: Add resets property
+> 
+>  .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
+>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
+>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
+>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
+>  6 files changed, 61 insertions(+)
+> 
+> -- 
+> 2.17.1
+> 
 
-> More specifically, since panfrost is using the drm_gem_shmem helper and
-> vm_ops, it too can provide the wrapper as it is the drm_gem_shmem layer
-> that implies that trying to mmap an imported object is an issue as that
-> is not a universal problem.
-mmap'ing an imported object isn't a problem as such. But rather than
-going behind the exporter's back we would need to call dma_buf_mmap() to
-ensure that the exporter can do whatever is necessary.
-
-I could add a wrapper in drm_gem_shmem_helper, but I'm not sure what the
-benefit of a wrapper here is?
-
-Steve
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
