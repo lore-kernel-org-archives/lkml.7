@@ -2,92 +2,47 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542E1C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67911C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACD2208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FSfBXyoh"
+	by mail.kernel.org (Postfix) with ESMTP id 3BFED208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfEMVJd (ORCPT
+        id S1726501AbfEMVKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:09:33 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:50704 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfEMVJc (ORCPT
+        Mon, 13 May 2019 17:10:32 -0400
+Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:24784 "EHLO
+        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726218AbfEMVKb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:09:32 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DL3koI146771;
-        Mon, 13 May 2019 21:08:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=etxC2fIO+k7WqJJbgmpaQKX6DDfUoMBtn3qTvkFV+tE=;
- b=FSfBXyohrOkcDcJUQjU9IbWERTb6TScchNOdnSNATyPYzF7SZ0/RAhT0ZrdjyrPMnhQj
- h4RPVcu565duvAFebok/LJcd3c+xOgFjoqRauIXFjbEJdhkRIGze08wA7ECcSvhk9i93
- E6X7epEf32cPFEeU2/FPfvjsJ9PLMW1Sy5Pn/KT6EkP/xN5fE+ebLUMdOpjI3KJ6CHpK
- TmS0Hmd3gx43vcCfYcH8WTla1Bup+aUHzerBHUIbKaD8IgaIATMHWplVrL8bftDDajWD
- cNf3OemKPk7HniAOw7L0LkBrGsprAuU21bairPt9pBdhGlGDr+TYe4lgM+ZDHyPjmbeR nA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdj031-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 21:08:42 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DL7aVk089303;
-        Mon, 13 May 2019 21:08:42 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2se0tvskr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 21:08:42 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DL8TlR001785;
-        Mon, 13 May 2019 21:08:36 GMT
-Received: from [192.168.14.112] (/79.180.238.224)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 14:08:29 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
-Date:   Tue, 14 May 2019 00:08:23 +0300
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
-To:     Andy Lutomirski <luto@kernel.org>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130141
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130140
+        Mon, 13 May 2019 17:10:31 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0TRdjdXM_1557781806;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRdjdXM_1557781806)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 14 May 2019 05:10:09 +0800
+Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     ying.huang@intel.com, hannes@cmpxchg.org,
+        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
+        hughd@google.com, shakeelb@google.com,
+        william.kucharski@oracle.com, akpm@linux-foundation.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513080929.GC24036@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
+Date:   Mon, 13 May 2019 14:09:59 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190513080929.GC24036@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -95,88 +50,84 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On 13 May 2019, at 21:17, Andy Lutomirski <luto@kernel.org> wrote:
->=20
->> I expect that the KVM address space can eventually be expanded to =
-include
->> the ioctl syscall entries. By doing so, and also adding the KVM page =
-table
->> to the process userland page table (which should be safe to do =
-because the
->> KVM address space doesn't have any secret), we could potentially =
-handle the
->> KVM ioctl without having to switch to the kernel pagetable (thus =
-effectively
->> eliminating KPTI for KVM). Then the only overhead would be if a =
-VM-Exit has
->> to be handled using the full kernel address space.
->>=20
->=20
-> In the hopefully common case where a VM exits and then gets re-entered
-> without needing to load full page tables, what code actually runs?
-> I'm trying to understand when the optimization of not switching is
-> actually useful.
->=20
-> Allowing ioctl() without switching to kernel tables sounds...
-> extremely complicated.  It also makes the dubious assumption that user
-> memory contains no secrets.
+On 5/13/19 1:09 AM, Michal Hocko wrote:
+> On Sat 11-05-19 00:23:40, Yang Shi wrote:
+>> Since commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after
+>> swapped out"), THP can be swapped out in a whole.  But, nr_reclaimed
+>> still gets inc'ed by one even though a whole THP (512 pages) gets
+>> swapped out.
+>>
+>> This doesn't make too much sense to memory reclaim.  For example, direct
+>> reclaim may just need reclaim SWAP_CLUSTER_MAX pages, reclaiming one THP
+>> could fulfill it.  But, if nr_reclaimed is not increased correctly,
+>> direct reclaim may just waste time to reclaim more pages,
+>> SWAP_CLUSTER_MAX * 512 pages in worst case.
+> You are technically right here. This has been a known issue for a while.
+> I am wondering whether somebody actually noticed some misbehavior.
+> Swapping out is a rare event and you have to have a considerable number
+> of THPs to notice.
 
-Let me attempt to clarify what we were thinking when creating this patch =
-series:
+The commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after 
+swapped out") was added in 4.14, it might be not used widely yet. And we 
+need swap + THPs to trigger it, furthermore the misbehavior might be 
+accumulative over time. I don't expect it will have any obvious 
+misbehavior for a single shot.
 
-1) It is never safe to execute one hyperthread inside guest while it=E2=80=
-=99s sibling hyperthread runs in a virtual address space which contains =
-secrets of host or other guests.
-This is because we assume that using some speculative gadget (such as =
-half-Spectrev2 gadget), it will be possible to populate *some* CPU core =
-resource which could then be *somehow* leaked by the hyperthread running =
-inside guest. In case of L1TF, this would be data populated to the L1D =
-cache.
+>
+>> This change may result in more reclaimed pages than scanned pages showed
+>> by /proc/vmstat since scanning one head page would reclaim 512 base pages.
+> This is quite nasty and confusing. I am worried that having those two
+> unsynced begs for subtle issues. Can we account THP as scanning 512 base
+> pages as well?
 
-2) Because of (1), every time a hyperthread runs inside host kernel, we =
-must make sure it=E2=80=99s sibling is not running inside guest. i.e. We =
-must kick the sibling hyperthread outside of guest using IPI.
+Actually, such unsync has been there for a while. The 
+isolate_lru_pages() returns nr_taken which has THP accounted as 512 base 
+pages, but nr_scanned just shows 1. nr_taken is not showed via 
+/proc/vmstat, but it is showed via trace point.
 
-3) =46rom (2), we should have theoretically deduced that for every =
-#VMExit, there is a need to kick the sibling hyperthread also outside of =
-guest until the #VMExit is completed. Such a patch series was =
-implemented at some point but it had (obviously) significant performance =
-hit.
+I think we can just account 512 base pages for nr_scanned for 
+isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT 
+just use it.
 
-4) The main goal of this patch series is to preserve (2), but to avoid =
-the overhead specified in (3).
+And, sc->nr_scanned should be accounted as 512 base pages too otherwise 
+we may have nr_scanned < nr_to_reclaim all the time to result in 
+false-negative for priority raise and something else wrong (e.g. wrong 
+vmpressure).
 
-The way this patch series achieves (4) is by observing that during the =
-run of a VM, most #VMExits can be handled rather quickly and locally =
-inside KVM and doesn=E2=80=99t need to reference any data that is not =
-relevant to this VM or KVM code. Therefore, if we will run these =
-#VMExits in an isolated virtual address space (i.e. KVM isolated address =
-space), there is no need to kick the sibling hyperthread from guest =
-while these #VMExits handlers run.
-The hope is that the very vast majority of #VMExit handlers will be able =
-to completely run without requiring to switch to full address space. =
-Therefore, avoiding the performance hit of (2).
-However, for the very few #VMExits that does require to run in full =
-kernel address space, we must first kick the sibling hyperthread outside =
-of guest and only then switch to full kernel address space and only once =
-all hyperthreads return to KVM address space, then allow then to enter =
-into guest.
-
-=46rom this reason, I think the above paragraph (that was added to my =
-original cover letter) is incorrect.
-I believe that we should by design treat all exits to userspace VMM =
-(e.g. QEMU) as slow-path that should not be optimised and therefore ok =
-to switch address space (and therefore also kick sibling hyperthread). =
-Similarly, all IOCTLs handlers are also slow-path and therefore it =
-should be ok for them to also not run in KVM isolated address space.
-
--Liran
-
-
-
-
-
-
-
-
+>
+>> Cc: "Huang, Ying" <ying.huang@intel.com>
+>> Cc: Johannes Weiner <hannes@cmpxchg.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Mel Gorman <mgorman@suse.de>
+>> Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>> v2: Added Shakeel's Reviewed-by
+>>      Use hpage_nr_pages instead of compound_order per Huang Ying and William Kucharski
+>>
+>>   mm/vmscan.c | 6 +++++-
+>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/vmscan.c b/mm/vmscan.c
+>> index fd9de50..4226d6b 100644
+>> --- a/mm/vmscan.c
+>> +++ b/mm/vmscan.c
+>> @@ -1446,7 +1446,11 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>>   
+>>   		unlock_page(page);
+>>   free_it:
+>> -		nr_reclaimed++;
+>> +		/*
+>> +		 * THP may get swapped out in a whole, need account
+>> +		 * all base pages.
+>> +		 */
+>> +		nr_reclaimed += hpage_nr_pages(page);
+>>   
+>>   		/*
+>>   		 * Is there need to periodically free_page_list? It would
+>> -- 
+>> 1.8.3.1
+>>
 
