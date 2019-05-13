@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF928C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7E4C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED792084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DFA2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W22kvYLf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m2arcl/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfEMOk0 (ORCPT
+        id S1730633AbfEMOk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:40:26 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:60134 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbfEMOkX (ORCPT
+        Mon, 13 May 2019 10:40:29 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:37798 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730623AbfEMOk0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:40:23 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd2Tx194906;
-        Mon, 13 May 2019 14:39:45 GMT
+        Mon, 13 May 2019 10:40:26 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEdHlv193231;
+        Mon, 13 May 2019 14:39:53 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=K8i6wzsowphEeVDFXNpunuRUppmUJV415MqqD0nUaBI=;
- b=W22kvYLfLPm+lj8NF2wS7sDx9KGLeptevfeDTUzv+GZagg1XtUp9vZNWcihPEkWLSaPG
- Lx/9JGXoffT/Eb0lGLC1sDrq7K90utKJBv6oHFBVipO5+pMWF/TFSJYeuAR0q5E3kmrb
- Z8y5MymYgg/n3HDgLeCgwZcunQle8i2tJ4Yh1yNjfZX7YXAq/W6CISOEnlueSKA6ARpD
- 7dxEJ5PcvUpwerEg1uRhKhIlwA7KzrsVOb2FbKrBGoKH6oKfCK78Z0vuFk+sXe8ZpF4h
- vFYm9C8pwOMgg5LaQcKAYKtRiG+FEuIFLEcRxD9EaawYkjfOPClZpb0QoK/QdH7HCyaA Yg== 
+ bh=LfHNGKdGVZ8SXafCfcR3Zof+WadTo/bKWh5zIaesw/M=;
+ b=m2arcl/OoSz25ufQlPkSDyXa5f1frMRq2QeB0JzA4PV/uhaSpAPsJfmP6YeH0R+Y7+PC
+ 50HJ+Yx7Z8gUn3m69WqI9tJvyt5ZPxzpbW+60gErtelRwYfFJw+X3V78E3pi6uU708Zl
+ uEVUq4MhUxXUf1DFx84dYgGV/93RXZwfztVCXTVvknZhM6YZw2KSvN8qBdHsbd2ELVmx
+ /7qs4qjDnvxh+fcskoo9PGQvTX2vY0RinWTrcvKjzeXlWoP9/wWiom7xFgGIssxbulhP
+ IvPfd4bMncK92V8msleNSWffh5EcxE1AX3Pw6AsvfuevV3vA7E7XlcOF1Gt+oJHTRqAq Ww== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2sdq1q7ayc-1
+        by aserp2130.oracle.com with ESMTP id 2sdkwdfm13-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:45 +0000
+        Mon, 13 May 2019 14:39:53 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQP022780;
-        Mon, 13 May 2019 14:39:42 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQS022780;
+        Mon, 13 May 2019 14:39:50 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,15 +50,15 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 22/27] kvm/isolation: initialize the KVM page table with vmx cpu data
-Date:   Mon, 13 May 2019 16:38:30 +0200
-Message-Id: <1557758315-12667-23-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 25/27] kvm/isolation: implement actual KVM isolation enter/exit
+Date:   Mon, 13 May 2019 16:38:33 +0200
+Message-Id: <1557758315-12667-26-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905130103
@@ -67,101 +67,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map vmx cpu to the KVM address space when a vmx cpu is created, and
-unmap when it is freed.
+From: Liran Alon <liran.alon@oracle.com>
 
+KVM isolation enter/exit is done by switching between the KVM address
+space and the kernel address space.
+
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/vmx/vmx.c |   65 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 65 insertions(+), 0 deletions(-)
+ arch/x86/kvm/isolation.c |   30 ++++++++++++++++++++++++------
+ arch/x86/mm/tlb.c        |    1 +
+ include/linux/sched.h    |    1 +
+ 3 files changed, 26 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 5b52e8c..cbbaf58 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6564,10 +6564,69 @@ static void vmx_vm_free(struct kvm *kvm)
- 	vfree(to_kvm_vmx(kvm));
+diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
+index db0a7ce..b0c789f 100644
+--- a/arch/x86/kvm/isolation.c
++++ b/arch/x86/kvm/isolation.c
+@@ -1383,11 +1383,13 @@ static bool kvm_page_fault(struct pt_regs *regs, unsigned long error_code,
+ 	printk(KERN_DEFAULT "KVM isolation: page fault %ld at %pS on %lx (%pS) while switching mm\n"
+ 	       "  cr3=%lx\n"
+ 	       "  kvm_mm=%px pgd=%px\n"
+-	       "  active_mm=%px pgd=%px\n",
++	       "  active_mm=%px pgd=%px\n"
++	       "  kvm_prev_mm=%px pgd=%px\n",
+ 	       error_code, (void *)regs->ip, address, (void *)address,
+ 	       cr3,
+ 	       &kvm_mm, kvm_mm.pgd,
+-	       active_mm, active_mm->pgd);
++	       active_mm, active_mm->pgd,
++	       current->kvm_prev_mm, current->kvm_prev_mm->pgd);
+ 	dump_stack();
+ 
+ 	return false;
+@@ -1649,11 +1651,27 @@ void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu)
+ 	kvm_isolation_exit();
  }
  
-+static void vmx_unmap_vcpu(struct vcpu_vmx *vmx)
++static void kvm_switch_mm(struct mm_struct *mm)
 +{
-+	pr_debug("unmapping vmx %p", vmx);
++	unsigned long flags;
 +
-+	kvm_clear_range_mapping(vmx);
-+	if (enable_pml)
-+		kvm_clear_range_mapping(vmx->pml_pg);
-+	kvm_clear_range_mapping(vmx->guest_msrs);
-+	kvm_clear_range_mapping(vmx->vmcs01.vmcs);
-+	kvm_clear_range_mapping(vmx->vmcs01.msr_bitmap);
-+	kvm_clear_range_mapping(vmx->vcpu.arch.pio_data);
-+	kvm_clear_range_mapping(vmx->vcpu.arch.apic);
++	/*
++	 * Disable interrupt before updating active_mm, otherwise if an
++	 * interrupt occurs during the switch then the interrupt handler
++	 * can be mislead about the mm effectively in use.
++	 */
++	local_irq_save(flags);
++	current->kvm_prev_mm = current->active_mm;
++	current->active_mm = mm;
++	switch_mm_irqs_off(current->kvm_prev_mm, mm, NULL);
++	local_irq_restore(flags);
 +}
 +
-+static int vmx_map_vcpu(struct vcpu_vmx *vmx)
-+{
-+	int rv;
-+
-+	pr_debug("mapping vmx %p", vmx);
-+
-+	rv = kvm_copy_ptes(vmx, sizeof(struct vcpu_vmx));
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	if (enable_pml) {
-+		rv = kvm_copy_ptes(vmx->pml_pg, PAGE_SIZE);
-+		if (rv)
-+			goto out_unmap_vcpu;
-+	}
-+
-+	rv = kvm_copy_ptes(vmx->guest_msrs, PAGE_SIZE);
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	rv = kvm_copy_ptes(vmx->vmcs01.vmcs, PAGE_SIZE << vmcs_config.order);
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	rv = kvm_copy_ptes(vmx->vmcs01.msr_bitmap, PAGE_SIZE);
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	rv = kvm_copy_ptes(vmx->vcpu.arch.pio_data, PAGE_SIZE);
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	rv = kvm_copy_ptes(vmx->vcpu.arch.apic, sizeof(struct kvm_lapic));
-+	if (rv)
-+		goto out_unmap_vcpu;
-+
-+	return 0;
-+
-+out_unmap_vcpu:
-+	vmx_unmap_vcpu(vmx);
-+	return rv;
-+}
-+
- static void vmx_free_vcpu(struct kvm_vcpu *vcpu)
+ void kvm_isolation_enter(void)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	int err;
  
-+	if (kvm_isolation())
-+		vmx_unmap_vcpu(vmx);
- 	if (enable_pml)
- 		vmx_destroy_pml_buffer(vmx);
- 	free_vpid(vmx->vpid);
-@@ -6679,6 +6738,12 @@ static void vmx_free_vcpu(struct kvm_vcpu *vcpu)
+-	if (kvm_isolation()) {
++	if (kvm_isolation() && current->active_mm != &kvm_mm) {
+ 		/*
+ 		 * Switches to kvm_mm should happen from vCPU thread,
+ 		 * which should not be a kernel thread with no mm
+@@ -1666,14 +1684,14 @@ void kvm_isolation_enter(void)
+ 			       current);
+ 			return;
+ 		}
+-		/* TODO: switch to kvm_mm */
++		kvm_switch_mm(&kvm_mm);
+ 	}
+ }
  
- 	vmx->ept_pointer = INVALID_PAGE;
+ void kvm_isolation_exit(void)
+ {
+-	if (kvm_isolation()) {
++	if (kvm_isolation() && current->active_mm == &kvm_mm) {
+ 		/* TODO: Kick sibling hyperthread before switch to host mm */
+-		/* TODO: switch back to original mm */
++		kvm_switch_mm(current->kvm_prev_mm);
+ 	}
+ }
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index a4db7f5..7ad5ad1 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -444,6 +444,7 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 		switch_ldt(real_prev, next);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(switch_mm_irqs_off);
  
-+	if (kvm_isolation()) {
-+		err = vmx_map_vcpu(vmx);
-+		if (err)
-+			goto free_vmcs;
-+	}
-+
- 	return &vmx->vcpu;
+ /*
+  * Please ignore the name of this function.  It should be called
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 80e1d75..b03680d 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1202,6 +1202,7 @@ struct task_struct {
+ #ifdef CONFIG_HAVE_KVM
+ 	/* Is the task mapped into the KVM address space? */
+ 	bool				kvm_mapped;
++	struct mm_struct		*kvm_prev_mm;
+ #endif
  
- free_vmcs:
+ 	/*
 -- 
 1.7.1
 
