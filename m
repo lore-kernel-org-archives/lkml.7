@@ -2,124 +2,99 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE7DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E9C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C308208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E96208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JM/MYBdm"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kIjXz//g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfEMQ2m (ORCPT
+        id S1730449AbfEMQbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:28:42 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:34916 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbfEMQ2l (ORCPT
+        Mon, 13 May 2019 12:31:33 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43846 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfEMQbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:28:41 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGNxNv088885;
-        Mon, 13 May 2019 16:28:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=FYrhA7egepTfvRq1AFeM0qLEx0DR5PBRWMLgWVnJWsQ=;
- b=JM/MYBdmNI6fFjLoGthcwpEXl9/Q6FhIqpsnCQ/BkenPG8S3EemOIYf0qHZKwH9r6swU
- 3W08FCV/MBFSOmti4xQvPOp8Bf8IjFwM6Ft4Xk8wc45eTYIomnnH/xdarjyLowUZdlZ7
- 0/jl1dVkSjbyok9Tn2nHlEu9gPiwnIxz7UJpBmh2MTDeF2Y7iO/lnwZ6kEhg+MA0egip
- HTkDQcfvDyFLE/STY78ukF9EWR9b5KDeLgSclCp2uP2RlVycLwSomEtzHCzJSlwK+A5K
- d6tT5kdeTExB5VdxFJdybuBxZc7pR8Ykx/LQ6U9q8h6+NrNWEGkyxNtbJmOJkmMrtlT3 0g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdnttg880-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 16:28:12 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DGRXaG010806;
-        Mon, 13 May 2019 16:28:11 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2se0tvngry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 16:28:11 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DGS8t7007669;
-        Mon, 13 May 2019 16:28:09 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 09:28:08 -0700
-Subject: Re: [RFC KVM 06/27] KVM: x86: Exit KVM isolation on IRQ entry
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-7-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrUzAjUFGd=xZRmCbyLfvDgC_WbPYyXB=OznwTkcV-PKNw@mail.gmail.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <64c49aa6-e7f2-4400-9254-d280585b4067@oracle.com>
-Date:   Mon, 13 May 2019 18:28:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Mon, 13 May 2019 12:31:32 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c6so7472401pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=B032wxaSxEpjK9pKdC74UIRXdzFCuNECesldV5G8LvM=;
+        b=kIjXz//gu34JmtpKR/dsJ1vaMB9L/2P9JKdACM4ZnrZf9kttODd7N98HnuFsEVpK3H
+         FIdjl/FRyZnbbOTRJRV8suMt4wVHzS4puVd+He2wCyZw86kYaE7PwGgE65mZKz8zpvx8
+         m16M2J/uGmFSVw12xYQdC2kH9O9BW+Ork2fQkP8Uz+GIaEyBXYZGvKooGAC274rZvpec
+         iGEg2CrUt4GjOXKRlv/7EX/hdlW6bMXdDr7+Uf60Re/nYOrwXNcSUN8C9hxWLypcorIv
+         KLxhUBL1CdM8nnMb1BjIQA4ek/gorM7PhHWs4EZxmiltYpeqqS6larlRaZ+Ggg0tqXRS
+         cAtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=B032wxaSxEpjK9pKdC74UIRXdzFCuNECesldV5G8LvM=;
+        b=ZXrBbbgTQiISSn9DirvfoAXuJoUhJLSguWLqzhldLvNLfQuGFCaXs2HZ5zhBbI6IuM
+         9yqyht9SZbyVMQz5fc291WFleUj/982uCTUoTuGwNY0DDAD7MwxwW2ZFZyogYM+/qVwM
+         k2EfNMBy7E2s1VkqnKcYRTX8calQIY/ZYx1pcMAPX1ks8b+9A39Z3IVQ41C4RSruasqR
+         B78NR4SrYGCsiruxGtth/qsgMQhrwitIfpQJrrWxdrxMZiTbdUTRf8E1Mi8Es3pqcwv6
+         FioojGp9NPrO9ZS9FPaAVE8TNrDE4B9pKDSoPwILwgMvlqigti7uRMV5SWe30qtlzZHw
+         Vg6w==
+X-Gm-Message-State: APjAAAUCTiAbw3U+3J1NsrazeKJ3iPF3o4NW2M9xksC4mvLiLiFmsAwT
+        QezYTYtWWRWvBLhxIvkBxFMPyQ==
+X-Google-Smtp-Source: APXvYqykyJVcUw9loEPh58IKDLQ8HHbmdX1X7MaIJ18vVl9tQx/WiDfdyA5qBoncQW+XhiG6PHGTUg==
+X-Received: by 2002:a63:fd50:: with SMTP id m16mr32686277pgj.192.1557765091630;
+        Mon, 13 May 2019 09:31:31 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
+        by smtp.googlemail.com with ESMTPSA id x17sm3939633pgh.47.2019.05.13.09.31.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 09:31:30 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/5] arm64: dts: meson: sei510: add network support
+In-Reply-To: <bf1360ab62a4e7bd3928052ebb6c969e8059f29e.camel@baylibre.com>
+References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-6-jbrunet@baylibre.com> <7ho94ac4jn.fsf@baylibre.com> <bf1360ab62a4e7bd3928052ebb6c969e8059f29e.camel@baylibre.com>
+Date:   Mon, 13 May 2019 09:31:30 -0700
+Message-ID: <7hftpico4d.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrUzAjUFGd=xZRmCbyLfvDgC_WbPYyXB=OznwTkcV-PKNw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=923
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130112
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=954 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130112
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
+> On Fri, 2019-05-10 at 15:45 -0700, Kevin Hilman wrote:
+>> Jerome Brunet <jbrunet@baylibre.com> writes:
+>> 
+>> > Enable the network interface of the SEI510 which use the internal PHY.
+>> > 
+>> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> 
+>> I tried testing this series on SEI510, but I must still be missing some
+>> defconfig options, as the default defconfig doesn't lead to a working
+>> interface.
+>
+> That's weird. AFAICT, the net part has hit Linus's tree.
 
-On 5/13/19 5:51 PM, Andy Lutomirski wrote:
-> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
-> <alexandre.chartre@oracle.com> wrote:
->>
->> From: Liran Alon <liran.alon@oracle.com>
->>
->> Next commits will change most of KVM #VMExit handlers to run
->> in KVM isolated address space. Any interrupt handler raised
->> during execution in KVM address space needs to switch back
->> to host address space.
->>
->> This patch makes sure that IRQ handlers will run in full
->> host address space instead of KVM isolated address space.
-> 
-> IMO this needs to be somewhere a lot more central.  What about NMI and
-> MCE?  Or async page faults?  Or any other entry?
-> 
+Ah, that's the key ingredient.  I was testing with a v5.1 baseline (not
+linus/master) along with all my queued up changes.  I just pulled in
+linus/master to test this series, and indeed, everything works, and I
+don't need my config fragment either.
 
-Actually, I am not sure this is effectively useful because the IRQ
-handler is probably faulting before it tries to exit isolation, so
-the isolation exit will be done by the kvm page fault handler. I need
-to check that.
+Thanks for clarifying.
 
-alex.
+If repost needed, feel free to add
 
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+
+Kevin
