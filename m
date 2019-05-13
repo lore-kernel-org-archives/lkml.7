@@ -2,177 +2,96 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7827AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51444C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 498EE208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5BC2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:07:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfEMIGB (ORCPT
+        id S1727988AbfEMIHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:06:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51164 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725928AbfEMIGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:06:01 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D84Msw095991
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:06:00 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sf3q9tknv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:06:00 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 13 May 2019 09:05:55 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 May 2019 09:05:54 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4D85rLJ24641752
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 08:05:53 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 517FBA4068;
-        Mon, 13 May 2019 08:05:53 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3F92A4067;
-        Mon, 13 May 2019 08:05:52 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 May 2019 08:05:52 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf report: Fix OOM error in TUI mode on s390
-Date:   Mon, 13 May 2019 10:05:51 +0200
-X-Mailer: git-send-email 2.16.4
-X-TM-AS-GCONF: 00
-x-cbid: 19051308-0008-0000-0000-000002E602A0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051308-0009-0000-0000-0000225295B5
-Message-Id: <20190513080551.102768-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130059
+        Mon, 13 May 2019 04:07:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54866 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfEMIHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:07:00 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 62F6730842A0;
+        Mon, 13 May 2019 08:07:00 +0000 (UTC)
+Received: from localhost (ovpn-12-31.pek2.redhat.com [10.72.12.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5A4D1001DC0;
+        Mon, 13 May 2019 08:06:55 +0000 (UTC)
+Date:   Mon, 13 May 2019 16:06:53 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     dyoung@redhat.com, Borislav Petkov <bp@alien8.de>
+Cc:     j-nomura@ce.jp.nec.com, kasong@redhat.com,
+        fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190513080653.GD16774@MiWiFi-R3L-srv>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv>
+ <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513075006.GB20105@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 13 May 2019 08:07:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debugging a OOM error using the TUI interface revealed this issue
-on s390:
+Hi Dave,
 
-[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
-....
-00000001119b7158 B radix_tree_node_cachep
-00000001119b8000 B __bss_stop
-00000001119b8000 B _end
-000003ff80002850 t autofs_mount	[autofs4]
-000003ff80002868 t autofs_show_options	[autofs4]
-000003ff80002a98 t autofs_evict_inode	[autofs4]
-....
+On 05/13/19 at 09:50am, Borislav Petkov wrote:
+> On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
+> > This is a critical bug which breaks memory hotplug,
+> 
+> Please concentrate and stop the blabla:
+> 
+> 36f0c423552d ("x86/boot: Disable RSDP parsing temporarily")
+> 
+> already explains what the deal is. This code was *purposefully* disabled
+> because we ran out of time and it broke a couple of machines. Don't make
 
-There is a huge gap between the last kernel symbol
-__bss_stop/_end and the first kernel module symbol
-autofs_mount (from autofs4 module).
+I remember your machine is the one on whihc the issue is reported. Could
+you also test it and confirm if these all things found ealier are
+cleared out?
 
-After reading the kernel symbol table via functions:
+Thanks
+Baoquan
 
- dso__load()
- +--> dso__load_kernel_sym()
-      +--> dso__load_kallsyms()
-	   +--> __dso_load_kallsyms()
-	        +--> symbols__fixup_end()
-
-the symbol __bss_stop has a start address of 1119b8000 and
-an end address of 3ff80002850, as can be seen by this debug statement:
-
-  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
-
-The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
-It is the last kernel symbol and fills up the space until
-the first kernel module symbol.
-
-This size kills the TUI interface when executing the following
-code:
-
-  process_sample_event()
-    hist_entry_iter__add()
-      hist_iter__report_callback()
-        hist_entry__inc_addr_samples()
-          symbol__inc_addr_samples(symbol = __bss_stop)
-            symbol__cycles_hist()
-               annotated_source__alloc_histograms(...,
-				                symbol__size(sym),
-		                                ...)
-
-This function allocates memory to save sample histograms.
-The symbol_size() marco is defined as sym->end - sym->start, which
-results in above value of 0x3fe6e64a850 bytes and
-the call to calloc() in annotated_source__alloc_histograms() fails.
-
-Samples are generated when functions execute.
-To fix this I suggest to allow histogram entries only for functions.
-Therefore ignore symbol entries which are not of type STT_FUNC.
-
-Output before:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
-		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
-		func: 0
-problem adding hist entry, skipping event
-0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
-[tmricht@m83lp54 perf]$
-
-Output after:
-[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
-					      -i ~/slow.data 2>/tmp/2
-[tmricht@m83lp54 perf]$ tail -5 /tmp/2
-   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
-   symbol__hists notes->src:0x2aa2a70 nr_hists:1
-   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
-   __symbol__inc_addr_samples: addr=0x11094c69e
-   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
-   	=> nr_samples: 1, period: 526008
-[tmricht@m83lp54 perf]$
-
-There is no error about failed memory allocation and the TUI interface
-shows all entries.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 09762985c713..5fbe7efb2649 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -929,7 +929,7 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
- {
- 	struct annotated_source *src;
- 
--	if (sym == NULL)
-+	if (sym == NULL || sym->type != STT_FUNC)
- 		return 0;
- 	src = symbol__hists(sym, evsel->evlist->nr_entries);
- 	if (src == NULL)
--- 
-2.19.1
-
+> me repeat all that - you were on CC on *all* threads and messages!
+> 
+> So we're going to try it again this cycle and if there's no fallout, it
+> will go upstream. If not, it will have to be fixed. The usual thing.
+> 
+> And I don't care if Kairui's patch fixes this one problem - judging by
+> the fragility of this whole thing, it should be hammered on one more
+> cycle on as many boxes as possible to make sure there's no other SNAFUs.
+> 
+> So go test it on more machines instead. I've pushed it here:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> Good mailing practices for 400: avoid top-posting and trim the reply.
