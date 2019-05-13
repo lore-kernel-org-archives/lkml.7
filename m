@@ -2,328 +2,110 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5E4C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E5EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73BA92084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3732084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:40:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="FraIFcYE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbfEMQkf (ORCPT
+        id S1730679AbfEMQkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:40:35 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33696 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbfEMQke (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:40:34 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d9so7689773wrx.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:40:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SvUe7mjTnbhcg04hs2UCusBjjOt6xfLMvA+VRFosc3A=;
-        b=XEMPmq14+GHoL+zDNgXNE/Pbhguob87JaldZ/ExdWQGXDgbubrJbQcUigaGa782Xld
-         WdUciFYoMccMlARbKP/jASECvNeKbuzauWv0EMpuqqfYEATrXTi4okjwJSQQC/lfB3Ab
-         Syo8G7K/iqoYgI+47K0P2ZoWKBiM+U8LOOARWG/sW21bc7xg/ZR11x2FikpfuDWK+T8l
-         gcra4XbPgN7fjw3lBCbISIvbWnnEwobS2ndLM1NFhHbSyfUlR1PL6iMa0Io6B3250P0h
-         M28JZDTdhlnh4QBXjMhHeQM3rDaslB7uwMCM0Co7g3tLi11suBSHrniE4hmuEBnSSIBf
-         nNnA==
-X-Gm-Message-State: APjAAAURH2q6r2iQ7GPYpXuKYRqU9XTQpGIYAYB4YMmRVNjy19oWU/Ft
-        LCa/7kQzepYdPGQjN8/9f0n3Zw==
-X-Google-Smtp-Source: APXvYqx3GA9Fr3qKnX1sAnb/StMyUs26kSBocFXf4KZT0+22223PpU/tykl4MkK5QEaSagkG2fRX6g==
-X-Received: by 2002:adf:fa8d:: with SMTP id h13mr11920883wrr.70.1557765632480;
-        Mon, 13 May 2019 09:40:32 -0700 (PDT)
-Received: from steredhat (host151-251-static.12-87-b.business.telecomitalia.it. [87.12.251.151])
-        by smtp.gmail.com with ESMTPSA id x4sm3264995wrn.41.2019.05.13.09.40.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 09:40:31 -0700 (PDT)
-Date:   Mon, 13 May 2019 18:40:29 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190513164029.w2m2if2s6i5xiyed@steredhat>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-2-sgarzare@redhat.com>
- <20190512125447-mutt-send-email-mst@kernel.org>
+        Mon, 13 May 2019 12:40:42 -0400
+Received: from mail-eopbgr680078.outbound.protection.outlook.com ([40.107.68.78]:57069
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730656AbfEMQkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 12:40:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l/iAmHKB5HOp50e9yMvGnt3MYRpcQk4vsw0oVUTgzCg=;
+ b=FraIFcYEJvDnrAxURCgaoLh6K0bdqFU9bbUoYXTFO8YTOWXgP2NvjH+/mWdnr3ZTxXC+3EJ+3vAlHjexMbuHCmyIWNJah0/3c9esERJMsIWu9ESxTLXZ9iDUIvejUwoOAYz/11VRVGbgVOKFjht7duleQ0vXyO7ffRjq5coK7Wk=
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.78.205) by
+ BN8PR10MB3219.namprd10.prod.outlook.com (20.179.138.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Mon, 13 May 2019 16:40:37 +0000
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16]) by BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 16:40:37 +0000
+From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "roy.pledge@nxp.com" <roy.pledge@nxp.com>
+CC:     "madalin.bucur@nxp.com" <madalin.bucur@nxp.com>,
+        "laurentiu.tudor@nxp.com" <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
+ tree properties
+Thread-Topic: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
+ tree properties
+Thread-Index: AQHVCadY7pF1Pe9lUE2omDuEjFRsAaZpQd6A
+Date:   Mon, 13 May 2019 16:40:36 +0000
+Message-ID: <1afd837287cebccfc1dd68365870d0f5d1cf27f7.camel@infinera.com>
+References: <1557763756-24118-1-git-send-email-roy.pledge@nxp.com>
+         <1557763756-24118-5-git-send-email-roy.pledge@nxp.com>
+In-Reply-To: <1557763756-24118-5-git-send-email-roy.pledge@nxp.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
+x-originating-ip: [88.131.87.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fe32ae2f-f61f-4c12-e2ba-08d6d7c1ba1b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR10MB3219;
+x-ms-traffictypediagnostic: BN8PR10MB3219:
+x-microsoft-antispam-prvs: <BN8PR10MB32191C4D15B5F73E163563E4F40F0@BN8PR10MB3219.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(136003)(346002)(366004)(396003)(189003)(199004)(4326008)(7736002)(256004)(102836004)(6246003)(6436002)(73956011)(6486002)(76116006)(66946007)(66556008)(64756008)(66446008)(66476007)(2501003)(2906002)(6506007)(91956017)(81156014)(229853002)(8676002)(81166006)(8936002)(71190400001)(71200400001)(36756003)(6116002)(3846002)(118296001)(5660300002)(53936002)(110136005)(478600001)(72206003)(486006)(4744005)(6512007)(54906003)(14454004)(2201001)(186003)(26005)(11346002)(476003)(2616005)(68736007)(446003)(316002)(86362001)(66066001)(99286004)(25786009)(305945005)(14444005)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3219;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: infinera.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: YGMhfspaPplJ+Kut85Y/tVRjWe+YPzHNvLIKD/8FyHlovAoozvlAhEpkVWmAIR9R/Jfz18sG3PHNPC30ePg1bMIk7NheUaOhHJ3jgzXdsBv2gUSVw3Fd7B5rBHg6FIWjEBhxHy7emw4vyqqFYe6dePSxMnDRJkzVVXwp1nZ6V3wPOeGxYFK+RZB/807Zs+eGW/PUra+jX+gFjhbSzjhRms+7BmYbIiQipZosmcdA1qK+1g1PerqcvFcwyRcITLjEYZeuYx1GBSFuZjjSN9pz6nR90f2dT0NyTlUH2ZP9Ua5h9qe/0+yx5DCaZtyCqj5sup0RYuO8TzfzMuvs6fenkt6+h4ojfWWFOcRlDlVCpTAirZJHH+MFw366X64WCdSLmkfQAshIBntVIsDjmb4tT/pf+OggP6DLBSuTq65P2Dk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <30C6854288C3D8458564DBB4CDD4EDB4@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512125447-mutt-send-email-mst@kernel.org>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: infinera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe32ae2f-f61f-4c12-e2ba-08d6d7c1ba1b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 16:40:36.9214
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3219
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 12:57:48PM -0400, Michael S. Tsirkin wrote:
-> On Fri, May 10, 2019 at 02:58:36PM +0200, Stefano Garzarella wrote:
-> > Since virtio-vsock was introduced, the buffers filled by the host
-> > and pushed to the guest using the vring, are directly queued in
-> > a per-socket list avoiding to copy it.
-> > These buffers are preallocated by the guest with a fixed
-> > size (4 KB).
-> > 
-> > The maximum amount of memory used by each socket should be
-> > controlled by the credit mechanism.
-> > The default credit available per-socket is 256 KB, but if we use
-> > only 1 byte per packet, the guest can queue up to 262144 of 4 KB
-> > buffers, using up to 1 GB of memory per-socket. In addition, the
-> > guest will continue to fill the vring with new 4 KB free buffers
-> > to avoid starvation of other sockets.
-> > 
-> > This patch solves this issue copying the payload in a new buffer.
-> > Then it is queued in the per-socket list, and the 4KB buffer used
-> > by the host is freed.
-> > 
-> > In this way, the memory used by each socket respects the credit
-> > available, and we still avoid starvation, paying the cost of an
-> > extra memory copy. When the buffer is completely full we do a
-> > "zero-copy", moving the buffer directly in the per-socket list.
-> > 
-> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > ---
-> >  drivers/vhost/vsock.c                   |  2 +
-> >  include/linux/virtio_vsock.h            |  8 +++
-> >  net/vmw_vsock/virtio_transport.c        |  1 +
-> >  net/vmw_vsock/virtio_transport_common.c | 95 ++++++++++++++++++-------
-> >  4 files changed, 81 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> > index bb5fc0e9fbc2..7964e2daee09 100644
-> > --- a/drivers/vhost/vsock.c
-> > +++ b/drivers/vhost/vsock.c
-> > @@ -320,6 +320,8 @@ vhost_vsock_alloc_pkt(struct vhost_virtqueue *vq,
-> >  		return NULL;
-> >  	}
-> >  
-> > +	pkt->buf_len = pkt->len;
-> > +
-> >  	nbytes = copy_from_iter(pkt->buf, pkt->len, &iov_iter);
-> >  	if (nbytes != pkt->len) {
-> >  		vq_err(vq, "Expected %u byte payload, got %zu bytes\n",
-> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> > index e223e2632edd..345f04ee9193 100644
-> > --- a/include/linux/virtio_vsock.h
-> > +++ b/include/linux/virtio_vsock.h
-> > @@ -54,9 +54,17 @@ struct virtio_vsock_pkt {
-> >  	void *buf;
-> >  	u32 len;
-> >  	u32 off;
-> > +	u32 buf_len;
-> >  	bool reply;
-> >  };
-> >  
-> > +struct virtio_vsock_buf {
-> > +	struct list_head list;
-> > +	void *addr;
-> > +	u32 len;
-> > +	u32 off;
-> > +};
-> > +
-> >  struct virtio_vsock_pkt_info {
-> >  	u32 remote_cid, remote_port;
-> >  	struct vsock_sock *vsk;
-> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> > index 15eb5d3d4750..af1d2ce12f54 100644
-> > --- a/net/vmw_vsock/virtio_transport.c
-> > +++ b/net/vmw_vsock/virtio_transport.c
-> > @@ -280,6 +280,7 @@ static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
-> >  			break;
-> >  		}
-> >  
-> > +		pkt->buf_len = buf_len;
-> >  		pkt->len = buf_len;
-> >  
-> >  		sg_init_one(&hdr, &pkt->hdr, sizeof(pkt->hdr));
-> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> > index 602715fc9a75..0248d6808755 100644
-> > --- a/net/vmw_vsock/virtio_transport_common.c
-> > +++ b/net/vmw_vsock/virtio_transport_common.c
-> > @@ -65,6 +65,9 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
-> >  		pkt->buf = kmalloc(len, GFP_KERNEL);
-> >  		if (!pkt->buf)
-> >  			goto out_pkt;
-> > +
-> > +		pkt->buf_len = len;
-> > +
-> >  		err = memcpy_from_msg(pkt->buf, info->msg, len);
-> >  		if (err)
-> >  			goto out;
-> > @@ -86,6 +89,46 @@ virtio_transport_alloc_pkt(struct virtio_vsock_pkt_info *info,
-> >  	return NULL;
-> >  }
-> >  
-> > +static struct virtio_vsock_buf *
-> > +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_copy)
-> > +{
-> > +	struct virtio_vsock_buf *buf;
-> > +
-> > +	if (pkt->len == 0)
-> > +		return NULL;
-> > +
-> > +	buf = kzalloc(sizeof(*buf), GFP_KERNEL);
-> > +	if (!buf)
-> > +		return NULL;
-> > +
-> > +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
-> > +	 * the new virtio_vsock_buf avoiding the copy, because we are sure that
-> > +	 * we are not use
-> 
-> we do not use
-> 
-
-Oh thanks! Will fix!
-
-> > more memory than that counted by the credit mechanism.
-> > +	 */
-> > +	if (zero_copy && pkt->len == pkt->buf_len) {
-> > +		buf->addr = pkt->buf;
-> > +		pkt->buf = NULL;
-> > +	} else {
-> > +		buf->addr = kmalloc(pkt->len, GFP_KERNEL);
-> > +		if (!buf->addr) {
-> > +			kfree(buf);
-> > +			return NULL;
-> > +		}
-> > +
-> > +		memcpy(buf->addr, pkt->buf, pkt->len);
-> > +	}
-> > +
-> > +	buf->len = pkt->len;
-> > +
-> > +	return buf;
-> > +}
-> > +
-> > +static void virtio_transport_free_buf(struct virtio_vsock_buf *buf)
-> > +{
-> > +	kfree(buf->addr);
-> > +	kfree(buf);
-> > +}
-> > +
-> >  /* Packet capture */
-> >  static struct sk_buff *virtio_transport_build_skb(void *opaque)
-> >  {
-> > @@ -190,17 +233,15 @@ static int virtio_transport_send_pkt_info(struct vsock_sock *vsk,
-> >  	return virtio_transport_get_ops()->send_pkt(pkt);
-> >  }
-> >  
-> > -static void virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
-> > -					struct virtio_vsock_pkt *pkt)
-> > +static void virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs, u32 len)
-> >  {
-> > -	vvs->rx_bytes += pkt->len;
-> > +	vvs->rx_bytes += len;
-> >  }
-> >  
-> > -static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
-> > -					struct virtio_vsock_pkt *pkt)
-> > +static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs, u32 len)
-> >  {
-> > -	vvs->rx_bytes -= pkt->len;
-> > -	vvs->fwd_cnt += pkt->len;
-> > +	vvs->rx_bytes -= len;
-> > +	vvs->fwd_cnt += len;
-> >  }
-> >  
-> >  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct virtio_vsock_pkt *pkt)
-> > @@ -254,36 +295,36 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-> >  				   size_t len)
-> >  {
-> >  	struct virtio_vsock_sock *vvs = vsk->trans;
-> > -	struct virtio_vsock_pkt *pkt;
-> > +	struct virtio_vsock_buf *buf;
-> >  	size_t bytes, total = 0;
-> >  	int err = -EFAULT;
-> >  
-> >  	spin_lock_bh(&vvs->rx_lock);
-> >  	while (total < len && !list_empty(&vvs->rx_queue)) {
-> > -		pkt = list_first_entry(&vvs->rx_queue,
-> > -				       struct virtio_vsock_pkt, list);
-> > +		buf = list_first_entry(&vvs->rx_queue,
-> > +				       struct virtio_vsock_buf, list);
-> >  
-> >  		bytes = len - total;
-> > -		if (bytes > pkt->len - pkt->off)
-> > -			bytes = pkt->len - pkt->off;
-> > +		if (bytes > buf->len - buf->off)
-> > +			bytes = buf->len - buf->off;
-> >  
-> >  		/* sk_lock is held by caller so no one else can dequeue.
-> >  		 * Unlock rx_lock since memcpy_to_msg() may sleep.
-> >  		 */
-> >  		spin_unlock_bh(&vvs->rx_lock);
-> >  
-> > -		err = memcpy_to_msg(msg, pkt->buf + pkt->off, bytes);
-> > +		err = memcpy_to_msg(msg, buf->addr + buf->off, bytes);
-> >  		if (err)
-> >  			goto out;
-> >  
-> >  		spin_lock_bh(&vvs->rx_lock);
-> >  
-> >  		total += bytes;
-> > -		pkt->off += bytes;
-> > -		if (pkt->off == pkt->len) {
-> > -			virtio_transport_dec_rx_pkt(vvs, pkt);
-> > -			list_del(&pkt->list);
-> > -			virtio_transport_free_pkt(pkt);
-> > +		buf->off += bytes;
-> > +		if (buf->off == buf->len) {
-> > +			virtio_transport_dec_rx_pkt(vvs, buf->len);
-> > +			list_del(&buf->list);
-> > +			virtio_transport_free_buf(buf);
-> >  		}
-> >  	}
-> >  	spin_unlock_bh(&vvs->rx_lock);
-> > @@ -841,20 +882,24 @@ virtio_transport_recv_connected(struct sock *sk,
-> >  {
-> >  	struct vsock_sock *vsk = vsock_sk(sk);
-> >  	struct virtio_vsock_sock *vvs = vsk->trans;
-> > +	struct virtio_vsock_buf *buf;
-> >  	int err = 0;
-> >  
-> >  	switch (le16_to_cpu(pkt->hdr.op)) {
-> >  	case VIRTIO_VSOCK_OP_RW:
-> >  		pkt->len = le32_to_cpu(pkt->hdr.len);
-> > -		pkt->off = 0;
-> > +		buf = virtio_transport_alloc_buf(pkt, true);
-> 
-> 
-> This seems to be the only callers and second parameter
-> is always true. So why is it needed?
-
-Right. It was a leftover, I'll remove it.
-
-> 
-> >  
-> > -		spin_lock_bh(&vvs->rx_lock);
-> > -		virtio_transport_inc_rx_pkt(vvs, pkt);
-> > -		list_add_tail(&pkt->list, &vvs->rx_queue);
-> > -		spin_unlock_bh(&vvs->rx_lock);
-> > +		if (buf) {
-> > +			spin_lock_bh(&vvs->rx_lock);
-> > +			virtio_transport_inc_rx_pkt(vvs, pkt->len);
-> > +			list_add_tail(&buf->list, &vvs->rx_queue);
-> > +			spin_unlock_bh(&vvs->rx_lock);
-> >  
-> > -		sk->sk_data_ready(sk);
-> > -		return err;
-> > +			sk->sk_data_ready(sk);
-> > +		}
-> > +
-> > +		break;
-> >  	case VIRTIO_VSOCK_OP_CREDIT_UPDATE:
-> >  		sk->sk_write_space(sk);
-> >  		break;
-
-Thanks for the review,
-Stefano
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDE2OjA5ICswMDAwLCBSb3kgUGxlZGdlIHdyb3RlOg0KPiAN
+Cj4gVGhlIGluZGV4IHZhbHVlIHNob3VsZCBiZSBwYXNzZWQgdG8gdGhlIG9mX3BhcnNlX3BoYW5k
+bGUoKQ0KPiBmdW5jdGlvbiB0byBlbnN1cmUgdGhlIGNvcnJlY3QgcHJvcGVydHkgaXMgcmVhZC4N
+Cg0KSXMgdGhpcyBhIGJ1ZyBmaXg/IE1heWJlIGZvciBzdGFibGUgdG9vPw0KDQogSm9ja2UNCg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogUm95IFBsZWRnZSA8cm95LnBsZWRnZUBueHAuY29tPg0KPiAt
+LS0NCj4gIGRyaXZlcnMvc29jL2ZzbC9xYm1hbi9kcGFhX3N5cy5jIHwgMiArLQ0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2RwYWFfc3lzLmMgYi9kcml2ZXJzL3NvYy9mc2wvcWJt
+YW4vZHBhYV9zeXMuYw0KPiBpbmRleCAzZTBhN2YzLi4wYjkwMWE4IDEwMDY0NA0KPiAtLS0gYS9k
+cml2ZXJzL3NvYy9mc2wvcWJtYW4vZHBhYV9zeXMuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9mc2wv
+cWJtYW4vZHBhYV9zeXMuYw0KPiBAQCAtNDksNyArNDksNyBAQCBpbnQgcWJtYW5faW5pdF9wcml2
+YXRlX21lbShzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBpZHgsIGRtYV9hZGRyX3QgKmFkZHIsDQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgIGlkeCwgcmV0KTsNCj4gICAgICAgICAgICAgICAgIHJl
+dHVybiAtRU5PREVWOw0KPiAgICAgICAgIH0NCj4gLSAgICAgICBtZW1fbm9kZSA9IG9mX3BhcnNl
+X3BoYW5kbGUoZGV2LT5vZl9ub2RlLCAibWVtb3J5LXJlZ2lvbiIsIDApOw0KPiArICAgICAgIG1l
+bV9ub2RlID0gb2ZfcGFyc2VfcGhhbmRsZShkZXYtPm9mX25vZGUsICJtZW1vcnktcmVnaW9uIiwg
+aWR4KTsNCj4gICAgICAgICBpZiAobWVtX25vZGUpIHsNCj4gICAgICAgICAgICAgICAgIHJldCA9
+IG9mX3Byb3BlcnR5X3JlYWRfdTY0KG1lbV9ub2RlLCAic2l6ZSIsICZzaXplNjQpOw0KPiAgICAg
+ICAgICAgICAgICAgaWYgKHJldCkgew0KPiAtLQ0KPiAyLjcuNA0KPiANCg0K
