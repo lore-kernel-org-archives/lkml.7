@@ -2,72 +2,192 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0699DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B91C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58652085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:45:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557783907;
-	bh=GYfCEU0kyuQm169jtAvImZKmPG44NqVW+asNGsa6F8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mLcKOGgL31MukQwWaxGTcSobrR+hSe6zJNS1+YixAfTI0A5dbQ9CXSFerC4dcWCEd
-	 umaRIvCs1TaFQK68sX4WV2A7Zq5aZQWynkXVOieaJYiCrp7vhIbLZ3gKtVhXj5mPF3
-	 4zpawY9oaZ4f7Gf+4ftwgi3f4orRcaH1gKtznQVo=
+	by mail.kernel.org (Postfix) with ESMTP id 358E42085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 21:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfEMVpG (ORCPT
+        id S1726580AbfEMVrH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 17:45:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47880 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726174AbfEMVpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 17:45:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A9351AC94;
-        Mon, 13 May 2019 21:45:04 +0000 (UTC)
-Date:   Mon, 13 May 2019 23:45:03 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     ying.huang@intel.com, hannes@cmpxchg.org,
-        mgorman@techsingularity.net, kirill.shutemov@linux.intel.com,
-        hughd@google.com, shakeelb@google.com,
-        william.kucharski@oracle.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
-Message-ID: <20190513214503.GB25356@dhcp22.suse.cz>
-References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190513080929.GC24036@dhcp22.suse.cz>
- <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
+        Mon, 13 May 2019 17:47:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:53513 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726421AbfEMVrH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 17:47:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id c16so1350291ioo.20
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 14:47:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=/rlXrbp2H3OAY3betgl/KXmyzA7uwrYXbBzE74HvkWI=;
+        b=KPNPuBmVha54LjLWRywsmg7QU+34b6/AoGU7bhgdK5Q6FzgYfUyesQ0i5SbjjK0Ky2
+         y/p6AGy+HkovtMFIqx5ZBVaoOeXsgKlEin6iS4n9+FnwFyHCjwVGGE/8l53AHZ6ROCnT
+         uwydUwqcB7uYmhzOgmLXUfUX2a3uTafPdaJ4NZ92DNlqZYbRtiVSpIi8R2arLDOVmOtG
+         WlnpOj6f8uTbK8SPdzvfAAaqXUEnmKuPMFaGV29Psn/gcBWM5bTrQxB3hXexWE1Cqg3a
+         syYDXOijXb+6PEJGIlr7Cg/HSSGqWbCqyD7c6Tg0Zkt9VtnXriZsmwx+rK5s5brfEWjK
+         BvIQ==
+X-Gm-Message-State: APjAAAVvqHwulI1l/zU4XHl451YizmhfcAe2jnMZLv5BFZl5Kn/UnKLU
+        Z2Dd4RpXhwqGUJzdy1sQHyNswegtxIlKk+hMQ/IWjKK7zZty
+X-Google-Smtp-Source: APXvYqx0tfheyALe0R0WL1ND66kOetDpP0PLCnkZdEC2Q+JJHHiHVsg9RwDEklEWW6G6HUVlcmqdcZTvwH5hvim2hbDvrJ497DGJ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:660c:ac3:: with SMTP id k3mr997600itl.79.1557784025621;
+ Mon, 13 May 2019 14:47:05 -0700 (PDT)
+Date:   Mon, 13 May 2019 14:47:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007bee9b0588cbdb77@google.com>
+Subject: net boot error: WARNING: workqueue cpumask: online intersect >
+ possible intersect
+From:   syzbot <syzbot+e7d5400c7ea466bf6c81@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 13-05-19 14:09:59, Yang Shi wrote:
-[...]
-> I think we can just account 512 base pages for nr_scanned for
-> isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT
-> just use it.
-> 
-> And, sc->nr_scanned should be accounted as 512 base pages too otherwise we
-> may have nr_scanned < nr_to_reclaim all the time to result in false-negative
-> for priority raise and something else wrong (e.g. wrong vmpressure).
+Hello,
 
-Be careful. nr_scanned is used as a pressure indicator to slab shrinking
-AFAIR. Maybe this is ok but it really begs for much more explaining
-than "it should be fine". This should have happened when THP swap out
-was implemented...
+syzbot found the following crash on:
 
--- 
-Michal Hocko
-SUSE Labs
+HEAD commit:    d4c26eb6 net: ethernet: stmmac: dwmac-sun8i: enable suppor..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1467a174a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=de3262a7df18d5ca
+dashboard link: https://syzkaller.appspot.com/bug?extid=e7d5400c7ea466bf6c81
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e7d5400c7ea466bf6c81@syzkaller.appspotmail.com
+
+smpboot: CPU0: Intel(R) Xeon(R) CPU @ 2.30GHz (family: 0x6, model: 0x3f,  
+stepping: 0x0)
+Performance Events: unsupported p6 CPU model 63 no PMU driver, software  
+events only.
+rcu: Hierarchical SRCU implementation.
+NMI watchdog: Perf NMI watchdog permanently disabled
+smp: Bringing up secondary CPUs ...
+x86: Booting SMP configuration:
+.... node  #0, CPUs:      #1
+smp: Brought up 2 nodes, 2 CPUs
+smpboot: Max logical packages: 1
+smpboot: Total of 2 processors activated (9200.00 BogoMIPS)
+devtmpfs: initialized
+clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns:  
+19112604462750000 ns
+futex hash table entries: 512 (order: 4, 65536 bytes)
+xor: automatically using best checksumming function   avx
+PM: RTC time: 19:42:27, date: 2019-05-13
+NET: Registered protocol family 16
+audit: initializing netlink subsys (disabled)
+cpuidle: using governor menu
+ACPI: bus type PCI registered
+dca service started, version 1.12.1
+PCI: Using configuration type 1 for base access
+WARNING: workqueue cpumask: online intersect > possible intersect
+HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+cryptd: max_cpu_qlen set to 1000
+raid6: avx2x4   gen() 11252 MB/s
+raid6: avx2x4   xor()  6726 MB/s
+raid6: avx2x2   gen()  7021 MB/s
+raid6: avx2x2   xor()  3931 MB/s
+raid6: avx2x1   gen()  4150 MB/s
+raid6: avx2x1   xor()  2274 MB/s
+raid6: sse2x4   gen()  5782 MB/s
+raid6: sse2x4   xor()  3445 MB/s
+raid6: sse2x2   gen()  3614 MB/s
+raid6: sse2x2   xor()  2050 MB/s
+raid6: sse2x1   gen()  1853 MB/s
+raid6: sse2x1   xor()  1076 MB/s
+raid6: using algorithm avx2x4 gen() 11252 MB/s
+raid6: .... xor() 6726 MB/s, rmw enabled
+raid6: using avx2x2 recovery algorithm
+ACPI: Added _OSI(Module Device)
+ACPI: Added _OSI(Processor Device)
+ACPI: Added _OSI(3.0 _SCP Extensions)
+ACPI: Added _OSI(Processor Aggregator Device)
+ACPI: Added _OSI(Linux-Dell-Video)
+ACPI: Added _OSI(Linux-Lenovo-NV-HDMI-Audio)
+ACPI: Added _OSI(Linux-HPI-Hybrid-Graphics)
+ACPI: 2 ACPI AML tables successfully acquired and loaded
+ACPI: Interpreter enabled
+ACPI: (supports S0 S3 S4 S5)
+ACPI: Using IOAPIC for interrupt routing
+PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and  
+report a bug
+ACPI: Enabled 16 GPEs in block 00 to 0F
+ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended  
+PCI configuration space under this bridge.
+PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+pci_bus 0000:00: root bus resource [mem 0xc0000000-0xfebfffff window]
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci 0000:00:01.3: quirk: [io  0xb000-0xb03f] claimed by PIIX4 ACPI
+ACPI: PCI Interrupt Link [LNKA] (IRQs 5 *10 11)
+ACPI: PCI Interrupt Link [LNKB] (IRQs 5 *10 11)
+ACPI: PCI Interrupt Link [LNKC] (IRQs 5 10 *11)
+ACPI: PCI Interrupt Link [LNKD] (IRQs 5 10 *11)
+ACPI: PCI Interrupt Link [LNKS] (IRQs *9)
+vgaarb: loaded
+SCSI subsystem initialized
+ACPI: bus type USB registered
+usbcore: registered new interface driver usbfs
+usbcore: registered new interface driver hub
+usbcore: registered new device driver usb
+media: Linux media interface: v0.10
+videodev: Linux video capture interface: v2.00
+pps_core: LinuxPPS API ver. 1 registered
+pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti  
+<giometti@linux.it>
+PTP clock support registered
+EDAC MC: Ver: 3.0.0
+Advanced Linux Sound Architecture Driver Initialized.
+PCI: Using ACPI for IRQ routing
+Bluetooth: Core ver 2.22
+NET: Registered protocol family 31
+Bluetooth: HCI device and connection manager initialized
+Bluetooth: HCI socket layer initialized
+Bluetooth: L2CAP socket layer initialized
+Bluetooth: SCO socket layer initialized
+NET: Registered protocol family 8
+NET: Registered protocol family 20
+NetLabel: Initializing
+NetLabel:  domain hash size = 128
+NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+NetLabel:  unlabeled traffic allowed by default
+nfc: nfc_init: NFC Core ver 0.1
+NET: Registered protocol family 39
+clocksource: Switched to clocksource kvm-clock
+VFS: Disk quotas dquot_6.6.0
+VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+FS-Cache: Loaded
+*** VALIDATE hugetlbfs ***
+CacheFiles: Loaded
+TOMOYO: 2.6.0
+Profile 0 (used by '<kernel>') is not defined.
+Userland tools for TOMOYO 2.6 must be installed and policy must be  
+initialized.
+Please see https://tomoyo.osdn.jp/2.6/ for more information.
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
