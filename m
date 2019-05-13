@@ -2,117 +2,118 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E9FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C92BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B4D208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2921520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfEMKGl convert rfc822-to-8bit (ORCPT
+        id S1728919AbfEMKHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:06:41 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:36228 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727339AbfEMKGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:06:41 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id D154B149B5; Mon, 13 May 2019 11:06:39 +0100 (BST)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-samsung-soc\@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3] usb: core: verify devicetree nodes for USB devices
-References: <yw1xpnotufti.fsf@mansr.com>
-        <CGME20190509084827eucas1p294962744fe70745c50b69a5349b5de68@eucas1p2.samsung.com>
-        <20190509084726.5405-1-m.szyprowski@samsung.com>
-        <yw1xlfzfv4ol.fsf@mansr.com>
-        <VI1PR04MB5327AD56CA772284DFE663D08B0C0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-        <7c5579d2-634a-d705-a451-563939957d57@samsung.com>
-        <VI1PR04MB5327B425756FA394C51525208B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-        <3544eb61-2bd8-338d-8d62-d95a775528ef@samsung.com>
-        <VI1PR04MB5327FAC12E4A3D403E8D92128B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-        <5d0abe9c-613c-d39b-6746-78e5e5c2bbc5@samsung.com>
-Date:   Mon, 13 May 2019 11:06:39 +0100
-In-Reply-To: <5d0abe9c-613c-d39b-6746-78e5e5c2bbc5@samsung.com> (Marek
-        Szyprowski's message of "Mon, 13 May 2019 12:03:18 +0200")
-Message-ID: <yw1xzhnqu0r4.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Mon, 13 May 2019 06:07:15 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59312 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728701AbfEMKHO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:07:14 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DA2dFK142090
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:07:13 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sf3dsynbj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:07:13 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Mon, 13 May 2019 11:07:10 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 May 2019 11:07:07 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4DA76Kc48758894
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 10:07:06 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 666B3A405B;
+        Mon, 13 May 2019 10:07:06 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B01CA4053;
+        Mon, 13 May 2019 10:07:05 +0000 (GMT)
+Received: from [9.124.31.49] (unknown [9.124.31.49])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 May 2019 10:07:04 +0000 (GMT)
+Subject: Re: [PATCH 1/2] perf ioctl: Add check for the sample_period value
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     jolsa@redhat.com, mpe@ellerman.id.au, maddy@linux.vnet.ibm.com,
+        acme@kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190511024217.4013-1-ravi.bangoria@linux.ibm.com>
+ <20190513074213.GH2623@hirez.programming.kicks-ass.net>
+ <20190513085620.GN2650@hirez.programming.kicks-ass.net>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Mon, 13 May 2019 15:37:04 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190513085620.GN2650@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051310-0012-0000-0000-0000031B1158
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051310-0013-0000-0000-00002153A35B
+Message-Id: <d2d34084-999d-9be2-511e-82625b80aa40@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
-> Hi Peter,
->
-> On 2019-05-13 11:23, Peter Chen wrote:
->>> On 2019-05-13 11:00, Peter Chen wrote:
->>>>> On 2019-05-10 05:10, Peter Chen wrote:
->>>>>>> Marek Szyprowski <m.szyprowski@samsung.com> writes:
->>>>>>>> Commit 69bec7259853 ("USB: core: let USB device know device node")
->>>>>>>> added support for attaching devicetree node for USB devices. The
->>>>>>>> mentioned commit however identifies the given USB device node only
->>>>>>>> by the
->>>>> 'reg'
->>>>>>>> property in the host controller children nodes. The USB device
->>>>>>>> node however also has to have a 'compatible' property as described
->>>>>>>> in Documentation/devicetree/bindings/usb/usb-device.txt. Lack for
->>>>>>>> the 'compatible' property check might result in assigning a
->>>>>>>> devicetree node, which is not intended to be the proper node for the given
->>> USB device.
->>>>>>>> This is important especially when USB host controller has
->>>>>>>> child-nodes for other purposes. For example, Exynos EHCI and OHCI
->>>>>>>> drivers already define child-nodes for each physical root hub port
->>>>>>>> and assigns respective PHY controller and parameters for them.
->>>>>>>> Those binding predates support for USB devicetree nodes.
->>>>>>>>
->>>>>>>> Checking for the proper compatibility string allows to mitigate
->>>>>>>> the conflict between USB device devicetree nodes and the bindings
->>>>>>>> for USB controllers with child nodes. It also fixes the
->>>>>>>> side-effect of the other commits, like 01fdf179f4b0 ("usb: core:
->>>>>>>> skip interfaces disabled in devicetree"), which incorrectly
->>>>>>>> disables some devices on Exynos based boards.
->>>>>> Hi Marek,
->>>>>>
->>>>>> The purpose of your patch is do not set of_node for device under USB
->>>>>> controller,
->>>>> right?
->>>>>
->>>>> Right.
->>>>>
->>>> Do you mind doing it at function exynos_ehci_get_phy of ehci-exynos.c?
->>> I don't mind fixing it in ehci-exynos, but frankly so far I have no
->>> idea how to do it.  The problem is that newly created USB devices
->>> get of-node pointer pointing to a node which if not intended for
->>> them. How this can be fixed in ehci-exynos?
+
+On 5/13/19 2:26 PM, Peter Zijlstra wrote:
+> On Mon, May 13, 2019 at 09:42:13AM +0200, Peter Zijlstra wrote:
+>> On Sat, May 11, 2019 at 08:12:16AM +0530, Ravi Bangoria wrote:
+>>> Add a check for sample_period value sent from userspace. Negative
+>>> value does not make sense. And in powerpc arch code this could cause
+>>> a recursive PMI leading to a hang (reported when running perf-fuzzer).
 >>>
->>   
->> Can't be workaround by setting of_node as NULL for EHCI controller or
->> for PHY node at exynos_ehci_get_phy?
->
-> Ah, such workaround? I will check, but this will need to be done with 
-> care, because have a side effect for other subsystems like regulators or 
-> clocks.
->
-> BTW, What's wrong with proper, full verification of USB device nodes?
+>>> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>>> ---
+>>>  kernel/events/core.c | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>> index abbd4b3b96c2..e44c90378940 100644
+>>> --- a/kernel/events/core.c
+>>> +++ b/kernel/events/core.c
+>>> @@ -5005,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
+>>>  	if (perf_event_check_period(event, value))
+>>>  		return -EINVAL;
+>>>  
+>>> +	if (!event->attr.freq && (value & (1ULL << 63)))
+>>> +		return -EINVAL;
+>>
+>> Well, perf_event_attr::sample_period is __u64. Would not be the site
+>> using it as signed be the one in error?
+> 
+> You forgot to mention commit: 0819b2e30ccb9, so I guess this just makes
+> it consistent and is fine.
+> 
 
-Your approach so far doesn't address the actual problem of a conflict
-between the generic USB DT bindings and those for the Exynos host
-controller.  If you fix that, the validation issue goes away.
+Yeah, I was about to reply :)
 
--- 
-Måns Rullgård
