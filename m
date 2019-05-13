@@ -2,77 +2,96 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB0AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C10C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867AF2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EACC52084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557768656;
-	bh=1KHrVjOJIKdAkwrfnTAw3fqu9992hX+XQlQ2QX6Un8k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=viraNeTqTeiRcfkFhMHM06JPkqdHhRR+IoQ/B97PYxYU5EVnWAqe4vHUpG6u43y8C
-	 O7N75UZ15FTCgfLdko49JZkhYHktrViz3v/ozZ3rMivCaoUW4MuRKU+aQpfQV5yxMn
-	 XdsK1vQR8dd+Z063vLszSKfdnSc7uC4g8gN26WUA=
+	s=default; t=1557768702;
+	bh=pT9qR5WqUwABcKfNLrryorfwTRheLyO+UK4aKBhzU4E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hcpMY6s2rioIg3kuFrbcBMK1j5mwl0Ys8qlSSJegwyibMTnA+H0JER/veNgW3qPPO
+	 chn8gOkO9OGBM0sw4FdGPexpQxDI7gdau1DGMwYTnA1TRiX699TnubJijLfcTy3hb1
+	 8bmrAxCXcKs4daJQe2+LiUFcRtXRbzxxGbS4rbIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731765AbfEMRaz (ORCPT
+        id S1731777AbfEMRbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:30:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42074 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729262AbfEMRay (ORCPT
+        Mon, 13 May 2019 13:31:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34411 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728708AbfEMRbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:30:54 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so18691522eda.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:30:53 -0700 (PDT)
+        Mon, 13 May 2019 13:31:40 -0400
+Received: by mail-oi1-f196.google.com with SMTP id v10so9990533oib.1;
+        Mon, 13 May 2019 10:31:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1KHrVjOJIKdAkwrfnTAw3fqu9992hX+XQlQ2QX6Un8k=;
-        b=rL7i4rZnSN7KiY0C8uSURXLuvV0y5sU6mr8oVqS/TVXz9Un9BGa5QROe2KXaUwtVs6
-         vTx57HJpEa446ZHGLPIqd6GadQyhIp0RAjja3w76Y7mixzjCvSMULjtxLl6SO9NsBqf/
-         7DnHLbdWDFiNAzrQ7wUxg2tG2WnKbFRnAMVKfsnUxVkRv3yM+a3A77oFoMt+M3xr6Ir3
-         s6dRn/wv3WffLC6F54ezvrqORWm74Ybys0Q+P+gEW2sFnGyeP7NI/e8B0X3r+HmXuDyt
-         aaJpe60iganN8Aoav3CMj4thCCdqycIZy1/X60dD8QKu8zcsTbK+KCGhRKaMTNsDq1Ln
-         58/A==
-X-Gm-Message-State: APjAAAUwRBFL+xxUmJnl7j/5A3RqGnT7tIDJVMzIFOZVyHKeRzhbSjhz
-        C+xxvA43vm1MJ6Hc22G7vNZXG7CuCafxxZSzWeI=
-X-Google-Smtp-Source: APXvYqz3oM4dVwEL3Z4or3ot8AjgF3yS6/CtEOpPWhmoHuOpZkFf7CiRlv8SMfATlSur7WhDOL6i54/HdMOy9+LVDT8=
-X-Received: by 2002:a17:906:4c90:: with SMTP id q16mr13150005eju.297.1557768653238;
- Mon, 13 May 2019 10:30:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jfvm+UxtW85+1lTj8+jl3f2AYjNWVAR7x9TACkvrnqs=;
+        b=XD7sZyqNO0liK+ip/Wc6hYBlLBBYUEL2zJXIvXF8IvQbxHFb7nA7E3n6SCnBd90h2N
+         7jcsuWqJ2sO4dSfeHN23s8U8+BwJOfBiGlnpvfKcGqqJl+mBoz0DnEU0NczOItX9s+zD
+         NatLZeAHp7eUrCNSs6EbtVOAyEIvyZBxm5dj6vd1dDlTKTJ+pgX69OhDCvXlg4pW6pJH
+         GQ74fsvtljhzl/53vztvKARbntf2NfTFYL27RrPrIw5S6w9wAtDYPjCnK0dLS/G5GR5c
+         s/QLxR7s4qqKdlY3KBNjNehdpbok9l1WtSGmFtNlP9rCf40TrEQx8/mlgdsseIgcS1Iq
+         8GFw==
+X-Gm-Message-State: APjAAAWFrwVHSY3i/As0mhijCxzP25eziRPdIIwH2fMvoAJCewcIKGzt
+        1vN2Hr9fkkQFXol7v5sWNw==
+X-Google-Smtp-Source: APXvYqza4wgb3FqLjsDoT94kPU0YjBN5EA7DYSQSSawD4WxuLHYAvNzbMmRxERMqkWJ+hZXslQS8CA==
+X-Received: by 2002:aca:61d7:: with SMTP id v206mr178118oib.97.1557768699295;
+        Mon, 13 May 2019 10:31:39 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k65sm5359873oia.16.2019.05.13.10.31.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 10:31:38 -0700 (PDT)
+Date:   Mon, 13 May 2019 12:31:37 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Claus H. Stovgaard" <cst@phaseone.com>, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        v.anuragkumar@gmail.com,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: Re: [PATCH v3 1/3] doc: dt: bindings: usb: dwc3: Update entries for
+ disabling U1 and U2
+Message-ID: <20190513173137.GA20313@bogus>
+References: <1557472048-10536-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1557472048-10536-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
 MIME-Version: 1.0
-References: <6f53f0e494d743c79e18f6e3a98085711e6ddd0c.1557177585.git.len.brown@intel.com>
- <a1ab2f32d8d99f0561ae5e2ce3337d48f1b6f66e.1557177585.git.len.brown@intel.com> <aef058a6-cdc9-cd86-cbba-ff96c59ef84d@linux.intel.com>
-In-Reply-To: <aef058a6-cdc9-cd86-cbba-ff96c59ef84d@linux.intel.com>
-From:   Len Brown <lenb@kernel.org>
-Date:   Mon, 13 May 2019 13:30:42 -0400
-Message-ID: <CAJvTdKnS+zAHE26NPq1KY6AfQkLd-Tyeson1-esnf+5EX9+xtg@mail.gmail.com>
-Subject: Re: [PATCH 21/22] perf/x86/intel/uncore: renames in response to
- multi-die/pkg support
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     X86 ML <x86@kernel.org>, linux-kernel@vger.kernel.org,
-        Len Brown <len.brown@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557472048-10536-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 11:02 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+On Fri, 10 May 2019 12:37:26 +0530, Anurag Kumar Vulisha wrote:
+> This patch updates the documentation with the information related
+> to the quirks that needs to be added for disabling the link entering
+> into the U1 and U2 states
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> ---
+>  Changes in v3:
+> 	-None
+> 
+>  Changes in v2
+> 	1. As suggested by Thinh Nguyen changed the "snps,dis_u1_entry_quirk"
+> 	   to "snps,dis-u1-entry-quirk"
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
->
-> I think the "box" terminology in perf uncore has different meaning. It
-> stands for an uncore PMU unit on a socket/die.
-> I think it may be better use "die" to replace the "pkg".
-> How about the patch as below?
-
-Also fine with me.
-And I've replaced my rename patch with yours here too.
-
-thanks,
-Len Brown, Intel Open Source Technology Center
+Reviewed-by: Rob Herring <robh@kernel.org>
