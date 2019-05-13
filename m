@@ -2,149 +2,87 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECA3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1AB1C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:00:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72A94208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BDCA208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:00:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+++fRZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbfEML5w (ORCPT
+        id S1729564AbfEMMAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:57:52 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7746 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728943AbfEML5w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:57:52 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1A687BF275AA98292D00;
-        Mon, 13 May 2019 19:57:49 +0800 (CST)
-Received: from [127.0.0.1] (10.184.12.158) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
- 19:57:39 +0800
-Subject: Re: [RFC PATCH] irqchip/gic-v3: Correct the usage of GICD_CTLR's RWP
- field
-To:     Andre Przywara <andre.przywara@arm.com>
-CC:     <marc.zyngier@arm.com>, <eric.auger@redhat.com>,
-        <drjones@redhat.com>, <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <wanghaibin.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1557720954-6592-1-git-send-email-yuzenghui@huawei.com>
- <20190513093704.0b293de0@donnerap.cambridge.arm.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <0d1febde-30de-6474-4cca-a0a17963a329@huawei.com>
-Date:   Mon, 13 May 2019 19:55:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101
- Thunderbird/64.0
+        Mon, 13 May 2019 08:00:31 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34235 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728841AbfEMMAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:00:31 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n19so7109894pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=p3WkRupLQANIn+eKZSEzZINagFb+f491TtMUB8rusGg=;
+        b=N+++fRZ20jobeOpyLHYLAVEpUKQjraWab8bLt6j5ZOHrH4gRwoiEzPEVePueOg4EkT
+         9aVhRhMNDREwNEbaja9OpqLvsmrwBITjfZtuZXZfVsGrxiBI5qlSlGtA8bTvgYsX80KS
+         B+Hy3tLCB6h6eCpC1xwUwRjx3yvZPN2lf3v3ZLVVBiv5sT7Ty37OChUzb50/4pDZrLMq
+         IE7CVxIDLsxzQNwTAEJyhwTyRmVumeHP1uFD1yumIOTTox/hWWkAOvidJivPGFVECEok
+         h/vm8VxlFnVl0yawuGVtUryQDBrwPXuS1oTAGBafBvVx/JAv2fvyytV/jVpmYh/Ndcd7
+         xm7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=p3WkRupLQANIn+eKZSEzZINagFb+f491TtMUB8rusGg=;
+        b=WIklum9mwtDa07fjGve1NbsQCSTYgM0YUAgA+6hADUNPTbHEbGNzDlUVHI5+GeqFmY
+         FWTE6uqcPyKMm9NqqA/iclAa8cNodAz9N7P4DKW0QDMv+clQ4Ze2zB9QbZIcuMAGRDF1
+         2m2NjkIQ8TZ+C/NSC0JORhTxFl7/11t62psAz8qxfxiUFUIsdoRwnSoXUU+HG6Pq6flB
+         Q/k7AUxSayuNfoQgtYdli/v/8MRSgC86Ph5KsGo2NM83j7GBRAZFFf/SqFPMNGlBqo+p
+         Op+LGGN2PL8ESu4A2JXHBQI2jrp5LmGlWPZF0QAwrHTNqJ8Xo5941b5uwvjieqEpkUnM
+         Wkhg==
+X-Gm-Message-State: APjAAAVbKA6ZnpuASJ3tf+BhBh0+lhcGe8LZUMv2TVXZYP6RvY/SSF2p
+        dhtXMi+nkwAc3rYg9ViVX47s1Iy+LLg=
+X-Google-Smtp-Source: APXvYqwVCYzieQmt6igQ6RiswHOPk0cOUDa7zoOiLFCwJCK65CcHTjofK0vKPbo01BznaQ8ITVMLqQ==
+X-Received: by 2002:a63:318b:: with SMTP id x133mr30649337pgx.297.1557748830228;
+        Mon, 13 May 2019 05:00:30 -0700 (PDT)
+Received: from [192.168.1.7] ([117.248.72.152])
+        by smtp.gmail.com with ESMTPSA id t25sm29707082pfq.91.2019.05.13.05.00.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 05:00:29 -0700 (PDT)
+Subject: Re: [PATCH v3 1/8] Staging: kpc2000: kpc_dma: Resolve trailing
+ whitespace error reported by checkpatch
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, lukas.bulwahn@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+References: <20190510193833.1051-1-bnvandana@gmail.com>
+ <20190513102622.22398-1-bnvandana@gmail.com> <20190513104920.GI18105@kadam>
+From:   Vandana BN <bnvandana@gmail.com>
+Message-ID: <73832a6a-bc47-5882-91af-b23727f33b87@gmail.com>
+Date:   Mon, 13 May 2019 17:30:25 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190513093704.0b293de0@donnerap.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190513104920.GI18105@kadam>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andre,
+oh ok.. thanks i will correct it.
 
-On 2019/5/13 16:37, Andre Przywara wrote:
-> On Mon, 13 May 2019 04:15:54 +0000
-> Zenghui Yu <yuzenghui@huawei.com> wrote:
-> 
-> Hi,
-> 
->> As per ARM IHI 0069D, GICD_CTLR's RWP field tracks updates to:
->>
->> 	GICD_CTLR's Group Enable bits, for transitions from 1 to 0 only
->> 	GICD_CTLR's ARE bits, E1NWF bit and DS bit (if we have)
->> 	GICD_ICENABLER<n>
->>
->> We seemed use this field in an inappropriate way, somewhere in the
->> GIC-v3 driver. For some examples:
->>
->> In gic_set_affinity(), if the interrupt was not enabled, we only need
->> to write GICD_IROUTER<n> with the appropriate mpidr value. Updates to
->> GICD_IROUTER will not be tracked by RWP field, and we can remove the
->> unnecessary RWP waiting.
-> 
-> I am not sure this is the proper fix, see below inline.
-> 
->> In gic_dist_init(), we "Enable distributor with ARE, Group1" by writing
->> to GICD_CTLR, and we should use gic_dist_wait_for_rwp() here.
-> 
-> That looks reasonable, yes.
-> 
->> These two are obvious cases, and there are some other cases where we don't
->> need to do RWP waiting, such as in gic_configure_irq() and gic_poke_irq().
->> But too many modifications makes me not confident. It's hard for me to say
->> whether this patch is doing the right thing and how does the RWP waiting
->> affect the system, thus RFC.
-> 
-> So did you actually see a problem, and this patch fixes it? Or was this
-> just discovered by code inspection and comparing to the spec?
-
-The latter ;-)
-
->> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
->> ---
->>   drivers/irqchip/irq-gic-v3.c | 8 ++------
->>   1 file changed, 2 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
->> index 15e55d3..8d63950 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -600,6 +600,7 @@ static void __init gic_dist_init(void)
->>   	/* Enable distributor with ARE, Group1 */
->>   	writel_relaxed(GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A |
->> GICD_CTLR_ENABLE_G1, base + GICD_CTLR);
->> +	gic_dist_wait_for_rwp();
->>   
->>   	/*
->>   	 * Set all global interrupts to the boot CPU only. ARE must be
->> @@ -986,14 +987,9 @@ static int gic_set_affinity(struct irq_data *d,
->> const struct cpumask *mask_val,
->>   	gic_write_irouter(val, reg);
->>   
->> -	/*
->> -	 * If the interrupt was enabled, enabled it again. Otherwise,
->> -	 * just wait for the distributor to have digested our changes.
->> -	 */
->> +	/* If the interrupt was enabled, enabled it again. */
->>   	if (enabled)
->>   		gic_unmask_irq(d);
->> -	else
->> -		gic_dist_wait_for_rwp();
-> 
-> I think you are right in this is not needed here.
-> But I guess this call belongs further up in this function, after the
-> gic_mask_irq() call, as this one writes to GICD_ICENABLER. So in case this
-> IRQ was enabled, we should wait for the distributor to have properly
-> disabled it, before changing its affinity.
-
-I still think we don't need this call in gic_set_affinity().
-Actually, the writes to GICD_ICENABLER happens in gic_poke_irq(). And we
-already have a gic_dist_wait_for_rwp() there, named rwp_wait().
-
-
-thanks,
-zenghui
-
-> 
-> Cheers,
-> Andre.
-> 
->>   
->>   	irq_data_update_effective_affinity(d, cpumask_of(cpu));
->>   
-> 
-> 
-> .
-> 
-
+On 13/05/19 4:19 PM, Dan Carpenter wrote:
+> The Signed off by has to be before the first --- cut off line.
+> Everything after the cut off is removed from the commit message.
