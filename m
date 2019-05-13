@@ -2,183 +2,107 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AC3C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C91FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C5A208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6860521019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:30:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZRyLpmz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="w5r30mez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfEMH3R (ORCPT
+        id S1727726AbfEMHaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:29:17 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36574 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727462AbfEMH3Q (ORCPT
+        Mon, 13 May 2019 03:30:21 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40928 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727462AbfEMHaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:29:16 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y10so8237128lfl.3;
-        Mon, 13 May 2019 00:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ANO0xXt34tqA+PC94Xi+g11/uy5YRgvNnUqPc1rWV1I=;
-        b=VZRyLpmzKnZG6EsvA2UZxgEYUc+G6nSBCAkhL6gCFeFmPqi6KnE+6ZVxO9HlhnvQd6
-         EjsDXQA/9rLECwZk6DGV6oDUo3a6u7/2nQfByi1Aicw7k/Al6/xYusC/vFkoraN59Dou
-         WuC/YfJrSWzukZFXNKJG4nv81eHXDJ6ig4TxM4OqDBCha3E+HWjDEkT/CZuZ0ZdRndcW
-         2lMk099OqhW4lvcL7Ec6GRPR1kwSnerOX1E8H+aQnLnKvPDGjH2KSPvmBJxdCIfcV85k
-         VzGRYDKoiQ537JeySD5pvAhDCERIRrqNZX3aLwuXulnR0xijZD/fUBVh8qeTocEeu6cA
-         iitg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ANO0xXt34tqA+PC94Xi+g11/uy5YRgvNnUqPc1rWV1I=;
-        b=cijKIXxk42DT9Y+R26XRdoqymAWLkY9FRTW1L7JXFrnLezb9LMd8UYxiWpIRcykniT
-         ReHeeyOUCIBqGKbPJPc6DLBwk94D+9dRCoLWt86xdl7o1mpqbv0lYt0iHiPBOujSL/Ug
-         j5PCRzTd3iWoDyIfm1Sd+4aurCMZAXup9i6GCwi22lE2N6sniE57kaBwphANdXmnhzLV
-         o6+jMzv4gd2Ffp6H04mqORLCoonObuse4xpsfTq83M5AMgiiGMxhQA6WqQCWsnl+/PJE
-         1VCPPV+Lh2eTy86SUMTVeqOFxycD0Xy11uA1bUmc2jqf0AmqEC3XJCShkuSdfNezb3Rx
-         Hzug==
-X-Gm-Message-State: APjAAAUQlLM+NSt4lJZ7ow8jM6Ps35eI5Qi3mo5ee5Yjzf2kOJFlFuaQ
-        SFLC90+kdUCbH8nEV6cALHI=
-X-Google-Smtp-Source: APXvYqxAPS2YNy9oUsYW8yeuuGGTIJp5tmtOJUBhMiJQhfu9QTP/3KsRjsvSFCh79P5VphfigYY94w==
-X-Received: by 2002:ac2:4857:: with SMTP id 23mr9993431lfy.158.1557732553706;
-        Mon, 13 May 2019 00:29:13 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id y24sm3063412lfg.33.2019.05.13.00.29.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 00:29:12 -0700 (PDT)
-Date:   Mon, 13 May 2019 10:29:10 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Vicente Bergas <vicencb@gmail.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: net: phy: realtek: regression, kernel null pointer dereference
-Message-ID: <20190513072909.behzxeisc7l3nprq@mobilestation>
-References: <16f75ff4-e3e3-4d96-b084-e772e3ce1c2b@gmail.com>
- <742a2235-4571-aa7d-af90-14c708205c6f@gmail.com>
- <11446b0b-c8a4-4e5f-bfa0-0892b500f467@gmail.com>
- <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
+        Mon, 13 May 2019 03:30:21 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D7QM1I009050;
+        Mon, 13 May 2019 09:30:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=bURCBAue+7AyVWgZbYBJxzJiyLeB1d3yp/jM0DfADTU=;
+ b=w5r30mezaFZfl7jNNnVNJBezsOhfZikY7nVPMZ+/ame+5Zq/sSr42IqClHXTF/tKMbFV
+ nfxMdgOdbchEB8YQb43ZjMJG4oIMjRa37j4A14DHo0YfSNfRdroepmCd6TMMEqLIHs4a
+ 95nQX7fU16DnnEgaS+7ntboGSc+API5ZZTWcpvhDLYFyoaWyK8LoeHSf3acYFdLdBe6j
+ 85lgjymtnF4UNA13xo8WhhvCFjDlrFqAISR76q1OOISpK9iMhfggirL7LA+AXYf32kpB
+ BI7GmjLUKV02lmCbNiD4LZOTR4cuahQBBfJYY3tKDuKBLDYm7ROFT2441a3Se5jM9YoE mw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sdn9fhe80-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 13 May 2019 09:30:09 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C69943A;
+        Mon, 13 May 2019 07:30:08 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 987B5141A;
+        Mon, 13 May 2019 07:30:08 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May
+ 2019 09:30:08 +0200
+Received: from localhost (10.201.20.5) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May 2019 09:30:07 +0200
+From:   Amelie Delaunay <amelie.delaunay@st.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>, <kbuild-all@01.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] pinctrl: stmfx: Fix comparison of unsigned expression warnings
+Date:   Mon, 13 May 2019 09:30:06 +0200
+Message-ID: <1557732606-14662-1-git-send-email-amelie.delaunay@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <61831f43-3b24-47d9-ec6f-15be6a4568c5@gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.5]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Heiner and net-folks,
+This patch fixes the following warnings:
 
-On Sat, May 11, 2019 at 04:56:56PM +0200, Heiner Kallweit wrote:
-> On 11.05.2019 16:46, Vicente Bergas wrote:
-> > On Friday, May 10, 2019 10:28:06 PM CEST, Heiner Kallweit wrote:
-> >> On 10.05.2019 17:05, Vicente Bergas wrote:
-> >>> Hello,
-> >>> there is a regression on linux v5.1-9573-gb970afcfcabd with a kernel null
-> >>> pointer dereference.
-> >>> The issue is the commit f81dadbcf7fd067baf184b63c179fc392bdb226e
-> >>>  net: phy: realtek: Add rtl8211e rx/tx delays config ...
-> >> The page operation callbacks are missing in the RTL8211E driver.
-> >> I just submitted a fix adding these callbacks to few Realtek PHY drivers
-> >> including RTl8211E. This should fix the issue.
-> > 
-> > Hello Heiner,
-> > just tried your patch and indeed the NPE is gone. But still no network...
-> > The MAC <-> PHY link was working before, so, maybe the rgmii delays are not
-> > correctly configured.
-> 
-> That's a question to the author of the original patch. My patch was just
-> meant to fix the NPE. In which configuration are you using the RTL8211E?
-> As a standalone PHY (with which MAC/driver?) or is it the integrated PHY
-> in a member of the RTL8168 family?
-> 
-> Serge: The issue with the NPE gave a hint already that you didn't test your
-> patch. Was your patch based on an actual issue on some board and did you
-> test it? We may have to consider reverting the patch.
-> 
+drivers/pinctrl/pinctrl-stmfx.c:225:5-8: WARNING: Unsigned expression
+compared with zero: dir < 0
+drivers/pinctrl/pinctrl-stmfx.c:231:5-9: WARNING: Unsigned expression
+compared with zero: pupd < 0
+drivers/pinctrl/pinctrl-stmfx.c:228:5-9: WARNING: Unsigned expression
+compared with zero: type < 0
 
-I'm sorry for the problems the patch caused. My fault I couldn't predict the
-paged-operations weren't defined for the E-revision of the PHY.
+Fixes: 1490d9f841b1 ("pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver")
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/pinctrl/pinctrl-stmfx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regarding the patch tests. As I mention in the patchset discussions, the patch
-was ported from earlier versions of the kernel. In particular I created it for
-kernels 4.4 and 4.9, where paged-operations weren't introduced. So when I moved
-it to the modern kernel I found the paged operations availability and decided to
-use them, which simplified the code providing a ready-to-use interface to access
-the PHY' extension pages. I also found they were defined in the driver with
-"rtl821x_" prefix and mistakenly decided, that they were also used for any
-rtl-like device. That's where I let the bug to creep in.
+diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+index bcd8126..3bd5d6f 100644
+--- a/drivers/pinctrl/pinctrl-stmfx.c
++++ b/drivers/pinctrl/pinctrl-stmfx.c
+@@ -213,7 +213,7 @@ static int stmfx_pinconf_get(struct pinctrl_dev *pctldev,
+ 	struct stmfx_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+ 	u32 param = pinconf_to_config_param(*config);
+ 	struct pinctrl_gpio_range *range;
+-	u32 dir, type, pupd;
++	int dir, type, pupd;
+ 	u32 arg = 0;
+ 	int ret;
+ 
+-- 
+2.7.4
 
-Regarding the MAC-PHY link. Without this functionality our custom board of
-MAC and rtl8211e PHY doesn't provide a fully supported network, because the
-RXDLY and TXDLY pins are grounded so there is no a simple way to set the
-RGMII delays on the PHY side.
-
-Concerning the MAC-PHY link problem Vincente found I'll respond to the
-corresponding email in three hours.
-
--Sergey
-
-> > With this change it is back to working:
-> > --- a/drivers/net/phy/realtek.c
-> > +++ b/drivers/net/phy/realtek.c
-> > @@ -300,7 +300,6 @@
-> >     }, {
-> >         PHY_ID_MATCH_EXACT(0x001cc915),
-> >         .name        = "RTL8211E Gigabit Ethernet",
-> > -        .config_init    = &rtl8211e_config_init,
-> >         .ack_interrupt    = &rtl821x_ack_interrupt,
-> >         .config_intr    = &rtl8211e_config_intr,
-> >         .suspend    = genphy_suspend,
-> > That is basically reverting the patch.
-> > 
-> > Regards,
-> >  Vicenç.
-> > 
-> >> Nevertheless your proposed patch looks good to me, just one small change
-> >> would be needed and it should be splitted.
-> >>
-> >> The change to phy-core I would consider a fix and it should be fine to
-> >> submit it to net (net-next is closed currently).
-> >>
-> >> Adding the warning to the Realtek driver is fine, but this would be
-> >> something for net-next once it's open again.
-> >>
-> >>> Regards,
-> >>>  Vicenç.
-> >>>
-> >> Heiner
-> >>
-> >>> --- a/drivers/net/phy/phy-core.c
-> >>> +++ b/drivers/net/phy/phy-core.c
-> >>> @@ -648,11 +648,17 @@
-> >>>
-> >>> static int __phy_read_page(struct phy_device *phydev)
-> >>> { ...
-> >>
-> >> Here phydev_warn() should be used.
-> >>
-> >>> +        return 0;
-> >>> +    }
-> >>>
-> >>>     ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-> >>>     if (ret)
-> > 
-> > 
-> 
