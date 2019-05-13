@@ -2,196 +2,127 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F2C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 647B6C46460
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 104A0206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 374F4206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FYcDKAyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfEMMiM (ORCPT
+        id S1728713AbfEMMix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:38:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:48038 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfEMMiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:38:11 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hQADM-00063i-Vj; Mon, 13 May 2019 15:37:57 +0300
-Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-References: <20190510072125.18059-1-oleksandr@redhat.com>
- <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
- <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <a3870e32-3a27-e6df-fcb2-79080cdd167a@virtuozzo.com>
-Date:   Mon, 13 May 2019 15:37:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 08:38:53 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37683 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728061AbfEMMiw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:38:52 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so14461424qtp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=crSUv5H6P69IxzlT9Dzg2VCf7w3w/bVJXLfp7t6XXVI=;
+        b=FYcDKAyQ4xDln7s4L02T2bgbqqE98ZDhKvDJrrQcV+hHKS11OTOCS+/3Fj+WzRhb1V
+         D4IM9b3ph290ckg1VoGiFhrPPDHJJH883c5Vm8HJrFaoRWcyCFTG4ZMgEMefBRwRanLM
+         K6IdDQxsVbrL4cba8IaKZGCr7VtDhjgkKFRBZunZG81srPXOjfHG2ebqi5ZKRnNU+ZGf
+         lk5IUXIKKZd9EHt3fWn6mEqPN6TX6Iko65eQTkwpP0EooQFc1mzoKYRmXqlZh8wlTXsh
+         BCdkQATDnytZpbN1f0hZUfq+3WjMjebb3hOhODgV883J1629hMZzCIdMFbMxztjgP81q
+         W5/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=crSUv5H6P69IxzlT9Dzg2VCf7w3w/bVJXLfp7t6XXVI=;
+        b=igp60UiNzF19IXnWIpr7x9aoJmx7XeFGcpKMmnWGff6/67vP0Pialepy2izo4LV855
+         PXzMhNjynlgyPuqCVbKGAzsoKt2w32hXdjfn+ja97IJQAhcVE3MiAFaduESgfnkaQ3rS
+         tO53dhHNT2UpQuarPeOc658ddtYOH8aBRAVxZDqu7OHcfl2HpKlH1nNg3ujpRfzuaSgS
+         BIYbcC0LZ3sxK/KmgogXV84OutblsacxO0T8lAkozw0TJlyGn5JK1H5W2jjTxqO5a2a2
+         WGnHsq0HKV/20Nc6r77K0JtxisUVjp1M8TjhbmP561dH5KdSUScrXhVbM2BPjpiNgkI7
+         tqUw==
+X-Gm-Message-State: APjAAAUrL3+7tqa0eS7Gh3isAmJ5lX9JUF3t/J/lBDaF4DZ8F6vGaqz1
+        i65dUcoNxcceiNbh/wZ0KmvIK8G6wV6UiKxxm3vCCz0SG88=
+X-Google-Smtp-Source: APXvYqywQgossQwFmG5Ly/2D/VyGN3ByHJv/hIaF12lmEyl/TqH5uFuJQFFJHHQS0cxHZgxj5Ty+J0YIEsoRGHTmCjk=
+X-Received: by 2002:ac8:a81:: with SMTP id d1mr18924863qti.276.1557751131755;
+ Mon, 13 May 2019 05:38:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
+ <3de9c573-5971-15fc-1632-706fc30e90c2@free.fr> <CAP245DU7=h=t1_QoM9nMGE-Amduuh+GPQBnmEEG+NGDdXCiR=g@mail.gmail.com>
+ <8292f259-d28b-9b37-d58e-3afb26da0646@free.fr>
+In-Reply-To: <8292f259-d28b-9b37-d58e-3afb26da0646@free.fr>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 13 May 2019 18:08:40 +0530
+Message-ID: <CAP245DXpB8tSXRiOZ=w2_RJ4jRUt-S0Rx5xkPE-4cYdfHp_DEQ@mail.gmail.com>
+Subject: Re: [PATCHv1 7/8] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
+ power states
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.05.2019 14:33, Oleksandr Natalenko wrote:
-> Hi.
-> 
-> On Mon, May 13, 2019 at 01:38:43PM +0300, Kirill Tkhai wrote:
->> On 10.05.2019 10:21, Oleksandr Natalenko wrote:
->>> By default, KSM works only on memory that is marked by madvise(). And the
->>> only way to get around that is to either:
->>>
->>>   * use LD_PRELOAD; or
->>>   * patch the kernel with something like UKSM or PKSM.
->>>
->>> Instead, lets implement a so-called "always" mode, which allows marking
->>> VMAs as mergeable on do_anonymous_page() call automatically.
->>>
->>> The submission introduces a new sysctl knob as well as kernel cmdline option
->>> to control which mode to use. The default mode is to maintain old
->>> (madvise-based) behaviour.
->>>
->>> Due to security concerns, this submission also introduces VM_UNMERGEABLE
->>> vmaflag for apps to explicitly opt out of automerging. Because of adding
->>> a new vmaflag, the whole work is available for 64-bit architectures only.
->>>> This patchset is based on earlier Timofey's submission [1], but it doesn't
->>> use dedicated kthread to walk through the list of tasks/VMAs.
->>>
->>> For my laptop it saves up to 300 MiB of RAM for usual workflow (browser,
->>> terminal, player, chats etc). Timofey's submission also mentions
->>> containerised workload that benefits from automerging too.
->>
->> This all approach looks complicated for me, and I'm not sure the shown profit
->> for desktop is big enough to introduce contradictory vma flags, boot option
->> and advance page fault handler. Also, 32/64bit defines do not look good for
->> me. I had tried something like this on my laptop some time ago, and
->> the result was bad even in absolute (not in memory percentage) meaning.
->> Isn't LD_PRELOAD trick enough to desktop? Your workload is same all the time,
->> so you may statically insert correct preload to /etc/profile and replace
->> your mmap forever.
->>
->> Speaking about containers, something like this may have a sense, I think.
->> The probability of that several containers have the same pages are higher,
->> than that desktop applications have the same pages; also LD_PRELOAD for
->> containers is not applicable. 
-> 
-> Yes, I get your point. But the intention is to avoid another hacky trick
-> (LD_PRELOAD), thus *something* should *preferably* be done on the
-> kernel level instead.
+On Fri, May 10, 2019 at 8:41 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
+>
+> On 10/05/2019 16:12, Amit Kucheria wrote:
+>
+> > On Fri, May 10, 2019 at 6:45 PM Marc Gonzalez wrote:
+> >>
+> >> On 10/05/2019 13:29, Amit Kucheria wrote:
+> >>
+> >>> Add device bindings for cpuidle states for cpu devices.
+> >>>
+> >>> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> >>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >>> ---
+> >>>   arch/arm64/boot/dts/qcom/msm8998.dtsi | 32 +++++++++++++++++++++++++++
+> >>>   1 file changed, 32 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> >>> index 3fd0769fe648..208281f318e2 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> >>> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+> >>> @@ -78,6 +78,7 @@
+> >>>                        compatible = "arm,armv8";
+> >>>                        reg = <0x0 0x0>;
+> >>>                        enable-method = "psci";
+> >>> +                     cpu-idle-states = <&LITTLE_CPU_PD>;
+> >>
+> >> For some reason, I was expecting the big cores to come first, but according
+> >> to /proc/cpuinfo, cores 0-3 are part 0x801, while cores 4-7 are part 0x800.
+> >>
+> >> According to https://github.com/pytorch/cpuinfo/blob/master/src/arm/uarch.c
+> >>
+> >> 0x801 = Low-power Kryo 260 / 280 "Silver" -> Cortex-A53
+> >> 0x800 = High-performance Kryo 260 (r10p2) / Kryo 280 (r10p1) "Gold" -> Cortex-A73
+> >
+> > Hmm, did I mess up the order of the big and LITTLE cores?
+> > I'll take a look again.
+>
+> Sorry for being unclear. I was saying I expected the opposite,
+> but it appears the order in your patch is correct ;-)
 
-I don't think so. Does userspace hack introduce some overhead? It does not
-look so. Why should we think about mergeable VMAs in page fault handler?!
-This is the last thing we want to think in page fault handler.
+OK :-)
 
-Also, there is difficult synchronization in page fault handlers, and it's
-easy to make a mistake. So, there is a mistake in [3/4], and you call
-ksm_enter() with mmap_sem read locked, while normal way is to call it
-with write lock (see madvise_need_mmap_write()).
+> Little cores have higher latency (+5%) than big cores?
 
-So, let's don't touch this path. Small optimization for unlikely case will
-introduce problems in optimization for likely case in the future.
+No, that is a result of me naively converting the downstream numbers
+into cpuidle parameters for upstream. There is scope for tuning those
+numbers with more instrumentation. My hope is that we will attract
+more contributions once the basic idle states have landed upstream
+i.e. change the story from "cpuidle isn't supported in upstream QC
+platforms" to "cpuidle needs some tuning"
 
->> But 1)this could be made for trusted containers only (are there similar
->> issues with KSM like with hardware side-channel attacks?!);
-> 
-> Regarding side-channel attacks, yes, I think so. Were those openssl guys
-> who complained about it?..
-> 
->> 2) the most
->> shared data for containers in my experience is file cache, which is not
->> supported by KSM.
->>
->> There are good results by the link [1], but it's difficult to analyze
->> them without knowledge about what happens inside them there.
->>
->> Some of tests have "VM" prefix. What the reason the hypervisor don't mark
->> their VMAs as mergeable? Can't this be fixed in hypervisor? What is the
->> generic reason that VMAs are not marked in all the tests?
-> 
-> Timofey, could you please address this?
-> 
-> Also, just for the sake of another piece of stats here:
-> 
-> $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> 526
-
-This all requires attentive analysis. The number looks pretty big for me.
-What are the pages you get merged there? This may be just zero pages,
-you have identical.
-
-E.g., your browser want to work fast. It introduces smart schemes,
-and preallocates many pages in background (mmap + write 1 byte to a page),
-so in further it save some time (no page fault + alloc), when page is
-really needed. But your change merges these pages and kills this
-optimization. Sounds not good, does this?
-
-I think, we should not think we know and predict better than application
-writers, what they want from kernel. Let's people decide themselves
-in dependence of their workload. The only exception is some buggy
-or old applications, which impossible to change, so force madvise
-workaround may help. But only in case there are really such applications...
-
-I'd researched what pages you have duplicated in these 526 MB. Maybe
-you find, no action is required or a report to userspace application
-to use madvise is needed.
-
->> In case of there is a fundamental problem of calling madvise, can't we
->> just implement an easier workaround like a new write-only file:
->>
->> #echo $task > /sys/kernel/mm/ksm/force_madvise
->>
->> which will mark all anon VMAs as mergeable for a passed task's mm?
->>
->> A small userspace daemon may write mergeable tasks there from time to time.
->>
->> Then we won't need to introduce additional vm flags and to change
->> anon pagefault handler, and the changes will be small and only
->> related to mm/ksm.c, and good enough for both 32 and 64 bit machines.
-> 
-> Yup, looks appealing. Two concerns, though:
-> 
-> 1) we are falling back to scanning through the list of tasks (I guess
-> this is what we wanted to avoid, although this time it happens in the
-> userspace);
-
-IMO, this should be made only for tasks, which are known to be buggy
-(which can't call madvise). Yes, scanning will be required.
-
-> 2) what kinds of opt-out we should maintain? Like, what if force_madvise
-> is called, but the task doesn't want some VMAs to be merged? This will
-> required new flag anyway, it seems. And should there be another
-> write-only file to unmerge everything forcibly for specific task?
-
-For example,
-
-Merge:
-#echo $task > /sys/kernel/mm/ksm/force_madvise
-
-Unmerge:
-#echo -$task > /sys/kernel/mm/ksm/force_madvise
-
-In case of task don't want to merge some VMA, we just should skip it at all.
-
-But firstly we probably should check, that we really need this, and why
-existing applications don't call madvise directly. Now we just don't know,
-what happens.
-
-Kirill
-
-P.S. This all above is my opinion. Let's wait, what other people think.
+Regards,
+Amit
