@@ -2,67 +2,144 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6B5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F55BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDD121473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568B421019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:01:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="b8UGgDxX"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="r+teCQ/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732227AbfEMSBG (ORCPT
+        id S1731412AbfEMSBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:01:06 -0400
-Received: from a9-30.smtp-out.amazonses.com ([54.240.9.30]:49352 "EHLO
-        a9-30.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727668AbfEMSBG (ORCPT
+        Mon, 13 May 2019 14:01:46 -0400
+Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:45806 "EHLO
+        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727668AbfEMSBq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:01:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1557770465;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=PlYvmqxRpVISnjsRFpBbrKcWou6q8G660sOR1uIfQB8=;
-        b=b8UGgDxXFtgOe6/nHEgwLitQKKdP6MaTm72eml72TE9fnqIiPmXw8fT7pLun0Kck
-        rTcHdXuzgkeKJJQmYht5nMnPLcckFMsU/bqzVWYwIlrnDkBQuekNUTWLhxi0ugBfjUe
-        6vhOsZoNl7l4/KTlnny/6ogqiyJ4zFkjdnQwfoKQ=
-Date:   Mon, 13 May 2019 18:01:05 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Roman Gushchin <guro@fb.com>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] mm: unify SLAB and SLUB page accounting
-In-Reply-To: <20190508202458.550808-5-guro@fb.com>
-Message-ID: <0100016ab25aef20-4552213a-13e1-4aff-ba52-e970f3ac7fd4-000000@email.amazonses.com>
-References: <20190508202458.550808-1-guro@fb.com> <20190508202458.550808-5-guro@fb.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 13 May 2019 14:01:46 -0400
+Received: from pps.filterd (m0170397.ppops.net [127.0.0.1])
+        by mx0b-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DHxhpx002178;
+        Mon, 13 May 2019 14:01:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=7RQwiZOU3P8AwjFWtnYhWR2+zaHJysmliJcO7wy13CY=;
+ b=r+teCQ/g7haRS7P0Yv5+MKvoTeZ+p3BR12R9BX+7nXGrAHYDAZ2NxYvLKf/vK/12uY/9
+ Xl6Y8y3lMuMdkTOluMSz753mDRG9/IxDEPlMB6LegYPWdMQUCbJmCxHHzetnpw+OC8Fc
+ 1UsiFt1YnS5F3owHEenLoY3KiLprfcS428dyfeVKFImm1FDrTGRyWNgQ/n+XvN0fYZMi
+ ze9kbv0C+XAWanAqOa7d2xLKJdyFPkxUywUkO6VWYgpX7ed7VaswHI06O+1RPeZAQ8rE
+ PJtYAiuNzcFpD+sdhdgdFZx222vUSiqlEYJ0IB3KbCWsk77D2Q+0dS5l96TSUWL8VjVG iQ== 
+Received: from mx0b-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
+        by mx0b-00154904.pphosted.com with ESMTP id 2sdqfsnx66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 14:01:44 -0400
+Received: from pps.filterd (m0090350.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DHwdoN042639;
+        Mon, 13 May 2019 14:01:43 -0400
+Received: from ausc60ps301.us.dell.com (ausc60ps301.us.dell.com [143.166.148.206])
+        by mx0b-00154901.pphosted.com with ESMTP id 2sf9xpbpbe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 14:01:42 -0400
+X-LoopCount0: from 10.166.132.134
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="1293478792"
+From:   <Mario.Limonciello@dell.com>
+To:     <hch@lst.de>
+CC:     <kbusch@kernel.org>, <keith.busch@intel.com>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <kai.heng.feng@canonical.com>
+Subject: RE: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Topic: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Index: AQHVB3g9crBQ5iluoUuygL0xp1WIm6ZlFnpAgAQIfyCAAFjOAP//rwFAgABWXgD//93q8A==
+Date:   Mon, 13 May 2019 18:01:39 +0000
+Message-ID: <df020e90e8b54244b37910a2a7965671@AUSX13MPC105.AMER.DELL.COM>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143754.GE15318@localhost.localdomain>
+ <7ab8274ef1ce46fcae54a50abc76ae4a@AUSX13MPC105.AMER.DELL.COM>
+ <20190513145708.GA25897@lst.de>
+In-Reply-To: <20190513145708.GA25897@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.05.13-54.240.9.30
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130123
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=990 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019, Roman Gushchin wrote:
 
-> Currently the page accounting code is duplicated in SLAB and SLUB
-> internals. Let's move it into new (un)charge_slab_page helpers
-> in the slab_common.c file. These helpers will be responsible
-> for statistics (global and memcg-aware) and memcg charging.
-> So they are replacing direct memcg_(un)charge_slab() calls.
 
-Looks good.
+> -----Original Message-----
+> From: Christoph Hellwig <hch@lst.de>
+> Sent: Monday, May 13, 2019 9:57 AM
+> To: Limonciello, Mario
+> Cc: kbusch@kernel.org; keith.busch@intel.com; hch@lst.de; sagi@grimberg.m=
+e;
+> linux-nvme@lists.infradead.org; rafael@kernel.org; linux-kernel@vger.kern=
+el.org;
+> linux-pm@vger.kernel.org; kai.heng.feng@canonical.com
+> Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Mon, May 13, 2019 at 02:54:49PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > The Intel DMA controller suspend callbacks in drivers/dma/idma64.c look=
+ to me
+> to
+> > turn off the controller.
+>=20
+> How is that relevant?  That thing is neither a NVMe controller, nor
+> even an PCIe device..
 
-Acked-by: Christoph Lameter <cl@linux.com>
+When using HMB the SSD will be writing to some memory mapped region.  Writi=
+ng to
+that region would use DMA to access host memory, no?
+If the DMA controller is not functional writing to that region won't work p=
+roperly as=20
+it can't access that memory.
+
+>=20
+> > And NVME spec made it sound to me that while in a low power state it sh=
+ouldn't
+> > be available if the memory isn't available.
+> >
+> > NVME spec in 8.9:
+> >
+> > "Host software should request that the controller release the
+> > assigned ranges prior to a shutdown event, a Runtime D3 event, or any o=
+ther
+> event
+> > that requires host software to reclaim the assigned ranges."
+>=20
+> The last part of the quoted text is the key - if the assigned range
+> is reclaimed, that is the memory is going to be used for something else,
+> we need to release the ranges.  But we do not release the ranges,
+> as we want to keep the memory in use so that we can quickly use it
+> again.
