@@ -2,82 +2,76 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74056C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 06:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54209C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 06:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1262084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 06:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EED2146F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 06:44:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfEMGmc (ORCPT
+        id S1727549AbfEMGos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 02:42:32 -0400
-Received: from mx.socionext.com ([202.248.49.38]:3119 "EHLO mx.socionext.com"
+        Mon, 13 May 2019 02:44:48 -0400
+Received: from mga18.intel.com ([134.134.136.126]:12748 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfEMGmb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 02:42:31 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 13 May 2019 15:42:30 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 42C3C180C09;
-        Mon, 13 May 2019 15:42:30 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 13 May 2019 15:42:30 +0900
-Received: from plum.e01.socionext.com (unknown [10.213.132.32])
-        by kinkan.css.socionext.com (Postfix) with ESMTP id ED7291A10F1;
-        Mon, 13 May 2019 15:42:28 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net] net: phy: realtek: Replace phy functions with non-locked version in rtl8211e_config_init()
-Date:   Mon, 13 May 2019 15:41:45 +0900
-Message-Id: <1557729705-6443-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
+        id S1726103AbfEMGos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 02:44:48 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 May 2019 23:44:47 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by orsmga002.jf.intel.com with ESMTP; 12 May 2019 23:44:45 -0700
+Subject: Re: [RFC PATCH 2/2] mmc: sdhci: Quirk for AMD SDHC Device 0x7906
+To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "Agrawal, Nitesh-kumar" <Nitesh-kumar.Agrawal@amd.com>
+Cc:     "djkurtz@chromium.org" <djkurtz@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Sen, Pankaj" <Pankaj.Sen@amd.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
+References: <20190501175457.195855-1-rrangel@chromium.org>
+ <20190501175457.195855-2-rrangel@chromium.org>
+ <08c3dc49-f5cb-401d-b900-12879f469728@intel.com>
+ <495b70a3-0232-343b-9081-56869415986f@amd.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <e2341ef7-134d-7eed-bb86-e1a341ea8914@intel.com>
+Date:   Mon, 13 May 2019 09:44:36 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <495b70a3-0232-343b-9081-56869415986f@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After calling phy_select_page() and until calling phy_restore_page(),
-the mutex 'mdio_lock' is already locked, so the driver should use
-non-locked version of phy functions. Or there will be a deadlock with
-'mdio_lock'.
+On 12/05/19 8:04 PM, S-k, Shyam-sundar wrote:
+> On 5/2/2019 12:02 PM, Adrian Hunter wrote:
+>> Cc: some AMD people
+>>
+>> On 1/05/19 8:54 PM, Raul E Rangel wrote:
+>>> AMD SDHC 0x7906 requires a hard reset to clear all internal state.
+>>> Otherwise it can get into a bad state where the DATA lines are always
+>>> read as zeros.
+>>>
+>>> This change requires firmware that can transition the device into
+>>> D3Cold for it to work correctly. If the firmware does not support
+>>> transitioning to D3Cold then the power state transitions are a no-op.
+>>>
+>>> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> Signed-off-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+> 
 
-This replaces phy functions called from rtl8211e_config_init() to avoid
-the deadlock issue.
-
-Fixes: f81dadbcf7fd ("net: phy: realtek: Add rtl8211e rx/tx delays config")
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/net/phy/realtek.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/phy/realtek.c b/drivers/net/phy/realtek.c
-index e1f7a60..61fc76f 100644
---- a/drivers/net/phy/realtek.c
-+++ b/drivers/net/phy/realtek.c
-@@ -233,12 +233,12 @@ static int rtl8211e_config_init(struct phy_device *phydev)
- 	if (oldpage < 0)
- 		goto err_restore_page;
- 
--	ret = phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
-+	ret = __phy_write(phydev, RTL821x_EXT_PAGE_SELECT, 0xa4);
- 	if (ret)
- 		goto err_restore_page;
- 
--	ret = phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
--			 val);
-+	ret = __phy_modify(phydev, 0x1c, RTL8211E_TX_DELAY | RTL8211E_RX_DELAY,
-+			   val);
- 
- err_restore_page:
- 	return phy_restore_page(phydev, oldpage, ret);
--- 
-2.7.4
-
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
