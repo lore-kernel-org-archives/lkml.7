@@ -2,296 +2,75 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B75C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EA0C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 501CD208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:08:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="WgMdtH5T"
+	by mail.kernel.org (Postfix) with ESMTP id 03A86208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:14:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfEMTIh (ORCPT
+        id S1729232AbfEMTOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:08:37 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38985 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfEMTIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:08:36 -0400
-Received: by mail-lj1-f196.google.com with SMTP id a10so4057192ljf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:08:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=AcW/lh7CeNInQyC6auP2jdaJFlOhXKYi2ZP/KtFkZts=;
-        b=WgMdtH5TRVKo3TPLzJI93onG5BpSAnfaMf0aWiZwByifMYtjsDgXoeyX+hv6C9hYNL
-         QSeouWFZbff2rQbcsaKUaMEacdCxzeU4q2Oz3kuoZ/a7JA8URO9vJUj4CaloZREYiNS8
-         0m1LeVGowMpWWseT2q0njY1TpJ9d2hIOWTnd8vQhJ/blMSAslMaah30a3u0Pg4LdUrwd
-         HUVWQwp/3kcN8euIwuQnmPMxYkv7hHpHs+JrxQQ41lKSfpG5Kmjm0pitgNeTa3LwKgut
-         OlFeQ6fawcNkf96eBVqjuQ/MGbm9KZRCuo2gzpNkqmP+oKwBkyBoPVYPYnVvELLwByFP
-         plzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=AcW/lh7CeNInQyC6auP2jdaJFlOhXKYi2ZP/KtFkZts=;
-        b=Gl5kiVUlTvyFi53rojxb92GDaTzgC7/O3L6ZgHBKMwPnUx6pMzwdxG7ZQ9D1DrvBHu
-         Ym139bni303APcZvvmWjTblw0yN4BABeRyVdRCWPPZQHc+hHlWxN8REzxVWJ/B0AKU3U
-         7lsOsGTL/7SxB5c4ttL5HYBOgu3njivA4iGmyE/sQ4tkXawwxsLmeXI3GzPk4LEgE//D
-         /Fd0BbOcDbS6iO22I0gKL1pe8Df/HY6Ag+jZZNCH7Kwt0l5wE+Srg6I2Tqow0271hoYP
-         muQDPB/hd3fE4UpO1V7OX+hTZxXJ1Z0FORj2jPbXqlJIkGLQqIyevLuKxHkEU9J4c+hJ
-         VkQQ==
-X-Gm-Message-State: APjAAAWOwTs28E2ZISZIziFurbAqrT9mT1O/h9+/lONcIDaR43Ojmzuq
-        lwtf4qsg8FN4blYBtFOj1BGi1A==
-X-Google-Smtp-Source: APXvYqw9xW4fnm/BWpWFEYxohh6YEbXyKRx3kergymsyW8MgYKEWS2CmimBwq21dYeFL6lBOGKypsA==
-X-Received: by 2002:a2e:9cd5:: with SMTP id g21mr9557098ljj.39.1557774512999;
-        Mon, 13 May 2019 12:08:32 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.81.227])
-        by smtp.gmail.com with ESMTPSA id s24sm3321380ljs.30.2019.05.13.12.08.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:08:31 -0700 (PDT)
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-To:     masonccyang@mxic.com.tw, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        Lee Jones <lee.jones@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus>
- <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell>
- <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
- <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
- <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com>
- <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
- <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
- <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com>
-Date:   Mon, 13 May 2019 22:08:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 13 May 2019 15:14:43 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60816 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbfEMTOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 15:14:42 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 12:14:41 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga004.jf.intel.com with ESMTP; 13 May 2019 12:14:41 -0700
+Date:   Mon, 13 May 2019 12:14:41 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH 2/3] KVM: LAPIC: Fix lapic_timer_advance_ns parameter
+ overflow
+Message-ID: <20190513191441.GK28561@linux.intel.com>
+References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
+ <1557401361-3828-3-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-In-Reply-To: <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557401361-3828-3-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 05/13/2019 12:37 PM, masonccyang@mxic.com.tw wrote:
-
->> > > [...]
->> > > >> > >> > On 4/24/19 11:23 PM, Rob Herring wrote:
->> > > >> > >> > > On Wed, Apr 24, 2019 at 03:55:36PM +0800, Mason Yang wrote:
->> > > >> > >> > >> Document the bindings used by the Renesas R-Car
->> Gen3 RPC-IF MFD.
->> > > >> > >> > >>
->> > > >> > >> > >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
->> > > >> > >> > >> ---
->> > > >> > >> > >>  .../devicetree/bindings/mfd/mfd-renesas-rpc.txt  
->> | 40 ++++++
->> > > >> > >> ++++++++++++++++
->> > > >> > >> > >>  1 file changed, 40 insertions(+)
->> > > >> > >> > >>  create mode 100644 Documentation/devicetree/
->> bindings/mfd/mfd-
->> > > >> > >> renesas-rpc.txt
->> > > >> > >> > >>
->> > > >> > >> > >> diff --git a/Documentation/devicetree/bindings/mfd/
->> mfd-renesas-
->> > > >> > >> rpc.txt b/Documentation/devicetree/bindings/mfd/mfd-
->> renesas-rpc.txt
->> > > >> > >> > >> new file mode 100644
->> > > >> > >> > >> index 0000000..668b822
->> > > >> > >> > >> --- /dev/null
->> > > >> > >> > >> +++ b/Documentation/devicetree/bindings/mfd/mfd-
->> renesas-rpc.txt
->> > > >> > >> > >> @@ -0,0 +1,40 @@
->> > > >> > >> > >> +Renesas R-Car Gen3 RPC-IF MFD Device Tree Bindings
->> > > >> > >> > >> +--------------------------------------------------
->> > > >> > >> > >
->> > > >> > >> > > Looks like a SPI flash controller from the example. What
->> > > makes it an
->> > > >> > >> > > MFD?
->> > > >> > >> >
->> > > >> > >> > It supports both SPI NOR and HyperFlash (CFI-compliantflash with
->> > > >> > >> > different bus interface).
->> > > >> > >>
->> > > >> > >> Looks like you're registering one OR the other.
->> > > >> > >>
->> > > >> > >> Why don't you just do this from DT?
->> > > >> > >>
->> > > >> > >> No reason for this to be an MFD IMHO.
->> > > >> > >
->> > > >> > >
->> > > >> > > okay, I will patch it back to SPI mode only.
->> > > >> >
->> > > >> > I don't think that's what Lee meant . The controller supports _both_
->> > > >> > modes , hence it would have the same compatible string. You
->> just need to
->> > > >> > extract the mode of operation from the DT.
->> > > >>
->> > > >> HiSilicon attempted to upstream something similar, only their
->> > > >> controller provided NAND and NOR functionality.  They used different
->> > > >> compatible strings to differentiate between the varying
->> > > >> technologies.
->> > > >>
->> > > >> They too tried to use MFD as a means to select between them (which was
->> > > >> also NACKed).  Not sure what they ended up doing, but the original
->> > > >> submission and (half of) the conversation can be found at [0].  Some
->> > > >> more of the thread continues at [1].
->> > > >>
->> > > >> Hope that helps.
->> > > >>
->> > > >> [0] https://groups.google.com/forum/#!topic/fa.linux.kernel/F6i9o8sfOIw
->> > > >> [1] https://marc.info/?l=devicetree&m=147669165104431&w=2
->> > > >
->> > > >
->> > > > Hi Marek,
->> > > >
->> > > > By Jones's comments:
->> > > >
->> --------------------------------------------------------------------------
->> > > >> From: Shunquan Lin <linshunquan1@hisilicon.com>
->> > > >>
->> > > >> This patch adds driver support for HiSilicon Flash Memory
->> > > >> Controller(FMC). HiSilicon FMC is a multi-functions device which
->> > > >> supports SPI Nor flash controller, SPI nand Flash controller and
->> > > >> parallel nand flash controller.
->> > > >
->> > > > MFDs are for devices which span multiple subsystems.
->> > >
->> > >    And we do! One of the subdrivers will live under drivers/
->> spi/, the other
->> > > under drivers/mtd/...
->> > >
->> >
->> > From my point of view, I think Jones mean to MFD's subsystems are
->> working simultaneously
->> > at the run-time, one period of time is working for sub-device-1
->> and later period of time
->> > is working for sub-device-2 and so on.
->> >
->> > But for RPC-IF, SPI or HF mode is decided at boot time by pins
->> configure and later in kernel
->> > by dtb, RPC-IF can't switch SPI and HF mode at the run time.
->>
->> > So far, Jones seems don't agree RPC-IF to MFD and then RPC MFD
->> will not applied
->> > to mfd tree by him !
->>
->> There's precedence for such constructs being an MFD: please see
->> drivers/mfd/at91-usart.c, which registers a single MFD cell for either
->> serial or SPI.
-
-   Thanks fir your example, Geert! :-)
-
-> okay, many thanks for your information.
+On Thu, May 09, 2019 at 07:29:20PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> How about to patch RPF-IF dts to:
-> -------------------------------------------------------------->
+> After commit c3941d9e0 (KVM: lapic: Allow user to disable adaptive tuning of 
+> timer advancement), '-1' enables adaptive tuning starting from default 
+> advancment of 1000ns. However, we should expose an int instead of an overflow 
+> uint module parameter.
 > 
-> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> ---------------------------------------------------------
->  
->   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
->  
->   Required properties:
->   - compatible: should be an SoC-specific compatible value, followed by
->                   "renesas,rcar-gen3-rpc" as a fallback.
->                   supported SoC-specific values are:
->                   "renesas,r8a77995-rpc"  (R-Car D3)
->   - reg: should contain three register areas:
->           first for the base address of RPC-IF registers,
-
-   I'd drop "the base address" here.
-
->           second for the direct mapping read mode and
->           third for the write buffer area.
->   - reg-names: should contain "regs", "dirmap" and "wbuf"
->   - clocks: should contain 1 entries for the module's clock
->   - clock-names: should contain "rpc"
-
-   I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not sure yet)...
-   And how about "power-domains", "resets" (seen in the example below),
-also what about #address-cells & #size-cells?
-
->  
->   Example:
-
-   Could you please indent with 1 or 2 tabs where you used 8 or 16 spaces?
-
->   - SPI mode:
->  
->           rpc: rpc-if@ee200000 {
-
-   The node names should be generic, based on the device class. And in this
-case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching like below:
-
-arch/arm64/boot/dts/renesas/r8a77980.dtsi:1344.21-1359.5: Warning (spi_bus_bridge):
-/soc/rpc@ee200000: node name for SPI buses should be 'spi'
-  also defined at arch/arm64/boot/dts/renesas/r8a77980-condor.dts:283.6-343.3
-arch/arm64/boot/dts/renesas/r8a77980-condor.dtb: Warning (spi_bus_reg):
-Failed prerequisite 'spi_bus_bridge'
-
-
->   - HF mode:
->           rpc: rpc-if@ee200000 {
-
-   Again, spi@<...>.
-
->                   compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
->                   reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
->                         <0 0xee208000 0 0x100>;
->                   reg-names = "regs", "dirmap", "wbuf";
->                   clocks = <&cpg CPG_MOD 917>;
->                   clock-names = "rpc";
->                   power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->                   resets = <&cpg 917>;
->                   #address-cells = <1>;
->                   #size-cells = <1>;
->  
->                   flash@0 {
->                           compatible = "cfi-flash";
-
-   The working HF implementation has "cypress,hyperflash" before "cfi-flash".
-
->                           reg = <0 0x4000000>;
->                   };
->           };
+> Before patch:
 > 
-> --------------------------------------------------------------<
+> /sys/module/kvm/parameters/lapic_timer_advance_ns:4294967295
 > 
-> Is it OK ?
+> After patch:
+> 
+> /sys/module/kvm/parameters/lapic_timer_advance_ns:-1
+> 
+> Fixes: c3941d9e0 (KVM: lapic: Allow user to disable adaptive tuning of timer advancement)
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
 
-   Yeah, seems good (assuming you fix the issues above).
-
-[...]
-> thanks & best regards,
-> Mason
-
-MBR, Sergei
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
