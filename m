@@ -2,169 +2,194 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECADC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF87FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 405D621019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:48:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANKFIAZH"
+	by mail.kernel.org (Postfix) with ESMTP id 85341208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfEMTsp (ORCPT
+        id S1726332AbfEMTyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:48:45 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42025 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbfEMTso (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:48:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d4so8809705qkc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:48:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sykOft9FFBUmilrQ1nPhLX+j0e/Ov648FW6a6gJmiZ0=;
-        b=ANKFIAZHZJTQNHI4V+3mA/MdTS4Lkw2wuCQliRZFdRRr82PEs2HGiDGc6eGHXYpsen
-         vtA/YPXT5267dGVX9yxPLnPQp6EeEZeXWdlAC+ceHONkJUnhURb5/P8yr2L/TtnvsyvV
-         VY1quZTgRh6Tc6to3EUN2czorFAFikEhUCuEyZGhylLnQlwGcee8u6SYwAnsIwhJ7kv9
-         qihHkx0InFQa4Ap2jW6pU0McOtpBPrjq/BNS3l3Pom8FrtrQRGNhH2jK0WfGU49O1pt/
-         Je7jBaFxo2Fty029A5wBAAlK1AoeeMRNBKZplJGIW4LjtZoBu71DkOqY3kGg7mg/LX7B
-         2NBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sykOft9FFBUmilrQ1nPhLX+j0e/Ov648FW6a6gJmiZ0=;
-        b=FAQtBNc202t6qyXwLWcifvoxkc/FTDGoksiubAUbDGtrF/ORj0hMi/WU66stJISwp6
-         k6pEmCMWjUsQIN0ZIIHuZnhQm1IDnznrH+2JLeiIUd0rdFdIiLyz+uIf2pXUnDi0OGJx
-         5hGAI1fAtQTY37/usfDIwRkWw/i8XWt3g6p4smaUdEFgRNHuvQEF99QkvPJRxIsFPajW
-         taR9hG62hOWW+N1DRZXZGE916qS/deKb6QvuHkoNaNNs27JK0NHILgl/07nmHxE1C2dP
-         2V1VFthNzH69Z03Paj6snYlA5MiDT7DKds9i8n/izAxODbZP5M1LhyrAgwkeprnaKkqr
-         9ZYQ==
-X-Gm-Message-State: APjAAAU1G2mwuCVoUcSxhctgeyert5wTmty6glfLwquh8LgEUMktbmBh
-        fsmxO+G32hX8aZawJzXeYxi8JEty
-X-Google-Smtp-Source: APXvYqxBh2CqtBfIbQFNCqjhxqAlnovZPyfABnkt9P+9cF2JrzssG2r24BoZHn0XvA7eIaCtQv2LEg==
-X-Received: by 2002:a37:9ed8:: with SMTP id h207mr22961585qke.120.1557776923512;
-        Mon, 13 May 2019 12:48:43 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id f7sm6862947qth.41.2019.05.13.12.48.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 12:48:43 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 682CF403AD; Mon, 13 May 2019 16:47:54 -0300 (-03)
-Date:   Mon, 13 May 2019 16:47:54 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Stanislav Fomichev <sdf@fomichev.me>,
-        Song Liu <songliubraving@fb.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 01/12] perf tools: Separate generic code in
- dso__data_file_size
-Message-ID: <20190513194754.GB3198@kernel.org>
-References: <20190508132010.14512-1-jolsa@kernel.org>
- <20190508132010.14512-2-jolsa@kernel.org>
+        Mon, 13 May 2019 15:54:18 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3596 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725928AbfEMTyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 15:54:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 12:54:17 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga006.jf.intel.com with ESMTP; 13 May 2019 12:54:17 -0700
+Date:   Mon, 13 May 2019 12:54:17 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: Re: [PATCH 3/3] KVM: LAPIC: Optimize timer latency further
+Message-ID: <20190513195417.GM28561@linux.intel.com>
+References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
+ <1557401361-3828-4-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190508132010.14512-2-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557401361-3828-4-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, May 08, 2019 at 03:19:59PM +0200, Jiri Olsa escreveu:
-> Moving file specific code in dso__data_file_size function
-> into separate file_size function. I'll add bpf specific
-> code in following patches.
-
-I'm applying this patch, as it just moves things around, no logic
-change, but can you please clarify a question I have after looking at
-this patch?
- 
-> Link: http://lkml.kernel.org/n/tip-rkcsft4a0f8sw33p67llxf0d@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/dso.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
+On Thu, May 09, 2019 at 07:29:21PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index e059976d9d93..cb6199c1390a 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -898,18 +898,12 @@ static ssize_t cached_read(struct dso *dso, struct machine *machine,
->  	return r;
+> Advance lapic timer tries to hidden the hypervisor overhead between host 
+> timer fires and the guest awares the timer is fired. However, it just hidden 
+> the time between apic_timer_fn/handle_preemption_timer -> wait_lapic_expire, 
+> instead of the real position of vmentry which is mentioned in the orignial 
+> commit d0659d946be0 ("KVM: x86: add option to advance tscdeadline hrtimer 
+> expiration"). There is 700+ cpu cycles between the end of wait_lapic_expire 
+> and before world switch on my haswell desktop, it will be 2400+ cycles if 
+> vmentry_l1d_flush is tuned to always. 
+> 
+> This patch tries to narrow the last gap, it measures the time between 
+> the end of wait_lapic_expire and before world switch, we take this 
+> time into consideration when busy waiting, otherwise, the guest still 
+> awares the latency between wait_lapic_expire and world switch, we also 
+> consider this when adaptively tuning the timer advancement. The patch 
+> can reduce 50% latency (~1600+ cycles to ~800+ cycles on a haswell 
+> desktop) for kvm-unit-tests/tscdeadline_latency when testing busy waits.
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> Cc: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c   | 23 +++++++++++++++++++++--
+>  arch/x86/kvm/lapic.h   |  8 ++++++++
+>  arch/x86/kvm/vmx/vmx.c |  2 ++
+>  3 files changed, 31 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index e7a0660..01d3a87 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1545,13 +1545,19 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  
+>  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
+>  	apic->lapic_timer.expired_tscdeadline = 0;
+> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+> +	guest_tsc = kvm_read_l1_tsc(vcpu, (apic->lapic_timer.measure_delay_done == 2) ?
+> +		rdtsc() + apic->lapic_timer.vmentry_delay : rdtsc());
+>  	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
+>  
+>  	if (guest_tsc < tsc_deadline)
+>  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+>  
+>  	adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
+> +
+> +	if (!apic->lapic_timer.measure_delay_done) {
+> +		apic->lapic_timer.measure_delay_done = 1;
+> +		apic->lapic_timer.vmentry_delay = rdtsc();
+> +	}
 >  }
 >  
-> -int dso__data_file_size(struct dso *dso, struct machine *machine)
-> +static int file_size(struct dso *dso, struct machine *machine)
+>  static void start_sw_tscdeadline(struct kvm_lapic *apic)
+> @@ -1837,6 +1843,18 @@ static void apic_manage_nmi_watchdog(struct kvm_lapic *apic, u32 lvt0_val)
+>  	}
+>  }
+>  
+> +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_timer *ktimer = &vcpu->arch.apic->lapic_timer;
+
+This will #GP if the APIC is not in-kernel, i.e. @apic is NULL.
+
+> +
+> +	if (ktimer->measure_delay_done == 1) {
+> +		ktimer->vmentry_delay = rdtsc() -
+> +			ktimer->vmentry_delay;
+> +		ktimer->measure_delay_done = 2;
+
+Measuring the delay a single time is bound to result in random outliers,
+e.g. if an NMI happens to occur after wait_lapic_expire().
+
+Rather than reinvent the wheel, can we simply move the call to
+wait_lapic_expire() into vmx.c and svm.c?  For VMX we'd probably want to
+support the advancement if enable_unrestricted_guest=true so that we avoid
+the emulation_required case, but other than that I don't see anything that
+requires wait_lapic_expire() to be called where it is.
+
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_lapic_measure_vmentry_delay);
+> +
+>  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
 >  {
 >  	int ret = 0;
->  	struct stat st;
->  	char sbuf[STRERR_BUFSIZE];
->  
-> -	if (dso->data.file_size)
-> -		return 0;
+> @@ -2318,7 +2336,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  		apic->lapic_timer.timer_advance_adjust_done = true;
+>  	}
 > -
-> -	if (dso->data.status == DSO_DATA_STATUS_ERROR)
-> -		return -1;
-> -
->  	pthread_mutex_lock(&dso__data_open_lock);
+> +	apic->lapic_timer.vmentry_delay = 0;
+> +	apic->lapic_timer.measure_delay_done = 0;
 >  
 >  	/*
-> @@ -938,6 +932,17 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
->  	return ret;
->  }
+>  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index d6d049b..f1d037b 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -35,6 +35,13 @@ struct kvm_timer {
+>  	atomic_t pending;			/* accumulated triggered timers */
+>  	bool hv_timer_in_use;
+>  	bool timer_advance_adjust_done;
+> +	/**
+> +	 * 0 unstart measure
+> +	 * 1 start record
+> +	 * 2 get delta
+> +	 */
+> +	u32 measure_delay_done;
+> +	u64 vmentry_delay;
+>  };
 >  
-> +int dso__data_file_size(struct dso *dso, struct machine *machine)
-> +{
-> +	if (dso->data.file_size)
-> +		return 0;
-> +
-> +	if (dso->data.status == DSO_DATA_STATUS_ERROR)
-> +		return -1;
-> +
-> +	return file_size(dso, machine);
-> +}
+>  struct kvm_lapic {
+> @@ -230,6 +237,7 @@ void kvm_lapic_switch_to_hv_timer(struct kvm_vcpu *vcpu);
+>  void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu);
+>  bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu);
+>  void kvm_lapic_restart_hv_timer(struct kvm_vcpu *vcpu);
+> +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu);
+>  
+>  static inline enum lapic_mode kvm_apic_mode(u64 apic_base)
+>  {
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 9663d41..a939bf5 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -6437,6 +6437,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  	if (vcpu->arch.cr2 != read_cr2())
+>  		write_cr2(vcpu->arch.cr2);
+>  
+> +	kvm_lapic_measure_vmentry_delay(vcpu);
 
-
-So the name of the function suggests we want to know the
-"data_file_size" of a dso, then the logic in it returns _zero_ if a
-member named "dso->data.file_size" is _not_ zero, can you please
-clarify?
-
-I was expecting something like:
-
-	if (dso->data.file_size)
-		return dso->data.file_size;
-
-I.e. if we had already read it, return the cached value, otherwise go
-and call some other function to get that info somehow.
-
-- Arnaldo
+This should be wrapped in an unlikely of some form given that it happens
+literally once out of thousands/millions runs.
 
 > +
->  /**
->   * dso__data_size - Return dso data size
->   * @dso: dso object
+>  	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
+>  				   vmx->loaded_vmcs->launched);
+>  
 > -- 
-> 2.20.1
-
--- 
-
-- Arnaldo
+> 2.7.4
+> 
