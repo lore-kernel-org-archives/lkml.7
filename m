@@ -2,248 +2,147 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E725C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABB8C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3534A21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSgEFRDq"
+	by mail.kernel.org (Postfix) with ESMTP id 8770D214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbfEMJOa (ORCPT
+        id S1728824AbfEMJOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:14:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43973 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbfEMJNy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:54 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c6so6853958pfa.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 02:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yHYDQ9IZ8H2C7mCEc1bmyCJDNMEW+3FaB3NaC6RhOPw=;
-        b=TSgEFRDqbV4yo6asweU3jpq4qSl+BFyMCnpaYp+XeS3pR/qyVr3FFRzFAQYj1SXM5b
-         9jA97+jRmAfnIJ6CWhOGaB+ZvgnCj1Q3vwB4CVM6H/YY2yuDlKFgn8jcBteuiZkrGD8t
-         7pVNyinf+Rtb5gzMP/mjGrrHWXw5szdiDx8kEkSw6uSjCAYiAczQRSatbMvtYYtdSQXz
-         4pr0QtY7MzpdDBm0znZBhVXx2McpbHXCrENuJGO515PF3EBbxCU6hrtw1eiRrM59KIhp
-         +YuqIBF1bd6BHIKAotiPRIo42Qvm0lYdm+HtZXI5ZGinvcWXUFF9nre5F71dL5D59499
-         NHAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yHYDQ9IZ8H2C7mCEc1bmyCJDNMEW+3FaB3NaC6RhOPw=;
-        b=RiHODayc2goQX89ngsrQ9OT72zJb/ULOYdVAb+JPCWgyAbetVGSfT6747HbszNjVHb
-         TqMWwodHPmJ0Oxd1xrPLh/UauvQWDnG/XwJC64B051JqMqEHqD6LgHk1VimP7/uTKaZb
-         3V3kKHGYM+C97tLF1EOETrWuSFAURji6q4ZXsiDQWbgwoo4i+Ep2m34xHY14WPpCaW0M
-         5K6VYPK22oK7idTB820R4Vvv9PaEg6kIPGJnbfDVQydVWV3z9+J8HZ6Vthak6mVVxpY0
-         sTLP/bhLHi0PfoKFqqOO7jmnlpYl6EtMbxj0sQtfc6DuODDkYuP+8+8Izj5QiNqiRS/y
-         8mQw==
-X-Gm-Message-State: APjAAAUnPM15iQ4lpMNwTB3OBCdHQiHn0NalERYGRPnPk+85RvCsHjUf
-        3FfFqfRwtr/TKKO+VALfhVM=
-X-Google-Smtp-Source: APXvYqwInDUY/fZ06Dgs3rrZMqrYL4Qv4n8mkxJkKYy0XaZ5RLnE2uo0KuT9DgvJMkMiYwj/KndGQQ==
-X-Received: by 2002:a62:56d9:: with SMTP id h86mr32688613pfj.195.1557738833987;
-        Mon, 13 May 2019 02:13:53 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n18sm35500837pfi.48.2019.05.13.02.13.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 02:13:53 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, boqun.feng@gmail.com,
-        linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH 11/17] locking/lockdep: Adjust lockdep selftest cases
-Date:   Mon, 13 May 2019 17:11:57 +0800
-Message-Id: <20190513091203.7299-12-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190513091203.7299-1-duyuyang@gmail.com>
-References: <20190513091203.7299-1-duyuyang@gmail.com>
+        Mon, 13 May 2019 05:14:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:48372 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728718AbfEMJOd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:14:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 02:14:32 -0700
+X-ExtLoop1: 1
+Received: from xxx.igk.intel.com ([10.237.93.170])
+  by fmsmga001.fm.intel.com with ESMTP; 13 May 2019 02:14:31 -0700
+From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Subject: [PATCH v2] ALSA: hda: Fix race between creating and refreshing sysfs entries
+Date:   Mon, 13 May 2019 11:18:01 +0200
+Message-Id: <20190513091801.985-1-amadeuszx.slawinski@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With read-write lock support, some read-write lock cases need to be updated,
-specifically, some read-lock involved deadlocks are actually not deadlocks.
-Hope I am not wildly wrong.
+hda_widget_sysfs_reinit() can free underlying codec->widgets structure
+on which widget_tree_create() operates. Add locking to prevent such
+issues from happening.
 
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110382
+Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
 ---
- lib/locking-selftest.c | 44 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 33 insertions(+), 11 deletions(-)
 
-diff --git a/lib/locking-selftest.c b/lib/locking-selftest.c
-index a170554..f83f047 100644
---- a/lib/locking-selftest.c
-+++ b/lib/locking-selftest.c
-@@ -424,7 +424,7 @@ static void rwsem_ABBA2(void)
- 	ML(Y1);
- 	RSL(X1);
- 	RSU(X1);
--	MU(Y1); // should fail
-+	MU(Y1); // should NOT fail
+Changes since v1:
+ - Moved mutexes around the callers
+ - Added comments noting that functions should be called with mutex held
+
+---
+ include/sound/hdaudio.h | 1 +
+ sound/hda/hdac_device.c | 7 +++++++
+ sound/hda/hdac_sysfs.c  | 3 +++
+ 3 files changed, 11 insertions(+)
+
+diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
+index 45f944d57982..85835d0c33cc 100644
+--- a/include/sound/hdaudio.h
++++ b/include/sound/hdaudio.h
+@@ -81,6 +81,7 @@ struct hdac_device {
+ 	atomic_t in_pm;		/* suspend/resume being performed */
+ 
+ 	/* sysfs */
++	struct mutex widget_lock;
+ 	struct hdac_widget_tree *widgets;
+ 
+ 	/* regmap */
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index 95b073ee4b32..4769f4c03e14 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -55,6 +55,7 @@ int snd_hdac_device_init(struct hdac_device *codec, struct hdac_bus *bus,
+ 	codec->bus = bus;
+ 	codec->addr = addr;
+ 	codec->type = HDA_DEV_CORE;
++	mutex_init(&codec->widget_lock);
+ 	pm_runtime_set_active(&codec->dev);
+ 	pm_runtime_get_noresume(&codec->dev);
+ 	atomic_set(&codec->in_pm, 0);
+@@ -141,7 +142,9 @@ int snd_hdac_device_register(struct hdac_device *codec)
+ 	err = device_add(&codec->dev);
+ 	if (err < 0)
+ 		return err;
++	mutex_lock(&codec->widget_lock);
+ 	err = hda_widget_sysfs_init(codec);
++	mutex_unlock(&codec->widget_lock);
+ 	if (err < 0) {
+ 		device_del(&codec->dev);
+ 		return err;
+@@ -158,7 +161,9 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_register);
+ void snd_hdac_device_unregister(struct hdac_device *codec)
+ {
+ 	if (device_is_registered(&codec->dev)) {
++		mutex_lock(&codec->widget_lock);
+ 		hda_widget_sysfs_exit(codec);
++		mutex_unlock(&codec->widget_lock);
+ 		device_del(&codec->dev);
+ 		snd_hdac_bus_remove_device(codec->bus, codec);
+ 	}
+@@ -404,7 +409,9 @@ int snd_hdac_refresh_widgets(struct hdac_device *codec, bool sysfs)
+ 	}
+ 
+ 	if (sysfs) {
++		mutex_lock(&codec->widget_lock);
+ 		err = hda_widget_sysfs_reinit(codec, start_nid, nums);
++		mutex_unlock(&codec->widget_lock);
+ 		if (err < 0)
+ 			return err;
+ 	}
+diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
+index fb2aa344981e..909d5ef1179c 100644
+--- a/sound/hda/hdac_sysfs.c
++++ b/sound/hda/hdac_sysfs.c
+@@ -395,6 +395,7 @@ static int widget_tree_create(struct hdac_device *codec)
+ 	return 0;
  }
  
++/* call with codec->widget_lock held */
+ int hda_widget_sysfs_init(struct hdac_device *codec)
+ {
+ 	int err;
+@@ -411,11 +412,13 @@ int hda_widget_sysfs_init(struct hdac_device *codec)
+ 	return 0;
+ }
  
-@@ -462,12 +462,13 @@ static void rwsem_ABBA3(void)
++/* call with codec->widget_lock held */
+ void hda_widget_sysfs_exit(struct hdac_device *codec)
+ {
+ 	widget_tree_free(codec);
+ }
  
- /*
-  * ABBA deadlock:
-+ *
-+ * Should fail except for either A or B is read lock.
-  */
--
- #define E()					\
- 						\
- 	LOCK_UNLOCK_2(A, B);			\
--	LOCK_UNLOCK_2(B, A); /* fail */
-+	LOCK_UNLOCK_2(B, A);
- 
- /*
-  * 6 testcases:
-@@ -494,13 +495,15 @@ static void rwsem_ABBA3(void)
- 
- /*
-  * AB BC CA deadlock:
-+ *
-+ * Should fail except for read or recursive-read locks.
-  */
- 
- #define E()					\
- 						\
- 	LOCK_UNLOCK_2(A, B);			\
- 	LOCK_UNLOCK_2(B, C);			\
--	LOCK_UNLOCK_2(C, A); /* fail */
-+	LOCK_UNLOCK_2(C, A);
- 
- /*
-  * 6 testcases:
-@@ -527,13 +530,15 @@ static void rwsem_ABBA3(void)
- 
- /*
-  * AB CA BC deadlock:
-+ *
-+ * Should fail except for read or recursive-read locks.
-  */
- 
- #define E()					\
- 						\
- 	LOCK_UNLOCK_2(A, B);			\
- 	LOCK_UNLOCK_2(C, A);			\
--	LOCK_UNLOCK_2(B, C); /* fail */
-+	LOCK_UNLOCK_2(B, C);
- 
- /*
-  * 6 testcases:
-@@ -560,6 +565,8 @@ static void rwsem_ABBA3(void)
- 
- /*
-  * AB BC CD DA deadlock:
-+ *
-+ * Should fail except for read or recursive-read locks.
-  */
- 
- #define E()					\
-@@ -567,7 +574,7 @@ static void rwsem_ABBA3(void)
- 	LOCK_UNLOCK_2(A, B);			\
- 	LOCK_UNLOCK_2(B, C);			\
- 	LOCK_UNLOCK_2(C, D);			\
--	LOCK_UNLOCK_2(D, A); /* fail */
-+	LOCK_UNLOCK_2(D, A);
- 
- /*
-  * 6 testcases:
-@@ -594,13 +601,15 @@ static void rwsem_ABBA3(void)
- 
- /*
-  * AB CD BD DA deadlock:
-+ *
-+ * Should fail except for read or recursive-read locks.
-  */
- #define E()					\
- 						\
- 	LOCK_UNLOCK_2(A, B);			\
- 	LOCK_UNLOCK_2(C, D);			\
- 	LOCK_UNLOCK_2(B, D);			\
--	LOCK_UNLOCK_2(D, A); /* fail */
-+	LOCK_UNLOCK_2(D, A);
- 
- /*
-  * 6 testcases:
-@@ -627,13 +636,15 @@ static void rwsem_ABBA3(void)
- 
- /*
-  * AB CD BC DA deadlock:
-+ *
-+ * Should fail except for read or recursive-read locks.
-  */
- #define E()					\
- 						\
- 	LOCK_UNLOCK_2(A, B);			\
- 	LOCK_UNLOCK_2(C, D);			\
- 	LOCK_UNLOCK_2(B, C);			\
--	LOCK_UNLOCK_2(D, A); /* fail */
-+	LOCK_UNLOCK_2(D, A);
- 
- /*
-  * 6 testcases:
-@@ -1238,7 +1249,7 @@ static inline void print_testname(const char *testname)
- /*
-  * 'read' variant: rlocks must not trigger.
-  */
--#define DO_TESTCASE_6R(desc, name)				\
-+#define DO_TESTCASE_6AA(desc, name)				\
- 	print_testname(desc);					\
- 	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
- 	dotest(name##_wlock, FAILURE, LOCKTYPE_RWLOCK);		\
-@@ -1249,6 +1260,17 @@ static inline void print_testname(const char *testname)
- 	dotest_rt(name##_rtmutex, FAILURE, LOCKTYPE_RTMUTEX);	\
- 	pr_cont("\n");
- 
-+#define DO_TESTCASE_6R(desc, name)				\
-+	print_testname(desc);					\
-+	dotest(name##_spin, FAILURE, LOCKTYPE_SPIN);		\
-+	dotest(name##_wlock, FAILURE, LOCKTYPE_RWLOCK);		\
-+	dotest(name##_rlock, SUCCESS, LOCKTYPE_RWLOCK);		\
-+	dotest(name##_mutex, FAILURE, LOCKTYPE_MUTEX);		\
-+	dotest(name##_wsem, FAILURE, LOCKTYPE_RWSEM);		\
-+	dotest(name##_rsem, SUCCESS, LOCKTYPE_RWSEM);		\
-+	dotest_rt(name##_rtmutex, FAILURE, LOCKTYPE_RTMUTEX);	\
-+	pr_cont("\n");
-+
- #define DO_TESTCASE_2I(desc, name, nr)				\
- 	DO_TESTCASE_1("hard-"desc, name##_hard, nr);		\
- 	DO_TESTCASE_1("soft-"desc, name##_soft, nr);
-@@ -1991,7 +2013,7 @@ void locking_selftest(void)
- 	debug_locks_silent = !debug_locks_verbose;
- 	lockdep_set_selftest_task(current);
- 
--	DO_TESTCASE_6R("A-A deadlock", AA);
-+	DO_TESTCASE_6AA("A-A deadlock", AA);
- 	DO_TESTCASE_6R("A-B-B-A deadlock", ABBA);
- 	DO_TESTCASE_6R("A-B-B-C-C-A deadlock", ABBCCA);
- 	DO_TESTCASE_6R("A-B-C-A-B-C deadlock", ABCABC);
-@@ -2048,7 +2070,7 @@ void locking_selftest(void)
- 	pr_cont("             |");
- 	dotest(rlock_ABBA2, SUCCESS, LOCKTYPE_RWLOCK);
- 	pr_cont("             |");
--	dotest(rwsem_ABBA2, FAILURE, LOCKTYPE_RWSEM);
-+	dotest(rwsem_ABBA2, SUCCESS, LOCKTYPE_RWSEM);
- 
- 	print_testname("mixed write-lock/lock-write ABBA");
- 	pr_cont("             |");
++/* call with codec->widget_lock held */
+ int hda_widget_sysfs_reinit(struct hdac_device *codec,
+ 			    hda_nid_t start_nid, int num_nodes)
+ {
 -- 
-1.8.3.1
+2.17.1
 
