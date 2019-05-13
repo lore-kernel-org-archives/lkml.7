@@ -7,67 +7,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF275C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB44FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7970208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC79208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xsc1FqfB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4CoZCzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfEMD7Y (ORCPT
+        id S1727582AbfEMD7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 12 May 2019 23:59:24 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45015 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727534AbfEMD7Y (ORCPT
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41752 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727415AbfEMD7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 May 2019 23:59:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d3so5740396plj.11
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 20:59:24 -0700 (PDT)
+Received: by mail-pg1-f195.google.com with SMTP id z3so6038869pgp.8
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2019 20:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=F9QBOZtjHD3cvSHL8seit1ng6gf/KXanf0uSnR0dfOI=;
-        b=Xsc1FqfBOwy8bGWszVKy9eKAwN5fabSOCsyoyESVpaOJllyh8NWqBLwEigRo5L6Gtn
-         wnb/SLFTaPG3x0thYFka1ag/hw90I2iQSYo1tCuJb0mYPJNTIYFSg5syIRtkVDnh0+Ks
-         hv4eR4HqATvnVpOU7qQDzFp08ohYrnZgo+qG0ePDL/DHYcKUBRYk3SXaW+QN1woNIJwP
-         EXajKe5rRQyjIAHLrHRsi/XrFzAZoUdydcKzsAmBD92wZUZHl8ZXTuymRneC32JNt1Fy
-         5mSmrZ/GgTiyehLHkwbi1YgJeNTUe+5fhjZYdGLnyQFK+czO+4hqdpQKehFWymF2giup
-         215Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T/UMdXUy+/44jsihjFncGu0LlYxKfRmwGK/u/aG6gy8=;
+        b=D4CoZCzw46wJhjAybuMT63XKBWH3byPbtxhQmXYVCReu7aSxN7P2einVcm1kJLa5Gi
+         fMXdsGNhHAY2vESdnGgRukqHkjw4fDD/kXtfS/SZ1VO3ZC4XZfOB/t1Zp2UGUrpFiGPO
+         NM2B4rgJDiic0UrR0q/52DlZPLmLrwoqjcOPJYZtrdBLspbL24oqk6Rg3LHzYktRtJY8
+         mbZ/5lIJJ6Npp3MeFIcpzM/DjZUEam94oE4DFlJRMtJ6df+O2uqXHo27SvWMJGtjCrVy
+         Apf2Jbe9IdhJO49mRrQTKlHL59f8nV1QchHQPo8nGPRkzkmyCvPGdEQGUZUXDE23X2gK
+         KcsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=F9QBOZtjHD3cvSHL8seit1ng6gf/KXanf0uSnR0dfOI=;
-        b=D1vqn1N8QXwckajCgXSjdCrTedUZkdJMTz7JoFjvjB1pEkPx6v4Opula9aQQaVASe8
-         70q0evxWLbxPb/8qvHPAtSvCDwjlEzDiQlIIY2a039qGUVppSRilaL2TUQsDStpEepCy
-         /CVNnyJhDp1NlJyWIDGhiIFj3syAU1KXUOFS+R67lxuagMB3/DBCn2SQAyok+UMswWdV
-         Ljzo0vvneedT4xesMluIMwEepLJAV3HGVDqlNku8C+vR/JFA4Z8POYMz1mZlhQxt1zZD
-         TN6iUi5TTsg+FCIoDZ/b8GYpZMhAtMJJHj931gyLZsUl1K1Ufn+s5tFbtlnwxxFL65UF
-         gWgA==
-X-Gm-Message-State: APjAAAV0DvaIu9Ojvt4B7ZQH4USIm5ACo2hOC5CEa+SwHIN140YqvH1T
-        nkR+AhdQdHOoYnHTgzosMXU=
-X-Google-Smtp-Source: APXvYqyNX8YPKfwxKwTXESwWJea0905IwBlPHwMrvpJrp5+E3xFtZK2791xVKS08UbaHHZOStnse3g==
-X-Received: by 2002:a17:902:a405:: with SMTP id p5mr23101195plq.51.1557719963804;
-        Sun, 12 May 2019 20:59:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=T/UMdXUy+/44jsihjFncGu0LlYxKfRmwGK/u/aG6gy8=;
+        b=KRT86+XE5qIhAHgy+aQ5o0+kDKJZoRqVWaRk+LSSyihCGITiuL259y9v2Fmr3pg/Xo
+         xywJLDjp1oT+O4grObZ5w1/5nF1fv1zbcS7kEYGe3xr9+Mz/ZYglG/+Z78t2mGt4aWRP
+         CemgrMya/DlasTwYZO0jJAEj5UbTFViF2u4bmtwXcwqWbmKmBuaccWfiRgZRC6IzyJ7Q
+         MQFluS1DY5LAC5zgZV90W29k+R2/g8SWPG63ZUkyHoNFDoArjySd1y+JzSSGQlNcDb+4
+         wubYLgViXJCtdALZqwT+zb2g5oN8/Il1EsH0Luqp3QSdAr/7yuD2X7+p+xMYi4AzRy8l
+         DLVA==
+X-Gm-Message-State: APjAAAUihKIUp3X6YUBvId7nXa2oud2jxQqAMa/xodF2MLhvRV8KcbLx
+        LD4K8v8MPOMBzqDfEu09vDM=
+X-Google-Smtp-Source: APXvYqyTijGyvIuRdI382Hw/nI2S9C2DPKA1QDQ+pl8IgiEEBjnhjYIvo7+z9vdBC8w9CHbxtDO49g==
+X-Received: by 2002:a63:f703:: with SMTP id x3mr27941129pgh.394.1557719962682;
+        Sun, 12 May 2019 20:59:22 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id i17sm16042496pfo.103.2019.05.12.20.59.22
+        by smtp.gmail.com with ESMTPSA id i17sm16042496pfo.103.2019.05.12.20.59.21
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 May 2019 20:59:23 -0700 (PDT)
+        Sun, 12 May 2019 20:59:21 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     Shawn Guo <shawnguo@kernel.org>
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
         Fabio Estevam <festevam@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: vf610-zii-dev: Add QSPI node
-Date:   Sun, 12 May 2019 20:59:09 -0700
-Message-Id: <20190513035909.30460-2-andrew.smirnov@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: vf610-zii-dev: Fix incorrect UART2 pin assignment
+Date:   Sun, 12 May 2019 20:59:08 -0700
+Message-Id: <20190513035909.30460-1-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190513035909.30460-1-andrew.smirnov@gmail.com>
-References: <20190513035909.30460-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,8 +73,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both rev C and rev B of the board come with two QSPI-NOR chips
-attached to the SoC. Add DT code describing all of this.
+UART2 is connected to PTD22/23, not PTD0/1. Fix corresponding pinmux
+node.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>
@@ -86,72 +84,21 @@ Cc: Fabio Estevam <festevam@gmail.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/vf610-zii-dev.dtsi | 48 ++++++++++++++++++++++++----
- 1 file changed, 42 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/vf610-zii-dev.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-index 5246c75e848c..f63a470f78ce 100644
+index 2d1e9b3203fa..5246c75e848c 100644
 --- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
 +++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-@@ -177,6 +177,36 @@
- 	status = "okay";
- };
+@@ -385,8 +385,8 @@
  
-+&qspi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_qspi0>;
-+	status = "okay";
-+
-+	/*
-+	 * Attached MT25QL02 can go up to 90Mhz in DTR and 166 in SDR
-+	 * modes, so we limit spi-max-frequency to 90Mhz
-+	 */
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <90000000>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+		m25p,fast-read;
-+	};
-+
-+	flash@2 {
-+		compatible = "jedec,spi-nor";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <90000000>;
-+		spi-rx-bus-width = <4>;
-+		reg = <2>;
-+		m25p,fast-read;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart0>;
-@@ -360,12 +390,18 @@
- 
- 	pinctrl_qspi0: qspi0grp {
+ 	pinctrl_uart2: uart2grp {
  		fsl,pins = <
--			VF610_PAD_PTD7__QSPI0_B_QSCK	0x31c3
--			VF610_PAD_PTD8__QSPI0_B_CS0	0x31ff
--			VF610_PAD_PTD9__QSPI0_B_DATA3	0x31c3
--			VF610_PAD_PTD10__QSPI0_B_DATA2	0x31c3
--			VF610_PAD_PTD11__QSPI0_B_DATA1	0x31c3
--			VF610_PAD_PTD12__QSPI0_B_DATA0	0x31c3
-+			VF610_PAD_PTD0__QSPI0_A_QSCK	0x38c2
-+			VF610_PAD_PTD1__QSPI0_A_CS0	0x38c2
-+			VF610_PAD_PTD2__QSPI0_A_DATA3	0x38c3
-+			VF610_PAD_PTD3__QSPI0_A_DATA2	0x38c3
-+			VF610_PAD_PTD4__QSPI0_A_DATA1	0x38c3
-+			VF610_PAD_PTD5__QSPI0_A_DATA0	0x38c3
-+			VF610_PAD_PTD7__QSPI0_B_QSCK	0x38c2
-+			VF610_PAD_PTD8__QSPI0_B_CS0	0x38c2
-+			VF610_PAD_PTD9__QSPI0_B_DATA3	0x38c3
-+			VF610_PAD_PTD10__QSPI0_B_DATA2	0x38c3
-+			VF610_PAD_PTD11__QSPI0_B_DATA1	0x38c3
-+			VF610_PAD_PTD12__QSPI0_B_DATA0	0x38c3
+-			VF610_PAD_PTD0__UART2_TX	0x21a2
+-			VF610_PAD_PTD1__UART2_RX	0x21a1
++			VF610_PAD_PTD23__UART2_TX	0x21a2
++			VF610_PAD_PTD22__UART2_RX	0x21a1
  		>;
  	};
  
