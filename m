@@ -2,95 +2,185 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A42D2C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF1DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74776208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8CBD208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="phXvz26i"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="aSet9rLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfEMHer (ORCPT
+        id S1728057AbfEMHgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:34:47 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35017 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbfEMHeq (ORCPT
+        Mon, 13 May 2019 03:36:00 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:37960 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbfEMHf7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:34:46 -0400
-Received: by mail-wm1-f67.google.com with SMTP id q15so8535681wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SrKOrxCUTi42whkmh8C32Tg5zmMnBqJytzi0/en5Cy4=;
-        b=phXvz26iMBHGz1Fgu8fxkESf2xt31+02S9dZ5N6nuqO/Z0Y4+omR0nsmOJJb0TQkMX
-         XhzqVUVjdw1LOZzb3bhk+rNoKc6NsLvMTb0SZmodCPiVXZ/kyQvGD3BPz824PnLdW2pY
-         2TqPggNDFxGgZDzL9Ta7pcUmLPYMJsMZ+RjxWucyA14SHUk/4zEeksnBaOicyVK0PIAr
-         I1+1aozZH8VkwNb0+EqoRwMuczz59qw1WpZti7AQAaYXyn+PSW4h7shqCVTzOYGlPlzn
-         Z0BMtT8P9zQO4uCghRqT4aTP1AFHbIqW1H1E8wf/LQGvH6ncvPYAl1oWChf8y3Zx7MpY
-         S5KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SrKOrxCUTi42whkmh8C32Tg5zmMnBqJytzi0/en5Cy4=;
-        b=kljn+7VvVzS+G337AwozWFOQi7RAuAlCBjObtjsOGGMEAKvd49S5xladTMbfTpeC7C
-         6tVytxbLd4PhfUpozH8ZEBts6HnZBaO0JChE6pQnzjuwjfoMhkRbVxQrOna/HWLBXNde
-         hb3elyq5GeJi7AT1pdmUV5M7cJet69iASbcqShmdRRD9JsvGP9cwZTbep3a8ma+HBxBf
-         kD0lZ6NGDI56NSiNlBQb1IaMSWuzlOL6AqSYNSJbAxD/hlih8U1tGD2JfQMrvYK92NJ/
-         ABpzaHWLVge3mqUML58SJ+NlWhMypAwod2oMDIn/wyUE5o1HymDUbI7OFfv9+R6urbb+
-         YWmw==
-X-Gm-Message-State: APjAAAUGem6dzhNkvvTyaMepyEzikyr3YjI6QgGlElgqVcPImLi58TMo
-        mrEgTcSwiJD1ejEyYvk3H0OSrg==
-X-Google-Smtp-Source: APXvYqyxFA25Gtez8Oa7moTqe7JIAnTCxZbpNYt+pUAEHYfAL5o0skgCCz8F858El1d+hev5N8CdVw==
-X-Received: by 2002:a05:600c:1109:: with SMTP id b9mr14338717wma.77.1557732884212;
-        Mon, 13 May 2019 00:34:44 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id h14sm1009883wrt.11.2019.05.13.00.34.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 00:34:43 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     linus.walleij@linaro.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        amelie.delaunay@st.com, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 2/2] pinctrl: stmfx: Fix 'warn: bitwise AND condition is false here'
-Date:   Mon, 13 May 2019 08:34:29 +0100
-Message-Id: <20190513073429.12023-2-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190513073429.12023-1-lee.jones@linaro.org>
-References: <20190513073429.12023-1-lee.jones@linaro.org>
+        Mon, 13 May 2019 03:35:59 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 231832DC0069;
+        Mon, 13 May 2019 03:35:57 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1557732958;
+        bh=aa+i95blYOSxhGwoRx9zFnMo5oG4XUfXT748BNmFJIU=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=aSet9rLYykQxcyXFS2GF9u8JjdaPfKwlu1qpX3Ek5B3X+zmGgF+1WtmJH8QDHUKVR
+         POJW18jnNWqKlc9WV/y9wswfLzQAdORTjoBGt6wbLb+XQzz+YSA8YT8exQIamI1hKA
+         NgBZZqdAOIFcj5X4mKMcpOALzVECo4ayuE60g+CPH7CvPt6lSOfmFpWRNnpn+wYPF4
+         P6SqYrz3uRsFocaNWbLb6GRXp8TE8CKtYMYUEeB/QfMAnGJ7U/FZrL/hYqxDE0ryBG
+         /8/mtlXRqGs0pBJCO5WKEQDm1lzWRXt40l8YPyEBjUBm/McmvG1Iafbx2EfRhysC43
+         vKIF2BpJNTxkposUCWaXgJuoNekulC6f7wlHUlNkNooeQHpAKXYuClI/ikmvCrnCff
+         Vy/fK7azMrun4S9M5k0UdX9IUayiM9Y1AVv1iAHjIJrMhP8ELgeNkTypKa35MyJMjx
+         LmIQVy3zVwlAOW1mMnZhrLapo90FKO26dOcJq140LOTx0ZahhIuR6KISKy+FuwYBfp
+         cNemDFNeNEkfGRWxw0VhCsOArzkI9iJJSDwhVYx2DI4O1xJX2kFEObBeq4rx25ClRK
+         PDCjVeuymuPU3aUBQKrJtdTxur1fcbH6SvSnl3OKtvCVGly9Za8zstBXG1KdRUNuvp
+         kOJclMVcOxeDGLfkA1Mcr7AQ=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x4D7ZjC4057687
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 13 May 2019 17:35:46 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Geert Uytterhoeven'" <geert@linux-m68k.org>,
+        "'Alastair D'Silva'" <alastair@au1.ibm.com>
+Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
+        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
+        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
+        "'David Airlie'" <airlied@linux.ie>,
+        "'Daniel Vetter'" <daniel@ffwll.ch>,
+        "'Dan Carpenter'" <dan.carpenter@oracle.com>,
+        "'Karsten Keil'" <isdn@linux-pingi.de>,
+        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
+        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
+        "'Kalle Valo'" <kvalo@codeaurora.org>,
+        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
+        "'Benson Leung'" <bleung@chromium.org>,
+        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
+        "'Petr Mladek'" <pmladek@suse.com>,
+        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
+        "'Steven Rostedt'" <rostedt@goodmis.org>,
+        "'David Laight'" <David.Laight@aculab.com>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "'Intel Graphics Development'" <intel-gfx@lists.freedesktop.org>,
+        "'DRI Development'" <dri-devel@lists.freedesktop.org>,
+        "'Linux Kernel Mailing List'" <linux-kernel@vger.kernel.org>,
+        "'netdev'" <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
+        "'linux-wireless'" <linux-wireless@vger.kernel.org>,
+        "'scsi'" <linux-scsi@vger.kernel.org>,
+        "'Linux Fbdev development list'" <linux-fbdev@vger.kernel.org>,
+        "'driverdevel'" <devel@driverdev.osuosl.org>,
+        "'Linux FS Devel'" <linux-fsdevel@vger.kernel.org>
+References: <20190508070148.23130-1-alastair@au1.ibm.com> <20190508070148.23130-4-alastair@au1.ibm.com> <CAMuHMdVefYTgHzGKBc0ebku1z8V3wsM0ydN+6-S2nFKaB8eH_Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdVefYTgHzGKBc0ebku1z8V3wsM0ydN+6-S2nFKaB8eH_Q@mail.gmail.com>
+Subject: RE: [PATCH v2 3/7] lib/hexdump.c: Optionally suppress lines of repeated bytes
+Date:   Mon, 13 May 2019 17:35:47 +1000
+Message-ID: <04de01d5095e$7f6af730$7e40e590$@d-silva.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-au
+Thread-Index: AQGz7QD7bMLLz3XdMyQiMIIzLY+D4AJkmwv+AXBy99KmjDiokA==
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 13 May 2019 17:35:53 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/pinctrl/pinctrl-stmfx.c:441 stmfx_pinctrl_irq_set_type() warn: bitwise AND condition is false here
+> -----Original Message-----
+> From: Geert Uytterhoeven <geert@linux-m68k.org>
+> Sent: Monday, 13 May 2019 5:01 PM
+> To: Alastair D'Silva <alastair@au1.ibm.com>
+> Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>; =
+Joonas
+> Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
+> <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel =
+Vetter
+> <daniel@ffwll.ch>; Dan Carpenter <dan.carpenter@oracle.com>; Karsten
+> Keil <isdn@linux-pingi.de>; Jassi Brar <jassisinghbrar@gmail.com>; Tom
+> Lendacky <thomas.lendacky@amd.com>; David S. Miller
+> <davem@davemloft.net>; Jose Abreu <Jose.Abreu@synopsys.com>; Kalle
+> Valo <kvalo@codeaurora.org>; Stanislaw Gruszka <sgruszka@redhat.com>;
+> Benson Leung <bleung@chromium.org>; Enric Balletbo i Serra
+> <enric.balletbo@collabora.com>; James E.J. Bottomley
+> <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
+> <viro@zeniv.linux.org.uk>; Petr Mladek <pmladek@suse.com>; Sergey
+> Senozhatsky <sergey.senozhatsky@gmail.com>; Steven Rostedt
+> <rostedt@goodmis.org>; David Laight <David.Laight@aculab.com>; Andrew
+> Morton <akpm@linux-foundation.org>; Intel Graphics Development <intel-
+> gfx@lists.freedesktop.org>; DRI Development <dri-
+> devel@lists.freedesktop.org>; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>; netdev <netdev@vger.kernel.org>;
+> ath10k@lists.infradead.org; linux-wireless =
+<linux-wireless@vger.kernel.org>;
+> scsi <linux-scsi@vger.kernel.org>; Linux Fbdev development list =
+<linux-
+> fbdev@vger.kernel.org>; driverdevel <devel@driverdev.osuosl.org>; =
+Linux
+> FS Devel <linux-fsdevel@vger.kernel.org>
+> Subject: Re: [PATCH v2 3/7] lib/hexdump.c: Optionally suppress lines =
+of
+> repeated bytes
+>=20
+> Hi Alastair,
+>=20
+> Thanks for your patch!
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/pinctrl/pinctrl-stmfx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+And thanks for your politeness :)
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index 074c8fa3e75c..eba872ce4a7c 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -437,7 +437,7 @@ static int stmfx_pinctrl_irq_set_type(struct irq_data *data, unsigned int type)
- 	u32 reg = get_reg(data->hwirq);
- 	u32 mask = get_mask(data->hwirq);
- 
--	if (type & IRQ_TYPE_NONE)
-+	if (type == IRQ_TYPE_NONE)
- 		return -EINVAL;
- 
- 	if (type & IRQ_TYPE_EDGE_BOTH) {
--- 
-2.17.1
+>=20
+> On Wed, May 8, 2019 at 9:04 AM Alastair D'Silva <alastair@au1.ibm.com>
+> wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> >
+> > Some buffers may only be partially filled with useful data, while =
+the
+> > rest is padded (typically with 0x00 or 0xff).
+> >
+> > This patch introduces a flag to allow the supression of lines of
+> > repeated bytes,
+>=20
+> Given print_hex_dump() operates on entities of groupsize (1, 2, 4, or =
+8)
+> bytes, wouldn't it make more sense to consider repeated groups instead =
+of
+> repeated bytes?
+
+Maybe, it would mean that subsequent addresses may not be a multiple of =
+rowsize though, which is useful.
+
+> > which are replaced with '** Skipped %u bytes of value 0x%x **'
+>=20
+> Using a custom message instead of just "*", like "hexdump" uses, will =
+require
+> preprocessing the output when recovering the original binary data by
+> feeding it to e.g. "xxd".
+> This may sound worse than it is, though, as I never got "xxd" to work =
+without
+> preprocessing anyway ;-)
+
+I think showing the details of the skipped values is useful when reading =
+the output directly. In situations where binary extracts are desired, =
+the feature can always be disabled.
+
+--=20
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+
+
 
