@@ -4,57 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E11C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E7620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0859A20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:30:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t15nWHPm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nuEds6uq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727190AbfEMT35 (ORCPT
+        id S1727168AbfEMTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:29:57 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35297 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbfEMT35 (ORCPT
+        Mon, 13 May 2019 15:30:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40324 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbfEMTaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:29:57 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c17so2623474lfi.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:29:55 -0700 (PDT)
+        Mon, 13 May 2019 15:30:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id d15so12079986ljc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:30:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=FS9Zs+3LWO+O30HH4l9Kk8Vdize9BSzeQBpadzl2HYA=;
-        b=t15nWHPmFlGF4Hk/qXkWtGd6P4khoapB58QJFxrQ0ZNQUXmlHvGcZXvn8hgr3rc7X+
-         eE/ASRA8k1AQG0DdZLyF3FiUVQKz9AjKmneEG4iuBy5DWguCj44rHUGww8VoLC14kkpV
-         TAmsE70nTuh+vkyVTcFflq1Ihtv15Gjs6lN28RnAdyk6YEKe1sk82sQKEFoOgzZS1j0g
-         ppmAaYnj4FwI7sFWE7rhWAusai9maT6zhjqYzXhVMTt9rwMyhTPogRZF82iPBQdLTLL8
-         e41snlmZNXFO0Bqj9yPBVHA/mzxQ87IGeFK04GazkTYlofyN2rCzQMCISOTnU4Ay1zIY
-         C4YA==
+        bh=5L3+w8hUR6giXqb5Tz84iJ3SS/PuntIOYwjCkJwPh9s=;
+        b=nuEds6uqvSvhzFgPN0xx4WrLj+8Aq5wMne2aRP4Hl30ysRHF3JwffRDwh2I/w4NkhA
+         ruqtjGmeavnUC5G6t1+5vD7jYhWzIibj7v8eKj+D5BqywqtbMj4VlBzc5f+oeCC7YVZr
+         gMQJv7sBlyWAqagmqVCdQx6ievkrgzxp6P6VXhi+yjAzjEClLL/IUaPqLF+XdiUzD+wB
+         PoZRlnXLRxkuWULBDbbLIts79BiF1YdM5kTUelzfYB3F6IWAddBJ1onCo4N+i653uveS
+         lhlUL6q4MSOpQOYlAnyDByOwere/dmOdnrZOjhSfSGK/7nMJMIUGdCEIfOTBMbYwDCev
+         MmjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=FS9Zs+3LWO+O30HH4l9Kk8Vdize9BSzeQBpadzl2HYA=;
-        b=fNC4yf3q5Rni/7v6VrAGvhFry9nyX9t1LPh/O5UGSMwnDJGKa+WVgWs/rvg/VTyM1o
-         1TgPZE2F65yxzuiVGa+9W/HjKyEXV6BJv0datRk94X8H30Qsj51sfKlAtYs9+MyybtZT
-         0xNYHyV/QJVFveiG3/2NvKVbsejPtjzmweBpVndjd6CEmAbg1E5ZfNXzF2eZg8f9T5E+
-         c/l9zWIRgR6XmFVqU8Ulhk0utDfrLhsm1y9V5cUx01pRijNAzicckUZD7HmBOEd/k+O5
-         TmAuU8gYawwhvW5PKkRbxk1Sui8uM2pf8pGscpbsMzHRh4KnZkatZASgPtMEAB+7huv4
-         v8zg==
-X-Gm-Message-State: APjAAAURXQvGy0AIlnAH1+pWMC0VTPei3TCoReFO89VRKiievnUiFRiM
-        KrRd2SYta5H95oJ+X9XCYAYc1Q==
-X-Google-Smtp-Source: APXvYqwf7I+vqyV1oY+DdOoP8eb7s+6VlIHVgf1KVMJaduN8GSRO4HLl7ruL91VI1qfgG8O6PtC3NA==
-X-Received: by 2002:a19:ae14:: with SMTP id f20mr14035921lfc.49.1557775415444;
-        Mon, 13 May 2019 12:23:35 -0700 (PDT)
+        bh=5L3+w8hUR6giXqb5Tz84iJ3SS/PuntIOYwjCkJwPh9s=;
+        b=Bxcy5vZ6z7coYhWJfLDMx3b+bLzFbKvQXGCEtjCsy8OaveLbw7CFT6mnOrt3Co20mb
+         NjlMfgNAhKZ04IUWyaLB+TIK2qySpkXKM6Rit0HKnTdlyLP3E2dKUzVlUgeUaJp/XpM+
+         rqcocsrJhGEuJ1/KbBDfYxODYQRgVCyx4wsiT4OqkqX8wwHCql8BpxVqCkByEaNxw4VU
+         JMDy9CHxdbiK2anqBBnhOM6d63SIYTRf+HkVwSx7zn2hjVamiuaTPuc/q9wXT9BnHrod
+         7/rZmfVImEjumoBhETO0aq1EYnxseq/JMSR3/D4APbrXgL6YYF9pO3mCzL+qxwVhxZLy
+         v95Q==
+X-Gm-Message-State: APjAAAVv2t6QmT+7EM7cOonZLjyNwIc0uMMhnGuOtkUN5DBjxqTlT7fO
+        rrOXPo/bPf6zEJlp0nQs10yxlw==
+X-Google-Smtp-Source: APXvYqwhviRoSbMrrPulC15a2Em5gq4bwlntBmk6fP/23jtstN9Z1J324DMrQRo3VkPOVmz3QA57og==
+X-Received: by 2002:a2e:9141:: with SMTP id q1mr14833265ljg.84.1557775411722;
+        Mon, 13 May 2019 12:23:31 -0700 (PDT)
 Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
-        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.33
+        by smtp.gmail.com with ESMTPSA id q21sm3449365lfa.84.2019.05.13.12.23.29
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 12:23:34 -0700 (PDT)
+        Mon, 13 May 2019 12:23:31 -0700 (PDT)
 From:   Ulf Hansson <ulf.hansson@linaro.org>
 To:     Sudeep Holla <sudeep.holla@arm.com>,
         Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
@@ -75,13 +75,10 @@ Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Souvik Chakravarty <souvik.chakravarty@arm.com>,
         linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH 16/18] arm64: kernel: Respect the hierarchical CPU topology in DT for PSCI
-Date:   Mon, 13 May 2019 21:22:58 +0200
-Message-Id: <20190513192300.653-17-ulf.hansson@linaro.org>
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 14/18] drivers: firmware: psci: Manage runtime PM in the idle path for CPUs
+Date:   Mon, 13 May 2019 21:22:56 +0200
+Message-Id: <20190513192300.653-15-ulf.hansson@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
 References: <20190513192300.653-1-ulf.hansson@linaro.org>
@@ -90,38 +87,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To let the PSCI driver parse for the hierarchical CPU topology in DT and
-thus potentially initiate the corresponding PM domain data structures,
-let's call psci_dt_topology_init() from the existing topology_init()
-subsys_initcall.
+When the hierarchical CPU topology layout is used in DT, let's allow the
+CPU to be power managed through its PM domain, via deploying runtime PM
+support.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+To know for which idle states runtime PM reference counting is needed,
+let's store the index of deepest idle state for the CPU, in a per CPU
+variable. This allows psci_cpu_suspend_enter() to compare this index with
+the requested idle state index and then act accordingly.
+
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
 
 Changes:
-	- None.
+	- Simplify the code by using the new per CPU struct, that stores the
+	  needed struct device*.
 
 ---
- arch/arm64/kernel/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/firmware/psci/psci.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 413d566405d1..f1559223c55b 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -367,6 +367,9 @@ static int __init topology_init(void)
- {
- 	int i;
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index 54e23d4ed0ea..2c4157d3a616 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -20,6 +20,7 @@
+ #include <linux/linkage.h>
+ #include <linux/of.h>
+ #include <linux/pm.h>
++#include <linux/pm_runtime.h>
+ #include <linux/printk.h>
+ #include <linux/psci.h>
+ #include <linux/reboot.h>
+@@ -298,6 +299,7 @@ static int __init psci_features(u32 psci_func_id)
  
-+	if (acpi_disabled)
-+		psci_dt_topology_init();
+ struct psci_cpuidle_data {
+ 	u32 *psci_states;
++	u32 rpm_state_id;
+ 	struct device *dev;
+ };
+ 
+@@ -385,6 +387,7 @@ static int psci_dt_cpu_init_idle(struct cpuidle_driver *drv,
+ 			goto free_mem;
+ 
+ 		data->dev = dev;
++		data->rpm_state_id = drv->state_count - 1;
+ 	}
+ 
+ 	/* Idle states parsed correctly, store them in the per-cpu struct. */
+@@ -481,8 +484,11 @@ static int psci_suspend_finisher(unsigned long index)
+ int psci_cpu_suspend_enter(unsigned long index)
+ {
+ 	int ret;
+-	u32 *state = __this_cpu_read(psci_cpuidle_data.psci_states);
+-	u32 composite_state = state[index - 1] | psci_get_domain_state();
++	struct psci_cpuidle_data *data = this_cpu_ptr(&psci_cpuidle_data);
++	u32 *states = data->psci_states;
++	struct device *dev = data->dev;
++	bool runtime_pm = (dev && data->rpm_state_id == index);
++	u32 composite_state;
+ 
+ 	/*
+ 	 * idle state index 0 corresponds to wfi, should never be called
+@@ -491,11 +497,23 @@ int psci_cpu_suspend_enter(unsigned long index)
+ 	if (WARN_ON_ONCE(!index))
+ 		return -EINVAL;
+ 
++	/*
++	 * Do runtime PM if we are using the hierarchical CPU toplogy, but only
++	 * when cpuidle have selected the deepest idle state for the CPU.
++	 */
++	if (runtime_pm)
++		pm_runtime_put_sync_suspend(dev);
 +
- 	for_each_online_node(i)
- 		register_one_node(i);
++	composite_state = states[index - 1] | psci_get_domain_state();
++
+ 	if (!psci_power_state_loses_context(composite_state))
+ 		ret = psci_ops.cpu_suspend(composite_state, 0);
+ 	else
+ 		ret = cpu_suspend(index, psci_suspend_finisher);
+ 
++	if (runtime_pm)
++		pm_runtime_get_sync(dev);
++
+ 	/* Clear the domain state to start fresh when back from idle. */
+ 	psci_set_domain_state(0);
  
 -- 
 2.17.1
