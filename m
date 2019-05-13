@@ -2,179 +2,136 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF45C04AAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E9C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5706208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i7IElMER";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i7IElMER"
+	by mail.kernel.org (Postfix) with ESMTP id 0F370208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfEMKET (ORCPT
+        id S1728909AbfEMKFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:04:19 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50502 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbfEMKET (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:04:19 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D582D6030D; Mon, 13 May 2019 10:04:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557741857;
-        bh=3XkmslwS7hhd6EdWnGyXu2LiPfgBfYAn/ge7FUSOMio=;
-        h=From:To:Cc:Subject:Date:From;
-        b=i7IElMERGgACywoAZa6u3aWYQd1W5SfUBTXCuSczHQJRbzJfCajsyRsX34fF3own8
-         idNPyJUkg2tXfMWUl4+s3I27EmLz7yw/E1ZIja1BjaViPd/0oXJmqA+sTkbfMay88P
-         WsAHaFrcGS1gd65ifVYanbWp7+vAJX7FgkiIi7Xo=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Mon, 13 May 2019 06:05:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21986 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727690AbfEMKFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:05:13 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B9EF6032C;
-        Mon, 13 May 2019 10:04:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557741857;
-        bh=3XkmslwS7hhd6EdWnGyXu2LiPfgBfYAn/ge7FUSOMio=;
-        h=From:To:Cc:Subject:Date:From;
-        b=i7IElMERGgACywoAZa6u3aWYQd1W5SfUBTXCuSczHQJRbzJfCajsyRsX34fF3own8
-         idNPyJUkg2tXfMWUl4+s3I27EmLz7yw/E1ZIja1BjaViPd/0oXJmqA+sTkbfMay88P
-         WsAHaFrcGS1gd65ifVYanbWp7+vAJX7FgkiIi7Xo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B9EF6032C
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org
-Cc:     pdaly@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        pratikp@codeaurora.org, linux-kernel@vger.kernel.org,
-        jcrouse@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v4 1/1] iommu/io-pgtable-arm: Add support to use system cache
-Date:   Mon, 13 May 2019 15:34:03 +0530
-Message-Id: <20190513100403.18981-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        by mx1.redhat.com (Postfix) with ESMTPS id 1493D3082E1E;
+        Mon, 13 May 2019 10:05:13 +0000 (UTC)
+Received: from [10.72.12.49] (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EE306A96C;
+        Mon, 13 May 2019 10:05:03 +0000 (UTC)
+Subject: Re: [PATCH v2 8/8] vsock/virtio: make the RX buffer size tunable
+To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-9-sgarzare@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
+Date:   Mon, 13 May 2019 18:05:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190510125843.95587-9-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 13 May 2019 10:05:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few Qualcomm platforms such as, sdm845 have an additional outer
-cache called as System cache, aka. Last level cache (LLC) that
-allows non-coherent devices to upgrade to using caching.
-This cache sits right before the DDR, and is tightly coupled
-with the memory controller. The clients using this cache request
-their slices from this system cache, make it active, and can then
-start using it.
 
-There is a fundamental assumption that non-coherent devices can't
-access caches. This change adds an exception where they *can* use
-some level of cache despite still being non-coherent overall.
-The coherent devices that use cacheable memory, and CPU make use of
-this system cache by default.
+On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+> The RX buffer size determines the memory consumption of the
+> vsock/virtio guest driver, so we make it tunable through
+> a module parameter.
+>
+> The size allowed are between 4 KB and 64 KB in order to be
+> compatible with old host drivers.
+>
+> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Looking at memory types, we have following -
-a) Normal uncached :- MAIR 0x44, inner non-cacheable,
-                      outer non-cacheable;
-b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
-                      outer read write-back non-transient;
-                      attribute setting for coherenet I/O devices.
-and, for non-coherent i/o devices that can allocate in system cache
-another type gets added -
-c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
-                        outer read write-back non-transient
 
-Coherent I/O devices use system cache by marking the memory as
-normal cached.
-Non-coherent I/O devices should mark the memory as normal
-sys-cached in page tables to use system cache.
+I don't see much value of doing this through kernel command line. We 
+should deal with them automatically like what virtio-net did. Or even a 
+module parameter is better.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
+Thanks
 
-V3 version of this patch and related series can be found at [1].
 
-This change is a realisation of following changes from downstream msm-4.9:
-iommu: io-pgtable-arm: Implement IOMMU_USE_UPSTREAM_HINT[2]
-
-Changes since v3:
- - Dropping support to cache i/o page tables to system cache. Getting support
-   for data buffers is the first step.
-   Removed io-pgtable quirk and related change to add domain attribute.
-
-Glmark2 numbers on SDM845 based cheza board:
-
-S.No.|	with LLC support   |	without LLC support
-     |	for data buffers   |
----------------------------------------------------		
-1    |	4480; 72.3fps      |	4042; 65.2fps
-2    |	4500; 72.6fps      |	4039; 65.1fps
-3    |	4523; 72.9fps	   |	4106; 66.2fps
-4    |	4489; 72.4fps	   |	4104; 66.2fps
-5    |	4518; 72.9fps	   |	4072; 65.7fps
-
-[1] https://patchwork.kernel.org/cover/10772629/
-[2] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/?h=msm-4.9&id=d4c72c413ea27c43f60825193d4de9cb8ffd9602
-
- drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
- include/linux/iommu.h          | 1 +
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index d3700ec15cbd..2dbafe697531 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -167,10 +167,12 @@
- #define ARM_LPAE_MAIR_ATTR_MASK		0xff
- #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
- #define ARM_LPAE_MAIR_ATTR_NC		0x44
-+#define ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE	0xf4
- #define ARM_LPAE_MAIR_ATTR_WBRWA	0xff
- #define ARM_LPAE_MAIR_ATTR_IDX_NC	0
- #define ARM_LPAE_MAIR_ATTR_IDX_CACHE	1
- #define ARM_LPAE_MAIR_ATTR_IDX_DEV	2
-+#define ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE	3
- 
- /* IOPTE accessors */
- #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
-@@ -442,6 +444,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
- 		else if (prot & IOMMU_CACHE)
- 			pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
- 				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
-+		else if (prot & IOMMU_QCOM_SYS_CACHE)
-+			pte |= (ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE
-+				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
- 	} else {
- 		pte = ARM_LPAE_PTE_HAP_FAULT;
- 		if (prot & IOMMU_READ)
-@@ -841,7 +846,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
- 	      (ARM_LPAE_MAIR_ATTR_WBRWA
- 	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
- 	      (ARM_LPAE_MAIR_ATTR_DEVICE
--	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
-+	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
-+	      (ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE
-+	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE));
- 
- 	cfg->arm_lpae_s1_cfg.mair[0] = reg;
- 	cfg->arm_lpae_s1_cfg.mair[1] = 0;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index a815cf6f6f47..29dd2c624348 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -31,6 +31,7 @@
- #define IOMMU_CACHE	(1 << 2) /* DMA cache coherency */
- #define IOMMU_NOEXEC	(1 << 3)
- #define IOMMU_MMIO	(1 << 4) /* e.g. things like MSI doorbells */
-+#define IOMMU_QCOM_SYS_CACHE	(1 << 6)
- /*
-  * Where the bus hardware includes a privilege level as part of its access type
-  * markings, and certain devices are capable of issuing transactions marked as
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+> ---
+>   include/linux/virtio_vsock.h     |  1 +
+>   net/vmw_vsock/virtio_transport.c | 27 ++++++++++++++++++++++++++-
+>   2 files changed, 27 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> index 5a9d25be72df..b9f8c3d91f80 100644
+> --- a/include/linux/virtio_vsock.h
+> +++ b/include/linux/virtio_vsock.h
+> @@ -13,6 +13,7 @@
+>   #define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 64)
+>   #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
+>   #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
+> +#define VIRTIO_VSOCK_MIN_PKT_BUF_SIZE		(1024 * 4)
+>   
+>   enum {
+>   	VSOCK_VQ_RX     = 0, /* for host to guest data */
+> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> index af1d2ce12f54..732398b4e28f 100644
+> --- a/net/vmw_vsock/virtio_transport.c
+> +++ b/net/vmw_vsock/virtio_transport.c
+> @@ -66,6 +66,31 @@ struct virtio_vsock {
+>   	u32 guest_cid;
+>   };
+>   
+> +static unsigned int rx_buf_size = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+> +
+> +static int param_set_rx_buf_size(const char *val, const struct kernel_param *kp)
+> +{
+> +	unsigned int size;
+> +	int ret;
+> +
+> +	ret = kstrtouint(val, 0, &size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (size < VIRTIO_VSOCK_MIN_PKT_BUF_SIZE ||
+> +	    size > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
+> +		return -EINVAL;
+> +
+> +	return param_set_uint(val, kp);
+> +};
+> +
+> +static const struct kernel_param_ops param_ops_rx_buf_size = {
+> +	.set = param_set_rx_buf_size,
+> +	.get = param_get_uint,
+> +};
+> +
+> +module_param_cb(rx_buf_size, &param_ops_rx_buf_size, &rx_buf_size, 0644);
+> +
+>   static struct virtio_vsock *virtio_vsock_get(void)
+>   {
+>   	return the_virtio_vsock;
+> @@ -261,7 +286,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
+>   
+>   static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
+>   {
+> -	int buf_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
+> +	int buf_len = rx_buf_size;
+>   	struct virtio_vsock_pkt *pkt;
+>   	struct scatterlist hdr, buf, *sgs[2];
+>   	struct virtqueue *vq;
