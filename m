@@ -2,122 +2,179 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4A1C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF45C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B3A208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5706208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:04:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i7IElMER";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i7IElMER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfEMKEB convert rfc822-to-8bit (ORCPT
+        id S1728902AbfEMKET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:04:01 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:36202 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfEMKEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:04:00 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 74D29149B5; Mon, 13 May 2019 11:03:58 +0100 (BST)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-samsung-soc\@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3] usb: core: verify devicetree nodes for USB devices
-References: <yw1xpnotufti.fsf@mansr.com>
-        <CGME20190509084827eucas1p294962744fe70745c50b69a5349b5de68@eucas1p2.samsung.com>
-        <20190509084726.5405-1-m.szyprowski@samsung.com>
-        <yw1xlfzfv4ol.fsf@mansr.com>
-        <VI1PR04MB5327AD56CA772284DFE663D08B0C0@VI1PR04MB5327.eurprd04.prod.outlook.com>
-        <7c5579d2-634a-d705-a451-563939957d57@samsung.com>
-Date:   Mon, 13 May 2019 11:03:58 +0100
-In-Reply-To: <7c5579d2-634a-d705-a451-563939957d57@samsung.com> (Marek
-        Szyprowski's message of "Fri, 10 May 2019 11:43:41 +0200")
-Message-ID: <yw1x4l5yvfg1.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+        Mon, 13 May 2019 06:04:19 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:50502 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727690AbfEMKET (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:04:19 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id D582D6030D; Mon, 13 May 2019 10:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557741857;
+        bh=3XkmslwS7hhd6EdWnGyXu2LiPfgBfYAn/ge7FUSOMio=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i7IElMERGgACywoAZa6u3aWYQd1W5SfUBTXCuSczHQJRbzJfCajsyRsX34fF3own8
+         idNPyJUkg2tXfMWUl4+s3I27EmLz7yw/E1ZIja1BjaViPd/0oXJmqA+sTkbfMay88P
+         WsAHaFrcGS1gd65ifVYanbWp7+vAJX7FgkiIi7Xo=
+Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B9EF6032C;
+        Mon, 13 May 2019 10:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557741857;
+        bh=3XkmslwS7hhd6EdWnGyXu2LiPfgBfYAn/ge7FUSOMio=;
+        h=From:To:Cc:Subject:Date:From;
+        b=i7IElMERGgACywoAZa6u3aWYQd1W5SfUBTXCuSczHQJRbzJfCajsyRsX34fF3own8
+         idNPyJUkg2tXfMWUl4+s3I27EmLz7yw/E1ZIja1BjaViPd/0oXJmqA+sTkbfMay88P
+         WsAHaFrcGS1gd65ifVYanbWp7+vAJX7FgkiIi7Xo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B9EF6032C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+To:     will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org
+Cc:     pdaly@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        pratikp@codeaurora.org, linux-kernel@vger.kernel.org,
+        jcrouse@codeaurora.org, Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v4 1/1] iommu/io-pgtable-arm: Add support to use system cache
+Date:   Mon, 13 May 2019 15:34:03 +0530
+Message-Id: <20190513100403.18981-1-vivek.gautam@codeaurora.org>
+X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marek Szyprowski <m.szyprowski@samsung.com> writes:
+Few Qualcomm platforms such as, sdm845 have an additional outer
+cache called as System cache, aka. Last level cache (LLC) that
+allows non-coherent devices to upgrade to using caching.
+This cache sits right before the DDR, and is tightly coupled
+with the memory controller. The clients using this cache request
+their slices from this system cache, make it active, and can then
+start using it.
 
-> Hi Peter,
->
-> On 2019-05-10 05:10, Peter Chen wrote:
->>
->>> Marek Szyprowski <m.szyprowski@samsung.com> writes:
->>>> Commit 69bec7259853 ("USB: core: let USB device know device node")
->>>> added support for attaching devicetree node for USB devices. The
->>>> mentioned commit however identifies the given USB device node only by the 'reg'
->>>> property in the host controller children nodes. The USB device node
->>>> however also has to have a 'compatible' property as described in
->>>> Documentation/devicetree/bindings/usb/usb-device.txt. Lack for the
->>>> 'compatible' property check might result in assigning a devicetree
->>>> node, which is not intended to be the proper node for the given USB device.
->>>>
->>>> This is important especially when USB host controller has child-nodes
->>>> for other purposes. For example, Exynos EHCI and OHCI drivers already
->>>> define child-nodes for each physical root hub port and assigns
->>>> respective PHY controller and parameters for them. Those binding
->>>> predates support for USB devicetree nodes.
->>>>
->>>> Checking for the proper compatibility string allows to mitigate the
->>>> conflict between USB device devicetree nodes and the bindings for USB
->>>> controllers with child nodes. It also fixes the side-effect of the
->>>> other commits, like 01fdf179f4b0 ("usb: core: skip interfaces disabled
->>>> in devicetree"), which incorrectly disables some devices on Exynos
->>>> based boards.
->> Hi Marek,
->>
->> The purpose of your patch is do not set of_node for device under USB
->> controller, right?
->
-> Right.
->
->> I do not understand how 01fdf179f4b0 affect your boards, some nodes
->> under the USB controller with status is not "okay", but still want to
->> be enumerated?
->
-> Please look at the ehci node in arch/arm/boot/dts/exynos4.dtsi and then 
-> at the changes to that node in arch/arm/boot/dts/exynos4412-odroidx.dts. 
-> Exynos EHCI controller has 3 subnodes, which matches to the physical 
-> ports of it and allows the driver to enable given PHY ports depending on 
-> which physical port is used on the particular board. All ports cannot 
-> not be enabled by default, because PHY controller has limited resources 
-> and shares them between USB host and USB device ports.
+There is a fundamental assumption that non-coherent devices can't
+access caches. This change adds an exception where they *can* use
+some level of cache despite still being non-coherent overall.
+The coherent devices that use cacheable memory, and CPU make use of
+this system cache by default.
 
-It seems like what's happening is that the Exynos port/phy nodes are
-mistaken for standard USB device nodes attached to the root hub.  The
-problem is that hub port numbering starts at 1 while the Exynos nodes
-start from 0.  This causes attached devices to be associated with the
-wrong DT node.
+Looking at memory types, we have following -
+a) Normal uncached :- MAIR 0x44, inner non-cacheable,
+                      outer non-cacheable;
+b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
+                      outer read write-back non-transient;
+                      attribute setting for coherenet I/O devices.
+and, for non-coherent i/o devices that can allocate in system cache
+another type gets added -
+c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
+                        outer read write-back non-transient
 
-Ignoring backwards compatibility, I can see a few ways of fixing this:
+Coherent I/O devices use system cache by marking the memory as
+normal cached.
+Non-coherent I/O devices should mark the memory as normal
+sys-cached in page tables to use system cache.
 
-- Add another child node, along side the port@N nodes, of the host
-  controller to represent the root hub.  Nodes for attached devices
-  would then be descendants of this new node.
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+---
 
-- Change the Exynos HCD binding to use a more standard "phys" property
-  and get rid of the child nodes for this purpose.
+V3 version of this patch and related series can be found at [1].
 
-- Move the port@N nodes below a new dedicated child node of the HCD.
+This change is a realisation of following changes from downstream msm-4.9:
+iommu: io-pgtable-arm: Implement IOMMU_USE_UPSTREAM_HINT[2]
 
-The first is probably the easiest to implement since it doesn't require
-any nasty hacks to avoid breaking existing device trees.
+Changes since v3:
+ - Dropping support to cache i/o page tables to system cache. Getting support
+   for data buffers is the first step.
+   Removed io-pgtable quirk and related change to add domain attribute.
 
+Glmark2 numbers on SDM845 based cheza board:
+
+S.No.|	with LLC support   |	without LLC support
+     |	for data buffers   |
+---------------------------------------------------		
+1    |	4480; 72.3fps      |	4042; 65.2fps
+2    |	4500; 72.6fps      |	4039; 65.1fps
+3    |	4523; 72.9fps	   |	4106; 66.2fps
+4    |	4489; 72.4fps	   |	4104; 66.2fps
+5    |	4518; 72.9fps	   |	4072; 65.7fps
+
+[1] https://patchwork.kernel.org/cover/10772629/
+[2] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/?h=msm-4.9&id=d4c72c413ea27c43f60825193d4de9cb8ffd9602
+
+ drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
+ include/linux/iommu.h          | 1 +
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index d3700ec15cbd..2dbafe697531 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -167,10 +167,12 @@
+ #define ARM_LPAE_MAIR_ATTR_MASK		0xff
+ #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
+ #define ARM_LPAE_MAIR_ATTR_NC		0x44
++#define ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE	0xf4
+ #define ARM_LPAE_MAIR_ATTR_WBRWA	0xff
+ #define ARM_LPAE_MAIR_ATTR_IDX_NC	0
+ #define ARM_LPAE_MAIR_ATTR_IDX_CACHE	1
+ #define ARM_LPAE_MAIR_ATTR_IDX_DEV	2
++#define ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE	3
+ 
+ /* IOPTE accessors */
+ #define iopte_deref(pte,d) __va(iopte_to_paddr(pte, d))
+@@ -442,6 +444,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
+ 		else if (prot & IOMMU_CACHE)
+ 			pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
+ 				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
++		else if (prot & IOMMU_QCOM_SYS_CACHE)
++			pte |= (ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE
++				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
+ 	} else {
+ 		pte = ARM_LPAE_PTE_HAP_FAULT;
+ 		if (prot & IOMMU_READ)
+@@ -841,7 +846,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+ 	      (ARM_LPAE_MAIR_ATTR_WBRWA
+ 	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
+ 	      (ARM_LPAE_MAIR_ATTR_DEVICE
+-	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
++	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
++	      (ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE
++	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE));
+ 
+ 	cfg->arm_lpae_s1_cfg.mair[0] = reg;
+ 	cfg->arm_lpae_s1_cfg.mair[1] = 0;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index a815cf6f6f47..29dd2c624348 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -31,6 +31,7 @@
+ #define IOMMU_CACHE	(1 << 2) /* DMA cache coherency */
+ #define IOMMU_NOEXEC	(1 << 3)
+ #define IOMMU_MMIO	(1 << 4) /* e.g. things like MSI doorbells */
++#define IOMMU_QCOM_SYS_CACHE	(1 << 6)
+ /*
+  * Where the bus hardware includes a privilege level as part of its access type
+  * markings, and certain devices are capable of issuing transactions marked as
 -- 
-Måns Rullgård
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
