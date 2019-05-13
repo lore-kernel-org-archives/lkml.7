@@ -2,112 +2,103 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B79C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22414C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C449B208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YguDFwQx"
+	by mail.kernel.org (Postfix) with ESMTP id F133320862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbfEMOGp (ORCPT
+        id S1730445AbfEMOHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:06:45 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46549 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728500AbfEMOGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:06:44 -0400
-Received: by mail-pl1-f193.google.com with SMTP id r18so1782747pls.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aFTVOemihi9Y/ybUHoKE6WPrQqKRWGsjPa+RThuNPJY=;
-        b=YguDFwQxxbQysZNVchZDs2o4+DUSWuunvES7JkNU4ESIaDfofMcLQrCJg4rZPMtkEG
-         zGe/+1AU+lMHjEY/W86b0Q1KiZM0XSmjQcHW5yuy0LMT4gEYKO76LS3jwCNItGhJ4H3r
-         8i+tv0vi+Qekkzkd59vD/ESQ1UuV76fO8oz3eTuDcP4ZC0UJvaNa7A4QZtSimhCra7vB
-         vC2DSUeCgI8WrsVy3Or+F/SfRLH3XO25o3cMUqA+NFpQ8Y6j8Anshulkzg0ohoQzDWn4
-         QqNCWG4xIzshEdiwsewWNuF4/SuUd7x+RNPb5VDPrqQliR40UnSZotQI12rMVjEcsrYa
-         BEdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aFTVOemihi9Y/ybUHoKE6WPrQqKRWGsjPa+RThuNPJY=;
-        b=AhX50LVsg6Ir6UFhaprbQVbFUROXVPPatbCg3AiIkq1uSVKPkDPI2npdHwOVY6U4mb
-         5ml6w6qk8Llirc1CGobOcrExl8+tkJnx+rjxBshU60JqYXAWPIIC0CR+4vLbolD8ZVq/
-         VGj1vSfXuL5yh4cbyjX/1Ard5AvuXQ9OnaLulKVuRHimN1/x6/byr/DYLmQaq8oOCZ5I
-         mwCn6TvgVICZDhzgbV5a+Rb3G6qyiXYvu0XJomryepMC2ZOpo7EhaH0QOwMkWDIVx3bY
-         T9XRzC6prrfyDFT65rQatqHi8LwsXUEI568gFixbradkNZw6JMQa9zaO5S2SP3SMRiVt
-         nZnA==
-X-Gm-Message-State: APjAAAWWd+/uuH3uMcs6ngl8TNJ+chRszEx/Igiv5QIK83kHvOD8Ytt3
-        tEqyr4dyrBvUZS9PAEEbnq8Q
-X-Google-Smtp-Source: APXvYqz4VLebjlmI/Dtm6WX8eMjt8XKoSB8c0yipsVgkqQ040qq1P2HKOvddgMuEgSK7VK6TcrW8Ow==
-X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr7336987plb.238.1557756403532;
-        Mon, 13 May 2019 07:06:43 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2405:204:7240:500:85c2:3660:4904:9fef])
-        by smtp.gmail.com with ESMTPSA id h13sm14931843pgk.55.2019.05.13.07.06.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 07:06:42 -0700 (PDT)
-Date:   Mon, 13 May 2019 19:36:37 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, haitao.suo@bitmain.com,
-        darren.tsao@bitmain.com, alec.lin@bitmain.com
-Subject: Re: [PATCH v3 0/4] Add reset controller support for BM1880 SoC
-Message-ID: <20190513140637.GA19120@Mani-XPS-13-9360>
-References: <20190510184525.13568-1-manivannan.sadhasivam@linaro.org>
- <1557745589.4442.5.camel@pengutronix.de>
+        Mon, 13 May 2019 10:07:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:33097 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728500AbfEMOHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:07:16 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 07:07:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,465,1549958400"; 
+   d="scan'208";a="171201036"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga002.fm.intel.com with ESMTP; 13 May 2019 07:07:15 -0700
+Date:   Mon, 13 May 2019 07:07:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Marc Haber <mh+linux-kernel@zugschlus.de>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Linux in KVM guest segfaults when hosts runs Linux 5.1
+Message-ID: <20190513140715.GB28561@linux.intel.com>
+References: <20190512115302.GM3835@torres.zugschlus.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557745589.4442.5.camel@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190512115302.GM3835@torres.zugschlus.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
-
-On Mon, May 13, 2019 at 01:06:29PM +0200, Philipp Zabel wrote:
+On Sun, May 12, 2019 at 01:53:02PM +0200, Marc Haber wrote:
 > Hi,
 > 
-> On Sat, 2019-05-11 at 00:15 +0530, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This patchset adds reset controller support for Bitmain BM1880 SoC.
-> > BM1880 SoC has only one reset controller and the reset-simple driver
-> > has been reused here.
-> > 
-> > This patchset has been tested on 96Boards Sophon Edge board.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Changes in v3:
-> > 
-> > * Removed the clk-rst part as it turned out be the clock gating register set.
-> 
-> Thank you, I'd like to pick up patches 1, 3, and 4.
-> 
-> Since patch 2 depends on patch 1, you could either temporarily replace
-> the constants with their numerical value, until patch 1 is merged, or I
-> could provide a stable branch that contains patch 1 after v5.2-rc1.
-> 
+> since updating my home desktop machine to kernel 5.1.1, KVM guests
+> started on that machine segfault after booting:
+> general protection fault: 0000 [#1] PREEMPT SMP NOPTI
+> CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.0.13-zgsrv20080 #5.0.13.20190505.0
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+> Workqueue: events once_deferred
+> RIP: 0010:native_read_pmc+0x2/0x10
+> Code: e2 20 89 3e 48 09 d0 c3 89 f9 89 f0 0f 30 c3 66 0f 1f 84 00 00 00 00 00 89 f0 89 f9 0f 30 31 c0 c3 0f 1f 80 00 00 00 00 89 f9 <0f> 33 48 c1 e2 20 48 09 d0 c3 0f 1f 40 00 0f 20 c0 c3 66 66 2e 0f
+> RSP: 0018:ffff8881b9a03e50 EFLAGS: 00010083
+> RAX: 0000000000000001 RBX: ffff800000000001 RCX: 0000000000000000
+> RDX: 000000000000002f RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff8881b590e400 R08: ffff8881b590e400 R09: 0000000000000003
+> R10: ffffe8ffffc05440 R11: 0000000000000000 R12: ffff8881b590e5d8
+> R13: 0000000000000010 R14: ffff8881b590e420 R15: ffffe8ffffc05400
+> FS:  0000000000000000(0000) GS:ffff8881b9a00000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f9bcc5c61f8 CR3: 00000001b6a24000 CR4: 00000000000006f0
+> Call Trace:
+>  <IRQ>
+>  x86_perf_event_update+0x3b/0x80
+>  x86_pmu_stop+0x84/0xa0
+>  x86_pmu_del+0x52/0x160
+>  event_sched_out.isra.59+0x95/0x190
+>  group_sched_out.part.61+0x51/0xc0
+>  ctx_sched_out+0xf2/0x220
+>  ctx_resched+0xb8/0xc0
+>  __perf_install_in_context+0x175/0x1f0
+>  remote_function+0x3e/0x50
+>  flush_smp_call_function_queue+0x30/0xe0
+>  smp_call_function_interrupt+0x2f/0x40
+>  call_function_single_interrupt+0xf/0x20
+>  </IRQ>
 
-I can use the numerical value in meantime, please pick those patches and I'll
-take the dts through arm-soc tree.
+...
 
-Thanks,
-Mani
+> The host seems to be running fine, the KVM guest crash is reproducible.
+> Both host and guest are running Debian unstable with a locally built
+> kernel; the host runs 5.1.1, the guest 5.0.13. The crash also happens
+> when the host is running 5.1.0; going back to 5.0.13 with the host
+> allows the guest to finish bootup and run fine.
+> 
+> Please note that my kernel 5.1.1 image is not fully broken in KVM, I
+> have update my APU machine which runs firewall and other infrastructure
+> services and the guests run fine there.
+> 
+> The machine in question is an older box with an AMD Phenom(tm) II X6
+> 1090T Processor. I guess that the issue is related to the Phenom CPU.
+> 
+> Any idea short of bisecting?
 
-> regards
-> Philipp
+It's a regression introduced by commit 672ff6cff80c ("KVM: x86: Raise
+#GP when guest vCPU do not support PMU").  A fix has been submitted.
+
+https://lkml.kernel.org/r/20190508170248.15271-1-bp@alien8.de
