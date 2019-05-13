@@ -2,339 +2,79 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB70C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A78BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E839208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA53208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557755755;
+	bh=pc2hyrvgvFiNrRyXcIWzUpLxl+BkeH6EsdHgGPqBv70=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DUiP1JV02BA7aPNhGnB4JmapqLsxV1hYWpSJmhwd9BFCa55VS667stSSQlWw6Z00w
+	 RzQnMUr+1htWyhpZYL8JSx4K9iE834T/bAHYXiI6yqcVAg5gFutRNz/0KsL2ZTmCj/
+	 nRf7DWZzOOKQUwHbibjbEHLmAKt2czYGPfdcCKVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbfEMNyy (ORCPT
+        id S1730002AbfEMNzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:54:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53590 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729747AbfEMNyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:54:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 47787AD64;
-        Mon, 13 May 2019 13:54:52 +0000 (UTC)
-Date:   Mon, 13 May 2019 15:54:24 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 09/12] mm/sparsemem: Support sub-section hotplug
-Message-ID: <20190513135317.GA31168@linux>
-References: <155718596657.130019.17139634728875079809.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155718601407.130019.14248061058774128227.stgit@dwillia2-desk3.amr.corp.intel.com>
+        Mon, 13 May 2019 09:55:54 -0400
+Received: from mga02.intel.com ([134.134.136.20]:32384 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729710AbfEMNzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:55:54 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 06:55:53 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by orsmga004.jf.intel.com with ESMTP; 13 May 2019 06:55:53 -0700
+Date:   Mon, 13 May 2019 07:50:31 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Busch, Keith" <keith.busch@intel.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Minwoo Im <minwoo.im.dev@gmail.com>,
+        "Heitke, Kenneth" <kenneth.heitke@intel.com>
+Subject: Re: [PATCH v3 5/7] nvme-pci: add device coredump infrastructure
+Message-ID: <20190513135031.GC15318@localhost.localdomain>
+References: <1557676457-4195-1-git-send-email-akinobu.mita@gmail.com>
+ <1557676457-4195-6-git-send-email-akinobu.mita@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155718601407.130019.14248061058774128227.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1557676457-4195-6-git-send-email-akinobu.mita@gmail.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 06, 2019 at 04:40:14PM -0700, Dan Williams wrote:
->  
-> +void subsection_mask_set(unsigned long *map, unsigned long pfn,
-> +		unsigned long nr_pages)
+On Sun, May 12, 2019 at 08:54:15AM -0700, Akinobu Mita wrote:
+> +static void nvme_coredump_logs(struct nvme_dev *dev)
 > +{
-> +	int idx = subsection_map_index(pfn);
-> +	int end = subsection_map_index(pfn + nr_pages - 1);
+> +	struct dev_coredumpm_bulk_data *bulk_data;
 > +
-> +	bitmap_set(map, idx, end - idx + 1);
-> +}
-> +
->  void subsection_map_init(unsigned long pfn, unsigned long nr_pages)
->  {
->  	int end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
-> @@ -219,20 +235,17 @@ void subsection_map_init(unsigned long pfn, unsigned long nr_pages)
->  		return;
->  
->  	for (i = start_sec; i <= end_sec; i++) {
-> -		int idx, end;
-> -		unsigned long pfns;
->  		struct mem_section *ms;
-> +		unsigned long pfns;
->  
-> -		idx = subsection_map_index(pfn);
->  		pfns = min(nr_pages, PAGES_PER_SECTION
->  				- (pfn & ~PAGE_SECTION_MASK));
-> -		end = subsection_map_index(pfn + pfns - 1);
-> -
->  		ms = __nr_to_section(i);
-> -		bitmap_set(ms->usage->subsection_map, idx, end - idx + 1);
-> +		subsection_mask_set(ms->usage->subsection_map, pfn, pfns);
->  
->  		pr_debug("%s: sec: %d pfns: %ld set(%d, %d)\n", __func__, i,
-> -				pfns, idx, end - idx + 1);
-> +				pfns, subsection_map_index(pfn),
-> +				subsection_map_index(pfn + pfns - 1));
-
-I would definetely add subsection_mask_set() and above change to Patch#3.
-I think it suits there better than here.
-
->  
->  		pfn += pfns;
->  		nr_pages -= pfns;
-> @@ -319,6 +332,15 @@ static void __meminit sparse_init_one_section(struct mem_section *ms,
->  		unsigned long pnum, struct page *mem_map,
->  		struct mem_section_usage *usage)
->  {
-> +	/*
-> +	 * Given that SPARSEMEM_VMEMMAP=y supports sub-section hotplug,
-> +	 * ->section_mem_map can not be guaranteed to point to a full
-> +	 *  section's worth of memory.  The field is only valid / used
-> +	 *  in the SPARSEMEM_VMEMMAP=n case.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP))
-> +		mem_map = NULL;
-> +
->  	ms->section_mem_map &= ~SECTION_MAP_MASK;
->  	ms->section_mem_map |= sparse_encode_mem_map(mem_map, pnum) |
->  							SECTION_HAS_MEM_MAP;
-> @@ -724,10 +746,142 @@ static void free_map_bootmem(struct page *memmap)
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
->  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
->  
-> +#ifndef CONFIG_MEMORY_HOTREMOVE
-> +static void free_map_bootmem(struct page *memmap)
-> +{
-> +}
-> +#endif
-> +
-> +static bool is_early_section(struct mem_section *ms)
-> +{
-> +	struct page *usage_page;
-> +
-> +	usage_page = virt_to_page(ms->usage);
-> +	if (PageSlab(usage_page) || PageCompound(usage_page))
-> +		return false;
-> +	else
-> +		return true;
-> +}
-> +
-> +static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> +		int nid, struct vmem_altmap *altmap)
-> +{
-> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	bool early_section = is_early_section(ms);
-> +	struct page *memmap = NULL;
-> +	unsigned long *subsection_map = ms->usage
-> +		? &ms->usage->subsection_map[0] : NULL;
-> +
-> +	subsection_mask_set(map, pfn, nr_pages);
-> +	if (subsection_map)
-> +		bitmap_and(tmp, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> +
-> +	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
-> +				"section already deactivated (%#lx + %ld)\n",
-> +				pfn, nr_pages))
+> +	if (!dev->dumps)
 > +		return;
 > +
-> +	if (WARN(!IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP)
-> +				&& nr_pages < PAGES_PER_SECTION,
-> +				"partial memory section removal not supported\n"))
+> +	bulk_data = nvme_coredump_alloc(dev, 1);
+> +	if (!bulk_data)
 > +		return;
 > +
-> +	/*
-> +	 * There are 3 cases to handle across two configurations
-> +	 * (SPARSEMEM_VMEMMAP={y,n}):
-> +	 *
-> +	 * 1/ deactivation of a partial hot-added section (only possible
-> +	 * in the SPARSEMEM_VMEMMAP=y case).
-> +	 *    a/ section was present at memory init
-> +	 *    b/ section was hot-added post memory init
-> +	 * 2/ deactivation of a complete hot-added section
-> +	 * 3/ deactivation of a complete section from memory init
-> +	 *
-> +	 * For 1/, when subsection_map does not empty we will not be
-> +	 * freeing the usage map, but still need to free the vmemmap
-> +	 * range.
-> +	 *
-> +	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
-> +	 */
-> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
-> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
-> +		unsigned long section_nr = pfn_to_section_nr(pfn);
-> +
-> +		if (!early_section) {
-> +			kfree(ms->usage);
-> +			ms->usage = NULL;
-> +		}
-> +		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-> +	}
-> +
-> +	if (early_section && memmap)
-> +		free_map_bootmem(memmap);
-> +	else
-> +		depopulate_section_memmap(pfn, nr_pages, altmap);
-> +}
-> +
-> +static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> +		unsigned long nr_pages, struct vmem_altmap *altmap)
-> +{
-> +	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
-> +	struct mem_section *ms = __pfn_to_section(pfn);
-> +	struct mem_section_usage *usage = NULL;
-> +	unsigned long *subsection_map;
-> +	struct page *memmap;
-> +	int rc = 0;
-> +
-> +	subsection_mask_set(map, pfn, nr_pages);
-> +
-> +	if (!ms->usage) {
-> +		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
-> +		if (!usage)
-> +			return ERR_PTR(-ENOMEM);
-> +		ms->usage = usage;
-> +	}
-> +	subsection_map = &ms->usage->subsection_map[0];
-> +
-> +	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
-> +		rc = -EINVAL;
-> +	else if (bitmap_intersects(map, subsection_map, SUBSECTIONS_PER_SECTION))
-> +		rc = -EEXIST;
-> +	else
-> +		bitmap_or(subsection_map, map, subsection_map,
-> +				SUBSECTIONS_PER_SECTION);
-> +
-> +	if (rc) {
-> +		if (usage)
-> +			ms->usage = NULL;
-> +		kfree(usage);
-> +		return ERR_PTR(rc);
-> +	}
-> +
-> +	/*
-> +	 * The early init code does not consider partially populated
-> +	 * initial sections, it simply assumes that memory will never be
-> +	 * referenced.  If we hot-add memory into such a section then we
-> +	 * do not need to populate the memmap and can simply reuse what
-> +	 * is already there.
-> +	 */
-> +	if (nr_pages < PAGES_PER_SECTION && is_early_section(ms))
-> +		return pfn_to_page(pfn);
-> +
-> +	memmap = populate_section_memmap(pfn, nr_pages, nid, altmap);
-> +	if (!memmap) {
-> +		section_deactivate(pfn, nr_pages, nid, altmap);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	return memmap;
+> +	if (nvme_coredump_telemetry_log(bulk_data, &dev->ctrl))
+> +		dev->num_dumps--;
 > +}
 
-I do not really like this.
-Sub-section scheme is only available on CONFIG_SPARSE_VMEMMAP, so I would rather
-have two internal __section_{activate,deactivate} functions for sparse-vmemmap and
-sparse-non-vmemmap.
-That way, we can hide all detail implementation and sub-section dance behind
-the __section_{activate,deactivate} functions.
-
-> +
-> @@ -741,49 +895,31 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap)
->  {
->  	unsigned long section_nr = pfn_to_section_nr(start_pfn);
-> -	struct mem_section_usage *usage;
->  	struct mem_section *ms;
->  	struct page *memmap;
->  	int ret;
->  
-> -	/*
-> -	 * no locking for this, because it does its own
-> -	 * plus, it does a kmalloc
-> -	 */
->  	ret = sparse_index_init(section_nr, nid);
->  	if (ret < 0 && ret != -EEXIST)
->  		return ret;
-> -	ret = 0;
-> -	memmap = populate_section_memmap(start_pfn, PAGES_PER_SECTION, nid,
-> -			altmap);
-> -	if (!memmap)
-> -		return -ENOMEM;
-> -	usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
-> -	if (!usage) {
-> -		depopulate_section_memmap(start_pfn, PAGES_PER_SECTION, altmap);
-> -		return -ENOMEM;
-> -	}
->  
-> -	ms = __pfn_to_section(start_pfn);
-> -	if (ms->section_mem_map & SECTION_MARKED_PRESENT) {
-> -		ret = -EEXIST;
-> -		goto out;
-> -	}
-> +	memmap = section_activate(nid, start_pfn, nr_pages, altmap);
-> +	if (IS_ERR(memmap))
-> +		return PTR_ERR(memmap);
-> +	ret = 0;
->  
->  	/*
->  	 * Poison uninitialized struct pages in order to catch invalid flags
->  	 * combinations.
->  	 */
-> -	page_init_poison(memmap, sizeof(struct page) * PAGES_PER_SECTION);
-> +	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
->  
-> +	ms = __pfn_to_section(start_pfn);
->  	section_mark_present(ms);
-> -	sparse_init_one_section(ms, section_nr, memmap, usage);
-> +	sparse_init_one_section(ms, section_nr, memmap, ms->usage);
->  
-> -out:
-> -	if (ret < 0) {
-> -		kfree(usage);
-> -		depopulate_section_memmap(start_pfn, PAGES_PER_SECTION, altmap);
-> -	}
-> +	if (ret < 0)
-> +		section_deactivate(start_pfn, nr_pages, nid, altmap);
->  	return ret;
->  }
-
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 34f322d14e62..daeb2d7d8dd0 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -900,13 +900,12 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
-        int ret;
- 
-        ret = sparse_index_init(section_nr, nid);
--       if (ret < 0 && ret != -EEXIST)
-+       if (ret < 0)
-                return ret;
- 
-        memmap = section_activate(nid, start_pfn, nr_pages, altmap);
-        if (IS_ERR(memmap))
-                return PTR_ERR(memmap);
--       ret = 0;
- 
-        /*
-         * Poison uninitialized struct pages in order to catch invalid flags
-@@ -918,8 +917,6 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
-        section_mark_present(ms);
-        sparse_init_one_section(ms, section_nr, memmap, ms->usage);
- 
--       if (ret < 0)
--               section_deactivate(start_pfn, nr_pages, nid, altmap);
-        return ret;
- }
-
--- 
-Oscar Salvador
-SUSE L3
+You'll need this function to return the same 'int' value from
+nvme_coredump_telemetry_log. A negative value here means that the
+device didn't produce a response, and that's important to check from
+the reset work since you'll need to abort the reset if that happens.
