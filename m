@@ -2,160 +2,122 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18652C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 950F8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E025720879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xpJyfpk3"
+	by mail.kernel.org (Postfix) with ESMTP id 6708F20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:40:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557769206;
+	bh=SrM4iNJmqoJMscAMH9MSZa273/S6iFsFRBCwJbdFkiI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NLCPyhysCDRTU6PdEvn97/3raZz0HdBNH3dZqJuI3PFl5N8BkkxwEvq43sI8FIFxU
+	 J/wkr4HwVxATojPWdweafbth+xK7mRQPC9YRr/l5bXE176/gvY7yICWYteBKw0zBL5
+	 erxp+5HjcNh1nOZGboc3poP6201SGED5Uus+DgkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731771AbfEMRjJ (ORCPT
+        id S1731796AbfEMRkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:39:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41448 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfEMRjI (ORCPT
+        Mon, 13 May 2019 13:40:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39722 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfEMRkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:39:08 -0400
-Received: by mail-pf1-f196.google.com with SMTP id l132so7564580pfc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:39:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KpsinxBxU2IoS3LCH5T0Ss+1QCWrxYRxntIPJdXby/A=;
-        b=xpJyfpk3uJ1PoPj69whnoQXlK2Y6lg+pimlpWmvvoHSrn2GQ9KweickQD26Kijy0kX
-         KOUiwHeetbM4coZ/33zlh2JPuIxqM1W55S74AA3gR88OCA4G41cwYMEQa0lLEW5ub0Pj
-         XaXCu8Xgq97cSfA/6KMXjJlMvWQHouEQ2+dqVwaCgGO+s6n8Sjox+TsLwpiPL/cqzCZu
-         Y5KmVjltLMp1U7C3phaU4GwWGOELUQS00VHails0/YXkwa0Dq3pQHwCQSszlhwPNndip
-         bsss2SvctkAcnk8RrH5axLM79eC4qp0i0rhDBIlDyYAvsp5WMfhQKZjdeJevHyiwleHH
-         dIJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KpsinxBxU2IoS3LCH5T0Ss+1QCWrxYRxntIPJdXby/A=;
-        b=t7dqiT21xN2z8M3eiL3az+0LvQZpWiuUA+hedyjD6YcbU5aknbG4lk8dyJxXLribO8
-         obd9Y9n4aRtB/jqM+HSccy6jgFYeXM6fSk11Qr0G5QZDl5VMZyr784U0LcoVS0jYjy0P
-         2AmMGjJEJmhxqnJNUoLNg7zhIL1vwjf2yIkrrIm8jvzcWXzqVNzEAcV+7gl9zmrUtome
-         heUkGkSHaMo18EOwxchdQJbBU3ZqD9cqsaRLyU65IfOPERpW2Qca5+rcPd3roMlEVr4S
-         dsUOvrzlLEM8CXN0ZoZuzsgy6PMI37utZrcLpI6tqp/uQTaTCTynmsXJEi10udg+v/Gq
-         dM3w==
-X-Gm-Message-State: APjAAAVHiyevkd/8sSW4HzHdECDE+6foeItW/c++TtinqYcj3qdRb73F
-        TOvQrFGll0w2kps2qPJZz0lgEw==
-X-Google-Smtp-Source: APXvYqyEYMG7ado+dLEWJgwVjGXR0xa/HRNzTbQYBvnTChEtAu6bvz0HchUbDOc2x5RW2QQY4I7Vbg==
-X-Received: by 2002:a65:6255:: with SMTP id q21mr21702714pgv.211.1557769148012;
-        Mon, 13 May 2019 10:39:08 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id 17sm21589088pfw.65.2019.05.13.10.39.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 10:39:07 -0700 (PDT)
-Date:   Mon, 13 May 2019 11:39:05 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH v3 24/30] coresight: platform: Use fwnode handle for
- device search
-Message-ID: <20190513173905.GD16162@xps15>
-References: <1557226378-10131-1-git-send-email-suzuki.poulose@arm.com>
- <1557226378-10131-25-git-send-email-suzuki.poulose@arm.com>
+        Mon, 13 May 2019 13:40:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q8Ws9F8LuqNXJmuF056IOvQqVLZe5vGNwBdJxJpKZrE=; b=Lj3EC4zP2azv7daXeW00ojMnV
+        TQ5VDXE6mjJ4BxlgMmM5TsECB75OFZvSvRpyGSVbfc87Sughcm6sCle2EgMlBB/iyxSEAh6XfZuk9
+        UHmjqd/JfVORHto5SVaDs+jiaU/0rLMOB/leAuFqgXlWs6BrVCEmiGP7LazzcWtwe4fwY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQEvi-0007FN-95; Mon, 13 May 2019 17:40:02 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 8FAF61129232; Mon, 13 May 2019 18:40:00 +0100 (BST)
+Date:   Mon, 13 May 2019 18:40:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
+ for Tegra30
+Message-ID: <20190513174000.GH5168@sirena.org.uk>
+References: <20190414175939.12368-1-digetx@gmail.com>
+ <20190414175939.12368-7-digetx@gmail.com>
+ <20190508075848.GX14916@sirena.org.uk>
+ <af6de446-ab45-1745-30e5-426c6b34421f@gmail.com>
+ <20190512090446.GN21483@sirena.org.uk>
+ <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4C6bbPZ6c/S1npyF"
 Content-Disposition: inline
-In-Reply-To: <1557226378-10131-25-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
+X-Cookie: Must be over 18.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 11:52:51AM +0100, Suzuki K Poulose wrote:
-> We match of_node while searching for a device. Make this
-> more generic in preparation for the ACPI support by using
-> fwnode_handle.
-> 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
-> Change since v2:
->  - Drop the generic helper. It requires further clean up,
->    and will be dealt with a separate series.
-> ---
->  drivers/hwtracing/coresight/coresight-platform.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-> index 53d6eed..4394095 100644
-> --- a/drivers/hwtracing/coresight/coresight-platform.c
-> +++ b/drivers/hwtracing/coresight/coresight-platform.c
-> @@ -36,14 +36,13 @@ static int coresight_alloc_conns(struct device *dev,
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_OF
-> -static int of_dev_node_match(struct device *dev, void *data)
-> +static int coresight_device_fwnode_match(struct device *dev, void *fwnode)
->  {
-> -	return dev->of_node == data;
-> +	return dev_fwnode(dev) == fwnode;
->  }
->  
->  static struct device *
-> -of_coresight_get_endpoint_device(struct device_node *endpoint)
-> +coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
->  {
->  	struct device *dev = NULL;
->  
-> @@ -52,7 +51,7 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->  	 * platform bus.
->  	 */
->  	dev = bus_find_device(&platform_bus_type, NULL,
-> -			      endpoint, of_dev_node_match);
-> +			      fwnode, coresight_device_fwnode_match);
->  	if (dev)
->  		return dev;
->  
-> @@ -61,9 +60,10 @@ of_coresight_get_endpoint_device(struct device_node *endpoint)
->  	 * looking for the device that matches the endpoint node.
->  	 */
->  	return bus_find_device(&amba_bustype, NULL,
-> -			       endpoint, of_dev_node_match);
-> +			       fwnode, coresight_device_fwnode_match);
->  }
->  
-> +#ifdef CONFIG_OF
->  static inline bool of_coresight_legacy_ep_is_input(struct device_node *ep)
->  {
->  	return of_property_read_bool(ep, "slave-mode");
-> @@ -191,6 +191,7 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  	struct device_node *rparent = NULL;
->  	struct device_node *rep = NULL;
->  	struct device *rdev = NULL;
-> +	struct fwnode_handle *rdev_fwnode;
->  
->  	do {
->  		/* Parse the local port details */
-> @@ -209,8 +210,9 @@ static int of_coresight_parse_endpoint(struct device *dev,
->  		if (of_graph_parse_endpoint(rep, &rendpoint))
->  			break;
->  
-> +		rdev_fwnode = of_fwnode_handle(rparent);
->  		/* If the remote device is not available, defer probing */
-> -		rdev = of_coresight_get_endpoint_device(rparent);
-> +		rdev = coresight_find_device_by_fwnode(rdev_fwnode);
->  		if (!rdev) {
->  			ret = -EPROBE_DEFER;
->  			break;
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+--4C6bbPZ6c/S1npyF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -- 
-> 2.7.4
-> 
+On Sun, May 12, 2019 at 09:29:54PM +0300, Dmitry Osipenko wrote:
+> 12.05.2019 12:04, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Wed, May 08, 2019 at 04:27:42PM +0300, Dmitry Osipenko wrote:
+
+> > Those seem like they should be doable in generic code, though the fact
+> > that the constraint is variable makes it annoying to specify - otherwise
+> > it'd just be a minimum and maximum spread.  I'm not really coming up
+> > with any great ideas right now, it's getting into OPP type territory but
+> > it sounds like there's more flexibility for ramping the core voltage so
+> > you'd end up with silly numbers of OPPs.
+
+> The OPP shouldn't have to do anything in regards to the regulators
+> coupling. The whole idea of the regulators coupling is to make device
+> drivers to not churn with the coupling. The coupling in this case is
+> specific to SoC and not to a particular board.
+
+The thing with OPPs is that they specify a whole table of values that
+work together including regulator settings, the result being that you
+have many fewer options but don't need to think about constraints.
+
+> I think the current approach with the customized regulators coupler is
+> the best solution for the time being. We may consider something more
+> generic if there will be other users with a similar coupling
+> requirements, otherwise it's quite difficult to judge what is "generic".
+> Do you agree?
+
+Some of the constraints (like having drivers loaded) are kind of fun...
+
+--4C6bbPZ6c/S1npyF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzZq+8ACgkQJNaLcl1U
+h9Dtswf/f4sgl8pKS8cZdLJ7aTJAOm1gCl9vpwFvrhRXFUi7Zmj5BQyd/G1GAWXu
+OxtEoUI8JWPsrf9vk9UxD2Qk1xlVTBXIWt1UfGn7HXXAOcgAMmHya1QRYJSy7rNh
+2bUCy/+Sh+tjmz2fqWe+YnoecfV1GyxCoTXF0WgA6+k86sXKZT8SNss1F6MJCJ14
+5pgJmTikPDbjOR8g/Wdd+5x315iaAjY/zv6q6d2uxgwvybHYVIx+YMwowzEI8FyH
+y2keI9ZHfPbZtmAw2SuxCJ2+74W+4ffAu7xiVANCFtdr5F665+/wa3V4AM9t7k4L
+dBlGd+z0XFj1J7KCxxmllK1RSYwJIA==
+=1OqR
+-----END PGP SIGNATURE-----
+
+--4C6bbPZ6c/S1npyF--
