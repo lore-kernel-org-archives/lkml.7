@@ -2,125 +2,186 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8323C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45896C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 799B32146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jleNO/Cd"
+	by mail.kernel.org (Postfix) with ESMTP id 179602147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfEMOVt (ORCPT
+        id S1730600AbfEMOVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:21:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46615 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730534AbfEMOVr (ORCPT
+        Mon, 13 May 2019 10:21:53 -0400
+Received: from 4.mo177.mail-out.ovh.net ([46.105.37.72]:44380 "EHLO
+        4.mo177.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730588AbfEMOVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:21:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r7so14873248wrr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cSguXg1ULNsLVeUlyV/JBYC1DyTsN/aiCX3xWl5lL/w=;
-        b=jleNO/Cdfykym1Iv62B4ZMzaeTMBfgLnbRfEOuZTYHQdFwoD/fE3Nu1uIO83bTuCb0
-         WufTyu79QjpzY5s5s1Orw+T6OkXimC1WGuD0yHItW1LPMoPvqskys5DxO8pNyTC4ETUn
-         89Ywwrps4NBIRn5o/0NOl6bzkn3fmWkCmrYM3/Grojkmqb4lW1xowhu96CezF4gLiK/1
-         pDJQJQvPFq6JEytsSw8z70jl3Aeprsh4UCVcEIAsKpgSj9R8c3+d/jI7Jk6plZr47VhM
-         Mb/gptNd4QJJZk6wUuG2U8eo6Ut7BoGxnUESQsUaQv5y5S+4390RDYWn7yytT4L9H7BN
-         VSuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cSguXg1ULNsLVeUlyV/JBYC1DyTsN/aiCX3xWl5lL/w=;
-        b=Q8GoiNGscT2/ZKYo4d3G7Oezknr5WkG9DHpk7FzUZMO97lMykappb52ZliKMEG/3KO
-         3BhjJeS6dKt09ajy+P3FDDoBLCK92tzuC8+Ku9mmf8ctUgkvRAvpLFTUJvTrIV5kfOUf
-         Z5ZNcD2jTqXyp/i6s/oeFieglNU5TJ1Iqq+V7XLgGf4ffyjLiFjl9pExDyD7xoNvcvGy
-         eLcaeW12M0DL15dJEuEqruSc9bUTG7IlLbj+AfBwDIG//oK9h3BC4Wj7k2/hyTPDozdK
-         zcsq/zpB1fyAls1tc4Qgwtpl0vaQJt7GJoL73VbmOfacrO1pVFdPvRj2mnacJiguM4CV
-         AuJg==
-X-Gm-Message-State: APjAAAWkff2En68oqUKlIUZpYt2Nb4hX6BN6fln1eh1Gxkz3fc3ZbSUJ
-        k/C7KxxbgVC8NkHkw29x1QwD0Q==
-X-Google-Smtp-Source: APXvYqyb7jvJZ+9TFKgT7DkyliaCtl4ZcjeYhYQ5a7ehr+YjdueGGPUKUKqqrkwlDWYC3gJx5sgcgQ==
-X-Received: by 2002:adf:aa0a:: with SMTP id p10mr8675758wrd.125.1557757305028;
-        Mon, 13 May 2019 07:21:45 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-11-31.w90-86.abo.wanadoo.fr. [90.86.214.31])
-        by smtp.gmail.com with ESMTPSA id v184sm21133615wma.6.2019.05.13.07.21.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 07:21:44 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, matthias.bgg@gmail.com
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH 2/2] input: keyboard: mtk-pmic-keys: add MT6392 support
-Date:   Mon, 13 May 2019 16:21:20 +0200
-Message-Id: <20190513142120.6527-2-fparent@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190513142120.6527-1-fparent@baylibre.com>
-References: <20190513142120.6527-1-fparent@baylibre.com>
+        Mon, 13 May 2019 10:21:52 -0400
+X-Greylist: delayed 7800 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 May 2019 10:21:51 EDT
+Received: from player729.ha.ovh.net (unknown [10.108.54.87])
+        by mo177.mail-out.ovh.net (Postfix) with ESMTP id 0072CF7501
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:56:15 +0200 (CEST)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player729.ha.ovh.net (Postfix) with ESMTPSA id 1EAF25D72366;
+        Mon, 13 May 2019 11:56:07 +0000 (UTC)
+Date:   Mon, 13 May 2019 13:56:06 +0200
+From:   Greg Kurz <groug@kaod.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>
+Subject: Re: [PATCH] powerpc/powernv/npu: Fix reference leak
+Message-ID: <20190513135606.7d9a0902@bahia.lan>
+In-Reply-To: <20190429123659.00c0622b@bahia.lan>
+References: <155568805354.600470.13376593185688810607.stgit@bahia.lan>
+        <962c1d9e-719c-cb82-cabc-1cf619e1510b@ozlabs.ru>
+        <20190429123659.00c0622b@bahia.lan>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 6583981181895154097
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrleeggdegiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for MT6392 PMIC's keys.
+Michael,
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
- drivers/input/keyboard/mtk-pmic-keys.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Any comments on this patch ? Should I repost with a shorter comment
+as suggested by Alexey ?
 
-diff --git a/drivers/input/keyboard/mtk-pmic-keys.c b/drivers/input/keyboard/mtk-pmic-keys.c
-index 8e6ebab05ab4..aaf68cbf7e5b 100644
---- a/drivers/input/keyboard/mtk-pmic-keys.c
-+++ b/drivers/input/keyboard/mtk-pmic-keys.c
-@@ -18,6 +18,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/mt6323/registers.h>
-+#include <linux/mfd/mt6392/registers.h>
- #include <linux/mfd/mt6397/core.h>
- #include <linux/mfd/mt6397/registers.h>
- #include <linux/module.h>
-@@ -83,6 +84,16 @@ static const struct mtk_pmic_regs mt6323_regs = {
- 	.pmic_rst_reg = MT6323_TOP_RST_MISC,
- };
- 
-+static const struct mtk_pmic_regs mt6392_regs = {
-+	.keys_regs[MTK_PMIC_PWRKEY_INDEX] =
-+		MTK_PMIC_KEYS_REGS(MT6392_CHRSTATUS,
-+		0x2, MT6392_INT_MISC_CON, 0x10),
-+	.keys_regs[MTK_PMIC_HOMEKEY_INDEX] =
-+		MTK_PMIC_KEYS_REGS(MT6392_CHRSTATUS,
-+		0x4, MT6392_INT_MISC_CON, 0x8),
-+	.pmic_rst_reg = MT6392_TOP_RST_MISC,
-+};
-+
- struct mtk_pmic_keys_info {
- 	struct mtk_pmic_keys *keys;
- 	const struct mtk_pmic_keys_regs *regs;
-@@ -238,6 +249,9 @@ static const struct of_device_id of_mtk_pmic_keys_match_tbl[] = {
- 	}, {
- 		.compatible = "mediatek,mt6323-keys",
- 		.data = &mt6323_regs,
-+	}, {
-+		.compatible = "mediatek,mt6392-keys",
-+		.data = &mt6392_regs,
- 	}, {
- 		/* sentinel */
- 	}
--- 
-2.20.1
+Cheers,
+
+--
+Greg
+
+On Mon, 29 Apr 2019 12:36:59 +0200
+Greg Kurz <groug@kaod.org> wrote:
+
+> On Mon, 29 Apr 2019 16:01:29 +1000
+> Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
+> 
+> > On 20/04/2019 01:34, Greg Kurz wrote:  
+> > > Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
+> > > has the effect of incrementing the reference count of the PCI device, as
+> > > explained in drivers/pci/search.c:
+> > > 
+> > >  * Given a PCI domain, bus, and slot/function number, the desired PCI
+> > >  * device is located in the list of PCI devices. If the device is
+> > >  * found, its reference count is increased and this function returns a
+> > >  * pointer to its data structure.  The caller must decrement the
+> > >  * reference count by calling pci_dev_put().  If no device is found,
+> > >  * %NULL is returned.
+> > > 
+> > > Nothing was done to call pci_dev_put() and the reference count of GPU and
+> > > NPU PCI devices rockets up.
+> > > 
+> > > A natural way to fix this would be to teach the callers about the change,
+> > > so that they call pci_dev_put() when done with the pointer. This turns
+> > > out to be quite intrusive, as it affects many paths in npu-dma.c,
+> > > pci-ioda.c and vfio_pci_nvlink2.c.    
+> > 
+> > 
+> > afaict this referencing is only done to protect the current traverser
+> > and what you've done is actually a natural way (and the generic
+> > pci_get_dev_by_id() does exactly the same), although this looks a bit weird.
+> >   
+> 
+> Not exactly the same: pci_get_dev_by_id() always increment the refcount
+> of the returned PCI device. The refcount is only decremented when this
+> device is passed to pci_get_dev_by_id() to continue searching.
+> 
+> That means that the users of the PCI device pointer returned by
+> pci_get_dev_by_id() or its exported variants pci_get_subsys(),
+> pci_get_device() and pci_get_class() do handle the refcount. They
+> all pass the pointer to pci_dev_put() or continue the search,
+> which calls pci_dev_put() internally.
+> 
+> Direct and indirect callers of get_pci_dev() don't care for the
+> refcount at all unless I'm missing something.
+> 
+> >   
+> > > Also, the issue appeared in 4.16 and
+> > > some affected code got moved around since then: it would be problematic
+> > > to backport the fix to stable releases.
+> > > 
+> > > All that code never cared for reference counting anyway. Call pci_dev_put()
+> > > from get_pci_dev() to revert to the previous behavior.    
+> > >> Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev    
+> > from pci_dn")  
+> > > Cc: stable@vger.kernel.org # v4.16
+> > > Signed-off-by: Greg Kurz <groug@kaod.org>
+> > > ---
+> > >  arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
+> > >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
+> > > index e713ade30087..d8f3647e8fb2 100644
+> > > --- a/arch/powerpc/platforms/powernv/npu-dma.c
+> > > +++ b/arch/powerpc/platforms/powernv/npu-dma.c
+> > > @@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock);
+> > >  static struct pci_dev *get_pci_dev(struct device_node *dn)
+> > >  {
+> > >  	struct pci_dn *pdn = PCI_DN(dn);
+> > > +	struct pci_dev *pdev;
+> > >  
+> > > -	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
+> > > +	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
+> > >  					   pdn->busno, pdn->devfn);
+> > > +
+> > > +	/*
+> > > +	 * pci_get_domain_bus_and_slot() increased the reference count of
+> > > +	 * the PCI device, but callers don't need that actually as the PE
+> > > +	 * already holds a reference to the device.    
+> > 
+> > Imho this would be just enough.
+> > 
+> > Anyway,
+> > 
+> > Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+> >   
+> 
+> Thanks !
+> 
+> I now realize that I forgot to add the --cc option for stable on my stgit
+> command line :-\.
+> 
+> Cc'ing now.
+> 
+> > 
+> > How did you find it? :)
+> >   
+> 
+> While reading code to find some inspiration for OpenCAPI passthrough. :)
+> 
+> I saw the following in vfio_pci_ibm_npu2_init():
+> 
+> 	if (!pnv_pci_get_gpu_dev(vdev->pdev))
+> 		return -ENODEV;
+> 
+> and simply followed the function calls.
+> 
+> >   
+> > > Since callers aren't
+> > > +	 * aware of the reference count change, call pci_dev_put() now to
+> > > +	 * avoid leaks.
+> > > +	 */
+> > > +	if (pdev)
+> > > +		pci_dev_put(pdev);
+> > > +
+> > > +	return pdev;
+> > >  }
+> > >  
+> > >  /* Given a NPU device get the associated PCI device. */
+> > >     
+> >   
+> 
 
