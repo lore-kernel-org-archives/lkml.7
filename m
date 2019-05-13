@@ -2,98 +2,85 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CD4C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C511C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B052133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7741C208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbfEMKCB convert rfc822-to-8bit (ORCPT
+        id S1728848AbfEMKCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:02:01 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33309 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbfEMKCA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:02:00 -0400
-X-Originating-IP: 80.215.106.0
-Received: from localhost (unknown [80.215.106.0])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 9B95724000F;
-        Mon, 13 May 2019 10:01:50 +0000 (UTC)
-Date:   Mon, 13 May 2019 12:01:49 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>, rui.zhang@intel.com,
-        edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, davem@davemloft.net,
-        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
-        Jonathan.Cameron@huawei.com, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, andy.gross@linaro.org, olof@lixom.net,
-        bjorn.andersson@linaro.org, jagan@amarulasolutions.com,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190513100149.w3uvpnuqql4eqwid@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512223955.6lhclj6jr2akmsdx@core.my.home>
+        Mon, 13 May 2019 06:02:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45994 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728113AbfEMKCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:02:04 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 204F4307D854;
+        Mon, 13 May 2019 10:02:04 +0000 (UTC)
+Received: from [10.72.12.49] (ovpn-12-49.pek2.redhat.com [10.72.12.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D31595D706;
+        Mon, 13 May 2019 10:01:54 +0000 (UTC)
+Subject: Re: [PATCH v2 7/8] vsock/virtio: increase RX buffer size to 64 KiB
+To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-8-sgarzare@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <bf0416f1-0e69-722d-75ce-3d101e6d7d71@redhat.com>
+Date:   Mon, 13 May 2019 18:01:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190512223955.6lhclj6jr2akmsdx@core.my.home>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190510125843.95587-8-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 13 May 2019 10:02:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 12:39:55AM +0200, Ondřej Jirman wrote:
-> > +	/*
-> > +	 * clkin = 24MHz
-> > +	 * T acquire = clkin / (SUN50I_THS_CTRL0_T_ACQ + 1)
-> > +	 *           = 20us
-> > +	 */
-> > +	regmap_write(tmdev->regmap, SUN50I_THS_CTRL0,
-> > +		     SUN50I_THS_CTRL0_T_ACQ(479));
-> > +	/* average over 4 samples */
-> > +	regmap_write(tmdev->regmap, SUN50I_H6_THS_MFC,
-> > +		     SUN50I_THS_FILTER_EN |
-> > +		     SUN50I_THS_FILTER_TYPE(1));
-> > +	/* period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms */
-> > +	regmap_write(tmdev->regmap, SUN50I_H6_THS_PC,
-> > +		     SUN50I_H6_THS_PC_TEMP_PERIOD(58));
->
-> Also this math is not all that clear:
->
->   period = (SUN50I_H6_THS_PC_TEMP_PERIOD + 1) * 4096 / clkin; ~10ms
->
-> SUN50I_H6_THS_PC_TEMP_PERIOD is a macro with an argument. So how does
-> this work?
->
-> Also, related to this, I've noticed that you removed the interrupt
-> processing from the original driver. Without that you have to make sure
-> that OF contains non-zero polling-delay and polling-delay-passive.
->
-> Nonzero values are necessary for enabling polling mode of the tz core,
-> otherwise tz core will not read values periodically from your driver.
->
-> You should documment it in the DT bindings, too. Or keep the interrupt
-> handling for THS.
 
-If there's interrupts for this in the H6, yeah we should use them over
-polling.
+On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+> In order to increase host -> guest throughput with large packets,
+> we can use 64 KiB RX buffers.
+>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>   include/linux/virtio_vsock.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> index 84b72026d327..5a9d25be72df 100644
+> --- a/include/linux/virtio_vsock.h
+> +++ b/include/linux/virtio_vsock.h
+> @@ -10,7 +10,7 @@
+>   #define VIRTIO_VSOCK_DEFAULT_MIN_BUF_SIZE	128
+>   #define VIRTIO_VSOCK_DEFAULT_BUF_SIZE		(1024 * 256)
+>   #define VIRTIO_VSOCK_DEFAULT_MAX_BUF_SIZE	(1024 * 256)
+> -#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
+> +#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 64)
+>   #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
+>   #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
+>   
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+We probably don't want such high order allocation. It's better to switch 
+to use order 0 pages in this case. See add_recvbuf_big() for virtio-net. 
+If we get datapath unified, we will get more stuffs set.
+
+Thanks
+
