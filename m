@@ -2,121 +2,115 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EB2C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2047DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC002085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8EEC2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:21:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lP34r2NW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ihynEujh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfEMUVG (ORCPT
+        id S1726496AbfEMUVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:21:06 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35672 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726348AbfEMUU4 (ORCPT
+        Mon, 13 May 2019 16:21:37 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:45101 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfEMUVh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:20:56 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g5so7036159plt.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:20:55 -0700 (PDT)
+        Mon, 13 May 2019 16:21:37 -0400
+Received: by mail-ua1-f65.google.com with SMTP id n7so5314154uap.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:21:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=A0hIvZUUUL3EyRykGBdB7l1SOet5HjIbFD3tZy1lwZw=;
-        b=lP34r2NWD/uZoRd0AmHrnPVr3Iay5m0VNeOUlwc4hniFrGufSZMjFpfwGXk+W85GBs
-         NfDq9Njm4nXNu8kRznt9FC3BI+msSj8YszwBXIYYOhHJZFeJJqMuE8f0NIPFLskYUPGo
-         xPrwdOGYOlGlnFbS4SFxOBOcejh3pG8VoKSnw=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wuySUmJX7+xhfDb6fBuwBVyhUWbe9FHoL+dr16R0laQ=;
+        b=ihynEujhHl0/kFd3e4X0WXi48xxh859HdVja7bEkA31bUjpl/penK1wa0zlw5r7dST
+         JtzGce+FT5rp2fnJ/Cqp2xmViQjF8M1Pj5+MB7JlP63y4F3a5wwpu4tkLrs4Vudh/TIi
+         inSG2Zfqn4/s2yGu+Vl3yRbG9RjwYr6RoklNQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=A0hIvZUUUL3EyRykGBdB7l1SOet5HjIbFD3tZy1lwZw=;
-        b=UM0SCgJz1sbKvV9mVUxmee6oSR8CHIiW1/Sei98vjRWlhkUYAlt2jWQ4G4UiJDTKY6
-         wwAenNHloAI9LcW6+LflCIemH12OOoSh7pf3G4/bUum8Xe+zNvqZWfi50x77K65QPU/h
-         s/de0O6OxEYm4eYpMVjmXq9qEOS9sop4GQJ6K09rkUVBMfu0DWblZl61NRfg1YkvrOm3
-         PCdXUkOUK29By1jNNKfFXKRUBHo83v/aULCjdsJHTM/rep2i0UNDKbsv+afv0g8sId1g
-         3L5X9rRUrqF0pchWOPsQnmD7nDs7StZschh+AcIwkCsYCq1UIOwfDhoaUDgGuFZwdGpw
-         lFUg==
-X-Gm-Message-State: APjAAAVTwqoEbMzoN2uEhxq3zDrey68hBjb4vkXhF//PPstqV64OZ/x+
-        Z2s0prXRdrH7yIal+ag7swKi1A==
-X-Google-Smtp-Source: APXvYqycX98I9RrS0+2PLISochd9e1uNzSdWwjsBuwDbWsmLVvAd8DTtC/KuAkigAeIT07A+gaSOGA==
-X-Received: by 2002:a17:902:7b8f:: with SMTP id w15mr33608247pll.314.1557778854816;
-        Mon, 13 May 2019 13:20:54 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s198sm26356597pfs.34.2019.05.13.13.20.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 13:20:54 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
-        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
-        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] platform/chrome: cros_ec_spi: Force transfers to realtime priority
-Date:   Mon, 13 May 2019 13:18:24 -0700
-Message-Id: <20190513201825.166969-3-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190513201825.166969-1-dianders@chromium.org>
-References: <20190513201825.166969-1-dianders@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wuySUmJX7+xhfDb6fBuwBVyhUWbe9FHoL+dr16R0laQ=;
+        b=WzB7rmpST1WC2r/46EohYbdqLmvN9SkuotyR/vm+9X6NlwwIYo2dEfN3184stmS16S
+         qkpVRMHIy//U/Iy0MRSxFuZ8lN8bBgNOmqniAZh20/YhEoc5AUyJNXNbacjNQ5GMXFj8
+         W8abHubtMC0d+p40MzroVgOpRdSFJvWN75E5t+ESB1sY4RKpXh3C1Y50wv3lG2UzFiWI
+         YYIjI+itU4m4A6gCIIcH+ujwsWpEV6d2pgzrhsI1R+6bUp6McWiIif+GkH+tSq5mF04n
+         uex3PKxTW3gjoNpRegvoGnlbh5A9iNf/SExuwmpqevjYfDYdSaNlL1rOQOrtfeK4Hql1
+         23Ew==
+X-Gm-Message-State: APjAAAUD1q8v/0L9Ni8KhN2szX/6z+oTKHt1AuLtFmHQ6oqte/TeUcm3
+        y68i09BwLYZrd0GAB1Hs5CK1n8T7wSY=
+X-Google-Smtp-Source: APXvYqy/0MhpqdR34E0Z48yc9ehAGbjP+C9pDE2fj21ze699B80gjXaiimnrM2W03olR1zUECYuBkQ==
+X-Received: by 2002:ab0:7019:: with SMTP id k25mr12705348ual.49.1557778895958;
+        Mon, 13 May 2019 13:21:35 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id 9sm1964424vkk.43.2019.05.13.13.21.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 13:21:35 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id y6so8887043vsb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 13:21:35 -0700 (PDT)
+X-Received: by 2002:a67:b348:: with SMTP id b8mr6727835vsm.144.1557778894709;
+ Mon, 13 May 2019 13:21:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190510223437.84368-1-dianders@chromium.org> <20190510223437.84368-5-dianders@chromium.org>
+ <20190512074538.GE21483@sirena.org.uk> <CAD=FV=Xg96SGg-JDjEJRtC6jACcN9Xizcr-zV4rQwXYvuEvmRA@mail.gmail.com>
+ <20190513160153.GD5168@sirena.org.uk> <CAD=FV=Xm-2oxit7doVAYJr28c-xHqUdt9PQC=WYpYfsAyUxuaw@mail.gmail.com>
+ <20190513164738.GE5168@sirena.org.uk>
+In-Reply-To: <20190513164738.GE5168@sirena.org.uk>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 13 May 2019 13:21:23 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XkkKRJN+Vv6+nf8EjXoCuO-0MG923v-0HKPMYg=mdZww@mail.gmail.com>
+Message-ID: <CAD=FV=XkkKRJN+Vv6+nf8EjXoCuO-0MG923v-0HKPMYg=mdZww@mail.gmail.com>
+Subject: Re: [PATCH 4/4] Revert "platform/chrome: cros_ec_spi: Transfer
+ messages at high priority"
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All currently known ECs in the wild are very sensitive to timing.
-Specifically the ECs are known to drop a transfer if more than 8 ms
-passes from the assertion of the chip select until the transfer
-finishes.
+Hi,
 
-Let's use the new feature introduced in the patch ("spi: Allow SPI
-devices to force transfers on a realtime thread") to specify this and
-increase the success rate of our transfers.
+On Mon, May 13, 2019 at 9:47 AM, Mark Brown <broonie@kernel.org> wrote:
 
-NOTE: if future Chrome OS ECs ever fix themselves to be less sensitive
-then we could consider adding a property (or compatible string) to not
-set this property.  For now we need it across the board.
+> On Mon, May 13, 2019 at 09:03:28AM -0700, Doug Anderson wrote:
+> > On Mon, May 13, 2019 at 9:02 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> > > I'm not saying the other changes aren't helping, I'm saying that it's
+> > > not clear that this revert is improving things.
+>
+> > If I add a call to force the pumping to happen on the SPI thread then
+> > the commit I'm reverting here is useless though, isn't it?
+>
+> Well, I'm not convinced that that change is ideal anyway and it does
+> leave you vulnerable to further changes in the SPI core pushing things
+> out to calling context which feels like it isn't going to be helping
+> robustness.
 
-With this change we can revert the commit 37a186225a0c
-("platform/chrome: cros_ec_spi: Transfer messages at high priority").
-...and, in fact, transfers are _even more_ reliable than they were
-with that commit since the SPI framework will use a higher priority
-(realtime) and we no longer lose our priority when we get shunted over
-to the message pumping thread (because we now always get shunted and
-the thread is high priority).
+OK.  Here's my plan: in v2 I've still included this revert and you can
+see how things look.  If you hate it as much as you think you will
+then let me know and I'll send a v3 that avoids to forcing and re-adds
+the realtime thread to cros_ec.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
----
+One note just so you're aware: For my particular device I'm not nearly
+as concerned with latency / throughput as I am concerned with
+transfers not getting interrupted once started.  I've added this
+explicitly in the commit message now, too.  :-)
 
-Changes in v2:
-- Renamed variable to "force_rt_transfers".
 
- drivers/platform/chrome/cros_ec_spi.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-index 8e9451720e73..a2959365a870 100644
---- a/drivers/platform/chrome/cros_ec_spi.c
-+++ b/drivers/platform/chrome/cros_ec_spi.c
-@@ -703,6 +703,7 @@ static int cros_ec_spi_probe(struct spi_device *spi)
- 
- 	spi->bits_per_word = 8;
- 	spi->mode = SPI_MODE_0;
-+	spi->force_rt_transfers = true;
- 	err = spi_setup(spi);
- 	if (err < 0)
- 		return err;
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+-Doug
