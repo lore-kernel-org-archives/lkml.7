@@ -2,147 +2,121 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45532C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F26C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE152133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9612084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="lkK1jfdX"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gh+JW4EH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbfEMOo7 (ORCPT
+        id S1730837AbfEMOqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:44:59 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46974 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728133AbfEMOo6 (ORCPT
+        Mon, 13 May 2019 10:46:09 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:6252 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727664AbfEMOqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:44:58 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f37so17905183edb.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:44:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oa11tgFM6isQYlc2/lSr8+dtL7dz0FGS2ImXszdei94=;
-        b=lkK1jfdXRSWG4EOPXpNEsgoMZb8lUzm2FfYavTsrFBTY7w3Z4FVJ9cp/fBcnbUD9bK
-         Frxw45KRQigXleUJaVccMl3gMpsrT0DKhj92T3OICo7PFH1ZWYiDKuhrJn4Bo6DXp0gB
-         BN+9OOpk6LCzBYskBvabimkY7bAvWM5tFDS84=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=oa11tgFM6isQYlc2/lSr8+dtL7dz0FGS2ImXszdei94=;
-        b=qRqRYy+0ftvCkBq3xbtFv3QLlQDG8l9+euTLqT2GS6GF7TQoTSvHE/PLgZuYcTO802
-         P+kia/YPwO2Bu2nI2z9FAiOZuJVx+a6Os0uRmuNJ/EP/dZhjXiAKg+rWIkDQPNrfWFCV
-         RX5TT29PIrnXu9kC0ydx8WEX3VPICs/Tahmlkq6mFq21XT03ChtN1rRUyDDxdoWWIdTg
-         xdmAjoLbu2CXGDZCi6Kduezlb4U0cs8/sAPGi1Y00RormEYj0X8Y4NhI3qnpsWLshMYh
-         jolixJe3t1RWX8QwbOsA1GIxNS8fJPl/srGjBaw4iodJMYd6l4YqHwDPSTYZoMfKTeoP
-         m6pQ==
-X-Gm-Message-State: APjAAAXxqpd+/rsMXFURT42uKjSUwTBOFO8Mwiq0V4eNO0i8WBj7iotd
-        0zGqfNvgm7FzZL6c6701EHPaxg==
-X-Google-Smtp-Source: APXvYqzazE/ARkr3DfLFYQv2UcXLE6AXccxEO07VmSzGlXapLczjo2jaDfA5V6TtDA06sVwBcw/rGw==
-X-Received: by 2002:a17:906:18b1:: with SMTP id c17mr22862891ejf.196.1557758696660;
-        Mon, 13 May 2019 07:44:56 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id ox15sm1844293ejb.52.2019.05.13.07.44.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 07:44:55 -0700 (PDT)
-Date:   Mon, 13 May 2019 16:44:51 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        brendanhiggins@google.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, amir73il@gmail.com,
-        dan.carpenter@oracle.com, dan.j.williams@intel.com,
-        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190513144451.GQ17751@phenom.ffwll.local>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        brendanhiggins@google.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, jdike@addtoit.com, joel@jms.id.au,
-        julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
- <20190511173344.GA8507@mit.edu>
+        Mon, 13 May 2019 10:46:09 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEaYv6023224;
+        Mon, 13 May 2019 16:46:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=4RLw9OtwLPiC58gpakKeZWkMrIYxXGSjksr4AaKMiTI=;
+ b=gh+JW4EHKwNxad8e0fF2rwRstYh+CMk6nPtvdlw8VT9lfAmdCE6Gm9ZvdLSF1IPuDPI/
+ 3fBVEn0REdHW0hCxOZR2vfzOpBlNLQhnt2td7C6J+fBqCf+4BWnWhI57SgouZY6CDzgA
+ 6U0ddKwjTy3zLxgX7iU7fGGq3Rs/F105blEgcFV0OERhxygCCWYfOTpgm7eT8P+7NeCj
+ BG0vFm6qgCEM2bY+zPIwIlZXPNU/nVMlC8d+E+gVcKoRJ6SLZM9JfrWQCKLG05/c402B
+ OPMCiTziQSR3oJRBpGOUw5U9uoiJvh00L4o0W2x/zZTX0UUoPL7TgF3bc1K4l1OrKnZL Gg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sek5a5j11-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 13 May 2019 16:46:00 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 86AEA34;
+        Mon, 13 May 2019 14:45:59 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6C944287B;
+        Mon, 13 May 2019 14:45:59 +0000 (GMT)
+Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE2.st.com
+ (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 13 May
+ 2019 16:45:58 +0200
+Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
+ SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
+ 15.00.1347.000; Mon, 13 May 2019 16:45:58 +0200
+From:   Philippe CORNU <philippe.cornu@st.com>
+To:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] drm/stm: ltdc: remove clk_round_rate comment
+Thread-Topic: [PATCH v2] drm/stm: ltdc: remove clk_round_rate comment
+Thread-Index: AQHVCY3rREh+NHqJykqFxhbYBvyWoKZpAIMA
+Date:   Mon, 13 May 2019 14:45:58 +0000
+Message-ID: <317f94d6-846f-92e2-bd0f-b44377ea7845@st.com>
+References: <1557753318-11218-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1557753318-11218-1-git-send-email-yannick.fertre@st.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.48]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <98ED9AB3A1602942B2A3C068394174FC@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190511173344.GA8507@mit.edu>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
-> On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> > However, the reply is incorrect.  Kselftest in-kernel tests (which
-> > is the context here) can be configured as built in instead of as
-> > a module, and built in a UML kernel.  The UML kernel can boot,
-> > running the in-kernel tests before UML attempts to invoke the
-> > init process.
-> 
-> Um, Citation needed?
-> 
-> I don't see any evidence for this in the kselftest documentation, nor
-> do I see any evidence of this in the kselftest Makefiles.
-> 
-> There exists test modules in the kernel that run before the init
-> scripts run --- but that's not strictly speaking part of kselftests,
-> and do not have any kind of infrastructure.  As noted, the
-> kselftests_harness header file fundamentally assumes that you are
-> running test code in userspace.
-
-Yeah I really like the "no userspace required at all" design of kunit,
-while still collecting results in a well-defined way (unless the current
-self-test that just run when you load the module, with maybe some
-kselftest ad-hoc wrapper around to collect the results).
-
-What I want to do long-term is to run these kernel unit tests as part of
-the build-testing, most likely in gitlab (sooner or later, for drm.git
-only ofc). So that people get their pull requests (and patch series, we
-have some ideas to tie this into patchwork) automatically tested for this
-super basic stuff.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+RGVhciBZYW5uaWNrLA0KDQpBY2tlZC1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51
+QHN0LmNvbT4NCg0KVGhhbmsgeW91LA0KDQpQaGlsaXBwZSA6LSkNCg0KT24gNS8xMy8xOSAzOjE1
+IFBNLCBZYW5uaWNrIEZlcnRyw6kgd3JvdGU6DQo+IENsa19yb3VuZF9yYXRlIHJldHVybnMgcm91
+bmRlZCBjbG9jayB3aXRob3V0IGNoYW5naW5nDQo+IHRoZSBoYXJkd2FyZSBpbiBhbnkgd2F5Lg0K
+PiBUaGlzIGZ1bmN0aW9uIGNvdWxkbid0IHJlcGxhY2Ugc2V0X3JhdGUvZ2V0X3JhdGUgY2FsbHMu
+DQo+IFRvZG8gY29tbWVudCBoYXMgYmVlbiByZW1vdmVkICYgYSBuZXcgbG9nIGluc2VydGVkLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0csOpIDx5YW5uaWNrLmZlcnRyZUBzdC5j
+b20+DQo+IC0tLQ0KPiBDaGFuZ2VzIGluIHYyOg0KPiAJLSBDbGtfZW5hYmxlICYgY2xrX2Rpc2Fi
+bGUgYXJlIG5lZWRlZCBmb3IgdGhlIFNPQyBTVE0zMkY3DQo+IAkgKG5vdCBmb3IgU1RNMzJNUDEp
+LiBJIHJldHVybiB0aGlzIHBhcnQgb2YgdGhlIHBhdGNoIHRvIG1ha2Ugc3VyZSB0aGUNCj4gCSBk
+cml2ZXIgaXMgY29tcGF0aWJsZSB3aXRoIGFsbCBTT0MgU1RNMzIuDQo+IA0KPiAgIGRyaXZlcnMv
+Z3B1L2RybS9zdG0vbHRkYy5jIHwgOCArKystLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGlu
+c2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9n
+cHUvZHJtL3N0bS9sdGRjLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYw0KPiBpbmRleCA5
+NzkxMmUyLi4xMTA0ZTc4IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMu
+Yw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYw0KPiBAQCAtNTA3LDExICs1MDcs
+NiBAQCBzdGF0aWMgYm9vbCBsdGRjX2NydGNfbW9kZV9maXh1cChzdHJ1Y3QgZHJtX2NydGMgKmNy
+dGMsDQo+ICAgCXN0cnVjdCBsdGRjX2RldmljZSAqbGRldiA9IGNydGNfdG9fbHRkYyhjcnRjKTsN
+Cj4gICAJaW50IHJhdGUgPSBtb2RlLT5jbG9jayAqIDEwMDA7DQo+IA0KPiAtCS8qDQo+IC0JICog
+VE9ETyBjbGtfcm91bmRfcmF0ZSgpIGRvZXMgbm90IHdvcmsgeWV0LiBXaGVuIHJlYWR5LCBpdCBj
+YW4NCj4gLQkgKiBiZSB1c2VkIGluc3RlYWQgb2YgY2xrX3NldF9yYXRlKCkgdGhlbiBjbGtfZ2V0
+X3JhdGUoKS4NCj4gLQkgKi8NCj4gLQ0KPiAgIAljbGtfZGlzYWJsZShsZGV2LT5waXhlbF9jbGsp
+Ow0KPiAgIAlpZiAoY2xrX3NldF9yYXRlKGxkZXYtPnBpeGVsX2NsaywgcmF0ZSkgPCAwKSB7DQo+
+ICAgCQlEUk1fRVJST1IoIkNhbm5vdCBzZXQgcmF0ZSAoJWRIeikgZm9yIHBpeGVsIGNsa1xuIiwg
+cmF0ZSk7DQo+IEBAIC01MjEsNiArNTE2LDkgQEAgc3RhdGljIGJvb2wgbHRkY19jcnRjX21vZGVf
+Zml4dXAoc3RydWN0IGRybV9jcnRjICpjcnRjLA0KPiANCj4gICAJYWRqdXN0ZWRfbW9kZS0+Y2xv
+Y2sgPSBjbGtfZ2V0X3JhdGUobGRldi0+cGl4ZWxfY2xrKSAvIDEwMDA7DQo+IA0KPiArCURSTV9E
+RUJVR19EUklWRVIoInJlcXVlc3RlZCBjbG9jayAlZGtIeiwgYWRqdXN0ZWQgY2xvY2sgJWRrSHpc
+biIsDQo+ICsJCQkgbW9kZS0+Y2xvY2ssIGFkanVzdGVkX21vZGUtPmNsb2NrKTsNCj4gKw0KPiAg
+IAlyZXR1cm4gdHJ1ZTsNCj4gICB9DQo+IA0KPiAtLQ0KPiAyLjcuNA0KPiA=
