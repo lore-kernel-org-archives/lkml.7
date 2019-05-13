@@ -2,127 +2,138 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 647B6C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4FAC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374F4206A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:38:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FYcDKAyQ"
+	by mail.kernel.org (Postfix) with ESMTP id 6DB19206A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557751276;
+	bh=dHiY26q4vJivccfdnZgE6SAhdYoYIwxSlhXpZf+/I4Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AUWNCXoS5enGJ50L5A+n/VjtcvvEMo4TlTmSiHrkEYG1zrs2LvwvAVt0qmX5gLDkb
+	 3LPr2W0Cs02mtsMmJCJaI3Kc1SlWgvtqOsugL+twwtbTxBU2PjVAIoBxFvyP4jSJAN
+	 kIkg8LhS+p1CCiGwgQYq0mgX4Hs7CuXP/BHFTAng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbfEMMix (ORCPT
+        id S1728911AbfEMMlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:38:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37683 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728061AbfEMMiw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:38:52 -0400
-Received: by mail-qt1-f193.google.com with SMTP id o7so14461424qtp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=crSUv5H6P69IxzlT9Dzg2VCf7w3w/bVJXLfp7t6XXVI=;
-        b=FYcDKAyQ4xDln7s4L02T2bgbqqE98ZDhKvDJrrQcV+hHKS11OTOCS+/3Fj+WzRhb1V
-         D4IM9b3ph290ckg1VoGiFhrPPDHJJH883c5Vm8HJrFaoRWcyCFTG4ZMgEMefBRwRanLM
-         K6IdDQxsVbrL4cba8IaKZGCr7VtDhjgkKFRBZunZG81srPXOjfHG2ebqi5ZKRnNU+ZGf
-         lk5IUXIKKZd9EHt3fWn6mEqPN6TX6Iko65eQTkwpP0EooQFc1mzoKYRmXqlZh8wlTXsh
-         BCdkQATDnytZpbN1f0hZUfq+3WjMjebb3hOhODgV883J1629hMZzCIdMFbMxztjgP81q
-         W5/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=crSUv5H6P69IxzlT9Dzg2VCf7w3w/bVJXLfp7t6XXVI=;
-        b=igp60UiNzF19IXnWIpr7x9aoJmx7XeFGcpKMmnWGff6/67vP0Pialepy2izo4LV855
-         PXzMhNjynlgyPuqCVbKGAzsoKt2w32hXdjfn+ja97IJQAhcVE3MiAFaduESgfnkaQ3rS
-         tO53dhHNT2UpQuarPeOc658ddtYOH8aBRAVxZDqu7OHcfl2HpKlH1nNg3ujpRfzuaSgS
-         BIYbcC0LZ3sxK/KmgogXV84OutblsacxO0T8lAkozw0TJlyGn5JK1H5W2jjTxqO5a2a2
-         WGnHsq0HKV/20Nc6r77K0JtxisUVjp1M8TjhbmP561dH5KdSUScrXhVbM2BPjpiNgkI7
-         tqUw==
-X-Gm-Message-State: APjAAAUrL3+7tqa0eS7Gh3isAmJ5lX9JUF3t/J/lBDaF4DZ8F6vGaqz1
-        i65dUcoNxcceiNbh/wZ0KmvIK8G6wV6UiKxxm3vCCz0SG88=
-X-Google-Smtp-Source: APXvYqywQgossQwFmG5Ly/2D/VyGN3ByHJv/hIaF12lmEyl/TqH5uFuJQFFJHHQS0cxHZgxj5Ty+J0YIEsoRGHTmCjk=
-X-Received: by 2002:ac8:a81:: with SMTP id d1mr18924863qti.276.1557751131755;
- Mon, 13 May 2019 05:38:51 -0700 (PDT)
+        Mon, 13 May 2019 08:41:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36310 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728420AbfEMMlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:41:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9A2D7AF60;
+        Mon, 13 May 2019 12:41:13 +0000 (UTC)
+Date:   Mon, 13 May 2019 14:41:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, brho@google.com, kernelfans@gmail.com,
+        dave.hansen@intel.com, rppt@linux.ibm.com, peterz@infradead.org,
+        mpe@ellerman.id.au, mingo@elte.hu, osalvador@suse.de,
+        luto@kernel.org, tglx@linutronix.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next v2] mm/hotplug: fix a null-ptr-deref during NUMA
+ boot
+Message-ID: <20190513124112.GH24036@dhcp22.suse.cz>
+References: <20190512054829.11899-1-cai@lca.pw>
 MIME-Version: 1.0
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
- <3de9c573-5971-15fc-1632-706fc30e90c2@free.fr> <CAP245DU7=h=t1_QoM9nMGE-Amduuh+GPQBnmEEG+NGDdXCiR=g@mail.gmail.com>
- <8292f259-d28b-9b37-d58e-3afb26da0646@free.fr>
-In-Reply-To: <8292f259-d28b-9b37-d58e-3afb26da0646@free.fr>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Mon, 13 May 2019 18:08:40 +0530
-Message-ID: <CAP245DXpB8tSXRiOZ=w2_RJ4jRUt-S0Rx5xkPE-4cYdfHp_DEQ@mail.gmail.com>
-Subject: Re: [PATCHv1 7/8] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190512054829.11899-1-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 8:41 PM Marc Gonzalez <marc.w.gonzalez@free.fr> wrote:
->
-> On 10/05/2019 16:12, Amit Kucheria wrote:
->
-> > On Fri, May 10, 2019 at 6:45 PM Marc Gonzalez wrote:
-> >>
-> >> On 10/05/2019 13:29, Amit Kucheria wrote:
-> >>
-> >>> Add device bindings for cpuidle states for cpu devices.
-> >>>
-> >>> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> >>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >>> ---
-> >>>   arch/arm64/boot/dts/qcom/msm8998.dtsi | 32 +++++++++++++++++++++++++++
-> >>>   1 file changed, 32 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> >>> index 3fd0769fe648..208281f318e2 100644
-> >>> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> >>> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> >>> @@ -78,6 +78,7 @@
-> >>>                        compatible = "arm,armv8";
-> >>>                        reg = <0x0 0x0>;
-> >>>                        enable-method = "psci";
-> >>> +                     cpu-idle-states = <&LITTLE_CPU_PD>;
-> >>
-> >> For some reason, I was expecting the big cores to come first, but according
-> >> to /proc/cpuinfo, cores 0-3 are part 0x801, while cores 4-7 are part 0x800.
-> >>
-> >> According to https://github.com/pytorch/cpuinfo/blob/master/src/arm/uarch.c
-> >>
-> >> 0x801 = Low-power Kryo 260 / 280 "Silver" -> Cortex-A53
-> >> 0x800 = High-performance Kryo 260 (r10p2) / Kryo 280 (r10p1) "Gold" -> Cortex-A73
-> >
-> > Hmm, did I mess up the order of the big and LITTLE cores?
-> > I'll take a look again.
->
-> Sorry for being unclear. I was saying I expected the opposite,
-> but it appears the order in your patch is correct ;-)
+On Sun 12-05-19 01:48:29, Qian Cai wrote:
+> The linux-next commit ("x86, numa: always initialize all possible
+> nodes") introduced a crash below during boot for systems with a
+> memory-less node. This is due to CPUs that get onlined during SMP boot,
+> but that onlining triggers a page fault in bus_add_device() during
+> device registration:
+> 
+> 	error = sysfs_create_link(&bus->p->devices_kset->kobj,
+> 
+> bus->p is NULL. That "p" is the subsys_private struct, and it should
+> have been set in,
+> 
+> 	postcore_initcall(register_node_type);
+> 
+> but that happens in do_basic_setup() after smp_init().
+> 
+> The old code had set this node online via alloc_node_data(), so when it
+> came time to do_cpu_up() -> try_online_node(), the node was already up
+> and nothing happened.
+> 
+> Now, it attempts to online the node, which registers the node with
+> sysfs, but that can't happen before the 'node' subsystem is registered.
+> 
+> Since kernel_init() is running by a kernel thread that is in
+> SYSTEM_SCHEDULING state, fixed this by skipping registering with sysfs
+> during the early boot in __try_online_node().
 
-OK :-)
+Relying on SYSTEM_SCHEDULING looks really hackish. Why cannot we simply
+drop try_online_node from do_cpu_up? Your v2 remark below suggests that
+we need to call node_set_online because something later on depends on
+that. Btw. why do we even allocate a pgdat from this path? This looks
+really messy.
 
-> Little cores have higher latency (+5%) than big cores?
+> Call Trace:
+>  device_add+0x43e/0x690
+>  device_register+0x107/0x110
+>  __register_one_node+0x72/0x150
+>  __try_online_node+0x8f/0xd0
+>  try_online_node+0x2b/0x50
+>  do_cpu_up+0x46/0xf0
+>  cpu_up+0x13/0x20
+>  smp_init+0x6e/0xd0
+>  kernel_init_freeable+0xe5/0x21f
+>  kernel_init+0xf/0x180
+>  ret_from_fork+0x1f/0x30
+> 
+> Reported-by: Barret Rhoden <brho@google.com>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Set the node online as it have CPUs. Otherwise, those memory-less nodes will
+>     end up being not in sysfs i.e., /sys/devices/system/node/.
+> 
+>  mm/memory_hotplug.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index b236069ff0d8..6eb2331fa826 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1037,6 +1037,18 @@ static int __try_online_node(int nid, u64 start, bool set_node_online)
+>  	if (node_online(nid))
+>  		return 0;
+>  
+> +	/*
+> +	 * Here is called by cpu_up() to online a node without memory from
+> +	 * kernel_init() which guarantees that "set_node_online" is true which
+> +	 * will set the node online as it have CPUs but not ready to call
+> +	 * register_one_node() as "node_subsys" has not been initialized
+> +	 * properly yet.
+> +	 */
+> +	if (system_state == SYSTEM_SCHEDULING) {
+> +		node_set_online(nid);
+> +		return 0;
+> +	}
+> +
+>  	pgdat = hotadd_new_pgdat(nid, start);
+>  	if (!pgdat) {
+>  		pr_err("Cannot online node %d due to NULL pgdat\n", nid);
+> -- 
+> 2.20.1 (Apple Git-117)
 
-No, that is a result of me naively converting the downstream numbers
-into cpuidle parameters for upstream. There is scope for tuning those
-numbers with more instrumentation. My hope is that we will attract
-more contributions once the basic idle states have landed upstream
-i.e. change the story from "cpuidle isn't supported in upstream QC
-platforms" to "cpuidle needs some tuning"
-
-Regards,
-Amit
+-- 
+Michal Hocko
+SUSE Labs
