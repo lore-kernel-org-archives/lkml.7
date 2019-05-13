@@ -2,120 +2,93 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB7DC04AB3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A80C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767C520B7C
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:03:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="O+pqQVhZ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="u0ZrxH9q"
+	by mail.kernel.org (Postfix) with ESMTP id 61BD020B7C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfEMHDq (ORCPT
+        id S1727440AbfEMHFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:03:46 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:46871 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfEMHDp (ORCPT
+        Mon, 13 May 2019 03:05:07 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35950 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfEMHFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:03:45 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4120221540;
-        Mon, 13 May 2019 03:03:42 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Mon, 13 May 2019 03:03:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=EUprfd4oTQRMt24J3KzcRvPKyEC
-        6+T0VwqaT8sTkVCE=; b=O+pqQVhZvmV60GYSMSAkdPunsYnKVKX9Ef6sOa/m7bH
-        FFjRERT88Z92kd/CJrXq8YU/aCGRL21/I9HEr2GkxCk0PEc4Ny9HxEyvAuJZdZDq
-        68lKzzGRnJ5YeR3QvBLtWW0zmfESSVIVSgTtziPOAgoeuhlO5prPkrTVNmjI5FwL
-        2ahAmU4T5HiRg+LFlZYRBCu6Cq5BHsfdhIciVjMpCB1b02DKxzBzv4v9fXs0xc12
-        7lsqCgDQjLIYZNaU2gZb9bJ65T7P1SG8ySOB4ZstvBWSMa+vxPc7uuWVqsd+D6uY
-        9LTr3nurXg/+zqGxvCOevMb/LonFmNFrzcnL12NhWdA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EUprfd
-        4oTQRMt24J3KzcRvPKyEC6+T0VwqaT8sTkVCE=; b=u0ZrxH9qkt4z4EjTNRDODL
-        Nw2XJzCfLQi0IbMnaeIfXHSd3+q2eXRR8fjSxBNCphRPb+8Jds4FBA9wOg4WQlvx
-        8fo530OWzq4Ir3lIh0CULIadj2ukGJ7Rka/aBFe4Uk/ovIBZ7BVmEVJ1zfmYDsiL
-        DWYh9i+r38cQQlndCZcYIwD0h4DQK7idZXVSRGMMmyDclKfZU7ruQEsAqEC+PJAp
-        I/wqeDo5OlnuN5LUMTqpNk2zWy3XmTQY65xf51DqpGQDMt6gKNWN2tlicffqH9oE
-        RAv8q+Rj2RXbEVr3pKYhNccroYFZBtlrRNw/wRkOnLaaDUToOcPz+JsL9z0qxZLQ
-        ==
-X-ME-Sender: <xms:zRbZXLzqJ6SRUcN14pdUw-yHesimMyunYQR1B4kiUAgaH0CTtkh8rg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleefgdduuddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecukfhppeekfedrkeeirdekledrud
-    dtjeenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhmnecu
-    vehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:zRbZXHjPWNDPxewBJDvxqj-z39TJJ0IrAuJ9-uS8rR_bmqXcW4asfQ>
-    <xmx:zRbZXAUTgZTMszS4BYXjbSlITbDwcxoLDNJ1CilQb-2sXy2YHnQfzQ>
-    <xmx:zRbZXJ2gph_4YGi1uevcIR1MChzLcwTYod5gsE_apHM288U8OipE3w>
-    <xmx:zhbZXLgJN03WNlHmVvMlA9YX97qzWTX5D3Qkj5UxPOtI2rXMAx_vnA>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id D03EF80060;
-        Mon, 13 May 2019 03:03:40 -0400 (EDT)
-Date:   Mon, 13 May 2019 09:03:37 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Eric Wheeler <stable@lists.ewheeler.net>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BFQ I/O SCHEDULER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Eric Wheeler <bfq@linux.ewheeler.net>, stable@vger.kernel.org
-Subject: Re: [PATCH] bfq: backport: update internal depth state when queue
- depth changes
-Message-ID: <20190513070337.GB26553@kroah.com>
-References: <1557510992-18506-1-git-send-email-stable@lists.ewheeler.net>
- <20190510201855.GB14410@sasha-vm>
+        Mon, 13 May 2019 03:05:07 -0400
+Received: by mail-vs1-f68.google.com with SMTP id c76so7349349vsd.3;
+        Mon, 13 May 2019 00:05:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4gXmxzF/Po14uQPLggz4c13bFBQQgBSLY5M86BA4rHg=;
+        b=Jxq+qTXEvj2MfT8eJ8De8dK1yRKJhLB01iIFZJCztitgZ6LadyEqdEArvfQSnz7bwF
+         1lfNNIIYa7mYK14O0sMWglOWOeEnqRDxDDxczV4CzeyTnrcgkskD2NlwGgbpkmbEIMsF
+         bMsgcFRWlYQZGNCYRBRXzIQZekeLaPKb1s5F6xYJiMl6mTS9amdN3wfVGQf20wjg5Vwh
+         l9UqbSAJxojH2EVoKnVuzAknm5bBy45aY4y5i1tzx/i5em90iEt9OykmSwOHp7ZXEbEq
+         G0BB1XjapZE2auk9tfXuqJylLd3wZVCeJXLhcoyX9CakxPxN2hjSlpm+dUNrCgWySz22
+         vhXw==
+X-Gm-Message-State: APjAAAWC/nnA2eNWBgvkuUp8331Azvnkp3is3fLZaY2Mhy6R31o5cxtC
+        RZ9qAiBGifrxCrBynXqR0S9eDGWGzY+pKhxyUyU=
+X-Google-Smtp-Source: APXvYqxgfS2ynbKs1o+2aZa8e7ecnAhyI2eO9iqCen14keAf7VzmDKsxF/OAPpOIAq4KuP9J+HPN5ZGt1iA/54SjGCc=
+X-Received: by 2002:a67:fdd4:: with SMTP id l20mr8909563vsq.63.1557731105926;
+ Mon, 13 May 2019 00:05:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190510201855.GB14410@sasha-vm>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190505180646.1442-2-radu_nicolae.pirea@upb.ro>
+ <20190508090857.B7CB344003F@finisterre.sirena.org.uk> <20190508105105.GN3995@dell>
+ <20190512075223.GF21483@sirena.org.uk>
+In-Reply-To: <20190512075223.GF21483@sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 May 2019 09:04:54 +0200
+Message-ID: <CAMuHMdUOwff68bSjvG3vo5+HUjtRCNXLbAiUc7et4m+yfSCoFA@mail.gmail.com>
+Subject: Re: Applied "dt-bindings: mfd: atmel-usart: add DMA bindings for
+ USART in SPI mode" to the spi tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Richard Genoud <richard.genoud@gmail.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 04:18:55PM -0400, Sasha Levin wrote:
-> On Fri, May 10, 2019 at 10:56:32AM -0700, Eric Wheeler wrote:
-> > From: Jens Axboe <axboe@kernel.dk>
-> > 
-> > commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e upstream
-> > 
-> > A previous commit moved the shallow depth and BFQ depth map calculations
-> > to be done at init time, moving it outside of the hotter IO path. This
-> > potentially causes hangs if the users changes the depth of the scheduler
-> > map, by writing to the 'nr_requests' sysfs file for that device.
-> > 
-> > Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
-> > the depth changes, so that the scheduler can update its internal state.
-> > 
-> > Signed-off-by: Eric Wheeler <bfq@linux.ewheeler.net>
-> > Tested-by: Kai Krakow <kai@kaishome.de>
-> > Reported-by: Paolo Valente <paolo.valente@linaro.org>
-> > Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
-> > Signed-off-by: Jens Axboe <axboe@kernel.dk>
-> > Cc: stable@vger.kernel.org
-> 
-> I wasn't clear on what was backported here, so I've queued the upstream
-> version on 4.19 and 4.14, it doesn't seem to be relevant to older
-> branches.
+Hi Mark,
 
-I only see this added to the 5.0 and 4.19 queues, did you forget to push
-the 4.14 update?
+On Sun, May 12, 2019 at 7:05 PM Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 08, 2019 at 11:51:05AM +0100, Lee Jones wrote:
+> > > Signed-off-by: Mark Brown <broonie@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/mfd/atmel-usart.txt   | 20 ++++++++++++++-----
+>
+> > Interesting!
+>
+> For some reason the bindings for the SPI function got put in the MFD
+> directory, dunno why.
 
-thanks,
+Because this is a block that can do either SPI or USART, hence MFD?
 
-greg k-h
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
