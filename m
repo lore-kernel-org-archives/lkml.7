@@ -2,170 +2,165 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94360C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35408C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D567208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056CF208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:37:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvAcvFbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfEMShc (ORCPT
+        id S1727001AbfEMShi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 14:37:32 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35884 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfEMShc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 14:37:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 653B480D;
+        Mon, 13 May 2019 14:37:38 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]:41031 "EHLO
+        mail-qk1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726888AbfEMShe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 14:37:34 -0400
+Received: by mail-qk1-f182.google.com with SMTP id g190so6551347qkf.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 11:37:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=7cRI9hSN0zogiJSS2xRa8So0qxBTCCyndYlONZH7Wq8=;
+        b=CvAcvFbPGhrAsprSS4I8lBGMxt2xTN8vizowUYQqW4WaZgyywyAcH8ybBtOrJ135X2
+         GlbMaUd6sAjJ4/imb6BEhzlHkLonpvpmK4dSqdGT+b7AE3T5E9sj9GdhTiSdZFm8KKOU
+         uarMN6HfB0ZVI48ZfIne0wPDHw1EQ4j9DhBQ2uSr2DdDQVY7V6iY19L6Iea/mC69UWe+
+         GohKfyVYxWmNZuPBX2LwEtYZ/OX0QyhFSy465eWmpc0VRT1SKitRLy+5KV2NoFIHAr4l
+         EJQVQGsqc8EnpKEbuCaWAIw+5RWMrtqEqiQQhE9IBy5JMaCju1BH13ZiqzZ0Dmperm5n
+         J4Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=7cRI9hSN0zogiJSS2xRa8So0qxBTCCyndYlONZH7Wq8=;
+        b=bjxRxBgFIkCtGEFHfRPBh6X8LbprmZUtDP0g0cXCop0ASWfDHMUvX6fERwQl4ueWl/
+         JxZaNqmvp5M5ED1ph6dRGQMNvNmulSIHYMa4KZVGxJqJz2/hsGskd6tIbGPGVOx3C0wm
+         +DHGU+8Ds7dh7dELhcUm4M1402UfimHmdFjRdFCCCoOVRsXSsp+oUrdhnXm5X22tDr1H
+         mAIs67wRBjSs8PdyEbB5/E8VvWTPiruYnXX53lzki4m+guxW1+t3NgZ/QPVAUUEafOg9
+         gpFD+cvmi038pGBxOd4agi/eb5fZuv/TI+PFmx3ak+sJnWvRvZsPB/nV1fnOHPKbFdJH
+         OEHw==
+X-Gm-Message-State: APjAAAWw0lSL3zKPmPhB+dK696J0c9JNmq/XahtZCLwgfl3tQb2XT2ke
+        7Lqpn00qmXxaSors/mP6iKx1G4ge
+X-Google-Smtp-Source: APXvYqwhihm+JZGWCxoViIhtTPzbDpIyeaY6LLA8LKCVnura/At+Qbh651MjRIohZ7CMQQ9OlD3t8w==
+X-Received: by 2002:a37:de19:: with SMTP id h25mr22749837qkj.289.1557772652620;
+        Mon, 13 May 2019 11:37:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id n7sm6996140qtl.43.2019.05.13.11.37.31
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Mon, 13 May 2019 11:37:31 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE043F6C4;
-        Mon, 13 May 2019 11:37:29 -0700 (PDT)
-Subject: Re: [RFC] iommu: arm-smmu: stall support
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
-References: <20170914194444.32551-1-robdclark@gmail.com>
- <20170919123038.GF8398@8bytes.org>
- <CAF6AEGuutkqjrWk4jagE=p-NwHgxdiPZjjsaFsfwtczK568j+A@mail.gmail.com>
- <20170922090204.GJ8398@8bytes.org>
- <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
- <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <571e825d-7f54-2da4-adc0-6b6ac6dae459@arm.com>
-Date:   Mon, 13 May 2019 19:37:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BEAFF403AD; Mon, 13 May 2019 15:37:28 -0300 (-03)
+Date:   Mon, 13 May 2019 15:37:28 -0300
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] tools pci: Do not delete pcitest.sh in 'make clean'
+Message-ID: <20190513175955.GB8003@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi,
 
-On 10/05/2019 19:23, Rob Clark wrote:
-> On Fri, Sep 22, 2017 at 2:58 AM Jean-Philippe Brucker
-> <jean-philippe.brucker@arm.com> wrote:
->>
->> On 22/09/17 10:02, Joerg Roedel wrote:
->>> On Tue, Sep 19, 2017 at 10:23:43AM -0400, Rob Clark wrote:
->>>> I would like to decide in the IRQ whether or not to queue work or not,
->>>> because when we get a gpu fault, we tend to get 1000's of gpu faults
->>>> all at once (and I really only need to handle the first one).  I
->>>> suppose that could also be achieved by having a special return value
->>>> from the fault handler to say "call me again from a wq"..
->>>>
->>>> Note that in the drm driver I already have a suitable wq to queue the
->>>> work, so it really doesn't buy me anything to have the iommu driver
->>>> toss things off to a wq for me.  Might be a different situation for
->>>> other drivers (but I guess mostly other drivers are using iommu API
->>>> indirectly via dma-mapping?)
->>>
->>> Okay, so since you are the only user for now, we don't need a
->>> work-queue. But I still want the ->resume call-back to be hidden in the
->>> iommu code and not be exposed to users.
->>>
->>> We already have per-domain fault-handlers, so the best solution for now
->>> is to call ->resume from report_iommu_fault() when the fault-handler
->>> returns a special value.
->>
->> The problem is that report_iommu_fault is called from IRQ context by the
->> SMMU driver, so the device driver callback cannot sleep.
->>
->> So if the device driver needs to be able to sleep between fault report and
->> resume, as I understand Rob needs for writing debugfs, we can either:
->>
->> * call report_iommu_fault from higher up, in a thread or workqueue.
->> * split the fault reporting as this patch proposes. The exact same
->>   mechanism is needed for the vSVM work by Intel: in order to inject fault
->>   into the guest, they would like to have an atomic notifier registered by
->>   VFIO for passing down the Page Request, and a new function in the IOMMU
->>   API to resume/complete the fault.
->>
-> 
-> So I was thinking about this topic again.. I would still like to get
-> some sort of async resume so that I can wire up GPU cmdstream/state
-> logging on iommu fault (without locally resurrecting and rebasing this
-> patch and drm/msm side changes each time I need to debug iommu
-> faults)..
+	I have this in my local perf/core branch, lined up for 5.2,
+please let me know if you're ok with it.
 
-We've been working on the new fault reporting API with Jacob and Eric,
-and I intend to send it out soon. It is supposed to be used for
-reporting faults to guests via VFIO, handling page faults via mm, and
-also reporting events directly to device drivers. Please let us know
-what works and what doesn't in your case
+- Arnaldo
 
-The most recent version of the patches is at
-http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/api
-(git://www.linux-arm.org/linux-jpb.git branch sva/api). Hopefully on the
-list sometimes next week, I'll add you on Cc.
+commit 4dfe8f59156382b7695fe5c10bddd5c97c84289a
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon May 13 13:53:20 2019 -0400
 
-In particular, see commits
-	iommu: Introduce device fault data
-	iommu: Introduce device fault report API
-	iommu: Add recoverable fault reporting
+    tools pci: Do not delete pcitest.sh in 'make clean'
+    
+    When running 'make -C tools clean' I noticed that a revision controlled
+    file was being deleted:
+    
+      $ git diff
+      diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
+      deleted file mode 100644
+      index 75ed48ff2990..000000000000
+      --- a/tools/pci/pcitest.sh
+      +++ /dev/null
+      @@ -1,72 +0,0 @@
+      -#!/bin/sh
+      -# SPDX-License-Identifier: GPL-2.0
+      -
+      -echo "BAR tests"
+      -echo
+      <SNIP>
+    
+    So I changed the make variables to fix that, testing it should produce
+    the same intended result while not deleting revision controlled files.
+    
+      $ make O=/tmp/build/pci -C tools/pci install
+      make: Entering directory '/home/acme/git/perf/tools/pci'
+      make -f /home/acme/git/perf/tools/build/Makefile.build dir=. obj=pcitest
+      install -d -m 755 /usr/bin;           \
+      for program in /tmp/build/pci/pcitest pcitest.sh; do  \
+            install $program /usr/bin;      \
+      done
+      install: cannot change permissions of ‘/usr/bin’: Operation not permitted
+      install: cannot create regular file '/usr/bin/pcitest': Permission denied
+      install: cannot create regular file '/usr/bin/pcitest.sh': Permission denied
+      make: *** [Makefile:46: install] Error 1
+      make: Leaving directory '/home/acme/git/perf/tools/pci'
+      $ ls -la /tmp/build/pci/pcitest
+      -rwxrwxr-x. 1 acme acme 27152 May 13 13:52 /tmp/build/pci/pcitest
+      $ /tmp/build/pci/pcitest
+      can't open PCI Endpoint Test device: No such file or directory
+      $
+    
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kishon Vijay Abraham I <kishon@ti.com>
+    Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Fixes: 1ce78ce09430 ("tools: PCI: Change pcitest compiling process")
+    Link: https://lkml.kernel.org/n/tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The device driver calls iommu_register_device_fault_handler(dev, cb,
-data). To report a fault, the SMMU driver calls
-iommu_report_device_fault(dev, fault). This calls into the device driver
-directly, there isn't any workqueue. If the fault is recoverable (the
-SMMU driver set type IOMMU_FAULT_PAGE_REQ rather than
-IOMMU_FAULT_DMA_UNRECOV), the device driver calls iommu_page_response()
-once it has dealt with the fault (after sleeping if it needs to). This
-invokes the SMMU driver's resume callback.
-
-At the moment we use mutexes, so iommu_report_device_fault() can only be
-called from an IRQ thread, which is incompatible with the current SMMUv2
-driver. Either we need to switch the SMMUv2 driver to an IRQ thread, or
-rework the fault handler to be called from an IRQ handler. The reporting
-also has to be per device rather than per domain, and I'm not sure if
-the SMMUv2 driver can deal with this.
-
-> 
-> And I do still prefer the fault cb in irq (or not requiring it in
-> wq)..  but on thinking about it, the two ideas aren't entirely
-> conflicting, ie. add some flags either when we register handler[1], or
-> they could be handled thru domain_set_attr, like:
-> 
->  _EXPLICIT_RESUME - iommu API user calls iommu_domain_resume(),
-> potentialy from wq/thread after fault handler returns
->  _HANDLER_SLEEPS  - iommu core handles the wq, and calls ops->resume()
-> internally
-> 
-> In both cases, from the iommu driver PoV it just implements
-> iommu_ops::resume().. in first case it is called via iommu user either
-> from the fault handler or at some point later (ie. wq or thread).
-> 
-> I don't particularly need the _HANDLER_SLEEPS case (unless I can't
-> convince anyone that iommu_domamin_resume() called from outside iommu
-> core is a good idea).. so probably I wouldn't wire up the wq plumbing
-> for the _HANDLER_SLEEPS case unless someone really wanted me to.
-> 
-> Since there are more iommu drivers, than places that register fault
-> handlers, I like the idea that in either case, from the driver PoV, it
-> is just implementing the resume callback.
-> 
-> [1] currently I only see a few places where fault handlers are
-> registered, so changing iommu_set_fault_handler() is really not much
-> churn
-
-At the moment we're keeping the new fault reporting mechanism separate
-from iommu_set_fault_handler()/report_iommu_fault(), to ease the transition.
-
-Thanks,
-Jean
+diff --git a/tools/pci/Makefile b/tools/pci/Makefile
+index 46e4c2f318c9..f64da817bc03 100644
+--- a/tools/pci/Makefile
++++ b/tools/pci/Makefile
+@@ -14,7 +14,7 @@ MAKEFLAGS += -r
+ 
+ CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ 
+-ALL_TARGETS := pcitest pcitest.sh
++ALL_TARGETS := pcitest
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ all: $(ALL_PROGRAMS)
+@@ -44,7 +44,7 @@ clean:
+ 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-	for program in $(ALL_PROGRAMS); do		\
++	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
+ 		install $$program $(DESTDIR)$(bindir);	\
+ 	done
+ 
