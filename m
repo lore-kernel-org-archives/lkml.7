@@ -2,315 +2,155 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CA3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC84C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4436520578
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40B82084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:35:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="dAysFmdV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbfEMMc0 (ORCPT
+        id S1728019AbfEMMfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:32:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34190 "EHLO mx1.redhat.com"
+        Mon, 13 May 2019 08:35:41 -0400
+Received: from mout.web.de ([212.227.15.4]:42027 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfEMMc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:32:26 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 089EB30833A6;
-        Mon, 13 May 2019 12:32:25 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 611746B8EA;
-        Mon, 13 May 2019 12:32:17 +0000 (UTC)
-Subject: Re: [PATCH v7 18/23] iommu/smmuv3: Report non recoverable faults
-To:     Robin Murphy <robin.murphy@arm.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-19-eric.auger@redhat.com>
- <52dd9de0-67a9-0316-cfe1-83d855d26c66@arm.com>
- <46f39a8e-a909-5493-b1eb-f8f082b0bb20@redhat.com>
- <3119943e-30f1-823d-c6a2-157b26901a41@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <6a78e67d-cc8b-6564-c122-b13c3a288d46@redhat.com>
-Date:   Mon, 13 May 2019 14:32:15 +0200
+        id S1727339AbfEMMfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:35:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1557750925;
+        bh=s2JwT04pr5DiFfwCGxcWShqS8T53ijJOigWJJZv4vuk=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=dAysFmdVUbWM8lf0wWzfmL2zO4qJ2wbghvyENo4npsu8/BuVj8WyaVzPWhgBiKzud
+         Gm28h3sRANd0emKC1uBaQBuNQV177gJeW2OmVeyNlbRP5yskabBDBwikkeVNUvfnkr
+         46qhYewnIT9kyhgtqqZjZKD53DhHsjI6bas2iK2g=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.135.147.80]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LuIAZ-1gjZeN3Y63-011lES; Mon, 13
+ May 2019 14:35:25 +0200
+Subject: Re: [5/5] Coccinelle: put_device: Merge two SmPL when constraints
+ into one
+To:     Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>
+References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn>
+ <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de>
+ <a29de02f-8726-c487-6d71-30979d153647@web.de>
+ <alpine.DEB.2.20.1905131129440.3616@hadrien>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
+ +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
+ mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
+ lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
+ YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
+ GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
+ rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
+ 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
+ jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
+ BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
+ cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
+ Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
+ g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
+ OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
+ CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
+ LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
+ sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
+ kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
+ i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
+ g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
+ q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
+ NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
+ nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
+ 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
+ 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
+ wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
+ riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
+ DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
+ fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
+ 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
+ xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
+ qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
+ Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
+ Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
+ +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
+ hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
+ /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
+ tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
+ qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
+ Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
+ x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
+ pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
+Message-ID: <d8f6adfe-6b43-2450-adb1-d7f16a805fcf@web.de>
+Date:   Mon, 13 May 2019 14:35:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <3119943e-30f1-823d-c6a2-157b26901a41@arm.com>
+In-Reply-To: <alpine.DEB.2.20.1905131129440.3616@hadrien>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 13 May 2019 12:32:25 +0000 (UTC)
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:iKADvqiuEbSsQrOYCIOCR5LZyHPQBjlk27Vl0vsVdDslztbNaL5
+ YS/geaM1bcrKZu5SkH4KpCass1rN30uQsSdGMSnHN5zn6CQKCc8YEgjj0XMPszNmjcfCosd
+ in0H+9vrLS51bimH56C845VQgIy7MPFdgEx6d+VcyWO55rhrirkRQ0nsN5NVS9yxzlj5t+Y
+ E6ceHsAXoP9ZSbZVGKL/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aLo5GEiIGD4=:xkaV7XMCOUDBrR7KM23Y7q
+ rk2BR5Y73Q7M4ZKcQIFfRJ9QoXez37zE6+NyTeqAEfZHnsH4mPrz60fAr1B+uZh7ceOqHSvjz
+ NOlR81m2/OWUDf/Q63jGoChry7400jAjlNPVPZ+8NvEG/zrWd+fSBMTma8pfgGkuF4IXZJBWD
+ 72TGQNRGW17eT1LCr3uhdaCa55yuJosDwNPGE4ggt+f5bixAK9Mb0p5Xh/lXaI7Ac82TiTPMa
+ CVGBlGKqkwiwLTEXPd8sSZp+LAHkF4vP3keEUvq3y6JeIGPARxhsOxDKA1qrtzi5gdFCRaAcq
+ CyMbXm5QoZVwhqDtow0iScWAZejfFkuuZjO89kZaTTCG8kXJFAcK7OLLLWS7MgNoRuy3dxWMc
+ YVUsCYYSl9xj3Gxz76oKzZoS6TqOTFJTq7RJ+2l2/Bi1M2mms4S3zT7EENGo4IuEpxg24thqS
+ 5KX6q1gd7qJgCgzD3px1UfgxYpYTsa/hZbNLoCFqm39etdJ/JhPYK1wsAa0xkOSj3zLFnvn/n
+ BMfvx0JlA6OxMdCpoC/G1DcgRNXQlWluuxBGOxQcnWieCvnSVjhgjxnZpMlcx2C7+LPPPih7C
+ /AZ7/IP9ksbttgzi7kV+IHoRW6ams47MZuUwKlslGWQFOGzMPMgegfKkhpGAH7AsuC+H2oUAR
+ Hm8WnXdRchwF0zUQiU3kL2sRF4uerNEChLhgqvH2w6hkAKflCAwEEzZIH/d+kVCESeHs+fahX
+ 1DYVhSXshqfFRNA6Xg16TkUOIAvRzffxGQaae9C/DRtFYAvEmY3e2n/IGAFL7YlmBNtx7CFkw
+ ooKOu/pJCgrQLhZwE8O3/KHWE2Gccp2Zex7DxsMWgOirb2gj+Uq9IJth8jXL8If9e09FFJglF
+ C6+4nbWUHlJnCTIkA7Gz9+kXCniQOwimh2AMqF1pvKuf9/W4XizbHPQ/NoRTylyowgWNf0qNS
+ U3tIZmsu6yg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-On 5/13/19 1:54 PM, Robin Murphy wrote:
-> On 13/05/2019 08:46, Auger Eric wrote:
->> Hi Robin,
->>
->> On 5/8/19 7:20 PM, Robin Murphy wrote:
->>> On 08/04/2019 13:19, Eric Auger wrote:
->>>> When a stage 1 related fault event is read from the event queue,
->>>> let's propagate it to potential external fault listeners, ie. users
->>>> who registered a fault handler.
->>>>
->>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>>
->>>> ---
->>>> v4 -> v5:
->>>> - s/IOMMU_FAULT_PERM_INST/IOMMU_FAULT_PERM_EXEC
->>>> ---
->>>>    drivers/iommu/arm-smmu-v3.c | 169
->>>> +++++++++++++++++++++++++++++++++---
->>>>    1 file changed, 158 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>>> index 8044445bc32a..1fd320788dcb 100644
->>>> --- a/drivers/iommu/arm-smmu-v3.c
->>>> +++ b/drivers/iommu/arm-smmu-v3.c
->>>> @@ -167,6 +167,26 @@
->>>>    #define ARM_SMMU_PRIQ_IRQ_CFG1        0xd8
->>>>    #define ARM_SMMU_PRIQ_IRQ_CFG2        0xdc
->>>>    +/* Events */
->>>> +#define ARM_SMMU_EVT_F_UUT        0x01
->>>> +#define ARM_SMMU_EVT_C_BAD_STREAMID    0x02
->>>> +#define ARM_SMMU_EVT_F_STE_FETCH    0x03
->>>> +#define ARM_SMMU_EVT_C_BAD_STE        0x04
->>>> +#define ARM_SMMU_EVT_F_BAD_ATS_TREQ    0x05
->>>> +#define ARM_SMMU_EVT_F_STREAM_DISABLED    0x06
->>>> +#define ARM_SMMU_EVT_F_TRANSL_FORBIDDEN    0x07
->>>> +#define ARM_SMMU_EVT_C_BAD_SUBSTREAMID    0x08
->>>> +#define ARM_SMMU_EVT_F_CD_FETCH        0x09
->>>> +#define ARM_SMMU_EVT_C_BAD_CD        0x0a
->>>> +#define ARM_SMMU_EVT_F_WALK_EABT    0x0b
->>>> +#define ARM_SMMU_EVT_F_TRANSLATION    0x10
->>>> +#define ARM_SMMU_EVT_F_ADDR_SIZE    0x11
->>>> +#define ARM_SMMU_EVT_F_ACCESS        0x12
->>>> +#define ARM_SMMU_EVT_F_PERMISSION    0x13
->>>> +#define ARM_SMMU_EVT_F_TLB_CONFLICT    0x20
->>>> +#define ARM_SMMU_EVT_F_CFG_CONFLICT    0x21
->>>> +#define ARM_SMMU_EVT_E_PAGE_REQUEST    0x24
->>>> +
->>>>    /* Common MSI config fields */
->>>>    #define MSI_CFG0_ADDR_MASK        GENMASK_ULL(51, 2)
->>>>    #define MSI_CFG2_SH            GENMASK(5, 4)
->>>> @@ -332,6 +352,15 @@
->>>>    #define EVTQ_MAX_SZ_SHIFT        7
->>>>      #define EVTQ_0_ID            GENMASK_ULL(7, 0)
->>>> +#define EVTQ_0_SSV            GENMASK_ULL(11, 11)
->>>> +#define EVTQ_0_SUBSTREAMID        GENMASK_ULL(31, 12)
->>>> +#define EVTQ_0_STREAMID            GENMASK_ULL(63, 32)
->>>> +#define EVTQ_1_PNU            GENMASK_ULL(33, 33)
->>>> +#define EVTQ_1_IND            GENMASK_ULL(34, 34)
->>>> +#define EVTQ_1_RNW            GENMASK_ULL(35, 35)
->>>> +#define EVTQ_1_S2            GENMASK_ULL(39, 39)
->>>> +#define EVTQ_1_CLASS            GENMASK_ULL(40, 41)
->>>> +#define EVTQ_3_FETCH_ADDR        GENMASK_ULL(51, 3)
->>>>      /* PRI queue */
->>>>    #define PRIQ_ENT_DWORDS            2
->>>> @@ -639,6 +668,64 @@ struct arm_smmu_domain {
->>>>        spinlock_t            devices_lock;
->>>>    };
->>>>    +/* fault propagation */
->>>> +
->>>> +#define IOMMU_FAULT_F_FIELDS    (IOMMU_FAULT_UNRECOV_PASID_VALID | \
->>>> +                 IOMMU_FAULT_UNRECOV_PERM_VALID | \
->>>> +                 IOMMU_FAULT_UNRECOV_ADDR_VALID)
->>>> +
->>>> +struct arm_smmu_fault_propagation_data {
->>>> +    enum iommu_fault_reason reason;
->>>> +    bool s1_check;
->>>> +    u32 fields; /* IOMMU_FAULT_UNRECOV_*_VALID bits */
->>>> +};
->>>> +
->>>> +/*
->>>> + * Describes how SMMU faults translate into generic IOMMU faults
->>>> + * and if they need to be reported externally
->>>> + */
->>>> +static const struct arm_smmu_fault_propagation_data
->>>> fault_propagation[] = {
->>>> +[ARM_SMMU_EVT_F_UUT]            = { },
->>>> +[ARM_SMMU_EVT_C_BAD_STREAMID]        = { },
->>>> +[ARM_SMMU_EVT_F_STE_FETCH]        = { },
->>>> +[ARM_SMMU_EVT_C_BAD_STE]        = { },
->>>> +[ARM_SMMU_EVT_F_BAD_ATS_TREQ]        = { },
->>>> +[ARM_SMMU_EVT_F_STREAM_DISABLED]    = { },
->>>> +[ARM_SMMU_EVT_F_TRANSL_FORBIDDEN]    = { },
->>>> +[ARM_SMMU_EVT_C_BAD_SUBSTREAMID]    =
->>>> {IOMMU_FAULT_REASON_PASID_INVALID,
->>>> +                       false,
->>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_CD_FETCH]        = {IOMMU_FAULT_REASON_PASID_FETCH,
->>>> +                       false,
->>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID |
->>>
->>> It doesn't make sense to presume validity here, or in any of the faults
->>> below...
->>
->>
->>>
->>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
->>>> +                      },
->>>> +[ARM_SMMU_EVT_C_BAD_CD]            =
->>>> {IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
->>>> +                       false,
->>>> +                       IOMMU_FAULT_UNRECOV_PASID_VALID
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_WALK_EABT]        = {IOMMU_FAULT_REASON_WALK_EABT,
->>>> true,
->>>> +                       IOMMU_FAULT_F_FIELDS |
->>>> +                       IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_TRANSLATION]        = {IOMMU_FAULT_REASON_PTE_FETCH,
->>>> true,
->>>> +                       IOMMU_FAULT_F_FIELDS
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_ADDR_SIZE]        = {IOMMU_FAULT_REASON_OOR_ADDRESS,
->>>> true,
->>>> +                       IOMMU_FAULT_F_FIELDS
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_ACCESS]            = {IOMMU_FAULT_REASON_ACCESS, true,
->>>> +                       IOMMU_FAULT_F_FIELDS
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_PERMISSION]        = {IOMMU_FAULT_REASON_PERMISSION,
->>>> true,
->>>> +                       IOMMU_FAULT_F_FIELDS
->>>> +                      },
->>>> +[ARM_SMMU_EVT_F_TLB_CONFLICT]        = { },
->>>> +[ARM_SMMU_EVT_F_CFG_CONFLICT]        = { },
->>>> +[ARM_SMMU_EVT_E_PAGE_REQUEST]        = { },
->>>> +};
->>>> +
->>>>    struct arm_smmu_option_prop {
->>>>        u32 opt;
->>>>        const char *prop;
->>>> @@ -1258,7 +1345,6 @@ static int arm_smmu_init_l2_strtab(struct
->>>> arm_smmu_device *smmu, u32 sid)
->>>>        return 0;
->>>>    }
->>>>    -__maybe_unused
->>>>    static struct arm_smmu_master_data *
->>>>    arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
->>>>    {
->>>> @@ -1284,24 +1370,85 @@ arm_smmu_find_master(struct arm_smmu_device
->>>> *smmu, u32 sid)
->>>>        return master;
->>>>    }
->>>>    +/* Populates the record fields according to the input SMMU event */
->>>> +static bool arm_smmu_transcode_fault(u64 *evt, u8 type,
->>>> +                     struct iommu_fault_unrecoverable *record)
->>>> +{
->>>> +    const struct arm_smmu_fault_propagation_data *data;
->>>> +    u32 fields;
->>>> +
->>>> +    if (type >= ARRAY_SIZE(fault_propagation))
->>>> +        return false;
->>>> +
->>>> +    data = &fault_propagation[type];
->>>> +    if (!data->reason)
->>>> +        return false;
->>>> +
->>>> +    fields = data->fields;
->>>> +
->>>> +    if (data->s1_check & FIELD_GET(EVTQ_1_S2, evt[1]))
->>>> +        return false; /* S2 related fault, don't propagate */
->>>> +
->>>> +    if (fields & IOMMU_FAULT_UNRECOV_PASID_VALID) {
->>>> +        if (FIELD_GET(EVTQ_0_SSV, evt[0]))
->>>> +            record->pasid = FIELD_GET(EVTQ_0_SUBSTREAMID, evt[0]);
->>>> +        else
->>>> +            fields &= ~IOMMU_FAULT_UNRECOV_PASID_VALID;
->>>
->>> ...because this logic then breaks for C_BAD_SUBSTREAMID, which ends up
->>> coming out of here *without* reporting the offending PASID.
->> Correct.
->>>
->>>> +    }
->>>> +    if (fields & IOMMU_FAULT_UNRECOV_PERM_VALID) {
->>>> +        if (!FIELD_GET(EVTQ_1_RNW, evt[1]))
->>>> +            record->perm |= IOMMU_FAULT_PERM_WRITE;
->>>> +        if (FIELD_GET(EVTQ_1_PNU, evt[1]))
->>>> +            record->perm |= IOMMU_FAULT_PERM_PRIV;
->>>> +        if (FIELD_GET(EVTQ_1_IND, evt[1]))
->>>> +            record->perm |= IOMMU_FAULT_PERM_EXEC;
->>>> +    }
->>>> +    if (fields & IOMMU_FAULT_UNRECOV_ADDR_VALID)
->>>> +        record->addr = evt[2];
->>>> +
->>>> +    if (fields & IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID)
->>>> +        record->fetch_addr = FIELD_GET(EVTQ_3_FETCH_ADDR, evt[3]);
->>>> +
->>>> +    record->flags = fields;
->>>> +    return true;
->>>> +}
->>>> +
->>>> +static void arm_smmu_report_event(struct arm_smmu_device *smmu, u64
->>>> *evt)
->>>> +{
->>>> +    u32 sid = FIELD_GET(EVTQ_0_STREAMID, evt[0]);
->>>> +    u8 type = FIELD_GET(EVTQ_0_ID, evt[0]);
->>>> +    struct arm_smmu_master_data *master;
->>>> +    struct iommu_fault_event event = {};
->>>> +    int i;
->>>> +
->>>> +    master = arm_smmu_find_master(smmu, sid);
->>>> +    if (WARN_ON(!master))
->>>> +        return;
->>>
->>> NAK. If I'm getting global faults like C_BAD_STE where a device almost
->>> certainly *isn't* configured (because hey, we would have initialised its
->>> STEs if we knew), then I sure as hell want to see the actual faults.
->>> Spamming a constant stream of stack traces *instead* of showing them is
->>> worse than useless.
->> Sure, if !master I will output the original traces.
->>>
->>>> +
->>>> +    event.fault.type = IOMMU_FAULT_DMA_UNRECOV;
->>>> +
->>>> +    if (arm_smmu_transcode_fault(evt, type, &event.fault.event)) {
->>>> +        iommu_report_device_fault(master->dev, &event);
->>>> +        return;
->>>
->>> And again, the vast majority of the time, there won't be a fault handler
->>> registered, so unconditionally suppressing the most common and useful
->>> stuff like translation and permission faults is very much not OK.
->> Going to test whether we are in nested mode before entering that path.
-> 
-> I don't think this has to be exclusive to nesting - the generic
-> reporting mechanism feels like it might ultimately be extensible to
-> other things like Rob's case for generalised stalling. It's just that
-> for robustness, even when a fault handler is present, we still want the
-> driver to be able to report if it didn't actually handle a fault.
+>> Combine the exclusion specifications into a disjunction for the semanti=
+c
+>> patch language so that this argument is referenced only once there.
+=E2=80=A6
+> NACK.  This hurts readability
+
+I suggest to reconsider such readability concerns once more.
+Can corresponding software limitations be adjusted any further?
 
 
-Jean-Philippe pointed out in a previous review
-(https://patchwork.kernel.org/patch/10751801/#22424047) that the guest
-can flood the host log with S1 related faults. At the moment we do not
-check that a fault handler is registered in nested mode. Maybe we
-should? Even if the fault handler is registered, as it is based on a
-circular buffer, this latter can be full and lead to a log flood.
+> and gives no practical benefit.
 
-Thanks
+I guess that you know better which aspects can matter also here
+for software fine-tuning.
 
-Eric
 
-> 
-> Thanks,
-> Robin.
+>> +++ b/scripts/coccinelle/free/put_device.cocci
+>> @@ -22,8 +22,7 @@ id =3D of_find_device_by_node@p1(x)
+>>  if (id =3D=3D NULL || ...) { ... return ...; }
+>>  ... when !=3D put_device(&id->dev)
+>>      when !=3D id =3D (T6)(e)
+>> -    when !=3D platform_device_put(id)
+>> -    when !=3D of_dev_put(id)
+>> +    when !=3D \( platform_device_put \| of_dev_put \) (id)
+
+Can the reduction of a bit of duplicate SmPL code result in nicer
+run time characteristics?
+
+Regards,
+Markus
