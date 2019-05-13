@@ -3,138 +3,162 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDFBC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:13:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B60C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026C921473
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:13:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F5921473
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 20:19:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CGp23cHq"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="v8h8SgiZ";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="dks3mxVU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726460AbfEMUNG (ORCPT
+        id S1726260AbfEMUTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 16:13:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40253 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfEMUNF (ORCPT
+        Mon, 13 May 2019 16:19:52 -0400
+Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:54490 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726130AbfEMUTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 16:13:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h4so16696294wre.7;
-        Mon, 13 May 2019 13:13:04 -0700 (PDT)
+        Mon, 13 May 2019 16:19:51 -0400
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DKADuB012076;
+        Mon, 13 May 2019 13:16:53 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=8FSlz0GjC3PdOKK/ewJnq9q1qVk9z6fQdSQDgDPLZOs=;
+ b=v8h8SgiZTm2Mrf3UKe715rKamNihd4Ywk9LCgclviNg51vqDvK8/3RvWaC5xJq+FRnyJ
+ VlqRytZQWSER0seoEEL3JJD9lpESnkfSKDRe2nQuJIx0PM7wVgmeh9JiSRUcerIss9TM
+ +wOxxxMGugafn9Am/EVOMhDTDnOQMTxgtVE2Oy8tIx3lyJTtuvEj8OPoxKJbgrPQU1uY
+ l7xm5n/tUP6amIn1e+ILLBU96cT0FYJC9wJ2Jr8UCq1nYp9d4jZd3WdMakJmbzirH5/g
+ 8SoY4yb7Dg39sBTj6an/Of82bbjH88cGICYQHOl3ITxmVKklZL1xCsZ1CgHwpMcJ/vk3 7Q== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0b-0016f401.pphosted.com with ESMTP id 2sf9xchp6t-11
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 13:16:52 -0700
+Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 13 May
+ 2019 13:16:22 -0700
+Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.53) by
+ SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 13 May 2019 13:16:22 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cRRBqLbvbj90dnuit0x8d7ovpvx/asJQqIIKZ6ub/Sw=;
-        b=CGp23cHqHxvrMsZIUwiTaGkO5AOngN5Zihv4SIcvPVlsotObpyVLovD7d08wPi/yuN
-         O2SnfUncMBPq0xXgqpJCAnYHcoTxJ/MsxtD5T4uC6WmOhZ1NVOFnoMHNxVa0pKBtnupb
-         n6b7fxFV/T54Wex9jbYqWsHXlWKEvAMRmNHL8wVydIAVQb53+qvm0jmS+GpFbv06lYcp
-         HLzUozQH0socB52LmcgRk7dAmpw/oAIWzqAk6TCLNG5idcNYF6DLbzKGzpDwbflpKOHg
-         SVwfuFIVmtUEM396wtHkSjv6pGGYbzRDzAzT7GJPWf6E0sEzYm//ujxyso4VyanLj93a
-         E+aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cRRBqLbvbj90dnuit0x8d7ovpvx/asJQqIIKZ6ub/Sw=;
-        b=QYfBofEnHNY12AEtcXgq3xtNQyEYJpLsK/F3BwgBDxpyx5+AWQYMdHTgFKUiHs7iXw
-         QB0hMREF1ujNo/5oomxyD7xOqogqg+V8422Zjd+Vaazq1ij90Zb+PGkhyzkomZPT+hhi
-         kCBBJu6I1gFLEitAsmUOBTfT7XJQWT83vK5HgHmCzlSrgcYQDUfYonsHnL9L8yXtzvtY
-         gkZ3lWfB+ivJ3DpXMcYl7e6NAyWfJGPzsKJgWygBlyByvKsCLjw1CtJ4gVTZHw6SxIrj
-         R05INAnGscw5PxgYTpPF5hTD5f4TgqmsfleJioGmA8ePKRXKx5leU2wa1nBpTQxzTuqB
-         jC3A==
-X-Gm-Message-State: APjAAAUGE1QPgd8m8W6LLd5rA8G80YZc7yVHQcmJjx6OcxHFphvpaATv
-        Ef2dwb0Rbdr/sV/En2xqtxWncGNiDMk=
-X-Google-Smtp-Source: APXvYqxfj7bjNtCNJtNEJzvPTH1HD2+VNTdO/IlPOiXKPmLMpoz1r7v0mT+cgjKs4c8EcZg7nn+Vvg==
-X-Received: by 2002:a5d:4cc4:: with SMTP id c4mr6069700wrt.164.1557778383095;
-        Mon, 13 May 2019 13:13:03 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8bd4:5700:291f:455f:c298:ea7f? (p200300EA8BD45700291F455FC298EA7F.dip0.t-ipconnect.de. [2003:ea:8bd4:5700:291f:455f:c298:ea7f])
-        by smtp.googlemail.com with ESMTPSA id y6sm23846065wrw.60.2019.05.13.13.13.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 13:13:02 -0700 (PDT)
-Subject: Re: [PATCH 5/5] net: phy: dp83867: Use unsigned variables to store
- unsigned properties
-To:     Trent Piepho <tpiepho@impinj.com>,
+ d=marvell.onmicrosoft.com; s=selector1-marvell-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8FSlz0GjC3PdOKK/ewJnq9q1qVk9z6fQdSQDgDPLZOs=;
+ b=dks3mxVUhOA91QILnn063NP916tvQ50FO0HuSlFouxKiM2NmHe7/J61cDuzv86U7wkwlelrnvjMwDWsUX1IDt6L0iNX5Na+Irjq3DZhlvQF+7dyI92gtqo9kCjQBhuOQidaPvHhQhrT4ciRIFbufee94Py6FAGmZEH68TyVdL5w=
+Received: from MN2PR18MB3086.namprd18.prod.outlook.com (20.179.21.74) by
+ MN2PR18MB3328.namprd18.prod.outlook.com (10.255.238.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Mon, 13 May 2019 20:16:18 +0000
+Received: from MN2PR18MB3086.namprd18.prod.outlook.com
+ ([fe80::9407:14a6:29bf:d683]) by MN2PR18MB3086.namprd18.prod.outlook.com
+ ([fe80::9407:14a6:29bf:d683%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 20:16:18 +0000
+From:   Yuri Norov <ynorov@marvell.com>
+To:     Andreas Schwab <schwab@suse.de>, Yury Norov <yury.norov@gmail.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>
+CC:     Yury Norov <ynorov@caviumnetworks.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <20190510214550.18657-1-tpiepho@impinj.com>
- <20190510214550.18657-5-tpiepho@impinj.com>
- <49c6afc4-6c5b-51c9-74ab-9a6e8c2460a5@gmail.com>
- <3a42c0cc-4a4b-e168-c03e-1cc13bd2f5d4@gmail.com>
- <1557777496.4229.13.camel@impinj.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <b246b18d-5523-7b8b-9cd0-b8ccb8a511e9@gmail.com>
-Date:   Mon, 13 May 2019 22:12:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557777496.4229.13.camel@impinj.com>
-Content-Type: text/plain; charset=utf-8
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        "Alexander Graf" <agraf@suse.de>,
+        Alexey Klimov <klimov.linux@gmail.com>,
+        Andrew Pinski <pinskia@gmail.com>,
+        Bamvor Zhangjian <bamv2005@gmail.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Florian Weimer" <fweimer@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        James Hogan <james.hogan@imgtec.com>,
+        James Morse <james.morse@arm.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Lin Yongting <linyongting@huawei.com>,
+        "Manuel Montezelo" <manuel.montezelo@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Nathan_Lynch <Nathan_Lynch@mentor.com>,
+        "Philipp Tomsich" <philipp.tomsich@theobroma-systems.com>,
+        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
+        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
+        Steve Ellcey <sellcey@caviumnetworks.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>
+Subject: Re: [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
+Thread-Topic: [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
+Thread-Index: AQHUhpjH9to/8IYtJ0GO80mU13Jv5KZi1g0AgAbuLc2AAL0yKQ==
+Date:   Mon, 13 May 2019 20:16:17 +0000
+Message-ID: <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
+References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+        <20190508225900.GA14091@yury-thinkpad>,<mvmtvdyoi33.fsf@suse.de>
+In-Reply-To: <mvmtvdyoi33.fsf@suse.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2601:640:9:8937:19d3:11c4:475e:3daa]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d63a7e5a-30b5-4c72-6c2e-08d6d7dfdb8f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR18MB3328;
+x-ms-traffictypediagnostic: MN2PR18MB3328:
+x-microsoft-antispam-prvs: <MN2PR18MB332863E675D3AFB0F5BEF1F1CB0F0@MN2PR18MB3328.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:826;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(39860400002)(346002)(199004)(189003)(55016002)(25786009)(9686003)(6246003)(316002)(64756008)(66556008)(66476007)(6116002)(66946007)(66446008)(76176011)(2501003)(7736002)(86362001)(73956011)(186003)(2906002)(476003)(76116006)(486006)(11346002)(4326008)(52536014)(446003)(46003)(229853002)(305945005)(99286004)(5660300002)(8936002)(68736007)(33656002)(8676002)(74316002)(6506007)(53936002)(4744005)(81166006)(7406005)(7416002)(7696005)(81156014)(6436002)(71200400001)(478600001)(102836004)(71190400001)(14454004)(54906003)(110136005)(14444005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3328;H:MN2PR18MB3086.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0BNA/4lGkwI/JlW9pnyosBaPDm721604g/Nf3FAJ0B/ROE9Hupn8TalOe1n6tAYKBDim/zKvwaubRL4labxcw8SscgAKrkz3NAY9IT8pwPQqCdoIhfvxdC+p0d7UMmZonRhz5O8qSt1NR37x5d6Q8ksZX5WcNMnR+FBN4iTbjqkO6PhExPk0DpVNmBzaE5FftIenOPUYMIbxzHe+bvHEQgZxHBjiHME+aFmfMpdmjDJ7+3xkWh51b+veSpXfSdLSW14XLPVYo20s6/c9dCbye7Yi/6xmMC76lhS2Vcnth7hRgBiwxiFiiWt3eswxlQ7+vdjDsya1CQjzCICCMUDKcv5hH32IXVRrkcJSS5MlhwGHZQiizlXIjUtGK7HABrJhnjUva8d8aP1ahEBGQ5CFagk/HuznHKSSaQ/sGRRSgHg=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: d63a7e5a-30b5-4c72-6c2e-08d6d7dfdb8f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 20:16:17.9821
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3328
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_12:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.05.2019 21:58, Trent Piepho wrote:
-> On Sat, 2019-05-11 at 14:32 +0200, Heiner Kallweit wrote:
->> On 11.05.2019 12:41, Heiner Kallweit wrote:
->>> On 10.05.2019 23:46, Trent Piepho wrote:
->>>> The variables used to store u32 DT properties were signed
->>>> ints.  This
->>>> doesn't work properly if the value of the property were to
->>>> overflow.
->>>> Use unsigned variables so this doesn't happen.
->>>>
->>>
->>> In patch 3 you added a check for DT properties being out of range.
->>> I think this would be good also for the three properties here.
->>> The delay values are only 4 bits wide, so you might also consider
->>> to switch to u8 or u16.
->>>
->>
->> I briefly looked over the rest of the driver. What is plain wrong
->> is to allocate memory for the private data structure in the
->> config_init callback. This has to be done in the probe callback.
->> An example is marvell_probe(). As you seem to work on this driver,
->> can you provide a patch for this?
-> 
-> It only allocates the data once, so it is not a memory leak.  But yes,
-> totally wrong place to do it.  I can fix this.  It also does not set
-> the signal line impedance from DT value unless unless also configuring
-> clock skew, even though they are orthogonal concepts.  And fails to
-> verify anything read from the DT.
-> 
-> Perhaps you could tell me if the approach I've taken in patch 3, 
-> "Add ability to disable output clock", and patch 4, "Disable tx/rx
-> delay when not configured", are considered acceptable?  I can conceive
-> of arguments for alternate approaches.  I would like to add support for
->  these into u-boot too, but typically u-boot follows the kernel DT
-> bindings, so I want to finalize the kernel DT semantics before sending
-> patches to u-boot.
-> 
-I lack experience with these TI PHY's. Maybe Andrew or Florian can advise.
++ ltp@lists.linux.it
 
->>> Please note that net-next is closed currently. Please resubmit the
->>> patches once it's open again, and please annotate them properly
->>> with net-next.
-> 
-> Sorry, didn't know about this policy.  Been years since I've submitted
-> net patches.  Is there a description somewhere of how this is done? 
-> Googling net-next wasn't helpful.  I gather new patches are only
-> allowed when the kernel merge window is open?  And they can't be queued
-> on patchwork or a topic branch until this happens?
-> 
-https://www.kernel.org/doc/Documentation/networking/netdev-FAQ.txt
+> There is a problem with the stack size accounting during execve when
+> there is no stack limit:
+>
+> $ ulimit -s
+> 8192
+> $ ./hello.ilp32=20
+> Hello World!
+> $ ulimit -s unlimited
+> $ ./hello.ilp32=20
+> Segmentation fault
+> $ strace ./hello.ilp32=20
+> execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) =
+=3D -1 ENOMEM (Cannot allocate memory)
+> +++ killed by SIGSEGV +++
+> Segmentation fault (core dumped)
+>
+> Andreas.
 
-And the easy way to check whether net-next is open:
-http://vger.kernel.org/~davem/net-next.html
+Thanks Andreas, I will take a look. Do we have such test in LTP?
+   =20
+Yury=
