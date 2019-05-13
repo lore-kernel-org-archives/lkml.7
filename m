@@ -2,157 +2,182 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DC0C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E68C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E20208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02F2208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="EC+mOskp"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QgoxxEUS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfEMKCx (ORCPT
+        id S1728880AbfEMKDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:02:53 -0400
-Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:46246
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727937AbfEMKCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:02:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0T9VWgh602kpcI+RpnlVv1QjadhoZseZrLTppVQ4k2E=;
- b=EC+mOskpBCJOFENEOn2o0301aDxeSr7tb9E1eNrPmM5SKSez8DGNh/yxaMNFdExtigTDv63+V3uZ/H5WX5IR+hQ7pnSiIjdc6XsmCNkEk19O61algn57txd7ECFLjONBVWuKMWgTRQso4ZMO2yvS6iReIyfg7N6SMCHzZzZATz0=
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
- VI1PR04MB4800.eurprd04.prod.outlook.com (20.177.48.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Mon, 13 May 2019 10:02:44 +0000
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::18d6:6f21:db62:4fe7]) by VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::18d6:6f21:db62:4fe7%2]) with mapi id 15.20.1878.024; Mon, 13 May 2019
- 10:02:44 +0000
-From:   Viorel Suman <viorel.suman@nxp.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Colin Ian King <colin.king@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        Viorel Suman <viorel.suman@gmail.com>
-Subject: [PATCH V2 2/2] ASoC: ak4458: add return value for ak4458_probe
-Thread-Topic: [PATCH V2 2/2] ASoC: ak4458: add return value for ak4458_probe
-Thread-Index: AQHVCXMCzF054fnn0U+h7l73qDbc+A==
-Date:   Mon, 13 May 2019 10:02:44 +0000
-Message-ID: <1557741724-6859-3-git-send-email-viorel.suman@nxp.com>
-References: <1557741724-6859-1-git-send-email-viorel.suman@nxp.com>
-In-Reply-To: <1557741724-6859-1-git-send-email-viorel.suman@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR08CA0227.eurprd08.prod.outlook.com
- (2603:10a6:802:15::36) To VI1PR04MB4704.eurprd04.prod.outlook.com
- (2603:10a6:803:52::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=viorel.suman@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 36a22c84-9c01-49df-a9d2-08d6d78a24bd
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4800;
-x-ms-traffictypediagnostic: VI1PR04MB4800:
-x-microsoft-antispam-prvs: <VI1PR04MB480041252B0CE940802B877A920F0@VI1PR04MB4800.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:883;
-x-forefront-prvs: 0036736630
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(346002)(366004)(39860400002)(189003)(199004)(486006)(44832011)(446003)(66066001)(8936002)(8676002)(36756003)(4326008)(73956011)(66946007)(2501003)(86362001)(14454004)(478600001)(26005)(2201001)(102836004)(11346002)(476003)(2616005)(186003)(66446008)(64756008)(66556008)(66476007)(5660300002)(386003)(6506007)(305945005)(54906003)(7736002)(6116002)(316002)(110136005)(2906002)(99286004)(52116002)(25786009)(76176011)(6512007)(71200400001)(71190400001)(68736007)(81156014)(50226002)(81166006)(14444005)(256004)(53936002)(3846002)(6436002)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4800;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ea/HqAHvS8Vx+qgg9X04zTeVjgKMhnokOT1Xb74nLEz7ps400r81QWk1XIf5Are49cx9doUEAQIbdlXe6Enw2k0X4yFeI67DXHA3upYxtAsZWTAuc5TJHMJy5Ad9oMNgOVD1pp1StuJCxYTZGJJbRAn4qmS7O/lDBrFjVabsDX9ktDtoaSeAjGgqBeQ2E8lclpVFCGHBG+/Pc+AevgztwovOclxtyuN2i18BBbvBRYvtUHACu7TlqlisdMFN5GBGAXcupmYHwbC6T3ht6O7y7qVR9EnvFSanON3Tf7o7nRd61UYL3W6/S3mBpDKWHGxTtupiIvO6xQohpzd7Bp5hddqCTScm0+R3tL1UM6fKSOJaVLy2PmseglmAG/HOcbNpqloGI7QCFmedovEln3w7hLcAMM+bQHPOG4lengdnFi0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <C61FD3D585FC4C449B7408E138CAF8C6@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 May 2019 06:03:25 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:36746 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbfEMKDY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:03:24 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190513100321euoutp02b3bcadaeac957f35581436640f716f7a~eNepcnRsl0579705797euoutp02M
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:03:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190513100321euoutp02b3bcadaeac957f35581436640f716f7a~eNepcnRsl0579705797euoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1557741801;
+        bh=IVyisuCc+JszPY6NcxfHr7roJU9tFZ+A5xwYyJ4aG68=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=QgoxxEUSATFPCiMPyDY/wp+qeqY/UeYzRS8tKXdSlqckvscc/FNMK/UsVPU7lE0uy
+         i3AX7aCgKXRWJlEtpcLnj5n549kjhmZLgi7d8Sm3c8E9SlgtRcReVvIcRQezaOfpZ/
+         PCbB6oVp0BJn1uPHCCgrd6/rA2+m5j2djo8jp1lw=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190513100321eucas1p2ccc4a16258b06ca90cf5e9c805092b50~eNeosycRa3209232092eucas1p2E;
+        Mon, 13 May 2019 10:03:21 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id A1.D2.04377.8E049DC5; Mon, 13
+        May 2019 11:03:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190513100320eucas1p1fea0b73bdc12f6a0a9456e967a26331c~eNen0RYM21359213592eucas1p1C;
+        Mon, 13 May 2019 10:03:20 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190513100319eusmtrp2f79d552aabf0abe043af66a88aa2071a~eNenkr2q-1629516295eusmtrp2K;
+        Mon, 13 May 2019 10:03:19 +0000 (GMT)
+X-AuditID: cbfec7f4-5632c9c000001119-9a-5cd940e8612e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 58.A3.04146.7E049DC5; Mon, 13
+        May 2019 11:03:19 +0100 (BST)
+Received: from [106.120.50.25] (unknown [106.120.50.25]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190513100319eusmtip160e7839a37e04c81293c187ca4c6619b~eNenHPs5I0239002390eusmtip1G;
+        Mon, 13 May 2019 10:03:19 +0000 (GMT)
+Subject: Re: [PATCH v3] usb: core: verify devicetree nodes for USB devices
+To:     Peter Chen <peter.chen@nxp.com>,
+        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <5d0abe9c-613c-d39b-6746-78e5e5c2bbc5@samsung.com>
+Date:   Mon, 13 May 2019 12:03:18 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36a22c84-9c01-49df-a9d2-08d6d78a24bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 10:02:44.3253
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4800
+In-Reply-To: <VI1PR04MB5327FAC12E4A3D403E8D92128B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHfXa3u6s0e9wMD1ZKg4zCl4yQC5UYWV6Kwogo1KilFzXnC7tO
+        sz5oimYqIfVBnYampqb5ii/T1NDEVVOXGcxMM0O0zIWvYSEz583y2+/8z/8853/goQhpu8iR
+        Co+KZVVRCqWctBE29/4yuH31+RB0cKrYla7PrRXRKSW1JG0w1InpobYCks41dAro4rJUgv7W
+        s4LolYkcAb36aVTkY82MjCYyDZX3SObFo2diZlb/RszU/9AKmPuNlYhZbHDyFwfYHA1hleFx
+        rMrD+5pNWKUhnYyZld2cqZ4XJqFSnIGsKcCHYUw7IbKwFFcgGDVu53kJQXGdXwayWedFBOXV
+        v4WbAxV9bQK+UY7gVX8jyRcmBJnLRRtPyfBpKBswkha2x5chx6wXWkwETiGg5X0XYWmQ2BMy
+        TBkbJgn2hrTl2nWmKCHeC2k9agvuwEFQvPjXYQev8yY3QljjKzBsnBZYmMDO0GIqIHh2gJHJ
+        wo1wgAfEkN/aSvKpfaGqvpfgWQYzukYxz7tgrXVzIAXBxEC1mC+yEAwl5yLedQRe6gZFlkQE
+        3g+1bR68fBxmx9oFFhmwLQyb7PgQtvCgOYfgZQmkp0l5twtodDX/1na9fUdkI7lmy2maLedo
+        tpyj+b+3CAkrkQOr5iJDWe5QFBvvzikiOXVUqHtwdGQDWv9TerNuSYvaVq93I0wh+TYJnh4O
+        kooUcVxCZDcCipDbSwL2rEuSEEXCLVYVfVWlVrJcN9pJCeUOkttWnwOlOFQRy0awbAyr2uwK
+        KGvHJFRo61yR7ev2U1I/r61yihhfS/ba99GxJe9cB+MSYdvsc2Hu/NmalbTU702JCycHA+MT
+        WUWm0jXG/c4pVUlW026voS9WZ0qfBD9euEQi/cXnD/1ksj7/BCbAeKMzoWK0AyXqlvuOxZzI
+        7zX2I+7uPFdubx6feto052bWLhVqrWblQi5M4XmAUHGKP5/wG0FPAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPIsWRmVeSWpSXmKPExsVy+t/xu7rPHW7GGHx6pGOxccZ6VovmxevZ
+        LM6f38BucXnXHDaLGef3MVksWtbKbPHyyA9Gix8PpzNZ/Ll3h9WB0+PWnXqPTas62Tz2z13D
+        7vHm9Cl2j43vdjB59G1ZxejxeZNcAHuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5
+        rJWRqZK+nU1Kak5mWWqRvl2CXsaq8x1sBW+EK16t/cjSwLhEoIuRk0NCwERixZldTF2MXBxC
+        AksZJSa+uMsEkZCRODmtgRXCFpb4c62LDaLoNaPE7f9T2EASwgJeEsvOXQeyOThEBCIk9lzK
+        A6lhFmhmlrjZ0MYOUiMksJ5FYuMmThCbTcBQouttF1gvr4CdRNvX9WC9LAKqEm1HSkHCogIx
+        EiembmGHKBGUODnzCQuIzSkQK3Hj+nOw25gFzCTmbX7IDGHLS2x/OwfKFpe49WQ+0wRGoVlI
+        2mchaZmFpGUWkpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiNz27Gfm3cwXtoYfIhR
+        gINRiYdX4PmNGCHWxLLiytxDjBIczEoivFGKQCHelMTKqtSi/Pii0pzU4kOMpkC/TWSWEk3O
+        ByaNvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjJFn+H+Vz5l+
+        Qf7VMv9Vma9K6v4X1Uy/dm1fl5Fy+qS7x27VHu6ewrXLV6njzZoU2eY9r03cVvts/Z7e0sQ7
+        0Ztzuig7w+SWJKMGFwWT4qq+3tp84xX/p2hyiy9WiY+R+mm8odbRlm3W9XUB0RZ/NgbU/9k3
+        K5R5f6Nvpt/ehdLRKvwvs95vVGIpzkg01GIuKk4EAD5aYNbiAgAA
+X-CMS-MailID: 20190513100320eucas1p1fea0b73bdc12f6a0a9456e967a26331c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190509084827eucas1p294962744fe70745c50b69a5349b5de68
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190509084827eucas1p294962744fe70745c50b69a5349b5de68
+References: <yw1xpnotufti.fsf@mansr.com>
+        <CGME20190509084827eucas1p294962744fe70745c50b69a5349b5de68@eucas1p2.samsung.com>
+        <20190509084726.5405-1-m.szyprowski@samsung.com>
+        <yw1xlfzfv4ol.fsf@mansr.com>
+        <VI1PR04MB5327AD56CA772284DFE663D08B0C0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <7c5579d2-634a-d705-a451-563939957d57@samsung.com>
+        <VI1PR04MB5327B425756FA394C51525208B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <3544eb61-2bd8-338d-8d62-d95a775528ef@samsung.com>
+        <VI1PR04MB5327FAC12E4A3D403E8D92128B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AK4458 is probed successfully even if AK4458 is not present - this
-is caused by probe function returning no error on i2c access failure.
-Return an error on probe if i2c access has failed.
+Hi Peter,
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
----
- sound/soc/codecs/ak4458.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+On 2019-05-13 11:23, Peter Chen wrote:
+>> On 2019-05-13 11:00, Peter Chen wrote:
+>>>> On 2019-05-10 05:10, Peter Chen wrote:
+>>>>>> Marek Szyprowski <m.szyprowski@samsung.com> writes:
+>>>>>>> Commit 69bec7259853 ("USB: core: let USB device know device node")
+>>>>>>> added support for attaching devicetree node for USB devices. The
+>>>>>>> mentioned commit however identifies the given USB device node only
+>>>>>>> by the
+>>>> 'reg'
+>>>>>>> property in the host controller children nodes. The USB device
+>>>>>>> node however also has to have a 'compatible' property as described
+>>>>>>> in Documentation/devicetree/bindings/usb/usb-device.txt. Lack for
+>>>>>>> the 'compatible' property check might result in assigning a
+>>>>>>> devicetree node, which is not intended to be the proper node for the given
+>> USB device.
+>>>>>>> This is important especially when USB host controller has
+>>>>>>> child-nodes for other purposes. For example, Exynos EHCI and OHCI
+>>>>>>> drivers already define child-nodes for each physical root hub port
+>>>>>>> and assigns respective PHY controller and parameters for them.
+>>>>>>> Those binding predates support for USB devicetree nodes.
+>>>>>>>
+>>>>>>> Checking for the proper compatibility string allows to mitigate
+>>>>>>> the conflict between USB device devicetree nodes and the bindings
+>>>>>>> for USB controllers with child nodes. It also fixes the
+>>>>>>> side-effect of the other commits, like 01fdf179f4b0 ("usb: core:
+>>>>>>> skip interfaces disabled in devicetree"), which incorrectly
+>>>>>>> disables some devices on Exynos based boards.
+>>>>> Hi Marek,
+>>>>>
+>>>>> The purpose of your patch is do not set of_node for device under USB
+>>>>> controller,
+>>>> right?
+>>>>
+>>>> Right.
+>>>>
+>>> Do you mind doing it at function exynos_ehci_get_phy of ehci-exynos.c?
+>> I don't mind fixing it in ehci-exynos, but frankly so far I have no idea how to do it.
+>> The problem is that newly created USB devices get of-node pointer pointing to a
+>> node which if not intended for them. How this can be fixed in ehci-exynos?
+>>
+>   
+> Can't be workaround by setting of_node as NULL for EHCI controller or for PHY node at
+> exynos_ehci_get_phy?
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index baf990a..7156215 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -539,9 +539,10 @@ static void ak4458_power_on(struct ak4458_priv *ak4458=
-)
- 	}
- }
-=20
--static void ak4458_init(struct snd_soc_component *component)
-+static int ak4458_init(struct snd_soc_component *component)
- {
- 	struct ak4458_priv *ak4458 =3D snd_soc_component_get_drvdata(component);
-+	int ret;
-=20
- 	/* External Mute ON */
- 	if (ak4458->mute_gpiod)
-@@ -549,21 +550,21 @@ static void ak4458_init(struct snd_soc_component *com=
-ponent)
-=20
- 	ak4458_power_on(ak4458);
-=20
--	snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
-+	ret =3D snd_soc_component_update_bits(component, AK4458_00_CONTROL1,
- 			    0x80, 0x80);   /* ACKS bit =3D 1; 10000000 */
-+	if (ret < 0)
-+		return ret;
-=20
--	ak4458_rstn_control(component, 1);
-+	return ak4458_rstn_control(component, 1);
- }
-=20
- static int ak4458_probe(struct snd_soc_component *component)
- {
- 	struct ak4458_priv *ak4458 =3D snd_soc_component_get_drvdata(component);
-=20
--	ak4458_init(component);
--
- 	ak4458->fs =3D 48000;
-=20
--	return 0;
-+	return ak4458_init(component);
- }
-=20
- static void ak4458_remove(struct snd_soc_component *component)
---=20
-2.7.4
+Ah, such workaround? I will check, but this will need to be done with 
+care, because have a side effect for other subsystems like regulators or 
+clocks.
+
+BTW, What's wrong with proper, full verification of USB device nodes?
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
