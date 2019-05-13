@@ -3,121 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB6FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D38DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFCC6208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:28:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03813208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 07:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOxp6Zc6"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="XckAKA7V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfEMH2p (ORCPT
+        id S1727996AbfEMH3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 03:28:45 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46277 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727966AbfEMH2p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 03:28:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id 203so8539783oid.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 00:28:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=inqo6XzBpfFXCCdJVPBLKf9Opijt817LqYON3iXApKY=;
-        b=TOxp6Zc6cZKp/VDUtYtpEKVfeuc2nTD4tLl+yijhyEW06dzrim0crPf92T442t32aQ
-         p+7m0gOPvlX7C/y/CfIxqlAiQFFKkUp2rBDw+y7XTzedhx0sH0UqLvCAOT+s5ACPhPrF
-         B6RNUb4Q6oPqQ6wF/Pv85F/GPLy+Jq5oUk6swIALTWWPzP2FtmC0unYFi7SdQ8FGEURm
-         D3p0+n8QBXx80xSSqw/fcmFBhBzBD6uEsi2bZIyW1KOkulzR8YNUK+FYPLKbRpinGEty
-         JodtKqCLOfPyN/mm3IrZLc6eyH+qu0A2W5Txqmjv9YcUrrDP/pHiASsg/HhxbmdPwUR8
-         eUHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=inqo6XzBpfFXCCdJVPBLKf9Opijt817LqYON3iXApKY=;
-        b=T4nvkVTxIujdHhBLXB5eD4JrZVj61HoG+R6y5/Ht22iEiGZx/D5H8jiCiF4WJN0J7p
-         ZwWRSRMrCIl8Uztv34As8VZ9+xqljrs/dKN6oCdUyz3zPhKUDRFTuQMeuATDfHkuJpQP
-         jQjceJO0LECcYETQeUr/ZiSBg1CJ9rInV/Cg2xNcO+d9q09UccM2xUj6VvoxraMQ/b/A
-         QIFSjHZIRXaiAtNl+b73lnCadYJ3/JmG7tLPt4Vva23vA1Sodno612LRm282nRFM7hfs
-         aHuLYb5X8GxCv9NWW7HjQC65y+FPnER7Ql665A+SHFMLE5BVlFWh40b0aJJFUYVEDGFl
-         FUbg==
-X-Gm-Message-State: APjAAAVK4poigIvnTLyHtOmton5/9hDnakJUGGMQI/pM2mu2Ny+ZLcb1
-        2JzvF3+YSYHOnEoLGK/Yb1F65/HB
-X-Google-Smtp-Source: APXvYqzKXQHo0LWZsPJk4ieZWiXeC0hvAMOoNqJK4oHn7wyFm2izPg3MdyEZcl7PL+m7efKXLFlHsw==
-X-Received: by 2002:aca:54c7:: with SMTP id i190mr7239656oib.108.1557732524474;
-        Mon, 13 May 2019 00:28:44 -0700 (PDT)
-Received: from JosephdeMacBook-Pro.local ([205.204.117.24])
-        by smtp.gmail.com with ESMTPSA id z20sm4402970otm.33.2019.05.13.00.28.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 00:28:43 -0700 (PDT)
-Subject: Re: [PATCH] ocfs2: Fix error path kobject memory leak
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
-References: <20190513033458.2824-1-tobin@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>
-From:   Joseph Qi <jiangqi903@gmail.com>
-Message-ID: <a4c16c11-15f4-cc34-9c31-69c7ce900486@gmail.com>
-Date:   Mon, 13 May 2019 15:28:37 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190513033458.2824-1-tobin@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 13 May 2019 03:29:02 -0400
+Received: from mail-eopbgr50098.outbound.protection.outlook.com ([40.107.5.98]:28875
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727568AbfEMH3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 03:29:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6dbTAC//XHrFVIZfXDI+bV77HQpSpYzq9ex1ut4pJcg=;
+ b=XckAKA7VFgGqj1+tFvJTSBBlwN5+SpL0VMNfD06Xa0BxSHHOApFtoZGC+5u+clFDuwy5kT/n3ITymFAN8r/34VF6hi4Sk47ihu87FXU1u/P4Kfc3QMh3UFRkcLGXiQ+Y8eOOsyZIKCJtI60IQpfyuyMJguULAPg6KyEItwzzhLQ=
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com (52.134.17.157) by
+ VI1PR0502MB3087.eurprd05.prod.outlook.com (10.175.22.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Mon, 13 May 2019 07:28:18 +0000
+Received: from VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571]) by VI1PR0502MB3965.eurprd05.prod.outlook.com
+ ([fe80::48ff:f344:98da:6571%5]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 07:28:18 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>
+CC:     "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>,
+        Max Krummenacher <max.krummenacher@toradex.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>
+Subject: Re: [PATCH 4/5] iio: stmpe-adc: Use wait_for_completion_timeout
+Thread-Topic: [PATCH 4/5] iio: stmpe-adc: Use wait_for_completion_timeout
+Thread-Index: AQHVBOJHMVYXdjmHB0653c7vvGs0gKZluzwAgAL12oA=
+Date:   Mon, 13 May 2019 07:28:17 +0000
+Message-ID: <6bc5bf4c854288fae0591f33ea9ae4e5c4091616.camel@toradex.com>
+References: <20190507143615.28477-1-dev@pschenker.ch>
+         <20190507143615.28477-4-dev@pschenker.ch>
+         <20190511111548.504948ae@archlinux>
+In-Reply-To: <20190511111548.504948ae@archlinux>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+x-originating-ip: [46.140.72.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c68ebad4-3e66-4d46-c477-08d6d77491b1
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR0502MB3087;
+x-ms-traffictypediagnostic: VI1PR0502MB3087:
+x-microsoft-antispam-prvs: <VI1PR0502MB3087CDD718CE0EBF6AB80807F40F0@VI1PR0502MB3087.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(396003)(39840400004)(376002)(189003)(199004)(6916009)(6116002)(53936002)(478600001)(3846002)(5660300002)(14454004)(6246003)(2501003)(6506007)(91956017)(76116006)(73956011)(66446008)(64756008)(66556008)(66476007)(86362001)(66946007)(316002)(102836004)(486006)(476003)(2616005)(446003)(11346002)(44832011)(99286004)(7736002)(8676002)(81156014)(81166006)(4326008)(2351001)(8936002)(25786009)(305945005)(26005)(6512007)(54906003)(66066001)(76176011)(6486002)(14444005)(229853002)(36756003)(7416002)(68736007)(186003)(71200400001)(71190400001)(256004)(118296001)(5640700003)(2906002)(6436002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR0502MB3087;H:VI1PR0502MB3965.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: aLasiDEjj1AmLmwKwpfhyXkxZxO9B8a3A6U3JErB2WuXUw5RLUCfL6vZjRfLTwRqEkwupWe0x3SLFpat2PirX+DeRso2t4rACfDNv3ZcWFfxSLUWpdR5z2Xy0f71DzTDDpLt+Vc3gbk9+RUIw8XBT3bVcJq+Fu3uKf5rjiLlcQe8D76OfFfi7nq4u0gAEQRT6fUcAZkbpI8yHBgGHBTOBYMCFo2UWjIi1hWEeGBgqxZg2OmPqH6036B57wVlLK53A6t/HdXhfNBu0tg/MEQxwmJQpk74SswAlRAOtfFWOarD6rqBUfpb9YrGX2nRyyGYGsZdFwVVmk/mWC+7cdByAiVnWIvBLBI2RNobL7PrnWgc3JAoMepEobow8oC5bZ81xvcrEAGP+Ch3Z7/mXgeUPX7JeXX1QGbwWYpT4Mn4vgQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D331B7B33E79B841B5F2A31D1CE2760E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c68ebad4-3e66-4d46-c477-08d6d77491b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 07:28:17.9187
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0502MB3087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 19/5/13 11:34, Tobin C. Harding wrote:
-> If a call to kobject_init_and_add() fails we should call kobject_put()
-> otherwise we leak memory.
-> 
-> Add call to kobject_put() in the error path of call to
-> kobject_init_and_add().  Please note, this has the side effect that
-> the release method is called if kobject_init_and_add() fails.
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-> ---
-> 
-> Is it ok to send patches during the merge window?
-> 
-> Applies on top of Linus' mainline tag: v5.1
-> 
-> Happy to rebase if there are conflicts.
-> 
-> thanks,
-> Tobin.
-> 
->  fs/ocfs2/filecheck.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
-> index f65f2b2f594d..1906cc962c4d 100644
-> --- a/fs/ocfs2/filecheck.c
-> +++ b/fs/ocfs2/filecheck.c
-> @@ -193,6 +193,7 @@ int ocfs2_filecheck_create_sysfs(struct ocfs2_super *osb)
->  	ret = kobject_init_and_add(&entry->fs_kobj, &ocfs2_ktype_filecheck,
->  					NULL, "filecheck");
->  	if (ret) {
-> +		kobject_put(&entry->fs_kobj);
->  		kfree(fcheck);
->  		return ret;
->  	}
-> 
+T24gU2F0LCAyMDE5LTA1LTExIGF0IDExOjE1ICswMTAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
+Og0KPiBPbiBUdWUsICA3IE1heSAyMDE5IDE2OjM2OjE0ICswMjAwDQo+IFBoaWxpcHBlIFNjaGVu
+a2VyIDxkZXZAcHNjaGVua2VyLmNoPiB3cm90ZToNCj4gDQo+ID4gRnJvbTogUGhpbGlwcGUgU2No
+ZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiA+IA0KPiA+IFVzZSB3YWl0
+X2Zvcl9jb21wbGV0aW9uX3RpbWVvdXQgaW5zdGVhZCBvZg0KPiA+IHdhaXRfZm9yX2NvbXBsZXRp
+b25faW50ZXJ1cHRpYmxlX3RpbWVvdXQuDQo+ID4gDQo+ID4gVGhlIGludGVycnVwdGlibGUgdmFy
+aWFudCBnZXRzIGNvbnN0YW50bHkgaW50ZXJydXB0ZWQgaWYgYSB1c2VyDQo+ID4gcHJvZ3JhbSBp
+cyBjb21waWxlZCB3aXRoIHRoZSAtcGcgb3B0aW9uLg0KPiA+IFRoZSBraWxsYWJsZSB2YXJpYW50
+IHdhcyBub3QgdXNlZCBkdWUgdG8gdGhlIGZhY3QgdGhhdCBhIHNlY29uZA0KPiA+IHByb2dyYW0s
+IHJlYWRpbmcgb24gdGhpcyBkZXZpY2UsIHRoYXQgZ2V0cyBraWxsZWQgaXMgdGhlbiBhbHNvIGtp
+bGxpbmcNCj4gPiB0aGF0IHdhaXQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUg
+U2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXguY29tPg0KPiBIaSBQaGlsbGlwcGUN
+Cj4gDQo+IFRoaXMgb25lIGNsYXNoZWQgYSBsaXR0bGUgYml0IHdpdGggb3VyIGVhcmxpZXIgcGF0
+Y2ggdG8gcmVtb3ZlIHRoZQ0KPiB1bm5lY2Vzc2FyeSBhc3NpZ25tZW50LiAgSSd2ZSBhcHBsaWVk
+IGl0IGJ5IGhhbmQgYnV0IHBsZWFzZSBjaGVjayBpdC4NCj4gDQo+IEFwcGxpZWQgdG8gdGhlIHRv
+Z3JlZyBicmFuY2ggb2YgaWlvLmdpdCBhbmQgcHVzaGVkIG91dCBhcyB0ZXN0aW5nDQo+IGZvciB0
+aGUgYXV0b2J1aWxkZXJzIHRvIHBsYXkgd2l0aCBpdC4NCj4gDQo+IFRoYW5rcywNCj4gDQo+IEpv
+bmF0aGFuDQoNCkhtbSwgeWVhaCBJIHNlZSBpdCBzb3JyeSBmb3IgdGhhdCEgU29tZWhvdyB0aGF0
+IGxpbmUgd2VudCBpbiBhZ2FpbiBpbiB0aGlzDQpwYXRjaC4gRG9uJ3Qga25vdyB3aHkuLi4gQW55
+d2F5IEkgY2hlY2tlZCBpdCBhbmQgaXQgbG9va3MgZ29vZC4gVGhhbmsgeW91IQ0KDQpQaGlsaXBw
+ZQ0KDQo+ID4gLS0tDQo+ID4gDQo+ID4gIGRyaXZlcnMvaWlvL2FkYy9zdG1wZS1hZGMuYyB8IDE4
+ICsrKystLS0tLS0tLS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
+LCAxNCBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRj
+L3N0bXBlLWFkYy5jIGIvZHJpdmVycy9paW8vYWRjL3N0bXBlLWFkYy5jDQo+ID4gaW5kZXggODJi
+NDNlNDUyMmI2Li5jYzc1MmE0NzQ0NGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9paW8vYWRj
+L3N0bXBlLWFkYy5jDQo+ID4gKysrIGIvZHJpdmVycy9paW8vYWRjL3N0bXBlLWFkYy5jDQo+ID4g
+QEAgLTc3LDE3ICs3NywxMSBAQCBzdGF0aWMgaW50IHN0bXBlX3JlYWRfdm9sdGFnZShzdHJ1Y3Qg
+c3RtcGVfYWRjICppbmZvLA0KPiA+ICAJc3RtcGVfcmVnX3dyaXRlKGluZm8tPnN0bXBlLCBTVE1Q
+RV9SRUdfQURDX0NBUFQsDQo+ID4gIAkJCVNUTVBFX0FEQ19DSChpbmZvLT5jaGFubmVsKSk7DQo+
+ID4gIA0KPiA+IC0JKnZhbCA9IGluZm8tPnZhbHVlOw0KPiA+IC0NCj4gPiAtCXJldCA9IHdhaXRf
+Zm9yX2NvbXBsZXRpb25faW50ZXJydXB0aWJsZV90aW1lb3V0DQo+ID4gLQkJKCZpbmZvLT5jb21w
+bGV0aW9uLCBTVE1QRV9BRENfVElNRU9VVCk7DQo+ID4gKwlyZXQgPSB3YWl0X2Zvcl9jb21wbGV0
+aW9uX3RpbWVvdXQoJmluZm8tPmNvbXBsZXRpb24sIFNUTVBFX0FEQ19USU1FT1VUKTsNCj4gPiAg
+DQo+ID4gIAlpZiAocmV0IDw9IDApIHsNCj4gPiAgCQltdXRleF91bmxvY2soJmluZm8tPmxvY2sp
+Ow0KPiA+IC0JCWlmIChyZXQgPT0gMCkNCj4gPiAtCQkJcmV0dXJuIC1FVElNRURPVVQ7DQo+ID4g
+LQkJZWxzZQ0KPiA+IC0JCQlyZXR1cm4gcmV0Ow0KPiA+ICsJCXJldHVybiAtRVRJTUVET1VUOw0K
+PiA+ICAJfQ0KPiA+ICANCj4gPiAgCSp2YWwgPSBpbmZvLT52YWx1ZTsNCj4gPiBAQCAtMTE2LDE1
+ICsxMTAsMTEgQEAgc3RhdGljIGludCBzdG1wZV9yZWFkX3RlbXAoc3RydWN0IHN0bXBlX2FkYyAq
+aW5mbywNCj4gPiAgCXN0bXBlX3JlZ193cml0ZShpbmZvLT5zdG1wZSwgU1RNUEVfUkVHX1RFTVBf
+Q1RSTCwNCj4gPiAgCQkJU1RNUEVfU1RBUlRfT05FX1RFTVBfQ09OVik7DQo+ID4gIA0KPiA+IC0J
+cmV0ID0gd2FpdF9mb3JfY29tcGxldGlvbl9pbnRlcnJ1cHRpYmxlX3RpbWVvdXQNCj4gPiAtCQko
+JmluZm8tPmNvbXBsZXRpb24sIFNUTVBFX0FEQ19USU1FT1VUKTsNCj4gPiArCXJldCA9IHdhaXRf
+Zm9yX2NvbXBsZXRpb25fdGltZW91dCgmaW5mby0+Y29tcGxldGlvbiwgU1RNUEVfQURDX1RJTUVP
+VVQpOw0KPiA+ICANCj4gPiAgCWlmIChyZXQgPD0gMCkgew0KPiA+ICAJCW11dGV4X3VubG9jaygm
+aW5mby0+bG9jayk7DQo+ID4gLQkJaWYgKHJldCA9PSAwKQ0KPiA+IC0JCQlyZXR1cm4gLUVUSU1F
+RE9VVDsNCj4gPiAtCQllbHNlDQo+ID4gLQkJCXJldHVybiByZXQ7DQo+ID4gKwkJcmV0dXJuIC1F
+VElNRURPVVQ7DQo+ID4gIAl9DQo+ID4gIA0KPiA+ICAJLyoNCg==
