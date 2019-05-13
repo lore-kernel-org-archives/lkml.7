@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CDFC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D592FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F9A2146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A86452084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hG+Eotkw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mJcTtw57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728916AbfEMOjy (ORCPT
+        id S1730428AbfEMOj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:39:54 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:59466 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbfEMOjr (ORCPT
+        Mon, 13 May 2019 10:39:59 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45680 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730320AbfEMOj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:39:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd4lg195008;
-        Mon, 13 May 2019 14:39:14 GMT
+        Mon, 13 May 2019 10:39:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DESlCI171427;
+        Mon, 13 May 2019 14:38:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=gIeFN0ziPc52a8KLvMF4BYUuKgdMORhtc90dfJFFcK8=;
- b=hG+EotkwfW0afgyQ6GQFcjNoUZvzVSUEOYaoXlfVoV2cUsog6OXPvWLhJn7Oel/wqLNU
- q93k3vhzcUlchxQbCpQ1datYttq5bU2CVnCcfgAzotf47Y8hQH+8rBgoN2OmMBnGwcKO
- LEQEsJMpMtvD5hREw/USDtI1pRBmvG/plElU+Xrot/aCMJUcLyH6vUNMyX9iYSD4MPrI
- Y0R0Lk4RBx9aTbJnKTE11caIJKBYXFjCKw9NZy0zBsZERP6ZtLnDVZy0YizHnM93iBtI
- eV66j3vQdt+zdewHBfSeob4gdmSsVVx7BhZaz3q+MBojcv1hUk06rRc6rPcuwhVdDGFV rg== 
+ bh=GS3GihsPyz7Y99NHOiQDTtmA0apAWQh5Zi8mHVLNyoo=;
+ b=mJcTtw571vBY/DqchePtoK+a2fMaLqNsWff99ts41cz3uW81AVh8k2kIjQIXfkadX5Q3
+ 6F/E6e4/O6myTDqiwNYcUSpAOVMeeIBt5z6sBwlWmvIiYKdfzx0Qg4nsfGs0iR0Ee/ws
+ 8fyDT/ryZpc/Obi/2zRq7DJqs0810bOvF26HLCD7ir3wtStKFUFAa7Ws6PKz+Pu1UJQL
+ dU9UJa5EK8+LYETRyQ5DuH2DbGMtHYVtA2jgoPUK3ziD1XjXnCkAD9TDmm7V4635R9i5
+ XflzqnTQJehHeZrV5CJoVBXa8ETCmtisHC5rPPYYhukBl0cMbZnPTDNSWhzzDSLkexDm Fw== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2120.oracle.com with ESMTP id 2sdq1q7avt-1
+        by userp2130.oracle.com with ESMTP id 2sdnttfecf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:14 +0000
+        Mon, 13 May 2019 14:38:54 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQE022780;
-        Mon, 13 May 2019 14:39:11 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQ7022780;
+        Mon, 13 May 2019 14:38:50 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,103 +50,111 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 11/27] kvm/isolation: add KVM page table entry offset functions
-Date:   Mon, 13 May 2019 16:38:19 +0200
-Message-Id: <1557758315-12667-12-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 04/27] KVM: x86: Switch to KVM address space on entry to guest
+Date:   Mon, 13 May 2019 16:38:12 +0200
+Message-Id: <1557758315-12667-5-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130103
+ definitions=main-1905130102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These functions are wrappers are the p4d/pud/pmd/pte offset functions
-which ensure that page table pointers are in the KVM page table.
+From: Liran Alon <liran.alon@oracle.com>
 
+Switch to KVM address space on entry to guest and switch
+out on immediately at exit (before enabling host interrupts).
+
+For now, this is not effectively switching, we just remain on
+the kernel address space. In addition, we switch back as soon
+as we exit guest, which makes KVM #VMExit handlers still run
+with full host address space.
+
+However, this introduces the entry points and places for switching.
+
+Next commits will change switch to happen only when necessary.
+
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/isolation.c |   61 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 61 insertions(+), 0 deletions(-)
+ arch/x86/kvm/isolation.c |   20 ++++++++++++++++++++
+ arch/x86/kvm/isolation.h |    2 ++
+ arch/x86/kvm/x86.c       |    8 ++++++++
+ 3 files changed, 30 insertions(+), 0 deletions(-)
 
 diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index 61df750..b29a09b 100644
+index 74bc0cd..35aa659 100644
 --- a/arch/x86/kvm/isolation.c
 +++ b/arch/x86/kvm/isolation.c
-@@ -162,6 +162,67 @@ static bool kvm_valid_pgt_entry(void *ptr)
+@@ -119,3 +119,23 @@ void kvm_isolation_uninit(void)
+ 	kvm_isolation_uninit_mm();
+ 	pr_info("KVM: x86: End of isolated address space\n");
  }
++
++void kvm_isolation_enter(void)
++{
++	if (address_space_isolation) {
++		/*
++		 * Switches to kvm_mm should happen from vCPU thread,
++		 * which should not be a kernel thread with no mm
++		 */
++		BUG_ON(current->active_mm == NULL);
++		/* TODO: switch to kvm_mm */
++	}
++}
++
++void kvm_isolation_exit(void)
++{
++	if (address_space_isolation) {
++		/* TODO: Kick sibling hyperthread before switch to host mm */
++		/* TODO: switch back to original mm */
++	}
++}
+diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
+index cf8c7d4..595f62c 100644
+--- a/arch/x86/kvm/isolation.h
++++ b/arch/x86/kvm/isolation.h
+@@ -4,5 +4,7 @@
  
- /*
-+ * kvm_pXX_offset() functions are equivalent to kernel pXX_offset()
-+ * functions but, in addition, they ensure that page table pointers
-+ * are in the KVM page table. Otherwise an error is returned.
-+ */
+ extern int kvm_isolation_init(void);
+ extern void kvm_isolation_uninit(void);
++extern void kvm_isolation_enter(void);
++extern void kvm_isolation_exit(void);
+ 
+ #endif
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 4b7cec2..85700e0 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -7896,6 +7896,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		goto cancel_injection;
+ 	}
+ 
++	kvm_isolation_enter();
 +
-+static pte_t *kvm_pte_offset(pmd_t *pmd, unsigned long addr)
-+{
-+	pte_t *pte;
-+
-+	pte = pte_offset_map(pmd, addr);
-+	if (!kvm_valid_pgt_entry(pte)) {
-+		pr_err("PTE %px is not in KVM page table\n", pte);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return pte;
-+}
-+
-+static pmd_t *kvm_pmd_offset(pud_t *pud, unsigned long addr)
-+{
-+	pmd_t *pmd;
-+
-+	pmd = pmd_offset(pud, addr);
-+	if (!kvm_valid_pgt_entry(pmd)) {
-+		pr_err("PMD %px is not in KVM page table\n", pmd);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return pmd;
-+}
-+
-+static pud_t *kvm_pud_offset(p4d_t *p4d, unsigned long addr)
-+{
-+	pud_t *pud;
-+
-+	pud = pud_offset(p4d, addr);
-+	if (!kvm_valid_pgt_entry(pud)) {
-+		pr_err("PUD %px is not in KVM page table\n", pud);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return pud;
-+}
-+
-+static p4d_t *kvm_p4d_offset(pgd_t *pgd, unsigned long addr)
-+{
-+	p4d_t *p4d;
-+
-+	p4d = p4d_offset(pgd, addr);
+ 	if (req_immediate_exit) {
+ 		kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 		kvm_x86_ops->request_immediate_exit(vcpu);
+@@ -7946,6 +7948,12 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
+ 
 +	/*
-+	 * p4d is the same has pgd if we don't have a 5-level page table.
++	 * TODO: Move this to where we architectually need to access
++	 * host (or other VM) sensitive data
 +	 */
-+	if ((p4d != (p4d_t *)pgd) && !kvm_valid_pgt_entry(p4d)) {
-+		pr_err("P4D %px is not in KVM page table\n", p4d);
-+		return ERR_PTR(-EINVAL);
-+	}
++	kvm_isolation_exit();
 +
-+	return p4d;
-+}
-+
-+/*
-  * kvm_pXX_free() functions are equivalent to kernel pXX_free()
-  * functions but they can be used with any PXX pointer in the
-  * directory.
+ 	vcpu->mode = OUTSIDE_GUEST_MODE;
+ 	smp_wmb();
+ 
 -- 
 1.7.1
 
