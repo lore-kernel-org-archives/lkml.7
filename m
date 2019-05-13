@@ -2,194 +2,196 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF87FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CBFC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85341208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF747214C6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 19:56:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iESxXiQh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfEMTyS (ORCPT
+        id S1726347AbfEMT4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 15:54:18 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3596 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725928AbfEMTyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 15:54:18 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 12:54:17 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 13 May 2019 12:54:17 -0700
-Date:   Mon, 13 May 2019 12:54:17 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH 3/3] KVM: LAPIC: Optimize timer latency further
-Message-ID: <20190513195417.GM28561@linux.intel.com>
-References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
- <1557401361-3828-4-git-send-email-wanpengli@tencent.com>
+        Mon, 13 May 2019 15:56:53 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49854 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725928AbfEMT4w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 15:56:52 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DJlc2F001155
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:56:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=Q/m7r9oDhbabE7C5gARZpfLLlDj2HaUtKuQrbtPLsyQ=;
+ b=iESxXiQh8mb73jrpFI7BpQ+227YydRv6Qyx7giJk6NgY/AibbJqMfp5B9+i5/DFDZmaJ
+ xGCKpXW5AcggB98y/MQ6C2KMCqG4Nbiehiql13wiZ92CLvkMRjJqsDEnLv0GZvoYnso+
+ zQwnhi7bI0MeWMwGDquYHiMIwQeIOulmK44= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sf94d1fce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 12:56:51 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 13 May 2019 12:56:50 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 4F25311FD7D42; Mon, 13 May 2019 12:56:48 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Tejun Heo <tj@kernel.org>
+CC:     Oleg Nesterov <oleg@redhat.com>, Alex Xu <alex_y_xu@yahoo.ca>,
+        <kernel-team@fb.com>, <cgroups@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] signal: don't always leave task frozen after ptrace_stop()
+Date:   Mon, 13 May 2019 12:55:17 -0700
+Message-ID: <20190513195517.2289671-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557401361-3828-4-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=352 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130133
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 07:29:21PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Advance lapic timer tries to hidden the hypervisor overhead between host 
-> timer fires and the guest awares the timer is fired. However, it just hidden 
-> the time between apic_timer_fn/handle_preemption_timer -> wait_lapic_expire, 
-> instead of the real position of vmentry which is mentioned in the orignial 
-> commit d0659d946be0 ("KVM: x86: add option to advance tscdeadline hrtimer 
-> expiration"). There is 700+ cpu cycles between the end of wait_lapic_expire 
-> and before world switch on my haswell desktop, it will be 2400+ cycles if 
-> vmentry_l1d_flush is tuned to always. 
-> 
-> This patch tries to narrow the last gap, it measures the time between 
-> the end of wait_lapic_expire and before world switch, we take this 
-> time into consideration when busy waiting, otherwise, the guest still 
-> awares the latency between wait_lapic_expire and world switch, we also 
-> consider this when adaptively tuning the timer advancement. The patch 
-> can reduce 50% latency (~1600+ cycles to ~800+ cycles on a haswell 
-> desktop) for kvm-unit-tests/tscdeadline_latency when testing busy waits.
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c   | 23 +++++++++++++++++++++--
->  arch/x86/kvm/lapic.h   |  8 ++++++++
->  arch/x86/kvm/vmx/vmx.c |  2 ++
->  3 files changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index e7a0660..01d3a87 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1545,13 +1545,19 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
->  
->  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->  	apic->lapic_timer.expired_tscdeadline = 0;
-> -	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> +	guest_tsc = kvm_read_l1_tsc(vcpu, (apic->lapic_timer.measure_delay_done == 2) ?
-> +		rdtsc() + apic->lapic_timer.vmentry_delay : rdtsc());
->  	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
->  
->  	if (guest_tsc < tsc_deadline)
->  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
->  
->  	adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
-> +
-> +	if (!apic->lapic_timer.measure_delay_done) {
-> +		apic->lapic_timer.measure_delay_done = 1;
-> +		apic->lapic_timer.vmentry_delay = rdtsc();
-> +	}
->  }
->  
->  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> @@ -1837,6 +1843,18 @@ static void apic_manage_nmi_watchdog(struct kvm_lapic *apic, u32 lvt0_val)
->  	}
->  }
->  
-> +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_timer *ktimer = &vcpu->arch.apic->lapic_timer;
+The ptrace_stop() function contains the cgroup_enter_frozen() call,
+but no cgroup_leave_frozen(). When ptrace_stop() is called from the
+do_jobctl_trap() path, it's correct, because corresponding
+cgroup_leave_frozen() calls in get_signal() will guarantee that
+the task won't leave the signal handler loop frozen.
 
-This will #GP if the APIC is not in-kernel, i.e. @apic is NULL.
+However, if ptrace_stop() is called from ptrace_signal() or
+ptrace_notify(), there is no such guarantee, and the task may leave
+with the frozen bit set.
 
-> +
-> +	if (ktimer->measure_delay_done == 1) {
-> +		ktimer->vmentry_delay = rdtsc() -
-> +			ktimer->vmentry_delay;
-> +		ktimer->measure_delay_done = 2;
+It leads to the regression, reported by Alex Xu. Write system call
+gets mistakenly interrupted by fake TIF_SIGPENDING, which is set
+by recalc_sigpending_tsk() because of the set frozen bit.
 
-Measuring the delay a single time is bound to result in random outliers,
-e.g. if an NMI happens to occur after wait_lapic_expire().
+The regression can be reproduced by stracing the following simple
+program:
 
-Rather than reinvent the wheel, can we simply move the call to
-wait_lapic_expire() into vmx.c and svm.c?  For VMX we'd probably want to
-support the advancement if enable_unrestricted_guest=true so that we avoid
-the emulation_required case, but other than that I don't see anything that
-requires wait_lapic_expire() to be called where it is.
+  #include <unistd.h>
 
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_lapic_measure_vmentry_delay);
-> +
->  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
->  {
->  	int ret = 0;
-> @@ -2318,7 +2336,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
->  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
->  		apic->lapic_timer.timer_advance_adjust_done = true;
->  	}
-> -
-> +	apic->lapic_timer.vmentry_delay = 0;
-> +	apic->lapic_timer.measure_delay_done = 0;
->  
->  	/*
->  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index d6d049b..f1d037b 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -35,6 +35,13 @@ struct kvm_timer {
->  	atomic_t pending;			/* accumulated triggered timers */
->  	bool hv_timer_in_use;
->  	bool timer_advance_adjust_done;
-> +	/**
-> +	 * 0 unstart measure
-> +	 * 1 start record
-> +	 * 2 get delta
-> +	 */
-> +	u32 measure_delay_done;
-> +	u64 vmentry_delay;
->  };
->  
->  struct kvm_lapic {
-> @@ -230,6 +237,7 @@ void kvm_lapic_switch_to_hv_timer(struct kvm_vcpu *vcpu);
->  void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu);
->  bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu);
->  void kvm_lapic_restart_hv_timer(struct kvm_vcpu *vcpu);
-> +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu);
->  
->  static inline enum lapic_mode kvm_apic_mode(u64 apic_base)
->  {
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 9663d41..a939bf5 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6437,6 +6437,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  	if (vcpu->arch.cr2 != read_cr2())
->  		write_cr2(vcpu->arch.cr2);
->  
-> +	kvm_lapic_measure_vmentry_delay(vcpu);
+  int main() {
+      write(1, "a", 1);
+      return 0;
+  }
 
-This should be wrapped in an unlikely of some form given that it happens
-literally once out of thousands/millions runs.
+An attempt to run strace ./a.out leads to the infinite loop:
+  [ pre-main omitted ]
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  [ repeats forever ]
 
-> +
->  	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
->  				   vmx->loaded_vmcs->launched);
->  
-> -- 
-> 2.7.4
-> 
+With this patch applied, it works as expected:
+  [ pre-main omitted ]
+  write(1, "a", 1)                        = 1
+  exit_group(0)                           = ?
+  +++ exited with 0 +++
+
+Reported-by: Alex Xu <alex_y_xu@yahoo.ca>
+Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>
+---
+ kernel/signal.c | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 8607b11ff936..f12abbda4c4b 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2016,7 +2016,8 @@ static bool sigkill_pending(struct task_struct *tsk)
+  * If we actually decide not to stop at all because the tracer
+  * is gone, we keep current->exit_code unless clear_code.
+  */
+-static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t *info)
++static void ptrace_stop(int exit_code, int why, int clear_code,
++			kernel_siginfo_t *info, bool may_remain_frozen)
+ 	__releases(&current->sighand->siglock)
+ 	__acquires(&current->sighand->siglock)
+ {
+@@ -2112,6 +2113,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		preempt_enable_no_resched();
+ 		cgroup_enter_frozen();
+ 		freezable_schedule();
++		if (!may_remain_frozen)
++			cgroup_leave_frozen(true);
+ 	} else {
+ 		/*
+ 		 * By the time we got the lock, our tracer went away.
+@@ -2152,7 +2155,8 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 	recalc_sigpending_tsk(current);
+ }
+ 
+-static void ptrace_do_notify(int signr, int exit_code, int why)
++static void ptrace_do_notify(int signr, int exit_code, int why,
++			     bool may_remain_frozen)
+ {
+ 	kernel_siginfo_t info;
+ 
+@@ -2163,7 +2167,7 @@ static void ptrace_do_notify(int signr, int exit_code, int why)
+ 	info.si_uid = from_kuid_munged(current_user_ns(), current_uid());
+ 
+ 	/* Let the debugger run.  */
+-	ptrace_stop(exit_code, why, 1, &info);
++	ptrace_stop(exit_code, why, 1, &info, may_remain_frozen);
+ }
+ 
+ void ptrace_notify(int exit_code)
+@@ -2173,7 +2177,7 @@ void ptrace_notify(int exit_code)
+ 		task_work_run();
+ 
+ 	spin_lock_irq(&current->sighand->siglock);
+-	ptrace_do_notify(SIGTRAP, exit_code, CLD_TRAPPED);
++	ptrace_do_notify(SIGTRAP, exit_code, CLD_TRAPPED, false);
+ 	spin_unlock_irq(&current->sighand->siglock);
+ }
+ 
+@@ -2328,10 +2332,10 @@ static void do_jobctl_trap(void)
+ 			signr = SIGTRAP;
+ 		WARN_ON_ONCE(!signr);
+ 		ptrace_do_notify(signr, signr | (PTRACE_EVENT_STOP << 8),
+-				 CLD_STOPPED);
++				 CLD_STOPPED, true);
+ 	} else {
+ 		WARN_ON_ONCE(!signr);
+-		ptrace_stop(signr, CLD_STOPPED, 0, NULL);
++		ptrace_stop(signr, CLD_STOPPED, 0, NULL, true);
+ 		current->exit_code = 0;
+ 	}
+ }
+@@ -2385,7 +2389,7 @@ static int ptrace_signal(int signr, kernel_siginfo_t *info)
+ 	 * comment in dequeue_signal().
+ 	 */
+ 	current->jobctl |= JOBCTL_STOP_DEQUEUED;
+-	ptrace_stop(signr, CLD_TRAPPED, 0, info);
++	ptrace_stop(signr, CLD_TRAPPED, 0, info, false);
+ 
+ 	/* We're back.  Did the debugger cancel the sig?  */
+ 	signr = current->exit_code;
+-- 
+2.20.1
+
