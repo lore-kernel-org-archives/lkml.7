@@ -2,94 +2,141 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A651DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374F1C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB9720879
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0956D20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:05:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="PrRpceaI"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="KCktDra5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfEMPFn (ORCPT
+        id S1729574AbfEMPFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:05:43 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53099 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfEMPFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:05:43 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 452kdx20Rcz9s4Y;
-        Tue, 14 May 2019 01:05:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557759941;
-        bh=tqS4kzx2hydYJAX+s68gQPYezEl4dU/R2ruoPAnE1RM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=PrRpceaI+SqwnzTdPU1p3SiLf0xOKmZMGz885BgBNW7PjKFabzPHMZPOQojs6eZPR
-         PVdDEDsRa16DDQ7OpWbbzsEkwHAlc1FqaITIDlMt/HguHdemUqXkQjK3Vh3QdzFxis
-         nBzuZ5HpV25MrJ0KzsY3v4HfcLR4fqtmgIgif9g4Gw1SnLpVe6S34Bv/tQvW1UMYve
-         WyPUdnvcGJavoBaD4rypjWrPY/SXVQvzRIMMRlQDIOGGju55aPwS6kxxpCOE1CTDbx
-         JKmZkaspjH054reLgtaujRxSzDJ0yImOoKEq39vizbNMwoSD5qlpxcDg+ZLr8oi5gZ
-         zPuCxEFMUPYvA==
-Date:   Tue, 14 May 2019 01:05:40 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the kselftest tree
-Message-ID: <20190514010540.6fbe70e0@canb.auug.org.au>
+        Mon, 13 May 2019 11:05:47 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:37590 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727725AbfEMPFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:05:46 -0400
+Received: from pps.filterd (m0170390.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEeUPA030344;
+        Mon, 13 May 2019 11:05:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=smtpout1;
+ bh=chAF8huIeWFNVTfXYbNZpQo2VqCwIsV6gSMQwM6imN4=;
+ b=KCktDra51lSdw3/Hcdg/Ti04mtb5zqnCfDPzFLjlCZkXXjEF3xwiKuqe4zlJzV2aLinF
+ w7uoeahba440Gu+LDXau3tZhIu1JF8W2aDRhxK/t2gQ+vYjViZKot/C38X5ENv7GFtNw
+ reByQtHSWyFjMead6GlsbCsaE2Fskb4Wei39FrAvKicWtzRdTdcOm23TH22+D0Usf2zW
+ +2Yr/g52mlpnp76s31FwjZS+eOkmoAXFe0E4I1MD9mL28Bj+QRVzCqwRjS0RS/7oaoCk
+ VsPCUfXIx3/goezeAuG9VAJq6y6Zgxrk9mivYOTYv31ZtHwqXrOcI9B0yrJMTOWyodBh pQ== 
+Received: from mx0b-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2sdsf3w32t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 May 2019 11:05:45 -0400
+Received: from pps.filterd (m0089483.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DF3Fxd135653;
+        Mon, 13 May 2019 11:05:44 -0400
+Received: from ausxippc106.us.dell.com (AUSXIPPC106.us.dell.com [143.166.85.156])
+        by mx0b-00154901.pphosted.com with ESMTP id 2sfa5s8sxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 May 2019 11:05:44 -0400
+X-LoopCount0: from 10.166.132.131
+X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
+   d="scan'208";a="397025192"
+From:   <Mario.Limonciello@dell.com>
+To:     <kbusch@kernel.org>
+CC:     <hch@lst.de>, <keith.busch@intel.com>, <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <kai.heng.feng@canonical.com>
+Subject: RE: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Topic: [PATCH] nvme/pci: Use host managed power state for suspend
+Thread-Index: AQHVB3g9crBQ5iluoUuygL0xp1WIm6ZlFnpAgAQIfyCAAFi+gP//rRIQgABX4QD//638cA==
+Date:   Mon, 13 May 2019 15:05:42 +0000
+Message-ID: <d69ff7154191492eaa8f55535a7effa5@AUSX13MPC105.AMER.DELL.COM>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143741.GA25500@lst.de>
+ <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
+ <20190513145522.GA15421@localhost.localdomain>
+In-Reply-To: <20190513145522.GA15421@localhost.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.143.18.86]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/42zB5IixV86pkMF=x7h5+V1"; protocol="application/pgp-signature"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905130104
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905130103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/42zB5IixV86pkMF=x7h5+V1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Keith Busch <kbusch@kernel.org>
+> Sent: Monday, May 13, 2019 9:55 AM
+> To: Limonciello, Mario
+> Cc: hch@lst.de; keith.busch@intel.com; sagi@grimberg.me; linux-
+> nvme@lists.infradead.org; rafael@kernel.org; linux-kernel@vger.kernel.org=
+; linux-
+> pm@vger.kernel.org; kai.heng.feng@canonical.com
+> Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+>=20
+>=20
+> [EXTERNAL EMAIL]
+>=20
+> On Mon, May 13, 2019 at 02:43:43PM +0000, Mario.Limonciello@dell.com wrot=
+e:
+> > > Well, it sounds like your partners device does not work properly in t=
+his
+> > > case.  There is nothing in the NVMe spec that says queues should be
+> > > torn down for deep power states, and that whole idea seems rather
+> > > counter productive to low-latency suspend/resume cycles.
+> >
+> > Well I've got a thought, quoting the NVME spec:
+> > "After a successful completion of a Set Features command for this featu=
+re, the
+> controller shall be in the
+> > Power State specified. If enabled, autonomous power state transitions c=
+ontinue
+> to occur from the new state."
+> >
+> > If APST is enabled on this disk, what is to stop an autonomous  reverse
+> > transition from queue activity on the way down?
+>=20
+> Regardless of whether APST is enabled or not, the controller may
+> autonomously transition out of a host requested low power state in
+> response to host activity. Exiting a low power state should mean some
+> other task is actively using the device, and if that's the case, why are
+> you trying to enter a low power state in the first place? Alternatively,
+> if host activity really is idle, then why is the device autonomously
+> leaving the requested state?
 
-Hi Shuah,
-
-In commit
-
-  e64ee1f5dc1a ("selftests: fix bpf build/test workflow regression when KBU=
-ILD_OUTPUT is set")
-
-Fixes tag
-
-  Fixes: commit 8ce72dc32578 ("selftests: fix headers_install circular depe=
-ndency")
-
-has these problem(s):
-
-  - leading word 'commit' unexpected
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/42zB5IixV86pkMF=x7h5+V1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzZh8QACgkQAVBC80lX
-0Gw33Af7BwLykcsFSxaJ4zhM0iYij121ix2a15JOsKMlKLJXEi8IGOd+8vw1CeWQ
-z65oEGTieWwIqp0j4YAXiDeRTVKYRV3X0ndcl3zLLW7bz4dKGcK7SRzfrs+nSVOH
-y+X/pHke+fQ63bful+d52Os3SSBdjslqq92AxtrJVqIKXkOnDxc2waZqqde/K8Jf
-LjlQ7KZ7cMZtLZWq1ZAcWg4LZVMWO7yzhbmnjIWeji+weIwHTYQyBFsLXKwe3ZVz
-UhIRDgfJ9WCUvaYai7VrT2jnxCAkxQ0YxKmZGhecfgSv5k04E8bxYQZF9qcnp9zD
-5JKQvhknM9OCkD5sM94JmO+MRxrE2Q==
-=SyBd
------END PGP SIGNATURE-----
-
---Sig_/42zB5IixV86pkMF=x7h5+V1--
+This system power state - suspend to idle is going to freeze threads.
+But we're talking a multi threaded kernel.  Can't there be a timing problem=
+ going
+on then too?  With a disk flush being active in one task and the other task=
+ trying
+to put the disk into the deepest power state.  If you don't freeze the queu=
+es how
+can you guarantee that didn't happen?
