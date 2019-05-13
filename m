@@ -2,113 +2,113 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7937AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D3CC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F3D20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEB6208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731336AbfEMRPY (ORCPT
+        id S1730391AbfEMRQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:15:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbfEMRPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:15:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75EA33087945;
-        Mon, 13 May 2019 17:15:23 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 95F3F18E51;
-        Mon, 13 May 2019 17:15:20 +0000 (UTC)
-Date:   Mon, 13 May 2019 13:15:19 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Tim Murray <timmurray@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com,
-        tj@kernel.org
-Subject: Re: Problems caused by dm crypt: use WQ_HIGHPRI for the IO and crypt
- workqueues
-Message-ID: <20190513171519.GA26166@redhat.com>
-References: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 13 May 2019 17:15:23 +0000 (UTC)
+        Mon, 13 May 2019 13:16:29 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50850 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729468AbfEMRQ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 13:16:29 -0400
+Received: from mail-pg1-f198.google.com ([209.85.215.198])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hQEYt-0005pr-0n
+        for linux-kernel@vger.kernel.org; Mon, 13 May 2019 17:16:27 +0000
+Received: by mail-pg1-f198.google.com with SMTP id 123so3760038pgh.17
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:16:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=2WuRwt1BUMyiCONirk08ch3xQZwKTcRL8gA1P1lbcVY=;
+        b=GqbBcdFDlR6XL+Fwt21cd0sSgFWw5wgnwKgfBaMKiziFd0eEdQuYnYBx8QLI++VUWa
+         DAFf44KEWh3wKxartiZCiB4RnXIsQRdQx0p92N3lxPOD3llT/XALQPoYpbFbhbtsfKp1
+         EDhvxhY1/j4Vduim9dzAfearc8dAjC8a+ocVNDr/s0U5ATOe4I8B4dy2VYe0tDUoEo9S
+         fQDefkB8Pz39Ym+f0xBROzO8B6JMAZI08qj5Dmvv9luwagzpz4z9EYA8ukSxhNCGmsqi
+         zdu7K5F3jLAna/cWBk7OnK0kx3mqkIGqQ37fSWtNgUcS8Q0CoZ/uyVzG0LEK2rD5qvR0
+         I01A==
+X-Gm-Message-State: APjAAAXtxvyNUMECF6m5fCvxpQ7UfDGFsBrMy2XA+dDJwFN1Fcb1dLtr
+        YZAJ7ylY6QnfuHu1If9C569YvF17Xnd73PqXL9fDeqHaF/VEmcVxh9hdADuJ2ihyATH7qZIfDXr
+        KMnrPfCCpOUELi7nHctK224eQW+7JeCwi1Gj/RtDslg==
+X-Received: by 2002:a17:902:a415:: with SMTP id p21mr18635793plq.286.1557767785687;
+        Mon, 13 May 2019 10:16:25 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwMpzkZBKa20L76h9qBox5leOqsefklOh+TGG6aIlOpne804YEEwfQcwN3ICe6Tsy0hWCt7CA==
+X-Received: by 2002:a17:902:a415:: with SMTP id p21mr18635760plq.286.1557767785478;
+        Mon, 13 May 2019 10:16:25 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-a00c-6f16-94cc-5640.dynamic-ip6.hinet.net (2001-b011-380f-14b9-a00c-6f16-94cc-5640.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:a00c:6f16:94cc:5640])
+        by smtp.gmail.com with ESMTPSA id k3sm6695967pfa.36.2019.05.13.10.16.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 10:16:24 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20190513151652.GB15437@localhost.localdomain>
+Date:   Tue, 14 May 2019 01:16:22 +0800
+Cc:     Christoph Hellwig <hch@lst.de>, Mario.Limonciello@dell.com,
+        keith.busch@intel.com, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <9AE4A3E7-CDB8-4730-8B4E-43C93FC0C47F@canonical.com>
+References: <20190510212937.11661-1-keith.busch@intel.com>
+ <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143754.GE15318@localhost.localdomain>
+ <7ab8274ef1ce46fcae54a50abc76ae4a@AUSX13MPC105.AMER.DELL.COM>
+ <20190513145708.GA25897@lst.de>
+ <20190513151652.GB15437@localhost.localdomain>
+To:     Keith Busch <kbusch@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13 2019 at 12:18pm -0400,
-Doug Anderson <dianders@chromium.org> wrote:
+at 23:16, Keith Busch <kbusch@kernel.org> wrote:
 
-> Hi,
-> 
-> I wanted to jump on the bandwagon of people reporting problems with
-> commit a1b89132dc4f ("dm crypt: use WQ_HIGHPRI for the IO and crypt
-> workqueues").
-> 
-> Specifically I've been tracking down communication errors when talking
-> to our Embedded Controller (EC) over SPI.  I found that communication
-> errors happened _much_ more frequently on newer kernels than older
-> ones.  Using ftrace I managed to track the problem down to the dm
-> crypt patch.  ...and, indeed, reverting that patch gets rid of the
-> vast majority of my errors.
-> 
-> If you want to see the ftrace of my high priority worker getting
-> blocked for 7.5 ms, you can see:
-> 
-> https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=392715
-> 
-> 
-> In my case I'm looking at solving my problems by bumping the CrOS EC
-> transfers fully up to real time priority.  ...but given that there are
-> other reports of problems with the dm-crypt priority (notably I found
-> https://bugzilla.kernel.org/show_bug.cgi?id=199857) maybe we should
-> also come up with a different solution for dm-crypt?
-> 
+> On Mon, May 13, 2019 at 04:57:08PM +0200, Christoph Hellwig wrote:
+>> On Mon, May 13, 2019 at 02:54:49PM +0000, Mario.Limonciello@dell.com  
+>> wrote:
+>>> And NVME spec made it sound to me that while in a low power state it  
+>>> shouldn't
+>>> be available if the memory isn't available.
+>>>
+>>> NVME spec in 8.9:
+>>>
+>>> "Host software should request that the controller release the
+>>> assigned ranges prior to a shutdown event, a Runtime D3 event, or any  
+>>> other event
+>>> that requires host software to reclaim the assigned ranges."
+>>
+>> The last part of the quoted text is the key - if the assigned range
+>> is reclaimed, that is the memory is going to be used for something else,
+>> we need to release the ranges.  But we do not release the ranges,
+>> as we want to keep the memory in use so that we can quickly use it
+>> again.
+>
+> Yes, this. As far as I know, the host memory range is still accessible in
+> the idle suspend state. If there are states in which host memory is not
+> accessible, a reference explaining the requirement will be most helpful.
 
-And chance you can test how behaviour changes if you remove
-WQ_CPU_INTENSIVE? e.g.:
+Disabling HMB prior suspend makes my original patch work without memory  
+barrier.
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 692cddf3fe2a..c97d5d807311 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -2827,8 +2827,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 
- 	ret = -ENOMEM;
- 	cc->io_queue = alloc_workqueue("kcryptd_io/%s",
--				       WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
--				       1, devname);
-+				       WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
- 	if (!cc->io_queue) {
- 		ti->error = "Couldn't create kcryptd io queue";
- 		goto bad;
-@@ -2836,11 +2835,10 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 
- 	if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
- 		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
--						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
--						  1, devname);
-+						  WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
- 	else
- 		cc->crypt_queue = alloc_workqueue("kcryptd/%s",
--						  WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
-+						  WQ_HIGHPRI | WQ_MEM_RECLAIM | WQ_UNBOUND,
- 						  num_online_cpus(), devname);
- 	if (!cc->crypt_queue) {
- 		ti->error = "Couldn't create kcryptd queue";
+However, using the same trick on this patch still freezes the system during  
+S2I.
+
+Kai-Heng
