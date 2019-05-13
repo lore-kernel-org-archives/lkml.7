@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D592FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296A8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86452084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1892084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mJcTtw57"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bc0UAXJu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfEMOj7 (ORCPT
+        id S1730536AbfEMOkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:39:59 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45680 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbfEMOj5 (ORCPT
+        Mon, 13 May 2019 10:40:04 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:37302 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730447AbfEMOkC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:39:57 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DESlCI171427;
-        Mon, 13 May 2019 14:38:54 GMT
+        Mon, 13 May 2019 10:40:02 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd3jQ193102;
+        Mon, 13 May 2019 14:39:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=GS3GihsPyz7Y99NHOiQDTtmA0apAWQh5Zi8mHVLNyoo=;
- b=mJcTtw571vBY/DqchePtoK+a2fMaLqNsWff99ts41cz3uW81AVh8k2kIjQIXfkadX5Q3
- 6F/E6e4/O6myTDqiwNYcUSpAOVMeeIBt5z6sBwlWmvIiYKdfzx0Qg4nsfGs0iR0Ee/ws
- 8fyDT/ryZpc/Obi/2zRq7DJqs0810bOvF26HLCD7ir3wtStKFUFAa7Ws6PKz+Pu1UJQL
- dU9UJa5EK8+LYETRyQ5DuH2DbGMtHYVtA2jgoPUK3ziD1XjXnCkAD9TDmm7V4635R9i5
- XflzqnTQJehHeZrV5CJoVBXa8ETCmtisHC5rPPYYhukBl0cMbZnPTDNSWhzzDSLkexDm Fw== 
+ bh=5Qtz3s/XQzDItLwgII6a7yqyolD8+y7jKItUNNZ5jHw=;
+ b=bc0UAXJuEUDdxvyu9LwCdXHqD4qh6pNojWMqcM9jSLBAxGM6igASeeKPL3IWePb5ch0s
+ fbCFf/kSYwqFzCOuWD0pbNuB78gAyLFK5Ed4veTVvUvCkVI2DR43VeRRk0g9ufQAr0sw
+ e6QhuGNeEnywPiXsoWdU2luDBNsmNNUqdcfqgUJyVy51fsmTOMsXHwAuC4cslhey/L9A
+ UYFWoKFzlhctdRm9y9d9iC7Djqvsf9+FCNhU/NbXFxMpjmDvfMOaaoR1Y5lpKRNKz4fW
+ VMMMFGBaxysR4n+y/P893dNcj5PpeJwOEyHs1Tnsryx4DvPOgcmS7i7F6ug4vAd8pZZL 3A== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2sdnttfecf-1
+        by aserp2130.oracle.com with ESMTP id 2sdkwdfkxg-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:38:54 +0000
+        Mon, 13 May 2019 14:39:24 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQ7022780;
-        Mon, 13 May 2019 14:38:50 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQG022780;
+        Mon, 13 May 2019 14:39:16 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,111 +50,149 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 04/27] KVM: x86: Switch to KVM address space on entry to guest
-Date:   Mon, 13 May 2019 16:38:12 +0200
-Message-Id: <1557758315-12667-5-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 13/27] kvm/isolation: add KVM page table entry set functions
+Date:   Mon, 13 May 2019 16:38:21 +0200
+Message-Id: <1557758315-12667-14-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130102
+ definitions=main-1905130103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liran Alon <liran.alon@oracle.com>
+Add wrappers around the page table entry (pgd/p4d/pud/pmd) set function
+to check that an existing entry is not being overwritten.
 
-Switch to KVM address space on entry to guest and switch
-out on immediately at exit (before enabling host interrupts).
-
-For now, this is not effectively switching, we just remain on
-the kernel address space. In addition, we switch back as soon
-as we exit guest, which makes KVM #VMExit handlers still run
-with full host address space.
-
-However, this introduces the entry points and places for switching.
-
-Next commits will change switch to happen only when necessary.
-
-Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/isolation.c |   20 ++++++++++++++++++++
- arch/x86/kvm/isolation.h |    2 ++
- arch/x86/kvm/x86.c       |    8 ++++++++
- 3 files changed, 30 insertions(+), 0 deletions(-)
+ arch/x86/kvm/isolation.c |  107 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 107 insertions(+), 0 deletions(-)
 
 diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index 74bc0cd..35aa659 100644
+index 6ec86df..b681e4f 100644
 --- a/arch/x86/kvm/isolation.c
 +++ b/arch/x86/kvm/isolation.c
-@@ -119,3 +119,23 @@ void kvm_isolation_uninit(void)
- 	kvm_isolation_uninit_mm();
- 	pr_info("KVM: x86: End of isolated address space\n");
+@@ -342,6 +342,113 @@ static inline void kvm_p4d_free(struct mm_struct *mm, p4d_t *p4d)
+ 	return p4d;
  }
+ 
++/*
++ * kvm_set_pXX() functions are equivalent to kernel set_pXX() functions
++ * but, in addition, they ensure that they are not overwriting an already
++ * existing reference in the page table. Otherwise an error is returned.
++ *
++ * Note that this is not used for PTE because a PTE entry points to page
++ * frames containing the actual user data, and not to another entry in the
++ * page table. However this is used for PGD.
++ */
 +
-+void kvm_isolation_enter(void)
++static int kvm_set_pmd(pmd_t *pmd, pmd_t pmd_value)
 +{
-+	if (address_space_isolation) {
-+		/*
-+		 * Switches to kvm_mm should happen from vCPU thread,
-+		 * which should not be a kernel thread with no mm
-+		 */
-+		BUG_ON(current->active_mm == NULL);
-+		/* TODO: switch to kvm_mm */
-+	}
-+}
-+
-+void kvm_isolation_exit(void)
-+{
-+	if (address_space_isolation) {
-+		/* TODO: Kick sibling hyperthread before switch to host mm */
-+		/* TODO: switch back to original mm */
-+	}
-+}
-diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
-index cf8c7d4..595f62c 100644
---- a/arch/x86/kvm/isolation.h
-+++ b/arch/x86/kvm/isolation.h
-@@ -4,5 +4,7 @@
- 
- extern int kvm_isolation_init(void);
- extern void kvm_isolation_uninit(void);
-+extern void kvm_isolation_enter(void);
-+extern void kvm_isolation_exit(void);
- 
- #endif
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 4b7cec2..85700e0 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7896,6 +7896,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		goto cancel_injection;
- 	}
- 
-+	kvm_isolation_enter();
-+
- 	if (req_immediate_exit) {
- 		kvm_make_request(KVM_REQ_EVENT, vcpu);
- 		kvm_x86_ops->request_immediate_exit(vcpu);
-@@ -7946,6 +7948,12 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 
- 	vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
- 
++#ifdef DEBUG
 +	/*
-+	 * TODO: Move this to where we architectually need to access
-+	 * host (or other VM) sensitive data
++	 * The pmd pointer should come from kvm_pmd_alloc() or kvm_pmd_offset()
++	 * both of which check if the pointer is in the KVM page table. So this
++	 * is a paranoid check to ensure the pointer is really in the KVM page
++	 * table.
 +	 */
-+	kvm_isolation_exit();
++	if (!kvm_valid_pgt_entry(pmd)) {
++		pr_err("PMD %px is not in KVM page table\n", pmd);
++		return -EINVAL;
++	}
++#endif
++	if (pmd_val(*pmd) == pmd_val(pmd_value))
++		return 0;
 +
- 	vcpu->mode = OUTSIDE_GUEST_MODE;
- 	smp_wmb();
++	if (!pmd_none(*pmd)) {
++		pr_err("PMD %px: overwriting %lx with %lx\n",
++		    pmd, pmd_val(*pmd), pmd_val(pmd_value));
++		return -EBUSY;
++	}
++
++	set_pmd(pmd, pmd_value);
++
++	return 0;
++}
++
++static int kvm_set_pud(pud_t *pud, pud_t pud_value)
++{
++#ifdef DEBUG
++	/*
++	 * The pud pointer should come from kvm_pud_alloc() or kvm_pud_offset()
++	 * both of which check if the pointer is in the KVM page table. So this
++	 * is a paranoid check to ensure the pointer is really in the KVM page
++	 * table.
++	 */
++	if (!kvm_valid_pgt_entry(pud)) {
++		pr_err("PUD %px is not in KVM page table\n", pud);
++		return -EINVAL;
++	}
++#endif
++	if (pud_val(*pud) == pud_val(pud_value))
++		return 0;
++
++	if (!pud_none(*pud)) {
++		pr_err("PUD %px: overwriting %lx\n", pud, pud_val(*pud));
++		return -EBUSY;
++	}
++
++	set_pud(pud, pud_value);
++
++	return 0;
++}
++
++static int kvm_set_p4d(p4d_t *p4d, p4d_t p4d_value)
++{
++#ifdef DEBUG
++	/*
++	 * The p4d pointer should come from kvm_p4d_alloc() or kvm_p4d_offset()
++	 * both of which check if the pointer is in the KVM page table. So this
++	 * is a paranoid check to ensure the pointer is really in the KVM page
++	 * table.
++	 */
++	if (!kvm_valid_pgt_entry(p4d)) {
++		pr_err("P4D %px is not in KVM page table\n", p4d);
++		return -EINVAL;
++	}
++#endif
++	if (p4d_val(*p4d) == p4d_val(p4d_value))
++		return 0;
++
++	if (!p4d_none(*p4d)) {
++		pr_err("P4D %px: overwriting %lx\n", p4d, p4d_val(*p4d));
++		return -EBUSY;
++	}
++
++	set_p4d(p4d, p4d_value);
++
++	return 0;
++}
++
++static int kvm_set_pgd(pgd_t *pgd, pgd_t pgd_value)
++{
++	if (pgd_val(*pgd) == pgd_val(pgd_value))
++		return 0;
++
++	if (!pgd_none(*pgd)) {
++		pr_err("PGD %px: overwriting %lx\n", pgd, pgd_val(*pgd));
++		return -EBUSY;
++	}
++
++	set_pgd(pgd, pgd_value);
++
++	return 0;
++}
++
  
+ static int kvm_isolation_init_mm(void)
+ {
 -- 
 1.7.1
 
