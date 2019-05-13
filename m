@@ -2,104 +2,79 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF30FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B607DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E63208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:52:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557755552;
-	bh=BDtrHeDetR61sJ1NtPNMI5rj1aAqPOBRg2vQUOYWcao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d6wwAlcsH2FdWos0epkVGXiSHUP2e1+KTvFfXFNRclRHBmTaRziNUtCL9JYt2WTmO
-	 Za44ji5tJciPGYW/d7m5KzMrj4Cik1JgVhQybgGvVRuONwjA3eValNlKLCk7eOnCE6
-	 72gO/FrKibfOfjYsovnDkyVQzhzz/Su3xDRNgJBc=
+	by mail.kernel.org (Postfix) with ESMTP id 7C50821019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfEMNwb (ORCPT
+        id S1729919AbfEMNwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:52:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:40693 "EHLO mga09.intel.com"
+        Mon, 13 May 2019 09:52:53 -0400
+Received: from foss.arm.com ([217.140.101.70]:56538 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729452AbfEMNwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:52:31 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 06:52:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,465,1549958400"; 
-   d="scan'208";a="171196692"
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2019 06:52:29 -0700
-Date:   Mon, 13 May 2019 07:47:08 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     "Busch, Keith" <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        linux-pm <linux-pm@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        Rafael Wysocki <rafael@kernel.org>
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-Message-ID: <20190513134708.GB15318@localhost.localdomain>
-References: <20190510212937.11661-1-keith.busch@intel.com>
- <SN6PR04MB452735778FD952AA838E78C9860E0@SN6PR04MB4527.namprd04.prod.outlook.com>
+        id S1729452AbfEMNwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:52:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEB6680D;
+        Mon, 13 May 2019 06:52:52 -0700 (PDT)
+Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63A453F71E;
+        Mon, 13 May 2019 06:52:51 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/7] sched/cpufreq: Make schedutil energy aware
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, quentin.perret@arm.com,
+        patrick.bellasi@arm.com,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>, rjw@rjwysocki.net
+References: <20190508174301.4828-1-douglas.raillard@arm.com>
+ <CAOh2x=k23D_FefOnmLjExj1d+UiothgOmyUk=1mqFknpHNwWGg@mail.gmail.com>
+From:   Douglas Raillard <douglas.raillard@arm.com>
+Organization: ARM
+Message-ID: <054f34d5-1b88-9337-501f-321519f5d27c@arm.com>
+Date:   Mon, 13 May 2019 14:52:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB452735778FD952AA838E78C9860E0@SN6PR04MB4527.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+In-Reply-To: <CAOh2x=k23D_FefOnmLjExj1d+UiothgOmyUk=1mqFknpHNwWGg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB-large
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 11:06:35PM -0700, Chaitanya Kulkarni wrote:
-> On 5/10/19 2:35 PM, Keith Busch wrote:
-> >   
-> > +int nvme_set_power(struct nvme_ctrl *ctrl, unsigned ps)
+Hi Viresh, Rafael,
 
-> dev->ctrl.npss is u8 can we use same data type here ?
-> If this is due to last_ps we use as a result and then call set_power may 
-> be we can change the type of last_ps ?
-> OR
-> can we please use unsigned int to avoid possible warnings ?
-
-Right, the feature uses a 32-bit value even though only the first byte
-is defined at the moment. It's just for foward compatibility. Will make
-this a u32.
-
-> > +int nvme_get_power(struct nvme_ctrl *ctrl, u32 *result)
-> > +{
-> > +	struct nvme_command c;
-> May be use struct nvme_command c {} so we can get rid of the memset() call.
-
-Good point.
-
-> > +	union nvme_result res;
-> > +	int ret;
-> > +
-> > +	if (!result)
-> > +		return -EINVAL;
-> > +
-> > +	memset(&c, 0, sizeof(c));
-> > +	c.features.opcode = nvme_admin_get_features;
-> > +	c.features.fid = cpu_to_le32(NVME_FEAT_POWER_MGMT);
-> > +
-> > +	ret = __nvme_submit_sync_cmd(ctrl->admin_q, &c, &res,
-> > +			NULL, 0, 0, NVME_QID_ANY, 0, 0, false);
-> > +	if (ret >= 0)
-> > +		*result = le32_to_cpu(res.u32);
+On 5/13/19 8:12 AM, Viresh Kumar wrote:
+> On Wed, May 8, 2019 at 11:57 PM <douglas.raillard@arm.com> wrote:
+>>
+>> From: Douglas RAILLARD <douglas.raillard@arm.com>
+>>
+>> Make schedutil cpufreq governor energy-aware.
+> 
+> Hi Douglas,
+> 
+> I was wondering on why the cpufreq maintainers weren't cc'd for this set and
+> then I noticed that get_maintainers doesn't report us at all for schedutil :(
 >
-> May be add a check for result here in above if before deref pointer :-
-> 	if (ret >= 0 && result)
+> I have sent a patch to fix that, but please include us as well in the
+> future even
+> if get_maintainers doesn't report us :)
 
-I have it checked at the top of the function since it doesn't make much
-sense to call this without a way to return the result.
+Looks like it was a mix of me not checking my checklist and get_maintainers
+not catching it, I'll make sure both of you are in CC next time :)
+
+> 
+> --
+> viresh
+
+Thanks,
+Douglas
