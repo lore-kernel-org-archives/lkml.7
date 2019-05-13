@@ -4,71 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400CDC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F382C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178B5218A2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 457FF2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 17:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557770371;
-	bh=XuaQ0a38qQz8223tKzOSnVGpCJkmvC7y0Ob4M0PsLD8=;
+	s=default; t=1557770383;
+	bh=d/QvHy1mbmZ1Y7oqNNEWpBY5hqMcobT5CjgmyMznXT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=P5gytJC5yQQbVxiFuAKSdJoCrY2jPipECRcPXjEALscT5Iw7n46yFiohQMBrNTChy
-	 PQlKR2uwDkt3UtlxEDigGjuyVeelClyRijGigO1eZQjKM+8nEXCk8ClNmOxtMrgUD0
-	 g2sGB015HfHseAp8fgwSXV/3WfJNLgD2U3Vy/YR4=
+	b=MbLNOLK2nxyLltRLiQ86g5dRD4thJ7jt9Ol1DSBmyzvJ/WiH20w0aNSDwGVcFR0m6
+	 1DjQYqfOIQZLQR/+NxEz5oZlJVrcce8PrZVqgiF6Tc9pbR5AMfZWdcAozOJrTZiWDS
+	 oevXzWmbdHso84Sf/IG5Qo7N/0QBhoC+3O6Yudok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732086AbfEMR7a (ORCPT
+        id S1732161AbfEMR7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:59:30 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33076 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732049AbfEMR70 (ORCPT
+        Mon, 13 May 2019 13:59:42 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40927 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732121AbfEMR7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:59:26 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y3so6853771plp.0;
-        Mon, 13 May 2019 10:59:25 -0700 (PDT)
+        Mon, 13 May 2019 13:59:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d31so7147183pgl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=qcB7eahk6uost1tJIP3FkNXq29ur/hHJU+gIkVwerH0=;
-        b=EqSqLmhMIhEkXb3UcdqmqEmzeSp707LwHp6ezi/bvRsnucBBCEXvSq4O9R8NC6zHF5
-         ulS+KZxKDCFHMEIWTTnPeY9mTFiB9X1nPInsYPNip12OAXQzb0NROacov01np1oB3NdZ
-         PPfepVT7ImuaWsKsm6yF/6/tT2ZL73UDrab34UjcHvhc+8LRZCzRxYChXEN9FKe4+zoi
-         Bw1oB/b/K/xZc28QVgMEPzsEf/YKNvj7GGu7oMDSBJUys5s5HflHBS0xqzwsZBLAvyMU
-         RU+dWfmFwTuYRwJIv0frRSIqV+ABtyGVp8f+opIbd8PL9WfY2FG90mART1HB76LX0KS3
-         rsFQ==
+        bh=CGKgJK9ntJVDJAbdtSfQk6iXN0Z85XjoYFkLOVcga7E=;
+        b=oo4uaQd1UxkA5lSemK0tniHLL4CrCH1aLMtIL4Dnywbk9P8By46DHj3Vqa0Xys6c8z
+         8vCS+wM2NSHFU3PZWX3w9qM42gLATVlvSYzSKe94SeoIZkGbC4ZL6eJPXVNPTL1zqaQq
+         Q4UJL0tFCol6l/Lm7WTZ3Hnw0di/xjBZn52BAX2684cchcHd8uCJvXtyytgwAHivx6Kh
+         6XOfEb+myelOLu3XNv7HiGCp3jFA9KlXlTy38tqL1p+rHuo6DLdTfwvC5pZUVhF68KW8
+         rbPFJ+AlK1K8C6DE1qACaKPTvNRSpSgLLUSyl8S69AgUamzYhmPxGgS2RcyGYd1dhq/z
+         QI4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=qcB7eahk6uost1tJIP3FkNXq29ur/hHJU+gIkVwerH0=;
-        b=hGaleaAxOiXsh+6gKGbwvkoJh/tP/2L+VwSTNxfLIuwgAp14DtSQLuVl9yAUTxKxDo
-         DOZZPQ2i7+ituQXNYMyOCrG43m/sBsMtJHM/yrKLr5f9mDjUh9RJBx+ng1idrSlKy7Fk
-         QN14ANWQMnwpc6bLDjceUeyyQmj/Vds9ZSNTGU0ZoezLMU6MXzTBwHeJa9MMyzROjc3J
-         u/pSFafdj9LkQ+nztcj7uOMIiNMTyi4RQZ/L5+BUyGrlPheVDH5TNmv4grJ2EtYJWz1u
-         okL3vzFUX8Z6nBwTJjSfQ4x0z0kUAEh0VuEbghr44hD6VL57+k3DD8Sd+U0Ieq1dMpcs
-         vclQ==
-X-Gm-Message-State: APjAAAVHm6NkNnPNmhyyfbZbe657PMr/Kfy9RnKqxL91PH/Bnw28JTfB
-        A6UBmlCMK1c/dHcSqX0Vo9g=
-X-Google-Smtp-Source: APXvYqxfD9OoJX+0baCGAS7WdKoGeDR3he1a1v7D1nhmn/LwAQauslfOBU4jr2py1g5X8O99vPOBWg==
-X-Received: by 2002:a17:902:2de4:: with SMTP id p91mr16127280plb.300.1557770365565;
-        Mon, 13 May 2019 10:59:25 -0700 (PDT)
+        bh=CGKgJK9ntJVDJAbdtSfQk6iXN0Z85XjoYFkLOVcga7E=;
+        b=rakhdKuP5z7AVoRIku+S73B0cyQzhYzN+aCW1rNPdTMoHFc+WRFEUQhv/ohXIVkbXY
+         OQbIvNi+W06kQh86zk+uSTmICDo2X2Pz3EBmdIX98REwE5/Sf4vYV++gaXiUdtqQ7BzB
+         DZAE69DY8m9CUTBsP3YVk0NhMgeUKTLaVGGOPZThQ92hrOMypsd1EgVBdPxzFdE1+UpA
+         /vDPrY2Hgu4ID8o+csZUYy652l/gXiIlVXhwNWscn3Rq3Xha+TmKq4Qz7yJaY7K/qHJJ
+         pGw0pDtVWquJELi8RDF+ZEmrwxxgZgO8T7zSIg0G1ZHePshBFJl/BURJbl0Aslb56rRb
+         BEUQ==
+X-Gm-Message-State: APjAAAWlXRWlI/jH8torfp50AwPo3s5npUvUpbw8Ioh1kb82HvwdiIuL
+        Xi5wTJdf8v5UFZrTnQ2uj8s=
+X-Google-Smtp-Source: APXvYqwmPDifk9+WIjnG0RN/eCOFBwUQjgEvP2lRzgkowLrR5fMkw3kf5WOVqTlfXP/GJCy2FagrNw==
+X-Received: by 2002:aa7:9214:: with SMTP id 20mr34772208pfo.202.1557770376127;
+        Mon, 13 May 2019 10:59:36 -0700 (PDT)
 Received: from localhost.localdomain ([96.79.124.202])
-        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.24
+        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:59:24 -0700 (PDT)
+        Mon, 13 May 2019 10:59:35 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org
-Subject: [PATCH 07/19] powercap/intel_rapl: Support multi-die/package
-Date:   Mon, 13 May 2019 13:58:51 -0400
-Message-Id: <9fcb4719aeb7efccf3bc75ed8dd559e46121649f.1557769318.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Len Brown <len.brown@intel.com>
+Subject: [PATCH 14/19] perf/x86/intel/rapl: Support multi-die/package
+Date:   Mon, 13 May 2019 13:58:58 -0400
+Message-Id: <851320c8c87ba7a54e58ee8579c1bf566ce23cbb.1557769318.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
 In-Reply-To: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
 References: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
@@ -79,46 +80,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-RAPL "package" domains are actually implemented in hardware per-die.
-Thus, the new multi-die/package systems have mulitple domains
-within each physical package.
+RAPL becomes die-scope on Xeon Cascade Lake-AP. Perf RAPL driver needs
+to support die-scope RAPL domain.
 
-Update the intel_rapl driver to be "die aware" -- exporting multiple
-domains within a single package, when present.
-No change on single die/package systems.
+Use topology_logical_die_id() to replace topology_logical_package_id().
+For previous platforms which doesn't have multi-die,
+topology_logical_die_id() is identical as topology_logical_package_id().
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Use topology_die_cpumask() to replace topology_core_cpumask().
+For previous platforms which doesn't have multi-die,
+topology_die_cpumask() is identical as topology_core_cpumask().
+
+There is no functional change for previous platforms.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Len Brown <len.brown@intel.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: linux-pm@vger.kernel.org
 ---
- drivers/powercap/intel_rapl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/events/intel/rapl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-index 3c3c0c23180b..9202dbcef96d 100644
---- a/drivers/powercap/intel_rapl.c
-+++ b/drivers/powercap/intel_rapl.c
-@@ -266,7 +266,7 @@ static struct rapl_domain *platform_rapl_domain; /* Platform (PSys) domain */
- /* caller to ensure CPU hotplug lock is held */
- static struct rapl_package *rapl_find_package_domain(int cpu)
- {
--	int id = topology_physical_package_id(cpu);
-+	int id = topology_logical_die_id(cpu);
- 	struct rapl_package *rp;
+diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
+index 37ebf6fc5415..6f5331271563 100644
+--- a/arch/x86/events/intel/rapl.c
++++ b/arch/x86/events/intel/rapl.c
+@@ -161,7 +161,7 @@ static u64 rapl_timer_ms;
  
- 	list_for_each_entry(rp, &rapl_packages, plist) {
-@@ -1459,7 +1459,7 @@ static void rapl_remove_package(struct rapl_package *rp)
- /* called from CPU hotplug notifier, hotplug lock held */
- static struct rapl_package *rapl_add_package(int cpu)
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
  {
--	int id = topology_physical_package_id(cpu);
-+	int id = topology_logical_die_id(cpu);
- 	struct rapl_package *rp;
- 	int ret;
+-	unsigned int pkgid = topology_logical_package_id(cpu);
++	unsigned int pkgid = topology_logical_die_id(cpu);
  
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -571,7 +571,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+ 
+ 	pmu->cpu = -1;
+ 	/* Find a new cpu to collect rapl events */
+-	target = cpumask_any_but(topology_core_cpumask(cpu), cpu);
++	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+ 
+ 	/* Migrate rapl events to the new target */
+ 	if (target < nr_cpu_ids) {
+@@ -598,14 +598,14 @@ static int rapl_cpu_online(unsigned int cpu)
+ 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 		rapl_hrtimer_init(pmu);
+ 
+-		rapl_pmus->pmus[topology_logical_package_id(cpu)] = pmu;
++		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
+ 	}
+ 
+ 	/*
+ 	 * Check if there is an online cpu in the package which collects rapl
+ 	 * events already.
+ 	 */
+-	target = cpumask_any_and(&rapl_cpu_mask, topology_core_cpumask(cpu));
++	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
+ 	if (target < nr_cpu_ids)
+ 		return 0;
+ 
+@@ -675,7 +675,7 @@ static void cleanup_rapl_pmus(void)
+ 
+ static int __init init_rapl_pmus(void)
+ {
+-	int maxpkg = topology_max_packages();
++	int maxpkg = topology_max_packages() * topology_max_die_per_package();
+ 	size_t size;
+ 
+ 	size = sizeof(*rapl_pmus) + maxpkg * sizeof(struct rapl_pmu *);
 -- 
 2.18.0-rc0
 
