@@ -4,72 +4,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916DEC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809C4C04AAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65132208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D138208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 18:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557770422;
-	bh=NqTXcEY6xitd9OwpOepED0bcGkN51+bHAKkT3RC1mWA=;
+	s=default; t=1557770431;
+	bh=/ztHUK6mdLEo9+gJkbhr4Ha759+XvpyfUbixVqDquS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:Reply-To:List-ID:
 	 From;
-	b=r1AjwloMuq0xyf+XhlWNnLd5QQ8BdzOnu3yy2Gszbdcin4CXrpFzPB5xNr3B/KFEU
-	 PT3PORtz7lBOQhS3ruDSpaIvHgfl/n/9uFfQlJWw/7qs2nHMrB+Qh60gj4Cs3K9ktj
-	 V4lZJ/ciqcJTIiPg/floNL/gDJ+Ge+4rnSkAwxuM=
+	b=nUjpR6c+rTPURe4lDd/Pae///EAJsb+Tmvx7dOo7xrbIAW1+x5/Sa23nLYhHUzrVh
+	 GwODxw+l1QNtS0Ng8KbRr5C8L3FtSOMkjNANKbxUtrPzdPIvm2r4qyw4KJU/IT/3b6
+	 +ELsUGItdJh1Q/uAAXrUAdamwW7N4WB4KQLy8uzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbfEMR7d (ORCPT
+        id S1732063AbfEMR71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 13:59:33 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36160 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732087AbfEMR7a (ORCPT
+        Mon, 13 May 2019 13:59:27 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40834 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732042AbfEMR7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 13:59:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v80so7609526pfa.3;
-        Mon, 13 May 2019 10:59:30 -0700 (PDT)
+        Mon, 13 May 2019 13:59:23 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so6847556plr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 10:59:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :reply-to:organization;
-        bh=rllXTOSI+l4dOxVedgJq5yZYXTiqRbCrivN8bEva+1o=;
-        b=P2R9iMibtoLad0qOV2+DiBMkXyuXf3CQycA8i3D+rYFgcUOhvBff8tb07olonxdyZ7
-         EPR1qiixByolrP00F9/QiDJeC0WrCoatZhz0uX5PWOtnkLAKq5sm+ivdFIgUsw+jatCR
-         XRSDJf+lBn1fdNKKAQPov56whA7FcvWt7xElnBS6N1/CncQ8e1K/glLMn+ZylC2mUtk4
-         LgcQu8O6Ile1SXpVLkxP7vlYLTYeVVRO+5oJAWZ04qhEbW6tAHLQOpq4apneRVO/dlEj
-         Uci7hpCy8r5PEu5g2UDwpeEOrPqZRp3fbszFTMQ4oMFSD3Ywf7uNyie439oxeSILOOpI
-         nf6A==
+        bh=9hwo5m2Xx1oKDMkvf5tOo/8gQUnZwUKCASRqX2THc6M=;
+        b=H7rDmfP80GgPW8QHcJ0TmSkIl9IZYmSWhXb/ShU82EbPcyIYYYkhS2WRuvaGPRDY9P
+         8M9r36NFKVbkb6O4R+f3hJCZCHD9vEmXIKPtJ955nPDZ9Lrkhe+r7l8/QRV1B2mr09i1
+         pSI8m0esHx9VnjImsUEYLMsfoiXYR6uaMTTCHMF6b8xmEJcdFZFy4SVh2BDuyC39wIM2
+         I1oRGXeX8JNMu2zKHie4W8eFAO9z3BPAneE6BB+qgYQYyE0mY/G2UlxlSe0Ecv4sx+Bw
+         OMvBDc/JjmE6FHrdFY/oYtUweqgJdFVJCDvg1D8ib0N1H0Kdyg4trlwmQIUGxFtdfRnl
+         tF/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:reply-to:organization;
-        bh=rllXTOSI+l4dOxVedgJq5yZYXTiqRbCrivN8bEva+1o=;
-        b=edhZwnSzOB8/2GCCMnL/I6ANW4xHlkTZNanHXzjh0JahtcPccVSMh/wMP0TXYqaftF
-         70yDYDMoP8+68bkRfGwm04tjDTPPq/zjFazxkCQKBOIy6qPFzX8Qfhb8IbZMYZ+kAvcH
-         MDgUInfwwEBYvmLesQRqWetercs9vdNq/4epvqgCP2ajAIJ0W859Ig514Bofh7p2JOj1
-         ui5Jz3U+iF9vEgI1MiBlAcT/PlcAXipu+oxm/umRpFbK4IuY7jyi9K7GlPEOFWVWSAoh
-         0VMJotdzsUpsuYXoWIvhBh2ALHxo1+cfFG9Ef9zUx7r/lYy7wyAkdZi6A69UhvlNDUus
-         QTEA==
-X-Gm-Message-State: APjAAAWkMxZ6MkSdTwl6fEBcv4n5HkBxNZcdDbkw3BGXp2CSvNi555HJ
-        t/byPt2FmGwN1Zwc1QEGF+aleEK6
-X-Google-Smtp-Source: APXvYqw4isY2CZSWFLw0cWYvh2NWwmmEFT2LoyQOEgEsbI31Z+B5w7inOWYLYdrjGOymQR4vwByrKQ==
-X-Received: by 2002:aa7:8e04:: with SMTP id c4mr34899854pfr.48.1557770370110;
-        Mon, 13 May 2019 10:59:30 -0700 (PDT)
+        bh=9hwo5m2Xx1oKDMkvf5tOo/8gQUnZwUKCASRqX2THc6M=;
+        b=cTcx9eSt2Fml8mAoq3v8meix5TUHva/d7s2pxEGipTVSSozdnGIK5Wr1ot09329Zkz
+         5xkmF3HQjFDBn+wxnPveNAp2fTpNtjk4aoXdb0HzhYPu8nu1TrDZYGWBllmprhG8saq8
+         OpRkKXAn2jMsyDR51NwSy4qjq6sntLap0FdOENX4nPTQR3OxfgVcqlFVIdFtQcOw1RDp
+         PT9Gt6Da+385UQkS8S0iolPWJ6KHtgaKg9oX58rXp46rDHrFG0P2jHcxXJtR3GjX/Qui
+         Ioxx81gw/sJ+8WlkGeqoL+XnfYWKY0h7NCdLhqG5I7JO/KM/Kw86B7i0THmWZIbq2iw6
+         BoFg==
+X-Gm-Message-State: APjAAAWzo6/VkqrpC1a+/1yemtoMlx0T69Wm9Ha/M/oqtcl9MUt/BFAs
+        JQ7jlCliLENgVX7V454zDGhNhy+d
+X-Google-Smtp-Source: APXvYqwd01FI397+M52CvJ3ABc9I4RcGzO0hxgN2EquwC06KNR6g2DIKpmN4u/5UylzbgXOgqoWpZw==
+X-Received: by 2002:a17:902:2847:: with SMTP id e65mr32716179plb.319.1557770362274;
+        Mon, 13 May 2019 10:59:22 -0700 (PDT)
 Received: from localhost.localdomain ([96.79.124.202])
-        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.28
+        by smtp.gmail.com with ESMTPSA id s12sm9536266pfd.152.2019.05.13.10.59.21
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 10:59:29 -0700 (PDT)
+        Mon, 13 May 2019 10:59:21 -0700 (PDT)
 From:   Len Brown <lenb@kernel.org>
 To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
-        linux-hwmon@vger.kernel.org
-Subject: [PATCH 10/19] hwmon/coretemp: Support multi-die/package
-Date:   Mon, 13 May 2019 13:58:54 -0400
-Message-Id: <ec2868f35113a01ff72d9041e0b97fc6a1c7df84.1557769318.git.len.brown@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>
+Subject: [PATCH 05/19] x86 topology: Define topology_logical_die_id()
+Date:   Mon, 13 May 2019 13:58:49 -0400
+Message-Id: <2f3526e25ae14fbeff26fb26e877d159df8946d9.1557769318.git.len.brown@intel.com>
 X-Mailer: git-send-email 2.18.0-rc0
 In-Reply-To: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
 References: <7b23d2d26d717b8e14ba137c94b70943f1ae4b5c.1557769318.git.len.brown@intel.com>
@@ -80,63 +77,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Len Brown <len.brown@intel.com>
 
-Package temperature sensors are actually implemented in hardware per-die.
+Define topology_logical_die_id() ala
+existing topology_logical_package_id()
 
-Update coretemp to be "die-aware", so it can expose mulitple sensors
-per package, instead of just one.  No change to single-die/package
-systems.
-
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+Tested-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org
 ---
- drivers/hwmon/coretemp.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/processor.h |  1 +
+ arch/x86/include/asm/topology.h  |  5 ++++
+ arch/x86/kernel/cpu/common.c     |  1 +
+ arch/x86/kernel/smpboot.c        | 45 ++++++++++++++++++++++++++++++++
+ 4 files changed, 52 insertions(+)
 
-diff --git a/drivers/hwmon/coretemp.c b/drivers/hwmon/coretemp.c
-index 5d34f7271e67..c64ce32d3214 100644
---- a/drivers/hwmon/coretemp.c
-+++ b/drivers/hwmon/coretemp.c
-@@ -435,7 +435,7 @@ static int chk_ucode_version(unsigned int cpu)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 87d42c0c6ccc..603ce3fe578d 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -118,6 +118,7 @@ struct cpuinfo_x86 {
+ 	/* Core id: */
+ 	u16			cpu_core_id;
+ 	u16			cpu_die_id;
++	u16			logical_die_id;
+ 	/* Index into per_cpu list: */
+ 	u16			cpu_index;
+ 	u32			microcode;
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 3777dbe9c0ff..9de16b4f6023 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -106,6 +106,7 @@ extern const struct cpumask *cpu_coregroup_mask(int cpu);
  
- static struct platform_device *coretemp_get_pdev(unsigned int cpu)
- {
--	int pkgid = topology_logical_package_id(cpu);
-+	int pkgid = topology_logical_die_id(cpu);
+ #define topology_logical_package_id(cpu)	(cpu_data(cpu).logical_proc_id)
+ #define topology_physical_package_id(cpu)	(cpu_data(cpu).phys_proc_id)
++#define topology_logical_die_id(cpu)		(cpu_data(cpu).logical_die_id)
+ #define topology_die_id(cpu)			(cpu_data(cpu).cpu_die_id)
+ #define topology_core_id(cpu)			(cpu_data(cpu).cpu_core_id)
  
- 	if (pkgid >= 0 && pkgid < max_packages)
- 		return pkg_devices[pkgid];
-@@ -579,7 +579,7 @@ static struct platform_driver coretemp_driver = {
+@@ -131,13 +132,17 @@ static inline int topology_max_smt_threads(void)
+ }
  
- static struct platform_device *coretemp_device_add(unsigned int cpu)
- {
--	int err, pkgid = topology_logical_package_id(cpu);
-+	int err, pkgid = topology_logical_die_id(cpu);
- 	struct platform_device *pdev;
- 
- 	if (pkgid < 0)
-@@ -703,7 +703,7 @@ static int coretemp_cpu_offline(unsigned int cpu)
- 	 * the rest.
- 	 */
- 	if (cpumask_empty(&pd->cpumask)) {
--		pkg_devices[topology_logical_package_id(cpu)] = NULL;
-+		pkg_devices[topology_logical_die_id(cpu)] = NULL;
- 		platform_device_unregister(pdev);
- 		return 0;
+ int topology_update_package_map(unsigned int apicid, unsigned int cpu);
++int topology_update_die_map(unsigned int dieid, unsigned int cpu);
+ int topology_phys_to_logical_pkg(unsigned int pkg);
++int topology_phys_to_logical_die(unsigned int die, unsigned int cpu);
+ bool topology_is_primary_thread(unsigned int cpu);
+ bool topology_smt_supported(void);
+ #else
+ #define topology_max_packages()			(1)
+ static inline int
+ topology_update_package_map(unsigned int apicid, unsigned int cpu) { return 0; }
++static inline int
++topology_update_die_map(unsigned int dieid, unsigned int cpu) { return 0; }
+ static inline int topology_phys_to_logical_pkg(unsigned int pkg) { return 0; }
+ static inline int topology_phys_to_logical_die(unsigned int die,
+ 		unsigned int cpu) { return 0; }
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 8739bdfe9bdf..48de7f069ac7 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1277,6 +1277,7 @@ static void validate_apic_and_package_id(struct cpuinfo_x86 *c)
+ 		       cpu, apicid, c->initial_apicid);
  	}
-@@ -741,7 +741,7 @@ static int __init coretemp_init(void)
- 	if (!x86_match_cpu(coretemp_ids))
- 		return -ENODEV;
+ 	BUG_ON(topology_update_package_map(c->phys_proc_id, cpu));
++	BUG_ON(topology_update_die_map(c->cpu_die_id, cpu));
+ #else
+ 	c->logical_proc_id = 0;
+ #endif
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 40ffe23249c0..a6e01b6c2709 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -101,6 +101,7 @@ EXPORT_PER_CPU_SYMBOL(cpu_info);
+ unsigned int __max_logical_packages __read_mostly;
+ EXPORT_SYMBOL(__max_logical_packages);
+ static unsigned int logical_packages __read_mostly;
++static unsigned int logical_die __read_mostly;
  
--	max_packages = topology_max_packages();
-+	max_packages = topology_max_packages() * topology_max_die_per_package();
- 	pkg_devices = kcalloc(max_packages, sizeof(struct platform_device *),
- 			      GFP_KERNEL);
- 	if (!pkg_devices)
+ /* Maximum number of SMT threads on any online core */
+ int __read_mostly __max_smt_threads = 1;
+@@ -302,6 +303,26 @@ int topology_phys_to_logical_pkg(unsigned int phys_pkg)
+ 	return -1;
+ }
+ EXPORT_SYMBOL(topology_phys_to_logical_pkg);
++/**
++ * topology_phys_to_logical_die - Map a physical die id to logical
++ *
++ * Returns logical die id or -1 if not found
++ */
++int topology_phys_to_logical_die(unsigned int die_id, unsigned int cur_cpu)
++{
++	int cpu;
++	int proc_id = cpu_data(cur_cpu).phys_proc_id;
++
++	for_each_possible_cpu(cpu) {
++		struct cpuinfo_x86 *c = &cpu_data(cpu);
++
++		if (c->initialized && c->cpu_die_id == die_id &&
++		    c->phys_proc_id == proc_id)
++			return c->logical_die_id;
++	}
++	return -1;
++}
++EXPORT_SYMBOL(topology_phys_to_logical_die);
+ 
+ /**
+  * topology_update_package_map - Update the physical to logical package map
+@@ -326,6 +347,29 @@ int topology_update_package_map(unsigned int pkg, unsigned int cpu)
+ 	cpu_data(cpu).logical_proc_id = new;
+ 	return 0;
+ }
++/**
++ * topology_update_die_map - Update the physical to logical die map
++ * @die:	The die id as retrieved via CPUID
++ * @cpu:	The cpu for which this is updated
++ */
++int topology_update_die_map(unsigned int die, unsigned int cpu)
++{
++	int new;
++
++	/* Already available somewhere? */
++	new = topology_phys_to_logical_die(die, cpu);
++	if (new >= 0)
++		goto found;
++
++	new = logical_die++;
++	if (new != die) {
++		pr_info("CPU %u Converting physical %u to logical die %u\n",
++			cpu, die, new);
++	}
++found:
++	cpu_data(cpu).logical_die_id = new;
++	return 0;
++}
+ 
+ void __init smp_store_boot_cpu_info(void)
+ {
+@@ -335,6 +379,7 @@ void __init smp_store_boot_cpu_info(void)
+ 	*c = boot_cpu_data;
+ 	c->cpu_index = id;
+ 	topology_update_package_map(c->phys_proc_id, id);
++	topology_update_die_map(c->cpu_die_id, id);
+ 	c->initialized = true;
+ }
+ 
 -- 
 2.18.0-rc0
 
