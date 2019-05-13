@@ -2,211 +2,199 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039EDC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5049BC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8FA021019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D532208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jXx8pNJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbfEMLxh (ORCPT
+        id S1729561AbfEMLyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:53:37 -0400
-Received: from 8bytes.org ([81.169.241.247]:41168 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfEMLxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:53:36 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 75174AAC; Mon, 13 May 2019 13:53:35 +0200 (CEST)
-Date:   Mon, 13 May 2019 13:53:34 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Updates for Linux v5.2
-Message-ID: <20190513115328.GA12854@8bytes.org>
+        Mon, 13 May 2019 07:54:25 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:34113 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729548AbfEMLyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:54:25 -0400
+Received: by mail-vs1-f65.google.com with SMTP id q64so7810334vsd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 04:54:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yyWZcQ9xuv1ePUmeginCRniFMdb4kDi9LqXon/ofAQQ=;
+        b=jXx8pNJkE0BbTjzMl7ivd+4vUnwuWMZXoLK6dKwCD5Px7FRMEWcLN5UBHSs+iWUJFq
+         NzWQIAGGOq2HyielWqQqbyC9NUXNi1TYrbMQ/wR45z5Jy5zwO0G7VznGT3+nejtB49+M
+         0FRchXIaofI7FZ911LZh7NxZNk+Ry4+UPlQk0x5UX4Botj5meRNgCts9JYBJx2TUha4F
+         VwbZWM+Q4L1BNKyH2M1N1OabEDxPZYz9eQUXqvINeGa+9LIudp8X7+cpC+tKagpQ66yo
+         0wZNfw/YGz+ZaeN6/KeNasPFsGfzCDDv+5cCyZAeyg9d8c6w9ko2ys5YL/kyKJKSir/I
+         VJwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yyWZcQ9xuv1ePUmeginCRniFMdb4kDi9LqXon/ofAQQ=;
+        b=OnGWFKEbV0aSacZATkyr7aeF6gzLj/ZzavvezlnlrMjaLI04HuP8NX/RXkADfwZe7T
+         xfulSja7uvI4wCosGnzwYftFSetGN6zGvkZVavQm09MZTnHcbCdEG+AvePPHagiu69xt
+         /3RbGVwaULG4TQLWfKmWz4kUSelnMY3E3Y1AWO7ScZHfuf9JUQ5oZAHLjvZFYWCvsjX7
+         oYLbpFUvvENncBuh23jNHFM594by7EsuyY2Bn0UsocS30h1oyC1FQihLM4qP8PoQuFZu
+         XY76Stbq5bttFcB517qWnflC6paY/kcUhiD/RnrmpcjlAcqr+3J3Yj2Y/51kjsZPMENq
+         2btA==
+X-Gm-Message-State: APjAAAX/SimmfRgVCPRKWzYZ3A0JRLk6e1xy5345M5V4lce6+UVXj+xP
+        2c2Nrb0QDt+JLM+eSkVGXVduIxZ7E/TUDiOW12MhhQ==
+X-Google-Smtp-Source: APXvYqzugMbTKcBWpzewm/jUTUzXq5+L8CGcnLBtnVt4w0TEMGBFhW70BFIFHoPzTLLVog4IeFDAAaphVr/Cc8c4cSo=
+X-Received: by 2002:a67:f34d:: with SMTP id p13mr11993272vsm.95.1557748463269;
+ Mon, 13 May 2019 04:54:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+In-Reply-To: <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Mon, 13 May 2019 17:24:12 +0530
+Message-ID: <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: multipart/mixed; boundary="000000000000cdd7180588c393b1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--000000000000cdd7180588c393b1
+Content-Type: text/plain; charset="UTF-8"
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> > that describes this topology.
+>
+> This is partly true. There are two groups of gold and silver cores,
+> but AFAICT they are in a single cluster, not two separate ones. SDM845
+> is one of the early examples of ARM's Dynamiq architecture.
+>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+>
+> I noticed that this patch sneaked through for this merge window but
+> perhaps we can whip up a quick fix for -rc2?
+>
 
-Hi Linus,
+And please find attached a patch to fix this up. Andy, since this
+hasn't landed yet (can we still squash this into the original patch?),
+I couldn't add a Fixes tag.
 
-this pull-request includes two reverts which I had to do after the merge
-window started, because the reverted patches caused issues in
-linux-next. But the rest of this was ready before the merge window. With
-this in mind:
+Regards,
+Amit
 
-The following changes since commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b:
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index c27cbd3bcb0a6..f6c0d87e663f3 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -192,6 +192,44 @@
+> >                                 next-level-cache = <&L3_0>;
+> >                         };
+> >                 };
+> > +
+> > +               cpu-map {
+> > +                       cluster0 {
+> > +                               core0 {
+> > +                                       cpu = <&CPU0>;
+> > +                               };
+> > +
+> > +                               core1 {
+> > +                                       cpu = <&CPU1>;
+> > +                               };
+> > +
+> > +                               core2 {
+> > +                                       cpu = <&CPU2>;
+> > +                               };
+> > +
+> > +                               core3 {
+> > +                                       cpu = <&CPU3>;
+> > +                               };
+> > +                       };
+> > +
+> > +                       cluster1 {
+>
+> This shouldn't exist.
+>
+> > +                               core0 {
+>
+> Rename to core4, 5, etc...
+>
+> > +                                       cpu = <&CPU4>;
+> > +                               };
+> > +
+> > +                               core1 {
+> > +                                       cpu = <&CPU5>;
+> > +                               };
+> > +
+> > +                               core2 {
+> > +                                       cpu = <&CPU6>;
+> > +                               };
+> > +
+> > +                               core3 {
+> > +                                       cpu = <&CPU7>;
+> > +                               };
+> > +                       };
+> > +               };
+> >         };
+> >
+> >         pmu {
+> > --
+> > 2.20.1.97.g81188d93c3-goog
+> >
 
-  Linux 5.1-rc7 (2019-04-28 17:04:13 -0700)
+--000000000000cdd7180588c393b1
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-arm64-dts-sdm845-Fix-up-CPU-topology.patch"
+Content-Disposition: attachment; 
+	filename="0001-arm64-dts-sdm845-Fix-up-CPU-topology.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jvmb7ded0>
+X-Attachment-Id: f_jvmb7ded0
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-updates-v5.2
-
-for you to fetch changes up to b5531563e8a0b8fcc5344a38d1fad9217e08e09b:
-
-  Merge branches 'arm/tegra', 'arm/mediatek', 'arm/smmu', 'x86/vt-d', 'x86/amd' and 'core' into next (2019-05-07 09:40:12 +0200)
-
-----------------------------------------------------------------
-IOMMU Updates for Linux v5.2
-
-Including:
-
-	- ATS support for ARM-SMMU-v3.
-
-	- AUX domain support in the IOMMU-API and the Intel VT-d driver.
-	  This adds support for multiple DMA address spaces per
-	  (PCI-)device. The use-case is to multiplex devices between
-	  host and KVM guests in a more flexible way than supported by
-	  SR-IOV.
-
-	- The Rest are smaller cleanups and fixes, two of which needed
-	  to be reverted after testing in linux-next.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      iommu/vt-d: Switch to bitmap_zalloc()
-
-Christoph Hellwig (4):
-      iommu/amd: Remove the leftover of bypass support
-      iommu/vt-d: Clean up iommu_no_mapping
-      iommu/vt-d: Use dma_direct for bypass devices
-      iommu/vt-d: Don't clear GFP_DMA and GFP_DMA32 flags
-
-Dmitry Osipenko (3):
-      iommu/tegra-smmu: Fix invalid ASID bits on Tegra30/114
-      iommu/tegra-smmu: Properly release domain resources
-      iommu/tegra-smmu: Respect IOMMU API read-write protections
-
-Douglas Anderson (1):
-      iommu/arm-smmu: Break insecure users by disabling bypass by default
-
-Eric Auger (1):
-      iommu/vt-d: Fix leak in intel_pasid_alloc_table on error path
-
-Gustavo A. R. Silva (1):
-      iommu/vt-d: Use struct_size() helper
-
-Jean-Philippe Brucker (11):
-      iommu: Bind process address spaces to devices
-      iommu/amd: Use pci_prg_resp_pasid_required()
-      PCI: Move ATS declarations outside of CONFIG_PCI
-      PCI: Add a stub for pci_ats_disabled()
-      ACPI/IORT: Check ATS capability in root complex nodes
-      iommu/arm-smmu-v3: Rename arm_smmu_master_data to arm_smmu_master
-      iommu/arm-smmu-v3: Store SteamIDs in master
-      iommu/arm-smmu-v3: Add a master->domain pointer
-      iommu/arm-smmu-v3: Link domains and devices
-      iommu/arm-smmu-v3: Add support for PCI ATS
-      iommu/arm-smmu-v3: Disable tagged pointers
-
-Jinyu Qi (1):
-      iommu/iova: Separate atomic variables to improve performance
-
-Joerg Roedel (7):
-      Merge branch 'api-features' into x86/vt-d
-      iommu/amd: Remove amd_iommu_pd_list
-      Merge branch 'for-joerg/arm-smmu/updates' of git://git.kernel.org/.../will/linux into arm/smmu
-      Merge branch 'api-features' into arm/smmu
-      Revert "iommu/amd: Remove the leftover of bypass support"
-      Revert "iommu/amd: Flush not present cache in iommu_map_page"
-      Merge branches 'arm/tegra', 'arm/mediatek', 'arm/smmu', 'x86/vt-d', 'x86/amd' and 'core' into next
-
-Lu Baolu (15):
-      iommu: Remove iommu_callback_data
-      iommu: Add APIs for multiple domains per device
-      iommu/vt-d: Make intel_iommu_enable_pasid() more generic
-      iommu/vt-d: Add per-device IOMMU feature ops entries
-      iommu/vt-d: Move common code out of iommu_attch_device()
-      iommu/vt-d: Aux-domain specific domain attach/detach
-      iommu/vt-d: Return ID associated with an auxiliary domain
-      vfio/mdev: Add iommu related member in mdev_device
-      vfio/type1: Add domain at(de)taching group helpers
-      vfio/type1: Handle different mdev isolation type
-      iommu/vt-d: Flush IOTLB for untrusted device in time
-      iommu/vt-d: Don't request page request irq under dmar_global_lock
-      iommu/vt-d: Cleanup: no spaces at the start of a line
-      iommu/vt-d: Set intel_iommu_gfx_mapped correctly
-      iommu/vt-d: Make kernel parameter igfx_off work with vIOMMU
-
-Tom Murphy (1):
-      iommu/amd: Flush not present cache in iommu_map_page
-
-Vivek Gautam (1):
-      iommu/arm-smmu: Log CBFRSYNRA register on context fault
-
-Wen Yang (1):
-      iommu/mediatek: Fix leaked of_node references
-
-Will Deacon (1):
-      iommu/arm-smmu-v3: Don't disable SMMU in kdump kernel
-
- drivers/acpi/arm64/iort.c           |  11 +
- drivers/iommu/Kconfig               |  25 ++
- drivers/iommu/amd_iommu.c           |  52 +---
- drivers/iommu/amd_iommu_init.c      |   8 -
- drivers/iommu/amd_iommu_types.h     |   6 -
- drivers/iommu/arm-smmu-regs.h       |   2 +
- drivers/iommu/arm-smmu-v3.c         | 355 +++++++++++++++++-----
- drivers/iommu/arm-smmu.c            |  11 +-
- drivers/iommu/dmar.c                |   2 +-
- drivers/iommu/intel-iommu.c         | 584 ++++++++++++++++++++++++++++--------
- drivers/iommu/intel-pasid.c         |   4 +-
- drivers/iommu/intel-svm.c           |  19 +-
- drivers/iommu/intel_irq_remapping.c |   7 +-
- drivers/iommu/iommu.c               | 211 ++++++++++++-
- drivers/iommu/mtk_iommu.c           |   8 +-
- drivers/iommu/tegra-smmu.c          |  41 ++-
- drivers/vfio/mdev/mdev_core.c       |  18 ++
- drivers/vfio/mdev/mdev_private.h    |   1 +
- drivers/vfio/vfio_iommu_type1.c     | 139 +++++++--
- include/linux/intel-iommu.h         |  13 +-
- include/linux/iommu.h               | 144 +++++++++
- include/linux/iova.h                |  16 +-
- include/linux/mdev.h                |  14 +
- include/linux/pci.h                 |  31 +-
- 24 files changed, 1376 insertions(+), 346 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAlzZWrcACgkQK/BELZcB
-GuNo1w//QRnAse4e2vXewn+JJWiOOMMoIcyj+LVXaduvKNfUbHRce0BLUDKY0ISu
-JPqyld7e2G7AhCc2yvANswtTKAEIthkTTgvgDed3kF5kBHOb/1ja34RhNTsXJ3Yq
-Y4dkOUBg7k8jFHMVaIs6B6q+KEyVEFArRmjWAM4+bWt1Y+aXH7ditJ3eI6AyEIuv
-dg4ylMM06W9F3/rzsc+f3aSHlNes+Cqfo7/fAgn7REOcqY3aGpk/JJCjqdLE143s
-m/GHSj81U/cdeoYHzcJtKvGsiaAXiQKJCvEe2CKLVBs+JUHmprnsmRYjOnwG2X26
-sMjiAlnkFuNuG0gPqqGS5jg7HjXLMucnJJjCYgrm05G+Ht/Vvulw9ctYk4qcVF0i
-5mAFUvBew6kLOUbr9Oa3IojpNHPgM4Eoft5Wvagy5lpCdelmWkwu2cHgbF6/KT4l
-cyEKd4DdqgR2keWov7ODlvas2pWx1dtvBtTOV8iZmSMit90aitCU1I2MoEp7YcS7
-+RhfeHQ9GPOZE2OmgrRiqyJx8JabgFLLnRWaouOhJcAO79YpGCHz1s0zrgX10zdv
-ux7qHuNuL12AgLGueivAS8UeuaQYd3X7hncns8Xyj0NrtQYo8PuZBhiMzpR/Ms0u
-AgYev7a/yZwa8AM9rdtGpRWYK8r90K5kF1cHUhuc/QL+wC8Eeuk=
-=lC6W
------END PGP SIGNATURE-----
-
---GvXjxJ+pjyke8COw--
+RnJvbSA5ZTdkNjBiY2FiYWQ3NTk0YTFkYTQzOTgyYmJjOWZkYTA0NjY5NzE3IE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpNZXNzYWdlLUlkOiA8OWU3ZDYwYmNhYmFkNzU5NGExZGE0Mzk4MmJiYzlm
+ZGEwNDY2OTcxNy4xNTU3NzQ4NDM3LmdpdC5hbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc+CkZyb206
+IEFtaXQgS3VjaGVyaWEgPGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZz4KRGF0ZTogTW9uLCAxMyBN
+YXkgMjAxOSAxNzowODozMyArMDUzMApTdWJqZWN0OiBbUEFUQ0hdIGFybTY0OiBkdHM6IHNkbTg0
+NTogRml4IHVwIENQVSB0b3BvbG9neQoKU0RNODQ1IGltcGxlbWVudHMgQVJNJ3MgRHluYW1pcSBh
+cmNoaXRlY3R1cmUgdGhhdCBhbGxvd3MgdGhlIGJpZyBhbmQKTElUVExFIGNvcmVzIHRvIGV4aXN0
+IGluIGEgc2luZ2xlIGNsdXN0ZXIgc2hhcmluZyB0aGUgTDMgY2FjaGUuCgpGaXggdGhlIGNwdS1t
+YXAgdG8gcHV0IGFsbCBjcHVzIGludG8gYSBzaW5nbGUgY2x1c3Rlci4KClNpZ25lZC1vZmYtYnk6
+IEFtaXQgS3VjaGVyaWEgPGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZz4KLS0tCiBhcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAxMCArKysrLS0tLS0tCiAxIGZpbGUgY2hhbmdl
+ZCwgNCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9z
+ZG04NDUuZHRzaQppbmRleCBlZjdjZTYzZWVmNGUuLmEzMGZhNTRiZmNjZCAxMDA2NDQKLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvcWNvbS9zZG04NDUuZHRzaQpAQCAtMjQ2LDIyICsyNDYsMjAgQEAKIAkJCQljb3JlMyB7
+CiAJCQkJCWNwdSA9IDwmQ1BVMz47CiAJCQkJfTsKLQkJCX07CiAKLQkJCWNsdXN0ZXIxIHsKLQkJ
+CQljb3JlMCB7CisJCQkJY29yZTQgewogCQkJCQljcHUgPSA8JkNQVTQ+OwogCQkJCX07CiAKLQkJ
+CQljb3JlMSB7CisJCQkJY29yZTUgewogCQkJCQljcHUgPSA8JkNQVTU+OwogCQkJCX07CiAKLQkJ
+CQljb3JlMiB7CisJCQkJY29yZTYgewogCQkJCQljcHUgPSA8JkNQVTY+OwogCQkJCX07CiAKLQkJ
+CQljb3JlMyB7CisJCQkJY29yZTcgewogCQkJCQljcHUgPSA8JkNQVTc+OwogCQkJCX07CiAJCQl9
+OwotLSAKMi4xNy4xCgo=
+--000000000000cdd7180588c393b1--
