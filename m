@@ -2,76 +2,90 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC03C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E0DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 602B92146F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557754659;
-	bh=d9zV5NxRO983geJRFbQCgZJPUiqH8fIlmgOX6IEtKC0=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=rAYKi/N72kra6+fDYvshVtDxOR+4sl+8RpZdfwKzFNC0OVkJFbytr44FwmC9+4u3W
-	 VqikoS/tu9ajd/6eLl5WgASSUVR4qNhIPF3cKQLJ7YL4/7XuDw2QchWKkhIiJLrf9r
-	 nG+zzCdDNWfCers3MLqHJL2gEdcg4WrUtp5eMngo=
+	by mail.kernel.org (Postfix) with ESMTP id 2F0CF20645
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:38:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfEMNhi (ORCPT
+        id S1730279AbfEMNig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730234AbfEMNhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:37:38 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75A0321019;
-        Mon, 13 May 2019 13:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557754657;
-        bh=d9zV5NxRO983geJRFbQCgZJPUiqH8fIlmgOX6IEtKC0=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=aijBOMDb7JZM0E98uhcqkFlvetuou4pSY2/WVrWlKyh9Nc1z8C+0xkBzksEUJbbr3
-         omZUaLiNRbOAh7xIx5dY6UPD1Kxhlq8morYgLA0U1CGzQl2Sd2yHQDE07Iwm3/C2s3
-         nurBc0LKZ3RmLMWZuxNZed45/CG3N9EgkemTn7HE=
-Date:   Mon, 13 May 2019 09:37:36 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     dsterba@suse.cz, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.0 92/99] btrfs: Switch memory allocations in
- async csum calculation path to kvmalloc
-Message-ID: <20190513133736.GC11972@sasha-vm>
-References: <20190507053235.29900-1-sashal@kernel.org>
- <20190507053235.29900-92-sashal@kernel.org>
- <20190507074919.GM20156@twin.jikos.cz>
+        Mon, 13 May 2019 09:38:36 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:43027 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbfEMNif (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:38:35 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id QB9whjKyd0YQeQBA0hdDdD; Mon, 13 May 2019 15:38:32 +0200
+Subject: Re: test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-media@vger.kernel.org
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
+        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
+        sakari.ailus@linux.intel.com,
+        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
+        lkft-triage@lists.linaro.org
+References: <CA+G9fYuC8dgKs04HmyCaKeQ_xwqKBxnh=zsOFjQK+3Fq7AZRyw@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <5de0df37-f0d0-f54c-2eef-a7533cbe7a25@xs4all.nl>
+Date:   Mon, 13 May 2019 15:38:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190507074919.GM20156@twin.jikos.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+G9fYuC8dgKs04HmyCaKeQ_xwqKBxnh=zsOFjQK+3Fq7AZRyw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfOZD1CorHOqojS7/3knRw8+4oscN4wDn5nPd5jP0VMGoFObN6OaK/d2CY/dIca8YNDwZBTS5R3Efz9YAGRrjc7DXzFnEiEER+yoXdrLb8Kx/PHczSnjo
+ zpeVodVdOwVqSnnXcfjCfmnz7oMu5uTgadcXC+F4oD1StgeKe7rPhW7FodSoQaNfs5+pZJKmeaqwyqbOhAruJOc/weueFi5WjuTMRvSlDdjqV4Xnj+bZ2nej
+ wo9DSRVUZGwxglGUWQ3H/zrVyr8E1kRpeYz2kVA6R0t9gKNX+FfMLlPT11zOxr93/08V6hI1k565p8rN75GIzlKBlLCzLsVd3xA0niUVCd1FVLEBb+9jKnN+
+ bo4ohxHSClBA6h2HLuP/NpQX2luZeQ3vUhxcMhpsXS/490cETFNZwLYWm99mSIJXRA3Hjy4ecMtkOgtH90CLJWsb+u/pazUufjq3z5MS0wq7c3jBVZUliQTj
+ jh+XwcJnr7yHs8A/WY5yMd/sdF6+JAtPD6JAlip5gu5zk+axLY+7L4jFUdgqEiCtJv+ims45PJ+Smi2YOJwfo/bsAkuDew57exNEUJiusZfAFzvEIZzGozIw
+ tgNKYdA/L9s5yPkW1A77TdJS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 07, 2019 at 09:49:19AM +0200, David Sterba wrote:
->On Tue, May 07, 2019 at 01:32:26AM -0400, Sasha Levin wrote:
->> From: Nikolay Borisov <nborisov@suse.com>
->>
->> [ Upstream commit a3d46aea46f99d134b4e0726e4826b824c3e5980 ]
->>
->> Recent multi-page biovec rework allowed creation of bios that can span
->> large regions - up to 128 megabytes in the case of btrfs.
->
->Not necessary for 5.0/4.x as it depends on 5.1 changes.
+On 5/13/19 3:32 PM, Naresh Kamboju wrote:
+> Do you see test VIDIOC_G/S_PARM: FAIL on stable 4.14, 4.9 and 4.4
+> kernel branches ?
 
-Dropped it, thank you!
+Probably related to commit 8a7c5594c0202 (media: v4l2-ioctl: clear fields in s_parm).
 
---
-Thanks,
-Sasha
+Regards,
+
+	Hans
+
+> 
+> test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1132):
+> reserved not zeroed
+> test VIDIOC_G/S_PARM: FAIL
+> 
+> Test passes on mainline, -next, 5.0 and 4.19
+> Test failed on 4.14, 4.9 and 4.4
+> 
+> steps to reproduce:
+>        # boot any 4.9/4.14 kernel on x86_64 / Juno / hikey  device
+>        #  install v4l-utils package
+>        # modprobe vivid.ko no_error_inj=1
+>        # v4l2-compliance -v -d /dev/video0
+> 
+> Full test log,
+> https://lkft.validation.linaro.org/scheduler/job/708755#L1791
+> 
+> Test results comparison on all branches,
+> https://qa-reports.linaro.org/_/comparetest/?project=22&project=6&project=58&project=135&project=40&project=23&project=159&suite=v4l2-compliance&test=VIDIOC_G-S_PARM
+> 
+> Best Regards
+> Naresh Kamboju
+> 
+
