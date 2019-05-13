@@ -2,193 +2,154 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044E2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3FD8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D819821019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:33:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFA120989
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z+A0uN9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfEMIdC (ORCPT
+        id S1728104AbfEMIgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:33:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:7745 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbfEMIdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:33:02 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2065CD97083CE2953F2;
-        Mon, 13 May 2019 16:32:58 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 May 2019
- 16:32:49 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <t-kristo@ti.com>, <mturquette@baylibre.com>, <sboyd@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2] clk: ti: Remove unused functions
-Date:   Mon, 13 May 2019 16:32:24 +0800
-Message-ID: <20190513083224.28892-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190512100328.27136-1-yuehaibing@huawei.com>
-References: <20190512100328.27136-1-yuehaibing@huawei.com>
+        Mon, 13 May 2019 04:36:25 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:52574 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728026AbfEMIgY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 04:36:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=A/LTjUKq3u7qRwt9jLoPyIVtj9SXda11NSro60RTqLg=; b=Z+A0uN9kY/5akyp9FoyRxb1Be5
+        1Qigih1z3BK4FURzUf9KoYBXn/anfPh+e1A+sbbSS/HRRb8MLcbOyWKifHMJ6oOv0qad6VkOVfvEJ
+        iGe88evRSwyM6FRC08g6CBx0tpkMhp48t8Kbm6mK8WCsLjexMnSkrXTh+sRt2arZOAjGkP39tYOS7
+        T51OK83w1YaMZIPXUD9OPs7Wk3gDOWhiSrb6U2N47GR8LVKO99CX+8SHYzddKQgQtl0PQbA5ex2nJ
+        U5nzALEj53adVcan72GkNuBvJFAZ1nEhaMYuuT/t+BmkH3e2itGHs14rd1JPKaoMkAA5I9LKvYDEb
+        NeDXz1/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ6RL-0005UE-KR; Mon, 13 May 2019 08:36:07 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 25DFF2029FD7A; Mon, 13 May 2019 10:36:06 +0200 (CEST)
+Date:   Mon, 13 May 2019 10:36:06 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-They are not used any more since
-commit 7558562a70fb ("clk: ti: Drop legacy clk-3xxx-legacy code")
+On Thu, May 09, 2019 at 09:21:35PM +0000, Nadav Amit wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: also remove mux/div unused functions
----
- drivers/clk/ti/divider.c | 36 ------------------------------------
- drivers/clk/ti/gate.c    | 30 ------------------------------
- drivers/clk/ti/mux.c     | 31 -------------------------------
- 3 files changed, 97 deletions(-)
+> >>> And we can fix that by having tlb_finish_mmu() sync up. Never let a
+> >>> concurrent tlb_finish_mmu() complete until all concurrenct mmu_gathers
+> >>> have completed.
+> >>> 
+> >>> This should not be too hard to make happen.
+> >> 
+> >> This synchronization sounds much more expensive than what I proposed. But I
+> >> agree that cache-lines that move from one CPU to another might become an
+> >> issue. But I think that the scheme I suggested would minimize this overhead.
+> > 
+> > Well, it would have a lot more unconditional atomic ops. My scheme only
+> > waits when there is actual concurrency.
+> 
+> Well, something has to give. I didn’t think that if the same core does the
+> atomic op it would be too expensive.
 
-diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
-index 4786e0e..c2ff4ce 100644
---- a/drivers/clk/ti/divider.c
-+++ b/drivers/clk/ti/divider.c
-@@ -474,42 +474,6 @@ struct clk_hw *ti_clk_build_component_div(struct ti_clk_divider *setup)
- 	return &div->hw;
- }
- 
--struct clk *ti_clk_register_divider(struct ti_clk *setup)
--{
--	struct ti_clk_divider *div = setup->data;
--	struct clk_omap_reg reg = {
--		.index = div->module,
--		.offset = div->reg,
--	};
--	u8 width;
--	u32 flags = 0;
--	u8 div_flags = 0;
--	const struct clk_div_table *table;
--	struct clk *clk;
--
--	if (div->flags & CLKF_INDEX_STARTS_AT_ONE)
--		div_flags |= CLK_DIVIDER_ONE_BASED;
--
--	if (div->flags & CLKF_INDEX_POWER_OF_TWO)
--		div_flags |= CLK_DIVIDER_POWER_OF_TWO;
--
--	if (div->flags & CLKF_SET_RATE_PARENT)
--		flags |= CLK_SET_RATE_PARENT;
--
--	table = _get_div_table_from_setup(div, &width);
--	if (IS_ERR(table))
--		return (struct clk *)table;
--
--	clk = _register_divider(NULL, setup->name, div->parent,
--				flags, &reg, div->bit_shift,
--				width, -EINVAL, div_flags, table);
--
--	if (IS_ERR(clk))
--		kfree(table);
--
--	return clk;
--}
--
- static struct clk_div_table *
- __init ti_clk_get_div_table(struct device_node *node)
- {
-diff --git a/drivers/clk/ti/gate.c b/drivers/clk/ti/gate.c
-index 504c0e9..4238955 100644
---- a/drivers/clk/ti/gate.c
-+++ b/drivers/clk/ti/gate.c
-@@ -131,36 +131,6 @@ static struct clk *_register_gate(struct device *dev, const char *name,
- 	return clk;
- }
- 
--struct clk_hw *ti_clk_build_component_gate(struct ti_clk_gate *setup)
--{
--	struct clk_hw_omap *gate;
--	struct clk_omap_reg *reg;
--	const struct clk_hw_omap_ops *ops = &clkhwops_wait;
--
--	if (!setup)
--		return NULL;
--
--	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
--	if (!gate)
--		return ERR_PTR(-ENOMEM);
--
--	reg = (struct clk_omap_reg *)&gate->enable_reg;
--	reg->index = setup->module;
--	reg->offset = setup->reg;
--
--	gate->enable_bit = setup->bit_shift;
--
--	if (setup->flags & CLKF_NO_WAIT)
--		ops = NULL;
--
--	if (setup->flags & CLKF_INTERFACE)
--		ops = &clkhwops_iclk_wait;
--
--	gate->ops = ops;
--
--	return &gate->hw;
--}
--
- static void __init _of_ti_gate_clk_setup(struct device_node *node,
- 					 const struct clk_ops *ops,
- 					 const struct clk_hw_omap_ops *hw_ops)
-diff --git a/drivers/clk/ti/mux.c b/drivers/clk/ti/mux.c
-index b7f9a4f..0069e7c 100644
---- a/drivers/clk/ti/mux.c
-+++ b/drivers/clk/ti/mux.c
-@@ -164,37 +164,6 @@ static struct clk *_register_mux(struct device *dev, const char *name,
- 	return clk;
- }
- 
--struct clk *ti_clk_register_mux(struct ti_clk *setup)
--{
--	struct ti_clk_mux *mux;
--	u32 flags;
--	u8 mux_flags = 0;
--	struct clk_omap_reg reg;
--	u32 mask;
--
--	mux = setup->data;
--	flags = CLK_SET_RATE_NO_REPARENT;
--
--	mask = mux->num_parents;
--	if (!(mux->flags & CLKF_INDEX_STARTS_AT_ONE))
--		mask--;
--
--	mask = (1 << fls(mask)) - 1;
--	reg.index = mux->module;
--	reg.offset = mux->reg;
--	reg.ptr = NULL;
--
--	if (mux->flags & CLKF_INDEX_STARTS_AT_ONE)
--		mux_flags |= CLK_MUX_INDEX_ONE;
--
--	if (mux->flags & CLKF_SET_RATE_PARENT)
--		flags |= CLK_SET_RATE_PARENT;
--
--	return _register_mux(NULL, setup->name, mux->parents, mux->num_parents,
--			     flags, &reg, mux->bit_shift, mask, -EINVAL,
--			     mux_flags, NULL);
--}
--
- /**
-  * of_mux_clk_setup - Setup function for simple mux rate clock
-  * @node: DT node for the clock
--- 
-2.7.4
+They're still at least 20 cycles a pop, uncontended.
 
+> > I _think_ something like the below ought to work, but its not even been
+> > near a compiler. The only problem is the unconditional wakeup; we can
+> > play games to avoid that if we want to continue with this.
+> > 
+> > Ideally we'd only do this when there's been actual overlap, but I've not
+> > found a sensible way to detect that.
+> > 
+> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> > index 4ef4bbe78a1d..b70e35792d29 100644
+> > --- a/include/linux/mm_types.h
+> > +++ b/include/linux/mm_types.h
+> > @@ -590,7 +590,12 @@ static inline void dec_tlb_flush_pending(struct mm_struct *mm)
+> > 	 *
+> > 	 * Therefore we must rely on tlb_flush_*() to guarantee order.
+> > 	 */
+> > -	atomic_dec(&mm->tlb_flush_pending);
+> > +	if (atomic_dec_and_test(&mm->tlb_flush_pending)) {
+> > +		wake_up_var(&mm->tlb_flush_pending);
+> > +	} else {
+> > +		wait_event_var(&mm->tlb_flush_pending,
+> > +			       !atomic_read_acquire(&mm->tlb_flush_pending));
+> > +	}
+> > }
+> 
+> It still seems very expensive to me, at least for certain workloads (e.g.,
+> Apache with multithreaded MPM).
 
+Is that Apache-MPM workload triggering this lots? Having a known
+benchmark for this stuff is good for when someone has time to play with
+things.
+
+> It may be possible to avoid false-positive nesting indications (when the
+> flushes do not overlap) by creating a new struct mmu_gather_pending, with
+> something like:
+> 
+>   struct mmu_gather_pending {
+>  	u64 start;
+> 	u64 end;
+> 	struct mmu_gather_pending *next;
+>   }
+> 
+> tlb_finish_mmu() would then iterate over the mm->mmu_gather_pending
+> (pointing to the linked list) and find whether there is any overlap. This
+> would still require synchronization (acquiring a lock when allocating and
+> deallocating or something fancier).
+
+We have an interval_tree for this, and yes, that's how far I got :/
+
+The other thing I was thinking of is trying to detect overlap through
+the page-tables themselves, but we have a distinct lack of storage
+there.
+
+The things is, if this threaded monster runs on all CPUs (busy front end
+server) and does a ton of invalidation due to all the short lived
+request crud, then all the extra invalidations will add up too. Having
+to do process (machine in this case) wide invalidations is expensive,
+having to do more of them surely isn't cheap either.
+
+So there might be something to win here.
