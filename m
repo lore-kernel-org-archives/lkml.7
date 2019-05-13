@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E93BC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E863BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF4F2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B94432133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:40:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sU2LVxvs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sPuRCB7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfEMOkk (ORCPT
+        id S1730660AbfEMOkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:40:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46126 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbfEMOkU (ORCPT
+        Mon, 13 May 2019 10:40:43 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:60450 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730646AbfEMOkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:40:20 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd3dD181544;
-        Mon, 13 May 2019 14:39:43 GMT
+        Mon, 13 May 2019 10:40:41 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DEd4le195008;
+        Mon, 13 May 2019 14:39:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2018-07-02;
- bh=OxanbwcMAhQGR2MgwGG1WhL6eejs6scvJBA++WEfeAY=;
- b=sU2LVxvsJrs8djlyFSIdZHIRCpnGERg2UYPNUhkjBZS5y33p5PwL4YfHc1GeuRzDdQDc
- tI0T4yhU0dK1zriLrw7oc9ar2kWJb8ndOWDLgtO2S3p47ONlJjMT8DUNuiH6bnk/HBS8
- 4pRTCY+QUM4kQQE3oKH19lJQLedFyMmlQevJV2qxd27nI0pcuQGDzWA0LWRRFA/SWQEU
- nPdKdbh2dWUUqgGbATEXLToM31SW1rDh84aMrX31dZ5ifOINbXk1GaZ1ybT260MDzhmO
- Rv/V6YNnfjMVWcuyQ7jnbONxErhqEaY2u+iG8myukAxzaJ4GJAWzjMX/sNhelawAFCXL Aw== 
+ bh=k+F2ikPI91eVYLszQvHNmFnwWVR/o1Jhouj4HTjs9uc=;
+ b=sPuRCB7AsbZZWT9m3DPio3N73cCl1qZSGvYcOtO5wcwsHy2zHWKroJG67uw/Upj6MB8h
+ as5U+fXDw92G4CC+u+VRhy4iiGPx4okU0TKnt3mZX/RUGaqFhGWJu4ijIoE5Zs9d9SNL
+ u//amNhRfak4bvPH2HOHsboCM+M+dxOBIVZGLn3TN6a2pmSvuViBD6jXP4r86MOGViz9
+ jN0fBYhsPujDrb6O6Mzol1ztWZq7wn6RT/LFtqlQE5JCw2X/1/QkZ/0lzXFxFT78JDD8
+ PNKqvAwiyWmQ5SmRKDUE6R4j7mSNKvwv3s4EEuyCXYkMX1kBdTCqgLL8P3W8I/5vm5L5 rw== 
 Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2sdnttfejj-1
+        by userp2120.oracle.com with ESMTP id 2sdq1q7ata-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 14:39:42 +0000
+        Mon, 13 May 2019 14:39:04 +0000
 Received: from achartre-desktop.fr.oracle.com (dhcp-10-166-106-34.fr.oracle.com [10.166.106.34])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQO022780;
-        Mon, 13 May 2019 14:39:39 GMT
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x4DEcZQ9022780;
+        Mon, 13 May 2019 14:38:56 GMT
 From:   Alexandre Chartre <alexandre.chartre@oracle.com>
 To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
@@ -50,16 +50,16 @@ To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
 Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
         liran.alon@oracle.com, jwadams@google.com,
         alexandre.chartre@oracle.com
-Subject: [RFC KVM 21/27] kvm/isolation: initialize the KVM page table with vmx VM data
-Date:   Mon, 13 May 2019 16:38:29 +0200
-Message-Id: <1557758315-12667-22-git-send-email-alexandre.chartre@oracle.com>
+Subject: [RFC KVM 06/27] KVM: x86: Exit KVM isolation on IRQ entry
+Date:   Mon, 13 May 2019 16:38:14 +0200
+Message-Id: <1557758315-12667-7-git-send-email-alexandre.chartre@oracle.com>
 X-Mailer: git-send-email 1.7.1
 In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=2
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
  definitions=main-1905130103
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,186 +67,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Map VM data, in particular the kvm structure data.
+From: Liran Alon <liran.alon@oracle.com>
 
+Next commits will change most of KVM #VMExit handlers to run
+in KVM isolated address space. Any interrupt handler raised
+during execution in KVM address space needs to switch back
+to host address space.
+
+This patch makes sure that IRQ handlers will run in full
+host address space instead of KVM isolated address space.
+
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
 Signed-off-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 ---
- arch/x86/kvm/isolation.c |   17 +++++++++++++++++
- arch/x86/kvm/isolation.h |    2 ++
- arch/x86/kvm/vmx/vmx.c   |   31 ++++++++++++++++++++++++++++++-
- arch/x86/kvm/x86.c       |   12 ++++++++++++
- include/linux/kvm_host.h |    1 +
- virt/kvm/arm/arm.c       |    4 ++++
- virt/kvm/kvm_main.c      |    2 +-
- 7 files changed, 67 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/apic.h    |    4 ++--
+ arch/x86/include/asm/hardirq.h |   10 ++++++++++
+ arch/x86/kernel/smp.c          |    2 +-
+ arch/x86/platform/uv/tlb_uv.c  |    2 +-
+ 4 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/isolation.c b/arch/x86/kvm/isolation.c
-index cf5ee0d..d3ac014 100644
---- a/arch/x86/kvm/isolation.c
-+++ b/arch/x86/kvm/isolation.c
-@@ -1222,6 +1222,23 @@ static void kvm_isolation_clear_handlers(void)
- 	kvm_set_isolation_exit_handler(NULL);
- }
- 
-+int kvm_isolation_init_vm(struct kvm *kvm)
-+{
-+	if (!kvm_isolation())
-+		return 0;
-+
-+	return (kvm_copy_percpu_mapping(kvm->srcu.sda,
-+		sizeof(struct srcu_data)));
-+}
-+
-+void kvm_isolation_destroy_vm(struct kvm *kvm)
-+{
-+	if (!kvm_isolation())
-+		return;
-+
-+	kvm_clear_percpu_mapping(kvm->srcu.sda);
-+}
-+
- int kvm_isolation_init(void)
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 130e81e..606da8f 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -515,7 +515,7 @@ static inline unsigned int read_apic_id(void)
+ static inline void entering_irq(void)
  {
- 	int r;
-diff --git a/arch/x86/kvm/isolation.h b/arch/x86/kvm/isolation.h
-index 1f79e28..33e9a87 100644
---- a/arch/x86/kvm/isolation.h
-+++ b/arch/x86/kvm/isolation.h
-@@ -23,6 +23,8 @@ static inline bool kvm_isolation(void)
- 
- extern int kvm_isolation_init(void);
- extern void kvm_isolation_uninit(void);
-+extern int kvm_isolation_init_vm(struct kvm *kvm);
-+extern void kvm_isolation_destroy_vm(struct kvm *kvm);
- extern void kvm_isolation_enter(void);
- extern void kvm_isolation_exit(void);
- extern void kvm_may_access_sensitive_data(struct kvm_vcpu *vcpu);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f181b3c..5b52e8c 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6523,6 +6523,33 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	vmx_complete_interrupts(vmx);
+ 	irq_enter();
+-	kvm_set_cpu_l1tf_flush_l1d();
++	kvm_cpu_may_access_sensitive_data();
  }
  
-+static void vmx_unmap_vm(struct kvm *kvm)
-+{
-+	struct kvm_vmx *kvm_vmx = to_kvm_vmx(kvm);
-+
-+	if (!kvm_isolation())
-+		return;
-+
-+	pr_debug("unmapping kvm %p", kvm_vmx);
-+	kvm_clear_range_mapping(kvm_vmx);
-+}
-+
-+static int vmx_map_vm(struct kvm *kvm)
-+{
-+	struct kvm_vmx *kvm_vmx = to_kvm_vmx(kvm);
-+
-+	if (!kvm_isolation())
-+		return 0;
-+
-+	pr_debug("mapping kvm %p", kvm_vmx);
-+	/*
-+	 * Only copy kvm_vmx struct mapping because other
-+	 * attributes (like kvm->srcu) are not initialized
-+	 * yet.
-+	 */
-+	return kvm_copy_ptes(kvm_vmx, sizeof(struct kvm_vmx));
-+}
-+
- static struct kvm *vmx_vm_alloc(void)
+ static inline void entering_ack_irq(void)
+@@ -528,7 +528,7 @@ static inline void ipi_entering_ack_irq(void)
  {
- 	struct kvm_vmx *kvm_vmx = __vmalloc(sizeof(struct kvm_vmx),
-@@ -6533,6 +6560,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- static void vmx_vm_free(struct kvm *kvm)
- {
-+	vmx_unmap_vm(kvm);
- 	vfree(to_kvm_vmx(kvm));
+ 	irq_enter();
+ 	ack_APIC_irq();
+-	kvm_set_cpu_l1tf_flush_l1d();
++	kvm_cpu_may_access_sensitive_data();
  }
  
-@@ -6702,7 +6730,8 @@ static int vmx_vm_init(struct kvm *kvm)
- 			break;
- 		}
- 	}
--	return 0;
+ static inline void exiting_irq(void)
+diff --git a/arch/x86/include/asm/hardirq.h b/arch/x86/include/asm/hardirq.h
+index d9069bb..e082ecb 100644
+--- a/arch/x86/include/asm/hardirq.h
++++ b/arch/x86/include/asm/hardirq.h
+@@ -80,4 +80,14 @@ static inline bool kvm_get_cpu_l1tf_flush_l1d(void)
+ static inline void kvm_set_cpu_l1tf_flush_l1d(void) { }
+ #endif /* IS_ENABLED(CONFIG_KVM_INTEL) */
+ 
++#ifdef CONFIG_HAVE_KVM
++extern void (*kvm_isolation_exit_handler)(void);
 +
-+	return (vmx_map_vm(kvm));
- }
- 
- static void __init vmx_check_processor_compat(void *rtn)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 1db72c3..e1cc3a6 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9207,6 +9207,17 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	return 0;
- }
- 
-+void kvm_arch_vm_postcreate(struct kvm *kvm)
++static inline void kvm_cpu_may_access_sensitive_data(void)
 +{
-+	/*
-+	 * The kvm structure is mapped in vmx.c so that the full kvm_vmx
-+	 * structure can be mapped. Attributes allocated in the kvm
-+	 * structure (like kvm->srcu) are mapped by kvm_isolation_init_vm()
-+	 * because they are not initialized when vmx.c maps the kvm structure.
-+	 */
-+	kvm_isolation_init_vm(kvm);
++	kvm_set_cpu_l1tf_flush_l1d();
++	kvm_isolation_exit_handler();
 +}
++#endif
 +
- static void kvm_unload_vcpu_mmu(struct kvm_vcpu *vcpu)
+ #endif /* _ASM_X86_HARDIRQ_H */
+diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
+index 04adc8d..b99fda0 100644
+--- a/arch/x86/kernel/smp.c
++++ b/arch/x86/kernel/smp.c
+@@ -261,7 +261,7 @@ __visible void __irq_entry smp_reschedule_interrupt(struct pt_regs *regs)
  {
- 	vcpu_load(vcpu);
-@@ -9320,6 +9331,7 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- 		x86_set_memory_region(kvm, IDENTITY_PAGETABLE_PRIVATE_MEMSLOT, 0, 0);
- 		x86_set_memory_region(kvm, TSS_PRIVATE_MEMSLOT, 0, 0);
- 	}
-+	kvm_isolation_destroy_vm(kvm);
- 	if (kvm_x86_ops->vm_destroy)
- 		kvm_x86_ops->vm_destroy(kvm);
- 	kvm_pic_destroy(kvm);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 640a036..ad24d9e 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -932,6 +932,7 @@ static inline bool kvm_arch_intc_initialized(struct kvm *kvm)
+ 	ack_APIC_irq();
+ 	inc_irq_stat(irq_resched_count);
+-	kvm_set_cpu_l1tf_flush_l1d();
++	kvm_cpu_may_access_sensitive_data();
  
- int kvm_arch_init_vm(struct kvm *kvm, unsigned long type);
- void kvm_arch_destroy_vm(struct kvm *kvm);
-+void kvm_arch_vm_postcreate(struct kvm *kvm);
- void kvm_arch_sync_events(struct kvm *kvm);
+ 	if (trace_resched_ipi_enabled()) {
+ 		/*
+diff --git a/arch/x86/platform/uv/tlb_uv.c b/arch/x86/platform/uv/tlb_uv.c
+index 1297e18..83a17ca 100644
+--- a/arch/x86/platform/uv/tlb_uv.c
++++ b/arch/x86/platform/uv/tlb_uv.c
+@@ -1285,7 +1285,7 @@ void uv_bau_message_interrupt(struct pt_regs *regs)
+ 	struct msg_desc msgdesc;
  
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index f412ebc..0921cb3 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -156,6 +156,10 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	return ret;
- }
+ 	ack_APIC_irq();
+-	kvm_set_cpu_l1tf_flush_l1d();
++	kvm_cpu_may_access_sensitive_data();
+ 	time_start = get_cycles();
  
-+void kvm_arch_vm_postcreate(struct kvm *kvm)
-+{
-+}
-+
- bool kvm_arch_has_vcpu_debugfs(void)
- {
- 	return false;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index a704d1f..3c0c3db 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -3366,7 +3366,7 @@ static int kvm_dev_ioctl_create_vm(unsigned long type)
- 		return -ENOMEM;
- 	}
- 	kvm_uevent_notify_change(KVM_EVENT_CREATE_VM, kvm);
--
-+	kvm_arch_vm_postcreate(kvm);
- 	fd_install(r, file);
- 	return r;
- 
+ 	bcp = &per_cpu(bau_control, smp_processor_id());
 -- 
 1.7.1
 
