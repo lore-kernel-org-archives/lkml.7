@@ -2,115 +2,117 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCF9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA44C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BBA208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s+iOIvIz"
+	by mail.kernel.org (Postfix) with ESMTP id 68A0E208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbfEMPSm (ORCPT
+        id S1731235AbfEMPSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:18:42 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49060 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728783AbfEMPSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:18:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DF9oxF029760;
-        Mon, 13 May 2019 15:17:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=7dwMUJzRttDvJYwhnTS2pvQini1VnZvpMgmhpc63TNI=;
- b=s+iOIvIzPv8p+qdn5Lp87nwsGe8piEJpWQ3OZW90Gqa7nfhqwc5jki1ocfhV8tfSYzyW
- ERQWmQkk0Drp6M39yqnyF2g5hWg8ckFsDEpZVMimRtrkJrFmN42X06Mw0JuVxtOyFXFQ
- ZM3y1OBAffh3lZwD1UORvYQyqw2FVoBLsR/ICZWoOVz30V9X8ZVIhod3gTSiGDDdcVAE
- BIDNG0vWG0mrq+wPCV1tkOBE/AwOEA2iQNd9Wj0ltYBVmaSz96NorsvT640eIhHYb7gR
- dKR2h7IcfhTPGL9nD1ygG8RWeV0LY/JCpb8KY+qu5uHfxDcfChNM5u9rLq4YgfLdHDAE yw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2sdq1q7m9k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 15:17:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4DFHYQU140196;
-        Mon, 13 May 2019 15:17:53 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2sdnqj1a07-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 15:17:53 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4DFHo3J020928;
-        Mon, 13 May 2019 15:17:50 GMT
-Received: from [10.30.3.22] (/213.57.127.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 May 2019 08:17:49 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [RFC KVM 01/27] kernel: Export memory-management symbols required
- for KVM address space isolation
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <20190513151550.GZ2589@hirez.programming.kicks-ass.net>
-Date:   Mon, 13 May 2019 18:17:42 +0300
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, kvm@vger.kernel.org,
-        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        jwadams@google.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6CAE8F45-E2C0-453F-B2C8-12D9BBE6B8D7@oracle.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-2-git-send-email-alexandre.chartre@oracle.com>
- <20190513151550.GZ2589@hirez.programming.kicks-ass.net>
+        Mon, 13 May 2019 11:18:46 -0400
+Received: from foss.arm.com ([217.140.101.70]:59238 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728962AbfEMPSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:18:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B0BC341;
+        Mon, 13 May 2019 08:18:45 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E8A93F71E;
+        Mon, 13 May 2019 08:18:43 -0700 (PDT)
+Date:   Mon, 13 May 2019 16:18:40 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
 To:     Peter Zijlstra <peterz@infradead.org>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130105
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130105
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v2 0/7] Add new tracepoints required for EAS testing
+Message-ID: <20190513151840.fhicik6mx6lowykm@e107158-lin.cambridge.arm.com>
+References: <20190510113013.1193-1-qais.yousef@arm.com>
+ <20190513122857.GU2623@hirez.programming.kicks-ass.net>
+ <20190513134203.xmw6rsjwpj5b4tj6@e107158-lin.cambridge.arm.com>
+ <20190513150619.GX2589@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190513150619.GX2589@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 05/13/19 17:06, Peter Zijlstra wrote:
+> On Mon, May 13, 2019 at 02:42:03PM +0100, Qais Yousef wrote:
+> > On 05/13/19 14:28, Peter Zijlstra wrote:
+> > > 
+> > > 
+> > > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > > index c8c7c7efb487..11555f95a88e 100644
+> > > --- a/include/trace/events/sched.h
+> > > +++ b/include/trace/events/sched.h
+> > > @@ -594,6 +594,23 @@ TRACE_EVENT(sched_wake_idle_without_ipi,
+> > >  
+> > >  	TP_printk("cpu=%d", __entry->cpu)
+> > >  );
+> > > +
+> > > +/*
+> > > + * Following tracepoints are not exported in tracefs and provide hooking
+> > > + * mechanisms only for testing and debugging purposes.
+> > > + */
+> > > +DECLARE_TRACE(pelt_cfs_rq,
+> > > +	TP_PROTO(struct cfs_rq *cfs_rq),
+> > > +	TP_ARGS(cfs_rq));
+> > > +
+> > > +DECLARE_TRACE(pelt_se,
+> > > +	TP_PROTO(struct sched_entity *se),
+> > > +	TP_ARGS(se));
+> > > +
+> > > +DECLARE_TRACE(sched_overutilized,
+> > > +	TP_PROTO(int overutilized),
+> > > +	TP_ARGS(overutilized));
+> > > +
+> > 
+> > If I decoded this patch correctly, what you're saying:
+> > 
+> > 	1. Move struct cfs_rq to the exported sched.h header
+> 
+> No, don't expose the structure, we want to keep that private. You can
+> use unqualified pointers.
+> 
+> > 	2. Get rid of the fatty wrapper functions and export any necessary
+> > 	   helper functions.
+> 
+> Right, that should get them read-only access to the members of those
+> structures and avoids the tracing code itself from becoming ugleh and
+> also avoids us having to export those structures (which we really don't
+> want to do).
+> 
+> > 	3. No need for RT and DL pelt tracking at the moment.
+> 
+> Nah, you probably want rt,dl,irq (as Dietmar pointed out), it's just
+> that your patched didn't do it right and I was lazy.
+> 
+> > I'm okay with this. The RT and DL might need to be revisited later but we don't
+> > have immediate need for them now.
+> > 
+> > I'll add to this passing rd->span to sched_overutilizied.
+> 
+> Or pass the rd itself and add another wrapper to extract the span.
 
+Ok got ya. Will do.
 
-> On 13 May 2019, at 18:15, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Mon, May 13, 2019 at 04:38:09PM +0200, Alexandre Chartre wrote:
->> From: Liran Alon <liran.alon@oracle.com>
->>=20
->> Export symbols needed to create, manage, populate and switch
->> a mm from a kernel module (kvm in this case).
->>=20
->> This is a hacky way for now to start.
->> This should be changed to some suitable memory-management API.
->=20
-> This should not be exported at all, ever, end of story.
->=20
-> Modules do not get to play with address spaces like that.
+Thanks
 
-I agree=E2=80=A6 No doubt about that. This should never be merged like =
-this.
-It=E2=80=99s just to have an initial PoC of the concept so we can:
-1) Messure performance impact of concept.
-2) Get feedback on appropriate design and APIs from community.
-
--Liran
-
+--
+Qais Yousef
