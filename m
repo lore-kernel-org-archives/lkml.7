@@ -2,78 +2,98 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B969C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84311C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6732133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557759649;
-	bh=ILmhQ2QK/WxmPdkHQISBgY8FQ9Ydm+VpcAwCfLiiOd0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bRdO6+qrerGTkRiQfUaT5TJprX7W6osnH2dNZenjN/p/7ZbyZjixb5aBHzve8a90M
-	 WM/F+YJWTxPgtv5wlHKTi7f9IXY7YDagk9atLkVHPySKbilQKISLp1ZceStl92R3Og
-	 z7eE1Mjolazl+iadFBlzR3l9G/DxlgnL/UCBdHxQ=
+	by mail.kernel.org (Postfix) with ESMTP id 53E1F20879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 15:01:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YsMZ3Bdo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbfEMPAs (ORCPT
+        id S1730658AbfEMPBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 11:00:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:42469 "EHLO mga18.intel.com"
+        Mon, 13 May 2019 11:01:05 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38801 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726738AbfEMPAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 11:00:48 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 08:00:47 -0700
-X-ExtLoop1: 1
-Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
-  by orsmga006.jf.intel.com with ESMTP; 13 May 2019 08:00:46 -0700
-Date:   Mon, 13 May 2019 08:55:24 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Mario.Limonciello@dell.com
-Cc:     hch@lst.de, keith.busch@intel.com, sagi@grimberg.me,
-        linux-nvme@lists.infradead.org, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kai.heng.feng@canonical.com
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-Message-ID: <20190513145522.GA15421@localhost.localdomain>
-References: <20190510212937.11661-1-keith.busch@intel.com>
- <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
- <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
- <20190513143741.GA25500@lst.de>
- <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
+        id S1726738AbfEMPBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 11:01:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 452kXY6XYWz9s4Y;
+        Tue, 14 May 2019 01:01:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557759662;
+        bh=jM/BYYYQ98rAruaEqByhmGooQVIjYf4G8WEdp+Ovptk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YsMZ3BdoDUiAyblJPK6+7zhwwBvC1uIbNaSRG0CCV/oKf0rFn8E9zjNLnQwHqBrxt
+         uDZLzPOFOOKscDRG2OAEuMit8DldE/yJtaCxNdGJnl0n5JxnRBT8Nkme6QjgDmCEgT
+         6VItbh4NqHKn9I91CMt8HBp5Nfml+pZ/BslOaBedklCBD4FmaWSbCzNu9fXDWdH0g6
+         Ts8dnMUZbwPqny9pxVl0iUhT0LaZbN0kLXeSFWqN8ISOGVzstSx5HmwAGb+K4+5dr1
+         exC3XN91/3Jupne9xe1QUJgRr/U6i5OxrTkEyqlQrjCJKPDvMozT9ITahL5toJtfVS
+         N2eA9gGQDq4rg==
+Date:   Tue, 14 May 2019 01:00:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Subject: linux-next: Fixes tag needs some work in the sound-asoc-fixes tree
+Message-ID: <20190514010054.5ab84a56@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
-User-Agent: Mutt/1.9.1 (2017-09-22)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/00XKta0_obGgJC=tRojAR=4"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 02:43:43PM +0000, Mario.Limonciello@dell.com wrote:
-> > Well, it sounds like your partners device does not work properly in this
-> > case.  There is nothing in the NVMe spec that says queues should be
-> > torn down for deep power states, and that whole idea seems rather
-> > counter productive to low-latency suspend/resume cycles.
-> 
-> Well I've got a thought, quoting the NVME spec:
-> "After a successful completion of a Set Features command for this feature, the controller shall be in the
-> Power State specified. If enabled, autonomous power state transitions continue to occur from the new state."
-> 
-> If APST is enabled on this disk, what is to stop an autonomous  reverse
-> transition from queue activity on the way down?
+--Sig_/00XKta0_obGgJC=tRojAR=4
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Regardless of whether APST is enabled or not, the controller may
-autonomously transition out of a host requested low power state in
-response to host activity. Exiting a low power state should mean some
-other task is actively using the device, and if that's the case, why are
-you trying to enter a low power state in the first place? Alternatively,
-if host activity really is idle, then why is the device autonomously
-leaving the requested state?
+Hi all,
+
+In commit
+
+  7df8e234449a ("ASoC: pcm: fix error handling when try_module_get() fails.=
+")
+
+Fixes tag
+
+  Fixes: 52034add7 (ASoC: pcm: update module refcount if
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+  - Please do not split Fixes tags over more than one line
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/00XKta0_obGgJC=tRojAR=4
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzZhqcACgkQAVBC80lX
+0GzOyQf9EUlQwT2PGd5j/mRjB7SMtOV9hVhk7bzj8rxE/7F9i08M48c9k4lCRK4K
+hTF/fMryO7pxldkKtE8FR86SQRu200o89N2X4+81rNniXs61MTWezo1yzbfUPRZI
+ciQDMjA5ij1bdCOc76xLpfYnIQWH9cwhVhOZZ19ldzZcAR3QBFEWDPxX6b2O8Ksn
+tTDRFyJdRczeM+rwftRdQqVt7yAxyDFXmP6Lcej2Jq3FLduEZdliCdJzDi1fiZdV
+IHBDQRKMdCMrbflLM9G06ALkVkN1qnAXnE2oj19lJD0uGqCp8jlnK8mwRaPkEGNo
+aae7XyShZbaIkirqJLE3+9RD1WPFVQ==
+=6KL4
+-----END PGP SIGNATURE-----
+
+--Sig_/00XKta0_obGgJC=tRojAR=4--
