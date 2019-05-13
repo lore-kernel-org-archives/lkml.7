@@ -2,108 +2,168 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4072EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7CDC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12ECD21479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAD721479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="cSXFz5U5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y3gzEAIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfEMJKo (ORCPT
+        id S1728554AbfEMJK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:10:44 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:22272 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726132AbfEMJKl (ORCPT
+        Mon, 13 May 2019 05:10:56 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:54169 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726132AbfEMJK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:10:41 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4D92P8b008551;
-        Mon, 13 May 2019 11:10:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=542weskigKoJ42ITdEuds81sog7neozb87KgExSQchc=;
- b=cSXFz5U5+rl87jTLh3kdexVxm5fRCNpouuv96sL1JOgXGaa0b8KPKsrLNRt9aIHp29vS
- Xq6SOif1jgsxrp1XLoyRvpZixzwSl7L50Kk/cEKtHY6Wm9ZMXAO7tgM98zStFrid6RAx
- /gaYxiQ2ZcqQrVtqksTZpbWWKAqds1hX3OSj9np1UAC8bGcw4XzUOsQzwAPqeD5dBng6
- vJR6skv4YXWaWKzpM7j6lrt63LWRzi3tY2IbRWEJ4xfE1a+9FPmKDyECc13gAMUMnmqk
- eQm3kBhSuIPmIAHWEbwAoRrFBQb9bHe59nyZ4cUexNiobiiI+PgecrKj4Nl+OA+ZNlml 2g== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdkuyj0d4-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 13 May 2019 11:10:36 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C90664;
-        Mon, 13 May 2019 09:10:35 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EE83F1334;
-        Mon, 13 May 2019 09:10:34 +0000 (GMT)
-Received: from SFHDAG5NODE3.st.com (10.75.127.15) by SFHDAG3NODE3.st.com
- (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 13 May
- 2019 11:10:34 +0200
-Received: from SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47]) by
- SFHDAG5NODE3.st.com ([fe80::7c09:5d6b:d2c7:5f47%20]) with mapi id
- 15.00.1347.000; Mon, 13 May 2019 11:10:34 +0200
-From:   Fabien DESSENNE <fabien.dessenne@st.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH 0/2] hwspinlock: add the 'in_atomic' API
-Thread-Topic: [PATCH 0/2] hwspinlock: add the 'in_atomic' API
-Thread-Index: AQHU1P6fLTW2AJMeL0au0cFYbaNSr6ZpC+wA
-Date:   Mon, 13 May 2019 09:10:34 +0000
-Message-ID: <41036bca-1266-70e9-6485-b718c9741c3f@st.com>
-References: <1551974303-24542-1-git-send-email-fabien.dessenne@st.com>
-In-Reply-To: <1551974303-24542-1-git-send-email-fabien.dessenne@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.51]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DC814E615EC016498780E18E25E92ACE@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 May 2019 05:10:56 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4D9ARM23449154
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 13 May 2019 02:10:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4D9ARM23449154
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557738628;
+        bh=LW7RaAhTHnFGb/D0ckNxHjb2HrqYgHigrR7E5Mtwdxs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Y3gzEAILKVuVjCC+UoKFUiHQ74vNjis7WlB9zwLQruYf9bn3ez8iKxkyQFGY1h03V
+         0mmenmnIax+6MyYfiH7+dxmQ8bmn49BW4us0XRY1zSU9w3mc1hrWQaWtq2A9mLkcF5
+         0e5O/XtD25KSi2Zfk/Qk9QP40xXQdadDuNPX4R013Ss6v+tnG2/KOvTkeUsWyEXbKp
+         nHgTijhQlfu2HuGZl6xRrMaoK8TRUi1V15dD1Haz+s9SPbbOamlvgiQzMVuV0CIxRw
+         BDkQWsy6LHTppg2T8PX4Z4EXgZNCWy9KBRCQzKzJQL4ojIBhyZV3QXP0Jar/0+hKkA
+         XqfhS9DcMhJRg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4D9ARJp3449149;
+        Mon, 13 May 2019 02:10:27 -0700
+Date:   Mon, 13 May 2019 02:10:27 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Masahiro Yamada <tipbot@zytor.com>
+Message-ID: <tip-409ca45526a428620d8efb362ccfd4b1e6b80642@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+        yamada.masahiro@socionext.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
+        ubizjak@gmail.com
+Reply-To: torvalds@linux-foundation.org, yamada.masahiro@socionext.com,
+          linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
+          mingo@kernel.org, ubizjak@gmail.com, peterz@infradead.org,
+          hpa@zytor.com
+In-Reply-To: <1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com>
+References: <1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/kconfig: Disable CONFIG_GENERIC_HWEIGHT and
+ remove __HAVE_ARCH_SW_HWEIGHT
+Git-Commit-ID: 409ca45526a428620d8efb362ccfd4b1e6b80642
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_05:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkNCg0KDQpHZW50bGUgcmVtaW5kZXINCg0KDQpGYWJpZW4NCg0KT24gMDcvMDMvMjAxOSA0OjU4
-IFBNLCBGYWJpZW4gRGVzc2VubmUgd3JvdGU6DQo+IEluIGl0cyBjdXJyZW50IGltcGxlbWVudGF0
-aW9uLCB0aGUgaHdzcGlubG9jayBmcmFtZXdvcmsgcmVsaWVzIG9uIGppZmZpZXMNCj4gdG8gaGFu
-ZGxlIHRoZSB0aW1lb3V0IG9mIHRoZSBod3NwaW5fbG9ja190aW1lb3V0X3h4eCgpIEFQSS4NCj4g
-SW4gYW4gYXRvbWljIGNvbnRleHQgKG9yIG1vcmUgcHJlY2lzZWx5IHdoZW4gaXJxIGFyZSBkaXNh
-YmxlZCkgamlmZmllcyBkb2VzIG5vdA0KPiBpbmNyZWFzZSwgd2hpY2ggcHJldmVudHMgdGhlIHRp
-bWVvdXQgdG8gcmVhY2ggaXRzIHRhcmdldCB2YWx1ZSAoaW5maW5pdGUgbG9vcCkuDQo+DQo+IE5v
-dGUgdGhhdCB0aGVyZSBpcyBhbHJlYWR5IGFuIGh3c3BpbmxvY2sgdXNlciB0aGF0IHJ1bnMgaW4g
-YXRvbWljIGNvbnRleHQNCj4gKGRyaXZlcnMvaXJxY2hpcC9pcnEtc3RtMzItZXh0aS5jKSBhbmQg
-dGhhdCBoYXMgdG8gaGFuZGxlIGJ5IGl0c2VsZiB0aGUNCj4gdGltZW91dC4NCj4NCj4gVGhlIGZp
-cnN0IHBhdGNoIG9mIHRoZSBzZXJpZXMgY29tcGxldGVzIHRoZSBEb2N1bWVudGF0aW9uICh0aGUg
-J3JhdycgQVBJDQo+IGlzIG5vdCBkb2N1bWVudGVkKSwgYW5kIHRoZSBzZWNvbmQgcGF0Y2ggcHJv
-dmlkZXMgd2l0aCB0aGUgJ2luX2F0b21pYycgQVBJLg0KPg0KPiBGYWJpZW4gRGVzc2VubmUgKDIp
-Og0KPiAgICBod3NwaW5sb2NrOiBkb2N1bWVudCB0aGUgaHdzcGlubG9jayAncmF3JyBBUEkNCj4g
-ICAgaHdzcGlubG9jazogYWRkIHRoZSAnaW5fYXRvbWljJyBBUEkNCj4NCj4gICBEb2N1bWVudGF0
-aW9uL2h3c3BpbmxvY2sudHh0ICAgICAgICAgfCA4MSArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysNCj4gICBkcml2ZXJzL2h3c3BpbmxvY2svaHdzcGlubG9ja19jb3JlLmMgfCA0
-MyArKysrKysrKysrKysrLS0tLS0tDQo+ICAgaW5jbHVkZS9saW51eC9od3NwaW5sb2NrLmggICAg
-ICAgICAgIHwgNjEgKysrKysrKysrKysrKysrKysrKysrKysrKy0tDQo+ICAgMyBmaWxlcyBjaGFu
-Z2VkLCAxNjkgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pDQo+
+Commit-ID:  409ca45526a428620d8efb362ccfd4b1e6b80642
+Gitweb:     https://git.kernel.org/tip/409ca45526a428620d8efb362ccfd4b1e6b80642
+Author:     Masahiro Yamada <yamada.masahiro@socionext.com>
+AuthorDate: Sun, 12 May 2019 21:52:01 +0900
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 13 May 2019 11:07:33 +0200
+
+x86/kconfig: Disable CONFIG_GENERIC_HWEIGHT and remove __HAVE_ARCH_SW_HWEIGHT
+
+Remove an unnecessary arch complication:
+
+arch/x86/include/asm/arch_hweight.h uses __sw_hweight{32,64} as
+alternatives, and they are implemented in arch/x86/lib/hweight.S
+
+x86 does not rely on the generic C implementation lib/hweight.c
+at all, so CONFIG_GENERIC_HWEIGHT should be disabled.
+
+__HAVE_ARCH_SW_HWEIGHT is not necessary either.
+
+No change in functionality intended.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Uros Bizjak <ubizjak@gmail.com>
+Link: http://lkml.kernel.org/r/1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/Kconfig                    | 3 ---
+ arch/x86/include/asm/arch_hweight.h | 2 --
+ lib/hweight.c                       | 4 ----
+ 3 files changed, 9 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 0a3cc347143f..de071d7e67b6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -261,9 +261,6 @@ config GENERIC_BUG
+ config GENERIC_BUG_RELATIVE_POINTERS
+ 	bool
+ 
+-config GENERIC_HWEIGHT
+-	def_bool y
+-
+ config ARCH_MAY_HAVE_PC_FDC
+ 	def_bool y
+ 	depends on ISA_DMA_API
+diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+index fc0693569f7a..ba88edd0d58b 100644
+--- a/arch/x86/include/asm/arch_hweight.h
++++ b/arch/x86/include/asm/arch_hweight.h
+@@ -12,8 +12,6 @@
+ #define REG_OUT "a"
+ #endif
+ 
+-#define __HAVE_ARCH_SW_HWEIGHT
+-
+ static __always_inline unsigned int __arch_hweight32(unsigned int w)
+ {
+ 	unsigned int res;
+diff --git a/lib/hweight.c b/lib/hweight.c
+index 7660d88fd496..c94586b62551 100644
+--- a/lib/hweight.c
++++ b/lib/hweight.c
+@@ -10,7 +10,6 @@
+  * The Hamming Weight of a number is the total number of bits set in it.
+  */
+ 
+-#ifndef __HAVE_ARCH_SW_HWEIGHT
+ unsigned int __sw_hweight32(unsigned int w)
+ {
+ #ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
+@@ -27,7 +26,6 @@ unsigned int __sw_hweight32(unsigned int w)
+ #endif
+ }
+ EXPORT_SYMBOL(__sw_hweight32);
+-#endif
+ 
+ unsigned int __sw_hweight16(unsigned int w)
+ {
+@@ -46,7 +44,6 @@ unsigned int __sw_hweight8(unsigned int w)
+ }
+ EXPORT_SYMBOL(__sw_hweight8);
+ 
+-#ifndef __HAVE_ARCH_SW_HWEIGHT
+ unsigned long __sw_hweight64(__u64 w)
+ {
+ #if BITS_PER_LONG == 32
+@@ -69,4 +66,3 @@ unsigned long __sw_hweight64(__u64 w)
+ #endif
+ }
+ EXPORT_SYMBOL(__sw_hweight64);
+-#endif
