@@ -2,81 +2,147 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 811AAC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756C9C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D83321019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF612070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:39:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="VkqJcfye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729488AbfEMLg7 (ORCPT
+        id S1729201AbfEMLjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:36:59 -0400
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:18671 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729477AbfEMLg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:36:57 -0400
-X-IronPort-AV: E=Sophos;i="5.60,465,1549926000"; 
-   d="scan'208";a="382892366"
-Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 13:36:56 +0200
-Date:   Mon, 13 May 2019 13:36:52 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>, cocci@systeme.lip6.fr,
-        linux-kernel@vger.kernel.org, Yi Wang <wang.yi59@zte.com.cn>
-Subject: Re: [1/5] Coccinelle: put_device: Adjust a message construction
-In-Reply-To: <97f32bc1-f7ff-5777-21b5-5c4f85bb7276@web.de>
-Message-ID: <alpine.DEB.2.20.1905131333560.1009@hadrien>
-References: <1553321671-27749-1-git-send-email-wen.yang99@zte.com.cn> <e34d47fe-3aac-5b01-055d-61d97cf50fe7@web.de> <308f5571-68f3-7505-d5ad-59ee68091959@web.de> <alpine.DEB.2.20.1905131133570.3616@hadrien> <97f32bc1-f7ff-5777-21b5-5c4f85bb7276@web.de>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 13 May 2019 07:39:08 -0400
+Received: from mail-eopbgr740071.outbound.protection.outlook.com ([40.107.74.71]:35664
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728969AbfEMLjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:39:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7bFwWqOQHMOO+34Oa8D7hVJuyV7G6ZKpj+L+SAshp40=;
+ b=VkqJcfyetNKc0vn8PtEFzEdyFAgzQVJTGOp1jpnYoc1pYlx3pmnzLxuPARhaUNc/JzH9MkbAgM+gvH9xj/fpOhvCBhc+hkmGW+eTEHmM7q/HlaF4s+CreVwN0Pfe7ptcDHXBGvVMTKvu7VT4FNE0fQ3nKU6X2zwtz0rjHO9sazY=
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com (20.179.78.205) by
+ BN8PR10MB3730.namprd10.prod.outlook.com (20.179.97.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Mon, 13 May 2019 11:39:01 +0000
+Received: from BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16]) by BN8PR10MB3540.namprd10.prod.outlook.com
+ ([fe80::24c5:ea68:cff3:4a16%7]) with mapi id 15.20.1878.024; Mon, 13 May 2019
+ 11:39:01 +0000
+From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+To:     "rasmus.villemoes@prevas.dk" <rasmus.villemoes@prevas.dk>,
+        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
+        "qiang.zhao@nxp.com" <qiang.zhao@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "Rasmus.Villemoes@prevas.se" <Rasmus.Villemoes@prevas.se>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "oss@buserror.net" <oss@buserror.net>
+Subject: Re: [PATCH v3 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums binding
+Thread-Topic: [PATCH v3 4/6] dt-bindings: soc/fsl: qe: document new
+ fsl,qe-snums binding
+Thread-Index: AQHVCX0dAJ3DoPo7GkSqekfXCWC8OKZo7e6A
+Date:   Mon, 13 May 2019 11:39:01 +0000
+Message-ID: <35d7ec55a136259668cadbb662bfd4913c4423ca.camel@infinera.com>
+References: <20190501092841.9026-1-rasmus.villemoes@prevas.dk>
+         <20190513111442.25724-1-rasmus.villemoes@prevas.dk>
+         <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20190513111442.25724-5-rasmus.villemoes@prevas.dk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
+x-originating-ip: [88.131.87.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11214e72-c1b0-4e30-2f8d-08d6d797987b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BN8PR10MB3730;
+x-ms-traffictypediagnostic: BN8PR10MB3730:
+x-microsoft-antispam-prvs: <BN8PR10MB3730703F403556E2FCC7C3FFF40F0@BN8PR10MB3730.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(39860400002)(136003)(376002)(366004)(396003)(346002)(40224003)(199004)(189003)(51914003)(52084003)(186003)(446003)(54906003)(14454004)(305945005)(229853002)(66556008)(66066001)(6486002)(99286004)(11346002)(66446008)(64756008)(7416002)(66476007)(3846002)(26005)(6116002)(6506007)(102836004)(6512007)(476003)(76176011)(2906002)(6436002)(2616005)(110136005)(7736002)(76116006)(91956017)(66946007)(73956011)(486006)(6246003)(2501003)(86362001)(36756003)(118296001)(316002)(256004)(5024004)(8676002)(81166006)(14444005)(81156014)(5660300002)(53936002)(71190400001)(71200400001)(68736007)(8936002)(72206003)(4326008)(2201001)(478600001)(25786009)(142933001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR10MB3730;H:BN8PR10MB3540.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: infinera.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BnAdRF8xk/oDQ7bQP4AFZAcaWjDFZ5fmdZhODaOpjs/bt02E4XObfbVJXu9cvndwqcM8BQL0zN0M07pJJhIeaRLuRT3G/1yy1rK0dRedHS8UB/Poi9HOT7A6fldznUQB6kGHuZ3ogEswHB1Zf3/mu1jma8PFikWWk5sO5LkqDATfJ32sMHyZN0XbXPpWrYDmwVaBkpVY/IHh1PSO0oueWKiJ+VMSqQzO6LBO9Fm1oAtfAK4gGlMJDWQdidPJ6YxtzJBYaX+u/ycDvBkXZHXXmnk1hWzwh5ibFCrGUJow0conPwVI08XK46QgHKyKvBkRVhOLkVlzSmRqV/PDK31oGLPnHtTH3GMDfyKcJuxunhg9CXqREY/ENHI1VZLOWlr+/+6UBZm3t2CvLMZDPkB5UR4B9dm8hWSOVnExZ7Zx+g0=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AFB1973088CD854496BB37D5532730F9@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-OriginatorOrg: infinera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11214e72-c1b0-4e30-2f8d-08d6d797987b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 11:39:01.6378
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3730
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Mon, 13 May 2019, Markus Elfring wrote:
-
-> >> Thus simplify a message construction in a SmPL rule by concatenating text
-> >> with two plus operators less.
-> >
-> > Is there any way to unindent, so that the string doesn't exceed 80 characters,
-> > or at least no so much?
->
-> How does your concern fit to the string literal tolerance from
-> the Linux coding style?
-
-The point of view of the Linux kernel is that if there is no nicer way to
-persent the string, exceeding 80 characters is preferable to breaking the
-string.  But here, at least if Python was not indentation sensitive, there
-are much nicer ways to present the string and not exceed 80 characters.
-
-> > On the other hand, I would have much preferred the original msg = code.
-> > I don't understand why it is so offensive.
->
-> I suggested again to avoid the use of extra variables in such cases
-> (also in the discussed bit of Python source code within a SmPL script).
-
-I realize that you don't like it, although I have no idea why.  Does it
-make the code slower? Less reliable? Less readable?  I doubt any of those
-things.  I think that staying within 80 characters would be a much greater
-benefit that all of these baseless concerns.
-
-julia
-
->
-> Regards,
-> Markus
->
+T24gTW9uLCAyMDE5LTA1LTEzIGF0IDExOjE0ICswMDAwLCBSYXNtdXMgVmlsbGVtb2VzIHdyb3Rl
+Og0KPiBDQVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBv
+cmdhbml6YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVz
+cyB5b3UgcmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4N
+Cj4gDQo+IA0KPiBSZWFkaW5nIHRhYmxlIDQtMzAsIGFuZCBpdHMgZm9vdG5vdGVzLCBvZiB0aGUg
+UVVJQ0MgRW5naW5lIEJsb2NrDQo+IFJlZmVyZW5jZSBNYW51YWwgc2hvd3MgdGhhdCB0aGUgc2V0
+IG9mIHNudW0gX3ZhbHVlc18gaXMgbm90DQo+IG5lY2Vzc2FyaWx5IGp1c3QgYSBmdW5jdGlvbiBv
+ZiB0aGUgX251bWJlcl8gb2Ygc251bXMsIGFzIGdpdmVuIGluIHRoZQ0KPiBmc2wscWUtbnVtLXNu
+dW1zIHByb3BlcnR5Lg0KPiANCj4gQXMgYW4gYWx0ZXJuYXRpdmUsIHRvIG1ha2UgaXQgZWFzaWVy
+IHRvIGFkZCBzdXBwb3J0IGZvciBvdGhlciB2YXJpYW50cw0KPiBvZiB0aGUgUVVJQ0MgZW5naW5l
+IElQLCB0aGlzIGludHJvZHVjZXMgYSBuZXcgYmluZGluZyBmc2wscWUtc251bXMsDQo+IHdoaWNo
+IGF1dG9tYXRpY2FsbHkgZW5jb2RlcyBib3RoIHRoZSBudW1iZXIgb2Ygc251bXMgYW5kIHRoZSBh
+Y3R1YWwNCj4gdmFsdWVzIHRvIHVzZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJhc211cyBWaWxs
+ZW1vZXMgPHJhc211cy52aWxsZW1vZXNAcHJldmFzLmRrPg0KPiAtLS0NCj4gUm9iLCB0aGFua3Mg
+Zm9yIHRoZSByZXZpZXcgb2YgdjIuIEhvd2V2ZXIsIHNpbmNlIEkgbW92ZWQgdGhlIGV4YW1wbGUN
+Cj4gZnJvbSB0aGUgY29tbWl0IGxvZyB0byB0aGUgYmluZGluZyAocGVyIEpvYWtpbSdzIHJlcXVl
+c3QpLCBJIGRpZG4ndA0KDQpUaGFua3MsIGxvb2tzIGdvb2Qgbm93Lg0KDQo+IGFkZCBhIFJldmll
+d2VkLWJ5IHRhZyBmb3IgdGhpcyByZXZpc2lvbi4NCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9zb2MvZnNsL2NwbV9xZS9xZS50eHQgICAgICAgfCAxMyArKysrKysrKysrKystDQo+ICAx
+IGZpbGUgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2NwbV9x
+ZS9xZS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1f
+cWUvcWUudHh0DQo+IGluZGV4IGQ3YWZhZmY1ZmFmZi4uMDVlYzJhODM4YzU0IDEwMDY0NA0KPiAt
+LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL2ZzbC9jcG1fcWUvcWUu
+dHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvZnNsL2Nw
+bV9xZS9xZS50eHQNCj4gQEAgLTE4LDcgKzE4LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4g
+IC0gcmVnIDogb2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIGRldmljZSByZWdpc3RlcnMuDQo+ICAt
+IGJ1cy1mcmVxdWVuY3kgOiB0aGUgY2xvY2sgZnJlcXVlbmN5IGZvciBRVUlDQyBFbmdpbmUuDQo+
+ICAtIGZzbCxxZS1udW0tcmlzY3M6IGRlZmluZSBob3cgbWFueSBSSVNDIGVuZ2luZXMgdGhlIFFF
+IGhhcy4NCj4gLS0gZnNsLHFlLW51bS1zbnVtczogZGVmaW5lIGhvdyBtYW55IHNlcmlhbCBudW1i
+ZXIoU05VTSkgdGhlIFFFIGNhbiB1c2UgZm9yIHRoZQ0KPiArLSBmc2wscWUtc251bXM6IFRoaXMg
+cHJvcGVydHkgaGFzIHRvIGJlIHNwZWNpZmllZCBhcyAnL2JpdHMvIDgnIHZhbHVlLA0KPiArICBk
+ZWZpbmluZyB0aGUgYXJyYXkgb2Ygc2VyaWFsIG51bWJlciAoU05VTSkgdmFsdWVzIGZvciB0aGUg
+dmlydHVhbA0KPiAgICB0aHJlYWRzLg0KPiANCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+IEBA
+IC0zNCw2ICszNSwxMSBAQCBSZWNvbW1lbmRlZCBwcm9wZXJ0aWVzDQo+ICAtIGJyZy1mcmVxdWVu
+Y3kgOiB0aGUgaW50ZXJuYWwgY2xvY2sgc291cmNlIGZyZXF1ZW5jeSBmb3IgYmF1ZC1yYXRlDQo+
+ICAgIGdlbmVyYXRvcnMgaW4gSHouDQo+IA0KPiArRGVwcmVjYXRlZCBwcm9wZXJ0aWVzDQo+ICst
+IGZzbCxxZS1udW0tc251bXM6IGRlZmluZSBob3cgbWFueSBzZXJpYWwgbnVtYmVyKFNOVU0pIHRo
+ZSBRRSBjYW4gdXNlDQo+ICsgIGZvciB0aGUgdGhyZWFkcy4gVXNlIGZzbCxxZS1zbnVtcyBpbnN0
+ZWFkIHRvIG5vdCBvbmx5IHNwZWNpZnkgdGhlDQo+ICsgIG51bWJlciBvZiBzbnVtcywgYnV0IGFs
+c28gdGhlaXIgdmFsdWVzLg0KPiArDQo+ICBFeGFtcGxlOg0KPiAgICAgICBxZUBlMDEwMDAwMCB7
+DQo+ICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+IEBAIC00NCw2ICs1MCwxMSBAQCBF
+eGFtcGxlOg0KPiAgICAgICAgIHJlZyA9IDxlMDEwMDAwMCA0ODA+Ow0KPiAgICAgICAgIGJyZy1m
+cmVxdWVuY3kgPSA8MD47DQo+ICAgICAgICAgYnVzLWZyZXF1ZW5jeSA9IDwxNzlBN0IwMD47DQo+
+ICsgICAgICAgZnNsLHFlLXNudW1zID0gL2JpdHMvIDggPA0KPiArICAgICAgICAgICAgICAgMHgw
+NCAweDA1IDB4MEMgMHgwRCAweDE0IDB4MTUgMHgxQyAweDFEDQo+ICsgICAgICAgICAgICAgICAw
+eDI0IDB4MjUgMHgyQyAweDJEIDB4MzQgMHgzNSAweDg4IDB4ODkNCj4gKyAgICAgICAgICAgICAg
+IDB4OTggMHg5OSAweEE4IDB4QTkgMHhCOCAweEI5IDB4QzggMHhDOQ0KPiArICAgICAgICAgICAg
+ICAgMHhEOCAweEQ5IDB4RTggMHhFOT47DQo+ICAgICAgIH0NCj4gDQo+ICAqIE11bHRpLVVzZXIg
+UkFNIChNVVJBTSkNCj4gLS0NCj4gMi4yMC4xDQo+IA0KDQo=
