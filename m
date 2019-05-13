@@ -2,671 +2,626 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A2EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE689C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738D92147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7A42147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 16:11:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="t0M2DSYx"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="FvGYl6Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731597AbfEMQK4 (ORCPT
+        id S1731609AbfEMQK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 12:10:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42059 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731482AbfEMQKg (ORCPT
+        Mon, 13 May 2019 12:10:59 -0400
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:61141 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731518AbfEMQK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 12:10:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id l2so15935561wrb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 09:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ThVPNS1+M2mQC4GSC7l7YiwTHbgmiYOidG+xFjpD/6w=;
-        b=t0M2DSYx9XXDkkN3loAmSC37/41+pJqG5EWRXEMP0V8vcwva8dpogd3wpkYD+P1JYU
-         xuIckwERgA064/SLI1ZDkyk+E3cNbictlGtIhrDDLOBx9T3dlNb23FzpYq1qbEw9H28Z
-         6wuXlqc5Weko2cpvrVhh2HWzepCHMtAATeISPNc6e5IYPewD9NkN+MIvsIgZw1fCrsXt
-         gS98jk0GIQKU4pCoRwlmA3OmEF7BqPVbgv2NgU39QNNKyOLI26caoVXmdLHNReZUNm95
-         raJn+dkn3d+R1oFJFTJa1UpOCl3dMkSA4SfJHg7XtRFXq/NERqdA8B3R1tdqQQzIEhjR
-         fsaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ThVPNS1+M2mQC4GSC7l7YiwTHbgmiYOidG+xFjpD/6w=;
-        b=VKGlyGYhdbp2suyKQ0ryHsYkyEHpxxlcM/ayHJaTHJwtKpSVsBWZn4FoFlTAlP9NAS
-         hpW6KcEcbvwchb+Sgdgpos4zF8lRoMVxpTWsVAmaCRurssaQTBFSSgr2oi3fLSsdCyKM
-         bSdl/9EsKl2L0VV9L5wZ+Utql2CmkzN98MKa1ejFpnvEw8u5Qci+2ti5jMseUN0XEL9J
-         jBfYweBpQ3djtbZgPhQNEUE8561xhxPsMAkOxCD5nhTImn+AO0fUe1WZvHEbO7EO5d1N
-         b9vdqJrZSc0QZYE+ysbDHgpQDUqRFAhwVoPURe/bpgN038MSfYlIknX2LXt1WRWPdmT2
-         v2kw==
-X-Gm-Message-State: APjAAAUTPo35TVVvpcaMTM2UQNhZ8potALk1tfM0URLSE99MevszSJUp
-        +QWnIDvwg9GwxxCkHZB5NcKuSg==
-X-Google-Smtp-Source: APXvYqwhQBFhcpgctH4VhIbvQsQ6mWxqb5KkiFUdUzVMIGZgyZQUfiO5VOk7vXTd4VPsgCWURB7hdQ==
-X-Received: by 2002:a5d:430f:: with SMTP id h15mr413342wrq.132.1557763833806;
-        Mon, 13 May 2019 09:10:33 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-11-31.w90-86.abo.wanadoo.fr. [90.86.214.31])
-        by smtp.gmail.com with ESMTPSA id n2sm24439089wra.89.2019.05.13.09.10.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 09:10:33 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH v2 2/5] regulator: mt6392: Add support for MT6392 regulator
-Date:   Mon, 13 May 2019 18:10:23 +0200
-Message-Id: <20190513161026.31308-3-fparent@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190513161026.31308-1-fparent@baylibre.com>
-References: <20190513161026.31308-1-fparent@baylibre.com>
+        Mon, 13 May 2019 12:10:56 -0400
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 941A8159D0A;
+        Mon, 13 May 2019 12:10:48 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; s=sasl; bh=w1EbUZ02myRoYYlD0yWQeR2Y/
+        5k=; b=FvGYl6LziG9SISPVM+p466hhdD517/l53isRSxmt+XD04NNZxxZnqyhC4
+        582N89m5YRxicGH4hEDb5sFanHuRYtZ9+XkzVO1JaqHaK1hZzYb7ceyLalXd4ioZ
+        gW7ebryls8pG7ibh7kACs0jOxLkZ8wpZCzr+doKXzpAstLlE0A=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=pobox.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; q=dns; s=sasl; b=rwbM0L5gg5UwaoNSUdK
+        LBGpHUxpv9EPpuAulqldZiqW3IOxkCNOgAQkasVhs8U7chgz0Wn2aePY4sV15gBL
+        B8bMbNVDOcSUwLPLvDrc8L57o5SLwaRlbvIEolLdSZ3/RNpSu5A4Oatil3h+BXPc
+        Q9fAOoBB5eK7YnVsgO2giag0=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 8BC7D159D09;
+        Mon, 13 May 2019 12:10:48 -0400 (EDT)
+Received: from pobox.com (unknown [34.76.255.141])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id 9FA13159D08;
+        Mon, 13 May 2019 12:10:47 -0400 (EDT)
+From:   Junio C Hamano <gitster@pobox.com>
+To:     git@vger.kernel.org
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Subject: [ANNOUNCE] Git v2.22.0-rc0
+Date:   Tue, 14 May 2019 01:10:46 +0900
+Message-ID: <xmqqef52baih.fsf@gitster-ct.c.googlers.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+X-Pobox-Relay-ID: AB59372E-7599-11E9-8038-46F8B7964D18-77302942!pb-smtp1.pobox.com
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MT6392 is a regulator found on boards based on the MediaTek
-MT8167, MT8516, and probably other SoCs. It is a so called PMIC and
-connectcts as a slave to a SoC using SPI, wrapped inside PWRAP.
+An early preview release Git v2.22.0-rc0 is now available for
+testing at the usual places.  It is comprised of 648 non-merge
+commits since v2.21.0, contributed by 58 people, 11 of which are
+new faces.
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
+The tarballs are found at:
 
-V2:
-	* no changes
+    https://www.kernel.org/pub/software/scm/git/testing/
 
----
- drivers/regulator/Kconfig                  |   9 +
- drivers/regulator/Makefile                 |   1 +
- drivers/regulator/mt6392-regulator.c       | 490 +++++++++++++++++++++
- include/linux/regulator/mt6392-regulator.h |  40 ++
- 4 files changed, 540 insertions(+)
- create mode 100644 drivers/regulator/mt6392-regulator.c
- create mode 100644 include/linux/regulator/mt6392-regulator.h
+The following public repositories all have a copy of the
+'v2.22.0-rc0' tag and the 'master' branch that the tag points at:
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 6c37f0df9323..880d5d3bbc50 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -625,6 +625,15 @@ config REGULATOR_MT6380
- 	  This driver supports the control of different power rails of device
- 	  through regulator interface.
- 
-+config REGULATOR_MT6392
-+	tristate "MediaTek MT6392 PMIC"
-+	depends on MFD_MT6397
-+	help
-+	  Say y here to select this option to enable the power regulator of
-+	  MediaTek MT6392 PMIC.
-+	  This driver supports the control of different power rails of device
-+	  through regulator interface.
-+
- config REGULATOR_MT6397
- 	tristate "MediaTek MT6397 PMIC"
- 	depends on MFD_MT6397
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 93f53840e8f1..fc67a215479d 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_REGULATOR_MCP16502) += mcp16502.o
- obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
- obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
- obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
-+obj-$(CONFIG_REGULATOR_MT6392)	+= mt6392-regulator.o
- obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
- obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
-diff --git a/drivers/regulator/mt6392-regulator.c b/drivers/regulator/mt6392-regulator.c
-new file mode 100644
-index 000000000000..d3c0e94d4cd0
---- /dev/null
-+++ b/drivers/regulator/mt6392-regulator.c
-@@ -0,0 +1,490 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Chen Zhong <chen.zhong@mediatek.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/mt6397/core.h>
-+#include <linux/mfd/mt6392/registers.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/mt6392-regulator.h>
-+#include <linux/regulator/of_regulator.h>
-+
-+#define MT6392_BUCK_MODE_AUTO	0
-+#define MT6392_BUCK_MODE_FORCE_PWM	1
-+#define MT6392_LDO_MODE_NORMAL	0
-+#define MT6392_LDO_MODE_LP	1
-+
-+/*
-+ * MT6392 regulators' information
-+ *
-+ * @desc: standard fields of regulator description.
-+ * @qi: Mask for query enable signal status of regulators
-+ * @vselon_reg: Register sections for hardware control mode of bucks
-+ * @vselctrl_reg: Register for controlling the buck control mode.
-+ * @vselctrl_mask: Mask for query buck's voltage control mode.
-+ */
-+struct mt6392_regulator_info {
-+	struct regulator_desc desc;
-+	u32 qi;
-+	u32 vselon_reg;
-+	u32 vselctrl_reg;
-+	u32 vselctrl_mask;
-+	u32 modeset_reg;
-+	u32 modeset_mask;
-+};
-+
-+#define MT6392_BUCK(match, vreg, min, max, step, volt_ranges, enreg,	\
-+		vosel, vosel_mask, voselon, vosel_ctrl,			\
-+		_modeset_reg, _modeset_mask)				\
-+[MT6392_ID_##vreg] = {							\
-+	.desc = {							\
-+		.name = #vreg,						\
-+		.of_match = of_match_ptr(match),			\
-+		.ops = &mt6392_volt_range_ops,				\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = MT6392_ID_##vreg,					\
-+		.owner = THIS_MODULE,					\
-+		.n_voltages = (max - min)/step + 1,			\
-+		.linear_ranges = volt_ranges,				\
-+		.n_linear_ranges = ARRAY_SIZE(volt_ranges),		\
-+		.vsel_reg = vosel,					\
-+		.vsel_mask = vosel_mask,				\
-+		.enable_reg = enreg,					\
-+		.enable_mask = BIT(0),					\
-+	},								\
-+	.qi = BIT(13),							\
-+	.vselon_reg = voselon,						\
-+	.vselctrl_reg = vosel_ctrl,					\
-+	.vselctrl_mask = BIT(1),					\
-+	.modeset_reg = _modeset_reg,					\
-+	.modeset_mask = _modeset_mask,					\
-+}
-+
-+#define MT6392_LDO(match, vreg, ldo_volt_table, enreg, enbit, vosel,	\
-+		vosel_mask, _modeset_reg, _modeset_mask)		\
-+[MT6392_ID_##vreg] = {							\
-+	.desc = {							\
-+		.name = #vreg,						\
-+		.of_match = of_match_ptr(match),			\
-+		.ops = &mt6392_volt_table_ops,				\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = MT6392_ID_##vreg,					\
-+		.owner = THIS_MODULE,					\
-+		.n_voltages = ARRAY_SIZE(ldo_volt_table),		\
-+		.volt_table = ldo_volt_table,				\
-+		.vsel_reg = vosel,					\
-+		.vsel_mask = vosel_mask,				\
-+		.enable_reg = enreg,					\
-+		.enable_mask = BIT(enbit),				\
-+	},								\
-+	.qi = BIT(15),							\
-+	.modeset_reg = _modeset_reg,					\
-+	.modeset_mask = _modeset_mask,					\
-+}
-+
-+#define MT6392_REG_FIXED(match, vreg, enreg, enbit, volt,		\
-+		_modeset_reg, _modeset_mask)				\
-+[MT6392_ID_##vreg] = {							\
-+	.desc = {							\
-+		.name = #vreg,						\
-+		.of_match = of_match_ptr(match),			\
-+		.ops = &mt6392_volt_fixed_ops,				\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = MT6392_ID_##vreg,					\
-+		.owner = THIS_MODULE,					\
-+		.n_voltages = 1,					\
-+		.enable_reg = enreg,					\
-+		.enable_mask = BIT(enbit),				\
-+		.min_uV = volt,						\
-+	},								\
-+	.qi = BIT(15),							\
-+	.modeset_reg = _modeset_reg,					\
-+	.modeset_mask = _modeset_mask,					\
-+}
-+
-+static const struct regulator_linear_range buck_volt_range1[] = {
-+	REGULATOR_LINEAR_RANGE(700000, 0, 0x7f, 6250),
-+};
-+
-+static const struct regulator_linear_range buck_volt_range2[] = {
-+	REGULATOR_LINEAR_RANGE(1400000, 0, 0x7f, 12500),
-+};
-+
-+static const u32 ldo_volt_table1[] = {
-+	1800000, 1900000, 2000000, 2200000,
-+};
-+
-+static const u32 ldo_volt_table2[] = {
-+	3300000, 3400000, 3500000, 3600000,
-+};
-+
-+static const u32 ldo_volt_table3[] = {
-+	1800000, 3300000,
-+};
-+
-+static const u32 ldo_volt_table4[] = {
-+	3000000, 3300000,
-+};
-+
-+static const u32 ldo_volt_table5[] = {
-+	1200000, 1300000, 1500000, 1800000, 2000000, 2800000, 3000000, 3300000,
-+};
-+
-+static const u32 ldo_volt_table6[] = {
-+	1240000, 1390000,
-+};
-+
-+static const u32 ldo_volt_table7[] = {
-+	1200000, 1300000, 1500000, 1800000,
-+};
-+
-+static const u32 ldo_volt_table8[] = {
-+	1800000, 2000000,
-+};
-+
-+static int mt6392_get_status(struct regulator_dev *rdev)
-+{
-+	int ret;
-+	u32 regval;
-+	struct mt6392_regulator_info *info = rdev_get_drvdata(rdev);
-+
-+	ret = regmap_read(rdev->regmap, info->desc.enable_reg, &regval);
-+	if (ret != 0) {
-+		dev_err(&rdev->dev, "Failed to get enable reg: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STATUS_OFF;
-+}
-+
-+static int mt6392_buck_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	int ret, val = 0;
-+	struct mt6392_regulator_info *info = rdev_get_drvdata(rdev);
-+	u32 reg_value;
-+
-+	if (!info->modeset_mask) {
-+		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
-+			info->desc.name);
-+		return -EINVAL;
-+	}
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_FAST:
-+		val = MT6392_BUCK_MODE_FORCE_PWM;
-+		break;
-+	case REGULATOR_MODE_NORMAL:
-+		val = MT6392_BUCK_MODE_AUTO;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	val <<= ffs(info->modeset_mask) - 1;
-+
-+	ret = regmap_update_bits(rdev->regmap, info->modeset_reg,
-+				  info->modeset_mask, val);
-+
-+	if (regmap_read(rdev->regmap, info->modeset_reg, &reg_value) < 0) {
-+		dev_err(&rdev->dev, "Failed to read register value\n");
-+		return -EIO;
-+	}
-+
-+	return ret;
-+}
-+
-+static unsigned int mt6392_buck_get_mode(struct regulator_dev *rdev)
-+{
-+	unsigned int val;
-+	unsigned int mode;
-+	int ret;
-+	struct mt6392_regulator_info *info = rdev_get_drvdata(rdev);
-+
-+	if (!info->modeset_mask) {
-+		dev_err(&rdev->dev, "regulator %s doesn't support get_mode\n",
-+			info->desc.name);
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_read(rdev->regmap, info->modeset_reg, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val &= info->modeset_mask;
-+	val >>= ffs(info->modeset_mask) - 1;
-+
-+	if (val & 0x1)
-+		mode = REGULATOR_MODE_FAST;
-+	else
-+		mode = REGULATOR_MODE_NORMAL;
-+
-+	return mode;
-+}
-+
-+static int mt6392_ldo_set_mode(struct regulator_dev *rdev, unsigned int mode)
-+{
-+	int ret, val = 0;
-+	struct mt6392_regulator_info *info = rdev_get_drvdata(rdev);
-+
-+	if (!info->modeset_mask) {
-+		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
-+			info->desc.name);
-+		return -EINVAL;
-+	}
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_STANDBY:
-+		val = MT6392_LDO_MODE_LP;
-+		break;
-+	case REGULATOR_MODE_NORMAL:
-+		val = MT6392_LDO_MODE_NORMAL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	val <<= ffs(info->modeset_mask) - 1;
-+
-+	ret = regmap_update_bits(rdev->regmap, info->modeset_reg,
-+				  info->modeset_mask, val);
-+
-+	return ret;
-+}
-+
-+static unsigned int mt6392_ldo_get_mode(struct regulator_dev *rdev)
-+{
-+	unsigned int val;
-+	unsigned int mode;
-+	int ret;
-+	struct mt6392_regulator_info *info = rdev_get_drvdata(rdev);
-+
-+	if (!info->modeset_mask) {
-+		dev_err(&rdev->dev, "regulator %s doesn't support get_mode\n",
-+			info->desc.name);
-+		return -EINVAL;
-+	}
-+
-+	ret = regmap_read(rdev->regmap, info->modeset_reg, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	val &= info->modeset_mask;
-+	val >>= ffs(info->modeset_mask) - 1;
-+
-+	if (val & 0x1)
-+		mode = REGULATOR_MODE_STANDBY;
-+	else
-+		mode = REGULATOR_MODE_NORMAL;
-+
-+	return mode;
-+}
-+
-+static const struct regulator_ops mt6392_volt_range_ops = {
-+	.list_voltage = regulator_list_voltage_linear_range,
-+	.map_voltage = regulator_map_voltage_linear_range,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.get_status = mt6392_get_status,
-+	.set_mode = mt6392_buck_set_mode,
-+	.get_mode = mt6392_buck_get_mode,
-+};
-+
-+static const struct regulator_ops mt6392_volt_table_ops = {
-+	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_iterate,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.get_status = mt6392_get_status,
-+	.set_mode = mt6392_ldo_set_mode,
-+	.get_mode = mt6392_ldo_get_mode,
-+};
-+
-+static const struct regulator_ops mt6392_volt_fixed_ops = {
-+	.list_voltage = regulator_list_voltage_linear,
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.get_status = mt6392_get_status,
-+	.set_mode = mt6392_ldo_set_mode,
-+	.get_mode = mt6392_ldo_get_mode,
-+};
-+
-+/* The array is indexed by id(MT6392_ID_XXX) */
-+static struct mt6392_regulator_info mt6392_regulators[] = {
-+	MT6392_BUCK("buck_vproc", VPROC, 700000, 1493750, 6250,
-+		buck_volt_range1, MT6392_VPROC_CON7, MT6392_VPROC_CON9, 0x7f,
-+		MT6392_VPROC_CON10, MT6392_VPROC_CON5, MT6392_VPROC_CON2,
-+		0x100),
-+	MT6392_BUCK("buck_vsys", VSYS, 1400000, 2987500, 12500,
-+		buck_volt_range2, MT6392_VSYS_CON7, MT6392_VSYS_CON9, 0x7f,
-+		MT6392_VSYS_CON10, MT6392_VSYS_CON5, MT6392_VSYS_CON2, 0x100),
-+	MT6392_BUCK("buck_vcore", VCORE, 700000, 1493750, 6250,
-+		buck_volt_range1, MT6392_VCORE_CON7, MT6392_VCORE_CON9, 0x7f,
-+		MT6392_VCORE_CON10, MT6392_VCORE_CON5, MT6392_VCORE_CON2,
-+		0x100),
-+	MT6392_REG_FIXED("ldo_vxo22", VXO22, MT6392_ANALDO_CON1, 10, 2200000,
-+		MT6392_ANALDO_CON1, 0x2),
-+	MT6392_LDO("ldo_vaud22", VAUD22, ldo_volt_table1,
-+		MT6392_ANALDO_CON2, 14, MT6392_ANALDO_CON8, 0x60,
-+		MT6392_ANALDO_CON2, 0x2),
-+	MT6392_REG_FIXED("ldo_vcama", VCAMA, MT6392_ANALDO_CON4, 15, 2800000,
-+		-1, 0),
-+	MT6392_REG_FIXED("ldo_vaud28", VAUD28, MT6392_ANALDO_CON23, 14, 2800000,
-+		MT6392_ANALDO_CON23, 0x2),
-+	MT6392_REG_FIXED("ldo_vadc18", VADC18, MT6392_ANALDO_CON25, 14, 1800000,
-+		MT6392_ANALDO_CON25, 0x2),
-+	MT6392_LDO("ldo_vcn35", VCN35, ldo_volt_table2,
-+		MT6392_ANALDO_CON21, 12, MT6392_ANALDO_CON16, 0xC,
-+		MT6392_ANALDO_CON21, 0x2),
-+	MT6392_REG_FIXED("ldo_vio28", VIO28, MT6392_DIGLDO_CON0, 14, 2800000,
-+		MT6392_DIGLDO_CON0, 0x2),
-+	MT6392_REG_FIXED("ldo_vusb", VUSB, MT6392_DIGLDO_CON2, 14, 3300000,
-+		MT6392_DIGLDO_CON2, 0x2),
-+	MT6392_LDO("ldo_vmc", VMC, ldo_volt_table3,
-+		MT6392_DIGLDO_CON3, 12, MT6392_DIGLDO_CON24, 0x10,
-+		MT6392_DIGLDO_CON3, 0x2),
-+	MT6392_LDO("ldo_vmch", VMCH, ldo_volt_table4,
-+		MT6392_DIGLDO_CON5, 14, MT6392_DIGLDO_CON26, 0x80,
-+		MT6392_DIGLDO_CON5, 0x2),
-+	MT6392_LDO("ldo_vemc3v3", VEMC3V3, ldo_volt_table4,
-+		MT6392_DIGLDO_CON6, 14, MT6392_DIGLDO_CON27, 0x80,
-+		MT6392_DIGLDO_CON6, 0x2),
-+	MT6392_LDO("ldo_vgp1", VGP1, ldo_volt_table5,
-+		MT6392_DIGLDO_CON7, 15, MT6392_DIGLDO_CON28, 0xE0,
-+		MT6392_DIGLDO_CON7, 0x2),
-+	MT6392_LDO("ldo_vgp2", VGP2, ldo_volt_table5,
-+		MT6392_DIGLDO_CON8, 15, MT6392_DIGLDO_CON29, 0xE0,
-+		MT6392_DIGLDO_CON8, 0x2),
-+	MT6392_REG_FIXED("ldo_vcn18", VCN18, MT6392_DIGLDO_CON11, 14, 1800000,
-+		MT6392_DIGLDO_CON11, 0x2),
-+	MT6392_LDO("ldo_vcamaf", VCAMAF, ldo_volt_table5,
-+		MT6392_DIGLDO_CON31, 15, MT6392_DIGLDO_CON32, 0xE0,
-+		MT6392_DIGLDO_CON31, 0x2),
-+	MT6392_LDO("ldo_vm", VM, ldo_volt_table6,
-+		MT6392_DIGLDO_CON47, 14, MT6392_DIGLDO_CON48, 0x30,
-+		MT6392_DIGLDO_CON47, 0x2),
-+	MT6392_REG_FIXED("ldo_vio18", VIO18, MT6392_DIGLDO_CON49, 14, 1800000,
-+		MT6392_DIGLDO_CON49, 0x2),
-+	MT6392_LDO("ldo_vcamd", VCAMD, ldo_volt_table7,
-+		MT6392_DIGLDO_CON51, 14, MT6392_DIGLDO_CON52, 0x60,
-+		MT6392_DIGLDO_CON51, 0x2),
-+	MT6392_REG_FIXED("ldo_vcamio", VCAMIO, MT6392_DIGLDO_CON53, 14, 1800000,
-+		MT6392_DIGLDO_CON53, 0x2),
-+	MT6392_REG_FIXED("ldo_vm25", VM25, MT6392_DIGLDO_CON55, 14, 2500000,
-+		MT6392_DIGLDO_CON55, 0x2),
-+	MT6392_LDO("ldo_vefuse", VEFUSE, ldo_volt_table8,
-+		MT6392_DIGLDO_CON57, 14, MT6392_DIGLDO_CON58, 0x10,
-+		MT6392_DIGLDO_CON57, 0x2),
-+};
-+
-+static int mt6392_set_buck_vosel_reg(struct platform_device *pdev)
-+{
-+	struct mt6397_chip *mt6392 = dev_get_drvdata(pdev->dev.parent);
-+	int i;
-+	u32 regval;
-+
-+	for (i = 0; i < MT6392_MAX_REGULATOR; i++) {
-+		if (mt6392_regulators[i].vselctrl_reg) {
-+			if (regmap_read(mt6392->regmap,
-+				mt6392_regulators[i].vselctrl_reg,
-+				&regval) < 0) {
-+				dev_err(&pdev->dev,
-+					"Failed to read buck ctrl\n");
-+				return -EIO;
-+			}
-+
-+			if (regval & mt6392_regulators[i].vselctrl_mask) {
-+				mt6392_regulators[i].desc.vsel_reg =
-+				mt6392_regulators[i].vselon_reg;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int mt6392_regulator_probe(struct platform_device *pdev)
-+{
-+	struct mt6397_chip *mt6392 = dev_get_drvdata(pdev->dev.parent);
-+	struct regulator_config config = {};
-+	struct regulator_dev *rdev;
-+	struct regulation_constraints *c;
-+	int i;
-+	u32 reg_value;
-+
-+	/* Query buck controller to select activated voltage register part */
-+	if (mt6392_set_buck_vosel_reg(pdev))
-+		return -EIO;
-+
-+	/* Read PMIC chip revision to update constraints and voltage table */
-+	if (regmap_read(mt6392->regmap, MT6392_CID, &reg_value) < 0) {
-+		dev_err(&pdev->dev, "Failed to read Chip ID\n");
-+		return -EIO;
-+	}
-+
-+	dev_info(&pdev->dev, "Chip ID = 0x%x\n", reg_value);
-+
-+	for (i = 0; i < MT6392_MAX_REGULATOR; i++) {
-+		config.dev = &pdev->dev;
-+		config.driver_data = &mt6392_regulators[i];
-+		config.regmap = mt6392->regmap;
-+		rdev = devm_regulator_register(&pdev->dev,
-+				&mt6392_regulators[i].desc, &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "failed to register %s\n",
-+				mt6392_regulators[i].desc.name);
-+			return PTR_ERR(rdev);
-+		}
-+
-+		/* Constrain board-specific capabilities according to what
-+		 * this driver and the chip itself can actually do.
-+		 */
-+		c = rdev->constraints;
-+		c->valid_modes_mask |= REGULATOR_MODE_NORMAL|
-+			REGULATOR_MODE_STANDBY | REGULATOR_MODE_FAST;
-+		c->valid_ops_mask |= REGULATOR_CHANGE_MODE;
-+
-+	}
-+	return 0;
-+}
-+
-+static const struct platform_device_id mt6392_platform_ids[] = {
-+	{"mt6392-regulator", 0},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(platform, mt6392_platform_ids);
-+
-+static const struct of_device_id mt6392_of_match[] = {
-+	{ .compatible = "mediatek,mt6392-regulator", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, mt6392_of_match);
-+
-+static struct platform_driver mt6392_regulator_driver = {
-+	.driver = {
-+		.name = "mt6392-regulator",
-+		.of_match_table = of_match_ptr(mt6392_of_match),
-+	},
-+	.probe = mt6392_regulator_probe,
-+	.id_table = mt6392_platform_ids,
-+};
-+
-+module_platform_driver(mt6392_regulator_driver);
-+
-+MODULE_AUTHOR("Chen Zhong <chen.zhong@mediatek.com>");
-+MODULE_DESCRIPTION("Regulator Driver for MediaTek MT6392 PMIC");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/regulator/mt6392-regulator.h b/include/linux/regulator/mt6392-regulator.h
-new file mode 100644
-index 000000000000..dfcbcacb5ad4
---- /dev/null
-+++ b/include/linux/regulator/mt6392-regulator.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2019 MediaTek Inc.
-+ * Author: Chen Zhong <chen.zhong@mediatek.com>
-+ */
-+
-+#ifndef __LINUX_REGULATOR_MT6392_H
-+#define __LINUX_REGULATOR_MT6392_H
-+
-+enum {
-+	MT6392_ID_VPROC = 0,
-+	MT6392_ID_VSYS,
-+	MT6392_ID_VCORE,
-+	MT6392_ID_VXO22,
-+	MT6392_ID_VAUD22,
-+	MT6392_ID_VCAMA,
-+	MT6392_ID_VAUD28,
-+	MT6392_ID_VADC18,
-+	MT6392_ID_VCN35,
-+	MT6392_ID_VIO28,
-+	MT6392_ID_VUSB = 10,
-+	MT6392_ID_VMC,
-+	MT6392_ID_VMCH,
-+	MT6392_ID_VEMC3V3,
-+	MT6392_ID_VGP1,
-+	MT6392_ID_VGP2,
-+	MT6392_ID_VCN18,
-+	MT6392_ID_VCAMAF,
-+	MT6392_ID_VM,
-+	MT6392_ID_VIO18,
-+	MT6392_ID_VCAMD,
-+	MT6392_ID_VCAMIO,
-+	MT6392_ID_VM25,
-+	MT6392_ID_VEFUSE,
-+	MT6392_ID_RG_MAX,
-+};
-+
-+#define MT6392_MAX_REGULATOR	MT6392_ID_RG_MAX
-+
-+#endif /* __LINUX_REGULATOR_MT6392_H */
--- 
-2.20.1
+  url =3D https://kernel.googlesource.com/pub/scm/git/git
+  url =3D git://repo.or.cz/alt-git.git
+  url =3D https://github.com/gitster/git
+
+New contributors whose contributions weren't in v2.21.0 are as follows.
+Welcome to the Git development community!
+
+  Alexander Blesius, Baruch Siach, Cl=C3=A9ment Chigot, Corentin
+  BOMPARD, Damien Robert, Michal Suchanek, Rohit Ashiwal, Sun Chao,
+  Vadim Kochan, William Hubbs, and Yash Bhatambare.
+
+Returning contributors who helped this release are as follows.
+Thanks for your continued support.
+
+  =C3=86var Arnfj=C3=B6r=C3=B0 Bjarmason, Alban Gruin, Alexander Shopov,
+  Anders Waldenborg, Andreas Heiduk, Andrei Rybak, Beat Bolli, Ben
+  Peart, Brandon Richardson, brian m. carlson, Christian Couder,
+  Daniels Umanovskis, David Aguilar, David Kastrup, Denton Liu,
+  Derrick Stolee, Elijah Newren, Eric Wong, Jean-No=C3=ABl Avila,
+  Jeff Hostetler, Jeff King, Jiang Xin, Joel Teichroeb, Joey Hess,
+  Johannes Schindelin, Jonathan Tan, Jordi Mas, Josh Steadmon,
+  Junio C Hamano, Kyle Meyer, Martin =C3=85gren, Matthew Kraai, Mike
+  Hommey, Nguy=E1=BB=85n Th=C3=A1i Ng=E1=BB=8Dc Duy, Paul-Sebastian Ungur=
+eanu,
+  Philip Oakley, Phillip Wood, Ramsay Jones, Ren=C3=A9 Scharfe,
+  Robert P. J. Day, Sven Strickroth, SZEDER G=C3=A1bor, Taylor Blau,
+  Thomas Gummerer, Todd Zullinger, Torsten B=C3=B6gershausen, and
+  Tr=E1=BA=A7n Ng=E1=BB=8Dc Qu=C3=A2n.
+
+----------------------------------------------------------------
+
+Git 2.22 Release Notes (draft)
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+
+Updates since v2.21
+-------------------
+
+UI, Workflows & Features
+
+ * "git checkout --no-overlay" can be used to trigger a new mode of
+   checking out paths out of the tree-ish, that allows paths that
+   match the pathspec that are in the current index and working tree
+   and are not in the tree-ish.
+
+ * The %(trailers) formatter in "git log --format=3D..."  now allows to
+   optionally pick trailers selectively by keyword, show only values,
+   etc.
+
+ * Four new configuration variables {author,committer}.{name,email}
+   have been introduced to override user.{name,email} in more specific
+   cases.
+
+ * Command-line completion (in contrib/) learned to tab-complete the
+   "git submodule absorbgitdirs" subcommand.
+
+ * "git branch" learned a new subcommand "--show-current".
+
+ * Output from "diff --cc" did not show the original paths when the
+   merge involved renames.  A new option adds the paths in the
+   original trees to the output.
+
+ * The command line completion (in contrib/) has been taught to
+   complete more subcommand parameters.
+
+ * The final report from "git bisect" used to show the suspected
+   culprit using a raw "diff-tree", with which there is no output for
+   a merge commit.  This has been updated to use a more modern and
+   human readable output that still is concise enough.
+
+ * "git rebase --rebase-merges" replaces its old "--preserve-merges"
+   option; the latter is now marked as deprecated.
+
+ * Error message given while cloning with --recurse-submodules has
+   been updated.
+
+ * The completion helper code now pays attention to repository-local
+   configuration (when available), which allows --list-cmds to honour
+   a repository specific setting of completion.commands, for example.
+
+ * "git mergetool" learned to offer Sublime Merge (smerge) as one of
+   its backends.
+
+ * A new hook "post-index-change" is called when the on-disk index
+   file changes, which can help e.g. a virtualized working tree
+   implementation.
+
+ * "git difftool" can now run outside a repository.
+
+ * "git checkout -m <other>" was about carrying the differences
+   between HEAD and the working-tree files forward while checking out
+   another branch, and ignored the differences between HEAD and the
+   index.  The command has been taught to abort when the index and the
+   HEAD are different.
+
+ * A progress indicator has been added to the "index-pack" step, which
+   often makes users wait for completion during "git clone".
+
+ * "git submodule" learns "set-branch" subcommand that allows the
+   submodule.*.branch settings to be modified.
+
+ * "git merge-recursive" backend recently learned a new heuristics to
+   infer file movement based on how other files in the same directory
+   moved.  As this is inherently less robust heuristics than the one
+   based on the content similarity of the file itself (rather than
+   based on what its neighbours are doing), it sometimes gives an
+   outcome unexpected by the end users.  This has been toned down to
+   leave the renamed paths in higher/conflicted stages in the index so
+   that the user can examine and confirm the result.
+
+ * "git tag" learned to give an advice suggesting it might be a
+   mistake when creating an annotated or signed tag that points at
+   another tag.
+
+ * The "git pack-objects" command learned to report the number of
+   objects it packed via the trace2 mechanism.
+
+ * The list of conflicted paths shown in the editor while concluding a
+   conflicted merge was shown above the scissors line when the
+   clean-up mode is set to "scissors", even though it was commented
+   out just like the list of updated paths and other information to
+   help the user explain the merge better.
+
+ * The trace2 tracing facility learned to auto-generate a filename
+   when told to log to a directory.
+
+ * "git clone" learned a new --server-option option when talking over
+   the protocol version 2.
+
+ * The connectivity bitmaps are created by default in bare
+   repositories now; also the pathname hash-cache is created by
+   default to avoid making crappy deltas when repacking.
+
+
+Performance, Internal Implementation, Development Support etc.
+
+ * The diff machinery, one of the oldest parts of the system, which
+   long predates the parse-options API, uses fairly long and complex
+   handcrafted option parser.  This is being rewritten to use the
+   parse-options API.
+
+ * The implementation of pack-redundant has been updated for
+   performance in a repository with many packfiles.
+
+ * A more structured way to obtain execution trace has been added.
+
+ * "git prune" has been taught to take advantage of reachability
+   bitmap when able.
+
+ * The command line parser of "git commit-tree" has been rewritten to
+   use the parse-options API.
+
+ * Suggest GitGitGadget instead of submitGit as a way to submit
+   patches based on GitHub PR to us.
+
+ * The test framework has been updated to help developers by making it
+   easier to run most of the tests under different versions of
+   over-the-wire protocols.
+
+ * Dev support update to make it easier to compare two formatted
+   results from our documentation.
+
+ * The scripted "git rebase" implementation has been retired.
+
+ * "git multi-pack-index verify" did not scale well with the number of
+   packfiles, which is being improved.
+
+ * "git stash" has been rewritten in C.
+
+ * The "check-docs" Makefile target to support developers has been
+   updated.
+
+ * The tests have been updated not to rely on the abbreviated option
+   names the parse-options API offers, to protect us from an
+   abbreviated form of an option that used to be unique within the
+   command getting non-unique when a new option that share the same
+   prefix is added.
+
+ * The scripted version of "git rebase -i" wrote and rewrote the todo
+   list many times during a single step of its operation, and the
+   recent C-rewrite made a faithful conversion of the logic to C.  The
+   implementation has been updated to carry necessary information
+   around in-core to avoid rewriting the same file over and over
+   unnecessarily.
+
+ * Test framework update to more robustly clean up leftover files and
+   processes after tests are done.
+
+ * Conversion from unsigned char[20] to struct object_id continues.
+
+ * While running "git diff" in a lazy clone, we can upfront know which
+   missing blobs we will need, instead of waiting for the on-demand
+   machinery to discover them one by one.  The code learned to aim to
+   achieve better performance by batching the request for these
+   promised blobs.
+
+ * During an initial "git clone --depth=3D..." partial clone, it is
+   pointless to spend cycles for a large portion of the connectivity
+   check that enumerates and skips promisor objects (which by
+   definition is all objects fetched from the other side).  This has
+   been optimized out.
+
+ * Mechanically and systematically drop "extern" from function
+   declarlation.
+
+ * The script to aggregate perf result unconditionally depended on
+   libjson-perl even though it did not have to, which has been
+   corrected.
+
+ * The internal implementation of "git rebase -i" has been updated to
+   avoid forking a separate "rebase--interactive" process.
+
+
+Fixes since v2.21
+-----------------
+
+ * "git prune-packed" did not notice and complain against excess
+   arguments given from the command line, which now it does.
+   (merge 9b0bd87ed2 rj/prune-packed-excess-args later to maint).
+
+ * Split-index fix.
+   (merge 6e37c8ed3c nd/split-index-null-base-fix later to maint).
+
+ * "git diff --no-index" may still want to access Git goodies like
+   --ext-diff and --textconv, but so far these have been ignored,
+   which has been corrected.
+   (merge 287ab28bfa jk/diff-no-index-initialize later to maint).
+
+ * Unify RPC code for smart http in protocol v0/v1 and v2, which fixes
+   a bug in the latter (lack of authentication retry) and generally
+   improves the code base.
+   (merge a97d00799a jt/http-auth-proto-v2-fix later to maint).
+
+ * The include file compat/bswap.h has been updated so that it is safe
+   to (accidentally) include it more than once.
+   (merge 33aa579a55 jk/guard-bswap-header later to maint).
+
+ * The set of header files used by "make hdr-check" unconditionally
+   included sha256/gcrypt.h, even when it is not used, causing the
+   make target to fail.  We now skip it when GCRYPT_SHA256 is not in
+   use.
+   (merge f23aa18e7f rj/hdr-check-gcrypt-fix later to maint).
+
+ * The Makefile uses 'find' utility to enumerate all the *.h header
+   files, which is expensive on platforms with slow filesystems; it
+   now optionally uses "ls-files" if working within a repository,
+   which is a trick similar to how all sources are enumerated to run
+   ETAGS on.
+   (merge 92b88eba9f js/find-lib-h-with-ls-files-when-possible later to m=
+aint).
+
+ * "git rebase" that was reimplemented in C did not set ORIG_HEAD
+   correctly, which has been corrected.
+   (merge cbd29ead92 js/rebase-orig-head-fix later to maint).
+
+ * Dev support.
+   (merge f545737144 js/stress-test-ui-tweak later to maint).
+
+ * CFLAGS now can be tweaked when invoking Make while using
+   DEVELOPER=3DYesPlease; this did not work well before.
+   (merge 6d5d4b4e93 ab/makefile-help-devs-more later to maint).
+
+ * "git fsck --connectivity-only" omits computation necessary to sift
+   the objects that are not reachable from any of the refs into
+   unreachable and dangling.  This is now enabled when dangling
+   objects are requested (which is done by default, but can be
+   overridden with the "--no-dangling" option).
+   (merge 8d8c2a5aef jk/fsck-doc later to maint).
+
+ * On platforms where "git fetch" is killed with SIGPIPE (e.g. OSX),
+   the upload-pack that runs on the other end that hangs up after
+   detecting an error could cause "git fetch" to die with a signal,
+   which led to a flakey test.  "git fetch" now ignores SIGPIPE during
+   the network portion of its operation (this is not a problem as we
+   check the return status from our write(2)s).
+   (merge 143588949c jk/no-sigpipe-during-network-transport later to main=
+t).
+
+ * A recent update broke "is this object available to us?" check for
+   well-known objects like an empty tree (which should yield "yes",
+   even when there is no on-disk object for an empty tree), which has
+   been corrected.
+   (merge f06ab027ef jk/virtual-objects-do-exist later to maint).
+
+ * The setup code has been cleaned up to avoid leaks around the
+   repository_format structure.
+   (merge e8805af1c3 ma/clear-repository-format later to maint).
+
+ * "git config --type=3Dcolor ..." is meant to replace "git config --get-=
+color"
+   but there is a slight difference that wasn't documented, which is
+   now fixed.
+   (merge cd8e7593b9 jk/config-type-color-ends-with-lf later to maint).
+
+ * When the "clean" filter can reduce the size of a huge file in the
+   working tree down to a small "token" (a la Git LFS), there is no
+   point in allocating a huge scratch area upfront, but the buffer is
+   sized based on the original file size.  The convert mechanism now
+   allocates very minimum and reallocates as it receives the output
+   from the clean filter process.
+   (merge 02156ab031 jh/resize-convert-scratch-buffer later to maint).
+
+ * "git rebase" uses the refs/rewritten/ hierarchy to store its
+   intermediate states, which inherently makes the hierarchy per
+   worktree, but it didn't quite work well.
+   (merge b9317d55a3 nd/rewritten-ref-is-per-worktree later to maint).
+
+ * "git log -L<from>,<to>:<path>" with "-s" did not suppress the patch
+   output as it should.  This has been corrected.
+   (merge 05314efaea jk/line-log-with-patch later to maint).
+
+ * "git worktree add" used to do a "find an available name with stat
+   and then mkdir", which is race-prone.  This has been fixed by using
+   mkdir and reacting to EEXIST in a loop.
+   (merge 7af01f2367 ms/worktree-add-atomic-mkdir later to maint).
+
+ * Build update for SHA-1 with collision detection.
+   (merge 07a20f569b jk/sha1dc later to maint).
+
+ * Build procedure has been fixed around use of asciidoctor instead of
+   asciidoc.
+   (merge 185f9a0ea0 ma/asciidoctor-fixes later to maint).
+
+ * remote-http transport did not anonymize URLs reported in its error
+   messages at places.
+   (merge c1284b21f2 js/anonymize-remote-curl-diag later to maint).
+
+ * Error messages given from the http transport have been updated so
+   that they can be localized.
+   (merge ed8b4132c8 js/remote-curl-i18n later to maint).
+
+ * "git init" forgot to read platform-specific repository
+   configuration, which made Windows port to ignore settings of
+   core.hidedotfiles, for example.
+
+ * A corner-case object name ambiguity while the sequencer machinery
+   is working (e.g. "rebase -i -x") has been fixed.
+
+ * "git format-patch" did not diagnose an error while opening the
+   output file for the cover-letter, which has been corrected.
+   (merge 2fe95f494c jc/format-patch-error-check later to maint).
+
+ * "git checkout -f <branch>" while the index has an unmerged path
+   incorrectly left some paths in an unmerged state, which has been
+   corrected.
+
+ * A corner case bug in the refs API has been corrected.
+   (merge d3322eb28b jk/refs-double-abort later to maint).
+
+ * Unicode update.
+   (merge 584b62c37b bb/unicode-12 later to maint).
+
+ * dumb-http walker has been updated to share more error recovery
+   strategy with the normal codepath.
+
+ * A buglet in configuration parser has been fixed.
+   (merge 19e7fdaa58 nd/include-if-wildmatch later to maint).
+
+ * The documentation for "git read-tree --reset -u" has been updated.
+   (merge b5a0bd694c nd/read-tree-reset-doc later to maint).
+
+ * Code clean-up around a much-less-important-than-it-used-to-be
+   update_server_info() funtion.
+   (merge b3223761c8 jk/server-info-rabbit-hole later to maint).
+
+ * The message given when "git commit -a <paths>" errors out has been
+   updated.
+   (merge 5a1dbd48bc nd/commit-a-with-paths-msg-update later to maint).
+
+ * "git cherry-pick --options A..B", after giving control back to the
+   user to ask help resolving a conflicted step, did not honor the
+   options it originally received, which has been corrected.
+
+ * Various glitches in "git gc" around reflog handling have been fixed.
+
+ * The code to read from commit-graph file has been cleanup with more
+   careful error checking before using data read from it.
+
+ * Performance fix around "git fetch" that grabs many refs.
+   (merge b764300912 jt/fetch-pack-wanted-refs-optim later to maint).
+
+ * Protocol v2 support in "git fetch-pack" of shallow clones has been
+   corrected.
+
+ * Performance fix around "git blame", especially in a linear history
+   (which is the norm we should optimize for).
+   (merge f892014943 dk/blame-keep-origin-blob later to maint).
+
+ * Performance fix for "rev-list --parents -- pathspec".
+   (merge 8320b1dbe7 jk/revision-rewritten-parents-in-prio-queue later to=
+ maint).
+
+ * Updating the display with progress message has been cleaned up to
+   deal better with overlong messages.
+   (merge 545dc345eb sg/overlong-progress-fix later to maint).
+
+ * "git blame -- path" in a non-bare repository starts blaming from
+   the working tree, and the same command in a bare repository errors
+   out because there is no working tree by definition.  The command
+   has been taught to instead start blaming from the commit at HEAD,
+   which is more useful.
+   (merge a544fb08f8 sg/blame-in-bare-start-at-head later to maint).
+
+ * An underallocation in the code to read the untracked cache
+   extension has been corrected.
+   (merge 3a7b45a623 js/untracked-cache-allocfix later to maint).
+
+ * The code is updated to check the result of memory allocation before
+   it is used in more places, by using xmalloc and/or xcalloc calls.
+   (merge 999b951b28 jk/xmalloc later to maint).
+
+ * The GETTEXT_POISON test option has been quite broken ever since it
+   was made runtime-tunable, which has been fixed.
+   (merge f88b9cb603 jc/gettext-test-fix later to maint).
+
+ * Test fix on APFS that is incapable of store paths in Latin-1.
+   (merge 3889149619 js/iso8895-test-on-apfs later to maint).
+
+ * "git submodule foreach <command> --quiet" did not pass the option
+   down correctly, which has been corrected.
+   (merge a282f5a906 nd/submodule-foreach-quiet later to maint).
+
+ * "git send-email" has been taught to use quoted-printable when the
+   payload contains carriage-return.  The use of the mechanism is in
+   line with the design originally added the codepath that chooses QP
+   when the payload has overly long lines.
+   (merge 74d76a1701 bc/send-email-qp-cr later to maint).
+
+ * The recently added feature to add addresses that are on
+   anything-by: trailers in 'git send-email' was found to be way too
+   eager and considered nonsense strings as if they can be legitimate
+   beginning of *-by: trailer.  This has been tightened.
+
+ * Builds with gettext broke on recent macOS w/ Homebrew, which
+   seems to have stopped including from /usr/local/include; this
+   has been corrected.
+   (merge 92a1377a2a js/macos-gettext-build later to maint).
+
+ * Running "git add" on a repository created inside the current
+   repository is an explicit indication that the user wants to add it
+   as a submodule, but when the HEAD of the inner repository is on an
+   unborn branch, it cannot be added as a submodule.  Worse, the files
+   in its working tree can be added as if they are a part of the outer
+   repository, which is not what the user wants.  These problems are
+   being addressed.
+   (merge f937bc2f86 km/empty-repo-is-still-a-repo later to maint).
+
+ * "git cherry-pick" run with the "-x" or the "--signoff" option used
+   to (and more importantly, ought to) clean up the commit log message
+   with the --cleanup=3Dspace option by default, but this has been
+   broken since late 2017.  This has been fixed.
+
+ * When given a tag that points at a commit-ish, "git replace --graft"
+   failed to peel the tag before writing a replace ref, which did not
+   make sense because the old graft mechanism the feature wants to
+   mimick only allowed to replace one commit object with another.
+   This has been fixed.
+   (merge ee521ec4cb cc/replace-graft-peel-tags later to maint).
+
+ * Code tightening against a "wrong" object appearing where an object
+   of a different type is expected, instead of blindly assuming that
+   the connection between objects are correctly made.
+   (merge 97dd512af7 tb/unexpected later to maint).
+
+ * An earlier update for MinGW and Cygwin accidentally broke MSVC build,
+   which has been fixed.
+   (merge 22c3634c0f ss/msvc-path-utils-fix later to maint).
+
+ * %(push:track) token used in the --format option to "git
+   for-each-ref" and friends was not showing the right branch, which
+   has been fixed.
+   (merge c646d0934e dr/ref-filter-push-track-fix later to maint).
+
+ * "make check-docs", "git help -a", etc. did not account for cases
+   where a particular build may deliberately omit some subcommands,
+   which has been corrected.
+
+ * The logic to tell if a Git repository has a working tree protects
+   "git branch -D" from removing the branch that is currently checked
+   out by mistake.  The implementation of this logic was broken for
+   repositories with unusual name, which unfortunately is the norm for
+   submodules these days.  This has been fixed.
+   (merge f3534c98e4 jt/submodule-repo-is-with-worktree later to maint).
+
+ * AIX shared the same build issues with other BSDs around fileno(fp),
+   which has been corrected.
+   (merge ee662bf5c6 cc/aix-has-fileno-as-a-macro later to maint).
+
+ * The autoconf generated configure script failed to use the right
+   gettext() implementations from -libintl by ignoring useless stub
+   implementations shipped in some C library, which has been
+   corrected.
+   (merge b71e56a683 vk/autoconf-gettext later to maint).
+
+ * Fix index-pack perf test so that the repeated invocations always
+   run in an empty repository, which emulates the initial clone
+   situation better.
+   (merge 775c71e16d jk/p5302-avoid-collision-check-cost later to maint).
+
+ * A "ls-files" that emulates "find" to enumerate files in the working
+   tree resulted in duplicated Makefile rules that caused the build to
+   issue an unnecessary warning during a trial build after merge
+   conflicts are resolved in working tree *.h files but before the
+   resolved results are added to the index.  This has been corrected.
+
+ * "git chery-pick" (and "revert" that shares the same runtime engine)
+   that deals with multiple commits got confused when the final step
+   gets stopped with a conflict and the user concluded the sequence
+   with "git commit".  Attempt to fix it by cleaning up the state
+   files used by these commands in such a situation.
+   (merge 4a72486de9 pw/clean-sequencer-state-upon-final-commit later to =
+maint).
+
+ * Code cleanup, docfix, build fix, etc.
+   (merge 11f470aee7 jc/test-yes-doc later to maint).
+   (merge 90503a240b js/doc-symref-in-proto-v1 later to maint).
+   (merge 5c326d1252 jk/unused-params later to maint).
+   (merge 68cabbfda3 dl/doc-submodule-wo-subcommand later to maint).
+   (merge 9903623761 ab/receive-pack-use-after-free-fix later to maint).
+   (merge 1ede45e44b en/merge-options-doc later to maint).
+   (merge 3e14dd2c8e rd/doc-hook-used-in-sample later to maint).
+   (merge c271dc28fd nd/no-more-check-racy later to maint).
+   (merge e6e15194a8 yb/utf-16le-bom-spellfix later to maint).
+   (merge bb101aaf0c rd/attr.c-comment-typofix later to maint).
+   (merge 716a5af812 rd/gc-prune-doc-fix later to maint).
+   (merge 50b206371d js/untravis-windows later to maint).
+   (merge dbf47215e3 js/rebase-recreate-merge later to maint).
+   (merge 56cb2d30f8 dl/reset-doc-no-wrt-abbrev later to maint).
+   (merge 64eca306a2 ja/dir-rename-doc-markup-fix later to maint).
+   (merge af91b0230c dl/ignore-docs later to maint).
+   (merge 59a06e947b ra/t3600-test-path-funcs later to maint).
+   (merge e041d0781b ar/t4150-remove-cruft later to maint).
+   (merge 8d75a1d183 ma/asciidoctor-fixes-more later to maint).
+   (merge 74cc547b0f mh/pack-protocol-doc-fix later to maint).
+   (merge ed31851fa6 ab/doc-misc-typofixes later to maint).
+   (merge a7256debd4 nd/checkout-m-doc-update later to maint).
+   (merge 3a9e1ad78d jt/t5551-protocol-v2-does-not-have-half-auth later t=
+o maint).
+   (merge 0b918b75af sg/t5318-cleanup later to maint).
+   (merge 68ed71b53c cb/doco-mono later to maint).
+   (merge a34dca2451 nd/interpret-trailers-docfix later to maint).
+   (merge cf7b857a77 en/fast-import-parsing-fix later to maint).
+   (merge fe61ccbc35 po/rerere-doc-fmt later to maint).
+   (merge ffea0248bf po/describe-not-necessarily-7 later to maint).
+   (merge 7cb7283adb tg/ls-files-debug-format-fix later to maint).
+   (merge f64a21bd82 tz/doc-apostrophe-no-longer-needed later to maint).
+   (merge dbe7b41019 js/t3301-unbreak-notes-test later to maint).
+   (merge d8083e4180 km/t3000-retitle later to maint).
+   (merge 9e4cbccbd7 tz/git-svn-doc-markup-fix later to maint).
+   (merge da9ca955a7 jk/ls-files-doc-markup-fix later to maint).
 
