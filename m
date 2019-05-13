@@ -2,103 +2,103 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22414C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4494AC46470
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F133320862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1775620862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbfEMOHR (ORCPT
+        id S1729513AbfEMOIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:07:17 -0400
-Received: from mga02.intel.com ([134.134.136.20]:33097 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728500AbfEMOHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:07:16 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 07:07:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,465,1549958400"; 
-   d="scan'208";a="171201036"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga002.fm.intel.com with ESMTP; 13 May 2019 07:07:15 -0700
-Date:   Mon, 13 May 2019 07:07:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Marc Haber <mh+linux-kernel@zugschlus.de>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Linux in KVM guest segfaults when hosts runs Linux 5.1
-Message-ID: <20190513140715.GB28561@linux.intel.com>
-References: <20190512115302.GM3835@torres.zugschlus.de>
+        Mon, 13 May 2019 10:08:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45350 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727202AbfEMOIp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 10:08:45 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: andrzej.p)
+        with ESMTPSA id 9B26A28395B
+Subject: Re: [REGRESSION] usb: gadget: f_fs: Allow scatter-gather buffers
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Felipe Balbi <balbi@kernel.org>, "Yang, Fei" <fei.yang@intel.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Chen Yu <chenyu56@huawei.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "kernel@collabora.com" <kernel@collabora.com>
+References: <CALAqxLUMRaNxwTUi9QS7-Cy-Ve4+vteBm8-jW4yzZg_QTJVChA@mail.gmail.com>
+ <7caebeb2-ea96-2276-3078-1e53f09ce227@collabora.com>
+ <CALAqxLUfJYUtmQDC_aDMxW7KcPUawGoRq-PNUfmzQuNKh97FmQ@mail.gmail.com>
+ <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com>
+From:   Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Message-ID: <7ec57c29-d1ab-dc4c-755d-a6009b9132b5@collabora.com>
+Date:   Mon, 13 May 2019 16:08:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190512115302.GM3835@torres.zugschlus.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CALAqxLVUFfrPVVjR74V3PhhtcCytfp=cUYjo=BcJ14D1fkVXTw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 01:53:02PM +0200, Marc Haber wrote:
-> Hi,
-> 
-> since updating my home desktop machine to kernel 5.1.1, KVM guests
-> started on that machine segfault after booting:
-> general protection fault: 0000 [#1] PREEMPT SMP NOPTI
-> CPU: 0 PID: 13 Comm: kworker/0:1 Not tainted 5.0.13-zgsrv20080 #5.0.13.20190505.0
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> Workqueue: events once_deferred
-> RIP: 0010:native_read_pmc+0x2/0x10
-> Code: e2 20 89 3e 48 09 d0 c3 89 f9 89 f0 0f 30 c3 66 0f 1f 84 00 00 00 00 00 89 f0 89 f9 0f 30 31 c0 c3 0f 1f 80 00 00 00 00 89 f9 <0f> 33 48 c1 e2 20 48 09 d0 c3 0f 1f 40 00 0f 20 c0 c3 66 66 2e 0f
-> RSP: 0018:ffff8881b9a03e50 EFLAGS: 00010083
-> RAX: 0000000000000001 RBX: ffff800000000001 RCX: 0000000000000000
-> RDX: 000000000000002f RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: ffff8881b590e400 R08: ffff8881b590e400 R09: 0000000000000003
-> R10: ffffe8ffffc05440 R11: 0000000000000000 R12: ffff8881b590e5d8
-> R13: 0000000000000010 R14: ffff8881b590e420 R15: ffffe8ffffc05400
-> FS:  0000000000000000(0000) GS:ffff8881b9a00000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f9bcc5c61f8 CR3: 00000001b6a24000 CR4: 00000000000006f0
-> Call Trace:
->  <IRQ>
->  x86_perf_event_update+0x3b/0x80
->  x86_pmu_stop+0x84/0xa0
->  x86_pmu_del+0x52/0x160
->  event_sched_out.isra.59+0x95/0x190
->  group_sched_out.part.61+0x51/0xc0
->  ctx_sched_out+0xf2/0x220
->  ctx_resched+0xb8/0xc0
->  __perf_install_in_context+0x175/0x1f0
->  remote_function+0x3e/0x50
->  flush_smp_call_function_queue+0x30/0xe0
->  smp_call_function_interrupt+0x2f/0x40
->  call_function_single_interrupt+0xf/0x20
->  </IRQ>
+Hi John,
 
-...
+W dniu 09.05.2019 o 23:23, John Stultz pisze:
+> On Thu, May 9, 2019 at 11:25 AM John Stultz <john.stultz@linaro.org> wrote:
+>>
+>> On Thu, May 9, 2019 at 7:02 AM Andrzej Pietrasiewicz
+>> <andrzej.p@collabora.com> wrote:
+>>>
 
-> The host seems to be running fine, the KVM guest crash is reproducible.
-> Both host and guest are running Debian unstable with a locally built
-> kernel; the host runs 5.1.1, the guest 5.0.13. The crash also happens
-> when the host is running 5.1.0; going back to 5.0.13 with the host
-> allows the guest to finish bootup and run fine.
-> 
-> Please note that my kernel 5.1.1 image is not fully broken in KVM, I
-> have update my APU machine which runs firewall and other infrastructure
-> services and the guests run fine there.
-> 
-> The machine in question is an older box with an AMD Phenom(tm) II X6
-> 1090T Processor. I guess that the issue is related to the Phenom CPU.
-> 
-> Any idea short of bisecting?
+<snip>
 
-It's a regression introduced by commit 672ff6cff80c ("KVM: x86: Raise
-#GP when guest vCPU do not support PMU").  A fix has been submitted.
+> 
+> Ok. Apologies for earlier confusion.
+> 
+> So the kzalloc/memset fix you sent for f_fs.c does seem to avoid the
+> crash on bootup I was seeing w/  HiKey/dwc2 (previously I had only
+> tested it on HiKey960/dwc3).
+> 
+> However with that patch, I still see tranfer problems with adb, unless
+> I comment out setting sg_supported in dwc2/gadget.c (in the same
+> fashion I have to with HiKey960/dwc3).
+> 
+> The dwc2 zlp patch doesn't seem to affect things much either way in my
+> testing. But maybe I'm just not tripping on that issue yet.
+> 
+> So yes, the kzalloc/memset patch is a clear improvement, as it avoids
+> the bootup crash on dwc2, and seems like it should go in.
+> 
+> However, there is still the outstanding issue w/  functionfs sg
+> support stalling on larger transfers.
 
-https://lkml.kernel.org/r/20190508170248.15271-1-bp@alien8.de
+Do you get "functionfs read size 512 > requested size 24, splitting
+request into multiple reads" message when problems happen?
+
+Is there anything in the kernel log?
+
+I'm unable to reproduce your problems. I thought I was able, but
+it was another problem, which is fixed with:
+
+5acb4b970184d189d901192d075997c933b82260
+dwc2: gadget: Fix completed transfer size calculation in DDMA
+
+(or you can simply take upstream drivers/usb/dwc2).
+
+Do your problems happen on dwc2 or dwc3?
+
+Is there a way to try your adb without building and running the
+whole Android?
+
+Andrzej
