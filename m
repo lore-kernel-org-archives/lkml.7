@@ -2,136 +2,117 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3E9C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E9FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F370208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B4D208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:06:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfEMKFN (ORCPT
+        id S1728584AbfEMKGl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 06:05:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:21986 "EHLO mx1.redhat.com"
+        Mon, 13 May 2019 06:06:41 -0400
+Received: from unicorn.mansr.com ([81.2.72.234]:36228 "EHLO unicorn.mansr.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727690AbfEMKFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 06:05:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1493D3082E1E;
-        Mon, 13 May 2019 10:05:13 +0000 (UTC)
-Received: from [10.72.12.49] (ovpn-12-49.pek2.redhat.com [10.72.12.49])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7EE306A96C;
-        Mon, 13 May 2019 10:05:03 +0000 (UTC)
-Subject: Re: [PATCH v2 8/8] vsock/virtio: make the RX buffer size tunable
-To:     Stefano Garzarella <sgarzare@redhat.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Stefan Hajnoczi <stefanha@redhat.com>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-9-sgarzare@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
-Date:   Mon, 13 May 2019 18:05:02 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727339AbfEMKGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:06:41 -0400
+Received: by unicorn.mansr.com (Postfix, from userid 51770)
+        id D154B149B5; Mon, 13 May 2019 11:06:39 +0100 (BST)
+From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Peter Chen <peter.chen@nxp.com>,
+        "linux-usb\@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-samsung-soc\@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] usb: core: verify devicetree nodes for USB devices
+References: <yw1xpnotufti.fsf@mansr.com>
+        <CGME20190509084827eucas1p294962744fe70745c50b69a5349b5de68@eucas1p2.samsung.com>
+        <20190509084726.5405-1-m.szyprowski@samsung.com>
+        <yw1xlfzfv4ol.fsf@mansr.com>
+        <VI1PR04MB5327AD56CA772284DFE663D08B0C0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <7c5579d2-634a-d705-a451-563939957d57@samsung.com>
+        <VI1PR04MB5327B425756FA394C51525208B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <3544eb61-2bd8-338d-8d62-d95a775528ef@samsung.com>
+        <VI1PR04MB5327FAC12E4A3D403E8D92128B0F0@VI1PR04MB5327.eurprd04.prod.outlook.com>
+        <5d0abe9c-613c-d39b-6746-78e5e5c2bbc5@samsung.com>
+Date:   Mon, 13 May 2019 11:06:39 +0100
+In-Reply-To: <5d0abe9c-613c-d39b-6746-78e5e5c2bbc5@samsung.com> (Marek
+        Szyprowski's message of "Mon, 13 May 2019 12:03:18 +0200")
+Message-ID: <yw1xzhnqu0r4.fsf@mansr.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190510125843.95587-9-sgarzare@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 13 May 2019 10:05:13 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Marek Szyprowski <m.szyprowski@samsung.com> writes:
 
-On 2019/5/10 ä¸‹åˆ8:58, Stefano Garzarella wrote:
-> The RX buffer size determines the memory consumption of the
-> vsock/virtio guest driver, so we make it tunable through
-> a module parameter.
+> Hi Peter,
 >
-> The size allowed are between 4 KB and 64 KB in order to be
-> compatible with old host drivers.
+> On 2019-05-13 11:23, Peter Chen wrote:
+>>> On 2019-05-13 11:00, Peter Chen wrote:
+>>>>> On 2019-05-10 05:10, Peter Chen wrote:
+>>>>>>> Marek Szyprowski <m.szyprowski@samsung.com> writes:
+>>>>>>>> Commit 69bec7259853 ("USB: core: let USB device know device node")
+>>>>>>>> added support for attaching devicetree node for USB devices. The
+>>>>>>>> mentioned commit however identifies the given USB device node only
+>>>>>>>> by the
+>>>>> 'reg'
+>>>>>>>> property in the host controller children nodes. The USB device
+>>>>>>>> node however also has to have a 'compatible' property as described
+>>>>>>>> in Documentation/devicetree/bindings/usb/usb-device.txt. Lack for
+>>>>>>>> the 'compatible' property check might result in assigning a
+>>>>>>>> devicetree node, which is not intended to be the proper node for the given
+>>> USB device.
+>>>>>>>> This is important especially when USB host controller has
+>>>>>>>> child-nodes for other purposes. For example, Exynos EHCI and OHCI
+>>>>>>>> drivers already define child-nodes for each physical root hub port
+>>>>>>>> and assigns respective PHY controller and parameters for them.
+>>>>>>>> Those binding predates support for USB devicetree nodes.
+>>>>>>>>
+>>>>>>>> Checking for the proper compatibility string allows to mitigate
+>>>>>>>> the conflict between USB device devicetree nodes and the bindings
+>>>>>>>> for USB controllers with child nodes. It also fixes the
+>>>>>>>> side-effect of the other commits, like 01fdf179f4b0 ("usb: core:
+>>>>>>>> skip interfaces disabled in devicetree"), which incorrectly
+>>>>>>>> disables some devices on Exynos based boards.
+>>>>>> Hi Marek,
+>>>>>>
+>>>>>> The purpose of your patch is do not set of_node for device under USB
+>>>>>> controller,
+>>>>> right?
+>>>>>
+>>>>> Right.
+>>>>>
+>>>> Do you mind doing it at function exynos_ehci_get_phy of ehci-exynos.c?
+>>> I don't mind fixing it in ehci-exynos, but frankly so far I have no
+>>> idea how to do it.  The problem is that newly created USB devices
+>>> get of-node pointer pointing to a node which if not intended for
+>>> them. How this can be fixed in ehci-exynos?
+>>>
+>>   
+>> Can't be workaround by setting of_node as NULL for EHCI controller or
+>> for PHY node at exynos_ehci_get_phy?
 >
-> Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-
-
-I don't see much value of doing this through kernel command line. We 
-should deal with them automatically like what virtio-net did. Or even a 
-module parameter is better.
-
-Thanks
-
-
-> ---
->   include/linux/virtio_vsock.h     |  1 +
->   net/vmw_vsock/virtio_transport.c | 27 ++++++++++++++++++++++++++-
->   2 files changed, 27 insertions(+), 1 deletion(-)
+> Ah, such workaround? I will check, but this will need to be done with 
+> care, because have a side effect for other subsystems like regulators or 
+> clocks.
 >
-> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> index 5a9d25be72df..b9f8c3d91f80 100644
-> --- a/include/linux/virtio_vsock.h
-> +++ b/include/linux/virtio_vsock.h
-> @@ -13,6 +13,7 @@
->   #define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 64)
->   #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
->   #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
-> +#define VIRTIO_VSOCK_MIN_PKT_BUF_SIZE		(1024 * 4)
->   
->   enum {
->   	VSOCK_VQ_RX     = 0, /* for host to guest data */
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index af1d2ce12f54..732398b4e28f 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -66,6 +66,31 @@ struct virtio_vsock {
->   	u32 guest_cid;
->   };
->   
-> +static unsigned int rx_buf_size = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
-> +
-> +static int param_set_rx_buf_size(const char *val, const struct kernel_param *kp)
-> +{
-> +	unsigned int size;
-> +	int ret;
-> +
-> +	ret = kstrtouint(val, 0, &size);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (size < VIRTIO_VSOCK_MIN_PKT_BUF_SIZE ||
-> +	    size > VIRTIO_VSOCK_MAX_PKT_BUF_SIZE)
-> +		return -EINVAL;
-> +
-> +	return param_set_uint(val, kp);
-> +};
-> +
-> +static const struct kernel_param_ops param_ops_rx_buf_size = {
-> +	.set = param_set_rx_buf_size,
-> +	.get = param_get_uint,
-> +};
-> +
-> +module_param_cb(rx_buf_size, &param_ops_rx_buf_size, &rx_buf_size, 0644);
-> +
->   static struct virtio_vsock *virtio_vsock_get(void)
->   {
->   	return the_virtio_vsock;
-> @@ -261,7 +286,7 @@ virtio_transport_cancel_pkt(struct vsock_sock *vsk)
->   
->   static void virtio_vsock_rx_fill(struct virtio_vsock *vsock)
->   {
-> -	int buf_len = VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE;
-> +	int buf_len = rx_buf_size;
->   	struct virtio_vsock_pkt *pkt;
->   	struct scatterlist hdr, buf, *sgs[2];
->   	struct virtqueue *vq;
+> BTW, What's wrong with proper, full verification of USB device nodes?
+
+Your approach so far doesn't address the actual problem of a conflict
+between the generic USB DT bindings and those for the Exynos host
+controller.  If you fix that, the validation issue goes away.
+
+-- 
+Måns Rullgård
