@@ -2,168 +2,185 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F7CDC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D226C04AB4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAD721479
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D915521479
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:11:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Y3gzEAIL"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="ZLw/TxZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfEMJK4 (ORCPT
+        id S1728561AbfEMJLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:10:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54169 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726132AbfEMJK4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:10:56 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4D9ARM23449154
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 13 May 2019 02:10:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4D9ARM23449154
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1557738628;
-        bh=LW7RaAhTHnFGb/D0ckNxHjb2HrqYgHigrR7E5Mtwdxs=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Y3gzEAILKVuVjCC+UoKFUiHQ74vNjis7WlB9zwLQruYf9bn3ez8iKxkyQFGY1h03V
-         0mmenmnIax+6MyYfiH7+dxmQ8bmn49BW4us0XRY1zSU9w3mc1hrWQaWtq2A9mLkcF5
-         0e5O/XtD25KSi2Zfk/Qk9QP40xXQdadDuNPX4R013Ss6v+tnG2/KOvTkeUsWyEXbKp
-         nHgTijhQlfu2HuGZl6xRrMaoK8TRUi1V15dD1Haz+s9SPbbOamlvgiQzMVuV0CIxRw
-         BDkQWsy6LHTppg2T8PX4Z4EXgZNCWy9KBRCQzKzJQL4ojIBhyZV3QXP0Jar/0+hKkA
-         XqfhS9DcMhJRg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4D9ARJp3449149;
-        Mon, 13 May 2019 02:10:27 -0700
-Date:   Mon, 13 May 2019 02:10:27 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Masahiro Yamada <tipbot@zytor.com>
-Message-ID: <tip-409ca45526a428620d8efb362ccfd4b1e6b80642@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, bp@alien8.de,
-        yamada.masahiro@socionext.com, tglx@linutronix.de,
-        torvalds@linux-foundation.org, hpa@zytor.com, peterz@infradead.org,
-        ubizjak@gmail.com
-Reply-To: torvalds@linux-foundation.org, yamada.masahiro@socionext.com,
-          linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de,
-          mingo@kernel.org, ubizjak@gmail.com, peterz@infradead.org,
-          hpa@zytor.com
-In-Reply-To: <1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com>
-References: <1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/kconfig: Disable CONFIG_GENERIC_HWEIGHT and
- remove __HAVE_ARCH_SW_HWEIGHT
-Git-Commit-ID: 409ca45526a428620d8efb362ccfd4b1e6b80642
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 13 May 2019 05:11:47 -0400
+Received: from mail-eopbgr700051.outbound.protection.outlook.com ([40.107.70.51]:33184
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726132AbfEMJLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 05:11:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EtybcWDbOKI3896SyjwYPpijOF11AfCIV1TpGLQImZc=;
+ b=ZLw/TxZxyhgYlzGr9Hg2UmKGM/GDFZSoBxqiUwr1wVru10+LlprK1F94VAPcFgKYxBuyE3AcTsZxmlStL10JcXR5VO7thQMnSWWcVMMQewwofwkKS/gSnAUbjMs6t8LSK2noL1IBJWaW9YG1wZ3H4owcsxs0lfShNw44+uyiT6c=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB3991.namprd05.prod.outlook.com (52.135.199.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.19; Mon, 13 May 2019 09:11:39 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.010; Mon, 13 May 2019
+ 09:11:39 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Yang Shi <yang.shi@linux.alibaba.com>,
+        "jstancek@redhat.com" <jstancek@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Nick Piggin <npiggin@gmail.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Topic: [PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Index: AQHVBlNcdgyGQHvMg0ymTH6Y7O8srKZjDs8AgAANcoCAAAcZgIAABfcAgAAkYwCABXN1AIAACeyA
+Date:   Mon, 13 May 2019 09:11:38 +0000
+Message-ID: <75FD46B2-2E0C-41F2-9308-AB68C8780E33@vmware.com>
+References: <1557264889-109594-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190509083726.GA2209@brain-police>
+ <20190509103813.GP2589@hirez.programming.kicks-ass.net>
+ <F22533A7-016F-4506-809A-7E86BAF24D5A@vmware.com>
+ <20190509182435.GA2623@hirez.programming.kicks-ass.net>
+ <04668E51-FD87-4D53-A066-5A35ABC3A0D6@vmware.com>
+ <20190509191120.GD2623@hirez.programming.kicks-ass.net>
+ <7DA60772-3EE3-4882-B26F-2A900690DA15@vmware.com>
+ <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190513083606.GL2623@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [50.204.119.4]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fd500dcc-4142-40be-cad3-08d6d78301d7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB3991;
+x-ms-traffictypediagnostic: BYAPR05MB3991:
+x-microsoft-antispam-prvs: <BYAPR05MB39915BDFF0257003483D8A0AD00F0@BYAPR05MB3991.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0036736630
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(346002)(136003)(39860400002)(396003)(51444003)(199004)(189003)(26005)(71190400001)(7416002)(83716004)(81156014)(82746002)(6916009)(71200400001)(8936002)(305945005)(229853002)(7736002)(81166006)(446003)(478600001)(25786009)(186003)(6486002)(6436002)(4326008)(8676002)(14444005)(86362001)(99286004)(256004)(11346002)(476003)(54906003)(14454004)(486006)(66066001)(2616005)(53936002)(6506007)(6246003)(76176011)(53546011)(6512007)(102836004)(68736007)(316002)(3846002)(6116002)(64756008)(2906002)(33656002)(66476007)(66556008)(5660300002)(66446008)(91956017)(76116006)(73956011)(66946007)(36756003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB3991;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XHsRYBCcUwJS1F6oiOx9ddAWKCNGafHK7j7pqStWVYHqx/r3WJP+SgOZX3THqY1PbwCBtjmuPBE1m2iSSiDifZmS83//caDqq/jvxIPAq3P5x4CNE6Xl6sOigpEk+bSQciSSg7tp4rO1RHnaWvZ09KFx49ZcfNBjchkOWpfigBZeQZ+yZBjcSisftmLmvL7W+bw9unGlXSE/fqgVlUME+qtrEcE9aCqvzQUNYvfBVMVQeINOYX6rxJtkl7syZfNtalaH23rVju07MpRaPyewJy6rd+YWEBa7UQnGH/m/YddF84X7RmhMnRu6x2Im8Xm0arIMnzXZ1gmOK+aUrUe6nIx8ymcIWLV2529X9+OMZmXEmhCPkQd/pG5yaCd8aXG44pQ81hXp0uLDB8gGqMQ908cvaX/v6MGaVmVZljz6E6g=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <68CAB2117800184493BC336790D6679E@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd500dcc-4142-40be-cad3-08d6d78301d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2019 09:11:38.9331
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB3991
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  409ca45526a428620d8efb362ccfd4b1e6b80642
-Gitweb:     https://git.kernel.org/tip/409ca45526a428620d8efb362ccfd4b1e6b80642
-Author:     Masahiro Yamada <yamada.masahiro@socionext.com>
-AuthorDate: Sun, 12 May 2019 21:52:01 +0900
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 13 May 2019 11:07:33 +0200
-
-x86/kconfig: Disable CONFIG_GENERIC_HWEIGHT and remove __HAVE_ARCH_SW_HWEIGHT
-
-Remove an unnecessary arch complication:
-
-arch/x86/include/asm/arch_hweight.h uses __sw_hweight{32,64} as
-alternatives, and they are implemented in arch/x86/lib/hweight.S
-
-x86 does not rely on the generic C implementation lib/hweight.c
-at all, so CONFIG_GENERIC_HWEIGHT should be disabled.
-
-__HAVE_ARCH_SW_HWEIGHT is not necessary either.
-
-No change in functionality intended.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Link: http://lkml.kernel.org/r/1557665521-17570-1-git-send-email-yamada.masahiro@socionext.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/Kconfig                    | 3 ---
- arch/x86/include/asm/arch_hweight.h | 2 --
- lib/hweight.c                       | 4 ----
- 3 files changed, 9 deletions(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 0a3cc347143f..de071d7e67b6 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -261,9 +261,6 @@ config GENERIC_BUG
- config GENERIC_BUG_RELATIVE_POINTERS
- 	bool
- 
--config GENERIC_HWEIGHT
--	def_bool y
--
- config ARCH_MAY_HAVE_PC_FDC
- 	def_bool y
- 	depends on ISA_DMA_API
-diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
-index fc0693569f7a..ba88edd0d58b 100644
---- a/arch/x86/include/asm/arch_hweight.h
-+++ b/arch/x86/include/asm/arch_hweight.h
-@@ -12,8 +12,6 @@
- #define REG_OUT "a"
- #endif
- 
--#define __HAVE_ARCH_SW_HWEIGHT
--
- static __always_inline unsigned int __arch_hweight32(unsigned int w)
- {
- 	unsigned int res;
-diff --git a/lib/hweight.c b/lib/hweight.c
-index 7660d88fd496..c94586b62551 100644
---- a/lib/hweight.c
-+++ b/lib/hweight.c
-@@ -10,7 +10,6 @@
-  * The Hamming Weight of a number is the total number of bits set in it.
-  */
- 
--#ifndef __HAVE_ARCH_SW_HWEIGHT
- unsigned int __sw_hweight32(unsigned int w)
- {
- #ifdef CONFIG_ARCH_HAS_FAST_MULTIPLIER
-@@ -27,7 +26,6 @@ unsigned int __sw_hweight32(unsigned int w)
- #endif
- }
- EXPORT_SYMBOL(__sw_hweight32);
--#endif
- 
- unsigned int __sw_hweight16(unsigned int w)
- {
-@@ -46,7 +44,6 @@ unsigned int __sw_hweight8(unsigned int w)
- }
- EXPORT_SYMBOL(__sw_hweight8);
- 
--#ifndef __HAVE_ARCH_SW_HWEIGHT
- unsigned long __sw_hweight64(__u64 w)
- {
- #if BITS_PER_LONG == 32
-@@ -69,4 +66,3 @@ unsigned long __sw_hweight64(__u64 w)
- #endif
- }
- EXPORT_SYMBOL(__sw_hweight64);
--#endif
+PiBPbiBNYXkgMTMsIDIwMTksIGF0IDE6MzYgQU0sIFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
+cmFkZWFkLm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBUaHUsIE1heSAwOSwgMjAxOSBhdCAwOToyMToz
+NVBNICswMDAwLCBOYWRhdiBBbWl0IHdyb3RlOg0KPiANCj4+Pj4+IEFuZCB3ZSBjYW4gZml4IHRo
+YXQgYnkgaGF2aW5nIHRsYl9maW5pc2hfbW11KCkgc3luYyB1cC4gTmV2ZXIgbGV0IGENCj4+Pj4+
+IGNvbmN1cnJlbnQgdGxiX2ZpbmlzaF9tbXUoKSBjb21wbGV0ZSB1bnRpbCBhbGwgY29uY3VycmVu
+Y3QgbW11X2dhdGhlcnMNCj4+Pj4+IGhhdmUgY29tcGxldGVkLg0KPj4+Pj4gDQo+Pj4+PiBUaGlz
+IHNob3VsZCBub3QgYmUgdG9vIGhhcmQgdG8gbWFrZSBoYXBwZW4uDQo+Pj4+IA0KPj4+PiBUaGlz
+IHN5bmNocm9uaXphdGlvbiBzb3VuZHMgbXVjaCBtb3JlIGV4cGVuc2l2ZSB0aGFuIHdoYXQgSSBw
+cm9wb3NlZC4gQnV0IEkNCj4+Pj4gYWdyZWUgdGhhdCBjYWNoZS1saW5lcyB0aGF0IG1vdmUgZnJv
+bSBvbmUgQ1BVIHRvIGFub3RoZXIgbWlnaHQgYmVjb21lIGFuDQo+Pj4+IGlzc3VlLiBCdXQgSSB0
+aGluayB0aGF0IHRoZSBzY2hlbWUgSSBzdWdnZXN0ZWQgd291bGQgbWluaW1pemUgdGhpcyBvdmVy
+aGVhZC4NCj4+PiANCj4+PiBXZWxsLCBpdCB3b3VsZCBoYXZlIGEgbG90IG1vcmUgdW5jb25kaXRp
+b25hbCBhdG9taWMgb3BzLiBNeSBzY2hlbWUgb25seQ0KPj4+IHdhaXRzIHdoZW4gdGhlcmUgaXMg
+YWN0dWFsIGNvbmN1cnJlbmN5Lg0KPj4gDQo+PiBXZWxsLCBzb21ldGhpbmcgaGFzIHRvIGdpdmUu
+IEkgZGlkbuKAmXQgdGhpbmsgdGhhdCBpZiB0aGUgc2FtZSBjb3JlIGRvZXMgdGhlDQo+PiBhdG9t
+aWMgb3AgaXQgd291bGQgYmUgdG9vIGV4cGVuc2l2ZS4NCj4gDQo+IFRoZXkncmUgc3RpbGwgYXQg
+bGVhc3QgMjAgY3ljbGVzIGEgcG9wLCB1bmNvbnRlbmRlZC4NCj4gDQo+Pj4gSSBfdGhpbmtfIHNv
+bWV0aGluZyBsaWtlIHRoZSBiZWxvdyBvdWdodCB0byB3b3JrLCBidXQgaXRzIG5vdCBldmVuIGJl
+ZW4NCj4+PiBuZWFyIGEgY29tcGlsZXIuIFRoZSBvbmx5IHByb2JsZW0gaXMgdGhlIHVuY29uZGl0
+aW9uYWwgd2FrZXVwOyB3ZSBjYW4NCj4+PiBwbGF5IGdhbWVzIHRvIGF2b2lkIHRoYXQgaWYgd2Ug
+d2FudCB0byBjb250aW51ZSB3aXRoIHRoaXMuDQo+Pj4gDQo+Pj4gSWRlYWxseSB3ZSdkIG9ubHkg
+ZG8gdGhpcyB3aGVuIHRoZXJlJ3MgYmVlbiBhY3R1YWwgb3ZlcmxhcCwgYnV0IEkndmUgbm90DQo+
+Pj4gZm91bmQgYSBzZW5zaWJsZSB3YXkgdG8gZGV0ZWN0IHRoYXQuDQo+Pj4gDQo+Pj4gZGlmZiAt
+LWdpdCBhL2luY2x1ZGUvbGludXgvbW1fdHlwZXMuaCBiL2luY2x1ZGUvbGludXgvbW1fdHlwZXMu
+aA0KPj4+IGluZGV4IDRlZjRiYmU3OGExZC4uYjcwZTM1NzkyZDI5IDEwMDY0NA0KPj4+IC0tLSBh
+L2luY2x1ZGUvbGludXgvbW1fdHlwZXMuaA0KPj4+ICsrKyBiL2luY2x1ZGUvbGludXgvbW1fdHlw
+ZXMuaA0KPj4+IEBAIC01OTAsNyArNTkwLDEyIEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBkZWNfdGxi
+X2ZsdXNoX3BlbmRpbmcoc3RydWN0IG1tX3N0cnVjdCAqbW0pDQo+Pj4gCSAqDQo+Pj4gCSAqIFRo
+ZXJlZm9yZSB3ZSBtdXN0IHJlbHkgb24gdGxiX2ZsdXNoXyooKSB0byBndWFyYW50ZWUgb3JkZXIu
+DQo+Pj4gCSAqLw0KPj4+IC0JYXRvbWljX2RlYygmbW0tPnRsYl9mbHVzaF9wZW5kaW5nKTsNCj4+
+PiArCWlmIChhdG9taWNfZGVjX2FuZF90ZXN0KCZtbS0+dGxiX2ZsdXNoX3BlbmRpbmcpKSB7DQo+
+Pj4gKwkJd2FrZV91cF92YXIoJm1tLT50bGJfZmx1c2hfcGVuZGluZyk7DQo+Pj4gKwl9IGVsc2Ug
+ew0KPj4+ICsJCXdhaXRfZXZlbnRfdmFyKCZtbS0+dGxiX2ZsdXNoX3BlbmRpbmcsDQo+Pj4gKwkJ
+CSAgICAgICAhYXRvbWljX3JlYWRfYWNxdWlyZSgmbW0tPnRsYl9mbHVzaF9wZW5kaW5nKSk7DQo+
+Pj4gKwl9DQo+Pj4gfQ0KPj4gDQo+PiBJdCBzdGlsbCBzZWVtcyB2ZXJ5IGV4cGVuc2l2ZSB0byBt
+ZSwgYXQgbGVhc3QgZm9yIGNlcnRhaW4gd29ya2xvYWRzIChlLmcuLA0KPj4gQXBhY2hlIHdpdGgg
+bXVsdGl0aHJlYWRlZCBNUE0pLg0KPiANCj4gSXMgdGhhdCBBcGFjaGUtTVBNIHdvcmtsb2FkIHRy
+aWdnZXJpbmcgdGhpcyBsb3RzPyBIYXZpbmcgYSBrbm93bg0KPiBiZW5jaG1hcmsgZm9yIHRoaXMg
+c3R1ZmYgaXMgZ29vZCBmb3Igd2hlbiBzb21lb25lIGhhcyB0aW1lIHRvIHBsYXkgd2l0aA0KPiB0
+aGluZ3MuDQoNClNldHRpbmcgQXBhY2hlMiB3aXRoIG1wbV93b3JrZXIgY2F1c2VzIGV2ZXJ5IHJl
+cXVlc3QgdG8gZ28gdGhyb3VnaA0KbW1hcC13cml0ZXYtbXVubWFwIGZsb3cgb24gZXZlcnkgdGhy
+ZWFkLiBJIGRpZG7igJl0IHJ1biB0aGlzIHdvcmtsb2FkIGFmdGVyDQp0aGUgcGF0Y2hlcyB0aGF0
+IGRvd25ncmFkZSB0aGUgbW1hcF9zZW0gdG8gcmVhZCBiZWZvcmUgdGhlIHBhZ2UtdGFibGUNCnph
+cHBpbmcgd2VyZSBpbnRyb2R1Y2VkLiBJIHByZXN1bWUgdGhlc2UgcGF0Y2hlcyB3b3VsZCBhbGxv
+dyB0aGUgcGFnZS10YWJsZQ0KemFwcGluZyB0byBiZSBkb25lIGNvbmN1cnJlbnRseSwgYW5kIHRo
+ZXJlZm9yZSB3b3VsZCBoaXQgdGhpcyBmbG93Lg0KDQo+PiBJdCBtYXkgYmUgcG9zc2libGUgdG8g
+YXZvaWQgZmFsc2UtcG9zaXRpdmUgbmVzdGluZyBpbmRpY2F0aW9ucyAod2hlbiB0aGUNCj4+IGZs
+dXNoZXMgZG8gbm90IG92ZXJsYXApIGJ5IGNyZWF0aW5nIGEgbmV3IHN0cnVjdCBtbXVfZ2F0aGVy
+X3BlbmRpbmcsIHdpdGgNCj4+IHNvbWV0aGluZyBsaWtlOg0KPj4gDQo+PiAgc3RydWN0IG1tdV9n
+YXRoZXJfcGVuZGluZyB7DQo+PiAJdTY0IHN0YXJ0Ow0KPj4gCXU2NCBlbmQ7DQo+PiAJc3RydWN0
+IG1tdV9nYXRoZXJfcGVuZGluZyAqbmV4dDsNCj4+ICB9DQo+PiANCj4+IHRsYl9maW5pc2hfbW11
+KCkgd291bGQgdGhlbiBpdGVyYXRlIG92ZXIgdGhlIG1tLT5tbXVfZ2F0aGVyX3BlbmRpbmcNCj4+
+IChwb2ludGluZyB0byB0aGUgbGlua2VkIGxpc3QpIGFuZCBmaW5kIHdoZXRoZXIgdGhlcmUgaXMg
+YW55IG92ZXJsYXAuIFRoaXMNCj4+IHdvdWxkIHN0aWxsIHJlcXVpcmUgc3luY2hyb25pemF0aW9u
+IChhY3F1aXJpbmcgYSBsb2NrIHdoZW4gYWxsb2NhdGluZyBhbmQNCj4+IGRlYWxsb2NhdGluZyBv
+ciBzb21ldGhpbmcgZmFuY2llcikuDQo+IA0KPiBXZSBoYXZlIGFuIGludGVydmFsX3RyZWUgZm9y
+IHRoaXMsIGFuZCB5ZXMsIHRoYXQncyBob3cgZmFyIEkgZ290IDovDQo+IA0KPiBUaGUgb3RoZXIg
+dGhpbmcgSSB3YXMgdGhpbmtpbmcgb2YgaXMgdHJ5aW5nIHRvIGRldGVjdCBvdmVybGFwIHRocm91
+Z2gNCj4gdGhlIHBhZ2UtdGFibGVzIHRoZW1zZWx2ZXMsIGJ1dCB3ZSBoYXZlIGEgZGlzdGluY3Qg
+bGFjayBvZiBzdG9yYWdlDQo+IHRoZXJlLg0KDQpJIHRyaWVkIHRvIHRoaW5rIGFib3V0IHNhdmlu
+ZyBzb21lIGdlbmVyYXRpb24gaW5mbyBzb21ld2hlcmUgaW4gdGhlDQpwYWdlLXN0cnVjdCwgYnV0
+IEkgY291bGQgbm90IGNvbWUgdXAgd2l0aCBhIHJlYXNvbmFibGUgc29sdXRpb24gdGhhdA0Kd291
+bGQgbm90IHJlcXVpdGUgdG8gdHJhdmVyc2UgYWxsIHRoZSBwYWdlIHRhYmxlcyBhZ2FpbiBvbmUg
+dGhlIFRMQg0KZmx1c2ggaXMgZG9uZS4NCg0KPiBUaGUgdGhpbmdzIGlzLCBpZiB0aGlzIHRocmVh
+ZGVkIG1vbnN0ZXIgcnVucyBvbiBhbGwgQ1BVcyAoYnVzeSBmcm9udCBlbmQNCj4gc2VydmVyKSBh
+bmQgZG9lcyBhIHRvbiBvZiBpbnZhbGlkYXRpb24gZHVlIHRvIGFsbCB0aGUgc2hvcnQgbGl2ZWQN
+Cj4gcmVxdWVzdCBjcnVkLCB0aGVuIGFsbCB0aGUgZXh0cmEgaW52YWxpZGF0aW9ucyB3aWxsIGFk
+ZCB1cCB0b28uIEhhdmluZw0KPiB0byBkbyBwcm9jZXNzIChtYWNoaW5lIGluIHRoaXMgY2FzZSkg
+d2lkZSBpbnZhbGlkYXRpb25zIGlzIGV4cGVuc2l2ZSwNCj4gaGF2aW5nIHRvIGRvIG1vcmUgb2Yg
+dGhlbSBzdXJlbHkgaXNuJ3QgY2hlYXAgZWl0aGVyLg0KPiANCj4gU28gdGhlcmUgbWlnaHQgYmUg
+c29tZXRoaW5nIHRvIHdpbiBoZXJlLg0KDQpZZXMuIEkgcmVtZW1iZXIgdGhhdCB0aGVzZSBmdWxs
+IFRMQiBmbHVzaGVzIGxlYXZlIHRoZWlyIG1hcmsuDQoNCkJUVzogc29tZXRpbWVzIHlvdSBkb27i
+gJl0IHNlZSB0aGUgZWZmZWN0IG9mIHRoZXNlIGZ1bGwgVExCIGZsdXNoZXMgYXMgbXVjaCBpbg0K
+Vk1zLiBJIGVuY291bnRlcmVkIGEgc3RyYW5nZSBwaGVub21lbm9uIGF0IHRoZSB0aW1lIC0gSU5W
+TFBHIGZvciBhbg0KYXJiaXRyYXJ5IHBhZ2UgY2F1c2UgbXkgSGFzd2VsbCBtYWNoaW5lIGZsdXNo
+IHRoZSBlbnRpcmUgVExCLCB3aGVuIHRoZQ0KSU5WTFBHIHdhcyBpc3N1ZWQgaW5zaWRlIGEgVk0u
+IEl0IHRvb2sgbWUgcXVpdGUgc29tZSB0aW1lIHRvIGFuYWx5emUgdGhpcw0KcHJvYmxlbS4gRXZl
+bnR1YWxseSBJbnRlbCB0b2xkIG1lIHRoYXTigJlzIHBhcnQgb2Ygd2hhdCBpcyBjYWxsZWQg4oCc
+cGFnZQ0KZnJhY3R1cmluZ+KAnSAtIGlmIHRoZSBob3N0IHVzZXMgNGsgcGFnZXMgaW4gdGhlIEVQ
+VCwgdGhleSAodXN1YWxseSkgbmVlZCB0bw0KZmx1c2ggdGhlIGVudGlyZSBUTEIgZm9yIGFueSBJ
+TlZMUEcuIFRoYXTigJlzIGhhcHBlbnMgc2luY2UgdGhleSBkb27igJl0IGtub3cNCnRoZSBzaXpl
+IG9mIHRoZSBmbHVzaGVkIHBhZ2UuDQoNCkkgcmVhbGx5IG5lZWQgdG8gZmluaXNoIG15IGJsb2ct
+cG9zdCBhYm91dCBpdCBzb21lIGRheS4=
