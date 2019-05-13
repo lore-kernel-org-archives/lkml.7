@@ -2,96 +2,141 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB7EC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D06FC04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AC43208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE85321019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfEMMBV (ORCPT
+        id S1729601AbfEMMEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:01:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35781 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727462AbfEMMBU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:01:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w12so14962336wrp.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 05:01:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kI2y91RRPGT/5VzkD7OKqqkIDn0uCsHkdT99PzPwrJo=;
-        b=m0hhwUpd0JOozw7zGId0rVHR3G1becJo5mwFAg+GrO3QOd/HQ3B6zr9sTh0drCZ6LA
-         2RzflfuH4UxEDRoNTYOCbr6jqSADyr/yvgG5aBDhukoIYMumiysTWnZt0ek095B8SfGW
-         PUsURYp6fj5O0EwARa6vgz6ZzvTOSK1LgUlBdWRbhTRuYlrTKtuQDgZnoUU9V+f15Lbx
-         VcQFsOr/EtvjMY9S5HJpkeD3KXwtD8YSqPA9SyCdzQ2iVFCjNs6fKQNN4yZFZYaKPDt1
-         Z5rcB/JXMxGRnRXg+5aav7AMKT9XOHZ41Hh72jodqTh0fji1SVnzdfrj+8Bj+d4RKrHi
-         UDgg==
-X-Gm-Message-State: APjAAAUo+coBNgwDSvJhz1hZRpz5DxZNJEidvkSjj2tP7d0W9rXTfHk8
-        kHMiMIGv4R5rL4qTo7hWt0D1tg==
-X-Google-Smtp-Source: APXvYqzzL7E0h8PEfT4wZH/Xu0YiRnxJ/Klb7n0tQrDUCbV+E+/M9iajly6wubYQTlzvmAr0yNz3Pw==
-X-Received: by 2002:adf:ce8e:: with SMTP id r14mr4611827wrn.289.1557748879134;
-        Mon, 13 May 2019 05:01:19 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id j10sm44012622wrb.0.2019.05.13.05.01.18
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 05:01:18 -0700 (PDT)
-Date:   Mon, 13 May 2019 14:01:17 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Timofey Titovets <nefelim4ag@gmail.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
-Message-ID: <20190513120117.aeiij4v2ncu43yxt@butterfly.localdomain>
-References: <20190510072125.18059-1-oleksandr@redhat.com>
- <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
- <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
- <CAGqmi744Vef7iF0tuBO3uBtXbNCKYxBV_c-T_Eg3LKPY0rKcWA@mail.gmail.com>
+        Mon, 13 May 2019 08:04:30 -0400
+Received: from foss.arm.com ([217.140.101.70]:54056 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbfEMMEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:04:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32888374;
+        Mon, 13 May 2019 05:04:29 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 564573F703;
+        Mon, 13 May 2019 05:04:26 -0700 (PDT)
+Subject: Re: [PATCH v7 13/23] iommu/smmuv3: Implement
+ attach/detach_pasid_table
+To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
+        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
+        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
+        will.deacon@arm.com
+Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
+        christoffer.dall@arm.com, peter.maydell@linaro.org,
+        vincent.stehle@arm.com
+References: <20190408121911.24103-1-eric.auger@redhat.com>
+ <20190408121911.24103-14-eric.auger@redhat.com>
+ <acde8b95-9cbc-c5e6-eb28-37bff7431e40@arm.com>
+ <30020e0d-2164-5b39-f1ca-04a85263b7f3@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <1b700d41-71c3-a68d-58a5-4715a58c6b84@arm.com>
+Date:   Mon, 13 May 2019 13:04:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGqmi744Vef7iF0tuBO3uBtXbNCKYxBV_c-T_Eg3LKPY0rKcWA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <30020e0d-2164-5b39-f1ca-04a85263b7f3@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 02:48:29PM +0300, Timofey Titovets wrote:
-> > Also, just for the sake of another piece of stats here:
-> >
-> > $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> > 526
+On 10/05/2019 15:35, Auger Eric wrote:
+> Hi Robin,
 > 
-> IIRC, for calculate saving you must use (pages_shared - pages_sharing)
+> On 5/8/19 4:38 PM, Robin Murphy wrote:
+>> On 08/04/2019 13:19, Eric Auger wrote:
+>>> On attach_pasid_table() we program STE S1 related info set
+>>> by the guest into the actual physical STEs. At minimum
+>>> we need to program the context descriptor GPA and compute
+>>> whether the stage1 is translated/bypassed or aborted.
+>>>
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>
+>>> ---
+>>> v6 -> v7:
+>>> - check versions and comment the fact we don't need to take
+>>>     into account s1dss and s1fmt
+>>> v3 -> v4:
+>>> - adapt to changes in iommu_pasid_table_config
+>>> - different programming convention at s1_cfg/s2_cfg/ste.abort
+>>>
+>>> v2 -> v3:
+>>> - callback now is named set_pasid_table and struct fields
+>>>     are laid out differently.
+>>>
+>>> v1 -> v2:
+>>> - invalidate the STE before changing them
+>>> - hold init_mutex
+>>> - handle new fields
+>>> ---
+>>>    drivers/iommu/arm-smmu-v3.c | 121 ++++++++++++++++++++++++++++++++++++
+>>>    1 file changed, 121 insertions(+)
+>>>
+>>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+>>> index e22e944ffc05..1486baf53425 100644
+>>> --- a/drivers/iommu/arm-smmu-v3.c
+>>> +++ b/drivers/iommu/arm-smmu-v3.c
+>>> @@ -2207,6 +2207,125 @@ static void arm_smmu_put_resv_regions(struct
+>>> device *dev,
+>>>            kfree(entry);
+>>>    }
+>>>    +static int arm_smmu_attach_pasid_table(struct iommu_domain *domain,
+>>> +                       struct iommu_pasid_table_config *cfg)
+>>> +{
+>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>> +    struct arm_smmu_master_data *entry;
+>>> +    struct arm_smmu_s1_cfg *s1_cfg;
+>>> +    struct arm_smmu_device *smmu;
+>>> +    unsigned long flags;
+>>> +    int ret = -EINVAL;
+>>> +
+>>> +    if (cfg->format != IOMMU_PASID_FORMAT_SMMUV3)
+>>> +        return -EINVAL;
+>>> +
+>>> +    if (cfg->version != PASID_TABLE_CFG_VERSION_1 ||
+>>> +        cfg->smmuv3.version != PASID_TABLE_SMMUV3_CFG_VERSION_1)
+>>> +        return -EINVAL;
+>>> +
+>>> +    mutex_lock(&smmu_domain->init_mutex);
+>>> +
+>>> +    smmu = smmu_domain->smmu;
+>>> +
+>>> +    if (!smmu)
+>>> +        goto out;
+>>> +
+>>> +    if (!((smmu->features & ARM_SMMU_FEAT_TRANS_S1) &&
+>>> +          (smmu->features & ARM_SMMU_FEAT_TRANS_S2))) {
+>>> +        dev_info(smmu_domain->smmu->dev,
+>>> +             "does not implement two stages\n");
+>>> +        goto out;
+>>> +    }
+>>
+>> That check is redundant (and frankly looks a little bit spammy). If the
+>> one below is not enough, there is a problem elsewhere - if it's possible
+>> for smmu_domain->stage to ever get set to ARM_SMMU_DOMAIN_NESTED without
+>> both stages of translation present, we've already gone fundamentally wrong.
+> 
+> Makes sense. Moved that check to arm_smmu_domain_finalise() instead and
+> remove redundant ones.
 
-Based on Documentation/ABI/testing/sysfs-kernel-mm-ksm:
+Urgh, I forgot exactly how the crazy domain-allocation dance worked, 
+such that we're not in a position to refuse the domain_set_attr() call 
+itself, but that does sound like the best compromise for now.
 
-	pages_shared: how many shared pages are being used.
-
-	pages_sharing: how many more sites are sharing them i.e. how
-	much saved.
-
-and unless I'm missing something, this must be already accounted:
-
-[~]$ echo "$(cat /sys/kernel/mm/ksm/pages_shared) * 4 / 1024" | bc
-69
-
-[~]$ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-563
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+Thanks,
+Robin.
