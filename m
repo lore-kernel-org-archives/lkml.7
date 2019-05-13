@@ -2,101 +2,104 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D2C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951E3C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D03208C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pNEAZa2n"
+	by mail.kernel.org (Postfix) with ESMTP id 61CF120645
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 13:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbfEMNgp (ORCPT
+        id S1730231AbfEMNhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 09:36:45 -0400
-Received: from mail-lj1-f174.google.com ([209.85.208.174]:39540 "EHLO
-        mail-lj1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730161AbfEMNgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 09:36:44 -0400
-Received: by mail-lj1-f174.google.com with SMTP id a10so3011802ljf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 06:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=BVuWkuJRVxxBIu+ROjURPBDTNuVZik0FjGVxnRhR3Fo=;
-        b=pNEAZa2n+1by6rv0kfBb0m7KhKF+6xoBXtCx9C0mmvaqujWd6MZZi0o36ay7YTdkWp
-         8z86r1jT/LfzQIjBnQJN0l5Wf2L5NYhU3ttANXatmwejt9e0/J+2ZayeLJhvxbYbR/qL
-         54kl55YfLO5Rxm+poLpWtBGc+ukQL8op2geRWUt4LXfLXQHemAL9NCKnG9F7qfNYc4xI
-         A5UXN3rnNkJ9E9XwGd2kPbvZluKDsOpVN7MtlJGmxQmzmFv4b9L8kcp5fFaZj+HIlCgz
-         pKK3VwIHBBxxYWCrkvZkkPcjqUoaeVHghXfPBmvAjdVxXlIZYPm3Id/lLKYVX2SVqG7W
-         0quw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BVuWkuJRVxxBIu+ROjURPBDTNuVZik0FjGVxnRhR3Fo=;
-        b=aMrD/2KTnhOCW87LqC1Z+km3Zisc6RFPXmnx4s2fGIjzOKh/fB0OYR7Hu2Luc8KEjR
-         1WRQIYRXT3UD8SiWPwiGjHVwVr5QyWOCFwszYKBOg0LgS4KIM7D4vrMg4E9fm/aOTRW4
-         y3nx6qf2HgjV7MJ+O92b56qD8pk8W57H+oTgkVM6MLHMd3exgn0FZYzrHyuW9WWFM4x5
-         1okS9t7c5R9QZ4u3GeItubshQjmL0fPw37Yqdirz9b8MZKCVDnOMgwFfo0RaLvfsUXrq
-         Wqpik0wmY7pTM84mN0BKyFUR5WnKnjJPEcCliYpGYTqmjho7kqDm6mwBS1o1iFwl0LA3
-         HeGg==
-X-Gm-Message-State: APjAAAXewu6qDwBO40yHGqBHD1rqTjd3aCzkUQF1B9rpZexktnKZSy5X
-        z3jLujFouHWNx/pwEzT6Xv8Hh1qJ5w92MIXpFWhSXw==
-X-Google-Smtp-Source: APXvYqx7iTUsSvL5YabfOzpyGgOw20Uj8cIiAbrrP5h7eMuZqf3wPBCBM70VFVRO5aRXQX7yd2mwGbJaTAS2Qmv1Q3g=
-X-Received: by 2002:a2e:8796:: with SMTP id n22mr1561551lji.75.1557754602218;
- Mon, 13 May 2019 06:36:42 -0700 (PDT)
+        Mon, 13 May 2019 09:37:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:56132 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729292AbfEMNha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 09:37:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F29ED80D;
+        Mon, 13 May 2019 06:37:29 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CA693F71E;
+        Mon, 13 May 2019 06:37:27 -0700 (PDT)
+Subject: Re: [PATCH v2 4/7] sched: Add pelt_rq tracepoint
+To:     Qais Yousef <qais.yousef@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Quentin Perret <quentin.perret@arm.com>
+References: <20190510113013.1193-1-qais.yousef@arm.com>
+ <20190510113013.1193-5-qais.yousef@arm.com>
+ <20190513121445.GT2623@hirez.programming.kicks-ass.net>
+ <20190513124829.aybnwdh74bsm7ugv@e107158-lin.cambridge.arm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <da915e4d-07ce-2914-e090-0f8e3e9e9650@arm.com>
+Date:   Mon, 13 May 2019 15:37:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 13 May 2019 19:06:31 +0530
-Message-ID: <CA+G9fYv+M_8p99c6i=akmuhHSCW6MdF-29CPKrwDsd2EW_LsbQ@mail.gmail.com>
-Subject: Format ioctls (Input 1) test Cropping failed: 4.19, 4.14, 4.9 and 4.4
-To:     linux-media@vger.kernel.org
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        paul.kocialkowski@bootlin.com, ezequiel@collabora.com,
-        treding@nvidia.com, niklas.soderlund+renesas@ragnatech.se,
-        sakari.ailus@linux.intel.com,
-        Hans Verkuil <hans.verkuil@cisco.com>, mchehab@kernel.org,
-        lkft-triage@lists.linaro.org,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190513124829.aybnwdh74bsm7ugv@e107158-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Format ioctls (Input 1) test Cropping failed on all devices running
-4.19, 4.14, 4.9 and 4.4 kernel branches.
+On 5/13/19 2:48 PM, Qais Yousef wrote:
+> On 05/13/19 14:14, Peter Zijlstra wrote:
+>> On Fri, May 10, 2019 at 12:30:10PM +0100, Qais Yousef wrote:
+>>
+>>> +DECLARE_TRACE(pelt_rq,
+>>> +	TP_PROTO(int cpu, const char *path, struct sched_avg *avg),
+>>> +	TP_ARGS(cpu, path, avg));
+>>> +
+>>
+>>> +static __always_inline void sched_trace_pelt_cfs_rq(struct cfs_rq *cfs_rq)
+>>> +{
+>>> +	if (trace_pelt_rq_enabled()) {
+>>> +		int cpu = cpu_of(rq_of(cfs_rq));
+>>> +		char path[SCHED_TP_PATH_LEN];
+>>> +
+>>> +		cfs_rq_tg_path(cfs_rq, path, SCHED_TP_PATH_LEN);
+>>> +		trace_pelt_rq(cpu, path, &cfs_rq->avg);
+>>> +	}
+>>> +}
+>>> +
+>>> +static __always_inline void sched_trace_pelt_rt_rq(struct rq *rq)
+>>> +{
+>>> +	if (trace_pelt_rq_enabled()) {
+>>> +		int cpu = cpu_of(rq);
+>>> +
+>>> +		trace_pelt_rq(cpu, NULL, &rq->avg_rt);
+>>> +	}
+>>> +}
+>>> +
+>>> +static __always_inline void sched_trace_pelt_dl_rq(struct rq *rq)
+>>> +{
+>>> +	if (trace_pelt_rq_enabled()) {
+>>> +		int cpu = cpu_of(rq);
+>>> +
+>>> +		trace_pelt_rq(cpu, NULL, &rq->avg_dl);
+>>> +	}
+>>> +}
+>>
+>> Since it is only the one real tracepoint, how do we know which avg is
+>> which?
+> 
+> Good question. I missed that to be honest since we are mainly interested in cfs
+> and I was focused into not adding too many tracepoints..
+> 
+> I'm happy to create a tracepoint per class assuming that's what you're
+> suggesting.
 
-Format ioctls (Input 1):
-
-...
-test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1425):
-doioctl(node, VIDIOC_CROPCAP, &cap)
-fail: ../../../v4l-utils-1.16.0/utils/v4l2-compliance/v4l2-test-formats.cpp(1447):
-testLegacyCrop(node)
-test Cropping: FAIL
-
-Test passes on mainline, -next and 5.0
-Test failed on 4.19, 4.14, 4.9 and 4.4 for all devices
-
-steps to reproduce:
-
-       # boot 4.19/4.14/4.9 kernel on x86_64 / Juno / hikey /  device
-       #  install v4l-utils package
-       # modprobe vivid.ko no_error_inj=1
-       # v4l2-compliance -v -d /dev/video0
-
-Test results comparison on all branches,
-https://qa-reports.linaro.org/_/comparetest/?project=22&project=6&project=58&project=135&project=40&project=23&project=159&suite=v4l2-compliance&test=Cropping
-
-Test output log,
-https://lkft.validation.linaro.org/scheduler/job/708755#L2236
-
-Best regards
-Naresh Kamboju
+IMHO, you should also consider irq (rq->avg_irq), so when people are 
+tracing asystem with 'IRQ' or 'paravirtual steal' time accounting, they 
+will get the full picture.
