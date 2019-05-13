@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B2AC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4950C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CF3208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8577C208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 08:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sRhqNGMI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lPF1vTnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfEMIRG (ORCPT
+        id S1727965AbfEMISm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 04:17:06 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37901 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbfEMIRG (ORCPT
+        Mon, 13 May 2019 04:18:42 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35100 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfEMISl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 04:17:06 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 14so10081058ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 01:17:05 -0700 (PDT)
+        Mon, 13 May 2019 04:18:41 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c17so1010376lfi.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 01:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3idWCwzUMnpA5VwTBF4KebKh5MTaU++zMsYGKtLyqjw=;
-        b=sRhqNGMIwjVpO8J652GT4JjZrgW/qp/nzAoi8tq2rczD9C1DkcSMFU2SX6TQTYROQ6
-         ZhAM2lraAFVTVBJIanaoEnUKXxhiYU+qTwP9Tc1F+eV/k/aGPbePTHTMKl7f8htIwgZg
-         fzMR3AOhKh/Vl2AQlyn9uCZFoqJAxY1CaV3HepkeKVTu3zkLm8c8QviB5vegR2/rJCQt
-         4OlwD7z+OoXmN1yx31b9u/i4esjyjmhrWZY+44T8eSg4d/9CUUMCOyOfciKTChSRuayC
-         V8CJo9FLsQ2buuOKoaihpqDjgk2QfVCh9H1O7RGIZ2wG5hF7+7bc6ltXnlyolwU0kQA2
-         05ig==
+        bh=IzxwE8OQ4c7+4wEW/7vEZjPCoKsrHHZVrP6UrqcgUq8=;
+        b=lPF1vTnBMNpymRG5DbEK0NzzXAE+TMQiKGra5kWmoyz3HpQm9RgsvReFi0MuP86mIj
+         35LTG7Jyt0nLrVE6XdU3VSNbZQWhWhamTAjEap78MbhILeb/xamCmS1Wl8le+QtSY7gL
+         qLyh0mTouyPO60I5AKsHeSkPOibLDX2krDMQdUPXiJj99R3UBa/yOxKj/T2+TeoGHTfN
+         3oAzBWCCE/rR+XLYbBfax9yDTPvJxG3HMBHCPRjVfCfq0rBud0DnegVN+z6WFuk+P/uu
+         rH/Gf+0nKLn2ibgIvA/eeL9wKmettrcgy1vXFlAzhnYc5SMZNiXZDGm78/3cPx0tT0I4
+         82IA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3idWCwzUMnpA5VwTBF4KebKh5MTaU++zMsYGKtLyqjw=;
-        b=t+D+zJHsZMqQhsKdu6XuHJBPYhRmQo1LxGe0NVr1upmobyU467OdzE1LubuSkWvPhy
-         lXFIxqZIk8ymvFKwHY/NZWRQKh60Kf5ME6yKDuVX3DWbyXb4nmfGcJ/mOv+hfQTPeYuG
-         bt0SxXrZ9/b354V8SD28Aj6PbyoNeVR0YQbTGngwXDWuUcyzQxdVRUj85IO4Rx/g4w9A
-         xtmia5Kb4jN2CJY+UTYQ/WQ8A9l+bi2KK6sNPe46SeZP+3dXVA195BqIDEloFNaqekC2
-         nVljBjMIFGsmidxWxRNFyDxqwicKPsnP/rpNvcdv2ZBw5zQfN6Tmhr8kJvkU8Big9phg
-         cSew==
-X-Gm-Message-State: APjAAAWMN1EC26LaMqqJEzm8YkqQM2vt4lFvOxJFFqugCBhi37c5xu7h
-        27aIzhYhSQOuz49+eG7nwNdYAlSRbVPRD8EwJ85v7w==
-X-Google-Smtp-Source: APXvYqxRXHHDn2LeaDGJnCVAP9EZXgovgWlUydeeOk9urC/7nL35rUMNFlPTknI8zMkcX/2DBziWyJKmsDIQO1uxGYo=
-X-Received: by 2002:a2e:9a4f:: with SMTP id k15mr8204365ljj.159.1557735424426;
- Mon, 13 May 2019 01:17:04 -0700 (PDT)
+        bh=IzxwE8OQ4c7+4wEW/7vEZjPCoKsrHHZVrP6UrqcgUq8=;
+        b=CNdBG+nD6jxVN6beTPDN+M5r+TkQt6VYn7yNa55adBL3ikhSZ3K85e62ZUd/FW8BAW
+         VqJOfdAszXPchPRqdm2pgw4rkNBrgzNEdjfZK04C6kM1N6qoCRLFm14owKedpvB2O2tE
+         POq9UdYA0/F4/0aV13Mbj415DAZbgxQ74JRpjhpye9fSGxdz7PiP+Z1cE0Yf726RHvyi
+         I3NlDry0ofE6x4kUcSaCAqlIgfFInf1iPfQX7PHdpI4i11EN+5uzGIdbNhmigDCwn+yP
+         NFod2Cita0u+hKPjy5KrZCMwCfbSznB14SZMVbzF3bzT/DGW0O6czLgLQB1mBnAftG+8
+         buhw==
+X-Gm-Message-State: APjAAAV8OOvlD5ocjj+wdZU5Uz7FAMNGLnw8aqd3eqYlDG+8UUR2DZ4K
+        hG71vYqLpbaFMPKtTwTS0vsRPQSUiwK8jwViFQm0Mw==
+X-Google-Smtp-Source: APXvYqyx/wAotvOY/06DClsed491rPyWm4VfXj0EqhU44I2W5fFspfxbUvJjecxNVuFkMZjsZJlpFg37jwMlH2NySYM=
+X-Received: by 2002:a19:ed12:: with SMTP id y18mr12598314lfy.130.1557735520224;
+ Mon, 13 May 2019 01:18:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190513073429.12023-1-lee.jones@linaro.org>
-In-Reply-To: <20190513073429.12023-1-lee.jones@linaro.org>
+References: <20190513073429.12023-1-lee.jones@linaro.org> <20190513073429.12023-2-lee.jones@linaro.org>
+In-Reply-To: <20190513073429.12023-2-lee.jones@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 13 May 2019 10:16:53 +0200
-Message-ID: <CACRpkdZHcrhjQ7VQQU004agf4P6AT194eMaama54H-7L9BDstQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: stmfx: Fix 'warn: unsigned <VAR> is never
- less than zero'
+Date:   Mon, 13 May 2019 10:18:28 +0200
+Message-ID: <CACRpkdasb1ARQeFzDujZgBgBG0Ti0vnSp3gGKdYMT-RbDAFkjA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: stmfx: Fix 'warn: bitwise AND condition is
+ false here'
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -71,10 +71,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, May 13, 2019 at 9:34 AM Lee Jones <lee.jones@linaro.org> wrote:
 
-> smatch warnings:
-> drivers/pinctrl/pinctrl-stmfx.c:225 stmfx_pinconf_get() warn: unsigned 'dir' is never less than zero.
-> drivers/pinctrl/pinctrl-stmfx.c:228 stmfx_pinconf_get() warn: unsigned 'type' is never less than zero.
-> drivers/pinctrl/pinctrl-stmfx.c:231 stmfx_pinconf_get() warn: unsigned 'pupd' is never less than zero.
+> drivers/pinctrl/pinctrl-stmfx.c:441 stmfx_pinctrl_irq_set_type() warn: bitwise AND condition is false here
 >
 > Reported-by: kbuild test robot <lkp@intel.com>
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
