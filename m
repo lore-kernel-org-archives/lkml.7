@@ -2,53 +2,54 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51557C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 112F5C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201382084A
+	by mail.kernel.org (Postfix) with ESMTP id D7D4D21473
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bSJl0sDa"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="D2M3OXTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730812AbfEMOoN (ORCPT
+        id S1730823AbfEMOoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:44:13 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37183 "EHLO
+        Mon, 13 May 2019 10:44:14 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:37169 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728133AbfEMOoM (ORCPT
+        by vger.kernel.org with ESMTP id S1728052AbfEMOoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:44:12 -0400
+        Mon, 13 May 2019 10:44:13 -0400
 Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEaZH3013863;
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DEasOC013962;
         Mon, 13 May 2019 16:44:04 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=H7Q5/LExNO59bdn3+PatXfQylruOtLqJEDuHGFHk764=;
- b=bSJl0sDa++4vqFNqa9vdeF1fwx4x8cw4yukMVXb/JKd8yt9Bod9ExrcdTLJTaWHETQru
- wxG0SWcF/7/0wDc59hEV71nMYggiAPJSC0kmZxzl93vK9AydXW5eN3fck6u1q+jN9jEe
- FVs7c8UuilNXacCP8YlysODN9PXQWNa2R+HHo+HHXpE6C3hl2l1zLIFNyiZPM8HDz/eN
- HwyLpYP1Tp3wz8GwDpdy/YlNEPQrQk8EVTfSEE0i8Mnk5OlAqm1nEYVvkwfB9Mo57xIa
- oi6TX0CM55AjV/ApKhRuuu8v8S7fqBJERlvzty26qrmcKPGcQIkl3AfBYl0eJJyFk00q MQ== 
+ date : message-id : in-reply-to : references : mime-version : content-type
+ : content-transfer-encoding; s=STMicroelectronics;
+ bh=LzYSQmTyf5/EQ3Y2VGObHjM41SSi7kcFjXdBikk9ZQs=;
+ b=D2M3OXToJoyZG8oTLgstVeyWRDkzT6VNeWCXJTfWcpHxyJc4PA7mCzyqvmq4cxu7ryul
+ v2OFOyxbcTlKXctUYf+Nc+pYB8SsToee1LFsjh9PVLd9Qrn8Dy8QYwrNkFUsqioiGe6J
+ rn0fkNDJnEWSyISi6AlYQmR9gn6baK4Ag3r1apREjv/GDEWNCZw/VbBvhksG4UYLDRTJ
+ 5hLeg+m3yWtFQK53TihN+izJlWRdwrwJ67x0lBpbNeST3KHQOBbzsDl2eDXeUAajGhwS
+ U4NxJCJPdIA6CnQ8KaxP/6etvMDd6/xdzjdLNEUJ/SiaOlvpYrJ/Qy4bsGNmDl/b9QcG Aw== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdm5tugns-1
+        by mx07-00178001.pphosted.com with ESMTP id 2sdm5tugnt-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
         Mon, 13 May 2019 16:44:04 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8241B34;
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EBE9438;
         Mon, 13 May 2019 14:44:03 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 48C5D2899;
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D01FA2897;
         Mon, 13 May 2019 14:44:03 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May
- 2019 16:44:02 +0200
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May
+ 2019 16:44:03 +0200
 Received: from localhost (10.201.23.97) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May 2019 16:44:01
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 13 May 2019 16:44:03
  +0200
 From:   =?UTF-8?q?Yannick=20Fertr=C3=A9?= <yannick.fertre@st.com>
 To:     Yannick Fertre <yannick.fertre@st.com>,
@@ -63,10 +64,12 @@ To:     Yannick Fertre <yannick.fertre@st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 0/2] Add supply property for DSI controller
-Date:   Mon, 13 May 2019 16:42:17 +0200
-Message-ID: <1557758539-28748-1-git-send-email-yannick.fertre@st.com>
+Subject: [PATCH v3 1/2] dt-bindings: display: stm32: add supply property to DSI controller
+Date:   Mon, 13 May 2019 16:42:18 +0200
+Message-ID: <1557758539-28748-2-git-send-email-yannick.fertre@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557758539-28748-1-git-send-email-yannick.fertre@st.com>
+References: <1557758539-28748-1-git-send-email-yannick.fertre@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
@@ -78,28 +81,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DSI controller needs a new property that powers its physical layer.
-Binding has been updated to documented this property.
-Device tree of stm32mp157c soc.
-Move reg18 & reg11 to stm32mp157c device tree file.
-Remove property phy-dsi-supply property to stm32mp157c-dk2.dts file.
+This patch adds documentation of a new property phy-dsi-supply to the
+STM32 DSI controller.
 
-Changes in v2:
-- rename patch drm/stm: dsi: add support of an optional regulator
-- rework dw_mipi_dsi-stm probe sequence
+Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Philippe Cornu <philippe.cornu@st.com>
+---
+ Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Changes in v3:
-- remove device-tree patches
-- replace the optional regulator by a regulator
-
-Yannick Fertré (2):
-  dt-bindings: display: stm32: add supply property to DSI controller
-  drm/stm: dsi: add support of an regulator
-
- .../devicetree/bindings/display/st,stm32-ltdc.txt  |  3 ++
- drivers/gpu/drm/stm/dw_mipi_dsi-stm.c              | 53 ++++++++++++++++++----
- 2 files changed, 48 insertions(+), 8 deletions(-)
-
---
+diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+index 3eb1b48..60c54da 100644
+--- a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
++++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
+@@ -40,6 +40,8 @@ Mandatory nodes specific to STM32 DSI:
+ - panel or bridge node: A node containing the panel or bridge description as
+   documented in [6].
+   - port: panel or bridge port node, connected to the DSI output port (port@1).
++Optional properties:
++- phy-dsi-supply: phandle of the regulator that provides the supply voltage.
+ 
+ Note: You can find more documentation in the following references
+ [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+@@ -101,6 +103,7 @@ Example 2: DSI panel
+ 			clock-names = "pclk", "ref";
+ 			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
+ 			reset-names = "apb";
++			phy-dsi-supply = <&reg18>;
+ 
+ 			ports {
+ 				#address-cells = <1>;
+-- 
 2.7.4
 
