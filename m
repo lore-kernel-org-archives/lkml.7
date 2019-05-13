@@ -2,133 +2,116 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B5DC04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E386FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07D620989
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 09:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02A4208C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 10:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Iw78WSCj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfEMJ7d convert rfc822-to-8bit (ORCPT
+        id S1728489AbfEMKAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 05:59:33 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:48781 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbfEMJ7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 05:59:33 -0400
-X-Originating-IP: 77.154.224.5
-Received: from xps13 (5.224.154.77.rev.sfr.net [77.154.224.5])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A2A7F6000D;
-        Mon, 13 May 2019 09:59:28 +0000 (UTC)
-Date:   Mon, 13 May 2019 11:59:26 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, richard@nod.at
-Subject: Re: [PATCH v1] mtd: rawnand: Add Macronix NAND read retry support
-Message-ID: <20190513115926.3e862566@xps13>
-In-Reply-To: <OF3A216E48.80ABBB8A-ON482583F9.002A09DA-482583F9.002AD40E@mxic.com.tw>
-References: <1557474062-4949-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190510094528.6008e8da@xps13>
-        <OF5E2BF75D.98A43E33-ON482583F6.002E7A65-482583F6.0030A2DE@mxic.com.tw>
-        <20190510111121.54f42e70@xps13>
-        <OF3A216E48.80ABBB8A-ON482583F9.002A09DA-482583F9.002AD40E@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Mon, 13 May 2019 06:00:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:20306 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728029AbfEMKAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 06:00:17 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 452bsS0Bwkz9v1jM;
+        Mon, 13 May 2019 12:00:12 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Iw78WSCj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id xVhwNUTxPomi; Mon, 13 May 2019 12:00:11 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 452bsR67Kjz9v1jV;
+        Mon, 13 May 2019 12:00:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557741611; bh=pt848MYhMrnfLmquFYiuTx2kZFGt5w9tP2p2+9ZTMM0=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=Iw78WSCj0WS9rFnTnPZ7/I08F2D2+zQBshdaZta0kPpnmmBrjATS/TP/AAqS3jumv
+         RV7DUZZmj/4KHJpWH83ewEtHm4djVZiW/Cg0YPfLtfFi6wUcmAEGX3U3LDW26i9NrM
+         ixPko349KkviJB/BU7Y/OhF3TV3Lnwc3z/itUZDQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 756CF8B883;
+        Mon, 13 May 2019 12:00:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id TZycueQ-iAhg; Mon, 13 May 2019 12:00:16 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BFF3A8B8A4;
+        Mon, 13 May 2019 12:00:15 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 5C92C67402; Mon, 13 May 2019 10:00:15 +0000 (UTC)
+Message-Id: <134ce533030ae76a60b88e3e73839681c1958f8c.1557741292.git.christophe.leroy@c-s.fr>
+In-Reply-To: <7496da89e027e563cb8e62dc89548525cf53b57e.1557741292.git.christophe.leroy@c-s.fr>
+References: <7496da89e027e563cb8e62dc89548525cf53b57e.1557741292.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 2/2] powerpc/lib: only build ldstfp.o when CONFIG_PPC_FPU is
+ set
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 13 May 2019 10:00:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
+The entire code in ldstfp.o is enclosed into #ifdef CONFIG_PPC_FPU,
+so there is no point in building it when this config is not selected.
 
-masonccyang@mxic.com.tw wrote on Mon, 13 May 2019 15:47:53 +0800:
+Fixes: cd64d1697cf0 ("powerpc: mtmsrd not defined")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/lib/Makefile | 3 ++-
+ arch/powerpc/lib/ldstfp.S | 4 ----
+ 2 files changed, 2 insertions(+), 5 deletions(-)
 
-> Hi Miquel,
-> 
-> 
-> > >   
-> > > >   
-> > > > > +   if (ret)
-> > > > > +      pr_err("set feature failed to read retry moded:%d\n",   
-> mode); 
-> > > > 
-> > > >                        "Failed to set read retry mode: %d\n"
-> > > > 
-> > > > I think you can abort the operation with a negative return code in   
-> this
-> > > > case.
-> > > >   
-> > > 
-> > > After set feature operation, this NAND device need a get feature   
-> command 
-> > 
-> > You need to add a comment for this.  
-> 
-> okay, will add this comment by next version.
-> 
-> >   
-> > > or
-> > > SW reset command to exit read retry mode.
-> > > Therefore, set features command followed by get feature command is   
-> needed.
-> > 
-> > In this case you must check first that both set and get are supported.
-> >   
-> 
-> okay, thanks.
-> 
-> 
-> > > > > +
-> > > > > +      if (mxic->reliability_func & MACRONIX_READ_RETRY_BIT) {
-> > > > > +         chip->read_retries = MACRONIX_READ_RETRY_MODE + 1;   
-> > > > 
-> > > > Why +1 here, I am missing something?   
-> > > 
-> > > 
-> > > Without + 1, read retry mode is up to 4 rather than 5.
-> > > But this NAND device support read retry mode up to 5.
-> > >   
-> > 
-> > If there are 5 modes, you need to set 5 to chip->read_retries, not 6.
-> > 
-> > If only 4 modes are used, there is probably a bug in the core that
-> > must be fixed, please do not workaround it in the driver!  
-> 
-> 
-> It seems some patches is needed in nand_base.c
-> -------------------------------------------------------------------------------------
-> diff --git a/drivers/mtd/nand/raw/nand_base.c 
-> b/drivers/mtd/nand/raw/nand_base.c
-> index ddd396e..56be3a9 100644
-> --- a/drivers/mtd/nand/raw/nand_base.c
-> +++ b/drivers/mtd/nand/raw/nand_base.c
-> @@ -3101,7 +3101,8 @@ static int nand_setup_read_retry(struct nand_chip 
-> *chip, int retry_mode)
->  {
->         pr_debug("setting READ RETRY mode %d\n", retry_mode);
-> 
-> -       if (retry_mode >= chip->read_retries)
-> +       if (retry_mode > chip->read_retries)
+diff --git a/arch/powerpc/lib/Makefile b/arch/powerpc/lib/Makefile
+index 17fce3738d48..eebc782d89a5 100644
+--- a/arch/powerpc/lib/Makefile
++++ b/arch/powerpc/lib/Makefile
+@@ -49,7 +49,8 @@ obj64-$(CONFIG_KPROBES_SANITY_TEST)	+= test_emulate_step.o \
+ obj-y			+= checksum_$(BITS).o checksum_wrappers.o \
+ 			   string_$(BITS).o
+ 
+-obj-y			+= sstep.o ldstfp.o
++obj-y			+= sstep.o
++obj-$(CONFIG_PPC_FPU)	+= ldstfp.o
+ obj64-y			+= quad.o
+ 
+ obj-$(CONFIG_PPC_LIB_RHEAP) += rheap.o
+diff --git a/arch/powerpc/lib/ldstfp.S b/arch/powerpc/lib/ldstfp.S
+index 32e91994b6b2..e388a3127cb6 100644
+--- a/arch/powerpc/lib/ldstfp.S
++++ b/arch/powerpc/lib/ldstfp.S
+@@ -18,8 +18,6 @@
+ #include <asm/asm-compat.h>
+ #include <linux/errno.h>
+ 
+-#ifdef CONFIG_PPC_FPU
+-
+ #define STKFRM	(PPC_MIN_STKFRM + 16)
+ 
+ /* Get the contents of frN into *p; N is in r3 and p is in r4. */
+@@ -241,5 +239,3 @@ _GLOBAL(conv_dp_to_sp)
+ 	MTMSRD(r6)
+ 	isync
+ 	blr
+-
+-#endif	/* CONFIG_PPC_FPU */
+-- 
+2.13.3
 
-If I understand correctly, chip->read_retries is the total number of
-'modes' so the last valid mode is indeed chip->read_retries -1.
-
-I thought the problem would come from the core but I was wrong, you
-actually need a MACRONIX_NUM_READ_RETRY_MODES set to 6. Please have two
-defines if you need both (the first one being something like
-MACRONIX_MAXIMUM_READ_RETRY_MODE set to 5).
-
-
-Thanks,
-Miquèl
