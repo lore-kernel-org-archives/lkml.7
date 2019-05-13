@@ -2,215 +2,71 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C197C46460
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED9EC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3E32070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8634020879
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 11:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ReYOQaUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729327AbfEMLnw (ORCPT
+        id S1729355AbfEMLpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 07:43:52 -0400
-Received: from foss.arm.com ([217.140.101.70]:53576 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfEMLnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 07:43:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36B63374;
-        Mon, 13 May 2019 04:43:51 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A03D3F703;
-        Mon, 13 May 2019 04:43:48 -0700 (PDT)
-Subject: Re: [PATCH v7 12/23] iommu/smmuv3: Get prepared for nested stage
- support
-To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, jean-philippe.brucker@arm.com,
-        will.deacon@arm.com
-Cc:     kevin.tian@intel.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com, peter.maydell@linaro.org,
-        vincent.stehle@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-13-eric.auger@redhat.com>
- <66f873eb-35c0-d1e9-794e-9150dbdb13fe@arm.com>
- <a1099cec-a8ad-6efa-b7e8-77388814f7e2@redhat.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <424fc9bc-f040-d702-5a04-0faef1125989@arm.com>
-Date:   Mon, 13 May 2019 12:43:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 13 May 2019 07:45:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54640 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfEMLpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 07:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kIFwTuS2Cq6ZYIK7P/ywG/BfaUTgrMlQGg1qCWu+uzI=; b=ReYOQaUrt+Qr5hvD0m6+3Wv1W
+        Nl73W6f8/GripfZ2I08SDufPtJezjJz80V+AW5QAewsXGvNgn+yjPfJQsIqQoLMKbiSLm15r+/noV
+        2gclMRQHZQ9K/QGx0V1p8d0Ggsy26zQT3JhiJpqJ8AE9StIfmozWUMinKQCZCbldDvcqluN3UdZab
+        NErbyDac0Qx/Xup/S+txTRLHKF1eobwznZdDqbQCpEIEzy1uV94J3hhXPlE3ywc7wGSlkCmhcT5Q9
+        AnaAjUD20+tFeEiBrSdzmmQ2TpHTS05Mfg0FJ4nMCCRGDA+2USffRHMskSbr+o0thKRygfdVxCJbG
+        yfa1+Tqhw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQ9OD-0006ri-VS; Mon, 13 May 2019 11:45:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 60BA92029F87A; Mon, 13 May 2019 13:45:04 +0200 (CEST)
+Date:   Mon, 13 May 2019 13:45:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yuyang Du <duyuyang@gmail.com>
+Cc:     will.deacon@arm.com, mingo@kernel.org, bvanassche@acm.org,
+        ming.lei@redhat.com, frederic@kernel.org, tglx@linutronix.de,
+        boqun.feng@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/17] locking/lockdep: Add lock type enum to explicitly
+ specify read or write locks
+Message-ID: <20190513114504.GR2623@hirez.programming.kicks-ass.net>
+References: <20190513091203.7299-1-duyuyang@gmail.com>
+ <20190513091203.7299-2-duyuyang@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a1099cec-a8ad-6efa-b7e8-77388814f7e2@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513091203.7299-2-duyuyang@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 15:34, Auger Eric wrote:
-> Hi Robin,
-> 
-> On 5/8/19 4:24 PM, Robin Murphy wrote:
->> On 08/04/2019 13:19, Eric Auger wrote:
->>> To allow nested stage support, we need to store both
->>> stage 1 and stage 2 configurations (and remove the former
->>> union).
->>>
->>> A nested setup is characterized by both s1_cfg and s2_cfg
->>> set.
->>>
->>> We introduce a new ste.abort field that will be set upon
->>> guest stage1 configuration passing. If s1_cfg is NULL and
->>> ste.abort is set, traffic can't pass. If ste.abort is not set,
->>> S1 is bypassed.
->>>
->>> arm_smmu_write_strtab_ent() is modified to write both stage
->>> fields in the STE and deal with the abort field.
->>>
->>> In nested mode, only stage 2 is "finalized" as the host does
->>> not own/configure the stage 1 context descriptor, guest does.
->>>
->>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>>
->>> ---
->>>
->>> v4 -> v5:
->>> - reset ste.abort on detach
->>>
->>> v3 -> v4:
->>> - s1_cfg.nested_abort and nested_bypass removed.
->>> - s/ste.nested/ste.abort
->>> - arm_smmu_write_strtab_ent modifications with introduction
->>>     of local abort, bypass and translate local variables
->>> - comment updated
->>>
->>> v1 -> v2:
->>> - invalidate the STE before moving from a live STE config to another
->>> - add the nested_abort and nested_bypass fields
->>> ---
->>>    drivers/iommu/arm-smmu-v3.c | 35 ++++++++++++++++++++---------------
->>>    1 file changed, 20 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
->>> index 21d027695181..e22e944ffc05 100644
->>> --- a/drivers/iommu/arm-smmu-v3.c
->>> +++ b/drivers/iommu/arm-smmu-v3.c
->>> @@ -211,6 +211,7 @@
->>>    #define STRTAB_STE_0_CFG_BYPASS        4
->>>    #define STRTAB_STE_0_CFG_S1_TRANS    5
->>>    #define STRTAB_STE_0_CFG_S2_TRANS    6
->>> +#define STRTAB_STE_0_CFG_NESTED        7
->>>      #define STRTAB_STE_0_S1FMT        GENMASK_ULL(5, 4)
->>>    #define STRTAB_STE_0_S1FMT_LINEAR    0
->>> @@ -514,6 +515,7 @@ struct arm_smmu_strtab_ent {
->>>         * configured according to the domain type.
->>>         */
->>>        bool                assigned;
->>> +    bool                abort;
->>>        struct arm_smmu_s1_cfg        *s1_cfg;
->>>        struct arm_smmu_s2_cfg        *s2_cfg;
->>>    };
->>> @@ -628,10 +630,8 @@ struct arm_smmu_domain {
->>>        bool                non_strict;
->>>          enum arm_smmu_domain_stage    stage;
->>> -    union {
->>> -        struct arm_smmu_s1_cfg    s1_cfg;
->>> -        struct arm_smmu_s2_cfg    s2_cfg;
->>> -    };
->>> +    struct arm_smmu_s1_cfg    s1_cfg;
->>> +    struct arm_smmu_s2_cfg    s2_cfg;
->>>          struct iommu_domain        domain;
->>>    @@ -1108,12 +1108,13 @@ static void arm_smmu_write_strtab_ent(struct
->>> arm_smmu_device *smmu, u32 sid,
->>>                          __le64 *dst, struct arm_smmu_strtab_ent *ste)
->>>    {
->>>        /*
->>> -     * This is hideously complicated, but we only really care about
->>> -     * three cases at the moment:
->>> +     * We care about the following transitions:
->>>         *
->>>         * 1. Invalid (all zero) -> bypass/fault (init)
->>> -     * 2. Bypass/fault -> translation/bypass (attach)
->>> -     * 3. Translation/bypass -> bypass/fault (detach)
->>> +     * 2. Bypass/fault -> single stage translation/bypass (attach)
->>> +     * 3. single stage Translation/bypass -> bypass/fault (detach)
->>> +     * 4. S2 -> S1 + S2 (attach_pasid_table)
->>> +     * 5. S1 + S2 -> S2 (detach_pasid_table)
->>>         *
->>>         * Given that we can't update the STE atomically and the SMMU
->>>         * doesn't read the thing in a defined order, that leaves us
->>> @@ -1124,7 +1125,7 @@ static void arm_smmu_write_strtab_ent(struct
->>> arm_smmu_device *smmu, u32 sid,
->>>         * 3. Update Config, sync
->>>         */
->>>        u64 val = le64_to_cpu(dst[0]);
->>> -    bool ste_live = false;
->>> +    bool abort, bypass, translate, ste_live = false;
->>>        struct arm_smmu_cmdq_ent prefetch_cmd = {
->>>            .opcode        = CMDQ_OP_PREFETCH_CFG,
->>>            .prefetch    = {
->>> @@ -1138,11 +1139,11 @@ static void arm_smmu_write_strtab_ent(struct
->>> arm_smmu_device *smmu, u32 sid,
->>>                break;
->>>            case STRTAB_STE_0_CFG_S1_TRANS:
->>>            case STRTAB_STE_0_CFG_S2_TRANS:
->>> +        case STRTAB_STE_0_CFG_NESTED:
->>>                ste_live = true;
->>>                break;
->>>            case STRTAB_STE_0_CFG_ABORT:
->>> -            if (disable_bypass)
->>> -                break;
->>> +            break;
->>>            default:
->>>                BUG(); /* STE corruption */
->>>            }
->>> @@ -1152,8 +1153,13 @@ static void arm_smmu_write_strtab_ent(struct
->>> arm_smmu_device *smmu, u32 sid,
->>>        val = STRTAB_STE_0_V;
->>>          /* Bypass/fault */
->>> -    if (!ste->assigned || !(ste->s1_cfg || ste->s2_cfg)) {
->>> -        if (!ste->assigned && disable_bypass)
->>> +
->>> +    abort = (!ste->assigned && disable_bypass) || ste->abort;
->>> +    translate = ste->s1_cfg || ste->s2_cfg;
->>> +    bypass = !abort && !translate;
->>> +
->>> +    if (abort || bypass) {
->>> +        if (abort)
->>>                val |= FIELD_PREP(STRTAB_STE_0_CFG,
->>> STRTAB_STE_0_CFG_ABORT);
->>>            else
->>>                val |= FIELD_PREP(STRTAB_STE_0_CFG,
->>> STRTAB_STE_0_CFG_BYPASS);
->>> @@ -1172,7 +1178,6 @@ static void arm_smmu_write_strtab_ent(struct
->>> arm_smmu_device *smmu, u32 sid,
->>>        }
->>>          if (ste->s1_cfg) {
->>> -        BUG_ON(ste_live);
->>
->> Hmm, I'm a little uneasy about just removing these checks altogether, as
->> there are still cases where rewriting a live entry is bogus, that we'd
->> really like to keep catching. Is the problem that it's hard to tell when
->> you're 'rewriting' the S2 config of a nested entry with the same thing
->> on attaching/detaching its S1 context?
-> No, I restored the original checks in !nested mode and added a new check
-> to make sure we never update a live S1 in nested mode. Only S2 can be live.
+On Mon, May 13, 2019 at 05:11:47PM +0800, Yuyang Du wrote:
+> + * Note that we have an assumption that a lock class cannot ever be both
+> + * read and recursive-read.
 
-Right, either way it's fairly easy to enforce "!(cfg->s1 && ste->s1)", 
-but what I'm really concerned about is that fact where Stream IDs (or 
-possibly PASIDS) get messed up and we end up silently writing a nested 
-config over an STE which happens to already have an S2 configuration for 
-some other domain (or vice versa).
+We have such locks in the kernel... see:
 
-I guess it might suffice to verify that the VTTBRs match for S2<->nested 
-transitions, what do you reckon?
+  kernel/qrwlock.c:queued_read_lock_slowpath()
 
-Robin.
+And yes, that is somewhat unfortunate, but hard to get rid of due to
+hysterical raisins.
