@@ -2,103 +2,132 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6F1C04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCCEC04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03C2321019
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC1F21019
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 12:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557749499;
+	bh=WNG2MlrAJcFt1wXzqMpPwwrfEuEKFEwSqbcfrwsQu5Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Cv4oAZ6HXLH7WYCwaczz4bUhLjN+dWZEsuGZ8Fg6v6X8BPN63g2wCUuLxPbHafH/e
+	 e5dXf+arFLhBgK8J1SKAliiVuiN7dChXRPW7QmaJ/YvGSRd4W1y0FbFywxDFrA88m1
+	 y+2Qvy9NIgSHxJjCIxzzrBKVh3JpC/vSd9jLXi/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfEMMJK (ORCPT
+        id S1729675AbfEMMLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 08:09:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33050 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728580AbfEMMJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 08:09:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4DC7OoO032479
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:09:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sf7ux19ky-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 08:09:07 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 13 May 2019 13:08:49 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 May 2019 13:08:45 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4DC8iT146268554
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 12:08:44 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0727A405B;
-        Mon, 13 May 2019 12:08:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9BA3A4054;
-        Mon, 13 May 2019 12:08:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.35])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 May 2019 12:08:43 +0000 (GMT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Rob Landley <rob@landley.net>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Arvind Sankar <niveditas98@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        initramfs@vger.kernel.org
-Date:   Mon, 13 May 2019 08:08:33 -0400
-In-Reply-To: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
-         <20190512194322.GA71658@rani.riverdale.lan>
-         <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
-         <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+        Mon, 13 May 2019 08:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727830AbfEMMLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 08:11:38 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D78620879;
+        Mon, 13 May 2019 12:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557749497;
+        bh=WNG2MlrAJcFt1wXzqMpPwwrfEuEKFEwSqbcfrwsQu5Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fyK1Mtl7s9+iTTAyV27myT0UUSzjXGyTI2AuFkuhIveXginRru0cpGKlL9S7zaFq6
+         LWdDhG7peI5E9MSxYcy72WUomcWdGQzaX5MGK87Y/BF4ZUtl2qFsAZPJEGOE9mXCoP
+         dZnO7a70Ovh9fBwp+arysaeXyWKmqbLIKiKv0E6A=
+Date:   Mon, 13 May 2019 21:11:30 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [RFC PATCH v6 4/6] tracing/probe: Support user-space
+ dereference
+Message-Id: <20190513211130.24735357a329cfdc25fcecf9@kernel.org>
+In-Reply-To: <20190508112237.76bd0e6b@gandalf.local.home>
+References: <155289137555.7218.9282784065958321058.stgit@devnote2>
+        <155289143224.7218.6083289081805224583.stgit@devnote2>
+        <20190506115226.70c62f7a@gandalf.local.home>
+        <20190508131143.6f69abddd4c11b47bea138fb@kernel.org>
+        <20190508112237.76bd0e6b@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051312-4275-0000-0000-0000033434AC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051312-4276-0000-0000-00003843B06F
-Message-Id: <1557749313.10635.309.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-13_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905130086
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-05-13 at 04:07 -0500, Rob Landley wrote:
+On Wed, 8 May 2019 11:22:37 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> > Allowing a kernel with integrity enforcement to parse the CPIO image
-> > without verifying it first is the weak point.
+> > > >  Per-Probe Event Filtering
+> > > >  -------------------------
+> > > > diff --git a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
+> > > > index 4346e23e3ae7..de8812c932bc 100644
+> > > > --- a/Documentation/trace/uprobetracer.rst
+> > > > +++ b/Documentation/trace/uprobetracer.rst
+> > > > @@ -42,16 +42,17 @@ Synopsis of uprobe_tracer
+> > > >     @+OFFSET	: Fetch memory at OFFSET (OFFSET from same file as PATH)
+> > > >     $stackN	: Fetch Nth entry of stack (N >= 0)
+> > > >     $stack	: Fetch stack address.
+> > > > -   $retval	: Fetch return value.(*)
+> > > > +   $retval	: Fetch return value.(\*1)
+> > > >     $comm	: Fetch current task comm.
+> > > > -   +|-offs(FETCHARG) : Fetch memory at FETCHARG +|- offs address.(**)
+> > > > +   +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*2)(\*3)
+> > > >     NAME=FETCHARG     : Set NAME as the argument name of FETCHARG.
+> > > >     FETCHARG:TYPE     : Set TYPE as the type of FETCHARG. Currently, basic types
+> > > >  		       (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> > > >  		       (x8/x16/x32/x64), "string" and bitfield are supported.  
+> > > 
+> > > Hmm, shouldn't uprobes default to userspace. Isn't the purpose mostly
+> > > to find out what's going on in userspace. Perhaps we should add a 'k'
+> > > annotation to uprobes to denote that it's for kernel space, as that
+> > > should be the exception and not the norm.  
+> > 
+> > No, uprobe can not access kernel space, because it doesn't have the
+> > current kernel context. Note that all registers, stacks which
+> > can be accessed from uprobe handler are user-space. We can not access
+> > kernel context from that. See below
+> > 
+> > > > -  (*) only for return probe.
+> > > > -  (**) this is useful for fetching a field of data structures.
+> > > > +  (\*1) only for return probe.
+> > > > +  (\*2) this is useful for fetching a field of data structures.
+> > > > +  (\*3) Unlike kprobe event, "u" prefix will just be ignored.  
+> > 
+> > Thus the 'u' is just ignored on uprobe event.
 > 
-> If you don't verify the CPIO image then in theory it could have anything in it,
-> yes. You seem to believe that signing individual files is more secure than
-> signing the archive. This is certainly a point of view.
+> I totally missed the footnote here. Can we stress this point more up in
+> the "User Memory Access" section. Specifically state something like:
+> "Uprobes only access userspace memory, thus the 'u' is not required,
+> and if it is added to a uprobe, it will simply be ignored".
 
-Nobody is claiming that signing and verifying individual files is more
-secure.  We are saying that in some environments BOTH are needed.  In
-many environments today the initramfs IS being signed and verified.
+Sorry, I missed this mail. 
 
-Unfortunately not all environments can sign the initramfs today,
-because the initramfs is not distributed with the kernel image, but
-generated on the target system.
+Since the "User Memory Access" section is only in kprobetrace.rst, I think
+mentioning uprobe-events in kprobetrace.rst is meaningless. Uprobe user
+might read uprobetracer.rst instead of kprobetrace.rst.
+So I think it is enough to mention it as a footnote in uprobetracer.rst.
 
-Mimi
+Thank you,
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
