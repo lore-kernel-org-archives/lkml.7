@@ -2,201 +2,112 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8593EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B79C04AA7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D5B2208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C449B208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 14:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ay4NVZxh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YguDFwQx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfEMOGb (ORCPT
+        id S1730441AbfEMOGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 10:06:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42850 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfEMOGa (ORCPT
+        Mon, 13 May 2019 10:06:45 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46549 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfEMOGo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 10:06:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 188so11075516ljf.9;
-        Mon, 13 May 2019 07:06:28 -0700 (PDT)
+        Mon, 13 May 2019 10:06:44 -0400
+Received: by mail-pl1-f193.google.com with SMTP id r18so1782747pls.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 07:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=qsB8mONNRQdOykcbEvsV450l7EoJeG+DifZn5TSN7ps=;
-        b=Ay4NVZxhPPakV2Xa8ZzJZzt3f9h2e8RV0ysLwuqZz0ywIO4mjHDRP+QgbsWRG8UYaI
-         6CXEPjftNdlGuxQ/Q+CN6MFP4Oap/4Cfj12cN9xFnPMgdO4se0gSY6txfe1DwIrrg1OR
-         gNQcV+ZJhBpJqfHtK3Lvn8/jg2hhsBk4jdQjDe7N3kr//KZ+2YrmFkrzI2k5JH9bZn6m
-         iSMWPGK7l4Y1ONN16e5vprNbcQINWLuS3dT2UjK+klPjGxJ+kNKTTJSXoUFzJhix7HBR
-         fELI6THhsonzWifsdS+wn+FXrjDnANjHl0AMvidipn0DYWrUS80lUYFHqK6n1Gq4V2Lm
-         AxwA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aFTVOemihi9Y/ybUHoKE6WPrQqKRWGsjPa+RThuNPJY=;
+        b=YguDFwQxxbQysZNVchZDs2o4+DUSWuunvES7JkNU4ESIaDfofMcLQrCJg4rZPMtkEG
+         zGe/+1AU+lMHjEY/W86b0Q1KiZM0XSmjQcHW5yuy0LMT4gEYKO76LS3jwCNItGhJ4H3r
+         8i+tv0vi+Qekkzkd59vD/ESQ1UuV76fO8oz3eTuDcP4ZC0UJvaNa7A4QZtSimhCra7vB
+         vC2DSUeCgI8WrsVy3Or+F/SfRLH3XO25o3cMUqA+NFpQ8Y6j8Anshulkzg0ohoQzDWn4
+         QqNCWG4xIzshEdiwsewWNuF4/SuUd7x+RNPb5VDPrqQliR40UnSZotQI12rMVjEcsrYa
+         BEdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=qsB8mONNRQdOykcbEvsV450l7EoJeG+DifZn5TSN7ps=;
-        b=EeE5ZfbnglyJEAViSusKKSYF4fgyo5sN/JADSfEBEsle9FzrWjVQAz+EgP8jClATL/
-         hk1D/umJKwPuIBNBkZxP4PLR+dxKy+Ufef24NU5BWKBL5f5IgoWyK6/kF0JYkENimlMK
-         BRPiZls8MmHgnIqLM+ZZTWkqXwzqnAP69xyQEDqtoZjCXFdeWuhMnalFxR+MmLL30Shp
-         /k6RUgNORiS9FijRUE4BXm1+9c8d84Y6IKW+LQ3SPJjTa/4GA4d6BqwfY3fYmUvlc8Im
-         AKCLfRAoF7p8VeDXOYyhzXA4aPkEkzim5JzFcfahxlpMKMN/sSDbH8qXuxqh2vw9ZEDE
-         tghA==
-X-Gm-Message-State: APjAAAXHvQ0jqdxygoDRJI1ImtZ5HHj5Mi4Gg5ZEjlXRpli8122KljEe
-        hUrEsv3EQHq7wEeOWXOXxno=
-X-Google-Smtp-Source: APXvYqxbOCYtaSW8f/ZwP0g7HwGg/jGgpM0Vd5ZEOgfA8sSD15p2EbHv2MId7jo+xznWo3RmHG0TVQ==
-X-Received: by 2002:a2e:4555:: with SMTP id s82mr13823604lja.15.1557756387312;
-        Mon, 13 May 2019 07:06:27 -0700 (PDT)
-Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id h29sm3137491ljb.49.2019.05.13.07.06.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 07:06:26 -0700 (PDT)
-Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
- region
-To:     Julien Grall <julien.grall@arm.com>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     horms@verge.net.au, magnus.damm@gmail.com, linux@armlinux.org.uk,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
- <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
-Date:   Mon, 13 May 2019 17:06:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aFTVOemihi9Y/ybUHoKE6WPrQqKRWGsjPa+RThuNPJY=;
+        b=AhX50LVsg6Ir6UFhaprbQVbFUROXVPPatbCg3AiIkq1uSVKPkDPI2npdHwOVY6U4mb
+         5ml6w6qk8Llirc1CGobOcrExl8+tkJnx+rjxBshU60JqYXAWPIIC0CR+4vLbolD8ZVq/
+         VGj1vSfXuL5yh4cbyjX/1Ard5AvuXQ9OnaLulKVuRHimN1/x6/byr/DYLmQaq8oOCZ5I
+         mwCn6TvgVICZDhzgbV5a+Rb3G6qyiXYvu0XJomryepMC2ZOpo7EhaH0QOwMkWDIVx3bY
+         T9XRzC6prrfyDFT65rQatqHi8LwsXUEI568gFixbradkNZw6JMQa9zaO5S2SP3SMRiVt
+         nZnA==
+X-Gm-Message-State: APjAAAWWd+/uuH3uMcs6ngl8TNJ+chRszEx/Igiv5QIK83kHvOD8Ytt3
+        tEqyr4dyrBvUZS9PAEEbnq8Q
+X-Google-Smtp-Source: APXvYqz4VLebjlmI/Dtm6WX8eMjt8XKoSB8c0yipsVgkqQ040qq1P2HKOvddgMuEgSK7VK6TcrW8Ow==
+X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr7336987plb.238.1557756403532;
+        Mon, 13 May 2019 07:06:43 -0700 (PDT)
+Received: from Mani-XPS-13-9360 ([2405:204:7240:500:85c2:3660:4904:9fef])
+        by smtp.gmail.com with ESMTPSA id h13sm14931843pgk.55.2019.05.13.07.06.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 07:06:42 -0700 (PDT)
+Date:   Mon, 13 May 2019 19:36:37 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, haitao.suo@bitmain.com,
+        darren.tsao@bitmain.com, alec.lin@bitmain.com
+Subject: Re: [PATCH v3 0/4] Add reset controller support for BM1880 SoC
+Message-ID: <20190513140637.GA19120@Mani-XPS-13-9360>
+References: <20190510184525.13568-1-manivannan.sadhasivam@linaro.org>
+ <1557745589.4442.5.camel@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557745589.4442.5.camel@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Philipp,
 
-On 13.05.19 12:19, Julien Grall wrote:
+On Mon, May 13, 2019 at 01:06:29PM +0200, Philipp Zabel wrote:
 > Hi,
+> 
+> On Sat, 2019-05-11 at 00:15 +0530, Manivannan Sadhasivam wrote:
+> > Hello,
+> > 
+> > This patchset adds reset controller support for Bitmain BM1880 SoC.
+> > BM1880 SoC has only one reset controller and the reset-simple driver
+> > has been reused here.
+> > 
+> > This patchset has been tested on 96Boards Sophon Edge board.
+> > 
+> > Thanks,
+> > Mani
+> > 
+> > Changes in v3:
+> > 
+> > * Removed the clk-rst part as it turned out be the clock gating register set.
+> 
+> Thank you, I'd like to pick up patches 1, 3, and 4.
+> 
+> Since patch 2 depends on patch 1, you could either temporarily replace
+> the constants with their numerical value, until patch 1 is merged, or I
+> could provide a stable branch that contains patch 1 after v5.2-rc1.
+> 
 
-Hi, Julien, Geert
+I can use the numerical value in meantime, please pick those patches and I'll
+take the dts through arm-soc tree.
 
+Thanks,
+Mani
 
->
-> On 5/10/19 5:22 PM, Oleksandr Tyshchenko wrote:
->> From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
->>
->> Don't use hardcoded address, retrieve it from device-tree instead.
->>
->> And besides, this patch fixes the memory error when running
->> on top of Xen hypervisor:
->>
->> (XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000
->>        gpa=0x000000e6080000
->>
->> Which shows that VCPU0 in Dom0 is trying to access an address in memory
->> it is not allowed to access (0x000000e6080000).
->> Put simply, Xen doesn't know that it is a device's register memory
->> since it wasn't described in a host device tree (which Xen parses)
->> and as the result this memory region wasn't assigned to Dom0 at
->> domain creation time.
->>
->> Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
->>
->> ---
->>
->> This patch is meant to get feedback from the community before
->> proceeding further. If we decide to go this direction, all Gen2
->> device-trees should be updated (add memory region) before
->> this patch going in.
->>
->> e.g. r8a7790.dtsi:
->>
->> ...
->> timer {
->>     compatible = "arm,armv7-timer";
->>     interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | 
->> IRQ_TYPE_LEVEL_LOW)>,
->>                   <&gic GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | 
->> IRQ_TYPE_LEVEL_LOW)>,
->>                   <&gic GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | 
->> IRQ_TYPE_LEVEL_LOW)>,
->>                   <&gic GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | 
->> IRQ_TYPE_LEVEL_LOW)>;
->> +     reg = <0 0xe6080000 0 0x1000>;
->
-> This looks incorrect, the "arm,armv7-timer" bindings doesn't offer you 
-> the possibility to specify an MMIO region. This makes sense because it 
-> is meant to describe the Arch timer that is only access via 
-> co-processor registers.
->
-> Looking at the code, I think the MMIO region corresponds to the 
-> coresight (based on the register name). So you may want to describe 
-> the coresight in the Device-Tree.
->
-> Also, AFAICT, the code is configuring and turning on the timer if it 
-> has not been done yet. If you are here running on Xen, then you have 
-> probably done something wrong. Indeed, it means Xen would not be able 
-> to use the timer until Dom0 has booted. But, shouldn't newer U-boot do 
-> it for you?
-
-Let me elaborate a bit more on this...
-
-Indeed, my PSCI patch series for U-Boot includes a patch [1] for 
-configuring that "counter module". So, if PSCI is available 
-(psci_smp_available() == true), then most likely we are running on 
-PSCI-enabled
-U-Boot which, we assume, has already taken care of configuring timer (as 
-well as resetting CNTVOFF). So, when running on Xen, the timer was 
-configured beforehand in U-Boot, and Xen is able to use it from the very 
-beginning, these is no need to wait for Dom0 to configure it.
-
-(XEN) Generic Timer IRQ: phys=30 hyp=26 virt=27 Freq: 10000 KHz
-
-So, the code in brackets won't be called when using PSCI/running Xen, 
-since the timer is already both enabled and configured:
-
-if ((ioread32(base + CNTCR) & 1) == 0 ||
-         ioread32(base + CNTFID0) != freq) {
-         /* Update registers with correct frequency */
-         iowrite32(freq, base + CNTFID0);
-         asm volatile("mcr p15, 0, %0, c14, c0, 0" : : "r" (freq));
-
-         /* make sure arch timer is started by setting bit 0 of CNTCR */
-         iowrite32(1, base + CNTCR);
-}
-
-But, the problem here is the first read access from timer register (when 
-we check whether the timer requires enabling) results in hypervisor trap:
-
-(XEN) traps.c:1999:d0v0 HSR=0x93830007 pc=0xc0b097f8 gva=0xf0805000 
-gpa=0x000000e6080000
-
-So, if the DT bindings for the counter module is not an option (if I 
-correctly understood a discussion pointed by Geert in another letter), 
-we should probably prevent all timer code here from being executed if 
-PSCI is in use.
-What I mean is to return to [2], but with the modification to use 
-psci_smp_available() helper as an indicator of PSCI usage.
-
-Julien, Geert, what do you think?
-
-
-[1] https://marc.info/?l=u-boot&m=154895714510154&w=2
-
-[2] https://lkml.org/lkml/2019/4/17/810
-
-
->
-> Cheers,
->
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+> regards
+> Philipp
