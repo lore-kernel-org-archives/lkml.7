@@ -2,114 +2,112 @@ Return-Path: <SRS0=lMFC=TN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DATE_IN_PAST_12_24,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEF5C04AB1
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318C6C04AB1
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB0120862
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="K3sxFPvX"
+	by mail.kernel.org (Postfix) with ESMTP id 040D220862
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 May 2019 03:35:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557718552;
+	bh=cn9PjWvSB31Il6wdalYnpQXKBJxAq5B6aHkDJRVC83M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ZsSoZ28Q590BWs/uXKj7sbhCKf0fI7C+2/NTaRnT/Rfqryuj4xJabs0U1ni4N75lb
+	 erIU+XqFA9mk1uEScpK00pS40RxKyafqety29BTg1T+UOE4b8BvnOKpwOU+R+jkAJt
+	 TipWgWlLGqkTKjeY9RWOMDPk+iid2b7WsYuA9CTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfEMDfW (ORCPT
+        id S1727485AbfEMDfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 May 2019 23:35:22 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:39748 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfEMDfW (ORCPT
+        Sun, 12 May 2019 23:35:50 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55163 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727202AbfEMDfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 May 2019 23:35:22 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4D3YL17040258;
-        Mon, 13 May 2019 03:34:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=r32tubxsUXPdHsbPUXKPUehGznTQnk+IpyDTdJj3D7Q=;
- b=K3sxFPvX27NlUsM04jJx+vPeBVvEciwZnkM1PCKdWRXzOJZ2JYX5lFAT+uTS0z4u8M19
- f0qA13BJ0ZuqmIX51GQ6n6q+SN8T5/zRq4g3RdRNW2u0wk+5n4/pTP/97p/btMq4kOtZ
- sAEKvgGIA1/GZQnNnWeHzEkB8CpenMMBeCB3CcwJucuQW4fCgWhGrnOL+MmxBtIE6s7h
- k98ClGykoA2MS3VWIf/2W4MBss0yQ4Bu0wmnt1V0QtSvqqDEn1Ak+0ZDU9kAzyp0XPW+
- ZPluFctbNEf10mZOS8ldocEVRB1HPbjCVX1XXGh/3sg6P5igSDlygcBDsKFUixcl/1B5 dA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdcatr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 03:34:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4D3Va3B145133;
-        Mon, 13 May 2019 03:32:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2sdnqhr439-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 May 2019 03:32:20 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4D3WEw7025820;
-        Mon, 13 May 2019 03:32:14 GMT
-Received: from z2.cn.oracle.com (/10.182.69.87)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 12 May 2019 20:32:13 -0700
-From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
-To:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Cc:     paulmck@linux.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        joel@joelfernandes.org, corbet@lwn.net, tglx@linutronix.de,
-        mingo@kernel.org, gregkh@linuxfoundation.org,
-        keescook@chromium.org, srinivas.eeda@oracle.com,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Subject: [PATCH v2] doc: kernel-parameters.txt: fix documentation of nmi_watchdog parameter
-Date:   Sun, 12 May 2019 11:35:27 +0800
-Message-Id: <1557632127-16717-1-git-send-email-zhenzhong.duan@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905130023
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9255 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905130024
+        Sun, 12 May 2019 23:35:50 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4FF9422136;
+        Sun, 12 May 2019 23:35:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sun, 12 May 2019 23:35:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IWWUUKQi6OBmjXErF
+        SkhIaMM+KOX6vf11cpQeCEFglA=; b=Ri2ZQRsEcQiG9fdh2dbALeoFQejH9F8ev
+        6C/KPORarnj5gSQECfmKJgc9Myzm/FzA0ZDd4NHzhB8NJtQPOTfISM+U6XTDx8eO
+        w4zEBxStlzJNVEwKOnzbg8gMk4poS+ChVhPSt8jvYJkurTybx4ovBsJydQtEWZ06
+        /pHUJIPtFsP2lKxnfLX1YGeAig8WM4p+5llpLGh5SQnpQGP2VK1LXj3LFsEP0hV0
+        jJjST7syJIqDBs4Q1M3xj5HrrhE2Rrj+eNN0mGNdJvNaimBFPy+wx7oyvhT/WpPC
+        IjFatASHFWKHK5zCJC76c6fiJeZf3FHYXkq/fa3jgC90HqHWATpGw==
+X-ME-Sender: <xms:FObYXGwDALMRbXhxwkySYU4hS4q75gOl_crtWCKu3p5BeibXnYhz0A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleefgdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvgedrudeiledrudeirddukeehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
+    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:FObYXDBMGnDpp_-OVAoSwdM6lUzGOz0GgarjlVlyPdA0M2DsJLeVnQ>
+    <xmx:FObYXEevFceP0ym2GAsQS-QQxaEz-PUc0kWLkJcYue55k0j23bPU3A>
+    <xmx:FObYXNnhMXXB-UVK8NBBYM-nTQ44RhBcOhts034KRQmh0HxW9qdx5w>
+    <xmx:FebYXJ37BZ1pgmHFZT6d6TgzW81ZuOSDgts9CbNhFo5hQkd0eLkWbQ>
+Received: from eros.localdomain (124-169-16-185.dyn.iinet.net.au [124.169.16.185])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 66DB08005C;
+        Sun, 12 May 2019 23:35:46 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Cc:     "Tobin C. Harding" <tobin@kernel.org>
+Subject: [PATCH] ocfs2: Fix error path kobject memory leak
+Date:   Mon, 13 May 2019 13:34:58 +1000
+Message-Id: <20190513033458.2824-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default behavior of hardlockup depends on the config of
-CONFIG_BOOTPARAM_HARDLOCKUP_PANIC.
+If a call to kobject_init_and_add() fails we should call kobject_put()
+otherwise we leak memory.
 
-Fix the description of nmi_watchdog to make it clear.
+Add call to kobject_put() in the error path of call to
+kobject_init_and_add().  Please note, this has the side effect that
+the release method is called if kobject_init_and_add() fails.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- v2: fix description using words suggested by Steven Rostedt
 
- Documentation/admin-guide/kernel-parameters.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Is it ok to send patches during the merge window?
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 08df588..b9d4358 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2805,8 +2805,9 @@
- 			0 - turn hardlockup detector in nmi_watchdog off
- 			1 - turn hardlockup detector in nmi_watchdog on
- 			When panic is specified, panic when an NMI watchdog
--			timeout occurs (or 'nopanic' to override the opposite
--			default). To disable both hard and soft lockup detectors,
-+			timeout occurs (or 'nopanic' to not panic on an NMI
-+			watchdog, if CONFIG_BOOTPARAM_HARDLOCKUP_PANIC is set)
-+			To disable both hard and soft lockup detectors,
- 			please see 'nowatchdog'.
- 			This is useful when you use a panic=... timeout and
- 			need the box quickly up again.
+Applies on top of Linus' mainline tag: v5.1
+
+Happy to rebase if there are conflicts.
+
+thanks,
+Tobin.
+
+ fs/ocfs2/filecheck.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
+index f65f2b2f594d..1906cc962c4d 100644
+--- a/fs/ocfs2/filecheck.c
++++ b/fs/ocfs2/filecheck.c
+@@ -193,6 +193,7 @@ int ocfs2_filecheck_create_sysfs(struct ocfs2_super *osb)
+ 	ret = kobject_init_and_add(&entry->fs_kobj, &ocfs2_ktype_filecheck,
+ 					NULL, "filecheck");
+ 	if (ret) {
++		kobject_put(&entry->fs_kobj);
+ 		kfree(fcheck);
+ 		return ret;
+ 	}
 -- 
-1.8.3.1
+2.21.0
 
