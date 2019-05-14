@@ -2,118 +2,139 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3ACC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 702BDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667FC2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 438AE2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nY5b8E42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfENOqh (ORCPT
+        id S1726406AbfENOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:46:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35440 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725901AbfENOqg (ORCPT
+        Tue, 14 May 2019 10:47:45 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40421 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENOrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:46:36 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EEkJ5a082694
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:46:35 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sfy8a9jh9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:46:31 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 14 May 2019 15:46:22 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 15:46:18 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EEkI5I49545464
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 14:46:18 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8AC9AE045;
-        Tue, 14 May 2019 14:46:17 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF28CAE04D;
-        Tue, 14 May 2019 14:46:16 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 May 2019 14:46:16 +0000 (GMT)
-Subject: Re: [PATCH 3/3 v5] call ima_kexec_cmdline from kexec_file_load path
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        inux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     ebiederm@xmission.com, vgoyal@redhat.com, prsriva@microsoft.com,
-        Dave Young <dyoung@redhat.com>
-Date:   Tue, 14 May 2019 10:46:06 -0400
-In-Reply-To: <20190510223744.10154-4-prsriva02@gmail.com>
-References: <20190510223744.10154-1-prsriva02@gmail.com>
-         <20190510223744.10154-4-prsriva02@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Tue, 14 May 2019 10:47:43 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u17so9258134pfn.7;
+        Tue, 14 May 2019 07:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uvTVVtDZuqjWYWGv3wOfnHFg54NPDwz8Y09qcxgYGas=;
+        b=nY5b8E423/ei9n51fU7pz6LahDlN6P5pg7XmmvVpW6Kt8YIjvLAynVKwrR9dt6zoQ9
+         m3aGr/5i+rm5H+AK8kB15ksxlQkL0HwO7gXjqsbCAc/GqVqlEEc62Vs4/2kszSTpc+ob
+         475tVx7XeBFl2S5Z9P0fSgUweqKyIkz/5kL78YHdR0u3sZ2ujXt6TnthKWIYJiL6qkSW
+         7otrl7Wyzb1B52ATfbepn22cxAlW2Qx0hYN0Ylza4uHgwlRc6PEaXdkxXnRP4M/J+aAn
+         HGzqA5gj7T0H7xBNE2gMAUk1tBracDKTOyJW4d6jPbHgRwnDDFJ84CBcjbfudmfVfBOB
+         Vzkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uvTVVtDZuqjWYWGv3wOfnHFg54NPDwz8Y09qcxgYGas=;
+        b=j51rctbgbVUp6Zh7fB5xJPtR8+77lfxTs4JK2f2V1D1oH9IpAtMaqPrIQIVOYdoJn+
+         9XZlPIjSGWZuH2KQ6DCHMOJd+s1lhQml1YWkqHwf/AHItEtOPRfFPUS/PvdO9MIcaFcl
+         I3hLVhrFEyBqluEe4QkE3W3uZbLS/PEWXNdmLQBU9m45hE/XtrtpycPnY254e675K97r
+         4Nu0+kNBR4nfL3icOI5jnsrw2mZt7usmZrG+KKGBIEPOORa6gsj3LQfNx2BK471/95Z8
+         rzvaMkrJJQRg7XswDOW4u7g0NDHtLJ/JbQlRw+76LVm/PehfpK2wq75lZYCCOi6cVE/7
+         tRcA==
+X-Gm-Message-State: APjAAAXb/9OIVhIFuM6q57x+PSmaO10wPCeCDQbgZmO+dPfDuVBnCR8l
+        KQwvNJZtmaXaKKIASfv7AF4=
+X-Google-Smtp-Source: APXvYqywCPxowiffZWYrYtb+FnI/R/I4J4jSzp35jr3GmLi09Z8qkPcaSnJjmtz7YBgG2C88CIHrgg==
+X-Received: by 2002:aa7:83d4:: with SMTP id j20mr19823511pfn.90.1557845262955;
+        Tue, 14 May 2019 07:47:42 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.47.39
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 07:47:42 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     bhelgaas@google.com, corbet@lwn.net
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v6 00/12] Include linux PCI docs into Sphinx TOC tree
+Date:   Tue, 14 May 2019 22:47:22 +0800
+Message-Id: <20190514144734.19760-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051414-0020-0000-0000-0000033C9621
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051414-0021-0000-0000-0000218F528F
-Message-Id: <1557845166.4139.53.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Dave Young]
+Hi all,
 
-On Fri, 2019-05-10 at 15:37 -0700, Prakhar Srivastava wrote:
-> From: Prakhar Srivastava <prsriva02@gmail.com>
+The kernel now uses Sphinx to generate intelligent and beautiful documentation
+from reStructuredText files. I converted most of the Linux PCI docs to rst
+format in this serias.
 
-The "From" line above should only appear when the patch author and the
-sender differ.  You can create the patches under one id and post them
-from another id.  Something is still wrong.
+For you to preview, please visit below url:
+http://www.bytemem.com:8080/kernel-doc/PCI/index.html
 
-> 
-> To measure the cmldine args used in case of soft reboot. Call the 
-> ima hook defined in [PATCH 1/3 v5]:"add a new ima hook and policy to measure the cmdline"
-> 
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+Thank you!
 
-> ---
->  kernel/kexec_file.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index f1d0e00a3971..e779bcf674a0 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -241,6 +241,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
->  			ret = -EINVAL;
->  			goto out;
->  		}
-> +
-> +		ima_kexec_cmdline(image->cmdline_buf, image->cmdline_buf_len - 1);
->  	}
->  
->  	/* Call arch image load handlers */
+v2: trivial style update.
+v3: update titles. (Bjorn Helgaas)
+v4: fix comments from Mauro Carvalho Chehab
+v5: update MAINTAINERS (Joe Perches)
+v6: fix comments.
 
-Much better!
+Changbin Du (12):
+  Documentation: add Linux PCI to Sphinx TOC tree
+  Documentation: PCI: convert pci.txt to reST
+  Documentation: PCI: convert PCIEBUS-HOWTO.txt to reST
+  Documentation: PCI: convert pci-iov-howto.txt to reST
+  Documentation: PCI: convert MSI-HOWTO.txt to reST
+  Documentation: PCI: convert acpi-info.txt to reST
+  Documentation: PCI: convert pci-error-recovery.txt to reST
+  Documentation: PCI: convert pcieaer-howto.txt to reST
+  Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
+  Documentation: PCI: convert endpoint/pci-endpoint-cfs.txt to reST
+  Documentation: PCI: convert endpoint/pci-test-function.txt to reST
+  Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
 
-Mimi
+ .../PCI/{acpi-info.txt => acpi-info.rst}      |  15 +-
+ Documentation/PCI/endpoint/index.rst          |  13 +
+ ...-endpoint-cfs.txt => pci-endpoint-cfs.rst} |  99 ++---
+ .../{pci-endpoint.txt => pci-endpoint.rst}    |  92 +++--
+ ...est-function.txt => pci-test-function.rst} |  84 +++--
+ ...{pci-test-howto.txt => pci-test-howto.rst} |  81 ++--
+ Documentation/PCI/index.rst                   |  18 +
+ .../PCI/{MSI-HOWTO.txt => msi-howto.rst}      |  85 +++--
+ ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++-------
+ .../{pci-iov-howto.txt => pci-iov-howto.rst}  | 161 ++++----
+ Documentation/PCI/{pci.txt => pci.rst}        | 356 ++++++++----------
+ .../{pcieaer-howto.txt => pcieaer-howto.rst}  | 156 +++++---
+ .../{PCIEBUS-HOWTO.txt => picebus-howto.rst}  | 140 ++++---
+ Documentation/index.rst                       |   1 +
+ MAINTAINERS                                   |   4 +-
+ include/linux/mod_devicetable.h               |  19 +
+ include/linux/pci.h                           |  37 ++
+ 17 files changed, 938 insertions(+), 710 deletions(-)
+ rename Documentation/PCI/{acpi-info.txt => acpi-info.rst} (96%)
+ create mode 100644 Documentation/PCI/endpoint/index.rst
+ rename Documentation/PCI/endpoint/{pci-endpoint-cfs.txt => pci-endpoint-cfs.rst} (64%)
+ rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (83%)
+ rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
+ rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
+ create mode 100644 Documentation/PCI/index.rst
+ rename Documentation/PCI/{MSI-HOWTO.txt => msi-howto.rst} (88%)
+ rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
+ rename Documentation/PCI/{pci-iov-howto.txt => pci-iov-howto.rst} (63%)
+ rename Documentation/PCI/{pci.txt => pci.rst} (68%)
+ rename Documentation/PCI/{pcieaer-howto.txt => pcieaer-howto.rst} (72%)
+ rename Documentation/PCI/{PCIEBUS-HOWTO.txt => picebus-howto.rst} (70%)
+
+-- 
+2.20.1
 
