@@ -2,172 +2,97 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBDEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1759C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB023208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6539A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557814843;
+	bh=8sY4WNMN8AqUC6oX3rp7XsGXypjPKZg80cJeNze1lGM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ImvfjwojhiDGQOM16TzWuPgr6lEsEi0HvdohW3ILtQMor2P/WT+xVE8MUu6m+bjBI
+	 OtT5QQJUGZRUMuyxIeXQBbGOmCYAcla49OPhWDHqWZDkurd9ds/nMFas9fnEiZdUNj
+	 a+KkE+f2+WURQldwiJMds2cZ1nAFPtQmk8raiMpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfENGRu (ORCPT
+        id S1726218AbfENGUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:17:50 -0400
-Received: from ozlabs.org ([203.11.71.1]:38889 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfENGRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:17:50 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4536tL62z0z9s00;
-        Tue, 14 May 2019 16:17:46 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Rafael Aquini <aquini@redhat.com>,
-        Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
+        Tue, 14 May 2019 02:20:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50524 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725985AbfENGUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 02:20:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8FD3DAD94;
+        Tue, 14 May 2019 06:20:40 +0000 (UTC)
+Date:   Tue, 14 May 2019 08:20:39 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <shy828301@gmail.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
         Huang Ying <ying.huang@intel.com>,
-        Sandeep Patil <sspatil@android.com>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
-In-Reply-To: <20190510072500.GA1520@yury-thinkpad>
-References: <1557158023-23021-1-git-send-email-jsavitz@redhat.com> <20190507125430.GA31025@x230.aquini.net> <20190508063716.GA3096@yury-thinkpad> <87k1ezugqh.fsf@concordia.ellerman.id.au> <20190510072500.GA1520@yury-thinkpad>
-Date:   Tue, 14 May 2019 16:17:46 +1000
-Message-ID: <87k1ettv91.fsf@concordia.ellerman.id.au>
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        kirill.shutemov@linux.intel.com, Hugh Dickins <hughd@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        william.kucharski@oracle.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
+Message-ID: <20190514062039.GB20868@dhcp22.suse.cz>
+References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513080929.GC24036@dhcp22.suse.cz>
+ <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
+ <20190513214503.GB25356@dhcp22.suse.cz>
+ <CAHbLzkpUE2wBp8UjH72ugXjWSfFY5YjV1Ps9t5EM2VSRTUKxRw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkpUE2wBp8UjH72ugXjWSfFY5YjV1Ps9t5EM2VSRTUKxRw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yury Norov <yury.norov@gmail.com> writes:
-> On Fri, May 10, 2019 at 01:32:22PM +1000, Michael Ellerman wrote:
->> Yury Norov <yury.norov@gmail.com> writes:
->> > On Tue, May 07, 2019 at 08:54:31AM -0400, Rafael Aquini wrote:
->> >> On Mon, May 06, 2019 at 11:53:43AM -0400, Joel Savitz wrote:
->> >> > There is currently no easy and architecture-independent way to find the
->> >> > lowest unusable virtual address available to a process without
->> >> > brute-force calculation. This patch allows a user to easily retrieve
->> >> > this value via /proc/<pid>/status.
->> >> > 
->> >> > Using this patch, any program that previously needed to waste cpu cycles
->> >> > recalculating a non-sensitive process-dependent value already known to
->> >> > the kernel can now be optimized to use this mechanism.
->> >> > 
->> >> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
->> >> > ---
->> >> >  Documentation/filesystems/proc.txt | 2 ++
->> >> >  fs/proc/task_mmu.c                 | 2 ++
->> >> >  2 files changed, 4 insertions(+)
->> >> > 
->> >> > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
->> >> > index 66cad5c86171..1c6a912e3975 100644
->> >> > --- a/Documentation/filesystems/proc.txt
->> >> > +++ b/Documentation/filesystems/proc.txt
->> >> > @@ -187,6 +187,7 @@ read the file /proc/PID/status:
->> >> >    VmLib:      1412 kB
->> >> >    VmPTE:        20 kb
->> >> >    VmSwap:        0 kB
->> >> > +  VmTaskSize:	137438953468 kB
->> >> >    HugetlbPages:          0 kB
->> >> >    CoreDumping:    0
->> >> >    THP_enabled:	  1
->> >> > @@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
->> >> >   VmPTE                       size of page table entries
->> >> >   VmSwap                      amount of swap used by anonymous private data
->> >> >                               (shmem swap usage is not included)
->> >> > + VmTaskSize                  lowest unusable address in process virtual memory
->> >> 
->> >> Can we change this help text to "size of process' virtual address space memory" ?
->> >
->> > Agree. Or go in other direction and make it VmEnd
->> 
->> Yeah I think VmEnd would be clearer to folks who aren't familiar with
->> the kernel's usage of the TASK_SIZE terminology.
->> 
->> >> > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
->> >> > index 95ca1fe7283c..0af7081f7b19 100644
->> >> > --- a/fs/proc/task_mmu.c
->> >> > +++ b/fs/proc/task_mmu.c
->> >> > @@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
->> >> >  	seq_put_decimal_ull_width(m,
->> >> >  		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
->> >> >  	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
->> >> > +	seq_put_decimal_ull_width(m,
->> >> > +		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
->> >> >  	seq_puts(m, " kB\n");
->> >> >  	hugetlb_report_usage(m, mm);
->> >> >  }
->> >
->> > I'm OK with technical part, but I still have questions not answered
->> > (or wrongly answered) in v1 and v2. Below is the very detailed
->> > description of the concerns I have.
->> >
->> > 1. What is the exact reason for it? Original version tells about some
->> > test that takes so much time that you were able to drink a cup of
->> > coffee before it was done. The test as you said implements linear
->> > search to find the last page and so is of O(n). If it's only for some
->> > random test, I think the kernel can survive without it. Do you have a
->> > real example of useful programs that suffer without this information?
->> >
->> >
->> > 2. I have nothing against taking breaks and see nothing weird if
->> > ineffective algorithms take time. On my system (x86, Ubuntu) the last
->> > mapped region according to /proc/<pid>/maps is:
->> > ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0     [vsyscall]
->> > So to find the required address, we have to inspect 2559 pages. With a
->> > binary search it would take 12 iterations at max. If my calculation is
->> > wrong or your environment is completely different - please elaborate.
->> 
->> I agree it should not be hard to calculate, but at the same time it's
->> trivial for the kernel to export the information so I don't see why the
->> kernel shouldn't.
->
-> Kernel shouldn't do it unless there will be real users of the feature.
-> Otherwise it's pure bloating.
+On Mon 13-05-19 21:36:59, Yang Shi wrote:
+> On Mon, May 13, 2019 at 2:45 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Mon 13-05-19 14:09:59, Yang Shi wrote:
+> > [...]
+> > > I think we can just account 512 base pages for nr_scanned for
+> > > isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT
+> > > just use it.
+> > >
+> > > And, sc->nr_scanned should be accounted as 512 base pages too otherwise we
+> > > may have nr_scanned < nr_to_reclaim all the time to result in false-negative
+> > > for priority raise and something else wrong (e.g. wrong vmpressure).
+> >
+> > Be careful. nr_scanned is used as a pressure indicator to slab shrinking
+> > AFAIR. Maybe this is ok but it really begs for much more explaining
+> 
+> I don't know why my company mailbox didn't receive this email, so I
+> replied with my personal email.
+> 
+> It is not used to double slab pressure any more since commit
+> 9092c71bb724 ("mm: use sc->priority for slab shrink targets"). It uses
+> sc->priority to determine the pressure for slab shrinking now.
+> 
+> So, I think we can just remove that "double slab pressure" code. It is
+> not used actually and looks confusing now. Actually, the "double slab
+> pressure" does something opposite. The extra inc to sc->nr_scanned
+> just prevents from raising sc->priority.
 
-A single line or two of code to print a value that's useful information
-for userspace is hardly "bloat".
-
-I agree it's good to have users for things, but this seems like it's so
-trivial that we should just add it and someone will find a use for it.
-
-> One possible user of it that I can imagine is mmap(MAP_FIXED). The
-> documentation is very clear about it:
->
->    Furthermore,  this  option  is  extremely  hazardous (when used on its own),
->    because it forcibly removes preexisting mappings, making it easy for a 
->    multithreaded  process  to corrupt its own address space.
->
-> VmEnd provided by kernel may encourage people to solve their problems
-> by using MAP_FIXED which is potentially dangerous.
-
-There's MAP_FIXED_NOREPLACE now which is not dangerous.
-
-Using MAX_FIXED_NOREPLACE and VmEnd would make it relatively easy to do
-a userspace ASLR implementation, so that actually is an argument in
-favour IMHO.
-
-> Another scenario of VmEnd is to understand how many top bits of address will
-> be always zero to allocate them for user's purpose, like smart pointers. It
-> worth to discuss this usecase with compiler people. If they have interest,
-> I think it's more straightforward to give them something like:
->    int preserve_top_bits(int nbits);
-
-You mean a syscall?
-
-With things like hardware pointer tagging / colouring coming along I
-think you're right that using VmEnd and assuming the top bits are never
-used is a bad idea, an explicit interface would be better.
-
-cheers
+I have to get in sync with the recent changes. I am aware there were
+some patches floating around but I didn't get to review them. I was
+trying to point out that nr_scanned used to have a side effect to be
+careful about. If it doesn't have anymore then this is getting much more
+easier of course. Please document everything in the changelog.
+-- 
+Michal Hocko
+SUSE Labs
