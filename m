@@ -2,88 +2,151 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3A7C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D74C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1DF20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557869654;
-	bh=yp5vDecb7fjI+ywiWRJ0DWnZe3v5cnUIYIfAnA9p2m0=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=j4GkWcRL/vopxqzSXrqZyn2ZgbqreFeqzpH4+NbJR2Fnb8uavFoilcoJBaESi2wmk
-	 OQ2h3aSpr4GUtbHMKlm5X7OT2A1Je+Vs8WXvAYYB036Bo3HUMLd3p/YvrQLdDFPetX
-	 PMFt85HvFaYt22phzPnErohB6hd/QDccdkjRZWi8=
+	by mail.kernel.org (Postfix) with ESMTP id CA7F420862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:34:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="47ccYNEq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfENVeN (ORCPT
+        id S1726622AbfENVea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60588 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfENVeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:34:12 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBFA20862;
-        Tue, 14 May 2019 21:34:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557869652;
-        bh=yp5vDecb7fjI+ywiWRJ0DWnZe3v5cnUIYIfAnA9p2m0=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=v3Nl8+PvRk9oI3IdjpCKGOTljU7wVAzidgmXYqBadBGQ8bveQQOx1zFjPVlX2yeeJ
-         TgBN8i9jVo+DislgBiPfKIE3gY8BMmCSfbCK3ReG19mFtfz2DidG22o1mCfBxuWVW3
-         oR/Qqscim7fPTarMugC2eu8kv9AWq3wJVQQzyvPU=
-Date:   Tue, 14 May 2019 14:34:10 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     dsterba@suse.cz, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Can crypto API provide information about hw acceleration?
-Message-ID: <20190514213409.GA115510@gmail.com>
-References: <20190514163348.GM3138@twin.jikos.cz>
+        Tue, 14 May 2019 17:34:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37832 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfENVe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 17:34:29 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4ELTuN4172625;
+        Tue, 14 May 2019 21:33:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=xP/1J7WtSjWfHwARbyhttwinIWyTQ+wkt13il4qJ3gI=;
+ b=47ccYNEqQtVdANjxK2ZSYU7cWNuAlIz3aclJ+JlSKO3kyibmZMxV9F6hNHWk0nBOHcbb
+ eWoQul25jc0gcFPtlbko4rrYqrREgGZxtpPLXG+i/YeKLpFuLDUeokwnqYBB2qCtSNz3
+ n5GK/gjgh4cWNyP6cfMyo9WMLR6aQ7zSSgyJDUk8AJALjqOPZlLWOlQki9atZU9VDhr9
+ Qn4ylmgTtHrOsereilhau+nW9/JOENdESqjcKGLL1qpoBBUHdB6RlPVmd1LTdTO3De5N
+ ZVt/mvsOGNsVYibT/I71ekgHlRyFq9Psav9nBhMdCN+wxzdalYAQvQWL67Mg41xLS0di 2g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2sdq1qgvua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 21:33:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4ELVIfq134876;
+        Tue, 14 May 2019 21:31:37 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2sdmebbr4s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 21:31:37 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4ELVR6l014023;
+        Tue, 14 May 2019 21:31:32 GMT
+Received: from tresor.us.oracle.com (/10.211.52.98)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 May 2019 14:31:27 -0700
+Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Liran Alon <liran.alon@oracle.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
+ <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+ <CALCETrXK8+tUxNA=iVDse31nFRZyiQYvcrQxV1JaidhnL4GC0w@mail.gmail.com>
+ <20190514073738.GH2589@hirez.programming.kicks-ass.net>
+From:   Jan Setje-Eilers <jan.setjeeilers@oracle.com>
+Message-ID: <f0d218f1-076e-e8ce-ebf8-84712a126b32@oracle.com>
+Date:   Tue, 14 May 2019 14:32:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514163348.GM3138@twin.jikos.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190514073738.GH2589@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=878
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905140141
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=903 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905140141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 06:33:48PM +0200, David Sterba wrote:
-> Hi,
-> 
-> Q: is there a way to query the crypto layer whether a given algorithm
-> (digest, crypto) is accelerated by the driver?
-> 
-> This information can be used to decide if eg. a checksum should can be
-> calculated right away or offloaded to a thread. This is done in btrfs,
-> (fs/btrfs/disk-io.c:check_async_write).
-> 
-> At this moment it contains a static check for a cpu feature, and only
-> for x86. I briefly searched the arch/ directory for implementations of
-> crc32c that possibly use hw aid and there are several of them. Adding a
-> static check a-la x86 for the other architectures (arm, ppc, mips,
-> sparc, s390) is wrong, so I'm looking for a clean solution.
-> 
-> The struct shash_alg definition of the algorithms does not say anything
-> about the acceleration. The closest thing is the cra_priority, but I
-> don't know if this is reliable information. The default implementations
-> seem to have 100, and acceleated 200 or 300.
-> 
-> This would be probably sufficient, but I'd like a confirmation from
-> crypto people.
-> 
 
-There's only one default implementation of crc32c, not multiple, and it has
-priority 100.  All other crc32c implementations have priority > 100.  So yes,
-you can check the priority (which would require adding a function to
-lib/libcrc32c.c to get it).  Alternatively you could check whether the driver
-name is "crc32c-generic" or not.
+On 5/14/19 12:37 AM, Peter Zijlstra wrote:
+> On Mon, May 13, 2019 at 07:07:36PM -0700, Andy Lutomirski wrote:
+>> On Mon, May 13, 2019 at 2:09 PM Liran Alon <liran.alon@oracle.com> wrote:
+>>> The hope is that the very vast majority of #VMExit handlers will be
+>>> able to completely run without requiring to switch to full address
+>>> space. Therefore, avoiding the performance hit of (2).
+>>> However, for the very few #VMExits that does require to run in full
+>>> kernel address space, we must first kick the sibling hyperthread
+>>> outside of guest and only then switch to full kernel address space
+>>> and only once all hyperthreads return to KVM address space, then
+>>> allow then to enter into guest.
+>> What exactly does "kick" mean in this context?  It sounds like you're
+>> going to need to be able to kick sibling VMs from extremely atomic
+>> contexts like NMI and MCE.
+> Yeah, doing the full synchronous thing from NMI/MCE context sounds
+> exceedingly dodgy, howver..
+>
+> Realistically they only need to send an IPI to the other sibling; they
+> don't need to wait for the VMExit to complete or anything else.
+>
+> And that is something we can do from NMI context -- with a bit of care.
+> See also arch_irq_work_raise(); specifically we need to ensure we leave
+> the APIC in an idle state, such that if we interrupted an APIC sequence
+> it will not suddenly fail/violate the APIC write/state etc.
+>
+  I've been experimenting with IPI'ing siblings on vmexit, primarily 
+because we know we'll need it if ASI turns out to be viable, but also 
+because I wanted to understand why previous experiments resulted in such 
+poor performance.
 
-- Eric
+  You're correct that you don't need to wait for the sibling to come out 
+once you send the IPI. That hardware thread will not do anything other 
+than process the IPI once it's sent. There is still some need for 
+synchronization, at least for the every vmexit case, since you always 
+want to make sure that one thread is actually doing work while the other 
+one is held. I have this working for some cases, but not enough to call 
+it a general solution. I'm not at all sure that the every vmexit case 
+can be made to perform for the general case. Even the non-general case 
+uses synchronization that I fear might be overly complex.
+
+  For the cases I do have working, simply not pinning the sibling when 
+we exit due to the quest idling is a big enough win to put performance 
+into a much more reasonable range.
+
+  Base on this, I believe that pining a sibling HT in a subset of cases, 
+when we interact with full kernel address space, is almost certainly 
+reasonable.
+
+-jan
+
