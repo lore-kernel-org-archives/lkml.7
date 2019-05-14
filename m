@@ -4,115 +4,262 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C3CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50108C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1BC2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C94120862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfENIua (ORCPT
+        id S1726332AbfENIww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:50:30 -0400
-Received: from michel.telenet-ops.be ([195.130.137.88]:54394 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfENIua (ORCPT
+        Tue, 14 May 2019 04:52:52 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:49670 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfENIwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:50:30 -0400
-Received: from ramsan ([84.194.111.163])
-        by michel.telenet-ops.be with bizsmtp
-        id C8qT2000H3XaVaC068qT9H; Tue, 14 May 2019 10:50:27 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hQT8j-0000Cv-Ko; Tue, 14 May 2019 10:50:25 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hQT8j-0004aR-IQ; Tue, 14 May 2019 10:50:25 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: property-units: Sanitize unit naming
-Date:   Tue, 14 May 2019 10:50:24 +0200
-Message-Id: <20190514085024.17587-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 May 2019 04:52:51 -0400
+Received-SPF: Pass (esa5.microchip.iphmx.com: domain of
+  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="Ludovic.Desroches@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa5.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa5.microchip.iphmx.com;
+  envelope-from="Ludovic.Desroches@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa5.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,468,1549954800"; 
+   d="scan'208";a="31386410"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 01:52:45 -0700
+Received: from localhost (10.10.76.4) by chn-sv-exch02.mchp-main.com
+ (10.10.76.38) with Microsoft SMTP Server id 14.3.352.0; Tue, 14 May 2019
+ 01:52:42 -0700
+Date:   Tue, 14 May 2019 10:52:09 +0200
+From:   Ludovic Desroches <ludovic.desroches@microchip.com>
+To:     Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>
+CC:     Raag Jadav <raagjadav@gmail.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
+Message-ID: <20190514085209.pud5sqrxn2zjrqix@M43218.corp.atmel.com>
+Mail-Followup-To: Eugen Hristev - M18282 <Eugen.Hristev@microchip.com>,
+        Raag Jadav <raagjadav@gmail.com>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
+ <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
+ <20190429223332.GA3908@pc>
+ <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
+ <20190503235851.GA4242@pc>
+ <408ff580-3633-f510-4223-50064f93024a@microchip.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <408ff580-3633-f510-4223-50064f93024a@microchip.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make the naming of units consistent with common practices:
-  - Do not capitalize the first character of units ("Celsius" is
-    special, as it is not the unit name, but a reference to its
-    proposer),
-  - Do not use plural for units,
-  - Do not abbreviate "ampere",
-  - Concatenate prefixes and units (no spaces or hyphens),
-  - Separate units by spaces not hyphens,
-  - "milli" applies to "degree", not to "Celsius".
+On Mon, May 06, 2019 at 10:19:01AM +0200, Eugen Hristev - M18282 wrote:
+> 
+> 
+> On 04.05.2019 02:58, Raag Jadav wrote:
+> 
+> > On Thu, May 02, 2019 at 04:01:16PM +0200, Ludovic Desroches wrote:
+> >> On Tue, Apr 30, 2019 at 04:03:32AM +0530, Raag Jadav wrote:
+> >>> External E-Mail
+> >>>
+> >>>
+> >>> On Mon, Apr 29, 2019 at 11:00:05AM +0200, Ludovic Desroches wrote:
+> >>>> Hello Raag,
+> >>>>
+> >>>> On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
+> >>>>> External E-Mail
+> >>>>>
+> >>>>>
+> >>>>> Performing i2c write operation while SDA or SCL line is held
+> >>>>> or grounded by slave device, we go into infinite at91_twi_write_next_byte
+> >>>>> loop with TXRDY interrupt spam.
+> >>>>
+> >>>> Sorry but I am not sure to have the full picture, the controller is in
+> >>>> slave or master mode?
+> >>>>
+> >>>> SVREAD is only used in slave mode. When SVREAD is set, it means that a read
+> >>>> access is performed and your issue concerns the write operation.
+> >>>>
+> >>>> Regards
+> >>>>
+> >>>> Ludovic
+> >>>
+> >>> Yes, even though the datasheet suggests that SVREAD is irrelevant in master mode,
+> >>> TXRDY and SVREAD are the only ones being set in status register upon reproducing the issue.
+> >>> Couldn't think of a better way to handle such strange behaviour.
+> >>> Any suggestions would be appreciated.
+> >>
+> >> I have the confirmation that you can't rely on the SVREAD flag when in
+> >> master mode. This flag should always have the same value.
+> >>
+> >> I am trying to understand what could lead to your situation. Can you
+> >> give me more details. What kind of device it is? What does lead to this
+> >> situation? Does it happen randomly or not?
+> > 
+> > One of the sama5d2 based board I worked on, was having trouble complete its boot
+> > because of a faulty i2c device, which was randomly holding down the SDA line
+> > on i2c write operation, not allowing the controller to complete its transmission,
+> > causing a massive TXRDY interrupt spam, ultimately hanging the processor.
+> > 
+> > Another strange observation was that SVREAD was being set in the status register
+> > along with TXRDY, every time I reproduced the issue.
+> > You can reproduce it by simply grounding the SDA line and performing i2c write
+> > on the bus.
+> > 
+> > Note that NACK, LOCK or TXCOMP are never set as the transmission never completes.
+> > I'm not sure why slave bits are being set in master mode,
+> > but it's been working reliably for me.
+> > 
+> > This patch doesn't recover the SDA line. It just prevents the processor from
+> > getting hanged in case of i2c bus lockup.
+> 
+> Hello,
+> 
+> I have noticed the same hanging at some points... In my case it is 
+> because of this patch:
+> 
+> commit e8f39e9fc0e0b7bce24922da925af820bacb8ef8
+> Author: David Engraf <david.engraf@sysgo.com>
+> Date:   Thu Apr 26 11:53:14 2018 +0200
+> 
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- .../devicetree/bindings/property-units.txt    | 34 +++++++++----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+Good to know.
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index bfd33734facaba73..e9b8360b32880f12 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -12,32 +12,32 @@ unit prefixes.
- Time/Frequency
- ----------------------------------------
- -mhz		: megahertz
---hz		: Hertz (preferred)
---sec		: seconds
---ms		: milliseconds
---us		: microseconds
---ns		: nanoseconds
-+-hz		: hertz (preferred)
-+-sec		: second
-+-ms		: millisecond
-+-us		: microsecond
-+-ns		: nanosecond
- 
- Distance
- ----------------------------------------
---mm		: millimeters
-+-mm		: millimeter
- 
- Electricity
- ----------------------------------------
---microamp	: micro amps
---microamp-hours : micro amp-hours
---ohms		: Ohms
---micro-ohms	: micro Ohms
---microwatt-hours: micro Watt-hours
---microvolt	: micro volts
---picofarads	: picofarads
---femtofarads	: femtofarads
-+-microamp	: microampere
-+-microamp-hours : microampere hour
-+-ohms		: ohm
-+-micro-ohms	: microohm
-+-microwatt-hours: microwatt hour
-+-microvolt	: microvolt
-+-picofarads	: picofarad
-+-femtofarads	: femtofarad
- 
- Temperature
- ----------------------------------------
---celsius	: Degrees Celsius
---millicelsius	: Degreee milli-Celsius
-+-celsius	: degree Celsius
-+-millicelsius	: millidegree Celsius
- 
- Pressure
- ----------------------------------------
---kpascal	: kiloPascal
-+-kpascal	: kilopascal
--- 
-2.17.1
+> 
+> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+> index bfd1fdf..3f3e8b3 100644
+> --- a/drivers/i2c/busses/i2c-at91.c
+> +++ b/drivers/i2c/busses/i2c-at91.c
+> @@ -518,8 +518,16 @@ static irqreturn_t atmel_twi_interrupt(int irq, 
+> void *dev_id)
+>           * the RXRDY interrupt first in order to not keep garbage data 
+> in the
+>           * Receive Holding Register for the next transfer.
+>           */
+> -       if (irqstatus & AT91_TWI_RXRDY)
+> -               at91_twi_read_next_byte(dev);
+> +       if (irqstatus & AT91_TWI_RXRDY) {
+> +               /*
+> +                * Read all available bytes at once by polling RXRDY 
+> usable w/
+> +                * and w/o FIFO. With FIFO enabled we could also read 
+> RXFL and
+> +                * avoid polling RXRDY.
+> +                */
+> +               do {
+> +                       at91_twi_read_next_byte(dev);
+> +               } while (at91_twi_read(dev, AT91_TWI_SR) & AT91_TWI_RXRDY);
+> +       }
+> 
+> 
+> In my opinion having a do/while with an exit condition relying solely on 
+> a bit read from hardware is unacceptable in IRQ context - kernel can 
+> hang here.
+> A timeout would be a solution...
 
+You're right with a faulty hardware it can lead to disaster. As you
+mentionned issues with this patch, the end of loop condition is not good
+as it can stay true indefinitely.
+
+For sure a timeout is a solution but its value can be controversial.
+Maybe there is a better combination of flags to check in the status
+register. I'll see this point too.
+
+Regards
+
+Ludovic
+
+> 
+> For me, reverting this patch solves hanging issues.
+> 
+> Hope this helps,
+> 
+> Eugen
+> 
+> > 
+> > Cheers,
+> > Raag
+> > 
+> >>
+> >> Regards
+> >>
+> >> Ludovic
+> >>
+> >>>
+> >>> Cheers,
+> >>> Raag
+> >>>
+> >>>>
+> >>>>>
+> >>>>> Signed-off-by: Raag Jadav <raagjadav@gmail.com>
+> >>>>> ---
+> >>>>>   drivers/i2c/busses/i2c-at91.c | 6 +++++-
+> >>>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
+> >>>>> index 3f3e8b3..b2f5fdb 100644
+> >>>>> --- a/drivers/i2c/busses/i2c-at91.c
+> >>>>> +++ b/drivers/i2c/busses/i2c-at91.c
+> >>>>> @@ -72,6 +72,7 @@
+> >>>>>   #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
+> >>>>>   #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
+> >>>>>   #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
+> >>>>> +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
+> >>>>>   #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
+> >>>>>   #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
+> >>>>>   #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
+> >>>>> @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
+> >>>>>   		at91_disable_twi_interrupts(dev);
+> >>>>>   		complete(&dev->cmd_complete);
+> >>>>>   	} else if (irqstatus & AT91_TWI_TXRDY) {
+> >>>>> -		at91_twi_write_next_byte(dev);
+> >>>>> +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
+> >>>>> +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
+> >>>>> +		else
+> >>>>> +			at91_twi_write_next_byte(dev);
+> >>>>>   	}
+> >>>>>   
+> >>>>>   	/* catch error flags */
+> >>>>> -- 
+> >>>>> 2.7.4
+> >>>>>
+> >>>>>
+> >>>
+> >>> _______________________________________________
+> >>> linux-arm-kernel mailing list
+> >>> linux-arm-kernel@lists.infradead.org
+> >>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >>>
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> > 
