@@ -2,152 +2,97 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919A6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3158AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD2021530
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C902085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="POgIrSQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfENKLH (ORCPT
+        id S1726525AbfENKMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:11:07 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35076 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfENKLD (ORCPT
+        Tue, 14 May 2019 06:12:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46757 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726211AbfENKMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:11:03 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p26so22063873edr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:11:02 -0700 (PDT)
+        Tue, 14 May 2019 06:12:49 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r7so687339wrr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:12:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JhynvhAiddsMm/Ocp7kfyLUqbkQfMFHtGPzDTJPS1B0=;
+        b=POgIrSQvJlnEj7sbeK83izHCW7/GNPyqSQO0wUuvNg0ap2oo/MDC29Uj291gjEXA9o
+         OOktcC8ZvbzM54YaY105eVEKF4L0mP0I5JKwuxFilZBTNBGicOIp6s45+vumK0A+d0P3
+         Lg5xHawaznKjqnhlI4lS/ivZUVtjU8TXLr+3710P/HT7OttPffWSt9U6QN+MsbFCdFnH
+         YIAp91wpgf7k1LYDfDAu48s8UWNAYXNjqe35n0aU8KP4xvylUMjUrmqZAUOgBsTxxEzG
+         foOtZEBJZ10Lt2TfL2DOvQZ4hcb+RvKBIO8I6BaBW3PeRU7WiK375bDnlIQKiIx36X7k
+         VTMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3VpRLg8NJLZAav9EnwymaMY+zgZMT88zMFcqJQzQ/Ac=;
-        b=CpPNI4ZNnPE3oWbwvIVlbct2jVz9B5Ng2QOkqB1wgOE1NiSY12xmdY5svqP0Zzzk+r
-         Wp7w/XDMzAKVgBbtv+Nw3UkFIAiOeU0TbTHA8k5rUUcwDNKw7kq0LUlh+L50RwLlTQbz
-         CnK53FyS4fHl/UiO+NLca2lSlS0ZwOvmVjTff8S5gRvJmAPT4LMNZ7KRzu3S5cCUMLSO
-         n1mzwj6kEtsXZP/nQfMDurdQuhpbnq8hPIAl492pRjLBm/Bm3uCM5CkR6bq3Xweqkxg8
-         qQ8Vcf4RyrJA2wsz1QnTGN+58v2BhY71j1SYNly8qwygVLidv2rspzqwFMd7MxZo2FJ2
-         HF7g==
-X-Gm-Message-State: APjAAAWXUwWWPRXV0iM1aiYaJYU6Ji43sMMkdVScXMOhwYgyRzsU7EBf
-        2YHQkIpHCtujerXNtQpj89a+sjgsGIg=
-X-Google-Smtp-Source: APXvYqwQ1M7+2IwC8+Ag7mbbnIGtPsFvd3nhiw/xiOfmQHxosgmZdMvZUm2GMUBqbezTPHW76hO4HQ==
-X-Received: by 2002:a17:906:6a50:: with SMTP id n16mr27031422ejs.119.1557828661574;
-        Tue, 14 May 2019 03:11:01 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f8:1c0c:6c86:46e0:a7ad:5246:f04d])
-        by smtp.gmail.com with ESMTPSA id k18sm4400849eda.92.2019.05.14.03.11.00
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:11:00 -0700 (PDT)
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-To:     "Robert R. Howell" <RHowell@uwyo.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
- <eb1462c9-ebef-7bd6-c263-3f4f2e8ba63d@redhat.com>
- <b6cd67d7-a4de-0fab-4512-25d732190d17@uwyo.edu>
- <feb1808d-542c-83c2-5c70-9228473bb8d0@redhat.com>
- <0a770539-dfe9-2eb6-a90a-82f065a23a3f@uwyo.edu>
- <f6db39bc-b8d1-fda8-ad37-a8b050ef0027@redhat.com>
- <37aee883-1253-adad-82b4-4a578cc72825@uwyo.edu>
- <CAJZ5v0j9U20cFbRx6QKeQv6wyDg6nL71L0U_Rec5+W1JoD8-=w@mail.gmail.com>
- <144b56d4-54e6-bccd-4652-22303bcd9168@uwyo.edu>
- <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com>
- <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu>
- <4fb5fc2e-e5af-6732-0228-8c73beed1afb@redhat.com>
- <c3dadc9d-bf3b-c992-f256-94a25fea570a@uwyo.edu>
- <1bb008bd-ae0d-d351-ef0c-303e23b0eca5@redhat.com>
- <cc1dacb5-ef0f-61c4-6187-99ee1da55d92@uwyo.edu>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0b3eaf00-1a28-441b-e1fd-dd57e118f7a3@redhat.com>
-Date:   Tue, 14 May 2019 12:10:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        bh=JhynvhAiddsMm/Ocp7kfyLUqbkQfMFHtGPzDTJPS1B0=;
+        b=ZIzhcusgrPC8qYc7UwO3/UWeeSBV1frglI8N/fO9rV4VVgRZYqEXylFcpaeTgpuXO3
+         BKo5kVbVZrYOofD2ejrm/g6BWqz1DUc1RysLA5yurVipcH7VpGFHaef2UQn/OToy8YWg
+         Fot32bRdqZioduMDbPBhSvBCiLPhBsfuplLX4UNkRv2jQ+S6rIgPeedsuUd8xaEs/fYS
+         BVvylPrcJCFPY7uj0B3LZpSorAlW7sE9J6aOkzMKYqcxt2k84PIf3c1Zrvh42Cd2vaFM
+         o4QQ7H9NlVMWiRxb1P8zSEmsBgRTk8Vi61gojvrxZWR7Vp8oytDc4M4hp9wU4AwFXQ9E
+         nGqA==
+X-Gm-Message-State: APjAAAU2Y7OOUOv9bPYMSeuQH9+7BPBrTAiIjxUGNTnSCkJhhdXPE9rK
+        740nY3q2GU3IEILNhBj8YzCwgw==
+X-Google-Smtp-Source: APXvYqxWgcWkABQ/gpTGPgCZF14Fs8TuOZduMEHV27FG7xjEGdKo8VVbb7/N98vhPuSiXwmwHNdJHg==
+X-Received: by 2002:a5d:52c4:: with SMTP id r4mr20149062wrv.79.1557828767618;
+        Tue, 14 May 2019 03:12:47 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id r23sm2219564wmh.29.2019.05.14.03.12.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 03:12:47 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] arm64: dts: meson: g12a: add i2c
+Date:   Tue, 14 May 2019 12:12:34 +0200
+Message-Id: <20190514101237.13969-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <cc1dacb5-ef0f-61c4-6187-99ee1da55d92@uwyo.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add the i2c controllers and pinctrl definitions to the g12a DT then
+the busses present on the u200 and sei510.
 
-On 5/9/19 8:09 PM, Robert R. Howell wrote:
-> Hi Hans
-> 
-> On 5/9/19 2:50 AM, Hans de Goede wrote:
-> 
->>
->> Hi,
->>
->> On 09-05-19 06:24, Robert R. Howell wrote:
->>> On 4/30/19 8:39 AM, Hans de Goede wrote:
->>>>
-> 
->>>>
->>>> I've just tried to reproduce the "Error i2c_dw_xfer call while suspended" error
->>>> on suspend/resume on my own T100TA and I could not reproduce this.
->>>>
->>>> Can you try without the BT keyboard paired and waking up from suspend using the
->>>> tablet part's power-button ?
->>>>
->>>> Also do you still have the scripts to rmmod some modules before suspend ?
->>>>
->>>
->>> The T100TA keyboard is actually a hardwired connection rather than Bluetooth but I
->>> did physically disconnect the keyboard, and also unpaired all the actual Bluetooth
->>> devices (such as the mouse) and then powered down the T100TA bluetooth adapter.
->>> When I suspend, then resume using the tablet power button, I still get the
->>> i2c_dw_xfererror error during the resume.  But whatever causes this error isn't fatal,
->>> in the sense that after resume the sound and other i2c functions do still work OK.
->>>
->>> While I always get this i2c_dw_xfer error on resume from suspend or hibernation on the T100TA,
->>> I also have a T100TAM and curiously, it NEVER shows that error -- although all the
->>> other suspend and hibernate behavior seems similar.  I'm not sure if the following could
->>> be the difference, but the T100TA uses an i2c connected ATML1000 touchscreen controller
->>> while the T100TAM uses an i2c connected SIS0817 touchscreen controller.  Other than that
->>> the hardware seems almost identical.
->>
->> I've been testing on an actual T100TA, with the ATML1000 touchscreen controller.
->>
->> Maybe it is a difference in BIOS version, my T100TA is running the latest BIOS, what
->> is the output of:
->>
->> cat /sys/class/dmi/id/bios_version /sys/class/dmi/id/bios_date
->>
-> On the T100TA which shows the i2c_dw_xfer error the above cat reports:
-> T100TA.307
-> 05/09/2014
+Notice the use of the pinconf DT property 'drive-strength-microamp'.
+Support for this property is not yet merged in meson pinctrl driver but
+the DT part as been acked by the DT maintainer [0] so it should be safe
+to use.
 
-My T100TA has version T100TA.314, date 08/13/2015
+[0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
 
-> while the T100TA which does NOT show the i2c_dw_xfer error reports:
-> T100TAM.205
-> 07/25/2014
->>
->> Also do you perhaps have a microsd card inserted?  (I'm trying to figure out the
->> different between our setups so that I can hopefully reproduce the issue myself).
->>
-> I do have a microsd card inserted in both the T100TA and the T100TAM.
+Guillaume La Roque (1):
+  arm64: dts: meson: g12a: add i2c nodes
 
-Ok, so I tried reproducing the suspend/resume problem on my T100TA with a microsd
-inserted and mounted and I still cannot reproduce the problem. So either you are
-hitting a BIOS bug which since has been fixed, or the suspend/resume
-problem is caused by you removing the DPM_FLAG_SMART_SUSPEND flag.
+Jerome Brunet (2):
+  arm64: dts: meson: u200: enable i2c busses
+  arm64: dts: meson: sei510: enable i2c3
 
-Regards,
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   6 +
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |  21 ++
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 268 ++++++++++++++++++
+ 3 files changed, 295 insertions(+)
 
-Hans
+-- 
+2.20.1
 
