@@ -2,37 +2,36 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE5A8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08550C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB59D208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C993F208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfENGOK (ORCPT
+        id S1726753AbfENGPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:14:10 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37599 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726148AbfENGOB (ORCPT
+        Tue, 14 May 2019 02:15:07 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:16842 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726407AbfENGOJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:14:01 -0400
-X-UUID: 2ead6c60d3f74208bb8338a830e375ab-20190514
-X-UUID: 2ead6c60d3f74208bb8338a830e375ab-20190514
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
+        Tue, 14 May 2019 02:14:09 -0400
+X-UUID: a069023ebd044d799faad716c5504642-20190514
+X-UUID: a069023ebd044d799faad716c5504642-20190514
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1259888378; Tue, 14 May 2019 14:13:55 +0800
+        with ESMTP id 518594923; Tue, 14 May 2019 14:13:57 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 14:13:54 +0800
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 14 May 2019 14:13:55 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 14:13:54 +0800
+ Transport; Tue, 14 May 2019 14:13:55 +0800
 From:   Stu Hsieh <stu.hsieh@mediatek.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
@@ -43,135 +42,235 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v3 06/13] [media] mtk-mipicsi: add function to support SerDes for link number
-Date:   Tue, 14 May 2019 14:13:43 +0800
-Message-ID: <1557814430-9675-7-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v3 11/13] [media] mtk-mipicsi: add function to get the format
+Date:   Tue, 14 May 2019 14:13:48 +0800
+Message-ID: <1557814430-9675-12-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: DA12BFC629A1B74F887628F032B6B504BA02668D416D7592F93EC9540751B8532000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add function to support SerDes for link number.
+This patch add function to get the format
 
-Mt2712 can server at most four camera link for each mipicsi port.
-Therefore, driver need to know how many camera link in SerDes and
-set the mipicsi HW to serve.
+This function can get the subdev format and host format.
+Calculate the number of format which intersection of subdev and host.
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 920848e965e3..117eb1939014 100644
+index cf46fcd01a19..1b885de6d990 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -53,6 +53,8 @@
- #define MIPICSI_COMMON_CLK 2
- #define MTK_CAMDMA_MAX_NUM 4U
+@@ -56,6 +56,7 @@
  #define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
-+#define MAX_DES_LINK 4U
-+#define SUBDEV_LINK_REG 0x49
+ #define MAX_DES_LINK 4U
+ #define SUBDEV_LINK_REG 0x49
++#define MTK_DATAWIDTH_8					(0x01U << 7U)
  #define MAX_SUPPORT_WIDTH             4096U
  #define MAX_SUPPORT_HEIGHT            4096U
  #define MAX_BUFFER_NUM                  32U
-@@ -103,6 +105,8 @@
- #define IMGO_STRIDE					0x238
- #define DMA_FRAME_HEADER_EN				0xE00
- 
-+#define SerDes_support 1
-+
- /* buffer for one video frame */
- struct mtk_mipicsi_buf {
- 	struct list_head queue;
-@@ -127,6 +131,8 @@ struct mtk_mipicsi_dev {
+@@ -134,6 +135,7 @@ struct mtk_mipicsi_dev {
+ 	struct regmap		*seninf_top;
+ 	void __iomem		*seninf_mux[MTK_CAMDMA_MAX_NUM];
+ 	void __iomem		*camsv[MTK_CAMDMA_MAX_NUM];
++	u16			width_flags;	/* max 12 bits */
+ 	struct list_head	fb_list;
+ 	spinlock_t		lock;
  	spinlock_t		queue_lock;
- 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
- 	bool streamon;
-+	unsigned int link;
-+	u8 link_reg_val;
- 	unsigned long enqueue_cnt;
- 	char drv_name[16];
- 	u32 id;
-@@ -146,6 +152,64 @@ struct mtk_mipicsi_dev {
- 		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
- 		V4L2_MBUS_DATA_ACTIVE_HIGH)
+@@ -152,6 +154,50 @@ struct mtk_mipicsi_dev {
+ 	u32 bytesperline;
+ };
  
-+static int get_subdev_register(const struct soc_camera_device *icd,
-+	struct v4l2_dbg_register *reg)
++static const struct soc_mbus_lookup mtk_mipicsi_formats[] = {
++{
++	.code = MEDIA_BUS_FMT_YUYV8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_YUYV,
++		.name			= "YUYV",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_YVYU8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_YVYU,
++		.name			= "YVYU",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_UYVY8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_UYVY,
++		.name			= "UYVY",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++}, {
++	.code = MEDIA_BUS_FMT_VYUY8_2X8,
++	.fmt = {
++		.fourcc			= V4L2_PIX_FMT_VYUY,
++		.name			= "VYUY",
++		.bits_per_sample	= 8,
++		.packing		= SOC_MBUS_PACKING_2X8_PADHI,
++		.order			= SOC_MBUS_ORDER_LE,
++		.layout			= SOC_MBUS_LAYOUT_PACKED,
++	},
++},
++};
++
+ #define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
+ 		V4L2_MBUS_HSYNC_ACTIVE_HIGH |	\
+ 		V4L2_MBUS_HSYNC_ACTIVE_LOW |	\
+@@ -196,6 +242,43 @@ static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
+ 	}
+ }
+ 
++static int mtk_mipicsi_try_bus_param(struct soc_camera_device *icd,
++					    unsigned char buswidth)
 +{
 +	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
++	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
++	struct mtk_mipicsi_dev *mipicsi = ici->priv;
++	struct v4l2_mbus_config cfg = {.type = V4L2_MBUS_CSI2_DPHY,};
++	unsigned long common_flags = 0;
 +	int ret = 0;
 +
-+	reg->match.type = V4L2_CHIP_MATCH_SUBDEV;
-+	reg->match.addr = 0;
-+	ret = v4l2_subdev_call(sd, core, g_register, reg);
-+	if (ret != 2) {
-+		dev_err(icd->parent, "mipicsi get des register 0x%llx fail, ret=%d\n",
-+			reg->reg, ret);
-+		return -EIO;
++	ret = v4l2_subdev_call(sd, video, g_mbus_config, &cfg);
++	if (ret == 0) {
++		common_flags = soc_mbus_config_compatible(&cfg,
++				MTK_MIPICSI_BUS_PARAM);
++		if (common_flags == 0U) {
++			dev_warn(icd->parent, "Flags incompatible: camera 0x%x\n",
++				cfg.flags);
++			return -EINVAL;
++		}
++	} else {
++		if (ret != -ENOIOCTLCMD)
++			return ret;
 +	}
 +
-+	dev_info(icd->parent, "read DES [reg/val/ret] is [0x%llx/0x%llx/%d]\n",
-+		reg->reg, reg->val, ret);
-+	return ret;
++	if ((((u16)1U << (buswidth - 1U)) & mipicsi->width_flags) != 0U)
++		return 0;
++
++	return -EINVAL;
 +}
 +
-+static int get_subdev_link(const struct soc_camera_device *icd,
-+	unsigned int *link, u8 *link_reg_val)
++static bool mtk_mipicsi_packing_supported(const struct soc_mbus_pixelfmt *fmt)
 +{
-+	struct v4l2_dbg_register reg;
-+	int ret = 0;
-+	unsigned int index = 0U;
-+	*link_reg_val = 0x0U;
++	return	fmt->packing == SOC_MBUS_PACKING_NONE ||
++		(fmt->bits_per_sample == 8U &&
++		 fmt->packing == SOC_MBUS_PACKING_2X8_PADHI);
++}
 +
-+	if (SerDes_support == 0) {
-+		*link = 1;
-+		*link_reg_val = 0x1;
-+		dev_info(icd->parent, "subdev not support SerDes\n");
+ static int get_subdev_register(const struct soc_camera_device *icd,
+ 	struct v4l2_dbg_register *reg)
+ {
+@@ -322,6 +405,72 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
+ 	(void)pm_runtime_put_sync(icd->parent);
+ }
+ 
++static int mtk_mipicsi_get_formats(struct soc_camera_device *icd,
++		unsigned int idx, struct soc_camera_format_xlate *xlate)
++{
++	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
++	int formats = 0, ret, i;
++	int n = ARRAY_SIZE(mtk_mipicsi_formats);
++
++	struct v4l2_subdev_mbus_code_enum mbus_code = {
++		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
++		.index = idx,
++	};
++	/* subdev format */
++	const struct soc_mbus_pixelfmt *fmt;
++
++	ret = v4l2_subdev_call(sd, pad, enum_mbus_code, NULL, &mbus_code);
++	if (ret < 0)
++		/* No more formats */
++		return 0;
++
++	/* get subdev support format */
++	fmt = soc_mbus_get_fmtdesc(mbus_code.code);
++	if (fmt == NULL) {
++		dev_err(icd->parent, "Invalid format code #%u: %d",
++			idx, mbus_code.code);
 +		return 0;
 +	}
 +
-+	if (link == NULL)
-+		return -EINVAL;
-+
-+	memset(&reg, 0, sizeof(reg));
-+	/*get camera link number*/
-+	reg.reg = SUBDEV_LINK_REG;
-+	ret = get_subdev_register(icd, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	*link = 0U;
-+	for (index = 0U; index < MAX_DES_LINK; ++index) {
-+		if ((reg.val & 0x01U) == 0x01U) {
-+			*link += 1U;
-+			*link_reg_val |= (0x01U << index);
-+		}
-+		reg.val >>= 1U;
++	/* This also checks support for the requested bits-per-sample */
++	ret = mtk_mipicsi_try_bus_param(icd, fmt->bits_per_sample);
++	if (ret < 0) {
++		dev_err(icd->parent, "Fail to try the bus parameters.\n");
++		return 0;
 +	}
 +
-+	dev_info(icd->parent, "%u camera linked to sub device\n", *link);
-+	return 0;
++	switch (mbus_code.code) {
++	case MEDIA_BUS_FMT_UYVY8_2X8:
++	case MEDIA_BUS_FMT_VYUY8_2X8:
++	case MEDIA_BUS_FMT_YUYV8_2X8:
++	case MEDIA_BUS_FMT_YVYU8_2X8:
++			dev_dbg(icd->parent, "Providing format %s using code %d\n",
++				fmt->name, mbus_code.code);
++		break;
++	default:
++		if (!mtk_mipicsi_packing_supported(fmt))
++			return 0;
++		if (xlate != NULL)
++			dev_dbg(icd->parent,
++				"Providing format %s in pass-through mode\n",
++				fmt->name);
++		break;
++	}
++
++	/* get camera host and subdev format intersection */
++	for (i = 0; i < n; ++i)
++		if (mtk_mipicsi_formats[i].fmt.fourcc == fmt->fourcc) {
++			++formats;
++			if (xlate != NULL) {
++				xlate->host_fmt = &mtk_mipicsi_formats[i].fmt;
++				xlate->code = mbus_code.code;
++				xlate++;
++			}
++		}
++
++	return formats;
 +}
 +
- static u32 get_bytesperline(const u32 fmt, const u32 width)
+ static bool is_supported(const u32 pixformat)
  {
- 	u32 bytesperline = 0;
-@@ -177,6 +241,7 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 	u32 height;
- 	u32 fmt;
+ 	switch (pixformat) {
+@@ -711,6 +860,7 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
+ 	.owner			= THIS_MODULE,
+ 	.add			= mtk_mipicsi_add_device,
+ 	.remove			= mtk_mipicsi_remove_device,
++	.get_formats            = mtk_mipicsi_get_formats,
+ 	.set_fmt		= mtk_mipicsi_set_fmt,
+ 	.try_fmt		= mtk_mipicsi_try_fmt,
+ 	.init_videobuf2	= mtk_mipicsi_init_videobuf2,
+@@ -1297,6 +1447,7 @@ static int mtk_mipicsi_probe(struct platform_device *pdev)
+ 	mipicsi->soc_host.priv		= mipicsi;
+ 	mipicsi->soc_host.v4l2_dev.dev	= &pdev->dev;
+ 	mipicsi->soc_host.nr		= mipicsi->id;
++	mipicsi->width_flags		= MTK_DATAWIDTH_8;
+ 	mipicsi->streamon		= false;
  
-+	(void)get_subdev_link(icd, &mipicsi->link, &mipicsi->link_reg_val);
- 	/* Get width/height info from subdev. Then use them to set register */
- 	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &format);
- 	if (ret < 0) {
+ 	ret = soc_camera_host_register(&mipicsi->soc_host);
 -- 
 2.18.0
 
