@@ -2,208 +2,157 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3672C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37CDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7C1B20881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A7B12147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:29:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CcGeR7lc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eZGNKozF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfENK3T (ORCPT
+        id S1726491AbfENK3a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:29:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36799 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfENK3S (ORCPT
+        Tue, 14 May 2019 06:29:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:33884 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENK3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:29:18 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s17so2111166wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zx18v+pt5qpFKWZn4kjcD7LGGT6wQN2CufNatm+c9iM=;
-        b=CcGeR7lcefXCrbxNad2WXV3L3Hy4IRqV9YbVNLIJWDMe6ih+wkswr0C02urPKoWci4
-         T7praIeAr7UvdW8cSfMfn1xTp5XCQ9APVEZcYm9dfvbJDkmg+JKbyKCn+J8Qe58WJqlH
-         UwUlTwzp/bREiZx4mAW7p6Ts8hqF6rc4dBJTY5DHMboSQ5qHGa1TzLQ7ZaBF+997wI2j
-         pDoBzDCfZshScfLYgh71YmcEBNLi5LOQWvkW3ZbkB7VYMbrKiVUpa/qgcHmCtSh+nJiF
-         D60h1Kd5NXH9WjNlY3FaFi7S5nmLdsgtDgbfi6WGUdnXKmlvmBB1BYYwyTShhZSjbzWV
-         wRIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zx18v+pt5qpFKWZn4kjcD7LGGT6wQN2CufNatm+c9iM=;
-        b=cX6Wf8aw6zRCGWY7BBnY6LNRrXE6o+XC3IzD/G2geBdAKuYH6S5wGuUDrLZD8Argt3
-         38WOrAYWEsD/1NK6+3gpZFlilEnWeo71RpNRtFr3JV9RL3mTfL+WZ55rTeqTI8gxMEIe
-         xOIhbUE36XosMwZNM4pmn7uvOnKycg3VybHF3kVHpRxmMVR+sKwYXWOVLtlf1rfSIrGQ
-         xiJ10Jo4erqAT/RAKxixWchY61m2KrP8S0Neb41+NiqBDAnVymp3H75b/Wkd+BKEBRzw
-         6MjOXlcxeXo/wDt3m/2viYCSVAi+F+X6DFmIvzEjET5/b1khycAykwJCYoxrJrGRess9
-         29dw==
-X-Gm-Message-State: APjAAAU9P5PjO3zn1EU7zuUezV6iZEZSRQbiVIbF/ZDt6GQ9IppGuPLq
-        qL5ICf6Q2SUvhPScZGXRFbyqhg==
-X-Google-Smtp-Source: APXvYqxPXMnsuqdgIhu95mY5T47oJBUtljTX+OwiJkwLm4JKIF8EZ4gbi4r9/RvR7z7zcT99Xl130Q==
-X-Received: by 2002:a5d:5701:: with SMTP id a1mr21686965wrv.52.1557829756032;
-        Tue, 14 May 2019 03:29:16 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id q26sm1922915wmq.25.2019.05.14.03.29.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:29:15 -0700 (PDT)
-Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
-To:     peron.clem@gmail.com, David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
-References: <20190512174608.10083-1-peron.clem@gmail.com>
- <20190513151405.GW17751@phenom.ffwll.local>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com>
-Date:   Tue, 14 May 2019 12:29:14 +0200
+        Tue, 14 May 2019 06:29:30 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EAOCF4162648;
+        Tue, 14 May 2019 10:26:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=HyoEJG6NjsyHsNKNQwL239w7XdNZ36sL7RhVidoBH+Y=;
+ b=eZGNKozFDNYKTFY2RTWJ35YGfn3mhjEA8HHUXglMJawyb8sst0F7BP0/4Tqo8wyOl/Zl
+ c984f8fM9ND92GrFfsqMa0Ekw3FYrxj9nyaI6XB/ijWegKO7CEuHzv/bEDXWjbKVyHtB
+ aP6vteMS5DEMIeUb1zbdHhC1a9NWZOEQWAd2ZsDebp00Li4T5WyeXFvyS8a6FIj9uYBg
+ IyFKQeacv8bVjNGoYSzwd6LMyAHhggvTMnVuBy7xcd1xGRc3WmKn8UoQFkKIG7NF+vmK
+ NwQN3wj7rJzV9JSEieX+QQ5xD2mZUQoMxeQ4Xcn23Lp/CvNFBG6uQZpIc8/pqjiWzQb0 YQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2sdq1qcubw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 10:26:50 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EAPYwj130365;
+        Tue, 14 May 2019 10:26:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2se0tw2na5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 10:26:50 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4EAQlqh024795;
+        Tue, 14 May 2019 10:26:47 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 May 2019 03:26:47 -0700
+Subject: Re: [RFC KVM 19/27] kvm/isolation: initialize the KVM page table with
+ core mappings
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+To:     Dave Hansen <dave.hansen@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, kvm@vger.kernel.org,
+        x86@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-20-git-send-email-alexandre.chartre@oracle.com>
+ <a9198e28-abe1-b980-597e-2d82273a2c17@intel.com>
+ <463b86c8-e9a0-fc13-efa4-31df3aea8e54@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <daace7ff-e85c-442d-a53e-6e08c5fb8385@oracle.com>
+Date:   Tue, 14 May 2019 12:26:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190513151405.GW17751@phenom.ffwll.local>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <463b86c8-e9a0-fc13-efa4-31df3aea8e54@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905140076
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905140076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 13/05/2019 17:14, Daniel Vetter wrote:
-> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com wrote:
->> From: Clément Péron <peron.clem@gmail.com>
->>
->> Hi,
->>
->> The Allwinner H6 has a Mali-T720 MP2. The drivers are
->> out-of-tree so this series only introduce the dt-bindings.
+On 5/13/19 6:47 PM, Alexandre Chartre wrote:
 > 
-> We do have an in-tree midgard driver now (since 5.2). Does this stuff work
-> together with your dt changes here?
-
-No, but it should be easy to add.
-
-Clément, no need to resend the first patch, it's now on
-linus master.
-
-Could you also add support for the bus clock in panfrost
-in the same patchset since it's also on master now ?
-
-Neil
-
-> -Daniel
 > 
->> The first patch is from Neil Amstrong and has been already
->> merged in linux-amlogic. It is required for this series.
+> On 5/13/19 5:50 PM, Dave Hansen wrote:
+>>> +    /*
+>>> +     * Copy the mapping for all the kernel text. We copy at the PMD
+>>> +     * level since the PUD is shared with the module mapping space.
+>>> +     */
+>>> +    rv = kvm_copy_mapping((void *)__START_KERNEL_map, KERNEL_IMAGE_SIZE,
+>>> +         PGT_LEVEL_PMD);
+>>> +    if (rv)
+>>> +        goto out_uninit_page_table;
 >>
->> The second patch is from Icenowy Zheng where I changed the
->> order has required by Rob Herring.
->> See: https://patchwork.kernel.org/patch/10699829/
->>
->> Thanks,
->> Clément
->>
->> Changes in v4:
->>  - Add Rob Herring reviewed-by tag
->>  - Resent with correct Maintainers
->>
->> Changes in v3 (Thanks to Maxime Ripard):
->>  - Reauthor Icenowy for her patch
->>
->> Changes in v2 (Thanks to Maxime Ripard):
->>  - Drop GPU OPP Table
->>  - Add clocks and clock-names in required
->>
->> Clément Péron (6):
->>   dt-bindings: gpu: mali-midgard: Add H6 mali gpu compatible
->>   arm64: dts: allwinner: Add ARM Mali GPU node for H6
->>   arm64: dts: allwinner: Add mali GPU supply for Pine H64
->>   arm64: dts: allwinner: Add mali GPU supply for Beelink GS1
->>   arm64: dts: allwinner: Add mali GPU supply for OrangePi Boards
->>   arm64: dts: allwinner: Add mali GPU supply for OrangePi 3
->>
->> Icenowy Zheng (1):
->>   dt-bindings: gpu: add bus clock for Mali Midgard GPUs
->>
->> Neil Armstrong (1):
->>   dt-bindings: gpu: mali-midgard: Add resets property
->>
->>  .../bindings/gpu/arm,mali-midgard.txt         | 27 +++++++++++++++++++
->>  .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |  5 ++++
->>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    |  5 ++++
->>  .../dts/allwinner/sun50i-h6-orangepi.dtsi     |  5 ++++
->>  .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  5 ++++
->>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 14 ++++++++++
->>  6 files changed, 61 insertions(+)
->>
->> -- 
->> 2.17.1
->>
+>> Could you double-check this?  We (I) have had some repeated confusion
+>> with the PTI code and kernel text vs. kernel data vs. __init.
+>> KERNEL_IMAGE_SIZE looks to be 512MB which is quite a bit bigger than
+>> kernel text.
+> 
+> I probably have the same confusion :-) but I will try to check again.
+> 
 > 
 
+mm.txt says that kernel text is 512MB, and that's probably why I used
+KERNEL_IMAGE_SIZE.
+
+https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt
+
+========================================================================================================================
+     Start addr    |   Offset   |     End addr     |  Size   | VM area description
+========================================================================================================================
+  [...]
+  ffffffff80000000 |   -2    GB | ffffffff9fffffff |  512 MB | kernel text mapping, mapped to physical address 0
+  [...]
+
+
+However, vmlinux.lds.S does:
+
+. = ASSERT((_end - _text <= KERNEL_IMAGE_SIZE),
+            "kernel image bigger than KERNEL_IMAGE_SIZE");
+
+So this covers everything between _text and _end, which includes text, data,
+init and other stuff
+
+The end of the text section is tagged with _etext. So the text section is
+effectively (_etext - _text). This matches with what efi_setup_page_tables()
+used to copy kernel text:
+
+int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+{
+	[...]
+         npages = (_etext - _text) >> PAGE_SHIFT;
+         text = __pa(_text);
+         pfn = text >> PAGE_SHIFT;
+
+         pf = _PAGE_RW | _PAGE_ENC;
+         if (kernel_map_pages_in_pgd(pgd, pfn, text, npages, pf)) {
+                 pr_err("Failed to map kernel text 1:1\n");
+                 return 1;
+         }
+	[...]
+}
+
+
+alex.
