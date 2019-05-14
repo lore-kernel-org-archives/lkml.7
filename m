@@ -2,141 +2,217 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F584C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260C5C04E53
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C3B2084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E476A20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="V/dvrrRS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vw8j1EhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfENRRN (ORCPT
+        id S1726940AbfENRRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:17:13 -0400
-Received: from mail-eopbgr750058.outbound.protection.outlook.com ([40.107.75.58]:19431
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726251AbfENRRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:17:12 -0400
+        Tue, 14 May 2019 13:17:18 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42231 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfENRRR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 13:17:17 -0400
+Received: by mail-ed1-f67.google.com with SMTP id l25so23890569eda.9;
+        Tue, 14 May 2019 10:17:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qc9AdtCfa2Mwj0MwrRa7J/OEQJU+85g71zfZl/OVdVs=;
- b=V/dvrrRSJXEHGEN2IH+F1MWUylrdZo0jIhUVja96dsJObtxewbtuO15LEkAuijAu2WjBDuDVhWDH/eUVRoiM2Ce9UKYzW26LjeMUj5w8jpQ0WGPLPSVLgwx9ZklFpOCwl8ZMLLEwas6um6gQVjWfSxHOXwu3Nm9ei+h4BN3C8Rw=
-Received: from DM5PR12MB2471.namprd12.prod.outlook.com (52.132.141.138) by
- DM5PR12MB1163.namprd12.prod.outlook.com (10.168.240.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.25; Tue, 14 May 2019 17:17:07 +0000
-Received: from DM5PR12MB2471.namprd12.prod.outlook.com
- ([fe80::899d:65c6:3f72:20d3]) by DM5PR12MB2471.namprd12.prod.outlook.com
- ([fe80::899d:65c6:3f72:20d3%7]) with mapi id 15.20.1878.024; Tue, 14 May 2019
- 17:17:07 +0000
-From:   "Moger, Babu" <Babu.Moger@amd.com>
-To:     "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Andre Przywara <andre.przywara@arm.com>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Chatre, Reinette" <reinette.chatre@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        "Shen, Xiaochen" <xiaochen.shen@intel.com>,
-        "Pathan, Arshiya Hayatkhan" <arshiya.hayatkhan.pathan@intel.com>,
-        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        James Morse <James.Morse@arm.com>
-Subject: Re: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests for
- AMD
-Thread-Topic: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests
- for AMD
-Thread-Index: AQHUwOxdxBVLcDr5zkmZv13O0Xn8HaZlLPyAgAAekACABiROAA==
-Date:   Tue, 14 May 2019 17:17:07 +0000
-Message-ID: <f80600a0-9d8c-a50f-5139-508d10ec4b20@amd.com>
-References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
- <1549767042-95827-13-git-send-email-fenghua.yu@intel.com>
- <20190510184011.210794fc@donnerap.cambridge.arm.com>
- <3E5A0FA7E9CA944F9D5414FEC6C712209D8A3C19@ORSMSX106.amr.corp.intel.com>
-In-Reply-To: <3E5A0FA7E9CA944F9D5414FEC6C712209D8A3C19@ORSMSX106.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0801CA0022.namprd08.prod.outlook.com
- (2603:10b6:803:29::32) To DM5PR12MB2471.namprd12.prod.outlook.com
- (2603:10b6:4:b5::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Babu.Moger@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 673a9fdc-8ccd-474b-346d-08d6d88ffdb1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1163;
-x-ms-traffictypediagnostic: DM5PR12MB1163:
-x-microsoft-antispam-prvs: <DM5PR12MB1163ED2910E26A737FF7640895080@DM5PR12MB1163.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(6436002)(5660300002)(71190400001)(71200400001)(6486002)(99286004)(68736007)(3846002)(6116002)(110136005)(7416002)(316002)(54906003)(14454004)(256004)(36756003)(72206003)(66066001)(478600001)(25786009)(73956011)(66946007)(53936002)(86362001)(7736002)(8936002)(66476007)(305945005)(64756008)(8676002)(66556008)(31696002)(66446008)(81156014)(81166006)(386003)(53546011)(6506007)(26005)(102836004)(4326008)(31686004)(76176011)(52116002)(11346002)(486006)(2906002)(6512007)(476003)(446003)(2616005)(6246003)(186003)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1163;H:DM5PR12MB2471.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rmnfg2mPWUwwmHow42sTN8IjX7tlVfc/Fvz4xNJ0ZArAciOTRBK3hIv7fa0aKqoLUv2Ui3EyAaKd6ih/Acv5LTb3QlMPJ/gEcVmLJEoHiLSCS0J4GT02jgbPgljeY0gZ1eZzLbE7D4ZDcSZ+VsBH6sbH56j5sq8UPfidlpNsfII5PXZ112Y5P357CVw2UNe2Z2Y9LT6Np7QLdC016SR9wSWibUMUlbAu0Pwqwv1/N495w6OtUz0/gTipyIRynrVaqgrxJnJ/mJ9B0UhFQPWTVCXi+gfCa3LoxXc88zY2WUFvzHKACM5N70yjXYojAH34CCwy/kOiMPOXTUjLb0tOSjXkmTX3DYsvqkNf88+YHkAhBZH3VlwW3TtY/8yzA+4bZmWENI9KTmIcXJSr7vaXLASmaTfDkCPb6IAMSOlHz5c=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2F30790853A24542AEEBF3B81336DF8B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+l9zz6eaN2LIJhz1rmWgTZAN4kH+dDR0HBMwscHakxY=;
+        b=Vw8j1EhC/hirGyhd//mhklJ3dK/9R4/rkLaiCq33qN9mZBdK+h9CeuGckVuTAQj4r8
+         Lroza3lMGmp3StHW3eBjXChsbcS6EzT+k4q+eonRhUVGbJfcGNxpvbT9O2BDNZ0+AOX9
+         m4AAe84sX022No4bgqg0cFpzvHd5AN7eSJj3oinlXew9tzYa2COSvYh7cs9sOrhvyivV
+         Io/sNSNXcrdWcax24GCRqP5/Crhy3g3lIl7bs4HUgNiVaFKD/wG2LeXJu7F943s/cwD0
+         HWQdaWMKasSQOWas0lKqMo36mGXP4HzFwMOV/QttYVTHapA6zmuvvFGGuApY99YCJvjT
+         4BWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+l9zz6eaN2LIJhz1rmWgTZAN4kH+dDR0HBMwscHakxY=;
+        b=cNPi/6WhNxYPo78K5odk+gqzj84r9qHWQ+m9eO4Q6Un1N5qUptyvTK4GMUh+IGIKvo
+         tri30Q2QbStq6499Nis3yoMFw76LZ8Km9JwW3zMrO2SximfWVc7cCDJB4y2fp3T6gIXp
+         fo3jbhm1yhSzO5FiamH6WQ+1fJeqWeWkY3lVSNjNjRsAeyMylmVYVyxUlvbycgcNNbfa
+         KiFrqqiXLRVs0tlrvisYTtOQ6hdBOuJL+l9EhpOX/R6sgo7joMAoFqEYVXYMDF5k7SVM
+         +nMMANPNXHYh+FmzzDbh9RqevfC26QL3AcD0X4vtaWr52aR0bnGopSlkbrDtkZ1dGarp
+         te2w==
+X-Gm-Message-State: APjAAAU8AvDQaFbdT7SVdXtWsMZNslPyEodnuK8rlO1hbYIMa0HH9sTX
+        4hBHKUSavjVkr5DFgr8+caWMjADnhjJOxjkgswY=
+X-Google-Smtp-Source: APXvYqwmXirTESmlcC78TECRFWo44J6KJt1h6qI1PBjPpoXbbJP1T2BFjs/mfGdnb1QLBUyu3TedlIxXhIoLHR0QlWs=
+X-Received: by 2002:a17:907:20a6:: with SMTP id pw6mr11778381ejb.113.1557854234894;
+ Tue, 14 May 2019 10:17:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 673a9fdc-8ccd-474b-346d-08d6d88ffdb1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 17:17:07.4821
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
+References: <20170914194444.32551-1-robdclark@gmail.com> <20170919123038.GF8398@8bytes.org>
+ <CAF6AEGuutkqjrWk4jagE=p-NwHgxdiPZjjsaFsfwtczK568j+A@mail.gmail.com>
+ <20170922090204.GJ8398@8bytes.org> <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
+ <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com>
+ <571e825d-7f54-2da4-adc0-6b6ac6dae459@arm.com> <CAF6AEGtJRYvSLw+Cc6XaHEN58Ne2_StTojN9_e6+aJZSfX_dVg@mail.gmail.com>
+ <6f7fb139-5117-d89e-0caa-bd34ea9b6ff3@arm.com>
+In-Reply-To: <6f7fb139-5117-d89e-0caa-bd34ea9b6ff3@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 14 May 2019 10:17:03 -0700
+Message-ID: <CAF6AEGuxGAjqpZBKQvmyHTr7fPU9yKYLf1CfB_TMzKDiXptjzg@mail.gmail.com>
+Subject: Re: [RFC] iommu: arm-smmu: stall support
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RmVuZ2h1YS9BbmRyZSwNCg0KDQpPbiA1LzEwLzE5IDI6MjkgUE0sIFl1LCBGZW5naHVhIHdyb3Rl
-Og0KPiBbQ0FVVElPTjogRXh0ZXJuYWwgRW1haWxdDQo+IA0KPj4gT24gRnJpZGF5LCBNYXkgMTAs
-IDIwMTkgMTA6NDAgQU0NCj4+IEFuZHJlIFByenl3YXJhIFttYWlsdG86YW5kcmUucHJ6eXdhcmFA
-YXJtLmNvbV0gd3JvdGU6DQo+PiBUbzogWXUsIEZlbmdodWEgPGZlbmdodWEueXVAaW50ZWwuY29t
-Pg0KPj4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgSW5nbyBNb2xu
-YXINCj4+IDxtaW5nb0ByZWRoYXQuY29tPjsgQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+
-OyBIIFBldGVyIEFudmluDQo+PiA8aHBhQHp5dG9yLmNvbT47IEx1Y2ssIFRvbnkgPHRvbnkubHVj
-a0BpbnRlbC5jb20+OyBDaGF0cmUsIFJlaW5ldHRlDQo+PiA8cmVpbmV0dGUuY2hhdHJlQGludGVs
-LmNvbT47IFNoYW5rYXIsIFJhdmkgViA8cmF2aS52LnNoYW5rYXJAaW50ZWwuY29tPjsNCj4+IFNo
-ZW4sIFhpYW9jaGVuIDx4aWFvY2hlbi5zaGVuQGludGVsLmNvbT47IFBhdGhhbiwgQXJzaGl5YSBI
-YXlhdGtoYW4NCj4+IDxhcnNoaXlhLmhheWF0a2hhbi5wYXRoYW5AaW50ZWwuY29tPjsgUHJha2h5
-YSwgU2FpIFByYW5lZXRoDQo+PiA8c2FpLnByYW5lZXRoLnByYWtoeWFAaW50ZWwuY29tPjsgQmFi
-dSBNb2dlciA8YmFidS5tb2dlckBhbWQuY29tPjsNCj4+IGxpbnV4LWtlcm5lbCA8bGludXgta2Vy
-bmVsQHZnZXIua2VybmVsLm9yZz47IEphbWVzIE1vcnNlDQo+PiA8SmFtZXMuTW9yc2VAYXJtLmNv
-bT4NCj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMTIvMTNdIHNlbGZ0ZXN0cy9yZXNjdHJsOiBE
-aXNhYmxlIE1CQSBhbmQgTUJNIHRlc3RzDQo+PiBmb3IgQU1EDQo+Pg0KPj4gT24gU2F0LCAgOSBG
-ZWIgMjAxOSAxODo1MDo0MSAtMDgwMA0KPj4gRmVuZ2h1YSBZdSA8ZmVuZ2h1YS55dUBpbnRlbC5j
-b20+IHdyb3RlOg0KPj4NCj4+IEhpLA0KPj4NCj4+PiBGcm9tOiBCYWJ1IE1vZ2VyIDxiYWJ1Lm1v
-Z2VyQGFtZC5jb20+DQo+Pj4NCj4+PiBGb3Igbm93LCBkaXNhYmxlIE1CQSBhbmQgTUJNIHRlc3Rz
-IGZvciBBTUQuIERlY2lkaW5nIHRlc3QgcGFzcy9mYWlsIGlzDQo+Pj4gbm90IGNsZWFyIHJpZ2h0
-IG5vdy4gV2UgY2FuIGVuYWJsZSB3aGVuIHdlIGhhdmUgc29tZSBjbGFyaXR5Lg0KPj4NCj4+IEkg
-ZG9uJ3QgdGhpbmsgdGhpcyBpcyB0aGUgcmlnaHQgd2F5LiBUaGUgYXZhaWxhYmlsaXR5IG9mIGZl
-YXR1cmVzIHNob3VsZCBiZQ0KPj4gcXVlcnlhYmxlLCBmb3IgaW5zdGFuY2UgYnkgbG9va2luZyBp
-bnRvIC9zeXMvZnMvcmVzY3RybC9pbmZvLiBDaGVja2luZyBmb3IgYQ0KPj4gY2VydGFpbiB2ZW5k
-b3IgdG8gc2tpcCB0ZXN0cyBqdXN0IHNvdW5kcyB3cm9uZyB0byBtZSwgYW5kIGlzIGRlZmluaXRl
-bHkgbm90DQo+PiBzY2FsYWJsZSBvciBmdXR1cmUgcHJvb2YuDQo+Pg0KPj4gV2Ugc2hvdWxkIHJl
-YWxseSBjaGVjayB0aGUgYXZhaWxhYmlsaXR5IG9mIGEgZmVhdHVyZSwgdGhlbiBza2lwIHRoZSB3
-aG9sZQ0KPj4gc3Vic3lzdGVtIHRlc3QgaW4gcmVzY3RybF90ZXN0cy5jLg0KPiANCj4gQmFidSBt
-YXkgY29ycmVjdCBpZiBJJ20gd3Jvbmc6IEFNRCBkb2VzIHN1cHBvcnQgdGhlIE1CQSBhbmQgTUJN
-IGZlYXR1cmVzLiBTbyBpZiBxdWVyeWluZyB0aGUgaW5mbyBkaXJlY3RvcnksIHRoZSBmZWF0dXJl
-cyBhcmUgdGhlcmUuIEJ1dCBBTUQgZG9lc24ndCB3YW50IHRvIHN1cHBvcnQgdGhlIHRlc3Rpbmcg
-Zm9yIHRoZSBmZWF0dXJlcyBpbiB0aGUgY3VycmVudCBwYXRjaCBzZXQuIFRoZXkgbWF5IHN1cHBv
-cnQgdGhlIHRlc3RpbmcgaW4gdGhlIGZ1dHVyZS4NCg0KWWVzLiBBTUQgc3VwcG9ydHMgdGhlIE1C
-QSBhbmQgTUJNIGZlYXR1cmVzLiBCdXQsIGRlY2lkaW5nIHRoZSB0ZXN0DQpwYXNzL2ZhaWwgd2Fz
-IG5vdCBjbGVhciB0byBtZS4gVGhhdCBpcyB3aHkgSSBkZWNpZGVkIHRvIGRpc2FibGUgdGhlIHRl
-c3QNCmZvciBub3cuIFJpZ2h0IG5vdywgaXQgcmVwb3J0cyB0aGUgdGVzdCByZXN1bHQgYXMgImZh
-aWwiLiBXZSBjYW4gYWRkIHRoZQ0KdGVzdCBpbiB0aGUgZnV0dXJlIHdpdGggc29tZSBtb2RpZmlj
-YXRpb25zLg0KDQo+IA0KPiBUaGFua3MuDQo+IA0KPiAtRmVuZ2h1YQ0KPiANCg==
+On Tue, May 14, 2019 at 3:24 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 14/05/2019 02:54, Rob Clark wrote:
+> > On Mon, May 13, 2019 at 11:37 AM Jean-Philippe Brucker
+> > <jean-philippe.brucker@arm.com> wrote:
+> >>
+> >> Hi Rob,
+> >>
+> >> On 10/05/2019 19:23, Rob Clark wrote:
+> >>> On Fri, Sep 22, 2017 at 2:58 AM Jean-Philippe Brucker
+> >>> <jean-philippe.brucker@arm.com> wrote:
+> >>>>
+> >>>> On 22/09/17 10:02, Joerg Roedel wrote:
+> >>>>> On Tue, Sep 19, 2017 at 10:23:43AM -0400, Rob Clark wrote:
+> >>>>>> I would like to decide in the IRQ whether or not to queue work or not,
+> >>>>>> because when we get a gpu fault, we tend to get 1000's of gpu faults
+> >>>>>> all at once (and I really only need to handle the first one).  I
+> >>>>>> suppose that could also be achieved by having a special return value
+> >>>>>> from the fault handler to say "call me again from a wq"..
+> >>>>>>
+> >>>>>> Note that in the drm driver I already have a suitable wq to queue the
+> >>>>>> work, so it really doesn't buy me anything to have the iommu driver
+> >>>>>> toss things off to a wq for me.  Might be a different situation for
+> >>>>>> other drivers (but I guess mostly other drivers are using iommu API
+> >>>>>> indirectly via dma-mapping?)
+> >>>>>
+> >>>>> Okay, so since you are the only user for now, we don't need a
+> >>>>> work-queue. But I still want the ->resume call-back to be hidden in the
+> >>>>> iommu code and not be exposed to users.
+> >>>>>
+> >>>>> We already have per-domain fault-handlers, so the best solution for now
+> >>>>> is to call ->resume from report_iommu_fault() when the fault-handler
+> >>>>> returns a special value.
+> >>>>
+> >>>> The problem is that report_iommu_fault is called from IRQ context by the
+> >>>> SMMU driver, so the device driver callback cannot sleep.
+> >>>>
+> >>>> So if the device driver needs to be able to sleep between fault report and
+> >>>> resume, as I understand Rob needs for writing debugfs, we can either:
+> >>>>
+> >>>> * call report_iommu_fault from higher up, in a thread or workqueue.
+> >>>> * split the fault reporting as this patch proposes. The exact same
+> >>>>    mechanism is needed for the vSVM work by Intel: in order to inject fault
+> >>>>    into the guest, they would like to have an atomic notifier registered by
+> >>>>    VFIO for passing down the Page Request, and a new function in the IOMMU
+> >>>>    API to resume/complete the fault.
+> >>>>
+> >>>
+> >>> So I was thinking about this topic again.. I would still like to get
+> >>> some sort of async resume so that I can wire up GPU cmdstream/state
+> >>> logging on iommu fault (without locally resurrecting and rebasing this
+> >>> patch and drm/msm side changes each time I need to debug iommu
+> >>> faults)..
+> >>
+> >> We've been working on the new fault reporting API with Jacob and Eric,
+> >> and I intend to send it out soon. It is supposed to be used for
+> >> reporting faults to guests via VFIO, handling page faults via mm, and
+> >> also reporting events directly to device drivers. Please let us know
+> >> what works and what doesn't in your case
+> >>
+> >> The most recent version of the patches is at
+> >> http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/api
+> >> (git://www.linux-arm.org/linux-jpb.git branch sva/api). Hopefully on the
+> >> list sometimes next week, I'll add you on Cc.
+> >>
+> >> In particular, see commits
+> >>          iommu: Introduce device fault data
+> >>          iommu: Introduce device fault report API
+> >>          iommu: Add recoverable fault reporting
+> >>
+> >> The device driver calls iommu_register_device_fault_handler(dev, cb,
+> >> data). To report a fault, the SMMU driver calls
+> >> iommu_report_device_fault(dev, fault). This calls into the device driver
+> >> directly, there isn't any workqueue. If the fault is recoverable (the
+> >> SMMU driver set type IOMMU_FAULT_PAGE_REQ rather than
+> >> IOMMU_FAULT_DMA_UNRECOV), the device driver calls iommu_page_response()
+> >> once it has dealt with the fault (after sleeping if it needs to). This
+> >> invokes the SMMU driver's resume callback.
+> >
+> > Ok, this sounds at a high level similar to my earlier RFC, in that
+> > resume is split (and that was the main thing I was interested in).
+> > And it does solve one thing I was struggling with, namely that when
+> > the domain is created it doesn't know which iommu device it will be
+> > attached to (given that at least the original arm-smmu.c driver cannot
+> > support stall in all cases)..
+> >
+> > For GPU translation faults, I also don't really need to know if the
+> > faulting translation is stalled until the callback (I mainly want to
+> > not bother to snapshot GPU state if it is not stalled, because in that
+> > case the data we snapshot is unlikely to be related to the fault if
+> > the translation is not stalled).
+> >
+> >> At the moment we use mutexes, so iommu_report_device_fault() can only be
+> >> called from an IRQ thread, which is incompatible with the current SMMUv2
+> >> driver. Either we need to switch the SMMUv2 driver to an IRQ thread, or
+> >> rework the fault handler to be called from an IRQ handler. The reporting
+> >> also has to be per device rather than per domain, and I'm not sure if
+> >> the SMMUv2 driver can deal with this.
+> >
+> > I'll take a closer look at the branch and try to formulate some plan
+> > to add v2 support for this.
+>
+> What's fun is that we should be able to identify a stream ID for most
+> context faults *except* translation faults...
+>
+> We've considered threaded IRQs before, and IIRC the problem with doing
+> it at the architectural level is that in some cases the fault interrupt
+> can only be deasserted by actually resuming/terminating the stalled
+> transaction.
+>
+> > For my cases, the GPU always has it's own iommu device, while display
+> > and other blocks share an apps_smmu.. although this sort of
+> > functionality isn't really required outside of the GPU.. but I'll have
+> > to think a bit about how we can support both cases in the single v2
+> > driver.
+>
+> With the above said, I am in the middle of a big refactoring[1] to allow
+> everyone's imp-def stuff to coexist nicely, so ultimately if qcom
+> implementations can guarantee the appropriate hardware behaviour then
+> they can have their own interrupt handlers to accommodate this.
+>
+
+Ok, maybe I'll hold off a bit and work on other things, to avoid feet stomping..
+
+I don't suppose you have thoughts about split pagetables, which is one
+of the things we want for implementing per-context pagetables?  I
+suppose that is less of an impl thing and more an architecture thing,
+but maybe no one on other implementations wants this?
+
+BR,
+-R
+
+
+> Robin.
+>
+> [1]
+> http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl
+> - note that this is very, very WIP right now
