@@ -2,88 +2,114 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A06C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4755AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1260820879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:16:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zDzjKRXB"
+	by mail.kernel.org (Postfix) with ESMTP id 1544220879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:17:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfENNQ5 (ORCPT
+        id S1726286AbfENNRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:16:57 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37563 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENNQ4 (ORCPT
+        Tue, 14 May 2019 09:17:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51110 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENNQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:16:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w37so22853500edw.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:16:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MTM1aBzPfSK5tgU1k2RNG5j9nKyYFdiQfhSRyC1AQNs=;
-        b=zDzjKRXBJHz2yPiLvfNwWdJqq/vB0SaFrHEGC+4tdjK7qgnCrVKdrQGXbzYdw14oyQ
-         2FN8i/6zGtMT7lmFJlnRkAQy9xn0Tp8jrpcCjZpMztqBnpJhbPLgLKtBXA5z8CinroXQ
-         oUFY0Wc1G6z6gMD8EtLGHoj+izORshYJT61j0WN+f7ynFTnhvncUf8umGzpqVB3Cm+Uo
-         tVXzXMPSSLzGbhwbKsIi1DOaLf+pAZVzIsTMvypZUewODOBy3mGMSnUKEn+UfHghHFyo
-         n02Y3xxyaGokkB8Wh+M10bEQkurf0e5pdpzJBL1swKYPqDuk23hNfPs5vXLP7F6ulYgp
-         ZoEg==
+        Tue, 14 May 2019 09:16:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f204so2858055wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:16:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MTM1aBzPfSK5tgU1k2RNG5j9nKyYFdiQfhSRyC1AQNs=;
-        b=pZ+9ApUc2n4xgwRMvJhkEBe7UL1tCwCQkI8PWN8EZ69gTzzm6zCUfN4sl3woFk9QIp
-         06zvAQewhu87qcc4oLETfW/FWdUs+YmvJrB9s86P4l5S+XRoyl5FpNeRgn0MMlwEOdAi
-         Ixh0vC7jy+FdDlVbhFFbqUkAr9mKCbHSPjh5H0ktMwWGK0jTfulzqMj+UmbjMXWE9+KF
-         086IqHSjEbSDnbWFUq+Hl5lJID6fsBCFpCGWnSSurFLeatjz8lRtgpu+5vH/Xe57URna
-         9vTcJoBV3JRKBkQ0FcYSWVQONObZgQs9FhtbIgUESepfgeUmx/FVQHO+9xfA0LoS4uih
-         rHMg==
-X-Gm-Message-State: APjAAAXKhOEyVaGGqQzkW9t0zKdKxlX0IV/6IbbXy95X6i6Cd0UYveAr
-        lQBANBMUs+V39p6z1sEIRAV/yw==
-X-Google-Smtp-Source: APXvYqxcAIh9/gohpAQTlGcytkwF0FDILsHXqj2wEvoP1yEMfI5z16TGN2EPlhSbHRGWJA81mLADdw==
-X-Received: by 2002:a17:906:74a:: with SMTP id z10mr15167062ejb.199.1557839814937;
-        Tue, 14 May 2019 06:16:54 -0700 (PDT)
-Received: from box.localdomain (mm-137-212-121-178.mgts.dynamic.pppoe.byfly.by. [178.121.212.137])
-        by smtp.gmail.com with ESMTPSA id h8sm678784ejf.73.2019.05.14.06.16.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 06:16:53 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id F1D16100C33; Tue, 14 May 2019 15:28:20 +0300 (+03)
-Date:   Tue, 14 May 2019 15:28:20 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Larry Bassel <larry.bassel@oracle.com>
-Cc:     mike.kravetz@oracle.com, willy@infradead.org,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH, RFC 0/2] Share PMDs for FS/DAX on x86
-Message-ID: <20190514122820.26zddpb27uxgrwzp@box>
-References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XOfzdfS9JDTS2x5DGGI6S8ITgh1lhmu7AKXviivuHlM=;
+        b=gso/FRID7p+BCbQFGmwg9f6soFny5MCF+FRJxVG9xHrpA6xZ4WuAYtabpcsBwLf1xu
+         b8pPmTBYp5bzYJAPSmBOwCFLFTazrhErp1hTe+eKKqY/7dV9JHbWrwoYh5FK/5ZBBxJa
+         3WWJ5JsOcVtlXHOFkJ7Ya2GWItUHrZXihsulbMgHtZFGxZY640AJg5Gb5T+0VmlMlEpj
+         vnXOQNLM9ObHKtCKKtPmXYJk2RNnSdvvUkYqWh3q/A7rMNC271U6ZoWHYCrGwZKwhISn
+         lAtmJDOjMFAWQjXhkZzMc4ykMMSYJ17lNmUJ+wip5jNYNpxP/wkOlVNTHjN4tIk0jUk7
+         IxAA==
+X-Gm-Message-State: APjAAAVJ4TXB7TDK29zk+/RDHCyr5WbewmQwmOhwUPauvBW92dC47L7k
+        CGcNEFYDnb98o8lGL9orHzpfmDgOxao3DA==
+X-Google-Smtp-Source: APXvYqzjd4S45m8QdzJ48SrXeW8o3mq0TAOS+XYFjYBtZJbI+0Eb9uL/5VQgPZcML53KJaym23myJQ==
+X-Received: by 2002:a1c:f310:: with SMTP id q16mr20319455wmq.102.1557839816601;
+        Tue, 14 May 2019 06:16:56 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id l12sm3350136wmj.0.2019.05.14.06.16.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 06:16:55 -0700 (PDT)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org
+Subject: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
+Date:   Tue, 14 May 2019 15:16:50 +0200
+Message-Id: <20190514131654.25463-1-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 09:05:31AM -0700, Larry Bassel wrote:
-> This patchset implements sharing of page table entries pointing
-> to 2MiB pages (PMDs) for FS/DAX on x86.
+By default, KSM works only on memory that is marked by madvise(). And the
+only way to get around that is to either:
 
--EPARSE.
+  * use LD_PRELOAD; or
+  * patch the kernel with something like UKSM or PKSM.
 
-How do you share entries? Entries do not take any space, page tables that
-cointain these entries do.
+Instead, lets implement a sysfs knob, which allows marking VMAs as
+mergeable. This can be used manually on some task in question or by some
+small userspace helper daemon.
 
-Have you checked if the patch makes memory consumption any better. I have
-doubts in it.
+The knob is named "force_madvise", and it is write-only. It accepts a PID
+to act on. To mark the VMAs as mergeable, use:
+
+   # echo PID > /sys/kernel/mm/ksm/force_madvise
+
+To unmerge all the VMAs, use the same approach, prepending the PID with
+the "minus" sign:
+
+   # echo -PID > /sys/kernel/mm/ksm/force_madvise
+
+This patchset is based on earlier Timofey's submission [1], but it doesn't
+use dedicated kthread to walk through the list of tasks/VMAs. Instead,
+it is up to userspace to traverse all the tasks in /proc if needed.
+
+The previous suggestion [2] was based on amending do_anonymous_page()
+handler to implement fully automatic mode, but this approach was
+incorrect due to improper locking and not desired due to excessive
+complexity.
+
+The current approach just implements minimal interface and leaves the
+decision on how and when to act to userspace.
+
+Thanks.
+
+[1] https://lore.kernel.org/patchwork/patch/1012142/
+[2] http://lkml.iu.edu/hypermail/linux/kernel/1905.1/02417.html
+
+Oleksandr Natalenko (4):
+  mm/ksm: introduce ksm_enter() helper
+  mm/ksm: introduce ksm_leave() helper
+  mm/ksm: introduce force_madvise knob
+  mm/ksm: add force merging/unmerging documentation
+
+ Documentation/admin-guide/mm/ksm.rst |  11 ++
+ mm/ksm.c                             | 160 +++++++++++++++++++++------
+ 2 files changed, 137 insertions(+), 34 deletions(-)
+
+-- 
+2.21.0
+
