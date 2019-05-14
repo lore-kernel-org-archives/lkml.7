@@ -2,95 +2,174 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0B9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42592C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D343B208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E05921473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gekg/Ime"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h6AZqHkX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfENFjx (ORCPT
+        id S1726803AbfENFni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:39:53 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34185 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENFjx (ORCPT
+        Tue, 14 May 2019 01:43:38 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:39879 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfENFni (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:39:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h1so9808550qtp.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 22:39:53 -0700 (PDT)
+        Tue, 14 May 2019 01:43:38 -0400
+Received: by mail-pg1-f202.google.com with SMTP id m35so10785502pgl.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 22:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LX0XaYHmt6JczsEsNVrSRTTBxFWPZ8BYZiJCI1WPlfs=;
-        b=Gekg/ImeDsjdwbPk3/9Rec4Nz+REdcTbuknK61Hxcqut8GFddxQb8OhftCzpwpFmzx
-         SLqT9+k7QiUXSoifO0lm/QfE2jSK94dfcZgdaAM9mYzow8Ie+evrF/C4+bhC+QxdEK+g
-         RtwGV6qJSY3Det823v7PxQf3yt31hBY7GSxVt7ziPaoS7hNoQ4+9+4XCPMNSeBcJXXhS
-         WDqCHNsD9juiWMQFGLajowPD8rNgf6+EJNzXcblGHVU1BK3vjalBgcWebTmxMus4WD7U
-         w9PPt6y39A+fAGPB9imEHReWkn+8GrmuSIghIZ/UlQLw1/PDuyKZO+WVg4EeUF+GUF3O
-         1aVw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=CA1N44QTqLhlVaroRojZdGi6CcVwoP2KNr1A1UImFq0=;
+        b=h6AZqHkX1OcXuKiWGxhO61tdk+HR2HvTKQEpCCBYcqn6plqrOohI9Okal84aTEN2gJ
+         pcUal3uJknEB+RrEmMmXoyWtFQ8z/VEve2BGMzS/N7pXPIQp0h1NVAva9rDSUnGHjLEJ
+         vx1VU8Uvu79S0JOwGTWgOfWHxd/ASKWGvpXSYxqiyDlRKx/kfa47HynTXrI6mghbfUkz
+         ftvsf604JHZwsEPgj7aK8R+INHqcBEEkFy98bk6arBDrrsX/GZ25q4wQIXVIU1DJAHdt
+         6dh5pUod4MbGUjQOr69py/QRwji6PeGn961MqFFs+Tum9tKKLYMRMp7U9XKdfLOGJDyx
+         zipg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LX0XaYHmt6JczsEsNVrSRTTBxFWPZ8BYZiJCI1WPlfs=;
-        b=nJD/P3ojeaIDX4bDDPqFzUfxIyn/hjiFZxwTdeBajKw8NILgWh20DlkxLXD6YXUQXV
-         dtWIqBaTRrqK4npmPCp7aOqVP1XlamHM3167UBWTYOwS07MLNcNBIxPBgPzej83Us8WB
-         IHWwj6gtTT1ekE3eFullbQkn8MdIkpbdhj1eSQgtDuGycwWBXu6c5mKXj/gatgJt3cXH
-         clSarQolG35cX0uhBFTaQgi4z24LyUCCJmSBan23oQWr6sqwm0aztWUk3FrK0sipZOpS
-         ktyGcBFSRSiz2SUDLW0iTHCUAVEl383V2Gj1PsyfC7yUu3BguA5jbf1CxVYZUrVi6rYv
-         Nujw==
-X-Gm-Message-State: APjAAAWpHepPSSVErHmNJ8kregOoaHAwh0aRcAnF88fzXVAp4CzEzUOh
-        daH5YrMTC+gWcWOMZtb5QO1ZjNhu3cilve2fM68=
-X-Google-Smtp-Source: APXvYqxoQmjPOX4z5nn8aA71WQnVuMX6mmygZa/Jn16QvBTxak3EDI/Irrk3FF8KmKluSoI68DkTq3eLvSlzUS57szg=
-X-Received: by 2002:a0c:ee28:: with SMTP id l8mr26055818qvs.67.1557812392608;
- Mon, 13 May 2019 22:39:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20180529205048.39694-1-jaegeuk@kernel.org>
-In-Reply-To: <20180529205048.39694-1-jaegeuk@kernel.org>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Tue, 14 May 2019 14:39:41 +0900
-Message-ID: <CAD14+f154_t1-TbbSDb9xV_ikDAWfF+8H7aOSK4VF8UmqWRDAQ@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: issue discard commands proactively in
- high fs utilization
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=CA1N44QTqLhlVaroRojZdGi6CcVwoP2KNr1A1UImFq0=;
+        b=CQ2aAIBvqAgLbds6QqM68UKf06NVm53qdGEZjyIydiHpLwm/b01z4/Nj/gPnEIbtz7
+         XauyotxvEsC31ZNLv1E8lF+ZbH6PXuqBUodEpxjEWMgaYgioUPujU4xYTPMN6rrDgv7k
+         Vzhq6AmBsNQkfeqnZcm9YnBU4KByl7FZWBLFKmri0IBk5NASNuGYfyXuKDWTAGFWFpS1
+         bV5v737+9VU3Y6JTYDSF9nQnmj8HMa3JmZDX2ZL36iVEQmVD1A3B7N+Zu6OzNnrwRRxC
+         eUpZGma+NPh/j5TXKTGkDmQd8x6vHcWgkqAhzJ4qS/rd7BGA6u6Cwqi5DS4nR/LY4TLZ
+         a+Cg==
+X-Gm-Message-State: APjAAAVVyyvkMfqpd7z7d5y8sUH9H4jBAdATIM56g3w6ituA5UOFdDXQ
+        PqB9EG6kB1nQi3mg4TgVO6KbzNaHN2X7UO9RnoI8Nw==
+X-Google-Smtp-Source: APXvYqyBPTv6v4eKPVDjcz6uhAI6teASmDK3xBqeYKpM9SuSjEAG+BViYVdVY5Rrq8TOB5itpc/QrUR1WPgEkoPcFI6QTA==
+X-Received: by 2002:a65:550b:: with SMTP id f11mr35449216pgr.311.1557812616583;
+ Mon, 13 May 2019 22:43:36 -0700 (PDT)
+Date:   Mon, 13 May 2019 22:42:33 -0700
+Message-Id: <20190514054251.186196-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v3 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
+        Brendan Higgins <brendanhiggins@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 30, 2018 at 5:51 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
->
-> In the high utilization like over 80%, we don't expect huge # of large discard
-> commands, but do many small pending discards which affects FTL GCs a lot.
-> Let's issue them in that case.
->
-> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-> ---
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 6e40e536dae0..8c1f7a6bf178 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -915,6 +915,38 @@ static void __check_sit_bitmap(struct f2fs_sb_info *sbi,
-> +                       dpolicy->max_interval = DEF_MIN_DISCARD_ISSUE_TIME;
+## TLDR
 
-Isn't this way too aggressive?
+I mostly wanted to incorporate feedback I got over the last week and a
+half.
 
-Discard thread will wake up on 50ms interval just because the user has
-used 80% of space.
-60,000ms vs 50ms is too much of a stark difference.
+Biggest things to look out for:
 
-I feel something like 10 seconds(10,000ms) could be a much more
-reasonable choice than this.
+- KUnit core now outputs results in TAP14.
+- Heavily reworked tools/testing/kunit/kunit.py
+  - Changed how parsing works.
+  - Added testing.
+  - Greg, Logan, you might want to re-review this.
+- Added documentation on how to use KUnit on non-UML kernels. You can
+  see the docs rendered here[1].
 
-Thanks.
+There is still some discussion going on on the [PATCH v2 00/17] thread,
+but I wanted to get some of these updates out before they got too stale
+(and too difficult for me to keep track of). I hope no one minds.
+
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in under a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+## What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+## Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+## More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3].
+The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.1/v3 branch.
+
+## Changes Since Last Version
+
+- Converted KUnit core to print test results in TAP14 format as
+  suggested by Greg and Frank.
+- Heavily reworked tools/testing/kunit/kunit.py
+  - Changed how parsing works.
+  - Added testing.
+- Added documentation on how to use KUnit on non-UML kernels. You can
+  see the docs rendered here[1].
+- Added a new set of EXPECTs and ASSERTs for pointer comparison.
+- Removed more function indirection as suggested by Logan.
+- Added a new patch that adds `kunit_try_catch_throw` to objtool's
+  noreturn list.
+- Fixed a number of minorish issues pointed out by Shuah, Masahiro, and
+  kbuild bot.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.1/v3
+
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
