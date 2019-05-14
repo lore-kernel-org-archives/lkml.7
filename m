@@ -2,229 +2,266 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4557C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60A0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5A1208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B67E206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="HvR8LkL7"
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="0Sn4sk2A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfENHVg (ORCPT
+        id S1726666AbfENHWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:21:36 -0400
-Received: from mail-eopbgr810072.outbound.protection.outlook.com ([40.107.81.72]:23049
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726491AbfENHVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:21:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7I0I7EqMp9u8qoAqgsPq2edPo34Jt6gf97q8PQTA6gw=;
- b=HvR8LkL7t2fasfzTvvJk3WsltZRAIkASXXTez6W9A1wJ3YR6+fCBX+sgjGqs/DZFRbRpgNBZKMzZKGGOG7vr1QsotKorQtf/Nth5ybtw5SovtyMivfhc+MXJNgfDThE4252qz8Klhv2I77wPR/j+e7z7eLUEEmEVUq8gR+tX/qc=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5173.namprd05.prod.outlook.com (20.177.231.31) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.4; Tue, 14 May 2019 07:21:33 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::b057:917a:f098:6098%7]) with mapi id 15.20.1900.010; Tue, 14 May 2019
- 07:21:33 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Jan Stancek <jstancek@redhat.com>
-CC:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "minchan@kernel.org" <minchan@kernel.org>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Topic: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Index: AQHVCfj1/ZS8SZ4p0ke1CH5gp1S1IPlIMumfrSIEdAA=
-Date:   Tue, 14 May 2019 07:21:33 +0000
-Message-ID: <9E536319-815D-4425-B4B6-8786D415442C@vmware.com>
-References: <45c6096e-c3e0-4058-8669-75fbba415e07@email.android.com>
- <914836977.22577826.1557818139522.JavaMail.zimbra@redhat.com>
-In-Reply-To: <914836977.22577826.1557818139522.JavaMail.zimbra@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [50.204.119.4]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ac502c48-e668-4174-56e5-08d6d83ccac7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR05MB5173;
-x-ms-traffictypediagnostic: BYAPR05MB5173:
-x-microsoft-antispam-prvs: <BYAPR05MB5173E2C0864A692094A3A104D0080@BYAPR05MB5173.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1332;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(136003)(376002)(366004)(51444003)(13464003)(189003)(199004)(26005)(6916009)(76116006)(486006)(82746002)(8936002)(11346002)(446003)(476003)(2616005)(53546011)(6506007)(3846002)(6116002)(8676002)(102836004)(64756008)(66946007)(86362001)(478600001)(66476007)(66556008)(99286004)(66446008)(76176011)(73956011)(2906002)(186003)(305945005)(33656002)(81166006)(81156014)(54906003)(14444005)(7736002)(25786009)(256004)(66066001)(4326008)(68736007)(83716004)(14454004)(71190400001)(71200400001)(6246003)(316002)(6436002)(5660300002)(6486002)(53936002)(229853002)(36756003)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5173;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jjvcp9/FuCA+7L2BLRNXI2KVPUCKVLkqEiABBUAolJOx08v596JYEHvi8zyej5TMk//dNwHPC0vzjiDo5fdGgG8mKoSw/LOPTRQSBlXWnirIGyuLD34jckMdDkxKt/2KThV1le9URf+Rya6TPXtbRIZEDHUIlgwYBpQ0s4c0dJPhdSlqgTMgyjlRNIvCFJe9umdHHhibwwfH9uPPj/UWdAnfHZaN4MNvve9gg8TLo2alcjFkCF0RPGYmpkdRm2aEkepPJq0cI2Hf7NIcFxWOzHAA+Txw4Ux+0T0ZS3Tm1pEI/aqxDBBJNcaRbcLegFZupiq6we1WvtE8zBneMUe1Cc67keYOdH69ZwHfXsgnLKbqbV5g0rNHMgrvEA8q/0zaHsvbiJzCXH2A01wrQMxqUm64PoDlJJjzeD/rWHu+TsE=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <92DBC1E19E9DE0418FCBE6C11065680D@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 May 2019 03:22:15 -0400
+Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:43261
+        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726190AbfENHWO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:22:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=lHJDEPi83/7TupgeVc/Ztzp6V7A4QR/sUMN42jYTWxI=;
+        b=0Sn4sk2AmAlV8NX9YMTrCyxoDA+mB43rp1kIvUNYNuamcfuy+oQgxFbc8Wd3PrnG3Fkrt9lU4WfkO
+         hJR8c403WYb8OE3ZvYpYX+PU5fRdUjVjLQgMvu6yRYfTJasFTfH793uR0brmC3K/fK0IjxcMZFoln+
+         Wyuo2Ddk4H/xqIpA=
+X-HalOne-Cookie: 53fd3c0f1aa55a61d90a2fd056e5d74f25d59243
+X-HalOne-ID: fb4ad7ed-7618-11e9-abc4-d0431ea8bb10
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id fb4ad7ed-7618-11e9-abc4-d0431ea8bb10;
+        Tue, 14 May 2019 07:22:08 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
+References: <20190430140416.4707-1-esben@geanix.com>
+        <20190430153736.GL9224@smile.fi.intel.com>
+        <874l6efxta.fsf@haabendal.dk>
+        <20190502104556.GS9224@smile.fi.intel.com>
+        <87pnp11112.fsf@haabendal.dk> <20190507093239.GB4529@dell>
+        <87sgtqjy3l.fsf@haabendal.dk>
+        <20190507115325.GV9224@smile.fi.intel.com>
+        <87k1f2jvyd.fsf@haabendal.dk>
+        <20190507150847.GW9224@smile.fi.intel.com>
+Date:   Tue, 14 May 2019 09:22:07 +0200
+In-Reply-To: <20190507150847.GW9224@smile.fi.intel.com> (Andy Shevchenko's
+        message of "Tue, 7 May 2019 18:08:47 +0300")
+Message-ID: <87k1etmrfk.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac502c48-e668-4174-56e5-08d6d83ccac7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 07:21:33.0143
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5173
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 14, 2019, at 12:15 AM, Jan Stancek <jstancek@redhat.com> wrote:
->=20
->=20
-> ----- Original Message -----
->> On May 13, 2019 4:01 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
->>=20
->>=20
->> On 5/13/19 9:38 AM, Will Deacon wrote:
->>> On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
->>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>>> index 99740e1..469492d 100644
->>>> --- a/mm/mmu_gather.c
->>>> +++ b/mm/mmu_gather.c
->>>> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>>>  {
->>>>      /*
->>>>       * If there are parallel threads are doing PTE changes on same ra=
-nge
->>>> -     * under non-exclusive lock(e.g., mmap_sem read-side) but defer T=
-LB
->>>> -     * flush by batching, a thread has stable TLB entry can fail to f=
-lush
->>>> -     * the TLB by observing pte_none|!pte_dirty, for example so flush=
- TLB
->>>> -     * forcefully if we detect parallel PTE batching threads.
->>>> +     * under non-exclusive lock (e.g., mmap_sem read-side) but defer =
-TLB
->>>> +     * flush by batching, one thread may end up seeing inconsistent P=
-TEs
->>>> +     * and result in having stale TLB entries.  So flush TLB forceful=
-ly
->>>> +     * if we detect parallel PTE batching threads.
->>>> +     *
->>>> +     * However, some syscalls, e.g. munmap(), may free page tables, t=
-his
->>>> +     * needs force flush everything in the given range. Otherwise thi=
-s
->>>> +     * may result in having stale TLB entries for some architectures,
->>>> +     * e.g. aarch64, that could specify flush what level TLB.
->>>>       */
->>>> -    if (mm_tlb_flush_nested(tlb->mm)) {
->>>> -            __tlb_reset_range(tlb);
->>>> -            __tlb_adjust_range(tlb, start, end - start);
->>>> +    if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
->>>> +            /*
->>>> +             * Since we can't tell what we actually should have
->>>> +             * flushed, flush everything in the given range.
->>>> +             */
->>>> +            tlb->freed_tables =3D 1;
->>>> +            tlb->cleared_ptes =3D 1;
->>>> +            tlb->cleared_pmds =3D 1;
->>>> +            tlb->cleared_puds =3D 1;
->>>> +            tlb->cleared_p4ds =3D 1;
->>>> +
->>>> +            /*
->>>> +             * Some architectures, e.g. ARM, that have range invalida=
-tion
->>>> +             * and care about VM_EXEC for I-Cache invalidation, need
->>>> force
->>>> +             * vma_exec set.
->>>> +             */
->>>> +            tlb->vma_exec =3D 1;
->>>> +
->>>> +            /* Force vma_huge clear to guarantee safer flush */
->>>> +            tlb->vma_huge =3D 0;
->>>> +
->>>> +            tlb->start =3D start;
->>>> +            tlb->end =3D end;
->>>>      }
->>> Whilst I think this is correct, it would be interesting to see whether
->>> or not it's actually faster than just nuking the whole mm, as I mention=
-ed
->>> before.
->>>=20
->>> At least in terms of getting a short-term fix, I'd prefer the diff belo=
-w
->>> if it's not measurably worse.
->>=20
->> I did a quick test with ebizzy (96 threads with 5 iterations) on my x86
->> VM, it shows slightly slowdown on records/s but much more sys time spent
->> with fullmm flush, the below is the data.
->>=20
->>                                     nofullmm                 fullmm
->> ops (records/s)              225606                  225119
->> sys (s)                            0.69                        1.14
->>=20
->> It looks the slight reduction of records/s is caused by the increase of
->> sys time.
->>=20
->>> Will
->>>=20
->>> --->8
->>>=20
->>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
->>> index 99740e1dd273..cc251422d307 100644
->>> --- a/mm/mmu_gather.c
->>> +++ b/mm/mmu_gather.c
->>> @@ -251,8 +251,9 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
->>>        * forcefully if we detect parallel PTE batching threads.
->>>        */
->>>       if (mm_tlb_flush_nested(tlb->mm)) {
->>> +             tlb->fullmm =3D 1;
->>>               __tlb_reset_range(tlb);
->>> -             __tlb_adjust_range(tlb, start, end - start);
->>> +             tlb->freed_tables =3D 1;
->>>       }
->>>=20
->>>       tlb_flush_mmu(tlb);
->>=20
->>=20
->> I think that this should have set need_flush_all and not fullmm.
->=20
-> Wouldn't that skip the flush?
->=20
-> If fulmm =3D=3D 0, then __tlb_reset_range() sets tlb->end =3D 0.
->  tlb_flush_mmu
->    tlb_flush_mmu_tlbonly
->      if (!tlb->end)
->         return
->=20
-> Replacing fullmm with need_flush_all, brings the problem back / reproduce=
-r hangs.
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-Maybe setting need_flush_all does not have the right effect, but setting
-fullmm and then calling __tlb_reset_range() when the PTEs were already
-zapped seems strange.
+> On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
+>> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+>> > On Tue, May 07, 2019 at 01:35:58PM +0200, Esben Haabendal wrote:
+>> >> Lee Jones <lee.jones@linaro.org> writes:
+>> >> > On Thu, 02 May 2019, Esben Haabendal wrote:
+>> >> >
+>> >> >> Could you help clarify whether or not this patch is trying to do
+>> >> >> something odd/wrong?
+>> >> >> 
+>> >> >> I might be misunderstanding Andy (probably is), but the discussion
+>> >> >> revolves around the changes I propose where I change the serial8250
+>> >> >> driver to use platform_get_resource() in favour of
+>> >> >> request_mem_region()/release_mem_region().
+>> >> >
+>> >> > Since 'serial8250' is registered as a platform device, I don't see any
+>> >> > reason why it shouldn't have the capability to obtain its memory
+>> >> > regions from the platform_get_*() helpers.
+>> >> 
+>> >> Good to hear.  That is exactly what I am trying do with this patch.
+>> >> 
+>> >> @Andy: If you still don't like my approach, could you please advice an
+>> >> acceptable method for improving the serial8250 driver to allow the use
+>> >> of platform_get_*() helpers?
+>> >
+>> > I still don't get why you need this.
+>> 
+>> Because platform_get_resource() is a generally available and useful
+>> helper function for working with platform_device resources, that the
+>> current standard serial8250 driver does not support.
+>> 
+>> I am uncertain if I still haven't convinced you that current serial8250
+>> driver does not work with platform_get_resource(), or if you believe
+>> that it really should not support it.
+>
+> I believe there is no need to do this support.
+>
+> Most of the platform code that uses it is quite legacy,
 
-fullmm is described as:
+So all code that use/support platform_get_resource() is legacy code?
 
-        /*
-         * we are in the middle of an operation to clear
-         * a full mm and can make some optimizations
-         */
+commit 7945f929f1a77a1c8887a97ca07f87626858ff42
+Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed Feb 20 11:12:39 2019 +0000
 
-And this not the case.
+    drivers: provide devm_platform_ioremap_resource()
+    
+    There are currently 1200+ instances of using platform_get_resource()
+    and devm_ioremap_resource() together in the kernel tree.
+    
+    This patch wraps these two calls in a single helper. Thanks to that
+    we don't have to declare a local variable for struct resource * and can
+    omit the redundant argument for resource type. We also have one
+    function call less.
+    
+    Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+    Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
+It does not looks quite dead to me.
+
+> and all under arch/
+> ideally should be converted to use Device Tree.
+
+When do you expect arch/x86 to be converted to device tree?
+
+>> > If it's MFD, you may use "serial8250" with a given platform data like
+>> > dozens of current users do.
+>> 
+>> There is only one in-tree mfd driver using "serial8250", the sm501.c
+>> driver.  And that driver predates the mfd framework (mfd-core.c) by a
+>> year, and does not use any of the mfd-core functionality.
+>
+> So, does it have an issue?
+
+I don't have hardware so I can test it, but I assume that it is
+working.
+
+It is ignoring framework code (mfd-core), that is implemented to await
+re-inventing the wheel for each and every mfd driver.  If that is an
+issue, then yes, sm501.c does have an issue and could be improved/fixed.
+
+>> I want to use the mfd-core provided handling of resource splitting,
+>> because it makes it easier to handle splitting of a single memory
+>> resource as defined by a PCI BAR in this case.  And the other drivers I
+>> need to use all support/use platform_get_resource(), so it would even
+>> have an impact on the integration of that if I cannot use mfd resource
+>> splitting with serial8250.
+>
+> I tired to repeat, that is OKAY! You *may* split and supply resources to the
+> drivers, nothing prevents you to do that with current code base.
+>
+> Do you see any problem with that? What is that problem?
+>
+> If you would like utilize serial8250, just provide a platform data for
+> it.
+
+I fear we are coming to an end here.
+
+I don't seem to be able to break through to you, to get you to
+understand the issue here.
+
+I want to write a simple and elegant mfd driver, using mfd-core
+framework (the mfd_add_devices() function call to be specific).  I don't
+want to reimplement similar functionality in the mfd driver.
+
+The other drivers I need all work fine with this, but serial8250 does
+not.
+
+As I understand Lee Jones, he seem to agree with me, so could you
+please, please consider that I might not be totally on crack, and might
+actually have brough forward a valid proposition.
+
+>> > Another approach is to use 8250 library, thus, creating a specific
+>> > glue driver (like all 8250_* do).
+>> 
+>> As mentioned, I think this is a bad approach, and I would prefer to
+>> improve the "serial8250" driver instead.  But if you insist, what should
+>> I call such a driver?  It needs a platform_driver name, for use when
+>> matching with platform_device devices.  And it would support exactly the
+>> same hardware as the current "serial8250" driver.
+>
+> If you need some specifics, you create a driver with whatever name
+> suits the IP in question. Nevertheless, if it's simple generic 8250, nothing
+> needs to be added, except platform data, see above.
+
+We are on repeat here.  I don't agree with you here.  I have a simple
+generic 8250 (16550A) compatible device, and cannot use it in a mfd
+driver using the standard mfd-core framework.
+
+The lacking of support for platform_get_resource() in the generic
+serial8250 driver is not a feature.  It should be supported, just as it
+is in several of the specialized 8250 drivers.
+
+>> > Yes, I understand that 8250 driver is full of quirks and not modern
+>> > approaches
+>> > to do one or another thing. Unfortunately it's not too easy to fix it
+>> > without
+>> > uglifying code and doing some kind of ping-pong thru the conversion. I don't
+>> > think it worth to do it in the current state of affairs. Though, cleaning up
+>> > the core part from the quirks and custom pieces would make this task
+>> > achievable.
+>> 
+>> I think it should be possible and worthwhile to improve serial8250
+>> driver with support for using platform_device resources
+>> (platform_get_resource() helper).
+>
+> I simple can't understand why it's needed. What problem would it solve which
+> can't be solved with existing code base?
+
+On repeat again.  I have explained it way to many times, so I guess I
+must assume by now that you do not think that being able to use
+serial8250 together with mfd-core is something that should be solved.
+
+>> If we could stop discussing if it is a proper thing to do, we could try
+>> to find a good way to do it instead.
+>
+>> > Btw, what exact IP of UART do you have implemented there?
+>> 
+>> It is an XPS 16550 UART (v3.00a).
+>> https://www.xilinx.com/support/documentation/ip_documentation/xps_uart16550.pdf
+>
+> So, briefly looking at it I didn't find any deviations from a standard 16550a.
+
+Exactly. I am pretty sure I have said this more than once in this
+thread.  This IP is perfectly standard.  It would be completely wrong to
+write a specialized 8250 driver for this.
+
+But if I fail to find a way to get something merged which allows using
+the generic serial8250 driver with platform_get_resource(), I guess I
+need to handle this out-of-tree.  And anybody else needing/wanting to do
+the same would have to do that as well.
+
+> Also there are two drivers mentioned Xilinx, though I'm pretty sure it's not
+> your case.
+>
+> Since you have more than one of them, it's even smaller to use current
+> infrastructure to enumerate them using only one serial8250 description.
+> See plenty examples in the Linux kernel, such as 8250_exar_st16c554.c.
+> That is what you may just modify for your needs and put inside your MFD.
+
+It would still mean that I would have revert to not using convenient and
+otherwise fully appropriate API calls like pci_request_regions() and
+mfd_add_devices().
+
+The mfd driver in question is for a PCI device.  Not being able to
+request the PCI regions seems silly.
+
+Not being able to register all child devices with the call introduced
+for that sole purpose also seems silly.
+
+/Esben
