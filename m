@@ -2,197 +2,199 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44ADC04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235B5C04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858E621019
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D854820645
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="L55k7Xpy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STE7B08o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726917AbfENA4y (ORCPT
+        id S1726928AbfENA6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 20:56:54 -0400
-Received: from ozlabs.org ([203.11.71.1]:41959 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726750AbfENA4y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 20:56:54 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 452zm21TCvz9s5c;
-        Tue, 14 May 2019 10:56:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557795411;
-        bh=TxTcMKVqXgh7M+k63ZhUKgh1N6mWCEbKVbjlNxSZxxQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=L55k7XpytwSSD1dtS2oPdIP7U3wNYg3AWkB2LnGA0twqCO3igIMU8erT6RZjhAa9y
-         RoM/9XKlRI6XB8ZdUU0kinDUTSLoHZQP6Lqv3W2IvIlWz92+9SYzkCeEXcEe3NwQX/
-         n+7rIeMIcMlbRr2D7sp9HE9F0LWXXFLfrVy9LX5dzAGwosbvjg6npXpgAJt7gaYbuY
-         yQCyF8YFZkhMi7jgklFHnG/GF33pAjYe6CleQ67oa7bisbtZZWOaJ6kDqM+lV/prnL
-         8Flj3rovoCnJVqQyQYtU6ucLoIkZ412E7yBkIM73p4BAAGqnzZSI1cMR1sQn4FvaVY
-         8oJtwbQvAH3bA==
-Date:   Tue, 14 May 2019 10:56:49 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Tyler Hicks <tyhicks@canonical.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: linux-next: build failure after merge of the ecryptfs tree
-Message-ID: <20190514105649.512267cd@canb.auug.org.au>
-In-Reply-To: <CAK7LNAT_aJ4-abaNXe5VwvAYa2TOprjFL-vcUc730EDwHq80kw@mail.gmail.com>
-References: <20190514100910.6996d2f5@canb.auug.org.au>
-        <CAK7LNAT_aJ4-abaNXe5VwvAYa2TOprjFL-vcUc730EDwHq80kw@mail.gmail.com>
+        Mon, 13 May 2019 20:58:02 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36508 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfENA6B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 20:58:01 -0400
+Received: by mail-ot1-f67.google.com with SMTP id c3so13622316otr.3;
+        Mon, 13 May 2019 17:58:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5rfYyyZa4QBXLtekQDW2u5rDpfxUQyTQIBx6qQjkZZ4=;
+        b=STE7B08orS/QS1xLAmu/iG54QcoWAH8ulUI5uQKsqI3U2f0l1EXc3Dh++7OFgjilXW
+         tCEenF2dSwOppEGDc+der5j6JeQpJvXS2DJKhmFx0cv/92PlJwSDvaBKrLeTb3b5DBvr
+         BrOhDbLQBZcn7eqsbd8kcdrWQAB6DRhuYrhd7yDSkDpuxyBVkC4soxZSnzO5WkWaVEhB
+         ZY12FRnKmmzEP7Bz2tNPUb0W1F/x5bb6p53N878+/TSMTehNYzkkbE8maV5bxRpFGnHk
+         zf/RrgYetQJOqOPh6MRpHRrp8ICEkhP863BjlJ62aUdM/NQv+5sc+MMNgJtIqjqrIp77
+         YWZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5rfYyyZa4QBXLtekQDW2u5rDpfxUQyTQIBx6qQjkZZ4=;
+        b=Ligb/2tgDG3sOodUldt7IhivJuWCTNMNiQYAzO/Rw5rGFCShIe2L4IDF0tYvCLp8Kk
+         85CF3YXh5UZ4RZ3p8dU0x/L7lydbLhXxzbOPjnhe7EGi2Ukbh9gi4nbEIYTsZ/H/YMIV
+         /IwCZCoGS+OdbExRn0JlLK9905CUhm+3SzfGRzukDFEKCn546XwqRy7/kefBZAlwvad0
+         Q92YboyTC9q3yl1AmXIWH+wxS0jiH3fbhqG1LcSZIDJZWVJbWzJZh9h4PFk0tnTuRHvA
+         Ke3b5jL1clqkCxda5B90zlrtt2DsdZrVg1IN4P0pYASkSznsggbiARGTkP8qn2YhAfhL
+         HUOA==
+X-Gm-Message-State: APjAAAUz0bcIzjAtJb4jUBaqKwi5HIGmqpGO/cXtWRGMSZ2DFMwwIO1r
+        XKlw9ZhhRx8OK4rh3+1mRWFKvkYhQ23dK6ofysw=
+X-Google-Smtp-Source: APXvYqxm+eya3WzAyTbMyI5pqWDx7Hc+i7L8iNYMsWhxZ+8oXd4MDWPwOeCiCPZNrI8CJG2SKH/Bcy94nAMIDN6H4HM=
+X-Received: by 2002:a9d:588b:: with SMTP id x11mr15757624otg.295.1557795480507;
+ Mon, 13 May 2019 17:58:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/GAZU4z.04i=a5k9ZE+2ngzi"; protocol="application/pgp-signature"
+References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
+ <1557401361-3828-2-git-send-email-wanpengli@tencent.com> <20190513193940.GL28561@linux.intel.com>
+In-Reply-To: <20190513193940.GL28561@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 14 May 2019 08:59:14 +0800
+Message-ID: <CANRm+Cyoip9Yq7cbeo0O8wrVWbZZ59QnRFEtD5DC452Spc3M+Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] KVM: LAPIC: Extract adaptive tune timer advancement logic
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Liran Alon <liran.alon@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/GAZU4z.04i=a5k9ZE+2ngzi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-[excessive quoting for new CC's]
-
-On Tue, 14 May 2019 09:40:53 +0900 Masahiro Yamada <yamada.masahiro@socione=
-xt.com> wrote:
+On Tue, 14 May 2019 at 03:39, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 >
-> On Tue, May 14, 2019 at 9:16 AM Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
+> On Thu, May 09, 2019 at 07:29:19PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
 > >
-> > I don't know why this suddenly appeared after mergeing the ecryptfs tree
-> > since nothin has changed in that tree for some time (and nothing in that
-> > tree seems relevant).
-> >
-> > After merging the ecryptfs tree, today's linux-next build (x86_64
-> > allmodconfig) failed like this:
-> >
-> > scripts/Makefile.modpost:112: target '.tmp_versions/asix.mod' doesn't m=
-atch the target pattern
-> > scripts/Makefile.modpost:113: warning: overriding recipe for target '.t=
-mp_versions/asix.mod'
-> > scripts/Makefile.modpost:100: warning: ignoring old recipe for target '=
-.tmp_versions/asix.mod'
-> > scripts/Makefile.modpost:127: target '.tmp_versions/asix.mod' doesn't m=
-atch the target pattern
-> > scripts/Makefile.modpost:128: warning: overriding recipe for target '.t=
-mp_versions/asix.mod'
-> > scripts/Makefile.modpost:113: warning: ignoring old recipe for target '=
-.tmp_versions/asix.mod'
-> > make[2]: Circular .tmp_versions/asix.mod <- __modpost dependency droppe=
-d.
-> > Binary file .tmp_versions/asix.mod matches: No such file or directory
-> > make[2]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
-> > make[1]: *** [Makefile:1290: modules] Error 2
-> >
-> > The only clue I can see is that asix.o gets built in two separate
-> > directories (drivers/net/{phy,usb}). =20
->=20
-> Module name should be unique.
->=20
-> If both are compiled as a module,
-> they have the same module names:
->=20
-> drivers/net/phy/asix.ko
-> drivers/net/usb/asix.ko
->=20
-> If you see .tmp_version directory,
-> you will see asix.mod
->=20
-> Perhaps, one overwrote the other,
-> or it already got broken somehow.
+> > Extract adaptive tune timer advancement logic to a single function.
+>
+> Why?
 
-So, the latter of these drivers (drivers/net/phy/asix.c) was added in
-v4.18-rc1 by commit
+Just because the function wait_lapic_expire() is too complex now.
 
-  31dd83b96641 ("net-next: phy: new Asix Electronics PHY driver")
+Regards,
+Wanpeng Li
 
-If we can't have 2 modules with the same base name, is it too late to
-change its name?
-
-I am sort of suprised that noone else has hit this in the past year.
-
-> > I have the following files in the object directory:
+>
 > >
-> > ./.tmp_versions/asix.mod
-> > ./drivers/net/usb/asix.ko
-> > ./drivers/net/usb/asix.mod.o
-> > ./drivers/net/usb/asix.o
-> > ./drivers/net/usb/asix_common.o
-> > ./drivers/net/usb/asix_devices.o
-> > ./drivers/net/usb/.asix.ko.cmd
-> > ./drivers/net/usb/.asix.mod.o.cmd
-> > ./drivers/net/usb/.asix.o.cmd
-> > ./drivers/net/usb/asix.mod.c
-> > ./drivers/net/usb/.asix_common.o.cmd
-> > ./drivers/net/usb/.asix_devices.o.cmd
-> > ./drivers/net/phy/asix.ko
-> > ./drivers/net/phy/asix.o
-> > ./drivers/net/phy/.asix.ko.cmd
-> > ./drivers/net/phy/.asix.mod.o.cmd
-> > ./drivers/net/phy/asix.mod.o
-> > ./drivers/net/phy/asix.mod.c
-> > ./drivers/net/phy/.asix.o.cmd
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Cc: Liran Alon <liran.alon@oracle.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 57 ++++++++++++++++++++++++++++++--------------=
+--------
+> >  1 file changed, 33 insertions(+), 24 deletions(-)
 > >
-> > ./.tmp_versions/asix.mod
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index bd13fdd..e7a0660 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -1501,11 +1501,41 @@ static inline void __wait_lapic_expire(struct k=
+vm_vcpu *vcpu, u64 guest_cycles)
+> >       }
+> >  }
 > >
-> > Looks like this:
+> > -void wait_lapic_expire(struct kvm_vcpu *vcpu)
+> > +static inline void adaptive_tune_timer_advancement(struct kvm_vcpu *vc=
+pu,
+> > +                             u64 guest_tsc, u64 tsc_deadline)
+> >  {
+> >       struct kvm_lapic *apic =3D vcpu->arch.apic;
+> >       u32 timer_advance_ns =3D apic->lapic_timer.timer_advance_ns;
+> > -     u64 guest_tsc, tsc_deadline, ns;
+> > +     u64 ns;
+> > +
+> > +     if (!apic->lapic_timer.timer_advance_adjust_done) {
+> > +                     /* too early */
+> > +                     if (guest_tsc < tsc_deadline) {
+> > +                             ns =3D (tsc_deadline - guest_tsc) * 10000=
+00ULL;
+> > +                             do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > +                             timer_advance_ns -=3D min((u32)ns,
+> > +                                     timer_advance_ns / LAPIC_TIMER_AD=
+VANCE_ADJUST_STEP);
+> > +                     } else {
+> > +                     /* too late */
+> > +                             ns =3D (guest_tsc - tsc_deadline) * 10000=
+00ULL;
+> > +                             do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > +                             timer_advance_ns +=3D min((u32)ns,
+> > +                                     timer_advance_ns / LAPIC_TIMER_AD=
+VANCE_ADJUST_STEP);
+> > +                     }
+> > +                     if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_A=
+DVANCE_ADJUST_DONE)
+> > +                             apic->lapic_timer.timer_advance_adjust_do=
+ne =3D true;
+> > +                     if (unlikely(timer_advance_ns > 5000)) {
+> > +                             timer_advance_ns =3D 0;
+> > +                             apic->lapic_timer.timer_advance_adjust_do=
+ne =3D true;
+> > +                     }
+> > +                     apic->lapic_timer.timer_advance_ns =3D timer_adva=
+nce_ns;
+> > +             }
+>
+> This whole block is indented too far.
+>
+> > +}
+> > +
+> > +void wait_lapic_expire(struct kvm_vcpu *vcpu)
+> > +{
+> > +     struct kvm_lapic *apic =3D vcpu->arch.apic;
+> > +     u64 guest_tsc, tsc_deadline;
 > >
-> > ------------------------------------------
-> > drivers/net/phy/asix.ko
-> > drivers/net/phy/asix.o
+> >       if (apic->lapic_timer.expired_tscdeadline =3D=3D 0)
+> >               return;
+> > @@ -1521,28 +1551,7 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
+> >       if (guest_tsc < tsc_deadline)
+> >               __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
 > >
+> > -     if (!apic->lapic_timer.timer_advance_adjust_done) {
+> > -             /* too early */
+> > -             if (guest_tsc < tsc_deadline) {
+> > -                     ns =3D (tsc_deadline - guest_tsc) * 1000000ULL;
+> > -                     do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > -                     timer_advance_ns -=3D min((u32)ns,
+> > -                             timer_advance_ns / LAPIC_TIMER_ADVANCE_AD=
+JUST_STEP);
+> > -             } else {
+> > -             /* too late */
+> > -                     ns =3D (guest_tsc - tsc_deadline) * 1000000ULL;
+> > -                     do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > -                     timer_advance_ns +=3D min((u32)ns,
+> > -                             timer_advance_ns / LAPIC_TIMER_ADVANCE_AD=
+JUST_STEP);
+> > -             }
+> > -             if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_ADVANCE_A=
+DJUST_DONE)
+> > -                     apic->lapic_timer.timer_advance_adjust_done =3D t=
+rue;
+> > -             if (unlikely(timer_advance_ns > 5000)) {
+> > -                     timer_advance_ns =3D 0;
+> > -                     apic->lapic_timer.timer_advance_adjust_done =3D t=
+rue;
+> > -             }
+> > -             apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
+> > -     }
+> > +     adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
+> >  }
 > >
-> > ------------------------------------------
+> >  static void start_sw_tscdeadline(struct kvm_lapic *apic)
+> > --
+> > 2.7.4
 > >
-> > What you can't see above are the 256 NUL bytes at the end of the file
-> > (followed by a NL).
-> >
-> > This is from a -j 80 build.  Surely there is a race condition here if t=
-he
-> > file in .tmp_versions is only named for the base name of the module and
-> > we have 2 modules with the same base name.
-> >
-> > I removed that file and redid the build and it succeeded.
-> >
-> > Mind you, I have no itdea why this file was begin rebuilt, the merge
-> > only touched these files:
-> >
-> > fs/ecryptfs/crypto.c
-> > fs/ecryptfs/keystore.c
-> >
-> > Puzzled ... :-(
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GAZU4z.04i=a5k9ZE+2ngzi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzaElEACgkQAVBC80lX
-0Gyjdgf/VOXl+vcYN5/Ns9TE9My0Xo/JNrguSjSJhQx3ADvaV+/jtei0jM7gRdLu
-Zjl0UU0Ru2sOJjhUnIgm7nAk7c9btHOG46lMDnYuFWvYATJNpPR5yepJywPvpbTy
-BMtnQEcSWBUIYW8GLDZiVtsrH1bgmahjDfJ/kShawh6OiF2p5+ai/zx2bOMPV5vR
-1nC41I+l76jUF8triGtXtcbHtuTKKJI5MMUhnn/xEO/uIukCNAv5FjcrC0SPHXPX
-97bj/UFKpGuZEPDlGVJBUOaBaif2xOuq2d5cbGktps99xg2f2Ti9NrD9z02RW/RA
-2/SyK8qUp3+tSlyC77Ns41H08A4MXQ==
-=zQyT
------END PGP SIGNATURE-----
-
---Sig_/GAZU4z.04i=a5k9ZE+2ngzi--
