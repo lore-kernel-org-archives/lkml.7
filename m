@@ -2,131 +2,111 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF62C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0788C21530
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="gKMZt+rm"
+	by mail.kernel.org (Postfix) with ESMTP id 243332147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfENMN7 (ORCPT
+        id S1726412AbfENMOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:13:59 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34753 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfENMN7 (ORCPT
+        Tue, 14 May 2019 08:14:11 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:50248 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENMOL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:13:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v10so11929743oib.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J6T7mgXIvnET5l/tpGXLopOXL/eCRoBVjJ8wVdjfvJM=;
-        b=gKMZt+rmO48Wd6LixwSFA5uP+tnHbIOOzUMW7+cBpiXeFZOAPzh53vAAif3AgkqbCQ
-         1qOovLLoGbwFNYLJHR9YWAxqooTAwxUakSopoiggHN/gyfCHB9iSN5+ffCnzv5xHnSSY
-         1HX5wrQvZ28MsrkDdHaV9KzwQSClciBtzVYJV+CzkD0V87c/OW4S9UkgNiWaUm00HP6O
-         inW6jQyHzZS5r4rWyYh2cWIY5bhfa2eYUZvyrJwh7jBdJse1t06e3uVksOSgWbViKwtI
-         wuadLwR/wSvMZP+RSe9VR5YNWctqW6aqDOo1HpmPgILV98ku9QPoARijDhLUJb+vUJ4R
-         ujNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6T7mgXIvnET5l/tpGXLopOXL/eCRoBVjJ8wVdjfvJM=;
-        b=hsy3GadyDxQHdP2YDbB054c8+/Wy0AT6lXAj8q1IYiShQ3agYHe4I5WLy3st6urGm0
-         yHAC7NH1YCWZzUn9D4FX4oRuRV0nyE3aqeauoKhVUSX0wt4VA99yAxvhOfLQV4s/n1gf
-         2TEms1iWddy24LTVTTW7oKuwD6MavFRuKhv3n3ki18Idzlr7F3aAM7Jxy+7rTCeB93ye
-         Uz9fPvRhmi6HyfaIwOXtn5x7M+6ndrXJSG2OYtMGv1DsEJycHj+P1k8Z7xMAt/187NEa
-         /Z7lwyZSZT/osKc7I8sp47wYw7NZReFh6E8oA7fzVQUDqmkUKb2k9Bm1gCiBXcvTNKLC
-         SfBA==
-X-Gm-Message-State: APjAAAVFfqgognhaFvqRDXXGpRrE5mXwY+ExLXEJn0K0TWADgiOS93kk
-        oiQwmobLPLxiZpYivY6nRTUGKQ==
-X-Google-Smtp-Source: APXvYqxt8u10XFlJlrW+Z8Xzk2QlxKIYWgUazpaKKgLWQ5dFhciFxSHt8Xc4H3c7OWeomT6MpjW7Zg==
-X-Received: by 2002:aca:fd0c:: with SMTP id b12mr2471522oii.55.1557836033811;
-        Tue, 14 May 2019 05:13:53 -0700 (PDT)
-Received: from minyard.net ([2001:470:b8f6:1b:b9a9:ba56:cfab:b3bf])
-        by smtp.gmail.com with ESMTPSA id f7sm6912633otb.66.2019.05.14.05.13.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 05:13:52 -0700 (PDT)
-Date:   Tue, 14 May 2019 07:13:50 -0500
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>, minyard@acm.org,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190514121350.GA6050@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20190508205728.25557-1-minyard@acm.org>
- <20190509161925.kul66w54wpjcinuc@linutronix.de>
- <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
- <20190514091219.nesriqe7qplk3476@linutronix.de>
+        Tue, 14 May 2019 08:14:11 -0400
+X-Greylist: delayed 575 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 08:14:10 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id 46C4F12F2625;
+        Tue, 14 May 2019 14:04:34 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JVAF5zPZzDM4; Tue, 14 May 2019 14:04:26 +0200 (CEST)
+Received: from probook (geri.datenkhaos.de [81.7.17.45])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Tue, 14 May 2019 14:04:26 +0200 (CEST)
+Date:   Tue, 14 May 2019 14:04:21 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+Message-ID: <20190514120416.GA11736@probook>
+References: <20190423183827.GA4012@beast>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190514091219.nesriqe7qplk3476@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190423183827.GA4012@beast>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:12:19AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-05-14 10:43:56 [+0200], Peter Zijlstra wrote:
-> > Now.. that will fix it, but I think it is also wrong.
-> > 
-> > The problem being that it violates FIFO, something that might be more
-> > important on -RT than elsewhere.
+On 2019 Apr 23, Kees Cook wrote:
+> When building x86 with Clang LTO and CFI, CFI jump regions are
+> automatically added to the end of the .text section late in linking. As a
+> result, the _etext position was being labelled before the appended jump
+> regions, causing confusion about where the boundaries of the executable
+> region actually are in the running kernel, and broke at least the fault
+> injection code. This moves the _etext mark to outside (and immediately
+> after) the .text area, as it already the case on other architectures
+> (e.g. arm64, arm).
 > 
-> Wouldn't -RT be more about waking the task with the highest priority
-> instead the one that waited the longest?
+> Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/kernel/vmlinux.lds.S | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> > The regular wait API seems confused/inconsistent when it uses
-> > autoremove_wake_function and default_wake_function, which doesn't help,
-> > but we can easily support this with swait -- the problematic thing is
-> > the custom wake functions, we musn't do that.
-> > 
-> > (also, mingo went and renamed a whole bunch of wait_* crap and didn't do
-> > the same to swait_ so now its named all different :/)
-> > 
-> > Something like the below perhaps.
-> 
-> This still violates FIFO because a task can do wait_for_completion(),
-> not enqueue itself on the list because it noticed a pending wake and
-> leave. The list order is preserved, we have that.
-> But this a completion list. We have probably multiple worker waiting for
-> something to do so all of those should be of equal priority, maybe one
-> for each core or so. So it shouldn't matter which one we wake up.
-> 
-> Corey, would it make any change which waiter is going to be woken up?
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index bad8c51fee6e..de94da2366e7 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -141,11 +141,11 @@ SECTIONS
+>  		*(.text.__x86.indirect_thunk)
+>  		__indirect_thunk_end = .;
+>  #endif
+> -
+> -		/* End of text section */
+> -		_etext = .;
+>  	} :text = 0x9090
+>  
+> +	/* End of text section */
+> +	_etext = .;
+> +
+>  	NOTES :text :note
+>  
+>  	EXCEPTION_TABLE(16) :text = 0x9090
+> -- 
+> 2.17.1
 
-In the application that found this, the wake order probably isn't
-relevant.
+This breaks the build on my system:
 
-For other applications, I really doubt that very many are using multiple
-waiters.  If so, this bug would have been reported sooner, I think.
+  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+  CC      arch/x86/boot/compressed/early_serial_console.o
+  CC      arch/x86/boot/compressed/kaslr.o
+  AS      arch/x86/boot/compressed/mem_encrypt.o
+  CC      arch/x86/boot/compressed/kaslr_64.o
+Invalid absolute R_X86_64_32S relocation: _etext
+make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
+make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [arch/x86/boot/Makefile:112: arch/x86/boot/compressed/vmlinux] Error 2
+make: *** [arch/x86/Makefile:283: bzImage] Error 2
 
-As you mention, for RT you would want waiter woken by priority and FIFO
-within priority.  I don't think POSIX says anything about FIFO within
-priority, but that's probably a good idea.  That's no longer a simple
-wait queue  The way it is now is probably closer to that than what Peter
-suggested, but not really that close.
 
-This is heavily used in drivers and fs code, where it probably doesn't
-matter.  I looked through a few users in mm and kernel, and they had
-one waiter or were init/shutdown type things where order is not important.
 
-So I'm not sure it's important.
+-- 
+Regards,
+  Johannes
 
--corey
-
-> 
-> Sebastian
