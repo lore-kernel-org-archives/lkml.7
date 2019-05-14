@@ -2,147 +2,205 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1877C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B00C5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D8520881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E01920881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfENW2z (ORCPT
+        id S1726465AbfENWaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:28:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:16607 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfENW2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:28:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 15:28:54 -0700
-X-ExtLoop1: 1
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by fmsmga006.fm.intel.com with ESMTP; 14 May 2019 15:28:53 -0700
-Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
- ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 14 May 2019 15:28:53 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX151.amr.corp.intel.com ([169.254.7.185]) with mapi id 14.03.0415.000;
- Tue, 14 May 2019 15:28:53 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: RE: [PATCH v20 00/28] Intel SGX1 support
-Thread-Topic: [PATCH v20 00/28] Intel SGX1 support
-Thread-Index: AQHU9QnxaoiNNkdqP0yJjajWChyAgKZCnqeAgAAN+QCAAVPmAIAAE4cAgABGGYCAABE4gIAAAfWAgAABFgCAAADiAIAABegAgAABOYCAAAN6gIAAAQAAgAAA2wCAAATlgIAEWt6AgBvkEoCAAHnYgIAABJkAgAAC6gD//5XxkIAAergAgAAFGwCABCIJAIABljuAgABLfwCAAFy4gIAAC6YA//+UP9A=
-Date:   Tue, 14 May 2019 22:28:52 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654E1213@ORSMSX116.amr.corp.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
- <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
-In-Reply-To: <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMTQyNWM2MjEtMTZhZS00ZTMzLThmMDUtNjBjNGQzZjdkMmY3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibk5BOU5ob0NIV0dDSDNGQmlOYVNxYUhhb1wvRFFnRndBS3c0cnQ4MEFRVU5RTjVcLzVhcWlWSVpCbmQwTFwvVHQzSyJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 14 May 2019 18:30:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52346 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726148AbfENWaN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 18:30:13 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EMQtDY011941
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 18:30:12 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sg3nc6nem-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 18:30:12 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 14 May 2019 23:30:11 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 23:30:08 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EMSrMR19857518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 22:28:53 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EA96CB2065;
+        Tue, 14 May 2019 22:28:52 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD1BFB205F;
+        Tue, 14 May 2019 22:28:52 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 22:28:52 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 9573016C1285; Tue, 14 May 2019 15:28:52 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:28:52 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liu Chuansheng <chuansheng.liu@intel.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
+Reply-To: paulmck@linux.ibm.com
+References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19051422-0064-0000-0000-000003DE67A4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011099; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203385; UDB=6.00631653; IPR=6.00984306;
+ MB=3.00026893; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-14 22:30:11
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051422-0065-0000-0000-00003D78A060
+Message-Id: <20190514222852.GE4184@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQW5keSwNCg0KPiBMZXQgbWUgbWFrZSBzdXJlIEknbSB1bmRlcnN0YW5kaW5nIHRoaXMgY29y
-cmVjdGx5OiB3aGVuIGFuIGVuY2xhdmUgdHJpZXMNCj4gdG8gZXhlY3V0ZSBjb2RlLCBpdCBvbmx5
-IHdvcmtzIGlmICpib3RoKiB0aGUgRVBDTSBhbmQgdGhlIHBhZ2UgdGFibGVzDQo+IGdyYW50IHRo
-ZSBhY2Nlc3MsIHJpZ2h0PyAgVGhpcyBzZWVtcyB0byBiZSB0aGF0IDM3LjMgaXMgdHJ5aW5nIHRv
-IHNheS4NCj4gU28gd2Ugc2hvdWxkIHByb2JhYmx5IGp1c3QgaWdub3JlIFNFQ0lORk8gZm9yIHRo
-ZXNlIHB1cnBvc2VzLg0KPiANCj4gQnV0IHRoaW5raW5nIHRoaXMgYWxsIHRocm91Z2gsIGl0J3Mg
-YSBiaXQgbW9yZSBjb21wbGljYXRlZCB0aGFuIGFueSBvZg0KPiB0aGlzLiAgTG9va2luZyBhdCB0
-aGUgU0VMaW51eCBjb2RlIGZvciBpbnNwaXJhdGlvbiwgdGhlcmUgYXJlIHF1aXRlIGENCj4gZmV3
-IHBhdGhzLCBidXQgdGhleSBib2lsIGRvd24gdG8gdHdvIGNhc2VzOiBFWEVDVVRFIGlzIHRoZSBy
-aWdodCB0byBtYXANCj4gYW4gdW5tb2RpZmllZCBmaWxlIGV4ZWN1dGFibHksIGFuZCBFWEVDTU9E
-L0VYRUNNRU0gKHRoZSBkaXN0aW5jdGlvbg0KPiBzZWVtcyBtb3N0bHkgaXJyZWxldmFudCkgaXMg
-dGhlIHJpZ2h0IHRvIGNyZWF0ZSAodmlhIG1tYXAgb3IgbXByb3RlY3QpIGENCj4gbW9kaWZpZWQg
-YW5vbnltb3VzIGZpbGUgbWFwcGluZyBvciBhIG5vbi1maWxlLWJhY2tlZCBtYXBwaW5nIHRoYXQg
-aXMNCj4gZXhlY3V0YWJsZS4gIFNvLCBpZiB3ZSBkbyBub3RoaW5nLCB0aGVuIG1hcHBpbmcgYW4g
-ZW5jbGF2ZSB3aXRoIGV4ZWN1dGUNCj4gcGVybWlzc2lvbiB3aWxsIHJlcXVpcmUgZWl0aGVyIEVY
-RUNVVEUgb24gdGhlIGVuY2xhdmUgaW5vZGUgb3INCj4gRVhFQ01PRC9FWEVDTUVNLCBkZXBlbmRp
-bmcgb24gZXhhY3RseSBob3cgdGhpcyBnZXRzIHNldCB1cC4NCj4gDQo+IFNvIGFsbCBpcyB3ZWxs
-LCBzb3J0IG9mLiAgVGhlIHByb2JsZW0gaXMgdGhhdCBJIGV4cGVjdCB0aGVyZSB3aWxsIGJlDQo+
-IHBlb3BsZSB3aG8gd2FudCBlbmNsYXZlcyB0byB3b3JrIGluIGEgcHJvY2VzcyB0aGF0IGRvZXMg
-bm90IGhhdmUgdGhlc2UNCj4gcmlnaHRzLiAgVG8gbWFrZSB0aGlzIHdvcmssIHdlIHByb2JhYmx5
-IG5lZWQgZG8gc29tZSBzdXJnZXJ5IG9uIFNFTGludXguDQo+IElTVE0gdGhlIGFjdCBvZiBjb3B5
-aW5nICh2aWEgdGhlIEVBREQgaW9jdGwpIGRhdGEgZnJvbSBhIFBST1RfRVhFQw0KPiBtYXBwaW5n
-IHRvIGFuIGVuY2xhdmUgc2hvdWxkIG5vdCBiZSBjb25zdHJ1ZWQgYXMgIm1vZGlmeWluZyINCj4g
-dGhlIGVuY2xhdmUgZm9yIFNFTGludXggcHVycG9zZXMuICBBY3R1YWxseSBkb2luZyB0aGlzIGNv
-dWxkIGJlIGF3a3dhcmQsDQo+IHNpbmNlIHRoZSBzYW1lIGlub2RlIHdpbGwgaGF2ZSBleGVjdXRh
-YmxlIHBhcnRzIGFuZCBub24tZXhlY3V0YWJsZSBwYXJ0cywNCj4gYW5kIFNFTGludXggY2FuJ3Qg
-cmVhbGx5IHRlbGwgdGhlIGRpZmZlcmVuY2UuDQo+IA0KDQpFbmNsYXZlIGZpbGVzIGFyZSBwcmV0
-dHkgbXVjaCBsaWtlIHNoYXJlZCBvYmplY3RzIGluIHRoYXQgdGhleSBib3RoIGNvbnRhaW4gZXhl
-Y3V0YWJsZSBjb2RlIG1hcHBlZCBpbnRvIHRoZSBob3N0IHByb2Nlc3MncyBhZGRyZXNzIHNwYWNl
-LiBEbyBzaGFyZWQgb2JqZWN0cyBuZWVkIEVYRUNVVEUgdG8gYmUgbWFwcGVkIGV4ZWN1dGFibGU/
-IElmIHNvLCB3aHkgd291bGQgcGVvcGxlIG5vdCB3YW50IEVYRUNVVEUgaW4gZW5jbGF2ZSBmaWxl
-cz8NCg0KV3J0IHRvIHdoaWNoIHBhcnQgb2YgYW4gZXhlY3V0YWJsZSBmaWxlIGlzIGV4ZWN1dGFi
-bGUsIHRoZSBsaW1pdGF0aW9uIHJlc2lkZXMgaW4gc2VjdXJpdHlfbW1hcF9maWxlKCksIHdoaWNo
-IGRvZXNuJ3QgdGFrZSB0aGUgcmFuZ2Ugb2YgYnl0ZXMgYXMgaW5wdXQuIEl0IGlzbid0IFNHWCBz
-cGVjaWZpYy4gSSdkIHNheSBqdXN0IGxldCBlbmNsYXZlcyBpbmhlcml0IGFwcGxpY2FibGUgY2hl
-Y2tzIGZvciBzaGFyZWQgb2JqZWN0cy4gVGhlbiBpdCB3aWxsIGFsc28gaW5oZXJpdCBhbGwgZnV0
-dXJlIGVuaGFuY2VtZW50cyB0cmFuc3BhcmVudGx5Lg0KDQo+IE1heWJlIHRoZSBlbmNsYXZlIHNo
-b3VsZCB0cmFjayBhIGJpdG1hcCBvZiB3aGljaCBwYWdlcyBoYXZlIGV2ZXIgYmVlbg0KPiBlaXRo
-ZXIgbWFwcGVkIGZvciB3cml0ZSBvciBFQUREZWQgd2l0aCBhICpzb3VyY2UqIHRoYXQgd2Fzbid0
-IFBST1RfRVhFQy4NCj4gQW5kIHRoZW4gU0VMaW51eCBjb3VsZCBsZWFybiB0byBhbGxvdyB0aG9z
-ZSBwYWdlcyAoYW5kIG9ubHkgdGhvc2UgcGFnZXMpDQo+IHRvIGJlIG1hcHBlZCBleGVjdXRhYmx5
-IHdpdGhvdXQgRVhFQ1VURSBvciBFWEVDTU9EIG9yIHdoYXRldmVyDQo+IHBlcm1pc3Npb24uDQoN
-CldoYXQgZG8geW91IG1lYW4gYnkgImVuY2xhdmUiIGhlcmU/IFRoZSBlbmNsYXZlIHJhbmdlIChF
-TFJBTkdFKSBjcmVhdGVkIGJ5IG1tYXAoKSdpbmcgL2Rldi9zZ3gvZW5jbGF2ZSBkZXZpY2U/IE15
-IGFyZ3VtZW50IGlzLCBhbiBlbmNsYXZlJ3Mgc2FuaXR5L2luc2FuaXR5IGlzIGRldGVybWluZWQg
-YXQgbG9hZCB0aW1lIChFQUREL0VFWFRFTkQgYW5kIEVJTklUKSBhbmQgYWxsIHBhZ2UgYWNjZXNz
-ZXMgYXJlIGVuZm9yY2VkIGJ5IEVQQ00sIHNvIFBURSBwZXJtaXNzaW9ucyByZWFsbHkgZG9uJ3Qg
-bWF0dGVyLiBBcyBJIGRpc2N1c3NlZCBpbiBhbiBlYXJsaWVyIGVtYWlsLCBJJ2QgYWxsb3cgUldY
-IGZvciBhbnkgcmFuZ2UgYmFja2VkIGJ5IC9kZXYvc2d4L2VuY2xhdmUgZGV2aWNlIGZpbGUgYnkg
-ZGVmYXVsdCwgdW5sZXNzIGFuIFNHWC1hd2FyZSBMU00gbW9kdWxlL3BvbGljeSBvYmplY3RzIHRv
-IHRoYXQgKGUuZy4gdmlhIGEgbmV3IHNlY3VyaXR5X3NneF9tcHJvdGVjdCgpIExTTSBob29rKS4N
-Cg0KPiANCj4gRG9lcyB0aGlzIHNlZW0gYXQgYWxsIHJlYXNvbmFibGU/DQo+IA0KPiBJIHN1cHBv
-c2UgaXQncyBub3QgdGhlIGVuZCBvZiB0aGUgd29ybGQgaWYgdGhlIGluaXRpYWxseSBtZXJnZWQg
-dmVyc2lvbg0KPiBkb2Vzbid0IGRvIHRoaXMsIGFzIGxvbmcgYXMgdGhlcmUncyBzb21lIHJlYXNv
-bmFibGUgcGF0aCB0byBhZGRpbmcgYQ0KPiBtZWNoYW5pc20gbGlrZSB0aGlzIHdoZW4gdGhlcmUn
-cyBkZW1hbmQgZm9yIGl0Lg0KDQpBZ3JlZWQhDQoNCi1DZWRyaWMNCg==
+On Mon, May 13, 2019 at 08:02:11PM +0900, Tetsuo Handa wrote:
+> syzbot's second top report is "no output from test machine" where the
+> userspace process failed to spawn a new test process for 300 seconds
+> for some reason. One of reasons which can result in this report is that
+> an already spawned test process was unable to terminate (e.g. trapped at
+> an unkillable retry loop due to some bug) after SIGKILL was sent to that
+> process. Therefore, reporting when a thread is failing to terminate
+> despite a fatal signal is pending would give us more useful information.
+> 
+> This version shares existing sysctl settings (e.g. check interval,
+> timeout, whether to panic) used for detecting TASK_UNINTERRUPTIBLE
+> threads, for I don't know whether people want to use a new kernel
+> config option and different sysctl settings for monitoring killed
+> threads.
+> 
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Cc: Dmitry Vyukov <dvyukov@google.com>
+
+Looks good to me.
+
+Acked-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+A few inconsequential comments below.
+
+> ---
+>  include/linux/sched.h |  1 +
+>  kernel/hung_task.c    | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index a2cd1585..d42bdd7 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -850,6 +850,7 @@ struct task_struct {
+>  #ifdef CONFIG_DETECT_HUNG_TASK
+>  	unsigned long			last_switch_count;
+>  	unsigned long			last_switch_time;
+> +	unsigned long			killed_time;
+>  #endif
+>  	/* Filesystem information: */
+>  	struct fs_struct		*fs;
+> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> index f108a95..34e7b84 100644
+> --- a/kernel/hung_task.c
+> +++ b/kernel/hung_task.c
+> @@ -141,6 +141,47 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+>  	touch_nmi_watchdog();
+>  }
+>  
+> +static void check_killed_task(struct task_struct *t, unsigned long timeout)
+> +{
+> +	unsigned long stamp = t->killed_time;
+> +
+> +	/*
+> +	 * Ensure the task is not frozen.
+> +	 * Also, skip vfork and any other user process that freezer should skip.
+> +	 */
+> +	if (unlikely(t->flags & (PF_FROZEN | PF_FREEZER_SKIP)))
+> +		return;
+> +	/*
+> +	 * Skip threads which are already inside do_exit(), for exit_mm() etc.
+> +	 * might take many seconds.
+> +	 */
+> +	if (t->flags & PF_EXITING)
+> +		return;
+> +	if (!stamp) {
+> +		stamp = jiffies;
+> +		if (!stamp)
+> +			stamp++;
+
+Cute trick to avoid issues with jiffy overflow on 32-bit systems.  ;-)
+
+> +		t->killed_time = stamp;
+> +		return;
+> +	}
+> +	if (time_is_after_jiffies(stamp + timeout * HZ))
+
+And if I understand correctly, timeout of zero disables everything, so
+we don't get the backwards false-positive comparison above.
+
+> +		return;
+> +	trace_sched_process_hang(t);
+> +	if (sysctl_hung_task_panic) {
+> +		console_verbose();
+> +		hung_task_call_panic = true;
+> +	}
+> +	/*
+> +	 * This thread failed to terminate for more than
+> +	 * sysctl_hung_task_timeout_secs seconds, complain:
+> +	 */
+> +	pr_err("INFO: task %s:%d can't die for more than %ld seconds.\n",
+> +	       t->comm, t->pid, (jiffies - stamp) / HZ);
+> +	sched_show_task(t);
+> +	hung_task_show_lock = true;
+> +	touch_nmi_watchdog();
+> +}
+> +
+>  /*
+>   * To avoid extending the RCU grace period for an unbounded amount of time,
+>   * periodically exit the critical section and enter a new one.
+> @@ -192,6 +233,9 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+>  				goto unlock;
+>  			last_break = jiffies;
+>  		}
+> +		/* Check threads which are about to terminate. */
+> +		if (unlikely(fatal_signal_pending(t)))
+> +			check_killed_task(t, timeout);
+>  		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
+>  		if (t->state == TASK_UNINTERRUPTIBLE)
+>  			check_hung_task(t, timeout);
+> -- 
+> 1.8.3.1
+> 
+
