@@ -2,194 +2,275 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B06C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D123C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02E920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B6C3216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557862090;
+	bh=WCUsG9f8wJiaXUhH+uSswKeXfoMJcP7JCu8gh/R5WU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iGj7ICXOyJh3AsN06BOiqwNM2+qPoclWQEL6pI8nP9WC+RFQvhDozx+QFVuzVBa3y
+	 yDLUN97fglEsZKAzPLrh3V0RoAJKICg26+eNqCgEhsSxHTiFaIGDSygnxdlsbmN2Ed
+	 CzWB3JMfwF/aAmpx/qa3xyTJY3MAcL+ODrwq6rJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfENTZz (ORCPT
+        id S1726325AbfENT2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:25:55 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9264 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfENTZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:25:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 12:25:53 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga004.fm.intel.com with ESMTP; 14 May 2019 12:25:53 -0700
-Received: from [10.254.90.245] (kliang2-mobl.ccr.corp.intel.com [10.254.90.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id A0CD7580414;
-        Tue, 14 May 2019 12:25:52 -0700 (PDT)
-Subject: Re: [PATCH 2/3] perf parse-regs: Add generic support for non-gprs
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-References: <1557844753-58223-1-git-send-email-kan.liang@linux.intel.com>
- <1557844753-58223-2-git-send-email-kan.liang@linux.intel.com>
- <20190514181902.GB1756@kernel.org>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <4b2b6e69-4e39-0946-4010-1bc3a2a60696@linux.intel.com>
-Date:   Tue, 14 May 2019 15:25:51 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 15:28:09 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46564 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfENT2I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 15:28:08 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j49so8708387otc.13;
+        Tue, 14 May 2019 12:28:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6guL+gsRRdFgD/vbMcouXTpctp515ym8MFo367/IsYI=;
+        b=XCkZaxwULDPYRZb067kbo6f1iOGhzy8TDqEJszrAL8+UQYZm5LIvIOjAMkJvw7ugiw
+         DCFM42XxTaa6T8Wbj9ppFxR//WXl/Jt0AkXY9v9mIN+2rkYe1AkUKzn3sBNBVOuT7UiF
+         B2YNFV4niXF6mOzIoNCvZzb60KsS0ESJ9aYX0gYFdN/ubmK7kZ77/GmVD+QK2cY78iJ/
+         KryAzhdflfNQ0Iuzu0Tw3CWbpAahkPTzF1JrFIau0yyfrw9gL/wc+CuFtMVPMZB81dZ7
+         R+J2H9NCF/ic4p2Yr9t48Yf2lKtQareOY/p4CzL7mVuBQp5kxIMUCb5ECxf2K0iKFdiS
+         CvFA==
+X-Gm-Message-State: APjAAAVXnp48g5wlMEY3Eh/u82Pt/IkRjjAxW7oGz0Qt8eUptb5/VhfQ
+        J2MNaXMfdmbnn8BE6n3Z1w==
+X-Google-Smtp-Source: APXvYqzyZC245V0LNnDn7RBEDPgVXsCYD9n7cuZSuXUT9DCdxNCo/SfksSuwpVn2D9oIv/Gggi50ng==
+X-Received: by 2002:a9d:4d02:: with SMTP id n2mr169374otf.332.1557862087618;
+        Tue, 14 May 2019 12:28:07 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a2sm3731953otf.50.2019.05.14.12.28.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 12:28:06 -0700 (PDT)
+Date:   Tue, 14 May 2019 14:28:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Stu Hsieh <stu.hsieh@mediatek.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        CK Hu <ck.hu@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+Subject: Re: [PATCH v3 01/13] dt-bindings: media: Add binding for MT2712
+ MIPI-CSI2
+Message-ID: <20190514192806.GA13654@bogus>
+References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+ <1557814430-9675-2-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190514181902.GB1756@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557814430-9675-2-git-send-email-stu.hsieh@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 14, 2019 at 02:13:38PM +0800, Stu Hsieh wrote:
+> Add MIPI-CSI2 dt-binding for Mediatek MT2712 SoC
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  .../bindings/media/mediatek-mipicsi-camsv.txt | 53 ++++++++++++++++++
+>  .../media/mediatek-mipicsi-common.txt         | 19 +++++++
+>  .../bindings/media/mediatek-mipicsi.txt       | 54 +++++++++++++++++++
+>  3 files changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> new file mode 100644
+> index 000000000000..5f34974f12ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
+> @@ -0,0 +1,53 @@
+> +* Mediatek MIPI-CSI2 receiver camsv
+> +
+> +Mediatek MIPI-CSI2 receiver camsv transfer data to DRAM in Mediatek SoCs
+> +
+> +Required properties:
 
+compatible?
 
-On 5/14/2019 2:19 PM, Arnaldo Carvalho de Melo wrote:
-> Em Tue, May 14, 2019 at 07:39:12AM -0700, kan.liang@linux.intel.com escreveu:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Some non general purpose registers, e.g. XMM, can be collected on some
->> platforms, e.g. X86 Icelake.
->>
->> Add a weak function has_non_gprs_support() to check if the
->> kernel/hardware support non-gprs collection.
->> Add a weak function non_gprs_mask() to return non-gprs mask.
->>
->> By default, the non-gprs collection is not support. Specific platforms
->> should implement their own non-gprs functions if they can collect
->> non-gprs.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   tools/perf/util/parse-regs-options.c | 10 +++++++++-
->>   tools/perf/util/perf_regs.c          | 10 ++++++++++
->>   tools/perf/util/perf_regs.h          |  2 ++
->>   3 files changed, 21 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
->> index b21617f..2f90f31 100644
->> --- a/tools/perf/util/parse-regs-options.c
->> +++ b/tools/perf/util/parse-regs-options.c
->> @@ -12,6 +12,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>   	const struct sample_reg *r;
->>   	char *s, *os = NULL, *p;
->>   	int ret = -1;
->> +	bool has_non_gprs = has_non_gprs_support(intr);
-> 
-> This is generic code, what does "non gprs" means for !Intel? Can we come
-> up with a better, not architecture specific jargon? Or you mean "general
-> purpose registers"?
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
 
-I mean "general purpose registers".
+How many regions? Looks like 2.
 
-> 
-> Perhaps we can ask for a register mask for use with intr? I.e.:
-> 
-> For the -I/--intr-regs
-> 
->          uint64_t mask = arch__intr_reg_mask();
-> 
-> And for --user-regs
-> 
->          uint64_t mask = arch__user_reg_mask();
-> 
-> And then on that loop do:
-> 
->    	for (r = sample_reg_masks; r->name; r++) {
-> 		if (r->mask & mask))
->    			fprintf(stderr, "%s ", r->name);
->    	}
-> 
-> ?
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +- interrupts : interrupt number to the interrupt controller.
+> +
+> +Example:
+> +	seninf1_mux_camsv0: seninf_mux_camsv@15002100 {
 
-Yes, it looks like a little bit simpler than my implementation.
-I will send out V2.
+Node names should be generic.
 
-Thanks,
-Kan
+mipi-csi@...
 
->    
->>   	if (unset)
->>   		return 0;
->> @@ -37,6 +38,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>   			if (!strcmp(s, "?")) {
->>   				fprintf(stderr, "available registers: ");
->>   				for (r = sample_reg_masks; r->name; r++) {
->> +					if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
->> +						break;
->>   					fprintf(stderr, "%s ", r->name);
->>   				}
->>   				fputc('\n', stderr);
->> @@ -44,6 +47,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>   				return -1;
->>   			}
->>   			for (r = sample_reg_masks; r->name; r++) {
->> +				if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
->> +					continue;
->>   				if (!strcasecmp(s, r->name))
->>   					break;
->>   			}
->> @@ -64,8 +69,11 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
->>   	ret = 0;
->>   
->>   	/* default to all possible regs */
->> -	if (*mode == 0)
->> +	if (*mode == 0) {
->>   		*mode = PERF_REGS_MASK;
->> +		if (has_non_gprs)
->> +			*mode |= non_gprs_mask(intr);
->> +	}
->>   error:
->>   	free(os);
->>   	return ret;
->> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
->> index 2acfcc5..0d278b6 100644
->> --- a/tools/perf/util/perf_regs.c
->> +++ b/tools/perf/util/perf_regs.c
->> @@ -13,6 +13,16 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
->>   	return SDT_ARG_SKIP;
->>   }
->>   
->> +bool __weak has_non_gprs_support(bool intr __maybe_unused)
->> +{
->> +	return false;
->> +}
->> +
->> +u64 __weak non_gprs_mask(bool intr __maybe_unused)
->> +{
->> +	return 0;
->> +}
->> +
->>   #ifdef HAVE_PERF_REGS_SUPPORT
->>   int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
->>   {
->> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
->> index 1a15a4b..983b4e6 100644
->> --- a/tools/perf/util/perf_regs.h
->> +++ b/tools/perf/util/perf_regs.h
->> @@ -23,6 +23,8 @@ enum {
->>   };
->>   
->>   int arch_sdt_arg_parse_op(char *old_op, char **new_op);
->> +bool has_non_gprs_support(bool intr);
->> +u64 non_gprs_mask(bool intr);
->>   
->>   #ifdef HAVE_PERF_REGS_SUPPORT
->>   #include <perf_regs.h>
->> -- 
->> 2.7.4
+Or maybe not as that's the last block...
+
+> +		reg = <0 0x15002120 0 0x40>,
+> +		      <0 0x15004000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf2_mux_camsv1: seninf_mux_camsv@15002500 {
+> +		reg = <0 0x15002520 0 0x40>,
+> +		      <0 0x15005000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV_EN>;
+> +		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf3_mux_camsv2: seninf_mux_camsv@15002900 {
+> +		reg = <0 0x15002920 0 0x40>,
+> +		      <0 0x15006000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 268 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf4_mux_camsv3: seninf_mux_camsv@15002D00 {
+> +		reg = <0 0x15002D20 0 0x40>,
+> +		      <0 0x15007000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV1_EN>;
+> +		interrupts = <GIC_SPI 269 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf5_mux_camsv4: seninf_mux_camsv@15003100 {
+> +		reg = <0 0x15003120 0 0x40>,
+> +		      <0 0x15008000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	seninf6_mux_camsv5: seninf_mux_camsv@15003500 {
+> +		reg = <0 0x15003520 0 0x40>,
+> +		      <0 0x15009000 0 0x1000>;
+> +		clocks = <&imgsys CLK_IMG_CAM_SV2_EN>;
+> +		interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> new file mode 100644
+> index 000000000000..a67c744b75f0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
+> @@ -0,0 +1,19 @@
+> +* Mediatek MIPI-CSI2 receiver common
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi-common"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+> +- clocks: device clocks, see
+> +  Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+> +
+> +
+> +Example:
+> +	mipicsi: mipicsi@15002000 {
+> +		compatible = "mediatek,mt2712-mipicsi-common", "syscon";
+> +		reg = <0 0x15002000 0 0x10>;
+> +		clocks = <&imgsys CLK_IMG_SENINF_CAM_EN>,
+> +			 <&imgsys CLK_IMG_SENINF_SCAM_EN>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> new file mode 100644
+> index 000000000000..24741ed62b25
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
+> @@ -0,0 +1,54 @@
+> +* Mediatek MIPI-CSI2 receiver
+> +
+> +Mediatek MIPI-CSI2 receiver is the MIPI Signal capture hardware present in Mediatek SoCs
+
+What's the difference with this and the prior block? Same text...
+
+> +
+> +Required properties:
+> +- compatible: should be "mediatek,mt2712-mipicsi"
+> +- reg : physical base address of the mipicsi receiver registers and length of
+> +  memory mapped region.
+> +- power-domains: a phandle to the power domain, see
+> +  Documentation/devicetree/bindings/power/power_domain.txt for details.
+> +- mediatek,larb: must contain the local arbiters in the current Socs, see
+> +  Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
+> +  for details.
+> +- iommus: should point to the respective IOMMU block with master port as
+> +  argument, see Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
+> +  for details.
+> +- mediatek,seninf_mux_camsv: seninf_mux_camsv the data go through of the mipicsi port
+
+s/_/-/
+
+How many entries? Needs a reference to the binding doc. 
+
+> +- mediatek,mipicsiid: the id of the mipicsi port
+
+If this is for the 'mediatek,mipicsi' block, then just make the id a 
+cell value in the 'mediatek,mipicsi' prop.
+
+> +- mediatek,mipicsi: the common component of the two mipicsi port
+> +
+> +Example:
+
+I'd prefer one complete example showing all 3 components in this file 
+rather than piecemeal.
+
+> +	mipicsi0: mipicsi@10217000 {
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA0>,
+> +			 <&iommu0 M4U_PORT_CAM_DMA1>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +
+> +		mediatek,seninf_mux_camsv = <&seninf1_mux_camsv0
+> +					     &seninf2_mux_camsv1
+> +					     &seninf3_mux_camsv2
+> +					     &seninf4_mux_camsv3>;
+> +		reg = <0 0x10217000 0 0x60>,
+> +		      <0 0x15002100 0 0x4>,
+> +		      <0 0x15002300 0 0x100>;
+> +		mediatek,mipicsiid = <0>;
+> +		status="disabled";
+
+Don't should status in examples.
+
+> +	};
+> +
+> +	mipicsi1: mipicsi@10218000 {
+
+This example doesn't add anything.
+
+> +		compatible = "mediatek,mt2712-mipicsi";
+> +		mediatek,mipicsi = <&mipicsi>;
+> +		iommus = <&iommu0 M4U_PORT_CAM_DMA2>;
+> +		mediatek,larb = <&larb2>;
+> +		power-domains = <&scpsys MT2712_POWER_DOMAIN_ISP>;
+> +		mediatek,seninf_mux_camsv = <&seninf5_mux_camsv4
+> +					     &seninf6_mux_camsv5>;
+> +		reg = <0 0x10218000 0 0x60>,
+> +		      <0 0x15002500 0 0x4>,
+> +		      <0 0x15002700 0 0x100>;
+> +		mediatek,mipicsiid = <1>;
+> +		status="disabled";
+> +	};
+> \ No newline at end of file
+
+Fix this...
+
+> -- 
+> 2.18.0
 > 
