@@ -2,104 +2,100 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2A5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1364EC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E462085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA24A2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:57:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evnybUqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfENPyz (ORCPT
+        id S1726218AbfENP5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:54:55 -0400
-Received: from sauhun.de ([88.99.104.3]:48886 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfENPyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:54:54 -0400
-Received: from localhost (p54B3310E.dip0.t-ipconnect.de [84.179.49.14])
-        by pokefinder.org (Postfix) with ESMTPSA id 580052C2868;
-        Tue, 14 May 2019 17:54:51 +0200 (CEST)
-Date:   Tue, 14 May 2019 17:54:51 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
-Message-ID: <20190514155450.GB6508@kunai>
-References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
- <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
- <20190514153021.GC18528@mam-gdavis-lt>
+        Tue, 14 May 2019 11:57:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35342 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENP5o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:57:44 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a39so18794815qtk.2;
+        Tue, 14 May 2019 08:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=09KkEvxVufpT7/jHfQWIW8S/OLgTGQRQAFAad5Q891g=;
+        b=evnybUqQSO3rMlm+kFqEQEIAfI3v4IqgwamNZvPOEyI9wfLiDbsuEeXduuT3enU+/D
+         iPaHuAred/MDyZUVZgr18lqhCz/SufyYY000qM22MZZpH/JuvqIujY2M3yfpedzXDH1V
+         CUXWUf5xY8etjU/g1epN4mmTh3W4L8h/GZxe9kMxCB+tU9kx3BuiIFMLWZKDu/wPTnz8
+         9a8FfvgxAFTFjGiycvXhLWDMbsBwaoxZL30QEkdUA3OmNl0+6lT6Rw7OMCoCN1pOTlgF
+         ssx2GCz1BmDg4+bJTTtQQmXXFK59NTym2BDk+1SRu1kUafbPyfP5tvlJWv1n1Itxr6C/
+         JP6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=09KkEvxVufpT7/jHfQWIW8S/OLgTGQRQAFAad5Q891g=;
+        b=S2byZtGVafs/kmyA/gfG2qs2Gb7KxcpxbQDROWdY+zcthmmD+o7paCXK1eund8cDV9
+         K9nUE619axorpLC7rZpYqTFXE/HGVMFnxvjnlORKjgra+pQSPUbzwWFAkyEyp2J4PtIZ
+         M4pvfrTXiiPql0qxmJNtA8UjRSRIIZr/W82Bn2D92yjsaKVtYFPdmAN8EvIaXV6b04pu
+         7L/oLp6PkIhDqWfw2TqtqnFIA43cearEXadL67LHgRuBtc4NfdXSmgX8ELiZXxj4Rpn5
+         4iXyP5LHImWE4CXrXIhOphrbOnMGAeiKNXDRSRNnnHDQWxPmYevUt2U0i4Ox08Is2Y6i
+         PYFQ==
+X-Gm-Message-State: APjAAAWQWSTvqYivORFI3EPkUudlOGLhiwJC+jys8l6RSrIt1dv1eT6N
+        M9bjxSn38zE/XwUO8310JsE=
+X-Google-Smtp-Source: APXvYqxQkrvvSVGKdFqsv/NpzHHnJeXW91ioD42OqHauIMmMOKgcTJj6yswK2beRxWwGYRcDRcnhnw==
+X-Received: by 2002:a0c:b92f:: with SMTP id u47mr19802185qvf.94.1557849462769;
+        Tue, 14 May 2019 08:57:42 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id p37sm14130553qtj.90.2019.05.14.08.57.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 08:57:42 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 May 2019 11:57:40 -0400
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Rob Landley <rob@landley.net>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        initramfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190514155739.GA70223@rani.riverdale.lan>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <49965ffd-dd57-ffe5-4a2f-73cdfb387848@landley.net>
+ <de91ef53-6bb3-b937-8773-5f6b34e1acb7@huawei.com>
+ <20190514152704.GB37109@rani.riverdale.lan>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190514153021.GC18528@mam-gdavis-lt>
+In-Reply-To: <20190514152704.GB37109@rani.riverdale.lan>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 14, 2019 at 11:27:04AM -0400, Arvind Sankar wrote:
+> It's also much easier to change/customize it for the end
+> system's requirements rather than setting the process in stone by
+> putting it inside the kernel.
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> > > Fixes: https://patchwork.kernel.org/patch/10929511/
-> >=20
-> > I don't think this is an appropriate reference, as it points to a patch=
- that
-> > was never applied.
->=20
-> I included it as a link to an upstream problem report similar to other co=
-mmits
-> that I previewed. The link provides the extra context that I was perhaps =
-to
-> lazy to note in the commit header.
-
-We have a "Link:" tag for things like this, e.g.:
-
-Link: https://patchwork.kernel.org/patch/10929511/
-
-
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlza5MYACgkQFA3kzBSg
-KbbkfQ/+PL1lLGOvBp4WLSQof0j9gnQWmDJDxCG61/wtuAsqm6CkBe4BlgZIhoDq
-ZgOk6lcFvge3gPJPP+DOiPVa9Uebjx84+gJV8t/hJx5EkZ5d/VBzxLS9C74ae9KQ
-yC1BN8slbFbu4aS4bzbOoYCOGjRq2Wh7Se6MtdV5pCHZA6DxV60KvbrwvgVD8DrT
-2YgoyE5pVyou/2gn4FxoUVzKDPTxvFr7rTTcJLHdEBXiXxy5x+5gBIGsl0521+qy
-XIsJdaQXkI1wyssp/gRrUhZiAf/Du8W9MW0g4vXTC0a7nX8O5ENKW23FyV6FrzoX
-BpPl7ICCxAarMabDkaNvhlO+TCC8f88yhYaiZ8UZ2ZyzIg8MPGJBQ0jdOTOeWjkU
-DoLS5eVr8C2N9jT6iFY/f2UI/RfJlCx2gjdpgX23dUtn2uAkGjeFke4hXN0hmNnF
-HYHyfTDOODnfnM3QzowRGaMOHE9nVcUcTcR5VKK8M0GtnzKHr8yBzfFJJkfKeiHi
-CLjR9N37CcCUCKe5qDhIxwnmkXjJoUp6rgZxAS2hewGiv/CKi0WtfCvk6BzEkUV9
-Eg3rZ1Ipeqt0fSHK4EK4ltIrs+iSZp+nhx7W61UE2teWQ6IG+weOdVvBCHpe9FUN
-6RMlFFMcVzfvFKw2z+Q8uua9EPlKFFnUe7SAbydWO7d81KNyUGI=
-=BcaQ
------END PGP SIGNATURE-----
-
---kXdP64Ggrk/fb43R--
+As an example, if you allow unverified external initramfs, it seems to
+me that it can try to play games that wouldn't be prevented by the
+in-kernel code: setup /dev in a weird way to try to trick /init, or more
+easily, replace /init by /bin/sh so you get a shell prompt while only
+the initramfs is loaded. It's easy to imagine that a system would want
+to lock itself down to prevent abuses like this.
+So you might already want an embedded initramfs that can be trusted and
+that can't be overwritten by an external one even outside the
+security.ima stuff.
