@@ -2,86 +2,117 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C337C04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:29:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC9FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AE321019
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31E8D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:33:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfENC3X (ORCPT
+        id S1726667AbfENCdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 22:29:23 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:39626 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726773AbfENC3P (ORCPT
+        Mon, 13 May 2019 22:33:41 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:22985 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726387AbfENCdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 22:29:15 -0400
-X-UUID: 21afe73e6c544b5c99de6875a6d6919c-20190514
-X-UUID: 21afe73e6c544b5c99de6875a6d6919c-20190514
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 453747894; Tue, 14 May 2019 10:29:07 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 10:29:02 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 10:29:01 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>
-Subject: [v2, PATCH 4/4] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
-Date:   Tue, 14 May 2019 10:28:53 +0800
-Message-ID: <1557800933-30759-5-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1557800933-30759-1-git-send-email-biao.huang@mediatek.com>
-References: <1557800933-30759-1-git-send-email-biao.huang@mediatek.com>
+        Mon, 13 May 2019 22:33:40 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x4E2XAxF017497;
+        Tue, 14 May 2019 10:33:10 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 8D513CCBE407EB61FA46;
+        Tue, 14 May 2019 10:33:10 +0800 (CST)
+In-Reply-To: <CAMuHMdWsZPevpYg0HfbgaXPD89RFdOOEPawvvZDt3Kp4=PeLRQ@mail.gmail.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <CAMuHMdWsZPevpYg0HfbgaXPD89RFdOOEPawvvZDt3Kp4=PeLRQ@mail.gmail.com>
+To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi" <linux-spi@vger.kernel.org>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: CE7E223FA5729AE41C9E6851E0C385031421ACF4489A781D3D3D42801D17CA8F2000:8
-X-MTK:  N
+X-KeepSent: D347E742:50D5CB45-482583FA:000D5FC2;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFD347E742.50D5CB45-ON482583FA.000D5FC2-482583FA.000E05BB@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 14 May 2019 10:33:10 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/14 AM 10:33:10,
+        Serialize complete at 2019/05/14 AM 10:33:10
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x4E2XAxF017497
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
-be 0 other than 5.
-2. the csr_clk can be got from device tree, so remove initialization here.
 
-Change-Id: I3cd92fe380150fec6daa2d3acaab69a6d58344c0
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    2 --
- 1 file changed, 2 deletions(-)
+Hi Geert,
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index bf25629..126b66b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 		return PTR_ERR(plat_dat);
- 
- 	plat_dat->interface = priv_plat->phy_mode;
--	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
--	plat_dat->clk_csr = 5;
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
--- 
-1.7.9.5
+> Subject
+> 
+> Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF 
+MFD bindings
+> 
+> Hi Mason,
+> 
+> Note that if you send multipart/text+html emails, they will be dropped 
+silently
+> by most Linux mailing lists.
+> Hence I'm quoting your last email fully, to give other people a chance
+> reading it (and commenting).
+
+Thanks for your remind !
+I have configured my Lotus Notes to plain text mode only and it should be 
+OK
+for Linux mailing lists now.
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
