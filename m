@@ -2,204 +2,183 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D95C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99721C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A51920881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A68C20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:17:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q5HMOrwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfENWQt (ORCPT
+        id S1726565AbfENWRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:16:49 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34857 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfENWQs (ORCPT
+        Tue, 14 May 2019 18:17:41 -0400
+Received: from mail-yw1-f74.google.com ([209.85.161.74]:46976 "EHLO
+        mail-yw1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfENWRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:16:48 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c15so302711qkl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:16:47 -0700 (PDT)
+        Tue, 14 May 2019 18:17:40 -0400
+Received: by mail-yw1-f74.google.com with SMTP id 201so645888ywr.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:17:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=Wtv/g4YDlWnregZkMuB6vGhT6mZK0s7Z+NfaxgtLekE=;
+        b=Q5HMOrwbJNM89YqHu+vD+8sRwSzKie4sE8pkjwQqXKbmvl8uUCrm4SpuFW4UU8JhnY
+         XeejyhCTCS9puS98uTFx8EFmIo2ivhwCloJ/U0p1hceMXJW+JMLxh7E0E2tQeOq2UuzA
+         uZxI0Ym2j+bs+4rerFEZdMmaFjvrOGk6StJ+TQn+bqsoaYxZ80ISDElTpKf5y0SFPk8h
+         VcJ7yADl/NR3VI+Ila1czReqJ0pnzAfR3bA5HRbf56qnKlhiN8U8YpErBnLxR7gClHqR
+         Qbxvzr+zfsgs5Z9UI/MeioiOkmyTPiLUIyzAE8HdShxJSC99+danDDMnvJhADTYyrN5z
+         MBUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sGvgwbM8Qq7R+d/pXVInrNBNpxBHuLlypbYxdcSh0QQ=;
-        b=t9Jhpv38ikwAJ+qkA9/lBd+DJfNCok6VpdioQDgMLohFE2OYIIDia5QLB/OOx5kRzz
-         r1RJoE38pjW/ENAzxEPXvfJ/k2mQkWOYllpqqF2ssgBORV1mkPKHJ2hv+5y6zpVs2+6L
-         wjxXZHKM3SXbWfsJVQCTr/Wg/xTnHNZzj8+oI4dI64irIzNYqG87tthdZViu9ozlka8M
-         IMLztb5C8dXqS2TsMRTMIfrjYNsBMdvzmAIW64GUNolmI8+j7GNTvAYKdyjJnnb0wJYH
-         RRx18fBI14J+t8aTupj7XrDtVIUuAPoH+lFLsV4Pr4oztsPat2MKQOG6PdxvQWAMyc3S
-         3dTw==
-X-Gm-Message-State: APjAAAUaCDdb2Lhv2aVAR4IejZvHG6mfTumjJhj34z5GRynEv53GBB9O
-        q0e58UFY31g/dhtn5r8P94mOsg==
-X-Google-Smtp-Source: APXvYqzxwTTzn51KbxxNaAzyv/pkJUV1ke6okBZa0i2lA3TII6YFz3jTQ7gK0oYDoqLv2xlrm4e0cA==
-X-Received: by 2002:ae9:e806:: with SMTP id a6mr14184171qkg.247.1557872207417;
-        Tue, 14 May 2019 15:16:47 -0700 (PDT)
-Received: from redhat.com ([185.54.206.10])
-        by smtp.gmail.com with ESMTPSA id t6sm41702qkt.25.2019.05.14.15.16.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 15:16:46 -0700 (PDT)
-Date:   Tue, 14 May 2019 18:16:28 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>
-Subject: Re: [PATCH net] vhost: don't use kmap() to log dirty pages
-Message-ID: <20190514181150-mutt-send-email-mst@kernel.org>
-References: <1557725265-63525-1-git-send-email-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557725265-63525-1-git-send-email-jasowang@redhat.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=Wtv/g4YDlWnregZkMuB6vGhT6mZK0s7Z+NfaxgtLekE=;
+        b=rxLCUE5SOsuBpsF4TdC4Fovq7PU4OOL+7BhC5gHFPIJVgxaJ+AwjWExZcin4NuPqD4
+         Q5EelO0gFkGqxlj53VCJse67/KLh5I98lUExOaDgpKwJzmLz1G/1V7/hpyhElPZX0w5L
+         F6UkyBUgqPsRokwOvQ5IGcVuEucrarn1oOM7tLig28oy+6TWBgEN1fZYL2xbAcmdysAz
+         OsN8AVrLuXhWTL/XpgXEX5jbgaRMCEgkxMfAGXPerKko42kNEweGTFfiGDcX77paoQf0
+         oFt+VbGEQWrI0p8VAxLo4DUORXY0Uxbsz6UjpGjAXieJ7pyHxncXCCcjYSw6GU2TGvmv
+         Rd0g==
+X-Gm-Message-State: APjAAAWgTzPe8yEFwrxW1d6JwAkQgOBgOg4Ng7jWa2S931HzLawd4zcv
+        BHxfEqp9XXr4HS66Ax7DVdIWUDfygEQDrBmkhSI4kg==
+X-Google-Smtp-Source: APXvYqzLw2GNR1CD/N7FU0EOf+vQnR8bF44lpYMHhbVCeioD/fNqnQCXEG9eHOkDZWuQz7kMqOBLBdCDFgs1RbGB1Bb/ig==
+X-Received: by 2002:a25:690d:: with SMTP id e13mr18821319ybc.178.1557872259260;
+ Tue, 14 May 2019 15:17:39 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:16:53 -0700
+Message-Id: <20190514221711.248228-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v4 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 01:27:45AM -0400, Jason Wang wrote:
-> Vhost log dirty pages directly to a userspace bitmap through GUP and
-> kmap_atomic() since kernel doesn't have a set_bit_to_user()
-> helper. This will cause issues for the arch that has virtually tagged
-> caches. The way to fix is to keep using userspace virtual
-> address. Fortunately, futex has arch_futex_atomic_op_inuser() which
-> could be used for setting a bit to user.
-> 
-> Note there're several cases that futex helper can fail e.g a page
-> fault or the arch that doesn't have the support. For those cases, a
-> simplified get_user()/put_user() pair protected by a global mutex is
-> provided as a fallback. The fallback may lead false positive that
-> userspace may see more dirty pages.
-> 
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
-> Cc: Andrea Arcangeli <aarcange@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Darren Hart <dvhart@infradead.org>
-> Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
-> Changes from RFC V2:
-> - drop GUP and provide get_user()/put_user() fallbacks
-> - round down log_base
-> Changes from RFC V1:
-> - switch to use arch_futex_atomic_op_inuser()
-> ---
->  drivers/vhost/vhost.c | 54 ++++++++++++++++++++++++++++-----------------------
->  1 file changed, 30 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index 351af88..7fa05ba 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -31,6 +31,7 @@
->  #include <linux/sched/signal.h>
->  #include <linux/interval_tree_generic.h>
->  #include <linux/nospec.h>
-> +#include <asm/futex.h>
->  
->  #include "vhost.h"
->  
-> @@ -43,6 +44,8 @@
->  MODULE_PARM_DESC(max_iotlb_entries,
->  	"Maximum number of iotlb entries. (default: 2048)");
->  
-> +static DEFINE_MUTEX(vhost_log_lock);
-> +
->  enum {
->  	VHOST_MEMORY_F_LOG = 0x1,
->  };
-> @@ -1692,28 +1695,31 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
->  }
->  EXPORT_SYMBOL_GPL(vhost_dev_ioctl);
->  
-> -/* TODO: This is really inefficient.  We need something like get_user()
-> - * (instruction directly accesses the data, with an exception table entry
-> - * returning -EFAULT). See Documentation/x86/exception-tables.txt.
-> - */
-> -static int set_bit_to_user(int nr, void __user *addr)
-> +static int set_bit_to_user(int nr, u32 __user *addr)
->  {
-> -	unsigned long log = (unsigned long)addr;
-> -	struct page *page;
-> -	void *base;
-> -	int bit = nr + (log % PAGE_SIZE) * 8;
-> +	u32 old;
->  	int r;
->  
-> -	r = get_user_pages_fast(log, 1, 1, &page);
-> -	if (r < 0)
-> -		return r;
-> -	BUG_ON(r != 1);
-> -	base = kmap_atomic(page);
-> -	set_bit(bit, base);
-> -	kunmap_atomic(base);
-> -	set_page_dirty_lock(page);
-> -	put_page(page);
-> +	r = arch_futex_atomic_op_inuser(FUTEX_OP_OR, 1 << nr, &old, addr);
-> +	if (r) {
-> +		/* Fallback through get_user()/put_user(), this may
-> +		 * lead false positive that userspace may see more
-> +		 * dirty pages. A mutex is used to synchronize log
-> +		 * access between vhost threads.
-> +		 */
-> +		mutex_lock(&vhost_log_lock);
-> +		r = get_user(old, addr);
-> +		if (r)
-> +			goto err;
-> +		r = put_user(old | 1 << nr, addr);
-> +		if (r)
-> +			goto err;
-> +		mutex_unlock(&vhost_log_lock);
-> +	}
+## TLDR
 
-Problem is, we always said it's atomic.
+A quick follow up to yesterday's revision. I got some feedback that I
+wanted to incorporate before anyone else read the update. For this
+reason, I will leave a TLDR of the biggest changes since v2.
 
-This trick will work if userspace only clears bits
-in the log, but won't if it sets bits in the log.
-E.g. reusing the log structure for vhost-user
-will have exactly this effect.
+Biggest things to look out for (since v2):
 
+- KUnit core now outputs results in TAP14.
+- Heavily reworked tools/testing/kunit/kunit.py
+  - Changed how parsing works.
+  - Added testing.
+  - Greg, Logan, you might want to re-review this.
+- Added documentation on how to use KUnit on non-UML kernels. You can
+  see the docs rendered here[1].
 
+There is still some discussion going on on the [PATCH v2 00/17] thread,
+but I wanted to get some of these updates out before they got too stale
+(and too difficult for me to keep track of). I hope no one minds.
 
+## Background
 
->  	return 0;
-> +err:
-> +	mutex_unlock(&vhost_log_lock);
-> +	return r;
->  }
->  
->  static int log_write(void __user *log_base,
-> @@ -1725,13 +1731,13 @@ static int log_write(void __user *log_base,
->  	if (!write_length)
->  		return 0;
->  	write_length += write_address % VHOST_PAGE_SIZE;
-> +	log_base = (void __user *)((u64)log_base & ~0x3ULL);
-> +	write_page += ((u64)log_base & 0x3ULL) * 8;
->  	for (;;) {
-> -		u64 base = (u64)(unsigned long)log_base;
-> -		u64 log = base + write_page / 8;
-> -		int bit = write_page % 8;
-> -		if ((u64)(unsigned long)log != log)
-> -			return -EFAULT;
-> -		r = set_bit_to_user(bit, (void __user *)(unsigned long)log);
-> +		u32 __user *log = (u32 __user *)log_base + write_page / 32;
-> +		int bit = write_page % 32;
-> +
-> +		r = set_bit_to_user(bit, log);
->  		if (r < 0)
->  			return r;
->  		if (write_length <= VHOST_PAGE_SIZE)
-> -- 
-> 1.8.3.1
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in under a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+## What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+## Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+## More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[2].
+
+Additionally for convenience, I have applied these patches to a
+branch[3].
+The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.1/v4 branch.
+
+## Changes Since Last Version
+
+As I mentioned above, there are a significant number of updates since
+v2:
+- Converted KUnit core to print test results in TAP14 format as
+  suggested by Greg and Frank.
+- Heavily reworked tools/testing/kunit/kunit.py
+  - Changed how parsing works.
+  - Added testing.
+- Added documentation on how to use KUnit on non-UML kernels. You can
+  see the docs rendered here[1].
+- Added a new set of EXPECTs and ASSERTs for pointer comparison.
+- Removed more function indirection as suggested by Logan.
+- Added a new patch that adds `kunit_try_catch_throw` to objtool's
+  noreturn list.
+- Fixed a number of minorish issues pointed out by Shuah, Masahiro, and
+  kbuild bot.
+
+Nevertheless, there are only a couple of minor updates since v3:
+- Added more context to the changelog on the objtool patch, as per
+  Peter's request.
+- Moved all KUnit documentation under the Documentation/dev-tools/
+  directory as per Jonathan's suggestion.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[3] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.1/v4
+
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
