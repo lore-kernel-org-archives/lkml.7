@@ -2,155 +2,179 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E7C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA55C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F173214C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5335E208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:33:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w/LJQO3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfENGas (ORCPT
+        id S1726303AbfENGdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:30:48 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39014 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfENGar (ORCPT
+        Tue, 14 May 2019 02:33:38 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43150 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfENGdh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:30:47 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y42so2961081qtk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:30:47 -0700 (PDT)
+        Tue, 14 May 2019 02:33:37 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z5so13186960lji.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CRlD4PfqxipN48LYGh/t8fDMnfZhbcWiOWe8eMRQYkQ=;
+        b=w/LJQO3GW0kYQP8hptFq0KF4yx8Jyymc/XJJp4peqa7zwtuypZ7HkaYtE4/HrWHOrd
+         l1hNhYtNkNDGwPrEUugq+BRami6ICHpR6V0ZJUUipARs8LtOVLVrRxupEzNZt7XeXaTM
+         NM4p9k69tAt2tU7zJGvwCmqGbC+LFjcgGi3ktGpG2DnCv3TFPakpCg4sg/FTenDfSGy7
+         jrVXFhRZXMTi+L8pIHXXrbEXNBLAShhSKtmSf4XjhWxICAy3elw3htiW+NwAmRlsVeKg
+         6tHz3lZvfKVEFVcHM5OfZuCHDpyYMqHshkciA24c7UMWkkkRlGugd0POG3pfHYXwFYJS
+         7T2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mgFD/HBmqD9tbHso2Ft8IrmU0HCter766u/5lDK5MD4=;
-        b=gmZ+nK/L1S2bq89wiQ5Hy2tKJOZRQRY4Lqfb4IcaUxFBXGiga6Ir/41FTMFgY2fD07
-         6NUfgfvShoVfoOX0/uW6PiwFNtLJBPJoJjfG4qkQ+MiE4T6hRLOLfHPyCG1qMnYHNfUv
-         yelVGaxPEDehyTDFvSBOyO8ORlkob9oTUjmJMIIQ8IdC6NcoQT/SN5S38vbFHRpjq3zQ
-         POjIP+h+Tl6AncXLglfF+Xfkm6P0u5sgzq4EYI2+HKb1bUO52ngSv0aYVIMLibffl2OE
-         evan7xmTbZeaFeRB3u1woPl59wtceLo8FEiLa/gpy/WRE0fAKTGIcdMy3i5+a0W4iGa3
-         1Cvg==
-X-Gm-Message-State: APjAAAXohvw1Xb/R9XgjarhJ+8RME8czbpykIWZw/J229KE/+SS74Zq2
-        m7+YjrO9lliY1S/8UWYcAZk2sw==
-X-Google-Smtp-Source: APXvYqwaf5mn0VEeYyYPcp4R3rX8b8NxqPdRtJziHb0+qXlt8ZvgtZIe0QaDDnNFxHyEY0wLoSEhbg==
-X-Received: by 2002:ac8:8ad:: with SMTP id v42mr27107649qth.337.1557815446620;
-        Mon, 13 May 2019 23:30:46 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id a51sm6532064qta.85.2019.05.13.23.30.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 23:30:45 -0700 (PDT)
-Date:   Tue, 14 May 2019 08:30:43 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
-Message-ID: <20190514063043.ojhsb6d3ohxx4wur@butterfly.localdomain>
-References: <20190510072125.18059-1-oleksandr@redhat.com>
- <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
- <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
- <a3870e32-3a27-e6df-fcb2-79080cdd167a@virtuozzo.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CRlD4PfqxipN48LYGh/t8fDMnfZhbcWiOWe8eMRQYkQ=;
+        b=rHqvXRoY6M/BrGLHrGnDaRAbdoNaDAvPTbXj/RZeVkKk+IJtrBYdWKHdaEG7cbO/9f
+         lsDdUSnBcPT15Ikv65JrQrrO7bEQvwE0rEjzi+R0HZC60YPJ5jWlv/LX5RvJVEZwp0Tq
+         cZ74bRKzSu60Ji9kcINIgz/ZD89XMETHb0Psq36TPJGAo6rXSVSt0ow7LYMKQZjF8cN6
+         z3oqDcb4x1Nxvtvc8Vds+dvNHm5y3fkmGhADF48Pevm2vqKN9SS8Unj+jOXHhhyvlpFc
+         xqqGLX2RjrYDxv5tu0Sg/pUrxl+tiKOKjWxmsyTTxlYEpcaF5T8Hvq1hMMN9UxuU9UkQ
+         1S2Q==
+X-Gm-Message-State: APjAAAX/4ElOqhLKDoQsE4hDsFjLI6KosbAdWQbz2m3xwqYIWDREAdJh
+        Rc/I7wuMdXWVHAawmF9Iv4USF28I8cA=
+X-Google-Smtp-Source: APXvYqyNEE7a/azT3MklQKNyzbEddY6rNRjIadPL70+XdIxuZQDtZdpRbMw9bV8LA8zBrgNT47zfHg==
+X-Received: by 2002:a2e:9241:: with SMTP id v1mr16003021ljg.6.1557815615191;
+        Mon, 13 May 2019 23:33:35 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id c19sm3466804lfi.69.2019.05.13.23.33.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 23:33:34 -0700 (PDT)
+Subject: Re: [RFC PATCH 0/3] Add support of busfreq
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Alexandre Bailon <abailon@baylibre.com>
+Cc:     linux-pm@vger.kernel.org, mturquette@baylibre.com,
+        ptitiano@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, zening.wang@nxp.com,
+        aisheng.dong@nxp.com, khilman@baylibre.com, ccaione@baylibre.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>
+References: <20190313193408.23740-1-abailon@baylibre.com>
+ <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <8f757d89-5df2-04e4-b1cf-e6d8971a8881@linaro.org>
+Date:   Tue, 14 May 2019 09:33:32 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3870e32-3a27-e6df-fcb2-79080cdd167a@virtuozzo.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAJKOXPeOnrgnX=onMeX1izS2kYKAkD8TvFVykYTyW-v4NOv3vA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-On Mon, May 13, 2019 at 03:37:56PM +0300, Kirill Tkhai wrote:
-> > Yes, I get your point. But the intention is to avoid another hacky trick
-> > (LD_PRELOAD), thus *something* should *preferably* be done on the
-> > kernel level instead.
+On 5/3/19 14:19, Krzysztof Kozlowski wrote:
+> On Wed, 13 Mar 2019 at 20:35, Alexandre Bailon <abailon@baylibre.com> wrote:
+>>
+>> This series implements busfreq, a framework used in MXP's
+>> tree to scale the interconnect and dram frequencies.
+>> In the vendor tree, device's driver request for a
+>> performance level, which is used to scale the frequencies.
+>> This series implements it using the interconnect framework.
+>> Devices' driver request for bandwidth which is use by busfreq
+>> to determine a performance level, and then scale the frequency.
+>>
+>> Busfreq is quite generic. It could be used for any i.MX SoC.
+>> A busfreq platform driver just have to define a list of
+>> interconnect nodes, and some OPPs.
+>>
+>> This series is sent as RFC mostly because the current support
+>> of i.MX SoC won't benefit of busfreq framework, because the
+>> clocks' driver don't support interconnect / dram frequency
+>> scaling.
+>> As exemple, this series implements busfreq for i.MX8MM whose
+>> upstreaming is in progress. Because this relies on ATF to
+>> do the frequency scaling, it won't be hard make it work.
+>>
+>> As exemple, this series implements busfreq for
+>> Alexandre Bailon (3):
+>>   drivers: interconnect: Add a driver for i.MX SoC
+>>   drivers: interconnect: imx: Add support of i.MX8MM
+>>   dt-bindings: interconnect: Document fsl,busfreq-imx8mm bindings
 > 
-> I don't think so. Does userspace hack introduce some overhead? It does not
-> look so. Why should we think about mergeable VMAs in page fault handler?!
-> This is the last thing we want to think in page fault handler.
+> Hi Alexandre,
 > 
-> Also, there is difficult synchronization in page fault handlers, and it's
-> easy to make a mistake. So, there is a mistake in [3/4], and you call
-> ksm_enter() with mmap_sem read locked, while normal way is to call it
-> with write lock (see madvise_need_mmap_write()).
+> I am quite late but I just found your email.
 > 
-> So, let's don't touch this path. Small optimization for unlikely case will
-> introduce problems in optimization for likely case in the future.
+> This looks very similar to existing framework - devfreq, which purpose
+> is to scale the system busses based on performance counters/events. It
+> would be nice if we could avoid duplication of existing subsystems.
 
-Yup, you're right, I've missed the fact that write lock is needed there.
-Re-vamping locking there is not my intention, so lets find another
-solution.
+Hi Krzysztof,
 
-> > Also, just for the sake of another piece of stats here:
-> > 
-> > $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-> > 526
+Scaling buses based on performance counters is suboptimal and sometimes might
+not work well. In contrast with devfreq, the interconnect API is allowing
+drivers to express their needs in advance and be proactive. It is also designed
+to deal with multi-tiered bus topologies and to aggregate the requests from the
+different consumer drivers.
+
+Thanks,
+Georgi
+
 > 
-> This all requires attentive analysis. The number looks pretty big for me.
-> What are the pages you get merged there? This may be just zero pages,
-> you have identical.
+> Best regards,
+> Krzysztof
 > 
-> E.g., your browser want to work fast. It introduces smart schemes,
-> and preallocates many pages in background (mmap + write 1 byte to a page),
-> so in further it save some time (no page fault + alloc), when page is
-> really needed. But your change merges these pages and kills this
-> optimization. Sounds not good, does this?
-> 
-> I think, we should not think we know and predict better than application
-> writers, what they want from kernel. Let's people decide themselves
-> in dependence of their workload. The only exception is some buggy
-> or old applications, which impossible to change, so force madvise
-> workaround may help. But only in case there are really such applications...
-> 
-> I'd researched what pages you have duplicated in these 526 MB. Maybe
-> you find, no action is required or a report to userspace application
-> to use madvise is needed.
-
-OK, I agree, this is a good argument to move decision to userspace.
-
-> > 2) what kinds of opt-out we should maintain? Like, what if force_madvise
-> > is called, but the task doesn't want some VMAs to be merged? This will
-> > required new flag anyway, it seems. And should there be another
-> > write-only file to unmerge everything forcibly for specific task?
-> 
-> For example,
-> 
-> Merge:
-> #echo $task > /sys/kernel/mm/ksm/force_madvise
-
-Immediate question: what should be actually done on this? I see 2
-options:
-
-1) mark all VMAs as mergeable + set some flag for mmap() to mark all
-further allocations as mergeable as well;
-2) just mark all the VMAs as mergeable; userspace can call this
-periodically to mark new VMAs.
-
-My prediction is that 2) is less destructive, and the decision is
-preserved predominantly to userspace, thus it would be a desired option.
-
-> Unmerge:
-> #echo -$task > /sys/kernel/mm/ksm/force_madvise
-
-Okay.
-
-> In case of task don't want to merge some VMA, we just should skip it at all.
-
-This way we lose some flexibility, IMO, but I get you point.
-
-Thanks.
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
-
