@@ -2,125 +2,224 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F0FC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:44:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A593C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60A2D2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE5E32084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFdfOb2s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFs9wWBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfENOoL (ORCPT
+        id S1726481AbfENOpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:44:11 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39743 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfENOoL (ORCPT
+        Tue, 14 May 2019 10:45:00 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35840 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENOpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:44:11 -0400
-Received: by mail-qk1-f195.google.com with SMTP id z128so10431156qkb.6;
-        Tue, 14 May 2019 07:44:10 -0700 (PDT)
+        Tue, 14 May 2019 10:45:00 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so8757449pgb.3;
+        Tue, 14 May 2019 07:45:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=MK/EeSYeIjxF8YTDVcELY66892EK1YJmsPeFgAgfrjM=;
-        b=qFdfOb2sfefv9BKhBFjgSIS+uytVFyTYQ01SS/qtY0zqykm8VlTLnzSLtzv7QxzVth
-         Un7eDsop3VKZJC1EVd6XQpNfWig7m6h2m69LtD0Y5JLiiTr04ZS0LEWa7FjLql/o3qHl
-         O7HVDtrCJDu7HTU8+WIMJdMxzEreKcply4xEir4+Pv1PClq2/Gcu6WNG4NDBJuK3VSZa
-         2eWFbELeMgW2NQ06TCD4S95CPB0dl3sK1becx5Cf0gM8+0W5lLRqw6P2+vPwbQcqMgl8
-         W2lYGRotHkH389BRu9YrUNYuioMiZFGvkiJfKEBfRZBe5j/iZzUTy5QB/vcHsTWMgq5t
-         /OrA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
+        b=uFs9wWBU7EuqOsDKvz+cVP5WgvZBLERAglZL1D1EkqgHFgsJFcJNyXUC4W/qD+DUa3
+         8wFk9QcPgy/7h0uKjPtKVTNXdaXwmBvISl6mRaVEvHW5ncRYa8bYA0efya5vogZZwjbv
+         ZZRfTT3sEw+11xOiYQgrMVJGZTnGUAR9nA2Oo6SyWt/RcHjjZjVImXlPL1/GTCpYKl+7
+         L4Y1bYP3a6NGTaOnfB2l0+o1sgCKRuDIpw0WMivnlUpPI75zzCsw/Lxv0C8FAiZSoJP1
+         KNPUcCAFyCXlofgYR6a3aCUoUI0ptZW0NEwo1L4oFkfpkqQhM/wr56mneob9Q1UemtAG
+         iDTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=MK/EeSYeIjxF8YTDVcELY66892EK1YJmsPeFgAgfrjM=;
-        b=n1dehGjbpQoYTxOTZowrc24AuLMmTi8H6Ep3ikekGaApmG/Xw4+9olSaq5Gw9+ce+L
-         N9eGG/K+Z0nPr8zdnHOS3eMQhWvZfVfH7crOx4UCvjJxiW51nLHY/9ADRu2Viv8OTasI
-         osKofXo3PZZaUgktc98071oeN3Vt1XJhdC+74aLmtXzXczQZFSGdc6eMirGx5ovbdx53
-         RnNnu4+688hniVb5Ol5zoAduuyq4ZPE5RzZbQesXGdY+WdNFUdKa55N53uCyOWJLFWo3
-         m5CHrf56v+u/gLp/HZxA4aL/Q+jNFQIKnB+6NzXJvSYOtU0ssD7M0/tEb2yd5QaNsQwo
-         Ojhg==
-X-Gm-Message-State: APjAAAWJpoHgUsfH4tZj0vq6smNBtWroRhITQtp8uAcS64YCAFcz4DqS
-        0ksg3EEPsmgOktdOyTC73P4=
-X-Google-Smtp-Source: APXvYqyOJRF/R0s6XEjfz+HFqZXUy/U3dE0Nq2kon+YZAEx3Nx+C5qxM5rRFpkNMj/j57uhOGWxe4Q==
-X-Received: by 2002:a37:495:: with SMTP id 143mr27573670qke.106.1557845049750;
-        Tue, 14 May 2019 07:44:09 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id d64sm5449740qke.55.2019.05.14.07.44.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 07:44:09 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 14 May 2019 10:44:07 -0400
-To:     Rob Landley <rob@landley.net>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Arvind Sankar <niveditas98@gmail.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190514144406.GA37109@rani.riverdale.lan>
-References: <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <20190513172007.GA69717@rani.riverdale.lan>
- <20190513175250.GC69717@rani.riverdale.lan>
- <1557772584.4969.62.camel@linux.ibm.com>
- <20190513184744.GA12386@rani.riverdale.lan>
- <1557785351.4969.94.camel@linux.ibm.com>
- <66b57ae5-bb5a-c008-8490-2c90e050fc65@landley.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
+        b=ldN8rdtaLYyR4j8+pXLvpnPRXnvwVsgi2H01IHWYqbZy2XBMTFb+psjvPtNLYsy7vK
+         uSSqyqdykp7JMLmlPPNVxa9yZR4QuWLbu3c9sVdUO6FEJLdujiiOj0fpLQ8ulroFdIml
+         MEK9BGIjlBRzD2nZIL5Viq0cFOlE/KU8oP8P1frZDvnmk4owlTd/0PRfW/5K+KLVQqlQ
+         8xb6Xa+PcKyJ3XU3593HXTgfL3ABi514ChWVDqMvOLceUdYi9AICsSroAaU3S125RwmJ
+         VIWYn1PefmmCIw7meiK04eNAMHsOMmY8+ejyzWHDsGQOVCUDjqAydOVYOKOpTTVxuxg8
+         ZMtQ==
+X-Gm-Message-State: APjAAAVjWN/eCsfbGa2A4PtnOa0cwf2CzDeYzbV8o6/vxSKeIEMjLHwm
+        JEnrX3dq7FMYCz3t9ZqhhsXNPecQBdM=
+X-Google-Smtp-Source: APXvYqyszJva4EMMR5heKptgP1XLXDlVskpU1wnd/h+BaPS711IH58DJGKfAXnRBxzL0lGTgN6E4rg==
+X-Received: by 2002:a63:465b:: with SMTP id v27mr38671882pgk.38.1557845099636;
+        Tue, 14 May 2019 07:44:59 -0700 (PDT)
+Received: from mail.google.com ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id u12sm2119425pfl.159.2019.05.14.07.44.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 07:44:59 -0700 (PDT)
+Date:   Tue, 14 May 2019 22:44:53 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
+        corbet@lwn.net, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 11/12] Documentation: PCI: convert
+ endpoint/pci-test-function.txt to reST
+Message-ID: <20190514144451.uxa4bkipmltllv5k@mail.google.com>
+References: <20190513142000.3524-1-changbin.du@gmail.com>
+ <20190513142000.3524-12-changbin.du@gmail.com>
+ <20190513120423.159b971f@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <66b57ae5-bb5a-c008-8490-2c90e050fc65@landley.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190513120423.159b971f@coco.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 01:06:45AM -0500, Rob Landley wrote:
-> On 5/13/19 5:09 PM, Mimi Zohar wrote:
-> >> Ok, but wouldn't my idea still work? Leave the default compiled-in
-> >> policy set to not appraise initramfs. The embedded /init sets all the
-> >> xattrs, changes the policy to appraise tmpfs, and then exec's the real
-> >> init? Then everything except the embedded /init and the file with the
-> >> xattrs will be appraised, and the embedded /init was verified as part of
-> >> the kernel image signature. The only additional kernel change needed
-> >> then is to add a config option to the kernel to disallow overwriting the
-> >> embedded initramfs (or at least the embedded /init).
+On Mon, May 13, 2019 at 12:04:23PM -0300, Mauro Carvalho Chehab wrote:
+> Em Mon, 13 May 2019 22:19:59 +0800
+> Changbin Du <changbin.du@gmail.com> escreveu:
+> 
+> > This converts the plain text documentation to reStructuredText format and
+> > add it to Sphinx TOC tree. No essential content change.
 > > 
-> > Yes and no.  The current IMA design allows a builtin policy to be
-> > specified on the boot command line ("ima_policy="), so that it exists
-> > from boot, and allows it to be replaced once with a custom policy.
-> >  After that, assuming that CONFIG_IMA_WRITE_POLICY is configured,
-> > additional rules may be appended.  As your embedded /init solution
-> > already replaces the builtin policy, the IMA policy couldn't currently
-> > be replaced a second time with a custom policy based on LSM labels.
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  Documentation/PCI/endpoint/index.rst          |  1 +
+> >  ...est-function.txt => pci-test-function.rst} | 34 ++++++++++++-------
+> >  2 files changed, 22 insertions(+), 13 deletions(-)
+> >  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
+> > 
+> > diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+> > index 3951de9f923c..b680a3fc4fec 100644
+> > --- a/Documentation/PCI/endpoint/index.rst
+> > +++ b/Documentation/PCI/endpoint/index.rst
+> > @@ -9,3 +9,4 @@ PCI Endpoint Framework
+> >  
+> >     pci-endpoint
+> >     pci-endpoint-cfs
+> > +   pci-test-function
+> > diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
+> > similarity index 84%
+> > rename from Documentation/PCI/endpoint/pci-test-function.txt
+> > rename to Documentation/PCI/endpoint/pci-test-function.rst
+> > index 5916f1f592bb..63148df97232 100644
+> > --- a/Documentation/PCI/endpoint/pci-test-function.txt
+> > +++ b/Documentation/PCI/endpoint/pci-test-function.rst
+> > @@ -1,5 +1,10 @@
+> > -				PCI TEST
+> > -		    Kishon Vijay Abraham I <kishon@ti.com>
+> > +.. SPDX-License-Identifier: GPL-2.0
+> > +
+> > +=================
+> > +PCI Test Function
+> > +=================
+> > +
+> > +:Author: Kishon Vijay Abraham I <kishon@ti.com>
+> >  
+> >  Traditionally PCI RC has always been validated by using standard
+> >  PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
+> > @@ -23,30 +28,31 @@ The PCI endpoint test device has the following registers:
+> >  	8) PCI_ENDPOINT_TEST_IRQ_TYPE
+> >  	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
+> >  
+> > -*) PCI_ENDPOINT_TEST_MAGIC
+> > +* PCI_ENDPOINT_TEST_MAGIC
+> >  
+> >  This register will be used to test BAR0. A known pattern will be written
+> >  and read back from MAGIC register to verify BAR0.
+> >  
+> > -*) PCI_ENDPOINT_TEST_COMMAND:
+> > +* PCI_ENDPOINT_TEST_COMMAND
+> >  
+> >  This register will be used by the host driver to indicate the function
+> >  that the endpoint device must perform.
+> >  
+> > -Bitfield Description:
+> > +Bitfield Description::
+> > +
+> >    Bit 0		: raise legacy IRQ
+> >    Bit 1		: raise MSI IRQ
+> >    Bit 2		: raise MSI-X IRQ
+> >    Bit 3		: read command (read data from RC buffer)
+> >    Bit 4		: write command (write data to RC buffer)
+> > -  Bit 5		: copy command (copy data from one RC buffer to another
+> > -		  RC buffer)
+> > +  Bit 5		: copy command (copy data from one RC buffer to another RC buffer)
 > 
-> So your design assumption you're changing other code to work around in that
-> instance is the policy can only be replaced once rather than having a "finalize"
-> option when it's set, making it immutable from then on.
+> Why not use a table instead?
+>
+hmm, table looks better.
+> >  
+> > -*) PCI_ENDPOINT_TEST_STATUS
+> > +* PCI_ENDPOINT_TEST_STATUS
+> >  
+> >  This register reflects the status of the PCI endpoint device.
+> >  
+> > -Bitfield Description:
+> > +Bitfield Description::
+> > +
+> >    Bit 0		: read success
+> >    Bit 1		: read fail
+> >    Bit 2		: write success
+> > @@ -57,31 +63,33 @@ Bitfield Description:
+> >    Bit 7		: source address is invalid
+> >    Bit 8		: destination address is invalid
 > 
-> Rob
-I agree it would be better to have a finalize option. Outside of my
-idea, it seems the current setup would make it so while developing an
-IMA policy you need to keep rebooting to test your changes?
+> Same here.
+> 
+> If you replace the two bitfield descriptions to table:
+> 	Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> 
+sure.
 
-I'd suggest having a knob that starts out unrestricted, and can be
-one-way changed to append-only or immutable. This seems like a good idea
-even if you decide the embedded image is too much trouble or unworkable
-for other reasons.
+> >  
+> > -*) PCI_ENDPOINT_TEST_SRC_ADDR
+> > +* PCI_ENDPOINT_TEST_SRC_ADDR
+> >  
+> >  This register contains the source address (RC buffer address) for the
+> >  COPY/READ command.
+> >  
+> > -*) PCI_ENDPOINT_TEST_DST_ADDR
+> > +* PCI_ENDPOINT_TEST_DST_ADDR
+> >  
+> >  This register contains the destination address (RC buffer address) for
+> >  the COPY/WRITE command.
+> >  
+> > -*) PCI_ENDPOINT_TEST_IRQ_TYPE
+> > +* PCI_ENDPOINT_TEST_IRQ_TYPE
+> >  
+> >  This register contains the interrupt type (Legacy/MSI) triggered
+> >  for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
+> >  
+> >  Possible types:
+> > +
+> >   - Legacy	: 0
+> >   - MSI		: 1
+> >   - MSI-X	: 2
+> >
+Also take this as table.
+
+> > -*) PCI_ENDPOINT_TEST_IRQ_NUMBER
+> > +* PCI_ENDPOINT_TEST_IRQ_NUMBER
+> >  
+> >  This register contains the triggered ID interrupt.
+> >  
+> >  Admissible values:
+> > +
+> >   - Legacy	: 0
+> >   - MSI		: [1 .. 32]
+> >   - MSI-X	: [1 .. 2048]
+> 
+> 
+> 
+> Thanks,
+> Mauro
+
+-- 
+Cheers,
+Changbin Du
