@@ -2,104 +2,180 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A6EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F11CC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B2D921707
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5228B21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pRBtj6f/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbfENOT4 (ORCPT
+        id S1726142AbfENOYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:19:56 -0400
-Received: from foss.arm.com ([217.140.101.70]:56820 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfENOT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:19:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE7A7374;
-        Tue, 14 May 2019 07:19:55 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E98B3F703;
-        Tue, 14 May 2019 07:19:53 -0700 (PDT)
-Date:   Tue, 14 May 2019 15:19:51 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Eduardo Valentin <edubezval@gmail.com>
-Cc:     rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-Message-ID: <20190514141949.352gjengdyg67w7s@queper01-lin>
-References: <20190503094409.3499-1-quentin.perret@arm.com>
- <20190503094409.3499-4-quentin.perret@arm.com>
- <20190514034056.GA5621@localhost.localdomain>
- <20190514071506.ykjg67elsydaehlz@queper01-ThinkPad-T460s>
- <20190514141736.GB16968@localhost.localdomain>
+        Tue, 14 May 2019 10:24:16 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37182 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENOYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 10:24:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+pHfppsKADb8o6U6hdDNOJ8jDyczo+OIxy2VLKb7Gg4=; b=pRBtj6f/JLam2sMyBn4ZdgAYKS
+        zV9Vex9eWiisqNd2+PQluuaGecaLSPF+AtgTLqPGXsfieNdnu19a7JnmpgnlKxwX7gZXKI4q6rO1a
+        0JdeJU/m/bn4Aq0otIxNfKN1/Fv2AU76Jryq56VRQ8bN5eWCytZ0sK6QLIpf95AipfO1wd3r1owgs
+        r8cRvcdoEBtcgeOqxV1EeloCdDEFJhfaNYi3R3wJcVJEzLof6bvXa0E+odtqfqEkXetKlAo/t893/
+        wpPR180CGByLo06yNxyC4YZ+S+A+jhM0hwynYCR1vvQYAV6DMvLm8vyXhNRn8qoL8dyegdukSx4A6
+        lSWSCV+A==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQYLP-0008K4-CU; Tue, 14 May 2019 14:23:52 +0000
+Subject: Re: [RFC PATCH v3 03/21] x86/hpet: Calculate ticks-per-second in a
+ separate function
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
+Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1557842534-4266-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <25922025-d551-0865-b364-b53ef34e6b6a@infradead.org>
+Date:   Tue, 14 May 2019 07:23:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514141736.GB16968@localhost.localdomain>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <1557842534-4266-4-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday 14 May 2019 at 07:17:37 (-0700), Eduardo Valentin wrote:
-> Hey Quentin,
+On 5/14/19 7:01 AM, Ricardo Neri wrote:
+> It is easier to compute the expiration times of an HPET timer by using
+> its frequency (i.e., the number of times it ticks in a second) than its
+> period, as given in the capabilities register.
 > 
-> On Tue, May 14, 2019 at 08:15:08AM +0100, Quentin Perret wrote:
-> > Hi Eduardo,
-> > 
-> > On Monday 13 May 2019 at 20:40:59 (-0700), Eduardo Valentin wrote:
-> > > On Fri, May 03, 2019 at 10:44:09AM +0100, Quentin Perret wrote:
-> > > > The newly introduced Energy Model framework manages power cost tables in
-> > > > a generic way. Moreover, it supports a several types of models since the
-> > > > tables can come from DT or firmware (through SCMI) for example. On the
-> > > > other hand, the cpu_cooling subsystem manages its own power cost tables
-> > > > using only DT data.
-> > > > 
-> > > > In order to avoid the duplication of data in the kernel, and in order to
-> > > > enable IPA with EMs coming from more than just DT, remove the private
-> > > > tables from cpu_cooling.c and migrate it to using the centralized EM
-> > > > framework.
-> > > > 
-> > > > The case where the thermal subsystem is used without an Energy Model
-> > > > (cpufreq_cooling_ops) is handled by looking directly at CPUFreq's
-> > > > frequency table which is already a dependency for cpu_cooling.c anyway.
-> > > > Since the thermal framework expects the cooling states in a particular
-> > > > order, bail out whenever the CPUFreq table is unsorted, since that is
-> > > > fairly uncommon in general, and there are currently no users of
-> > > > cpu_cooling for this use-case.
-> > > 
-> > > Will this break DT in any way? After this change, are the existing DTs
-> > > still compatible with this cpu cooling?
-> > 
-> > Yes, all existing DTs stay compatible with this CPU cooling. The EM can
-> > still be built using the 'dynamic-power-coefficient' DT property thanks
-> > to the recently introduced dev_pm_opp_of_register_em() helper, see
-> > a4f342b9607d ("PM / OPP: Introduce a power estimation helper"). And all
-> > relevant cpufreq drivers have already been updated to use that function.
+> In addition to the HPET char driver, the HPET-based hardlockup detector
+> will also need to know the timer's frequency. Thus, create a common
+> function that both can use.
 > 
-> I see..
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Ashok Raj <ashok.raj@intel.com>
+> Cc: Andi Kleen <andi.kleen@intel.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Clemens Ladisch <clemens@ladisch.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Philippe Ombredanne <pombredanne@nexb.com>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+> Cc: x86@kernel.org
+> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> ---
+>  drivers/char/hpet.c  | 31 ++++++++++++++++++++++++-------
+>  include/linux/hpet.h |  1 +
+>  2 files changed, 25 insertions(+), 7 deletions(-)
 > 
-> > 
-> > So, this patch should cause no functional change for all existing users.
-> > It's really just plumbing. I can probably explain that better in this
-> > commit message rather than the cover letter if you feel it is necessary.
-> > 
-> 
-> Yes I would prefer if this info goes into the commit message.
+> diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
+> index d0ad85900b79..bdcbecfdb858 100644
+> --- a/drivers/char/hpet.c
+> +++ b/drivers/char/hpet.c
+> @@ -836,6 +836,29 @@ static unsigned long hpet_calibrate(struct hpets *hpetp)
+>  	return ret;
+>  }
+>  
+> +u64 hpet_get_ticks_per_sec(u64 hpet_caps)
+> +{
+> +	u64 ticks_per_sec, period;
+> +
+> +	period = (hpet_caps & HPET_COUNTER_CLK_PERIOD_MASK) >>
+> +		 HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
+> +
+> +	/*
+> +	 * The frequency is the reciprocal of the period. The period is given
+> +	 * femtoseconds per second. Thus, prepare a dividend to obtain the
 
-No problem, will do in v4.
+	 * in femtoseconds per second.
 
-Thanks,
-Quentin
+> +	 * frequency in ticks per second.
+> +	 */
+> +
+> +	/* 10^15 femtoseconds per second */
+> +	ticks_per_sec = 1000000000000000uLL;
+
+	ULL is overwhelmingly used in the kernel.
+
+> +	ticks_per_sec += period >> 1; /* round */
+> +
+> +	/* The quotient is put in the dividend. We drop the remainder. */
+> +	do_div(ticks_per_sec, period);
+> +
+> +	return ticks_per_sec;
+> +}
+> +
+>  int hpet_alloc(struct hpet_data *hdp)
+>  {
+>  	u64 cap, mcfg;
+> @@ -844,7 +867,6 @@ int hpet_alloc(struct hpet_data *hdp)
+>  	struct hpets *hpetp;
+>  	struct hpet __iomem *hpet;
+>  	static struct hpets *last;
+> -	unsigned long period;
+>  	unsigned long long temp;
+>  	u32 remainder;
+>  
+> @@ -894,12 +916,7 @@ int hpet_alloc(struct hpet_data *hdp)
+>  
+>  	last = hpetp;
+>  
+> -	period = (cap & HPET_COUNTER_CLK_PERIOD_MASK) >>
+> -		HPET_COUNTER_CLK_PERIOD_SHIFT; /* fs, 10^-15 */
+> -	temp = 1000000000000000uLL; /* 10^15 femtoseconds per second */
+> -	temp += period >> 1; /* round */
+> -	do_div(temp, period);
+> -	hpetp->hp_tick_freq = temp; /* ticks per second */
+> +	hpetp->hp_tick_freq = hpet_get_ticks_per_sec(cap);
+>  
+>  	printk(KERN_INFO "hpet%d: at MMIO 0x%lx, IRQ%s",
+>  		hpetp->hp_which, hdp->hd_phys_address,
+> diff --git a/include/linux/hpet.h b/include/linux/hpet.h
+> index 8604564b985d..e7b36bcf4699 100644
+> --- a/include/linux/hpet.h
+> +++ b/include/linux/hpet.h
+> @@ -107,5 +107,6 @@ static inline void hpet_reserve_timer(struct hpet_data *hd, int timer)
+>  }
+>  
+>  int hpet_alloc(struct hpet_data *);
+> +u64 hpet_get_ticks_per_sec(u64 hpet_caps);
+>  
+>  #endif				/* !__HPET__ */
+> 
+
+
+-- 
+~Randy
