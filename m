@@ -2,172 +2,87 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DC7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C67CC20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5237B20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYYyR+Ex"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz3x2Hx3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfENNIE (ORCPT
+        id S1726246AbfENNIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:08:04 -0400
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:45483 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENNIE (ORCPT
+        Tue, 14 May 2019 09:08:39 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46599 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENNIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:08:04 -0400
-Received: by mail-pf1-f171.google.com with SMTP id s11so9102556pfm.12;
-        Tue, 14 May 2019 06:08:03 -0700 (PDT)
+        Tue, 14 May 2019 09:08:39 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so12486250ljk.13;
+        Tue, 14 May 2019 06:08:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=HkTrup9eFQQ+oLlEDmRavF3Qjf2zdQSOrx8h9qp5+SQ=;
-        b=AYYyR+ExyOp9KaKCIYiyM8TaijaswJ4nql8ZYcwkMKNLB6qQn2w1u4/b3ykklPbopa
-         kUJCqAeNf9pNXqpeDOLXfY5W33ozl7X7pDq2vEaG5gzyGPNZmF2+lZz2L9NTJs+9NvpA
-         zrc1MdQJyK3EY0fEoxZ+PZL3q7GO2ZaY+hePqezPY8IZXt/SbAiz1XMpFEcDDc+He1je
-         9WnMaCxkHNZ2TpuDNwON4F24r6MgecQk2byObXMiwzuGgfpLxfDyNvaYOGsCxUqii3Ly
-         TFSDOqWXhYRxWHi48yfwNMuF8bZRFKETxiWBEpYuz4AcCxSAFt9mPK8NOZSbYxUbqAAX
-         TnmA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jGnWaeTdAGYVob1R/TxXevTDDOUSFKjgVCqNbbE/1nI=;
+        b=hz3x2Hx3tvoY4x19hxjgKQPiNUhxFg13owl7/k6Ky6dO4KK2ca5+M2T/ZQAHHSZThe
+         xIwgSLc13QESbL3hNX+o5utV03dRJChs7nOKk6wkDO5elb16VMgToE05vxVoHrSD0yoL
+         wABAYKND66EjSnJljB/B9NcK7jayPwmR0lvS/EA3rYOLZ0RgNQDRysBwK/VkBtP/rZDu
+         fpeYAXJCvJ/wpkfEqBrurLrugaGUcJWi5Gg5sSe+sTbPk7iJLXpCd0hDsQ77PQ5vCPhL
+         Bn/CBBeO0ID0BLatVCRMm/lGrg5qSdZa628QsHlslnMeW58ygsZykh2ii05BeCZeaFJi
+         gQiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=HkTrup9eFQQ+oLlEDmRavF3Qjf2zdQSOrx8h9qp5+SQ=;
-        b=hUHlINM2E0h23XGuOQbpKM2a54HMqpHIkwg8frfb6N6xc9wqADAi/8Z2lp7tNrmthg
-         3d6KKVEiCnOmzyFbYDSFlz0TCDumEiQ5qCbjUge3QEFPoFY2Z1iUVGAVBYUFaimpMG3D
-         Uk8CzhZi7PRm7wA+0cVkRKLbKcDbCR2gmxQjrMdrNH9jJueqOLeoSuO/1T5GdafBRKgc
-         P0ZzgFu93kz1Jn2/y3DLy3l3SERHDUo2hxEOE6rPuEAKDt1ZMb4XUWhKuSVQ9wMzNVfv
-         eM2bxnXBb0z4cihVF5tn6m0Ay0Xeydl9Xa47s/+l1SPdDHTCrs0CBIN9Zg0DB9AJG28U
-         7s4w==
-X-Gm-Message-State: APjAAAUpCA5mCkmDO0DbCfLZwMiG0FMPYn95z5yw5eHK+d1dO44kUWHZ
-        5cOAS/cj03ysf2euLzXHYLeQmUjz
-X-Google-Smtp-Source: APXvYqxdeFaXiGgR5XZIdBg6q2jWBImkdZ0F+r1FkMDsIuxIDKynydOuN5LTJMH1xZiF8NzRZ+nwPw==
-X-Received: by 2002:aa7:87ca:: with SMTP id i10mr14451676pfo.157.1557839283140;
-        Tue, 14 May 2019 06:08:03 -0700 (PDT)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.27? ([2402:f000:1:1501:200:5efe:a66f:471b])
-        by smtp.gmail.com with ESMTPSA id h14sm542472pgj.8.2019.05.14.06.08.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 06:08:02 -0700 (PDT)
-To:     pkshih@realtek.com, Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] rtlwifi: a crash in error handling code of rtl_pci_probe()
-Message-ID: <4627da7a-c56c-5d88-62ae-ea2be9430f6f@gmail.com>
-Date:   Tue, 14 May 2019 21:07:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jGnWaeTdAGYVob1R/TxXevTDDOUSFKjgVCqNbbE/1nI=;
+        b=BWR0nYQH05fktCcFwntfwVLMF9UUsEMrP1uiAp9k7etusazA+UH64M7ao3MfsRomgx
+         Yf4Zt8NIwptxv3IzinHOo1CCsB3VlRc/cz8Qt7MnN8WH+K4h0lmmvarlOS1hK836qCpd
+         23NMtXjpgeEDaSw8Xp/EanWnMWwgpNtwBmyIxGbtQkzyu0nmTZSpLcXc5Fw/h0OBWLT3
+         7y8v1weo8c2+08f9FXl++FMAzq0n4mLtxdl4EzFrB4nQUriPzz+I3GpD+Fac1IeMWhZE
+         BiYcqoYVAs11GWNyvwLZIQCEQP8vlOIN/EHMUB16AVDHJtle6EUaVIcFKBqQi1D9p2tQ
+         mj4Q==
+X-Gm-Message-State: APjAAAVmIAtCRNuCoru7KAA3S/T27L9Vk8HJheASRfUdMqCp5tqkeAFn
+        Z3isVjx8RfZf5F5U9j34fLvv6/meSXqGvQwBgFY=
+X-Google-Smtp-Source: APXvYqwGecBzbpfdMXAIjdCxJTDl5Ws8nyl0nWjhHtCf7epuYAKPy0fZvIPVELRzmMR4xkE3iE/POW6O04b/VHIW07o=
+X-Received: by 2002:a2e:2b81:: with SMTP id r1mr15614143ljr.138.1557839316690;
+ Tue, 14 May 2019 06:08:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190513202258.30949-1-angus@akkea.ca> <20190513202258.30949-2-angus@akkea.ca>
+In-Reply-To: <20190513202258.30949-2-angus@akkea.ca>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 14 May 2019 10:08:33 -0300
+Message-ID: <CAOMZO5Dn4sVJx3UPo-WXMen9N36CiBvq3i+GosJ_4FGZ7jnTqA@mail.gmail.com>
+Subject: Re: [PATCH v11 1/4] MAINTAINERS: add an entry for for arm63 imx devicetrees
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>,
+        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rtl_pci_probe(), when request_irq() in rtl_pci_intr_mode_legacy() in 
-rtl_pci_intr_mode_decide() fails, a crash occurs.
-The crash information is as follows:
+On Mon, May 13, 2019 at 5:23 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> Add an explicit reference to imx* devicetrees
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-[  108.271155] kasan: CONFIG_KASAN_INLINE enabled
-[  108.271163] kasan: GPF could be caused by NULL-ptr deref or user 
-memory access
-......
-[  108.271193] RIP: 0010:cfg80211_get_drvinfo+0xce/0x3b0 [cfg80211]
-......
-[  108.271235] Call Trace:
-[  108.271245]  ethtool_get_drvinfo+0x110/0x640
-[  108.271255]  ? cfg80211_get_chan_state+0x7e0/0x7e0 [cfg80211]
-[  108.271261]  ? ethtool_get_settings+0x340/0x340
-[  108.271268]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
-[  108.271279]  ? kasan_check_write+0x14/0x20
-[  108.271284]  dev_ethtool+0x272d/0x4c20
-[  108.271290]  ? unwind_get_return_address+0x66/0xb0
-[  108.271299]  ? __save_stack_trace+0x92/0x100
-[  108.271307]  ? ethtool_get_rxnfc+0x3f0/0x3f0
-[  108.271316]  ? save_stack+0xa3/0xd0
-[  108.271323]  ? save_stack+0x43/0xd0
-[  108.271331]  ? ftrace_graph_ret_addr+0x2d/0x170
-[  108.271338]  ? ftrace_graph_ret_addr+0x2d/0x170
-[  108.271346]  ? ftrace_graph_ret_addr+0x2d/0x170
-[  108.271354]  ? update_stack_state+0x3b2/0x670
-[  108.271361]  ? update_stack_state+0x3b2/0x670
-[  108.271370]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
-[  108.271379]  ? unwind_next_frame.part.5+0x19f/0xa60
-[  108.271388]  ? bpf_prog_kallsyms_find+0x3e/0x270
-[  108.271396]  ? is_bpf_text_address+0x1a/0x30
-[  108.271408]  ? kernel_text_address+0x11d/0x130
-[  108.271416]  ? __kernel_text_address+0x12/0x40
-[  108.271423]  ? unwind_get_return_address+0x66/0xb0
-[  108.271431]  ? __save_stack_trace+0x92/0x100
-[  108.271440]  ? save_stack+0xa3/0xd0
-[  108.271448]  ? udp_ioctl+0x35/0xe0
-[  108.271457]  ? inet_ioctl+0x100/0x320
-[  108.271466]  ? inet_stream_connect+0xb0/0xb0
-[  108.271475]  ? alloc_file+0x60/0x480
-[  108.271483]  ? alloc_file_pseudo+0x19d/0x270
-[  108.271495]  ? sock_alloc_file+0x51/0x170
-[  108.271502]  ? __sys_socket+0x12c/0x1f0
-[  108.271510]  ? __x64_sys_socket+0x78/0xb0
-[  108.271520]  ? do_syscall_64+0xb1/0x2e0
-[  108.271529]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  108.271538]  ? kasan_check_read+0x11/0x20
-[  108.271548]  ? mutex_lock+0x8f/0xe0
-[  108.271557]  ? __mutex_lock_slowpath+0x20/0x20
-[  108.271568]  dev_ioctl+0x1fb/0xae0
-[  108.271576]  ? dev_ioctl+0x1fb/0xae0
-[  108.271586]  ? _copy_from_user+0x71/0xd0
-[  108.271594]  sock_do_ioctl+0x1e2/0x2f0
-[  108.271602]  ? kmem_cache_alloc+0xf9/0x250
-[  108.271611]  ? ___sys_recvmsg+0x5a0/0x5a0
-[  108.271621]  ? apparmor_file_alloc_security+0x128/0x7e0
-[  108.271630]  ? kasan_unpoison_shadow+0x35/0x50
-[  108.271638]  ? kasan_kmalloc+0xad/0xe0
-[  108.271652]  ? apparmor_file_alloc_security+0x128/0x7e0
-[  108.271662]  ? apparmor_file_alloc_security+0x269/0x7e0
-[  108.271670]  sock_ioctl+0x361/0x590
-[  108.271678]  ? sock_ioctl+0x361/0x590
-[  108.271686]  ? routing_ioctl+0x470/0x470
-[  108.271695]  ? kasan_check_write+0x14/0x20
-[  108.271703]  ? __mutex_init+0xba/0x130
-[  108.271713]  ? percpu_counter_add_batch+0xc7/0x120
-[  108.271722]  ? alloc_empty_file+0xae/0x150
-[  108.271729]  ? routing_ioctl+0x470/0x470
-[  108.271738]  do_vfs_ioctl+0x1ae/0xfe0
-[  108.271745]  ? do_vfs_ioctl+0x1ae/0xfe0
-[  108.271754]  ? alloc_file_pseudo+0x1ad/0x270
-[  108.271762]  ? ioctl_preallocate+0x1e0/0x1e0
-[  108.271770]  ? alloc_file+0x480/0x480
-[  108.271778]  ? kasan_check_read+0x11/0x20
-[  108.271786]  ? __fget+0x24d/0x320
-[  108.271794]  ? iterate_fd+0x180/0x180
-[  108.271802]  ? fd_install+0x52/0x60
-[  108.271812]  ? security_file_ioctl+0x8c/0xb0
-[  108.271820]  ksys_ioctl+0x99/0xb0
-[  108.271829]  __x64_sys_ioctl+0x78/0xb0
-[  108.271839]  do_syscall_64+0xb1/0x2e0
-[  108.271857]  ? prepare_exit_to_usermode+0xc8/0x160
-[  108.271871]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-......
+There is a typo in the Subject: "arm63" --> "arm64".
 
-I checked the driver source code, but cannot find the reason, so I only 
-report the crash...
-Can somebody give an explanation about this crash?
-
-This crash is triggered by a runtime fuzzing tool named FIZZER written 
-by us.
-
-
-Best wishes,
-Jia-Ju Bai
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
