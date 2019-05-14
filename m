@@ -2,245 +2,220 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D09C04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C43C04AB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EAE2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B1421019
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:54:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftyK0Zu9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hf5dvgxb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfENBo2 (ORCPT
+        id S1726607AbfENByT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 21:44:28 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45119 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfENBo2 (ORCPT
+        Mon, 13 May 2019 21:54:19 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36064 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfENByT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 21:44:28 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t24so4989194otl.12;
-        Mon, 13 May 2019 18:44:27 -0700 (PDT)
+        Mon, 13 May 2019 21:54:19 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so20380012edx.3;
+        Mon, 13 May 2019 18:54:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=yy2Yel/USF4a4M7OXdkKtgr8TJY88ids8FL33ul2o24=;
-        b=ftyK0Zu9SdNODowfCGef5M5MWQtnQRW+K0ewSddIAjJgnD5x5De/Wful+d8XCktU23
-         4bwBdP69H8+MQYi+jRvJAp7NBtj/l8b8Nk/UJojkNONU61O9M4mNHoZdkj4TIhMbUVAM
-         jzpRiTb7mMsfy1ss082O4RGHaU0k2paXKqcFb2Z8OFlohjBHm3Y51WGnD5DQSXjX6YzA
-         bzSocXEUoe8HCjc6tavJnVIqrzWsZpVhZyOsOL4MCKps1BozD8llD+CJ1BEBvatCLfyf
-         uWsGnTe0nWTT3qPkBjayQHVVjHjZL511+xkHrf0urrRA4OYcRcM1HOO1LqBVzgQGYr2I
-         cYrA==
+         :cc;
+        bh=oJTciUBqLw6+VYQPo9LgfDntBzoqnhF9HaeX08QgSPc=;
+        b=Hf5dvgxbzZDy/nUCh6WREXgCdmnsqQqs9yDXE/AMxAnWv5bjbVKxl7vYd17rbAdh6M
+         i7WdnJkAZPR/EGWh9YwlCE8zyTpRv32TC7gse0SVZjdXqaBEB132hWLBEE/dWTR/In4V
+         WoU+N+PEDuHj0jauuIxuLRppu/csxHCT+v4d09Vb/P9XyV5b9dfMwOndZoDI8C2iR9Fn
+         YORL5ggTkGvppRRw8PMdQZUrQC2vySetCcf1fhEgwUy1s2OOc7ZJeYv6r5vMU4g+urD9
+         47+vApdVszVXOsiYDg8G8d8tKw4qNBAVKX32zbETS+Oh3j/vuKTz1crnz6c5jBjUY2Ap
+         kydw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=yy2Yel/USF4a4M7OXdkKtgr8TJY88ids8FL33ul2o24=;
-        b=AiMsWd2Z0Uq5NhKLCx40gv4OGuMNjeYSCj1MvaGyhg7TWKZHid4LlDrxklaDiYlolw
-         ViS3O7fwjnUgZSZEnFQMztz9f4A8qqr/PosSjxdjFqXz1u75UFfqVg5BtEAgOteXA3n6
-         hLIHDB1f/1bvIB4MWOykMU5P6ZMCmv+54VwW5PatwHtpcU4yL2FDnX5UZubUMQmc8B1w
-         LJhtpVv3dZLSUU7ms2Tw0WCdh3jxsC97iSf3s8LoyZTjzjuu6L/BF8MT+02eBjOqUqry
-         2JQxVw5M/Vaf/q5LPRxhH0gcwWVP1DRi8CINIYqPK/RyKIstoU4DvtHnTzyClBY2B7SL
-         1LOQ==
-X-Gm-Message-State: APjAAAXjLVIiWzprUh/7d2u/KFj5AEC627bWpYIjV8sGYeXUZJrFcfUZ
-        ZDgAn1ExORToPRrUAH1IVecoSJGxHD4Mo36DhWE=
-X-Google-Smtp-Source: APXvYqwCwweRgGxR0q2aDofRD6zHvfdGOjy5pQEcLdAMiC084mM+T8w4F7wNjpERXuETfAeHr9bSFtMlVmspTdrv4ZM=
-X-Received: by 2002:a9d:7f8b:: with SMTP id t11mr18632299otp.110.1557798267465;
- Mon, 13 May 2019 18:44:27 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=oJTciUBqLw6+VYQPo9LgfDntBzoqnhF9HaeX08QgSPc=;
+        b=lQzr/pqtlPZxBg9MOJUdxCUEK0ShmU+qwvFfSCeAOamRzjBADq05/34LgNwEEhDutY
+         kdu6J4a6E6rgC080xdlZ4Sdjvx/b6Sh4KnoGkn8/ydfXfVoiGbu33l78rrmQePgTdahM
+         JJ4gNmIBEQLuCbPH1IxQhms5qMT0kXn/24SWE/MLRDY/8ZCXkleXGcJyUEUYHyrUluAf
+         rs1CjjgItz7Sm6RZDZIys8Wsz7biF1dfatXeTksQtbD80zjgruXdU41RwxBbWkj0Eikv
+         Rq0BpGfYAwgo6RQ+zlTkIN3N5ix9KCyaC9HPYnTbwtKNmEU8RLVDTZkAPfWdRTGZCid+
+         O0WQ==
+X-Gm-Message-State: APjAAAUFVOgyZG06l96gVXCCI4//hXsxLUq2rdbAFgG/PS9EzN/pmZbd
+        XAPkBTMrnpWqNnPA7bNVIZLcd/Si8Genp2Jzl0k=
+X-Google-Smtp-Source: APXvYqwtjwbA6ugaUY4XzcsNk6VWZorMnP/TGvu7pzPTN7g769c186jM+tAHFc0r++Gvo/m+W7Lbz2AQ3ErPJI2Gyk8=
+X-Received: by 2002:a17:906:4e56:: with SMTP id g22mr17944472ejw.51.1557798856169;
+ Mon, 13 May 2019 18:54:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
- <1557401361-3828-4-git-send-email-wanpengli@tencent.com> <20190513195417.GM28561@linux.intel.com>
-In-Reply-To: <20190513195417.GM28561@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 14 May 2019 09:45:40 +0800
-Message-ID: <CANRm+CxVRMQF9yHoqDMJR9FROGtLwYgaQXPqu++S7Juneh2vtw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] KVM: LAPIC: Optimize timer latency further
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
+References: <20170914194444.32551-1-robdclark@gmail.com> <20170919123038.GF8398@8bytes.org>
+ <CAF6AEGuutkqjrWk4jagE=p-NwHgxdiPZjjsaFsfwtczK568j+A@mail.gmail.com>
+ <20170922090204.GJ8398@8bytes.org> <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
+ <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com> <571e825d-7f54-2da4-adc0-6b6ac6dae459@arm.com>
+In-Reply-To: <571e825d-7f54-2da4-adc0-6b6ac6dae459@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 13 May 2019 18:54:03 -0700
+Message-ID: <CAF6AEGtJRYvSLw+Cc6XaHEN58Ne2_StTojN9_e6+aJZSfX_dVg@mail.gmail.com>
+Subject: Re: [RFC] iommu: arm-smmu: stall support
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 at 03:54, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Mon, May 13, 2019 at 11:37 AM Jean-Philippe Brucker
+<jean-philippe.brucker@arm.com> wrote:
 >
-> On Thu, May 09, 2019 at 07:29:21PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Advance lapic timer tries to hidden the hypervisor overhead between hos=
-t
-> > timer fires and the guest awares the timer is fired. However, it just h=
-idden
-> > the time between apic_timer_fn/handle_preemption_timer -> wait_lapic_ex=
-pire,
-> > instead of the real position of vmentry which is mentioned in the orign=
-ial
-> > commit d0659d946be0 ("KVM: x86: add option to advance tscdeadline hrtim=
-er
-> > expiration"). There is 700+ cpu cycles between the end of wait_lapic_ex=
-pire
-> > and before world switch on my haswell desktop, it will be 2400+ cycles =
-if
-> > vmentry_l1d_flush is tuned to always.
-> >
-> > This patch tries to narrow the last gap, it measures the time between
-> > the end of wait_lapic_expire and before world switch, we take this
-> > time into consideration when busy waiting, otherwise, the guest still
-> > awares the latency between wait_lapic_expire and world switch, we also
-> > consider this when adaptively tuning the timer advancement. The patch
-> > can reduce 50% latency (~1600+ cycles to ~800+ cycles on a haswell
-> > desktop) for kvm-unit-tests/tscdeadline_latency when testing busy waits=
-.
-> >
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > Cc: Liran Alon <liran.alon@oracle.com>
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/lapic.c   | 23 +++++++++++++++++++++--
-> >  arch/x86/kvm/lapic.h   |  8 ++++++++
-> >  arch/x86/kvm/vmx/vmx.c |  2 ++
-> >  3 files changed, 31 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index e7a0660..01d3a87 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1545,13 +1545,19 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
-> >
-> >       tsc_deadline =3D apic->lapic_timer.expired_tscdeadline;
-> >       apic->lapic_timer.expired_tscdeadline =3D 0;
-> > -     guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc());
-> > +     guest_tsc =3D kvm_read_l1_tsc(vcpu, (apic->lapic_timer.measure_de=
-lay_done =3D=3D 2) ?
-> > +             rdtsc() + apic->lapic_timer.vmentry_delay : rdtsc());
-> >       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadli=
-ne);
-> >
-> >       if (guest_tsc < tsc_deadline)
-> >               __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
-> >
-> >       adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
-> > +
-> > +     if (!apic->lapic_timer.measure_delay_done) {
-> > +             apic->lapic_timer.measure_delay_done =3D 1;
-> > +             apic->lapic_timer.vmentry_delay =3D rdtsc();
-> > +     }
-> >  }
-> >
-> >  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> > @@ -1837,6 +1843,18 @@ static void apic_manage_nmi_watchdog(struct kvm_=
-lapic *apic, u32 lvt0_val)
-> >       }
-> >  }
-> >
-> > +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu)
-> > +{
-> > +     struct kvm_timer *ktimer =3D &vcpu->arch.apic->lapic_timer;
+> Hi Rob,
 >
-> This will #GP if the APIC is not in-kernel, i.e. @apic is NULL.
+> On 10/05/2019 19:23, Rob Clark wrote:
+> > On Fri, Sep 22, 2017 at 2:58 AM Jean-Philippe Brucker
+> > <jean-philippe.brucker@arm.com> wrote:
+> >>
+> >> On 22/09/17 10:02, Joerg Roedel wrote:
+> >>> On Tue, Sep 19, 2017 at 10:23:43AM -0400, Rob Clark wrote:
+> >>>> I would like to decide in the IRQ whether or not to queue work or not,
+> >>>> because when we get a gpu fault, we tend to get 1000's of gpu faults
+> >>>> all at once (and I really only need to handle the first one).  I
+> >>>> suppose that could also be achieved by having a special return value
+> >>>> from the fault handler to say "call me again from a wq"..
+> >>>>
+> >>>> Note that in the drm driver I already have a suitable wq to queue the
+> >>>> work, so it really doesn't buy me anything to have the iommu driver
+> >>>> toss things off to a wq for me.  Might be a different situation for
+> >>>> other drivers (but I guess mostly other drivers are using iommu API
+> >>>> indirectly via dma-mapping?)
+> >>>
+> >>> Okay, so since you are the only user for now, we don't need a
+> >>> work-queue. But I still want the ->resume call-back to be hidden in the
+> >>> iommu code and not be exposed to users.
+> >>>
+> >>> We already have per-domain fault-handlers, so the best solution for now
+> >>> is to call ->resume from report_iommu_fault() when the fault-handler
+> >>> returns a special value.
+> >>
+> >> The problem is that report_iommu_fault is called from IRQ context by the
+> >> SMMU driver, so the device driver callback cannot sleep.
+> >>
+> >> So if the device driver needs to be able to sleep between fault report and
+> >> resume, as I understand Rob needs for writing debugfs, we can either:
+> >>
+> >> * call report_iommu_fault from higher up, in a thread or workqueue.
+> >> * split the fault reporting as this patch proposes. The exact same
+> >>   mechanism is needed for the vSVM work by Intel: in order to inject fault
+> >>   into the guest, they would like to have an atomic notifier registered by
+> >>   VFIO for passing down the Page Request, and a new function in the IOMMU
+> >>   API to resume/complete the fault.
+> >>
+> >
+> > So I was thinking about this topic again.. I would still like to get
+> > some sort of async resume so that I can wire up GPU cmdstream/state
+> > logging on iommu fault (without locally resurrecting and rebasing this
+> > patch and drm/msm side changes each time I need to debug iommu
+> > faults)..
 >
-> > +
-> > +     if (ktimer->measure_delay_done =3D=3D 1) {
-> > +             ktimer->vmentry_delay =3D rdtsc() -
-> > +                     ktimer->vmentry_delay;
-> > +             ktimer->measure_delay_done =3D 2;
+> We've been working on the new fault reporting API with Jacob and Eric,
+> and I intend to send it out soon. It is supposed to be used for
+> reporting faults to guests via VFIO, handling page faults via mm, and
+> also reporting events directly to device drivers. Please let us know
+> what works and what doesn't in your case
 >
-> Measuring the delay a single time is bound to result in random outliers,
-> e.g. if an NMI happens to occur after wait_lapic_expire().
+> The most recent version of the patches is at
+> http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/api
+> (git://www.linux-arm.org/linux-jpb.git branch sva/api). Hopefully on the
+> list sometimes next week, I'll add you on Cc.
 >
-> Rather than reinvent the wheel, can we simply move the call to
-> wait_lapic_expire() into vmx.c and svm.c?  For VMX we'd probably want to
-> support the advancement if enable_unrestricted_guest=3Dtrue so that we av=
-oid
-> the emulation_required case, but other than that I don't see anything tha=
-t
-> requires wait_lapic_expire() to be called where it is.
+> In particular, see commits
+>         iommu: Introduce device fault data
+>         iommu: Introduce device fault report API
+>         iommu: Add recoverable fault reporting
+>
+> The device driver calls iommu_register_device_fault_handler(dev, cb,
+> data). To report a fault, the SMMU driver calls
+> iommu_report_device_fault(dev, fault). This calls into the device driver
+> directly, there isn't any workqueue. If the fault is recoverable (the
+> SMMU driver set type IOMMU_FAULT_PAGE_REQ rather than
+> IOMMU_FAULT_DMA_UNRECOV), the device driver calls iommu_page_response()
+> once it has dealt with the fault (after sleeping if it needs to). This
+> invokes the SMMU driver's resume callback.
 
-I also considered to move wait_lapic_expire() into vmx.c and svm.c
-before, what do you think, Paolo, Radim?
+Ok, this sounds at a high level similar to my earlier RFC, in that
+resume is split (and that was the main thing I was interested in).
+And it does solve one thing I was struggling with, namely that when
+the domain is created it doesn't know which iommu device it will be
+attached to (given that at least the original arm-smmu.c driver cannot
+support stall in all cases)..
 
-Regards,
-Wanpeng Li
+For GPU translation faults, I also don't really need to know if the
+faulting translation is stalled until the callback (I mainly want to
+not bother to snapshot GPU state if it is not stalled, because in that
+case the data we snapshot is unlikely to be related to the fault if
+the translation is not stalled).
+
+> At the moment we use mutexes, so iommu_report_device_fault() can only be
+> called from an IRQ thread, which is incompatible with the current SMMUv2
+> driver. Either we need to switch the SMMUv2 driver to an IRQ thread, or
+> rework the fault handler to be called from an IRQ handler. The reporting
+> also has to be per device rather than per domain, and I'm not sure if
+> the SMMUv2 driver can deal with this.
+
+I'll take a closer look at the branch and try to formulate some plan
+to add v2 support for this.
+
+For my cases, the GPU always has it's own iommu device, while display
+and other blocks share an apps_smmu.. although this sort of
+functionality isn't really required outside of the GPU.. but I'll have
+to think a bit about how we can support both cases in the single v2
+driver.
+
+BR,
+-R
 
 >
-> > +     }
-> > +}
-> > +EXPORT_SYMBOL_GPL(kvm_lapic_measure_vmentry_delay);
-> > +
-> >  int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
-> >  {
-> >       int ret =3D 0;
-> > @@ -2318,7 +2336,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int t=
-imer_advance_ns)
-> >               apic->lapic_timer.timer_advance_ns =3D timer_advance_ns;
-> >               apic->lapic_timer.timer_advance_adjust_done =3D true;
-> >       }
-> > -
-> > +     apic->lapic_timer.vmentry_delay =3D 0;
-> > +     apic->lapic_timer.measure_delay_done =3D 0;
 > >
-> >       /*
-> >        * APIC is created enabled. This will prevent kvm_lapic_set_base =
-from
-> > diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> > index d6d049b..f1d037b 100644
-> > --- a/arch/x86/kvm/lapic.h
-> > +++ b/arch/x86/kvm/lapic.h
-> > @@ -35,6 +35,13 @@ struct kvm_timer {
-> >       atomic_t pending;                       /* accumulated triggered =
-timers */
-> >       bool hv_timer_in_use;
-> >       bool timer_advance_adjust_done;
-> > +     /**
-> > +      * 0 unstart measure
-> > +      * 1 start record
-> > +      * 2 get delta
-> > +      */
-> > +     u32 measure_delay_done;
-> > +     u64 vmentry_delay;
-> >  };
+> > And I do still prefer the fault cb in irq (or not requiring it in
+> > wq)..  but on thinking about it, the two ideas aren't entirely
+> > conflicting, ie. add some flags either when we register handler[1], or
+> > they could be handled thru domain_set_attr, like:
 > >
-> >  struct kvm_lapic {
-> > @@ -230,6 +237,7 @@ void kvm_lapic_switch_to_hv_timer(struct kvm_vcpu *=
-vcpu);
-> >  void kvm_lapic_expired_hv_timer(struct kvm_vcpu *vcpu);
-> >  bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu);
-> >  void kvm_lapic_restart_hv_timer(struct kvm_vcpu *vcpu);
-> > +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu);
+> >  _EXPLICIT_RESUME - iommu API user calls iommu_domain_resume(),
+> > potentialy from wq/thread after fault handler returns
+> >  _HANDLER_SLEEPS  - iommu core handles the wq, and calls ops->resume()
+> > internally
 > >
-> >  static inline enum lapic_mode kvm_apic_mode(u64 apic_base)
-> >  {
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 9663d41..a939bf5 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -6437,6 +6437,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >       if (vcpu->arch.cr2 !=3D read_cr2())
-> >               write_cr2(vcpu->arch.cr2);
+> > In both cases, from the iommu driver PoV it just implements
+> > iommu_ops::resume().. in first case it is called via iommu user either
+> > from the fault handler or at some point later (ie. wq or thread).
 > >
-> > +     kvm_lapic_measure_vmentry_delay(vcpu);
+> > I don't particularly need the _HANDLER_SLEEPS case (unless I can't
+> > convince anyone that iommu_domamin_resume() called from outside iommu
+> > core is a good idea).. so probably I wouldn't wire up the wq plumbing
+> > for the _HANDLER_SLEEPS case unless someone really wanted me to.
+> >
+> > Since there are more iommu drivers, than places that register fault
+> > handlers, I like the idea that in either case, from the driver PoV, it
+> > is just implementing the resume callback.
+> >
+> > [1] currently I only see a few places where fault handlers are
+> > registered, so changing iommu_set_fault_handler() is really not much
+> > churn
 >
-> This should be wrapped in an unlikely of some form given that it happens
-> literally once out of thousands/millions runs.
+> At the moment we're keeping the new fault reporting mechanism separate
+> from iommu_set_fault_handler()/report_iommu_fault(), to ease the transition.
 >
-> > +
-> >       vmx->fail =3D __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.re=
-gs,
-> >                                  vmx->loaded_vmcs->launched);
-> >
-> > --
-> > 2.7.4
-> >
+> Thanks,
+> Jean
