@@ -2,168 +2,117 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17854C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77310C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86D02147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4462085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:41:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557844869;
+	bh=JvSWtBN2a+2LHm1ldZpeI1ZSDbBLbXB9nRK81ty/lvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xjfUtlVEjKRLJdP+buGCQ64Xb15JagpP+09OCSC1S4KPp81QQj5m9yPuyvJfm79tS
+	 1O1lwqklEsRHgc1LClyb2+4wHb4u+gRXMzPeSC6P0Zm0ZYsdGKDzoc+MtXrko7LRV0
+	 wAmlPnzcsd/54Cd5VXrdn9jdpSPg0INpiowMx/T4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726566AbfENOjz (ORCPT
+        id S1726568AbfENOlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:39:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:51571 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbfENOjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:39:51 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 07:39:51 -0700
-X-ExtLoop1: 1
-Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2019 07:39:51 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 3/3] perf regs x86: Add X86 support for non-gprs
-Date:   Tue, 14 May 2019 07:39:13 -0700
-Message-Id: <1557844753-58223-3-git-send-email-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557844753-58223-1-git-send-email-kan.liang@linux.intel.com>
-References: <1557844753-58223-1-git-send-email-kan.liang@linux.intel.com>
+        Tue, 14 May 2019 10:41:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33148 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726151AbfENOlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 10:41:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 16AAFAC38;
+        Tue, 14 May 2019 14:41:06 +0000 (UTC)
+Date:   Tue, 14 May 2019 16:41:05 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
+Message-ID: <20190514144105.GF4683@dhcp22.suse.cz>
+References: <20190514131654.25463-1-oleksandr@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514131654.25463-1-oleksandr@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+[This is adding a new user visible interface so you should be CCing
+linux-api mailing list. Also CC Hugh for KSM in general. Done now]
 
-XMM registers can be collected on Icelake and later platforms.
+On Tue 14-05-19 15:16:50, Oleksandr Natalenko wrote:
+> By default, KSM works only on memory that is marked by madvise(). And the
+> only way to get around that is to either:
+> 
+>   * use LD_PRELOAD; or
+>   * patch the kernel with something like UKSM or PKSM.
+> 
+> Instead, lets implement a sysfs knob, which allows marking VMAs as
+> mergeable. This can be used manually on some task in question or by some
+> small userspace helper daemon.
+> 
+> The knob is named "force_madvise", and it is write-only. It accepts a PID
+> to act on. To mark the VMAs as mergeable, use:
+> 
+>    # echo PID > /sys/kernel/mm/ksm/force_madvise
+> 
+> To unmerge all the VMAs, use the same approach, prepending the PID with
+> the "minus" sign:
+> 
+>    # echo -PID > /sys/kernel/mm/ksm/force_madvise
+> 
+> This patchset is based on earlier Timofey's submission [1], but it doesn't
+> use dedicated kthread to walk through the list of tasks/VMAs. Instead,
+> it is up to userspace to traverse all the tasks in /proc if needed.
+> 
+> The previous suggestion [2] was based on amending do_anonymous_page()
+> handler to implement fully automatic mode, but this approach was
+> incorrect due to improper locking and not desired due to excessive
+> complexity.
+> 
+> The current approach just implements minimal interface and leaves the
+> decision on how and when to act to userspace.
 
-Add specific has_non_gprs_support(), which creating an event to check if
-the kernel and hardware can collect XMM registers.
+Please make sure to describe a usecase that warrants adding a new
+interface we have to maintain for ever.
 
-Add specific non_gprs_mask() to return the mask of XMM registers.
+> 
+> Thanks.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1012142/
+> [2] http://lkml.iu.edu/hypermail/linux/kernel/1905.1/02417.html
+> 
+> Oleksandr Natalenko (4):
+>   mm/ksm: introduce ksm_enter() helper
+>   mm/ksm: introduce ksm_leave() helper
+>   mm/ksm: introduce force_madvise knob
+>   mm/ksm: add force merging/unmerging documentation
+> 
+>  Documentation/admin-guide/mm/ksm.rst |  11 ++
+>  mm/ksm.c                             | 160 +++++++++++++++++++++------
+>  2 files changed, 137 insertions(+), 34 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
 
-The XMM registers collection is only supported with --int-regs option.
-
-Test on Skylake which doesn't support XMM registers collection. There is
-nothing changed.
-
-   #perf record -I?
-   available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9
-   R10 R11 R12 R13 R14 R15
-
-   Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
-
-    -I, --intr-regs[=<any register>]
-                          sample selected machine registers on
-   interrupt, use '-I?' to list register names
-
-   #perf record -I
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.905 MB perf.data (2520 samples) ]
-
-   #perf evlist -v
-   cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
-   IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
-   inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
-   sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
-   1, bpf_event: 1, sample_regs_intr: 0xff0fff
-
-Test on Icelake which support XMM registers collection.
-
-   #perf record -I?
-   available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
-   R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9
-   XMM10 XMM11 XMM12 XMM13 XMM14 XMM15
-
-   Usage: perf record [<options>] [<command>]
-    or: perf record [<options>] -- <command> [<options>]
-
-    -I, --intr-regs[=<any register>]
-                          sample selected machine registers on
-   interrupt, use '-I?' to list register names
-
-   #perf record -I
-   [ perf record: Woken up 1 times to write data ]
-   [ perf record: Captured and wrote 0.800 MB perf.data (318 samples) ]
-
-   #perf evlist -v
-   cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
-   IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
-   inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
-   sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
-   1, bpf_event: 1, sample_regs_intr: 0xffffffff00ff0fff
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/arch/x86/include/perf_regs.h |  1 +
- tools/perf/arch/x86/util/perf_regs.c    | 36 +++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
-
-diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
-index b732133..b7cd91a 100644
---- a/tools/perf/arch/x86/include/perf_regs.h
-+++ b/tools/perf/arch/x86/include/perf_regs.h
-@@ -9,6 +9,7 @@
- void perf_regs_load(u64 *regs);
- 
- #define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
-+#define PERF_XMM_REGS_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
- #ifndef HAVE_ARCH_X86_64_SUPPORT
- #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
- #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index 71d7604..963b126 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -270,3 +270,39 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
- 
- 	return SDT_ARG_VALID;
- }
-+
-+bool has_non_gprs_support(bool intr)
-+{
-+	struct perf_event_attr attr = {
-+		.type			= PERF_TYPE_HARDWARE,
-+		.config			= PERF_COUNT_HW_CPU_CYCLES,
-+		.sample_period		= 1,
-+		.sample_type		= PERF_SAMPLE_REGS_INTR,
-+		.sample_regs_intr	= PERF_XMM_REGS_MASK,
-+		.precise_ip		= 1,
-+		.disabled 		= 1,
-+		.exclude_kernel		= 1,
-+	};
-+	int fd;
-+
-+	if (!intr)
-+		return false;
-+
-+	event_attr_init(&attr);
-+
-+	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
-+	if (fd != -1) {
-+		close(fd);
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+u64 non_gprs_mask(bool intr)
-+{
-+	if (intr)
-+		return PERF_XMM_REGS_MASK;
-+
-+	return 0;
-+}
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
