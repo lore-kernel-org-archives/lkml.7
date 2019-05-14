@@ -2,119 +2,102 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC43EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFA2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC46E2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5XJ/WDUH"
+	by mail.kernel.org (Postfix) with ESMTP id AAEAE20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfENPh6 (ORCPT
+        id S1726201AbfENPkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:37:58 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41286 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfENPh6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:37:58 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EFY5Ad041917;
-        Tue, 14 May 2019 15:36:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=K6RAKYDjcjRrn7OwP84UHYgsO7ChGZaEr+sqPb3xwhc=;
- b=5XJ/WDUHZ0rtX1wy7iGiSQInjd4Yje8V0Nmw7F2TpN62bao4hby9ViD40alDqoIimCcT
- IqmNrySa/hvm/yvNnPV7kAphqhwRpXXmIo9tmtGOcJefID4qORAU6rmiyGDpSb8VzGkL
- wb2TZXj3OraOSmMlRjSCXoGgbjRn5+uqIUwZ+EjtnghualrShvTzaqilDUUKkav3ZVEG
- DUvMwQXC/emAR1qaIFGPMioz6EbIWV+l5UJVwALQDf2XpMOl/tGCRp2uLVjWvH3o5D1j
- ygyljCSo8K2hmvy8qbg334BYRGKGGy7EcRlTxjFeqnVaX0FP4NSfdl91Nuo1L4e/hW2f uQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdnttpxv1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 15:36:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EFZLrw135409;
-        Tue, 14 May 2019 15:36:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2se0tw7m68-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 15:36:58 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4EFatFM011608;
-        Tue, 14 May 2019 15:36:56 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 08:36:54 -0700
-Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
- <20190513151500.GY2589@hirez.programming.kicks-ass.net>
- <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
- <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com>
- <20190514072110.GF2589@hirez.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <95f462d4-37d3-f863-b7c6-2bcbb92251ec@oracle.com>
-Date:   Tue, 14 May 2019 17:36:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 14 May 2019 11:40:10 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:57836 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfENPkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:40:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73C8C374;
+        Tue, 14 May 2019 08:40:09 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B89C3F703;
+        Tue, 14 May 2019 08:40:06 -0700 (PDT)
+Date:   Tue, 14 May 2019 16:40:00 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, mhocko@suse.com, mgorman@techsingularity.net,
+        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        ira.weiny@intel.com
+Subject: Re: [PATCH V3 2/4] arm64/mm: Hold memory hotplug lock while walking
+ for kernel page table dump
+Message-ID: <20190514154000.GA20935@lakrids.cambridge.arm.com>
+References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
+ <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190514072110.GF2589@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=941
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140109
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=973 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140110
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 14, 2019 at 02:30:05PM +0530, Anshuman Khandual wrote:
+> The arm64 pagetable dump code can race with concurrent modification of the
+> kernel page tables. When a leaf entries are modified concurrently, the dump
+> code may log stale or inconsistent information for a VA range, but this is
+> otherwise not harmful.
+> 
+> When intermediate levels of table are freed, the dump code will continue to
+> use memory which has been freed and potentially reallocated for another
+> purpose. In such cases, the dump code may dereference bogus addressses,
+> leading to a number of potential problems.
+> 
+> Intermediate levels of table may by freed during memory hot-remove, or when
+> installing a huge mapping in the vmalloc region. To avoid racing with these
+> cases, take the memory hotplug lock when walking the kernel page table.
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-On 5/14/19 9:21 AM, Peter Zijlstra wrote:
-> On Mon, May 13, 2019 at 07:02:30PM -0700, Andy Lutomirski wrote:
-> 
->> This sounds like a great use case for static_call().  PeterZ, do you
->> suppose we could wire up static_call() with the module infrastructure
->> to make it easy to do "static_call to such-and-such GPL module symbol
->> if that symbol is in a loaded module, else nop"?
-> 
-> You're basically asking it to do dynamic linking. And I suppose that is
-> technically possible.
-> 
-> However, I'm really starting to think kvm (or at least these parts of it
-> that want to play these games) had better not be a module anymore.
-> 
+Can we please move this after the next patch (which addresses the huge
+vmap case), and change the last paragraph to:
 
-Maybe we can use an atomic notifier (e.g. page_fault_notifier)?
+  Intermediate levels of table may by freed during memory hot-remove,
+  which will be enabled by a subsequent patch. To avoid racing with
+  this, take the memory hotplug lock when walking the kernel page table.
 
-alex.
+With that, this looks good to me.
+
+Thanks,
+Mark.
+
+> ---
+>  arch/arm64/mm/ptdump_debugfs.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+> index 064163f..80171d1 100644
+> --- a/arch/arm64/mm/ptdump_debugfs.c
+> +++ b/arch/arm64/mm/ptdump_debugfs.c
+> @@ -7,7 +7,10 @@
+>  static int ptdump_show(struct seq_file *m, void *v)
+>  {
+>  	struct ptdump_info *info = m->private;
+> +
+> +	get_online_mems();
+>  	ptdump_walk_pgd(m, info);
+> +	put_online_mems();
+>  	return 0;
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(ptdump);
+> -- 
+> 2.7.4
+> 
