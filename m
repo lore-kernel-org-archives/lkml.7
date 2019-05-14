@@ -2,126 +2,152 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926FFC04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CD3C04AAA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638762085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDzV41z7"
+	by mail.kernel.org (Postfix) with ESMTP id E96B62085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557799673;
+	bh=194cYzJSEWelAQdAamSQ+HGCjU5m9KnJ95hz0wnBDOw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=f6CRMG4JdwIqaf2zniNurdfnZGCuA27G+2kQ2B40Bcp1Y1sMePI623r6tVc5LNl1o
+	 3V0rKmUTIwvN2LB5Pah2Ql5MF4LDJDhvcy4n9EjzK5gmaYmN+Bf7qrZCXxjmCJK6wh
+	 JY7Hl8VcMpophGHmGTNQ8Caa9Y4bmi3SzUJQpz/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbfENCHf (ORCPT
+        id S1726727AbfENCHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 22:07:35 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42941 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfENCHf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 22:07:35 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x15so7389940pln.9;
-        Mon, 13 May 2019 19:07:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TUW58sFUl5sYOk3396X1MJdln3VeH0EXozxImmU59vw=;
-        b=gDzV41z701QnCrQ26V0bq4z6xWTHENKXtePpErSx1cTFZAEnR170Cb3GIh6X6MaWvS
-         P86mF/lBRPJUDD0wchUSehkIB5xvrpeuqlBa3x2Vho248Nn/RkVDrf1bXASF+h6UKMN4
-         RJw+91n48gNTDuIgc4nbPEe+W1cxRXTb+DWKeIovw8s8/EnknXE17L/40Sd6A2Ubbr5c
-         mWCcTIy0CdYWj6taw53+CmqUKawbwZcEhJArjMmEt6X9vDDg49TOvQtWuiBMVFdi+mON
-         IPNk5ELNC1d9yajDGEoP1a7uD/eSigryhXScvyM69k3K7CMtduUWmvSmvMIQ6zmk60J0
-         pPcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TUW58sFUl5sYOk3396X1MJdln3VeH0EXozxImmU59vw=;
-        b=OQXl/Ci0QDUwGmKmNrDFYUJTh+xKTkbDdO/K8RHRF3J8ccuola8H9M8lORL5vCvmby
-         AL6SP7t760ZYIajguGOoMoRZEAgGAAy2lgfEy5rRNHOAI9Cp9MGNdSKCzNtdIW95pbo1
-         hmKz/4DdnnSmXTtIOy47PCrbbV/aDMGYpTgJHsB+24fV62hpO7h/ayZ+hxyv3Th8A0oS
-         qFxgmnWZQdqHhDTrfKCU5I1KuDmO6ADOcMWyx85fqT8bdhIW09gsKIoLugaFXxCEgXjJ
-         m1UIizGv1sNmTpWwCOXiJyySqCQjh029Q5wWo9c4kKocvsuCK16dwRZ2+wGc9dUgNe8L
-         Z7mw==
-X-Gm-Message-State: APjAAAXYuEx1TTifdK+TLYFbepgfkJ0cYCKzxslQC+6+Y4ixXft3i/xi
-        5kbk6GwLJPO/wmepgsizJhs=
-X-Google-Smtp-Source: APXvYqyCY0Kzi1kXb0vmv87aGVQQILnCJJ8qRJqL49F8s8Dds7JPB7O9ESBZIffOVdyOAeqexsF5/w==
-X-Received: by 2002:a17:902:108a:: with SMTP id c10mr35439629pla.48.1557799654316;
-        Mon, 13 May 2019 19:07:34 -0700 (PDT)
-Received: from localhost ([39.7.55.172])
-        by smtp.gmail.com with ESMTPSA id v64sm19993908pfv.106.2019.05.13.19.07.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 19:07:33 -0700 (PDT)
-Date:   Tue, 14 May 2019 11:07:30 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        'christophe leroy' <christophe.leroy@c-s.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190514020730.GA651@jagdpanzerIV>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+        Mon, 13 May 2019 22:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726547AbfENCHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 22:07:51 -0400
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F71E21726
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 02:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557799669;
+        bh=194cYzJSEWelAQdAamSQ+HGCjU5m9KnJ95hz0wnBDOw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AWYLnYQXqecynVt8YdrwsS+Xfe7b6aCvx26D2JOr6eOFfLp34kg8+aoO6xKlIGs+n
+         if+Vo2q8fZoCeysFzcDiUsbbBG2udM5TCiMj02dJ8dNOct9/ZqVispF3WQeOuagvIo
+         NudBGjsk7KLG9PNcK2KUdJ8z3KuRVee+3Ctp2/cA=
+Received: by mail-wm1-f44.google.com with SMTP id y3so1121504wmm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 19:07:49 -0700 (PDT)
+X-Gm-Message-State: APjAAAVjQxWECBaA9K+APa6fDwHZEDZ7NbHDdKO1zBfA4q20k3QgjsBd
+        B2f8LK7Y4gG0rHJGzfrBXsXIxV6NNMRgjenlHPVUJg==
+X-Google-Smtp-Source: APXvYqzLSJXQVwKfkewbLcE7v0r0bhXbJZ1wHCUTLEQOaL5ypCYuhmil6I3fNQ+XQ6Dh66OKap38pkC6fcXCiEHQ6uk=
+X-Received: by 2002:a7b:c844:: with SMTP id c4mr6663648wml.108.1557799667844;
+ Mon, 13 May 2019 19:07:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com> <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+In-Reply-To: <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 13 May 2019 19:07:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrXK8+tUxNA=iVDse31nFRZyiQYvcrQxV1JaidhnL4GC0w@mail.gmail.com>
+Message-ID: <CALCETrXK8+tUxNA=iVDse31nFRZyiQYvcrQxV1JaidhnL4GC0w@mail.gmail.com>
+Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/13/19 14:42), Petr Mladek wrote:
-> > The "(null)" is good enough by itself and already an established
-> > practice..
-> 
-> (efault) made more sense with the probe_kernel_read() that
-> checked wide range of addresses. Well, I still think that
-> it makes sense to distinguish a pure NULL. And it still
-> used also for IS_ERR_VALUE().
+On Mon, May 13, 2019 at 2:09 PM Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 13 May 2019, at 21:17, Andy Lutomirski <luto@kernel.org> wrote:
+> >
+> >> I expect that the KVM address space can eventually be expanded to incl=
+ude
+> >> the ioctl syscall entries. By doing so, and also adding the KVM page t=
+able
+> >> to the process userland page table (which should be safe to do because=
+ the
+> >> KVM address space doesn't have any secret), we could potentially handl=
+e the
+> >> KVM ioctl without having to switch to the kernel pagetable (thus effec=
+tively
+> >> eliminating KPTI for KVM). Then the only overhead would be if a VM-Exi=
+t has
+> >> to be handled using the full kernel address space.
+> >>
+> >
+> > In the hopefully common case where a VM exits and then gets re-entered
+> > without needing to load full page tables, what code actually runs?
+> > I'm trying to understand when the optimization of not switching is
+> > actually useful.
+> >
+> > Allowing ioctl() without switching to kernel tables sounds...
+> > extremely complicated.  It also makes the dubious assumption that user
+> > memory contains no secrets.
+>
+> Let me attempt to clarify what we were thinking when creating this patch =
+series:
+>
+> 1) It is never safe to execute one hyperthread inside guest while it=E2=
+=80=99s sibling hyperthread runs in a virtual address space which contains =
+secrets of host or other guests.
+> This is because we assume that using some speculative gadget (such as hal=
+f-Spectrev2 gadget), it will be possible to populate *some* CPU core resour=
+ce which could then be *somehow* leaked by the hyperthread running inside g=
+uest. In case of L1TF, this would be data populated to the L1D cache.
+>
+> 2) Because of (1), every time a hyperthread runs inside host kernel, we m=
+ust make sure it=E2=80=99s sibling is not running inside guest. i.e. We mus=
+t kick the sibling hyperthread outside of guest using IPI.
+>
+> 3) From (2), we should have theoretically deduced that for every #VMExit,=
+ there is a need to kick the sibling hyperthread also outside of guest unti=
+l the #VMExit is completed. Such a patch series was implemented at some poi=
+nt but it had (obviously) significant performance hit.
+>
+>
+4) The main goal of this patch series is to preserve (2), but to avoid
+the overhead specified in (3).
+>
+> The way this patch series achieves (4) is by observing that during the ru=
+n of a VM, most #VMExits can be handled rather quickly and locally inside K=
+VM and doesn=E2=80=99t need to reference any data that is not relevant to t=
+his VM or KVM code. Therefore, if we will run these #VMExits in an isolated=
+ virtual address space (i.e. KVM isolated address space), there is no need =
+to kick the sibling hyperthread from guest while these #VMExits handlers ru=
+n.
 
-Wouldn't anything within first PAGE_SIZE bytes be reported as
-a NULL deref?
+Thanks!  This clarifies a lot of things.
 
-       char *p = (char *)(PAGE_SIZE - 2);
-       *p = 'a';
+> The hope is that the very vast majority of #VMExit handlers will be able =
+to completely run without requiring to switch to full address space. Theref=
+ore, avoiding the performance hit of (2).
+> However, for the very few #VMExits that does require to run in full kerne=
+l address space, we must first kick the sibling hyperthread outside of gues=
+t and only then switch to full kernel address space and only once all hyper=
+threads return to KVM address space, then allow then to enter into guest.
 
-gives
-
- kernel: BUG: kernel NULL pointer dereference, address = 0000000000000ffe
- kernel: #PF: supervisor-privileged write access from kernel code
- kernel: #PF: error_code(0x0002) - not-present page
-
-
-And I like Steven's "(fault)" idea.
-How about this:
-
-	if ptr < PAGE_SIZE		-> "(null)"
-	if IS_ERR_VALUE(ptr)		-> "(fault)"
-
-	-ss
+What exactly does "kick" mean in this context?  It sounds like you're
+going to need to be able to kick sibling VMs from extremely atomic
+contexts like NMI and MCE.
