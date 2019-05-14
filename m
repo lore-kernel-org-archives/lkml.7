@@ -2,399 +2,435 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15419C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E2AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C830D206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC03206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:43:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a8jo+a8v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oYzeg0Bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfENGkE (ORCPT
+        id S1726338AbfENGnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:40:04 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37196 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbfENGkD (ORCPT
+        Tue, 14 May 2019 02:43:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43134 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfENGnm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:40:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p15so7728214pll.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:40:01 -0700 (PDT)
+        Tue, 14 May 2019 02:43:42 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u27so10901582lfg.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:43:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NkYMLvhEglL+mWSXYDFgGZ/fAEU46IwtjPqa+IId2OY=;
-        b=a8jo+a8vql6eDNS0Pt+hPvKD34/MxWMZ4IlRsrW6E36WFcR+Sb1Z7cT893hFVgSYQK
-         M9m3Az/P7qAU9sWtxkDVhO49jX2TT4cPMjENj3Fm377rhC5/JUDPJwlhYpMQ2ACKAS2F
-         ewL8St3clCy8u4N+WXem9hAf6ABL4DV6VWDscXJeBhc6AJEVbjfZ+mlW6OO4TEvT/pZp
-         KHgCp0tN0/Borye3yeDweT9Jor1BlOfVpkT0bTlR6dyitqJgJOBo1URYIeZi/Vx1s/mp
-         TQrzyAlCZum4LZTjdk0znHbdgdeHc5/5DbEOM99T9LEOfgG8SApDnK/whRCyyzrdOumy
-         n4pg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IOwZgY53uo9afNXAbNOCrN584Khryn8hDev82i6sR+E=;
+        b=oYzeg0BqozEIMz4LqVVGXYfy+5nRClDTJ5TH9aMzNZxq0k7PgL47WgV0b/j0UFfoiY
+         SGb/8Wh9wb9bD97KwVndEUwLmsbN0yW0UTavW6oMbPOXa6jw9JamktHALZSINF2df8Kj
+         INIBuvgZr3DB89IcLkf+ujbBxZcfkKcXGs5IYGaTrKlzlhzx8as+610BJbAI57hZULGa
+         R4tZJuaGZkEx7YYh9Nad8Y40AEvWGnXWwPUjzvQkTl0VEowH8PL70KHowiAJIfNZMZMl
+         MSN7n88YQ3ipB93iZyjAX+wDb7EOp0JDscNpuLN884RAhETUvAwW2thaSAc5UU9C/VEr
+         KmLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NkYMLvhEglL+mWSXYDFgGZ/fAEU46IwtjPqa+IId2OY=;
-        b=UMOE9ZGDWtZjP4OK2Wv5gaJ2dfAoRiok1WXZiPQ+f9R0Q4jBEa7m4HbE7C8RNhq4Eu
-         zSQfkFMUI/0IWFCXSRXinh299oeRy9DS0OaxhzttTXwvYzr9yKcueD0554mJS6IP+2mZ
-         2zzGYRkCnzKHWxCj7Cwlx0sVa5YVnMrpbOOPl5zZAXdtyVdWZeIkmczNazVE8RABrS4W
-         Ux1DX7IjJXuvMkT3RiXK7jD04+Lp9iJhU/FIj3kI+abzH3RLFi3P16ulDpfe9AtjOyTK
-         4r+y/p2079GAJ28/01TS9igMrclDVFmdT21YmnfN1jq3MoqgGJtd3F3dWBlWWPeZvu66
-         7J7A==
-X-Gm-Message-State: APjAAAVYxv5hLPsXiag8Q6zCGLBsZd+arKdL2El6QAI+N32Lx9uqSinD
-        KE1F8rJH2bzD3ktz0gNMqOsTRg==
-X-Google-Smtp-Source: APXvYqy1YYJ+o/VqT2Zh+kuGsAE587Bfp9GL1Je8qpSATHzk2CJmNojFfxDYJOLHONYyM7pct7l/Pw==
-X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr31634180plb.108.1557816000053;
-        Mon, 13 May 2019 23:40:00 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id d85sm5109087pfd.94.2019.05.13.23.39.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 23:39:58 -0700 (PDT)
-Date:   Mon, 13 May 2019 23:39:53 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Knut Omang <knut.omang@oracle.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Bird, Timothy" <Tim.Bird@sony.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jeff Dike <jdike@addtoit.com>, Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190514063953.GB181462@google.com>
-References: <20190509233043.GC20877@mit.edu>
- <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
- <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
- <a1b88d5add15d43de0468c32d9a2427629337abb.camel@oracle.com>
- <CAKMK7uFd1xUx8u3xWLwifVSq4OEnMO4S-m0hESe68UzONXnMFg@mail.gmail.com>
- <CAFd5g47Fvafwgh15JNfxSBRf5qqG2z+V+XGAB2cJtNnHFTiFfQ@mail.gmail.com>
- <1781164863be8d21a7e1890ae6dfee9be101d0a0.camel@oracle.com>
- <CAFd5g46fn4nB-nd27-qj8BoC2h-dTCa=WMGoFNhgXDXY0xOdeg@mail.gmail.com>
- <ccec4818-1b9d-2554-e0e4-433eba659c8e@gmail.com>
- <b3dd7e40149184f5823b66764a20dee3c9905ed1.camel@oracle.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IOwZgY53uo9afNXAbNOCrN584Khryn8hDev82i6sR+E=;
+        b=PXwjx4CdCwPvPYDqna1xAHhdYvNCkosKXNn3JjpUKVXJ57GPN0kiUBmAz5OOnuCRK+
+         MAKLJw3yE4iPXSffHTFDbLdILZAzx9Pquq9fXjznT8z5uVNJh0l3cH+tqpxioEu4bUKO
+         Vr9HTCJxtOwDxwdNZa16w8nTpiVvKuUiFRES0+xRhbY3/9xENyuC4d9b5VB1Ye9ywxit
+         G4jbAwRzl3/RFGz/S7RD33tN50CqNlCrK9If7VkmBw7/Ndh7b7RpJB2SsWuZ1q1RkqRM
+         xRb5X1hvP3LcuOAYfaFwhVzrFwkPHVUIUTgxgdysu5Um0Ds6plXEtFGYOOBq3/6r4xBN
+         RKRQ==
+X-Gm-Message-State: APjAAAXwzPStbbiTEa3RVin+ngq26K1tknh8DOPzu00xdtUCUIE16y8s
+        nXJ1bKXLYqZJ+MuJvtZ8KS7Tqg==
+X-Google-Smtp-Source: APXvYqw0qQMTauij/Oo/ropk6BAlzxAgoBgwtfrwjlTkx5VWmps+w3jDb8BBy/DMVTtPFVWV3FhbFg==
+X-Received: by 2002:ac2:5612:: with SMTP id v18mr1119673lfd.15.1557816219258;
+        Mon, 13 May 2019 23:43:39 -0700 (PDT)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id o7sm3478877lfl.13.2019.05.13.23.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 May 2019 23:43:38 -0700 (PDT)
+Subject: Re: [RFC V2 10/11] interconnect: mediatek: Add mt8183 interconnect
+ provider driver
+To:     Henry Chen <henryc.chen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Fan Chen <fan.chen@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <1556614265-12745-1-git-send-email-henryc.chen@mediatek.com>
+ <1556614265-12745-11-git-send-email-henryc.chen@mediatek.com>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <b8db4f70-4b95-5a98-38b4-9990bae023b4@linaro.org>
+Date:   Tue, 14 May 2019 09:43:36 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3dd7e40149184f5823b66764a20dee3c9905ed1.camel@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556614265-12745-11-git-send-email-henryc.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 11, 2019 at 08:17:47AM +0200, Knut Omang wrote:
-> On Fri, 2019-05-10 at 15:18 -0700, Frank Rowand wrote:
-> > On 5/10/19 1:54 PM, Brendan Higgins wrote:
-> > > On Fri, May 10, 2019 at 5:13 AM Knut Omang <knut.omang@oracle.com> wrote:
-> > >> On Fri, 2019-05-10 at 03:23 -0700, Brendan Higgins wrote:
-> > >>>> On Fri, May 10, 2019 at 7:49 AM Knut Omang <knut.omang@oracle.com> wrote:
-> > >>>>>
-> > >>>>> On Thu, 2019-05-09 at 22:18 -0700, Frank Rowand wrote:
-> > >>>>>> On 5/9/19 4:40 PM, Logan Gunthorpe wrote:
-> > >>>>>>>
-> > >>>>>>>
-> > >>>>>>> On 2019-05-09 5:30 p.m., Theodore Ts'o wrote:
-> > >>>>>>>> On Thu, May 09, 2019 at 04:20:05PM -0600, Logan Gunthorpe wrote:
-> > >>>>>>>>>
-> > >>>>>>>>> The second item, arguably, does have significant overlap with kselftest.
-> > >>>>>>>>> Whether you are running short tests in a light weight UML environment or
-> > >>>>>>>>> higher level tests in an heavier VM the two could be using the same
-> > >>>>>>>>> framework for writing or defining in-kernel tests. It *may* also be valuable
-> > >>>>>>>>> for some people to be able to run all the UML tests in the heavy VM
-> > >>>>>>>>> environment along side other higher level tests.
-> > >>>>>>>>>
-> > >>>>>>>>> Looking at the selftests tree in the repo, we already have similar items to
-> > >>>>>>>>> what Kunit is adding as I described in point (2) above. kselftest_harness.h
-> > >>>>>>>>> contains macros like EXPECT_* and ASSERT_* with very similar intentions to
-> > >>>>>>>>> the new KUNIT_EXECPT_* and KUNIT_ASSERT_* macros.
-> > >>>>>>>>>
-> > >>>>>>>>> However, the number of users of this harness appears to be quite small. Most
-> > >>>>>>>>> of the code in the selftests tree seems to be a random mismash of scripts
-> > >>>>>>>>> and userspace code so it's not hard to see it as something completely
-> > >>>>>>>>> different from the new Kunit:
-> > >>>>>>>>>
-> > >>>>>>>>> $ git grep --files-with-matches kselftest_harness.h *
-> > >>>>>>>>
-> > >>>>>>>> To the extent that we can unify how tests are written, I agree that
-> > >>>>>>>> this would be a good thing.  However, you should note that
-> > >>>>>>>> kselftest_harness.h is currently assums that it will be included in
-> > >>>>>>>> userspace programs.  This is most obviously seen if you look closely
-> > >>>>>>>> at the functions defined in the header files which makes calls to
-> > >>>>>>>> fork(), abort() and fprintf().
-> > >>>>>>>
-> > >>>>>>> Ah, yes. I obviously did not dig deep enough. Using kunit for
-> > >>>>>>> in-kernel tests and kselftest_harness for userspace tests seems like
-> > >>>>>>> a sensible line to draw to me. Trying to unify kernel and userspace
-> > >>>>>>> here sounds like it could be difficult so it's probably not worth
-> > >>>>>>> forcing the issue unless someone wants to do some really fancy work
-> > >>>>>>> to get it done.
-> > >>>>>>>
-> > >>>>>>> Based on some of the other commenters, I was under the impression
-> > >>>>>>> that kselftests had in-kernel tests but I'm not sure where or if they
-> > >>>>>>> exist.
-> > >>>>>>
-> > >>>>>> YES, kselftest has in-kernel tests.  (Excuse the shouting...)
-> > >>>>>>
-> > >>>>>> Here is a likely list of them in the kernel source tree:
-> > >>>>>>
-> > >>>>>> $ grep module_init lib/test_*.c
-> > >>>>>> lib/test_bitfield.c:module_init(test_bitfields)
-> > >>>>>> lib/test_bitmap.c:module_init(test_bitmap_init);
-> > >>>>>> lib/test_bpf.c:module_init(test_bpf_init);
-> > >>>>>> lib/test_debug_virtual.c:module_init(test_debug_virtual_init);
-> > >>>>>> lib/test_firmware.c:module_init(test_firmware_init);
-> > >>>>>> lib/test_hash.c:module_init(test_hash_init);  /* Does everything */
-> > >>>>>> lib/test_hexdump.c:module_init(test_hexdump_init);
-> > >>>>>> lib/test_ida.c:module_init(ida_checks);
-> > >>>>>> lib/test_kasan.c:module_init(kmalloc_tests_init);
-> > >>>>>> lib/test_list_sort.c:module_init(list_sort_test);
-> > >>>>>> lib/test_memcat_p.c:module_init(test_memcat_p_init);
-> > >>>>>> lib/test_module.c:static int __init test_module_init(void)
-> > >>>>>> lib/test_module.c:module_init(test_module_init);
-> > >>>>>> lib/test_objagg.c:module_init(test_objagg_init);
-> > >>>>>> lib/test_overflow.c:static int __init test_module_init(void)
-> > >>>>>> lib/test_overflow.c:module_init(test_module_init);
-> > >>>>>> lib/test_parman.c:module_init(test_parman_init);
-> > >>>>>> lib/test_printf.c:module_init(test_printf_init);
-> > >>>>>> lib/test_rhashtable.c:module_init(test_rht_init);
-> > >>>>>> lib/test_siphash.c:module_init(siphash_test_init);
-> > >>>>>> lib/test_sort.c:module_init(test_sort_init);
-> > >>>>>> lib/test_stackinit.c:module_init(test_stackinit_init);
-> > >>>>>> lib/test_static_key_base.c:module_init(test_static_key_base_init);
-> > >>>>>> lib/test_static_keys.c:module_init(test_static_key_init);
-> > >>>>>> lib/test_string.c:module_init(string_selftest_init);
-> > >>>>>> lib/test_ubsan.c:module_init(test_ubsan_init);
-> > >>>>>> lib/test_user_copy.c:module_init(test_user_copy_init);
-> > >>>>>> lib/test_uuid.c:module_init(test_uuid_init);
-> > >>>>>> lib/test_vmalloc.c:module_init(vmalloc_test_init)
-> > >>>>>> lib/test_xarray.c:module_init(xarray_checks);
-> > >>>>>>
-> > >>>>>>
-> > >>>>>>> If they do exists, it seems like it would make sense to
-> > >>>>>>> convert those to kunit and have Kunit tests run-able in a VM or
-> > >>>>>>> baremetal instance.
-> > >>>>>>
-> > >>>>>> They already run in a VM.
-> > >>>>>>
-> > >>>>>> They already run on bare metal.
-> > >>>>>>
-> > >>>>>> They already run in UML.
-> > >>>>>>
-> > >>>>>> This is not to say that KUnit does not make sense.  But I'm still trying
-> > >>>>>> to get a better description of the KUnit features (and there are
-> > >>>>>> some).
-> > >>>>>
-> > >>>>> FYI, I have a master student who looks at converting some of these to KTF, such as
-> > >>> for
-> > >>>>> instance the XArray tests, which lended themselves quite good to a semi-automated
-> > >>>>> conversion.
-> > >>>>>
-> > >>>>> The result is also a somewhat more compact code as well as the flexibility
-> > >>>>> provided by the Googletest executor and the KTF frameworks, such as running
-> > selected
-> > >>>>> tests, output formatting, debugging features etc.
-> > >>>>
-> > >>>> So is KTF already in upstream? Or is the plan to unify the KTF and
-> > >>>
-> > >>> I am not certain about KTF's upstream plans, but I assume that Knut
-> > >>> would have CC'ed me on the thread if he had started working on it.
-> > >>
-> > >> You are on the Github watcher list for KTF?
-> > > 
-> > > Yep! I have been since LPC in 2017.
-> > > 
-> > >> Quite a few of the commits there are preparatory for a forthcoming kernel patch set.
-> > >> I'll of course CC: you on the patch set when we send it to the list.
-> > > 
-> > > Awesome! I appreciate it.
-> > > 
-> > >>
-> > >>>> Kunit in-kernel test harnesses? Because there's tons of these
-> > >>>
-> > >>> No, no plan. Knut and I talked about this a good while ago and it
-> > >>> seemed that we had pretty fundamentally different approaches both in
-> > >>> terms of implementation and end goal. Combining them seemed pretty
-> > >>> infeasible, at least from a technical perspective. Anyway, I am sure
-> > >>> Knut would like to give him perspective on the matter and I don't want
-> > >>> to say too much without first giving him a chance to chime in on the
-> > >>> matter.
-> > >>
-> > >> I need more time to study KUnit details to say, but from a 10k feet perspective:
-> > >> I think at least there's a potential for some API unification, in using the same
-> > macro
-> > >> names. How about removing the KUNIT_ prefix to the test macros ;-) ?
-> > > 
-> > > Heh, heh. That's actually the way I had it in the earliest versions of
-> > > KUnit! But that was pretty much the very first thing everyone
-> > > complained about. I think I went from no prefix (like you are
-> > > suggesting) to TEST_* before the first version of the RFC at the
-> > > request of several people I was kicking the idea around with, and then
-> > > I think I was asked to go from TEST_* to KUNIT_* in the very first
-> > > revision of the RFC.
-> > > 
-> > > In short, I am sympathetic to your suggestion, but I think that is
-> > > non-negotiable at this point. The community has a clear policy in
-> > > place on the matter, and at this point I would really prefer not to
-> > > change all the symbol names again.
-> > 
-> > This would not be the first time that a patch submitter has been
-> > told "do B instead of A" for version 1, then told "do C instead of
-> > B" for version 2, then told "do A instead of C" for the final version.
-> > 
-> > It sucks, but it happens.
+Hi Henry,
 
-Sure, I have been there before, but I thought those original opinions
-were based on a pretty well established convention. Also, I don't think
-those original opinions have changed. If they have, please chime in and
-correct me.
-
-> Sorry, I must have overlooked the B instead of A instance - otherwise 
-> I would have objected against it - in addition to the recognizability 
-> and portability issue I think it is important that these primitives are
-> not unnecessary long since they will be written a *lot* of times if things go 
-> our way.
-
-I get that. That is why I thought I might have been worthy of an
-exception. It is definitely easier to write EXPECT_EQ(...) than
-KUNIT_EXPECT_EQ(...) or TEST_EXPECT_EQ(...), but no one else seemed to
-agree in the past.
-
-Even now, it is only you (and maybe Frank?) telling me to change it; I
-would like to maybe hear Shuah, Kees, or Greg chime in on this before I
-go about actually chaning it back, as I distinctly remember each of them
-telling me that I should go with KUNIT_*.
-
-> And the reason for using unique names elsewhere is to be able to co-exist with
-> other components with the same needs. In the case of tests, I believe they are 
-
-That's the policy I was talking about.
-
-> in a different category, they are not supposed to be part of production kernels,
-> and we want them to be used all over, that should warrant having the ASSERT_ and EXPECT_
-> prefixes "reserved" for the purpose, so I would urge some pragmatism here!
-
-I don't disagree. Again, this is what I initially proposed, but no one
-agreed with me on this point.
-
-I am not saying no. Nevertheless, this is a pretty consistently applied
-pattern for new stuff, and I would really prefer not to make waves on
-something that really doesn't matter all that much.
-
-So like I said, if we can get some more discussion on this and it seems
-like broad consensus says we can reserve ASSERT_* and EXPECT_*, then I
-will go along with it.
-
-> > As an aside, can you point to where the "clear policy in place" is
-> > documented, and what the policy is?
-
-Global namespacing policy that Knut mentioned above.
-
-> > 
-> > -Frank
-> > 
-> > 
-> > >> That would make the names shorter, saving typing when writing tests, and storage ;-)
-> > >> and also make the names more similar to KTF's, and those of user land unit test
-> > > 
-> > > You mean the Googletest/Googlemock expectations/assertions?
-> > > 
-> > > It's a great library (with not so great a name), but unfortunately it
-> > > is written in C++, which I think pretty much counts it out here.
+On 4/30/19 11:51, Henry Chen wrote:
+> Introduce Mediatek MT8183 specific provider driver using the
+> interconnect framework.
 > 
-> Using a similar syntax is a good thing, since it makes it easier for people
-> who write tests in user land frameworks to contribute to the kernel tests.
-> And if, lets say, someone later comes up with a way to run the KUnit tests in "real" 
-> user land within Googletest ;-) then less editing would be needed..
+> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> ---
+>  drivers/interconnect/Kconfig           |   1 +
+>  drivers/interconnect/Makefile          |   1 +
+>  drivers/interconnect/mediatek/Kconfig  |  13 ++
+>  drivers/interconnect/mediatek/Makefile |   5 +
+>  drivers/interconnect/mediatek/mt8183.c | 223 +++++++++++++++++++++++++++++++++
+>  5 files changed, 243 insertions(+)
+>  create mode 100644 drivers/interconnect/mediatek/Kconfig
+>  create mode 100644 drivers/interconnect/mediatek/Makefile
+>  create mode 100644 drivers/interconnect/mediatek/mt8183.c
 > 
-> > >> frameworks? Also it will make it possible to have functions compiling both with KTF
-> > and
-> > >> KUnit, facilitating moving code between the two.
-> > > 
-> > > I think that would be cool, but again, I don't think this will be
-> > > possible with Googletest/Googlemock.
-> 
-> I was thinking of moves between KUnit tests and KTF tests, kernel code only.
-> Some test functions may easily be usable both in a "pure" mocking environment
-> and in an integrated setting with hardware/driver/userspace dependencies.
+> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+> index 07a8276..ac41ea6 100644
+> --- a/drivers/interconnect/Kconfig
+> +++ b/drivers/interconnect/Kconfig
+> @@ -11,5 +11,6 @@ menuconfig INTERCONNECT
+>  if INTERCONNECT
+>  
+>  source "drivers/interconnect/qcom/Kconfig"
+> +source "drivers/interconnect/mediatek/Kconfig"
+>  
+>  endif
+> diff --git a/drivers/interconnect/Makefile b/drivers/interconnect/Makefile
+> index 28f2ab0..253f24a3 100644
+> --- a/drivers/interconnect/Makefile
+> +++ b/drivers/interconnect/Makefile
+> @@ -4,3 +4,4 @@ icc-core-objs				:= core.o
+>  
+>  obj-$(CONFIG_INTERCONNECT)		+= icc-core.o
+>  obj-$(CONFIG_INTERCONNECT_QCOM)		+= qcom/
+> +obj-$(CONFIG_INTERCONNECT_MTK)		+= mediatek/
+> diff --git a/drivers/interconnect/mediatek/Kconfig b/drivers/interconnect/mediatek/Kconfig
+> new file mode 100644
+> index 0000000..0686494
+> --- /dev/null
+> +++ b/drivers/interconnect/mediatek/Kconfig
+> @@ -0,0 +1,13 @@
+> +config INTERCONNECT_MTK
+> +	bool "Mediatek Network-on-Chip interconnect drivers"
+> +	depends on ARCH_MEDIATEK
+> +	help
+> +	  Support for Mediatek's Network-on-Chip interconnect hardware.
+> +
+> +config INTERCONNECT_MTK_MT8183
+> +	tristate "Mediatek MT8183 interconnect driver"
+> +	depends on INTERCONNECT_MTK
+> +	depends on (MTK_DVFSRC && OF)
+> +	help
+> +	  This is a driver for the Mediatek Network-on-Chip on mt8183-based
+> +	  platforms.
+> diff --git a/drivers/interconnect/mediatek/Makefile b/drivers/interconnect/mediatek/Makefile
+> new file mode 100644
+> index 0000000..a39ceee
+> --- /dev/null
+> +++ b/drivers/interconnect/mediatek/Makefile
+> @@ -0,0 +1,5 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +mtk-mt8183-objs			:= mt8183.o
+> +
+> +obj-$(CONFIG_INTERCONNECT_MTK_MT8183) += mtk-mt8183.o
+> \ No newline at end of file
+> diff --git a/drivers/interconnect/mediatek/mt8183.c b/drivers/interconnect/mediatek/mt8183.c
+> new file mode 100644
+> index 0000000..38ffe0b
+> --- /dev/null
+> +++ b/drivers/interconnect/mediatek/mt8183.c
+> @@ -0,0 +1,223 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + *
+> + */
+> +
+> +#include <dt-bindings/interconnect/mtk,mt8183.h>
+> +#include <linux/device.h>
+> +#include <linux/interconnect.h>
 
-Speaking for KUnit, you are right. I got KUnit working on other
-architectures a couple revisions ago (apparently I didn't advertise that
-well enough).
+This is not needed.
 
-> > >>
-> > >> Also the string stream facilities of KUnit looks interesting to share.
-> > > 
-> > > I am glad you think so!
-> > > 
-> > > If your biggest concern on my side is test macro names (which I think
-> > > is a no-go as I mentioned above), I think we should be in pretty good
-> > > shape once you are ready to move forward. Besides, I have a lot more
-> > > KUnit patches coming after this: landing this patchset is just the
-> > > beginning. So how about we keep moving forward on this patchset?
-> 
-> I think the importance of a well thought through 
-> test API definition is not to be underestimated 
+> +#include <linux/interconnect-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <soc/mediatek/mtk_dvfsrc.h>
+> +
+> +#define MT8183_MAX_LINKS	6
+> +
+> +/**
+> + * struct mtk_icc_node - Mediatek specific interconnect nodes
+> + * @name: the node name used in debugfs
+> + * @ep: true if the node is an end point.
+> + * @id: a unique node identifier
+> + * @links: an array of nodes where we can go next while traversing
+> + * @num_links: the total number of @links
+> + * @buswidth: width of the interconnect between a node and the bus
 
-I agree. That is why I am saying that I think we are in good shape if we
-are only arguing about the name.
+Maybe mention the units?
 
-> - the sooner we can unify and establish a common base, the better, 
-> I think.
+> + * @sum_avg: current sum aggregate value of all avg bw requests
+> + * @max_peak: current max aggregate value of all peak bw requests
 
-Again, I agree. That is what I am trying to do here.
+units?
 
-> 
-> My other concern is, as mentioned earlier, whether UML is really that 
-> different from just running in a VM wrt debugging support, and that 
-> there exists a better approach based on automatically generating 
-> an environment where the test code and the source under test 
-> can be compiled in a normal user land program. But it seems 
-> there are enough clients of the UML approach to justify it 
-> as a lightweight entry. We want to make it easy and inexcusable 
-> not to test the code, having a low bar of entry is certainly good.
+> + */
+> +struct mtk_icc_node {
+> +	unsigned char *name;
+> +	bool ep;
+> +	u16 id;
+> +	u16 links[MT8183_MAX_LINKS];
+> +	u16 num_links;
+> +	u16 buswidth;
+> +	u64 sum_avg;
+> +	u64 max_peak;
+> +};
+> +
+> +struct mtk_icc_desc {
+> +	struct mtk_icc_node **nodes;
+> +	size_t num_nodes;
+> +};
+> +
+> +#define DEFINE_MNODE(_name, _id, _buswidth, _ep, _numlinks, ...)	\
 
-Yep.
+We can drop the _numlinks and..
 
-> Other than that, I really would need to spend some more time with 
-> the details on KUnit to verify my so far fairly 
-> shallow observations!
+> +		static struct mtk_icc_node _name = {			\
+> +		.name = #_name,						\
+> +		.id = _id,						\
+> +		.buswidth = _buswidth,					\
+> +		.ep = _ep,						\
+> +		.num_links = _numlinks,					\
 
-Are we arguing about anything other than naming schemes here? If that's
-it, we can refactor the under the hood stuff later; if we even need to
-at all.
+..just use 	.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ }))
 
-Cheers!
+> +		.links = { __VA_ARGS__ },				\
+> +}
+> +
+> +DEFINE_MNODE(ddr_emi, SLAVE_DDR_EMI, 1024, 1, 0, 0);
+> +DEFINE_MNODE(mcusys, MASTER_MCUSYS, 256, 0, 1, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(gpu, MASTER_GPU, 256, 0, 1, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(mmsys, MASTER_MMSYS, 256, 0, 1, SLAVE_DDR_EMI);
+> +DEFINE_MNODE(mm_vpu, MASTER_MM_VPU, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_disp, MASTER_MM_DISP, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_vdec, MASTER_MM_VDEC, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_venc, MASTER_MM_VENC, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_cam, MASTER_MM_CAM, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_img, MASTER_MM_IMG, 128, 0, 1, MASTER_MMSYS);
+> +DEFINE_MNODE(mm_mdp, MASTER_MM_MDP, 128, 0, 1, MASTER_MMSYS);
+> +
+> +static struct mtk_icc_node *mt8183_icc_nodes[] = {
+> +	&ddr_emi,
+> +	&mcusys,
+> +	&gpu,
+> +	&mmsys,
+> +	&mm_vpu,
+> +	&mm_disp,
+> +	&mm_vdec,
+> +	&mm_venc,
+> +	&mm_cam,
+> +	&mm_img,
+> +	&mm_mdp,
+> +};
+> +
+> +static struct mtk_icc_desc mt8183_icc = {
+> +	.nodes = mt8183_icc_nodes,
+> +	.num_nodes = ARRAY_SIZE(mt8183_icc_nodes),
+> +};
+> +
+> +static int mt8183_icc_aggregate(struct icc_node *node, u32 avg_bw,
+> +			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
+> +{
+> +	struct mtk_icc_node *in;
+> +
+> +	in = node->data;
+> +
+> +	*agg_avg += avg_bw;
+> +	*agg_peak = max_t(u32, *agg_peak, peak_bw);
+> +
+> +	in->sum_avg = *agg_avg;
+> +	in->max_peak = *agg_peak;
+> +
+> +	return 0;
+> +}
+> +
+> +static int mt8183_icc_set(struct icc_node *src, struct icc_node *dst)
+> +{
+> +	int ret = 0;
+> +	struct mtk_icc_node *node;
+> +
+> +	node = dst->data;
+> +	if (node->ep) {
+> +		pr_debug("sum_avg (%llu), max_peak (%llu)\n",
+> +			node->sum_avg, node->max_peak);
+> +		mtk_dvfsrc_send_request(src->provider->dev->parent,
+> +					MTK_DVFSRC_CMD_BW_REQUEST,
+> +					node->max_peak);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int mt8183_icc_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	const struct mtk_icc_desc *desc;
+> +	struct icc_node *node;
+> +	struct icc_onecell_data *data;
+> +	struct icc_provider *provider;
+> +	struct mtk_icc_node **mnodes;
+> +	size_t num_nodes, i, j;
+> +
+> +	desc = of_device_get_match_data(&pdev->dev);
+> +	if (!desc)
+> +		return -EINVAL;
+> +
+> +	mnodes = desc->nodes;
+> +	num_nodes = desc->num_nodes;
+> +
+> +	provider = devm_kzalloc(&pdev->dev, sizeof(*provider), GFP_KERNEL);
+> +	if (!provider)
+> +		return -ENOMEM;
+> +
+> +	data = devm_kcalloc(&pdev->dev, num_nodes, sizeof(*node), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	provider->dev = &pdev->dev;
+> +	provider->set = mt8183_icc_set;
+> +	provider->aggregate = mt8183_icc_aggregate;
+> +	provider->xlate = of_icc_xlate_onecell;
+> +	INIT_LIST_HEAD(&provider->nodes);
+> +	provider->data = data;
+> +
+> +	ret = icc_provider_add(provider);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "error adding interconnect provider\n");
+> +		return ret;
+> +	}
+> +
+> +	for (i = 0; i < num_nodes; i++) {
+> +		node = icc_node_create(mnodes[i]->id);
+> +		if (IS_ERR(node)) {
+> +			ret = PTR_ERR(node);
+> +			goto err;
+> +		}
+> +
+> +		node->name = mnodes[i]->name;
+> +		node->data = mnodes[i];
+> +		icc_node_add(node, provider);
+> +
+> +		dev_dbg(&pdev->dev, "registered node %s, num link: %d\n",
+> +			mnodes[i]->name, mnodes[i]->num_links);
+> +
+> +		/* populate links */
+> +		for (j = 0; j < mnodes[i]->num_links; j++)
+> +			icc_link_create(node, mnodes[i]->links[j]);
+> +
+> +		data->nodes[i] = node;
+> +	}
+> +	data->num_nodes = num_nodes;
+> +
+> +	platform_set_drvdata(pdev, provider);
+> +
+> +	return ret;
+
+just return 0;
+
+> +err:
+> +	list_for_each_entry(node, &provider->nodes, node_list) {
+> +		icc_node_del(node);
+> +		icc_node_destroy(node->id);
+> +	}
+> +
+> +	icc_provider_del(provider);
+> +	return ret;
+> +}
+> +
+> +static int mt8183_icc_remove(struct platform_device *pdev)
+> +{
+> +	struct icc_provider *provider = platform_get_drvdata(pdev);
+> +	struct icc_node *n;
+> +
+> +	list_for_each_entry(n, &provider->nodes, node_list) {
+> +		icc_node_del(n);
+> +		icc_node_destroy(n->id);
+> +	}
+> +
+> +	return icc_provider_del(provider);
+> +}
+> +
+> +static const struct of_device_id mt8183_icc_of_match[] = {
+> +	{ .compatible = "mediatek,mt8183-emi-icc", .data = &mt8183_icc },
+
+A separate -icc compatible should not be needed.
+
+Thanks,
+Georgi
