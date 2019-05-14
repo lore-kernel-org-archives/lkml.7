@@ -2,213 +2,134 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 844DCC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA17AC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4798520879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACC220879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:41:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kjLXVYEp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6TXiImM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726603AbfENVkw (ORCPT
+        id S1726612AbfENVlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:40:52 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:33716 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbfENVkv (ORCPT
+        Tue, 14 May 2019 17:41:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46590 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfENVlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:40:51 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 79448C1252;
-        Tue, 14 May 2019 21:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557870056; bh=UAGFHdNUHCjHtjAzwzRdYB0qbkfQ4RIc8Er0tSFwcA0=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=kjLXVYEpdY/Hmo6FGfegwROk+XHUYftiUFzPloEbEnE7aWiYLo05y0VcjSoHzgAxr
-         2TuRikAodPlxEELXNvErljSt+UsvYuv6vQ4ZTuQd4IFmY8baGKEIbrXF9EBhYN25Wm
-         qyVBpxIk9jDvA/79zMJCSRVwClnsVOioZUBkkyXnFlIVpPmqC7s0OXfLx735q/iVjI
-         ToMBJpCUYMIt43jBupah2gmuxsPCTSwNs14Mz6EqM2fKQBQ5mBLWT7IdvHBXMcAA7I
-         aXIxFOze3ojtnXgMW15bayg6mO7mp3JR5n2IXjQE+9EyyNiK7XGIBnlUxVkt0ajun4
-         afiulznKB+hzw==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id C8515A0093;
-        Tue, 14 May 2019 21:40:50 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.22]) by
- US01WXQAHTC1.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
- 14 May 2019 14:40:50 -0700
-From:   Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-To:     Anurag Kumar Vulisha <anuragku@xilinx.com>,
-        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Felipe Balbi" <balbi@kernel.org>,
-        "Claus H. Stovgaard" <cst@phaseone.com>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>
-Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Thread-Topic: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling U1
- and U2 entries
-Thread-Index: AQHVBXNg9QMnfODDx0qS+2/7kcKJQQ==
-Date:   Tue, 14 May 2019 21:40:50 +0000
-Message-ID: <30102591E157244384E984126FC3CB4F639F7681@us01wembx1.internal.synopsys.com>
-References: <1557302091-7455-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1557302091-7455-4-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <30102591E157244384E984126FC3CB4F639E9823@us01wembx1.internal.synopsys.com>
- <BL0PR02MB5587B28B6CCAC0FD790F8335A7330@BL0PR02MB5587.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639E9E8F@us01wembx1.internal.synopsys.com>
- <BYAPR02MB55913E2D6F6865202DE88514A70C0@BYAPR02MB5591.namprd02.prod.outlook.com>
- <30102591E157244384E984126FC3CB4F639EA444@us01wembx1.internal.synopsys.com>
- <BYAPR02MB5591B928413B5118142841BDA70F0@BYAPR02MB5591.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 May 2019 17:41:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so578767ljk.13;
+        Tue, 14 May 2019 14:41:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5m8suSOXj3rzby4LAxsQcSwGgLVkjYeR9u7Qjs8sKQk=;
+        b=c6TXiImMg/nQjL/P6h7bIbTERKpUGdYxZxwBURtDusJzfsXpEpr4/6fZP7DoX90W7B
+         3EbUs92KZc+z7ty0fyBfxdWZZu9h5dc0Nfjwr2nYfYX0Wx1f5uZYyDgQ2IEDxc7Xg5y6
+         A/nz3dgWLg1ARdFYUh/0tgCraZNtf90bA+I+1yXAlaUW0EPfW+zhXpiwU91nul396Noa
+         7qQXWJfFmRC5367OU7GjG2jUOkBhowtMBQI5d9/KXkFkaTaDhQtq1HJnykRHbOLS5/Tm
+         e93bIIxlm3Tqht5AHvjI4qWrglSR69H3mxvAOB7MeQAFOAZJPs2joxZIT+xXjnSj+LQk
+         XlKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5m8suSOXj3rzby4LAxsQcSwGgLVkjYeR9u7Qjs8sKQk=;
+        b=f1cLP5EWi24uLJZRNmtUsiDqDDIcbEpRN4IlG7LUV+fb6a8vynXiOiB/JLbrNqanSD
+         f+SphXr3T3X7nULm9Xyd9ns0y6kDAV9B8aKuI7hgMzWqlSTfckfinuMG5sSlWGkkxeQF
+         9W8JmTe/W9Usbe8NSUrYQe1mlnyU62FuXxus6E/DuOXcRhxA+5IS+W/7btQqAhuW6ND1
+         fKNE74PCrlp+8uh0i+d8YJ0Sm9YFyeLXjzh4/rAdGEu84kZ9BMxy73pC28MOD5JT2kqz
+         2dVYTdp1gbOlcHBg1RwjUUvsbfMjpgqQD5nq64/1cX4dMv3eKX/8kO4l6AorTlk9IGaK
+         5mrw==
+X-Gm-Message-State: APjAAAUBUEf8PArWpWF51w1tNoaT0ANoQxBhhzv8dFkAH/pcLNeP+59E
+        aZApGgoV/HIxkKG4AvaI3mCsPQnX3AU+0TYKsQ==
+X-Google-Smtp-Source: APXvYqzJfN5/jEVrICMKNKf1Gbk6t97scfit5Or0E0rGafJU60pSgkm96WWXDbFmc/eogZh3Ay8RlJQmxCehuE6fsIo=
+X-Received: by 2002:a2e:994:: with SMTP id 142mr10090225ljj.192.1557870090361;
+ Tue, 14 May 2019 14:41:30 -0700 (PDT)
 MIME-Version: 1.0
+References: <1557806489-11272-1-git-send-email-longli@linuxonhyperv.com> <1557806489-11272-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1557806489-11272-2-git-send-email-longli@linuxonhyperv.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Tue, 14 May 2019 14:41:18 -0700
+Message-ID: <CAKywueSKyttaG8h_OrFE-ZCvDy_QCRQkdKQmW7m2wtrJ+fsT6Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cifs:smbd Use the correct DMA direction when sending data
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anurag,=0A=
-=0A=
-Anurag Kumar Vulisha wrote:=0A=
-> Hi Thinh,=0A=
->=0A=
->> -----Original Message-----=0A=
->> From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]=0A=
->> Sent: Saturday, May 11, 2019 7:18 AM=0A=
->> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen=0A=
->> <Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman=0A=
->> <gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark Rut=
-land=0A=
->> <mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stovga=
-ard=0A=
->> <cst@phaseone.com>=0A=
->> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->> Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabling=
- U1 and U2=0A=
->> entries=0A=
->>=0A=
->> Hi,=0A=
->>=0A=
->> Anurag Kumar Vulisha wrote:=0A=
->>> Hi Thinh,=0A=
->>>=0A=
->>>> -----Original Message-----=0A=
->>>> From: Thinh Nguyen [mailto:Thinh.Nguyen@synopsys.com]=0A=
->>>> Sent: Friday, May 10, 2019 5:30 AM=0A=
->>>> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; Thinh Nguyen=0A=
->>>> <Thinh.Nguyen@synopsys.com>; Greg Kroah-Hartman=0A=
->>>> <gregkh@linuxfoundation.org>; Rob Herring <robh+dt@kernel.org>; Mark R=
-utland=0A=
->>>> <mark.rutland@arm.com>; Felipe Balbi <balbi@kernel.org>; Claus H. Stov=
-gaard=0A=
->>>> <cst@phaseone.com>=0A=
->>>> Cc: linux-usb@vger.kernel.org; devicetree@vger.kernel.org; linux-=0A=
->>>> kernel@vger.kernel.org; v.anuragkumar@gmail.com=0A=
->>>> Subject: Re: [PATCH v2 3/3] usb: dwc3: gadget: Add support for disabli=
-ng U1 and=0A=
->> U2=0A=
->>>> entries=0A=
->>>>=0A=
->>>> Hi Anurag,=0A=
->>>>=0A=
->>>> Anurag Kumar Vulisha wrote:=0A=
->>>>>>> +		return -EINVAL;=0A=
->>>>>>>=0A=
->>>>>>>  	reg =3D dwc3_readl(dwc->regs, DWC3_DCTL);=0A=
->>>>>>>  	if (set)=0A=
->>>>>>> @@ -626,7 +630,10 @@ static int dwc3_ep0_set_config(struct dwc3 *dw=
-c,=0A=
->>>> struct=0A=
->>>>>>> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c=
-=0A=
->>>>>>> index e293400..f2d3112 100644=0A=
->>>>>>> --- a/drivers/usb/dwc3/gadget.c=0A=
->>>>>>> +++ b/drivers/usb/dwc3/gadget.c=0A=
->>>>>>> @@ -2073,6 +2073,24 @@ static int dwc3_gadget_stop(struct usb_gadge=
-t *g)=0A=
->>>>>>>  	return 0;=0A=
->>>>>>>  }=0A=
->>>>>>>=0A=
->>>>>>> +static void dwc3_gadget_config_params(struct usb_gadget *g,=0A=
->>>>>>> +				      struct usb_dcd_config_params *params)=0A=
->>>>>>> +{=0A=
->>>>>>> +	struct dwc3		*dwc =3D gadget_to_dwc(g);=0A=
->>>>>>> +=0A=
->>>>>>> +	/* U1 Device exit Latency */=0A=
->>>>>>> +	if (dwc->dis_u1_entry_quirk)=0A=
->>>>>>> +		params->bU1devExitLat =3D 0;=0A=
->>>>>> It doesn't make sense to have exit latency of 0. Rejecting=0A=
->>>>>> SET_FEATURE(enable U1/U2) should already let the host know that the=
-=0A=
->>>>>> device doesn't support U1/U2.=0A=
->>>>>>=0A=
->>>>> I am okay to remove this, but I feel that it is better to report zero=
- value instead=0A=
->>>>> of a non-zero value in exit latency of BOS when U1 or U2 entries are =
-not=0A=
->> supported.=0A=
->>>>> Advantage of reporting 0 is that some hosts doesn't even send=0A=
->>>> SET_FEATURE(U1/U2)=0A=
->>>>> requests on seeing zero value in BOS descriptor. Also there can be ca=
-ses where=0A=
->> U1 is=0A=
->>>>> disabled and U2 entry is allowed or vice versa, for these kind of cas=
-es the driver=0A=
->> can=0A=
->>>>> set zero exit latency value for U1 and non-zero exit latency value fo=
-r U2 . Based=0A=
->> on=0A=
->>>> this=0A=
->>>>> I think it would be better to report 0 when U1/U2 states are not enab=
-led. Please=0A=
->>>> provide=0A=
->>>>> your opinion on this.=0A=
->>>> Hm... I assume you're testing against linux usb stack and xhci host. I=
-f=0A=
->>>> that's the case, it looks like host will still request the device to=
-=0A=
->>>> enter U1/U2 despite the device rejecting SET_FEATURE(enable U1/U2). Th=
-is=0A=
->>>> needs to be fixed. I think what you have is fine to workaround this is=
-sue.=0A=
->>> Thanks . Will send the next series with the other fixes that you have s=
-uggested=0A=
->>>=0A=
->>> Best Regards,=0A=
->>> Anurag Kumar Vulisha=0A=
->>>=0A=
->> I want to try something. Can you see if this helps with your performance=
-=0A=
->> test without setting the U1/U2 exit latency to 0?=0A=
->> (No need to change what you have in your patch. This is just for testing=
-).=0A=
->>=0A=
-> With your patch , the link doesn't enter into U1/U2 and I am also getting=
-=0A=
-> better performance=0A=
->=0A=
-> Thanks,=0A=
-> Anurag Kumar Vulisha=0A=
-=0A=
-Thanks for testing.=0A=
-=0A=
-BR,=0A=
-Thinh=0A=
+=D0=BF=D0=BD, 13 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 21:02, <longli@linu=
+xonhyperv.com>:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> When sending data, use the DMA_TO_DEVICE to map buffers. Also log the num=
+ber
+> of requests in a compounding request from upper layer.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  fs/cifs/smbdirect.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/fs/cifs/smbdirect.c b/fs/cifs/smbdirect.c
+> index 251ef1223206..caac37b1de8c 100644
+> --- a/fs/cifs/smbdirect.c
+> +++ b/fs/cifs/smbdirect.c
+> @@ -903,7 +903,7 @@ static int smbd_create_header(struct smbd_connection =
+*info,
+>         request->sge[0].addr =3D ib_dma_map_single(info->id->device,
+>                                                  (void *)packet,
+>                                                  header_length,
+> -                                                DMA_BIDIRECTIONAL);
+> +                                                DMA_TO_DEVICE);
+>         if (ib_dma_mapping_error(info->id->device, request->sge[0].addr))=
+ {
+>                 mempool_free(request, info->request_mempool);
+>                 rc =3D -EIO;
+> @@ -1005,7 +1005,7 @@ static int smbd_post_send_sgl(struct smbd_connectio=
+n *info,
+>         for_each_sg(sgl, sg, num_sgs, i) {
+>                 request->sge[i+1].addr =3D
+>                         ib_dma_map_page(info->id->device, sg_page(sg),
+> -                              sg->offset, sg->length, DMA_BIDIRECTIONAL)=
+;
+> +                              sg->offset, sg->length, DMA_TO_DEVICE);
+>                 if (ib_dma_mapping_error(
+>                                 info->id->device, request->sge[i+1].addr)=
+) {
+>                         rc =3D -EIO;
+> @@ -2110,8 +2110,10 @@ int smbd_send(struct TCP_Server_Info *server,
+>                 goto done;
+>         }
+>
+> -       rqst_idx =3D 0;
+> +       log_write(INFO, "num_rqst=3D%d total length=3D%u\n",
+> +                       num_rqst, remaining_data_length);
+>
+> +       rqst_idx =3D 0;
+>  next_rqst:
+>         rqst =3D &rqst_array[rqst_idx];
+>         iov =3D rqst->rq_iov;
+> --
+> 2.17.1
+>
+
+Acked-by: Pavel Shilovsky <pshilov@microsoft.com>
+
+--
+Best regards,
+Pavel Shilovsky
