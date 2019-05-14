@@ -2,177 +2,217 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F925C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FFFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00DA120818
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8738020818
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WN0wzIFU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cQr12Gmm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfENK5V (ORCPT
+        id S1726370AbfENLAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:57:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37644 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726036AbfENK5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:57:21 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 14 May 2019 07:00:05 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39894 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725892AbfENLAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 07:00:05 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C2305608D4; Tue, 14 May 2019 11:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557831603;
+        bh=xSkLRV2QGI8N8EyzVbCKEkYGEF5Z3gTYYuoMnN/Fx/8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=WN0wzIFUs/GOugJhJ2WWH+4B1BLt7/EuR82KpU0l5iifupcZxiPPlw4teYFs7RiEV
+         esBndgilyoz3FTgcIaCe/khyFI6xgw0uJdpQ7Xg0zCY/9xqUcQNpnOVgYG2FCi4Ljb
+         HAQaeok+69ZbUJkOskb7ll+uwsY4PthnU2/DLlDg=
+Received: from [10.204.79.19] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EBF7FC045770;
-        Tue, 14 May 2019 10:57:19 +0000 (UTC)
-Received: from beluga.usersys.redhat.com (unknown [10.43.2.166])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 39A211001DE1;
-        Tue, 14 May 2019 10:57:07 +0000 (UTC)
-Date:   Tue, 14 May 2019 12:57:04 +0200
-From:   Erik Skultety <eskultet@redhat.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Yan Zhao <yan.y.zhao@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190514105704.GA10926@beluga.usersys.redhat.com>
-References: <20190510110838.2df4c4d0.cohuck@redhat.com>
- <20190510093608.GD2854@work-vm>
- <20190510114838.7e16c3d6.cohuck@redhat.com>
- <20190513132804.GD11139@beluga.usersys.redhat.com>
- <20190514061235.GC20407@joy-OptiPlex-7040>
- <20190514072039.GA2089@beluga.usersys.redhat.com>
- <20190514073219.GD20407@joy-OptiPlex-7040>
- <20190514074344.GB2089@beluga.usersys.redhat.com>
- <20190514074736.GE20407@joy-OptiPlex-7040>
- <20190514115135.078bbaf7.cohuck@redhat.com>
+        (Authenticated sender: prsood@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4F388601D4;
+        Tue, 14 May 2019 11:00:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557831602;
+        bh=xSkLRV2QGI8N8EyzVbCKEkYGEF5Z3gTYYuoMnN/Fx/8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cQr12GmmGBse208Ems1ZU5Jlz2+rPQke82kPfVbGROSm09QNxE9x/F2DwCUneUySx
+         8P2c92Sepp3lJMeB+J9N+EeGHNpNkHxVK0A/y9Mhgd079eVYT+yBgkHIIQ7gASe8ej
+         1hi+Y65hgY8avea0YUg1rRv7SseTQji8kYNHT4sk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4F388601D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
+Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
+ directory
+To:     Mukesh Ojha <mojha@codeaurora.org>,
+        Muchun Song <smuchun@gmail.com>, gregkh@linuxfoundation.org,
+        rafael@kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20190423143258.96706-1-smuchun@gmail.com>
+ <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
+ <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
+ <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
+ <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
+ <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
+ <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+ <d9495ef6-17bc-dc50-f5fe-fb5ff20edfde@codeaurora.org>
+From:   Prateek Sood <prsood@codeaurora.org>
+Message-ID: <c0166ef7-ef76-56d8-6289-276573e3aea7@codeaurora.org>
+Date:   Tue, 14 May 2019 16:29:58 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <d9495ef6-17bc-dc50-f5fe-fb5ff20edfde@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190514115135.078bbaf7.cohuck@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 14 May 2019 10:57:20 +0000 (UTC)
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:51:35AM +0200, Cornelia Huck wrote:
-> On Tue, 14 May 2019 03:47:36 -0400
-> Yan Zhao <yan.y.zhao@intel.com> wrote:
->
-> > On Tue, May 14, 2019 at 03:43:44PM +0800, Erik Skultety wrote:
-> > > On Tue, May 14, 2019 at 03:32:19AM -0400, Yan Zhao wrote:
-> > > > On Tue, May 14, 2019 at 03:20:40PM +0800, Erik Skultety wrote:
->
-> > > > > That said, from libvirt POV as a consumer, I'd expect there to be truly only 2
-> > > > > errors (I believe Alex has mentioned something similar in one of his responses
-> > > > > in one of the threads):
-> > > > >     a) read error indicating that an mdev type doesn't support migration
-> > > > >         - I assume if one type doesn't support migration, none of the other
-> > > > >           types exposed on the parent device do, is that a fair assumption?
->
-> Probably; but there might be cases where the migratability depends not
-> on the device type, but how the partitioning has been done... or is
-> that too contrived?
+On 5/14/19 4:26 PM, Mukesh Ojha wrote:
+> ++
+> 
+> On 5/4/2019 8:17 PM, Muchun Song wrote:
+>> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四 下午2:25写道：
+>>
+>>>>> The basic idea yes, the whole bool *locked is horrid though.
+>>>>> Wouldn't it
+>>>>> work to have a get_device_parent_locked that always returns with
+>>>>> the mutex held,
+>>>>> or just move the mutex to the caller or something simpler like this
+>>>>> ?
+>>>>>
+>>>> Greg and Rafael, do you have any suggestions for this? Or you also
+>>>> agree with Ben?
+>>> Ping guys ? This is worth fixing...
+>> I also agree with you. But Greg and Rafael seem to be high latency right now.
+>>
+>>  From your suggestions, I think introduce get_device_parent_locked() may easy
+>> to fix. So, do you agree with the fix of the following code snippet
+>> (You can also
+>> view attachments)?
+>>
+>> I introduce a new function named get_device_parent_locked_if_glue_dir() which
+>> always returns with the mutex held only when we live in glue dir. We should call
+>> unlock_if_glue_dir() to release the mutex. The
+>> get_device_parent_locked_if_glue_dir()
+>> and unlock_if_glue_dir() should be called in pairs.
+>>
+>> ---
+>> drivers/base/core.c | 44 ++++++++++++++++++++++++++++++++++++--------
+>> 1 file changed, 36 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/drivers/base/core.c b/drivers/base/core.c
+>> index 4aeaa0c92bda..5112755c43fa 100644
+>> --- a/drivers/base/core.c
+>> +++ b/drivers/base/core.c
+>> @@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class,
+>> struct kobject *parent_kobj)
+>> static DEFINE_MUTEX(gdp_mutex);
+>> -static struct kobject *get_device_parent(struct device *dev,
+>> -                    struct device *parent)
+>> +static struct kobject *__get_device_parent(struct device *dev,
+>> +                    struct device *parent,
+>> +                    bool lock)
+>> {
+>>     if (dev->class) {
+>>         struct kobject *kobj = NULL;
+>> @@ -1779,14 +1780,16 @@ static struct kobject
+>> *get_device_parent(struct device *dev,
+>>             }
+>>         spin_unlock(&dev->class->p->glue_dirs.list_lock);
+>>         if (kobj) {
+>> -           mutex_unlock(&gdp_mutex);
+>> +           if (!lock)
+>> +               mutex_unlock(&gdp_mutex);
+>>             return kobj;
+>>         }
+>>         /* or create a new class-directory at the parent device */
+>>         k = class_dir_create_and_add(dev->class, parent_kobj);
+>>         /* do not emit an uevent for this simple "glue" directory */
+>> -       mutex_unlock(&gdp_mutex);
+>> +       if (!lock)
+>> +           mutex_unlock(&gdp_mutex);
+>>         return k;
+>>     }
+>> @@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct
+>> device *dev,
+>>     return NULL;
+>> }
+>> +static inline struct kobject *get_device_parent(struct device *dev,
+>> +                       struct device *parent)
+>> +{
+>> +   return __get_device_parent(dev, parent, false);
+>> +}
+>> +
+>> +static inline struct kobject *
+>> +get_device_parent_locked_if_glue_dir(struct device *dev,
+>> +                struct device *parent)
+>> +{
+>> +   return __get_device_parent(dev, parent, true);
+>> +}
+>> +
+>> static inline bool live_in_glue_dir(struct kobject *kobj,
+>>                  struct device *dev)
+>> {
+>> @@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device
+>> *dev, struct kobject *glue_dir)
+>>     mutex_unlock(&gdp_mutex);
+>> }
+>> +static inline void unlock_if_glue_dir(struct device *dev,
+>> +                struct kobject *glue_dir)
+>> +{
+>> +   /* see if we live in a "glue" directory */
+>> +   if (!live_in_glue_dir(glue_dir, dev))
+>> +       return;
+>> +
+>> +   mutex_unlock(&gdp_mutex);
+>> +}
+>> +
+>> static int device_add_class_symlinks(struct device *dev)
+>> {
+>>     struct device_node *of_node = dev_of_node(dev);
+>> @@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
+>>     pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
+>>     parent = get_device(dev->parent);
+>> -   kobj = get_device_parent(dev, parent);
+>> +   kobj = get_device_parent_locked_if_glue_dir(dev, parent);
+>>     if (IS_ERR(kobj)) {
+>>         error = PTR_ERR(kobj);
+>>         goto parent_error;
+>> @@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
+>>     /* first, register with generic layer. */
+>>     /* we require the name to be set before, and pass NULL */
+>>     error = kobject_add(&dev->kobj, dev->kobj.parent, NULL);
+>> -   if (error) {
+>> -       glue_dir = get_glue_dir(dev);
+>> +
+>> +   glue_dir = get_glue_dir(dev);
+>> +   unlock_if_glue_dir(dev, glue_dir);
+>> +
+>> +   if (error)
+>>         goto Error;
+>> -   }
+>>     /* notify platform of device entry */
+>>     error = device_platform_notify(dev, KOBJ_ADD);
+>> -- 
 
-No, you have a point - once again I let my thoughts be carried away by the idea
-of heterogeneous setups, which is a discussion for another time anyway, I was
-just thinking out loud.
+This change has been done in device_add(). AFAICT, locked
+version of get_device_parent should be used in device_move()
+also.
 
->
-> > > > >     b) write error indicating that the mdev types are incompatible for
-> > > > >     migration
-> > > > >
-> > > > > Regards,
-> > > > > Erik
-> > > > Thanks for this explanation.
-> > > > so, can we arrive at below agreements?
-> > > >
-> > > > 1. "not to define the specific errno returned for a specific situation,
-> > > > let the vendor driver decide, userspace simply needs to know that an errno on
-> > > > read indicates the device does not support migration version comparison and
-> > > > that an errno on write indicates the devices are incompatible or the target
-> > > > doesn't support migration versions. "
-> > > > 2. vendor driver should log detailed error reasons in kernel log.
-> > >
-> > > That would be my take on this, yes, but I open to hear any other suggestions and
-> > > ideas I couldn't think of as well.
->
-> So, read to find out whether migration is supported at all, write to
-> find out whether it is supported for that concrete pairing is
-> reasonable for libvirt?
+Thanks
 
-Yes, more specifically, in the prepare phase of migration, we'd retrieve the
-string (potentially reporting an error like: "Failed to query migration
-support: <errno translation>"), put the string into the migration cookie and
-do the check with write on destination. The only thing is that if the error is
-on the destination, the error message in kernel log lives only on the
-destination, which doesn't help libvirt users, so it would require setting up
-remote logging, but for layered products, this is not a problem since those
-already utilize central logging nodes.
-
-Then there are the libvirt-specific bits out of scope of this discussion,
-whether we should only assume identical mdev type pairs, or whether we should
-employ best effort approach and iterate over all the available types exposed by
-the vendor and check whether any of the types would support this migration
-(back to your note Connie, partitioning would come into the picture here).
-
-
->
-> > >
-> > > Erik
-> > got it. thanks a lot!
-> >
-> > hi Cornelia and Dave,
-> > do you also agree on:
-> > 1. "not to define the specific errno returned for a specific situation,
-> > let the vendor driver decide, userspace simply needs to know that an errno on
-> > read indicates the device does not support migration version comparison and
-> > that an errno on write indicates the devices are incompatible or the target
-> > doesn't support migration versions. "
-> > 2. vendor driver should log detailed error reasons in kernel log.
->
-> Two questions:
-> - How reasonable is it to refer to the system log in order to find out
->   what exactly went wrong?
-> - If detailed error reporting is basically done to the syslog, do
->   different error codes still provide useful information? Or should the
->   vendor driver decide what it wants to do?
-
-I'd leave anything beyond returning -1 on read/write from/to the sysfs to the
-vendor driver, as user space has no control over it, even if there was a
-facility to interpret different return codes for us, I'm not sure (in this
-migration-related case) how much would userspace be able to recover or
-fallback anyway, you either can or cannot migrate smoothely.
-
-Regards,
-Erik
-
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation
+Center, Inc., is a member of Code Aurora Forum, a Linux Foundation
+Collaborative Project
