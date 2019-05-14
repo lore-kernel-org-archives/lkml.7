@@ -2,124 +2,132 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B6DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA40CC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DD52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A0D21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="ZMoyB01O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So8Ue2Gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfENEvk (ORCPT
+        id S1726659AbfENExc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 00:51:40 -0400
-Received: from mail-eopbgr720062.outbound.protection.outlook.com ([40.107.72.62]:11027
-        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725965AbfENEvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 00:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ahY3PwDdvXvvZ3EwGRlFE5BFyjFOgSVg0fQHVXgQfc4=;
- b=ZMoyB01O2yYs7tKRHoQDbos461ACh2JQZZ6EJHApFP5EF0cVOmpy5soxX7NePP53R1/4gqai40ieFLp1DJhA2RC8SCd1Uriq+/Fttt4LntvJ+En81Lrp7UiZeX9u+yzQn+Ox3QBeKp02kOs/9YZYUMJJh8H/sGNJEDLIe51Oo7Q=
-Received: from BYAPR10MB3541.namprd10.prod.outlook.com (20.179.62.206) by
- BYAPR10MB2648.namprd10.prod.outlook.com (52.135.217.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Tue, 14 May 2019 04:51:36 +0000
-Received: from BYAPR10MB3541.namprd10.prod.outlook.com
- ([fe80::bda3:184c:7f59:f7ab]) by BYAPR10MB3541.namprd10.prod.outlook.com
- ([fe80::bda3:184c:7f59:f7ab%7]) with mapi id 15.20.1878.024; Tue, 14 May 2019
- 04:51:35 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "leoyang.li@nxp.com" <leoyang.li@nxp.com>,
-        "roy.pledge@nxp.com" <roy.pledge@nxp.com>
-CC:     "madalin.bucur@nxp.com" <madalin.bucur@nxp.com>,
-        "laurentiu.tudor@nxp.com" <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
- tree properties
-Thread-Topic: [PATCH v1 4/8] soc/fsl/qbman: Use index when accessing device
- tree properties
-Thread-Index: AQHVCadY7pF1Pe9lUE2omDuEjFRsAaZqDhiA
-Date:   Tue, 14 May 2019 04:51:35 +0000
-Message-ID: <6c97a9105fe35d2afdcd2e481d109521c7acb235.camel@infinera.com>
-References: <1557763756-24118-1-git-send-email-roy.pledge@nxp.com>
-         <1557763756-24118-5-git-send-email-roy.pledge@nxp.com>
-         <1afd837287cebccfc1dd68365870d0f5d1cf27f7.camel@infinera.com>
-         <DB6PR0402MB27278B23001A8965AE493CE3860F0@DB6PR0402MB2727.eurprd04.prod.outlook.com>
-In-Reply-To: <DB6PR0402MB27278B23001A8965AE493CE3860F0@DB6PR0402MB2727.eurprd04.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Joakim.Tjernlund@infinera.com; 
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 686b4a25-3963-426e-adf7-08d6d827d80d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR10MB2648;
-x-ms-traffictypediagnostic: BYAPR10MB2648:
-x-microsoft-antispam-prvs: <BYAPR10MB26482D13BAFCC20A2997174BF4080@BYAPR10MB2648.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(366004)(189003)(199004)(486006)(2201001)(53936002)(66476007)(110136005)(446003)(54906003)(11346002)(14454004)(66066001)(66446008)(118296001)(8676002)(66556008)(2616005)(91956017)(73956011)(76116006)(476003)(66946007)(64756008)(86362001)(5660300002)(6512007)(2906002)(6436002)(36756003)(229853002)(53546011)(71190400001)(102836004)(71200400001)(186003)(5024004)(76176011)(256004)(8936002)(26005)(81166006)(14444005)(7736002)(6246003)(99286004)(316002)(478600001)(305945005)(25786009)(68736007)(4326008)(2501003)(6506007)(6486002)(72206003)(6116002)(3846002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR10MB2648;H:BYAPR10MB3541.namprd10.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: infinera.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 4PRavAMl7Zjm13s/FrQqJX8g8RklWNI5dUJIyjva8xPZVYu94PyTLe5txwL+8DTjzrL/jWG7BPQXam2qAsnN0aZ4pzTyqHl9xHuiYYLl6Gb7bNCcKPcUYXA1zqWJ3udoh6YoJuQsIW+sBuwE+k286mmhRzTpSdBAARtKubYS46lLziZqFC3+hjKzdlyydeyT8gz5znlWHNwc/d9LEjAf/dM8a6VapntTeDyNt3aOOYPjfAAG5ihcG79jzQHUIwagiTypDhrUZqQqFGSsAVBF2uWcO+CxtmutVEge5bznGYH56uCvtBc2VOWFqwfUwaRLH6ZYN0l7bVyWufPniGE+GTE8ypnWi56f3zAs2ALhokyzthWz2iM7K7GSSF/1YS5BN9rtcucJcHyOkjFS7/gv1I7Crhn+4zxCIKM0k5DzUtY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1FCAA9E0AEB788468E4FCE14DAE4DCAD@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 May 2019 00:53:32 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42417 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENExb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 00:53:31 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 13so8421724pfw.9;
+        Mon, 13 May 2019 21:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LkOJ6KXC11/Y4FBi0TytGsBTIahyfqyZdKmtY1CFDQ0=;
+        b=So8Ue2Gc8rZSW5pW2l+Y2rKJ16D/6JWtXp5P/568wGipRi/2wpNuT8/3PqHOxVJwKJ
+         7osnBCp7xvJlIE1ybL/+9Deox4alkHIXQtcH0Z39A/IMRflTKgN/xIsD2fGi9PztBTHp
+         CzNf8XLulv42j5oUDgThNxCuEnG88a7by9j4JCOxNEbSyEVZuoWJyJf2/OvqdA7P91KC
+         NpH9/Y8PCsUYJ+ef+MyKi+EF51Ks1l67le4roy04+hnDYKbWqcHMvL9kh29qJiipLAHy
+         ngniRGoa6okI1WVwFnrPDtG38cKtkRRNTNagzoOJHmWBsd+BZwtYx/+aok8A2edI4Fh4
+         42yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LkOJ6KXC11/Y4FBi0TytGsBTIahyfqyZdKmtY1CFDQ0=;
+        b=DO3nXupkVfHqNM3V1Q7lmJtk3HdIsBQ+OLB1Kwq5s1FmrV2uZzdPsol62VjeG9R6D3
+         3EeJwUh5Bjtoc+kmMiflCc7R0BBmV3DpPRjcp+n0EjdR6+Y2Nnc+FoL0+sB3ILGlQsuy
+         5kAGOz+KHP86Eh4MZuNYr7uPUHiuD1NuWowiWhah6L+ka8mugVq9H3w08Oao6htb3rV9
+         TR35cwPlxuCRKUSjOhkKa2QZgk5bjurFfd5r2khppkWvcxmhIjno5+IrYuvtGr7E4TaV
+         R0HL+8p88R66e5i406i2514Rz1SU9MR8lJ90BGaM9hxpFUQE3ZnMnwDM64TjaWlE1TfZ
+         GO9A==
+X-Gm-Message-State: APjAAAVZjegWofu9m5jNKbnj89wJyJzUNxJP+qe4yyB122sesLpa/Ms4
+        pSl5bEzPUhNbr+NAwkNLWeIOul4PesZZtQT9hvw=
+X-Google-Smtp-Source: APXvYqz7xa2SkDRvZ5t+Uh8iZ0NKcv/Uh538AeL3a11JV6tjOrZWkN/RQkSc+BT6rlX8yOrJoR204s8WMB4p9+UnHhg=
+X-Received: by 2002:aa7:95bb:: with SMTP id a27mr26957930pfk.30.1557809611110;
+ Mon, 13 May 2019 21:53:31 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 686b4a25-3963-426e-adf7-08d6d827d80d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 04:51:35.6904
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2648
+References: <20190510223744.10154-1-prsriva02@gmail.com> <20190510223744.10154-2-prsriva02@gmail.com>
+ <1557766592.4969.22.camel@linux.ibm.com>
+In-Reply-To: <1557766592.4969.22.camel@linux.ibm.com>
+From:   prakhar srivastava <prsriva02@gmail.com>
+Date:   Mon, 13 May 2019 21:53:44 -0700
+Message-ID: <CAEFn8qJNzG5scBcdVbrXpY7ZEbku+yNbMZn3M=JUW8nNZbGKoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3 v5] add a new ima hook and policy to measure the cmdline
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org,
+        inux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ebiederm@xmission.com, vgoyal@redhat.com,
+        Prakhar Srivastava <prsriva@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA1LTEzIGF0IDE3OjQwICswMDAwLCBSb3kgUGxlZGdlIHdyb3RlOg0KPiBD
-QVVUSU9OOiBUaGlzIGVtYWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBvcmdhbml6
-YXRpb24uIERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Ug
-cmVjb2duaXplIHRoZSBzZW5kZXIgYW5kIGtub3cgdGhlIGNvbnRlbnQgaXMgc2FmZS4NCj4gDQo+
-IA0KPiBPbiA1LzEzLzIwMTkgMTI6NDAgUE0sIEpvYWtpbSBUamVybmx1bmQgd3JvdGU6DQo+ID4g
-T24gTW9uLCAyMDE5LTA1LTEzIGF0IDE2OjA5ICswMDAwLCBSb3kgUGxlZGdlIHdyb3RlOg0KPiA+
-ID4gVGhlIGluZGV4IHZhbHVlIHNob3VsZCBiZSBwYXNzZWQgdG8gdGhlIG9mX3BhcnNlX3BoYW5k
-bGUoKQ0KPiA+ID4gZnVuY3Rpb24gdG8gZW5zdXJlIHRoZSBjb3JyZWN0IHByb3BlcnR5IGlzIHJl
-YWQuDQo+ID4gSXMgdGhpcyBhIGJ1ZyBmaXg/IE1heWJlIGZvciBzdGFibGUgdG9vPw0KPiA+IA0K
-PiA+ICBKb2NrZQ0KPiBZZXMgdGhpcyBjb3VsZCBnbyB0byBzdGFibGUuICBJIHdpbGwgaW5jbHVk
-ZSBzdGFibGVAdmdlci5rZXJuZWwub3JnIHdoZW4NCj4gSSBzZW5kIHRoZSBuZXh0IHZlcnNpb24u
-DQoNCkkgdGhpbmsgeW91IG5lZWQgdG8gc2VuZCB0aGlzIHBhdGNoIHNlcGFyYXRlbHkgdGhlbi4g
-VGhlIHdob2xlIHNlcmllcyBjYW5ub3QgZ28gdG8gc3RhYmxlLg0KDQogSm9ja2UNCg0KPiA+ID4g
-U2lnbmVkLW9mZi1ieTogUm95IFBsZWRnZSA8cm95LnBsZWRnZUBueHAuY29tPg0KPiA+ID4gLS0t
-DQo+ID4gPiAgZHJpdmVycy9zb2MvZnNsL3FibWFuL2RwYWFfc3lzLmMgfCAyICstDQo+ID4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4gPiANCj4g
-PiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvcWJtYW4vZHBhYV9zeXMuYyBiL2RyaXZl
-cnMvc29jL2ZzbC9xYm1hbi9kcGFhX3N5cy5jDQo+ID4gPiBpbmRleCAzZTBhN2YzLi4wYjkwMWE4
-IDEwMDY0NA0KPiA+ID4gLS0tIGEvZHJpdmVycy9zb2MvZnNsL3FibWFuL2RwYWFfc3lzLmMNCj4g
-PiA+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9xYm1hbi9kcGFhX3N5cy5jDQo+ID4gPiBAQCAtNDks
-NyArNDksNyBAQCBpbnQgcWJtYW5faW5pdF9wcml2YXRlX21lbShzdHJ1Y3QgZGV2aWNlICpkZXYs
-IGludCBpZHgsIGRtYV9hZGRyX3QgKmFkZHIsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBpZHgsIHJldCk7DQo+ID4gPiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+ID4g
-PiAgICAgICAgIH0NCj4gPiA+IC0gICAgICAgbWVtX25vZGUgPSBvZl9wYXJzZV9waGFuZGxlKGRl
-di0+b2Zfbm9kZSwgIm1lbW9yeS1yZWdpb24iLCAwKTsNCj4gPiA+ICsgICAgICAgbWVtX25vZGUg
-PSBvZl9wYXJzZV9waGFuZGxlKGRldi0+b2Zfbm9kZSwgIm1lbW9yeS1yZWdpb24iLCBpZHgpOw0K
-PiA+ID4gICAgICAgICBpZiAobWVtX25vZGUpIHsNCj4gPiA+ICAgICAgICAgICAgICAgICByZXQg
-PSBvZl9wcm9wZXJ0eV9yZWFkX3U2NChtZW1fbm9kZSwgInNpemUiLCAmc2l6ZTY0KTsNCj4gPiA+
-ICAgICAgICAgICAgICAgICBpZiAocmV0KSB7DQo+ID4gPiAtLQ0KPiA+ID4gMi43LjQNCj4gPiA+
-IA0KDQo=
+On Mon, May 13, 2019 at 9:56 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Fri, 2019-05-10 at 15:37 -0700, Prakhar Srivastava wrote:
+>
+> > +/*
+> > + * process_buffer_measurement - Measure the buffer passed to ima log.
+>
+> "passed to ima log" is unnecessary.
+>
+> > + * (Instead of using the file hash use the buffer hash).
+>
+> This comment, if needed, belongs in the text description area below,
+> not here.
+>
+> > + * @buf - The buffer that needs to be added to the log
+> > + * @size - size of buffer(in bytes)
+> > + * @eventname - event name to be used for buffer.
+>
+> Missing are the other fields.
+>
+> > + *
+> > + * The buffer passed is added to the ima log.
+> > + *
+> > + * On success return 0.
+> > + * On error cases surface errors from ima calls.
+>
+> Only IMA-appraise returns errors to the caller.  There's no point in
+> returning an error.
+>
+>
+> > + */
+> > +static int process_buffer_measurement(const void *buf, int size,
+> > +                             const char *eventname, const struct cred *cred,
+> > +                             u32 secid)
+>
+> This should be "static void".
+>
+> > +{
+> > +
+> > +     if (action & IMA_MEASURE)
+> > +             ret = ima_store_template(entry, violation, NULL, buf, pcr);
+> > +
+> > +     if (action & IMA_AUDIT)
+> > +             ima_audit_measurement(iint, event_data.filename);
+>
+> The cover letter and patch description say this patch set is limited
+> to measuring the boot command line - IMA-measurement.
+>  ima_audit_measurement() adds file hashes in the audit log, which can
+> be used for security analytics and/or forensics.  This is part of IMA-
+> audit.  The call to ima_audit_measurement() is inappropriate.
+>
+To clarify, in one of the previous versions you mentioned it
+might be helpful to add audit.
+I might have misunderstood you, but i will remove the
+audit_measurement and make other corrections.
+Thankyou for your feedback.
+
+- Thanks,
+Prakhar Srivastava
+ Mimi
