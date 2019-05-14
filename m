@@ -2,90 +2,169 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AE2C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C0BC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C368C208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E076B208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfENHPT (ORCPT
+        id S1726598AbfENHPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:15:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:49368 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfENHPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:15:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6184374;
-        Tue, 14 May 2019 00:15:18 -0700 (PDT)
-Received: from queper01-ThinkPad-T460s (unknown [10.37.8.231])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23D5F3F71E;
-        Tue, 14 May 2019 00:15:14 -0700 (PDT)
-Date:   Tue, 14 May 2019 08:15:08 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Eduardo Valentin <edubezval@gmail.com>
-Cc:     rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 3/3] thermal: cpu_cooling: Migrate to using the EM
- framework
-Message-ID: <20190514071506.ykjg67elsydaehlz@queper01-ThinkPad-T460s>
-References: <20190503094409.3499-1-quentin.perret@arm.com>
- <20190503094409.3499-4-quentin.perret@arm.com>
- <20190514034056.GA5621@localhost.localdomain>
+        Tue, 14 May 2019 03:15:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38314 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfENHPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:15:40 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC599859FC;
+        Tue, 14 May 2019 07:15:39 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC7D918EE4;
+        Tue, 14 May 2019 07:15:39 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A35EC18089C8;
+        Tue, 14 May 2019 07:15:39 +0000 (UTC)
+Date:   Tue, 14 May 2019 03:15:39 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        Will Deacon <will.deacon@arm.com>, peterz@infradead.org,
+        minchan@kernel.org, mgorman@suse.de, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Jan Stancek <jstancek@redhat.com>
+Message-ID: <914836977.22577826.1557818139522.JavaMail.zimbra@redhat.com>
+In-Reply-To: <45c6096e-c3e0-4058-8669-75fbba415e07@email.android.com>
+References: <45c6096e-c3e0-4058-8669-75fbba415e07@email.android.com>
+Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514034056.GA5621@localhost.localdomain>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.17.163, 10.4.195.30]
+Thread-Topic: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Thread-Index: AQHVCfj1/ZS8SZ4p0ke1CH5gp1S1IPlIMumf
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 14 May 2019 07:15:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eduardo,
 
-On Monday 13 May 2019 at 20:40:59 (-0700), Eduardo Valentin wrote:
-> On Fri, May 03, 2019 at 10:44:09AM +0100, Quentin Perret wrote:
-> > The newly introduced Energy Model framework manages power cost tables in
-> > a generic way. Moreover, it supports a several types of models since the
-> > tables can come from DT or firmware (through SCMI) for example. On the
-> > other hand, the cpu_cooling subsystem manages its own power cost tables
-> > using only DT data.
-> > 
-> > In order to avoid the duplication of data in the kernel, and in order to
-> > enable IPA with EMs coming from more than just DT, remove the private
-> > tables from cpu_cooling.c and migrate it to using the centralized EM
-> > framework.
-> > 
-> > The case where the thermal subsystem is used without an Energy Model
-> > (cpufreq_cooling_ops) is handled by looking directly at CPUFreq's
-> > frequency table which is already a dependency for cpu_cooling.c anyway.
-> > Since the thermal framework expects the cooling states in a particular
-> > order, bail out whenever the CPUFreq table is unsorted, since that is
-> > fairly uncommon in general, and there are currently no users of
-> > cpu_cooling for this use-case.
+----- Original Message -----
 > 
-> Will this break DT in any way? After this change, are the existing DTs
-> still compatible with this cpu cooling?
+> 
+> On May 13, 2019 4:01 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
+> 
+> 
+> On 5/13/19 9:38 AM, Will Deacon wrote:
+> > On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
+> >> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> >> index 99740e1..469492d 100644
+> >> --- a/mm/mmu_gather.c
+> >> +++ b/mm/mmu_gather.c
+> >> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> >>   {
+> >>       /*
+> >>        * If there are parallel threads are doing PTE changes on same range
+> >> -     * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> >> -     * flush by batching, a thread has stable TLB entry can fail to flush
+> >> -     * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> >> -     * forcefully if we detect parallel PTE batching threads.
+> >> +     * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
+> >> +     * flush by batching, one thread may end up seeing inconsistent PTEs
+> >> +     * and result in having stale TLB entries.  So flush TLB forcefully
+> >> +     * if we detect parallel PTE batching threads.
+> >> +     *
+> >> +     * However, some syscalls, e.g. munmap(), may free page tables, this
+> >> +     * needs force flush everything in the given range. Otherwise this
+> >> +     * may result in having stale TLB entries for some architectures,
+> >> +     * e.g. aarch64, that could specify flush what level TLB.
+> >>        */
+> >> -    if (mm_tlb_flush_nested(tlb->mm)) {
+> >> -            __tlb_reset_range(tlb);
+> >> -            __tlb_adjust_range(tlb, start, end - start);
+> >> +    if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
+> >> +            /*
+> >> +             * Since we can't tell what we actually should have
+> >> +             * flushed, flush everything in the given range.
+> >> +             */
+> >> +            tlb->freed_tables = 1;
+> >> +            tlb->cleared_ptes = 1;
+> >> +            tlb->cleared_pmds = 1;
+> >> +            tlb->cleared_puds = 1;
+> >> +            tlb->cleared_p4ds = 1;
+> >> +
+> >> +            /*
+> >> +             * Some architectures, e.g. ARM, that have range invalidation
+> >> +             * and care about VM_EXEC for I-Cache invalidation, need
+> >> force
+> >> +             * vma_exec set.
+> >> +             */
+> >> +            tlb->vma_exec = 1;
+> >> +
+> >> +            /* Force vma_huge clear to guarantee safer flush */
+> >> +            tlb->vma_huge = 0;
+> >> +
+> >> +            tlb->start = start;
+> >> +            tlb->end = end;
+> >>       }
+> > Whilst I think this is correct, it would be interesting to see whether
+> > or not it's actually faster than just nuking the whole mm, as I mentioned
+> > before.
+> >
+> > At least in terms of getting a short-term fix, I'd prefer the diff below
+> > if it's not measurably worse.
+> 
+> I did a quick test with ebizzy (96 threads with 5 iterations) on my x86
+> VM, it shows slightly slowdown on records/s but much more sys time spent
+> with fullmm flush, the below is the data.
+> 
+>                                      nofullmm                 fullmm
+> ops (records/s)              225606                  225119
+> sys (s)                            0.69                        1.14
+> 
+> It looks the slight reduction of records/s is caused by the increase of
+> sys time.
+> 
+> >
+> > Will
+> >
+> > --->8
+> >
+> > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> > index 99740e1dd273..cc251422d307 100644
+> > --- a/mm/mmu_gather.c
+> > +++ b/mm/mmu_gather.c
+> > @@ -251,8 +251,9 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> >         * forcefully if we detect parallel PTE batching threads.
+> >         */
+> >        if (mm_tlb_flush_nested(tlb->mm)) {
+> > +             tlb->fullmm = 1;
+> >                __tlb_reset_range(tlb);
+> > -             __tlb_adjust_range(tlb, start, end - start);
+> > +             tlb->freed_tables = 1;
+> >        }
+> >
+> >        tlb_flush_mmu(tlb);
+> 
+> 
+> I think that this should have set need_flush_all and not fullmm.
+> 
 
-Yes, all existing DTs stay compatible with this CPU cooling. The EM can
-still be built using the 'dynamic-power-coefficient' DT property thanks
-to the recently introduced dev_pm_opp_of_register_em() helper, see
-a4f342b9607d ("PM / OPP: Introduce a power estimation helper"). And all
-relevant cpufreq drivers have already been updated to use that function.
+Wouldn't that skip the flush?
 
-So, this patch should cause no functional change for all existing users.
-It's really just plumbing. I can probably explain that better in this
-commit message rather than the cover letter if you feel it is necessary.
+If fulmm == 0, then __tlb_reset_range() sets tlb->end = 0.
+  tlb_flush_mmu
+    tlb_flush_mmu_tlbonly
+      if (!tlb->end)
+         return
 
-Thanks,
-Quentin
+Replacing fullmm with need_flush_all, brings the problem back / reproducer hangs.
