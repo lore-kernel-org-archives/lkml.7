@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAB91C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DCFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 856BC2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D138C2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbfENOiT (ORCPT
+        id S1726464AbfENOiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:38:19 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49592 "EHLO inva020.nxp.com"
+        Tue, 14 May 2019 10:38:18 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49652 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfENOiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725854AbfENOiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 May 2019 10:38:14 -0400
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 70AAE1A0130;
-        Tue, 14 May 2019 16:38:11 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BDB961A0125;
+        Tue, 14 May 2019 16:38:12 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 63F431A012A;
-        Tue, 14 May 2019 16:38:11 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B1A931A00C2;
+        Tue, 14 May 2019 16:38:12 +0200 (CEST)
 Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C77E72061C;
-        Tue, 14 May 2019 16:38:10 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2190E2061C;
+        Tue, 14 May 2019 16:38:12 +0200 (CEST)
 From:   laurentiu.tudor@nxp.com
 To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
         linux-usb@vger.kernel.org, marex@denx.de
 Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
         robin.murphy@arm.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local memory
-Date:   Tue, 14 May 2019 17:38:05 +0300
-Message-Id: <20190514143807.7745-2-laurentiu.tudor@nxp.com>
+Subject: [RFC PATCH v2 3/3] usb: host: ohci-tmio: init genalloc for local memory
+Date:   Tue, 14 May 2019 17:38:07 +0300
+Message-Id: <20190514143807.7745-4-laurentiu.tudor@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
 References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
@@ -47,120 +47,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-For HCs that have local memory, replace the current DMA API usage
-with a genalloc generic allocator to manage the mappings for these
-devices.
-This is in preparation for dropping the existing "coherent" dma
-mem declaration APIs. Current implementation was relying on a short
-circuit in the DMA API that in the end, was acting as an allocator
-for these type of devices.
+In preparation for dropping the existing "coherent" dma mem declaration
+APIs, replace the current dma_declare_coherent_memory() based mechanism
+with the creation of a genalloc pool that will be used in the OHCI
+subsystem as replacement for the DMA APIs.
 
 For context, see thread here: https://lkml.org/lkml/2019/4/22/357
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/usb/core/buffer.c   | 12 +++++++++++-
- drivers/usb/host/ohci-hcd.c | 23 ++++++++++++++++++-----
- include/linux/usb/hcd.h     |  3 +++
- 3 files changed, 32 insertions(+), 6 deletions(-)
+ drivers/usb/host/ohci-tmio.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/usb/core/buffer.c b/drivers/usb/core/buffer.c
-index f641342cdec0..5729801e82e0 100644
---- a/drivers/usb/core/buffer.c
-+++ b/drivers/usb/core/buffer.c
-@@ -16,6 +16,7 @@
- #include <linux/io.h>
+diff --git a/drivers/usb/host/ohci-tmio.c b/drivers/usb/host/ohci-tmio.c
+index f88a0370659f..34869382618f 100644
+--- a/drivers/usb/host/ohci-tmio.c
++++ b/drivers/usb/host/ohci-tmio.c
+@@ -30,6 +30,7 @@
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/tmio.h>
  #include <linux/dma-mapping.h>
- #include <linux/dmapool.h>
-+#include <linux/genalloc.h>
- #include <linux/usb.h>
- #include <linux/usb/hcd.h>
- 
-@@ -136,6 +137,10 @@ void *hcd_buffer_alloc(
- 		if (size <= pool_max[i])
- 			return dma_pool_alloc(hcd->pool[i], mem_flags, dma);
- 	}
-+
-+	if (hcd->driver->flags & HCD_LOCAL_MEM)
-+		return gen_pool_dma_alloc(hcd->localmem_pool, size, dma);
-+
- 	return dma_alloc_coherent(hcd->self.sysdev, size, dma, mem_flags);
- }
- 
-@@ -165,5 +170,10 @@ void hcd_buffer_free(
- 			return;
- 		}
- 	}
--	dma_free_coherent(hcd->self.sysdev, size, addr, dma);
-+
-+	if (hcd->driver->flags & HCD_LOCAL_MEM)
-+		gen_pool_free(hcd->localmem_pool, (unsigned long)addr,
-+			      size);
-+	else
-+		dma_free_coherent(hcd->self.sysdev, size, addr, dma);
- }
-diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-hcd.c
-index 210181fd98d2..f9462c372943 100644
---- a/drivers/usb/host/ohci-hcd.c
-+++ b/drivers/usb/host/ohci-hcd.c
-@@ -40,6 +40,7 @@
- #include <linux/dmapool.h>
- #include <linux/workqueue.h>
- #include <linux/debugfs.h>
 +#include <linux/genalloc.h>
  
- #include <asm/io.h>
- #include <asm/irq.h>
-@@ -505,8 +506,15 @@ static int ohci_init (struct ohci_hcd *ohci)
- 	timer_setup(&ohci->io_watchdog, io_watchdog_func, 0);
- 	ohci->prev_frame_no = IO_WATCHDOG_OFF;
+ /*-------------------------------------------------------------------------*/
  
--	ohci->hcca = dma_alloc_coherent (hcd->self.controller,
--			sizeof(*ohci->hcca), &ohci->hcca_dma, GFP_KERNEL);
-+	if (hcd->driver->flags & HCD_LOCAL_MEM)
-+		ohci->hcca = gen_pool_dma_alloc(hcd->localmem_pool,
-+						sizeof(*ohci->hcca),
-+						&ohci->hcca_dma);
-+	else
-+		ohci->hcca = dma_alloc_coherent(hcd->self.controller,
-+						sizeof(*ohci->hcca),
-+						&ohci->hcca_dma,
-+						GFP_KERNEL);
- 	if (!ohci->hcca)
- 		return -ENOMEM;
- 
-@@ -990,9 +998,14 @@ static void ohci_stop (struct usb_hcd *hcd)
- 	remove_debug_files (ohci);
- 	ohci_mem_cleanup (ohci);
- 	if (ohci->hcca) {
--		dma_free_coherent (hcd->self.controller,
--				sizeof *ohci->hcca,
--				ohci->hcca, ohci->hcca_dma);
-+		if (hcd->driver->flags & HCD_LOCAL_MEM)
-+			gen_pool_free(hcd->localmem_pool,
-+				      (unsigned long)ohci->hcca,
-+				      sizeof(*ohci->hcca));
-+		else
-+			dma_free_coherent(hcd->self.controller,
-+					  sizeof(*ohci->hcca),
-+					  ohci->hcca, ohci->hcca_dma);
- 		ohci->hcca = NULL;
- 		ohci->hcca_dma = 0;
+@@ -224,11 +225,6 @@ static int ohci_hcd_tmio_drv_probe(struct platform_device *dev)
+ 		goto err_ioremap_regs;
  	}
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index 695931b03684..0fee81ef5d52 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -215,6 +215,9 @@ struct usb_hcd {
- #define	HC_IS_RUNNING(state) ((state) & __ACTIVE)
- #define	HC_IS_SUSPENDED(state) ((state) & __SUSPEND)
  
-+	/* allocator for HCs having local memory */
-+	struct gen_pool         *localmem_pool;
+-	ret = dma_declare_coherent_memory(&dev->dev, sram->start, sram->start,
+-				resource_size(sram));
+-	if (ret)
+-		goto err_dma_declare;
+-
+ 	if (cell->enable) {
+ 		ret = cell->enable(dev);
+ 		if (ret)
+@@ -239,6 +235,20 @@ static int ohci_hcd_tmio_drv_probe(struct platform_device *dev)
+ 	ohci = hcd_to_ohci(hcd);
+ 	ohci_hcd_init(ohci);
+ 
++	hcd->localmem_pool = devm_gen_pool_create(&dev->dev, PAGE_SHIFT,
++						  dev_to_node(&dev->dev),
++						  "ohci-sm501");
++	if (IS_ERR(hcd->localmem_pool)) {
++		ret = PTR_ERR(hcd->localmem_pool);
++		goto err_enable;
++	}
++	ret = gen_pool_add_virt(hcd->localmem_pool, sram->start, sram->start,
++				resource_size(sram), dev_to_node(&dev->dev));
++	if (ret < 0) {
++		dev_err(&dev->dev, "failed to add to pool: %d\n", ret);
++		goto err_enable;
++	}
 +
- 	/* more shared queuing code would be good; it should support
- 	 * smarter scheduling, handle transaction translators, etc;
- 	 * input size of periodic table to an interrupt scheduler.
+ 	ret = usb_add_hcd(hcd, irq, 0);
+ 	if (ret)
+ 		goto err_add_hcd;
+@@ -254,8 +264,6 @@ static int ohci_hcd_tmio_drv_probe(struct platform_device *dev)
+ 	if (cell->disable)
+ 		cell->disable(dev);
+ err_enable:
+-	dma_release_declared_memory(&dev->dev);
+-err_dma_declare:
+ 	iounmap(hcd->regs);
+ err_ioremap_regs:
+ 	iounmap(tmio->ccr);
+@@ -276,7 +284,6 @@ static int ohci_hcd_tmio_drv_remove(struct platform_device *dev)
+ 	tmio_stop_hc(dev);
+ 	if (cell->disable)
+ 		cell->disable(dev);
+-	dma_release_declared_memory(&dev->dev);
+ 	iounmap(hcd->regs);
+ 	iounmap(tmio->ccr);
+ 	usb_put_hcd(hcd);
 -- 
 2.17.1
 
