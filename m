@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053AAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96A4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C144D2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CBCC2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJD3Ov27"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DReEgfyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbfENOsm (ORCPT
+        id S1726915AbfENOsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:48:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43804 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfENOsY (ORCPT
+        Tue, 14 May 2019 10:48:53 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36588 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbfENOsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:48:24 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so8383830plp.10;
-        Tue, 14 May 2019 07:48:24 -0700 (PDT)
+        Tue, 14 May 2019 10:48:17 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so8401008plr.3;
+        Tue, 14 May 2019 07:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lK1xlzj9XVgEphYMHzXNXMIFEbFxUpOQnQC8+zBIUE8=;
-        b=lJD3Ov27c9VH3vWvtix/2KOW14mKXb/6Q9t+Zavy2Rwh77z5wMuzoJQRDlbVqV8usk
-         9PXRehB/0uaQEugrXmTMwwV1Lwu5LJ1u3hQ03dxC/ZnEFOPWP90/CSsKlXUw+/7x3ULC
-         YEASJogUhOxyFu4hbuzvO0DaFf8qPWEuj28YYE+0hoYUFoQs37y4iKwUx93x7LkquXZx
-         grREBAaR6P5isXMc5TFcTKGnkxgKev3vs/nSWyHVfk/0akuX9GetSHzuzJyvlavgpcdG
-         cgXyRjFoMvayOBR/iUw42vXuaaeRnMUgfKe701RfcUJj0OvDCSUZSYID7JHRlC8KtYN+
-         pJgg==
+        bh=GZPCPQxGexWtk/HvjS0k1/QZKYTL6e4sdoymRbsDb0I=;
+        b=DReEgfyNV4qU1wfII32i6tuNDwZBLhjQUNrsG4tJd6rKZjcHpakJ6YwqTNWYJQ6PDV
+         9K5eHILZzXqNDgW5fQ4jhM5LbLsM7rNcl6JUFXo2X/bnCYWmkVKwuXPU2jI2v/xXz2F8
+         euQ383ETAHsIYzbQn72oz7dtmr77bmb/hHrtZsGq4Ca1RNlBl6QH/g8AMBNV/yJvLIF9
+         5CWUj+Jyw1MfeGlefkZMiJxNl7t1rXM6RAsdHyOByzPMx6Tk/QkSEy6aLMlashFYAnH1
+         meAGLm+IouOHqoia+v0fmYg+6DOm3uRyh3QXGUkxWCcAqqicOZZKYBFGEn36SHDv9mdB
+         kv6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lK1xlzj9XVgEphYMHzXNXMIFEbFxUpOQnQC8+zBIUE8=;
-        b=Xy7p6DbNNUNOyIIwqb3FVTNqjAnRuaY9ZI2JKX/3GSXYbUgVZrEOHSXjzhvY9hyODy
-         WglvYGJeMIzwOsRq1T/8dHK3nF5834Y8zpdicQd7HqVikgej8Jv/UOiPF+N3mMOyytlG
-         nfSKLG05OGGEcgqe7IW+YeT6cunvF1b1JuCB5Zzu3DiPwQ4/QqNqmnYDgcJiVNF7cMv9
-         tCI8CarsBm/1QySj1v9eYmVeEsAGN86JvatV8blMLtxw86x/MUxMAcgHBxiEUA6BwGn4
-         +PLLvTiRda5M+VBTwb9DnPcZwPnmSLVV3TXXXQr5BBWPymG6Thypk/M4yKohfaVO2nGJ
-         WHfQ==
-X-Gm-Message-State: APjAAAXHlyxFBucSq6vS8VJiUaJlffytaEhvMtqhgHjYAG4Ejcuf/7x7
-        /otz4vG7tK7THmUBarNNdsQ=
-X-Google-Smtp-Source: APXvYqwVMWPA37MiGapzQ6y3XYUwQ9SLAIkcEtRaZPZ/xMlUTgm8v7VSwIaos84vAugbbwC9fBkMvA==
-X-Received: by 2002:a17:902:f096:: with SMTP id go22mr39345068plb.49.1557845303778;
-        Tue, 14 May 2019 07:48:23 -0700 (PDT)
+        bh=GZPCPQxGexWtk/HvjS0k1/QZKYTL6e4sdoymRbsDb0I=;
+        b=N7rPOT5ut+zKrRfJEhqamIDygxM1VMo8FxFcurIO/r+T1LvVCNaLjjbmimUK3sFgrl
+         Sl1xxDKriqMaas1cpwGRQP9nQw1CuznHo4fhvO4QtJvJKAY9QGB5/V7+1xxDOrqxMSeQ
+         5Kukb56JUEg25A2wFNOPS4w5AY5VwCaZ1aJ3SILq1nKr175VbcfjsKaIh8a2oFh0rme/
+         su7OCsQVNoHc8y9Ilowy1T8ro7xZrnfQlFNPQMIHQJh/OcmdlMcjR8fS+/4j+aFjXzZs
+         TOnDZKihE7cSRP0B3RDTN4m3EHH+q4KC1o6eKQMsd2Rs9fJMcHnVohzDG0rKUGXmBlpR
+         dGWg==
+X-Gm-Message-State: APjAAAWeU8lHMekOcKuAYmRMtIeaYDPjU6HXXP48XxynhqIvfJNgmec2
+        4HIIbj6yyj5YhN/NXDp1IWc=
+X-Google-Smtp-Source: APXvYqxvkJVbb9TTzlgEnbHW0VHeVS4ROAFFWNqxfcpCYwHxBBHX862JHcGxBlu49bVf6y91ehOUdg==
+X-Received: by 2002:a17:902:7407:: with SMTP id g7mr3520848pll.311.1557845296254;
+        Tue, 14 May 2019 07:48:16 -0700 (PDT)
 Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.20
+        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 07:48:23 -0700 (PDT)
+        Tue, 14 May 2019 07:48:15 -0700 (PDT)
 From:   Changbin Du <changbin.du@gmail.com>
 To:     bhelgaas@google.com, corbet@lwn.net
 Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
         Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 11/12] Documentation: PCI: convert endpoint/pci-test-function.txt to reST
-Date:   Tue, 14 May 2019 22:47:33 +0800
-Message-Id: <20190514144734.19760-12-changbin.du@gmail.com>
+Subject: [PATCH v6 09/12] Documentation: PCI: convert endpoint/pci-endpoint.txt to reST
+Date:   Tue, 14 May 2019 22:47:31 +0800
+Message-Id: <20190514144734.19760-10-changbin.du@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
 References: <20190514144734.19760-1-changbin.du@gmail.com>
@@ -82,149 +82,300 @@ Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/PCI/endpoint/index.rst          |  1 +
- ...est-function.txt => pci-test-function.rst} | 84 +++++++++++--------
- 2 files changed, 51 insertions(+), 34 deletions(-)
- rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (55%)
+ Documentation/PCI/endpoint/index.rst          | 10 ++
+ .../{pci-endpoint.txt => pci-endpoint.rst}    | 92 +++++++++++--------
+ Documentation/PCI/index.rst                   |  1 +
+ 3 files changed, 65 insertions(+), 38 deletions(-)
+ create mode 100644 Documentation/PCI/endpoint/index.rst
+ rename Documentation/PCI/endpoint/{pci-endpoint.txt => pci-endpoint.rst} (83%)
 
 diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-index 3951de9f923c..b680a3fc4fec 100644
---- a/Documentation/PCI/endpoint/index.rst
+new file mode 100644
+index 000000000000..0db4f2fcd7f0
+--- /dev/null
 +++ b/Documentation/PCI/endpoint/index.rst
-@@ -9,3 +9,4 @@ PCI Endpoint Framework
- 
-    pci-endpoint
-    pci-endpoint-cfs
-+   pci-test-function
-diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
-similarity index 55%
-rename from Documentation/PCI/endpoint/pci-test-function.txt
-rename to Documentation/PCI/endpoint/pci-test-function.rst
-index 5916f1f592bb..3c8521d7aa31 100644
---- a/Documentation/PCI/endpoint/pci-test-function.txt
-+++ b/Documentation/PCI/endpoint/pci-test-function.rst
-@@ -1,5 +1,10 @@
--				PCI TEST
+@@ -0,0 +1,10 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++======================
++PCI Endpoint Framework
++======================
++
++.. toctree::
++   :maxdepth: 2
++
++   pci-endpoint
+diff --git a/Documentation/PCI/endpoint/pci-endpoint.txt b/Documentation/PCI/endpoint/pci-endpoint.rst
+similarity index 83%
+rename from Documentation/PCI/endpoint/pci-endpoint.txt
+rename to Documentation/PCI/endpoint/pci-endpoint.rst
+index e86a96b66a6a..0e2311b5617b 100644
+--- a/Documentation/PCI/endpoint/pci-endpoint.txt
++++ b/Documentation/PCI/endpoint/pci-endpoint.rst
+@@ -1,11 +1,13 @@
+-			    PCI ENDPOINT FRAMEWORK
 -		    Kishon Vijay Abraham I <kishon@ti.com>
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=================
-+PCI Test Function
-+=================
-+
 +:Author: Kishon Vijay Abraham I <kishon@ti.com>
  
- Traditionally PCI RC has always been validated by using standard
- PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
-@@ -23,65 +28,76 @@ The PCI endpoint test device has the following registers:
- 	8) PCI_ENDPOINT_TEST_IRQ_TYPE
- 	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
+ This document is a guide to use the PCI Endpoint Framework in order to create
+ endpoint controller driver, endpoint function driver, and using configfs
+ interface to bind the function driver to the controller driver.
  
--*) PCI_ENDPOINT_TEST_MAGIC
-+* PCI_ENDPOINT_TEST_MAGIC
+-1. Introduction
++Introduction
++============
  
- This register will be used to test BAR0. A known pattern will be written
- and read back from MAGIC register to verify BAR0.
+ Linux has a comprehensive PCI subsystem to support PCI controllers that
+ operates in Root Complex mode. The subsystem has capability to scan PCI bus,
+@@ -19,26 +21,30 @@ add endpoint mode support in Linux. This will help to run Linux in an
+ EP system which can have a wide variety of use cases from testing or
+ validation, co-processor accelerator, etc.
  
--*) PCI_ENDPOINT_TEST_COMMAND:
-+* PCI_ENDPOINT_TEST_COMMAND
+-2. PCI Endpoint Core
++PCI Endpoint Core
++=================
  
- This register will be used by the host driver to indicate the function
- that the endpoint device must perform.
+ The PCI Endpoint Core layer comprises 3 components: the Endpoint Controller
+ library, the Endpoint Function library, and the configfs layer to bind the
+ endpoint function with the endpoint controller.
  
--Bitfield Description:
--  Bit 0		: raise legacy IRQ
--  Bit 1		: raise MSI IRQ
--  Bit 2		: raise MSI-X IRQ
--  Bit 3		: read command (read data from RC buffer)
--  Bit 4		: write command (write data to RC buffer)
--  Bit 5		: copy command (copy data from one RC buffer to another
--		  RC buffer)
-+========	================================================================
-+Bitfield	Description
-+========	================================================================
-+Bit 0		raise legacy IRQ
-+Bit 1		raise MSI IRQ
-+Bit 2		raise MSI-X IRQ
-+Bit 3		read command (read data from RC buffer)
-+Bit 4		write command (write data to RC buffer)
-+Bit 5		copy command (copy data from one RC buffer to another RC buffer)
-+========	================================================================
+-2.1 PCI Endpoint Controller(EPC) Library
++PCI Endpoint Controller(EPC) Library
++------------------------------------
  
--*) PCI_ENDPOINT_TEST_STATUS
-+* PCI_ENDPOINT_TEST_STATUS
+ The EPC library provides APIs to be used by the controller that can operate
+ in endpoint mode. It also provides APIs to be used by function driver/library
+ in order to implement a particular endpoint function.
  
- This register reflects the status of the PCI endpoint device.
+-2.1.1 APIs for the PCI controller Driver
++APIs for the PCI controller Driver
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
--Bitfield Description:
--  Bit 0		: read success
--  Bit 1		: read fail
--  Bit 2		: write success
--  Bit 3		: write fail
--  Bit 4		: copy success
--  Bit 5		: copy fail
--  Bit 6		: IRQ raised
--  Bit 7		: source address is invalid
--  Bit 8		: destination address is invalid
--
--*) PCI_ENDPOINT_TEST_SRC_ADDR
-+========	==============================
-+Bitfield	Description
-+========	==============================
-+Bit 0		read success
-+Bit 1		read fail
-+Bit 2		write success
-+Bit 3		write fail
-+Bit 4		copy success
-+Bit 5		copy fail
-+Bit 6		IRQ raised
-+Bit 7		source address is invalid
-+Bit 8		destination address is invalid
-+========	==============================
+ This section lists the APIs that the PCI Endpoint core provides to be used
+ by the PCI controller driver.
+ 
+-*) devm_pci_epc_create()/pci_epc_create()
++* devm_pci_epc_create()/pci_epc_create()
+ 
+    The PCI controller driver should implement the following ops:
 +
-+* PCI_ENDPOINT_TEST_SRC_ADDR
+ 	 * write_header: ops to populate configuration space header
+ 	 * set_bar: ops to configure the BAR
+ 	 * clear_bar: ops to reset the BAR
+@@ -51,110 +57,116 @@ by the PCI controller driver.
+    The PCI controller driver can then create a new EPC device by invoking
+    devm_pci_epc_create()/pci_epc_create().
  
- This register contains the source address (RC buffer address) for the
- COPY/READ command.
+-*) devm_pci_epc_destroy()/pci_epc_destroy()
++* devm_pci_epc_destroy()/pci_epc_destroy()
  
--*) PCI_ENDPOINT_TEST_DST_ADDR
-+* PCI_ENDPOINT_TEST_DST_ADDR
+    The PCI controller driver can destroy the EPC device created by either
+    devm_pci_epc_create() or pci_epc_create() using devm_pci_epc_destroy() or
+    pci_epc_destroy().
  
- This register contains the destination address (RC buffer address) for
- the COPY/WRITE command.
+-*) pci_epc_linkup()
++* pci_epc_linkup()
  
--*) PCI_ENDPOINT_TEST_IRQ_TYPE
-+* PCI_ENDPOINT_TEST_IRQ_TYPE
+    In order to notify all the function devices that the EPC device to which
+    they are linked has established a link with the host, the PCI controller
+    driver should invoke pci_epc_linkup().
  
- This register contains the interrupt type (Legacy/MSI) triggered
- for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
+-*) pci_epc_mem_init()
++* pci_epc_mem_init()
  
- Possible types:
-- - Legacy	: 0
-- - MSI		: 1
-- - MSI-X	: 2
+    Initialize the pci_epc_mem structure used for allocating EPC addr space.
  
--*) PCI_ENDPOINT_TEST_IRQ_NUMBER
-+======	==
-+Legacy	0
-+MSI	1
-+MSI-X	2
-+======	==
+-*) pci_epc_mem_exit()
++* pci_epc_mem_exit()
+ 
+    Cleanup the pci_epc_mem structure allocated during pci_epc_mem_init().
+ 
+-2.1.2 APIs for the PCI Endpoint Function Driver
 +
-+* PCI_ENDPOINT_TEST_IRQ_NUMBER
++APIs for the PCI Endpoint Function Driver
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
- This register contains the triggered ID interrupt.
+ This section lists the APIs that the PCI Endpoint core provides to be used
+ by the PCI endpoint function driver.
  
- Admissible values:
-- - Legacy	: 0
-- - MSI		: [1 .. 32]
-- - MSI-X	: [1 .. 2048]
+-*) pci_epc_write_header()
++* pci_epc_write_header()
+ 
+    The PCI endpoint function driver should use pci_epc_write_header() to
+    write the standard configuration header to the endpoint controller.
+ 
+-*) pci_epc_set_bar()
++* pci_epc_set_bar()
+ 
+    The PCI endpoint function driver should use pci_epc_set_bar() to configure
+    the Base Address Register in order for the host to assign PCI addr space.
+    Register space of the function driver is usually configured
+    using this API.
+ 
+-*) pci_epc_clear_bar()
++* pci_epc_clear_bar()
+ 
+    The PCI endpoint function driver should use pci_epc_clear_bar() to reset
+    the BAR.
+ 
+-*) pci_epc_raise_irq()
++* pci_epc_raise_irq()
+ 
+    The PCI endpoint function driver should use pci_epc_raise_irq() to raise
+    Legacy Interrupt, MSI or MSI-X Interrupt.
+ 
+-*) pci_epc_mem_alloc_addr()
++* pci_epc_mem_alloc_addr()
+ 
+    The PCI endpoint function driver should use pci_epc_mem_alloc_addr(), to
+    allocate memory address from EPC addr space which is required to access
+    RC's buffer
+ 
+-*) pci_epc_mem_free_addr()
++* pci_epc_mem_free_addr()
+ 
+    The PCI endpoint function driver should use pci_epc_mem_free_addr() to
+    free the memory space allocated using pci_epc_mem_alloc_addr().
+ 
+-2.1.3 Other APIs
++Other APIs
++~~~~~~~~~~
+ 
+ There are other APIs provided by the EPC library. These are used for binding
+ the EPF device with EPC device. pci-ep-cfs.c can be used as reference for
+ using these APIs.
+ 
+-*) pci_epc_get()
++* pci_epc_get()
+ 
+    Get a reference to the PCI endpoint controller based on the device name of
+    the controller.
+ 
+-*) pci_epc_put()
++* pci_epc_put()
+ 
+    Release the reference to the PCI endpoint controller obtained using
+    pci_epc_get()
+ 
+-*) pci_epc_add_epf()
++* pci_epc_add_epf()
+ 
+    Add a PCI endpoint function to a PCI endpoint controller. A PCIe device
+    can have up to 8 functions according to the specification.
+ 
+-*) pci_epc_remove_epf()
++* pci_epc_remove_epf()
+ 
+    Remove the PCI endpoint function from PCI endpoint controller.
+ 
+-*) pci_epc_start()
++* pci_epc_start()
+ 
+    The PCI endpoint function driver should invoke pci_epc_start() once it
+    has configured the endpoint function and wants to start the PCI link.
+ 
+-*) pci_epc_stop()
++* pci_epc_stop()
+ 
+    The PCI endpoint function driver should invoke pci_epc_stop() to stop
+    the PCI LINK.
+ 
+-2.2 PCI Endpoint Function(EPF) Library
 +
-+======	===========
-+Legacy	0
-+MSI	[1 .. 32]
-+MSI-X	[1 .. 2048]
-+======	===========
++PCI Endpoint Function(EPF) Library
++----------------------------------
+ 
+ The EPF library provides APIs to be used by the function driver and the EPC
+ library to provide endpoint mode functionality.
+ 
+-2.2.1 APIs for the PCI Endpoint Function Driver
++APIs for the PCI Endpoint Function Driver
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ This section lists the APIs that the PCI Endpoint core provides to be used
+ by the PCI endpoint function driver.
+ 
+-*) pci_epf_register_driver()
++* pci_epf_register_driver()
+ 
+    The PCI Endpoint Function driver should implement the following ops:
+ 	 * bind: ops to perform when a EPC device has been bound to EPF device
+@@ -166,50 +178,54 @@ by the PCI endpoint function driver.
+   The PCI Function driver can then register the PCI EPF driver by using
+   pci_epf_register_driver().
+ 
+-*) pci_epf_unregister_driver()
++* pci_epf_unregister_driver()
+ 
+   The PCI Function driver can unregister the PCI EPF driver by using
+   pci_epf_unregister_driver().
+ 
+-*) pci_epf_alloc_space()
++* pci_epf_alloc_space()
+ 
+   The PCI Function driver can allocate space for a particular BAR using
+   pci_epf_alloc_space().
+ 
+-*) pci_epf_free_space()
++* pci_epf_free_space()
+ 
+   The PCI Function driver can free the allocated space
+   (using pci_epf_alloc_space) by invoking pci_epf_free_space().
+ 
+-2.2.2 APIs for the PCI Endpoint Controller Library
++APIs for the PCI Endpoint Controller Library
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++
+ This section lists the APIs that the PCI Endpoint core provides to be used
+ by the PCI endpoint controller library.
+ 
+-*) pci_epf_linkup()
++* pci_epf_linkup()
+ 
+    The PCI endpoint controller library invokes pci_epf_linkup() when the
+    EPC device has established the connection to the host.
+ 
+-2.2.2 Other APIs
++Other APIs
++~~~~~~~~~~
++
+ There are other APIs provided by the EPF library. These are used to notify
+ the function driver when the EPF device is bound to the EPC device.
+ pci-ep-cfs.c can be used as reference for using these APIs.
+ 
+-*) pci_epf_create()
++* pci_epf_create()
+ 
+    Create a new PCI EPF device by passing the name of the PCI EPF device.
+    This name will be used to bind the the EPF device to a EPF driver.
+ 
+-*) pci_epf_destroy()
++* pci_epf_destroy()
+ 
+    Destroy the created PCI EPF device.
+ 
+-*) pci_epf_bind()
++* pci_epf_bind()
+ 
+    pci_epf_bind() should be invoked when the EPF device has been bound to
+    a EPC device.
+ 
+-*) pci_epf_unbind()
++* pci_epf_unbind()
+ 
+    pci_epf_unbind() should be invoked when the binding between EPC device
+    and EPF device is lost.
+diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
+index f54b65b1ca5f..f4c6121868c3 100644
+--- a/Documentation/PCI/index.rst
++++ b/Documentation/PCI/index.rst
+@@ -15,3 +15,4 @@ Linux PCI Bus Subsystem
+    acpi-info
+    pci-error-recovery
+    pcieaer-howto
++   endpoint/index
 -- 
 2.20.1
 
