@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3C4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CAEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841FB208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8BF214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfENHAX (ORCPT
+        id S1726491AbfENHCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:00:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43257 "EHLO ozlabs.org"
+        Tue, 14 May 2019 03:02:20 -0400
+Received: from ozlabs.org ([203.11.71.1]:33657 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfENHAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:00:23 -0400
+        id S1726148AbfENHCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:02:20 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4537qS0Z2pz9sML;
-        Tue, 14 May 2019 17:00:20 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4537sh6nsKz9sMr;
+        Tue, 14 May 2019 17:02:16 +1000 (AEST)
 From:   Michael Ellerman <mpe@ellerman.id.au>
 To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
         Paul Mackerras <paulus@samba.org>,
@@ -35,8 +35,8 @@ Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
 Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
 In-Reply-To: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
 References: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
-Date:   Tue, 14 May 2019 17:00:19 +1000
-Message-ID: <877eattta4.fsf@concordia.ellerman.id.au>
+Date:   Tue, 14 May 2019 17:02:16 +1000
+Message-ID: <874l5xtt6v.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,16 +47,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
 > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 >
+> Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
+
+ps. A "RESEND" implies the patch is unchanged and you're just resending
+it because it was ignored.
+
+In this case it should have just been "PATCH v2", with a note below the "---"
+saying "v2: Rebased onto powerpc/next ..."
+
+cheers
+
 > During a memory hotplug operations involving resizing of the HPT, we
 > invoke a stop_machine() to perform the resizing. In this code path, we
 > end up recursively taking the cpu_hotplug_lock, first in
 > memory_hotplug_begin() and then subsequently in stop_machine(). This
-> causes the system to hang.
-
-This implies we have never tested a memory hotplug that resized the HPT.
-Is that really true? Or did something change?
-
-> With lockdep enabled we get the following
+> causes the system to hang. With lockdep enabled we get the following
 > error message before the hang.
 >
 >   swapper/0/1 is trying to acquire lock:
@@ -64,9 +69,7 @@ Is that really true? Or did something change?
 >
 >   but task is already holding lock:
 >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-
-Do we have the full stack trace?
-
+>
 >   other info that might help us debug this:
 >    Possible unsafe locking scenario:
 >
@@ -138,12 +141,6 @@ Do we have the full stack trace?
 > -/* Must be called in user context */
 > +/*
 > + * Must be called in user context. The caller should hold the
-
-I realise you're just copying that comment, but it seems wrong. "user
-context" means userspace. I think it means "process context" doesn't it?
-
-Also "should" should be "must" :)
-
 > + * cpus_lock.
 > + */
 >  static int pseries_lpar_resize_hpt(unsigned long shift)
@@ -158,5 +155,6 @@ Also "should" should be "must" :)
 > +				     &state, NULL);
 >  
 >  	t2 = ktime_get();
-
-cheers
+>  
+> -- 
+> 1.9.4
