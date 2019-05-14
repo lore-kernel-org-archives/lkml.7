@@ -2,126 +2,243 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6C2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F5720862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76EDF20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Yf3p1HRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfENIyZ (ORCPT
+        id S1726441AbfENI4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:54:25 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:47971 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725916AbfENIyY (ORCPT
+        Tue, 14 May 2019 04:56:50 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:49128 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725916AbfENI4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:54:24 -0400
-Received: from [IPv6:2001:420:44c1:2579:859d:cefd:f7a7:d8be] ([IPv6:2001:420:44c1:2579:859d:cefd:f7a7:d8be])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id QTCThNgNTsDWyQTCXhnyVt; Tue, 14 May 2019 10:54:22 +0200
-Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <a1807c37-99cf-d1fa-bcb9-67af2935abaf@xs4all.nl>
-Date:   Tue, 14 May 2019 10:54:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 14 May 2019 04:56:50 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 514E4C01E1;
+        Tue, 14 May 2019 08:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557824200; bh=O+0rWepauJnazeZEJmN4/DK9betXSpBzbpaFCxnnojw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=Yf3p1HRP2tSiHuEfjUvd78hUwJqUehwQh0tSeY8klr0yrT0xMJ7IRd+ZvsNTpxqK6
+         DW4ngUsRHi9hM5yw+GugAEQxm9NrMPTI/r0QCiWR2TpnNpGTrnqyXTIfTYs1mWZ7UY
+         1RhOQuzdCg0WPZZbaWE35cV0uvHbOaqN8uaVtB5s/3PI883xUe/6ReDc0nrqCBw4Dz
+         MyLaB8O7uLjYW1CUaSkEd4ZlcgiVZo//VL+ydtO9BeC65K8jTGh1Ml8FY3h9fwxN4j
+         AKGdT1uQYOaIHUPMi40Pzq3FHL1Ixq1ztSxtKE6YoX+ocQefdYauJ1PHnCts4kzyc0
+         HcQOqfk4DG1Hw==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B047A009D;
+        Tue, 14 May 2019 08:56:49 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 14 May 2019 01:56:49 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
+ 14 May 2019 10:56:46 +0200
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+CC:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] tools pci: Do not delete pcitest.sh in 'make clean'
+Thread-Topic: [PATCH] tools pci: Do not delete pcitest.sh in 'make clean'
+Thread-Index: AQHVCbrw4jLq+8y4G0GDGSXvGZ9UF6ZqUVJQ
+Date:   Tue, 14 May 2019 08:56:46 +0000
+Message-ID: <305100E33629484CBB767107E4246BBB0A6F349C@DE02WEMBXB.internal.synopsys.com>
+References: <20190513175955.GB8003@kernel.org>
+In-Reply-To: <20190513175955.GB8003@kernel.org>
+Accept-Language: pt-PT, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfAgHoK2WGMk8wobjzwGKH8h2qhPqPdWqnic4oyaXyYXoeyoRnnLK/2ARQjpyQ0xK95h8xK8IxF4BxwZrXbykNh+Z/HyS6oJ80GXvwBJ8LvBnV8Fw8XHF
- ACq78qH8Y0dRpNHTfaxSdsYrf6/81duxZvrBRrvKbGitnonfy0N/vQt0CZr1UzBlaL1OI07Tnd+BqHQkJ9KdxqLU7tRShMsibjdCk1rOi0AW69oODpX2f0wp
- FHs8oSQrapUvigEDFBBLgmjBygAqXSvgWcnhkC/mbFC2q02Ox7Vk/URo+wAfHzLMKIqD8K+H/sdBjtWaev97wVyp9KmMvYWDHsSTCpMU6mYxbpqvYIrV4zEj
- ZodYpnwiM6h0uohbDMAtI/lqKBwtLDE0nP2Yo4oWMiLtwI6UU2TqqCWDlTmlP49TPFRbYYgX64ShzBEQBXYnBjbkqD2PVQ==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?utf-8?B?UEcxbGRHRStQR0YwSUc1dFBTSmliMlI1TG5SNGRDSWdjRDBpWXpwY2RYTmxj?=
+ =?utf-8?B?bk5jWjNWemRHRjJiMXhoY0hCa1lYUmhYSEp2WVcxcGJtZGNNRGxrT0RRNVlq?=
+ =?utf-8?B?WXRNekprTXkwMFlUUXdMVGcxWldVdE5tSTROR0poTWpsbE16VmlYRzF6WjNO?=
+ =?utf-8?B?Y2JYTm5MVE15TjJFM1pHRXpMVGMyTWpZdE1URmxPUzA1T0RneUxXWTRPVFJq?=
+ =?utf-8?B?TWpjek9EQTBNbHhoYldVdGRHVnpkRnd6TWpkaE4yUmhOUzAzTmpJMkxURXha?=
+ =?utf-8?B?VGt0T1RnNE1pMW1PRGswWXpJM016Z3dOREppYjJSNUxuUjRkQ0lnYzNvOUlq?=
+ =?utf-8?B?TTNPRElpSUhROUlqRXpNakF5TWprM09EQTBPVE0zTXpnNU5DSWdhRDBpVWpS?=
+ =?utf-8?B?SFN5dFNibXBPUlVWbVNVVktkRFZZVldweU9IWldSa3BGUFNJZ2FXUTlJaUln?=
+ =?utf-8?B?WW13OUlqQWlJR0p2UFNJeElpQmphVDBpWTBGQlFVRkZVa2hWTVZKVFVsVkdU?=
+ =?utf-8?B?a05uVlVGQlFsRktRVUZFUjJSMFREQk5aM0pXUVZsMmFWaFlTbVJ1TVc1NmFT?=
+ =?utf-8?B?dEtaR05zTW1aWFprMVBRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVaEJRVUZCUTJ0RFFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVWQlFWRkJRa0ZCUVVGR2RHSkNjSGRCUVVGQlFVRkJRVUZCUVVGQlFVRktO?=
+ =?utf-8?B?RUZCUVVKdFFVZHJRV0puUW1oQlJ6UkJXWGRDYkVGR09FRmpRVUp6UVVkRlFX?=
+ =?utf-8?B?Sm5RblZCUjJ0QlltZENia0ZHT0VGa2QwSm9RVWhSUVZwUlFubEJSekJCV1ZG?=
+ =?utf-8?B?Q2VVRkhjMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUlVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?blFVRkJRVUZCYm1kQlFVRkhXVUZpZDBJeFFVYzBRVnBCUW5sQlNHdEJXSGRD?=
+ =?utf-8?B?ZDBGSFJVRmpaMEl3UVVjMFFWcFJRbmxCU0UxQldIZENia0ZIV1VGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFWRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkRRVUZCUVVGQlEyVkJRVUZCV21kQ2RrRklWVUZpWjBKclFV?=
+ =?utf-8?B?aEpRV1ZSUW1aQlNFRkJXVkZDZVVGSVVVRmlaMEpzUVVoSlFXTjNRbVpCU0Ux?=
+ =?utf-8?B?QldWRkNkRUZJVFVGa1VVSjFRVWRqUVZoM1FtcEJSemhCWW1kQ2JVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUpCUVVGQlFVRkJRVUZCU1VGQlFVRkJRVW8wUVVGQlFtMUJSemhC?=
+ =?utf-8?B?WkZGQ2RVRkhVVUZqWjBJMVFVWTRRV05CUW1oQlNFbEJaRUZDZFVGSFZVRmpa?=
+ =?utf-8?B?MEo2UVVZNFFXTjNRbWhCUnpCQlkzZENNVUZITkVGYWQwSm1RVWhKUVZwUlFu?=
+ =?utf-8?B?cEJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGRlFVRkJRVUZCUVVGQlFXZEJRVUZCUVVGdVow?=
+ =?utf-8?B?RkJRVWRaUVdKM1FqRkJSelJCV2tGQ2VVRklhMEZZZDBKM1FVZEZRV05uUWpC?=
+ =?utf-8?B?QlJ6UkJXbEZDZVVGSVRVRllkMEo2UVVjd1FXRlJRbXBCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJVVUZCUVVGQlFVRkJRVU5C?=
+ =?utf-8?B?UVVGQlFVRkRaVUZCUVVGYVowSjJRVWhWUVdKblFtdEJTRWxCWlZGQ1prRklR?=
+ =?utf-8?B?VUZaVVVKNVFVaFJRV0puUW14QlNFbEJZM2RDWmtGSVRVRmtRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUWtGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGSlFVRkJRVUZCU2pSQlFVRkNiVUZIT0VGa1VVSjFRVWRSUVdO?=
+ =?utf-8?B?blFqVkJSamhCWTBGQ2FFRklTVUZrUVVKMVFVZFZRV05uUW5wQlJqaEJaRUZD?=
+ =?utf-8?B?ZWtGSE1FRlpkMEZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVVkJRVUZCUVVGQlFVRkJaMEZCUVVGQlFXNW5RVUZCUjFsQlluZENN?=
+ =?utf-8?B?VUZITkVGYVFVSjVRVWhyUVZoM1FuZEJSMFZCWTJkQ01FRkhORUZhVVVKNVFV?=
+ =?utf-8?B?aE5RVmgzUWpGQlJ6QkJXWGRCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZSUVVGQlFVRkJRVUZCUTBGQlFVRkJRVU5sUVVG?=
+ =?utf-8?B?QlFWcDNRakJCU0UxQldIZENkMEZJU1VGaWQwSnJRVWhWUVZsM1FqQkJSamhC?=
+ =?utf-8?B?WkVGQ2VVRkhSVUZoVVVKMVFVZHJRV0puUW01QlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQ1FVRkJRVUZCUVVGQlFVbEJR?=
+ =?utf-8?B?VUZCUVVGS05FRkJRVUo2UVVkRlFXSkJRbXhCU0UxQldIZENhRUZIVFVGWmQw?=
+ =?utf-8?B?SjJRVWhWUVdKblFqQkJSamhCWTBGQ2MwRkhSVUZpWjBGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJSVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZuUVVGQlFVRkJibWRCUVVGSVRVRlpVVUp6UVVkVlFXTjNRbVpC?=
+ =?utf-8?B?U0VWQlpGRkNka0ZJVVVGYVVVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVZGQlFVRkJRVUZCUVVGRFFVRkJRVUZCUTJWQlFVRkJZM2RDZFVGSVFV?=
+ =?utf-8?B?RmpkMEptUVVkM1FXRlJRbXBCUjFWQlltZENla0ZIVlVGWWQwSXdRVWRWUVdO?=
+ =?utf-8?B?blFuUkJSamhCVFZGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVSkJRVUZCUVVGQlFVRkJTVUZCUVVGQlFVbzBRVUZC?=
+ =?utf-8?B?UW5wQlJ6UkJZMEZDZWtGR09FRmlRVUp3UVVkTlFWcFJRblZCU0UxQldsRkNa?=
+ =?utf-8?B?a0ZJVVVGYVVVSjVRVWN3UVZoM1FucEJTRkZCWkZGQ2EwRkhWVUZpWjBJd1FV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZGUVVGQlFVRkJRVUZCUVdkQlFV?=
+ =?utf-8?B?RkJRVUZ1WjBGQlFVaFpRVnAzUW1aQlIzTkJXbEZDTlVGSVkwRmlkMEo1UVVk?=
+ =?utf-8?B?UlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZC?=
+ =?utf-8?B?UVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJR?=
+ =?utf-8?B?VUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFV?=
+ =?utf-8?B?RkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVG?=
+ =?utf-8?B?QlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlFVRkJRVUZCUVVGQlVVRkJRVUZC?=
+ =?utf-8?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+x-originating-ip: [10.98.3.41]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stanimir,
-
-On 4/12/19 5:59 PM, Stanimir Varbanov wrote:
-> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
-> field description to allow v4l clients to set bigger image size
-> in case of variable length compressed data.
-
-I've been reconsidering this change. The sizeimage value in the format
-is the minimum size a buffer should have in order to store the data of
-an image of the width and height as described in the format.
-
-But there is nothing that prevents userspace from calling VIDIOC_CREATEBUFS
-instead of VIDIOC_REQBUFS to allocate larger buffers.
-
-So do we really need this change?
-
-The more I think about this, the more uncomfortable I become with this change.
-
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> ---
->  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
->  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> index 5688c816e334..005428a8121e 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
-> @@ -31,7 +31,18 @@ describing all planes of that format.
->  
->      * - __u32
->        - ``sizeimage``
-> -      - Maximum size in bytes required for image data in this plane.
-> +      - Maximum size in bytes required for image data in this plane,
-> +	set by the driver. When the image consists of variable length
-> +	compressed data this is the number of bytes required by the
-> +	codec to support the worst-case compression scenario.
-> +
-> +	For uncompressed images the driver will set the value. For
-> +	variable length compressed data clients are allowed to set
-> +	the sizeimage field, but the driver may ignore it and set the
-> +	value itself, or it may modify the provided value based on
-> +	alignment requirements or minimum/maximum size requirements.
-> +	If the client wants to leave this to the driver, then it should
-> +	set sizeimage to 0.
->      * - __u32
->        - ``bytesperline``
->        - Distance in bytes between the leftmost pixels in two adjacent
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> index 71eebfc6d853..0f7771151db9 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
-> @@ -89,7 +89,16 @@ Single-planar format structure
->        - Size in bytes of the buffer to hold a complete image, set by the
->  	driver. Usually this is ``bytesperline`` times ``height``. When
->  	the image consists of variable length compressed data this is the
-> -	maximum number of bytes required to hold an image.
-> +	number of bytes required by the codec to support the worst-case
-> +	compression scenario.
-> +
-> +	For uncompressed images the driver will set the value. For
-> +	variable length compressed data clients are allowed to set
-> +	the sizeimage field, but the driver may ignore it and set the
-> +	value itself, or it may modify the provided value based on
-> +	alignment requirements or minimum/maximum size requirements.
-> +	If the client wants to leave this to the driver, then it should
-> +	set sizeimage to 0.
->      * - __u32
->        - ``colorspace``
->        - Image colorspace, from enum :c:type:`v4l2_colorspace`.
-> 
-
+T24gTW9uLCBNYXkgMTMsIDIwMTkgYXQgMTk6Mzc6MjgsIEFybmFsZG8gQ2FydmFsaG8gZGUgTWVs
+byANCjxhcm5hbGRvLm1lbG9AZ21haWwuY29tPiB3cm90ZToNCg0KDQpIaSBBcm5hbGRvLA0KDQpJ
+IHRoaW5rIEtpc2hvbiBoYXMgYWxyZWFkeSBkaXNwYXRjaGVkIGEgcGF0Y2ggZml4aW5nIHRoaXMg
+aXNzdWUuDQpLaXNob24sIGNhbiB5b3UgY29uZmlybSBpdD8NCg0KUmVnYXJkcywNCkd1c3Rhdm8N
+Cg0KPiBIaSwNCj4gDQo+IAlJIGhhdmUgdGhpcyBpbiBteSBsb2NhbCBwZXJmL2NvcmUgYnJhbmNo
+LCBsaW5lZCB1cCBmb3IgNS4yLA0KPiBwbGVhc2UgbGV0IG1lIGtub3cgaWYgeW91J3JlIG9rIHdp
+dGggaXQuDQo+IA0KPiAtIEFybmFsZG8NCj4gDQo+IGNvbW1pdCA0ZGZlOGY1OTE1NjM4MmI3Njk1
+ZmU1YzEwYmRkZDVjOTdjODQyODlhDQo+IEF1dGhvcjogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxv
+IDxhY21lQHJlZGhhdC5jb20+DQo+IERhdGU6ICAgTW9uIE1heSAxMyAxMzo1MzoyMCAyMDE5IC0w
+NDAwDQo+IA0KPiAgICAgdG9vbHMgcGNpOiBEbyBub3QgZGVsZXRlIHBjaXRlc3Quc2ggaW4gJ21h
+a2UgY2xlYW4nDQo+ICAgICANCj4gICAgIFdoZW4gcnVubmluZyAnbWFrZSAtQyB0b29scyBjbGVh
+bicgSSBub3RpY2VkIHRoYXQgYSByZXZpc2lvbiBjb250cm9sbGVkDQo+ICAgICBmaWxlIHdhcyBi
+ZWluZyBkZWxldGVkOg0KPiAgICAgDQo+ICAgICAgICQgZ2l0IGRpZmYNCj4gICAgICAgZGlmZiAt
+LWdpdCBhL3Rvb2xzL3BjaS9wY2l0ZXN0LnNoIGIvdG9vbHMvcGNpL3BjaXRlc3Quc2gNCj4gICAg
+ICAgZGVsZXRlZCBmaWxlIG1vZGUgMTAwNjQ0DQo+ICAgICAgIGluZGV4IDc1ZWQ0OGZmMjk5MC4u
+MDAwMDAwMDAwMDAwDQo+ICAgICAgIC0tLSBhL3Rvb2xzL3BjaS9wY2l0ZXN0LnNoDQo+ICAgICAg
+ICsrKyAvZGV2L251bGwNCj4gICAgICAgQEAgLTEsNzIgKzAsMCBAQA0KPiAgICAgICAtIyEvYmlu
+L3NoDQo+ICAgICAgIC0jIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wDQo+ICAgICAg
+IC0NCj4gICAgICAgLWVjaG8gIkJBUiB0ZXN0cyINCj4gICAgICAgLWVjaG8NCj4gICAgICAgPFNO
+SVA+DQo+ICAgICANCj4gICAgIFNvIEkgY2hhbmdlZCB0aGUgbWFrZSB2YXJpYWJsZXMgdG8gZml4
+IHRoYXQsIHRlc3RpbmcgaXQgc2hvdWxkIHByb2R1Y2UNCj4gICAgIHRoZSBzYW1lIGludGVuZGVk
+IHJlc3VsdCB3aGlsZSBub3QgZGVsZXRpbmcgcmV2aXNpb24gY29udHJvbGxlZCBmaWxlcy4NCj4g
+ICAgIA0KPiAgICAgICAkIG1ha2UgTz0vdG1wL2J1aWxkL3BjaSAtQyB0b29scy9wY2kgaW5zdGFs
+bA0KPiAgICAgICBtYWtlOiBFbnRlcmluZyBkaXJlY3RvcnkgJy9ob21lL2FjbWUvZ2l0L3BlcmYv
+dG9vbHMvcGNpJw0KPiAgICAgICBtYWtlIC1mIC9ob21lL2FjbWUvZ2l0L3BlcmYvdG9vbHMvYnVp
+bGQvTWFrZWZpbGUuYnVpbGQgZGlyPS4gb2JqPXBjaXRlc3QNCj4gICAgICAgaW5zdGFsbCAtZCAt
+bSA3NTUgL3Vzci9iaW47ICAgICAgICAgICBcDQo+ICAgICAgIGZvciBwcm9ncmFtIGluIC90bXAv
+YnVpbGQvcGNpL3BjaXRlc3QgcGNpdGVzdC5zaDsgZG8gIFwNCj4gICAgICAgICAgICAgaW5zdGFs
+bCAkcHJvZ3JhbSAvdXNyL2JpbjsgICAgICBcDQo+ICAgICAgIGRvbmUNCj4gICAgICAgaW5zdGFs
+bDogY2Fubm90IGNoYW5nZSBwZXJtaXNzaW9ucyBvZiDigJgvdXNyL2JpbuKAmTogT3BlcmF0aW9u
+IG5vdCBwZXJtaXR0ZWQNCj4gICAgICAgaW5zdGFsbDogY2Fubm90IGNyZWF0ZSByZWd1bGFyIGZp
+bGUgJy91c3IvYmluL3BjaXRlc3QnOiBQZXJtaXNzaW9uIGRlbmllZA0KPiAgICAgICBpbnN0YWxs
+OiBjYW5ub3QgY3JlYXRlIHJlZ3VsYXIgZmlsZSAnL3Vzci9iaW4vcGNpdGVzdC5zaCc6IFBlcm1p
+c3Npb24gZGVuaWVkDQo+ICAgICAgIG1ha2U6ICoqKiBbTWFrZWZpbGU6NDY6IGluc3RhbGxdIEVy
+cm9yIDENCj4gICAgICAgbWFrZTogTGVhdmluZyBkaXJlY3RvcnkgJy9ob21lL2FjbWUvZ2l0L3Bl
+cmYvdG9vbHMvcGNpJw0KPiAgICAgICAkIGxzIC1sYSAvdG1wL2J1aWxkL3BjaS9wY2l0ZXN0DQo+
+ICAgICAgIC1yd3hyd3hyLXguIDEgYWNtZSBhY21lIDI3MTUyIE1heSAxMyAxMzo1MiAvdG1wL2J1
+aWxkL3BjaS9wY2l0ZXN0DQo+ICAgICAgICQgL3RtcC9idWlsZC9wY2kvcGNpdGVzdA0KPiAgICAg
+ICBjYW4ndCBvcGVuIFBDSSBFbmRwb2ludCBUZXN0IGRldmljZTogTm8gc3VjaCBmaWxlIG9yIGRp
+cmVjdG9yeQ0KPiAgICAgICAkDQo+ICAgICANCj4gICAgIENjOiBBZHJpYW4gSHVudGVyIDxhZHJp
+YW4uaHVudGVyQGludGVsLmNvbT4NCj4gICAgIENjOiBHdXN0YXZvIFBpbWVudGVsIDxndXN0YXZv
+LnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gICAgIENjOiBKaXJpIE9sc2EgPGpvbHNhQGtlcm5l
+bC5vcmc+DQo+ICAgICBDYzogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4N
+Cj4gICAgIENjOiBMb3JlbnpvIFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT4N
+Cj4gICAgIENjOiBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+DQo+ICAgICBGaXhl
+czogMWNlNzhjZTA5NDMwICgidG9vbHM6IFBDSTogQ2hhbmdlIHBjaXRlc3QgY29tcGlsaW5nIHBy
+b2Nlc3MiKQ0KPiAgICAgTGluazogaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29tL3Yy
+L3VybD91PWh0dHBzLTNBX19sa21sLmtlcm5lbC5vcmdfbl90aXAtMkQ5cmU2YmQ3ZWg5ZXBpM2tv
+c2xrdjNvY24tNDBnaXQua2VybmVsLm9yZyZkPUR3SURhUSZjPURQTDZfWF82SmtYRng3QVhXcUIw
+dGcmcj1ia1d4cExvVy1mLUUzRWRpRENDYTBfaDBQaWNzVmlhc1Nsdklwelp2UHhzJm09YVpqUjVS
+OTFBSlI0MDJGUkREbll6WFplelRIcGhaQ2lOaC05RzhCTzZ2RSZzPVZ6a1QwWFl2QjM3c1ZaOC1s
+T3hXTjdMc0c2SXZEVENSakNUVWZlcnRzUnMmZT0NCj4gICAgIFNpZ25lZC1vZmYtYnk6IEFybmFs
+ZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUByZWRoYXQuY29tPg0KPiANCj4gZGlmZiAtLWdpdCBh
+L3Rvb2xzL3BjaS9NYWtlZmlsZSBiL3Rvb2xzL3BjaS9NYWtlZmlsZQ0KPiBpbmRleCA0NmU0YzJm
+MzE4YzkuLmY2NGRhODE3YmMwMyAxMDA2NDQNCj4gLS0tIGEvdG9vbHMvcGNpL01ha2VmaWxlDQo+
+ICsrKyBiL3Rvb2xzL3BjaS9NYWtlZmlsZQ0KPiBAQCAtMTQsNyArMTQsNyBAQCBNQUtFRkxBR1Mg
+Kz0gLXINCj4gIA0KPiAgQ0ZMQUdTICs9IC1PMiAtV2FsbCAtZyAtRF9HTlVfU09VUkNFIC1JJChP
+VVRQVVQpaW5jbHVkZQ0KPiAgDQo+IC1BTExfVEFSR0VUUyA6PSBwY2l0ZXN0IHBjaXRlc3Quc2gN
+Cj4gK0FMTF9UQVJHRVRTIDo9IHBjaXRlc3QNCj4gIEFMTF9QUk9HUkFNUyA6PSAkKHBhdHN1YnN0
+ICUsJChPVVRQVVQpJSwkKEFMTF9UQVJHRVRTKSkNCj4gIA0KPiAgYWxsOiAkKEFMTF9QUk9HUkFN
+UykNCj4gQEAgLTQ0LDcgKzQ0LDcgQEAgY2xlYW46DQo+ICANCj4gIGluc3RhbGw6ICQoQUxMX1BS
+T0dSQU1TKQ0KPiAgCWluc3RhbGwgLWQgLW0gNzU1ICQoREVTVERJUikkKGJpbmRpcik7CQlcDQo+
+IC0JZm9yIHByb2dyYW0gaW4gJChBTExfUFJPR1JBTVMpOyBkbwkJXA0KPiArCWZvciBwcm9ncmFt
+IGluICQoQUxMX1BST0dSQU1TKSBwY2l0ZXN0LnNoOyBkbwlcDQo+ICAJCWluc3RhbGwgJCRwcm9n
+cmFtICQoREVTVERJUikkKGJpbmRpcik7CVwNCj4gIAlkb25lDQo+ICANCg0KDQo=
