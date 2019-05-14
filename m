@@ -5,90 +5,151 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC164C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28187C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5008208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E929420879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dob32DPo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGETcZb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfENFxh (ORCPT
+        id S1726898AbfENFzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:53:37 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38642 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENFxg (ORCPT
+        Tue, 14 May 2019 01:55:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43467 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENFzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:53:36 -0400
-Received: by mail-lj1-f196.google.com with SMTP id 14so13121305ljj.5;
-        Mon, 13 May 2019 22:53:35 -0700 (PDT)
+        Tue, 14 May 2019 01:55:16 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c6so8494725pfa.10;
+        Mon, 13 May 2019 22:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=bM8hX4jppxiiULCsRqeT+54oxj9AT3t2fWeo8Qg5H18=;
-        b=Dob32DPoL28AKLt8YMC5ibe91NtjpjbzGPVHHk8989EBn9rOV27UBxAiE9y5p9T1nE
-         fLc3Sk2ckq+3v/VDhuZq67lIbfDE/2xLNa1ul3s+hN0SwcrsPQHePrwWRU5SmASrF2wB
-         Kceqql6z0YU/4HAP2PxGQWot0rJDixIGSMhwGOPWTew8N/0DB7dLXkUmXEqbtYvRgaz2
-         v8ZTqlPv+do87EQ162FcrGCOXmTMDMEs8abJno+7PblkZCcjMpNCVO/ctt8bg2R6/alF
-         1sjQxbH36CWqJj3CGd7c3FX7clQxVFQl6IeQBFqff3zmwClmL65/2YePRBj8FfXLrmyF
-         DtEA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CMDRp8XpQweyoE6w7mWaIS4V4U3Zt6PA6daqDS60vy4=;
+        b=AGETcZb5B5+JSFCrLzQCchKAqOSdHTu08ihur04wjJAh4hRZzLT5eq0cLyddtkUxpy
+         9EAUk0dM3Jh09plKuOu01QSRFeSHDwN3hbK/O01GgzEeO/4agp1pcwQBmYkoUTXNrK4S
+         wt40Lc832cHqClBbr5NtBUsffKq8l/dvP7Yhcibu4GuO78iIy0BGaTxcM8tlriyAJKWY
+         4cUtkluCq3TE4EA20rAMgEqrIDKaiugh/VrCoj/ToAukkNJ5RdYQmCiul6xi/KaQoBfE
+         +m9UVL+ZjktcaXrKq3w1kWnxRr+iVTyzx+3LC73cDhZ3dS+w4gjviHZfwq3pZdBNL78D
+         TYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=bM8hX4jppxiiULCsRqeT+54oxj9AT3t2fWeo8Qg5H18=;
-        b=s4pV+oDnGi5BlFcgpiKPxTQg+G2Fds/j2wGKSlUYbEYGLBn3hgtyBwpIJKC8Ws5TBN
-         3J7pFTj4t+6jpxKNimwP1nWzAdfiTkDaMiyA+1xizdIbfGq+ZndRqemYBCpS8PBC2r9f
-         Pu07Au6CZ8hU155puyZwq7G/VNntQSqcRkNxdd6PbhRO+TwgESKwWk7q2OfOjimmzxOs
-         WOitFjHyboSNtfHBR2vG7vqVktLHogpuXE/6OTfvkuN1oRvz5eMaq+1yGBRWIrPVLFMo
-         IL6IowLADixISfqRIponMNpi/KON2bHMAARwJUUgYfmG2TrNJaLrCblabImz8gYQ8dlJ
-         9wQA==
-X-Gm-Message-State: APjAAAX5lIdTZmpbdPiVMrfthGPh1gxqqyC5yGa0M92Q6icXhAydvL88
-        m8L+6mVc8HnyV35YMZNKEfQ=
-X-Google-Smtp-Source: APXvYqzuGAt6PH1pi+yzKaxNkn0AG7TBFPHbW5+hx5CYlVXf4WXfqqLPsFmrqnUUKbHAmIvFhV4ftQ==
-X-Received: by 2002:a2e:89cc:: with SMTP id c12mr11613738ljk.90.1557813214576;
-        Mon, 13 May 2019 22:53:34 -0700 (PDT)
-Received: from k8s-master.localdomain (kovt.soborka.net. [94.158.152.75])
-        by smtp.googlemail.com with ESMTPSA id y7sm3465555ljj.34.2019.05.13.22.53.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 22:53:33 -0700 (PDT)
-From:   Kovtunenko Oleksandr <alexander198961@gmail.com>
-To:     sfrench@samba.org
-Cc:     linux-kernel@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-cifs@vger.kernel.org,
-        Kovtunenko Oleksandr <alexander198961@gmail.com>
-Subject: [PATCH] Fixed  https://bugzilla.kernel.org/show_bug.cgi?id=202935 allow write on the same file
-Date:   Tue, 14 May 2019 05:52:34 +0000
-Message-Id: <1557813154-6663-1-git-send-email-alexander198961@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CMDRp8XpQweyoE6w7mWaIS4V4U3Zt6PA6daqDS60vy4=;
+        b=rCsH5uu8/TSUHIv4v97ozlyMtXMCqOxcGrC6tQGhEXWDt4aCcR2cxtagVCcIJSezbl
+         6kPD+UwH5qmFYrfdqtgUH46vmQbDBXg4SR5Vl+D6AWH14bUFodHdQoPAXJ8k2CmSjnVe
+         9m9TJtNFfVy0TnZMvoh9+cb6XOpgWvkGHo96Mrh57AtUXHF5eBtUuIVgN2CYVPdqXyiB
+         sGYGq6ymSYdKVkHdhoPyplDw//gp2WyZz2vfnM1QK6PMQOUiAELIf81Ekey64oNdL0X1
+         h6bNdj9pXnQ9HGKegAdTNv5UATzAr41f9wG3Y0CYldxnkfGHG5/kvwAKYKKbiYIiIH91
+         Ly8Q==
+X-Gm-Message-State: APjAAAU4lyIpFpNshLhKYXe+31UDKkf/5JCFHekCFjIl242nBYZT9hnP
+        76PHxwTe0dcXn6NgEn+Ba5D4w+sy
+X-Google-Smtp-Source: APXvYqwJB4aneVhpH1fMcWBasJHmUPuELrl/sHgYpGsFJ084xgc/kGYBvgpy0nL8CvfCAVIAX32xjQ==
+X-Received: by 2002:a63:309:: with SMTP id 9mr36437674pgd.49.1557813315521;
+        Mon, 13 May 2019 22:55:15 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id f87sm22808814pff.56.2019.05.13.22.55.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 13 May 2019 22:55:15 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: [PATCH v2] KVM: X86: Emulate MSR_IA32_MISC_ENABLE MWAIT bit
+Date:   Tue, 14 May 2019 13:55:09 +0800
+Message-Id: <1557813309-8524-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Kovtunenko Oleksandr <alexander198961@gmail.com>
----
- fs/cifs/cifsfs.c | 5 -----
- 1 file changed, 5 deletions(-)
+From: Wanpeng Li <wanpengli@tencent.com>
 
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index a05bf1d..2964438 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -1073,11 +1073,6 @@ ssize_t cifs_file_copychunk_range(unsigned int xid,
+MSR IA32_MSIC_ENABLE bit 18, according to SDM:
+
+| When this bit is set to 0, the MONITOR feature flag is not set (CPUID.01H:ECX[bit 3] = 0). 
+| This indicates that MONITOR/MWAIT are not supported.
+| 
+| Software attempts to execute MONITOR/MWAIT will cause #UD when this bit is 0.
+| 
+| When this bit is set to 1 (default), MONITOR/MWAIT are supported (CPUID.01H:ECX[bit 3] = 1). 
+
+The CPUID.01H:ECX[bit 3] ought to mirror the value of the MSR bit, 
+CPUID.01H:ECX[bit 3] is a better guard than kvm_mwait_in_guest().
+kvm_mwait_in_guest() affects the behavior of MONITOR/MWAIT, not its
+guest visibility.
+
+This patch implements toggling of the CPUID bit based on guest writes 
+to the MSR.
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v1 -> v2:
+ * to configure MSR_IA32_MISC_ENABLE_MWAIT bit in userspace
+ * implements toggling of the CPUID bit based on guest writes to the MSR
+
+ arch/x86/kvm/cpuid.c | 8 ++++++++
+ arch/x86/kvm/x86.c   | 9 +++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index fd39516..0f82393 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -137,6 +137,14 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
+ 		(best->eax & (1 << KVM_FEATURE_PV_UNHALT)))
+ 		best->eax &= ~(1 << KVM_FEATURE_PV_UNHALT);
  
- 	cifs_dbg(FYI, "copychunk range\n");
- 
--	if (src_inode == target_inode) {
--		rc = -EINVAL;
--		goto out;
--	}
--
- 	if (!src_file->private_data || !dst_file->private_data) {
- 		rc = -EBADF;
- 		cifs_dbg(VFS, "missing cifsFileInfo on copy range src file\n");
++	best = kvm_find_cpuid_entry(vcpu, 0x1, 0);
++	if (best) {
++		if (vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT)
++			best->ecx |= F(MWAIT);
++		else
++			best->ecx &= ~F(MWAIT);
++	}
++
+ 	/* Update physical-address width */
+ 	vcpu->arch.maxphyaddr = cpuid_query_maxphyaddr(vcpu);
+ 	kvm_mmu_reset_context(vcpu);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3bbf3ab..4ed45ab 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2506,6 +2506,15 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		}
+ 		break;
+ 	case MSR_IA32_MISC_ENABLE:
++		if ((vcpu->arch.ia32_misc_enable_msr ^ data) & MSR_IA32_MISC_ENABLE_MWAIT) {
++			if ((vcpu->arch.ia32_misc_enable_msr & MSR_IA32_MISC_ENABLE_MWAIT) &&
++				!(data & MSR_IA32_MISC_ENABLE_MWAIT)) {
++				if (!guest_cpuid_has(vcpu, X86_FEATURE_XMM3))
++					return 1;
++			}
++			vcpu->arch.ia32_misc_enable_msr = data;
++			kvm_update_cpuid(vcpu);
++		}
+ 		vcpu->arch.ia32_misc_enable_msr = data;
+ 		break;
+ 	case MSR_IA32_SMBASE:
 -- 
-1.8.3.1
+2.7.4
 
