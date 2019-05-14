@@ -2,123 +2,63 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2A6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF16C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC762147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557826244;
-	bh=fM+FURnsr22KLYFuwhFdMwwGbisL0hWXZHm+1EB/Yrc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LyrQxoB0tNPctdFeTETXWnaZfomonYHIfeyjY1ELr3zvjk0O/GRVhIguTHsuBOyyn
-	 V6pQOvBYJm6E1El8qJ/JWJRcsj/M5Fuhih85qHnZtD23fdGeErx2zhWLhU9Sq0Bzg9
-	 OZGS6AQDKQbEzDwtcLLki6AfGAaYfhL5+F1IvrVs=
+	by mail.kernel.org (Postfix) with ESMTP id B71FE21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfENJan (ORCPT
+        id S1726338AbfENJdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:30:43 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53980 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfENJam (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:30:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ogUgaaH2FccQD+ItDmWrUWM6+03M0Do2XSZMnpUHceY=; b=CJ3twDJ4Ss3i508fdPmdK/zRj
-        R7w67ibexGoEp29YCWd9SiSVlvTj16CEgFg2trAJl1h1ZwgmIrK363txkHxSuF5/DNZi1u2TvqUNZ
-        iSig4jcBBeg/ZVnrzkBv8EXUH95t3/LhNkfA3b8QWtDIC2eyWjNhReN3DdBZEu7C66eIQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQTlf-0000a2-Bf; Tue, 14 May 2019 09:30:39 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id CB7981128518; Tue, 14 May 2019 10:30:38 +0100 (BST)
-Date:   Tue, 14 May 2019 10:30:38 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 1/4] spi: For controllers that need realtime always use
- the pump thread
-Message-ID: <20190514093038.GB8665@sirena.org.uk>
-References: <20190510223437.84368-1-dianders@chromium.org>
- <20190510223437.84368-2-dianders@chromium.org>
- <20190512073301.GC21483@sirena.org.uk>
- <CAD=FV=UBic4qywgYQFGEXx_frD9ZoRJX7XGgDbQCvb2CbkBa9w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UBic4qywgYQFGEXx_frD9ZoRJX7XGgDbQCvb2CbkBa9w@mail.gmail.com>
-X-Cookie: Information is the inverse of entropy.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 14 May 2019 05:33:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:52914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbfENJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:33:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2EC2374;
+        Tue, 14 May 2019 02:33:03 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FC633F703;
+        Tue, 14 May 2019 02:33:02 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [PATCH] objtool: doc: Fix one-file exception Makefile directive
+Date:   Tue, 14 May 2019 10:32:43 +0100
+Message-Id: <20190514093243.17356-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The directive specified in the documentation to add an exception
+for a single file in a Makefile was inverted.
 
---61jdw2sOBCFtR2d/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+---
+ tools/objtool/Documentation/stack-validation.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, May 13, 2019 at 01:24:57PM -0700, Doug Anderson wrote:
-> On Sun, May 12, 2019 at 10:05 AM Mark Brown <broonie@kernel.org> wrote:
+diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
+index 3995735a878f..cd17ee022072 100644
+--- a/tools/objtool/Documentation/stack-validation.txt
++++ b/tools/objtool/Documentation/stack-validation.txt
+@@ -306,7 +306,7 @@ ignore it:
+ 
+ - To skip validation of a file, add
+ 
+-    OBJECT_FILES_NON_STANDARD_filename.o := n
++    OBJECT_FILES_NON_STANDARD_filename.o := y
+ 
+   to the Makefile.
+ 
+-- 
+2.17.1
 
-> > If performance is important you probably also want to avoid the context
-> > thrashing - executing in the calling context is generally a substantial
-> > performance boost.  I can see this causing problems further down the
-> > line when someone else turns up with a different requirement, perhaps in
-> > an application where the caller does actually have a raised priority
-> > themselves and just wanted to make sure that the thread wasn't lower
-> > than they are.  I guess it'd be nice if we could check what priority the
-> > calling thread has and make a decision based on that but there don't
-> > seem to be any facilities for doing that which I can see right now.
-
-> In my case performance is 2nd place to a transfer not getting
-> interrupted once started (so we don't break the 8ms rule of the EC).
-
-That's great but other users do care very much about performance and are
-also interested in both priority control and avoiding context thrashing.
-
-> My solution in v2 of my series is to take out the forcing in the case
-> that the controller wanted "rt" priority and then to add "force" to
-> the parameter name.  If someone wants rt priority for the thread but
-> doesn't want to force all transfers to the thread we can later add a
-> different parameter for that?
-
-I think that's going to be the common case for this.  Forcing context
-thrashing is really not something anyone else is asking for.
-
---61jdw2sOBCFtR2d/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzair4ACgkQJNaLcl1U
-h9DoXAf/fzz5EFthAbXe19mb473HQldgqE56pd7CBSi1QQH5k+puSKto+29/CYoj
-aZR8w3Cn56+X0xB3rPvvkQzvpr/Och2AYJ2EX4lbrX/YnLEPjlZwaYUbZWFh/mLi
-5lgWO8TLgLafUNknlatJCG/fh3MTBOxKtKNi8awjM7ucNn+/h0COCeml9nPe6IGg
-x+FlA7n4W4jrUbcndTHtUeW0JudK6IP4+eGImK6alhoz0YiIsmo1lWUPzDAtW2zC
-iOMaS3WleNJRO4VS5wmQMAmmjjvg/fKLbeZLQRDcRir6eiHZbwCW5R/b3K7aMNh2
-AXHNWcOHpgqSOu3CNcqik6IZyox8vw==
-=ktFw
------END PGP SIGNATURE-----
-
---61jdw2sOBCFtR2d/--
