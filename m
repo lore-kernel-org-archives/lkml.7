@@ -2,156 +2,150 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE55EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D6AE208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0F720862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fZ8OmwN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfENKpm (ORCPT
+        id S1726370AbfENKrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:45:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725892AbfENKpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:45:42 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9E3799C08F69048496F2;
-        Tue, 14 May 2019 18:45:39 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
- 18:45:31 +0800
-Subject: Re: [PATCH 2/2] scsi: libsas: delete sas port if expander discover
- failed
-To:     Jason Yan <yanaijie@huawei.com>, <martin.petersen@oracle.com>,
-        <jejb@linux.vnet.ibm.com>
-References: <20190514024239.47313-1-yanaijie@huawei.com>
- <20190514024239.47313-2-yanaijie@huawei.com>
-CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <hare@suse.com>, <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
-        <hch@lst.de>, <huangdaode@hisilicon.com>,
-        <chenxiang66@hisilicon.com>, <miaoxie@huawei.com>,
-        <zhaohongjiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <6b831fd1-825e-19a7-0981-bc182cf4685f@huawei.com>
-Date:   Tue, 14 May 2019 11:45:23 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 14 May 2019 06:47:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35900 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENKrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:47:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s17so2175686wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:47:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=5gH8SCU/PfgFL5qEKFSie+aHi1qe4cMAqpYxa6KsVr0=;
+        b=fZ8OmwN3LUlRQYZcNOrplAIIuTozu0QQ5MxVQASFRednsF/M7Dj5xVDBEWiKdhET1t
+         zTNFaVuzuUn5QArZyZf2Wcq0rgARGXJw9unRfiYbQJgjOByk6guGFdDyYrywgNwUJnu1
+         7saI7oyKJeDEkIGN/h7D3c1A1+uN5Z9LQFo9tGCD9J2Qd0gAPThHRzZSOTL8LFX1LCJQ
+         IyF+RmpegWQG4WwDYeF+u9ClHSf6hG6Dn3uLK8l7qk7jTOjavlaB7/oNUOiUkXCRS6qB
+         sh2CQj5p6qAkXEe/LdjQKkn4aOF9LvEZq9JDqSQ+mER/lSsV+QfPYv/Q5hLqIliufVfa
+         rphg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=5gH8SCU/PfgFL5qEKFSie+aHi1qe4cMAqpYxa6KsVr0=;
+        b=i3XHU1BaO4eB7vPNmYjasit5Kx4MKAJEH6afhTlzqmOjQgUNlswLxFnTWLFJQziR3r
+         ynJJQpdU6LGzlwR/spsO8gXBxixKBrFhUeZNJLGz9rAinGSyIQ6hokpiOl4fo4ARcVnV
+         RrWchAVHQVfeB+KoElB5sjWQwYpcVQBUVLeHuoBJIHk1J4/9SS7eKsN4Z9fl/KkiXJpi
+         xzjuv99ZHXSaNYppbRewii27/rd6vhe6hQ7hPGdi03ToHcCyaBCdEBAADzmDyKPDyt6J
+         ltiCgSGjxhUMKSCXAPsa6OYTDzu5cTBDzJHO+a+URTQTqmek9ofnfujFLmTlmQWLE9YO
+         9Ugg==
+X-Gm-Message-State: APjAAAXQXZeIFHD7j2BNL72dl96oscdj6Jv/aM1Ll1+T+/sIImLUelIp
+        1rfYoCEBmvU2d2fAhH6DbnB1Bg==
+X-Google-Smtp-Source: APXvYqwN77j5a17Ol6619bFQGaGTN4yqAu8K0d9UvECNwiucQ8+X3xiYOAbaiWYhA9TMxstw+mcKMQ==
+X-Received: by 2002:a5d:4945:: with SMTP id r5mr20197015wrs.328.1557830864276;
+        Tue, 14 May 2019 03:47:44 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id t18sm35338093wrg.19.2019.05.14.03.47.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 03:47:43 -0700 (PDT)
+Date:   Tue, 14 May 2019 11:47:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD
+ function
+Message-ID: <20190514104741.GO4319@dell>
+References: <20190426084038.6377-1-esben@geanix.com>
+ <20190426084038.6377-3-esben@geanix.com>
+ <20190507114905.GB29524@dell>
+ <87o94ejwrx.fsf@haabendal.dk>
+ <20190507133844.GA6194@dell>
+ <87bm05mpmx.fsf@haabendal.dk>
 MIME-Version: 1.0
-In-Reply-To: <20190514024239.47313-2-yanaijie@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87bm05mpmx.fsf@haabendal.dk>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2019 03:42, Jason Yan wrote:
-> The sas_port(phy->port) allocated in sas_ex_discover_expander() will not
-> be deleted when the expander failed to discover. This will cause
-> resource leak and a further issue of kernel BUG like below:
->
-> [159785.843156]  port-2:17:29: trying to add phy phy-2:17:29 fails: it's
-> already part of another port
-> [159785.852144] ------------[ cut here  ]------------
-> [159785.856833] kernel BUG at drivers/scsi/scsi_transport_sas.c:1086!
-> [159785.863000] Internal error: Oops - BUG: 0 [#1] SMP
-> [159785.867866] CPU: 39 PID: 16993 Comm: kworker/u96:2 Tainted: G
-> W  OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
-> [159785.878458] Hardware name: Huawei Technologies Co., Ltd.
-> Hi1620EVBCS/Hi1620EVBCS, BIOS Hi1620 CS B070 1P TA 03/21/2019
-> [159785.889231] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
-> [159785.895224] pstate: 40c00009 (nZcv daif +PAN +UAO)
-> [159785.900094] pc : sas_port_add_phy+0x188/0x1b8
-> [159785.904524] lr : sas_port_add_phy+0x188/0x1b8
-> [159785.908952] sp : ffff0001120e3b80
-> [159785.912341] x29: ffff0001120e3b80 x28: 0000000000000000
-> [159785.917727] x27: ffff802ade8f5400 x26: ffff0000681b7560
-> [159785.923111] x25: ffff802adf11a800 x24: ffff0000680e8000
-> [159785.928496] x23: ffff802ade8f5728 x22: ffff802ade8f5708
-> [159785.933880] x21: ffff802adea2db40 x20: ffff802ade8f5400
-> [159785.939264] x19: ffff802adea2d800 x18: 0000000000000010
-> [159785.944649] x17: 00000000821bf734 x16: ffff00006714faa0
-> [159785.950033] x15: ffff0000e8ab4ecf x14: 7261702079646165
-> [159785.955417] x13: 726c612073277469 x12: ffff00006887b830
-> [159785.960802] x11: ffff00006773eaa0 x10: 7968702079687020
-> [159785.966186] x9 : 0000000000002453 x8 : 726f702072656874
-> [159785.971570] x7 : 6f6e6120666f2074 x6 : ffff802bcfb21290
-> [159785.976955] x5 : ffff802bcfb21290 x4 : 0000000000000000
-> [159785.982339] x3 : ffff802bcfb298c8 x2 : 337752b234c2ab00
-> [159785.987723] x1 : 337752b234c2ab00 x0 : 0000000000000000
-> [159785.993108] Process kworker/u96:2 (pid: 16993, stack limit =
-> 0x0000000072dae094)
-> [159786.000576] Call trace:
-> [159786.003097]  sas_port_add_phy+0x188/0x1b8
-> [159786.007179]  sas_ex_get_linkrate.isra.5+0x134/0x140
-> [159786.012130]  sas_ex_discover_expander+0x128/0x408
-> [159786.016906]  sas_ex_discover_dev+0x218/0x4c8
-> [159786.021249]  sas_ex_discover_devices+0x9c/0x1a8
-> [159786.025852]  sas_discover_root_expander+0x134/0x160
-> [159786.030802]  sas_discover_domain+0x1b8/0x1e8
-> [159786.035148]  process_one_work+0x1b4/0x3f8
-> [159786.039230]  worker_thread+0x54/0x470
-> [159786.042967]  kthread+0x134/0x138
-> [159786.046269]  ret_from_fork+0x10/0x18
-> [159786.049918] Code: 91322300 f0004402 91178042 97fe4c9b (d4210000)
-> [159786.056083] Modules linked in: hns3_enet_ut(OE) hclge(OE) hnae3(OE)
-> hisi_sas_test_hw(OE) hisi_sas_test_main(OE) serdes(OE)
-> [159786.067202] ---[ end trace 03622b9e2d99e196  ]---
-> [159786.071893] Kernel panic - not syncing: Fatal exception
-> [159786.077190] SMP: stopping secondary CPUs
-> [159786.081192] Kernel Offset: disabled
-> [159786.084753] CPU features: 0x2,a2a00a38
->
-> Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-> Reported-by: Jian Luo <luojian5@huawei.com>
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> CC: John Garry <john.garry@huawei.com>
-> ---
->  drivers/scsi/libsas/sas_expander.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-> index 83f2fd70ce76..9f7e2457360e 100644
-> --- a/drivers/scsi/libsas/sas_expander.c
-> +++ b/drivers/scsi/libsas/sas_expander.c
-> @@ -1019,6 +1019,8 @@ static struct domain_device *sas_ex_discover_expander(
->  		list_del(&child->dev_list_node);
->  		spin_unlock_irq(&parent->port->dev_list_lock);
->  		sas_put_device(child);
-> +		sas_port_delete(phy->port);
-> +		phy->port = NULL;
+On Tue, 14 May 2019, Esben Haabendal wrote:
 
-This looks ok.
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > On Tue, 07 May 2019, Esben Haabendal wrote:
+> >
+> >> Lee Jones <lee.jones@linaro.org> writes:
+> >> 
+> >> > On Fri, 26 Apr 2019, Esben Haabendal wrote:
+> >> >
+> >> >> The serial8250-mfd driver is for adding 8250/16550 UART ports as functions
+> >> >> to an MFD driver.
+> >> >> 
+> >> >> When calling mfd_add_device(), platform_data should be a pointer to a
+> >> >> struct plat_serial8250_port, with proper settings like .flags, .type,
+> >> >> .iotype, .regshift and .uartclk.  Memory (or ioport) and IRQ should be
+> >> >> passed as cell resources.
+> >> >
+> >> > What?  No, please!
+> >> >
+> >> > If you *must* create a whole driver just to be able to use
+> >> > platform_*() helpers (which I don't think you should), then please
+> >> > call it something else.  This doesn't have anything to do with MFD.
+> >> 
+> >> True.
+> >> 
+> >> I really don't think it is a good idea to create a whole driver just to
+> >> be able to use platform_get_*() helpers.  And if I am forced to do this,
+> >> because I am unable to convince Andy to improve the standard serial8250
+> >> driver to support that, it should be called MFD.  The driver would be
+> >
+> > I assume you mean "shouldn't"?
+> 
+> Of-course.
+> 
+> >> generally usable for all usecases where platform_get_*() works.
+> >> 
+> >> I don't have any idea what to call such a driver.  It really would just
+> >> be a fork of the current serial8250 driver, just allowing use of
+> >> platform_get_*(), supporting exactly the same hardware.
+> >> 
+> >> I am still hoping that we can find a way to improve serial8250 to be
+> >> usable in these cases.
+> >
+> > Me too.
+> 
+> Unfortunately, I don't seem to be able to convince Andy to accept
+> something like that.
 
-However, I wonder if we miss something else, and I see this code earlier 
-in sas_ex_discover_expander():
+Andy is not he Maintainer.
 
-     kref_get(&parent->kref);
-     child->parent = parent;
-     child->port = port;
-     child->iproto = phy->attached_iproto;
-     child->tproto = phy->attached_tproto;
+What are Greg and Jiri's opinions?
 
-I assume the kref get is for the child referencing the parent. Do we 
-need the kref put? I couldn't see it.
+> I might have to do this out-of-tree :(
 
-If yes, maybe it should it go in sas_free_device(), along with kfree() 
-for expander device phys.
+Well that would suck!
 
-Thanks,
-John
-
->  		return NULL;
->  	}
->  	list_add_tail(&child->siblings, &parent->ex_dev.children);
->
-
-
-
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
