@@ -7,100 +7,126 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DD9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F047C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCCA216F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FD4216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:17:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/TlMi4Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XPWJG741"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbfENOPn (ORCPT
+        id S1726246AbfENORn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:15:43 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46153 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENOPn (ORCPT
+        Tue, 14 May 2019 10:17:43 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42136 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENORn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:15:43 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t187so8699223pgb.13;
-        Tue, 14 May 2019 07:15:42 -0700 (PDT)
+        Tue, 14 May 2019 10:17:43 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x15so8335294pln.9;
+        Tue, 14 May 2019 07:17:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=fEJluj9EIVSnD/lWYbBU/Qd/kcfRPu6BkyMoBDhXzT8=;
-        b=X/TlMi4YqUIx5Nbluv2LuL8oIc+hZkfOPu/7aLG64Ho3wg+7ZMs0IvWVog5Grz369c
-         ZOrx8upNj2K2XRR+q7KFcIPfrwFMiOjQUu/J5REoRS9sWPAOWQQiuYzZVqInPkSlIsaj
-         ci2/pxd4thaQf5Sm1Ma+rQ6XmcB2JbZkIPzUYl6mQOap7uDCOmigqqTTq5klmNdnw+Qc
-         xJxMqbB7Ujjn1TxjCT3I0FAI0G87OClJFGCpq1pokc4yEN0V6RwjxGSocIlj2ZouscC0
-         VY/tDFnZ1/JCURr8CZov6QkgZxZ/TCZBrLHWXxEbGm2eRFR4pP9L78h7LP4HzRkQb++h
-         gQVA==
+        bh=ArFnW1VY3ms9qyz4p1fVUAVmj/4GdKkZjXhkCrGDcic=;
+        b=XPWJG741EQYNQPD+hgI3shXcsBj/Ku7w2rUJYu/EBxfP916HYq124NZroB7TfHv3Ie
+         PTfiTc7nuPV6GfE1rww2RSetpQ8nL37LkRmf1Rb3mHS5xTyTPSEBrwoRtvOdq38MAJLo
+         B9tPEVpZYCnt1S0jhdsX1X3u1yNJXuTV7M/3InB4zykPFLi1pV5ZVyler1Xai+zVXU0M
+         4rAgLSD1hYKqWyqq08TtQ5Y2Sqvuv0i3OvnNHcdTsEF3m9n32kv9x6FH8nGe45iwOUpK
+         FY281isLNjYAJL3T/ctd8waOPCEqkZdUq1Zz+iwWMdk0P9s3OH681FQdlwXFRBk1szPU
+         Zbyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fEJluj9EIVSnD/lWYbBU/Qd/kcfRPu6BkyMoBDhXzT8=;
-        b=IIm4AySlliMf1c0PyCkY49paCM+BTefGPgb39nutA+lLSBOkcpAN2/Nv7Ca4efIBwj
-         JRMaBDyDLesJSt/6RVYQ5NQB8Oyep/9H1VXgIa2D4mzcLQ+fSnqdN7r0/kp/yejmqiWI
-         yAgHvq4bBzu1oDEbkoEZYyEBLsII11iEQ0gqkzXro0PPYYNcVR9xFm6eECETJNaYDNCl
-         uf/iyCAASByzCSk/1bPFNRqy0k4ixdRgMo4uWXRkQRVBwGR4LWCNovJsR7R1JliRemwI
-         sA9wrF1Hq3+LIehSstXJkqpfvCi6k9dYBCtdiYKhjnhDbRUFY+8HdpguY+5V80F2hmi3
-         77Fg==
-X-Gm-Message-State: APjAAAX6FvZdi3Y/SJtntSuT1V8aeO9jQVt24NRzJcOYaJVDCbbstjYE
-        Acr2pqaHbpWxeHUQ5tr7eR8=
-X-Google-Smtp-Source: APXvYqzTFB3xQvG3qOHN4QSXivugPG4rbujh0U0wxIzPl/686U+JyvfO9nQKapdVrTbLL6gLTMM9UQ==
-X-Received: by 2002:a65:534b:: with SMTP id w11mr38410973pgr.210.1557843342355;
-        Tue, 14 May 2019 07:15:42 -0700 (PDT)
+        bh=ArFnW1VY3ms9qyz4p1fVUAVmj/4GdKkZjXhkCrGDcic=;
+        b=D5BDs6+U/AvFqSV5Ae7Qe9tRyq9G7ApU6NGSDIXp28gGu0wud7bcYd6oaKoLYs5FrX
+         jpttxCorYa7Xk81UOYQ6j0a7Fo8S5AtL1i2C/8QANYOSGCa5QVQGXBo8AX3KuMKFwG7P
+         4TSD6c1c9a+qGYNTbWVdsG3pjgiqVtdmosNBoK93F2FN4K+/zfmUqXLYrjrRkPBFLUFG
+         jAU5fR78P0nnuEjFbndKFuwKR3DsMQEJ81eIWb6jmDWflTIBg9iF1eyRX/ui6SJKqAp/
+         mBSESm99Rq4wfiGugp4v8m7I8H9SmlJHUBMFIth177LI7lndmtD83xGB5Ms79t1dZiDp
+         2+dw==
+X-Gm-Message-State: APjAAAXRQWkqxOmDCUpytJ+8+qExo3/dTPdEZ7OjG3LAv/yNKZF3EKIQ
+        7AM4AQGrzaVRpD2GwBgQPTY=
+X-Google-Smtp-Source: APXvYqyEoNeXQY01NVeGJknPJkVArnV8DTbciFn5z6wBalJ/oPW7cEOETXrh7Dz2iEuMNL18s/0cEw==
+X-Received: by 2002:a17:902:9a03:: with SMTP id v3mr39294120plp.27.1557843462222;
+        Tue, 14 May 2019 07:17:42 -0700 (PDT)
 Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
-        by smtp.gmail.com with ESMTPSA id v66sm25015125pfa.38.2019.05.14.07.15.40
+        by smtp.gmail.com with ESMTPSA id p14sm19852605pfa.112.2019.05.14.07.17.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 07:15:41 -0700 (PDT)
-Date:   Tue, 14 May 2019 07:15:33 -0700
+        Tue, 14 May 2019 07:17:41 -0700 (PDT)
+Date:   Tue, 14 May 2019 07:17:37 -0700
 From:   Eduardo Valentin <edubezval@gmail.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gal Pressman <galpress@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Talel Shenhar <talel@amazon.com>
-Subject: Re: linux-next: manual merge of the thermal-soc tree with Linus' tree
-Message-ID: <20190514141531.GA16968@localhost.localdomain>
-References: <20190513104928.0265b40f@canb.auug.org.au>
- <20190514034409.GA5691@localhost.localdomain>
- <20190514144006.60df13bb@canb.auug.org.au>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 3/3] thermal: cpu_cooling: Migrate to using the EM
+ framework
+Message-ID: <20190514141736.GB16968@localhost.localdomain>
+References: <20190503094409.3499-1-quentin.perret@arm.com>
+ <20190503094409.3499-4-quentin.perret@arm.com>
+ <20190514034056.GA5621@localhost.localdomain>
+ <20190514071506.ykjg67elsydaehlz@queper01-ThinkPad-T460s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514144006.60df13bb@canb.auug.org.au>
+In-Reply-To: <20190514071506.ykjg67elsydaehlz@queper01-ThinkPad-T460s>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Stephen,
+Hey Quentin,
 
-On Tue, May 14, 2019 at 02:40:06PM +1000, Stephen Rothwell wrote:
+On Tue, May 14, 2019 at 08:15:08AM +0100, Quentin Perret wrote:
 > Hi Eduardo,
 > 
-> On Mon, 13 May 2019 20:44:11 -0700 Eduardo Valentin <edubezval@gmail.com> wrote:
-> >
-> > Thanks for spotting this. I am re-doing the branch based off v5.1-rc7,
-> > where the last conflict went in with my current queue.
+> On Monday 13 May 2019 at 20:40:59 (-0700), Eduardo Valentin wrote:
+> > On Fri, May 03, 2019 at 10:44:09AM +0100, Quentin Perret wrote:
+> > > The newly introduced Energy Model framework manages power cost tables in
+> > > a generic way. Moreover, it supports a several types of models since the
+> > > tables can come from DT or firmware (through SCMI) for example. On the
+> > > other hand, the cpu_cooling subsystem manages its own power cost tables
+> > > using only DT data.
+> > > 
+> > > In order to avoid the duplication of data in the kernel, and in order to
+> > > enable IPA with EMs coming from more than just DT, remove the private
+> > > tables from cpu_cooling.c and migrate it to using the centralized EM
+> > > framework.
+> > > 
+> > > The case where the thermal subsystem is used without an Energy Model
+> > > (cpufreq_cooling_ops) is handled by looking directly at CPUFreq's
+> > > frequency table which is already a dependency for cpu_cooling.c anyway.
+> > > Since the thermal framework expects the cooling states in a particular
+> > > order, bail out whenever the CPUFreq table is unsorted, since that is
+> > > fairly uncommon in general, and there are currently no users of
+> > > cpu_cooling for this use-case.
+> > 
+> > Will this break DT in any way? After this change, are the existing DTs
+> > still compatible with this cpu cooling?
 > 
-> Its really not worth the rebase.  Just fix the build problem and send it
-> all to Linus.
+> Yes, all existing DTs stay compatible with this CPU cooling. The EM can
+> still be built using the 'dynamic-power-coefficient' DT property thanks
+> to the recently introduced dev_pm_opp_of_register_em() helper, see
+> a4f342b9607d ("PM / OPP: Introduce a power estimation helper"). And all
+> relevant cpufreq drivers have already been updated to use that function.
 
-Yeah, I think I was not super clear in my first email. I am about to
-send the content of my branch to Linus.  This specific conflict was
-because a change in MAINTAINERS went in before the change I have in it,
-causing a conflict there. The rebase is simply to make it easier for him
-to pull when I send the git pull.
+I see..
 
 > 
-> -- 
-> Cheers,
-> Stephen Rothwell
+> So, this patch should cause no functional change for all existing users.
+> It's really just plumbing. I can probably explain that better in this
+> commit message rather than the cover letter if you feel it is necessary.
+> 
 
+Yes I would prefer if this info goes into the commit message.
 
+> Thanks,
+> Quentin
