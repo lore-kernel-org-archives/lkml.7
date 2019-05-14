@@ -2,116 +2,118 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C653FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA42C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B66920879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F64F2166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:41:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oAEG2oDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfENWi0 (ORCPT
+        id S1726541AbfENWlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:38:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:22218 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfENWiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:38:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 15:38:24 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2019 15:38:23 -0700
-Date:   Tue, 14 May 2019 15:38:23 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
- entries for percpu buffer
-Message-ID: <20190514223823.GE1977@linux.intel.com>
-References: <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
- <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net>
- <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
- <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
- <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com>
- <20190514170522.GW2623@hirez.programming.kicks-ass.net>
- <20190514180936.GA1977@linux.intel.com>
- <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com>
- <20190514210603.GD1977@linux.intel.com>
- <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
+        Tue, 14 May 2019 18:41:08 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44287 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfENWlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 18:41:08 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so1116840edm.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:41:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=De9yut+MJE0vq/sB5hhSe0oQe16qEPDC6fhRh/E/rX4=;
+        b=oAEG2oDhTeQvIT+TIJ1/M+H2j1bu9UZA21/89ZMpxSGh6uhOo3VN9SjEGnV4jR211H
+         /lSWej5qn3euaLZyRYpkGjs4FVm5x9bTWD/7OPQWRXAafIhUVwsBuzWLnTVrEVkrVNcX
+         k73fkOUOfzQfZESG8nNuqVAcHp0HvbsyrDUeBeumtxsRW4IwaTiJxeMLGEGmxeN9iTVH
+         9zQxghlelWmOdHhGz/Z4MaaquYcfZJ/3rCQMK0NaD0EoS++25v4+5xwXhTHbdCz4H0Ly
+         gAMg5EmZDYJ8ghO4rYrwNfgnOdLiJEfLrcS5jQzaLy97Y9KqBp3njb9GmTq1MEkcGydo
+         eJqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=De9yut+MJE0vq/sB5hhSe0oQe16qEPDC6fhRh/E/rX4=;
+        b=GvEdDRILlUf9iOThgzCdANHn7zSRiCPACOq7jX1yer86onro+WrnYh+SXIeiz522HX
+         1o2PbzciIaFtpuUWtWaydM34T3pnDOJ/hJRp5HfxKveFiC0v35+3A2qiG+wBj+gcmtgJ
+         aL61KNVgbPOAnQK1WQUfUxqLQaRUqPZsJKjJ68jBI00YyWWTms2yIp2Y/R0232Fp1OhQ
+         xo+W+tGgGRicPJ1+P7/rTrxKprxMrMbO8JXtT7amr9SoWNqBk3lFXJSi02SkUd/o1waT
+         VkXfi1pNP0nJNvgIJifg14Hg0mE036MhleOqlXagh20El68Gc12oUIRxt4pmVmcozxH2
+         vMMQ==
+X-Gm-Message-State: APjAAAXjVsGISuFVUENrg8nGborLPIYF5ppRgU6pGWvj4PQCSwDbI3Gu
+        hte1994anlkASya+BvBUcb4=
+X-Google-Smtp-Source: APXvYqw9NrNSs7XlZb0QF7UJKD0u3SI3luy813oEkNyxXO28+mH3GwCCdb2p6CpO3PBJlGPDvPGtrw==
+X-Received: by 2002:a50:95d6:: with SMTP id x22mr38290047eda.89.1557873666417;
+        Tue, 14 May 2019 15:41:06 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id j13sm97910eda.91.2019.05.14.15.41.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 15:41:05 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] objtool: Allow AR to be overridden with HOSTAR
+Date:   Tue, 14 May 2019 15:40:47 -0700
+Message-Id: <20190514224047.28505-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0.rc0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 02:55:18PM -0700, Andy Lutomirski wrote:
-> 
-> > On May 14, 2019, at 2:06 PM, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > 
-> >> On Tue, May 14, 2019 at 01:33:21PM -0700, Andy Lutomirski wrote:
-> >> I suspect that the context switch is a bit of a red herring.  A
-> >> PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slow,
-> >> but it's probably minor compared to the full cost of the vm exit.  The
-> >> pain point is kicking the sibling thread.
-> > 
-> > Speaking of PCIDs, a separate mm for KVM would mean consuming another
-> > ASID, which isn't good.
-> 
-> I’m not sure we care. We have many logical address spaces (two per mm plus a
-> few more).  We have 4096 PCIDs, but we only use ten or so.  And we have some
-> undocumented number of *physical* ASIDs with some undocumented mechanism by
-> which PCID maps to a physical ASID.
+Currently, this Makefile hardcodes GNU ar, meaning that if it is not
+available, there is no way to supply a different one and the build will
+fail.
 
-Yeah, I was referring to physical ASIDs.
+$ make AR=llvm-ar CC=clang LD=ld.lld HOSTAR=llvm-ar HOSTCC=clang \
+       HOSTLD=ld.lld HOSTLDFLAGS=-fuse-ld=lld defconfig modules_prepare
+...
+  AR       /out/tools/objtool/libsubcmd.a
+/bin/sh: 1: ar: not found
+...
 
-> I don’t suppose you know how many physical ASIDs we have?
+Follow the logic of HOST{CC,LD} and allow the user to specify a
+different ar tool via HOSTAR (which is used elsewhere in other
+tools/ Makefiles).
 
-Limited number of physical ASIDs.  I'll leave it at that so as not to
-disclose something I shouldn't.
+Link: https://github.com/ClangBuiltLinux/linux/issues/481
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ tools/objtool/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> And how it interacts with the VPID stuff?
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 53f8be0f4a1f..88158239622b 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -7,11 +7,12 @@ ARCH := x86
+ endif
+ 
+ # always use the host compiler
++HOSTAR	?= ar
+ HOSTCC	?= gcc
+ HOSTLD	?= ld
++AR	 = $(HOSTAR)
+ CC	 = $(HOSTCC)
+ LD	 = $(HOSTLD)
+-AR	 = ar
+ 
+ ifeq ($(srctree),)
+ srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+-- 
+2.22.0.rc0
 
-VPID and PCID get factored into the final ASID, i.e. changing either one
-results in a new ASID.  The SDM's oblique way of saying that:
-
-  VPIDs and PCIDs (see Section 4.10.1) can be used concurrently. When this
-  is done, the processor associates cached information with both a VPID and
-  a PCID. Such information is used only if the current VPID and PCID both
-  match those associated with the cached information.
-
-E.g. enabling PTI in both the host and guest consumes four ASIDs just to
-run a single task in the guest:
-
-  - VPID=0, PCID=kernel
-  - VPID=0, PCID=user
-  - VPID=1, PCID=kernel
-  - VPID=1, PCID=user
-
-The impact of consuming another ASID for KVM would likely depend on both
-the guest and host configurations/worloads, e.g. if the guest is using a
-lot of PCIDs then it's probably a moot point.  It's something to keep in
-mind though if we go down this path.
