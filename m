@@ -2,183 +2,117 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D7AC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B7DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BE520862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557852962;
-	bh=kLKAdEEeXCbRylavUkmyhySVv0lYey9X0yaOkSYnFwY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ccPjsdUgfbZ3wlyaBdxTyT4PnmOlA5uCQBPYzaWEdd020fK0M6fuDBl3P32Robo68
-	 VmKMZ4z4tMecVFtfpeaoA6TORjNaQ4xwpR40qlwtcjVQvWxqudjPhFrEeJ0yj/iZNH
-	 Hs7PtcHHNawqCXSutO6ELkPjFQU5ejvvikPvs+Mo=
+	by mail.kernel.org (Postfix) with ESMTP id 3271C2084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yufZ3579"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfENQ4B (ORCPT
+        id S1726441AbfENQ4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbfENQ4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:56:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E9D42084A;
-        Tue, 14 May 2019 16:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557852959;
-        bh=kLKAdEEeXCbRylavUkmyhySVv0lYey9X0yaOkSYnFwY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=suFW14rDR+aofrdMelabOO6zWt/x6IU0m6HQjDQoVN5DP9RJfdiHQNzHkNh+usqZ5
-         vBWjvDTvSRV2+su6pxeHQ8XODKpSrHamfKPtnWac+7E+BsWyoYno7FYYbYUsx23Nq6
-         OZgYJHHpEUIF5KsoUXsqj2uGdo9R35TDu4FJqKFs=
-Date:   Tue, 14 May 2019 18:55:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     rafael@kernel.org, benh@kernel.crashing.org, prsood@codeaurora.org,
-        mojha@codeaurora.org, gkohli@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        zhaowuyun@wingtech.com
-Subject: Re: [PATCH v2] driver core: Fix use-after-free and double free on
- glue directory
-Message-ID: <20190514165557.GB28266@kroah.com>
-References: <20190514150027.2364-1-smuchun@gmail.com>
+        Tue, 14 May 2019 12:56:42 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38842 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfENQ4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 12:56:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QEzjc5Av74DO6+A4a5nv3t2hw4nojszLXPYtxmG0GVc=; b=yufZ3579mTxJxqVm3UxjtQD5j
+        G8gnyWLZ5h5cEkEO2hNZMzp8py+tonmJgQolp3P05OwN049WGISW3OsAuqrUyIA/zfBum0nxgptif
+        toCmg+dlWfxO+b5fjFDTOMTKs6IGnHSidITxnShgHAQFw55M4sZH75X0FtdN6Y58kgTir44IqKXQ+
+        L20srlxad08fg4EnlYlOwdJYhYtUIDzxJxAoWNRCRG5pzAeaoUe6FXVd/Ts/QWiWVLlC+T4WKLhm+
+        h5ItBx83ee2mkL0+wlF+jTgE2QHagl6e202XlHLleqZHHazKHE0z39jOiu+aEv1JahvvjWNjnTWzj
+        b0L9Pb4ug==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQaiu-0000rQ-7W; Tue, 14 May 2019 16:56:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5BBDA2029F888; Tue, 14 May 2019 18:56:14 +0200 (CEST)
+Date:   Tue, 14 May 2019 18:56:14 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     huangpei@loongson.cn, Paul Burton <paul.burton@mips.com>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "akiyks@gmail.com" <akiyks@gmail.com>,
+        "andrea.parri@amarulasolutions.com" 
+        <andrea.parri@amarulasolutions.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "dlustig@nvidia.com" <dlustig@nvidia.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
+        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Huacai Chen <chenhc@lemote.com>
+Subject: Re: Re: [RFC][PATCH 2/5] mips/atomic: Fix loongson_llsc_mb() wreckage
+Message-ID: <20190514165614.GV2623@hirez.programming.kicks-ass.net>
+References: <20190424123656.484227701@infradead.org>
+ <20190424124421.636767843@infradead.org>
+ <20190424211759.52xraajqwudc2fza@pburton-laptop>
+ <2b2b07cc.bf42.16a52dc4e4d.Coremail.huangpei@loongson.cn>
+ <20190425073348.GV11158@hirez.programming.kicks-ass.net>
+ <20190425091258.GC14281@hirez.programming.kicks-ass.net>
+ <20190514155813.GG2677@hirez.programming.kicks-ass.net>
+ <CAHk-=wgxT24Z6Ba_4DKbMfBnQ0Cp4gzwp6Vq1aBkU5bsjqKUhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514150027.2364-1-smuchun@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHk-=wgxT24Z6Ba_4DKbMfBnQ0Cp4gzwp6Vq1aBkU5bsjqKUhg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:00:27PM +0800, Muchun Song wrote:
-> There is a race condition between removing glue directory and adding a new
-> device under the glue directory. It can be reproduced in following test:
+On Tue, May 14, 2019 at 09:10:34AM -0700, Linus Torvalds wrote:
+> On Tue, May 14, 2019 at 8:58 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > So if two variables share a line, and one is local while the other is
+> > shared atomic, can contention on the line, but not the variable, cause
+> > issues for the local variable?
+> >
+> > If not; why not? Because so far the issue is line granular due to the
+> > coherence aspect.
 > 
-> path 1: Add the child device under glue dir
-> device_add()
->     get_device_parent()
->         mutex_lock(&gdp_mutex);
->         ....
->         /*find parent from glue_dirs.list*/
->         list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
->             if (k->parent == parent_kobj) {
->                 kobj = kobject_get(k);
->                 break;
->             }
->         ....
->         mutex_unlock(&gdp_mutex);
->         ....
->     ....
->     kobject_add()
->         kobject_add_internal()
->             create_dir()
->                 sysfs_create_dir_ns()
->                     if (kobj->parent)
->                         parent = kobj->parent->sd;
->                     ....
->                     kernfs_create_dir_ns(parent)
->                         kernfs_new_node()
->                             kernfs_get(parent)
->                         ....
->                         /* link in */
->                         rc = kernfs_add_one(kn);
->                         if (!rc)
->                             return kn;
+> If I understood the issue correctly, it's not that cache coherence
+> doesn't work, it's literally that the sc succeeds when it shouldn't.
 > 
->                         kernfs_put(kn)
->                             ....
->                             repeat:
->                             kmem_cache_free(kn)
->                             kn = parent;
+> In other words, it's not going to affect anything else, but it means
+> that "ll/sc" isn't actually truly atomic, because the cacheline could
+> have bounced around to another CPU in the meantime.
 > 
->                             if (kn) {
->                                 if (atomic_dec_and_test(&kn->count))
->                                     goto repeat;
->                             }
->                         ....
+> So we *think* we got an atomic update, but didn't, and the "ll/sc"
+> pair ends up incorrectly working as a regular "load -> store" pair,
+> because the "sc' incorrectly thought it still had exclusive access to
+> the line from the "ll".
 > 
-> path2: Remove last child device under glue dir
-> device_del()
->     cleanup_device_parent()
->         cleanup_glue_dir()
->             mutex_lock(&gdp_mutex);
->             if (!kobject_has_children(glue_dir))
->                 kobject_del(glue_dir);
->             kobject_put(glue_dir);
->             mutex_unlock(&gdp_mutex);
+> The added memory barrier isn't because it's a memory barrier, it's
+> just keeping the subsequent speculative instructions from getting the
+> cacheline back and causing that "sc" confusion.
 > 
-> Before path2 remove last child device under glue dir, If path1 add a new
-> device under glue dir, the glue_dir kobject reference count will be
-> increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
-> been called kernfs_new_node(), but not call kernfs_get(parent).
-> Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
-> kobject_has_children(). This result in glue_dir->sd is freed and it's
-> reference count will be 0. Then path1 call kernfs_get(parent) will trigger
-> a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
-> it's reference count to 1. Because glue_dir->sd is freed by path2, the next
-> call kernfs_add_one() by path1 will fail(This is also use-after-free)
-> and call atomic_dec_and_test() to decrease reference count. Because the
-> reference count is decremented to 0, it will also call kmem_cache_free()
-> to free glue_dir->sd again. This will result in double free.
-> 
-> In order to avoid this happening, we we should not call kobject_del() on
-> path2 when the reference count of glue_dir is greater than 1. So we add a
-> conditional statement to fix it.
-> 
-> The following calltrace is captured in kernel 4.14 with the following patch
-> applied:
-> 
-> commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-> 
-> --------------------------------------------------------------------------
-> [    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
->                 Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-> ....
-> [    3.633986] Call trace:
-> [    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-> [    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-> [    3.634001]  kobject_add_internal+0x22c/0x3f0
-> [    3.634005]  kobject_add+0xe4/0x118
-> [    3.634011]  device_add+0x200/0x870
-> [    3.634017]  _request_firmware+0x958/0xc38
-> [    3.634020]  request_firmware_into_buf+0x4c/0x70
-> ....
-> [    3.634064] kernel BUG at .../mm/slub.c:294!
->                 Here is BUG_ON(object == fp) in set_freepointer().
-> ....
-> [    3.634346] Call trace:
-> [    3.634351]  kmem_cache_free+0x504/0x6b8
-> [    3.634355]  kernfs_put+0x14c/0x1d8
-> [    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-> [    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-> [    3.634366]  kobject_add_internal+0x22c/0x3f0
-> [    3.634370]  kobject_add+0xe4/0x118
-> [    3.634374]  device_add+0x200/0x870
-> [    3.634378]  _request_firmware+0x958/0xc38
-> [    3.634381]  request_firmware_into_buf+0x4c/0x70
-> --------------------------------------------------------------------------
-> 
-> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-> 
-> Signed-off-by: Muchun Song <smuchun@gmail.com>
-> ---
->  drivers/base/core.c | 47 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 38 insertions(+), 9 deletions(-)
+> But note how from a cache coherency standpoint, it's not about the
+> cache coherency being wrong, it's literally just about the ll/sc not
+> giving the atomicity guarantees that the sequence is *supposed* to
+> give. So an "atomic_inc()" can basically (under just the wrong
+> circumstances) essentially turn into just a non-atomic "*p++".
 
-What changed in v2?  That always goes below the --- line.
+Understood; the problem is that "*p++" is not good enough for local_t
+either (on load-store architectures), since it needs to be "atomic" wrt
+all other instructions on that CPU, most notably exceptions.
 
-Please fix up and send v3.
+The issue has come up before in this thread; but I don't think it was
+clearly answered before.
 
-thanks,
-
-greg k-h
