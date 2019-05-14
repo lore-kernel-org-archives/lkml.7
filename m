@@ -2,71 +2,71 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1C5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BE8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410D420881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34DC20881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557868785;
-	bh=gd/pnIADB9mnwVxFskwGr4PQpavxFmsa/Jk1ovMRRKE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=EEHcfG+N5c3edCIzD3cU9eRVQoxK0igxFNGF4weqXYfGpnGRF2ByAkOV39RL3oRD0
-	 lajBqlQnIfDYQfA9r7phUQ/MPROpvsYSg00IXw6kBVnQxRtZuajlSspYIosVNZy/t7
-	 jhx5s7oR51JLFousfiMmMqBy7mbTfGWA3mdQ9Zok=
+	s=default; t=1557868816;
+	bh=sAZ3XnUOBom+63DLslp+1ES/j3Ot9HYCWDTdwVdx/cY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bK4g4soE0kbivAwAsXR8i9ZukJ60MZ39nkf+s0vh4TSgwI7t1EEyHGOkQBx7Xru++
+	 V8NQaS1Jwj1SkFc3GqdMZ4u78jhBORn7GNgJih1RQNm2tboAf9zLoJ+OKa+6JtLkVM
+	 JKPKbCI88Pd0zADwWb07KopLbIZiSub73PE0mqn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfENVTo (ORCPT
+        id S1726638AbfENVUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:19:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        Tue, 14 May 2019 17:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfENVTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:19:43 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0503720873;
-        Tue, 14 May 2019 21:19:42 +0000 (UTC)
+        id S1726089AbfENVUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 17:20:15 -0400
+Subject: Re: [PULL] vhost: cleanups and fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557868783;
-        bh=gd/pnIADB9mnwVxFskwGr4PQpavxFmsa/Jk1ovMRRKE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0KPtgXBTjx+yxCOJRLdK3ANmNHcVOXoTW0PMbaSNhVwIY58b/mYVCuS1E3gE/DzYK
-         G/uVC89drvDek5hvTDXKgdC8b/+bMQwJTArsj2R3VHtu0RU3qPgqE8XEtV/mXtRfve
-         7EpXicwvGUWjn+Y7wQr18No7iGnqvlNpa0DLoPCc=
-Date:   Tue, 14 May 2019 14:19:42 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v4 1/3] mm/vmap: keep track of free blocks for vmap
- allocation
-Message-Id: <20190514141942.23271725e5d1b8477a44f102@linux-foundation.org>
-In-Reply-To: <20190406183508.25273-2-urezki@gmail.com>
-References: <20190406183508.25273-1-urezki@gmail.com>
-        <20190406183508.25273-2-urezki@gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1557868814;
+        bh=sAZ3XnUOBom+63DLslp+1ES/j3Ot9HYCWDTdwVdx/cY=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=ho90yahGxZDTNsYTOSdjuex+X5jmeYETGsjwKUOfTSBpFylw9dv0t8o9MqSHtBRPC
+         wJNtIXWY9jJ0ONz4JzpZasiU42EZZQkVzZECneNpc9lRjvRKG4zHVkx1fEZ0p8B3lj
+         DeJLnTaiMhefMeQxVPoz1lZD0/rLhjE90wowHtbg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190514171147-mutt-send-email-mst@kernel.org>
+References: <20190514171147-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190514171147-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+X-PR-Tracked-Commit-Id: 050f4c4d2fbbd8217d94dc21051cc597d2a6848b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 35c99ffa20edd3c24be352d28a63cd3a23121282
+Message-Id: <155786881470.21399.17909669772085382895.pr-tracker-bot@kernel.org>
+Date:   Tue, 14 May 2019 21:20:14 +0000
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrea.parri@amarulasolutions.com, benbjiang@tencent.com,
+        jasowang@redhat.com, j.neuschaefer@gmx.net, mst@redhat.com,
+        pasic@linux.ibm.com, pbonzini@redhat.com, yuehaibing@huawei.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An earlier version of this patch was accused of crashing the kernel:
+The pull request you sent on Tue, 14 May 2019 17:11:47 -0400:
 
-https://lists.01.org/pipermail/lkp/2019-April/010004.html
+> git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
 
-does the v4 series address this?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/35c99ffa20edd3c24be352d28a63cd3a23121282
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
