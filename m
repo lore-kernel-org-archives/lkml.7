@@ -2,152 +2,172 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2668EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDBDEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019B52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB023208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbfENGPX (ORCPT
+        id S1726261AbfENGRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:15:23 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:16842 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726347AbfENGOH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:14:07 -0400
-X-UUID: 31563ad590f64cd3a9adb8a36aec06ad-20190514
-X-UUID: 31563ad590f64cd3a9adb8a36aec06ad-20190514
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stu.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 678261910; Tue, 14 May 2019 14:13:56 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 14:13:55 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 14:13:55 +0800
-From:   Stu Hsieh <stu.hsieh@mediatek.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stu Hsieh <stu.hsieh@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v3 10/13] [media] mtk-mipicsi: set the output address in HW reg
-Date:   Tue, 14 May 2019 14:13:47 +0800
-Message-ID: <1557814430-9675-11-git-send-email-stu.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
-References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+        Tue, 14 May 2019 02:17:50 -0400
+Received: from ozlabs.org ([203.11.71.1]:38889 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfENGRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 02:17:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4536tL62z0z9s00;
+        Tue, 14 May 2019 16:17:46 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Rafael Aquini <aquini@redhat.com>,
+        Joel Savitz <jsavitz@redhat.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Sandeep Patil <sspatil@android.com>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3] fs/proc: add VmTaskSize field to /proc/$$/status
+In-Reply-To: <20190510072500.GA1520@yury-thinkpad>
+References: <1557158023-23021-1-git-send-email-jsavitz@redhat.com> <20190507125430.GA31025@x230.aquini.net> <20190508063716.GA3096@yury-thinkpad> <87k1ezugqh.fsf@concordia.ellerman.id.au> <20190510072500.GA1520@yury-thinkpad>
+Date:   Tue, 14 May 2019 16:17:46 +1000
+Message-ID: <87k1ettv91.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set the output address in HW reg when buffer queue and ISR.
+Yury Norov <yury.norov@gmail.com> writes:
+> On Fri, May 10, 2019 at 01:32:22PM +1000, Michael Ellerman wrote:
+>> Yury Norov <yury.norov@gmail.com> writes:
+>> > On Tue, May 07, 2019 at 08:54:31AM -0400, Rafael Aquini wrote:
+>> >> On Mon, May 06, 2019 at 11:53:43AM -0400, Joel Savitz wrote:
+>> >> > There is currently no easy and architecture-independent way to find the
+>> >> > lowest unusable virtual address available to a process without
+>> >> > brute-force calculation. This patch allows a user to easily retrieve
+>> >> > this value via /proc/<pid>/status.
+>> >> > 
+>> >> > Using this patch, any program that previously needed to waste cpu cycles
+>> >> > recalculating a non-sensitive process-dependent value already known to
+>> >> > the kernel can now be optimized to use this mechanism.
+>> >> > 
+>> >> > Signed-off-by: Joel Savitz <jsavitz@redhat.com>
+>> >> > ---
+>> >> >  Documentation/filesystems/proc.txt | 2 ++
+>> >> >  fs/proc/task_mmu.c                 | 2 ++
+>> >> >  2 files changed, 4 insertions(+)
+>> >> > 
+>> >> > diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+>> >> > index 66cad5c86171..1c6a912e3975 100644
+>> >> > --- a/Documentation/filesystems/proc.txt
+>> >> > +++ b/Documentation/filesystems/proc.txt
+>> >> > @@ -187,6 +187,7 @@ read the file /proc/PID/status:
+>> >> >    VmLib:      1412 kB
+>> >> >    VmPTE:        20 kb
+>> >> >    VmSwap:        0 kB
+>> >> > +  VmTaskSize:	137438953468 kB
+>> >> >    HugetlbPages:          0 kB
+>> >> >    CoreDumping:    0
+>> >> >    THP_enabled:	  1
+>> >> > @@ -263,6 +264,7 @@ Table 1-2: Contents of the status files (as of 4.19)
+>> >> >   VmPTE                       size of page table entries
+>> >> >   VmSwap                      amount of swap used by anonymous private data
+>> >> >                               (shmem swap usage is not included)
+>> >> > + VmTaskSize                  lowest unusable address in process virtual memory
+>> >> 
+>> >> Can we change this help text to "size of process' virtual address space memory" ?
+>> >
+>> > Agree. Or go in other direction and make it VmEnd
+>> 
+>> Yeah I think VmEnd would be clearer to folks who aren't familiar with
+>> the kernel's usage of the TASK_SIZE terminology.
+>> 
+>> >> > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>> >> > index 95ca1fe7283c..0af7081f7b19 100644
+>> >> > --- a/fs/proc/task_mmu.c
+>> >> > +++ b/fs/proc/task_mmu.c
+>> >> > @@ -74,6 +74,8 @@ void task_mem(struct seq_file *m, struct mm_struct *mm)
+>> >> >  	seq_put_decimal_ull_width(m,
+>> >> >  		    " kB\nVmPTE:\t", mm_pgtables_bytes(mm) >> 10, 8);
+>> >> >  	SEQ_PUT_DEC(" kB\nVmSwap:\t", swap);
+>> >> > +	seq_put_decimal_ull_width(m,
+>> >> > +		    " kB\nVmTaskSize:\t", mm->task_size >> 10, 8);
+>> >> >  	seq_puts(m, " kB\n");
+>> >> >  	hugetlb_report_usage(m, mm);
+>> >> >  }
+>> >
+>> > I'm OK with technical part, but I still have questions not answered
+>> > (or wrongly answered) in v1 and v2. Below is the very detailed
+>> > description of the concerns I have.
+>> >
+>> > 1. What is the exact reason for it? Original version tells about some
+>> > test that takes so much time that you were able to drink a cup of
+>> > coffee before it was done. The test as you said implements linear
+>> > search to find the last page and so is of O(n). If it's only for some
+>> > random test, I think the kernel can survive without it. Do you have a
+>> > real example of useful programs that suffer without this information?
+>> >
+>> >
+>> > 2. I have nothing against taking breaks and see nothing weird if
+>> > ineffective algorithms take time. On my system (x86, Ubuntu) the last
+>> > mapped region according to /proc/<pid>/maps is:
+>> > ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0     [vsyscall]
+>> > So to find the required address, we have to inspect 2559 pages. With a
+>> > binary search it would take 12 iterations at max. If my calculation is
+>> > wrong or your environment is completely different - please elaborate.
+>> 
+>> I agree it should not be hard to calculate, but at the same time it's
+>> trivial for the kernel to export the information so I don't see why the
+>> kernel shouldn't.
+>
+> Kernel shouldn't do it unless there will be real users of the feature.
+> Otherwise it's pure bloating.
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+A single line or two of code to print a value that's useful information
+for userspace is hardly "bloat".
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index af5655345754..cf46fcd01a19 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -105,6 +105,7 @@
- #define CAMSV_TG_SEN_GRAB_LIN				0x50C
- #define CAMSV_TG_PATH_CFG				0x510
- 
-+#define IMGO_BASE_ADDR					0x220
- #define IMGO_XSIZE					0x230
- #define IMGO_YSIZE					0x234
- #define IMGO_STRIDE					0x238
-@@ -503,12 +504,22 @@ static int mtk_mipicsi_vb2_prepare(struct vb2_buffer *vb)
- 	return 0;
- }
- 
-+static void mtk_mipicsi_fill_buffer(void __iomem *base, dma_addr_t dma_handle)
-+{
-+	writel(dma_handle, base + IMGO_BASE_ADDR);
-+}
-+
- static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- {
- 	struct soc_camera_device *icd = soc_camera_from_vb2q(vb->vb2_queue);
- 	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
- 	struct mtk_mipicsi_dev *mipicsi = ici->priv;
-+	unsigned int i = 0;
-+	u64 offset = 0;
-+	u8 link_index = 0U;
- 	char *va = NULL;
-+	u32 bytesperline = mipicsi->bytesperline;
-+	u32 height = mipicsi->height;
- 
- 	spin_lock(&mipicsi->queue_lock);
- 	list_add_tail(&(mipicsi->cam_buf[vb->index].queue),
-@@ -517,6 +528,20 @@ static void mtk_mipicsi_vb2_queue(struct vb2_buffer *vb)
- 
- 	va = vb2_plane_vaddr(vb, 0);
- 
-+	for (i = 0U; (mipicsi->enqueue_cnt == 0UL) && (i < MTK_CAMDMA_MAX_NUM);
-+		++i)
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			offset = (u64)link_index * bytesperline * height;
-+
-+			spin_lock(&mipicsi->lock);
-+			mtk_mipicsi_fill_buffer(mipicsi->camsv[i],
-+				mipicsi->cam_buf[vb->index].vb_dma_addr_phy
-+					+ offset);
-+			spin_unlock(&mipicsi->lock);
-+
-+			link_index++;
-+		}
-+
- 	++(mipicsi->enqueue_cnt);
- }
- 
-@@ -938,6 +963,10 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 	struct mtk_mipicsi_buf *tmp = NULL;
- 	unsigned int index = 0U;
- 	unsigned int next = 0U;
-+	u64 offset = 0ULL;
-+	u8 link_index = 0U;
-+	void __iomem *base = NULL;
-+	dma_addr_t pa;
- 
- 	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
- 		mipicsi->irq_status[i] = false;
-@@ -960,6 +989,16 @@ static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
- 		++i;
- 	}
- 
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
-+		if (((mipicsi->link_reg_val >> i) & 0x01U) == 0x01U) {
-+			offset = (u64)link_index *
-+				mipicsi->bytesperline * mipicsi->height;
-+			base = mipicsi->camsv[i];
-+			pa = mipicsi->cam_buf[next].vb_dma_addr_phy;
-+			mtk_mipicsi_fill_buffer(base, pa + offset);
-+			link_index++;
-+		}
-+	}
- 	/*
- 	 * fb_list has one more buffer. Free the first buffer to user
- 	 * and fill the second buffer to HW.
--- 
-2.18.0
+I agree it's good to have users for things, but this seems like it's so
+trivial that we should just add it and someone will find a use for it.
 
+> One possible user of it that I can imagine is mmap(MAP_FIXED). The
+> documentation is very clear about it:
+>
+>    Furthermore,  this  option  is  extremely  hazardous (when used on its own),
+>    because it forcibly removes preexisting mappings, making it easy for a 
+>    multithreaded  process  to corrupt its own address space.
+>
+> VmEnd provided by kernel may encourage people to solve their problems
+> by using MAP_FIXED which is potentially dangerous.
+
+There's MAP_FIXED_NOREPLACE now which is not dangerous.
+
+Using MAX_FIXED_NOREPLACE and VmEnd would make it relatively easy to do
+a userspace ASLR implementation, so that actually is an argument in
+favour IMHO.
+
+> Another scenario of VmEnd is to understand how many top bits of address will
+> be always zero to allocate them for user's purpose, like smart pointers. It
+> worth to discuss this usecase with compiler people. If they have interest,
+> I think it's more straightforward to give them something like:
+>    int preserve_top_bits(int nbits);
+
+You mean a syscall?
+
+With things like hardware pointer tagging / colouring coming along I
+think you're right that using VmEnd and assuming the top bits are never
+used is a bad idea, an explicit interface would be better.
+
+cheers
