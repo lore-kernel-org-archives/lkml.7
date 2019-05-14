@@ -2,118 +2,90 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D99CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1418FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A112084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D87882084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557821335;
+	bh=AWm6mMU5ntuV/CqseYpvApqEUMSFpmgOWSwc60Tv2bc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vPsn4vxJ0u8i8BGI7HDGriwuu63rQ+UXMs5E6TpbSkX1DsgApTnZdPWGVGNl6Cos5
+	 yYRo1q6cSO4Ot6wSEJKw64hfm6BerVf1qUl3wK2RlimZctvMz9GnsXMvTZIDAWYvcs
+	 r4FdocCH5Vv2lP1oS5FRfvPYCZv0DW96H3fm/wK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfENIIi (ORCPT
+        id S1726441AbfENIIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:08:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55536 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725899AbfENIIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:08:38 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 310FA79B1C67F328660D;
-        Tue, 14 May 2019 16:08:35 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
- 16:08:27 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <paulus@samba.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] ppp: deflate: Fix possible crash in deflate_init
-Date:   Tue, 14 May 2019 15:43:00 +0800
-Message-ID: <20190514074300.42588-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 14 May 2019 04:08:55 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46707 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbfENIIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 04:08:54 -0400
+Received: by mail-ot1-f66.google.com with SMTP id j49so6730966otc.13;
+        Tue, 14 May 2019 01:08:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AWm6mMU5ntuV/CqseYpvApqEUMSFpmgOWSwc60Tv2bc=;
+        b=F0EjUCJiIB5F4D3GoURhu1AKUGjpkk46fDdHYFlkokF9DiEJMIMpv/BRGUyDBIS/m7
+         AP6nbqZFFdzjqSNeavAZO/jPxladFV8wGTQ9jjtvOOkiTNoPrp5af8t7YPY0NRKlscSX
+         XI4ZXJfUwqBLhOmVmIB2/uXeuDUiQmglywy5uheDyB5u9A7nWuBLoAqqn7XiOqKh8soN
+         em5FWotejBvIcgKtgUorxlKR3ZlqXuqRWFDpKPxJEzhksI98Srft9pfLAx3952ihI+uu
+         SrI+qqYG9QQES3O3iNbROGOFqv2nat9/SJZ6w8oqzC7SQbGzoCTJ5MgbEn7hYzRIfn+o
+         5XcA==
+X-Gm-Message-State: APjAAAXubFhT1189GjduEsXjuS3mgLsEQN/pVfeBlYaeJBVAqGMK0kFb
+        weHkBjlkYqyZYkNFgP30J4b5iYd7XO5u4OYCkvU=
+X-Google-Smtp-Source: APXvYqwTEraX14mcZPt1vimtoi25THN+ixAWY1ha+9DfuEBICcJUnLm2RU77VIBddQdQK8nrMAM+2KXW8YeAocOii18=
+X-Received: by 2002:a9d:5912:: with SMTP id t18mr14870864oth.252.1557821333611;
+ Tue, 14 May 2019 01:08:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+References: <20190513192300.653-1-ulf.hansson@linaro.org>
+In-Reply-To: <20190513192300.653-1-ulf.hansson@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 14 May 2019 10:08:42 +0200
+Message-ID: <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
+Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement for PSCI
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Souvik Chakravarty <souvik.chakravarty@arm.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: unable to handle kernel paging request at ffffffffa018f000
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 2307eb067 PTE 0
-Oops: 0000 [#1] PREEMPT SMP
-CPU: 0 PID: 4138 Comm: modprobe Not tainted 5.1.0-rc7+ #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:ppp_register_compressor+0x3e/0xd0 [ppp_generic]
-Code: 98 4a 3f e2 48 8b 15 c1 67 00 00 41 8b 0c 24 48 81 fa 40 f0 19 a0
-75 0e eb 35 48 8b 12 48 81 fa 40 f0 19 a0 74
-RSP: 0018:ffffc90000d93c68 EFLAGS: 00010287
-RAX: ffffffffa018f000 RBX: ffffffffa01a3000 RCX: 000000000000001a
-RDX: ffff888230c750a0 RSI: 0000000000000000 RDI: ffffffffa019f000
-RBP: ffffc90000d93c80 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0194080
-R13: ffff88822ee1a700 R14: 0000000000000000 R15: ffffc90000d93e78
-FS:  00007f2339557540(0000) GS:ffff888237a00000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa018f000 CR3: 000000022bde4000 CR4: 00000000000006f0
-Call Trace:
- ? 0xffffffffa01a3000
- deflate_init+0x11/0x1000 [ppp_deflate]
- ? 0xffffffffa01a3000
- do_one_initcall+0x6c/0x3cc
- ? kmem_cache_alloc_trace+0x248/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+On Mon, May 13, 2019 at 9:23 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> This series enables support for hierarchical CPU arrangement, managed by PSCI
+> for ARM/ARM64. It's based on using the generic PM domain (genpd), which
+> recently was extended to manage devices belonging to CPUs.
 
-If ppp_deflate fails to register in deflate_init,
-module initialization failed out, however
-ppp_deflate_draft may has been regiestred and not
-unregistered before return.
-Then the seconed modprobe will trigger crash like this.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/net/ppp/ppp_deflate.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/net/ppp/ppp_deflate.c b/drivers/net/ppp/ppp_deflate.c
-index b5edc7f..2829efe 100644
---- a/drivers/net/ppp/ppp_deflate.c
-+++ b/drivers/net/ppp/ppp_deflate.c
-@@ -610,12 +610,16 @@ static void z_incomp(void *arg, unsigned char *ibuf, int icnt)
- 
- static int __init deflate_init(void)
- {
--        int answer = ppp_register_compressor(&ppp_deflate);
--        if (answer == 0)
--                printk(KERN_INFO
--		       "PPP Deflate Compression module registered\n");
-+	int answer;
-+
-+	answer = ppp_register_compressor(&ppp_deflate);
-+	if (answer)
-+		return answer;
-+
-+	pr_info("PPP Deflate Compression module registered\n");
- 	ppp_register_compressor(&ppp_deflate_draft);
--        return answer;
-+
-+	return 0;
- }
- 
- static void __exit deflate_cleanup(void)
--- 
-1.8.3.1
-
-
+ACK for the patches touching cpuidle in this series (from the
+framework perspective), but I'm assuming it to be taken care of by
+ARM/ARM64 maintainers.
