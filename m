@@ -2,112 +2,121 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0465FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD7821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BAB92084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pT4Kgdoi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlYGPpce"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfENSvg (ORCPT
+        id S1727666AbfENSyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:51:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46941 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727568AbfENSvf (ORCPT
+        Tue, 14 May 2019 14:54:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34770 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbfENSyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:51:35 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r7so2546810wrr.13;
-        Tue, 14 May 2019 11:51:34 -0700 (PDT)
+        Tue, 14 May 2019 14:54:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f8so2555340wrt.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 11:54:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=d6lio4FUKP4hIMj/LmCQXh9/Jwu24a67v0ySJSmb6ow=;
-        b=pT4KgdoiSi1Cc2C8OLXNPnPsmZvr2g3z+jcZqt5z0LqHYaRWIGmXSmv+hH70+1QPhR
-         rJmUeMrlFq29bkMBHV0u1HNDGh+wtG1wJPB3LS/8QY0TuUQviRA0DDYjzfI3Ii7ISjbc
-         vmVfgvKEfYCrUHw1R8XNjO8GGzUOzN7HwZ7RVRC5kRpMDIOpz0uchKrNzAwVP0RtdwzP
-         0UJHP4xMC099mJCRpSj+1gaDex+vS0Sd+vRXq5FfgtPSbGPDQMOhGmj8nx0+7Aa7BRI6
-         wv1IHdhh74mNdJruSSQazbhW28wfzdPNI8bN9wLjOrxgoV8O+gvNh2Pakl+jUYuQpLlR
-         i0nA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=VCAQGz8qjml6ASU2OK1LEnrW5ChvncfEkzJRDaJ9AfM=;
+        b=tlYGPpceDt4GjqHqn8XvdeH7oSM4djD9WBPrOe1X0oZ0wDG5pryX0rfiv5SFEB76LU
+         JF8LJ6bu8T4YJ78yelc8P/8CAQXBiiY4sQb5MN0t2afe+OrgCaooEL+PBudgmZk3lZLa
+         Z0RZOdsq8VBwI8pemYXk/7gNDSyGmcPFvDhPdEQ/3xefc2UwmmiquzJ2SHSkDvz+Tz/T
+         Yrwc9WSg1emsJwcguVZ/NnVSIeCVPmK5JFqaL8uiMElLtPsdYvUlCPN+1RvBJklEk4/w
+         lJ9WBrUsU19nQ8Xb6Sgezkr3UWCPjyiVX9vc/+AjdkufhHjZ/QboyUGR//IqfzGnbQbX
+         I7pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=d6lio4FUKP4hIMj/LmCQXh9/Jwu24a67v0ySJSmb6ow=;
-        b=JQLF+kCZL8q4Fedwe/oiUJdKd2ojqW09QdF33oIF2djdYi4Fj323ylJHaI8X4MwAz8
-         jFCHF+loc1dzsGHQSTMKznrO418DDnmsSdCQI0xK8Sse+kuQeUZUnMqHSAHzgQpi9NE/
-         4ExGqPkdEiLB3Y+UbBSjs+bIiH0RbLN+SZy+suTQrWk+LH4FqxpJ5ksLAPS+0OyX/iC2
-         LAu04ZnaGetTCE7c4wcf/zB7a+n6dbJ1Vshi0vwMReHKPOjonlokMkSzCmjHFoNJMoeA
-         hhMX5B6sAshSaw7qHdg6XdRLfLxYwSZsNIwltTxnmlNTsrKBpxBQnc2K65GpHS75xFmo
-         vM1A==
-X-Gm-Message-State: APjAAAVZPoFV39YdQu12gS1LyykGpyismfaKdF2C3Il9UljKAhEnOkCk
-        Wk4HH+n0Ak/gfzlT9PtJ+HPfr3XG
-X-Google-Smtp-Source: APXvYqzWOeFcKQIQMFm7pqGeA3nLxmR8p68Jpnm7CnQtPAVWAMMO3ceMq753pkbhsao7tUCEA+tG5A==
-X-Received: by 2002:adf:ce88:: with SMTP id r8mr1325371wrn.191.1557859893270;
-        Tue, 14 May 2019 11:51:33 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id 34sm16442360wre.32.2019.05.14.11.51.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 11:51:32 -0700 (PDT)
-Subject: [PATCH v4 02/13] platform/x86: asus-wmi: Fix preserving keyboard
- backlight intensity on load
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-Message-ID: <40403d07-293a-62a1-e0e9-ad6a2ba84844@gmail.com>
-Date:   Tue, 14 May 2019 20:51:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=VCAQGz8qjml6ASU2OK1LEnrW5ChvncfEkzJRDaJ9AfM=;
+        b=Vn5o8fRKgN2Di3VQGmedgdADWD3F0+XxTEnrbLwwIYDgLbc5jejlggxjX24MzlXA+O
+         YdpYG16UBQg2ftZOKXwYl6qR73irHCMNWmdDqBOKyOSfd5CArRpbDKfEVVz+tLvy7p1a
+         loL94k2XQ4l8zE7Ygo4HxhR4X0++TAZAfcC3CO/CQMZbjzOgB0jZEaZw1ZfzfJU33VJm
+         JvlAVcyCDA33BMoM5n76W5bloZE9ds4qYnRGMsY8se5SDt4IexYy5a7JAfvJTdDYxzbB
+         DXUNGbaEdBz2hnTrAdeIrBkR6yOeALw/UunWq0bIN9Rv25bqTGZZTFNaXcAq8A2ESE6f
+         IFrQ==
+X-Gm-Message-State: APjAAAUrM9ZdhMVaQChjjBiAwY2CPdFqBTels6GgT4ywkjFDgVj2uh4q
+        H67DKsxMmVQT4tBu2hX5YvQgbA==
+X-Google-Smtp-Source: APXvYqyXK6O0Aqh/1goILlJaZM+s8rUCdPYL1LSk9ZSGB1TPgYZuXHgOORUbKQn4wE9vtJIsBxrKSw==
+X-Received: by 2002:a5d:4b07:: with SMTP id v7mr12420510wrq.106.1557860046921;
+        Tue, 14 May 2019 11:54:06 -0700 (PDT)
+Received: from dell ([2.27.167.43])
+        by smtp.gmail.com with ESMTPSA id s22sm5469199wmh.45.2019.05.14.11.54.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 11:54:06 -0700 (PDT)
+Date:   Tue, 14 May 2019 19:54:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] mfd: stmfx: Fix macro definition spelling
+Message-ID: <20190514185404.GP4319@dell>
+References: <20190511012301.2661-1-natechancellor@gmail.com>
+ <20190513073059.GH4319@dell>
+ <20190514183900.GA7559@archlinux-i9>
 MIME-Version: 1.0
-In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190514183900.GA7559@archlinux-i9>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The error code and return value are mixed up. The intensity is always set
-to 0 on load as kbd_led_read returns either 0 or negative value. To
-reproduce set backlight to maximum, reload driver and try to increase it
-using keyboard hotkey, the intensity will drop as a result. Correct the
-implementation.
+On Tue, 14 May 2019, Nathan Chancellor wrote:
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> On Mon, May 13, 2019 at 08:30:59AM +0100, Lee Jones wrote:
+> > On Fri, 10 May 2019, Nathan Chancellor wrote:
+> > 
+> > > Clang warns:
+> > > 
+> > > In file included from drivers/mfd/stmfx.c:13:
+> > > include/linux/mfd/stmfx.h:7:9: warning: 'MFD_STMFX_H' is used as a
+> > > header guard here, followed by #define of a different macro
+> > > [-Wheader-guard]
+> > > 
+> > > Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/475
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > >  include/linux/mfd/stmfx.h | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > Applied, thanks.
+> > 
+> 
+> Hi Lee,
+> 
+> Thanks for picking it up. It seems this didn't make it into your MFD
+> pull request for 5.2, was that intentional? It would be nice to avoid
+> this warning.
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 62567766bdfb..84d7fc6f941c 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -595,8 +595,7 @@ static int asus_wmi_led_init(struct asus_wmi *asus)
- 			goto error;
- 	}
- 
--	led_val = kbd_led_read(asus, NULL, NULL);
--	if (led_val >= 0) {
-+	if (!kbd_led_read(asus, &led_val, NULL)) {
- 		asus->kbd_led_wk = led_val;
- 		asus->kbd_led.name = "asus::kbd_backlight";
- 		asus->kbd_led.flags = LED_BRIGHT_HW_CHANGED;
+Hmm... no it was not intentional.  Not sure what happened there.
+
+I will pick it up for the -rcs.
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
