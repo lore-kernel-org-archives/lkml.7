@@ -2,126 +2,121 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF64C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BDDC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 475D9208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDDD6208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:06:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KPAMBYMr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTnawXYq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbfENFED (ORCPT
+        id S1726659AbfENFG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:04:03 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:14755 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbfENFEB (ORCPT
+        Tue, 14 May 2019 01:06:56 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39621 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbfENFG4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:04:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cda4c470000>; Mon, 13 May 2019 22:04:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 May 2019 22:04:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 May 2019 22:04:00 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
- 2019 05:03:59 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 14 May 2019 05:03:59 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.159]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cda4c3e0001>; Mon, 13 May 2019 22:03:59 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <broonie@kernel.org>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
-Date:   Mon, 13 May 2019 22:03:52 -0700
-Message-ID: <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
-References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 14 May 2019 01:06:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id w22so7957825pgi.6;
+        Mon, 13 May 2019 22:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q7ivzidNqiF6L5Pdt29c2H0Kj0g0EzNa6q9k46tNNOA=;
+        b=XTnawXYqf3R9HsqS96E5qSl06en1GGyJWROir0uXJ4H3z/SYsSv0byyYFtn97lRKqs
+         qQYfpVXf3tM7x/Kivn0rIX1mNhYKE+8imiCpmMVNw5iU5VVgEywypIlUlL2Mkt/pD+8F
+         NUHgoobnCSE3qLigkRuIUg4NF6UktCoJSU8XNtI8V/e6fa1cMtEqnVx3+rC8o7HI2mDd
+         O1NmT2yytRMubHtdZk1HtBBV25qlF1KO4xhoIosFCwIg51FS2JDCP4T7szBFsmoh14mZ
+         mw8+fMsNI2CDyMfIc66Ei1NyrpTK/sfcRk3SUTcuYbx2Pz6QIOkGL8n54CuRu7V+zdni
+         2oEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q7ivzidNqiF6L5Pdt29c2H0Kj0g0EzNa6q9k46tNNOA=;
+        b=VVw1lYZmEHiAKuZG5MYCLxjZdnPHUmB/zhCBvyeiIa2WOz1jHRaOQ0mIIS8Qn6ktzu
+         51xY6K9ZVXvL27xNnbmUXHfLtPXbO88icegkF7B7i9RGFeor82K7IR1fWVXDYtwCEdyP
+         2cpINagHxyZITmUUOLtzO+XuBReL1669De59E1kC894lFtby5TvgK3n2MxqXeL5peJnm
+         umP7Hzgtb1xlbojFgayE2YwzcGH75phaTcmmft1oC7DWsfaZdEHT0Ljd4Mr0zrNB0pGb
+         QqfGQf2hSoxkI5u2Zi28ozXR3Z8NMwOKM0MVbJ83x53UobU74LYqJKGD7V9f+q334tiq
+         Q4lg==
+X-Gm-Message-State: APjAAAXZd8Zffqu72vIduI7QFQFHF0jppBUwmkuW1y6PtcrbLEiw4R+q
+        Yu2XPX9G4Lo7JVNTPLI7Jm6sRD1jTQfTKNFv2MM=
+X-Google-Smtp-Source: APXvYqylm3Vo+xJz4QY3Vv3T0tWftZToA2Edue5y3F4dBxuubEGEUZN6SgAVhnE7T2minpfzzHISkVgBpJKYNY+xIWs=
+X-Received: by 2002:a62:ed1a:: with SMTP id u26mr31636146pfh.229.1557810415272;
+ Mon, 13 May 2019 22:06:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557810247; bh=K7F2P173EQjrqPomTsKC7kMVoDELsjl//sPm6PDIsWw=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=KPAMBYMrVCV4W0Y7ydQV9hhGtLCVihf7OqaRI0TiZV2fz2+E3Ac+j08POHdUCI/pB
-         ZOTVVL9gJ3QxxWLM4394yAmZC4xDc33RwbapyxR54GMEklGa7jcVWar2D/PJbhgD/W
-         YEmhV+0Wr2VEZcNmuAvwQDPjvxqAIHgfXB2HrvV1qVnP4aZyfcjSKQ/76p5oJ2LPeW
-         ip8dxJD8U9dduHCxc6rkdGq8LntHuT35d263N7DRKCtDJgUxFt7ihr5X4Rfm5nRplu
-         g8qFhSJ65Pef1/FQzULs3mjWW7oAt5najv9hOfT7ZdRiV/BbdvgboO9mnLCOfeW9x3
-         nH6RmOCxtcKIQ==
+References: <20190510223744.10154-1-prsriva02@gmail.com> <20190510223744.10154-3-prsriva02@gmail.com>
+ <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
+In-Reply-To: <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
+From:   prakhar srivastava <prsriva02@gmail.com>
+Date:   Mon, 13 May 2019 22:07:08 -0700
+Message-ID: <CAEFn8qJVvNivP6Lmx+nVewPcHjH=V2OrR_HyHR6nOeuVQW0A4w@mail.gmail.com>
+Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     linux-integrity@vger.kernel.org,
+        inux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>, ebiederm@xmission.com,
+        vgoyal@redhat.com, Prakhar Srivastava <prsriva@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for GPIO based CS control through SPI core
-function spi_set_cs.
+On Mon, May 13, 2019 at 6:48 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
+>
+> On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
+> > From: Prakhar Srivastava <prsriva02@gmail.com>
+> >
+> > The buffer(cmdline args) added to the ima log cannot be attested
+> > without having the actual buffer. Thus to make the measured buffer
+> > available to store/read a new ima template (buf) is added.
+>
+> Hi Prakhar
+>
+> please fix the typos. More comments below.
+>
+>
+> > +     buffer_event_data->type = IMA_XATTR_BUFFER;
+> > +     buffer_event_data->buf_length = size;
+> > +     memcpy(buffer_event_data->buf, buf, size);
+> > +
+> > +     event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
+> > +     event_data.xattr_len = alloc_length;
+>
+> I would prefer that you introduce two new fields in the ima_event_data
+> structure. You can initialize them directly with the parameters of
+> process_buffer_measurement().
+I will make the edits, this will definitely save the kzalloc in this code
+path.
+>
+> ima_write_template_field_data() will make
+> a copy.
+>
+Since event_data->type is used to distinguish what the template field
+ should contain.
+Removing the type and subsequent check in the template_init,
+ buf template fmt will result in the whole event_Data structure
+being added to the log, which is not the expected output.
+For buffer entries, the buf templet fmt will contains the buffer itself.
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/spi/spi-tegra114.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+>
+> > +      .field_show = ima_show_template_buf},
+>
+> Please update Documentation/security/IMA-templates.rst
+Will update the documentation.
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index b1f31bb16659..f47417dd9edb 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -776,6 +776,10 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 		} else
- 			tegra_spi_writel(tspi, command1, SPI_COMMAND1);
- 
-+		/* GPIO based chip select control */
-+		if (spi->cs_gpiod)
-+			gpiod_set_value(spi->cs_gpiod, 1);
-+
- 		command1 |= SPI_CS_SW_HW;
- 		if (spi->mode & SPI_CS_HIGH)
- 			command1 |= SPI_CS_SW_VAL;
-@@ -864,6 +868,10 @@ static int tegra_spi_setup(struct spi_device *spi)
- 	}
- 
- 	spin_lock_irqsave(&tspi->lock, flags);
-+	/* GPIO based chip select control */
-+	if (spi->cs_gpiod)
-+		gpiod_set_value(spi->cs_gpiod, 0);
-+
- 	val = tspi->def_command1_reg;
- 	if (spi->mode & SPI_CS_HIGH)
- 		val &= ~SPI_CS_POL_INACTIVE(spi->chip_select);
-@@ -893,6 +901,10 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
- 	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
- 	int cs_val = (spi->mode & SPI_CS_HIGH) ? 0 : 1;
- 
-+	/* GPIO based chip select control */
-+	if (spi->cs_gpiod)
-+		gpiod_set_value(spi->cs_gpiod, 0);
-+
- 	if (cs_val)
- 		tspi->command1_reg |= SPI_CS_SW_VAL;
- 	else
-@@ -1199,6 +1211,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 		master->max_speed_hz = 25000000; /* 25MHz */
- 
- 	/* the spi->mode bits understood by this driver: */
-+	master->use_gpio_descriptors = true;
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH | SPI_LSB_FIRST |
- 			    SPI_TX_DUAL | SPI_RX_DUAL | SPI_3WIRE;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
--- 
-2.7.4
-
+Thanks,
+Prakhar Srivastava
+>
+> Thanks
+>
+> Roberto
