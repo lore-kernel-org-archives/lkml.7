@@ -2,473 +2,147 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76ADC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E49FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B42621537
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0629220881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:58:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sys806tx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfENL4L (ORCPT
+        id S1726393AbfENL6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 07:56:11 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:47985 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbfENL4L (ORCPT
+        Tue, 14 May 2019 07:58:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46328 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENL6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 07:56:11 -0400
-Received: from [IPv6:2001:420:44c1:2579:859d:cefd:f7a7:d8be] ([IPv6:2001:420:44c1:2579:859d:cefd:f7a7:d8be])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id QW2OhvBzz3qlsQW2Sh3O1F; Tue, 14 May 2019 13:56:08 +0200
-Subject: Re: [PATCH v5 1/4] media: v4l2-subdev: Verify arguments in
- v4l2_subdev_call()
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190512201551.18724-1-jmkrzyszt@gmail.com>
- <20190512201551.18724-2-jmkrzyszt@gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <56e49c85-f906-1552-11d1-ad32e7f3c2af@xs4all.nl>
-Date:   Tue, 14 May 2019 13:56:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 14 May 2019 07:58:30 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y11so9002261pfm.13;
+        Tue, 14 May 2019 04:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PHsvMzJ/ElifXzgRhZsQ2fxqtqxtZnYp1vf5e9YVI5c=;
+        b=Sys806txaL2ePBILZweqrTyj/tSS09Jc7nVQUyTA0PGqBx2oRBDq8eHZqKL/+yTC1v
+         C9s+uCYhwTxwR5sk+OHjTC/e+o+tJC/N+tu1UhAsj3lzqWBNolurjK0DQUPKpuQjC9uM
+         oIkBwFzM3LZYAOsQiP/4dt1XNvgCY5gtbFziuE+91DClizTY9PwevdcI/79MNwZLqooA
+         Ng9amy2EtA6lNXNRb9kdm0w6b6mf/FvAzLwSoyS5j1Ak1eSyl8z0HKIVFT7nDuBi7Gyo
+         +f/dJyvYvly9BEq3A5Eg2NZLCqCrS0IJQATmuzHdtHvgDMERCauaKB9MunVy7XHDSVFn
+         sBtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PHsvMzJ/ElifXzgRhZsQ2fxqtqxtZnYp1vf5e9YVI5c=;
+        b=TRhbRRygrxDAAj4kyuuIUVpd+3S3mnXVHQTyNie7NxM/1MZPjt/eaTJe71AXX9R5DV
+         8JRpeq2wc2VsKmyFL8fby/+BTK9IOBaKAS3UKSl2miUyXwMkwye5mdy9D/j876zwV/Zg
+         qD00xFdtwx+0119sEmiHeiHBQ6L4Gw1AXJ7nrvRHnYicXzgueJrCEdau/iFDc7fGFx7X
+         Ir8AQBKZBcn83VcZGrFOzXvWWncYZAhtaBxIA6ngRTsESB2DT8AjZggNz24JTSDZFpsr
+         QCNrowUqjXPKxhFMPYSsGYd8MHxGlvWrzmhGl5ByykbBejDbsD9X0Xgrg14r9J6htVJp
+         U8lw==
+X-Gm-Message-State: APjAAAWdcs5/olVCFl87K/zxUY5nHsnlJX2R27jpG1PaQUJn0FZ1Q9xJ
+        XpOthCoydMg0WWcmPdTfgVE=
+X-Google-Smtp-Source: APXvYqw+eortiWn2aXpMxovjjsbmczbuHxT991wDWHh/wTCrnK6Uilx/i1v/wyKdid5CUZ4C1bC6uA==
+X-Received: by 2002:a65:56c3:: with SMTP id w3mr35624527pgs.232.1557835109722;
+        Tue, 14 May 2019 04:58:29 -0700 (PDT)
+Received: from localhost.localdomain ([163.152.162.99])
+        by smtp.gmail.com with ESMTPSA id y10sm19588597pff.4.2019.05.14.04.58.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 04:58:29 -0700 (PDT)
+Date:   Tue, 14 May 2019 20:58:23 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah <shuah@kernel.org>
+Cc:     valentina.manea.m@gmail.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] usbip: Remove repeated setting of hcd->state in
+ vhci_bus_suspend()
+Message-ID: <20190514115822.GA2453@localhost.localdomain>
+References: <20190506125550.7826-1-suwan.kim027@gmail.com>
+ <440389ab-62c3-7bc2-0e9b-0b302a88c929@kernel.org>
+ <20190507154918.GA2427@localhost.localdomain>
+ <0ad76300-9b7f-f368-0533-1f88de649d10@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190512201551.18724-2-jmkrzyszt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfO+d+ebtMoypQ64f3ebq+0F13KsJWe4y03gFuCzxVBpaxERRcjtytg/V/oWj++iX/RFr2bVok7SKDOL8A7/Vnzl2onNptCbpB7ZUF9Ye0Qt/jy1gz3Uo
- OpR8MHWp00nV27rTS/wEpCl9MIYjo4klabKr3ypyDr75qvA7bQ6m5AAuuD6LHKq/GmGFJhOEyLC8wWCVGmPCbQyyx85SfOligcUxdZHD/KopJI8WK0l4RA55
- Juu83JtDJT06Xqe76AXZPXXcFZzdWVhRE7C9PwSGn1wBNhFFLF7CTqPOWBs9agiiiyMYS5oyOMS/ePzk/TTG/PA2F6QtOH30hlKpQjka6e+Rnz1N+JXisB33
- 4vq6PxlBrTEcE8od20nsnLEV1dZh0JPI8n2Yps36zX2HAzSUoioXTcKS+hd+wJGQic6/oWJLl9qkCejnjCTDg24xvdkPJg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ad76300-9b7f-f368-0533-1f88de649d10@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/12/19 10:15 PM, Janusz Krzysztofik wrote:
-> Correctness of format type (try or active) and pad ID parameters passed
-> to subdevice operation callbacks is now verified only for IOCTL calls.
-> However, those callbacks are also used by drivers, e.g., V4L2 host
-> interfaces.
+On Wed, May 08, 2019 at 11:28:05AM -0600, shuah wrote:
+> On 5/7/19 9:49 AM, Suwan Kim wrote:
+> > Hi Shuah,
+> > 
+> > On Mon, May 06, 2019 at 09:13:02AM -0600, shuah wrote:
+> > > On 5/6/19 6:55 AM, Suwan Kim wrote:
+> > > > When hcd suspends execution, hcd_bus_suspend() calls vhci_bus_suspend()
+> > > > which sets hcd->state as HC_STATE_SUSPENDED. But after calling
+> > > > vhci_bus_suspend(), hcd_bus_suspend() also sets hcd->state as
+> > > > HC_STATE_SUSPENDED.
+> > > > So, setting hcd->state in vhci_hcd_suspend() is unnecessary.
+> > > > 
+> > > > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> > > > ---
+> > > >    drivers/usb/usbip/vhci_hcd.c | 4 ----
+> > > >    1 file changed, 4 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> > > > index 667d9c0ec905..e6f378d00fb6 100644
+> > > > --- a/drivers/usb/usbip/vhci_hcd.c
+> > > > +++ b/drivers/usb/usbip/vhci_hcd.c
+> > > > @@ -1238,10 +1238,6 @@ static int vhci_bus_suspend(struct usb_hcd *hcd)
+> > > >    	dev_dbg(&hcd->self.root_hub->dev, "%s\n", __func__);
+> > > > -	spin_lock_irqsave(&vhci->lock, flags);
+> > > > -	hcd->state = HC_STATE_SUSPENDED;
+> > > > -	spin_unlock_irqrestore(&vhci->lock, flags);
+> > > > -
+> > > >    	return 0;
+> > > >    }
+> > > > 
+> > > 
+> > > Tell me more about why you think this change is needed? How did you test
+> > > this change?
+> > 
+> > I think that host controller specific functions, vhci_bus_resume()
+> > or vhci_bus_suspend() in the case of vhci, usually process host
+> > controller specific data (struct vhci_hcd) not a generic data
+> > (struct usb_hcd). The generic data is usually processed by generic HCD
+> > layer. But vhci_bus_resume() and vhci_bus_suspend() set generic data
+> > (hcd->state) and moreover this variable is set in generic HCD layer
+> > once again(hcd_bus_resume() and hcd_bus_suspend()).
+> > 
+> > So, i think host controller specific functions (vhci_bus_resume()
+> > and vhci_bus_suspend()) don't need to set the generic data that is
+> > "hcd->state = HC_STATE_RUNNING or HC_STATE_SUSPEND".
+> > 
 > 
-> Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
-> macro while calling subdevice operations, move those parameter checks
-> from subdev_do_ioctl() to v4l2_subdev_call() so we can avoid taking care
-> of those checks inside drivers.
+> It depends. In this case, vhci_hcd is virtual driver and maintains
+> port status for devices that are remote. It checks hcd->state in
+> vhci_hub_status().
 > 
-> Define a wrapper function for each operation callback in scope, then
-> gather those wrappers in a static v4l2_subdev_ops structure so the
-> v4l2_subdev_call() macro can find them easy if provided.  Move reusable
-> code to helpers.
-> 
-> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
-> ---
->  drivers/media/v4l2-core/v4l2-subdev.c | 227 ++++++++++++++++----------
->  include/media/v4l2-subdev.h           |   6 +
->  2 files changed, 143 insertions(+), 90 deletions(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> index d75815ab0d7b..890916674d42 100644
-> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> @@ -120,56 +120,168 @@ static int subdev_close(struct file *file)
->  	return 0;
->  }
->  
-> -#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
-> -static int check_format(struct v4l2_subdev *sd,
-> -			struct v4l2_subdev_format *format)
-> +static int check_which(__u32 which)
->  {
-> -	if (format->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -	    format->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -		return -EINVAL;
-> -
-> -	if (format->pad >= sd->entity.num_pads)
-> +	if (which != V4L2_SUBDEV_FORMAT_TRY &&
-> +	    which != V4L2_SUBDEV_FORMAT_ACTIVE)
->  		return -EINVAL;
->  
->  	return 0;
->  }
->  
-> -static int check_crop(struct v4l2_subdev *sd, struct v4l2_subdev_crop *crop)
-> +static int check_pad(struct v4l2_subdev *sd, __u32 pad)
->  {
-> -	if (crop->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -	    crop->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> +#if defined(CONFIG_MEDIA_CONTROLLER)
-> +	if (sd->entity.num_pads && pad >= sd->entity.num_pads)
->  		return -EINVAL;
-> +#endif
-> +	return 0;
-> +}
->  
-> -	if (crop->pad >= sd->entity.num_pads)
-> -		return -EINVAL;
-> +static int check_format(struct v4l2_subdev *sd,
-> +			struct v4l2_subdev_format *format)
-> +{
-> +	return check_which(format->which) ? : check_pad(sd, format->pad);
-> +}
->  
-> -	return 0;
-> +static int check_get_fmt(struct v4l2_subdev *sd,
-> +			 struct v4l2_subdev_pad_config *cfg,
-> +			 struct v4l2_subdev_format *format)
-> +{
-> +	return check_format(sd, format) ? :
-> +	       sd->ops->pad->get_fmt(sd, cfg, format);
-> +}
-> +
-> +static int check_set_fmt(struct v4l2_subdev *sd,
-> +			 struct v4l2_subdev_pad_config *cfg,
-> +			 struct v4l2_subdev_format *format)
-> +{
-> +	return check_format(sd, format) ? :
-> +	       sd->ops->pad->set_fmt(sd, cfg, format);
-> +}
-> +
-> +static int check_enum_mbus_code(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_pad_config *cfg,
-> +				struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	return check_which(code->which) ? : check_pad(sd, code->pad) ? :
-> +	       sd->ops->pad->enum_mbus_code(sd, cfg, code);
-> +}
-> +
-> +static int check_enum_frame_size(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_pad_config *cfg,
-> +				 struct v4l2_subdev_frame_size_enum *fse)
-> +{
-> +	return check_which(fse->which) ? : check_pad(sd, fse->pad) ? :
-> +	       sd->ops->pad->enum_frame_size(sd, cfg, fse);
-> +}
-> +
-> +static int check_frame_interval(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_frame_interval *fi)
-> +{
-> +	return check_pad(sd, fi->pad);
-> +}
-> +
-> +static int check_g_frame_interval(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_frame_interval *fi)
-> +{
-> +	return check_frame_interval(sd, fi) ? :
-> +	       sd->ops->video->g_frame_interval(sd, fi);
-> +}
-> +
-> +static int check_s_frame_interval(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_frame_interval *fi)
-> +{
-> +	return check_frame_interval(sd, fi) ? :
-> +	       sd->ops->video->s_frame_interval(sd, fi);
-> +}
-> +
-> +static int check_enum_frame_interval(struct v4l2_subdev *sd,
-> +				struct v4l2_subdev_pad_config *cfg,
-> +				struct v4l2_subdev_frame_interval_enum *fie)
-> +{
-> +	return check_which(fie->which) ? : check_pad(sd, fie->pad) ? :
-> +	       sd->ops->pad->enum_frame_interval(sd, cfg, fie);
->  }
->  
->  static int check_selection(struct v4l2_subdev *sd,
->  			   struct v4l2_subdev_selection *sel)
->  {
-> -	if (sel->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -	    sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -		return -EINVAL;
-> +	return check_which(sel->which) ? : check_pad(sd, sel->pad);
-> +}
->  
-> -	if (sel->pad >= sd->entity.num_pads)
-> -		return -EINVAL;
-> +static int check_get_selection(struct v4l2_subdev *sd,
-> +			       struct v4l2_subdev_pad_config *cfg,
-> +			       struct v4l2_subdev_selection *sel)
-> +{
-> +	return check_selection(sd, sel) ? :
-> +	       sd->ops->pad->get_selection(sd, cfg, sel);
-> +}
->  
-> -	return 0;
-> +static int check_set_selection(struct v4l2_subdev *sd,
-> +			       struct v4l2_subdev_pad_config *cfg,
-> +			       struct v4l2_subdev_selection *sel)
-> +{
-> +	return check_selection(sd, sel) ? :
-> +	       sd->ops->pad->set_selection(sd, cfg, sel);
->  }
->  
->  static int check_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
->  {
-> -	if (edid->pad >= sd->entity.num_pads)
-> -		return -EINVAL;
-> -
->  	if (edid->blocks && edid->edid == NULL)
->  		return -EINVAL;
->  
-> -	return 0;
-> +	return check_pad(sd, edid->pad);
->  }
-> -#endif
-> +
-> +static int check_get_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
-> +{
-> +	return check_edid(sd, edid) ? : sd->ops->pad->get_edid(sd, edid);
-> +}
-> +
-> +static int check_set_edid(struct v4l2_subdev *sd, struct v4l2_subdev_edid *edid)
-> +{
-> +	return check_edid(sd, edid) ? : sd->ops->pad->set_edid(sd, edid);
-> +}
-> +
-> +static int check_dv_timings_cap(struct v4l2_subdev *sd,
-> +				struct v4l2_dv_timings_cap *cap)
-> +{
-> +	return check_pad(sd, cap->pad) ? :
-> +	       sd->ops->pad->dv_timings_cap(sd, cap);
-> +}
-> +
-> +static int check_enum_dv_timings(struct v4l2_subdev *sd,
-> +				 struct v4l2_enum_dv_timings *dvt)
-> +{
-> +	return check_pad(sd, dvt->pad) ? :
-> +	       sd->ops->pad->enum_dv_timings(sd, dvt);
-> +}
-> +
-> +static const struct v4l2_subdev_pad_ops v4l2_subdev_pad_chk_args = {
-> +	.get_fmt		= check_get_fmt,
-> +	.set_fmt		= check_set_fmt,
-> +	.enum_mbus_code		= check_enum_mbus_code,
-> +	.enum_frame_size	= check_enum_frame_size,
-> +	.enum_frame_interval	= check_enum_frame_interval,
-> +	.get_selection		= check_get_selection,
-> +	.set_selection		= check_set_selection,
-> +	.get_edid		= check_get_edid,
-> +	.set_edid		= check_set_edid,
-> +	.dv_timings_cap		= check_dv_timings_cap,
-> +	.enum_dv_timings	= check_enum_dv_timings,
-> +};
-> +
-> +static const struct v4l2_subdev_video_ops v4l2_subdev_video_chk_args = {
-> +	.g_frame_interval	= check_g_frame_interval,
-> +	.s_frame_interval	= check_s_frame_interval,
-> +};
-> +
-> +struct v4l2_subdev_ops v4l2_subdev_call_chk_args = {
-
-Should be const.
-
-BTW, I agree with Sakari regarding the naming of these ops.
-
-Regards,
-
-	Hans
-
-> +	.pad	= &v4l2_subdev_pad_chk_args,
-> +	.video	= &v4l2_subdev_video_chk_args,
-> +};
-> +EXPORT_SYMBOL(v4l2_subdev_call_chk_args);
->  
->  static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  {
-> @@ -292,10 +404,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_G_FMT: {
->  		struct v4l2_subdev_format *format = arg;
->  
-> -		rval = check_format(sd, format);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(format->reserved, 0, sizeof(format->reserved));
->  		memset(format->format.reserved, 0, sizeof(format->format.reserved));
->  		return v4l2_subdev_call(sd, pad, get_fmt, subdev_fh->pad, format);
-> @@ -304,10 +412,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_S_FMT: {
->  		struct v4l2_subdev_format *format = arg;
->  
-> -		rval = check_format(sd, format);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(format->reserved, 0, sizeof(format->reserved));
->  		memset(format->format.reserved, 0, sizeof(format->format.reserved));
->  		return v4l2_subdev_call(sd, pad, set_fmt, subdev_fh->pad, format);
-> @@ -317,10 +421,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  		struct v4l2_subdev_crop *crop = arg;
->  		struct v4l2_subdev_selection sel;
->  
-> -		rval = check_crop(sd, crop);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(crop->reserved, 0, sizeof(crop->reserved));
->  		memset(&sel, 0, sizeof(sel));
->  		sel.which = crop->which;
-> @@ -340,10 +440,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  		struct v4l2_subdev_selection sel;
->  
->  		memset(crop->reserved, 0, sizeof(crop->reserved));
-> -		rval = check_crop(sd, crop);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(&sel, 0, sizeof(sel));
->  		sel.which = crop->which;
->  		sel.pad = crop->pad;
-> @@ -361,13 +457,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_ENUM_MBUS_CODE: {
->  		struct v4l2_subdev_mbus_code_enum *code = arg;
->  
-> -		if (code->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -		    code->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -			return -EINVAL;
-> -
-> -		if (code->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		memset(code->reserved, 0, sizeof(code->reserved));
->  		return v4l2_subdev_call(sd, pad, enum_mbus_code, subdev_fh->pad,
->  					code);
-> @@ -376,13 +465,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_ENUM_FRAME_SIZE: {
->  		struct v4l2_subdev_frame_size_enum *fse = arg;
->  
-> -		if (fse->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -		    fse->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -			return -EINVAL;
-> -
-> -		if (fse->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		memset(fse->reserved, 0, sizeof(fse->reserved));
->  		return v4l2_subdev_call(sd, pad, enum_frame_size, subdev_fh->pad,
->  					fse);
-> @@ -391,9 +473,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_G_FRAME_INTERVAL: {
->  		struct v4l2_subdev_frame_interval *fi = arg;
->  
-> -		if (fi->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		memset(fi->reserved, 0, sizeof(fi->reserved));
->  		return v4l2_subdev_call(sd, video, g_frame_interval, arg);
->  	}
-> @@ -401,9 +480,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_S_FRAME_INTERVAL: {
->  		struct v4l2_subdev_frame_interval *fi = arg;
->  
-> -		if (fi->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		memset(fi->reserved, 0, sizeof(fi->reserved));
->  		return v4l2_subdev_call(sd, video, s_frame_interval, arg);
->  	}
-> @@ -411,13 +487,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_ENUM_FRAME_INTERVAL: {
->  		struct v4l2_subdev_frame_interval_enum *fie = arg;
->  
-> -		if (fie->which != V4L2_SUBDEV_FORMAT_TRY &&
-> -		    fie->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> -			return -EINVAL;
-> -
-> -		if (fie->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		memset(fie->reserved, 0, sizeof(fie->reserved));
->  		return v4l2_subdev_call(sd, pad, enum_frame_interval, subdev_fh->pad,
->  					fie);
-> @@ -426,10 +495,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_G_SELECTION: {
->  		struct v4l2_subdev_selection *sel = arg;
->  
-> -		rval = check_selection(sd, sel);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(sel->reserved, 0, sizeof(sel->reserved));
->  		return v4l2_subdev_call(
->  			sd, pad, get_selection, subdev_fh->pad, sel);
-> @@ -438,10 +503,6 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_SUBDEV_S_SELECTION: {
->  		struct v4l2_subdev_selection *sel = arg;
->  
-> -		rval = check_selection(sd, sel);
-> -		if (rval)
-> -			return rval;
-> -
->  		memset(sel->reserved, 0, sizeof(sel->reserved));
->  		return v4l2_subdev_call(
->  			sd, pad, set_selection, subdev_fh->pad, sel);
-> @@ -450,38 +511,24 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
->  	case VIDIOC_G_EDID: {
->  		struct v4l2_subdev_edid *edid = arg;
->  
-> -		rval = check_edid(sd, edid);
-> -		if (rval)
-> -			return rval;
-> -
->  		return v4l2_subdev_call(sd, pad, get_edid, edid);
->  	}
->  
->  	case VIDIOC_S_EDID: {
->  		struct v4l2_subdev_edid *edid = arg;
->  
-> -		rval = check_edid(sd, edid);
-> -		if (rval)
-> -			return rval;
-> -
->  		return v4l2_subdev_call(sd, pad, set_edid, edid);
->  	}
->  
->  	case VIDIOC_SUBDEV_DV_TIMINGS_CAP: {
->  		struct v4l2_dv_timings_cap *cap = arg;
->  
-> -		if (cap->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		return v4l2_subdev_call(sd, pad, dv_timings_cap, cap);
->  	}
->  
->  	case VIDIOC_SUBDEV_ENUM_DV_TIMINGS: {
->  		struct v4l2_enum_dv_timings *dvt = arg;
->  
-> -		if (dvt->pad >= sd->entity.num_pads)
-> -			return -EINVAL;
-> -
->  		return v4l2_subdev_call(sd, pad, enum_dv_timings, dvt);
->  	}
->  
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index a7fa5b80915a..900f265fd950 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -1091,6 +1091,8 @@ void v4l2_subdev_free_pad_config(struct v4l2_subdev_pad_config *cfg);
->  void v4l2_subdev_init(struct v4l2_subdev *sd,
->  		      const struct v4l2_subdev_ops *ops);
->  
-> +extern struct v4l2_subdev_ops v4l2_subdev_call_chk_args;
-> +
->  /**
->   * v4l2_subdev_call - call an operation of a v4l2_subdev.
->   *
-> @@ -1112,6 +1114,10 @@ void v4l2_subdev_init(struct v4l2_subdev *sd,
->  			__result = -ENODEV;				\
->  		else if (!(__sd->ops->o && __sd->ops->o->f))		\
->  			__result = -ENOIOCTLCMD;			\
-> +		else if (v4l2_subdev_call_chk_args.o &&			\
-> +			 v4l2_subdev_call_chk_args.o->f)		\
-> +			__result = v4l2_subdev_call_chk_args.o->f(	\
-> +							__sd, ##args);	\
->  		else							\
->  			__result = __sd->ops->o->f(__sd, ##args);	\
->  		__result;						\
+> It updates the hcd->state in suspend with vhci->lock hold and checks
+> status from vhci_hub_status(). Removing updating hcd->state from
+> vhci_bus_suspend()will open a window where vhci_hub_status() might
+> find it wrong state.
 > 
 
+I didn't know that and I missed. Thank you for pointing out my fault.
+I agree that removing updating hcd->state which is protected by vhci
+lock is not correct.
+
+But I still have not fully understood the relationship between
+vhci_bus_suspend() and vhci_hub_status() yet. I will look at it in
+more detail. Again, thank you for reviewing my patch.
+
+Regards
+
+Suwan Kim
