@@ -2,112 +2,264 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B197C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2DD21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BBE21707
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557846374;
-	bh=7BYfTKO6aOWFBb458CFdGiSPzXk4KVRFwBEwn5mBMmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qnQr6wXEobhsXkK5ikU0ES5h9AdTmKdrXNKV+En4ZBObk9OQ/5yoKyLsPzEioXGZQ
-	 S4Ntj+pe3yIXc3sRb01TWncaFt9K+ZRmb2iutWXbaleXxEAqLJRDdOTNtDDFNLIlE0
-	 XmGgBCxQfqozNZI7JKsInAtNAw6/y+RYT9lH175I=
+	s=default; t=1557846500;
+	bh=uFBOIAJuJJn9eG4hdMOo/0HtgolIWidCe+VP9TR2ric=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IC17fI+t+Hz0oZJ4mudSx4xy4yXdhN8UO+RmELD+Ty54OKWO/UmmSNrVW3YoSI7lq
+	 oh8KQ1CB5uhnoXU/obbQpX+bykxgRKa2n22wMxe1OKo90K2xLp/JgAZMPD39moHEA+
+	 H3OfqeqMDYltWp3V1xD2E5xEIFLrdcROFCDTLJqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfENPGM (ORCPT
+        id S1726381AbfENPIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:06:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52172 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENPGM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:06:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NQhfVy0qFNuvDpdRYcvkTlDsVD03kBM9D8DvgCnqBPc=; b=Dl5/ocQVDpG/+WUNiJvVsFRBD
-        +ZkCa4teBLvzobqhtymTMHwRMN1560TtLfuX8i3hGHz4nH+aHwmDrQig/arE4f8Em+vwjmiclnVGl
-        axaSq2p7TChHq11t36ylMJH87h10VU4zL8+zHyONdqsNUd+YcPZIwuVXIdQZS4Oswg+7w=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQZ0K-00015Q-Ac; Tue, 14 May 2019 15:06:08 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 85DBD1121EE8; Tue, 14 May 2019 16:06:07 +0100 (BST)
-Date:   Tue, 14 May 2019 16:06:07 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH 1/4] spi: For controllers that need realtime always use
- the pump thread
-Message-ID: <20190514150607.GA1917@sirena.org.uk>
-References: <20190510223437.84368-1-dianders@chromium.org>
- <20190510223437.84368-2-dianders@chromium.org>
- <20190512073301.GC21483@sirena.org.uk>
- <CAD=FV=UBic4qywgYQFGEXx_frD9ZoRJX7XGgDbQCvb2CbkBa9w@mail.gmail.com>
- <20190514093038.GB8665@sirena.org.uk>
- <CAD=FV=UXhQg2CuNsTCkSe1BuEvkGMj6qeUB2iF=Qfj=Z0fLiWw@mail.gmail.com>
+        Tue, 14 May 2019 11:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfENPIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:08:19 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5B62189D
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:08:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557846497;
+        bh=uFBOIAJuJJn9eG4hdMOo/0HtgolIWidCe+VP9TR2ric=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hn4XsD7rdUBM3zAWlZfe8yiZd3281ar20Nbm6W0BukStHsuEiKJy6FxsZcmHeo2/R
+         tUjDqmspcbUBpm25xFDUQlRxhqeTYKgFNU5juzte7d8bDl+ImqzTybE/Yq5apRAMEQ
+         PDeuT0LwUFzzv5En0iC10ez7V08HIBC1lXKsjoyI=
+Received: by mail-wr1-f44.google.com with SMTP id d9so11279239wrx.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:08:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAX1jw7lVoW33pB60f8OzDSu+hKDzqeEFEBcd1KOq+2QpeMZUeII
+        PIfv0vEd5rf5QHJV4rJpmm+L6SQEcz++Pfh310Ce+Q==
+X-Google-Smtp-Source: APXvYqwboTitGEVChl2NUfxveIybzxOQsclHqlk9rDMOmaKeaoNVIsosLJp6sEzpEOh5ANUnFkp5DjE1yTzmE+Gx5rw=
+X-Received: by 2002:a5d:4907:: with SMTP id x7mr10042481wrq.199.1557846495382;
+ Tue, 14 May 2019 08:08:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=UXhQg2CuNsTCkSe1BuEvkGMj6qeUB2iF=Qfj=Z0fLiWw@mail.gmail.com>
-X-Cookie: There is a fly on your nose.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
+ <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com> <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com> <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com> <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com> <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886394@ORSMSX116.amr.corp.intel.com>
+In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F4E886394@ORSMSX116.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 May 2019 08:08:03 -0700
+X-Gmail-Original-Message-ID: <CALCETrU9Ry0MpoZTKmzxys7kVsTJfKrC_3ZxMYgc6z2V36bfZg@mail.gmail.com>
+Message-ID: <CALCETrU9Ry0MpoZTKmzxys7kVsTJfKrC_3ZxMYgc6z2V36bfZg@mail.gmail.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     "Xing, Cedric" <cedric.xing@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 10, 2019 at 6:06 PM Xing, Cedric <cedric.xing@intel.com> wrote:
+>
+> Hi Andy and Jethro,
+>
+> > > > You have probably misread my email. By mmap(), I meant the enclave
+> > file would be mapped via *multiple* mmap() calls, in the same way as
+> > what dlopen() would do in loading regular shared object. The intention
+> > here is to make the enclave file subject to the same checks as regular
+> > shared objects.
+> > >
+> > > No, I didn't misread your email. My original point still stands:
+> > > requiring that an enclave's memory is created from one or more mmap
+> > > calls of a file puts significant restrictions on the enclave's on-dis=
+k
+> > > representation.
+> > >
+>
+> I was talking in the context of ELF, with the assumption that changing RW=
+ pages to RX is disallowed by LSM. And in that case mmap()would be the only=
+ way to load a page from disk without having to "write" to it. But that's j=
+ust an example but not the focus of the discussion.
+>
+> The point I was trying to make was, that the driver is going to copy both=
+ content and permissions from the source so the security properties establi=
+shed (by IMA/LSM) around that source page would be carried onto the EPC pag=
+e being EADD'ed. The driver doesn't care how that source page came into exi=
+stence. It could be mapped from an ELF file as in the example, or it could =
+be a result from JIT as long as LSM allows it. The driver will be file form=
+at agnostic.
+>
+> >
+> > For a tiny bit of background, Linux (AFAIK*) makes no effort to ensure
+> > the complete integrity of DSOs.  What Linux *does* do (if so
+> > configured) is to make sure that only approved data is mapped
+> > executable.  So, if you want to have some bytes be executable, those
+> > bytes have to come from a file that passes the relevant LSM and IMA
+> > checks.  So we have two valid approaches, I think.
+> >
+> > Approach 1: we treat SGX exactly the same way and make it so that only
+> > bytes that pass the relevant checks can be mapped as code within an
+> > enclave.  This imposes no particular restrictions on the file format
+> > -- we just need some API that takes an fd, an offset, and a length,
+> > and adds those bytes as code to an enclave.  (It could also take a
+> > pointer and a length and make sure that the pointer points to
+> > executable memory -- same effect.)
+>
+> I assume "some API" is some user mode API so this approach is the same as=
+ what I suggested in my last email. Am I correct?
 
---ikeVEW9yuYc//A+q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I meant kernel, but SGX_IOC_ADD_ENCLAVE_PAGE could be that API.
 
-On Tue, May 14, 2019 at 07:42:38AM -0700, Doug Anderson wrote:
+The only benefit I can see to making the kernel API take an fd instead
+of a pointer is that it allows loading an enclave without mapping it
+first, but that seems unlikely to be very important.
 
-> ...but I guess you're saying that you don't want to guarantee that the
-> SPI core will happen to have this thread sitting around in the future
-> so you'd rather add the extra complexity to cros_ec so the core can
-> evolve more freely?
+>
+> >
+> > Approach 2: we decide that we want a stronger guarantee and that we
+> > *will* ensure the integrity of the enclave.  This means:
+> >
+> > 2a) that we either need to load the entire thing from some approved
+> > file, and we commit to supporting one or more file formats.
+> >
+> > 2b) we need to check that the eventual enclave hash is approved.  Or
+> > we could have a much shorter file that is just the hash and we check
+> > that.  At its simplest, the file could be *only* the hash, and there
+> > could be an LSM callback to check it.  In the future, if someone wants
+> > to allow enclaves to be embedded in DSOs, we could have a special ELF
+> > note or similar that contains an enclave hash or similar.
+> >
+> > 2c) same as 2b except that we expose the whole SIGSTRUCT, not just the
+> > hash.
+> >
+> > Here are some pros and cons of various bits:
+> >
+> > 1 and 2a allow anti-virus software to scan the enclave code, and 2a
+> > allows it to scan the whole enclave.  I don't know if this is actually
+> > imporant.
+>
+> I guess anti-virus software can scan any enclave file in *all* cases as l=
+ong as it understands the format of that enclave. It doesn't necessary mean=
+ the kernel has to understand that enclave format (as enclave file could be=
+ parsed in user mode) or the anti-virus software has to understand all form=
+ats (if any) supported natively by the kernel.
 
-We need something to support spi_async() but what you're asking for is
-fairly specific implementation details about how things are currently
-structured, and we do need to be able to continue to make improvements
-for users who are interested in performance.  Ensuring that the calling
-context is also less likely to be preempted is going to make it much
-less likely that any other work is going to cause some timing change
-that creates problems for you.
+True, but in 2a it can be scanned even without understanding the
+format.  That's probably not terribly important.
 
---ikeVEW9yuYc//A+q
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> >
+> > 2a is by far the most complicated kernel implementation.
+> >
+>
+> Agreed. I don't see any reason 2a would be necessary.
+>
+> > 2b and 2c are almost file-format agnostic.  1 is completely file
+> > format agnostic but, in exchange, it's much weaker.
+>
+> I'd say 1 and (variants of) 2 are orthogonal. SGX always enforces integri=
+ties so not doing integrity checks at EADD doesn't mean the enclave integri=
+ty is not being enforced. 1 and 2 are basically 2 different checkpoints whe=
+re LSM hooks could be placed. And a given LSM implementation/policy may enf=
+orce either 1 or 2, or both, or neither.
 
------BEGIN PGP SIGNATURE-----
+They're not orthogonal in the sense that verifying the SIGSTRUCT
+implicitly verifies the executable contents.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlza2V4ACgkQJNaLcl1U
-h9BdzAf+KMVQaYP9/vNw0i0uGrveiVFMzejKMkn1HLO53K5CGl+UPRj+Y2OYUy/4
-o4zonygqZNCkn+XY4BVZHOGInN1sb2Vzp6Ky1kuw76YxxwL+xKsLuua7+HQ9bCQM
-oVh1Okwky0twqGK78DMtZpfRrYyetWfXA6teiW7G3LZ9+eEd0hXuVVGamq9lzDlM
-zYR8ar3mdRRJmW8JGkJSE0t6Q03CMoeVPoNT8TUs41QnLfNOi/shVZ5kRwbuyoTA
-PZGyAEjbIEYmMe7UR09ePu685ymCtrO9KjqplYeBQBOaUm6KqjURqrJBGWhVyLqF
-sRSuDvQVfjGjiNbqlpfc7QsEj0HaLw==
-=RN96
------END PGP SIGNATURE-----
+>
+> >
+> > 2b and 2c should solve most (but not all) of the launch control
+> > complaints that Dr. Greg cares about, in the sense that the LSM policy
+> > quite literally validates that the enclave is approved.
+> >
+> > As a straw man design, I propose the following, which is mostly 2c.
+> > The whole loading process works almost as in Jarkko's current driver,
+> > but the actual ioctl that triggers EINIT changes.  When you issue the
+> > ioctl, you pass in an fd and the SIGSTRUCT is loaded and checked from
+> > the fd.  The idea is that software that ships an enclave will ship a
+> > .sgxsig file that is literally a SIGSTRUCT for the enclave.  With
+> > SELinux, that file gets labeled something like
+> > sgx_enclave_sigstruct_t.  And we have the following extra twist: if
+> > you're calling the EADD ioctl to add *code* to the enclave, the driver
+> > checks that the code being loaded is mapped executable.  This way
+> > existing code-signing policies don't get subverted, and policies that
+> > want to impose full verification on the enclave can do so by verifying
+> > the .sigstruct file.
+>
+> I'm with you that it's desirable/necessary to add an LSM hook at EINIT, b=
+ut don't see the need for .sigstruct file or its fd as input to EINIT ioctl=
+.
+>
+> Generally speaking, LSM needs to decide whether or not to launch the encl=
+ave in question. And that decision could be based upon either the enclave i=
+tself (i.e. bytes comprising the enclave, or its MRENCLAVE, or its signatur=
+e, all equivalent from cryptographic standpoint), or some external attribut=
+es associated with the enclave (e.g. DAC/MAC context associated with the en=
+clave file), or both. In the former case, what matters is the content of th=
+e SIGSTRUCT but not where it came from; while in the latter case it could b=
+e gated at open() syscall so that no fd to SIGSTRUCT (or the enclave image =
+file) could ever be obtained by the calling process if it was not allowed t=
+o launch that enclave at all. In either case, no fd is necessary to be pass=
+ed to EINIT ioctl. That said, by providing a SIGSTRUCT to EINIT ioctl, the =
+calling process has implicitly proven its access to needed file(s) at the f=
+ile system level, so only the content (i.e. MRENCLAVE or signing key) of th=
+e SIGSTRUCT needs to be checked by LSM, while the integrity of the enclave =
+will be enforced by SGX hardware.
+>
 
---ikeVEW9yuYc//A+q--
+I agree with you except that there's a difference in how the
+configuration works.  If the whole .sigstruct is in a file, then
+teaching your policy to accept an enclave works just like teaching
+your policy to accept a new ELF program -- you just put it in a file
+and mark the file trusted (by labeling it, for example).  If the
+.sigstruct comes from unverifiable application memory, then an
+out-of-band mechanism will likely be needed.
+
+> Putting everything together, I'd suggest to:
+>   - Change EADD ioctl to take source page's VMA permission as ("upper bou=
+nd" of) EPCM permission. This make sure no one can circumvent LSM to genera=
+te executable code on the fly using SGX driver.
+>   - Change EINIT ioctl to invoke (new?) LSM hook to validate SIGSTRUCT be=
+fore issuing EINIT.
+
+I'm okay with this if the consensus is that having a .sigstruct file
+is too annoying.
+
+(Note that a .sigstruct file does not, strictly speaking, require that
+it comes from a real file.  It could come from memfd, and it will then
+fail to load if the LSM doesn't like it.  So you can still easily
+download and run an enclave if you think that's a good idea.)
