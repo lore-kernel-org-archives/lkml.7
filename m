@@ -2,121 +2,149 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 736B4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D1DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A813216B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145F720850
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Do+8Q+pH"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="UywwujrY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbfENSMl (ORCPT
+        id S1727588AbfENSNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:12:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38827 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbfENSMk (ORCPT
+        Tue, 14 May 2019 14:13:00 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:42987 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbfENSM7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:12:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id b76so1123385pfb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 11:12:40 -0700 (PDT)
+        Tue, 14 May 2019 14:12:59 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d4so10884795qkc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 11:12:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=poorly.run; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=N4UQ8E37RD8PM/SrG8N/O0bEDGjz00r1+gSc2WyT1f4=;
-        b=Do+8Q+pHF8OB+tlzSEbCAlPOY5hObzGGmcvPm0YH3pOm8OWb+2EG6k/+3FX9ODnKET
-         HeeejJJzGaiMQRAOmVbGKQQo9GMUp77yZaFJ+oq5A5++UZ2bqGz1eozejMrClIviWLaH
-         6NqHaVQChwYnFjxvjCGyJrQCTbtCzP1YDVjWmeDvwiekfu/CIsr1rAo7eeV2cOghCM3s
-         jg1XfDoXavpa+8h5sP6zhUgTkyTdA3gv3smrtEjkWIEZtUEMHzNqwHjzR4ACtYGyLA5t
-         PjdZhQFtOg524SURCKg00duz4q2SfEaie9Z/aI0bjh6oNPjygJN8c7oYJhw88kmkUhL7
-         hq9A==
+        bh=HrkjcsngWKiOpJS10js6bvf1zdshTsN54KJhQwcMKVg=;
+        b=UywwujrY/ytEzSfp8rG9FXW/ApAoK75ult5EIRsYGH1clhBX7Ek9y6Tj6lWt9Xo6pK
+         P8kF8427XKk1mgLR646yNWutCI9Y4T3sU62CshHLqV9b0UYbtVRph4V9DhrPDpK147Zx
+         bDPZrVlvWhkkSq5ZLj8Xa8I6WWnhSNA5PiYSumt4rpj34C9M6t2h2wW+9ZLG7JMPpTL3
+         48SXBH1rghW8V51fCr0a+0MEYGnRSGDasXc2GYaXoxPGkQLcMlxBlHQJlU7voH/u3aIO
+         PUHIxzdBMivxsr5/Zpqw8TcH09MZDT6mzWt6LZcFAxotbq5el/9nRruGl72Nolpv4GFx
+         3sqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N4UQ8E37RD8PM/SrG8N/O0bEDGjz00r1+gSc2WyT1f4=;
-        b=hQpOMyB24B1fFUHM4aokvqfSY6w59a4Wt3uDsECZwjATL+JCwDIMsqA4fH6DQ/Rj7U
-         bH88Cm7W/gg5BdVJm3sWE1uV3oLrZzvidGfF1Vxcz2ugCSdKxv00mpSqA650d/+kX51Z
-         TN7U+aBHObh5p6l2JAS59ImabJXvfinaxPIMgeGCZ7SXeQea/Pvn+dwMjrg6el4vVxnT
-         v/RbtUxgjVtp+ZpRySApAW/P/jjzHmxW8x9fEiQGeOXkK+JU1ptfplukr47ImTTFh7Vy
-         leIdpdg9Glh3JzSDvCuEAvF9hA/qd/YpuLfu/l6NPitw23tXEx1Zt8lgNdkYojm2wq5Q
-         srbw==
-X-Gm-Message-State: APjAAAUAVOw7aUc90DZbXvxFBcCWs/cMb869OCavnz1PyLNrBfWH3XG4
-        9pb/9ErvecieC418JwJ5Zf+NaA==
-X-Google-Smtp-Source: APXvYqzF1W3MvAqglRw1f3U3GzCogO4oDzfR+rvBgcAvxH3aiWBoZY2un6t4j9IVvIzAxmzzun0V4w==
-X-Received: by 2002:a62:d244:: with SMTP id c65mr3681839pfg.173.1557857559066;
-        Tue, 14 May 2019 11:12:39 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id w189sm22611956pfw.147.2019.05.14.11.12.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 11:12:38 -0700 (PDT)
-Date:   Tue, 14 May 2019 11:12:33 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
-        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
- noreturn list
-Message-ID: <20190514181233.GB109557@google.com>
-References: <20190514054251.186196-1-brendanhiggins@google.com>
- <20190514054251.186196-9-brendanhiggins@google.com>
- <20190514065643.GC2589@hirez.programming.kicks-ass.net>
- <20190514081223.GA230665@google.com>
- <20190514084655.GK2589@hirez.programming.kicks-ass.net>
+        bh=HrkjcsngWKiOpJS10js6bvf1zdshTsN54KJhQwcMKVg=;
+        b=fSIEj4K9O5IUdkn+V7T8Bt7YPUBMx5q5Dav/WYfXZo9EF/DWhPfDpzX+GA45C7y35V
+         FYfh//HuEBihgqA4P1fgaoIYXaCJW645lgBmY8+iltGWFD5Rz+XGjcFYr8UfL7pQb6YS
+         mzy/pNXGTFzN0QuFyefI7im99x/07yEjwr5uP0Z1R8GMQ0zBWTRH1FEgIqJw1A6ByX7R
+         S/+0JxJOZhfZtD0+zkJW/eVQzfLLfjNxcUHOlHj3/KORcE944jrpVEz/GJnyBdF9mbLO
+         L1TkmAa4DIqggKF52n+D6psl4Vaw/Juv2jGrRE5qRkRz1JWuMHoHmulQS8tGGKz7P9iz
+         jzYg==
+X-Gm-Message-State: APjAAAVyt//EqXxATrGpkLnP7NwesLTbMQFCpK7oOtlzYznsGIKufUq+
+        2xQqBHOIi6PzGoWVsLmEEu4dEQ==
+X-Google-Smtp-Source: APXvYqyKze9u0JIuismmXNkd+chXAfH2zyghRGa1LErYSasX1sE5+g2ouyvkDufBwjI7Z5AohXUjtQ==
+X-Received: by 2002:a37:358:: with SMTP id 85mr28270475qkd.174.1557857578793;
+        Tue, 14 May 2019 11:12:58 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id g55sm14028045qtk.76.2019.05.14.11.12.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 11:12:58 -0700 (PDT)
+Date:   Tue, 14 May 2019 14:12:57 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Matt Redfearn <matt.redfearn@thinci.com>,
+        Archit Taneja <architt@codeaurora.org>,
+        David Airlie <airlied@linux.ie>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Matthew Redfearn <matthew.redfearn@thinci.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/bridge: adv7511: Fix low refresh rate selection
+Message-ID: <20190514181257.GS17077@art_vandelay>
+References: <20190424132210.26338-1-matt.redfearn@thinci.com>
+ <20190511193226.GO13043@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190511193226.GO13043@pendragon.ideasonboard.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 10:46:55AM +0200, Peter Zijlstra wrote:
-> On Tue, May 14, 2019 at 01:12:23AM -0700, Brendan Higgins wrote:
-> > On Tue, May 14, 2019 at 08:56:43AM +0200, Peter Zijlstra wrote:
-> > > On Mon, May 13, 2019 at 10:42:42PM -0700, Brendan Higgins wrote:
-> > > > This fixes the following warning seen on GCC 7.3:
-> > > >   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
-> > > > 
-> > > 
-> > > What is that file and function; no kernel tree near me seems to have
-> > > that.
-> > 
-> > Oh, sorry about that. The function is added in the following patch,
-> > "[PATCH v3 09/18] kunit: test: add support for test abort"[1].
-> > 
-> > My apologies if this patch is supposed to come after it in sequence, but
-> > I assumed it should come before otherwise objtool would complain about
-> > the symbol when it is introduced.
+On Sat, May 11, 2019 at 10:32:26PM +0300, Laurent Pinchart wrote:
+> Hi Matt,
 > 
-> Or send me all patches such that I have context, or have a sane
-> Changelog that gives me context. Just don't give me one patch with a
-> crappy changelog.
+> Thank you for the patch.
+> 
+> On Wed, Apr 24, 2019 at 01:22:27PM +0000, Matt Redfearn wrote:
+> > The driver currently sets register 0xfb (Low Refresh Rate) based on the
+> > value of mode->vrefresh. Firstly, this field is specified to be in Hz,
+> > but the magic numbers used by the code are Hz * 1000. This essentially
+> > leads to the low refresh rate always being set to 0x01, since the
+> > vrefresh value will always be less than 24000. Fix the magic numbers to
+> > be in Hz.
+> > Secondly, according to the comment in drm_modes.h, the field is not
+> > supposed to be used in a functional way anyway. Instead, use the helper
+> > function drm_mode_vrefresh().
+> > 
+> > Fixes: 9c8af882bf12 ("drm: Add adv7511 encoder driver")
+> > Signed-off-by: Matt Redfearn <matt.redfearn@thinci.com>
+> 
+> Wow, a 4.5 year old bug fix, nice :-)
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
 
-I will provide more context in the next revision.
+Applied to drm-misc-next-fixes.
 
-Sorry about that!
+Thanks!
+
+Sean
+
+> > ---
+> > 
+> >  drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> > index 85c2d407a52..e7ddd3e3db9 100644
+> > --- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> > +++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+> > @@ -747,11 +747,11 @@ static void adv7511_mode_set(struct adv7511 *adv7511,
+> >  			vsync_polarity = 1;
+> >  	}
+> >  
+> > -	if (mode->vrefresh <= 24000)
+> > +	if (drm_mode_vrefresh(mode) <= 24)
+> >  		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_24HZ;
+> > -	else if (mode->vrefresh <= 25000)
+> > +	else if (drm_mode_vrefresh(mode) <= 25)
+> >  		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_25HZ;
+> > -	else if (mode->vrefresh <= 30000)
+> > +	else if (drm_mode_vrefresh(mode) <= 30)
+> >  		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_30HZ;
+> >  	else
+> >  		low_refresh_rate = ADV7511_LOW_REFRESH_RATE_NONE;
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
