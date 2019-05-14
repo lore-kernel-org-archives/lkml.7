@@ -2,301 +2,232 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 482C3C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DDDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B3C2084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:01:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epAnV9v1"
+	by mail.kernel.org (Postfix) with ESMTP id 80A3C2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfENPBB (ORCPT
+        id S1726279AbfENPCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:01:01 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42549 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENPBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:01:00 -0400
-Received: by mail-pl1-f195.google.com with SMTP id x15so8391646pln.9;
-        Tue, 14 May 2019 08:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KHX2jm8h5cQhhSHYMZcd0NuEp1U3hOpgV39qpd13txY=;
-        b=epAnV9v1oJsCsTroRdOenuw1LNVvi3uHZmqNxcWmzw9azQ2RZJEuzsE6s4VbFuDlM1
-         06WxwynGVP8FWkJOfV5pnztBd97djdPB2F7lOu4/eVSNNqKJ6HwKzlp84iIn6Ysj8dYQ
-         tlHMYJOTFRoios0sxf+UgarNIPhCp7MgvP0JiLp8Phyqqfj+MiWoMDjxqfYD1gM8fCvk
-         x+qJmA5A6WVQYvpR7jxmr6SjpyKvvewCaiPWp7SbWd0sGO0G76YxygbESHcISwdJNWA1
-         6T0HHa6qGP+QU+kNMr6G9ndFA5P9W2dIMvY/t0hrwfoEye3PqYyel+fpZk74GYblkL1z
-         cxUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KHX2jm8h5cQhhSHYMZcd0NuEp1U3hOpgV39qpd13txY=;
-        b=cNv9XMDIqoSDDuaps6KJAfgdz0eHkvxHqEr2+hxWLJ+FIOvNEaJzZhp2IRU7QKtYf5
-         oY26W2/l8XYXnMMoYWyTda+ubzfBe7Fciyh9csW+vqoZYPUsjpO9RX9vLu6MoIMAsgNb
-         oouIqyMNGTjiAr3S/N54P1yJeDbigKO2a2N8MguhFt3lXoIua4yRLisWVWvkOvVHWsOC
-         E0Am6M2+k838iBMM5Ffaj9UQiRQoFDF/XgfC50yq9GK/5FSBvF1C/unThyw7gI04X84v
-         QNwQo5r88eJhhFhubol4K6ZZ4G83QtceK1A8cyzs+8UuzHu1XuxpjAfyTn+S9NCEzUvr
-         KY2w==
-X-Gm-Message-State: APjAAAV/oqhc0q2FFdThY9adW/3W8ZkYZCo6dubigpblB4fjqCzajaDo
-        z70KOMOKRb4iota2Vtv3ePE=
-X-Google-Smtp-Source: APXvYqyIC9AyQXsRwNDXknePguQdvN5NSJSs67TbQzno0EygQBGG0csr5pCGZjO9l5Ng9XoSAuAnGg==
-X-Received: by 2002:a17:902:9a81:: with SMTP id w1mr36547178plp.71.1557846059768;
-        Tue, 14 May 2019 08:00:59 -0700 (PDT)
-Received: from ubuntu.localdomain ([104.238.150.158])
-        by smtp.gmail.com with ESMTPSA id o20sm17674943pgj.70.2019.05.14.08.00.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 08:00:59 -0700 (PDT)
-From:   Muchun Song <smuchun@gmail.com>
-To:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        benh@kernel.crashing.org, prsood@codeaurora.org,
-        mojha@codeaurora.org, gkohli@codeaurora.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        zhaowuyun@wingtech.com
-Subject: [PATCH v2] driver core: Fix use-after-free and double free on glue directory
-Date:   Tue, 14 May 2019 23:00:27 +0800
-Message-Id: <20190514150027.2364-1-smuchun@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 May 2019 11:02:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41738 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfENPCI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:02:08 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D478F3DBFB;
+        Tue, 14 May 2019 15:02:01 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 539FD5EDE2;
+        Tue, 14 May 2019 15:01:43 +0000 (UTC)
+Date:   Tue, 14 May 2019 09:01:42 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Erik Skultety <eskultet@redhat.com>
+Cc:     Yan Zhao <yan.y.zhao@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190514090142.441a8a8c@x1.home>
+In-Reply-To: <20190514074344.GB2089@beluga.usersys.redhat.com>
+References: <20190509154857.GF2868@work-vm>
+        <20190509175404.512ae7aa.cohuck@redhat.com>
+        <20190509164825.GG2868@work-vm>
+        <20190510110838.2df4c4d0.cohuck@redhat.com>
+        <20190510093608.GD2854@work-vm>
+        <20190510114838.7e16c3d6.cohuck@redhat.com>
+        <20190513132804.GD11139@beluga.usersys.redhat.com>
+        <20190514061235.GC20407@joy-OptiPlex-7040>
+        <20190514072039.GA2089@beluga.usersys.redhat.com>
+        <20190514073219.GD20407@joy-OptiPlex-7040>
+        <20190514074344.GB2089@beluga.usersys.redhat.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 14 May 2019 15:02:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race condition between removing glue directory and adding a new
-device under the glue directory. It can be reproduced in following test:
+On Tue, 14 May 2019 09:43:44 +0200
+Erik Skultety <eskultet@redhat.com> wrote:
 
-path 1: Add the child device under glue dir
-device_add()
-    get_device_parent()
-        mutex_lock(&gdp_mutex);
-        ....
-        /*find parent from glue_dirs.list*/
-        list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
-            if (k->parent == parent_kobj) {
-                kobj = kobject_get(k);
-                break;
-            }
-        ....
-        mutex_unlock(&gdp_mutex);
-        ....
-    ....
-    kobject_add()
-        kobject_add_internal()
-            create_dir()
-                sysfs_create_dir_ns()
-                    if (kobj->parent)
-                        parent = kobj->parent->sd;
-                    ....
-                    kernfs_create_dir_ns(parent)
-                        kernfs_new_node()
-                            kernfs_get(parent)
-                        ....
-                        /* link in */
-                        rc = kernfs_add_one(kn);
-                        if (!rc)
-                            return kn;
+> On Tue, May 14, 2019 at 03:32:19AM -0400, Yan Zhao wrote:
+> > On Tue, May 14, 2019 at 03:20:40PM +0800, Erik Skultety wrote:  
+> > > On Tue, May 14, 2019 at 02:12:35AM -0400, Yan Zhao wrote:  
+> > > > On Mon, May 13, 2019 at 09:28:04PM +0800, Erik Skultety wrote:  
+> > > > > On Fri, May 10, 2019 at 11:48:38AM +0200, Cornelia Huck wrote:  
+> > > > > > On Fri, 10 May 2019 10:36:09 +0100
+> > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> > > > > >  
+> > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:  
+> > > > > > > > On Thu, 9 May 2019 17:48:26 +0100
+> > > > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> > > > > > > >  
+> > > > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:  
+> > > > > > > > > > On Thu, 9 May 2019 16:48:57 +0100
+> > > > > > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> > > > > > > > > >  
+> > > > > > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:  
+> > > > > > > > > > > > On Tue, 7 May 2019 15:18:26 -0600
+> > > > > > > > > > > > Alex Williamson <alex.williamson@redhat.com> wrote:
+> > > > > > > > > > > >  
+> > > > > > > > > > > > > On Sun,  5 May 2019 21:49:04 -0400
+> > > > > > > > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:  
+> > > > > > > > > > > >  
+> > > > > > > > > > > > > > +  Errno:
+> > > > > > > > > > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
+> > > > > > > > > > > > > > +  devices, it should not register version attribute for this mdev device. But if
+> > > > > > > > > > > > > > +  a vendor driver has already registered version attribute and it wants to claim
+> > > > > > > > > > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
+> > > > > > > > > > > > > > +  -ENODEV on access to this mdev device's version attribute.
+> > > > > > > > > > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
+> > > > > > > > > > > > > > +  incompatible mdev devices's version strings to its version attribute should
+> > > > > > > > > > > > > > +  return -EINVAL;  
+> > > > > > > > > > > > >
+> > > > > > > > > > > > > I think it's best not to define the specific errno returned for a
+> > > > > > > > > > > > > specific situation, let the vendor driver decide, userspace simply
+> > > > > > > > > > > > > needs to know that an errno on read indicates the device does not
+> > > > > > > > > > > > > support migration version comparison and that an errno on write
+> > > > > > > > > > > > > indicates the devices are incompatible or the target doesn't support
+> > > > > > > > > > > > > migration versions.  
+> > > > > > > > > > > >
+> > > > > > > > > > > > I think I have to disagree here: It's probably valuable to have an
+> > > > > > > > > > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
+> > > > > > > > > > > > those two particular devices'. Userspace might want to do different
+> > > > > > > > > > > > things (e.g. trying with different device pairs).  
+> > > > > > > > > > >
+> > > > > > > > > > > Trying to stuff these things down an errno seems a bad idea; we can't
+> > > > > > > > > > > get much information that way.  
+> > > > > > > > > >
+> > > > > > > > > > So, what would be a reasonable approach? Userspace should first read
+> > > > > > > > > > the version attributes on both devices (to find out whether migration
+> > > > > > > > > > is supported at all), and only then figure out via writing whether they
+> > > > > > > > > > are compatible?
+> > > > > > > > > >
+> > > > > > > > > > (Or just go ahead and try, if it does not care about the reason.)  
+> > > > > > > > >
+> > > > > > > > > Well, I'm OK with something like writing to test whether it's
+> > > > > > > > > compatible, it's just we need a better way of saying 'no'.
+> > > > > > > > > I'm not sure if that involves reading back from somewhere after
+> > > > > > > > > the write or what.  
+> > > > > > > >
+> > > > > > > > Hm, so I basically see two ways of doing that:
+> > > > > > > > - standardize on some error codes... problem: error codes can be hard
+> > > > > > > >   to fit to reasons
+> > > > > > > > - make the error available in some attribute that can be read
+> > > > > > > >
+> > > > > > > > I'm not sure how we can serialize the readback with the last write,
+> > > > > > > > though (this looks inherently racy).
+> > > > > > > >
+> > > > > > > > How important is detailed error reporting here?  
+> > > > > > >
+> > > > > > > I think we need something, otherwise we're just going to get vague
+> > > > > > > user reports of 'but my VM doesn't migrate'; I'd like the error to be
+> > > > > > > good enough to point most users to something they can understand
+> > > > > > > (e.g. wrong card family/too old a driver etc).  
+> > > > > >
+> > > > > > Ok, that sounds like a reasonable point. Not that I have a better idea
+> > > > > > how to achieve that, though... we could also log a more verbose error
+> > > > > > message to the kernel log, but that's not necessarily where a user will
+> > > > > > look first.  
+> > > > >
+> > > > > In case of libvirt checking the compatibility, it won't matter how good the
+> > > > > error message in the kernel log is and regardless of how many error states you
+> > > > > want to handle, libvirt's only limited to errno here, since we're going to do
+> > > > > plain read/write, so our internal error message returned to the user is only
+> > > > > going to contain what the errno says - okay, of course we can (and we DO)
+> > > > > provide libvirt specific string, further specifying the error but like I
+> > > > > mentioned, depending on how many error cases we want to distinguish this may be
+> > > > > hard for anyone to figure out solely on the error code, as apps will most
+> > > > > probably not parse the
+> > > > > logs.
+> > > > >
+> > > > > Regards,
+> > > > > Erik  
+> > > > hi Erik
+> > > > do you mean you are agreeing on defining common errors and only returning errno?  
+> > >
+> > > In a sense, yes. While it is highly desirable to have logs with descriptive
+> > > messages which will help in troubleshooting tremendously, I wanted to point out
+> > > that spending time with error logs may not be that worthwhile especially since
+> > > most apps (like libvirt) will solely rely on using read(3)/write(3) to sysfs.
+> > > That means that we're limited by the errnos available, so apart from
+> > > reporting the generic system message we can't any more magic in terms of the
+> > > error messages, so the driver needs to assure that a proper message is
+> > > propagated to the journal and at best libvirt can direct the user (consumer) to
+> > > look through the system logs for more info. I also agree with the point
+> > > mentioned above that defining a specific errno is IMO not the way to go, as
+> > > these would be just too specific for the read(3)/write(3) use case.
+> > >
+> > > That said, from libvirt POV as a consumer, I'd expect there to be truly only 2
+> > > errors (I believe Alex has mentioned something similar in one of his responses
+> > > in one of the threads):
+> > >     a) read error indicating that an mdev type doesn't support migration
+> > >         - I assume if one type doesn't support migration, none of the other
+> > >           types exposed on the parent device do, is that a fair assumption?
 
-                        kernfs_put(kn)
-                            ....
-                            repeat:
-                            kmem_cache_free(kn)
-                            kn = parent;
+I'd prefer not to make this assumption.  Let's leave open the
+possibility that (for whatever reason) a vendor may choose to support
+migration on some types, but not others.
 
-                            if (kn) {
-                                if (atomic_dec_and_test(&kn->count))
-                                    goto repeat;
-                            }
-                        ....
+> > >     b) write error indicating that the mdev types are incompatible for
+> > >     migration
+> > >
+> > > Regards,
+> > > Erik  
+> > Thanks for this explanation.
+> > so, can we arrive at below agreements?
+> >
+> > 1. "not to define the specific errno returned for a specific situation,
+> > let the vendor driver decide, userspace simply needs to know that an errno on
+> > read indicates the device does not support migration version comparison and
+> > that an errno on write indicates the devices are incompatible or the target
+> > doesn't support migration versions. "
+> > 2. vendor driver should log detailed error reasons in kernel log.  
+> 
+> That would be my take on this, yes, but I open to hear any other suggestions and
+> ideas I couldn't think of as well.
 
-path2: Remove last child device under glue dir
-device_del()
-    cleanup_device_parent()
-        cleanup_glue_dir()
-            mutex_lock(&gdp_mutex);
-            if (!kobject_has_children(glue_dir))
-                kobject_del(glue_dir);
-            kobject_put(glue_dir);
-            mutex_unlock(&gdp_mutex);
+Kernel logging tends to be rather ineffective, it's surprisingly
+difficult to get users to look in dmesg and it's not really a good
+choice for scraping diagnostic information either.  I'd probably leave
+this to vendor driver's discretion at this point.  Thanks,
 
-Before path2 remove last child device under glue dir, If path1 add a new
-device under glue dir, the glue_dir kobject reference count will be
-increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
-been called kernfs_new_node(), but not call kernfs_get(parent).
-Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
-kobject_has_children(). This result in glue_dir->sd is freed and it's
-reference count will be 0. Then path1 call kernfs_get(parent) will trigger
-a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
-it's reference count to 1. Because glue_dir->sd is freed by path2, the next
-call kernfs_add_one() by path1 will fail(This is also use-after-free)
-and call atomic_dec_and_test() to decrease reference count. Because the
-reference count is decremented to 0, it will also call kmem_cache_free()
-to free glue_dir->sd again. This will result in double free.
-
-In order to avoid this happening, we we should not call kobject_del() on
-path2 when the reference count of glue_dir is greater than 1. So we add a
-conditional statement to fix it.
-
-The following calltrace is captured in kernel 4.14 with the following patch
-applied:
-
-commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
---------------------------------------------------------------------------
-[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
-                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-....
-[    3.633986] Call trace:
-[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634001]  kobject_add_internal+0x22c/0x3f0
-[    3.634005]  kobject_add+0xe4/0x118
-[    3.634011]  device_add+0x200/0x870
-[    3.634017]  _request_firmware+0x958/0xc38
-[    3.634020]  request_firmware_into_buf+0x4c/0x70
-....
-[    3.634064] kernel BUG at .../mm/slub.c:294!
-                Here is BUG_ON(object == fp) in set_freepointer().
-....
-[    3.634346] Call trace:
-[    3.634351]  kmem_cache_free+0x504/0x6b8
-[    3.634355]  kernfs_put+0x14c/0x1d8
-[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-[    3.634366]  kobject_add_internal+0x22c/0x3f0
-[    3.634370]  kobject_add+0xe4/0x118
-[    3.634374]  device_add+0x200/0x870
-[    3.634378]  _request_firmware+0x958/0xc38
-[    3.634381]  request_firmware_into_buf+0x4c/0x70
---------------------------------------------------------------------------
-
-Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
-
-Signed-off-by: Muchun Song <smuchun@gmail.com>
----
- drivers/base/core.c | 47 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 38 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 4aeaa0c92bda..e7810329223a 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class, struct kobject *parent_kobj)
- 
- static DEFINE_MUTEX(gdp_mutex);
- 
--static struct kobject *get_device_parent(struct device *dev,
--					 struct device *parent)
-+static struct kobject *__get_device_parent(struct device *dev,
-+					   struct device *parent,
-+					   bool lock)
- {
- 	if (dev->class) {
- 		struct kobject *kobj = NULL;
-@@ -1779,14 +1780,16 @@ static struct kobject *get_device_parent(struct device *dev,
- 			}
- 		spin_unlock(&dev->class->p->glue_dirs.list_lock);
- 		if (kobj) {
--			mutex_unlock(&gdp_mutex);
-+			if (!lock)
-+				mutex_unlock(&gdp_mutex);
- 			return kobj;
- 		}
- 
- 		/* or create a new class-directory at the parent device */
- 		k = class_dir_create_and_add(dev->class, parent_kobj);
- 		/* do not emit an uevent for this simple "glue" directory */
--		mutex_unlock(&gdp_mutex);
-+		if (!lock || IS_ERR(k))
-+			mutex_unlock(&gdp_mutex);
- 		return k;
- 	}
- 
-@@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct device *dev,
- 	return NULL;
- }
- 
-+static inline struct kobject *get_device_parent(struct device *dev,
-+						struct device *parent)
-+{
-+	return __get_device_parent(dev, parent, false);
-+}
-+
-+static inline struct kobject *
-+get_device_parent_locked_if_glue_dir(struct device *dev,
-+				     struct device *parent)
-+{
-+	return __get_device_parent(dev, parent, true);
-+}
-+
- static inline bool live_in_glue_dir(struct kobject *kobj,
- 				    struct device *dev)
- {
-@@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
- 	mutex_unlock(&gdp_mutex);
- }
- 
-+static inline void unlock_if_glue_dir(struct device *dev,
-+				      struct kobject *glue_dir)
-+{
-+	/* see if we live in a "glue" directory */
-+	if (!live_in_glue_dir(glue_dir, dev))
-+		return;
-+
-+	mutex_unlock(&gdp_mutex);
-+}
-+
- static int device_add_class_symlinks(struct device *dev)
- {
- 	struct device_node *of_node = dev_of_node(dev);
-@@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
- 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
- 
- 	parent = get_device(dev->parent);
--	kobj = get_device_parent(dev, parent);
-+	kobj = get_device_parent_locked_if_glue_dir(dev, parent);
- 	if (IS_ERR(kobj)) {
- 		error = PTR_ERR(kobj);
- 		goto parent_error;
-@@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
- 	/* first, register with generic layer. */
- 	/* we require the name to be set before, and pass NULL */
- 	error = kobject_add(&dev->kobj, dev->kobj.parent, NULL);
--	if (error) {
--		glue_dir = get_glue_dir(dev);
-+
-+	glue_dir = get_glue_dir(dev);
-+	unlock_if_glue_dir(dev, glue_dir);
-+
-+	if (error)
- 		goto Error;
--	}
- 
- 	/* notify platform of device entry */
- 	error = device_platform_notify(dev, KOBJ_ADD);
-@@ -2972,7 +3000,7 @@ int device_move(struct device *dev, struct device *new_parent,
- 
- 	device_pm_lock();
- 	new_parent = get_device(new_parent);
--	new_parent_kobj = get_device_parent(dev, new_parent);
-+	new_parent_kobj = get_device_parent_locked_if_glue_dir(dev, new_parent);
- 	if (IS_ERR(new_parent_kobj)) {
- 		error = PTR_ERR(new_parent_kobj);
- 		put_device(new_parent);
-@@ -2982,6 +3010,7 @@ int device_move(struct device *dev, struct device *new_parent,
- 	pr_debug("device: '%s': %s: moving to '%s'\n", dev_name(dev),
- 		 __func__, new_parent ? dev_name(new_parent) : "<NULL>");
- 	error = kobject_move(&dev->kobj, new_parent_kobj);
-+	unlock_if_glue_dir(dev, new_parent_kobj);
- 	if (error) {
- 		cleanup_glue_dir(dev, new_parent_kobj);
- 		put_device(new_parent);
--- 
-2.17.1
-
+Alex
