@@ -2,180 +2,135 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0CCC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8591C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D08092084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZB9BiPN3"
+	by mail.kernel.org (Postfix) with ESMTP id 8419D20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfENSy5 (ORCPT
+        id S1727710AbfENS6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:54:57 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41474 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfENSy5 (ORCPT
+        Tue, 14 May 2019 14:58:54 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.200]:16799 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727262AbfENS6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:54:57 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d12so20348764wrm.8;
-        Tue, 14 May 2019 11:54:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=1Vtv8vjo+k0fYAQaZ6ozljyJomIPXdJKSl6iEIq/F3I=;
-        b=ZB9BiPN3mcV8aYqzXsJCUdohCAJcs08wznHfJLne6ytAI+7YW66CB4j1QAr2ejeI24
-         ExZL6IRV+C9NnawmAZlpIK/w+So5zGRd6VfHyDgkMG1gDIi1O/9Wil+w9MaUBQUwaMDm
-         YxZDEcBtjD/rBBahOKUssDBN8r6QwXdvtgal8m0fK+Oda3fQb/DX6d33LuxI/f84JUbR
-         NpsTXTXY1+v2ehlxiFq3SCLUQdeHumdqOYZ9IkCKWB7lVKFOvRLh9oHOCL8q2JhRjdIy
-         7cjVS//GqEo3uZBcPcdZPtPh4rbydR3cGLI9okWOED7gY+DK/TBV4jbEdpZI/qx2/Aak
-         8XKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1Vtv8vjo+k0fYAQaZ6ozljyJomIPXdJKSl6iEIq/F3I=;
-        b=YraSFOM3ruQDYKtXncObjgYGc3nI35eHPCuJNDNRy50ucI65UkNaOUQ8sZ6R9duza7
-         hTTHMTia9g4eWXfFOdxqIH5wTSkDn0iaSr9sKkLrLu6Vuepkumb22A/xjHguVzCDrqr3
-         v4GOsM9ROpZHP1C9kzFZlaxQ8QWhZzFKTCvaABlZv/ngwMlq9yn1BWruYrAXmzq2vdvf
-         L7bQyZltuwtoR9SYrsmxgGDkpM9iuGyIwYjBplqNrfDCNI+XwEyp8okmmxRK5dqI209F
-         eaobenUkQ0jxB/LuOm1IxUTARuIH//AqUH3w/aUvNLEUTFxkvRKpH457UNfLT2vKCveF
-         QJcg==
-X-Gm-Message-State: APjAAAVXTP99DOJ0EkUgqd1NRP5j+B+o2Dmqbxb1tNGuXwURSykmsKHA
-        op33O1R2JfSl4mc+uVSkEQa+yeBW
-X-Google-Smtp-Source: APXvYqwmzaWet/cwInE/bAm/HtJVcfbTml8/21zp+y0sovf2T8Cf+yRxZPqzQ9qNOVGsGvEv61ZE3g==
-X-Received: by 2002:a5d:6145:: with SMTP id y5mr12600574wrt.96.1557860095100;
-        Tue, 14 May 2019 11:54:55 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id a6sm14168275wrp.49.2019.05.14.11.54.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 11:54:54 -0700 (PDT)
-Subject: [PATCH v4 03/13] platform/x86: asus-wmi: Increase input buffer size
- of WMI methods
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-Message-ID: <4613f54b-b6ba-c9ad-15ca-e43d440b9f63@gmail.com>
-Date:   Tue, 14 May 2019 20:54:50 +0200
+        Tue, 14 May 2019 14:58:53 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 0A6005C1B41
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:58:51 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id QcdXh5EaJiQerQcdXhiT1P; Tue, 14 May 2019 13:58:51 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.42.230] (port=38278 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hQcdW-001wP3-SJ; Tue, 14 May 2019 13:58:50 -0500
+Subject: Re: [PATCH][next] iwlwifi: d3: Use struct_size() helper
+To:     Luciano Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190403160342.GA24396@embeddedor>
+ <c4a1fd36abf6acafa35bb70f87791d4ef802d87c.camel@intel.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <81d4b360-7e93-a8ed-ffaf-732e487a7e87@embeddedor.com>
+Date:   Tue, 14 May 2019 13:58:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
+In-Reply-To: <c4a1fd36abf6acafa35bb70f87791d4ef802d87c.camel@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.42.230
+X-Source-L: No
+X-Exim-ID: 1hQcdW-001wP3-SJ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.42.230]:38278
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
-Gaming series laptops producing multiple ACPI errors in the kernel log.
 
-The input buffer for WMI method invocation size is 2 dwords, whereas
-3 are expected by this model.
 
-FX505GM:
-..
-Method (WMNB, 3, Serialized)
-{
-    P8XH (Zero, 0x11)
-    CreateDWordField (Arg2, Zero, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    CreateDWordField (Arg2, 0x08, IIA2)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
+On 5/14/19 12:16 AM, Luciano Coelho wrote:
+> 
+> Thanks! Applied to our internal tree and it will reach the mainline
+> following our normal upstreaming process.
+> 
 
-Compare with older K54C:
-...
-Method (WMNB, 3, NotSerialized)
-{
-    CreateDWordField (Arg2, 0x00, IIA0)
-    CreateDWordField (Arg2, 0x04, IIA1)
-    Local0 = (Arg1 & 0xFFFFFFFF)
-    ...
+Awesome. :)
 
-Increase buffer size to 3 dwords. No negative consequences of this change
-are expected, as the input buffer size is not verified. The original
-function is replaced by a wrapper for a new method passing value 0 for the
-last parameter. The new function will be used to control RGB keyboard
-backlight.
+Thanks, Luciano.
+--
+Gustavo
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
-One of current kernel errors:
-ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA2] at bit offset/
-	length 64/32 exceeds size of target Buffer (64 bits)
-	(20190215/dsopcode-203)
-[ 4528.573948] No Local Variables are initialized for Method [WMNB]
-[ 4528.573949] Initialized Arguments for Method [WMNB]:  (3 arguments
-	defined for method invocation)
-[ 4528.573950]   Arg0:   00000000bd1bea5a <Obj>
-	Integer 0000000000000000
-[ 4528.573952]   Arg1:   00000000d414dc53 <Obj>
-	Integer 000000004E464741
-[ 4528.573954]   Arg2:   00000000fcefea4b <Obj>
-	Buffer(8) F0 95 08 00 00 00 00 00
-[ 4528.573959] ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous
-	error (AE_AML_BUFFER_LIMIT) (20190215/psparse-531)
-[ 4528.686425] asus-nb-wmi: probe of asus-nb-wmi failed with error -5
----
- drivers/platform/x86/asus-wmi.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 84d7fc6f941c..6b35c1f00a3e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -98,6 +98,7 @@ static bool ashs_present(void)
- struct bios_args {
- 	u32 arg0;
- 	u32 arg1;
-+	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
- } __packed;
- 
- /*
-@@ -224,11 +225,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
- 	asus->inputdev = NULL;
- }
- 
--int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+static int asus_wmi_evaluate_method3(u32 method_id,
-+		u32 arg0, u32 arg1, u32 arg2, u32 *retval)
- {
- 	struct bios_args args = {
- 		.arg0 = arg0,
- 		.arg1 = arg1,
-+		.arg2 = arg2,
- 	};
- 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
-@@ -260,6 +263,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
- 
- 	return 0;
- }
-+
-+int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
-+{
-+	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
-+}
- EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
- 
- static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
--- 
-2.17.1
 
