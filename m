@@ -2,308 +2,227 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C96C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DA5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3DCF20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5762086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VTm/BvXF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CCRDczIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfENTeq (ORCPT
+        id S1726424AbfENTe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:34:46 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:43569 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfENTeq (ORCPT
+        Tue, 14 May 2019 15:34:57 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41779 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfENTe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:34:46 -0400
-Received: by mail-yw1-f67.google.com with SMTP id t5so223755ywf.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:34:45 -0700 (PDT)
+        Tue, 14 May 2019 15:34:56 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y22so419510qtn.8;
+        Tue, 14 May 2019 12:34:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SQWdR6M1bjA5E+nekafkDtjgeu8tRbwrT58SnilDw98=;
-        b=VTm/BvXF7CB8JN7kN9QXABAueDzMJCPc0kvojGn8Jr4yODlW5pnbnuvXgQ+W6Y6FIk
-         j+rIfGppQF3ULbrliYTb5x5r6kw6+GYjhyeYmGsqrLMoXWfgUci1kTSyCm9E4FuiiCnw
-         OihJYG3zZL9jDNOr1Lss8gx6HAlP9Q/mzGA+heDC3KJPD8tut/Ip6EHzakkgWC5l8vY8
-         QDjPXSSbcRFXZZhbWn800AnSj/TXAw0tvZwjAEke9WQVB36L+ZsbzKkxEMXt1adlVDLV
-         ++ZG203U86KvfO/43CSEMX9TpqZKYah1AU+qH24kpxccTpKePzT97nrIqAG+c/85ggSu
-         FwsA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RBYOvxiWmO3bQL8vugMK4oxEBk4q/77DwSeYMrIR7sM=;
+        b=CCRDczIjXsd3Ym5A7uoH1pOzcknd1ilZw42UBtqnTSGIX0CtFt4uxO9kCsawBqZiwW
+         oc/9trz2tw3t2undUUtMGrl3lKYaAxbIn5Ra+1DcRpUGeznQw4BzF3SziSzZM5aq4Phw
+         xgNObaWTKiAM4nWbfkDiNaSh8w8PQlMhUCaIW8xlVB3aD1zv6tdQjdlsRCMS7+yjJQqu
+         A81eUvTFklbl2awvScOKIMmnExokyACo11YldQ1BRHNg95vlw7YLdhMGtvyd3274PxiA
+         g7Xy1gMMmypep4MslpMl0qS5tGJFQ8GviRVO8YBKLiKjhWnT3epQNbOPTGnPIinrijPL
+         l/ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SQWdR6M1bjA5E+nekafkDtjgeu8tRbwrT58SnilDw98=;
-        b=jBEHqBAKERrij0IQS4Uy8rsZWPEF2QljUnyzM/zIU5AoG5Wtao+TZfWCjbW0BxRrL/
-         o/vayRGxfjbT1YrnCRieDrs69JkhscBmi4FONcMUI8GEwq6yi65Yw1wg1QmbyFnzSkvB
-         RUdjqTRzGAGOCQxY0RNQGyjSYBIBYWqtwI+SxZSvgDvR5CGeUEDODGuvEOubAXR8S+6w
-         uBSRd0E4k2bgYYWriJVrdq6OrBVXE9b9SF+OVsYzHylorWxF+1ZXA6sKYJ80Aize1bpC
-         2D21Q7KU9vCL4BBeRyrmK9yriWPSws9iBisfSQG62BmeTQ44ehL9FzaBTLHzjJy/1OlJ
-         Mm5g==
-X-Gm-Message-State: APjAAAUn+E3jOGbM2gJhz9jxqC3dWbou5JHBGvrtKZ+euaPOkByiCMC4
-        TS2nDWw00ZNQlOWVLnTjCJCK0NW7qECyaMKCo1jzOw==
-X-Google-Smtp-Source: APXvYqybgfi+BJU2SWBbUsNHCW9HAljOxaVdzf/lwwO7O/6dlTexrfBwYt9Pwh2t5dPe+HmevcUBE4jWsw5Q+1iUUYs=
-X-Received: by 2002:a81:2513:: with SMTP id l19mr13016377ywl.299.1557862484830;
- Tue, 14 May 2019 12:34:44 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RBYOvxiWmO3bQL8vugMK4oxEBk4q/77DwSeYMrIR7sM=;
+        b=ZkzhU1TMqo+YYeyLMBDNnTkxKVXPqaz0zVN1p9hZnePjw8ta0mAg0o3u3YkcywZzgp
+         7/LKBAk35yF+5gAFOhfbnBvKiAd3BPlL5xRVoswo3Oh1hU4bXwqI7aKEAEbRdqmBdvG9
+         FMo8Pjl13WntMA2CxURYiIZbD9Jo411KtvUsTpnbrcVehw2PBSmPlNY5nMvwYAmnw379
+         cUhear69mG08ys8Y7VOlnhCuD1eeRkEFdAoIg/xdgSvUrVcP7gjY5a8QCSBBy3kAOu6g
+         ot0H2Ezg0NOpijRhBNuU/Ie3BbUNmlBNERFXlL/sO5rVIBNDYqzGtuSIEAByEFwY2SoZ
+         2MsQ==
+X-Gm-Message-State: APjAAAXOLCgw8RUhDNK1udrKWgLpj9E8Mi/3yEHS4IGofKf/Li5XqmE6
+        hyWoDkm5vAgvur5BV2Zjqdo=
+X-Google-Smtp-Source: APXvYqxZmWam7B95dIXeaMIQ4UZ37RuknBm9llEAqMQLP387twPJ3C9/pK23VkTjH3AntpKDS13+hQ==
+X-Received: by 2002:ac8:2cbc:: with SMTP id 57mr9119426qtw.222.1557862495398;
+        Tue, 14 May 2019 12:34:55 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-182-78.3g.claro.net.br. [179.240.182.78])
+        by smtp.gmail.com with ESMTPSA id e8sm8343784qtm.34.2019.05.14.12.34.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 12:34:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B0FF2403AD; Tue, 14 May 2019 16:34:50 -0300 (-03)
+Date:   Tue, 14 May 2019 16:34:50 -0300
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 2/3] perf parse-regs: Add generic support for non-gprs
+Message-ID: <20190514193450.GA21157@kernel.org>
+References: <1557844753-58223-1-git-send-email-kan.liang@linux.intel.com>
+ <1557844753-58223-2-git-send-email-kan.liang@linux.intel.com>
+ <20190514181902.GB1756@kernel.org>
+ <4b2b6e69-4e39-0946-4010-1bc3a2a60696@linux.intel.com>
 MIME-Version: 1.0
-References: <20190514183935.143463-1-dianders@chromium.org> <20190514183935.143463-2-dianders@chromium.org>
-In-Reply-To: <20190514183935.143463-2-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 14 May 2019 12:34:33 -0700
-Message-ID: <CABXOdTc36r7XV-3o8MJiaUTkaALtfQAQpi1gV2xvsDSX+S3s2A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] platform/chrome: cros_ec_spi: Move to real time
- priority for transfers
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4b2b6e69-4e39-0946-4010-1bc3a2a60696@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:40 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> In commit 37a186225a0c ("platform/chrome: cros_ec_spi: Transfer
-> messages at high priority") we moved transfers to a high priority
-> workqueue.  This helped make them much more reliable.
->
-> ...but, we still saw failures.
->
-> We were actually finding ourselves competing for time with dm-crypt
-> which also scheduled work on HIGHPRI workqueues.  While we can
-> consider reverting the change that made dm-crypt run its work at
-> HIGHPRI, the argument in commit a1b89132dc4f ("dm crypt: use
-> WQ_HIGHPRI for the IO and crypt workqueues") is somewhat compelling.
-> It does make sense for IO to be scheduled at a priority that's higher
-> than the default user priority.  It also turns out that dm-crypt isn't
-> alone in using high priority like this.  loop_prepare_queue() does
-> something similar for loopback devices.
->
-> Looking in more detail, it can be seen that the high priority
-> workqueue isn't actually that high of a priority.  It runs at MIN_NICE
-> which is _fairly_ high priority but still below all real time
-> priority.
->
-> Should we move cros_ec_spi to real time priority to fix our problems,
-> or is this just escalating a priority war?  I'll argue here that
-> cros_ec_spi _does_ belong at real time priority.  Specifically
-> cros_ec_spi actually needs to run quickly for correctness.  As I
-> understand this is exactly what real time priority is for.
->
-> There currently doesn't appear to be any way to use the standard
-> workqueue APIs with a real time priority, so we'll switch over to
-> using using a kthread worker.  We'll match the priority that the SPI
-> core uses when it wants to do things on a realtime thread and just use
-> "MAX_RT_PRIO - 1".
->
-> This commit plus the patch ("platform/chrome: cros_ec_spi: Request the
-> SPI thread be realtime") are enough to get communications very close
-> to 100% reliable (the only known problem left is when serial console
-> is turned on, which isn't something that happens in shipping devices).
-> Specifically this test case now passes (tested on rk3288-veyron-jerry):
->
->   dd if=/dev/zero of=/var/log/foo.txt bs=4M count=512&
->   while true; do
->     ectool version > /dev/null;
->   done
->
-> It should be noted that "/var/log" is encrypted (and goes through
-> dm-crypt) and also passes through a loopback device.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v3:
-> - cros_ec realtime patch replaces revert; now patch #1
->
-> Changes in v2: None
->
->  drivers/platform/chrome/cros_ec_spi.c | 88 +++++++++++++++++++++++----
->  1 file changed, 77 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> index 8e9451720e73..b89bf11dda64 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -13,6 +13,8 @@
->  #include <linux/slab.h>
->  #include <linux/spi/spi.h>
->
-> +#include <uapi/linux/sched/types.h>
-> +
+Em Tue, May 14, 2019 at 03:25:51PM -0400, Liang, Kan escreveu:
+> 
+> 
+> On 5/14/2019 2:19 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, May 14, 2019 at 07:39:12AM -0700, kan.liang@linux.intel.com escreveu:
+> > > From: Kan Liang <kan.liang@linux.intel.com>
+> > > 
+> > > Some non general purpose registers, e.g. XMM, can be collected on some
+> > > platforms, e.g. X86 Icelake.
+> > > 
+> > > Add a weak function has_non_gprs_support() to check if the
+> > > kernel/hardware support non-gprs collection.
+> > > Add a weak function non_gprs_mask() to return non-gprs mask.
+> > > 
+> > > By default, the non-gprs collection is not support. Specific platforms
+> > > should implement their own non-gprs functions if they can collect
+> > > non-gprs.
+> > > 
+> > > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > > ---
+> > >   tools/perf/util/parse-regs-options.c | 10 +++++++++-
+> > >   tools/perf/util/perf_regs.c          | 10 ++++++++++
+> > >   tools/perf/util/perf_regs.h          |  2 ++
+> > >   3 files changed, 21 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+> > > index b21617f..2f90f31 100644
+> > > --- a/tools/perf/util/parse-regs-options.c
+> > > +++ b/tools/perf/util/parse-regs-options.c
+> > > @@ -12,6 +12,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+> > >   	const struct sample_reg *r;
+> > >   	char *s, *os = NULL, *p;
+> > >   	int ret = -1;
+> > > +	bool has_non_gprs = has_non_gprs_support(intr);
+> > 
+> > This is generic code, what does "non gprs" means for !Intel? Can we come
+> > up with a better, not architecture specific jargon? Or you mean "general
+> > purpose registers"?
+> 
+> I mean "general purpose registers".
 
-Extra newline.
+Ok
+ 
+> > 
+> > Perhaps we can ask for a register mask for use with intr? I.e.:
+> > 
+> > For the -I/--intr-regs
+> > 
+> >          uint64_t mask = arch__intr_reg_mask();
+> > 
+> > And for --user-regs
+> > 
+> >          uint64_t mask = arch__user_reg_mask();
+> > 
+> > And then on that loop do:
+> > 
+> >    	for (r = sample_reg_masks; r->name; r++) {
+> > 		if (r->mask & mask))
+> >    			fprintf(stderr, "%s ", r->name);
+> >    	}
+> > 
+> > ?
+> 
+> Yes, it looks like a little bit simpler than my implementation.
+> I will send out V2.
 
->
->  /* The header byte, which follows the preamble */
->  #define EC_MSG_HEADER                  0xec
-> @@ -67,12 +69,16 @@
->   *      is sent when we want to turn on CS at the start of a transaction.
->   * @end_of_msg_delay: used to set the delay_usecs on the spi_transfer that
->   *      is sent when we want to turn off CS at the end of a transaction.
-> + * @high_pri_worker: Used to give work to high_pri_thread.
-> + * @high_pri_thread: We'll do our transfers here to reduce preemption problems.
->   */
->  struct cros_ec_spi {
->         struct spi_device *spi;
->         s64 last_transfer_ns;
->         unsigned int start_of_msg_delay;
->         unsigned int end_of_msg_delay;
-> +       struct kthread_worker high_pri_worker;
-> +       struct task_struct *high_pri_thread;
->  };
->
->  typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
-> @@ -89,7 +95,7 @@ typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
->   */
->
->  struct cros_ec_xfer_work_params {
-> -       struct work_struct work;
-> +       struct kthread_work work;
->         cros_ec_xfer_fn_t fn;
->         struct cros_ec_device *ec_dev;
->         struct cros_ec_command *ec_msg;
-> @@ -632,7 +638,7 @@ static int do_cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
->         return ret;
->  }
->
-> -static void cros_ec_xfer_high_pri_work(struct work_struct *work)
-> +static void cros_ec_xfer_high_pri_work(struct kthread_work *work)
->  {
->         struct cros_ec_xfer_work_params *params;
->
-> @@ -644,12 +650,14 @@ static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
->                                  struct cros_ec_command *ec_msg,
->                                  cros_ec_xfer_fn_t fn)
->  {
-> -       struct cros_ec_xfer_work_params params;
-> -
-> -       INIT_WORK_ONSTACK(&params.work, cros_ec_xfer_high_pri_work);
-> -       params.ec_dev = ec_dev;
-> -       params.ec_msg = ec_msg;
-> -       params.fn = fn;
-> +       struct cros_ec_spi *ec_spi = ec_dev->priv;
-> +       struct cros_ec_xfer_work_params params = {
-> +               .work = KTHREAD_WORK_INIT(params.work,
-> +                                         cros_ec_xfer_high_pri_work),
-> +               .ec_dev = ec_dev,
-> +               .ec_msg = ec_msg,
-> +               .fn = fn,
-> +       };
->
->         /*
->          * This looks a bit ridiculous.  Why do the work on a
-> @@ -660,9 +668,8 @@ static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
->          * context switched out for too long and the EC giving up on
->          * the transfer.
->          */
-> -       queue_work(system_highpri_wq, &params.work);
-> -       flush_work(&params.work);
-> -       destroy_work_on_stack(&params.work);
-> +       kthread_queue_work(&ec_spi->high_pri_worker, &params.work);
-> +       kthread_flush_work(&params.work);
->
->         return params.ret;
->  }
-> @@ -694,6 +701,61 @@ static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
->                 ec_spi->end_of_msg_delay = val;
->  }
->
-> +static void cros_ec_spi_high_pri_release(struct device *dev, void *res)
-> +{
-> +       struct cros_ec_spi *ec_spi = *(struct cros_ec_spi **)res;
-> +
-> +       kthread_stop(ec_spi->high_pri_thread);
+Thanks!
+ 
+> Thanks,
+> Kan
+> 
+> > >   	if (unset)
+> > >   		return 0;
+> > > @@ -37,6 +38,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+> > >   			if (!strcmp(s, "?")) {
+> > >   				fprintf(stderr, "available registers: ");
+> > >   				for (r = sample_reg_masks; r->name; r++) {
+> > > +					if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
+> > > +						break;
+> > >   					fprintf(stderr, "%s ", r->name);
+> > >   				}
+> > >   				fputc('\n', stderr);
+> > > @@ -44,6 +47,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+> > >   				return -1;
+> > >   			}
+> > >   			for (r = sample_reg_masks; r->name; r++) {
+> > > +				if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
+> > > +					continue;
+> > >   				if (!strcasecmp(s, r->name))
+> > >   					break;
+> > >   			}
+> > > @@ -64,8 +69,11 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+> > >   	ret = 0;
+> > >   	/* default to all possible regs */
+> > > -	if (*mode == 0)
+> > > +	if (*mode == 0) {
+> > >   		*mode = PERF_REGS_MASK;
+> > > +		if (has_non_gprs)
+> > > +			*mode |= non_gprs_mask(intr);
+> > > +	}
+> > >   error:
+> > >   	free(os);
+> > >   	return ret;
+> > > diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> > > index 2acfcc5..0d278b6 100644
+> > > --- a/tools/perf/util/perf_regs.c
+> > > +++ b/tools/perf/util/perf_regs.c
+> > > @@ -13,6 +13,16 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
+> > >   	return SDT_ARG_SKIP;
+> > >   }
+> > > +bool __weak has_non_gprs_support(bool intr __maybe_unused)
+> > > +{
+> > > +	return false;
+> > > +}
+> > > +
+> > > +u64 __weak non_gprs_mask(bool intr __maybe_unused)
+> > > +{
+> > > +	return 0;
+> > > +}
+> > > +
+> > >   #ifdef HAVE_PERF_REGS_SUPPORT
+> > >   int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
+> > >   {
+> > > diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> > > index 1a15a4b..983b4e6 100644
+> > > --- a/tools/perf/util/perf_regs.h
+> > > +++ b/tools/perf/util/perf_regs.h
+> > > @@ -23,6 +23,8 @@ enum {
+> > >   };
+> > >   int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+> > > +bool has_non_gprs_support(bool intr);
+> > > +u64 non_gprs_mask(bool intr);
+> > >   #ifdef HAVE_PERF_REGS_SUPPORT
+> > >   #include <perf_regs.h>
+> > > -- 
+> > > 2.7.4
+> > 
 
-Is that needed ? kthread_destroy_worker() does it for you.
+-- 
 
-> +       kthread_destroy_worker(&ec_spi->high_pri_worker);
-> +}
-> +
-> +static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
-> +                                          struct cros_ec_spi *ec_spi)
-> +{
-> +       struct sched_param sched_priority = {
-> +               .sched_priority = MAX_RT_PRIO - 1,
-> +       };
-> +       struct cros_ec_spi **ptr;
-> +       int err = 0;
-> +
-> +       ptr = devres_alloc(cros_ec_spi_high_pri_release, sizeof(*ptr),
-> +                          GFP_KERNEL);
-> +       if (!ptr)
-> +               return -ENOMEM;
-> +       *ptr = ec_spi;
-> +
-> +       kthread_init_worker(&ec_spi->high_pri_worker);
-> +       ec_spi->high_pri_thread = kthread_create(kthread_worker_fn,
-> +                                                &ec_spi->high_pri_worker,
-> +                                                "cros_ec_spi_high_pri");
-> +       if (IS_ERR(ec_spi->high_pri_thread)) {
-> +               err = PTR_ERR(ec_spi->high_pri_thread);
-> +               dev_err(dev, "Can't create cros_ec high pri thread: %d\n", err);
-> +               goto err_worker_initted;
-> +       }
-> +
-> +       err = sched_setscheduler_nocheck(ec_spi->high_pri_thread,
-> +                                        SCHED_FIFO, &sched_priority);
-> +       if (err) {
-> +               dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
-> +               goto err_thread_created;
-> +       }
-> +
-> +       wake_up_process(ec_spi->high_pri_thread);
-> +
-> +       devres_add(dev, ptr);
-> +
-
-If you move that ahead of sched_setscheduler_nocheck(), you would not
-need the err_thread_created: label.
-
-> +       return 0;
-> +
-> +err_thread_created:
-> +       kthread_stop(ec_spi->high_pri_thread);
-> +
-> +err_worker_initted:
-> +       kthread_destroy_worker(&ec_spi->high_pri_worker);
-
-Are you sure about this ? The worker isn't started here, but
-kthread_destroy_worker() tries to stop it.
-
-> +       devres_free(ptr);
-> +       return err;
-> +}
-> +
->  static int cros_ec_spi_probe(struct spi_device *spi)
->  {
->         struct device *dev = &spi->dev;
-> @@ -732,6 +794,10 @@ static int cros_ec_spi_probe(struct spi_device *spi)
->
->         ec_spi->last_transfer_ns = ktime_get_ns();
->
-> +       err = cros_ec_spi_devm_high_pri_alloc(dev, ec_spi);
-> +       if (err)
-> +               return err;
-> +
->         err = cros_ec_register(ec_dev);
->         if (err) {
->                 dev_err(dev, "cannot register EC\n");
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+- Arnaldo
