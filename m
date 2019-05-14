@@ -2,134 +2,97 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D693C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28134C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41B72086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE3521473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NSzdQDwp"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JOFFcrn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfENFfc (ORCPT
+        id S1726882AbfENFfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:35:32 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55164 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbfENFfc (ORCPT
+        Tue, 14 May 2019 01:35:50 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51758 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfENFfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:35:32 -0400
-Received: by mail-it1-f196.google.com with SMTP id a190so2931935ite.4;
-        Mon, 13 May 2019 22:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ROnZBNUjavEPATCp1Opo+Fi0jSzmWi2jvW4E1gcmmR8=;
-        b=NSzdQDwpBBa362njSlwhNhs7vhCUxNwQXNRTOlCPRAPNS9KafxL6jwlRy2Is17dycj
-         hX4TGdEniOVVubcDUedCX9kkhYYY69ejq00y7sGbZQnABZ9N7sYOxyXN1VOo+oISiH7R
-         FU24vSJxTGTcXC9C42x3CKoUhfNM9LNCx2qAUiYuP4WSrEAlLT/+uLVv8VEKepsti7z/
-         Ls90/YuQNDHnAkP/I2CT4E5vR4g5DNPQ6ZOrNlXOFRwZg0bc74UCajaYqZ7sb1Wxjgsa
-         3JkLtl+o8teimJehJScWHcU6MCqKae0gSGz0wO70ydEFOEf7DfR1pOXzrc5OhGkqTYfw
-         tJeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ROnZBNUjavEPATCp1Opo+Fi0jSzmWi2jvW4E1gcmmR8=;
-        b=aIjcd2nj0mTsTqjW//fwo1IwW0QSvj/qtv9RSpHBKhS60Bqgp2CtHgym7nAfzOBSIX
-         dzOtmt1x7VmZ1z0fgRI1N8J+A7fOt2ROSxEUap+TCdW9fSPN5tByN2Mmq1gUMVyTvqeV
-         0F2SwV5P8s3w5LyFF+oFiYos8TOY2hbP+hzAfj9ka6x4YCDxvvzqVB1IO5aYsI4QyTMl
-         KOABjaWnyKN3yCze/GJCvyrw46WL8Jufu7Y+Zm5GrnwWoeUtyrnxOZXWANSfsHDv19n8
-         TBSz9/Xpx0M0u1gFQMgzJhnIDgxY11Tny90S824pfMnq6m7US8AsppL83V8E+kEc7vCM
-         f5rw==
-X-Gm-Message-State: APjAAAWCe1/M63t7AkYTJiLd1Xa+OWfu0uGAhnQiyxvNACRdduo790QZ
-        Rn3YDoZWCkgxwmEb//VHyJRxxz9DcfaBxXVylsw=
-X-Google-Smtp-Source: APXvYqxnsVMo5UM99fUX1eUTegiPxPCSWcQI/OUdYd83fAERf0SMkvw1yLaPmTNFqHa//Hxs45go0UzItmWlHF32tbU=
-X-Received: by 2002:a02:741c:: with SMTP id o28mr21283892jac.144.1557812131236;
- Mon, 13 May 2019 22:35:31 -0700 (PDT)
+        Tue, 14 May 2019 01:35:50 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0DF6783640;
+        Tue, 14 May 2019 17:35:46 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1557812146;
+        bh=wVBdohI/n7MSYwyFNnz215vNMEvAa3jglAQK0ECa5I4=;
+        h=From:To:Cc:Subject:Date;
+        b=JOFFcrn8RIENx/dQf01nsQ/ykId81TYnfgoIUsH/wt1MwT9B1+5afXa/3TBKJeBRy
+         AEEnqOGKWbuAI5mzdKATGmCeNGUm1069Km3FOmPYEv4mrQiIp/x1++bVRhcJrkv5kN
+         aLb0ZBSKBwDslYoKxcgiwnVwbYBhSwlvEmpN1ct7v97AwYUH8fmy5SkBxug0sevxmT
+         QThL50rqMFLrIZhhvrfa4GsCzA1I4iNrVrxxJyXQg6O2Fwem8t+sbukrz2Tk9K50Oj
+         fWDDczmwiSTZlHV3JDjsHQGFw7218LfrzsIFWGGUXuh9x+2ySHzLGWrEQ7nxZsy2ks
+         Igr8lOeHCDn1g==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5cda53b20000>; Tue, 14 May 2019 17:35:46 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 5142F13ED45;
+        Tue, 14 May 2019 17:35:46 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id CB2A11E1D5B; Tue, 14 May 2019 17:35:45 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     johan@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] USB: serial: pl2303: add Allied Telesis VT-Kit3
+Date:   Tue, 14 May 2019 17:35:42 +1200
+Message-Id: <20190514053542.28047-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com> <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-In-Reply-To: <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
-From:   Ley Foon Tan <lftan.linux@gmail.com>
-Date:   Tue, 14 May 2019 13:35:20 +0800
-Message-ID: <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
-Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
->
-> Altera MSI IP is a soft IP and is only available after
-> FPGA image is programmed.
->
-> Make driver modulable to support use case FPGA image is programmed
-> after kernel is booted. User proram FPGA image in kernel then only load
-> MSI driver module.
->
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> ---
->  drivers/pci/controller/Kconfig           |  2 +-
->  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
->  2 files changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 4b550f9cdd56..920546cb84e2 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -181,7 +181,7 @@ config PCIE_ALTERA
->           FPGA.
->
->  config PCIE_ALTERA_MSI
-> -       bool "Altera PCIe MSI feature"
-> +       tristate "Altera PCIe MSI feature"
->         depends on PCIE_ALTERA
->         depends on PCI_MSI_IRQ_DOMAIN
->         help
-> diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> index 025ef7d9a046..16d938920ca5 100644
-> --- a/drivers/pci/controller/pcie-altera-msi.c
-> +++ b/drivers/pci/controller/pcie-altera-msi.c
-> @@ -10,6 +10,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/msi.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
->  {
->         return platform_driver_register(&altera_msi_driver);
->  }
-> +
-> +static void __exit altera_msi_exit(void)
-> +{
-> +       platform_driver_unregister(&altera_msi_driver);
-> +}
-> +
->  subsys_initcall(altera_msi_init);
-> +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-> +module_exit(altera_msi_exit);
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.19.0
->
-Hi
+This is adds the vendor and device id for the AT-VT-Kit3 which is a
+pl2303-based device.
 
-Any comment for this patch?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ drivers/usb/serial/pl2303.c | 1 +
+ drivers/usb/serial/pl2303.h | 3 +++
+ 2 files changed, 4 insertions(+)
 
-Regards
-Ley Foon
+diff --git a/drivers/usb/serial/pl2303.c b/drivers/usb/serial/pl2303.c
+index 55122ac84518..d7abde14b3cf 100644
+--- a/drivers/usb/serial/pl2303.c
++++ b/drivers/usb/serial/pl2303.c
+@@ -106,6 +106,7 @@ static const struct usb_device_id id_table[] =3D {
+ 	{ USB_DEVICE(SANWA_VENDOR_ID, SANWA_PRODUCT_ID) },
+ 	{ USB_DEVICE(ADLINK_VENDOR_ID, ADLINK_ND6530_PRODUCT_ID) },
+ 	{ USB_DEVICE(SMART_VENDOR_ID, SMART_PRODUCT_ID) },
++	{ USB_DEVICE(AT_VENDOR_ID, AT_VTKIT3_PRODUCT_ID) },
+ 	{ }					/* Terminating entry */
+ };
+=20
+diff --git a/drivers/usb/serial/pl2303.h b/drivers/usb/serial/pl2303.h
+index 559941ca884d..b0175f17d1a2 100644
+--- a/drivers/usb/serial/pl2303.h
++++ b/drivers/usb/serial/pl2303.h
+@@ -155,3 +155,6 @@
+ #define SMART_VENDOR_ID	0x0b8c
+ #define SMART_PRODUCT_ID	0x2303
+=20
++/* Allied Telesis VT-Kit3 */
++#define AT_VENDOR_ID		0x0caa
++#define AT_VTKIT3_PRODUCT_ID	0x3001
+--=20
+2.21.0
+
