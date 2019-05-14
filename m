@@ -2,157 +2,84 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAE1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999C6C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4226920850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEZV1zpt"
+	by mail.kernel.org (Postfix) with ESMTP id 64E5320850
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557857267;
+	bh=cBl17dKDCE701qysIFd3wYbG70L5NBjvORUz4ES3AvM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qN3motzQdIWuDfiaIXI90yxTK7kD76Al/9P3j2ux5N8fLV/+ClwbgfR3icnEI5E6M
+	 E67KspBqWqAgH0TrLatrf5TweIxKu8QA67jwfDMOYbUsOA/bZJfBG8IOKvituFWq9q
+	 DeINNAj9Bxe+Iy6gs0aMtouhUA0FVQ7GMRFPdz94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfENSHB (ORCPT
+        id S1727520AbfENSHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:07:01 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46189 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726295AbfENSHB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:07:01 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t187so8998920pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 11:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bqed65o+00TUEDfhl5S4jemqONUpRuqUUbQE+V6VwOg=;
-        b=ZEZV1zpt4zoI3zCOkldM9cVVQHl+agll74+rv4+8x9K0wng4dHFAuTFSL9odqftmTj
-         mL11PwG53KbrFYgsU9os7GEDrRO3aNoteyJBtfiRX3g61jXch01X/Bs6+AXI514WpeoG
-         +1eXJewmhWMJ15BPPJ+t/gN/uRqFDVQJHqhBnqBoEbbqz/v7jyzHMaGt8DFrGTDuVzji
-         1PLVObBeo8DfVNfZ078He66tknyo2EE0O7zAskpWT0YvgJhy4s0k3Ik40G04xwQijHWu
-         KXpORUKZQ5Wxad0M3ZFvRPkOBbeAk5gR07DAum7c+n2N0rWdUVDjElFbm4l/VisvoVL1
-         thyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bqed65o+00TUEDfhl5S4jemqONUpRuqUUbQE+V6VwOg=;
-        b=BfenpqpHihig+AuF37Re8WlxvfhAJnmWk/0jIYxlwQ1GAwNmnOR56rNUZH21CH9tOs
-         7L5DdcoR4fMixCJj4qhUoGJXTxVGGBdc3W1udTcuSE6PuqaD2QjjqH9jBtltSP3arxBm
-         SPzJY+0vzBR75K4ckUOII9ZiZd7pAcoK6FpjN5A1/C2AM0Nqcn2jxCYD46AmWYCOek4H
-         uoT99Ve/Lxba2/3wGJOmRETX86D/tQ0z45U3tJu+IERMe6xEQdKsAh/Wacut8w5D+ues
-         R4FluQq9W17el6mRzSz2KNxJ3TkpAJTvj7B7DQApVqRX/CaIkpTBhCQKERtVCxUQd5JU
-         W6lA==
-X-Gm-Message-State: APjAAAVsDwIoETMAZrhfC9Gfg6P90evczyx7OsKs8DBEZLeIlfKdk2pF
-        8yZ473eruos0qIMICDyhSYmew9nM+Ufnhr40jUM=
-X-Google-Smtp-Source: APXvYqzJqyvFiaKm/wPBr+hvYK+HHRtZqWpfm/nvGfRcq9AIPHKUJ/CeE9/QHGJ2MDuThim0D4rn+4G+P5yvXldohJA=
-X-Received: by 2002:a62:75d8:: with SMTP id q207mr10192507pfc.35.1557857220504;
- Tue, 14 May 2019 11:07:00 -0700 (PDT)
+        Tue, 14 May 2019 14:07:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36680 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbfENSHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 14:07:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BD9520850;
+        Tue, 14 May 2019 18:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557857265;
+        bh=cBl17dKDCE701qysIFd3wYbG70L5NBjvORUz4ES3AvM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zviqZzZr09Hqnm0oihz7ygQcRmmYTsoHGshtyK5HJU75dQep6h17j3cRthqVuj17q
+         j0Z4sDzB7fqDUvaoOUlQ+oh8jGcV+GucioCgpRggngsywf9xyYTSP5UHy8sqCE68wA
+         GnY99dIJcczj34s3cdP5aXi9tPGj/ueRWfHlAT6M=
+Date:   Tue, 14 May 2019 20:07:43 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.1.2
+Message-ID: <20190514180743.GA13519@kroah.com>
+References: <20190514180424.GA11131@kroah.com>
 MIME-Version: 1.0
-References: <20190514002747.7047-1-xiyou.wangcong@gmail.com> <20190514123213.GR2589@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190514123213.GR2589@hirez.programming.kicks-ass.net>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 14 May 2019 11:06:49 -0700
-Message-ID: <CAM_iQpX1PTqUqMWfa+LvTPpT85jCJu-LNanyoxM2nCvzPNaCpg@mail.gmail.com>
-Subject: Re: [RFC Patch] perf_event: fix a cgroup switch warning
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514180424.GA11131@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 5:32 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, May 13, 2019 at 05:27:47PM -0700, Cong Wang wrote:
-> > We have been consistently triggering the warning
-> > WARN_ON_ONCE(cpuctx->cgrp) in perf_cgroup_switch() for a rather
-> > long time, although we still have no clue on how to reproduce it.
-> >
-> > Looking into the code, it seems the only possibility here is that
-> > the process calling perf_event_open() with a cgroup target exits
-> > before the process in the target cgroup exits but after it gains
-> > CPU to run. This is because we use the atomic counter
-> > perf_cgroup_events as an indication of whether cgroup perf event
-> > has enabled or not, which is inaccurate, illustrated as below:
-> >
-> > CPU 0                                 CPU 1
-> > // open perf events with a cgroup
-> > // target for all CPU's
-> > perf_event_open():
-> >   account_event_cpu()
-> >   // perf_cgroup_events == 1
-> >                               // Schedule in a process in the target cgroup
-> >                               perf_cgroup_switch()
-> > perf_event_release_kernel():
-> >   unaccount_event_cpu()
-> >   // perf_cgroup_events == 0
-> >                               // schedule out
-> >                               // but perf_cgroup_sched_out() is skipped
-> >                               // cpuctx->cgrp left as non-NULL
->
->                                 which implies we observed:
->                                 'perf_cgroup_events == 0'
->
-> >                               // schedule in another process
-> >                               perf_cgroup_switch() // WARN triggerred
->
->                                 which implies we observed:
->                                 'perf_cgroup_events == 1'
->
->
-> Which is impossible. It _might_ have been possible if the out and in
-> happened on different CPUs. But then I'm not sure that is enough to
-> trigger the problem.
+On Tue, May 14, 2019 at 08:04:24PM +0200, Greg KH wrote:
+> I'm announcing the release of the 5.1.2 kernel.
+> 
+> All users of the 5.1 kernel series must upgrade.  Well, kind of, let me rephrase that...
+> 
+> All users of Intel processors made since 2011 must upgrade.
+> 
+> Note, this release, and the other stable releases that are all being
+> released right now at the same time, just went out all contain patches
+> that have only seen the "public eye" for about 5 minutes.  So be
+> forwarned, they might break things, they might not build, but hopefully
+> they fix things.  Odds are we will be fixing a number of small things in
+> this area for the next few weeks as things shake out on real hardware
+> and workloads.  So don't think you are done updating your kernel, you
+> never are done with that :)
+> 
+> As for what specifically these changes fix, I'll let the tech news sites
+> fill you in on the details.  Or go read the excellently written Xen
+> Security Advisory 297:
+> 	https://xenbits.xen.org/xsa/advisory-297.html
+> That should give you a good idea of what a number of people have been
+> dealing with for many many many months now.
 
-Good catch, but this just needs one more perf_event_open(),
-right? :)
+Also see the new in-kernel documentation for how to handle all of this:
+	https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html
 
-
->
-> > The proposed fix is kinda ugly,
->
-> Yes :-)
->
-> > Suggestions? Thoughts?
->
-> At perf_event_release time, when it is the last cgroup event, there
-> should not be any cgroup events running anymore, so ideally
-> perf_cgroup_switch() would not set state.
->
-> Furthermore; list_update_cgroup_event() will actually clear cpuctx->cgrp
-> on removal of the last cgroup event.
-
-Ah, yes, this probably explains why it is harder to trigger than I expected.
-
-
->
-> Also; perf_cgroup_switch() will WARN when there are not in fact any
-> cgroup events at all. I would expect that WARN to trigger too in your
-> scneario. But you're not seeing that?
-
-Not sure if I follow you, but if there is no cgroup event, cgrp_cpuctx_list
-should be empty, right?
-
-From the stack traces I can't tell, what I can tell is that we use cgroup
-events in most cases.
-
-
->
-> I do however note that that check seems racy; we do that without holding
-> the ctx_lock.
-
-Hmm? perf_ctx_lock() is taken in perf_cgroup_switch(), so I think locking
-is fine.
-
-Thanks.
