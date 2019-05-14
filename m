@@ -2,269 +2,128 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50164C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A9CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEAC20881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061DC20881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="LQpxGUSj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ULnWl7Re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfENWIX (ORCPT
+        id S1726283AbfENWND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:08:23 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:1820 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfENWIX (ORCPT
+        Tue, 14 May 2019 18:13:03 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:43933 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfENWNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:08:23 -0400
+        Tue, 14 May 2019 18:13:02 -0400
+Received: by mail-vs1-f54.google.com with SMTP id d128so355522vsc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:13:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1557871701; x=1589407701;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=PRP1xBxuo+1R+ttuKDucVSYxEcz5wPNDFETPGhUhDeg=;
-  b=LQpxGUSjdqJ5oZqjmFwOyytXC4+uIG9f5CzhSyAIs4n5Qe+yj3ax9Ezg
-   Le2QvlX0VFHhOxfUnje/TWMZPxbI3ZfKd3aEhktB6C2wG6iUavTTopuxZ
-   Ikad/aZyrzO8ZgIGa4RXSTcKUUqyVrZsTn9AxNttvf2QTgyraqEinZhJe
-   U=;
-X-IronPort-AV: E=Sophos;i="5.60,470,1549929600"; 
-   d="scan'208";a="799668867"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 22:08:19 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4EM8F2O129758
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 14 May 2019 22:08:19 GMT
-Received: from EX13D02EUC003.ant.amazon.com (10.43.164.10) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 14 May 2019 22:08:18 +0000
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13D02EUC003.ant.amazon.com (10.43.164.10) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 14 May 2019 22:08:17 +0000
-Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
- EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
- Tue, 14 May 2019 22:08:17 +0000
-From:   "Sironi, Filippo" <sironi@amazon.de>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
-Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-Thread-Topic: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZqvgUAgAAL5ICAAGRWAA==
-Date:   Tue, 14 May 2019 22:08:16 +0000
-Message-ID: <0E82B8C2-5169-4788-B1C0-1668D1F74204@amazon.de>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-2-git-send-email-sironi@amazon.de>
- <d03f6be5-d8dc-4389-e14c-295f36a68827@de.ibm.com>
- <56DAB9BD-2543-49DA-9886-C9C8F2B814F9@amazon.de>
-In-Reply-To: <56DAB9BD-2543-49DA-9886-C9C8F2B814F9@amazon.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.166.102]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D4A90837FC6EEB479DA8881876B210DF@amazon.com>
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wVIzeix7iLELUYXl5m49E5wdhPumzJ5vp2cjgvebQJQ=;
+        b=ULnWl7ReV9rhaVd9pYIsvgg33E+PGKtMfc+ur2c8hcDVjhewK0cqzVQ/57ij9VsgjQ
+         5Y69oZ7Mzh9fQPFmr2uXOzsFsmL/k9mCx144O+AehmgtTh59VxK83LKZqOWIeKnin8wQ
+         0IIZse0BJQXufZcusH2jn6JvGYIO8IsvjbGNE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wVIzeix7iLELUYXl5m49E5wdhPumzJ5vp2cjgvebQJQ=;
+        b=ibbIFx56Fx2ZJzdOvYsQody+lflnBZ3oI3iJg8xEN6NXSQvRFAlMSJibZUSWYQzH9S
+         MZRKLmu8+7MR6fGuh4Pp76MtsBb5r+V748BIk834WPtd9FUtvuxwGF4j3mOYATVIfN1W
+         p17NVtKTQYieWOWRv+h5Rg24/R44j5cIjU+AkybM2FUtSR3bcRvczCmKvLHyEQne5jYj
+         8B86m+mm2ROWDxZSOU5HKdP/AdnxQAq+270jWGvMNe6Sz4+Y1qHrnN8Bh3nevJJqG2R4
+         cVIUKcX5kSe+syy4LBkc3w+UVeduA6lRYbdroGThDG+xuvZHwNcLidoxUEz7IKHPBrji
+         i7iw==
+X-Gm-Message-State: APjAAAV1p2OlKXD7agNWTsnWZJbUhRWo0D+xlq2TyqHyOdmfh/CBYEFQ
+        lXUQChEvdm2MvMHW42MDVs52S15Wskw=
+X-Google-Smtp-Source: APXvYqzl6n/t4vlNlz7TiorWlld7g4reEQ7+5ufJfDNTfNQPuYGiRxr+5QsEkB8YNG+mpEalSMxkPg==
+X-Received: by 2002:a67:7ac9:: with SMTP id v192mr19336729vsc.100.1557871981559;
+        Tue, 14 May 2019 15:13:01 -0700 (PDT)
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
+        by smtp.gmail.com with ESMTPSA id e76sm69036vke.54.2019.05.14.15.13.00
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 15:13:00 -0700 (PDT)
+Received: by mail-vs1-f45.google.com with SMTP id o10so349867vsp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:13:00 -0700 (PDT)
+X-Received: by 2002:a67:b348:: with SMTP id b8mr10745210vsm.144.1557871980393;
+ Tue, 14 May 2019 15:13:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
+ <20190513171519.GA26166@redhat.com> <CAD=FV=X7GDNoJVvRgBTDoVkf9UYA69B-rTY2G3888w=9iS=RtQ@mail.gmail.com>
+ <20190514172938.GA31835@redhat.com>
+In-Reply-To: <20190514172938.GA31835@redhat.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 14 May 2019 15:12:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VTn7OKOG03YDTjzDPJMYD7ar+HdswHb=VUHm_yp=8vMg@mail.gmail.com>
+Message-ID: <CAD=FV=VTn7OKOG03YDTjzDPJMYD7ar+HdswHb=VUHm_yp=8vMg@mail.gmail.com>
+Subject: Re: Problems caused by dm crypt: use WQ_HIGHPRI for the IO and crypt workqueues
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Tim Murray <timmurray@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On Tue, May 14, 2019 at 10:29 AM Mike Snitzer <snitzer@redhat.com> wrote:
+
+> > tl;dr: High priority (even without CPU_INTENSIVE) definitely causes
+> > interference with my high priority work starving it for > 8 ms, but
+> > dm-crypt isn't unique here--loopback devices also have problems.
+>
+> Well I read it all ;)
+>
+> I don't have a commit 37a186225a0c, the original commit in querstion is
+> a1b89132dc4 right?
+
+commit 37a186225a0c ("platform/chrome: cros_ec_spi: Transfer messages
+at high priority") is only really relevant to my particular test case
+of using cros_ec to reproduce the problem.
 
 
-> On 14. May 2019, at 18:09, Sironi, Filippo <sironi@amazon.de> wrote:
-> =
+> But I think we need a deeper understanding from workqueue maintainers on
+> what the right way forward is here.  I cc'd Tejun in my previous reply
+> but IIRC he no longer looks after the workqueue code.
+>
+> I think it'd be good for you to work with the original author of commit
+> a1b89132dc4 (Tim, on cc) to see if you can reach consensus on what works
+> for both of your requirements.
 
->> On 14. May 2019, at 17:26, Christian Borntraeger <borntraeger@de.ibm.com=
-> wrote:
->> =
-
->>> On 14.05.19 17:16, Filippo Sironi wrote:
->>> Start populating /sys/hypervisor with KVM entries when we're running on
->>> KVM. This is to replicate functionality that's available when we're
->>> running on Xen.
->>> =
-
->>> Start with /sys/hypervisor/uuid, which users prefer over
->>> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
->>> machine, since it's also available when running on Xen HVM and on Xen PV
->>> and, on top of that doesn't require root privileges by default.
->>> Let's create arch-specific hooks so that different architectures can
->>> provide different implementations.
->>> =
-
->>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
->>> ---
->>> v2:
->>> * move the retrieval of the VM UUID out of uuid_show and into
->>> kvm_para_get_uuid, which is a weak function that can be overwritten
->>> =
-
->>> drivers/Kconfig              |  2 ++
->>> drivers/Makefile             |  2 ++
->>> drivers/kvm/Kconfig          | 14 ++++++++++++++
->>> drivers/kvm/Makefile         |  1 +
->>> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
->>> 5 files changed, 49 insertions(+)
->>> create mode 100644 drivers/kvm/Kconfig
->>> create mode 100644 drivers/kvm/Makefile
->>> create mode 100644 drivers/kvm/sys-hypervisor.c
->>> =
-
->>> diff --git a/drivers/Kconfig b/drivers/Kconfig
->>> index 45f9decb9848..90eb835fe951 100644
->>> --- a/drivers/Kconfig
->>> +++ b/drivers/Kconfig
->>> @@ -146,6 +146,8 @@ source "drivers/hv/Kconfig"
->>> =
-
->>> source "drivers/xen/Kconfig"
->>> =
-
->>> +source "drivers/kvm/Kconfig"
->>> +
->>> source "drivers/staging/Kconfig"
->>> =
-
->>> source "drivers/platform/Kconfig"
->>> diff --git a/drivers/Makefile b/drivers/Makefile
->>> index c61cde554340..79cc92a3f6bf 100644
->>> --- a/drivers/Makefile
->>> +++ b/drivers/Makefile
->>> @@ -44,6 +44,8 @@ obj-y				+=3D soc/
->>> obj-$(CONFIG_VIRTIO)		+=3D virtio/
->>> obj-$(CONFIG_XEN)		+=3D xen/
->>> =
-
->>> +obj-$(CONFIG_KVM_GUEST)		+=3D kvm/
->>> +
->>> # regulators early, since some subsystems rely on them to initialize
->>> obj-$(CONFIG_REGULATOR)		+=3D regulator/
->>> =
-
->>> diff --git a/drivers/kvm/Kconfig b/drivers/kvm/Kconfig
->>> new file mode 100644
->>> index 000000000000..3fc041df7c11
->>> --- /dev/null
->>> +++ b/drivers/kvm/Kconfig
->>> @@ -0,0 +1,14 @@
->>> +menu "KVM driver support"
->>> +        depends on KVM_GUEST
->>> +
->>> +config KVM_SYS_HYPERVISOR
->>> +        bool "Create KVM entries under /sys/hypervisor"
->>> +        depends on SYSFS
->>> +        select SYS_HYPERVISOR
->>> +        default y
->>> +        help
->>> +          Create KVM entries under /sys/hypervisor (e.g., uuid). When =
-running
->>> +          native or on another hypervisor, /sys/hypervisor may still be
->>> +          present, but it will have no KVM entries.
->>> +
->>> +endmenu
->>> diff --git a/drivers/kvm/Makefile b/drivers/kvm/Makefile
->>> new file mode 100644
->>> index 000000000000..73a43fc994b9
->>> --- /dev/null
->>> +++ b/drivers/kvm/Makefile
->>> @@ -0,0 +1 @@
->>> +obj-$(CONFIG_KVM_SYS_HYPERVISOR) +=3D sys-hypervisor.o
->>> diff --git a/drivers/kvm/sys-hypervisor.c b/drivers/kvm/sys-hypervisor.c
->>> new file mode 100644
->>> index 000000000000..43b1d1a09807
->>> --- /dev/null
->>> +++ b/drivers/kvm/sys-hypervisor.c
->>> @@ -0,0 +1,30 @@
->>> +/* SPDX-License-Identifier: GPL-2.0 */
->>> +
->>> +#include <asm/kvm_para.h>
->>> +
->>> +#include <linux/kobject.h>
->>> +#include <linux/sysfs.h>
->>> +
->>> +__weak const char *kvm_para_get_uuid(void)
->>> +{
->>> +	return NULL;
->>> +}
->>> +
->>> +static ssize_t uuid_show(struct kobject *obj,
->>> +			 struct kobj_attribute *attr,
->>> +			 char *buf)
->>> +{
->>> +	const char *uuid =3D kvm_para_get_uuid();
->> =
-
->> I would prefer to have kvm_para_get_uuid return a uuid_t
->> but char * will probably work out as well.
-> =
-
-> Let me give this a quick spin.
-
-I looked into getting a uuid_t.
-
-At least for architectures where we retrieve that bit of
-information from DMI tables, this is undesirable since
-the interpretation of the UUID changed with DMI 2.6
-(the first 3 fields are now encoded in little-endian).
-This means that we wouldn't know how to print it in this
-generic code.
-
-I think that it's best if the architecture specific code
-turns the UUID into the string representation.
-
->>> +	return sprintf(buf, "%s\n", uuid);
->>> +}
->>> +
->>> +static struct kobj_attribute uuid =3D __ATTR_RO(uuid);
->>> +
->>> +static int __init uuid_init(void)
->>> +{
->>> +	if (!kvm_para_available())
->> =
-
->> Isnt kvm_para_available a function that is defined in the context of the=
- HOST
->> and not of the guest?
-> =
-
-> No, kvm_para_available is defined in the guest context.
-> On x86, it checks for the presence of the KVM CPUID leafs.
-> =
-
->>> +		return 0;
->>> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
->>> +}
->>> +
->>> +device_initcall(uuid_init);
+Basically what I decided in the end was that the workqueue code didn't
+offer enough flexibility in terms of priorities.  To get realtime
+priority I needed to fallback to using kthread_create_worker() to
+create my worker.  Presumably if you want something nicer than the
+"min_nice" priority you get with the high priority workqueue flag then
+you'd have to do something similar (but moving in the opposite
+direction).
 
 
+> Given 7 above, if your new "cros_ec at realtime" series fixes it.. ship
+> it?
+
+Yeah, that's the plan.  Right now I have
+<https://lkml.kernel.org/r/20190514183935.143463-2-dianders@chromium.org>
+but Guenter pointed out some embarrassing bugs in my patch so I'll
+post up a v4 tomorrow.  I pointed to a Chrome OS review that has a
+preview of my v4 if you for some reason can't wait.  That can be found
+at <https://crrev.com/c/1612165>.
 
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-
-
+-Doug
