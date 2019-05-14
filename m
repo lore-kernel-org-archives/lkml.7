@@ -2,136 +2,157 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76854C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34FEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4583E2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:03:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FVH/1fBV"
+	by mail.kernel.org (Postfix) with ESMTP id B1D5220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557849936;
+	bh=hJfCCKi48RIVVVurf1uzxJpTYl+ZKJvrpl7smCiMk9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kyZCsmzgU8h3Q7USSKRlV6MPvi9K5QoFxbOWuB9n6B1/ULtl2rvlXypssqenHtlg6
+	 hMg7SHaptKohfYY6sZjLs9BcaPAWcYnt9deYyrRVSzmC75j3BC8fzq6hnPLW6/DU0X
+	 XPTGtEiiQvWJdhUZZJitM+Om8WGDP5201LtZ1imU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfENQDx (ORCPT
+        id S1726349AbfENQFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:03:53 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:35382 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfENQDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:03:52 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EFrh4T075818;
-        Tue, 14 May 2019 16:03:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=LKX2pJCZMM1fM5+jEyMtPXBt1Ui1VdtBDPvhsBNL6VM=;
- b=FVH/1fBVq/9bb+b70RdubSY71Oyx9B4cg5tSjA/xyWD1lO4HlKakAfyzhJG+ogf1EUso
- zyPY6j9o64v1FPRW5c8/st1MX63dHPSPq7nTHRNsxl1ug/vTW8kbay97eCLhZMVK35iu
- ckHACP/VX5R0Fct1yr7wy9sZXjZ0QP/c0V9mCBIbjFrQ2mU9IXwxU1cufpGH73v7hqLd
- oeSW/hjJX8SksaBF9Sri2LOLxKy6izpfVXxbq61m0qvtJ0TMPWESyUCT9piVoKmoEreb
- IgIGrweG0ngmlbXXXNd3Th8cGvXvHwtr6224ljvbNExUSaq18EOcpsr+DLxmBkX/fGI9 wg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdqc1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 16:03:28 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EG3LuL022208;
-        Tue, 14 May 2019 16:03:27 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2se0tw84k3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 16:03:27 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4EG3NOK000843;
-        Tue, 14 May 2019 16:03:25 GMT
-Received: from [172.10.12.21] (/24.113.124.115)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 09:03:23 -0700
-Subject: Re: [RFC V2 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Cc:     songliubraving@fb.com, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        Dietmar.Eggemann@arm.com, linux-kernel@vger.kernel.org
-References: <cover.1556182964.git.viresh.kumar@linaro.org>
- <59b37c56b8fcb834f7d3234e776eaeff74ad117f.1556182965.git.viresh.kumar@linaro.org>
- <20190510072125.GG2623@hirez.programming.kicks-ass.net>
- <20190513093418.altqhlhu4zsu75t4@vireshk-i7>
- <20190513113518.GQ2623@hirez.programming.kicks-ass.net>
-From:   Steven Sistare <steven.sistare@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <05ffe5f4-4324-2977-e46e-155e1aef57fa@oracle.com>
-Date:   Tue, 14 May 2019 12:03:21 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 12:05:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42958 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbfENQFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 12:05:35 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E71D420863;
+        Tue, 14 May 2019 16:05:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557849934;
+        bh=hJfCCKi48RIVVVurf1uzxJpTYl+ZKJvrpl7smCiMk9k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=L/wizO1rm2m1f3c8ycsczry1ZMHkYklOT9Gq7r7ANgmAWG7SPyj+kYOKF6euRdbrx
+         wnhQ5cTM2ga4WLXvJJTNjoPZJB9vXsnQi4TGoyVi25FNKPa5rTjlUmXomMuoYKhpUX
+         NLTRYAu76AZITv/M6gd7lOt+AV7PEEx0CALj3o2Q=
+Received: by mail-qk1-f175.google.com with SMTP id c15so10647385qkl.2;
+        Tue, 14 May 2019 09:05:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAXBozo8Avxjg7L8XqHTkFba9hGQXqbIvgxUT3RXprlk+YCM8fRb
+        X/akZapobp8s+nJHY46Q0SHIPtqphk/Jma8e5Q==
+X-Google-Smtp-Source: APXvYqyglETLbb45wrJNIfZkmNqcgXRPRw5CeGZBc+AinbWKI/we4U8bnbDm+n/32ilz11VUASlMrGHWERgv4MMTLb8=
+X-Received: by 2002:a37:c42:: with SMTP id 63mr27440583qkm.326.1557849933158;
+ Tue, 14 May 2019 09:05:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190513113518.GQ2623@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140113
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140112
+References: <1557242108-13580-1-git-send-email-sagar.kadam@sifive.com>
+ <1557242108-13580-2-git-send-email-sagar.kadam@sifive.com>
+ <20190513205615.GA5844@bogus> <CAARK3HkTCGWg4CAo1LmQHmf4_NFukjTwO1LAHjgSTS+R_5CRSg@mail.gmail.com>
+In-Reply-To: <CAARK3HkTCGWg4CAo1LmQHmf4_NFukjTwO1LAHjgSTS+R_5CRSg@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 14 May 2019 11:05:19 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKGyq-GaAXWqb=8DGCPYd-2kHWaOyNO9rC9dZkx2Z=LeQ@mail.gmail.com>
+Message-ID: <CAL_JsqKGyq-GaAXWqb=8DGCPYd-2kHWaOyNO9rC9dZkx2Z=LeQ@mail.gmail.com>
+Subject: Re: [PATCH v2 v2 1/3] dt-bindings: i2c: extend existing opencore bindings.
+To:     Sagar Kadam <sagar.kadam@sifive.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, peter@korsgaard.com,
+        Andrew Lunn <andrew@lunn.ch>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/2019 7:35 AM, Peter Zijlstra wrote:
-> On Mon, May 13, 2019 at 03:04:18PM +0530, Viresh Kumar wrote:
->> On 10-05-19, 09:21, Peter Zijlstra wrote:
-> 
->>> I don't hate his per se; but the whole select_idle_sibling() thing is
->>> something that needs looking at.
->>>
->>> There was the task stealing thing from Steve that looked interesting and
->>> that would render your apporach unfeasible.
->>
->> I am surely missing something as I don't see how that patchset will
->> make this patchset perform badly, than what it already does.
-> 
-> Nah; I just misremembered. I know Oracle has a patch set poking at
-> select_idle_siblings() _somewhere_ (as do I), and I just found the wrong
-> one.
-> 
-> Basically everybody is complaining select_idle_sibling() is too
-> expensive for checking the entire LLC domain, except for FB (and thus
-> likely some other workloads too) that depend on it to kill their tail
-> latency.
-> 
-> But I suppose we could still do this, even if we scan only a subset of
-> the LLC, just keep track of the last !idle CPU running only SCHED_IDLE
-> tasks and pick that if you do not (in your limited scan) find a better
-> candidate.
+On Tue, May 14, 2019 at 7:50 AM Sagar Kadam <sagar.kadam@sifive.com> wrote:
+>
+> Hello Rob,
+>
+> Thank you for the review.
+>
+> On Tue, May 14, 2019 at 2:26 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, May 07, 2019 at 08:45:06PM +0530, Sagar Shrikant Kadam wrote:
+> > > Add FU540-C000 specific device tree bindings to already
+> > > available i2-ocores file. This device is available on
+> > > HiFive Unleashed Rev A00 board.
+> > >
+> > > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > > index 17bef9a..f6bcf90 100644
+> > > --- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > > +++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
+> > > @@ -2,6 +2,7 @@ Device tree configuration for i2c-ocores
+> > >
+> > >  Required properties:
+> > >  - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
+> > > +                    "sifive,fu540-c000-i2c" or "sifive,i2c0"
+> >
+> > If this is Opencores IP, does it really follow the Sifive versioning
+> > convention? If so, please reference sifive-blocks-ip-versioning.txt
+> > (which appears to have missed going upstream). Also, referencing the IP
+> > repository would be good too. If this IP block doesn't follow the same
+> > convention, then don't try using it for this binding.
+> >
+> Yes, the sifive,fu540-c000-i2c is a SoC specific compatibility string,
+> this way SoC specific
+> workaround's or bugs, can be handled in the software and the ip-block
+> specific compatibility
+> string "sifive,<ip-block-name><integer version number>" i.e.
+> sifive,i2c0 is IP block specific compatibility
+> string. Please let me know if I need some correction here?
+> I will also update reference for sifive-blocks-ip-versioning and the
+> ip repository into next version of patch.
 
-Subhra posted a patch that incrementally searches for an idle CPU in the LLC,
-remembering the last CPU examined, and searching a fixed number of CPUs from there.
-That technique is compatible with the one that Viresh suggests; the incremental
-search would stop if a SCHED_IDLE cpu was found.
+My question is whether I can correlate v0 to a specific revision of
+the IP and versions will be tracked in the same way as SiFive IP
+blocks?
 
-I also fiddled with select_idle_sibling, maintaining a per-LLC bitmap of idle CPUs,
-updated with atomic operations.  Performance was basically unchanged for the
-workloads I tested, and I inserted timers around the idle search showing it was
-a very small fraction of time both before and after my changes.  That led me to
-ignore the push side and optimize the pull side with task stealing.
+> > >  - reg             : bus address start and address range size of device
+> > >  - interrupts      : interrupt number
+> > >  - clocks          : handle to the controller clock; see the note below.
+> > > @@ -67,3 +68,22 @@ or
+> > >                       reg = <0x60>;
+> > >               };
+> > >       };
+> > > +or
+> >
+> > Just a new compatible isn't really a reason to add an example.
+> >
+> > > +     /*
+> > > +       An Opencore based I2C node in FU540-C000 chip from SiFive
+> > > +       This chip has a hardware erratum for broken IRQ
+> > > +       so it's recommended not to define interrupt in the device node
+> >
+> > Then interrupts needs to be optional.
+> True, I will move interrupts and interrupt parent into optional section
+> >
+> > > +     */
+> > > +     i2c@10030000 {
+> > > +                     compatible = "sifive,i2c0","sifive,fu540-c000-i2c";
+> > > +                     reg = <0x0 0x10030000 0x0 0x1000>;
+> > > +                     reg-names = "i2c-control";
+> >
+> > Not doucmented.
+> In v1, I had added a new binding file as sifive-i2c-ocores.txt for
+> SiFive i2c core.
+> After Andrew's suggestion,  extending the available i2c-ocores.txt
+> seemed to be a better idea rather than adding a new file.
+> so added an example node which is HiFive specific in the existing file.
+> Please let me know if I need to handle this in a different way.
 
-I would be very interested in hearing from folks that have workloads that demonstrate
-that select_idle_sibling is too expensive.
+That has nothing to do with whether reg-names is documented. Being in
+the example is not documented. You either need to add it to the
+property list or drop it from the example. IMO, you should drop it as
+it is not necessary with only 1 entry.
 
-- Steve
+Rob
