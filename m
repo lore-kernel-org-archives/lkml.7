@@ -6,83 +6,100 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7C9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB2DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C142166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:28:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4741820873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557865692;
-	bh=SeTXnt4Kq0pwZ9i9q/N8y5cFP/35h05XfSXXT4hChF8=;
+	s=default; t=1557865772;
+	bh=fbPcIuE4LpfXACLuNQZ/br1V8i83hANg4CTtYRdn12Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=T2VewQnbgKgkjzJO1vdCiX3/QXSfB6ulFTDdJPzUkgIpy6hluXLbsZinq/7QKu0k6
-	 iYyPASxqrN0kZShr6XHRSIjwj1qxvzzI5oW7iJ4Mp7K/cQXceJzXPCrA0udDybIsL5
-	 OuZIW1YucXfTMT8hZki7+qzgqthPrWrcNMtyQwYU=
+	b=gikmLiKPn/iHyyD0McFgsPpNAmDmWJpwGC83WJlleRfzqxkuI0R5ZVqdE1jwGyro+
+	 P04k9KTvEwvLmXwDKofrm3vq1qHU7234NwtwP+HEGG/mnn4nVAn4hdNCMGu3ZD1HXR
+	 r1j6dC3r9XyByq9gZ4QCtmba42q+3Rt/j9JQ1ocw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfENU2L (ORCPT
+        id S1726380AbfENU3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:28:11 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41398 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbfENU2L (ORCPT
+        Tue, 14 May 2019 16:29:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42354 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENU3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:28:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y10so112752oia.8;
-        Tue, 14 May 2019 13:28:10 -0700 (PDT)
+        Tue, 14 May 2019 16:29:30 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f23so109707otl.9;
+        Tue, 14 May 2019 13:29:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/xEQhRe1Pra6YVRpwyMFKIovwszsqjuMIre3+73jdVw=;
-        b=BhnStekwb2faaqXnH0+BBovID7o3dRItCLSLGL1xZ8DAUxsUgXW3rWpQZpFHJ++5QJ
-         dBGBuJYQeBHLGCMb4hG9IUkL3RgC2jH1aonakoyOD81fcnd4AuzpmzTHP113vauKHCAa
-         Ln/PhXJ3rXFETIRyt6g4bz9FANFV4sWqympX+X/vc9cRUoRXAfEwZ4QvWx8CHPOw5NTi
-         L7gvQm2qmI2jqiGocO9vYeFBYryEtGGyANoT7BD2zAVIwnmBKiiTgTilU5dsf4iQsgFq
-         TlVBYssz6P+ef+gB8mPh3Ie/uM0anVQSc0CC6OhRULLxdM6cGm0oC/bk0Jjbz8bi1JcU
-         4rlg==
-X-Gm-Message-State: APjAAAVSMTkIwhkL8HocbR2b6japRYuqykoo4yq5Q9HQ6atl+/V/U3f+
-        Kiodqzi0ya980Kh9eVvrWg==
-X-Google-Smtp-Source: APXvYqwH5J0KSSwtut0OTNe86vsNzvw9QHm7hI902PxNhh3qNuE4E8bI0xQtbTD5Y+FzANVluP7iug==
-X-Received: by 2002:aca:aa8b:: with SMTP id t133mr4038437oie.101.1557865690412;
-        Tue, 14 May 2019 13:28:10 -0700 (PDT)
+        bh=oPaY+Ss9+ep2GCkhb8u3t1B3H/GvEu2ypW66c2/qd9s=;
+        b=gyJ/fWOEYB8Ki78+dj79xyZWtls6GDQy57l7Nmz0zem0/razc7TuHHlg4z5h4eKvhQ
+         KbkSYIrCZ98dRT4a6hfSIffW6A2GnzybIV+Vsh9nJdmdbsPbJG8lHIp9g682qGVrGXDD
+         fFD1oKpRROpclivzqRfJbJ7X/hL3J/rkZf2dSEEoDJ3/2IupnrPd06gnrCguDhR3Nqri
+         nZ/qtB8WhDxhHGk1t8LjEVbuSpT8rJYUunpclggdnAZJxDezRWe6I4P5zs9+nkJY4rou
+         8+61G0GDQjZ8glcP8AiWNZsjQ+aS/ZzoNOta4cqOG5lNgh50ZBqlnaPjsnu7n6F3cCXe
+         0AwQ==
+X-Gm-Message-State: APjAAAXLDq6V/F5fnzLtzxxgmSE8Nt0G1afv5JnW9YlVa/9rFS+xZOmb
+        NLwQm/Lxq4nrS0vw9xPh1w==
+X-Google-Smtp-Source: APXvYqzvuTeT7D9lZIqV3PwgDn5MJm1tKGPk0EO3gjy5o6D/bZ1ZmxMIWQbWUaiO3rbeleX4+VOgHQ==
+X-Received: by 2002:a9d:7354:: with SMTP id l20mr23489464otk.115.1557865770039;
+        Tue, 14 May 2019 13:29:30 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g3sm6652578oif.25.2019.05.14.13.28.09
+        by smtp.gmail.com with ESMTPSA id b25sm2460790otq.65.2019.05.14.13.29.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 13:28:09 -0700 (PDT)
-Date:   Tue, 14 May 2019 15:28:08 -0500
+        Tue, 14 May 2019 13:29:29 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:29:28 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Fabien Parent <fparent@baylibre.com>
-Subject: Re: [PATCH v2 3/5] dt-bindings: mfd: mt6397: Add bindings for MT6392
- PMIC
-Message-ID: <20190514202808.GA21263@bogus>
-References: <20190513161026.31308-1-fparent@baylibre.com>
- <20190513161026.31308-4-fparent@baylibre.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Paul Walmsley <paul@pwsan.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Megan Wachs <megan@sifive.com>,
+        Wesley Terpstra <wesley@sifive.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] dt-bindings: sifive: describe sifive-blocks versioning
+Message-ID: <20190514202928.GA23497@bogus>
+References: <20190513215152.26578-1-paul.walmsley@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190513161026.31308-4-fparent@baylibre.com>
+In-Reply-To: <20190513215152.26578-1-paul.walmsley@sifive.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019 18:10:24 +0200, Fabien Parent wrote:
-> Add the currently supported bindings for the MT6392 PMIC.
+On Mon, 13 May 2019 14:51:53 -0700, Paul Walmsley wrote:
+> For IP blocks that are generated from the public, open-source
+> sifive-blocks repository, describe the version numbering policy
+> that its maintainers intend to use, upon request from Rob
+> Herring <robh@kernel.org>.
 > 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> Cc: Megan Wachs <megan@sifive.com>
+> Cc: Wesley Terpstra <wesley@sifive.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
 > 
-> V2:
-> 	* New patch
+> This second version updates the example URL, requested by
+> Rob Herring <robh+dt@kernel.org>.
 > 
-> ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+>  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks.
+
+Rob
