@@ -2,89 +2,97 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B35BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828C1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B08208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4523E206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dzz9eun9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3/bLx0Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfENH3u (ORCPT
+        id S1726475AbfENHbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:29:50 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59736 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbfENH3t (ORCPT
+        Tue, 14 May 2019 03:31:48 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37236 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfENHbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:29:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LyILN8tiqYOrBbTwx/bEvqalqGDEJJBbWfhDeckm5hE=; b=Dzz9eun9Mdy9wxo6bjQ/SIsbt
-        oaxyTesAJhv9qhYG29ELdIzQ8B/4GLPi0S8UY+SnAcrWsieohzt9xVLpRhitf05XQyxO7ZvDUpA0D
-        cS8cXr+iCRBYbcZyZ7yfxlixVscm0v/7u4FMWGSfjFQof4+63mREl05GW8UbuYtl0yzm5KhC518wa
-        3K0+dFcGdKuj0Q3+Da79oPBpMcssZqcdi8szEOuBHxkpbs5D9EZOYRhpClyX/WmZZ7XT/F5ssJ6Il
-        DBeWy+3TfcJ/0K1sCsfibvbpOdBb6QU26+YWbFL59jn27d7emM4RUrVU80JjsfqyYCnyCGrQaB3VT
-        WW2asI+rg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQRsd-00054W-Bb; Tue, 14 May 2019 07:29:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B13822029F87A; Tue, 14 May 2019 09:29:41 +0200 (CEST)
-Date:   Tue, 14 May 2019 09:29:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
-Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
-Message-ID: <20190514072941.GG2589@hirez.programming.kicks-ass.net>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
- <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+        Tue, 14 May 2019 03:31:48 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g3so8649994pfi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 00:31:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=s/sQlqp99nJA/7VNGTPHqYbSkGF5LqoG/HcNRpQv3Nk=;
+        b=f3/bLx0YYNpy6z0dOLKo6LV1cUhkhK9f9VbG9O2g/twcl+paKF47Ro0iLj3XEydSbY
+         IRPeeEkj05Hs6KIZaEeDreBRMWvCD+cGPrPcm6B0CaILWzyvUlj+19RVF28MIZl/nDvF
+         xSJE4/flkQCkDNOZzCERY123sqWTYLt6PP4dnvzlPc+bVF4fxvy0kqSw1nFD9UxgiKT5
+         Vcy+ziDvYHtjQ2lvfQCeM/S3MdBv2qqS07OgrIIgtbIDWuKOtHQiSYFPC+pO4WUESobg
+         5EGxVNHY0VPCg7olywfXOolqyZbfATL3qycYIK3/5uQur4BbSx5fyRHgx236fpEPcl9r
+         jPew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=s/sQlqp99nJA/7VNGTPHqYbSkGF5LqoG/HcNRpQv3Nk=;
+        b=tD9xoNgMHIdCH2/7Epv8xynNyGYoRQvjKLUANu/6DY8MkS06cKEpokxVanolyGoEp4
+         ltzSUgUobCDd5TNeTR0IdjRMYFfhJu2gmmtSnJXTvNJgopJFvZJ5N9jsdspIGggnPZru
+         qHfgGTGAuB70PN0Ns0vhnlEdq9HMf5UHYoZGklktuWLxxTYuIWkFyJRwCDvN2hiPEZo3
+         KzzFSpY/ivQjE8p6WkvgupLBqceKXfic9H+n97D8BgFGkWLi/7qclOdDqstzHWyA6zzF
+         gBkxuloZB5U4ay+Z/DxRJ0yWzOm/VTLWkAljHhajcvOjRaoavK3OBH9pxawIrD28c4ih
+         3YJw==
+X-Gm-Message-State: APjAAAWPkuUzgzQo7e4WnAhQwSOR/K4gamXKSstXTwM0umq7aXhMI156
+        1dFWKd065JXWSMBBo/xlq54baz5j
+X-Google-Smtp-Source: APXvYqyBzzYvLZ+Pvf4kW5/ghr5RDfsFaIP4txDqRiWRkUKnEmS4jWZnLlSnc+i+ja/3theR44iHjg==
+X-Received: by 2002:a63:555a:: with SMTP id f26mr36910942pgm.197.1557819107219;
+        Tue, 14 May 2019 00:31:47 -0700 (PDT)
+Received: from sabyasachi ([2405:205:641d:f30a:5511:e7cb:49d8:c4c3])
+        by smtp.gmail.com with ESMTPSA id z6sm4527479pfr.135.2019.05.14.00.31.45
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 14 May 2019 00:31:46 -0700 (PDT)
+Message-ID: <5cda6ee2.1c69fb81.2949b.d3e7@mx.google.com>
+X-Google-Original-Message-ID: <20190514073141.GA6446@sabyasachi.linux@gmail.com>
+Date:   Tue, 14 May 2019 13:01:41 +0530
+From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+To:     architt@codeaurora.org, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc:     jrdr.linux@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: Remove duplicate header
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove drm/drm_panel.h which is included more than once
 
-(please, wrap our emails at 78 chars)
+Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+---
+ drivers/gpu/drm/bridge/panel.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-On Tue, May 14, 2019 at 12:08:23AM +0300, Liran Alon wrote:
-
-> 3) From (2), we should have theoretically deduced that for every
-> #VMExit, there is a need to kick the sibling hyperthread also outside
-> of guest until the #VMExit is completed.
-
-That's not in fact quite true; all you have to do is send the IPI.
-Having one sibling IPI the other sibling carries enough guarantees that
-the receiving sibling will not execute any further guest instructions.
-
-That is, you don't have to wait on the VMExit to complete; you can just
-IPI and get on with things. Now, this is still expensive, But it is
-heaps better than doing a full sync up between siblings.
-
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index 7cbaba2..402b318 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -15,7 +15,6 @@
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_modeset_helper_vtables.h>
+-#include <drm/drm_panel.h>
+ 
+ struct panel_bridge {
+ 	struct drm_bridge bridge;
+-- 
+2.7.4
 
