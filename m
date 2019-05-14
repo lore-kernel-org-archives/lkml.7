@@ -2,127 +2,112 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA63C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 522122084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:05:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEroM6Hy"
+	by mail.kernel.org (Postfix) with ESMTP id BD2DD21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557846374;
+	bh=7BYfTKO6aOWFBb458CFdGiSPzXk4KVRFwBEwn5mBMmA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qnQr6wXEobhsXkK5ikU0ES5h9AdTmKdrXNKV+En4ZBObk9OQ/5yoKyLsPzEioXGZQ
+	 S4Ntj+pe3yIXc3sRb01TWncaFt9K+ZRmb2iutWXbaleXxEAqLJRDdOTNtDDFNLIlE0
+	 XmGgBCxQfqozNZI7JKsInAtNAw6/y+RYT9lH175I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726259AbfENPFb (ORCPT
+        id S1726290AbfENPGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:05:31 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45434 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENPFb (ORCPT
+        Tue, 14 May 2019 11:06:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52172 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENPGM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:05:31 -0400
-Received: by mail-qk1-f193.google.com with SMTP id j1so10449557qkk.12;
-        Tue, 14 May 2019 08:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eKmYcU0qZ8prGVMhQw+n3k1eXR+U2VKtwEpWmO6d6Vc=;
-        b=eEroM6HysoF3Sho8Sy8sXFyJ03IOfCUKOhy4Lwf/cXXTfFKWTqQMbgM61+0IYMQuEL
-         6le3dU+KwHJ8YZH5SvQW7OxuQQ0gEQWds0Hno+5cKhKfWba4rbiTNCgBBXSMFSv2UylR
-         vMigOpL++wObyAXhMDULkHx9Aj5WyAW39Cnmhi4UtCStb/YEjzp47/BSxSn8LR4+vDV0
-         +eNVQ4aUKF9MkbOWUIEDYZn62+JbUpVaYdOtkHvEqM+v5cJBKlzDHLEIrzgcWXAQZcF8
-         TnCGHmGZMVxbZ8GvxAGSGl7dvdEqMVJmR+CyDOLpZBCVD7U8BQyEL9XySFy4x5xSuucT
-         qxwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eKmYcU0qZ8prGVMhQw+n3k1eXR+U2VKtwEpWmO6d6Vc=;
-        b=BRSvoiMFSwSVi8M1BfOn7H4UP80Fkat8Q2bN6sWhERUbmgz0af9lN6Lv8LPFQWP2yh
-         Pc6+5WntueiXlKjwNFINVn08JNHwUVFr0TfEh3yRMQaLxtW7axfxrNBxxop952ff3u+b
-         r8U75H0oH0WaarRAYUsNWt9xxEqIHsosSbsPMSUzIAjFJLWuCfyYwHEKudO9Qr91Kxkk
-         TOfEv7CjJQY+z3rZ2xWvWAxItnXETK8BTaOuepob8wGLWl78ck93Ze//Ci0BkVLM7TPq
-         MVSuuqcyoGs7ec3hG7Gl+o9wg4qTcb/IFHeDPE4oySfI2YFMzrOTtnjckHycugIhXWdd
-         b2lw==
-X-Gm-Message-State: APjAAAVw/o15o1sS9C23MuRpWlpRAGKJXEjmDr4GyjkLayaPhOCTGgdd
-        o6I24WZWXWFCpIBuDiPcXwZ1Mv3hFNc=
-X-Google-Smtp-Source: APXvYqzb+BJaFqPoNxLpBoJK35c/6OT9AOOeq+7nTYl01Pdh7ItBdn5cJdLSn3xsj1Vf7fnR3zSvQA==
-X-Received: by 2002:ae9:df82:: with SMTP id t124mr20525013qkf.170.1557846330160;
-        Tue, 14 May 2019 08:05:30 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([177.195.211.58])
-        by smtp.gmail.com with ESMTPSA id m18sm8720437qki.21.2019.05.14.08.05.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 08:05:29 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9C41D403AD; Tue, 14 May 2019 12:05:24 -0300 (-03)
-Date:   Tue, 14 May 2019 12:05:24 -0300
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 01/27] tools lib traceevent: Remove hard coded install
- paths from pkg-config file
-Message-ID: <20190514150524.GA1756@kernel.org>
-References: <20190510195606.537643615@goodmis.org>
- <20190510200105.966709757@goodmis.org>
- <20190510161150.20be7f1e@gandalf.local.home>
- <BDB00110-43B1-4766-BB21-D7BF6FDD5EC7@kernel.org>
+        Tue, 14 May 2019 11:06:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NQhfVy0qFNuvDpdRYcvkTlDsVD03kBM9D8DvgCnqBPc=; b=Dl5/ocQVDpG/+WUNiJvVsFRBD
+        +ZkCa4teBLvzobqhtymTMHwRMN1560TtLfuX8i3hGHz4nH+aHwmDrQig/arE4f8Em+vwjmiclnVGl
+        axaSq2p7TChHq11t36ylMJH87h10VU4zL8+zHyONdqsNUd+YcPZIwuVXIdQZS4Oswg+7w=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQZ0K-00015Q-Ac; Tue, 14 May 2019 15:06:08 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 85DBD1121EE8; Tue, 14 May 2019 16:06:07 +0100 (BST)
+Date:   Tue, 14 May 2019 16:06:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH 1/4] spi: For controllers that need realtime always use
+ the pump thread
+Message-ID: <20190514150607.GA1917@sirena.org.uk>
+References: <20190510223437.84368-1-dianders@chromium.org>
+ <20190510223437.84368-2-dianders@chromium.org>
+ <20190512073301.GC21483@sirena.org.uk>
+ <CAD=FV=UBic4qywgYQFGEXx_frD9ZoRJX7XGgDbQCvb2CbkBa9w@mail.gmail.com>
+ <20190514093038.GB8665@sirena.org.uk>
+ <CAD=FV=UXhQg2CuNsTCkSe1BuEvkGMj6qeUB2iF=Qfj=Z0fLiWw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
 Content-Disposition: inline
-In-Reply-To: <BDB00110-43B1-4766-BB21-D7BF6FDD5EC7@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAD=FV=UXhQg2CuNsTCkSe1BuEvkGMj6qeUB2iF=Qfj=Z0fLiWw@mail.gmail.com>
+X-Cookie: There is a fly on your nose.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, May 10, 2019 at 05:25:10PM -0400, Arnaldo Carvalho de Melo escreveu:
-> On May 10, 2019 4:11:50 PM AST, Steven Rostedt <rostedt@goodmis.org> wrote:
-> >On Fri, 10 May 2019 15:56:07 -0400
-> >Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> >> From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> >> 
-> >> Install directories of header and library files are hard coded in
-> >> pkg-config template file.
-> >> 
-> >> They must be configurable, the Makefile should set them on the
-> >> compilation / install stage.
-> >> 
-> >> Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-> >> Cc: Jiri Olsa <jolsa@redhat.com>
-> >> Link:
-> >http://lkml.kernel.org/r/20190418211556.5a12adc3@oasis.local.home
-> >> Link:
-> >http://lkml.kernel.org/r/20190329144546.5819-1-tstoyanov@vmware.com
-> >> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> >> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> >Bah!
-> >
-> >I based my patch series off of the wrong commit, and ended up including
-> >this one in this series.
-> >
-> >Arnaldo,
-> >
-> >I believe you already applied patch 1 (otherwise I would not have your
-> >SOB on it), please ignore. But patch 2 on are new to be applied.
-> 
-> 
-> Ok, I'll be back at work early next week and will peixes this,
 
-Done.
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Arnaldo
+On Tue, May 14, 2019 at 07:42:38AM -0700, Doug Anderson wrote:
+
+> ...but I guess you're saying that you don't want to guarantee that the
+> SPI core will happen to have this thread sitting around in the future
+> so you'd rather add the extra complexity to cros_ec so the core can
+> evolve more freely?
+
+We need something to support spi_async() but what you're asking for is
+fairly specific implementation details about how things are currently
+structured, and we do need to be able to continue to make improvements
+for users who are interested in performance.  Ensuring that the calling
+context is also less likely to be preempted is going to make it much
+less likely that any other work is going to cause some timing change
+that creates problems for you.
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlza2V4ACgkQJNaLcl1U
+h9BdzAf+KMVQaYP9/vNw0i0uGrveiVFMzejKMkn1HLO53K5CGl+UPRj+Y2OYUy/4
+o4zonygqZNCkn+XY4BVZHOGInN1sb2Vzp6Ky1kuw76YxxwL+xKsLuua7+HQ9bCQM
+oVh1Okwky0twqGK78DMtZpfRrYyetWfXA6teiW7G3LZ9+eEd0hXuVVGamq9lzDlM
+zYR8ar3mdRRJmW8JGkJSE0t6Q03CMoeVPoNT8TUs41QnLfNOi/shVZ5kRwbuyoTA
+PZGyAEjbIEYmMe7UR09ePu685ymCtrO9KjqplYeBQBOaUm6KqjURqrJBGWhVyLqF
+sRSuDvQVfjGjiNbqlpfc7QsEj0HaLw==
+=RN96
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
