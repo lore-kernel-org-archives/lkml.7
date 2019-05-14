@@ -2,221 +2,178 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78FBC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3544FC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2FB20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:05:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557857127;
-	bh=k+8FdvXuBe75v9rBFkVqQpD1bmlqFde+7w36JKOaxxM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=wnzBxtMlOqojWxDasOcREUoiaDlaJWAeP6jcGIA+7YHjFcEox3b2qISy1BEpF0yip
-	 6ztWJx7KTiEKh2T+LPpU7nA5LqXAVBpzaOcCZvfgpz/hbpr5SaNHwf/pdwG2AdVa+/
-	 n+x8B89z5RiUjPjrtAyek6zROotWxYaxNC3HP5LA=
+	by mail.kernel.org (Postfix) with ESMTP id 1667820881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfENSF0 (ORCPT
+        id S1727564AbfENSFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:05:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
+        Tue, 14 May 2019 14:05:32 -0400
+Received: from mga12.intel.com ([192.55.52.136]:17499 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbfENSF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:05:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D1FF20881;
-        Tue, 14 May 2019 18:05:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557857125;
-        bh=k+8FdvXuBe75v9rBFkVqQpD1bmlqFde+7w36JKOaxxM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Lr5OgG/ebB2162BTB+sD2UsKe1xJnNRAtGs43WP4r6lwMmz1b6TAeE8t7hpm1iyqi
-         vKx56OvZAW0MH6wwMOvh5GGYWeF4dtVr4Rv56edSk+wgxOu+uJCZb4zaHBp0xC901j
-         S1aGkE0lvN+N1rerH9WrrQb9ieUnLZuYYmjEoPM4=
-Date:   Tue, 14 May 2019 20:05:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.19.43
-Message-ID: <20190514180522.GA13164@kroah.com>
+        id S1727032AbfENSFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 14:05:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 11:05:30 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 14 May 2019 11:05:30 -0700
+Received: from [10.252.16.172] (abudanko-mobl.ccr.corp.intel.com [10.252.16.172])
+        by linux.intel.com (Postfix) with ESMTP id AACF35800CB;
+        Tue, 14 May 2019 11:05:28 -0700 (PDT)
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v3] perf record: collect user registers set jointly with
+ dwarf stacks
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <b34d8f60-9163-beac-7faa-4fa5e897c0f7@linux.intel.com>
+ <20190513194317.GA3198@kernel.org>
+Organization: Intel Corp.
+Message-ID: <b5cabb0e-01fb-d90f-feda-d26dc5b32d12@linux.intel.com>
+Date:   Tue, 14 May 2019 21:05:19 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gBBFr7Ir9EOA20Yy"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190513194317.GA3198@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13.05.2019 22:43, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Apr 22, 2019 at 05:37:52PM +0300, Alexey Budankov escreveu:
+>>
+>> When dwarf stacks are collected jointly with user specified register
+>> set using --user-regs option like below the full register context is
+>> still captured on a sample:
+>>
+>>   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
+>>
+>>   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
+>>   ... FP chain: nr:0
+>>   ... user regs: mask 0xff0fff ABI 64-bit
+>>   .... AX    0x53b
+>>   .... BX    0x7ffedbdd3cc0
+>>   .... CX    0xffffffff
+>>   .... DX    0x33d3a
+>>   .... SI    0x7f09b74c38d0
+>>   .... DI    0x0
+>>   .... BP    0x401260
+>>   .... SP    0x7ffedbdd3cc0
+>>   .... IP    0x401236
+>>   .... FLAGS 0x20a
+>>   .... CS    0x33
+>>   .... SS    0x2b
+>>   .... R8    0x7f09b74c3800
+>>   .... R9    0x7f09b74c2da0
+>>   .... R10   0xfffffffffffff3ce
+>>   .... R11   0x246
+>>   .... R12   0x401070
+>>   .... R13   0x7ffedbdd5db0
+>>   .... R14   0x0
+>>   .... R15   0x0
+>>   ... ustack: size 1024, offset 0xe0
+>>    . data_src: 0x5080021
+>>    ... thread: stack_test2.g.O:23828
+>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>
+>> After applying the change suggested in the patch the sample data contain
+>> only user specified register values:
+>>
+>>   $ perf record -g --call-graph dwarf,1024 --user-regs=BP -- matrix.gcc.g.03
+>>
+>>   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
+>>   ... FP chain: nr:0
+>>   ... user regs: mask 0x1c0 ABI 64-bit
+>>   .... BP    0x401260
+>>   .... SP    0x7ffd3d85cc20
+>>   .... IP    0x401236
+>>   ... ustack: size 1024, offset 0x58
+>>    . data_src: 0x5080021
+>>    ... thread: stack_test2.g.O:23839
+>>    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+>>
+>> IP and SP registers (dwarf_regs) are collected anayways regardless of
+>> the --user-regs option value provided from the command line:
+> 
+> So user asks for a, b and c and gets a, b, c + d and e? At the very
+> least we should warn that those registers are being added to the mix,
+> i.e. something like:
+> 
+> WARNING: specified --user-regs register set doesn't include registers
+> needed by also specified --call-graph=dwarf, auto adding missing
+> registers (list of missing registers auto-added).
 
---gBBFr7Ir9EOA20Yy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, let's have it like this.
 
-I'm announcing the release of the 4.19.43 kernel.
+~Alexey 
 
-All users of the 4.19 kernel series must upgrade.
-
-The updated 4.19.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.19.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
-
-thanks,
-
-greg k-h
-
-------------
-
- Documentation/ABI/testing/sysfs-devices-system-cpu    |    4=20
- Documentation/admin-guide/hw-vuln/index.rst           |   13=20
- Documentation/admin-guide/hw-vuln/l1tf.rst            |  615 +++++++++++++=
-+++++
- Documentation/admin-guide/hw-vuln/mds.rst             |  308 +++++++++
- Documentation/admin-guide/index.rst                   |    6=20
- Documentation/admin-guide/kernel-parameters.txt       |   62 +
- Documentation/admin-guide/l1tf.rst                    |  614 -------------=
-----
- Documentation/index.rst                               |    1=20
- Documentation/x86/conf.py                             |   10=20
- Documentation/x86/index.rst                           |    8=20
- Documentation/x86/mds.rst                             |  225 ++++++
- Makefile                                              |    2=20
- arch/powerpc/kernel/security.c                        |    6=20
- arch/powerpc/kernel/setup_64.c                        |    2=20
- arch/s390/kernel/nospec-branch.c                      |    3=20
- arch/x86/entry/common.c                               |    3=20
- arch/x86/events/intel/core.c                          |   20=20
- arch/x86/events/intel/cstate.c                        |    8=20
- arch/x86/events/intel/rapl.c                          |    4=20
- arch/x86/events/msr.c                                 |    8=20
- arch/x86/include/asm/cpufeatures.h                    |    3=20
- arch/x86/include/asm/intel-family.h                   |   33=20
- arch/x86/include/asm/irqflags.h                       |    4=20
- arch/x86/include/asm/msr-index.h                      |   39 -
- arch/x86/include/asm/mwait.h                          |    7=20
- arch/x86/include/asm/nospec-branch.h                  |   50 +
- arch/x86/include/asm/processor.h                      |    6=20
- arch/x86/kernel/cpu/bugs.c                            |  146 ++++
- arch/x86/kernel/cpu/common.c                          |  116 +--
- arch/x86/kernel/cpu/intel_rdt_pseudo_lock.c           |    4=20
- arch/x86/kernel/nmi.c                                 |    4=20
- arch/x86/kernel/traps.c                               |    8=20
- arch/x86/kernel/tsc.c                                 |    2=20
- arch/x86/kernel/tsc_msr.c                             |   10=20
- arch/x86/kvm/cpuid.c                                  |    5=20
- arch/x86/kvm/vmx.c                                    |    7=20
- arch/x86/mm/pti.c                                     |    4=20
- arch/x86/platform/atom/punit_atom_debug.c             |    4=20
- arch/x86/platform/intel-mid/device_libs/platform_bt.c |    2=20
- drivers/acpi/acpi_lpss.c                              |    2=20
- drivers/acpi/x86/utils.c                              |    2=20
- drivers/base/cpu.c                                    |    8=20
- drivers/cpufreq/intel_pstate.c                        |    4=20
- drivers/edac/pnd2_edac.c                              |    2=20
- drivers/idle/intel_idle.c                             |   18=20
- drivers/mmc/host/sdhci-acpi.c                         |    2=20
- drivers/pci/pci-mid.c                                 |    4=20
- drivers/platform/x86/intel_int0002_vgpio.c            |    2=20
- drivers/platform/x86/intel_mid_powerbtn.c             |    4=20
- drivers/platform/x86/intel_telemetry_debugfs.c        |    2=20
- drivers/platform/x86/intel_telemetry_pltdrv.c         |    2=20
- drivers/powercap/intel_rapl.c                         |   10=20
- drivers/thermal/intel_soc_dts_thermal.c               |    2=20
- include/linux/cpu.h                                   |   26=20
- kernel/cpu.c                                          |   15=20
- sound/soc/intel/boards/bytcr_rt5651.c                 |    2=20
- tools/power/x86/turbostat/Makefile                    |    2=20
- tools/power/x86/turbostat/turbostat.c                 |   46 -
- tools/power/x86/x86_energy_perf_policy/Makefile       |    2=20
- 59 files changed, 1730 insertions(+), 803 deletions(-)
-
-Andi Kleen (2):
-      x86/speculation/mds: Add basic bug infrastructure for MDS
-      x86/kvm: Expose X86_FEATURE_MD_CLEAR to guests
-
-Boris Ostrovsky (1):
-      x86/speculation/mds: Fix comment
-
-Eduardo Habkost (1):
-      kvm: x86: Report STIBP on GET_SUPPORTED_CPUID
-
-Greg Kroah-Hartman (1):
-      Linux 4.19.43
-
-Josh Poimboeuf (9):
-      x86/speculation/mds: Add mds=3Dfull,nosmt cmdline option
-      x86/speculation: Move arch_smt_update() call to after mitigation deci=
-sions
-      x86/speculation/mds: Add SMT warning message
-      cpu/speculation: Add 'mitigations=3D' cmdline option
-      x86/speculation: Support 'mitigations=3D' cmdline option
-      powerpc/speculation: Support 'mitigations=3D' cmdline option
-      s390/speculation: Support 'mitigations=3D' cmdline option
-      x86/speculation/mds: Add 'mitigations=3D' support for MDS
-      x86/speculation/mds: Fix documentation typo
-
-Konrad Rzeszutek Wilk (1):
-      x86/speculation/mds: Print SMT vulnerable on MSBDS with mitigations o=
-ff
-
-Peter Zijlstra (1):
-      x86/cpu: Sanitize FAM6_ATOM naming
-
-Salvatore Bonaccorso (1):
-      Documentation/l1tf: Fix small spelling typo
-
-Thomas Gleixner (12):
-      x86/msr-index: Cleanup bit defines
-      x86/speculation: Consolidate CPU whitelists
-      x86/speculation/mds: Add BUG_MSBDS_ONLY
-      x86/speculation/mds: Add mds_clear_cpu_buffers()
-      x86/speculation/mds: Clear CPU buffers on exit to user
-      x86/kvm/vmx: Add MDS protection when L1D Flush is not active
-      x86/speculation/mds: Conditionally clear CPU buffers on idle entry
-      x86/speculation/mds: Add mitigation control for MDS
-      x86/speculation/mds: Add sysfs reporting for MDS
-      x86/speculation/mds: Add mitigation mode VMWERV
-      Documentation: Move L1TF to separate directory
-      Documentation: Add MDS vulnerability documentation
-
-Tyler Hicks (1):
-      Documentation: Correct the possible MDS sysfs values
-
-speck for Pawan Gupta (1):
-      x86/mds: Add MDSUM variant to the MDS documentation
-
-
---gBBFr7Ir9EOA20Yy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzbA2IACgkQONu9yGCS
-aT6Vaw//bQT5H0BOoSh6vtI64UPf/GJ0b10h5I0kUjPztaLUrENjIkBhsIpr6R26
-r6nzfMpstKbkdJVV40Fug1wKX6S8fpZNqB71vrm0m/m9SLdJKhK1y3dvBCGrOar7
-ig6O8FD7hADDwfee9bla7KYS/jU3o1pyM+dGOpIveIP+s1FgqOC1SfQsFNwyabjV
-6ksg9KY1259wFhSVhvSDLfY5N/6onI8YtLgV8/idFp3zM1hjQvVxbxHbCwlYb9nN
-5ByNSNNCkCr8vNegW0Nb/QCaDDJ6ojRXQtxDHxxGPKk+zujwf9BKimuQCHnz9nuN
-DPmE4tUcddzCcu0mGpipP4Yqi547PHFi0wTINx+fSACAEtEf5ctPLTfaDDgADrv1
-nNg09ji89eZTtR/5MbcnL69+oJhk0BWo6VgOLZaLZJdL6vApEkocYHb92MwnARqK
-YoU3ocb0Udljk+MaHhrn7M469lX6HewOHIaUxhnmeiR8YrL54SLUD0gPkXnC3y1Q
-lnxWeE+GzlIV7YxgAKSEUFG/E+DuWuKHXY9qnPYRKtlDBMtBDiKDqWpdi41Mpdb0
-ZUZRssj8Tr1YZSc02vARXATpoivIwmdyCSI6n03IoUT5hk6E9hMqgas/YNLQOeed
-9iLnPQBw46zlyKAl6lev7TTKPkyBVZiM935l18L7031ewgd5tLI=
-=xU7N
------END PGP SIGNATURE-----
-
---gBBFr7Ir9EOA20Yy--
+> 
+> - Arnaldo
+> 
+> P.S. Back from vacation, going thru backlog, hopefully will apply your
+> perf.data compression patchkit after testing its patches one by one,
+> sorry for the delay for that one (and this :))
+>  
+>>   -g call-graph dwarf,K                         full_regs
+>>   -g call-graph dwarf,K --user-regs=user_regs	user_regs | dwarf_regs
+>>   --user-regs=user_regs                         user_regs
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>> Changes in v3:
+>> - avoid changes in platform specific header files
+>>
+>> Changes in v2:
+>> - implemented dwarf register set to avoid corrupted trace 
+>>   when --user-regs option value omits IP,SP
+>>
+>> ---
+>>  tools/perf/util/evsel.c | 8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>> index 84cfb9fe2fc6..e5e61ee3c6e7 100644
+>> --- a/tools/perf/util/evsel.c
+>> +++ b/tools/perf/util/evsel.c
+>> @@ -669,6 +669,9 @@ int perf_evsel__group_desc(struct perf_evsel *evsel, char *buf, size_t size)
+>>  	return ret;
+>>  }
+>>  
+>> +#define DWARF_REGS_MASK ((1ULL << PERF_REG_IP) | \
+>> +			 (1ULL << PERF_REG_SP))
+>> +
+>>  static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>>  					   struct record_opts *opts,
+>>  					   struct callchain_param *param)
+>> @@ -702,7 +705,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
+>>  		if (!function) {
+>>  			perf_evsel__set_sample_bit(evsel, REGS_USER);
+>>  			perf_evsel__set_sample_bit(evsel, STACK_USER);
+>> -			attr->sample_regs_user |= PERF_REGS_MASK;
+>> +			if (opts->sample_user_regs)
+>> +				attr->sample_regs_user |= DWARF_REGS_MASK;
+>> +			else
+>> +				attr->sample_regs_user |= PERF_REGS_MASK;
+>>  			attr->sample_stack_user = param->dump_size;
+>>  			attr->exclude_callchain_user = 1;
+>>  		} else {
+>> -- 
+>> 2.20.1
+> 
