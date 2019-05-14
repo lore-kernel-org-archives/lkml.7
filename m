@@ -2,113 +2,113 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CDBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2CD2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952A62086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="o4uo3BL2"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HPhNvCZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfENPnr (ORCPT
+        id S1726635AbfENPpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:43:47 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38740 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENPnr (ORCPT
+        Tue, 14 May 2019 11:45:43 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:35770 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726044AbfENPpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:43:47 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so3358148plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:43:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=v0nvVqgy68rs5XKTL1qS0XTg9vbvJX75DMTfHz65o7k=;
-        b=o4uo3BL2FJTiVqjqCYWGK7TMMV+lwcOVDCNWJTqe+tsflDaF1yLX/e9s+YSEdV9a/X
-         0LABKAoi0StS36W6oGQpGj2P9Ct672agdHbaJD3SQjoZ0jW0NpD1tvHmfqZg3k3gEIMm
-         pD3Y0PN2veoFVEcAjudbuFBK4ihHBhxjGmFrArDMaQOSdIoNf0wbzeoWhlxvo11h8EQj
-         5+ePJDr+YQ3YkBtn6wnDJCoLAujldWH4NLM1lyC6LyWFIUDCdOPrWhUQBDcmMaKmwirX
-         GLQ96LzLwwi7s2MUdjqt+joWr3rsVAX/g44QiL28zCZdC3f8nx6CKfXtYBWsA//YqsXb
-         s4oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=v0nvVqgy68rs5XKTL1qS0XTg9vbvJX75DMTfHz65o7k=;
-        b=HWyU1L+Evtq6eQuMUebc4n//YZPO55pvJhmovAzi8zuD+1KENMDVVKZSH2f++51N+A
-         z+aBH4UytVeVH+nadyB8oJ/9nNMrZjZhvyo219XI1kQlLuuC+hym8f8rTznTP71iY3/F
-         mwyAseTThVoGOjr7tFyMSkDzwmigkr8SJoUET1V2N8TPf+LxjcQbGl3X4RCGcQwALnIT
-         iycKU+xJnjNaEKjTBvqUXsdsJCkyFS4tli0RNWssF0ZBly3bozBX4Vy1FAgccJ0K2N2h
-         d9SIKuD+i7FZh+9y3H/SWboTb3WKmDqUOt3GRjCg9u5GZIrY5o5zLJyrp2r4xmYIlN6G
-         GW6Q==
-X-Gm-Message-State: APjAAAVhVHjEh5LWBiUQeYNGK5ci0+384J90z8/2vaEBStdlmDVPo5Re
-        PI4XL7+GexrA0ma/WrbIV1mKNg==
-X-Google-Smtp-Source: APXvYqzfFBQAOq4cxgvOLcK8bcyy/NCFnT7eLClak8c7V4eglmQgE2DbsTwqSnHYj5t5cw7CJVy3Wg==
-X-Received: by 2002:a17:902:4203:: with SMTP id g3mr19140823pld.288.1557848626663;
-        Tue, 14 May 2019 08:43:46 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:1d0a:33b8:7824:bf6b? ([2601:646:c200:1ef2:1d0a:33b8:7824:bf6b])
-        by smtp.gmail.com with ESMTPSA id o2sm36069339pgq.1.2019.05.14.08.43.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 08:43:45 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <95f462d4-37d3-f863-b7c6-2bcbb92251ec@oracle.com>
-Date:   Tue, 14 May 2019 08:43:44 -0700
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8DBEACE9-AB4C-4891-8522-A474CA59E325@amacapital.net>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com> <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com> <20190513151500.GY2589@hirez.programming.kicks-ass.net> <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com> <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com> <20190514072110.GF2589@hirez.programming.kicks-ass.net> <95f462d4-37d3-f863-b7c6-2bcbb92251ec@oracle.com>
-To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+        Tue, 14 May 2019 11:45:41 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 59AF1C0174;
+        Tue, 14 May 2019 15:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557848731; bh=Ky3auTImAfe37zrIkXpYgTd4Sk3t6wEQs0RE5Rcse8o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=HPhNvCZiExgGYqGUf6fV6Zhe7k4V7e9KGiMNj4lLHxmp3KlqKOngpSyFxj24/yPQg
+         T2vpxJOhD768iSiNs28K0Xm33Nsf3vH8wwotw6AKzW/R93NqN5F0dzTaRsiTO5rBHE
+         wEoKeizaqLSea5A9vwWNL2Szf/3VPKk+YZAhhagfUe+AyqdaAvzWZTxSn4ex7UWOcM
+         K8iqlXrVcA93JU5cvFoynz2xZ8xI+KDcWHOfJz0ipq6SEoAUtFZECxSAC9YVmQlzJI
+         ndcDEfBWTglM7rnQ0bDMvpTGuXlRJYteGhvjhAPJV77G4FTswQbXlOEFYoskDh77SO
+         QkvKrHXjvNM2w==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 10FABA0242;
+        Tue, 14 May 2019 15:45:39 +0000 (UTC)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id 2F0D23EA14;
+        Tue, 14 May 2019 17:45:39 +0200 (CEST)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [RFC net-next v2 02/14] net: stmmac: dwmac100: Add MAC loopback support
+Date:   Tue, 14 May 2019 17:45:24 +0200
+Message-Id: <74f003170161809eb914504c18311eaf7b0a617a.1557848472.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
+References: <cover.1557848472.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
+References: <cover.1557848472.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In preparation for the addition of stmmac selftests we implement the MAC
+loopback callback in dwmac100 core.
 
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> On May 14, 2019, at 8:36 AM, Alexandre Chartre <alexandre.chartre@oracle.c=
-om> wrote:
->=20
->=20
->> On 5/14/19 9:21 AM, Peter Zijlstra wrote:
->>> On Mon, May 13, 2019 at 07:02:30PM -0700, Andy Lutomirski wrote:
->>> This sounds like a great use case for static_call().  PeterZ, do you
->>> suppose we could wire up static_call() with the module infrastructure
->>> to make it easy to do "static_call to such-and-such GPL module symbol
->>> if that symbol is in a loaded module, else nop"?
->> You're basically asking it to do dynamic linking. And I suppose that is
->> technically possible.
->> However, I'm really starting to think kvm (or at least these parts of it
->> that want to play these games) had better not be a module anymore.
->=20
-> Maybe we can use an atomic notifier (e.g. page_fault_notifier)?
->=20
->=20
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
+index b735143987e1..d621b5189c41 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
+@@ -160,6 +160,18 @@ static void dwmac100_pmt(struct mac_device_info *hw, unsigned long mode)
+ 	return;
+ }
+ 
++static void dwmac100_set_mac_loopback(void __iomem *ioaddr, bool enable)
++{
++	u32 value = readl(ioaddr + MAC_CONTROL);
++
++	if (enable)
++		value |= MAC_CONTROL_OM;
++	else
++		value &= ~MAC_CONTROL_OM;
++
++	writel(value, ioaddr + MAC_CONTROL);
++}
++
+ const struct stmmac_ops dwmac100_ops = {
+ 	.core_init = dwmac100_core_init,
+ 	.set_mac = stmmac_set_mac,
+@@ -171,6 +183,7 @@ const struct stmmac_ops dwmac100_ops = {
+ 	.pmt = dwmac100_pmt,
+ 	.set_umac_addr = dwmac100_set_umac_addr,
+ 	.get_umac_addr = dwmac100_get_umac_addr,
++	.set_mac_loopback = dwmac100_set_mac_loopback,
+ };
+ 
+ int dwmac100_setup(struct stmmac_priv *priv)
+-- 
+2.7.4
 
-IMO that=E2=80=99s worse. I want to be able to read do_page_fault() and unde=
-rstand what happens and in what order.
-
-Having do_page_fault run with the wrong CR3 is so fundamental to its operati=
-on that it needs to be very obvious what=E2=80=99s happening.=
