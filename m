@@ -2,151 +2,254 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EEC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA48C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0813A20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0021620862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:09:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR0A1tsJ"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ZBiTgtcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726416AbfENQHD (ORCPT
+        id S1726290AbfENQJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:07:03 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37917 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfENQHD (ORCPT
+        Tue, 14 May 2019 12:09:08 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:52846 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENQJI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:07:03 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 14so14856496ljj.5;
-        Tue, 14 May 2019 09:07:01 -0700 (PDT)
+        Tue, 14 May 2019 12:09:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=l2kzXztgdqxiHBF3c7LPxlH8bIvFcECDZTDG91ehbx4=;
-        b=PR0A1tsJWz8uRFCRpSiSR49AR79qD9JFrM3C5IFUaUKqkW9EOIRLCzUu8SOiWvWfZy
-         id33CYsnCKhiUe31pvJOiP8Kk3eh/s+2VdQ2xf+/lyAZP4p6X1IMXMqr4bLV4vJw+tzL
-         LGBSYQ0A1Q3l/HYvRmTYUcQ1xd/558FD9Czvp9+xVet/QRplBQ5+IlZYPuQCCLjBK+Dj
-         MOAjyWMUgnYDLXmR7RCHxtUPns0CUWvcyy5V70NenKBgJx9z+gYmpuGUbDIbNN0Cby+O
-         YUurbc2vI+8Isbo4KxBg/JtnkxUQ62/bY12IEzOc1C+CvH0tr1fc4qsUcDhi2BrPblEe
-         U1eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=l2kzXztgdqxiHBF3c7LPxlH8bIvFcECDZTDG91ehbx4=;
-        b=Plj6ImSdQT+ZrQNCf2ZxoW+nvKxc53poSmn3qzN5q4hcndsPBXzAGB8xgYHTcSo7Bk
-         ej1D9Iw8QiPPpk3KenLZCryaBm1xgBsp/bTXGdMq5Pi/TD357aL/skbQx1RZZeErh12H
-         CEsFgR5nDLrxPb/rwDflLxC/Qr+WKS769qegr6MN8toxejesjU1by+C5uguZIREa8zpv
-         mJKZ05X/LYUW2aiOGC7PERjdroRvE7a+Wk/w4IdimHG61AIV7lm+YF4o6PKjBF7Q1Xfo
-         5ujH9P6onFSol26pvGDBRxeLtyEFCLSc+1w82mHIamPSw5BoacM1E/Kbk6oxnDOtfsET
-         Z+hQ==
-X-Gm-Message-State: APjAAAXeXyymRvW9BHW8rHlEDK9KSlabA/FnrgSjSQtYX3j+EYZNTq1B
-        TWLfkmIFTxsp1zzs0cwDowfcI7oU44A=
-X-Google-Smtp-Source: APXvYqyi9avFiaNSir3/zoPi1mqHFZMT68ODr7pS8T4yik0qllHQ5PZQlG47sWcl2hMoonrhcP4CMQ==
-X-Received: by 2002:a2e:81d0:: with SMTP id s16mr17263087ljg.145.1557850020781;
-        Tue, 14 May 2019 09:07:00 -0700 (PDT)
-Received: from otyshchenko.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
-        by smtp.gmail.com with ESMTPSA id v23sm946597ljk.53.2019.05.14.09.06.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 14 May 2019 09:07:00 -0700 (PDT)
-From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
-To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
-        linux@armlinux.org.uk, geert@linux-m68k.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH V4] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI is available
-Date:   Tue, 14 May 2019 19:06:52 +0300
-Message-Id: <1557850012-16612-1-git-send-email-olekstysh@gmail.com>
-X-Mailer: git-send-email 2.7.4
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1557850146; x=1589386146;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=plFXiYh0xL6L4GZRf8G+HDY7MbdFYndRHWvRX7zth/w=;
+  b=ZBiTgtcSutWm4WZq0zTbkOwSaN4geL/hEhvYq6dspPnOV3Xc/OtTP8Oj
+   pFGvBuO2BJ6SPY4u4cIWAKOr+ydJuZfbuFBx3bUhEVWdRunzA8bXLvCiX
+   3GwbkHQEC2Qh+K4cmXU4H9fKZ0P0INV+8/jl+cODcWyAq0HgK89v2VDU4
+   s=;
+X-IronPort-AV: E=Sophos;i="5.60,469,1549929600"; 
+   d="scan'208";a="402102493"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 16:09:04 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4EG8wr5099411
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Tue, 14 May 2019 16:09:03 GMT
+Received: from EX13D02EUC004.ant.amazon.com (10.43.164.117) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 14 May 2019 16:09:03 +0000
+Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
+ EX13D02EUC004.ant.amazon.com (10.43.164.117) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 14 May 2019 16:09:02 +0000
+Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
+ EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
+ Tue, 14 May 2019 16:09:02 +0000
+From:   "Sironi, Filippo" <sironi@amazon.de>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
+Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+Thread-Topic: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZqvgUAgAAL5IA=
+Date:   Tue, 14 May 2019 16:09:01 +0000
+Message-ID: <56DAB9BD-2543-49DA-9886-C9C8F2B814F9@amazon.de>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+ <d03f6be5-d8dc-4389-e14c-295f36a68827@de.ibm.com>
+In-Reply-To: <d03f6be5-d8dc-4389-e14c-295f36a68827@de.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.164.163]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CCC5E4FD52492B49A46973EAD664A3EF@amazon.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-If PSCI is available then most likely we are running on PSCI-enabled
-U-Boot which, we assume, has already taken care of resetting CNTVOFF
-and updating counter module before switching to non-secure mode
-and we don't need to.
 
-As the psci_smp_available() helper always returns false if CONFIG_SMP
-is disabled, it can't be used safely as an indicator of PSCI usage.
-For that reason, we check for the mandatory PSCI operation to be
-available.
+> On 14. May 2019, at 17:26, Christian Borntraeger <borntraeger@de.ibm.com>=
+ wrote:
+> =
 
-Please note, an extra check to prevent secure_cntvoff_init() from
-being called for secondary CPUs in headsmp-apmu.S is not needed,
-as SMP code for APMU based system is not executed if PSCI is in use.
+> =
 
-Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-CC: Julien Grall <julien.grall@arm.com>
+> =
 
----
-   You can find previous discussions here:
-   [v1]  https://lkml.org/lkml/2019/4/17/810
-   [v2]  https://lkml.org/lkml/2019/5/3/338
-   [v3]  https://lkml.org/lkml/2019/5/10/415
-   [RFC] https://lkml.org/lkml/2019/5/10/473
+> On 14.05.19 17:16, Filippo Sironi wrote:
+>> Start populating /sys/hypervisor with KVM entries when we're running on
+>> KVM. This is to replicate functionality that's available when we're
+>> running on Xen.
+>> =
 
-   Changes in v2:
-      - Clarify patch subject/description
-      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
-        by using psci_smp_available()
-      - Check whether we are running on top of Xen, by using xen_domain()
+>> Start with /sys/hypervisor/uuid, which users prefer over
+>> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
+>> machine, since it's also available when running on Xen HVM and on Xen PV
+>> and, on top of that doesn't require root privileges by default.
+>> Let's create arch-specific hooks so that different architectures can
+>> provide different implementations.
+>> =
 
-   Changes in v3:
-      - Don't check for the presence of Xen
+>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+>> ---
+>> v2:
+>> * move the retrieval of the VM UUID out of uuid_show and into
+>>  kvm_para_get_uuid, which is a weak function that can be overwritten
+>> =
 
-   Changes in v4:
-      - Don't use psci_smp_available() helper, check for psci_ops.cpu_on
-        directly
-      - Skip updating counter module if PSCI is available
----
- arch/arm/mach-shmobile/setup-rcar-gen2.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+>> drivers/Kconfig              |  2 ++
+>> drivers/Makefile             |  2 ++
+>> drivers/kvm/Kconfig          | 14 ++++++++++++++
+>> drivers/kvm/Makefile         |  1 +
+>> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
+>> 5 files changed, 49 insertions(+)
+>> create mode 100644 drivers/kvm/Kconfig
+>> create mode 100644 drivers/kvm/Makefile
+>> create mode 100644 drivers/kvm/sys-hypervisor.c
+>> =
 
-diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-index eea60b2..64e3abd 100644
---- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
-@@ -17,6 +17,7 @@
- #include <linux/of.h>
- #include <linux/of_fdt.h>
- #include <linux/of_platform.h>
-+#include <linux/psci.h>
- #include <asm/mach/arch.h>
- #include <asm/secure_cntvoff.h>
- #include "common.h"
-@@ -63,6 +64,15 @@ void __init rcar_gen2_timer_init(void)
- 	void __iomem *base;
- 	u32 freq;
- 
-+	/*
-+	 * If PSCI is available then most likely we are running on PSCI-enabled
-+	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
-+	 * and updating counter module before switching to non-secure mode
-+	 * and we don't need to.
-+	 */
-+	if (psci_ops.cpu_on)
-+		goto skip_update;
-+
- 	secure_cntvoff_init();
- 
- 	if (of_machine_is_compatible("renesas,r8a7745") ||
-@@ -102,6 +112,7 @@ void __init rcar_gen2_timer_init(void)
- 
- 	iounmap(base);
- 
-+skip_update:
- 	of_clk_init(NULL);
- 	timer_probe();
- }
--- 
-2.7.4
+>> diff --git a/drivers/Kconfig b/drivers/Kconfig
+>> index 45f9decb9848..90eb835fe951 100644
+>> --- a/drivers/Kconfig
+>> +++ b/drivers/Kconfig
+>> @@ -146,6 +146,8 @@ source "drivers/hv/Kconfig"
+>> =
+
+>> source "drivers/xen/Kconfig"
+>> =
+
+>> +source "drivers/kvm/Kconfig"
+>> +
+>> source "drivers/staging/Kconfig"
+>> =
+
+>> source "drivers/platform/Kconfig"
+>> diff --git a/drivers/Makefile b/drivers/Makefile
+>> index c61cde554340..79cc92a3f6bf 100644
+>> --- a/drivers/Makefile
+>> +++ b/drivers/Makefile
+>> @@ -44,6 +44,8 @@ obj-y				+=3D soc/
+>> obj-$(CONFIG_VIRTIO)		+=3D virtio/
+>> obj-$(CONFIG_XEN)		+=3D xen/
+>> =
+
+>> +obj-$(CONFIG_KVM_GUEST)		+=3D kvm/
+>> +
+>> # regulators early, since some subsystems rely on them to initialize
+>> obj-$(CONFIG_REGULATOR)		+=3D regulator/
+>> =
+
+>> diff --git a/drivers/kvm/Kconfig b/drivers/kvm/Kconfig
+>> new file mode 100644
+>> index 000000000000..3fc041df7c11
+>> --- /dev/null
+>> +++ b/drivers/kvm/Kconfig
+>> @@ -0,0 +1,14 @@
+>> +menu "KVM driver support"
+>> +        depends on KVM_GUEST
+>> +
+>> +config KVM_SYS_HYPERVISOR
+>> +        bool "Create KVM entries under /sys/hypervisor"
+>> +        depends on SYSFS
+>> +        select SYS_HYPERVISOR
+>> +        default y
+>> +        help
+>> +          Create KVM entries under /sys/hypervisor (e.g., uuid). When r=
+unning
+>> +          native or on another hypervisor, /sys/hypervisor may still be
+>> +          present, but it will have no KVM entries.
+>> +
+>> +endmenu
+>> diff --git a/drivers/kvm/Makefile b/drivers/kvm/Makefile
+>> new file mode 100644
+>> index 000000000000..73a43fc994b9
+>> --- /dev/null
+>> +++ b/drivers/kvm/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_KVM_SYS_HYPERVISOR) +=3D sys-hypervisor.o
+>> diff --git a/drivers/kvm/sys-hypervisor.c b/drivers/kvm/sys-hypervisor.c
+>> new file mode 100644
+>> index 000000000000..43b1d1a09807
+>> --- /dev/null
+>> +++ b/drivers/kvm/sys-hypervisor.c
+>> @@ -0,0 +1,30 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +
+>> +#include <asm/kvm_para.h>
+>> +
+>> +#include <linux/kobject.h>
+>> +#include <linux/sysfs.h>
+>> +
+>> +__weak const char *kvm_para_get_uuid(void)
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>> +static ssize_t uuid_show(struct kobject *obj,
+>> +			 struct kobj_attribute *attr,
+>> +			 char *buf)
+>> +{
+>> +	const char *uuid =3D kvm_para_get_uuid();
+> =
+
+> I would prefer to have kvm_para_get_uuid return a uuid_t
+> but char * will probably work out as well.
+
+Let me give this a quick spin.
+
+>> +	return sprintf(buf, "%s\n", uuid);
+>> +}
+>> +
+>> +static struct kobj_attribute uuid =3D __ATTR_RO(uuid);
+>> +
+>> +static int __init uuid_init(void)
+>> +{
+>> +	if (!kvm_para_available())
+> =
+
+> Isnt kvm_para_available a function that is defined in the context of the =
+HOST
+> and not of the guest?
+
+No, kvm_para_available is defined in the guest context.
+On x86, it checks for the presence of the KVM CPUID leafs.
+
+>> +		return 0;
+>> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
+>> +}
+>> +
+>> +device_initcall(uuid_init);
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
+Ust-ID: DE 289 237 879
+Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
+
 
