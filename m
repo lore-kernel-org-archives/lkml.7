@@ -6,160 +6,137 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6577CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F584C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F34920578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:15:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C3B2084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="nTtwzpON"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="V/dvrrRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfENRP1 (ORCPT
+        id S1726827AbfENRRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:15:27 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37526 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726392AbfENRP0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:15:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id g3so9474007pfi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:15:26 -0700 (PDT)
+        Tue, 14 May 2019 13:17:13 -0400
+Received: from mail-eopbgr750058.outbound.protection.outlook.com ([40.107.75.58]:19431
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726251AbfENRRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 13:17:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6+3exks6fdLq67Hyw13z/f6pVq1U2l7pQ2O271G9vzY=;
-        b=nTtwzpONuJZF5R4VbarCf6fwPLkAGQZT5G84BzUCr7yO1AamMP7qvVbUCXQBLNf7lN
-         +OOEC4Vn1PICfpX7D/yrPeD34lTMW6+woOHKzQozMW1EkAQi1fo8K0yrJPKFtAmEsIvz
-         WT4jnJ1ZVdzvIKRX0GK+Qvs5qIP0TeNFJ6HCmlw3LiweRiRozYwv5nnZISyI0dx+6NNk
-         6BlbsZkHsqVK/9ZCWGp86O80jKTFWZhJ8rzjANvvUb6sshQZLbD7UBBuk4quygQkPmZL
-         Z+1k4urAKXvJkeMvzbq2gV/FZqPgH/3C8CquqXOmahnZOz8ZSA0FdcPJMyvpWygRB+Iq
-         45NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6+3exks6fdLq67Hyw13z/f6pVq1U2l7pQ2O271G9vzY=;
-        b=IoL+ogumJiSGP+sFzwaBtVzsJmCogRGDd6TMtHows4/zjGMF1h8H+ByYtzAobf1tYo
-         gqw5G8bWwAesQaZ7DfLIzot5ZQlesTpu24J7Uj2JICn9cii0YX7cQFmkmi8ryftcWOxp
-         U3C9qEB+8FBqtceKah9l363EfUv1UC+O0tyjFUk3rE8l+0jSpmy7lhGaojUDdAHQNl1G
-         tTYpHrJaPluphZ4NPZUGrBxV8DSW4y/qfzxEq4F5F4GX942NJ31Ga5pgBG1ElbUp7PF4
-         l+IhnWP+h4L7vybC5GlHiOdalpIORJDwenU7zDFe1l+NAVfOefxGNp/0sDRHMZRZnebG
-         AstQ==
-X-Gm-Message-State: APjAAAV6uxxNIruMwHK/37T9wbKGOelpFEkBbUY9WCLoTdRkSzT1P0xf
-        495hKQ9IwStGZRL0d94OcnCzWg==
-X-Google-Smtp-Source: APXvYqwUhltskd/aBmpkCuJ2MmMvOaKISuKKkPHJ5N4EoQH32puZlI/2JxO6sqqBSrW//VP+7Su70Q==
-X-Received: by 2002:aa7:93ba:: with SMTP id x26mr41836706pff.238.1557854125653;
-        Tue, 14 May 2019 10:15:25 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b003:d41f:c45f:19c:b406:c9bd? ([2600:1010:b003:d41f:c45f:19c:b406:c9bd])
-        by smtp.gmail.com with ESMTPSA id h123sm1692723pfe.80.2019.05.14.10.15.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 10:15:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC] x86: Speculative execution warnings
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <EB9EEC92-A513-44B4-9377-56691916BF5D@vmware.com>
-Date:   Tue, 14 May 2019 10:15:21 -0700
-Cc:     Paul Turner <pjt@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirsky <luto@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3944C0B1-D0C4-4D2F-B055-69313CFD73F2@amacapital.net>
-References: <20190510192514.19301-1-namit@vmware.com> <CAPM31RJ_vQsLp3nK5nhq0U8J+x_9w=aV+TtPGj7vdtiOKPpw8g@mail.gmail.com> <EB9EEC92-A513-44B4-9377-56691916BF5D@vmware.com>
-To:     Nadav Amit <namit@vmware.com>
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qc9AdtCfa2Mwj0MwrRa7J/OEQJU+85g71zfZl/OVdVs=;
+ b=V/dvrrRSJXEHGEN2IH+F1MWUylrdZo0jIhUVja96dsJObtxewbtuO15LEkAuijAu2WjBDuDVhWDH/eUVRoiM2Ce9UKYzW26LjeMUj5w8jpQ0WGPLPSVLgwx9ZklFpOCwl8ZMLLEwas6um6gQVjWfSxHOXwu3Nm9ei+h4BN3C8Rw=
+Received: from DM5PR12MB2471.namprd12.prod.outlook.com (52.132.141.138) by
+ DM5PR12MB1163.namprd12.prod.outlook.com (10.168.240.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Tue, 14 May 2019 17:17:07 +0000
+Received: from DM5PR12MB2471.namprd12.prod.outlook.com
+ ([fe80::899d:65c6:3f72:20d3]) by DM5PR12MB2471.namprd12.prod.outlook.com
+ ([fe80::899d:65c6:3f72:20d3%7]) with mapi id 15.20.1878.024; Tue, 14 May 2019
+ 17:17:07 +0000
+From:   "Moger, Babu" <Babu.Moger@amd.com>
+To:     "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Andre Przywara <andre.przywara@arm.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "Chatre, Reinette" <reinette.chatre@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        "Shen, Xiaochen" <xiaochen.shen@intel.com>,
+        "Pathan, Arshiya Hayatkhan" <arshiya.hayatkhan.pathan@intel.com>,
+        "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        James Morse <James.Morse@arm.com>
+Subject: Re: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests for
+ AMD
+Thread-Topic: [PATCH v7 12/13] selftests/resctrl: Disable MBA and MBM tests
+ for AMD
+Thread-Index: AQHUwOxdxBVLcDr5zkmZv13O0Xn8HaZlLPyAgAAekACABiROAA==
+Date:   Tue, 14 May 2019 17:17:07 +0000
+Message-ID: <f80600a0-9d8c-a50f-5139-508d10ec4b20@amd.com>
+References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
+ <1549767042-95827-13-git-send-email-fenghua.yu@intel.com>
+ <20190510184011.210794fc@donnerap.cambridge.arm.com>
+ <3E5A0FA7E9CA944F9D5414FEC6C712209D8A3C19@ORSMSX106.amr.corp.intel.com>
+In-Reply-To: <3E5A0FA7E9CA944F9D5414FEC6C712209D8A3C19@ORSMSX106.amr.corp.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN4PR0801CA0022.namprd08.prod.outlook.com
+ (2603:10b6:803:29::32) To DM5PR12MB2471.namprd12.prod.outlook.com
+ (2603:10b6:4:b5::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Babu.Moger@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.78.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 673a9fdc-8ccd-474b-346d-08d6d88ffdb1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1163;
+x-ms-traffictypediagnostic: DM5PR12MB1163:
+x-microsoft-antispam-prvs: <DM5PR12MB1163ED2910E26A737FF7640895080@DM5PR12MB1163.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0037FD6480
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(346002)(376002)(189003)(199004)(6436002)(5660300002)(71190400001)(71200400001)(6486002)(99286004)(68736007)(3846002)(6116002)(110136005)(7416002)(316002)(54906003)(14454004)(256004)(36756003)(72206003)(66066001)(478600001)(25786009)(73956011)(66946007)(53936002)(86362001)(7736002)(8936002)(66476007)(305945005)(64756008)(8676002)(66556008)(31696002)(66446008)(81156014)(81166006)(386003)(53546011)(6506007)(26005)(102836004)(4326008)(31686004)(76176011)(52116002)(11346002)(486006)(2906002)(6512007)(476003)(446003)(2616005)(6246003)(186003)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1163;H:DM5PR12MB2471.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: rmnfg2mPWUwwmHow42sTN8IjX7tlVfc/Fvz4xNJ0ZArAciOTRBK3hIv7fa0aKqoLUv2Ui3EyAaKd6ih/Acv5LTb3QlMPJ/gEcVmLJEoHiLSCS0J4GT02jgbPgljeY0gZ1eZzLbE7D4ZDcSZ+VsBH6sbH56j5sq8UPfidlpNsfII5PXZ112Y5P357CVw2UNe2Z2Y9LT6Np7QLdC016SR9wSWibUMUlbAu0Pwqwv1/N495w6OtUz0/gTipyIRynrVaqgrxJnJ/mJ9B0UhFQPWTVCXi+gfCa3LoxXc88zY2WUFvzHKACM5N70yjXYojAH34CCwy/kOiMPOXTUjLb0tOSjXkmTX3DYsvqkNf88+YHkAhBZH3VlwW3TtY/8yzA+4bZmWENI9KTmIcXJSr7vaXLASmaTfDkCPb6IAMSOlHz5c=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F30790853A24542AEEBF3B81336DF8B@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 673a9fdc-8ccd-474b-346d-08d6d88ffdb1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 17:17:07.4821
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On May 14, 2019, at 10:00 AM, Nadav Amit <namit@vmware.com> wrote:
-
->> On May 14, 2019, at 1:00 AM, Paul Turner <pjt@google.com> wrote:
->>=20
->> From: Nadav Amit <namit@vmware.com>
->> Date: Fri, May 10, 2019 at 7:45 PM
->> To: <x86@kernel.org>
->> Cc: Borislav Petkov, <linux-kernel@vger.kernel.org>, Nadav Amit, Andy
->> Lutomirsky, Ingo Molnar, Peter Zijlstra, Thomas Gleixner, Jann Horn
->>=20
->>> It may be useful to check in runtime whether certain assertions are
->>> violated even during speculative execution. This can allow to avoid
->>> adding unnecessary memory fences and at the same time check that no data=
-
->>> leak channels exist.
->>>=20
->>> For example, adding such checks can show that allocating zeroed pages
->>> can return speculatively non-zeroed pages (the first qword is not
->>> zero).  [This might be a problem when the page-fault handler performs
->>> software page-walk, for example.]
->>>=20
->>> Introduce SPEC_WARN_ON(), which checks in runtime whether a certain
->>> condition is violated during speculative execution. The condition should=
-
->>> be computed without branches, e.g., using bitwise operators. The check
->>> will wait for the condition to be realized (i.e., not speculated), and
->>> if the assertion is violated, a warning will be thrown.
->>>=20
->>> Warnings can be provided in one of two modes: precise and imprecise.
->>> Both mode are not perfect. The precise mode does not always make it easy=
-
->>> to understand which assertion was broken, but instead points to a point
->>> in the execution somewhere around the point in which the assertion was
->>> violated.  In addition, it prints a warning for each violation (unlike
->>> WARN_ONCE() like behavior).
->>>=20
->>> The imprecise mode, on the other hand, can sometimes throw the wrong
->>> indication, specifically if the control flow has changed between the
->>> speculative execution and the actual one. Note that it is not a
->>> false-positive, it just means that the output would mislead the user to
->>> think the wrong assertion was broken.
->>>=20
->>> There are some more limitations. Since the mechanism requires an
->>> indirect branch, it should not be used in production systems that are
->>> susceptible for Spectre v2. The mechanism requires TSX and performance
->>> counters that are only available in skylake+. There is a hidden
->>> assumption that TSX is not used in the kernel for anything else, other
->>> than this mechanism.
->>=20
->> Nice trick!
->=20
-> =E2=80=9CIllusion." [ ignore if you don=E2=80=99t know the reference ]
->=20
->>=20
->> Can you eliminate the indirect call by forcing an access fault to
->> abort the transaction instead, e.g. "cmove 0, $1=E2=80=9D?
->>=20
->> (If this works, it may also allow support on older architectures as
->> the RTM_RETIRED.ABORT* events go back further I believe?)
->=20
-> I don=E2=80=99t think it would work. The whole problem is that we need a c=
-ounter
-> that is updated during execution and not retirement. I tried several
-> counters and could not find other appropriate ones.
->=20
-> The idea behind the implementation is to affect the control flow through
-> data dependency. I may be able to do something similar without an indirect=
-
-> branch. I=E2=80=99ll take a page, put the XABORT on the page and make the p=
-age NX.
-> Then, a direct jump would go to this page. The conditional-mov would chang=
-e
-> the PTE to X if the assertion is violated. There should be a page-walk eve=
-n
-> if the CPU finds the entry in the TLB, since this entry is NX.
->=20
-
-I think you only get a page walk if the TLB entry is not-present.  I=E2=80=99=
-d be a bit surprised if the CPU is willing to execute, even speculatively, f=
-rom speculatively written data. Good luck!=
+RmVuZ2h1YS9BbmRyZSwNCg0KDQpPbiA1LzEwLzE5IDI6MjkgUE0sIFl1LCBGZW5naHVhIHdyb3Rl
+Og0KPiBbQ0FVVElPTjogRXh0ZXJuYWwgRW1haWxdDQo+IA0KPj4gT24gRnJpZGF5LCBNYXkgMTAs
+IDIwMTkgMTA6NDAgQU0NCj4+IEFuZHJlIFByenl3YXJhIFttYWlsdG86YW5kcmUucHJ6eXdhcmFA
+YXJtLmNvbV0gd3JvdGU6DQo+PiBUbzogWXUsIEZlbmdodWEgPGZlbmdodWEueXVAaW50ZWwuY29t
+Pg0KPj4gQ2M6IFRob21hcyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsgSW5nbyBNb2xu
+YXINCj4+IDxtaW5nb0ByZWRoYXQuY29tPjsgQm9yaXNsYXYgUGV0a292IDxicEBhbGllbjguZGU+
+OyBIIFBldGVyIEFudmluDQo+PiA8aHBhQHp5dG9yLmNvbT47IEx1Y2ssIFRvbnkgPHRvbnkubHVj
+a0BpbnRlbC5jb20+OyBDaGF0cmUsIFJlaW5ldHRlDQo+PiA8cmVpbmV0dGUuY2hhdHJlQGludGVs
+LmNvbT47IFNoYW5rYXIsIFJhdmkgViA8cmF2aS52LnNoYW5rYXJAaW50ZWwuY29tPjsNCj4+IFNo
+ZW4sIFhpYW9jaGVuIDx4aWFvY2hlbi5zaGVuQGludGVsLmNvbT47IFBhdGhhbiwgQXJzaGl5YSBI
+YXlhdGtoYW4NCj4+IDxhcnNoaXlhLmhheWF0a2hhbi5wYXRoYW5AaW50ZWwuY29tPjsgUHJha2h5
+YSwgU2FpIFByYW5lZXRoDQo+PiA8c2FpLnByYW5lZXRoLnByYWtoeWFAaW50ZWwuY29tPjsgQmFi
+dSBNb2dlciA8YmFidS5tb2dlckBhbWQuY29tPjsNCj4+IGxpbnV4LWtlcm5lbCA8bGludXgta2Vy
+bmVsQHZnZXIua2VybmVsLm9yZz47IEphbWVzIE1vcnNlDQo+PiA8SmFtZXMuTW9yc2VAYXJtLmNv
+bT4NCj4+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMTIvMTNdIHNlbGZ0ZXN0cy9yZXNjdHJsOiBE
+aXNhYmxlIE1CQSBhbmQgTUJNIHRlc3RzDQo+PiBmb3IgQU1EDQo+Pg0KPj4gT24gU2F0LCAgOSBG
+ZWIgMjAxOSAxODo1MDo0MSAtMDgwMA0KPj4gRmVuZ2h1YSBZdSA8ZmVuZ2h1YS55dUBpbnRlbC5j
+b20+IHdyb3RlOg0KPj4NCj4+IEhpLA0KPj4NCj4+PiBGcm9tOiBCYWJ1IE1vZ2VyIDxiYWJ1Lm1v
+Z2VyQGFtZC5jb20+DQo+Pj4NCj4+PiBGb3Igbm93LCBkaXNhYmxlIE1CQSBhbmQgTUJNIHRlc3Rz
+IGZvciBBTUQuIERlY2lkaW5nIHRlc3QgcGFzcy9mYWlsIGlzDQo+Pj4gbm90IGNsZWFyIHJpZ2h0
+IG5vdy4gV2UgY2FuIGVuYWJsZSB3aGVuIHdlIGhhdmUgc29tZSBjbGFyaXR5Lg0KPj4NCj4+IEkg
+ZG9uJ3QgdGhpbmsgdGhpcyBpcyB0aGUgcmlnaHQgd2F5LiBUaGUgYXZhaWxhYmlsaXR5IG9mIGZl
+YXR1cmVzIHNob3VsZCBiZQ0KPj4gcXVlcnlhYmxlLCBmb3IgaW5zdGFuY2UgYnkgbG9va2luZyBp
+bnRvIC9zeXMvZnMvcmVzY3RybC9pbmZvLiBDaGVja2luZyBmb3IgYQ0KPj4gY2VydGFpbiB2ZW5k
+b3IgdG8gc2tpcCB0ZXN0cyBqdXN0IHNvdW5kcyB3cm9uZyB0byBtZSwgYW5kIGlzIGRlZmluaXRl
+bHkgbm90DQo+PiBzY2FsYWJsZSBvciBmdXR1cmUgcHJvb2YuDQo+Pg0KPj4gV2Ugc2hvdWxkIHJl
+YWxseSBjaGVjayB0aGUgYXZhaWxhYmlsaXR5IG9mIGEgZmVhdHVyZSwgdGhlbiBza2lwIHRoZSB3
+aG9sZQ0KPj4gc3Vic3lzdGVtIHRlc3QgaW4gcmVzY3RybF90ZXN0cy5jLg0KPiANCj4gQmFidSBt
+YXkgY29ycmVjdCBpZiBJJ20gd3Jvbmc6IEFNRCBkb2VzIHN1cHBvcnQgdGhlIE1CQSBhbmQgTUJN
+IGZlYXR1cmVzLiBTbyBpZiBxdWVyeWluZyB0aGUgaW5mbyBkaXJlY3RvcnksIHRoZSBmZWF0dXJl
+cyBhcmUgdGhlcmUuIEJ1dCBBTUQgZG9lc24ndCB3YW50IHRvIHN1cHBvcnQgdGhlIHRlc3Rpbmcg
+Zm9yIHRoZSBmZWF0dXJlcyBpbiB0aGUgY3VycmVudCBwYXRjaCBzZXQuIFRoZXkgbWF5IHN1cHBv
+cnQgdGhlIHRlc3RpbmcgaW4gdGhlIGZ1dHVyZS4NCg0KWWVzLiBBTUQgc3VwcG9ydHMgdGhlIE1C
+QSBhbmQgTUJNIGZlYXR1cmVzLiBCdXQsIGRlY2lkaW5nIHRoZSB0ZXN0DQpwYXNzL2ZhaWwgd2Fz
+IG5vdCBjbGVhciB0byBtZS4gVGhhdCBpcyB3aHkgSSBkZWNpZGVkIHRvIGRpc2FibGUgdGhlIHRl
+c3QNCmZvciBub3cuIFJpZ2h0IG5vdywgaXQgcmVwb3J0cyB0aGUgdGVzdCByZXN1bHQgYXMgImZh
+aWwiLiBXZSBjYW4gYWRkIHRoZQ0KdGVzdCBpbiB0aGUgZnV0dXJlIHdpdGggc29tZSBtb2RpZmlj
+YXRpb25zLg0KDQo+IA0KPiBUaGFua3MuDQo+IA0KPiAtRmVuZ2h1YQ0KPiANCg==
