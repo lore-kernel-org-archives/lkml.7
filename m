@@ -2,187 +2,130 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20E1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E496C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A870720881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="a7BcpiAa"
+	by mail.kernel.org (Postfix) with ESMTP id 793B7208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726525AbfENMFU (ORCPT
+        id S1726363AbfENMJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:05:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39895 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfENMFT (ORCPT
+        Tue, 14 May 2019 08:09:50 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38198 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726286AbfENMJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:05:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id m7so12791950ioa.6
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3cCt7Fv9PrSN+POfdDA9BhvmV9/m6Z9B8cT0V9l7bcU=;
-        b=a7BcpiAa3cXS6NukeVFgCH7xf3ARmd8J6e/ULZ0a8xqTBwTNaq+N8QguChZh3uzW7f
-         kWHSY7qQUZbeMlUwXYdXunYt1ZQd2SKBDUTXd3jKW+KmrJ1DqqIRVtLYOVb1f+tEQL2N
-         W7DqiSEqrT+k9VDAEFt9iTN+c6I6bW1EG18JM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3cCt7Fv9PrSN+POfdDA9BhvmV9/m6Z9B8cT0V9l7bcU=;
-        b=TvrxZbGU8b4W9rd/tr6fQePn/7m+FWEYHr3+UQA1Oc3E0fONpzksK4cw10gQKV1/dg
-         WIQKIMgNrK/shsAbtaMbiceiPKpXWITobW5ZJ4tKuxr2uRb6sXYU0ONONCSqJTmbqPsN
-         nm+d4wss8kCgKYLncLnW0xsJziRBakFL5x2R1gDCFjmPm9/wgcuHOHC/PMebNYtIYGOU
-         iw59yCD4w2V+qqW7Rjou1EwMdFHhWnGg1uy3vR2/4e6M+sn2cC0BE2TSAduaPawfF26p
-         3S26dr3rxdRYLAkPZR3iOOGM81W9iDmt98B6UyGi/3x+HpkI4h+uVvTeaOeROmUXPJX/
-         SyOQ==
-X-Gm-Message-State: APjAAAWLt9wmzZ5i3V7RukOYdm1s/BSp1/s5IwdF0JnL95QG568i6fGm
-        Mg8aViWHrGP2MWeyFoMz3WugqLGnal4i4YLcRuT7Hw==
-X-Google-Smtp-Source: APXvYqyhBqCsjjVPPpuo20Er/14b4Noh22uMAdPO6o3WUMvHLuILgjBTMJK3Dh0BqwvOEYcjDaa/KDS4xlT8iYcmIUQ=
-X-Received: by 2002:a6b:b654:: with SMTP id g81mr3614153iof.34.1557835518050;
- Tue, 14 May 2019 05:05:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu> <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu> <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com> <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com> <20190511173344.GA8507@mit.edu>
- <20190513144451.GQ17751@phenom.ffwll.local> <20190514060433.GA181462@google.com>
-In-Reply-To: <20190514060433.GA181462@google.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 14 May 2019 14:05:05 +0200
-Message-ID: <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        Knut Omang <knut.omang@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+        Tue, 14 May 2019 08:09:49 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EC45pf052715
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:09:48 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sfva3bac0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:09:47 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 May 2019 13:09:44 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 13:09:39 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EC9c1l55050322
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 12:09:38 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3DD0C42052;
+        Tue, 14 May 2019 12:09:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 175C14204B;
+        Tue, 14 May 2019 12:09:36 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.29])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 12:09:35 +0000 (GMT)
+Subject: Re: [PATCH v10 09/12] ima: Implement support for module-style
+ appended signatures
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        David Howells <dhowells@redhat.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Date:   Tue, 14 May 2019 08:09:25 -0400
+In-Reply-To: <20190418035120.2354-10-bauerman@linux.ibm.com>
+References: <20190418035120.2354-1-bauerman@linux.ibm.com>
+         <20190418035120.2354-10-bauerman@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051412-0020-0000-0000-0000033C871A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051412-0021-0000-0000-0000218F42B3
+Message-Id: <1557835765.4139.9.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 8:04 AM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
-> > On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
-> > > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> > > > However, the reply is incorrect.  Kselftest in-kernel tests (which
-> > > > is the context here) can be configured as built in instead of as
-> > > > a module, and built in a UML kernel.  The UML kernel can boot,
-> > > > running the in-kernel tests before UML attempts to invoke the
-> > > > init process.
-> > >
-> > > Um, Citation needed?
-> > >
-> > > I don't see any evidence for this in the kselftest documentation, nor
-> > > do I see any evidence of this in the kselftest Makefiles.
-> > >
-> > > There exists test modules in the kernel that run before the init
-> > > scripts run --- but that's not strictly speaking part of kselftests,
-> > > and do not have any kind of infrastructure.  As noted, the
-> > > kselftests_harness header file fundamentally assumes that you are
-> > > running test code in userspace.
-> >
-> > Yeah I really like the "no userspace required at all" design of kunit,
-> > while still collecting results in a well-defined way (unless the current
-> > self-test that just run when you load the module, with maybe some
-> > kselftest ad-hoc wrapper around to collect the results).
-> >
-> > What I want to do long-term is to run these kernel unit tests as part of
-> > the build-testing, most likely in gitlab (sooner or later, for drm.git
->
-> Totally! This is part of the reason I have been insisting on a minimum
-> of UML compatibility for all unit tests. If you can suffiently constrain
-> the environment that is required for tests to run in, it makes it much
-> easier not only for a human to run your tests, but it also makes it a
-> lot easier for an automated service to be able to run your tests.
->
-> I actually have a prototype presubmit already working on my
-> "stable/non-upstream" branch. You can checkout what presubmit results
-> look like here[1][2].
+Hi Thiago,
 
-ug gerrit :-)
+On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+> 
+> @@ -326,6 +356,10 @@ int ima_appraise_measurement(enum ima_hooks func,
+>         case INTEGRITY_UNKNOWN:
+>                 break;
+>         case INTEGRITY_NOXATTRS:        /* No EVM protected xattrs. */
+> +               /* It's fine not to have xattrs when using a modsig. */
+> +               if (try_modsig)
+> +                       break;
+> +               /* fall through */
+>         case INTEGRITY_NOLABEL:         /* No security.evm xattr. */
+>                 cause = "missing-HMAC";
+>                 goto out;
+> @@ -340,6 +374,14 @@ int ima_appraise_measurement(enum ima_hooks func,
+>                 rc = xattr_verify(func, iint, xattr_value, xattr_len, &status,
+>                                   &cause);
+>  
+> +       /*
+> +        * If we have a modsig and either no imasig or the imasig's key isn't
+> +        * known, then try verifying the modsig.
+> +        */
+> +       if (status != INTEGRITY_PASS && try_modsig &&
+> +           (!xattr_value || rc == -ENOKEY))
+> +               rc = modsig_verify(func, modsig, &status, &cause);
 
-> > only ofc). So that people get their pull requests (and patch series, we
-> > have some ideas to tie this into patchwork) automatically tested for this
->
-> Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
-> and he seemed pretty open to collaboration.
->
-> Before I heard about Snowpatch, I had an intern write a translation
-> layer that made Prow (the presubmit service that I used in the prototype
-> above) work with LKML[4].
+EVM protects other security xattrs, not just security.ima, if they
+exist.  As a result, evm_verifyxattr() could pass based on the other
+security xattrs.
 
-There's about 3-4 forks/clones of patchwork. snowpatch is one, we have
-a different one on freedesktop.org. It's a bit a mess :-/
+Mimi
 
-> I am not married to either approach, but I think between the two of
-> them, most of the initial legwork has been done to make presubmit on
-> LKML a reality.
+> +
+>  out:
+>         /*
+>          * File signatures on some filesystems can not be properly verified.
 
-We do have presubmit CI working already with our freedesktop.org
-patchwork. The missing glue is just tying that into gitlab CI somehow
-(since we want to unify build testing more and make it easier for
-contributors to adjust things).
--Daniel
-
-> > super basic stuff.
->
-> I am really excited to hear back on what you think!
->
-> Cheers!
->
-> [1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
-> [2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
-> [3] https://developer.ibm.com/open/projects/snowpatch/
-> [4] https://kunit.googlesource.com/prow-lkml/
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
