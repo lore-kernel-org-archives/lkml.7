@@ -2,226 +2,135 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EE4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60325C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC3A921707
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEE421473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:52:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FV1tdJS5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kDdgHx32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfENLv3 (ORCPT
+        id S1726422AbfENLwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 07:51:29 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40323 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfENLv3 (ORCPT
+        Tue, 14 May 2019 07:52:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58238 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENLwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 07:51:29 -0400
-Received: by mail-qt1-f196.google.com with SMTP id k24so13578379qtq.7
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 04:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1sBX4U4iWmOfOwXqMxC9FR33gHwWEfHbWFFPwCSxOH0=;
-        b=FV1tdJS5hniNAk7rB4Z8MfOC/G+QAMbgKkjTkVz5s9UfH7vhoVgRv6wIELfTWlOTyO
-         fL51HFuO0Fldhv7LzcGAt0bvgSKLJ2CGUIiKlM4WN80HU+FryQiCm/Eodd6rU5E3nR4b
-         4acIeYlchvc3/aM6Te7jvr5GOQf9wuP6hcL8WI08f7rLH6EZ44OgsY5YuPfUvAgvWWe5
-         4qPJQpnrNy59Kh2mm+Qan/MWkZ2eLSSP7bHupUtS6P5U4ROa+6pC3GfDNaec9nZpsTsq
-         ryEMkD5QXVBu2M9vq+JlnGvVjcAOyetOZsdkL4nr6Divgq20CIkNLi4tIdC10bgWcMNd
-         cs2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1sBX4U4iWmOfOwXqMxC9FR33gHwWEfHbWFFPwCSxOH0=;
-        b=QMb9XXHyFlL2bfikNm2beMrRoD7FwnekX0SD23q+kA3lA0pQi7W56y4zcirFx0TqAD
-         D55vEI7Fxp2fPskZwirb57S/RRaiD24di19WHleFYQfhI2bnJVkCaJbT8fYIKSVBMiJJ
-         ywGM2++MSHEO5kgDIPsSSu+I8HRBgKHbCFWsp67g9poowyOecgiGYvurHGjPCBl55Mqz
-         S4+HsfW5OSuT0IHeTEluAAuOjqTrYSuT2BxMkBWnTWm4cp8oY8Ee+4TyFbD1i3NvrsCa
-         oQOT+FrDboBQpw/6SNslN7GFkvHmzqIVC0vUhG4YDURG5nzDR3fg7FKywRz6bs8unAne
-         vKWw==
-X-Gm-Message-State: APjAAAXrX9nPuNpufNDOka5Vzj2Iehnct4lGqPG+DXK7fLlY4MDDr5qT
-        fWGOBxpiwRth7mT+1UPYxvAVJO9kK0I9Ane82D4=
-X-Google-Smtp-Source: APXvYqwU1dS7a2bEkgUPhZOh8shaCI2h1nM+YeiPfRj5U5vfk7KhghTSyALYEBmg/PX7AnTe3vJZV5QU/dpaCyRYr0M=
-X-Received: by 2002:a0c:b997:: with SMTP id v23mr384083qvf.128.1557834688075;
- Tue, 14 May 2019 04:51:28 -0700 (PDT)
+        Tue, 14 May 2019 07:52:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=kV9fT0KmOxuF+T41tUiDHBswBBV2DoIvK7WOkx75qek=; b=kDdgHx3228aF+DbfBwQD1cHRG
+        u/MMbPjYEL0gI73Cjho8IW7rrNyWJy4SF3XGW94P8Iix0SV2SjWlCxAwbmOOTV6tTRG35LBFf4ipQ
+        WmEQCqLcYVJNZRlMVG00mMJ3Qv2lX8Iz+NrAgp1/x5TvoLry+b+txJvm39UcpnKHKEv+LHnYevmog
+        fegtKzNMW/YO31a+A3Y1v4wfIbgywog0U1mYkFEiP+JkWkud8tASItZBQ4YG4Ag6sY0EPevk/NcTD
+        SZDLr79gKNk3xpJDx8ce5YhH5Q/HME7A5PGRbiT2hGoODErs/vd1MEby9pArSOAdz9E3f1/+6MSVm
+        8NgwrlXfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQVyr-0004nf-Bl; Tue, 14 May 2019 11:52:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D1F0D2029F877; Tue, 14 May 2019 13:52:23 +0200 (CEST)
+Date:   Tue, 14 May 2019 13:52:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, jstancek@redhat.com,
+        namit@vmware.com, minchan@kernel.org, mgorman@suse.de,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+Message-ID: <20190514115223.GP2589@hirez.programming.kicks-ass.net>
+References: <1557444414-12090-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513163804.GB10754@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-References: <20190423143258.96706-1-smuchun@gmail.com> <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
- <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
- <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
- <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
- <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
- <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
- <d9495ef6-17bc-dc50-f5fe-fb5ff20edfde@codeaurora.org> <c0166ef7-ef76-56d8-6289-276573e3aea7@codeaurora.org>
-In-Reply-To: <c0166ef7-ef76-56d8-6289-276573e3aea7@codeaurora.org>
-From:   Muchun Song <smuchun@gmail.com>
-Date:   Tue, 14 May 2019 19:51:12 +0800
-Message-ID: <CAPSr9jGD3m7Whr+Trd1hmKcDFTAdUqWb4nVPKJy_81cy-nBYaQ@mail.gmail.com>
-Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue directory
-To:     Prateek Sood <prsood@codeaurora.org>
-Cc:     Mukesh Ojha <mojha@codeaurora.org>, gregkh@linuxfoundation.org,
-        rafael@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513163804.GB10754@fuggles.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prateek Sood <prsood@codeaurora.org> =E4=BA=8E2019=E5=B9=B45=E6=9C=8814=E6=
-=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=887:00=E5=86=99=E9=81=93=EF=BC=9A
->
-> On 5/14/19 4:26 PM, Mukesh Ojha wrote:
-> > ++
-> >
-> > On 5/4/2019 8:17 PM, Muchun Song wrote:
-> >> Benjamin Herrenschmidt <benh@kernel.crashing.org> =E4=BA=8E2019=E5=B9=
-=B45=E6=9C=882=E6=97=A5=E5=91=A8=E5=9B=9B =E4=B8=8B=E5=8D=882:25=E5=86=99=
-=E9=81=93=EF=BC=9A
-> >>
-> >>>>> The basic idea yes, the whole bool *locked is horrid though.
-> >>>>> Wouldn't it
-> >>>>> work to have a get_device_parent_locked that always returns with
-> >>>>> the mutex held,
-> >>>>> or just move the mutex to the caller or something simpler like this
-> >>>>> ?
-> >>>>>
-> >>>> Greg and Rafael, do you have any suggestions for this? Or you also
-> >>>> agree with Ben?
-> >>> Ping guys ? This is worth fixing...
-> >> I also agree with you. But Greg and Rafael seem to be high latency rig=
-ht now.
-> >>
-> >>  From your suggestions, I think introduce get_device_parent_locked() m=
-ay easy
-> >> to fix. So, do you agree with the fix of the following code snippet
-> >> (You can also
-> >> view attachments)?
-> >>
-> >> I introduce a new function named get_device_parent_locked_if_glue_dir(=
-) which
-> >> always returns with the mutex held only when we live in glue dir. We s=
-hould call
-> >> unlock_if_glue_dir() to release the mutex. The
-> >> get_device_parent_locked_if_glue_dir()
-> >> and unlock_if_glue_dir() should be called in pairs.
-> >>
-> >> ---
-> >> drivers/base/core.c | 44 ++++++++++++++++++++++++++++++++++++--------
-> >> 1 file changed, 36 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> >> index 4aeaa0c92bda..5112755c43fa 100644
-> >> --- a/drivers/base/core.c
-> >> +++ b/drivers/base/core.c
-> >> @@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class,
-> >> struct kobject *parent_kobj)
-> >> static DEFINE_MUTEX(gdp_mutex);
-> >> -static struct kobject *get_device_parent(struct device *dev,
-> >> -                    struct device *parent)
-> >> +static struct kobject *__get_device_parent(struct device *dev,
-> >> +                    struct device *parent,
-> >> +                    bool lock)
-> >> {
-> >>     if (dev->class) {
-> >>         struct kobject *kobj =3D NULL;
-> >> @@ -1779,14 +1780,16 @@ static struct kobject
-> >> *get_device_parent(struct device *dev,
-> >>             }
-> >>         spin_unlock(&dev->class->p->glue_dirs.list_lock);
-> >>         if (kobj) {
-> >> -           mutex_unlock(&gdp_mutex);
-> >> +           if (!lock)
-> >> +               mutex_unlock(&gdp_mutex);
-> >>             return kobj;
-> >>         }
-> >>         /* or create a new class-directory at the parent device */
-> >>         k =3D class_dir_create_and_add(dev->class, parent_kobj);
-> >>         /* do not emit an uevent for this simple "glue" directory */
-> >> -       mutex_unlock(&gdp_mutex);
-> >> +       if (!lock)
-> >> +           mutex_unlock(&gdp_mutex);
-> >>         return k;
-> >>     }
-> >> @@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct
-> >> device *dev,
-> >>     return NULL;
-> >> }
-> >> +static inline struct kobject *get_device_parent(struct device *dev,
-> >> +                       struct device *parent)
-> >> +{
-> >> +   return __get_device_parent(dev, parent, false);
-> >> +}
-> >> +
-> >> +static inline struct kobject *
-> >> +get_device_parent_locked_if_glue_dir(struct device *dev,
-> >> +                struct device *parent)
-> >> +{
-> >> +   return __get_device_parent(dev, parent, true);
-> >> +}
-> >> +
-> >> static inline bool live_in_glue_dir(struct kobject *kobj,
-> >>                  struct device *dev)
-> >> {
-> >> @@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device
-> >> *dev, struct kobject *glue_dir)
-> >>     mutex_unlock(&gdp_mutex);
-> >> }
-> >> +static inline void unlock_if_glue_dir(struct device *dev,
-> >> +                struct kobject *glue_dir)
-> >> +{
-> >> +   /* see if we live in a "glue" directory */
-> >> +   if (!live_in_glue_dir(glue_dir, dev))
-> >> +       return;
-> >> +
-> >> +   mutex_unlock(&gdp_mutex);
-> >> +}
-> >> +
-> >> static int device_add_class_symlinks(struct device *dev)
-> >> {
-> >>     struct device_node *of_node =3D dev_of_node(dev);
-> >> @@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
-> >>     pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
-> >>     parent =3D get_device(dev->parent);
-> >> -   kobj =3D get_device_parent(dev, parent);
-> >> +   kobj =3D get_device_parent_locked_if_glue_dir(dev, parent);
-> >>     if (IS_ERR(kobj)) {
-> >>         error =3D PTR_ERR(kobj);
-> >>         goto parent_error;
-> >> @@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
-> >>     /* first, register with generic layer. */
-> >>     /* we require the name to be set before, and pass NULL */
-> >>     error =3D kobject_add(&dev->kobj, dev->kobj.parent, NULL);
-> >> -   if (error) {
-> >> -       glue_dir =3D get_glue_dir(dev);
-> >> +
-> >> +   glue_dir =3D get_glue_dir(dev);
-> >> +   unlock_if_glue_dir(dev, glue_dir);
-> >> +
-> >> +   if (error)
-> >>         goto Error;
-> >> -   }
-> >>     /* notify platform of device entry */
-> >>     error =3D device_platform_notify(dev, KOBJ_ADD);
-> >> --
->
-> This change has been done in device_add(). AFAICT, locked
-> version of get_device_parent should be used in device_move()
-> also.
->
+On Mon, May 13, 2019 at 05:38:04PM +0100, Will Deacon wrote:
+> On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
+> > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> > index 99740e1..469492d 100644
+> > --- a/mm/mmu_gather.c
+> > +++ b/mm/mmu_gather.c
+> > @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> >  {
+> >  	/*
+> >  	 * If there are parallel threads are doing PTE changes on same range
+> > +	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
+> > +	 * flush by batching, one thread may end up seeing inconsistent PTEs
+> > +	 * and result in having stale TLB entries.  So flush TLB forcefully
+> > +	 * if we detect parallel PTE batching threads.
+> > +	 *
+> > +	 * However, some syscalls, e.g. munmap(), may free page tables, this
+> > +	 * needs force flush everything in the given range. Otherwise this
+> > +	 * may result in having stale TLB entries for some architectures,
+> > +	 * e.g. aarch64, that could specify flush what level TLB.
+> >  	 */
+> > +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
+> > +		/*
+> > +		 * Since we can't tell what we actually should have
+> > +		 * flushed, flush everything in the given range.
+> > +		 */
+> > +		tlb->freed_tables = 1;
+> > +		tlb->cleared_ptes = 1;
+> > +		tlb->cleared_pmds = 1;
+> > +		tlb->cleared_puds = 1;
+> > +		tlb->cleared_p4ds = 1;
+> > +
+> > +		/*
+> > +		 * Some architectures, e.g. ARM, that have range invalidation
+> > +		 * and care about VM_EXEC for I-Cache invalidation, need force
+> > +		 * vma_exec set.
+> > +		 */
+> > +		tlb->vma_exec = 1;
+> > +
+> > +		/* Force vma_huge clear to guarantee safer flush */
+> > +		tlb->vma_huge = 0;
+> > +
+> > +		tlb->start = start;
+> > +		tlb->end = end;
+> >  	}
+> 
+> Whilst I think this is correct, it would be interesting to see whether
+> or not it's actually faster than just nuking the whole mm, as I mentioned
+> before.
+> 
+> At least in terms of getting a short-term fix, I'd prefer the diff below
+> if it's not measurably worse.
 
-Yeah, I agree with you. I will send the v2 patch later to fix it also.
-Thanks.
+So what point? General paranoia? Either change should allow PPC to get
+rid of its magic mushrooms, the below would be a little bit easier for
+them because they already do full invalidate correct.
 
-Yours,
-Muchun
+> --->8
+> 
+> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> index 99740e1dd273..cc251422d307 100644
+> --- a/mm/mmu_gather.c
+> +++ b/mm/mmu_gather.c
+> @@ -251,8 +251,9 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>  	 * forcefully if we detect parallel PTE batching threads.
+>  	 */
+>  	if (mm_tlb_flush_nested(tlb->mm)) {
+> +		tlb->fullmm = 1;
+>  		__tlb_reset_range(tlb);
+> -		__tlb_adjust_range(tlb, start, end - start);
+> +		tlb->freed_tables = 1;
+>  	}
+>  
+>  	tlb_flush_mmu(tlb);
