@@ -2,52 +2,111 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B7FC04AB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A26C04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03CF521019
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 01:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A524621473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557799365;
+	bh=4OBmtfQllm0RymwAbmCzcP2d3KH9f8oCMkSmd1HlaAA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CHj8aJjOaKFhFKpYAEK8V61eLZGgeovFwrq8fiJz3nnCXn/CSuPL7jJ1AHoMjT51x
+	 8wVsxQCS8TazCIBoSf/j2uDfiBCg2Gda5RVh7Tpzvi84X7VkZueNELCHCR8gagePRe
+	 RdJUrJVVy5B7dXYMKxnQgNqRIAP3SqDTyKmoQSdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfENB7o convert rfc822-to-8bit (ORCPT
+        id S1726663AbfENCCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 21:59:44 -0400
-Received: from ipmail06.adl2.internode.on.net ([150.101.137.129]:11452 "EHLO
-        ipmail06.adl2.internode.on.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726233AbfENB7n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 21:59:43 -0400
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: A2C/AADh299ZAOaJfQENUQ4LAQEBAQEBAQEBAQEHAQEBAQGJUIMql3uYY4VFAoUWAQIBAQEBAQIPATSFbQIBAyNWEAsNDQImAgJXBgENtSprgiciixoBAQEBAQEBAQEBAQEBAQEBAQEBAQEdgQ6CH4NYghULgnSEZQEBHoMTL4ISIAWSVo5ugi6UNwEYhXSDcYcXlySBZTIhMGUBhktPigiCNQEBAQ
-Received: from unknown (HELO [10.135.5.170]) ([1.125.137.230])
-  by ipmail06.adl2.internode.on.net with ESMTP; 14 May 2019 11:29:41 +0930
-Date:   Tue, 14 May 2019 11:29:37 +0930
-User-Agent: K-9 Mail for Android
-In-Reply-To: <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
-References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net> <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com> <20190511220659.GB8507@mit.edu> <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
+        Mon, 13 May 2019 22:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726233AbfENCCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 22:02:44 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47249214D8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 02:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557799363;
+        bh=4OBmtfQllm0RymwAbmCzcP2d3KH9f8oCMkSmd1HlaAA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=15OxqietpeRfGcIVu5u4YGK6lQMkA8PXcTMZtnOt1lzuJODROCsf/5K71H11TL4ul
+         XIQLz6xsf1OfhAS72AXJbUsNOQo5rEO7Y4JJrc/YQcRpjxUqD+Y1DbYwehJXNSN6/d
+         Q0NETdnisf6YcHjz5rFLGoBCziHZbk+A/5MudBlA=
+Received: by mail-wm1-f53.google.com with SMTP id x64so1090184wmb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 19:02:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAUBf7JKWvc0NN+BxQCUVK8sdMTVl+E1i7ZPmnoUbvIcG+YBYdy+
+        o1jJgPg5Dtrx7LPsZwmfcEQpp3Fgrz4mMSbkV+aEyg==
+X-Google-Smtp-Source: APXvYqynOcw9YL9Rj7oZzy310IyYvddcWfkYtYUCrEZa+qhWQKqb0ESZyXTuKlKEYx+4/q84sAUpXBybTnLqOnGPL3A=
+X-Received: by 2002:a1c:486:: with SMTP id 128mr16481232wme.83.1557799361797;
+ Mon, 13 May 2019 19:02:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-CC:     LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org
-From:   Arthur Marsh <arthur.marsh@internode.on.net>
-Message-ID: <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
+ <20190513151500.GY2589@hirez.programming.kicks-ass.net> <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
+In-Reply-To: <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 13 May 2019 19:02:30 -0700
+X-Gmail-Original-Message-ID: <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com>
+Message-ID: <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com>
+Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
+To:     Liran Alon <liran.alon@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apologies, I had forgotten to
+On Mon, May 13, 2019 at 2:26 PM Liran Alon <liran.alon@oracle.com> wrote:
+>
+>
+>
+> > On 13 May 2019, at 18:15, Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Mon, May 13, 2019 at 04:38:32PM +0200, Alexandre Chartre wrote:
+> >> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+> >> index 46df4c6..317e105 100644
+> >> --- a/arch/x86/mm/fault.c
+> >> +++ b/arch/x86/mm/fault.c
+> >> @@ -33,6 +33,10 @@
+> >> #define CREATE_TRACE_POINTS
+> >> #include <asm/trace/exceptions.h>
+> >>
+> >> +bool (*kvm_page_fault_handler)(struct pt_regs *regs, unsigned long error_code,
+> >> +                           unsigned long address);
+> >> +EXPORT_SYMBOL(kvm_page_fault_handler);
+> >
+> > NAK NAK NAK NAK
+> >
+> > This is one of the biggest anti-patterns around.
+>
+> I agree.
+> I think that mm should expose a mm_set_kvm_page_fault_handler() or something (give it a better name).
+> Similar to how arch/x86/kernel/irq.c have kvm_set_posted_intr_wakeup_handler().
+>
+> -Liran
+>
 
-got bisect - - hard origin/master
-
-I am still seeing the corruption leading to the invalid block error on 5.1.0+ kernels on both my machines.
-
-Arthur. 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+This sounds like a great use case for static_call().  PeterZ, do you
+suppose we could wire up static_call() with the module infrastructure
+to make it easy to do "static_call to such-and-such GPL module symbol
+if that symbol is in a loaded module, else nop"?
