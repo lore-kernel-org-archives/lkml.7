@@ -2,164 +2,182 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F65C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863ADC46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1AAF20881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:22:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JVPDo6Ux"
+	by mail.kernel.org (Postfix) with ESMTP id 553CA2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:24:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfENKWg (ORCPT
+        id S1726481AbfENKY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:22:36 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43092 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfENKWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:22:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r4so18537388wro.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JS4sBt7IXohvdJKn0F8lWpqp1oCwlBU70LHzqo2dwZ0=;
-        b=JVPDo6UxJfPRIhlrANZYpLrkSBhH61/2DdCBE/SMC37X7qKsJH9OdVryg+kKEYCte7
-         uIzgzsw/qjJDhDWMUgHChbxhlpK1l9qEzl9nD39W/Bo8DVRoifvpIBaU++Lzu/D32fGI
-         5Q2u2Zq1gY/yd8sLE/T+UrG4dbqUPZlygKfpoOhDkkQ7iIuygvwABBK2Dc5xyCuK5n/7
-         Lzk/3Y2bqXRQ8tLKMOzBfnEixgQtTLtlLCB78N8cGSIVgCCFFQIzRTJYExyn9XwmsflV
-         DNKaSwUVVYZqu7AWJLQ3v0zsP8Lfbj+NXGdWq9wHzw9+ab/tvuYP1K/fAEkqmIDqKp6u
-         1eEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=JS4sBt7IXohvdJKn0F8lWpqp1oCwlBU70LHzqo2dwZ0=;
-        b=PGcsC2IO8BKctmkDOswmUseDPiBfHhRhY7mdx4bFsNvPUZzOnyGpW0A9kxXakjgdIu
-         yOKxFeyW7wzaqUHcvOwfNiNyLIxHFNneIpTbkBN4NTxqL5IbyYV05UNZrGKaUrrvMiIX
-         bxoaKju+tcJJ2SC1Sg2fcs5Ud/wjaGsnbzCI60acCHpq7KajKej1OsPxIPTGCggCmpxQ
-         ehTEsfwIRpkH785X/BuRiv1R7ybFxe+iW1YGpAqLBSGOVzNcTBP8G8iH7OXaWUGRGTa5
-         GYSYCU3lpmJGPlTxhDbu8AetPnsXqdc1TZV8XY4NWjA9jaHYKWPBQHJCXfyhZ926ZVzv
-         pn1Q==
-X-Gm-Message-State: APjAAAX3MtgQH1Z4RD1or+oIxMDf87U9S4w18XXAkjtkkfeAlxHGqIt9
-        GZkN9367INSBpB7F3woxaeBamEai2MH98g==
-X-Google-Smtp-Source: APXvYqzWB783F3hQbnGDoZ91DEryw2E2bUBhtz9f3DNSzF9hVkBmhVyupxSUko8VTLt1GLUrNiPRhw==
-X-Received: by 2002:adf:e390:: with SMTP id e16mr18215602wrm.321.1557829353940;
-        Tue, 14 May 2019 03:22:33 -0700 (PDT)
-Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
-        by smtp.gmail.com with ESMTPSA id q26sm1895385wmq.25.2019.05.14.03.22.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:22:33 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson: g12a: set uart_ao clocks
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20190514094537.8765-1-jbrunet@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <8e6fb5af-e158-d2a3-5c28-8360a03711db@baylibre.com>
-Date:   Tue, 14 May 2019 12:22:32 +0200
+        Tue, 14 May 2019 06:24:26 -0400
+Received: from foss.arm.com ([217.140.101.70]:53596 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbfENKYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:24:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A7D4374;
+        Tue, 14 May 2019 03:24:24 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 383953F703;
+        Tue, 14 May 2019 03:24:23 -0700 (PDT)
+Subject: Re: [RFC] iommu: arm-smmu: stall support
+To:     Rob Clark <robdclark@gmail.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20170914194444.32551-1-robdclark@gmail.com>
+ <20170919123038.GF8398@8bytes.org>
+ <CAF6AEGuutkqjrWk4jagE=p-NwHgxdiPZjjsaFsfwtczK568j+A@mail.gmail.com>
+ <20170922090204.GJ8398@8bytes.org>
+ <32e3ab2c-a996-c805-2a0d-a2e85deb3a50@arm.com>
+ <CAF6AEGuepdKo1Ob2jW66UhYXOTAqOMc3C-XKsK3Rze1QdLobLw@mail.gmail.com>
+ <571e825d-7f54-2da4-adc0-6b6ac6dae459@arm.com>
+ <CAF6AEGtJRYvSLw+Cc6XaHEN58Ne2_StTojN9_e6+aJZSfX_dVg@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6f7fb139-5117-d89e-0caa-bd34ea9b6ff3@arm.com>
+Date:   Tue, 14 May 2019 11:24:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190514094537.8765-1-jbrunet@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAF6AEGtJRYvSLw+Cc6XaHEN58Ne2_StTojN9_e6+aJZSfX_dVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2019 11:45, Jerome Brunet wrote:
-> Now that the AO clock controller is available, make the uarts of the
-> always-on domain claim the appropriate peripheral clock.
+On 14/05/2019 02:54, Rob Clark wrote:
+> On Mon, May 13, 2019 at 11:37 AM Jean-Philippe Brucker
+> <jean-philippe.brucker@arm.com> wrote:
+>>
+>> Hi Rob,
+>>
+>> On 10/05/2019 19:23, Rob Clark wrote:
+>>> On Fri, Sep 22, 2017 at 2:58 AM Jean-Philippe Brucker
+>>> <jean-philippe.brucker@arm.com> wrote:
+>>>>
+>>>> On 22/09/17 10:02, Joerg Roedel wrote:
+>>>>> On Tue, Sep 19, 2017 at 10:23:43AM -0400, Rob Clark wrote:
+>>>>>> I would like to decide in the IRQ whether or not to queue work or not,
+>>>>>> because when we get a gpu fault, we tend to get 1000's of gpu faults
+>>>>>> all at once (and I really only need to handle the first one).  I
+>>>>>> suppose that could also be achieved by having a special return value
+>>>>>> from the fault handler to say "call me again from a wq"..
+>>>>>>
+>>>>>> Note that in the drm driver I already have a suitable wq to queue the
+>>>>>> work, so it really doesn't buy me anything to have the iommu driver
+>>>>>> toss things off to a wq for me.  Might be a different situation for
+>>>>>> other drivers (but I guess mostly other drivers are using iommu API
+>>>>>> indirectly via dma-mapping?)
+>>>>>
+>>>>> Okay, so since you are the only user for now, we don't need a
+>>>>> work-queue. But I still want the ->resume call-back to be hidden in the
+>>>>> iommu code and not be exposed to users.
+>>>>>
+>>>>> We already have per-domain fault-handlers, so the best solution for now
+>>>>> is to call ->resume from report_iommu_fault() when the fault-handler
+>>>>> returns a special value.
+>>>>
+>>>> The problem is that report_iommu_fault is called from IRQ context by the
+>>>> SMMU driver, so the device driver callback cannot sleep.
+>>>>
+>>>> So if the device driver needs to be able to sleep between fault report and
+>>>> resume, as I understand Rob needs for writing debugfs, we can either:
+>>>>
+>>>> * call report_iommu_fault from higher up, in a thread or workqueue.
+>>>> * split the fault reporting as this patch proposes. The exact same
+>>>>    mechanism is needed for the vSVM work by Intel: in order to inject fault
+>>>>    into the guest, they would like to have an atomic notifier registered by
+>>>>    VFIO for passing down the Page Request, and a new function in the IOMMU
+>>>>    API to resume/complete the fault.
+>>>>
+>>>
+>>> So I was thinking about this topic again.. I would still like to get
+>>> some sort of async resume so that I can wire up GPU cmdstream/state
+>>> logging on iommu fault (without locally resurrecting and rebasing this
+>>> patch and drm/msm side changes each time I need to debug iommu
+>>> faults)..
+>>
+>> We've been working on the new fault reporting API with Jacob and Eric,
+>> and I intend to send it out soon. It is supposed to be used for
+>> reporting faults to guests via VFIO, handling page faults via mm, and
+>> also reporting events directly to device drivers. Please let us know
+>> what works and what doesn't in your case
+>>
+>> The most recent version of the patches is at
+>> http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/sva/api
+>> (git://www.linux-arm.org/linux-jpb.git branch sva/api). Hopefully on the
+>> list sometimes next week, I'll add you on Cc.
+>>
+>> In particular, see commits
+>>          iommu: Introduce device fault data
+>>          iommu: Introduce device fault report API
+>>          iommu: Add recoverable fault reporting
+>>
+>> The device driver calls iommu_register_device_fault_handler(dev, cb,
+>> data). To report a fault, the SMMU driver calls
+>> iommu_report_device_fault(dev, fault). This calls into the device driver
+>> directly, there isn't any workqueue. If the fault is recoverable (the
+>> SMMU driver set type IOMMU_FAULT_PAGE_REQ rather than
+>> IOMMU_FAULT_DMA_UNRECOV), the device driver calls iommu_page_response()
+>> once it has dealt with the fault (after sleeping if it needs to). This
+>> invokes the SMMU driver's resume callback.
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Ok, this sounds at a high level similar to my earlier RFC, in that
+> resume is split (and that was the main thing I was interested in).
+> And it does solve one thing I was struggling with, namely that when
+> the domain is created it doesn't know which iommu device it will be
+> attached to (given that at least the original arm-smmu.c driver cannot
+> support stall in all cases)..
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index b2f08fc96568..ca01064a771a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -708,7 +708,7 @@
->  					     "amlogic,meson-ao-uart";
->  				reg = <0x0 0x3000 0x0 0x18>;
->  				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-> -				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
->  				clock-names = "xtal", "pclk", "baud";
->  				status = "disabled";
->  			};
-> @@ -718,7 +718,7 @@
->  					     "amlogic,meson-ao-uart";
->  				reg = <0x0 0x4000 0x0 0x18>;
->  				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-> -				clocks = <&xtal>, <&xtal>, <&xtal>;
-> +				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
->  				clock-names = "xtal", "pclk", "baud";
->  				status = "disabled";
->  			};
+> For GPU translation faults, I also don't really need to know if the
+> faulting translation is stalled until the callback (I mainly want to
+> not bother to snapshot GPU state if it is not stalled, because in that
+> case the data we snapshot is unlikely to be related to the fault if
+> the translation is not stalled).
 > 
+>> At the moment we use mutexes, so iommu_report_device_fault() can only be
+>> called from an IRQ thread, which is incompatible with the current SMMUv2
+>> driver. Either we need to switch the SMMUv2 driver to an IRQ thread, or
+>> rework the fault handler to be called from an IRQ handler. The reporting
+>> also has to be per device rather than per domain, and I'm not sure if
+>> the SMMUv2 driver can deal with this.
+> 
+> I'll take a closer look at the branch and try to formulate some plan
+> to add v2 support for this.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+What's fun is that we should be able to identify a stream ID for most 
+context faults *except* translation faults...
+
+We've considered threaded IRQs before, and IIRC the problem with doing 
+it at the architectural level is that in some cases the fault interrupt 
+can only be deasserted by actually resuming/terminating the stalled 
+transaction.
+
+> For my cases, the GPU always has it's own iommu device, while display
+> and other blocks share an apps_smmu.. although this sort of
+> functionality isn't really required outside of the GPU.. but I'll have
+> to think a bit about how we can support both cases in the single v2
+> driver.
+
+With the above said, I am in the middle of a big refactoring[1] to allow 
+everyone's imp-def stuff to coexist nicely, so ultimately if qcom 
+implementations can guarantee the appropriate hardware behaviour then 
+they can have their own interrupt handlers to accommodate this.
+
+Robin.
+
+[1] 
+http://linux-arm.org/git?p=linux-rm.git;a=shortlog;h=refs/heads/iommu/smmu-impl 
+- note that this is very, very WIP right now
