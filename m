@@ -2,93 +2,192 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683E4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED83FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EDA2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:03:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557864186;
-	bh=zzstFzPM2CHMwP2Pz4T3k7angf1fcugPtkyS1d9Z8kY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sx9D88y9vPK+PWLLIphvAYNJh1AB2C7TcX0KLFs94rp5nVrZPRMu1CB9RqkCUqflB
-	 ODMHBaZmbSgH30EKpbWGgPvx1NMXxSd1wZKW/LlZK0CfVH9hFkk1HDgMe6FFia0j++
-	 bQ3TZacntoZLnM6wUPcrx2w9hdTr+CSIShsvPBkU=
+	by mail.kernel.org (Postfix) with ESMTP id B5F622086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:04:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XtTEYKum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfENUDF (ORCPT
+        id S1726363AbfENUEe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:03:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44586 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfENUDE (ORCPT
+        Tue, 14 May 2019 16:04:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35213 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfENUEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:03:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id z65so43421oia.11;
-        Tue, 14 May 2019 13:03:04 -0700 (PDT)
+        Tue, 14 May 2019 16:04:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a39so582533qtk.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2wZQ6xWxc+/+0XmEJfXIGreqSfh73KSQ5TKQRQXts58=;
+        b=XtTEYKummlHi//ChjhE1VH9Y1m+spOUTqRcjCQJRhxc1cOI7N8azzbfCUibgdDWADS
+         ANJ79xzwlFSQ0fLTcXSWIliRXwyKYRuzGQXm5iB1VnnPn6rU2FWTyqhcwrJyOaHLGnKz
+         zNjoKmjsnu+PbBx40quKXVbVirwoJpsFDJ1ztemXfL2kARjy8F0n/4hRAWqSHQXr7VPX
+         JQjjQHlDT7kqCaXzSrSyBxLNN6aIsi1WpejQpVm8nK8bG0B/LOaI2BrW28tDmKHC0RF6
+         lZNuZ3/Nbto98YIEfekmGXa2NJuozk/TFBtWRCG6ce3ehpOiRdv8wS/AdhwJ1HCeBHPl
+         Kvvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=fr00WeJI7LuY/N4++pQHRnJwZ0q8ePUBZpSaqAUAGZM=;
-        b=oQfyaUnnrQeGZN4T3LbSgGMZlAnUjyB5MBmCZqABsmil5LfoguTsaqprlVy+g9Vyyz
-         o4ztLrHRQX7r5FHcuIU4Y5osg3coXkSshLoc4KgURMdqLHPpODkd7wrZaMkmcEnVaPa3
-         wyB91XT0i5zDXCxBDmA9j6DiSvQZXwlRxsg+Ki2O8LAqO2tAVhZpRzGZmPGo9JyZttZ2
-         QQaV0GY6wC57IxERLB6n+mgNrYDJ+z2UUsLXPQaLrVjM4XdTUlVOjScGjwH6G6MRGkPw
-         UnS1WPK6MyabskaMQ2Gv6hQ9L6Cf1IsT8WpHOuvGy/kzLf0KZGwT8eQxbUDcT5JiOESc
-         5g8A==
-X-Gm-Message-State: APjAAAVVPp/O4ltoXzlPTG+PSqKoK2oCfVEG+eDCA9/U7UKo8KpuOD3p
-        zq6WPXNkSu2WsPj2igjz/g==
-X-Google-Smtp-Source: APXvYqyyGrngDLkf4JtW5jGewq3pbgcF+xgmfak6/x/AXfJYI3EEMCP71iIcdP81e9ElCqbZBI7PHw==
-X-Received: by 2002:aca:56c3:: with SMTP id k186mr4070933oib.95.1557864184052;
-        Tue, 14 May 2019 13:03:04 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e133sm6577619oif.44.2019.05.14.13.03.03
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2wZQ6xWxc+/+0XmEJfXIGreqSfh73KSQ5TKQRQXts58=;
+        b=rAJJSXlunqUDKsrpk7apyF/NFbSUOMdeAXaxh//GQ67F49I1K/1a+F/j4jGdxhMse2
+         zKe9Rmhq5gte3YEpzPSOZZ5OJNGuBcoeC79a3hFL4nElK4R14pILW3b5q/M5TuCOXt61
+         GQEG/HHRvP9Sp8ROQ03v2cQYGGLm8ZBluy5TcX3LLbcafgR1IcnR4DyACuVhYMismI0U
+         4Y3DtGHE0qN3o5tT9Z07Q6CSScdekvQozgd8q03bEDwWdIzi06u7Dqfg+DoCqDDST3Pk
+         eaPpeZ4ya+ypv1pjeoKpqBxSu0Nq+tQGjTjbNaylfyUaTNYlXZxBljx6V3VYzOqEDQty
+         0AAw==
+X-Gm-Message-State: APjAAAXpXtBplEcjR9ZmcZYQPPU7J3nfuGkaTnqhhhqdEHu92l4Gu1wh
+        7miU0hKCquXP40AdqPB4B6qN/b+J7ks=
+X-Google-Smtp-Source: APXvYqwpOfuSsBF6JyzStVV467mNiQVNlv+ojmrBrZb+WJR08SIrxVKs7dbsMkUvqu+ZsUv/kzyf8w==
+X-Received: by 2002:aed:2a25:: with SMTP id c34mr32386158qtd.62.1557864272534;
+        Tue, 14 May 2019 13:04:32 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (179-240-182-78.3g.claro.net.br. [179.240.182.78])
+        by smtp.gmail.com with ESMTPSA id o64sm9422001qke.61.2019.05.14.13.04.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 13:03:03 -0700 (PDT)
-Date:   Tue, 14 May 2019 15:03:02 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Yannick =?iso-8859-1?Q?Fertr=E9?= <yannick.fertre@st.com>
-Cc:     Yannick Fertre <yannick.fertre@st.com>,
-        Philippe Cornu <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Vincent Abriou <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: display: stm32: add supply property
- to DSI controller
-Message-ID: <20190514200302.GA10115@bogus>
-References: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
- <1557498023-10766-2-git-send-email-yannick.fertre@st.com>
+        Tue, 14 May 2019 13:04:30 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B9F0C403AD; Tue, 14 May 2019 17:04:24 -0300 (-03)
+Date:   Tue, 14 May 2019 17:04:24 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 09/12] perf record: implement
+ -z,--compression_level[=<n>] option
+Message-ID: <20190514200424.GB8945@kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+ <9ff06518-ae63-a908-e44d-5d9e56dd66d9@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557498023-10766-2-git-send-email-yannick.fertre@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <9ff06518-ae63-a908-e44d-5d9e56dd66d9@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 May 2019 16:20:19 +0200, =?UTF-8?q?Yannick=20Fertr=C3=A9?= wrote:
-> This patch adds documentation of a new property phy-dsi-supply to the
-> STM32 DSI controller.
+Em Mon, Mar 18, 2019 at 08:44:42PM +0300, Alexey Budankov escreveu:
 > 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-> ---
->  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> Implemented -z,--compression_level[=<n>] option that enables compression
+> of mmaped kernel data buffers content in runtime during perf record
+> mode collection. Default option value is 1 (fastest compression).
 > 
+> Compression overhead has been measured for serial and AIO streaming
+> when profiling matrix multiplication workload:
+> 
+>     -------------------------------------------------------------
+>     | SERIAL			  | AIO-1                       |
+> ----------------------------------------------------------------|
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Please don't have lines starting with --- in the cset comment log
+message, breaks scripts, fixing it up now.
+
+- Arnaldo
+
+> |-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+> |---------------------------------------------------------------|
+> | 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+> | 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+> | 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+> | 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+> | 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+> | 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+> -----------------------------------------------------------------
+> 
+> OVH = (Execution time with -z N) / (Execution time with -z 0)
+> 
+> ratio - compression ratio
+> size  - number of bytes that was compressed
+> 
+> 	size ~= trace size x ratio
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt |  5 +++++
+>  tools/perf/builtin-record.c              | 25 ++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 18fceb49434e..0567bacc2ae6 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -471,6 +471,11 @@ Also at some cases executing less trace write syscalls with bigger data size can
+>  shorter than executing more trace write syscalls with smaller data size thus lowering
+>  runtime profiling overhead.
+>  
+> +-z::
+> +--compression-level[=n]::
+> +Produce compressed trace using specified level n (default: 1 - fastest compression,
+> +22 - smallest trace)
+> +
+>  --all-kernel::
+>  Configure all used events to run in kernel space.
+>  
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 2e083891affa..7258f2964a3b 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -440,6 +440,26 @@ static int record__mmap_flush_parse(const struct option *opt,
+>  	return 0;
+>  }
+>  
+> +#ifdef HAVE_ZSTD_SUPPORT
+> +static unsigned int comp_level_default = 1;
+> +static int record__parse_comp_level(const struct option *opt,
+> +				    const char *str,
+> +				    int unset)
+> +{
+> +	struct record_opts *opts = (struct record_opts *)opt->value;
+> +
+> +	if (unset) {
+> +		opts->comp_level = 0;
+> +	} else {
+> +		if (str)
+> +			opts->comp_level = strtol(str, NULL, 0);
+> +		if (!opts->comp_level)
+> +			opts->comp_level = comp_level_default;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+>  static unsigned int comp_level_max = 22;
+>  
+>  static int record__comp_enabled(struct record *rec)
+> @@ -2169,6 +2189,11 @@ static struct option __record_options[] = {
+>  	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
+>  		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
+>  		     record__parse_affinity),
+> +#ifdef HAVE_ZSTD_SUPPORT
+> +	OPT_CALLBACK_OPTARG('z', "compression-level", &record.opts, &comp_level_default,
+> +		     "n", "Produce compressed trace using specified level (default: 1 - fastest compression, 22 - smallest trace)",
+> +		     record__parse_comp_level),
+> +#endif
+>  	OPT_END()
+>  };
+>  
+> -- 
+> 2.20.1
+
+-- 
+
+- Arnaldo
