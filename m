@@ -4,98 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1364EC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6322BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA24A2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 337922085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="evnybUqQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="q+LAgf1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfENP5p (ORCPT
+        id S1726296AbfENP6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:57:45 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:35342 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfENP5o (ORCPT
+        Tue, 14 May 2019 11:58:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38414 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfENP6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:57:44 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a39so18794815qtk.2;
-        Tue, 14 May 2019 08:57:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=09KkEvxVufpT7/jHfQWIW8S/OLgTGQRQAFAad5Q891g=;
-        b=evnybUqQSO3rMlm+kFqEQEIAfI3v4IqgwamNZvPOEyI9wfLiDbsuEeXduuT3enU+/D
-         iPaHuAred/MDyZUVZgr18lqhCz/SufyYY000qM22MZZpH/JuvqIujY2M3yfpedzXDH1V
-         CUXWUf5xY8etjU/g1epN4mmTh3W4L8h/GZxe9kMxCB+tU9kx3BuiIFMLWZKDu/wPTnz8
-         9a8FfvgxAFTFjGiycvXhLWDMbsBwaoxZL30QEkdUA3OmNl0+6lT6Rw7OMCoCN1pOTlgF
-         ssx2GCz1BmDg4+bJTTtQQmXXFK59NTym2BDk+1SRu1kUafbPyfP5tvlJWv1n1Itxr6C/
-         JP6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=09KkEvxVufpT7/jHfQWIW8S/OLgTGQRQAFAad5Q891g=;
-        b=S2byZtGVafs/kmyA/gfG2qs2Gb7KxcpxbQDROWdY+zcthmmD+o7paCXK1eund8cDV9
-         K9nUE619axorpLC7rZpYqTFXE/HGVMFnxvjnlORKjgra+pQSPUbzwWFAkyEyp2J4PtIZ
-         M4pvfrTXiiPql0qxmJNtA8UjRSRIIZr/W82Bn2D92yjsaKVtYFPdmAN8EvIaXV6b04pu
-         7L/oLp6PkIhDqWfw2TqtqnFIA43cearEXadL67LHgRuBtc4NfdXSmgX8ELiZXxj4Rpn5
-         4iXyP5LHImWE4CXrXIhOphrbOnMGAeiKNXDRSRNnnHDQWxPmYevUt2U0i4Ox08Is2Y6i
-         PYFQ==
-X-Gm-Message-State: APjAAAWQWSTvqYivORFI3EPkUudlOGLhiwJC+jys8l6RSrIt1dv1eT6N
-        M9bjxSn38zE/XwUO8310JsE=
-X-Google-Smtp-Source: APXvYqxQkrvvSVGKdFqsv/NpzHHnJeXW91ioD42OqHauIMmMOKgcTJj6yswK2beRxWwGYRcDRcnhnw==
-X-Received: by 2002:a0c:b92f:: with SMTP id u47mr19802185qvf.94.1557849462769;
-        Tue, 14 May 2019 08:57:42 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p37sm14130553qtj.90.2019.05.14.08.57.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 08:57:42 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 14 May 2019 11:57:40 -0400
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     Rob Landley <rob@landley.net>,
-        Arvind Sankar <niveditas98@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190514155739.GA70223@rani.riverdale.lan>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <49965ffd-dd57-ffe5-4a2f-73cdfb387848@landley.net>
- <de91ef53-6bb3-b937-8773-5f6b34e1acb7@huawei.com>
- <20190514152704.GB37109@rani.riverdale.lan>
+        Tue, 14 May 2019 11:58:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=uEG6RAbenetSOMt2p9wGwy8CK7MGZhuTPCJ+MQ39rqU=; b=q+LAgf1KxBqb6/SCaU1L7GtjIF
+        kDReAoucGpNYabwwnltrdstTqskmLN4GIHlOa3uY8I35Rk8/VcqoQHpx5Vm/XZo0pW3GrcSqMAZpI
+        nk9185FKy/dY5nH594dnb3Jetb8Q4vGQXnLNTPfrcl/9alvgWxYyHUjvW0IJscOGVsYL9oxN7QmCR
+        5cQkgJmCnBswxrl2Amz9FDI4g9RJV0/QGdA5lzwIS/GGucJv4xcuPfI5StaCxCrf166f1pC+/FJ7k
+        +6X7mLZmjTh/j43/jyvh7wieNqyCRXxsPLnzKFrO8885cv683+/ZVJd65Y412ChiSV5Oq5L1ADWCR
+        QhXusegg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQZol-0000Wc-Bp; Tue, 14 May 2019 15:58:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9AF8F2029F877; Tue, 14 May 2019 17:58:13 +0200 (CEST)
+Date:   Tue, 14 May 2019 17:58:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     huangpei@loongson.cn
+Cc:     Paul Burton <paul.burton@mips.com>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "akiyks@gmail.com" <akiyks@gmail.com>,
+        "andrea.parri@amarulasolutions.com" 
+        <andrea.parri@amarulasolutions.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "dlustig@nvidia.com" <dlustig@nvidia.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "j.alglave@ucl.ac.uk" <j.alglave@ucl.ac.uk>,
+        "luc.maranget@inria.fr" <luc.maranget@inria.fr>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        Huacai Chen <chenhc@lemote.com>
+Subject: Re: Re: [RFC][PATCH 2/5] mips/atomic: Fix loongson_llsc_mb() wreckage
+Message-ID: <20190514155813.GG2677@hirez.programming.kicks-ass.net>
+References: <20190424123656.484227701@infradead.org>
+ <20190424124421.636767843@infradead.org>
+ <20190424211759.52xraajqwudc2fza@pburton-laptop>
+ <2b2b07cc.bf42.16a52dc4e4d.Coremail.huangpei@loongson.cn>
+ <20190425073348.GV11158@hirez.programming.kicks-ass.net>
+ <20190425091258.GC14281@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190514152704.GB37109@rani.riverdale.lan>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190425091258.GC14281@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:27:04AM -0400, Arvind Sankar wrote:
-> It's also much easier to change/customize it for the end
-> system's requirements rather than setting the process in stone by
-> putting it inside the kernel.
 
-As an example, if you allow unverified external initramfs, it seems to
-me that it can try to play games that wouldn't be prevented by the
-in-kernel code: setup /dev in a weird way to try to trick /init, or more
-easily, replace /init by /bin/sh so you get a shell prompt while only
-the initramfs is loaded. It's easy to imagine that a system would want
-to lock itself down to prevent abuses like this.
-So you might already want an embedded initramfs that can be trusted and
-that can't be overwritten by an external one even outside the
-security.ima stuff.
+I think this thread got 'lost'
+
+On Thu, Apr 25, 2019 at 11:12:58AM +0200, Peter Zijlstra wrote:
+> On Thu, Apr 25, 2019 at 09:33:48AM +0200, Peter Zijlstra wrote:
+> > > Let me explain the bug more specific:
+> > > 
+> > > the bug ONLY matters in following situation:
+> > > 
+> > > #. more than one cpu (assume cpu A and B) doing ll/sc on same shared
+> > > var V
+> > > 
+> > > #. speculative memory access from A cause A erroneously succeed sc
+> > > operation, since the erroneously successful sc operation violate the
+> > > coherence protocol. (here coherence protocol means the rules that CPU
+> > > follow to implement ll/sc right)
+> > > 
+> > > #. B succeed sc operation too, but this sc operation is right both
+> > > logically and follow the coherence protocol, and makes A's sc wrong
+> > > logically since only ONE sc operation can succeed.
+> 
+> > > In one word， the bug only affect local cpu‘s ll/sc operation, and
+> > > affect MP system.
+> 
+> > > PS:
+> > > 
+> > > If local_t is only ll/sc manipulated by current CPU， then no need fix it.
+> > 
+> > It _should_ be CPU local, but this was not at all clear from reading the
+> > original changelog nor the comment with loongson_llsc_mb().
+> 
+> However, if it is a coherence issue, the thing is at the cacheline
+> level, and there is nothing that says the line isn't shared, just the
+> one variable isn't.
+> 
+> Ideally there should be minimal false sharing, but....
+
+So if two variables share a line, and one is local while the other is
+shared atomic, can contention on the line, but not the variable, cause
+issues for the local variable?
+
+If not; why not? Because so far the issue is line granular due to the
+coherence aspect.
