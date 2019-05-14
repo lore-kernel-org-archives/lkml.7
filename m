@@ -2,138 +2,206 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B6BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222CAC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA40B2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1832084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:47:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="P/3RK9cu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VSY8dXQo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726587AbfENQpe (ORCPT
+        id S1726447AbfENQrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:45:34 -0400
-Received: from mout.web.de ([217.72.192.78]:42667 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfENQpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:45:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557852302;
-        bh=QOR1BLXQNz5je1M2863+zbS3ipBJfUxoDeGOj243Cyc=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=P/3RK9cukXMgsHwi557LTDiAWYLvjlitsO4baHoU/UHIO5uceiQkEBKIjZpY0VOsQ
-         LnDqS0fBV8RmbJaV+PVJnnlYXu2i+Zt1O2BxW/5C0pGO5zBvZtqDNgKPhxp8mE+zDY
-         wfbyEAs1zUI/DMRpuHgu/WboFveaV5znh9k8XkCQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([93.131.122.180]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0Mfq6i-1h5bn01Kjc-00NCXZ; Tue, 14
- May 2019 18:45:02 +0200
-To:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Petr Strnad <strnape1@fel.cvut.cz>,
-        Wen Yang <wen.yang99@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH 0/3] Coccinelle: pci_free_consistent: Adjustments for a SmPL
- script
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Yi Wang <wang.yi59@zte.com.cn>
-Message-ID: <e30b9777-6440-b041-9df9-f1a27ce06c6c@web.de>
-Date:   Tue, 14 May 2019 18:44:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 12:47:23 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:39231 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfENQrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 12:47:23 -0400
+Received: by mail-ua1-f67.google.com with SMTP id v7so6455408ual.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 09:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y7PwSEWga2/yPtBQUis8gBpGWAMpLLGBJz02yhRxW58=;
+        b=VSY8dXQoBspa4RXRjnFzsXCE0X8Uk+FIr6PE+cYivABoT0y+YLVAE8RbSuXG99Z7Rf
+         N25/9PQ9Ufr7OYaHSH7Oh1iMkAYcaMSPowqMKeVyfw80o2CRO7ieTWCoCIez+CTxr4Tl
+         rSbsPE7YdyNeVFoFWWU48wHDTgvkSL8q1w8to=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y7PwSEWga2/yPtBQUis8gBpGWAMpLLGBJz02yhRxW58=;
+        b=TFwqLgIx6g+w1Whp0SSSnc1Q28x/8RfP1Nl+OhBc2NzrlSTDNIg+lXUcIOFKPprerd
+         JCDCMcIPpZbdDrq37Wl1nDib/G8BOPqZAyJBq6ntPOhVEzfVJZ+WyGQtI8fsRaOT2A3z
+         pTzFh54Bcypx6XiGxwdhK3Erslo7+0oKkYyRgYejH4rMKp7D1WgwwuSnH6dVoaNWsCLY
+         Dd5vBPvlD8uuwIKZGJScjUlcau2XySAS7U78CsKwPaUhCSjN/r5hQdgn0pkbRhsctGe0
+         mSnXTUTLfo46tdmiVCGHMAE0zHk8m36AtDswo1QaZXI3mM3AnVO7yRN+cBX4O18tCJA+
+         loTg==
+X-Gm-Message-State: APjAAAURhM0r5bGkXIdb7To6PH4m7r6nwpkVWJ013nGCm7QvA5ifcRrj
+        eGQr4MLWGSj62HqWklKaNhDtIhH1reU=
+X-Google-Smtp-Source: APXvYqzarCVh4FvfCDlqwwh7HhzHjeBDqJblyShJ81QHLPXzQ7iWpVkXAo65WOU262MoHxTzI2eoOg==
+X-Received: by 2002:ab0:806:: with SMTP id a6mr18119629uaf.10.1557852441897;
+        Tue, 14 May 2019 09:47:21 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id o66sm3621844vke.17.2019.05.14.09.47.20
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 09:47:20 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id z17so6467448uar.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 09:47:20 -0700 (PDT)
+X-Received: by 2002:ab0:2692:: with SMTP id t18mr1528737uao.106.1557852440345;
+ Tue, 14 May 2019 09:47:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TITipfat3CM+TTRoRigcZZbAnGbJBdlLMMtjqlmlxSmxuACwVnE
- REUAaPumXaIPuRJdbd0511BXI2iZ+/PAVLQdaiZEZAZot5cC9Vce9tSX1s3jSZ/DoNU9/Os
- eqheC5xcHm8dqSXSjzj5NIZtZ6alsPywFOEJE49HxT4wrMp/o+TaWrZNhJOgAWFFkZ0Vohr
- HDyvZU0+IPnGit8MEuhKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YwiQNWbz+M8=:t2BkyuHJAZuQTl7RO5KHBQ
- Mho0eWbfqyfPzj5YsgsnfiHaBy39N0UWNodJuoUlUkaQhHaHx1py45h9x/Vd3pKyQdylgm90e
- iz5AgsCIO4/Ezmt+FBGkSgQzuMiYR8qL66Qu3AM3HAB8YVEHv6X3Vp0SmmiGwv75t36q50RVi
- fItOFkVkXHKW/68j4EFicQmY5gJXQIq2NNEA+jupdH3IbU+3wwSDYE6je9asOuWMjbThN9FxB
- tJ1BemkNCywAfeFT4NVSCMTL+2iO7Ea8sppv6YeVq6j/cNeunRt2a7sNjvAnhS5fRpYFppg72
- IVEIe91OtGfR54OSyPaYjQOuGKBFYkthcQpHD55UVXzaV6zlQaI17njrpmyJz6XAHMZB3DMqm
- NLYsghvoyLY3avM6pJg1JXguzqvwcXylQ4Ja2KV2laj5+UgSlakaXX7upQ33bZ+Govdo4Mcsx
- JorvhKg2T/mUL2lqSUzP99VXkz/ucFjQDwk6eyNMCrga2kEivzjFFXX4qZbzdPtsWbACJdpkO
- 1/SO/jTwUMwHZlmjfOC+KIo4L1+kaGpbyNPUKR4rYXfzrDXzZDVCF/aGx8d2hAs75yQkxcQO8
- ZyxvP23THCZw1La5exYC8yF1mUNY7O7jVhzX2P8OZVoi7tQWGlF/u4Yt4pch2lYMlxECa/QSU
- 5UKq9+e1/e0vSdgKkOyhy1rN5NdHyNrAsDRYnTl9mU/4WK0Qpl3U2sGoRd9qafDoZspPJUHEC
- XJ3OOnCQRGZbwve0nNkwoVKo5VpH7zxSgUHxFJSxw/Yu4rOqEBTqe7mKguJGdUjtT9fHa/879
- pe3KqzT96L9P2rx1zeFKfq5zWTGS0pIirP49EEvI6Cv40Egm0/EyqiB95CrOy2SQfaZV4+xpt
- Me8I5naA9zMzTkWJD14f4zpajjwDB7tZb6Xs06BDekFQvx9GIorBGvgLbndjt/Fpimfs5FKdt
- deQkKJnT8jw==
+References: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
+ <20190513171519.GA26166@redhat.com>
+In-Reply-To: <20190513171519.GA26166@redhat.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 14 May 2019 09:47:10 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X7GDNoJVvRgBTDoVkf9UYA69B-rTY2G3888w=9iS=RtQ@mail.gmail.com>
+Message-ID: <CAD=FV=X7GDNoJVvRgBTDoVkf9UYA69B-rTY2G3888w=9iS=RtQ@mail.gmail.com>
+Subject: Re: Problems caused by dm crypt: use WQ_HIGHPRI for the IO and crypt workqueues
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Tim Murray <timmurray@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com,
+        Tejun Heo <tj@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This script for the semantic patch language contains implementation detail=
-s
-which can be improved.
+Hi,
 
-Markus Elfring (3):
-  Use formatted strings directly in SmPL rules
-  Reduce a bit of duplicate SmPL code
-  Extend when constraints for two SmPL ellipses
+On Mon, May 13, 2019 at 10:15 AM Mike Snitzer <snitzer@redhat.com> wrote:
 
- .../coccinelle/free/pci_free_consistent.cocci | 28 ++++++++++---------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+> On Mon, May 13 2019 at 12:18pm -0400,
+> Doug Anderson <dianders@chromium.org> wrote:
+>
+> > Hi,
+> >
+> > I wanted to jump on the bandwagon of people reporting problems with
+> > commit a1b89132dc4f ("dm crypt: use WQ_HIGHPRI for the IO and crypt
+> > workqueues").
+> >
+> > Specifically I've been tracking down communication errors when talking
+> > to our Embedded Controller (EC) over SPI.  I found that communication
+> > errors happened _much_ more frequently on newer kernels than older
+> > ones.  Using ftrace I managed to track the problem down to the dm
+> > crypt patch.  ...and, indeed, reverting that patch gets rid of the
+> > vast majority of my errors.
+> >
+> > If you want to see the ftrace of my high priority worker getting
+> > blocked for 7.5 ms, you can see:
+> >
+> > https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=392715
+> >
+> >
+> > In my case I'm looking at solving my problems by bumping the CrOS EC
+> > transfers fully up to real time priority.  ...but given that there are
+> > other reports of problems with the dm-crypt priority (notably I found
+> > https://bugzilla.kernel.org/show_bug.cgi?id=199857) maybe we should
+> > also come up with a different solution for dm-crypt?
+> >
+>
+> And chance you can test how behaviour changes if you remove
+> WQ_CPU_INTENSIVE? e.g.:
+>
+> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+> index 692cddf3fe2a..c97d5d807311 100644
+> --- a/drivers/md/dm-crypt.c
+> +++ b/drivers/md/dm-crypt.c
+> @@ -2827,8 +2827,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>
+>         ret = -ENOMEM;
+>         cc->io_queue = alloc_workqueue("kcryptd_io/%s",
+> -                                      WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
+> -                                      1, devname);
+> +                                      WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
+>         if (!cc->io_queue) {
+>                 ti->error = "Couldn't create kcryptd io queue";
+>                 goto bad;
+> @@ -2836,11 +2835,10 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+>
+>         if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
+>                 cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+> -                                                 WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
+> -                                                 1, devname);
+> +                                                 WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
+>         else
+>                 cc->crypt_queue = alloc_workqueue("kcryptd/%s",
+> -                                                 WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
+> +                                                 WQ_HIGHPRI | WQ_MEM_RECLAIM | WQ_UNBOUND,
+>                                                   num_online_cpus(), devname);
+>         if (!cc->crypt_queue) {
+>                 ti->error = "Couldn't create kcryptd queue";
 
-=2D-
-2.21.0
+It's not totally trivially easy for me to test.  My previous failure
+cases were leaving a few devices "idle" over a long period of time.  I
+did that on 3 machines last night and didn't see any failures.  Thus
+removing "WQ_CPU_INTENSIVE" may have made things better.  Before I say
+for sure I'd want to test for longer / redo the test a few times,
+since I've seen the problem go away on its own before (just by
+timing/luck) and then re-appear.
 
+Do you have a theory about why removing WQ_CPU_INTENSIVE would help?
+
+---
+
+NOTE: in trying to reproduce problems more quickly I actually came up
+with a better test case for the problem I was seeing.  I found that I
+can reproduce my own problems much better with this test:
+
+  dd if=/dev/zero of=/var/log/foo.txt bs=4M count=512&
+  while true; do
+    ectool version > /dev/null;
+  done
+
+It should be noted that "/var" is on encrypted stateful on my system
+so throwing data at it stresses dm-crypt.  It should also be noted
+that somehow "/var" also ends up traversing through a loopback device
+(this becomes relevant below):
+
+
+With the above test:
+
+1. With a mainline kernel that has commit 37a186225a0c
+("platform/chrome: cros_ec_spi: Transfer messages at high priority"):
+I see failures.
+
+2. With a mainline kernel that has commit 37a186225a0c plus removing
+WQ_CPU_INTENSIVE in dm-crypt: I still see failures.
+
+3. With a mainline kernel that has commit 37a186225a0c plus removing
+high priority (but keeping CPU intensive) in dm-crypt: I still see
+failures.
+
+4. With a mainline kernel that has commit 37a186225a0c plus removing
+high priority (but keeping CPU intensive) in dm-crypt plus removing
+set_user_nice() in loop_prepare_queue(): I get a pass!
+
+5. With a mainline kernel that has commit 37a186225a0c plus removing
+set_user_nice() in loop_prepare_queue() plus leaving dm-crypt alone: I
+see failures.
+
+6. With a mainline kernel that has commit 37a186225a0c plus removing
+set_user_nice() in loop_prepare_queue() plus removing WQ_CPU_INTENSIVE
+in dm-crypt: I still see failures
+
+7. With my new "cros_ec at realtime" series and no other patches, I get a pass!
+
+
+tl;dr: High priority (even without CPU_INTENSIVE) definitely causes
+interference with my high priority work starving it for > 8 ms, but
+dm-crypt isn't unique here--loopback devices also have problems.
+
+
+-Doug
