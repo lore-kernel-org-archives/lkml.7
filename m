@@ -2,87 +2,160 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A84C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5160DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8378F20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2381F208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Febku/bv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dXeMBsJl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726678AbfENGCj (ORCPT
+        id S1726060AbfENGEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:02:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43918 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENGCj (ORCPT
+        Tue, 14 May 2019 02:04:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42944 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENGEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:02:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ecFsjeXieV9h3Fjo2VPit06w6DAoGJHeCAQiJy8yh1I=; b=Febku/bv1m6bGePNQRiuuuwGC
-        sCAh71ePAxt+5+rfCcN24Ub59rLk9XptZe4o/Wak5eyMwAXAcQd8vsp14Fnzi2C07Y5sr3aHO/F17
-        ke0Y/HP6rS/HHI6uD+S0kkrbPtD+FlW/LoYPgCSgrt6bqIWaYv3MvJVGJ33ab1USgBljny9w80TUa
-        Iy527WdGHlHIjjJdJoMSNPICTjyVG6hNOp2uPmV4lgzYEbQeIHpTXjfWQVM/1+JnIOk/tH59kReHf
-        Dkqrg2M+K17AUwEX5Wt7uId6xbc70xBfVJOPlBQf7UvZwP7Z9k7tMyXhRPlNm3vOxYxUTaj+HsHBp
-        bTIC8A7Sw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQQWB-0003hG-L2; Tue, 14 May 2019 06:02:27 +0000
-Date:   Mon, 13 May 2019 23:02:27 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com,
-        bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Message-ID: <20190514060227.GA7625@infradead.org>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
- <20190513072539.GA27708@infradead.org>
- <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+        Tue, 14 May 2019 02:04:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 13so8517928pfw.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wphR9fs1TaZsZNH4NQjQ2k5wiALr/JJ7E+MkCJWg1G8=;
+        b=dXeMBsJluQkuZhtQlsIs60i39Eowu4Bt+MfjENGGmqpwBGoiYmgZ+5w8Qv26k9QKXI
+         1cnJzcNtxLLINZMIPeb4dfPgJ9g1ycOJEIg8i4YfGPpKugYG/E5lbz6d5J5x9AuwEioW
+         4w2gtbfJr7C59YLC9izuQhoVm6zDXWPFcTTTt0JfnLD/xaylHZ0XCbk5pClrxdins17i
+         5S5K0uYGrPEnttnkWkkw5N35wkZ3iKovTWWT7UaNVg+Cgtqi0115K/LElBXGDu9PpvZF
+         H60HHv+fa3B8a/nV2ZgfeVrjAVx8la+EU59rYesO3d6/OVXgbE5DewFQtzpmhhvoUR6U
+         YnrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wphR9fs1TaZsZNH4NQjQ2k5wiALr/JJ7E+MkCJWg1G8=;
+        b=RjEyRouWcYhMttEpxd0ZbM8ofWl9THLkb1mi0XJenwr1liImqqpbHWqsCzUM50wk43
+         MHhA2jv41yeJRXRXKYG5Pa8krK/90r7tgW/BO/qHtjHp4trmnrhXKN8PW8BqM86f/OvY
+         mMwALW4BrQHK2PqNylqRzedTwMx+lfbr/1EUfiP1A1TPwtQ1SuJoP6vu2HpplYeoOoFd
+         F0xIClg91j7ndhMuta2Z0Bj0oPc7vbzDz+jo+HPrdLZfjzmVy0QaVpQlOS5WoQP4W1Lq
+         2Qoh0rwwx3q1Rdjk5ph1/fio7C8oSXU4Btnt8GE4nTnr6GFcViAOQl6+kirQjfbq9UpN
+         wroQ==
+X-Gm-Message-State: APjAAAW5hOj0lSRnT2Jtd3Q3z6TUuPAUDQmcqrQW5jcqJEuHaARW1uHn
+        hLcr+68HBgm7YmKtGwwOdOjv+g==
+X-Google-Smtp-Source: APXvYqzgwWIVKsYY211IYVBjZXLCdV1/hwybUBgofPR0QuIs5iXekLntSbypfxIlEzH7138sP0qZvw==
+X-Received: by 2002:aa7:8008:: with SMTP id j8mr38436137pfi.120.1557813879741;
+        Mon, 13 May 2019 23:04:39 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
+        by smtp.gmail.com with ESMTPSA id k10sm16067228pgo.82.2019.05.13.23.04.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 13 May 2019 23:04:38 -0700 (PDT)
+Date:   Mon, 13 May 2019 23:04:33 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190514060433.GA181462@google.com>
+References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
+ <20190511173344.GA8507@mit.edu>
+ <20190513144451.GQ17751@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190513144451.GQ17751@phenom.ffwll.local>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
-> There is nothing broken in Tegra194 root port as such, rather,  this is more
-> of software configuration choice and we are going with legacy interrupts than
-> MSI interrupts (as Tegra194 doesn't support raising PME interrupts through MSI
-> and please note that this doesn't mean root port is broken).
+On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
+> On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
+> > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
+> > > However, the reply is incorrect.  Kselftest in-kernel tests (which
+> > > is the context here) can be configured as built in instead of as
+> > > a module, and built in a UML kernel.  The UML kernel can boot,
+> > > running the in-kernel tests before UML attempts to invoke the
+> > > init process.
+> > 
+> > Um, Citation needed?
+> > 
+> > I don't see any evidence for this in the kselftest documentation, nor
+> > do I see any evidence of this in the kselftest Makefiles.
+> > 
+> > There exists test modules in the kernel that run before the init
+> > scripts run --- but that's not strictly speaking part of kselftests,
+> > and do not have any kind of infrastructure.  As noted, the
+> > kselftests_harness header file fundamentally assumes that you are
+> > running test code in userspace.
+> 
+> Yeah I really like the "no userspace required at all" design of kunit,
+> while still collecting results in a well-defined way (unless the current
+> self-test that just run when you load the module, with maybe some
+> kselftest ad-hoc wrapper around to collect the results).
+> 
+> What I want to do long-term is to run these kernel unit tests as part of
+> the build-testing, most likely in gitlab (sooner or later, for drm.git
 
-It seems odd at least and probably broken if it adverises MSI interrupts,
-but than doesn't actually support them fully.
+Totally! This is part of the reason I have been insisting on a minimum
+of UML compatibility for all unit tests. If you can suffiently constrain
+the environment that is required for tests to run in, it makes it much
+easier not only for a human to run your tests, but it also makes it a
+lot easier for an automated service to be able to run your tests.
 
-> Since Tegra194 has
-> only Synopsys DesignWare core based host controllers and not any other hosts, I
-> think it is fine to call this API in driver. Also, since this is a global setting,
-> calling this APIs from anywhere (be it from quirk or from driver) would have the
-> same effect, or did I miss anything here?
+I actually have a prototype presubmit already working on my
+"stable/non-upstream" branch. You can checkout what presubmit results
+look like here[1][2].
 
-Maybe in your current particular case this is true, but in general
-we see more and more systems with different kind of root ports, and
-having a driver set a global variable due to its own hardwares quirk
-defeats that.  So the right thing here is to replace the global
-flag with a per-device one first before setting it for a driver.
+> only ofc). So that people get their pull requests (and patch series, we
+> have some ideas to tie this into patchwork) automatically tested for this
+
+Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
+and he seemed pretty open to collaboration.
+
+Before I heard about Snowpatch, I had an intern write a translation
+layer that made Prow (the presubmit service that I used in the prototype
+above) work with LKML[4].
+
+I am not married to either approach, but I think between the two of
+them, most of the initial legwork has been done to make presubmit on
+LKML a reality.
+
+> super basic stuff.
+
+I am really excited to hear back on what you think!
+
+Cheers!
+
+[1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
+[2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
+[3] https://developer.ibm.com/open/projects/snowpatch/
+[4] https://kunit.googlesource.com/prow-lkml/
