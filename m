@@ -2,95 +2,132 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A69EC04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4A7C04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6F221734
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCC3D2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DmaXwPUu"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dIDbl08z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfENAfL (ORCPT
+        id S1726823AbfENAj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 20:35:11 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:49695 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfENAfK (ORCPT
+        Mon, 13 May 2019 20:39:56 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39045 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbfENAj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 20:35:10 -0400
-Received: by mail-yw1-f73.google.com with SMTP id v123so28332246ywf.16
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 17:35:10 -0700 (PDT)
+        Mon, 13 May 2019 20:39:56 -0400
+Received: by mail-it1-f195.google.com with SMTP id 9so2043143itf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 17:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cQYS69pnKdMx3gTO+F+7L60HZWMlBVLEQe2DQzgIjmQ=;
-        b=DmaXwPUuWIZMqSn3Lsqr881WEcVU27uNFKq/wiCngB4z8Zzw9SPR1itbmxkurWaCGj
-         HxExxQXTVwHuFlqxg9Ua8Y/2PGoxyQvRgboX8EsKaLuXc7XGe7ijMvfbFo/EWGOBaGix
-         SHvw6RLvCz7KTBEmnarZo3gSNYNBoAvCJrpq5/sdvbMlhw1QL/XoGdeQFKFyojg/nQwK
-         DCvLMtAQEM8Wy6aFmNCuNEHIPxNiMfIG6/yOjqnELveRZtT6mEa1ToIv/mCy/ssO1a8a
-         mszckrZjoviua2DCVZxW173T+Bf70pLXqbtYqmI8RvdRYsGf3r+WvOQGI56ppJ9FDAa0
-         LXpw==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=kMZ5w85F7GQqBXnYMmtQZ+xbVTO8OslBtbOYC6aSOnc=;
+        b=dIDbl08zuYEXjpcqx5vKPssywdXTZxvDMCnbtlVVbXHC97okSbaxXNZpoFGB/UovIx
+         XoNy7bRb7HHziO9YZaDJxH0NKnSIMjQ+anjVkDM2z+PgnN/HRC9xUdqv81IzsDJKWChr
+         K756P8PpDsujRhQqr77vMsEUI1ZULdqJ7QDQnH+geiBWrD64ANnYy9jNOVPAdTi5+ngh
+         fadPDEslLEAUiySuMIlfbc8wfrZSVhxEbiE9zKtdsj/ohJZn7u4TFbLScXkiEvyHUqO8
+         fDcOd0W2a2UwGMTHMw43d7np5QJOHencef/vU/jqX6rHMgAauiHTMBZaGwlof4Y+TRyX
+         Jizw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cQYS69pnKdMx3gTO+F+7L60HZWMlBVLEQe2DQzgIjmQ=;
-        b=NPFYgBEGgon5s6Vh4WI4BAhbBo6ivWvt10aFr4ft4RgBk9b9BXMMuvbUKQzFfC9ZGu
-         chwcCSN94sXmGDACRLsp9E6z5S8MfomGXkrHRKi24t1Oz8ATogjS4qDcDMiZCuH3g49+
-         SaqSzxQqYVGIhB6rBanM0GgkDxcvQnBXcxz13lJpt5/cTtGhSdut6TPKUYwEZG4p9or1
-         jiEK7IfPPZDwpYZ4FHLWZQJ3stMnC93QvLOJLYFAJlLwZHO63/1rkYYzccZuAe8QSz1j
-         Xpfkkv3HexAAnlnfwm1t6WHpsgkNeRDsDb8ZHZAGS8JlIYw2Y3yzgXAwMyGCCbJC1EcQ
-         aU/Q==
-X-Gm-Message-State: APjAAAVE4OUXsQ7INEr2RF5F4a7tn2eU7/LyfR+icamgo8f1eICJTquT
-        i97uTlL8zqV7Eq9788QlLDcfyZaWoOKcYI1McumPqoSEgwtZSPr8xRJKaTHohk1YlNn6Fx8p0Mo
-        bZfyLaQJ9PXbfyYM/jwA2ukiyq4G+HxAoOOP9ZUfIqY9B1daRbVoBHeDEj3seVw2s7UD8PMcR
-X-Google-Smtp-Source: APXvYqzsmtb0KPyqn4PIBDgUHFGDExg8nnHyTZfy05UepuYWyO7FwFrB7WZTCQ76s0tcs+wV4QT9CyFyBRAz
-X-Received: by 2002:a25:3b43:: with SMTP id i64mr15016395yba.477.1557794109918;
- Mon, 13 May 2019 17:35:09 -0700 (PDT)
-Date:   Mon, 13 May 2019 17:34:00 -0700
-Message-Id: <20190514003400.224340-1-eranian@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH] perf/x86/intel: allow PEBS multi-entry in watermark mode
-From:   Stephane Eranian <eranian@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, ak@linux.intel.com, kan.liang@intel.com,
-        mingo@elte.hu, jolsa@redhat.com, vincent.weaver@maine.edu
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=kMZ5w85F7GQqBXnYMmtQZ+xbVTO8OslBtbOYC6aSOnc=;
+        b=pqtom9Q9HWCx9fnouly/mE8DnpdaNPzqc+c5Yi1ns7gUzrwiHYDWYeSaL+07kOJlhR
+         9lVtGk9MMZN93pgd5Sg0W/Kr5+QtZXUvB1qdllmuL69RbtvjEa7K1uPDOsdWWr4ctVjR
+         nO2gWWRNGwGxJXi2xJ0F5TkfRFtCyCUfTw1s9t544JTrc17ou3m3uecI9MyTw6gIHrrw
+         8jw/QskafpSe18dk22qe6kr460VGLGmn/nx2n25Z3TaTCPfEPTgNps0hp7rmPbnEB+Bu
+         suXvYKAnvqalc7LFbnvS3urZcwZ2BWXtjFJiK35RcGS4bb7stkg25DDA8zldkruLv2GY
+         a/xw==
+X-Gm-Message-State: APjAAAXB6LO815LlCZtbFce/pHrMsAsU4eM71YofhuTYpPk8PGs77H6p
+        RkfThvN+D58Nx+VXHl3lFyuvpg==
+X-Google-Smtp-Source: APXvYqx0TpHx62U3H8GkYS/wTRgE90Fw0RHn+5MFL4cRHZ+i1FZufTyt2KrESO10KRzC2lbCsu/ukA==
+X-Received: by 2002:a24:2758:: with SMTP id g85mr1604621ita.30.1557794395577;
+        Mon, 13 May 2019 17:39:55 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id c11sm494780itj.31.2019.05.13.17.39.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 17:39:55 -0700 (PDT)
+Date:   Mon, 13 May 2019 17:39:54 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>,
+        "merker@debian.org" <merker@debian.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+Subject: Re: [v2 PATCH] RISC-V: Add a PE/COFF compliant Image header.
+In-Reply-To: <a3eb8e32-5344-801e-03ef-98107ed13130@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1905131735450.21198@viisi.sifive.com>
+References: <20190501195607.32553-1-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1905131522370.21198@viisi.sifive.com> <a498967c-cdc8-637a-340b-202d216c5360@wdc.com> <alpine.DEB.2.21.9999.1905131704371.21198@viisi.sifive.com>
+ <a3eb8e32-5344-801e-03ef-98107ed13130@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes an issue introduced with:
+On Mon, 13 May 2019, Atish Patra wrote:
 
-   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+> On 5/13/19 5:09 PM, Paul Walmsley wrote:
+> 
+> > What are the semantics of those reserved fields?
+> 
+> +struct riscv_image_header {
+> +	u32 code0;
+> +	u32 code1;
+> +	u64 text_offset;
+> +	u64 image_size;
+> +	u64 res1;
+> +	u64 res2;
+> +	u64 res3;
+> +	u64 magic;
+> +	u32 res4; ---> We can use this for versioning when required
+> +	u32 res5; ---> This is reserved for PE/COFF header
+> +};
 
-The original patch prevented using multi-entry PEBS when wakeup_events != 0.
-However given that wakeup_events is part of a union with wakeup_watermark, it
-means that in watermark mode, PEBS multi-entry is also disabled which is not the
-intent. This patch fixes this by checking is watermark mode is enabled.
+I saw that in your patch.  The problem is that this doesn't describe what 
+other software might expect in those fields.  Can anything at all be 
+placed in those reserved fields?
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Change-Id: I8362bbcf9035c860b64b4c2e8faf310ebd74c234
----
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > Do we need to add it now or add it later when we actually need a version
+> > > number. My preference is to add it later based on requirement.
+> > 
+> > If it isn't added now, how would bootloaders know whether it was there or
+> > not?
+> > 
+> > 
+> Here is the corresponding U-Boot Patch
+> https://patchwork.ozlabs.org/patch/1096087/
+> 
+> Currently, boot loader doesn't care about versioning. Since we are updating a
+> reserved field, offsets will not change. If a boot loader want to use the
+> versioning, it should be patched along with the kernel patch.
+> 
+> Any other boot loader that doesn't care about the version, it can continue to
+> do so without any change.
+> 
+> My idea is to enable the minimum required fields in this patch and keep
+> everything else as reserved so that it can be amended in future as required.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 416233f92b3c..613fabba2c99 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3280,7 +3280,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
- 
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_large_pebs_flags(event)))
+If those fields really are reserved for implementors to do whatever they 
+want with them, then that might be a reasonable approach.  That seems 
+unlikely, however, since specification authors usually reserve the right 
+to use reserved fields for their own purposes in later versions.
+
+
+- Paul
