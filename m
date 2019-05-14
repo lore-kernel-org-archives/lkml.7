@@ -2,111 +2,88 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A13CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8676C04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2C2208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:25:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UDw1+6Hd"
+	by mail.kernel.org (Postfix) with ESMTP id BD7CE208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:29:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbfENCZc (ORCPT
+        id S1726663AbfENC3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 22:25:32 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39400 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726566AbfENCZb (ORCPT
+        Mon, 13 May 2019 22:29:06 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11846 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726387AbfENC3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 22:25:31 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w22so7758044pgi.6;
-        Mon, 13 May 2019 19:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zi4wszV1L43AeLT0Z8PIOWy38tTYuSZF/HdHyWxecsY=;
-        b=UDw1+6HdTlVp15oFELQcYeP5tV9aX4WE2CTmk/VFT9j/uRDSGzkXgwHKipfBdjUcy6
-         iWd5TAVfBECyekH1/M3I65DO8JG6bsdwQiYpZPb+IvL2/NRDrhMlO6vl9tfI1DTC2n8V
-         ZQObeHztzolzKrcIN2b/9VCj+OdGEtNRTQMUz8nfylBLkUKYFsgCyTvqrBD8JblWqBMs
-         2ATuHVX+eMGT7vY3UOYNRORuXGhZjogeHrl6sZejHqhzP1ylwRwstzz6oGskofNicyFJ
-         dU04R9JVeM7RaJ6I2pxqlhwoRSiRJyHo8rLCRYT0ThJgyxpnMnnsbjh3cJf1XWqOhld0
-         Moqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zi4wszV1L43AeLT0Z8PIOWy38tTYuSZF/HdHyWxecsY=;
-        b=ngkw1ElmV3Ih2+FFGHeSO/N27D7B2pFHa8h8UG75bQjbDXSyR3E3A+kFnMfN0I0bx8
-         /TaRLjioTI96uLgzIl8WnzgsbiWt5w2mPmgGrSXC+Jc2Pfj+7zRjGmIEKvF0ovPINCbP
-         arjb+A1qtTK2Tw+bD3wPqvY6bjLTKdHnfyrRhwr15ETqwj9vwxYRqzOINxoYqu7kZtkU
-         KT+lutBEo279VbMcPIwzo+rsTRfRE/Dd3ljZ0XVjreMxPDJ8Et59e7WvMa0VKcOV0S7S
-         vRc5uSqhX89OIM7dFOGoMVQMzQjCsGcXiJEFzZqGNdYgcVKlbtwU3u5O8m9YUN/x2XOn
-         jxFg==
-X-Gm-Message-State: APjAAAWNYCi52dqsHuQ9Foo/GAMRxUgJEReA2CcwkfOq2rUUHFKY1PWr
-        Kos/+HKpAbm2TcfIqlsnsW8=
-X-Google-Smtp-Source: APXvYqwA6b0Z8MgrtwzlDdj6bF9A8j85qLr4jxGimHQO5UZWJdPr+G2gpISwBf6oV7oS7hzca+w4yw==
-X-Received: by 2002:a62:6d47:: with SMTP id i68mr37943522pfc.189.1557800730620;
-        Mon, 13 May 2019 19:25:30 -0700 (PDT)
-Received: from localhost ([39.7.55.172])
-        by smtp.gmail.com with ESMTPSA id g83sm19072131pfb.158.2019.05.13.19.25.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 May 2019 19:25:29 -0700 (PDT)
-Date:   Tue, 14 May 2019 11:25:26 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@aculab.com>,
-        'christophe leroy' <christophe.leroy@c-s.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190514022526.GA6683@jagdpanzerIV>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
+        Mon, 13 May 2019 22:29:06 -0400
+X-UUID: 781b2acb1fcd4409801e6ecda65f8466-20190514
+X-UUID: 781b2acb1fcd4409801e6ecda65f8466-20190514
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <biao.huang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1269660347; Tue, 14 May 2019 10:29:00 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 14 May 2019 10:28:58 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 14 May 2019 10:28:58 +0800
+From:   Biao Huang <biao.huang@mediatek.com>
+To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
+        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.com>
+Subject: [v2, PATCH 0/4] fix some bugs in stmmac
+Date:   Tue, 14 May 2019 10:28:49 +0800
+Message-ID: <1557800933-30759-1-git-send-email-biao.huang@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514020730.GA651@jagdpanzerIV>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/14/19 11:07), Sergey Senozhatsky wrote:
-> How about this:
-> 
-> 	if ptr < PAGE_SIZE		-> "(null)"
+changes in v2:                                                                  
+        1. update rx_tail_addr as Jose's comment                                
+        2. changes clk_csr condition as Alex's proposition                      
+        3. remove init lines in dwmac-mediatek, get clk_csr from dts instead.   
+                                                                                
+v1:                                                                             
+This series fix some bugs in stmmac driver                                      
+3 patches are for common stmmac or dwmac4:                                      
+        1. update rx tail pointer to fix rx dma hang issue.                     
+        2. change condition for mdc clock to fix csr_clk can't be zero issue.   
+        3. write the modified value back to MTL_OPERATION_MODE.                 
+1 patch is for dwmac-mediatek:                                                  
+        modify csr_clk value to fix mdio read/write fail issue for dwmac-mediatek
+                                                                                
+Biao Huang (4):                                                                 
+  net: stmmac: update rx tail pointer register to fix rx dma hang               
+    issue.                                                                      
+  net: stmmac: fix csr_clk can't be zero issue                                  
+  net: stmmac: write the modified value back to MTL_OPERATION_MODE              
+  net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio                 
+    read/write fail                                                             
+                                                                                
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |    2 --                   
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |    2 ++                   
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    7 ++++---              
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-                
+ 4 files changed, 10 insertions(+), 6 deletions(-)                              
+                                                                                
+--                                                                              
+1.7.9.5 
 
-No, this is totally stupid. Forget about it. Sorry.
-
-
-> 	if IS_ERR_VALUE(ptr)		-> "(fault)"
-
-But Steven's "(fault)" is nice.
-
-	-ss
