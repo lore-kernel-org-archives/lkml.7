@@ -2,107 +2,116 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70837C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB592147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219A421473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfENLCz (ORCPT
+        id S1726347AbfENLKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 07:02:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49236 "EHLO mx1.redhat.com"
+        Tue, 14 May 2019 07:10:11 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50951 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfENLCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 07:02:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81E9C3079B80;
-        Tue, 14 May 2019 11:02:54 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 006701018A2E;
-        Tue, 14 May 2019 11:02:49 +0000 (UTC)
-Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
- <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
- <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
- <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
- <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
- <1edd45e6-4da3-e393-36b2-9e63cd5f7607@redhat.com>
- <4094baf1-6cf5-a33b-4717-08ced0673c50@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <5d2c0279-7fa9-3d11-9999-583f9ed329ba@redhat.com>
-Date:   Tue, 14 May 2019 13:02:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726036AbfENLKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 07:10:11 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 04:10:10 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2019 04:10:07 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 0289920666; Tue, 14 May 2019 14:10:06 +0300 (EEST)
+Date:   Tue, 14 May 2019 14:10:06 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] media: v4l2-subdev: Verify arguments of
+ v4l2_subdev_call()
+Message-ID: <20190514111006.chhwvyfem2ngu4oy@paasikivi.fi.intel.com>
+References: <20190511101031.4777-1-jmkrzyszt@gmail.com>
+ <20190511101031.4777-2-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <4094baf1-6cf5-a33b-4717-08ced0673c50@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 14 May 2019 11:02:54 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190511101031.4777-2-jmkrzyszt@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean,
+Hi Janusz,
 
-On 5/14/19 12:42 PM, Jean-Philippe Brucker wrote:
-> On 14/05/2019 08:46, Auger Eric wrote:
->> Hi Jean,
->>
->> On 5/13/19 7:09 PM, Jean-Philippe Brucker wrote:
->>> On 13/05/2019 17:50, Auger Eric wrote:
->>>>> struct iommu_inv_pasid_info {
->>>>> #define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
->>>>> #define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
->>>>> 	__u32	flags;
->>>>> 	__u32	archid;
->>>>> 	__u64	pasid;
->>>>> };
->>>> I agree it does the job now. However it looks a bit strange to do a
->>>> PASID based invalidation in my case - SMMUv3 nested stage - where I
->>>> don't have any PASID involved.
->>>>
->>>> Couldn't we call it context based invalidation then? A context can be
->>>> tagged by a PASID or/and an ARCHID.
->>>
->>> I think calling it "context" would be confusing as well (I shouldn't
->>> have used it earlier), since VT-d uses that name for device table
->>> entries (=STE on Arm SMMU). Maybe "addr_space"?
->> yes you're right. Well we already pasid table table terminology so we
->> can use it here as well - as long as we understand what purpose it
->> serves ;-) - So OK for iommu_inv_pasid_info.
->>
->> I think Jean understood we would keep pasid standalone field in
-I meant Jacob here.
->> iommu_cache_invalidate_info's union. I understand the struct
->> iommu_inv_pasid_info now would replace it, correct?
+On Sat, May 11, 2019 at 12:10:30PM +0200, Janusz Krzysztofik wrote:
+> Correctness of format type (try or active) and pad number parameters
+> passed to subdevice operation callbacks is now verified only for IOCTL
+> calls.  However, those callbacks are also used by drivers, e.g., V4L2
+> host interfaces.
+> 
+> Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
+> macro while calling subdevice operations, move those parameter checks
+> from subdev_do_ioctl() to v4l2_subdev_call() so we can avoid taking care
+> of those checks inside drivers.
 
-Thank you for the confirmation.
-
-Eric
+I have to say I really like this patch!
 
 > 
-> Yes
+> Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-subdev.c | 222 +++++++++++++++-----------
+>  include/media/v4l2-subdev.h           |   6 +
+>  2 files changed, 139 insertions(+), 89 deletions(-)
 > 
-> Thanks,
-> Jean
-> 
+> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> index d75815ab0d7b..cd50fcb86c47 100644
+> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> @@ -120,56 +120,165 @@ static int subdev_close(struct file *file)
+>  	return 0;
+>  }
+>  
+> +static inline int check_which(__u32 which)
+> +{
+> +	return which != V4L2_SUBDEV_FORMAT_TRY &&
+> +	       which != V4L2_SUBDEV_FORMAT_ACTIVE ? -EINVAL : 0;
+> +}
+> +
+>  #if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+> +static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
+> +{
+> +	return pad >= sd->entity.num_pads ? -EINVAL : 0;
+> +}
+> +#else
+> +#define check_pad(...) 0
+
+This should be an inline function as well. Or just have one function; the
+prototype is the same anyway.
+
+> +#endif
+> +
+>  static int check_format(struct v4l2_subdev *sd,
+
+inline?
+
+>  			struct v4l2_subdev_format *format)
+>  {
+> -	if (format->which != V4L2_SUBDEV_FORMAT_TRY &&
+> -	    format->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+> -		return -EINVAL;
+> +	return check_which(format->which) ? : check_pad(sd, format->pad);
+> +}
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
