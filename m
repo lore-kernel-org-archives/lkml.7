@@ -2,189 +2,162 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD94C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BAFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A1A20818
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:43:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210E120818
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:44:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jvnw4koa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfENIna (ORCPT
+        id S1726429AbfENIoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:43:30 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:53075 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfENIn3 (ORCPT
+        Tue, 14 May 2019 04:44:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58436 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfENIoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:43:29 -0400
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Ludovic.Desroches@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="Ludovic.Desroches@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Ludovic.Desroches@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Ludovic.Desroches@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,468,1549954800"; 
-   d="scan'208";a="33227185"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 01:43:28 -0700
-Received: from localhost (10.10.76.4) by chn-sv-exch02.mchp-main.com
- (10.10.76.38) with Microsoft SMTP Server id 14.3.352.0; Tue, 14 May 2019
- 01:43:28 -0700
-Date:   Tue, 14 May 2019 10:42:54 +0200
-From:   Ludovic Desroches <ludovic.desroches@microchip.com>
-To:     Raag Jadav <raagjadav@gmail.com>
-CC:     <linux-kernel@vger.kernel.org>, <alexandre.belloni@bootlin.com>,
-        <linux-i2c@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] i2c: at91: handle TXRDY interrupt spam
-Message-ID: <20190514084254.zc526whem6yxfu7l@M43218.corp.atmel.com>
-Mail-Followup-To: Raag Jadav <raagjadav@gmail.com>,
-        linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com,
-        linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <1556005008-6318-1-git-send-email-raagjadav@gmail.com>
- <20190429090005.f6ydghzu5n5yruav@M43218.corp.atmel.com>
- <20190429223332.GA3908@pc>
- <20190502140116.rim72idpgvq4h4vc@M43218.corp.atmel.com>
- <20190503235851.GA4242@pc>
+        Tue, 14 May 2019 04:44:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ZFukSCaXEzzob4O1ASywHJ/kDWha8dAc33N1Kx8msEI=; b=Jvnw4koacudV2mpSex+Jp9PVU
+        u+p3BJnbpc+ernQ/5r/gu+G/f78E44NbLceEeuslh5phii0ZNJAnMFy//Yg55x1RWr011U6oq1+Ys
+        Pl10ZvgyOygdKjQs0rlUJzQd+lsb14oxc/1h3f75GCZVFTvRmexCAfrMUKvLlCdHw4+j+hthkxuAS
+        50nhiDj/g2m+LIyoMwpCTI95tF652/74rS0OiUUQAFnt7fj78zaev08CHr7GsQrClv15G0X88Czsm
+        t/E0BWT11XTbznL34YZPN8TuZBaH6gD3YMz9XwW0qMn/LibbMSiTRwh/cz7gTDC6SAgmGWmXT/Ual
+        cmNWCij7w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQT2U-00069x-HM; Tue, 14 May 2019 08:43:58 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D9B252029F87A; Tue, 14 May 2019 10:43:56 +0200 (CEST)
+Date:   Tue, 14 May 2019 10:43:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     minyard@acm.org, linux-rt-users@vger.kernel.org,
+        Corey Minyard <cminyard@mvista.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
+References: <20190508205728.25557-1-minyard@acm.org>
+ <20190509161925.kul66w54wpjcinuc@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190503235851.GA4242@pc>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190509161925.kul66w54wpjcinuc@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, May 04, 2019 at 05:28:51AM +0530, Raag Jadav wrote:
-> On Thu, May 02, 2019 at 04:01:16PM +0200, Ludovic Desroches wrote:
-> > On Tue, Apr 30, 2019 at 04:03:32AM +0530, Raag Jadav wrote:
-> > > External E-Mail
-> > > 
-> > > 
-> > > On Mon, Apr 29, 2019 at 11:00:05AM +0200, Ludovic Desroches wrote:
-> > > > Hello Raag,
-> > > > 
-> > > > On Tue, Apr 23, 2019 at 01:06:48PM +0530, Raag Jadav wrote:
-> > > > > External E-Mail
-> > > > > 
-> > > > > 
-> > > > > Performing i2c write operation while SDA or SCL line is held
-> > > > > or grounded by slave device, we go into infinite at91_twi_write_next_byte
-> > > > > loop with TXRDY interrupt spam.
-> > > > 
-> > > > Sorry but I am not sure to have the full picture, the controller is in
-> > > > slave or master mode?
-> > > > 
-> > > > SVREAD is only used in slave mode. When SVREAD is set, it means that a read
-> > > > access is performed and your issue concerns the write operation.
-> > > > 
-> > > > Regards
-> > > > 
-> > > > Ludovic
-> > > 
-> > > Yes, even though the datasheet suggests that SVREAD is irrelevant in master mode,
-> > > TXRDY and SVREAD are the only ones being set in status register upon reproducing the issue.
-> > > Couldn't think of a better way to handle such strange behaviour.
-> > > Any suggestions would be appreciated.
-> > 
-> > I have the confirmation that you can't rely on the SVREAD flag when in
-> > master mode. This flag should always have the same value.
-> > 
-> > I am trying to understand what could lead to your situation. Can you
-> > give me more details. What kind of device it is? What does lead to this
-> > situation? Does it happen randomly or not?
-> 
-> One of the sama5d2 based board I worked on, was having trouble complete its boot
-> because of a faulty i2c device, which was randomly holding down the SDA line
-> on i2c write operation, not allowing the controller to complete its transmission,
-> causing a massive TXRDY interrupt spam, ultimately hanging the processor.
-> 
-> Another strange observation was that SVREAD was being set in the status register
-> along with TXRDY, every time I reproduced the issue.
-> You can reproduce it by simply grounding the SDA line and performing i2c write
-> on the bus.
+On Thu, May 09, 2019 at 06:19:25PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-05-08 15:57:28 [-0500], minyard@acm.org wrote:
 
-Thanks for the details, I'll discussed it with hw guys but expect some
-dealy as I'll be off next 2 weeks.
-
-Regards
-
-Ludovic
-
-> 
-> Note that NACK, LOCK or TXCOMP are never set as the transmission never completes.
-> I'm not sure why slave bits are being set in master mode,
-> but it's been working reliably for me.
-> 
-> This patch doesn't recover the SDA line. It just prevents the processor from
-> getting hanged in case of i2c bus lockup.
-> 
-> Cheers,
-> Raag
-> 
+> >  kernel/sched/completion.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
 > > 
-> > Regards
-> > 
-> > Ludovic
-> > 
-> > > 
-> > > Cheers,
-> > > Raag
-> > > 
-> > > > 
-> > > > > 
-> > > > > Signed-off-by: Raag Jadav <raagjadav@gmail.com>
-> > > > > ---
-> > > > >  drivers/i2c/busses/i2c-at91.c | 6 +++++-
-> > > > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/i2c/busses/i2c-at91.c b/drivers/i2c/busses/i2c-at91.c
-> > > > > index 3f3e8b3..b2f5fdb 100644
-> > > > > --- a/drivers/i2c/busses/i2c-at91.c
-> > > > > +++ b/drivers/i2c/busses/i2c-at91.c
-> > > > > @@ -72,6 +72,7 @@
-> > > > >  #define	AT91_TWI_TXCOMP		BIT(0)	/* Transmission Complete */
-> > > > >  #define	AT91_TWI_RXRDY		BIT(1)	/* Receive Holding Register Ready */
-> > > > >  #define	AT91_TWI_TXRDY		BIT(2)	/* Transmit Holding Register Ready */
-> > > > > +#define	AT91_TWI_SVREAD		BIT(3)	/* Slave Read */
-> > > > >  #define	AT91_TWI_OVRE		BIT(6)	/* Overrun Error */
-> > > > >  #define	AT91_TWI_UNRE		BIT(7)	/* Underrun Error */
-> > > > >  #define	AT91_TWI_NACK		BIT(8)	/* Not Acknowledged */
-> > > > > @@ -571,7 +572,10 @@ static irqreturn_t atmel_twi_interrupt(int irq, void *dev_id)
-> > > > >  		at91_disable_twi_interrupts(dev);
-> > > > >  		complete(&dev->cmd_complete);
-> > > > >  	} else if (irqstatus & AT91_TWI_TXRDY) {
-> > > > > -		at91_twi_write_next_byte(dev);
-> > > > > +		if ((status & AT91_TWI_SVREAD) && (dev->buf_len == 0))
-> > > > > +			at91_twi_write(dev, AT91_TWI_IDR, AT91_TWI_TXRDY);
-> > > > > +		else
-> > > > > +			at91_twi_write_next_byte(dev);
-> > > > >  	}
-> > > > >  
-> > > > >  	/* catch error flags */
-> > > > > -- 
-> > > > > 2.7.4
-> > > > > 
-> > > > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > 
+> > diff --git a/kernel/sched/completion.c b/kernel/sched/completion.c
+> > index 755a58084978..4f9b4cc0c95a 100644
+> > --- a/kernel/sched/completion.c
+> > +++ b/kernel/sched/completion.c
+> > @@ -70,20 +70,20 @@ do_wait_for_common(struct completion *x,
+> >  		   long (*action)(long), long timeout, int state)
+> >  {
+> >  	if (!x->done) {
+> > -		DECLARE_SWAITQUEUE(wait);
+> > -
+> > -		__prepare_to_swait(&x->wait, &wait);
+> 
+> you can keep DECLARE_SWAITQUEUE remove just __prepare_to_swait()
+> 
+> >  		do {
+> > +			DECLARE_SWAITQUEUE(wait);
+> > +
+> >  			if (signal_pending_state(state, current)) {
+> >  				timeout = -ERESTARTSYS;
+> >  				break;
+> >  			}
+> > +			__prepare_to_swait(&x->wait, &wait);
+> 
+> add this, yes and you are done.
+> 
+> >  			__set_current_state(state);
+> >  			raw_spin_unlock_irq(&x->wait.lock);
+> >  			timeout = action(timeout);
+> >  			raw_spin_lock_irq(&x->wait.lock);
+> > +			__finish_swait(&x->wait, &wait);
+> >  		} while (!x->done && timeout);
+> > -		__finish_swait(&x->wait, &wait);
+> >  		if (!x->done)
+> >  			return timeout;
+> >  	}
+
+Now.. that will fix it, but I think it is also wrong.
+
+The problem being that it violates FIFO, something that might be more
+important on -RT than elsewhere.
+
+The regular wait API seems confused/inconsistent when it uses
+autoremove_wake_function and default_wake_function, which doesn't help,
+but we can easily support this with swait -- the problematic thing is
+the custom wake functions, we musn't do that.
+
+(also, mingo went and renamed a whole bunch of wait_* crap and didn't do
+the same to swait_ so now its named all different :/)
+
+Something like the below perhaps.
+
+---
+diff --git a/include/linux/swait.h b/include/linux/swait.h
+index 73e06e9986d4..f194437ae7d2 100644
+--- a/include/linux/swait.h
++++ b/include/linux/swait.h
+@@ -61,11 +61,13 @@ struct swait_queue_head {
+ struct swait_queue {
+ 	struct task_struct	*task;
+ 	struct list_head	task_list;
++	unsigned int		remove;
+ };
+ 
+ #define __SWAITQUEUE_INITIALIZER(name) {				\
+ 	.task		= current,					\
+ 	.task_list	= LIST_HEAD_INIT((name).task_list),		\
++	.remove		= 1,						\
+ }
+ 
+ #define DECLARE_SWAITQUEUE(name)					\
+diff --git a/kernel/sched/swait.c b/kernel/sched/swait.c
+index e83a3f8449f6..86974ecbabfc 100644
+--- a/kernel/sched/swait.c
++++ b/kernel/sched/swait.c
+@@ -28,7 +28,8 @@ void swake_up_locked(struct swait_queue_head *q)
+ 
+ 	curr = list_first_entry(&q->task_list, typeof(*curr), task_list);
+ 	wake_up_process(curr->task);
+-	list_del_init(&curr->task_list);
++	if (curr->remove)
++		list_del_init(&curr->task_list);
+ }
+ EXPORT_SYMBOL(swake_up_locked);
+ 
+@@ -57,7 +58,8 @@ void swake_up_all(struct swait_queue_head *q)
+ 		curr = list_first_entry(&tmp, typeof(*curr), task_list);
+ 
+ 		wake_up_state(curr->task, TASK_NORMAL);
+-		list_del_init(&curr->task_list);
++		if (curr->remove)
++			list_del_init(&curr->task_list);
+ 
+ 		if (list_empty(&tmp))
+ 			break;
