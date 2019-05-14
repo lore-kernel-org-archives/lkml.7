@@ -2,68 +2,161 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F659C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F410C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 114D720850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:35:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="lM2INjEy"
+	by mail.kernel.org (Postfix) with ESMTP id 67B262147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:38:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726515AbfENMfX (ORCPT
+        id S1726370AbfENMis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:35:23 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:35137 "EHLO vps0.lunn.ch"
+        Tue, 14 May 2019 08:38:48 -0400
+Received: from mga12.intel.com ([192.55.52.136]:56137 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfENMfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:35:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=931qFPLgGkTX5B8UVoqi1RHkcr6VEe5RWP7gqhbFW2I=; b=lM2INjEyoCovQvFD8CW1nSUQ6q
-        ykF4K72YY0KZivnaAgELsem2MfX/y8GYLC6vbVQlo+tLyEqwmbRrc4+1KIX9cfBkgIQG9kjFH2Pr4
-        XUZS7zsdyoxf07cdmJvB/GFtyTNzc7E/gX8YEm8/A/x7UXNr2T+/IeJmWgJfKdbYOesw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hQWeE-00024v-Mt; Tue, 14 May 2019 14:35:10 +0200
-Date:   Tue, 14 May 2019 14:35:10 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     netdev@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: macb: fix error format in dev_err()
-Message-ID: <20190514123510.GA5892@lunn.ch>
-References: <20190514071450.27760-1-luca@lucaceresoli.net>
+        id S1725893AbfENMis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 08:38:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 05:38:47 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga005.fm.intel.com with ESMTP; 14 May 2019 05:38:44 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1hQWhf-0007xn-3y; Tue, 14 May 2019 15:38:43 +0300
+Date:   Tue, 14 May 2019 15:38:43 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
+ resources
+Message-ID: <20190514123843.GC9224@smile.fi.intel.com>
+References: <20190502104556.GS9224@smile.fi.intel.com>
+ <87pnp11112.fsf@haabendal.dk>
+ <20190507093239.GB4529@dell>
+ <87sgtqjy3l.fsf@haabendal.dk>
+ <20190507115325.GV9224@smile.fi.intel.com>
+ <87k1f2jvyd.fsf@haabendal.dk>
+ <20190507150847.GW9224@smile.fi.intel.com>
+ <87k1etmrfk.fsf@haabendal.dk>
+ <CAHp75VfrP6SLVzmp6LepN7dU1c7QYxfRDRtj7dCTuWzmYp2tCA@mail.gmail.com>
+ <871s11meg3.fsf@haabendal.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514071450.27760-1-luca@lucaceresoli.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <871s11meg3.fsf@haabendal.dk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:14:50AM +0200, Luca Ceresoli wrote:
-> Errors are negative numbers. Using %u shows them as very large positive
-> numbers such as 4294967277 that don't make sense. Use the %d format
-> instead, and get a much nicer -19.
+On Tue, May 14, 2019 at 02:02:36PM +0200, Esben Haabendal wrote:
+> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
+> > On Tue, May 14, 2019 at 10:24 AM Esben Haabendal <esben@haabendal.dk> wrote:
+> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> >> > On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
+> >
+> >> We are on repeat here.  I don't agree with you here.  I have a simple
+> >> generic 8250 (16550A) compatible device, and cannot use it in a mfd
+> >> driver using the standard mfd-core framework.
+> >
+> >> The lacking of support for platform_get_resource() in the generic
+> >> serial8250 driver is not a feature.  It should be supported, just as it
+> >> is in several of the specialized 8250 drivers.
+> >
+> > We are going circles here.
+> > What exactly prevents you to use it? Presence of request_mem_region()?
+> 
+> Exactly.
 
-Hi Luca
+And I completely tired to repeat that this is okay and does not prevent you to
+use MFD.
 
-Do you consider this a fix? If so, it should be against David net
-tree, and have [PATCH net] in the subject. It would also be good to
-add a Fixes: tag.
+> >> It would still mean that I would have revert to not using convenient and
+> >> otherwise fully appropriate API calls like pci_request_regions() and
+> >> mfd_add_devices().
+> >
+> > Yes, here is the issue. 8250 requires the parent not to *request*
+> > resources. Because child handles IO access itself.
+> 
+> Ok, clearly we are not discussing the actual IO access.  The only issue
+> is how to handle the memory resource management.
+> 
+> And yes, serial8250 requires "the parent" to not request the resources.
+> But by doing so, it gets in the way of the mfd-core way of splitting a
+> properly requested resource.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Which is right thing to do. Requesting resources should be done by their actual
+user, no?
 
-    Andrew
+Moreover, if you look at /proc/iomem, for example, I bet there will be
+a difference with your proposed method and a established one.
+
+> >> The mfd driver in question is for a PCI device.  Not being able to
+> >> request the PCI regions seems silly.
+> >
+> > Nope. Otherwise, the parent which *doesn't handle* IO on behalf of
+> > child should not request its resources.
+> 
+> If I may, could I get you to discuss this with Lee Jones?
+> 
+> As I read both of your comments in this thread, you are not aligned on
+> how mfd drivers should handle resources.  And in that case, one of you
+> are most likely more right than the other, and if Lee is right, I seem
+> to be unable to convince you about that.
+
+MFD has nothing to do with *requesting* resource. It's about *slicing* them.
+*Requesting* resource is orthogonal to the *slicing*.
+
+> >> Not being able to register all child devices with the call introduced
+> >> for that sole purpose also seems silly.
+> >
+> >> Please take a look at https://lkml.org/lkml/2019/4/9/576
+> >> ("[PATCH v2 2/4] mfd: ioc3: Add driver for SGI IOC3 chip")
+> >
+> > Thank you for this link.
+> > Now, look at this comment:
+> >
+> > + /*
+> > + * Map all IOC3 registers.  These are shared between subdevices
+> > + * so the main IOC3 module manages them.
+> > + */
+> >
+> > Is it your case? Can we see the code?
+> 
+> That comment seems quite misleading.  I am quote certain that the uart
+> registers which are part of BAR 0 is not more shared between subdevices
+> than the uart registers in BAR 0 in my case.
+> 
+> But BAR 0 as a whole is shared between subdevices.  But BAR 0 can be
+> (is) split in parts that are exclusive to one subdevice.  The only
+> difference I see is that I don't have any registers accessed directly by
+> the mfd driver.
+
+I stopped here. Let's discuss an actual code.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
