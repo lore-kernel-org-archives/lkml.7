@@ -2,145 +2,226 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 902ACC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0FDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B5E20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Sqp9nGAl"
+	by mail.kernel.org (Postfix) with ESMTP id A86BA20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfENVzZ (ORCPT
+        id S1726581AbfENV4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:55:25 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45369 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726352AbfENVzV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:55:21 -0400
-Received: by mail-pg1-f195.google.com with SMTP id i21so213424pgi.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 14:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zGsQ7lgpHhpTbszYslBdzxyDCXSizX6+VVJQr1o6b6I=;
-        b=Sqp9nGAlWQZ5vX1dxWHDTDuxZAQ8qZWMKHz3Jl8zJhU4HCd4U5LRW6+WrNk+FFVT4m
-         hghwxry4xwaDl/HQX8VpDYEsXxjpIc+C5kovvhxiwYCqXTRQef29CxCNWFm1bW5znOQt
-         K7SZARGMC8Rt7RfHAn3RpY8sM6daSCeeLH7swaooopzfa3ObMdZ6EWj/nj1LpViuniyi
-         4bbhnkKWhoastGyfdBE/DJkoP1Rh8R0rld6KSf2YfFl4gdmjFXNecFeWf9TzQuYX9kSC
-         yl5u8Qe4FV0TiiOwcMABkeTC1I2KGOOO/tJlPkFrFplmiajsczCkdhcwsEb9HLfHGJbp
-         bZGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=zGsQ7lgpHhpTbszYslBdzxyDCXSizX6+VVJQr1o6b6I=;
-        b=PZrb9PU2h+ZB2G9/pfBLMhQxb20AVTSJjrSN68tBTXU7kiXbSvQSdh0XE0njLZlkNI
-         uEJndtWkYa2BGEyRbJ0wkq6RxeO6T75ywf+1FBE5eArAW3z5AuTkfxu9TDG4trWfHsAi
-         BwXgzoNvm107eQR/AqrqA0UBAuwV81wjUrlHQLQoKmO7FqIfYUmzcRqsiHQyKKy33xS7
-         6Oz58ltYXJe4vQRk3CQ/9tFKl5OL31Xm8ziXfmShH3B8RMiS+BvQCkvEY+Yn/Yniww9y
-         IOUeCXm+GOUsfA5a3+Mr2ms3beVZrdmcBnE8hcZli6+kKWcBmhIaTJQbuGXbszSzX/pu
-         8IIA==
-X-Gm-Message-State: APjAAAVvqN8dxS45HROdQMpem9EBwp40ILUM1HRBYU9iy9FAbpM2iMWH
-        Gs+wug+FJrPclrwdmCfgnUup/Q==
-X-Google-Smtp-Source: APXvYqw24l2gqEGsaEZKg5LYXhvlKPM4W+qe2urWfGhhgYhWFa149ACdSpb4zow/e83hwlMY5jdZGg==
-X-Received: by 2002:a63:2bc8:: with SMTP id r191mr39777166pgr.72.1557870920728;
-        Tue, 14 May 2019 14:55:20 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:bde9:fbad:7d91:52eb? ([2601:646:c200:1ef2:bde9:fbad:7d91:52eb])
-        by smtp.gmail.com with ESMTPSA id d15sm116637pfm.186.2019.05.14.14.55.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 14:55:19 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table entries for percpu buffer
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16E227)
-In-Reply-To: <20190514210603.GD1977@linux.intel.com>
-Date:   Tue, 14 May 2019 14:55:18 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
-References: <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com> <20190514070941.GE2589@hirez.programming.kicks-ass.net> <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com> <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com> <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com> <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com> <20190514170522.GW2623@hirez.programming.kicks-ass.net> <20190514180936.GA1977@linux.intel.com> <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com> <20190514210603.GD1977@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
+        Tue, 14 May 2019 17:56:04 -0400
+Received: from mx.allycomm.com ([138.68.30.55]:20014 "EHLO mx.allycomm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726134AbfENV4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 17:56:04 -0400
+Received: from allycomm.com (inet.guidewire.com [199.91.42.30])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx.allycomm.com (Postfix) with ESMTPSA id 099663B864;
+        Tue, 14 May 2019 14:56:02 -0700 (PDT)
+From:   Jeff Kletsky <lede@allycomm.com>
+To:     Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 3/3] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
+Date:   Tue, 14 May 2019 14:53:15 -0700
+Message-Id: <20190514215315.19228-4-lede@allycomm.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190514215315.19228-1-lede@allycomm.com>
+References: <20190514215315.19228-1-lede@allycomm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jeff Kletsky <git-commits@allycomm.com>
 
+The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
+and, while it has the same logical layout as the E-series devices,
+it differs in the SPI interfacing in significant ways.
 
-> On May 14, 2019, at 2:06 PM, Sean Christopherson <sean.j.christopherson@in=
-tel.com> wrote:
->=20
->> On Tue, May 14, 2019 at 01:33:21PM -0700, Andy Lutomirski wrote:
->> On Tue, May 14, 2019 at 11:09 AM Sean Christopherson
->> <sean.j.christopherson@intel.com> wrote:
->>> For IRQs it's somewhat feasible, but not for NMIs since NMIs are unblock=
-ed
->>> on VMX immediately after VM-Exit, i.e. there's no way to prevent an NMI
->>> from occuring while KVM's page tables are loaded.
->>>=20
->>> Back to Andy's question about enabling IRQs, the answer is "it depends".=
+This support is contingent on previous commits to:
 
->>> Exits due to INTR, NMI and #MC are considered high priority and are
->>> serviced before re-enabling IRQs and preemption[1].  All other exits are=
+  * Add support for two-byte device IDs
+  * Add #define-s for page-read ops with three-byte addresses
 
->>> handled after IRQs and preemption are re-enabled.
->>>=20
->>> A decent number of exit handlers are quite short, e.g. CPUID, most RDMSR=
+http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
 
->>> and WRMSR, any event-related exit, etc...  But many exit handlers requir=
-e
->>> significantly longer flows, e.g. EPT violations (page faults) and anythi=
-ng
->>> that requires extensive emulation, e.g. nested VMX.  In short, leaving
->>> IRQs disabled across all exits is not practical.
->>>=20
->>> Before going down the path of figuring out how to handle the corner case=
-s
->>> regarding kvm_mm, I think it makes sense to pinpoint exactly what exits
->>> are a) in the hot path for the use case (configuration) and b) can be
->>> handled fast enough that they can run with IRQs disabled.  Generating th=
-at
->>> list might allow us to tightly bound the contents of kvm_mm and sidestep=
+Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
+---
+ drivers/mtd/nand/spi/gigadevice.c | 79 +++++++++++++++++++++++++------
+ 1 file changed, 64 insertions(+), 15 deletions(-)
 
->>> many of the corner cases, i.e. select VM-Exits are handle with IRQs
->>> disabled using KVM's mm, while "slow" VM-Exits go through the full conte=
-xt
->>> switch.
->>=20
->> I suspect that the context switch is a bit of a red herring.  A
->> PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slow,
->> but it's probably minor compared to the full cost of the vm exit.  The
->> pain point is kicking the sibling thread.
->=20
-> Speaking of PCIDs, a separate mm for KVM would mean consuming another
-> ASID, which isn't good.
+diff --git a/drivers/mtd/nand/spi/gigadevice.c b/drivers/mtd/nand/spi/gigadevice.c
+index 0b49d8264bef..d6497ac4c5d8 100644
+--- a/drivers/mtd/nand/spi/gigadevice.c
++++ b/drivers/mtd/nand/spi/gigadevice.c
+@@ -9,11 +9,17 @@
+ #include <linux/mtd/spinand.h>
+ 
+ #define SPINAND_MFR_GIGADEVICE			0xC8
++
+ #define GD5FXGQ4XA_STATUS_ECC_1_7_BITFLIPS	(1 << 4)
+ #define GD5FXGQ4XA_STATUS_ECC_8_BITFLIPS	(3 << 4)
+ 
+ #define GD5FXGQ4UEXXG_REG_STATUS2		0xf0
+ 
++#define GD5FXGQ4UXFXXG_STATUS_ECC_MASK		(7 << 4)
++#define GD5FXGQ4UXFXXG_STATUS_ECC_NO_BITFLIPS	(0 << 4)
++#define GD5FXGQ4UXFXXG_STATUS_ECC_1_3_BITFLIPS	(1 << 4)
++#define GD5FXGQ4UXFXXG_STATUS_ECC_UNCOR_ERROR	(7 << 4)
++
+ static SPINAND_OP_VARIANTS(read_cache_variants,
+ 		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
+ 		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
+@@ -22,6 +28,14 @@ static SPINAND_OP_VARIANTS(read_cache_variants,
+ 		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+ 		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
+ 
++static SPINAND_OP_VARIANTS(read_cache_variants_f,
++		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X4_OP_3A(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_X2_OP_3A(0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP_3A(true, 0, 1, NULL, 0),
++		SPINAND_PAGE_READ_FROM_CACHE_OP_3A(false, 0, 0, NULL, 0));
++
+ static SPINAND_OP_VARIANTS(write_cache_variants,
+ 		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
+ 		SPINAND_PROG_LOAD(true, 0, NULL, 0));
+@@ -59,6 +73,11 @@ static int gd5fxgq4xa_ooblayout_free(struct mtd_info *mtd, int section,
+ 	return 0;
+ }
+ 
++static const struct mtd_ooblayout_ops gd5fxgq4xa_ooblayout = {
++	.ecc = gd5fxgq4xa_ooblayout_ecc,
++	.free = gd5fxgq4xa_ooblayout_free,
++};
++
+ static int gd5fxgq4xa_ecc_get_status(struct spinand_device *spinand,
+ 					 u8 status)
+ {
+@@ -83,7 +102,7 @@ static int gd5fxgq4xa_ecc_get_status(struct spinand_device *spinand,
+ 	return -EINVAL;
+ }
+ 
+-static int gd5fxgq4uexxg_ooblayout_ecc(struct mtd_info *mtd, int section,
++static int gd5fxgq4_variant2_ooblayout_ecc(struct mtd_info *mtd, int section,
+ 				       struct mtd_oob_region *region)
+ {
+ 	if (section)
+@@ -95,7 +114,7 @@ static int gd5fxgq4uexxg_ooblayout_ecc(struct mtd_info *mtd, int section,
+ 	return 0;
+ }
+ 
+-static int gd5fxgq4uexxg_ooblayout_free(struct mtd_info *mtd, int section,
++static int gd5fxgq4_variant2_ooblayout_free(struct mtd_info *mtd, int section,
+ 					struct mtd_oob_region *region)
+ {
+ 	if (section)
+@@ -108,6 +127,11 @@ static int gd5fxgq4uexxg_ooblayout_free(struct mtd_info *mtd, int section,
+ 	return 0;
+ }
+ 
++static const struct mtd_ooblayout_ops gd5fxgq4_variant2_ooblayout = {
++	.ecc = gd5fxgq4_variant2_ooblayout_ecc,
++	.free = gd5fxgq4_variant2_ooblayout_free,
++};
++
+ static int gd5fxgq4uexxg_ecc_get_status(struct spinand_device *spinand,
+ 					u8 status)
+ {
+@@ -150,15 +174,25 @@ static int gd5fxgq4uexxg_ecc_get_status(struct spinand_device *spinand,
+ 	return -EINVAL;
+ }
+ 
+-static const struct mtd_ooblayout_ops gd5fxgq4xa_ooblayout = {
+-	.ecc = gd5fxgq4xa_ooblayout_ecc,
+-	.free = gd5fxgq4xa_ooblayout_free,
+-};
++static int gd5fxgq4ufxxg_ecc_get_status(struct spinand_device *spinand,
++					u8 status)
++{
++	switch (status & GD5FXGQ4UXFXXG_STATUS_ECC_MASK) {
++	case GD5FXGQ4UXFXXG_STATUS_ECC_NO_BITFLIPS:
++		return 0;
+ 
+-static const struct mtd_ooblayout_ops gd5fxgq4uexxg_ooblayout = {
+-	.ecc = gd5fxgq4uexxg_ooblayout_ecc,
+-	.free = gd5fxgq4uexxg_ooblayout_free,
+-};
++	case GD5FXGQ4UXFXXG_STATUS_ECC_1_3_BITFLIPS:
++		return 3;
++
++	case GD5FXGQ4UXFXXG_STATUS_ECC_UNCOR_ERROR:
++		return -EBADMSG;
++
++	default: /* (2 << 4) through (6 << 4) are 4-8 corrected errors */
++		return ((status & GD5FXGQ4UXFXXG_STATUS_ECC_MASK) >> 4) + 2;
++	}
++
++	return -EINVAL;
++}
+ 
+ static const struct spinand_info gigadevice_spinand_table[] = {
+ 	SPINAND_INFO("GD5F1GQ4xA", 0xF1,
+@@ -195,25 +229,40 @@ static const struct spinand_info gigadevice_spinand_table[] = {
+ 					      &write_cache_variants,
+ 					      &update_cache_variants),
+ 		     0,
+-		     SPINAND_ECCINFO(&gd5fxgq4uexxg_ooblayout,
++		     SPINAND_ECCINFO(&gd5fxgq4_variant2_ooblayout,
+ 				     gd5fxgq4uexxg_ecc_get_status)),
++	SPINAND_INFO("GD5F1GQ4UFxxG", 0xb148,
++		     NAND_MEMORG(1, 2048, 128, 64, 1024, 1, 1, 1),
++		     NAND_ECCREQ(8, 512),
++		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants_f,
++					      &write_cache_variants,
++					      &update_cache_variants),
++		     0,
++		     SPINAND_ECCINFO(&gd5fxgq4_variant2_ooblayout,
++				     gd5fxgq4ufxxg_ecc_get_status)),
+ };
+ 
+ static int gigadevice_spinand_detect(struct spinand_device *spinand)
+ {
+ 	u8 *id = spinand->id.data;
++	u16 did;
+ 	int ret;
+ 
+ 	/*
+-	 * For GD NANDs, There is an address byte needed to shift in before IDs
+-	 * are read out, so the first byte in raw_id is dummy.
++	 * Earlier GDF5-series devices (A,E) return [0][MID][DID]
++	 * Later (F) devices return [MID][DID1][DID2]
+ 	 */
+-	if (id[1] != SPINAND_MFR_GIGADEVICE)
++
++	if (id[0] == SPINAND_MFR_GIGADEVICE)
++		did = (id[1] << 8) + id[2];
++	else if (id[0] == 0 && id[1] == SPINAND_MFR_GIGADEVICE)
++		did = id[2];
++	else
+ 		return 0;
+ 
+ 	ret = spinand_match_and_init(spinand, gigadevice_spinand_table,
+ 				     ARRAY_SIZE(gigadevice_spinand_table),
+-				     id[2]);
++				     did);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.20.1
 
-I=E2=80=99m not sure we care. We have many logical address spaces (two per m=
-m plus a few more).  We have 4096 PCIDs, but we only use ten or so.  And we h=
-ave some undocumented number of *physical* ASIDs with some undocumented mech=
-anism by which PCID maps to a physical ASID.
-
-I don=E2=80=99t suppose you know how many physical ASIDs we have?  And how i=
-t interacts with the VPID stuff?
