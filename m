@@ -2,109 +2,111 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E348FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31FA1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B545521537
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03ACF21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1laPt4Yc"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="K7GcW9FG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfENO1b (ORCPT
+        id S1726586AbfENO1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:27:31 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37292 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfENO12 (ORCPT
+        Tue, 14 May 2019 10:27:42 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51160 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725928AbfENO06 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:27:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=eNvhEe3BMTRaZ1fLMuDOKnrgYFbmEX60UqHNIxHZPnQ=; b=1laPt4YcsSByydA6OAeBTkdoPG
-        GEisQedgcPbnTOnE5ITOdPgGqPKli8Fm3YkUxv1tV8/brlnLK2OkiCxHxD9S6n74I227kkS5b4KOS
-        29QCup7DP9WooAOpTON1XnmqTFEazMGg/3uaC5Bi00d2r4I2G9XX9yNqSCL85MdCWGggxMFleqlge
-        mU/pJXFircxoc2K4v3FLEXZyCWpxNLlx/fHs/NrNOYBvG+naStYkxQes3ysF+2hE1KPcQ7jLzJKQh
-        8nJiJvZS4WAV3JAYWzDN1dVSR10p7E51BUWAMoR725GoJ4m95xyaUoay2f9G7322GHH+96j1vLU8W
-        tNUbutLQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQYOS-0008LC-RO; Tue, 14 May 2019 14:27:01 +0000
-Subject: Re: [RFC PATCH v3 11/21] x86/watchdog/hardlockup: Add an HPET-based
- hardlockup detector
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
-Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1557842534-4266-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <62576937-50fc-fded-784b-d691e455dfc1@infradead.org>
-Date:   Tue, 14 May 2019 07:26:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 10:26:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f204so3126600wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lVjP/TUvsFtzE93nQgdFOmYpEZuIaIcrKuBduhrv6Ws=;
+        b=K7GcW9FGsMDGxGWbxMWdDHlnWThhYXf57bdn121CmkzrQDob5RNGybirJGZLfAsdCu
+         T8QutaUYs3/d0X26GcQWtcCkl1fVXERlWhF3ZLTvMnk8DURyMRhuf64vBo6889GyysH8
+         yVsCi/pIm3xMznYNNo2Jk9Cb9XseuEFj4quZrXBJIycHUXbI0/qEkKYDK4EEpPSnz9Pw
+         LTQ4YMCI9XNNND0yoVVQSmZcX0WUJCiY0Tcb2muUXHAJF3/sxkz+XD/2z9vizen1kHlh
+         c6PsAbjN3X4sXxrOcG2WSmI4bo8g8RiYwfLapqwu9UOp1rp4plPyfddQHAZN+0CgRsJQ
+         EWBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lVjP/TUvsFtzE93nQgdFOmYpEZuIaIcrKuBduhrv6Ws=;
+        b=GoCChmwGCJXL/cO29pFg8al4ilwExf/lrsBcw0ePq12SBSpSo1J2RQaDXLFTd1nplU
+         gLcn4Reo2CEupkcPJz7cXexsTBbYZl4OM2tjB8SKPhkJ1fDdbnDUVOjCCHabu6I57Pxd
+         cAOgi9r2S/HX3s2hT3TFjOTD+f+O/msV7zJ0a1z0GjO/fLEXJfR2svQAhAxKpi8uC8kg
+         kHLQQOs8XcGisvioCJCwyA1wjc6G4u2hPP1Y7x/oQL/KiL1ziF2h+tQp93sJuhpMJG0k
+         NuH2O7V/k8x3obxcfTn0tCkKs+dUEooCNGjwYPUOmeoMEyiHG0nd3QV5EJhDycEuwkP8
+         dlag==
+X-Gm-Message-State: APjAAAVJabdCvHqtPp6votp0gWX+AySBBvWX+7hfmSVszukpXrrPweoi
+        i81e2kgTjYyg72sybmB2z0OCWw==
+X-Google-Smtp-Source: APXvYqxzRoLfq1Pg+NWyMjtpd/8d6g1yBno1wegJJegosDrCNpzpZ9uiC2M+yIMJE5sQnvO/xvylYQ==
+X-Received: by 2002:a1c:c016:: with SMTP id q22mr14286292wmf.6.1557844017646;
+        Tue, 14 May 2019 07:26:57 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id h15sm12343642wru.52.2019.05.14.07.26.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 07:26:56 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/8] arm64: dts: meson: g12a: add audio memory arbitrer
+Date:   Tue, 14 May 2019 16:26:43 +0200
+Message-Id: <20190514142649.1127-3-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190514142649.1127-1-jbrunet@baylibre.com>
+References: <20190514142649.1127-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <1557842534-4266-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 7:02 AM, Ricardo Neri wrote:
-> diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-> index 15d0fbe27872..376a5db81aec 100644
-> --- a/arch/x86/Kconfig.debug
-> +++ b/arch/x86/Kconfig.debug
-> @@ -169,6 +169,17 @@ config IOMMU_LEAK
->  config HAVE_MMIOTRACE_SUPPORT
->  	def_bool y
->  
-> +config X86_HARDLOCKUP_DETECTOR_HPET
-> +	bool "Use HPET Timer for Hard Lockup Detection"
-> +	select SOFTLOCKUP_DETECTOR
-> +	select HARDLOCKUP_DETECTOR
-> +	select HARDLOCKUP_DETECTOR_CORE
-> +	depends on HPET_TIMER && HPET && X86_64
-> +	help
-> +	  Say y to enable a hardlockup detector that is driven by an High-
+Add the audio DDR memory arbitrer of the g12a SoC family.
 
-	                                                       by a
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> +	  Precision Event Timer. This option is helpful to not use counters
-> +	  from the Performance Monitoring Unit to drive the detector.
-> +
->  config X86_DECODER_SELFTEST
->  	bool "x86 instruction decoder selftest"
->  	depends on DEBUG_KERNEL && KPROBES
-
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 09aa024d9f0e..2d5bccad4035 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -5,6 +5,7 @@
+ 
+ #include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/axg-audio-clkc.h>
+ #include <dt-bindings/clock/g12a-clkc.h>
+ #include <dt-bindings/clock/g12a-aoclkc.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+@@ -707,6 +708,14 @@
+ 
+ 					resets = <&reset RESET_AUDIO>;
+ 				};
++
++				arb: reset-controller@280 {
++					status = "disabled";
++					compatible = "amlogic,meson-axg-audio-arb";
++					reg = <0x0 0x280 0x0 0x4>;
++					#reset-cells = <1>;
++					clocks = <&clkc_audio AUD_CLKID_DDR_ARB>;
++				};
+ 			};
+ 
+ 			usb3_pcie_phy: phy@46000 {
 -- 
-~Randy
+2.20.1
+
