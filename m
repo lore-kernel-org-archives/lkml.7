@@ -2,138 +2,103 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67475C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393FEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD5B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pydUdVtc"
+	by mail.kernel.org (Postfix) with ESMTP id 179E621537
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfENOEq (ORCPT
+        id S1726465AbfENOFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:04:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38903 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfENOEp (ORCPT
+        Tue, 14 May 2019 10:05:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39690 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENOFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:04:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id j26so8697055pgl.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:04:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=A8jWje4NgcT6MshH45a0i40xgDC1LZofezqqjj0Ab5Y=;
-        b=pydUdVtcvkl4WjYE6VFJSrN4kDpWkRSTw1NBe7MssMeEHZ6ZsggZmJbmNuOqLrSp40
-         3rOwaurGQyLmgvoQi2+q1hK24SVNEuQJjnSgLXMnxpaGI1zPFia+UFP/j0MaoWshxF6C
-         mbjWq2fHWa7nsTW/U74hhlcsRwAeixNS6Tw+RSInNmelyLnZ39Vf7nnmH1vgpmD0jKK/
-         LLxDvoVhnkCq6o/EWDkCa1ho8NGMXI4vrbzEfFqIWjygYOYELmZrH+z4Ff3Bd8WQakjh
-         hqRQY/UI97N9lBoOIGHk6r/fqIrDb6KzWBzRXIUlJxOF65cNXSQB99tETWcqdcXEWP4j
-         A72Q==
+        Tue, 14 May 2019 10:05:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id w8so16946351wrl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:05:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=A8jWje4NgcT6MshH45a0i40xgDC1LZofezqqjj0Ab5Y=;
-        b=LDWWWvJG2q6h2XSDNcxWx9H3c5DjFENFbcP7OgovNf/J2ZRclqgJ3Ca8nIUzizVvnz
-         Tozpa2A+gMwD2TsZkq7SkJiZr684P39oozyAqIJ9jOtxxgc9H/dCxO1BZKrLbd28wcNT
-         1CzSrljGAGEoevMgK+VBt6fSWrA1dAlpkOz96muFs8wcMqXHa5tIr2d9tTvWWDPmJzcm
-         aBD8LEVJXXEG+vO5SNjWiyOp/yhAWL8QhxTl18FSalwYFCQCidRMkMIDQz28fkPYUZJl
-         Sb8CaUujYM7/gEbxTJjpSTgjziuwBjvDBdSnLQvmiYgAv4WxrPufcVhdez5dPh5iwUgi
-         T+sg==
-X-Gm-Message-State: APjAAAWG/qodnTacxIsIzmDjboRWO9kdwpf3r7E9Lkfg9mGDr6ObO+mI
-        kFWzNK+ELsGCeGU9VLwb05VbRPBt3Zsv6y0rlV0=
-X-Google-Smtp-Source: APXvYqwGzU9z2y3Okwp6KevtAW9y0Jsw9Hlcm2aHeEkxnsnDUrKXTdXrJXdF3qw0vek9g67Nd71rQyIhnL05ez6NnqA=
-X-Received: by 2002:a65:480c:: with SMTP id h12mr37371134pgs.266.1557842684846;
- Tue, 14 May 2019 07:04:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HFrxKRJ5HNStlbUTQZyFY7J10wCh/Ba3Wo5fQJBjPyQ=;
+        b=X77tEROxxbLYGWSepATLl9EWhfd3VvsZ2I7tR6Uv7g198SzPvYfxZ0u5v6OXAwfm/Y
+         eW8LHZmPRMux34pblc+RaLPqQuxboZa5Mf4z0+bOJBbnAsTVzsw61UMb8fMQe/kVcDCn
+         6AzG9BkQmw9sGWGsBaXgmKSxaM1JoodoVZ5VeGeuTRKpWkKDXfMK6BAzmeKli+JcsNA1
+         mOzEMsD2Po99PZz+wvNVqB2z85Z+ZO8GcXmkamq6bMf/cURSwPvkHdHVZa4ro2OVa2nv
+         q3POge33kJo8TJbdEpkUK4EE9aP+Cgq9v4W19mHPZ2RhUGquKtHYx5w6Zt4NPuhfJRO9
+         0OQQ==
+X-Gm-Message-State: APjAAAX2PJcKiz8pGF8+zorr/SxaWKsVH1HWuOW4iJVHQWax6U2xJTV4
+        tru0aPdWY4IRcrkQuZw+35RmcsLtYVc=
+X-Google-Smtp-Source: APXvYqw125K8xwI4XsobgwXdSL1K0hlf2aXA2HtrmE4RRFWiK7i4AUBOj5YqSNVzCFCZhGhmte/4UQ==
+X-Received: by 2002:adf:eb44:: with SMTP id u4mr22038936wrn.83.1557842751050;
+        Tue, 14 May 2019 07:05:51 -0700 (PDT)
+Received: from linux.home (2a01cb05850ddf00045dd60e6368f84b.ipv6.abo.wanadoo.fr. [2a01:cb05:850d:df00:45d:d60e:6368:f84b])
+        by smtp.gmail.com with ESMTPSA id x187sm3488139wmb.33.2019.05.14.07.05.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 07:05:50 -0700 (PDT)
+Date:   Tue, 14 May 2019 16:05:48 +0200
+From:   Guillaume Nault <gnault@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, paulus@samba.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] ppp: deflate: Fix possible crash in deflate_init
+Message-ID: <20190514140547.GA25993@linux.home>
+References: <20190514074300.42588-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <1557676457-4195-1-git-send-email-akinobu.mita@gmail.com>
- <1557676457-4195-5-git-send-email-akinobu.mita@gmail.com> <SN6PR04MB4527A2B52661330D519FD618860F0@SN6PR04MB4527.namprd04.prod.outlook.com>
-In-Reply-To: <SN6PR04MB4527A2B52661330D519FD618860F0@SN6PR04MB4527.namprd04.prod.outlook.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Tue, 14 May 2019 23:04:33 +0900
-Message-ID: <CAC5umyjjjuj04mkBd3O23Stjs9s56r+F_XTSimrJbnasy5PBcQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] nvme: add basic facility to get telemetry log page
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@fb.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Kenneth Heitke <kenneth.heitke@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Minwoo Im <minwoo.im.dev@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514074300.42588-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019=E5=B9=B45=E6=9C=8814=E6=97=A5(=E7=81=AB) 0:34 Chaitanya Kulkarni <Chai=
-tanya.Kulkarni@wdc.com>:
->
-> On 05/12/2019 08:55 AM, Akinobu Mita wrote:
-> > This adds the required definisions to get telemetry log page.
-> s/definisions/definitions/
-
-OK.
-
-> > diff --git a/include/linux/nvme.h b/include/linux/nvme.h
-> > index c40720c..8c0b29d 100644
-> > --- a/include/linux/nvme.h
-> > +++ b/include/linux/nvme.h
-> > @@ -294,6 +294,8 @@ enum {
-> >       NVME_CTRL_OACS_DIRECTIVES               =3D 1 << 5,
-> >       NVME_CTRL_OACS_DBBUF_SUPP               =3D 1 << 8,
-> >       NVME_CTRL_LPA_CMD_EFFECTS_LOG           =3D 1 << 1,
-> > +     NVME_CTRL_LPA_EXTENDED_DATA             =3D 1 << 2,
-> > +     NVME_CTRL_LPA_TELEMETRY_LOG             =3D 1 << 3,
-> >   };
-> >
-> >   struct nvme_lbaf {
-> > @@ -396,6 +398,20 @@ enum {
-> >       NVME_NIDT_UUID          =3D 0x03,
-> >   };
-> >
-> > +struct nvme_telemetry_log_page_hdr {
-> > +     __u8    lpi; /* Log page identifier */
-> > +     __u8    rsvd[4];
-> > +     __u8    iee_oui[3];
-> > +     __le16  dalb1; /* Data area 1 last block */
-> > +     __le16  dalb2; /* Data area 2 last block */
-> > +     __le16  dalb3; /* Data area 3 last block */
-> > +     __u8    rsvd1[368];
-> > +     __u8    ctrlavail; /* Controller initiated data avail?*/
-> > +     __u8    ctrldgn; /* Controller initiated telemetry Data Gen # */
-> > +     __u8    rsnident[128];
-> > +     __u8    telemetry_dataarea[0];
-> > +};
-> > +
->
-> nit:- Thanks for adding the comments, can you please align all the above
-> comments like :-
-
-OK.  I'll send a patch for nvme-cli at first.
-
-> +struct nvme_telemetry_log_page_hdr {
-> +       __u8    lpi;            /* Log page identifier */
-> +       __u8    rsvd[4];
-> +       __u8    iee_oui[3];
-> +       __le16  dalb1;          /* Data area 1 last block */
-> +       __le16  dalb2;          /* Data area 2 last block */
-> +       __le16  dalb3;          /* Data area 3 last block */
-> +       __u8    rsvd1[368];
-> +       __u8    ctrlavail;      /* Controller initiated data avail?*/
-> +       __u8    ctrldgn;        /* Controller initiated telemetry Data
-> Gen # */
-> +       __u8    rsnident[128];
-> +       __u8    telemetry_dataarea[0];
-> +};
+On Tue, May 14, 2019 at 03:43:00PM +0800, YueHaibing wrote:
+> 
+> If ppp_deflate fails to register in deflate_init,
+> module initialization failed out, however
+> ppp_deflate_draft may has been regiestred and not
+> unregistered before return.
+> Then the seconed modprobe will trigger crash like this.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/net/ppp/ppp_deflate.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ppp/ppp_deflate.c b/drivers/net/ppp/ppp_deflate.c
+> index b5edc7f..2829efe 100644
+> --- a/drivers/net/ppp/ppp_deflate.c
+> +++ b/drivers/net/ppp/ppp_deflate.c
+> @@ -610,12 +610,16 @@ static void z_incomp(void *arg, unsigned char *ibuf, int icnt)
+>  
+>  static int __init deflate_init(void)
+>  {
+> -        int answer = ppp_register_compressor(&ppp_deflate);
+> -        if (answer == 0)
+> -                printk(KERN_INFO
+> -		       "PPP Deflate Compression module registered\n");
+> +	int answer;
 > +
+> +	answer = ppp_register_compressor(&ppp_deflate);
+> +	if (answer)
+> +		return answer;
+> +
+> +	pr_info("PPP Deflate Compression module registered\n");
+>  	ppp_register_compressor(&ppp_deflate_draft);
+> -        return answer;
+> +
+> +	return 0;
+>  }
+>  
+I'd be cleaner to also check for ppp_deflate_draft registration failure
+IMHO (and print the log line only if both compressors get registered
+successfully).
