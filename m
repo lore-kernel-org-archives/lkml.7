@@ -2,109 +2,132 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19EBC04AB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D6CC04A6B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAFF2214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 036BA208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfENDhk (ORCPT
+        id S1726971AbfENDiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 23:37:40 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:56571 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726672AbfENDhj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 23:37:39 -0400
-X-UUID: 7e7b64bdd5c743cca87edf23b68a1ce2-20190514
-X-UUID: 7e7b64bdd5c743cca87edf23b68a1ce2-20190514
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1437643664; Tue, 14 May 2019 11:37:32 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 11:37:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 11:37:30 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     Jose Abreu <joabreu@synopsys.com>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.comi>,
-        <boon.leong.ong@intel.com>
-Subject: [v3, PATCH 2/4] net: stmmac: fix csr_clk can't be zero issue
-Date:   Tue, 14 May 2019 11:37:24 +0800
-Message-ID: <1557805046-306-3-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1557805046-306-1-git-send-email-biao.huang@mediatek.com>
-References: <1557805046-306-1-git-send-email-biao.huang@mediatek.com>
+        Mon, 13 May 2019 23:38:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59014 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726660AbfENDiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 23:38:15 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95D9B307D92F;
+        Tue, 14 May 2019 03:38:15 +0000 (UTC)
+Received: from [10.72.12.59] (ovpn-12-59.pek2.redhat.com [10.72.12.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 815F2608BB;
+        Tue, 14 May 2019 03:38:06 +0000 (UTC)
+Subject: Re: [PATCH v2 7/8] vsock/virtio: increase RX buffer size to 64 KiB
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-8-sgarzare@redhat.com>
+ <bf0416f1-0e69-722d-75ce-3d101e6d7d71@redhat.com>
+ <20190513175138.4yycad2xi65komw6@steredhat>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <fd934a4c-f7d2-8a04-ed93-a3b690ed0d79@redhat.com>
+Date:   Tue, 14 May 2019 11:38:05 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+In-Reply-To: <20190513175138.4yycad2xi65komw6@steredhat>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 14 May 2019 03:38:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The specific clk_csr value can be zero, and
-stmmac_clk is necessary for MDC clock which can be set dynamically.
-So, change the condition from plat->clk_csr to plat->stmmac_clk to
-fix clk_csr can't be zero issue.
 
-Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |    6 +++---
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |    5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+On 2019/5/14 上午1:51, Stefano Garzarella wrote:
+> On Mon, May 13, 2019 at 06:01:52PM +0800, Jason Wang wrote:
+>> On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+>>> In order to increase host -> guest throughput with large packets,
+>>> we can use 64 KiB RX buffers.
+>>>
+>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>> ---
+>>>    include/linux/virtio_vsock.h | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>>> index 84b72026d327..5a9d25be72df 100644
+>>> --- a/include/linux/virtio_vsock.h
+>>> +++ b/include/linux/virtio_vsock.h
+>>> @@ -10,7 +10,7 @@
+>>>    #define VIRTIO_VSOCK_DEFAULT_MIN_BUF_SIZE	128
+>>>    #define VIRTIO_VSOCK_DEFAULT_BUF_SIZE		(1024 * 256)
+>>>    #define VIRTIO_VSOCK_DEFAULT_MAX_BUF_SIZE	(1024 * 256)
+>>> -#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
+>>> +#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 64)
+>>>    #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
+>>>    #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
+>>
+>> We probably don't want such high order allocation. It's better to switch to
+>> use order 0 pages in this case. See add_recvbuf_big() for virtio-net. If we
+>> get datapath unified, we will get more stuffs set.
+> IIUC, you are suggesting to allocate only pages and put them in a
+> scatterlist, then add them to the virtqueue.
+>
+> Is it correct?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 906f2be..a905b63 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4374,10 +4374,10 @@ int stmmac_dvr_probe(struct device *device,
- 	 * set the MDC clock dynamically according to the csr actual
- 	 * clock input.
- 	 */
--	if (!priv->plat->clk_csr)
--		stmmac_clk_csr_set(priv);
--	else
-+	if (priv->plat->clk_csr >= 0)
- 		priv->clk_csr = priv->plat->clk_csr;
-+	else
-+		stmmac_clk_csr_set(priv);
- 
- 	stmmac_check_pcs_mode(priv);
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 3031f2b..f45bfbe 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -408,7 +408,10 @@ struct plat_stmmacenet_data *
- 	/* Default to phy auto-detection */
- 	plat->phy_addr = -1;
- 
--	/* Get clk_csr from device tree */
-+	/* Default to get clk_csr from stmmac_clk_crs_set(),
-+	 * or get clk_csr from device tree.
-+	 */
-+	plat->clk_csr = -1;
- 	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
- 
- 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
--- 
-1.7.9.5
 
+Yes since you are using:
+
+                 pkt->buf = kmalloc(buf_len, GFP_KERNEL);
+                 if (!pkt->buf) {
+                         virtio_transport_free_pkt(pkt);
+                         break;
+                 }
+
+This is likely to fail when the memory is fragmented which is kind of 
+fragile.
+
+
+>
+> The issue that I have here, is that the virtio-vsock guest driver, see
+> virtio_vsock_rx_fill(), allocates a struct virtio_vsock_pkt that
+> contains the room for the header, then allocates the buffer for the payload.
+> At this point it fills the scatterlist with the &virtio_vsock_pkt.hdr and the
+> buffer for the payload.
+
+
+This part should be fine since what is needed is just adding more pages 
+to sg[] and call virtuqeueu_add_sg().
+
+
+>
+> Changing this will require several modifications, and if we get datapath
+> unified, I'm not sure it's worth it.
+> Of course, if we leave the datapaths separated, I'd like to do that later.
+>
+> What do you think?
+
+
+For the driver it self, it should not be hard. But I think you mean the 
+issue of e.g virtio_vsock_pkt itself which doesn't support sg. For short 
+time, maybe we can use kvec instead.
+
+Thanks
+
+
+>
+> Thanks,
+> Stefano
