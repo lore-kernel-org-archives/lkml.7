@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F6BC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA982C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFEB7216E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE8A216E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:03:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbfENOD1 (ORCPT
+        id S1726651AbfENODf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:03:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:47295 "EHLO mga05.intel.com"
+        Tue, 14 May 2019 10:03:35 -0400
+Received: from mga05.intel.com ([192.55.52.43]:47286 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbfENODC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:03:02 -0400
+        id S1726393AbfENODB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 10:03:01 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 07:03:01 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 07:03:00 -0700
 X-ExtLoop1: 1
 Received: from unknown (HELO luv-build.sc.intel.com) ([172.25.110.25])
-  by fmsmga005.fm.intel.com with ESMTP; 14 May 2019 07:03:01 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 14 May 2019 07:03:00 -0700
 From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
@@ -49,9 +49,9 @@ Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
         Jan Kiszka <jan.kiszka@siemens.com>,
         Stephane Eranian <eranian@google.com>,
         Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-Subject: [RFC PATCH v3 21/21] x86/watchdog/hardlockup/hpet: Support interrupt remapping
-Date:   Tue, 14 May 2019 07:02:14 -0700
-Message-Id: <1557842534-4266-22-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Subject: [RFC PATCH v3 18/21] x86/apic: Add a parameter for the APIC delivery mode
+Date:   Tue, 14 May 2019 07:02:11 -0700
+Message-Id: <1557842534-4266-19-git-send-email-ricardo.neri-calderon@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
 References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
@@ -60,15 +60,24 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When interrupt remapping is enabled in the system, the MSI interrupt
-message must follow a special format the IOMMU can understand. Hence,
-utilize the functionality provided by the IOMMU driver for such purpose.
+Until now, the delivery mode of APIC interrupts is set to the default
+mode set in the APIC driver. However, there are no restrictions in hardware
+to configure each interrupt with a different delivery mode. Specifying the
+delivery mode per interrupt is useful when one is interested in changing
+the delivery mode of a particular interrupt. For instance, this can be used
+to deliver an interrupt as non-maskable.
 
-The first step is to determine whether interrupt remapping is enabled
-by looking for the existence of an interrupt remapping domain. If it
-exists, let the IOMMU driver compose the MSI message for us. The hard-
-lockup detector is still responsible of writing the message in the
-HPET FSB route register.
+Add a new member, delivery_mode, to struct irq_cfg. This new member, can
+be used to update the configuration of the delivery mode in each interrupt
+domain. Likewise, add equivalent macros to populate MSI messages.
+
+Currently, all interrupt domains set the delivery mode of interrupts using
+the APIC setting. Interrupt domains use an irq_cfg data structure to
+configure their own data structures and hardware resources. Thus, in order
+to keep the current behavior, set the delivery mode of the irq
+configuration that as the APIC setting. In this manner, irq domains can
+obtain the delivery mode from the irq configuration data instead of the
+APIC setting, if needed.
 
 Cc: Ashok Raj <ashok.raj@intel.com>
 Cc: Andi Kleen <andi.kleen@intel.com>
@@ -92,76 +101,62 @@ Cc: x86@kernel.org
 Cc: iommu@lists.linux-foundation.org
 Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
 ---
- arch/x86/kernel/watchdog_hld_hpet.c | 33 ++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/hw_irq.h |  5 +++--
+ arch/x86/include/asm/msidef.h |  3 +++
+ arch/x86/kernel/apic/vector.c | 10 ++++++++++
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/watchdog_hld_hpet.c b/arch/x86/kernel/watchdog_hld_hpet.c
-index 90680a8cf9fc..2d59b8f0390e 100644
---- a/arch/x86/kernel/watchdog_hld_hpet.c
-+++ b/arch/x86/kernel/watchdog_hld_hpet.c
-@@ -19,6 +19,7 @@
- #include <linux/nmi.h>
- #include <linux/hpet.h>
- #include <asm/msidef.h>
-+#include <asm/irq_remapping.h>
- #include <asm/hpet.h>
+diff --git a/arch/x86/include/asm/hw_irq.h b/arch/x86/include/asm/hw_irq.h
+index 32e666e1231e..c024e5976b78 100644
+--- a/arch/x86/include/asm/hw_irq.h
++++ b/arch/x86/include/asm/hw_irq.h
+@@ -117,8 +117,9 @@ struct irq_alloc_info {
+ };
  
- static struct hpet_hld_data *hld_data;
-@@ -116,6 +117,25 @@ static bool is_hpet_wdt_interrupt(struct hpet_hld_data *hdata)
- 	return false;
- }
+ struct irq_cfg {
+-	unsigned int		dest_apicid;
+-	unsigned int		vector;
++	unsigned int				dest_apicid;
++	unsigned int				vector;
++	enum ioapic_irq_destination_types	delivery_mode;
+ };
  
-+/** irq_remapping_enabled() - Detect if interrupt remapping is enabled
-+ * @hdata:	A data structure with the HPET block id
-+ *
-+ * Determine if the HPET block that the hardlockup detector is under
-+ * the remapped interrupt domain.
-+ *
-+ * Returns: True interrupt remapping is enabled. False otherwise.
-+ */
-+static bool irq_remapping_enabled(struct hpet_hld_data *hdata)
-+{
-+	struct irq_alloc_info info;
-+
-+	init_irq_alloc_info(&info, NULL);
-+	info.type = X86_IRQ_ALLOC_TYPE_HPET;
-+	info.hpet_id = hdata->blockid;
-+
-+	return !!irq_remapping_get_ir_irq_domain(&info);
-+}
-+
- /**
-  * compose_msi_msg() - Populate address and data fields of an MSI message
-  * @hdata:	A data strucure with the message to populate
-@@ -160,6 +180,9 @@ static int update_msi_destid(struct hpet_hld_data *hdata)
- {
- 	u32 destid;
+ extern struct irq_cfg *irq_cfg(unsigned int irq);
+diff --git a/arch/x86/include/asm/msidef.h b/arch/x86/include/asm/msidef.h
+index 38ccfdc2d96e..6d666c90f057 100644
+--- a/arch/x86/include/asm/msidef.h
++++ b/arch/x86/include/asm/msidef.h
+@@ -16,6 +16,9 @@
+ 					 MSI_DATA_VECTOR_MASK)
  
-+	if (irq_remapping_enabled(hdata))
-+		return hld_hpet_intremap_activate_irq(hdata);
+ #define MSI_DATA_DELIVERY_MODE_SHIFT	8
++#define MSI_DATA_DELIVERY_MODE_MASK	0x00000700
++#define MSI_DATA_DELIVERY_MODE(dm)	(((dm) << MSI_DATA_DELIVERY_MODE_SHIFT) & \
++					 MSI_DATA_DELIVERY_MODE_MASK)
+ #define  MSI_DATA_DELIVERY_FIXED	(0 << MSI_DATA_DELIVERY_MODE_SHIFT)
+ #define  MSI_DATA_DELIVERY_LOWPRI	(1 << MSI_DATA_DELIVERY_MODE_SHIFT)
+ #define  MSI_DATA_DELIVERY_NMI		(4 << MSI_DATA_DELIVERY_MODE_SHIFT)
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index 3173e07d3791..99436fe7e932 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -548,6 +548,16 @@ static int x86_vector_alloc_irqs(struct irq_domain *domain, unsigned int virq,
+ 		irqd->chip_data = apicd;
+ 		irqd->hwirq = virq + i;
+ 		irqd_set_single_target(irqd);
 +
- 	hdata->msi_msg.address_lo &= ~MSI_ADDR_DEST_ID_MASK;
- 	destid = apic->calc_dest_apicid(hdata->handling_cpu);
- 	hdata->msi_msg.address_lo |= MSI_ADDR_DEST_ID(destid);
-@@ -216,9 +239,17 @@ static int hardlockup_detector_nmi_handler(unsigned int type,
-  */
- static int setup_irq_msi_mode(struct hpet_hld_data *hdata)
- {
-+	s32 ret;
- 	u32 v;
- 
--	compose_msi_msg(hdata);
-+	if (irq_remapping_enabled(hdata)) {
-+		ret = hld_hpet_intremap_alloc_irq(hdata);
-+		if (ret)
-+			return ret;
-+	} else {
-+		compose_msi_msg(hdata);
-+	}
++		/*
++		 * Initialize the delivery mode of this irq to match the
++		 * default delivery mode of the APIC. This is useful for
++		 * children irq domains which want to take the delivery
++		 * mode from the individual irq configuration rather
++		 * than from the APIC.
++		 */
++		 apicd->hw_irq_cfg.delivery_mode = apic->irq_delivery_mode;
 +
- 	hpet_writel(hdata->msi_msg.data, HPET_Tn_ROUTE(hdata->num));
- 	hpet_writel(hdata->msi_msg.address_lo, HPET_Tn_ROUTE(hdata->num) + 4);
- 
+ 		/*
+ 		 * Legacy vectors are already assigned when the IOAPIC
+ 		 * takes them over. They stay on the same vector. This is
 -- 
 2.17.1
 
