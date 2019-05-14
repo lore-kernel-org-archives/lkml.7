@@ -2,148 +2,235 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D26C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:51:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FBA2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4442084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:51:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4mfkQzn"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="nS5cBo7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbfENXlx (ORCPT
+        id S1726581AbfENXvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:41:53 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:34680 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfENXlw (ORCPT
+        Tue, 14 May 2019 19:51:18 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47404 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726362AbfENXvS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:41:52 -0400
-Received: by mail-pg1-f193.google.com with SMTP id c13so353950pgt.1;
-        Tue, 14 May 2019 16:41:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DY6OWxXL6Mkjdnz9bKItmOBCwg7lWspCryDrZpJJELw=;
-        b=X4mfkQznNYHZpXmFQYc7WK7z6OUmo6Sk25Nz/vjKV2dkhuYPBTUE6ya8Uuvkk/gBjh
-         yA9ixJsoOl6ZMN9xYtfiFtg3vHtMFGQ1iOyOf+mqu3wjSEummwRW/BRDCd+QtgiQZPHj
-         pa7E7QrakEnijd59IO6EK+x0NSpSwHa5cORHnMYA76qNEjYcLFOmQ1p30SGuBQR708zp
-         CygDrnfb/RYOSwMJwPiynqo8DLa4PyaW8HtNT/zDcyu4TUn3xmi3AVBPGtHTxz+qem38
-         Nxe3M+AbbxfJsYvo5uXQMhJnOobYuVgUeifiaAKUUDLjXnmhcvT22u4FH00JEvinEmNk
-         a4zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DY6OWxXL6Mkjdnz9bKItmOBCwg7lWspCryDrZpJJELw=;
-        b=MhFrLICxYeyG1sLxG005khR4XzbPUPvwVaSGdLkhQB2LPSbri+aCSuL2DEAAWDIncm
-         whd+FefsCD6Tv+74PyJ6vg9wwbPGuEzOL8a2/g/6Z8QkTHbC1dOBC/zthloX3/f3sT40
-         4wDaM+jeawho9E5SSUhwYm6lyAMoYNZVyha2Ix6VQlL/7TMLMcTEtumUkjPylo1MJCn+
-         5Z2Eu/ug9TMLNToS0D5r/GZrqV637UihhUL/oTeIhlh1duTbbW4Q7e61f8H9TSzx969t
-         II5nfyi2ZBq40sZ24GfrZs6HDw7XQfLstKB0qD2tU2KYH8YeqhAveUeuwL1UyDZ2UgWu
-         8CZQ==
-X-Gm-Message-State: APjAAAXVlRbOpSeBT53jmiW0GQMhHP/Yn8WWB/xupgMlWR40yEx8V6yI
-        3D1aQBHUu0gVHeZ1lmtt3Go=
-X-Google-Smtp-Source: APXvYqwNBpkrVnbSQYAwgohdGmjunNQdCGyoDBa+JV+/+DN57azD9XaTe7h6TpYw5x0TTy4MoQNjgQ==
-X-Received: by 2002:a63:4346:: with SMTP id q67mr40722725pga.241.1557877311862;
-        Tue, 14 May 2019 16:41:51 -0700 (PDT)
-Received: from localhost ([2601:640:5:a19f:19d3:11c4:475e:3daa])
-        by smtp.gmail.com with ESMTPSA id u123sm290199pfu.67.2019.05.14.16.41.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 16:41:51 -0700 (PDT)
-Date:   Tue, 14 May 2019 16:41:49 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Cyril Hrubis <chrubis@suse.cz>
-Cc:     Yuri Norov <ynorov@marvell.com>, Andreas Schwab <schwab@suse.de>,
-        "ltp@lists.linux.it" <ltp@lists.linux.it>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Steve Ellcey <sellcey@caviumnetworks.com>,
-        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
-        Alexander Graf <agraf@suse.de>,
-        Bamvor Zhangjian <bamv2005@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        Manuel Montezelo <manuel.montezelo@gmail.com>,
-        James Hogan <james.hogan@imgtec.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Pinski <pinskia@gmail.com>,
-        Lin Yongting <linyongting@huawei.com>,
-        Alexey Klimov <klimov.linux@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Nathan_Lynch <Nathan_Lynch@mentor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Subject: Re: [LTP] [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
-Message-ID: <20190514234149.GA12077@yury-thinkpad>
-References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
- <20190508225900.GA14091@yury-thinkpad>
- <mvmtvdyoi33.fsf@suse.de>
- <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
- <20190514104311.GA24708@rei>
+        Tue, 14 May 2019 19:51:18 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4ENhWmv001629
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:51:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=O7eBrs0cmRrFsnBiCjlPOjGDWGcxOa5jMCEdxURKIS8=;
+ b=nS5cBo7ZXbIbW8vKlx1+2CYmEYbH/oukpPAEDPubpR6q6i6Kmz3pt45EkxkZ7GSqbzZu
+ P8S1VqFOtaBkglV9zxTsxNw/5rFS0/BS6JglBD+487wPVRGDPfweYpl1cbATdH47RDSn
+ PwPBysBeuv/hXDcbOdZ1G0FUwCEP1g+e2jw= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2sg3k1gvtn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:51:17 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Tue, 14 May 2019 16:51:16 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id E085912084F48; Tue, 14 May 2019 16:51:15 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Roman Gushchin <guro@fb.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] mm: refactor __vunmap() to avoid duplicated call to find_vm_area()
+Date:   Tue, 14 May 2019 16:51:10 -0700
+Message-ID: <20190514235111.2817276-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514104311.GA24708@rei>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_13:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:43:11PM +0200, Cyril Hrubis wrote:
-> Hi!
-> > > There is a problem with the stack size accounting during execve when
-> > > there is no stack limit:
-> > >
-> > > $ ulimit -s
-> > > 8192
-> > > $ ./hello.ilp32 
-> > > Hello World!
-> > > $ ulimit -s unlimited
-> > > $ ./hello.ilp32 
-> > > Segmentation fault
-> > > $ strace ./hello.ilp32 
-> > > execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) = -1 ENOMEM (Cannot allocate memory)
-> > > +++ killed by SIGSEGV +++
-> > > Segmentation fault (core dumped)
-> > >
-> > > Andreas.
-> > 
-> > Thanks Andreas, I will take a look. Do we have such test in LTP?
-> 
-> We do have a test that we can run a binary with very small stack size
-> i.e. 512kB but there does not seem to be anything that would catch this
-> specific problem.
-> 
-> Can you please open an issue and describe how to reproduce the problem
-> at our github tracker:
-> 
-> https://github.com/linux-test-project/ltp/issues
-> 
-> Then we can create testcase based on that reproducer later on.
+__vunmap() calls find_vm_area() twice without an obvious reason:
+first directly to get the area pointer, second indirectly by calling
+vm_remove_mappings()->remove_vm_area(), which is again searching
+for the area.
 
-This is it:
-https://github.com/linux-test-project/ltp/issues/530
+To remove this redundancy, let's split remove_vm_area() into
+__remove_vm_area(struct vmap_area *), which performs the actual area
+removal, and remove_vm_area(const void *addr) wrapper, which can
+be used everywhere, where it has been used before. Let's pass
+a pointer to the vm_area instead of vm_struct to vm_remove_mappings(),
+so it can pass it to __remove_vm_area() and avoid the redundant area
+lookup.
 
-Yury
+On my test setup, I've got 5-10% speed up on vfree()'ing 1000000
+of 4-pages vmalloc blocks.
+
+Perf report before:
+  29.44%  cat      [kernel.kallsyms]  [k] free_unref_page
+  11.88%  cat      [kernel.kallsyms]  [k] find_vmap_area
+   9.28%  cat      [kernel.kallsyms]  [k] __free_pages
+   7.44%  cat      [kernel.kallsyms]  [k] __slab_free
+   7.28%  cat      [kernel.kallsyms]  [k] vunmap_page_range
+   4.56%  cat      [kernel.kallsyms]  [k] __vunmap
+   3.64%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
+   3.04%  cat      [kernel.kallsyms]  [k] __free_vmap_area
+
+Perf report after:
+  32.41%  cat      [kernel.kallsyms]  [k] free_unref_page
+   7.79%  cat      [kernel.kallsyms]  [k] find_vmap_area
+   7.40%  cat      [kernel.kallsyms]  [k] __slab_free
+   7.31%  cat      [kernel.kallsyms]  [k] vunmap_page_range
+   6.84%  cat      [kernel.kallsyms]  [k] __free_pages
+   6.01%  cat      [kernel.kallsyms]  [k] __vunmap
+   3.98%  cat      [kernel.kallsyms]  [k] smp_call_function_single
+   3.81%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
+   2.77%  cat      [kernel.kallsyms]  [k] __free_vmap_area
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/vmalloc.c | 52 +++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 29 insertions(+), 23 deletions(-)
+
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index c42872ed82ac..8d4907865614 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -2075,6 +2075,22 @@ struct vm_struct *find_vm_area(const void *addr)
+ 	return NULL;
+ }
+ 
++static struct vm_struct *__remove_vm_area(struct vmap_area *va)
++{
++	struct vm_struct *vm = va->vm;
++
++	spin_lock(&vmap_area_lock);
++	va->vm = NULL;
++	va->flags &= ~VM_VM_AREA;
++	va->flags |= VM_LAZY_FREE;
++	spin_unlock(&vmap_area_lock);
++
++	kasan_free_shadow(vm);
++	free_unmap_vmap_area(va);
++
++	return vm;
++}
++
+ /**
+  * remove_vm_area - find and remove a continuous kernel virtual area
+  * @addr:	    base address
+@@ -2087,26 +2103,14 @@ struct vm_struct *find_vm_area(const void *addr)
+  */
+ struct vm_struct *remove_vm_area(const void *addr)
+ {
++	struct vm_struct *vm = NULL;
+ 	struct vmap_area *va;
+ 
+-	might_sleep();
+-
+ 	va = find_vmap_area((unsigned long)addr);
+-	if (va && va->flags & VM_VM_AREA) {
+-		struct vm_struct *vm = va->vm;
+-
+-		spin_lock(&vmap_area_lock);
+-		va->vm = NULL;
+-		va->flags &= ~VM_VM_AREA;
+-		va->flags |= VM_LAZY_FREE;
+-		spin_unlock(&vmap_area_lock);
+-
+-		kasan_free_shadow(vm);
+-		free_unmap_vmap_area(va);
++	if (va && va->flags & VM_VM_AREA)
++		vm = __remove_vm_area(va);
+ 
+-		return vm;
+-	}
+-	return NULL;
++	return vm;
+ }
+ 
+ static inline void set_area_direct_map(const struct vm_struct *area,
+@@ -2119,9 +2123,10 @@ static inline void set_area_direct_map(const struct vm_struct *area,
+ 			set_direct_map(area->pages[i]);
+ }
+ 
+-/* Handle removing and resetting vm mappings related to the vm_struct. */
+-static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
++/* Handle removing and resetting vm mappings related to the va->vm vm_struct. */
++static void vm_remove_mappings(struct vmap_area *va, int deallocate_pages)
+ {
++	struct vm_struct *area = va->vm;
+ 	unsigned long addr = (unsigned long)area->addr;
+ 	unsigned long start = ULONG_MAX, end = 0;
+ 	int flush_reset = area->flags & VM_FLUSH_RESET_PERMS;
+@@ -2138,7 +2143,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ 		set_memory_rw(addr, area->nr_pages);
+ 	}
+ 
+-	remove_vm_area(area->addr);
++	__remove_vm_area(va);
+ 
+ 	/* If this is not VM_FLUSH_RESET_PERMS memory, no need for the below. */
+ 	if (!flush_reset)
+@@ -2178,6 +2183,7 @@ static void vm_remove_mappings(struct vm_struct *area, int deallocate_pages)
+ static void __vunmap(const void *addr, int deallocate_pages)
+ {
+ 	struct vm_struct *area;
++	struct vmap_area *va;
+ 
+ 	if (!addr)
+ 		return;
+@@ -2186,17 +2192,18 @@ static void __vunmap(const void *addr, int deallocate_pages)
+ 			addr))
+ 		return;
+ 
+-	area = find_vm_area(addr);
+-	if (unlikely(!area)) {
++	va = find_vmap_area((unsigned long)addr);
++	if (unlikely(!va || !(va->flags & VM_VM_AREA))) {
+ 		WARN(1, KERN_ERR "Trying to vfree() nonexistent vm area (%p)\n",
+ 				addr);
+ 		return;
+ 	}
+ 
++	area = va->vm;
+ 	debug_check_no_locks_freed(area->addr, get_vm_area_size(area));
+ 	debug_check_no_obj_freed(area->addr, get_vm_area_size(area));
+ 
+-	vm_remove_mappings(area, deallocate_pages);
++	vm_remove_mappings(va, deallocate_pages);
+ 
+ 	if (deallocate_pages) {
+ 		int i;
+@@ -2212,7 +2219,6 @@ static void __vunmap(const void *addr, int deallocate_pages)
+ 	}
+ 
+ 	kfree(area);
+-	return;
+ }
+ 
+ static inline void __vfree_deferred(const void *addr)
+-- 
+2.20.1
+
