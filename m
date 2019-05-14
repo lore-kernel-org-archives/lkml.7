@@ -2,89 +2,96 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CC1C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87047C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEDF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572BC20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:18:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2KCHHXa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfENQQL (ORCPT
+        id S1726248AbfENQSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:16:11 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:44543 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfENQQL (ORCPT
+        Tue, 14 May 2019 12:18:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42195 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENQSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:16:11 -0400
-Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hQa63-0006ru-LN from George_Davis@mentor.com ; Tue, 14 May 2019 09:16:07 -0700
-Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
- (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 14 May
- 2019 09:16:05 -0700
-Date:   Tue, 14 May 2019 12:16:04 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
-Message-ID: <20190514161604.GD18528@mam-gdavis-lt>
-References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
- <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
- <20190514153021.GC18528@mam-gdavis-lt>
- <20190514155450.GB6508@kunai>
+        Tue, 14 May 2019 12:18:21 -0400
+Received: by mail-wr1-f66.google.com with SMTP id l2so19886131wrb.9;
+        Tue, 14 May 2019 09:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2QCo8Dha4jyH5qWVup39lkl3qNYvyEmFp/lbafcwv0g=;
+        b=M2KCHHXa9w7/0ORsFwfWWtv8dG1WOl97mnj3NEraBVfUPCaS3RJyCUsg0aDol2crMV
+         raEb9PUzHG/xhP6y6ugm6qvILLGa8UEU//4WsgOZwBDbII7z1cevZXlD4xywNq1wcR3Q
+         w0Vl+YrMkTKbMLgJp0H3HliVuCckDZBdoFKx7fzPBO/OP8Bc3AwQp6gVMUSaF7QEvZGu
+         fItLVS3WYog+yqtkIDBHgRL18EcAfR1z0ve0HPcxOTPQ28xswqyWZui5KWr/1olovf0n
+         +NHrQUziMAS0fVm1Eb/wlwZy0NNHp+wKWJ+bUCFve3NAgimjqazbg1jOtDQ4Tar7EQyR
+         Gfsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2QCo8Dha4jyH5qWVup39lkl3qNYvyEmFp/lbafcwv0g=;
+        b=Px6Am08Sc8pZMS0XDS3UK8hu/9OZ6BfA0340oCsC0jq5L3YaxvSFx8auPLICltvILE
+         xseFaWz5AM1NX7WK4LO5MWL+b4uRAO7rKRkIN44chvvL+qCR9dhQk4aGfqyXx08tSqtN
+         Znw8we9UT9V8TxKADjYmDwvG/acKzRPpeUrFfnsVQ0dgUXaATsDDUxtKD+VsedxAaUqM
+         F+Kgcr2wb6X6rfCljMgpIAn/VJs1C4+Ei7i+M0XZzl+FjvB7BgIAdT7lLEoeWFCJobae
+         HyM9SUJ7IcI2ipepegjKDtka/9/tckE54BNKYOsdqP/yUNJqiW3tKb1lsUE7FPxVrrAF
+         Ivww==
+X-Gm-Message-State: APjAAAWdEuvntDOz5kt4AOf41L9R6Bv+gyV084MqAyaWta8HE49HkaVY
+        6+dXcPi5xuqfjkf+VKXPL3s=
+X-Google-Smtp-Source: APXvYqxYdKqSrZRWSHsMpQlKO7iixoLljsIATMn2P6fIRC02plxoPJYE12VcGiTDYRt10LFDD8Y+Wg==
+X-Received: by 2002:a5d:66c1:: with SMTP id k1mr14777198wrw.225.1557850699692;
+        Tue, 14 May 2019 09:18:19 -0700 (PDT)
+Received: from nexussix.ar.arcelik ([84.44.14.233])
+        by smtp.gmail.com with ESMTPSA id d16sm15422987wrs.68.2019.05.14.09.18.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 09:18:19 -0700 (PDT)
+From:   Cengiz Can <cengizc@gmail.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cengizc@gmail.com
+Subject: [PATCH] Documentation: kdump: fix minor typo
+Date:   Tue, 14 May 2019 19:17:25 +0300
+Message-Id: <20190514161724.16604-1-cengizc@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190514155450.GB6508@kunai>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Wolfram,
+kdump.txt had a minor typo.
 
-On Tue, May 14, 2019 at 05:54:51PM +0200, Wolfram Sang wrote:
-> 
-> > > > Fixes: https://patchwork.kernel.org/patch/10929511/
-> > > 
-> > > I don't think this is an appropriate reference, as it points to a patch that
-> > > was never applied.
-> > 
-> > I included it as a link to an upstream problem report similar to other commits
-> > that I previewed. The link provides the extra context that I was perhaps to
-> > lazy to note in the commit header.
-> 
-> We have a "Link:" tag for things like this, e.g.:
-> 
-> Link: https://patchwork.kernel.org/patch/10929511/
+Signed-off-by: Cengiz Can <cengizc@gmail.com>
+---
+ Documentation/kdump/kdump.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Right, I've changed it to a Link instead.
-
-Thanks!
-
+diff --git a/Documentation/kdump/kdump.txt b/Documentation/kdump/kdump.txt
+index 51814450a7f8..3162eeb8c262 100644
+--- a/Documentation/kdump/kdump.txt
++++ b/Documentation/kdump/kdump.txt
+@@ -410,7 +410,7 @@ Notes on loading the dump-capture kernel:
+ * Boot parameter "1" boots the dump-capture kernel into single-user
+   mode without networking. If you want networking, use "3".
+ 
+-* We generally don' have to bring up a SMP kernel just to capture the
++* We generally don't have to bring up a SMP kernel just to capture the
+   dump. Hence generally it is useful either to build a UP dump-capture
+   kernel or specify maxcpus=1 option while loading dump-capture kernel.
+   Note, though maxcpus always works, you had better replace it with
 -- 
-Regards,
-George
+2.21.0
+
