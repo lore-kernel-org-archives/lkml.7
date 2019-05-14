@@ -6,138 +6,149 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D31AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90DBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE9F2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82EA520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="F54v5r3Q"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bYM7ZfDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfENTYe (ORCPT
+        id S1726379AbfENTZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:24:34 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45726 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfENTYe (ORCPT
+        Tue, 14 May 2019 15:25:31 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36265 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfENTZb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:24:34 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t24so7635789otl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:24:34 -0700 (PDT)
+        Tue, 14 May 2019 15:25:31 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c14so11084138qke.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dgq3UM6Fy7t89KBsWPa/dNwubJ5x9NhFBR3nKkdGxBQ=;
-        b=F54v5r3Q2UY3p0fjMipKOr0SMEZcrmYQxQ6eq9lQTgFwD5XGRo7ab2Bz8ptu15lqGi
-         KZME0yohwroLEHCqjTihL6T8ZzRNmzMX7XD8jv7Z+22fnjT4CvamuDPDwm9ZqC92NFbL
-         psOyeN7hAWl/ayAPPh+L4sKlmOR9e4FXsgXAFcGuaBankMius3erJ5ABRCntGuZtIkgO
-         9jeDxqXQHS2OhoN7nFNVwmCrmTOEL+tP7bKNE5KCXPZpUqEb8Q3ZSOO0v0EPUhAncVKX
-         R8ZR5TfBmbtgDvjr2jF88CVkbM+5tHyeeTNmn91CplwgR3mz7BuLfoQZwny3cygAJMrY
-         Lw+w==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=KGcQ9upC29gYa4IvVNB87+RZG37gSQZLhYRKnsdq/QU=;
+        b=bYM7ZfDp2uyEwMRdAYGgW1UMkTQBI1XJSNiLk0bjPhoCi78+HQrKbdoeWOJcuqGomf
+         6dZ3Hmp4hYZYf2j1gzRJOFLW+uKLzutlwe/Fxuv0SIqZWsK2ILOwjR/lN11/ulXuJKgE
+         hLrq9z7xfO1WB9cK1ZCLt8jh4Q6jExUIiLEjPyMSrSfg8YrBpBwUiTT+iKKxjT8D054V
+         TZiKEoZkrlQjv3yDxjPWXNG2izGQUrRRFF7HUh9mInJk7/ijFtr9Pi6cEttPcM1u/A/m
+         ltUIUJ26tsQNXAxVMgFrmgvJ1iobNUwK3KZsZkNXtG2EP8EpMb7MsIvRNPGgvMTeE5GR
+         fH8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dgq3UM6Fy7t89KBsWPa/dNwubJ5x9NhFBR3nKkdGxBQ=;
-        b=UPoUcKOkCAy/3f2SY0eLrkRFHyGKmeiMG4k0PviOEGAqFdKzi9VJmLBgrYKOgsXJjE
-         zhP1EfblA9rwI+2xJphlRWuBWlSHADGJiv6ge2tiaIx3aHUmh3LJIGhRSVi4D6vaEtTs
-         fmAV3Gn+OCMeZABmj2wi0n21OWj14Oqj3yF2MQE5H/TaAWTfHubVmmbotOzAI1VMlWXc
-         V4udkcP7O35GNWaBWeQrB2PN9Wf6W/c+A+ZnuEC7EfQqlEZa+JMXkZD8rxvhjbgYPSfR
-         EwML/adydmMuWz5mLO+RgSUI9sZrhsfbYnenVWiGRJeSFWq/OBngPDs8wWxcUcjY/QGq
-         yeSg==
-X-Gm-Message-State: APjAAAXuzNIpI/UeQCfkIWbX6R6pFpYyp+v2fGgy0Pj0HRtKzW+LMBva
-        qx3PUpniJEpFizlZr7FBIH4oFyr2vLirOndw3NqpOg==
-X-Google-Smtp-Source: APXvYqwKrS+xjnV2C39v/K43aWh/ONuM204U4eBm/zYWLBvQbW5tmknEyf9ZYMNzmmuNbTGmVFMfdvg9LHWShr9lgv0=
-X-Received: by 2002:a9d:6a8a:: with SMTP id l10mr21177381otq.197.1557861873856;
- Tue, 14 May 2019 12:24:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=KGcQ9upC29gYa4IvVNB87+RZG37gSQZLhYRKnsdq/QU=;
+        b=AaoOHgcXfqn5AdHHr/ifwfsme6Rb4PkCYvsI6druAZ5HbNNtRHNT2y8uyABO+9v4Nb
+         JduAudnQxGjY+FKHu1DPePorg76gl3HQnltNpczz5kjVsO6TUH2sxt9bJ6tWOZiuLKNS
+         8HaTaICeGR+KOXkyNXqNw1HC+wt6POSDSohXBluo3FmKvhO0uq7b5iQUYip2MZ4p9TqP
+         9v3BvLPVnQ0NX5w8zJ7V3I+66ZFgvhoR+n0iAPVUjMRAtE3Drhc7l/y+IfCay8HzArTN
+         cWUVbbYA5dYzQ2YyFolHKCWn83WyjQY9jrInUIB9tVT1v1QwDLubFP72F3w99g+CQn0k
+         xkYg==
+X-Gm-Message-State: APjAAAX0qsmF7YWv8sHp9J9rw0BGzVqtkGUJx0zb8e9lZRaqkO+3WkNo
+        Ru/i3i2fMurQkxrjM/OSmaXplpUzrEQ=
+X-Google-Smtp-Source: APXvYqzERwp4vgEjaoTLtN65oy2xv6PWcLZSxjMr1K1/3w/5NNxyQxqNR336BTtj0/TQaFIv5HjabQ==
+X-Received: by 2002:ae9:e30e:: with SMTP id v14mr30149993qkf.91.1557861929556;
+        Tue, 14 May 2019 12:25:29 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id j26sm3061100qtj.70.2019.05.14.12.25.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 12:25:29 -0700 (PDT)
+Date:   Tue, 14 May 2019 12:25:09 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Thomas Graf <tgraf@suug.ch>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/5] rhashtable: reorder some inline functions and
+ macros.
+Message-ID: <20190514122509.46ab191a@cakuba.netronome.com>
+In-Reply-To: <155503392797.17793.15780367123758287135.stgit@noble.brown>
+References: <155503371949.17793.8266195008003399968.stgit@noble.brown>
+        <155503392797.17793.15780367123758287135.stgit@noble.brown>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-References: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155727336530.292046.2926860263201336366.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190514191243.GA17226@kroah.com>
-In-Reply-To: <20190514191243.GA17226@kroah.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 14 May 2019 12:24:23 -0700
-Message-ID: <CAPcyv4jO5KA4ddvBx6PFTgv2D+PfJ4Znzt5RFP4ry9NUDZ+eSQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/6] drivers/base/devres: Introduce devm_release_action()
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:12 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, May 07, 2019 at 04:56:05PM -0700, Dan Williams wrote:
-> > The devm_add_action() facility allows a resource allocation routine to
-> > add custom devm semantics. One such user is devm_memremap_pages().
-> >
-> > There is now a need to manually trigger devm_memremap_pages_release().
-> > Introduce devm_release_action() so the release action can be triggered
-> > via a new devm_memunmap_pages() api in a follow-on change.
-> >
-> > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Christoph Hellwig <hch@lst.de>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  drivers/base/devres.c  |   24 +++++++++++++++++++++++-
-> >  include/linux/device.h |    1 +
-> >  2 files changed, 24 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> > index e038e2b3b7ea..0bbb328bd17f 100644
-> > --- a/drivers/base/devres.c
-> > +++ b/drivers/base/devres.c
-> > @@ -755,10 +755,32 @@ void devm_remove_action(struct device *dev, void (*action)(void *), void *data)
-> >
-> >       WARN_ON(devres_destroy(dev, devm_action_release, devm_action_match,
-> >                              &devres));
-> > -
-> >  }
-> >  EXPORT_SYMBOL_GPL(devm_remove_action);
-> >
-> > +/**
-> > + * devm_release_action() - release previously added custom action
-> > + * @dev: Device that owns the action
-> > + * @action: Function implementing the action
-> > + * @data: Pointer to data passed to @action implementation
-> > + *
-> > + * Releases and removes instance of @action previously added by
-> > + * devm_add_action().  Both action and data should match one of the
-> > + * existing entries.
-> > + */
-> > +void devm_release_action(struct device *dev, void (*action)(void *), void *data)
-> > +{
-> > +     struct action_devres devres = {
-> > +             .data = data,
-> > +             .action = action,
-> > +     };
-> > +
-> > +     WARN_ON(devres_release(dev, devm_action_release, devm_action_match,
-> > +                            &devres));
->
-> What does WARN_ON help here?  are we going to start getting syzbot
-> reports of this happening?
+On Fri, 12 Apr 2019 11:52:08 +1000, NeilBrown wrote:
+> This patch only moves some code around, it doesn't
+> change the code at all.
+> A subsequent patch will benefit from this as it needs
+> to add calls to functions which are now defined before the
+> call-site, but weren't before.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.com>
 
-Hopefully, yes, if developers misuse the api they get a loud
-notification similar to devm_remove_action() misuse.
+Hi Neil, I think this patch introduces as slew of sparse warnigns:
 
-> How can this fail?
+include/linux/rhashtable.h:724:23: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:724:23:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:724:23:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:728:33: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:728:33:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:728:33:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:760:41: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:760:41:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:760:41:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:801:25: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:801:25:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:801:25:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:1003:23: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:1003:23:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:1003:23:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:1047:41: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:1047:41:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:1047:41:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+include/linux/rhashtable.h:1054:25: warning: incorrect type in argument 2 (different address spaces)
+include/linux/rhashtable.h:1054:25:    expected struct rhash_lock_head **bkt
+include/linux/rhashtable.h:1054:25:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
 
-It's a catch to make sure that @dev actually has a live devres
-resource that can be found via @action and @data.
+Is there any chance to get those fixed?  Presumably a __force would be
+appropriate?  Maybe like this?
+
+diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
+index f7714d3b46bd..997017a85032 100644
+--- a/include/linux/rhashtable.h
++++ b/include/linux/rhashtable.h
+@@ -325,27 +325,28 @@ static inline struct rhash_lock_head __rcu **rht_bucket_insert(
+  */
+ 
+ static inline void rht_lock(struct bucket_table *tbl,
+-                           struct rhash_lock_head **bkt)
++                           struct rhash_lock_head __rcu **bkt)
+ {
++
+        local_bh_disable();
+-       bit_spin_lock(0, (unsigned long *)bkt);
++       bit_spin_lock(0, (unsigned long __force *)bkt);
+        lock_map_acquire(&tbl->dep_map);
+ }
+ 
+ static inline void rht_lock_nested(struct bucket_table *tbl,
+-                                  struct rhash_lock_head **bucket,
++                                  struct rhash_lock_head __rcu **bkt,
+                                   unsigned int subclass)
+ {
+        local_bh_disable();
+-       bit_spin_lock(0, (unsigned long *)bucket);
++       bit_spin_lock(0, (unsigned long __force *)bkt);
+        lock_acquire_exclusive(&tbl->dep_map, subclass, 0, NULL, _THIS_IP_);
+ }
+ 
+ static inline void rht_unlock(struct bucket_table *tbl,
+-                             struct rhash_lock_head **bkt)
++                             struct rhash_lock_head __rcu **bkt)
+ {
+        lock_map_release(&tbl->dep_map);
+-       bit_spin_unlock(0, (unsigned long *)bkt);
++       bit_spin_unlock(0, (unsigned long __force *)bkt);
+        local_bh_enable();
+ }
+ 
