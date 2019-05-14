@@ -3,129 +3,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B0CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB58DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E415820881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82AE20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfENUyy (ORCPT
+        id S1726400AbfENU5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:54:54 -0400
-Received: from mailoutvs12.siol.net ([185.57.226.203]:33943 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726362AbfENUyx (ORCPT
+        Tue, 14 May 2019 16:57:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53122 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfENU5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:54:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 72127521E15;
-        Tue, 14 May 2019 22:54:51 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id pn1ki_A1-MXA; Tue, 14 May 2019 22:54:51 +0200 (CEST)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 11E89521E6F;
-        Tue, 14 May 2019 22:54:51 +0200 (CEST)
-Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id A83ED521E15;
-        Tue, 14 May 2019 22:54:50 +0200 (CEST)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     maxime.ripard@bootlin.com, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v2] arm64: dts: allwinner: a64: orangepi-win: Add wifi and bluetooth nodes
-Date:   Tue, 14 May 2019 22:54:45 +0200
-Message-Id: <20190514205445.11591-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.21.0
+        Tue, 14 May 2019 16:57:07 -0400
+Received: from cpc129250-craw9-2-0-cust139.know.cable.virginm.net ([82.43.126.140] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hQeTu-0002fC-Bd; Tue, 14 May 2019 20:57:02 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/nouveau/bios/init: fix spelling mistake "CONDITON" -> "CONDITION"
+Date:   Tue, 14 May 2019 21:57:01 +0100
+Message-Id: <20190514205701.5750-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
-identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+From: Colin Ian King <colin.king@canonical.com>
 
-WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
-in a 4 wire configuration. Same as the WiFi side, due to being the same
-chip and package, DLDO2 provides overall power via VBAT, and DLDO4
-provides I/O power via VDDIO. The RTC clock output provides the LPO low
-power clock at 32.768 kHz.
+There is a spelling mistake in a warning message. Fix it.
 
-This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
-missing LPO clock on the WiFi side. PCM connection also exists for
-Bluetooth audio, but it's not used here.
-
-Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
-audio. While module supports even higher speeds, currently sunxi clock
-driver doesn't support higher speed.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
-Changes from v1:
-- fix commit log by stating that current clock driver doesn't support
-  higher speeds instead of UART driver
+ drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../dts/allwinner/sun50i-a64-orangepi-win.dts | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
-arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 510f661229dc..5ef3c62c765e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -109,6 +109,8 @@
- 	wifi_pwrseq: wifi_pwrseq {
- 		compatible =3D "mmc-pwrseq-simple";
- 		reset-gpios =3D <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "ext_clock";
- 	};
- };
-=20
-@@ -170,6 +172,14 @@
- 	bus-width =3D <4>;
- 	non-removable;
- 	status =3D "okay";
-+
-+	brcmf: wifi@1 {
-+		reg =3D <1>;
-+		compatible =3D "brcm,bcm4329-fmac";
-+		interrupt-parent =3D <&r_pio>;
-+		interrupts =3D <0 7 IRQ_TYPE_LEVEL_LOW>; /* PL7 */
-+		interrupt-names =3D "host-wake";
-+	};
- };
-=20
- &ohci0 {
-@@ -342,7 +352,20 @@
- &uart1 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
- 	status =3D "okay";
-+
-+	bluetooth {
-+		compatible =3D "brcm,bcm43438-bt";
-+		max-speed =3D <1500000>;
-+		clocks =3D <&rtc 1>;
-+		clock-names =3D "lpo";
-+		vbat-supply =3D <&reg_dldo2>;
-+		vddio-supply =3D <&reg_dldo4>;
-+		device-wakeup-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+		host-wakeup-gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
-+		shutdown-gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
-+	};
- };
-=20
- /* On Pi-2 connector, RTS/CTS optional */
---=20
-2.21.0
+diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
+index ec0e9f7224b5..3f4f27d191ae 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
++++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
+@@ -834,7 +834,7 @@ init_generic_condition(struct nvbios_init *init)
+ 		init_exec_set(init, false);
+ 		break;
+ 	default:
+-		warn("INIT_GENERIC_CONDITON: unknown 0x%02x\n", cond);
++		warn("INIT_GENERIC_CONDITION: unknown 0x%02x\n", cond);
+ 		init->offset += size;
+ 		break;
+ 	}
+-- 
+2.20.1
 
