@@ -2,77 +2,179 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69C9C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7802DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADF2208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:35:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eG6Qnz3D"
+	by mail.kernel.org (Postfix) with ESMTP id 5549520818
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 11:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfENLfs (ORCPT
+        id S1726381AbfENLhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 07:35:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57716 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfENLfs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 07:35:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Hdo3J+SKgWMYdkmLex1ScT4QKrEl5Fkd2SvwQB3f/zU=; b=eG6Qnz3DL+iAnoIykPjWycQ24
-        XVA3G+osUl6uBIBNgtqHwidCwRHxK4E9/K0v2UHH4+oswQZYC5gpYwRC42f3z68fe9KUI63ivYlXy
-        XmPckJkK3cfuX4iq7yxWqsecCrfMSd3yjuDodOmL79Hx1EHi9OqtTG1L8uw9npWO+E74yxREqK8RM
-        FXCMz/eSYKCYVFQUiEKaWuaz2EtG+q3ZRXnqFL36QaGx1hrR014pGceOmHYXmNpRTIqvptgjFhnYk
-        QwnnicyeLIGkbxUcyA37jw9S5joDPHb27g2VajMJV+lxF1fwlFaZMjmrguQEnZOCGxgsHnT6hwUln
-        TWc5opcVw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQVie-0000IC-M5; Tue, 14 May 2019 11:35:40 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 89F562029F877; Tue, 14 May 2019 13:35:38 +0200 (CEST)
-Date:   Tue, 14 May 2019 13:35:38 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     minyard@acm.org, linux-rt-users@vger.kernel.org,
-        Corey Minyard <cminyard@mvista.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190514113538.GL2589@hirez.programming.kicks-ass.net>
-References: <20190508205728.25557-1-minyard@acm.org>
- <20190509161925.kul66w54wpjcinuc@linutronix.de>
- <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
- <20190514091219.nesriqe7qplk3476@linutronix.de>
+        Tue, 14 May 2019 07:37:14 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:36130 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725893AbfENLhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 07:37:13 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E4434F1908D3720AE325;
+        Tue, 14 May 2019 19:37:10 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.203) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
+ 19:37:02 +0800
+Subject: Re: [PATCH 2/2] scsi: libsas: delete sas port if expander discover
+ failed
+To:     John Garry <john.garry@huawei.com>, <martin.petersen@oracle.com>,
+        <jejb@linux.vnet.ibm.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
+        <hch@lst.de>, <huangdaode@hisilicon.com>,
+        <chenxiang66@hisilicon.com>, <miaoxie@huawei.com>,
+        <zhaohongjiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+References: <20190514024239.47313-1-yanaijie@huawei.com>
+ <20190514024239.47313-2-yanaijie@huawei.com>
+ <6b831fd1-825e-19a7-0981-bc182cf4685f@huawei.com>
+From:   Jason Yan <yanaijie@huawei.com>
+Message-ID: <8af67af8-6fe5-0b5a-5308-8134aec74a1a@huawei.com>
+Date:   Tue, 14 May 2019 19:37:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514091219.nesriqe7qplk3476@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6b831fd1-825e-19a7-0981-bc182cf4685f@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.96.203]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:12:19AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-05-14 10:43:56 [+0200], Peter Zijlstra wrote:
-> > Now.. that will fix it, but I think it is also wrong.
-> > 
-> > The problem being that it violates FIFO, something that might be more
-> > important on -RT than elsewhere.
-> 
-> Wouldn't -RT be more about waking the task with the highest priority
-> instead the one that waited the longest?
 
-Possibly, but that's a far larger patch. Also, even with that
-completions do not avoid inversions and thus don't really make nice RT
-primitives anyway.
+
+On 2019/5/14 18:45, John Garry wrote:
+> On 14/05/2019 03:42, Jason Yan wrote:
+>> The sas_port(phy->port) allocated in sas_ex_discover_expander() will not
+>> be deleted when the expander failed to discover. This will cause
+>> resource leak and a further issue of kernel BUG like below:
+>>
+>> [159785.843156]  port-2:17:29: trying to add phy phy-2:17:29 fails: it's
+>> already part of another port
+>> [159785.852144] ------------[ cut here  ]------------
+>> [159785.856833] kernel BUG at drivers/scsi/scsi_transport_sas.c:1086!
+>> [159785.863000] Internal error: Oops - BUG: 0 [#1] SMP
+>> [159785.867866] CPU: 39 PID: 16993 Comm: kworker/u96:2 Tainted: G
+>> W  OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
+>> [159785.878458] Hardware name: Huawei Technologies Co., Ltd.
+>> Hi1620EVBCS/Hi1620EVBCS, BIOS Hi1620 CS B070 1P TA 03/21/2019
+>> [159785.889231] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
+>> [159785.895224] pstate: 40c00009 (nZcv daif +PAN +UAO)
+>> [159785.900094] pc : sas_port_add_phy+0x188/0x1b8
+>> [159785.904524] lr : sas_port_add_phy+0x188/0x1b8
+>> [159785.908952] sp : ffff0001120e3b80
+>> [159785.912341] x29: ffff0001120e3b80 x28: 0000000000000000
+>> [159785.917727] x27: ffff802ade8f5400 x26: ffff0000681b7560
+>> [159785.923111] x25: ffff802adf11a800 x24: ffff0000680e8000
+>> [159785.928496] x23: ffff802ade8f5728 x22: ffff802ade8f5708
+>> [159785.933880] x21: ffff802adea2db40 x20: ffff802ade8f5400
+>> [159785.939264] x19: ffff802adea2d800 x18: 0000000000000010
+>> [159785.944649] x17: 00000000821bf734 x16: ffff00006714faa0
+>> [159785.950033] x15: ffff0000e8ab4ecf x14: 7261702079646165
+>> [159785.955417] x13: 726c612073277469 x12: ffff00006887b830
+>> [159785.960802] x11: ffff00006773eaa0 x10: 7968702079687020
+>> [159785.966186] x9 : 0000000000002453 x8 : 726f702072656874
+>> [159785.971570] x7 : 6f6e6120666f2074 x6 : ffff802bcfb21290
+>> [159785.976955] x5 : ffff802bcfb21290 x4 : 0000000000000000
+>> [159785.982339] x3 : ffff802bcfb298c8 x2 : 337752b234c2ab00
+>> [159785.987723] x1 : 337752b234c2ab00 x0 : 0000000000000000
+>> [159785.993108] Process kworker/u96:2 (pid: 16993, stack limit =
+>> 0x0000000072dae094)
+>> [159786.000576] Call trace:
+>> [159786.003097]  sas_port_add_phy+0x188/0x1b8
+>> [159786.007179]  sas_ex_get_linkrate.isra.5+0x134/0x140
+>> [159786.012130]  sas_ex_discover_expander+0x128/0x408
+>> [159786.016906]  sas_ex_discover_dev+0x218/0x4c8
+>> [159786.021249]  sas_ex_discover_devices+0x9c/0x1a8
+>> [159786.025852]  sas_discover_root_expander+0x134/0x160
+>> [159786.030802]  sas_discover_domain+0x1b8/0x1e8
+>> [159786.035148]  process_one_work+0x1b4/0x3f8
+>> [159786.039230]  worker_thread+0x54/0x470
+>> [159786.042967]  kthread+0x134/0x138
+>> [159786.046269]  ret_from_fork+0x10/0x18
+>> [159786.049918] Code: 91322300 f0004402 91178042 97fe4c9b (d4210000)
+>> [159786.056083] Modules linked in: hns3_enet_ut(OE) hclge(OE) hnae3(OE)
+>> hisi_sas_test_hw(OE) hisi_sas_test_main(OE) serdes(OE)
+>> [159786.067202] ---[ end trace 03622b9e2d99e196  ]---
+>> [159786.071893] Kernel panic - not syncing: Fatal exception
+>> [159786.077190] SMP: stopping secondary CPUs
+>> [159786.081192] Kernel Offset: disabled
+>> [159786.084753] CPU features: 0x2,a2a00a38
+>>
+>> Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+>> Reported-by: Jian Luo <luojian5@huawei.com>
+>> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+>> CC: John Garry <john.garry@huawei.com>
+>> ---
+>>  drivers/scsi/libsas/sas_expander.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/scsi/libsas/sas_expander.c 
+>> b/drivers/scsi/libsas/sas_expander.c
+>> index 83f2fd70ce76..9f7e2457360e 100644
+>> --- a/drivers/scsi/libsas/sas_expander.c
+>> +++ b/drivers/scsi/libsas/sas_expander.c
+>> @@ -1019,6 +1019,8 @@ static struct domain_device 
+>> *sas_ex_discover_expander(
+>>          list_del(&child->dev_list_node);
+>>          spin_unlock_irq(&parent->port->dev_list_lock);
+>>          sas_put_device(child);
+>> +        sas_port_delete(phy->port);
+>> +        phy->port = NULL;
+> 
+> This looks ok.
+> 
+> However, I wonder if we miss something else, and I see this code earlier 
+> in sas_ex_discover_expander():
+> 
+>      kref_get(&parent->kref);
+>      child->parent = parent;
+>      child->port = port;
+>      child->iproto = phy->attached_iproto;
+>      child->tproto = phy->attached_tproto;
+> 
+> I assume the kref get is for the child referencing the parent. Do we 
+> need the kref put? I couldn't see it.
+> 
+> If yes, maybe it should it go in sas_free_device(), along with kfree() 
+> for expander device phys.
+> 
+
+Yes, the parent's kref will put in sas_free_device(). So the call chain 
+will be:
+
+sas_put_device
+   ->sas_free_device
+     ->sas_put_device(dev->parent);
+       ->kref_put
+
+Thanks,
+Jason
+
+> Thanks,
+> John
+> 
+>>          return NULL;
+>>      }
+>>      list_add_tail(&child->siblings, &parent->ex_dev.children);
+>>
+> 
+> 
+> 
+> 
+> .
+> 
+
