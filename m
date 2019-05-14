@@ -2,110 +2,116 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC53BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54111C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8D82086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19E1720879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="kImKw8Sg"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="r7sCywDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfENPrU (ORCPT
+        id S1726347AbfENPt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:47:20 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:35804 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726246AbfENPpl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:45:41 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 228C2C0991;
-        Tue, 14 May 2019 15:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557848732; bh=nU4eyfuhVOYZ4Njb6dkyUp+NF+GLuqM+QrOrWCyNdeQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=kImKw8SgXBP438IdiC2+clkKPY804C16u3ur10wTwDxSibhcG1cN0hMNk72MwwnDu
-         by9limBufNU4UmVFzIPxX4KCNlVeH5s0mxxvTJSOBZ52tWMeHkQTEnr4NH2Xp+Gu8q
-         EgIz/5OjKHL9NM9EA5XgW6k5BHyWw1UaeWK6NKgx/xMdxBr4rrAOvGgaMGBMu3i0rq
-         rbnsuPbuaE/wUje433HHSl1VTFkAV4TiZUL34EsR1058cks7Woh7TKFKGvhsW3qV1w
-         VPNlLVx8EBwMqx779hvmjNAPKv9i3xi0yFMm1s7vBbv6Nxv0bc4kxYTdEuvNqzF5ir
-         6oRQjX2tL+6kw==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 4E718A0250;
-        Tue, 14 May 2019 15:45:41 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id C63D73EA31;
-        Tue, 14 May 2019 17:45:39 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [RFC net-next v2 10/14] net: stmmac: dwxgmac2: Also pass control frames while in promisc mode
-Date:   Tue, 14 May 2019 17:45:32 +0200
-Message-Id: <1404f154579c30549ba62cb95cdf8516dc2b7882.1557848472.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
-References: <cover.1557848472.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
-References: <cover.1557848472.git.joabreu@synopsys.com>
+        Tue, 14 May 2019 11:49:56 -0400
+Received: from mail-eopbgr820082.outbound.protection.outlook.com ([40.107.82.82]:21024
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725901AbfENPtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:49:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q+cV5nQUritTdFUknDzJVWAoOeLLVGz2oThSdTDm2qs=;
+ b=r7sCywDH63mRwEyDQwt2dY88KngGkXPlQvcOFtwDtsVEUEpu+IHSlbD5RZPdNIYVcbyycH6Ty6ewpUSuD/2GhyGwYVwV3rAb6YLZygu02D/kHFmoMGcysT6M9zclM3uehoDBGlEmGDs2EHNLCp/1nqDegaTlf5bLtDceYBxxlEw=
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
+ DM6PR12MB3004.namprd12.prod.outlook.com (20.178.29.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Tue, 14 May 2019 15:49:52 +0000
+Received: from DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::edb0:d696:3077:51bc]) by DM6PR12MB2844.namprd12.prod.outlook.com
+ ([fe80::edb0:d696:3077:51bc%2]) with mapi id 15.20.1878.024; Tue, 14 May 2019
+ 15:49:52 +0000
+From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "graf@amazon.com" <graf@amazon.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Subject: [PATCH v2] svm/avic: Allow avic_vcpu_load logic to support host APIC
+ ID 255
+Thread-Topic: [PATCH v2] svm/avic: Allow avic_vcpu_load logic to support host
+ APIC ID 255
+Thread-Index: AQHVCmyrLU0LS+h5g0aXaHB58uDCjQ==
+Date:   Tue, 14 May 2019 15:49:52 +0000
+Message-ID: <1557848977-146396-1-git-send-email-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [165.204.78.1]
+x-clientproxiedby: SN1PR12CA0088.namprd12.prod.outlook.com
+ (2603:10b6:802:21::23) To DM6PR12MB2844.namprd12.prod.outlook.com
+ (2603:10b6:5:45::32)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3a77cce1-4128-4606-d0ae-08d6d883cd9d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3004;
+x-ms-traffictypediagnostic: DM6PR12MB3004:
+x-microsoft-antispam-prvs: <DM6PR12MB3004764E972200A5B163AC8AF3080@DM6PR12MB3004.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0037FD6480
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(376002)(39860400002)(396003)(366004)(189003)(199004)(52116002)(14454004)(6512007)(86362001)(2906002)(25786009)(7736002)(305945005)(4326008)(3846002)(53936002)(66066001)(6116002)(186003)(476003)(2616005)(54906003)(99286004)(316002)(6436002)(486006)(6486002)(26005)(2501003)(102836004)(386003)(6506007)(110136005)(68736007)(72206003)(4720700003)(66946007)(73956011)(36756003)(66476007)(5660300002)(66446008)(64756008)(66556008)(256004)(8676002)(50226002)(81156014)(8936002)(81166006)(14444005)(71200400001)(71190400001)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3004;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: IN8PellT1cf2RCayNETNCP/u16GLGM7Xfr28lADyRosRwHG5SAD2uUavl0LYTD7/I3Fl0kiBlN1d5ytYFM/10CVHrmmUg0MTSBfHSjjL2RcLfLmfGRnWEP7zXYhAguAKAc+nyFSfSYPOGy5QX+5wMzRjiO3pmYBNq9ubJKN5B0OsyWumdOzAUfqK4W/9ob8/yrv/HbE+tYeFs90dacPpKTqIczHTv0Suf7Jc3LrtRr0s5qfQHRBbyVhFtAspV8bDlYCxIJZV7cSoI9YHXLM9vpwmnL08IEYLyBKKfcs7cpERliN8jYbSn3GyxyvVEKDP7bFf5OY6D5JNArgAxD0ZGyJsrwECmQL4zeMgQ4W/ONau2sFd7YtViV8smxtUxTjQT9skrAFokpaRLGgTyidaDCDy6lj2RB7tIuZ9aPea7Yk=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a77cce1-4128-4606-d0ae-08d6d883cd9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 15:49:52.7085
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order for the selftests to run the Flow Control selftest we need to
-also pass pause frames to the stack.
-
-Pass this type of frames while in promiscuous mode.
-
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      | 1 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index f629ccc8932a..b8296eb41011 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -40,6 +40,7 @@
- #define XGMAC_CORE_INIT_RX		0
- #define XGMAC_PACKET_FILTER		0x00000008
- #define XGMAC_FILTER_RA			BIT(31)
-+#define XGMAC_FILTER_PCF		BIT(7)
- #define XGMAC_FILTER_PM			BIT(4)
- #define XGMAC_FILTER_HMC		BIT(2)
- #define XGMAC_FILTER_PR			BIT(0)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index c27b3ca052ea..bfa7d6913fd4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -310,7 +310,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
- 	u32 value = XGMAC_FILTER_RA;
- 
- 	if (dev->flags & IFF_PROMISC) {
--		value |= XGMAC_FILTER_PR;
-+		value |= XGMAC_FILTER_PR | XGMAC_FILTER_PCF;
- 	} else if ((dev->flags & IFF_ALLMULTI) ||
- 		   (netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
- 		value |= XGMAC_FILTER_PM;
--- 
-2.7.4
-
+Q3VycmVudCBsb2dpYyBkb2VzIG5vdCBhbGxvdyBWQ1BVIHRvIGJlIGxvYWRlZCBvbnRvIENQVSB3
+aXRoDQpBUElDIElEIDI1NS4gVGhpcyBzaG91bGQgYmUgYWxsb3dlZCBzaW5jZSB0aGUgaG9zdCBw
+aHlzaWNhbCBBUElDIElEDQpmaWVsZCBpbiB0aGUgQVZJQyBQaHlzaWNhbCBBUElDIHRhYmxlIGVu
+dHJ5IGlzIGFuIDgtYml0IHZhbHVlLA0KYW5kIEFQSUMgSUQgMjU1IGlzIHZhbGlkIGluIHN5c3Rl
+bSB3aXRoIHgyQVBJQyBlbmFibGVkLg0KSW5zdGVhZCwgZG8gbm90IGFsbG93IFZDUFUgbG9hZCBp
+ZiB0aGUgaG9zdCBBUElDIElEIGNhbm5vdCBiZQ0KcmVwcmVzZW50ZWQgYnkgYW4gOC1iaXQgdmFs
+dWUuDQoNCkFsc28sIHVzZSB0aGUgbW9yZSBhcHByb3ByaWF0ZSBBVklDX1BIWVNJQ0FMX0lEX0VO
+VFJZX0hPU1RfUEhZU0lDQUxfSURfTUFTSw0KaW5zdGVhZCBvZiBBVklDX01BWF9QSFlTSUNBTF9J
+RF9DT1VOVC4gDQoNClNpZ25lZC1vZmYtYnk6IFN1cmF2ZWUgU3V0aGlrdWxwYW5pdCA8c3VyYXZl
+ZS5zdXRoaWt1bHBhbml0QGFtZC5jb20+DQotLS0NCg0KQ2hhbmdlIGluIFYyOg0KICAqIFVzZSBB
+VklDX1BIWVNJQ0FMX0lEX0VOVFJZX0hPU1RfUEhZU0lDQUxfSURfTUFTSyBpbnN0ZWFkIG9mDQog
+ICAgQVZJQ19NQVhfUEhZU0lDQUxfSURfQ09VTlQuIA0KDQogYXJjaC94ODYva3ZtL3N2bS5jIHwg
+NiArKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0p
+DQoNCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rdm0vc3ZtLmMgYi9hcmNoL3g4Ni9rdm0vc3ZtLmMN
+CmluZGV4IDY4Nzc2N2YuLjM0NWZlOWUgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0vc3ZtLmMN
+CisrKyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KQEAgLTIwNzEsNyArMjA3MSwxMSBAQCBzdGF0aWMg
+dm9pZCBhdmljX3ZjcHVfbG9hZChzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIGludCBjcHUpDQogCWlm
+ICgha3ZtX3ZjcHVfYXBpY3ZfYWN0aXZlKHZjcHUpKQ0KIAkJcmV0dXJuOw0KIA0KLQlpZiAoV0FS
+Tl9PTihoX3BoeXNpY2FsX2lkID49IEFWSUNfTUFYX1BIWVNJQ0FMX0lEX0NPVU5UKSkNCisJLyoN
+CisJICogU2luY2UgdGhlIGhvc3QgcGh5c2ljYWwgQVBJQyBpZCBpcyA4IGJpdHMsDQorCSAqIHdl
+IGNhbiBzdXBwb3J0IGhvc3QgQVBJQyBJRCB1cHRvIDI1NS4NCisJICovDQorCWlmIChXQVJOX09O
+KGhfcGh5c2ljYWxfaWQgPiBBVklDX1BIWVNJQ0FMX0lEX0VOVFJZX0hPU1RfUEhZU0lDQUxfSURf
+TUFTSykpDQogCQlyZXR1cm47DQogDQogCWVudHJ5ID0gUkVBRF9PTkNFKCooc3ZtLT5hdmljX3Bo
+eXNpY2FsX2lkX2NhY2hlKSk7DQotLSANCjEuOC4zLjENCg0K
