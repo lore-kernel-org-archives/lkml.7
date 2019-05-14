@@ -2,110 +2,108 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF17C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E613FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E93ED20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06F820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfENI2s (ORCPT
+        id S1726605AbfENI34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:28:48 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:34085 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfENI2s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:28:48 -0400
-Received: by mail-ua1-f67.google.com with SMTP id 7so1786842uah.1;
-        Tue, 14 May 2019 01:28:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/NA3o69AVedwbrS8I/JNFCMoka6aSRYx6sOSkm7j+ZY=;
-        b=sWgbCysasls5T0fl83xIYjpsrFQUwdFB9c00tAyeFdNssQL6P4oHoo5COXUm+f/6A1
-         ayG7O8p9Tgf2fUn8N6rzoQnSZUePC4/JzJQYlfE/ZbTkgMRO2yeAAefz8nq6YSGZ43UT
-         W40o3xXh9d9538IE0NrDii59lG6ogBdYvkRa2IauaAG5xJ7uc1KuS/rQOnixZrAe7IkV
-         1tUZYKZKemMSpYaD4ie9Edhd7FQdxBOUJtgHIEWJauyGGuCGGMc0SuzOceh1ZnGBbSPC
-         gOkQ68MKkpGA/wWNks4CnVKO7XO27I/VfMbgbocICTjRhe0O03pSpCDWYas++gLnEgYC
-         tp7g==
-X-Gm-Message-State: APjAAAVvpSQ02Mb7kYjA24EDNaHNWCNtrKlOwY3H1QsyyQlsrRNOd5wH
-        bc6ZGzQf0B8iRuPZ2FmWsH67XBV8TXG3PqFXj04=
-X-Google-Smtp-Source: APXvYqwdcU+/txalebspsx4VOD+EnsWOMl3ldpM6w0yNu5aBmbUhQ7DwUL4yoq5BDqRktbvDVPuCHNLpcUJd09+lby0=
-X-Received: by 2002:ab0:45e9:: with SMTP id u96mr4671687uau.75.1557822526733;
- Tue, 14 May 2019 01:28:46 -0700 (PDT)
+        Tue, 14 May 2019 04:29:56 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3009 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbfENI34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 04:29:56 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 2A642CAC562BAF98E832;
+        Tue, 14 May 2019 16:29:54 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 14 May 2019 16:29:53 +0800
+Received: from [10.134.22.195] (10.134.22.195) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Tue, 14 May 2019 16:29:53 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: issue discard commands proactively in
+ high fs utilization
+To:     Ju Hyung Park <qkrwngud825@gmail.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20180529205048.39694-1-jaegeuk@kernel.org>
+ <CAD14+f154_t1-TbbSDb9xV_ikDAWfF+8H7aOSK4VF8UmqWRDAQ@mail.gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <73fc6da8-7b89-3b02-8856-bd6876c50259@huawei.com>
+Date:   Tue, 14 May 2019 16:29:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
-In-Reply-To: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 May 2019 10:28:34 +0200
-Message-ID: <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
-Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
-To:     "George G. Davis" <george_davis@mentor.com>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
-        Andy Lowe <andy_lowe@mentor.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
-        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAD14+f154_t1-TbbSDb9xV_ikDAWfF+8H7aOSK4VF8UmqWRDAQ@mail.gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi George,
+On 2019/5/14 13:39, Ju Hyung Park wrote:
+> On Wed, May 30, 2018 at 5:51 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
+>>
+>> In the high utilization like over 80%, we don't expect huge # of large discard
+>> commands, but do many small pending discards which affects FTL GCs a lot.
+>> Let's issue them in that case.
+>>
+>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>> ---
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index 6e40e536dae0..8c1f7a6bf178 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -915,6 +915,38 @@ static void __check_sit_bitmap(struct f2fs_sb_info *sbi,
+>> +                       dpolicy->max_interval = DEF_MIN_DISCARD_ISSUE_TIME;
+> 
+> Isn't this way too aggressive?
+> 
+> Discard thread will wake up on 50ms interval just because the user has
+> used 80% of space.
+> 60,000ms vs 50ms is too much of a stark difference.
+> 
+> I feel something like 10 seconds(10,000ms) could be a much more
+> reasonable choice than this.
 
-On Mon, May 13, 2019 at 5:48 PM George G. Davis <george_davis@mentor.com> wrote:
-> As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
-> console UART"), UART console lines use low-level PIO only access functions
-> which will conflict with use of the line when DMA is enabled, e.g. when
-> the console line is also used for systemd messages. So disable DMA
-> support for UART console lines.
->
-> Fixes: https://patchwork.kernel.org/patch/10929511/
+Hmm.. I agree that current hard code method is not flexible enough, and I
+proposed below patch last year to adjust interval according to space usage, it
+looks Jaegeuk partially agreed with that, and pointed out we need to distinguish
+low/high-end storage to decide interval. And also you point out that btrfs
+introduces mount option "ssd" to let user give the device type, and we can
+distinguish with that. :P
 
-I don't think this is an appropriate reference, as it points to a patch that
-was never applied.
+https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git/commit/?h=f2fs-dev&id=009f548e37ca5d9b4cad9e3c15c2164c53eff1df
 
-As the problem has basically existed forever, IMHO no Fixes tag
-is needed.
+But I pended below patch based on Jaegeuk's and your idea due to other work...
 
-> Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> ---
-> v2: Clarify comment regarding DMA support on kernel console,
->     add {Tested,Reviewed}-by:, and Cc: linux-stable lines.
+https://git.kernel.org/pub/scm/linux/kernel/git/chao/linux.git/commit/?h=f2fs-dev&id=47a992c12398c98e739e3eedc2743824459df943
 
-Thanks for the update!
+Thanks,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> Thanks.
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
