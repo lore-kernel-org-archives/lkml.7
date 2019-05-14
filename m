@@ -2,118 +2,86 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C43C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AC6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69CF20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAF720862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfENPbt (ORCPT
+        id S1726261AbfENPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:31:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57418 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725901AbfENPbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:31:48 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BBF47307D962;
-        Tue, 14 May 2019 15:31:47 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B2F695C542;
-        Tue, 14 May 2019 15:31:40 +0000 (UTC)
-Date:   Tue, 14 May 2019 09:31:40 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Boris Fiuczynski <fiuczy@linux.ibm.com>
-Cc:     Yan Zhao <yan.y.zhao@intel.com>, Halil Pasic <pasic@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "eskultet@redhat.com" <eskultet@redhat.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [libvirt] [PATCH v2 1/2] vfio/mdev: add version attribute for
- mdev device
-Message-ID: <20190514093140.68cc6f7a@x1.home>
-In-Reply-To: <5eac912c-e753-b5f6-83a4-b646f991d858@linux.ibm.com>
-References: <20190506014514.3555-1-yan.y.zhao@intel.com>
-        <20190506014904.3621-1-yan.y.zhao@intel.com>
-        <20190507151826.502be009@x1.home>
-        <20190508112740.GA24397@joy-OptiPlex-7040>
-        <20190508152242.4b54a5e7@x1.home>
-        <5eac912c-e753-b5f6-83a4-b646f991d858@linux.ibm.com>
-Organization: Red Hat
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 14 May 2019 15:31:48 +0000 (UTC)
+        Tue, 14 May 2019 11:34:01 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:38775 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725901AbfENPeA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:34:00 -0400
+X-IronPort-AV: E=Sophos;i="5.60,469,1549897200"; 
+   d="scan'208";a="15714500"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 15 May 2019 00:33:58 +0900
+Received: from renesas-ubuntu18.ree.adwin.renesas.com (unknown [10.226.36.106])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E356940123F7;
+        Wed, 15 May 2019 00:33:56 +0900 (JST)
+From:   Chris Paterson <chris.paterson2@renesas.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Biju Das <biju.das@bp.renesas.com>, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chris Paterson <chris.paterson2@renesas.com>
+Subject: [PATCH] scripts/spelling.txt: Add spelling fix for prohibited
+Date:   Tue, 14 May 2019 16:33:41 +0100
+Message-Id: <20190514153341.22540-1-chris.paterson2@renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 8 May 2019 17:27:47 +0200
-Boris Fiuczynski <fiuczy@linux.ibm.com> wrote:
+Misspelling 'prohibited' is quite common in the real world, although
+surprisingly not so much in the Linux Kernel. In addition to fixing the
+typo we may as well add it to the spelling checker.
 
-> On 5/8/19 11:22 PM, Alex Williamson wrote:
-> >>> I thought there was a request to make this more specific to migration
-> >>> by renaming it to something like migration_version.  Also, as an
-> >>>     
-> >> so this attribute may not only include a mdev device's parent device info and
-> >> mdev type, but also include numeric software version of vendor specific
-> >> migration code, right?  
-> > It's a vendor defined string, it should be considered opaque to the
-> > user, the vendor can include whatever they feel is relevant.
-> >   
-> Would a vendor also be allowed to provide a string expressing required 
-> features as well as containing backend resource requirements which need 
-> to be compatible for a successful migration? Somehow a bit like a cpu 
-> model... maybe even as json or xml...
-> I am asking this with vfio-ap in mind. In that context checking 
-> compatibility of two vfio-ap mdev devices is not as simple as checking 
-> if version A is smaller or equal to version B.
+Also adding the present participle (prohibiting).
 
-Two pieces to this, the first is that the string is opaque exactly so
-that the vendor driver can express whatever they need in it.  The user
-should never infer that two devices are compatible.  The second is that
-this is not a resource availability or reservation interface.  The fact
-that a target device would be compatible for migration should not take
-into account whether the target has the resources to actually create
-such a device.  Doing so would imply some sort of resource reservation
-support that does not exist.  Matrix devices are clearly a bit
-complicated here since maybe the source is expressing a component of
-the device that doesn't exist on the target.  In such a "resource not
-available at all" case, it might be fair to nak the compatibility test,
-but a "ok, but resource not currently available" case should pass,
-imo.  Thanks,
+Fixes: 5bf2fbbef50c ("clk: renesas: cpg-mssr: Add r8a77470 support")
 
-Alex
+Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+ drivers/clk/renesas/r8a77470-cpg-mssr.c | 2 +-
+ scripts/spelling.txt                    | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/clk/renesas/r8a77470-cpg-mssr.c b/drivers/clk/renesas/r8a77470-cpg-mssr.c
+index ab0fb10b6bf0..d81ae65f0d18 100644
+--- a/drivers/clk/renesas/r8a77470-cpg-mssr.c
++++ b/drivers/clk/renesas/r8a77470-cpg-mssr.c
+@@ -175,7 +175,7 @@ static const unsigned int r8a77470_crit_mod_clks[] __initconst = {
+  *---------------------------------------------------
+  * 0  0		20		x80	x78	x50
+  * 0  1		26		x60	x60	x56
+- * 1  0		Prohibitted setting
++ * 1  0		Prohibited setting
+  * 1  1		30		x52	x52	x50
+  *
+  * *1 :	Table 7.4 indicates VCO output (PLL0 = VCO)
+diff --git a/scripts/spelling.txt b/scripts/spelling.txt
+index dcd25a31f9f5..135459f59db6 100644
+--- a/scripts/spelling.txt
++++ b/scripts/spelling.txt
+@@ -1310,6 +1310,8 @@ programmble||programmable
+ programm||program
+ programms||programs
+ progresss||progress
++prohibitted||prohibited
++prohibitting||prohibiting
+ promiscouos||promiscuous
+ promiscous||promiscuous
+ promixity||proximity
+-- 
+2.17.1
+
