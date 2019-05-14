@@ -2,196 +2,98 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C27AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F471C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F394216FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DC8E20850
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557866771;
-	bh=/mI64tb0Z8FcxzmRmShI+n14CiSe3Xwb9fHokhW/+s0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hpfKkLtnBz2diJpWXeb8MGd82SevSpEPKNgKpzVZdkAL/J2YLuhd+aJoRzV5piCTg
-	 YoP7RhT2kq50HpRJHD7PX1G2yshDLdLb5QkPhuf0Zs+B714WsCwXcUAHj9d3ib9+JE
-	 ZzmSLa9Nmoktl1UGgzIjDXFQGNYQhNnOCNhq7kR0=
+	s=default; t=1557866956;
+	bh=rB2t2WMPfjjoP/VNZu3XhL+a7N8l6usZQ4fcSo8sRJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SRPJieIUPqz14ZCF/enPYPEN+i3nk0iwCsVB5HSNjdgSBrxG87CoFaHcCenzhcqw1
+	 Ku4Kwo0sqWbS2MRc0LLgpDwOBoIY5jxU7K8QFDPLu/fhhSy8nu/JODPFtUd16Dz5Iz
+	 C59ls2n4uiFQAxvWYKwKlS1l55tHhYqvgcofKx4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbfENUqJ (ORCPT
+        id S1726424AbfENUtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726134AbfENUqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:46:09 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E33821726
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 20:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557866768;
-        bh=/mI64tb0Z8FcxzmRmShI+n14CiSe3Xwb9fHokhW/+s0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=a0S8AwNBIaaq5fMEVsHeeWhspFx9mu5s2gWKt/hl9glhNbwacO/B0es3SD/XSgyAT
-         63nHblLtpuf5fymLuSO8pUwr2ONMHwu+IOmBcauT9Cjh0+rEC3sDhxD9fKtU84eitj
-         RTRrco2rsuV4eJ+o9CWf3kUGa2MbkFsLYKP4o6D8=
-Received: by mail-wr1-f47.google.com with SMTP id w12so283602wrp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:46:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAUdXTOmliUg3T6mGUj8GlVw050jVCEq5W4StvGsXG6aMuBgX2eh
-        co0CBjbqB0Sv8YFAnNGCqf0oFFpwxEG9DmwyoUav9g==
-X-Google-Smtp-Source: APXvYqyEhuxZ7uJaTcVVmCuvtM6hLSEX0pPM/Y1j3kR/0a/rJPa1WRZVB/zJF8zuhfQv2Ip4vIVwh1kVLmNuE4OnOPA=
-X-Received: by 2002:adf:ef8f:: with SMTP id d15mr23958531wro.330.1557866766590;
- Tue, 14 May 2019 13:46:06 -0700 (PDT)
+        Tue, 14 May 2019 16:49:15 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40817 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726134AbfENUtO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 16:49:14 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r136so162224oie.7;
+        Tue, 14 May 2019 13:49:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6T3Ip6O04LTKLd5qWK9Ww230fOKy3msDw8KUYfWmvPM=;
+        b=iUbAM7QVkpgpoEs5CcDQYrjDuiU7qevvs5/5MiHV9I6wywOPNPwdFu9LzxlkKW2M8a
+         ZgU8/4PLCwQ10jbE/4cyahAHMdDFF1mm6H48hg6EGX0HqmyJk2MWiVhJq6++sJqgv1Mn
+         E6w6XsUtbQVG1iGWAtefVo1HFGhAmYhaUiqamv1/ldA4VWHnkIfIRtcdZ5qYrSsLtiyV
+         jLAH1/PxmxFxEuK4zNVR01Ozc63cL5qzVRDe1cagk+WLel+ENBkAoxFzFEbqEFH4KDrW
+         gwcQIvZyqZQSfbnLB8xqvgIYDtbCWq62vOF2bdugMrhyvB1fOKKcQjEATUlIMx9hI6tP
+         fBig==
+X-Gm-Message-State: APjAAAWV+CFoExpfjbut8SMr3UC783FXAEPyJ2Wlm3m7MyGk1TNq9LO5
+        II8qCj5DfxnSo+lLTgRAZg==
+X-Google-Smtp-Source: APXvYqw9r62Myv1ZK5vENIP2ad0ZFC9OJdOjoMmtmV5w3i5Ay9PLbIuaxAG0cmS6uL2JJgGZGo7oTQ==
+X-Received: by 2002:aca:7255:: with SMTP id p82mr372346oic.119.1557866953685;
+        Tue, 14 May 2019 13:49:13 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id o124sm1524501oig.23.2019.05.14.13.49.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 13:49:12 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:49:12 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-rockchip@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Mark Rutland <mark.rutland@arm.com>, mka@chromium.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/5] dt-bindings: drm/bridge/synopsys: dw-hdmi: Add
+ "unwedge" for ddc bus
+Message-ID: <20190514204912.GA25548@bogus>
+References: <20190502225336.206885-1-dianders@chromium.org>
 MIME-Version: 1.0
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
- <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
- <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com> <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
- <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
- <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com> <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
- <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com> <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
- <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com> <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <op.z1saqpzxwjvjmi@hhuan26-mobl.amr.corp.intel.com> <CALCETrXHbRL-pzZ7CG+RrMNGNEPKO9LY=6Bo4tuFzcZ_ZTMQvQ@mail.gmail.com>
- <op.z1sdc6m4wjvjmi@hhuan26-mobl.amr.corp.intel.com>
-In-Reply-To: <op.z1sdc6m4wjvjmi@hhuan26-mobl.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 14 May 2019 13:45:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrVfUfcs8ntj6tAzGo5eiaDGnLvUmgkUXNLX0a6SyJT+pg@mail.gmail.com>
-Message-ID: <CALCETrVfUfcs8ntj6tAzGo5eiaDGnLvUmgkUXNLX0a6SyJT+pg@mail.gmail.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-To:     Haitao Huang <haitao.huang@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502225336.206885-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 14, 2019, at 8:30 AM, Haitao Huang <haitao.huang@linux.intel.com> =
-wrote:
->
->> On Tue, 14 May 2019 10:17:29 -0500, Andy Lutomirski <luto@kernel.org> wr=
-ote:
->>
->> On Tue, May 14, 2019 at 7:33 AM Haitao Huang
->> <haitao.huang@linux.intel.com> wrote:
->>>
->>> On Fri, 10 May 2019 14:22:34 -0500, Andy Lutomirski <luto@kernel.org>
->>> wrote:
->>>
->>> > On Fri, May 10, 2019 at 12:04 PM Jethro Beekman <jethro@fortanix.com>
->>> > wrote:
->>> >>
->>> >> On 2019-05-10 11:56, Xing, Cedric wrote:
->>> >> > Hi Jethro,
->>> >> >
->>> >> >> ELF files are explicitly designed such that you can map them (wit=
-h
->>> >> mmap)
->>> >> >> in 4096-byte chunks. However, sometimes there's overlap and you w=
-ill
->>> >> >> sometimes see that a particular offset is mapped twice because th=
-e
->>> >> first
->>> >> >> half of the page in the file belongs to an RX range and the secon=
-d
->>> >> half
->>> >> >> to an R-only range. Also, ELF files don't (normally) describe sta=
-ck,
->>> >> >> heap, etc. which you do need for enclaves.
->>> >> >
->>> >> > You have probably misread my email. By mmap(), I meant the enclave
->>> >> file would be mapped via *multiple* mmap() calls, in the same way as
->>> >> what dlopen() would do in loading regular shared object. The intenti=
-on
->>> >> here is to make the enclave file subject to the same checks as regul=
-ar
->>> >> shared objects.
->>> >>
->>> >> No, I didn't misread your email. My original point still stands:
->>> >> requiring that an enclave's memory is created from one or more mmap
->>> >> calls of a file puts significant restrictions on the enclave's on-di=
-sk
->>> >> representation.
->>> >>
->>> >
->>> > For a tiny bit of background, Linux (AFAIK*) makes no effort to ensur=
-e
->>> > the complete integrity of DSOs.  What Linux *does* do (if so
->>> > configured) is to make sure that only approved data is mapped
->>> > executable.  So, if you want to have some bytes be executable, those
->>> > bytes have to come from a file that passes the relevant LSM and IMA
->>> > checks.
->>>
->>> Given this, I just want to step back a little to understand the exact
->>> issue that SGX is causing here for LSM/IMA. Sorry if I missed points
->>> discussed earlier.
->>>
->>> By the time of EADD, enclave file is opened and should have passed IMA =
-and
->>> SELinux policy enforcement gates if any. We really don't need extra mma=
-ps
->>> on the enclave files to be IMA and SELinux compliant.
->>
->> The problem, as i see it, is that they passed the *wrong* checks,
->> because, as you noticed:
->>
->>> We are loading
->>> enclave files as RO and copying those into EPC.
->>
->> Which is, semantically, a lot like loading a normal file as RO and
->> then mprotecting() it to RX, which is disallowed under quite a few LSM
->> policies.
->>
->>> An IMA policy can enforce
->>> RO files (or any file). And SELinux policy can say which processes can
->>> open the file for what permissions. No extra needed here.
->>
->> If SELinux says a process may open a file as RO, that does *not* mean
->> that it can be opened as RX.
->>
->
-> But in this case, file itself is mapped as RO treated like data and it is=
- not for execution. SGX enclave pages have EPCM enforced permissions. So fr=
-om SELinux point of view I would think it can treat it as RO and that's fin=
-e.
+On Thu,  2 May 2019 15:53:32 -0700, Douglas Anderson wrote:
+> In certain situations it was seen that we could wedge up the DDC bus
+> on the HDMI adapter on rk3288.  The only way to unwedge was to mux one
+> of the pins over to GPIO output-driven-low temporarily and then
+> quickly mux back.  Full details can be found in the patch
+> ("drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc bus").
+> 
+> Since unwedge requires remuxing the pins, we first need to add to the
+> bindings so that we can specify what state the pins should be in for
+> unwedging.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
 
-As an example, SELinux has an =E2=80=9Cexecute=E2=80=9D permission (via
-security_mmap_file =E2=80=94 see file_map_prot_check()) that controls wheth=
-er
-you can execute code from that file.  If you lack this permission on a
-file, you may still be able to map it PROT_READ, but you may not map
-it PROT_EXEC.  Similarly, if you want to malloc() some memory, write
-*code* to it, and execute it, you need a specific permission.
-
-So, unless we somehow think it=E2=80=99s okay for SGX to break the existing
-model, we need to respect these restrictions in the SGX driver. In
-other words, we either need to respect execmem, etc or require
-PROT_EXEC or the equivalent. I like the latter a lot more.
+Reviewed-by: Rob Herring <robh@kernel.org>
