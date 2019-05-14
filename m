@@ -2,164 +2,123 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A50DC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02102C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 158292086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCB8D20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:26:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DCcz3Yp6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726332AbfENIXo (ORCPT
+        id S1726347AbfENI06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:23:44 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbfENIXn (ORCPT
+        Tue, 14 May 2019 04:26:58 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51980 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfENI05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:23:43 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8MHkR131745
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 04:23:42 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sfqjdp32h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 04:23:42 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 14 May 2019 09:23:39 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 09:23:37 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4E8Na4951970092
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 08:23:36 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12FFF52051;
-        Tue, 14 May 2019 08:23:36 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id A12D952050;
-        Tue, 14 May 2019 08:23:34 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 14 May 2019 11:23:34 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] docs: reorder memory-hotplug documentation
-Date:   Tue, 14 May 2019 11:23:33 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19051408-4275-0000-0000-000003348A71
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051408-4276-0000-0000-00003844097D
-Message-Id: <1557822213-19058-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140062
+        Tue, 14 May 2019 04:26:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o189so1857102wmb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
+        b=DCcz3Yp69wR3bZBKDn/QuVK0FvCSof8Ew0WzSEPM81nXrM6IGVV4Z378IW/wEmApc9
+         6rJYt5azj7d//VJx3fFlxx9csNHdvyMki7rvr5x0lXeY3yt4/TBV9idded8Kfj3wGnko
+         zZVMKUlZf8rv79WH6OmPz8scKITVnTsJKQwfXSdwK0y5KG61Lqd1DXDQHF8y76Osrs7I
+         timrhpRIfLeKoo3xSDFVYbgKZZPLMUW2NaoCeqDtvrYVz9+f7pxgnBO0ut49nHYqsWMp
+         ikucev/DepoE0LeBL3uM7ZWS+hdInkxhqj33nX/o47Qnyegi6YG8MQGwk4yydf7LXlFg
+         bEfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
+        b=CIBpx+Mif0VogfOXSCypZdestPBqY9xp1H+Mf0nIGBMwkl8WxcMMepA1m5ctK8uZ2Y
+         knrz6LTWyJJmeHvli96Cj3rAdWap7NzScimX3Ddj198wA6R19eqxvvTcgEd228Sn1LI8
+         WzIOKmNZ93Lk6sZzde6kcWpYOgMNgL2c+LmOjPPHYInTAHWy2XBEa42ad/Z3mf2AJHzq
+         wuwtdOP4anmbW0GNQ7xceeHxN5EAH8djN4/IdWEzMba8cWuBtZnaXNrnLXnNNqDqcgzU
+         AspAP/NPf2EqexLOLSmH6ZUDNIpKfUO+x0B8xonmrWOVSe2SCPGKZ/i3bik7jAoUK1EE
+         USDQ==
+X-Gm-Message-State: APjAAAX87+U6zPlBsGG9NF2fehbkEwmpTQvvoDpfJdsChLlis4e2fry/
+        TRe9RsIP1QTbgwt4j03wQRXlbw==
+X-Google-Smtp-Source: APXvYqxnQPc8uylG3Vch3Y5Tb7DiuQJ87G8GH7fcOBvIRwt2mlcz4eOXf1LUsAUj88af8nCLk1cElQ==
+X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1792485wmh.78.1557822414947;
+        Tue, 14 May 2019 01:26:54 -0700 (PDT)
+Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
+        by smtp.gmail.com with ESMTPSA id j190sm2450772wmb.19.2019.05.14.01.26.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 01:26:53 -0700 (PDT)
+From:   Guillaume La Roque <glaroque@baylibre.com>
+To:     linus.walleij@linaro.org, khilman@baylibre.com
+Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
+Date:   Tue, 14 May 2019 10:26:46 +0200
+Message-Id: <20190514082652.20686-1-glaroque@baylibre.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "Locking Internals" section of the memory-hotplug documentation is
-duplicated in admin-guide and core-api. Drop the admin-guide copy as
-locking internals does not belong there.
+The purpose of this patchset is to add drive-strength support in meson pinconf
+driver. This is a new feature that was added on the g12a. It is critical for us
+to support this since many functions are failing with default pad drive-strength.
 
-While on it, move the "Future Work" section to the core-api part.
+The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+'drive-strength' is expressed in mA.
+So this patch add another generic property "drive-strength-microamp". The change to do so
+would be minimal and could be benefit to other platforms later on.
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- Documentation/admin-guide/mm/memory-hotplug.rst | 51 -------------------------
- Documentation/core-api/memory-hotplug.rst       | 11 ++++++
- 2 files changed, 11 insertions(+), 51 deletions(-)
+Cheers
+Guillaume
 
-diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
-index 5c4432c..72090ba 100644
---- a/Documentation/admin-guide/mm/memory-hotplug.rst
-+++ b/Documentation/admin-guide/mm/memory-hotplug.rst
-@@ -391,54 +391,3 @@ Physical memory remove
- Need more implementation yet....
-  - Notification completion of remove works by OS to firmware.
-  - Guard from remove if not yet.
--
--
--Locking Internals
--=================
--
--When adding/removing memory that uses memory block devices (i.e. ordinary RAM),
--the device_hotplug_lock should be held to:
--
--- synchronize against online/offline requests (e.g. via sysfs). This way, memory
--  block devices can only be accessed (.online/.state attributes) by user
--  space once memory has been fully added. And when removing memory, we
--  know nobody is in critical sections.
--- synchronize against CPU hotplug and similar (e.g. relevant for ACPI and PPC)
--
--Especially, there is a possible lock inversion that is avoided using
--device_hotplug_lock when adding memory and user space tries to online that
--memory faster than expected:
--
--- device_online() will first take the device_lock(), followed by
--  mem_hotplug_lock
--- add_memory_resource() will first take the mem_hotplug_lock, followed by
--  the device_lock() (while creating the devices, during bus_add_device()).
--
--As the device is visible to user space before taking the device_lock(), this
--can result in a lock inversion.
--
--onlining/offlining of memory should be done via device_online()/
--device_offline() - to make sure it is properly synchronized to actions
--via sysfs. Holding device_hotplug_lock is advised (to e.g. protect online_type)
--
--When adding/removing/onlining/offlining memory or adding/removing
--heterogeneous/device memory, we should always hold the mem_hotplug_lock in
--write mode to serialise memory hotplug (e.g. access to global/zone
--variables).
--
--In addition, mem_hotplug_lock (in contrast to device_hotplug_lock) in read
--mode allows for a quite efficient get_online_mems/put_online_mems
--implementation, so code accessing memory can protect from that memory
--vanishing.
--
--
--Future Work
--===========
--
--  - allowing memory hot-add to ZONE_MOVABLE. maybe we need some switch like
--    sysctl or new control file.
--  - showing memory block and physical device relationship.
--  - test and make it better memory offlining.
--  - support HugeTLB page migration and offlining.
--  - memmap removing at memory offline.
--  - physical remove memory.
-diff --git a/Documentation/core-api/memory-hotplug.rst b/Documentation/core-api/memory-hotplug.rst
-index de7467e..e08be1c 100644
---- a/Documentation/core-api/memory-hotplug.rst
-+++ b/Documentation/core-api/memory-hotplug.rst
-@@ -123,3 +123,14 @@ In addition, mem_hotplug_lock (in contrast to device_hotplug_lock) in read
- mode allows for a quite efficient get_online_mems/put_online_mems
- implementation, so code accessing memory can protect from that memory
- vanishing.
-+
-+Future Work
-+===========
-+
-+  - allowing memory hot-add to ZONE_MOVABLE. maybe we need some switch like
-+    sysctl or new control file.
-+  - showing memory block and physical device relationship.
-+  - test and make it better memory offlining.
-+  - support HugeTLB page migration and offlining.
-+  - memmap removing at memory offline.
-+  - physical remove memory.
+Changes since v5:
+- restore Tested-by/Reviewed-by/Ack-by tags
+
+Changes since v4:
+- fix dt-binding documentation
+- rename drive-strength-uA to drive-strength-microamp in coverletter
+
+Changes since v3:
+- remove dev_err in meson_get_drive_strength
+- cleanup code
+
+Changes since v2:
+- rename driver-strength-uA property to drive-strength-microamp
+- rework patch series for better understanding
+- rework set_bias function
+
+Changes since v1:
+- fix missing break
+- implement new pinctrl generic property "drive-strength-uA"
+
+[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
+Tested-by: Jerome Brunet <jbrunet@baylibre.com>
+
+Guillaume La Roque (6):
+  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
+  pinctrl: generic: add new 'drive-strength-microamp' property support
+  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
+  pinctrl: meson: Rework enable/disable bias part
+  pinctrl: meson: add support of drive-strength-microamp
+  pinctrl: meson: g12a: add DS bank value
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
+ .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
+ drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
+ drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
+ drivers/pinctrl/pinconf-generic.c             |   2 +
+ include/linux/pinctrl/pinconf-generic.h       |   3 +
+ 7 files changed, 193 insertions(+), 53 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
