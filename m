@@ -2,69 +2,71 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC14C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DB7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D435B2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D122166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JBRvZK07"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuPHlOKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbfENKOc (ORCPT
+        id S1726761AbfENKOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:14:32 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45065 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfENKOb (ORCPT
+        Tue, 14 May 2019 06:14:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37636 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfENKOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:14:31 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n22so11374284lfe.12;
-        Tue, 14 May 2019 03:14:30 -0700 (PDT)
+        Tue, 14 May 2019 06:14:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h19so7339917ljj.4;
+        Tue, 14 May 2019 03:14:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YIZ3kgLRbbPlHjkQaU8GGW+xZ44MSvuVReE59qUFDXA=;
-        b=JBRvZK070+rHxRCffanCjbI2/OlhQwa/N8JN3+t1UbNb0ZYQimUxd33Mv2Zpx4KLZS
-         GDvFb4JSDz7hP5h76UhrEJWz/qIWfJ0msGEEEZo0sUCN4IFw+2cvNTZDHm63L7wLQ/oJ
-         giFTSAhwjDZcMxYwT4pB6APvKq4MLectAthKeM7idFVQcDynqel4xIZx7LJ5zLLvPIn+
-         5u75SlFeZ/B7+FnH7tFI3p7MB+ytK8OkyfXYEa/seXEMHEptW4v4kb5EWLEwAJ+LUZ2l
-         TuFrbnP2dv4sln+jpjciiwC/vTze9SdWsUqKFycqD5rrpoCa5MhGjRuT72aRMua/ztu2
-         DaNw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qPn8FPvs2SjLEj/IT8pEZw6LNgmcxaZw6OHHve5bSvE=;
+        b=BuPHlOKhuHA86vpCSCE2Khe2qcQ53z+yUJ0J6wRlq87EXVDsc++DdiW7fBe3ovXTVA
+         Y3izPN5hENRt/2ttq0Ea+lJG8g0x8qpX5jHoifk+DoKV80NFXtac4jmhdfC6I+JyMe8j
+         STPvN1y6+xAtDe2L+pjI6NDQqHtPS5JSpsNXwckulTkWx3DUnRhvGzB/R2ksEmydgAlP
+         Iv0wikz0gbUI9dOT0fRfudxvhQiFCoNZuzM3uziUOprlPIjRQxEDG/fku2cosvti50Dk
+         xxZvEQeywmtlcsWKlNFWtsrGehfmWlix/ZrLfm1zSoQVOwFp8gJvHPpRQUyEBCV5PcCz
+         Nexg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YIZ3kgLRbbPlHjkQaU8GGW+xZ44MSvuVReE59qUFDXA=;
-        b=aES5zRpUEmBEEGmAGdgYD3Xeuesp3L4KAy1fOvKK5uzPrbNmTazFJ4AFsBKiJCpcpE
-         gdC19IO52rYyUP9FffYGjwafZUGYYI996NMwa5WVvRu1nQxxxkrCaryh3rHl+1wi2jFn
-         O9H9lIMuwhOmKkW1b7w0RTj/ulsjruWan08bAdLe3f8SoOp+lOBONVjkVEc7F+bKIG0f
-         MWWOuL1bEAtdPubd9v803aYDsy5ofxn56by8kGnsbErPXP8a9kKkUS4lPGklHY8QopOi
-         4d1zqd9KYzNS50XCRSqGyX7uv95dexFt0rYRbS2VTUy71OETIBiBjuocrX/YaliLmNk5
-         LzNg==
-X-Gm-Message-State: APjAAAUkUAmy/P8x3HtQEXTXAISdW5lpXrYSIT4/Zc0vuSMfmSgUKdwk
-        hLtNjSNA4a311L4qSHzgVhY=
-X-Google-Smtp-Source: APXvYqzF+ksXffBErnYUSHAodm5Kp8IJ34xoA3xPxb207dmag1RJmhmD9ql2mAc2x/a2hhTvHKfRiQ==
-X-Received: by 2002:ac2:51a9:: with SMTP id f9mr17085224lfk.56.1557828869654;
-        Tue, 14 May 2019 03:14:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qPn8FPvs2SjLEj/IT8pEZw6LNgmcxaZw6OHHve5bSvE=;
+        b=rXVwfJVQU+J73NmWtmL+FiZKuGzkEmwSyLDmdtVwAXBfGfhzidS96ngaFPP3eZxdCg
+         USRJ7/7WV/u+tJ5qqSjXWl61ua0iljxW3r8qiY9A7KrFBbd+5juiu1C6wr2p0110Cpxu
+         Pxc9IZvP40v2PvVTQyKNITeEnmOhrrAD/kcUr2IRF6kNvzBKPclBzgGJ/P08GZbhidyp
+         sMFVavNqKTq1IVnG7lWUlvt2a/1gyNa/mW287x5dzk6gOCQ8xAEuSbDeh7EapeD432c/
+         zIK0ASgMWDBjDSzLYLK65DNjTKp+UW27lM3qBkpQ+xTQ7UN5wIfpcGRW8BJMYJIMs9qU
+         k3uA==
+X-Gm-Message-State: APjAAAUTnUUjQThHAENOC22m3725BQpDp060wO58w2cUx3qJUekmt8yD
+        TkEw52MHG+ay4gZfKGLsqE8=
+X-Google-Smtp-Source: APXvYqxKhs2VHDhW/KEDGjyMv++36P8nn6OVWjhyVQa/SWIVgYYAgf9/dEhHVseBpuQvVpjIoLqWSQ==
+X-Received: by 2002:a2e:9812:: with SMTP id a18mr15359706ljj.146.1557828875653;
+        Tue, 14 May 2019 03:14:35 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id v2sm3126359ljg.6.2019.05.14.03.14.28
+        by smtp.gmail.com with ESMTPSA id v2sm3126359ljg.6.2019.05.14.03.14.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:14:28 -0700 (PDT)
+        Tue, 14 May 2019 03:14:35 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
         linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/7] tty: max310x: Simplify the code and fix a few bugs
-Date:   Tue, 14 May 2019 13:14:08 +0300
-Message-Id: <20190514101415.26754-1-fancer.lancer@gmail.com>
+Subject: [PATCH 5/7] tty: max310x: Add rx-during-tx rs485 flag support
+Date:   Tue, 14 May 2019 13:14:13 +0300
+Message-Id: <20190514101415.26754-6-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190514101415.26754-1-fancer.lancer@gmail.com>
+References: <20190514101415.26754-1-fancer.lancer@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,59 +74,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I started using this driver two years ago in kernek 4.4 and then in kernel
-4.9. It didn't go well from the very beginning due to my platform
-peculiarities: DW SPI core with hardware CS and relatively slow MIPS-based
-SoC. This patchset is intended to fix some of the problems I found out
-during the max310x driver utilization with max14830 device.
-
-First of all it was discovered, that workqueue API isn't optimally used.
-Work context isn't re-entrant by design, so the mutex used to guard the
-TX-method is redundant. schedule_work() method is also created in a way
-the work item is scheduled only if it isn't pending. Patch 1 concerns all
-these fixes. Seeing the similar container_of(uart_port) is used three
-times in the driver, the patch 2 introduces a macro to_max310x_port() to
-get a pointer to corresponding struct max310x_one. This is the code
-simplification and is going to be used in the following patches.
-
-It was found out, that batch read and write methods used buffers allocated
-on the kernel stack. Since they might be utilized by SPI controllers for
-DMA it might be unsafe on some platforms. Patch 3 provides a dedicated
-kmalloced buffers for this.
-
-The baud-rate calculator function didn't work correct for all the possible
-baud-rates requested within a pre-defined input reference frequency.
-Instead an algo fully compliant with datasheet divisor formulae is
-implemented in patch 4.
-
-Patches 5 and 6 are created to fix some rs485 issues. Particularly the
-rs485 mode is configured on the port startup if it's enabled. And seeing
-the mode2 register provides a way to enable/disable the echo-suppression
-in RS485 mode, it is used to implement the SER_RS485_RX_DURING_TX flag
+The driver currently sets the echo suppression bit by default when rs485
+is enabled. Naturally it disables any data retrieval in rs485 mode while
+RTSn is pushed up. The receiver gate (RX_) can be enabled just by clearing
+(or not setting) the EchoSuprs bit of mode2 register. So by setting or
+clearing the bit we implement the SER_RS485_RX_DURING_TX rs485 flag
 support.
 
-Finally it was discovered that in case if inbound hardware FIFO
-experienced overflow, a lot of '\0' characters inserted into the
-flip-buffer as a character of the RX-FIFO overrun. It isn't quite correct
-since the overflow happened only after the last character had been
-received. Patch 7 is dedicated to push only a single RX-FIFO overrun
-character in this case.
-
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+---
+ drivers/tty/serial/max310x.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-
-Serge Semin (7):
-  tty: max310x: Simplify tx-work item code
-  tty: max310x: Introduce max310x_one port macro-wrapper
-  tty: max310x: Don't pass stacked buffers to SPI
-  tty: max310x: Fix invalid baudrate divisors calculator
-  tty: max310x: Add rx-during-tx rs485 flag support
-  tty: max310x: Optionally enable rs485 on startup
-  tty: max310x: Split uart characters insertion loop
-
- drivers/tty/serial/max310x.c | 157 +++++++++++++++++++++--------------
- 1 file changed, 95 insertions(+), 62 deletions(-)
-
+diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
+index ca044f96c5cc..2255300404bd 100644
+--- a/drivers/tty/serial/max310x.c
++++ b/drivers/tty/serial/max310x.c
+@@ -975,25 +975,23 @@ static void max310x_set_termios(struct uart_port *port,
+ static void max310x_rs_proc(struct work_struct *ws)
+ {
+ 	struct max310x_one *one = container_of(ws, struct max310x_one, rs_work);
+-	unsigned int val;
++	unsigned int delay, mode1 = 0, mode2 = 0;
+ 
+-	val = (one->port.rs485.delay_rts_before_send << 4) |
++	delay = (one->port.rs485.delay_rts_before_send << 4) |
+ 		one->port.rs485.delay_rts_after_send;
+-	max310x_port_write(&one->port, MAX310X_HDPIXDELAY_REG, val);
++	max310x_port_write(&one->port, MAX310X_HDPIXDELAY_REG, delay);
+ 
+ 	if (one->port.rs485.flags & SER_RS485_ENABLED) {
+-		max310x_port_update(&one->port, MAX310X_MODE1_REG,
+-				MAX310X_MODE1_TRNSCVCTRL_BIT,
+-				MAX310X_MODE1_TRNSCVCTRL_BIT);
+-		max310x_port_update(&one->port, MAX310X_MODE2_REG,
+-				MAX310X_MODE2_ECHOSUPR_BIT,
+-				MAX310X_MODE2_ECHOSUPR_BIT);
+-	} else {
+-		max310x_port_update(&one->port, MAX310X_MODE1_REG,
+-				MAX310X_MODE1_TRNSCVCTRL_BIT, 0);
+-		max310x_port_update(&one->port, MAX310X_MODE2_REG,
+-				MAX310X_MODE2_ECHOSUPR_BIT, 0);
++		mode1 = MAX310X_MODE1_TRNSCVCTRL_BIT;
++
++		if (!(one->port.rs485.flags & SER_RS485_RX_DURING_TX))
++			mode2 = MAX310X_MODE2_ECHOSUPR_BIT;
+ 	}
++
++	max310x_port_update(&one->port, MAX310X_MODE1_REG,
++			MAX310X_MODE1_TRNSCVCTRL_BIT, mode1);
++	max310x_port_update(&one->port, MAX310X_MODE2_REG,
++			MAX310X_MODE2_ECHOSUPR_BIT, mode2);
+ }
+ 
+ static int max310x_rs485_config(struct uart_port *port,
+@@ -1005,7 +1003,8 @@ static int max310x_rs485_config(struct uart_port *port,
+ 	    (rs485->delay_rts_after_send > 0x0f))
+ 		return -ERANGE;
+ 
+-	rs485->flags &= SER_RS485_RTS_ON_SEND | SER_RS485_ENABLED;
++	rs485->flags &= SER_RS485_RTS_ON_SEND | SER_RS485_RX_DURING_TX |
++			SER_RS485_ENABLED;
+ 	memset(rs485->padding, 0, sizeof(rs485->padding));
+ 	port->rs485 = *rs485;
+ 
 -- 
 2.21.0
 
