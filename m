@@ -2,137 +2,121 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4514C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E091FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69CD920578
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:18:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lPSL0+DJ"
+	by mail.kernel.org (Postfix) with ESMTP id BCEA420881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:20:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbfENRS6 (ORCPT
+        id S1726955AbfENRUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:18:58 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:45863 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfENRS5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:18:57 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdaf87d0000>; Wed, 15 May 2019 01:18:53 +0800
-Received: from HKMAIL101.nvidia.com ([10.18.16.10])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 14 May 2019 10:18:53 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Tue, 14 May 2019 10:18:53 -0700
-Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL101.nvidia.com
- (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
- 2019 17:18:52 +0000
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (104.47.32.57) by
- HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 14 May 2019 17:18:52 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com (20.178.196.24) by
- BYAPR12MB2919.namprd12.prod.outlook.com (20.179.91.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Tue, 14 May 2019 17:18:48 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::e843:91f7:56c:73e8]) by BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::e843:91f7:56c:73e8%5]) with mapi id 15.20.1900.010; Tue, 14 May 2019
- 17:18:48 +0000
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Jonathan Hunter <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        Krishna Yarlagadda <kyarlagadda@nvidia.com>
-CC:     "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: RE: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
-Thread-Topic: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
-Thread-Index: AQHVChJyTuikRwKAUUyx+CcmS+4wvqZqXBUAgACAP+A=
-Date:   Tue, 14 May 2019 17:18:48 +0000
-Message-ID: <BYAPR12MB33986B88CF3A30036E3F1F04C2080@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
- <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
- <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
-In-Reply-To: <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=skomatineni@nvidia.com; 
-x-originating-ip: [216.228.112.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fd9679c2-3bb5-48f7-ecc7-08d6d8903a75
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR12MB2919;
-x-ms-traffictypediagnostic: BYAPR12MB2919:
-x-microsoft-antispam-prvs: <BYAPR12MB29198C5C9168BA094744B15DC2080@BYAPR12MB2919.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(376002)(346002)(366004)(396003)(189003)(199004)(4744005)(55016002)(53546011)(486006)(54906003)(5660300002)(6506007)(4326008)(476003)(6246003)(11346002)(66476007)(64756008)(66946007)(73956011)(446003)(53936002)(66556008)(66446008)(76116006)(52536014)(478600001)(2906002)(33656002)(74316002)(6436002)(68736007)(26005)(316002)(7696005)(102836004)(7736002)(305945005)(66066001)(86362001)(6116002)(99286004)(25786009)(229853002)(186003)(2501003)(110136005)(3846002)(9686003)(8936002)(14454004)(8676002)(256004)(71200400001)(81156014)(81166006)(71190400001)(6636002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2919;H:BYAPR12MB3398.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nvidia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cw6DzW1TdFaPjFqjWJqTOKJzBigbQJ2GKACoCLgepYrPRhE4vOXkL+UnDWrtwdRrScX/KoUgJAARYMPqxB/oeHXTiPGAkvJJddUfNEpDmW4iuPk40glyp1Kp3wND/DbpKCziyxK9dpWSH5q/cxcOtXQu59VtD4bJkHgDyE3f9m3N9MLsGK/7dpVzvr7Wh02ZfCklfXLHkqltjglciAhockukfpghwb5BuoNjBdFj4DatQwlXsuVkOU5HfP/qMcip2bmWibj4y0Yho+W4y4WaHh9ZnJ8VNT2myy8YIJ0P+AgCsqtsCetL2oxilyucFTJI0KL2DPyIKX/muRVwT1TxerW2jkBEZWMedCrlYG4yzRSAE28scg0Fm7qDK01zOSQaaqdqQkt+7A6gqOrKEiJJi5GknAC5VvOQn+w4YByNwvc=
+        Tue, 14 May 2019 13:20:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59390 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfENRUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 13:20:12 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6924C374;
+        Tue, 14 May 2019 10:20:11 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01943F575;
+        Tue, 14 May 2019 10:20:08 -0700 (PDT)
+Subject: Re: [PATCH v7 10/13] selftests/resctrl: Add vendor detection
+ mechanism
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaochen Shen <xiaochen.shen@intel.com>,
+        Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Babu Moger <babu.moger@amd.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
+ <1549767042-95827-11-git-send-email-fenghua.yu@intel.com>
+ <20190510183909.65732a67@donnerap.cambridge.arm.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <5cc3b562-6e48-f64c-06dd-b1ee1059e33e@arm.com>
+Date:   Tue, 14 May 2019 18:20:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd9679c2-3bb5-48f7-ecc7-08d6d8903a75
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 17:18:48.5631
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2919
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557854333; bh=CNfAJmJXTse5O37//Wk0m9tM+T47HPFZ0mHfZYmjD4Y=;
-        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
-         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
-         x-microsoft-antispam:x-ms-traffictypediagnostic:
-         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
-         x-forefront-prvs:x-forefront-antispam-report:received-spf:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
-         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=lPSL0+DJMnM5qUeKQuDmrjUxff7BZa3XwMqJvq5muQyEHgOwON3cVKlJ0mxoLU2rW
-         49p6q9zQsN9EIpDQjDVxj09chB+WfgPRfp3BlNt8DrBZH2qDnj84N/fIMb5uwXAZak
-         cNccij7a+HQhQIWHpGMQQiMtZWO8B2nDGVN2Xs3jnNepcSmmwQqUWxjI/5D3ezUJr3
-         MR9WKdeVyY/jLXEhbF/qSKAcH+Y5b3amPg8byeqiffFNNAV1dMv2tIt2BJd/Iz1f/s
-         TX/P3pN7aiUI1tP/4Ihp5+iDGngH7jNNwbkQmg7WaocWHJqWERpnUDTz0MTZVKmPQp
-         HDfPrMdSynlgg==
+In-Reply-To: <20190510183909.65732a67@donnerap.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIFY1IDEvNF0gc3BpOiB0ZWdyYTExNDogYWRkIHN1cHBvcnQg
-Zm9yIGdwaW8gYmFzZWQgQ1MNCg0KPiBPbiAxNC8wNS8yMDE5IDA2OjAzLCBTb3dqYW55YSBLb21h
-dGluZW5pIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IGZvciBHUElPIGJhc2Vk
-IENTIGNvbnRyb2wgdGhyb3VnaCBTUEkgY29yZSANCj4gPiBmdW5jdGlvbiBzcGlfc2V0X2NzLg0K
-PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFNvd2phbnlhIEtvbWF0aW5lbmkgPHNrb21hdGluZW5p
-QG52aWRpYS5jb20+DQo+IENhbiB5b3UgZWxhYm9yYXRlIG9uIHRoZSB1c2UtY2FzZSB3aGVyZSB0
-aGlzIGlzIG5lZWRlZD8gSSBhbSBjdXJpb3VzIHdoYXQgcGxhdGZvcm1zIGFyZSB1c2luZyB0aGlz
-IGFuZCB3aHkgdGhleSB3b3VsZCBub3QgdXNlIHRoZSBkZWRpY2F0ZWQgQ1Mgc2lnbmFscy4NCj4N
-Cj4gQ2hlZXJzDQo+IEpvbg0KDQpUZWdyYSBTUEkgZG9lc27igJl0IHN1cHBvcnQgaW50ZXIgYnl0
-ZSBkZWxheSBkaXJlY3RseSB0byBtZWV0IHNvbWUgU1BJIHNsYXZlIHJlcXVpcmVtZW50cy4NClNv
-IHdlIHVzZSBHUElPIGNvbnRyb2wgQ1MgaW4gcGFyYWxsZWwgd2l0aCBhIGR1bW15IEhXIENTIGFu
-ZCB1c2UgaW5hY3RpdmUgY3ljbGVzIGRlbGF5IG9mIFNQSSBjb250cm9sbGVyIHRvIG1pbWljIGlu
-dGVyIGJ5dGUgZGVsYXkuDQoNCkN1cnJlbnRseSB3ZSBkb27igJl0IGhhdmUgc3BlY2lmaWMgU1BJ
-IHNsYXZlIG9uIHVwc3RyZWFtIHN1cHBvcnRlZCBwbGF0Zm9ybXMgYnV0IGNvbnNpZGVyaW5nIHJh
-c3BiZXJyeSBQSSBoZWFkZXIgd2hlcmUgU1BJIEkvRiBpcyBleHBvc2VkIHRvIHBpbnMgaXQgYWxs
-b3dzIHVzZXIgdG8gY29ubmVjdCBhbnkgU1BJIHNsYXZlIGFuZCB0aGlzIGhlbHBzIGZvciBzb21l
-IHNsYXZlcyB0aGF0IG5lZWQgc3BlY2lmaWMgaW50ZXIgYnl0ZSBkZWxheS4NCg0KVGhhbmtzDQpz
-b3dqYW55YQ0K
+Hi Andre,
+
+(thanks for digging into this!)
+
+On 10/05/2019 18:39, Andre Przywara wrote:
+> On Sat,  9 Feb 2019 18:50:39 -0800
+> Fenghua Yu <fenghua.yu@intel.com> wrote:
+>> From: Babu Moger <babu.moger@amd.com>
+>>
+>> RESCTRL feature is supported both on Intel and AMD now. Some features
+>> are implemented differently. Add vendor detection mechanism. Use the vendor
+>> check where there are differences.
+> 
+> I don't think vendor detection is the right approach. The Linux userland
+> interface should be even architecture agnostic, not to speak of different
+> vendors.
+> 
+> But even if we need this for some reason ...
+
+>> diff --git a/tools/testing/selftests/resctrl/resctrl_tests.c b/tools/testing/selftests/resctrl/resctrl_tests.c
+>> index 3959b2b0671a..1d9adcfbdb4c 100644
+>> --- a/tools/testing/selftests/resctrl/resctrl_tests.c
+>> +++ b/tools/testing/selftests/resctrl/resctrl_tests.c
+>> @@ -14,6 +14,66 @@
+>>  #define BENCHMARK_ARGS		64
+>>  #define BENCHMARK_ARG_SIZE	64
+>>  
+>> +/**
+>> + * This variables provides information about the vendor
+>> + */
+>> +int genuine_intel;
+>> +int authentic_amd;
+>> +
+>> +void lcpuid(const unsigned int leaf, const unsigned int subleaf,
+>> +	    struct cpuid_out *out)
+> 
+> There is a much easier way to detect the vendor, without resorting to
+> (unchecked) inline assembly in userland:
+
+> I changed this to scan /proc/cpuinfo for a line starting with vendor_id,
+> then use the information there. This should work everywhere.
+
+Everywhere x86. /proc/cpuinfo is unfortunately arch specific, arm64 spells that field 'CPU
+implementer'. Short of invoking lscpu, I don't know a portable way of finding this string.
+
+What do we need it for? Surely it indicates something is wrong with the kernel interface
+if you need to know which flavour of CPU this is.
+
+The only differences I've spotted are the 'MAX_MBA_BW' on Intel is a percentage, on AMD
+its a number between 1 and 2K. If user-space needs to know we could add another file with
+the 'max_bandwidth'. (I haven't spotted how the MBA default_ctrl gets exposed).
+
+The other one is the non-contiguous CBM values, where user-space is expected to try it and
+see [0]. If user-space needs to know, we could expose some 'sparse_bitmaps=[0 1]', unaware
+user-space keeps working.
+
+
+Thanks,
+
+James
+
+[0] https://lore.kernel.org/patchwork/patch/991236/#1179944
