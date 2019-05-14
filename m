@@ -2,172 +2,72 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA66C04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:54:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CFBC04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6671F20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 477D92089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="M/nWmIQp"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tSmoC5EM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfENCyp (ORCPT
+        id S1726667AbfENDBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 22:54:45 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:29816 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726646AbfENCyo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 22:54:44 -0400
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x4E2sdp1004820;
-        Tue, 14 May 2019 11:54:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4E2sdp1004820
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557802481;
-        bh=rFuRFoBY8BjOIKeayc3Ot7VuLciFt8LmjZQInVHSlJ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=M/nWmIQpgSw8lYeS5vHINkvbkJEEyJ2XG6ydAmYMqKRuStMB1s1ZvnGlfKW8E1S+r
-         p1r6IOp6KSf7oQc9jql1QraVXc9oFBd5kVGQdBF34ER8EpqXK0vHxs6khjAFiuMU/3
-         wtMuoqofVm99cCX+DbvvEswe/DzMtSTOQJ0x4LhxdAMt3YVbi38hAWL6PloUMTLMNu
-         9HARA3NHM2QeeVhmmUJpAvuJ7+vKMCehbSKgmYrE7E1LgqUIi9V7zP4rSVCBySm43K
-         jWGwbtBuWCyRRS/Z5aQMX2IllBKizP7vbKb+0d+wTG7CwUy/NQtff5+7WwpRtjf5Gd
-         pSb2qHrx/FVng==
-X-Nifty-SrcIP: [209.85.217.53]
-Received: by mail-vs1-f53.google.com with SMTP id q64so9372215vsd.1;
-        Mon, 13 May 2019 19:54:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAXHOrJhTdjWJlL6etBiZ1DBYsoMWbkYhKOHL7+YFLkEBib4SaE5
-        Ld2XWZYaUn49YuNLQlnCIRlzjpCFfs+DOwTm6dc=
-X-Google-Smtp-Source: APXvYqyrQxnPRhJ3FLWMlSOsXjGbSi7zKQxYzdHJB0RMC8Qrb2DGcBWQtuxRQWnmcrKt62nbS2wFXsudrd2UZBTVwL4=
-X-Received: by 2002:a67:f443:: with SMTP id r3mr15631970vsn.179.1557802479337;
- Mon, 13 May 2019 19:54:39 -0700 (PDT)
+        Mon, 13 May 2019 23:01:03 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34727 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726533AbfENDBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 23:01:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=G3zxPkEx8xFAbyKPcWX048WseX1r8i9WLN8ua6tPwmc=; b=tSmoC5EMuNCDWWJh44SydrloQ7
+        GgY0QYJRcyXdrf2nbti5fSz9evr36xmIFcXYj7FBobiupdZJC8N8lt2mzYEuJ+KIakZO5OKHh219H
+        0Nx/WfMMc2wY0dS/wXCbGu1GEZk3WafJTguYGrM8KbxuCaRLTMO7VrYG/AOl+wqfWPKM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hQNfs-000604-5y; Tue, 14 May 2019 05:00:16 +0200
+Date:   Tue, 14 May 2019 05:00:16 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Biao Huang <biao.huang@mediatek.com>
+Cc:     Jose Abreu <joabreu@synopsys.com>, davem@davemloft.net,
+        jianguo.zhang@mediatek.com,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        yt.shen@mediatek.com, linux-mediatek@lists.infradead.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [v2, PATCH 0/4] fix some bugs in stmmac
+Message-ID: <20190514030016.GA19642@lunn.ch>
+References: <1557800933-30759-1-git-send-email-biao.huang@mediatek.com>
 MIME-Version: 1.0
-References: <20190509073555.15545-1-yamada.masahiro@socionext.com> <20190513044721.GA3664@archlinux-i9>
-In-Reply-To: <20190513044721.GA3664@archlinux-i9>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 14 May 2019 11:54:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARUgvqLG8LQUcLfkQFVngiOdAeeYxbK0qg9dyUyxenu6A@mail.gmail.com>
-Message-ID: <CAK7LNARUgvqLG8LQUcLfkQFVngiOdAeeYxbK0qg9dyUyxenu6A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: terminate Kconfig when $(CC) or $(LD) is missing
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557800933-30759-1-git-send-email-biao.huang@mediatek.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 1:47 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Thu, May 09, 2019 at 04:35:55PM +0900, Masahiro Yamada wrote:
-> > If the compiler specified by $(CC) is not present, the Kconfig stage
-> > sprinkles 'not found' messages, then succeeds.
-> >
-> >   $ make CROSS_COMPILE=foo defconfig
-> >   /bin/sh: 1: foogcc: not found
-> >   /bin/sh: 1: foogcc: not found
-> >   *** Default configuration is based on 'x86_64_defconfig'
-> >   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 17: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 18: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/gcc-version.sh: 19: ./scripts/gcc-version.sh: foogcc: not found
-> >   ./scripts/clang-version.sh: 11: ./scripts/clang-version.sh: foogcc: not found
-> >   ./scripts/gcc-plugin.sh: 11: ./scripts/gcc-plugin.sh: foogcc: not found
-> >   init/Kconfig:16:warning: 'GCC_VERSION': number is invalid
-> >   #
-> >   # configuration written to .config
-> >   #
-> >
-> > Terminate parsing files immediately if $(CC) or $(LD) is not found.
-> > "make *config" will fail more nicely.
-> >
-> >   $ make CROSS_COMPILE=foo defconfig
-> >   *** Default configuration is based on 'x86_64_defconfig'
-> >   scripts/Kconfig.include:34: compiler 'foogcc' not found
-> >   make[1]: *** [scripts/kconfig/Makefile;82: defconfig] Error 1
-> >   make: *** [Makefile;557: defconfig] Error 2
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> >  Makefile                | 2 +-
-> >  scripts/Kconfig.include | 8 ++++++++
-> >  2 files changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 28965187c528..bd7ae11947cb 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -537,7 +537,7 @@ endif
-> >  # Some architectures define CROSS_COMPILE in arch/$(SRCARCH)/Makefile.
-> >  # CC_VERSION_TEXT is referenced from Kconfig (so it needs export),
-> >  # and from include/config/auto.conf.cmd to detect the compiler upgrade.
-> > -CC_VERSION_TEXT = $(shell $(CC) --version | head -n 1)
-> > +CC_VERSION_TEXT = $(shell $(CC) --version 2>/dev/null | head -n 1)
-> >
-> >  ifeq ($(config-targets),1)
-> >  # ===========================================================================
-> > diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
-> > index 87ff1dcc6bd5..0b267fb27f07 100644
-> > --- a/scripts/Kconfig.include
-> > +++ b/scripts/Kconfig.include
-> > @@ -18,6 +18,10 @@ if-success = $(shell,{ $(1); } >/dev/null 2>&1 && echo "$(2)" || echo "$(3)")
-> >  # Return y if <command> exits with 0, n otherwise
-> >  success = $(if-success,$(1),y,n)
-> >
-> > +# $(failure,<command>)
-> > +# Return n if <command> exits with 0, y otherwise
-> > +failure = $(if-success,$(1),n,y)
-> > +
-> >  # $(cc-option,<flag>)
-> >  # Return y if the compiler supports <flag>, n otherwise
-> >  cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-> > @@ -26,5 +30,9 @@ cc-option = $(success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null)
-> >  # Return y if the linker supports <flag>, n otherwise
-> >  ld-option = $(success,$(LD) -v $(1))
-> >
-> > +# check if $(CC) and $(LD) exist
-> > +$(error-if,$(failure,command -v $(CC)),compiler '$(CC)' not found)
-> > +$(error-if,$(failure,command -v $(LD)),linker '$(LD)' not found)
->
-> As mentioned in the other thread, $(AS) should be checked as well since
-> it's possible that neither $(CC) nor $(LD) will involve $(CROSS_COMPILE),
-> like the combination of clang + ld.lld, whereas $(AS) will (currently)
-> always involve $(CROSS_COMPILE).
+On Tue, May 14, 2019 at 10:28:49AM +0800, Biao Huang wrote:
+> changes in v2:                                                                  
+>         1. update rx_tail_addr as Jose's comment                                
+>         2. changes clk_csr condition as Alex's proposition                      
+>         3. remove init lines in dwmac-mediatek, get clk_csr from dts instead.   
 
-Indeed.
-This patch cannot check the presence of the intended gnu toolchains
-if CC=clang LD=ld.lld
+Hi Biao
 
-The reason for $(CC) / $(LD) checks in Kconfig
-is because it evaluates some $(cc-option, ...) and $(ld-option, ...) calls.
+Since these are fixes, could you provide a Fixes: tag for each one?
 
-Currently, Kconfig does not have as-option, but I will add it
-sooner or later, so I am fine with adding
-$(error-if,$(failure,command -v $(AS)),assembler '$(AS)' not found)
-
-
-
-
-> > +
-> >  # gcc version including patch level
-> >  gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
-> > --
-> > 2.17.1
-> >
-
-
---
-Best Regards
-Masahiro Yamada
+Thanks
+	Andrew
