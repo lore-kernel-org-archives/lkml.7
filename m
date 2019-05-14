@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FF8C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57376C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 479EB214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279A7214C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="JI4x7e7O"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bPf4WuuY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfENI1E (ORCPT
+        id S1726604AbfENI1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:27:04 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51984 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfENI1A (ORCPT
+        Tue, 14 May 2019 04:27:08 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36198 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfENI1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:27:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o189so1857277wmb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:26:58 -0700 (PDT)
+        Tue, 14 May 2019 04:27:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id j187so1834489wmj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:27:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=m6Un7OR1aiu9wrzrl8IRY5GNnopILO3r5dQ0m/pbT10=;
-        b=JI4x7e7Oy3ry6mUfW5LiquXDPgzPcSd5zy3s2eWGX8WqMy4EoeoVL09PGiMTzW7OUy
-         1zeXMdUAc5rN/k2ekwFxZQjgWsnxfzn+naKQC9NEexCAXDQsCNH5PPNziSSUXRDpJqs1
-         OfiuS76sPDL4nxBByqQYJ8ceKziM9y6w6IehCyldMAoDofXEUxCn6pScPIkxOxhiNiUT
-         siaJkO0/F1sbzN9mRsGPj0Y/nIBelz87TCjWLLrz3pynDQZ1UbNhYFiv1Zwtv+cuy+H5
-         WGYV6ucH77gBg94yuAFVmhA++4wsANAXLf9KcVg6DK/Cz2foMz3t+tbLRKSQ3Y7xoA4w
-         TEBw==
+        bh=O97zZZn1z4pV5/CBd0LynhS3xGUIwq2UphBG0p1YFRQ=;
+        b=bPf4WuuYIqH2CH9bQmXEo1O34FgtRlbigWtGU36yskR/JqXCQ/OJg76GS3qGPgMcR3
+         vHOr3yIF50qoEfqp2acVrlqRNwYxmCtwNrQxxMlMjfvOMjYEq/hfhCPcZ92ywzjH/Wu3
+         2X6f+ps9mNRR882qkn9/0YTWP3xAaw/S8SMi6j7LPy5n84ItH994gvgN8f22JsCBQjiW
+         2ptIfpHlkGvIz1fhsW+HEgTyY/tnOsLHH50eYsvvTCPLuOPqAkvdQHlfZ5sKy7IQeD4U
+         1nbAL8REhP2W/4aftAOOcxBoc9DY+hyc2QYH17vGyL2+bpQ9vJAjSpnIIXL6OUuQ3TNo
+         8wUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=m6Un7OR1aiu9wrzrl8IRY5GNnopILO3r5dQ0m/pbT10=;
-        b=jTKAITmA4Gw5+JVmcRefS8wSxRQFnMsUP2ZLbxs4HVp0WQtNEhjGmEuC5aQ8qRk1Hl
-         VxeyOnxL2IM+fjKHuewNSw59nbz6r7fTdA/1gYoMopqodht4WOe9QozJj3oW+RKBqmBK
-         pBLYGJR5gI0SxcBNUirUhy6kipfkP5DCYDFb5VOs4hg1YorrKtdstU9YMA1fvVLaPk5z
-         UiYcUnO095f/3AXxmZI9rnnwsGt3A9hSERuVu043X4OWt5k4QMS/dV9U0G3vt2reg4AS
-         CzoF44YOHi83AUIybyVTWtTcf/ppHVugjKU92cF+zNkPOf+SJIm7gYydm4eG6T+KmhYX
-         ZQUQ==
-X-Gm-Message-State: APjAAAWtexXrsnCQtUaaP6gEDVLQBepUp5Dvk1HzEs359WhE6PhX+kvW
-        quaTb624tmHaG+2LRNRTeGQy+w==
-X-Google-Smtp-Source: APXvYqwiyL+F34V5oX5aorvsSvFWYQaBw0/Pj5Q1wGOXb7PjKpXDBCJptQeHKQK6h73Y6MwygEhtkw==
-X-Received: by 2002:a1c:96c9:: with SMTP id y192mr7711843wmd.75.1557822418092;
-        Tue, 14 May 2019 01:26:58 -0700 (PDT)
+        bh=O97zZZn1z4pV5/CBd0LynhS3xGUIwq2UphBG0p1YFRQ=;
+        b=umGdB90bjNq6jvboVDiNIqo3uaYn3DrpdY6vFBy7XhDV/2dEbI/w9IWfGjJy/9oftS
+         ft5FkUuMMvxYyNi09uNgsmF/uccYmR/jeLwF7tFZL8yORanmFA7Tk4xmUDte+aTNKaPv
+         lC+Z/vhuqRwDGcROY/GraV+dRYjWLVqWSAk32T1PiOk/7uU9YTNYuM0EHa1VvXhRszTI
+         mBFbrNNFGuRVMT941ncpgiqiuIaZg5pm3G9YSHo6CFKFOe44FLTpXH2PeinoLhZ7xDUL
+         +7OmvIQ7tDeoG+ayCZjhAyMSkFXsl59BvCO8svHKj3iLa03ju+OUxhbVv/m6iDKGW8a8
+         oXaA==
+X-Gm-Message-State: APjAAAUvaj7b1cLp+Qk3+ADhwIVHAPZobt2sFqgzZqHNyrJ8Dciawflv
+        8J241NUw5RXYk2LYOb/z/zK5RQ==
+X-Google-Smtp-Source: APXvYqwgUQzayw2v0ikkYZxkiB0BG9CeOqyLkpcMOf/bqVkm0uyUrcKtkGPsT8Nrob/g7fdLlQ43wg==
+X-Received: by 2002:a7b:c8d1:: with SMTP id f17mr5244524wml.45.1557822421448;
+        Tue, 14 May 2019 01:27:01 -0700 (PDT)
 Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
-        by smtp.gmail.com with ESMTPSA id j190sm2450772wmb.19.2019.05.14.01.26.57
+        by smtp.gmail.com with ESMTPSA id j190sm2450772wmb.19.2019.05.14.01.27.00
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 01:26:57 -0700 (PDT)
+        Tue, 14 May 2019 01:27:01 -0700 (PDT)
 From:   Guillaume La Roque <glaroque@baylibre.com>
 To:     linus.walleij@linaro.org, khilman@baylibre.com
 Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 3/6] dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-Date:   Tue, 14 May 2019 10:26:49 +0200
-Message-Id: <20190514082652.20686-4-glaroque@baylibre.com>
+Subject: [PATCH v6 6/6] pinctrl: meson: g12a: add DS bank value
+Date:   Tue, 14 May 2019 10:26:52 +0200
+Message-Id: <20190514082652.20686-7-glaroque@baylibre.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
 References: <20190514082652.20686-1-glaroque@baylibre.com>
@@ -71,30 +71,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add optional drive-strength-microamp property
+add drive-strength bank regiter and bit value for G12A SoC
 
 Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c | 36 +++++++++++-----------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index a47dd990a8d3..a7618605bf1e 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -51,6 +51,10 @@ Configuration nodes support the generic properties "bias-disable",
- "bias-pull-up" and "bias-pull-down", described in file
- pinctrl-bindings.txt
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+index d494492e98e9..3475cd7bd2af 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+@@ -1304,28 +1304,28 @@ static struct meson_pmx_func meson_g12a_aobus_functions[] = {
+ };
  
-+Optional properties :
-+ - drive-strength-microamp: Drive strength for the specified pins in uA.
-+			    This property is only valid for G12A and newer.
-+
- === Example ===
+ static struct meson_bank meson_g12a_periphs_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in */
+-	BANK("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
+-	     4,  0,  4,  0,  12,  0,  13, 0,  14, 0),
+-	BANK("H",    GPIOH_0,    GPIOH_8, 28, 36,
+-	     3,  0,  3,  0,  9,  0,  10,  0,  11,  0),
+-	BANK("BOOT", BOOT_0,     BOOT_15,  37, 52,
+-	     0,  0,  0,  0,  0, 0,  1, 0,  2, 0),
+-	BANK("C",    GPIOC_0,    GPIOC_7,  53, 60,
+-	     1,  0,  1,  0,  3, 0,  4, 0,  5, 0),
+-	BANK("A",    GPIOA_0,    GPIOA_15,  61, 76,
+-	     5,  0,  5,  0,  16,  0,  17,  0,  18,  0),
+-	BANK("X",    GPIOX_0,    GPIOX_19,   77, 96,
+-	     2,  0,  2,  0,  6,  0,  7,  0,  8,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("Z",    GPIOZ_0,    GPIOZ_15, 12, 27,
++		4,  0,  4,  0,  12,  0,  13, 0,  14, 0, 5, 0),
++	BANK_DS("H",    GPIOH_0,    GPIOH_8, 28, 36,
++		3,  0,  3,  0,  9,  0,  10,  0,  11,  0, 4, 0),
++	BANK_DS("BOOT", BOOT_0,     BOOT_15,  37, 52,
++		0,  0,  0,  0,  0, 0,  1, 0,  2, 0, 0, 0),
++	BANK_DS("C",    GPIOC_0,    GPIOC_7,  53, 60,
++		1,  0,  1,  0,  3, 0,  4, 0,  5, 0, 1, 0),
++	BANK_DS("A",    GPIOA_0,    GPIOA_15,  61, 76,
++		5,  0,  5,  0,  16,  0,  17,  0,  18,  0, 6, 0),
++	BANK_DS("X",    GPIOX_0,    GPIOX_19,   77, 96,
++		2,  0,  2,  0,  6,  0,  7,  0,  8,  0, 2, 0),
+ };
  
- 	pinctrl: pinctrl@c1109880 {
+ static struct meson_bank meson_g12a_aobus_banks[] = {
+-	/* name  first  last  irq  pullen  pull  dir  out  in  */
+-	BANK("AO",   GPIOAO_0,  GPIOAO_11,  0, 11,
+-	     3,  0,  2, 0,  0,  0,  4, 0,  1,  0),
++	/* name  first  last  irq  pullen  pull  dir  out  in  ds */
++	BANK_DS("AO", GPIOAO_0, GPIOAO_11, 0, 11, 3, 0, 2, 0, 0, 0, 4, 0, 1, 0,
++		0, 0),
+ 	/* GPIOE actually located in the AO bank */
+-	BANK("E",   GPIOE_0,  GPIOE_2,   97, 99,
+-	     3,  16,  2, 16,  0,  16,  4, 16,  1,  16),
++	BANK_DS("E", GPIOE_0, GPIOE_2, 97, 99, 3, 16, 2, 16, 0, 16, 4, 16, 1,
++		16, 1, 0),
+ };
+ 
+ static struct meson_pmx_bank meson_g12a_periphs_pmx_banks[] = {
 -- 
 2.17.1
 
