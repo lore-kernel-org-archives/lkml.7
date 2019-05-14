@@ -2,126 +2,74 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B5FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A19C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8267120862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FCB820862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfENV3v (ORCPT
+        id S1726486AbfENVdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:29:51 -0400
-Received: from mx.allycomm.com ([138.68.30.55]:57133 "EHLO mx.allycomm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfENV3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:29:50 -0400
-Received: from allycomm.com (inet.guidewire.com [199.91.42.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx.allycomm.com (Postfix) with ESMTPSA id 336653B682;
-        Tue, 14 May 2019 14:29:49 -0700 (PDT)
-From:   Jeff Kletsky <lede@allycomm.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] mtd: spinand: Add #define-s for page-read ops with three-byte addresses
-Date:   Tue, 14 May 2019 14:29:39 -0700
-Message-Id: <20190514212941.18794-2-lede@allycomm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190514212941.18794-1-lede@allycomm.com>
-References: <20190514212941.18794-1-lede@allycomm.com>
+        Tue, 14 May 2019 17:33:39 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:54025 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfENVdj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 17:33:39 -0400
+Received: from 79.184.255.148.ipv4.supernova.orange.pl (79.184.255.148) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 653687329530d137; Tue, 14 May 2019 23:33:36 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: Update MAINTAINERS to include schedutil governor
+Date:   Tue, 14 May 2019 23:33:36 +0200
+Message-ID: <55648738.2dPUYNdNxi@kreacher>
+In-Reply-To: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
+References: <f2badd7ec3afa227410a9f57401bf5ce04aff692.1557731248.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kletsky <git-commits@allycomm.com>
+On Monday, May 13, 2019 9:10:33 AM CEST Viresh Kumar wrote:
+> List cpufreq maintainers as well for schedutil governor apart from
+> scheduler maintainers.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4244dd341eb7..7d4417d862a6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4093,7 +4093,9 @@ F:	Documentation/admin-guide/pm/intel_pstate.rst
+>  F:	Documentation/cpu-freq/
+>  F:	Documentation/devicetree/bindings/cpufreq/
+>  F:	drivers/cpufreq/
+> +F:	kernel/sched/cpufreq*.c
+>  F:	include/linux/cpufreq.h
+> +F:	include/linux/sched/cpufreq.h
+>  F:	tools/testing/selftests/cpufreq/
+>  
+>  CPU FREQUENCY DRIVERS - ARM BIG LITTLE
+> 
 
-The GigaDevice GD5F1GQ4UFxxG SPI NAND utilizes three-byte addresses
-for its page-read ops.
+Applied, thanks!
 
-http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
 
-Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
----
- include/linux/mtd/spinand.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
 
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index b92e2aa955b6..05fe98eebe27 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -68,30 +68,60 @@
- 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
- 		   SPI_MEM_OP_DATA_IN(len, buf, 1))
- 
-+#define SPINAND_PAGE_READ_FROM_CACHE_OP_3A(fast, addr, ndummy, buf, len) \
-+	SPI_MEM_OP(SPI_MEM_OP_CMD(fast ? 0x0b : 0x03, 1),		\
-+		   SPI_MEM_OP_ADDR(3, addr, 1),				\
-+		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
-+		   SPI_MEM_OP_DATA_IN(len, buf, 1))
-+
- #define SPINAND_PAGE_READ_FROM_CACHE_X2_OP(addr, ndummy, buf, len)	\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x3b, 1),				\
- 		   SPI_MEM_OP_ADDR(2, addr, 1),				\
- 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
- 		   SPI_MEM_OP_DATA_IN(len, buf, 2))
- 
-+#define SPINAND_PAGE_READ_FROM_CACHE_X2_OP_3A(addr, ndummy, buf, len)	\
-+	SPI_MEM_OP(SPI_MEM_OP_CMD(0x3b, 1),				\
-+		   SPI_MEM_OP_ADDR(3, addr, 1),				\
-+		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
-+		   SPI_MEM_OP_DATA_IN(len, buf, 2))
-+
- #define SPINAND_PAGE_READ_FROM_CACHE_X4_OP(addr, ndummy, buf, len)	\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x6b, 1),				\
- 		   SPI_MEM_OP_ADDR(2, addr, 1),				\
- 		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
- 		   SPI_MEM_OP_DATA_IN(len, buf, 4))
- 
-+#define SPINAND_PAGE_READ_FROM_CACHE_X4_OP_3A(addr, ndummy, buf, len)	\
-+	SPI_MEM_OP(SPI_MEM_OP_CMD(0x6b, 1),				\
-+		   SPI_MEM_OP_ADDR(3, addr, 1),				\
-+		   SPI_MEM_OP_DUMMY(ndummy, 1),				\
-+		   SPI_MEM_OP_DATA_IN(len, buf, 4))
-+
- #define SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(addr, ndummy, buf, len)	\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0xbb, 1),				\
- 		   SPI_MEM_OP_ADDR(2, addr, 2),				\
- 		   SPI_MEM_OP_DUMMY(ndummy, 2),				\
- 		   SPI_MEM_OP_DATA_IN(len, buf, 2))
- 
-+#define SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP_3A(addr, ndummy, buf, len) \
-+	SPI_MEM_OP(SPI_MEM_OP_CMD(0xbb, 1),				\
-+		   SPI_MEM_OP_ADDR(3, addr, 2),				\
-+		   SPI_MEM_OP_DUMMY(ndummy, 2),				\
-+		   SPI_MEM_OP_DATA_IN(len, buf, 2))
-+
- #define SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(addr, ndummy, buf, len)	\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0xeb, 1),				\
- 		   SPI_MEM_OP_ADDR(2, addr, 4),				\
- 		   SPI_MEM_OP_DUMMY(ndummy, 4),				\
- 		   SPI_MEM_OP_DATA_IN(len, buf, 4))
- 
-+#define SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP_3A(addr, ndummy, buf, len) \
-+	SPI_MEM_OP(SPI_MEM_OP_CMD(0xeb, 1),				\
-+		   SPI_MEM_OP_ADDR(3, addr, 4),				\
-+		   SPI_MEM_OP_DUMMY(ndummy, 4),				\
-+		   SPI_MEM_OP_DATA_IN(len, buf, 4))
-+
- #define SPINAND_PROG_EXEC_OP(addr)					\
- 	SPI_MEM_OP(SPI_MEM_OP_CMD(0x10, 1),				\
- 		   SPI_MEM_OP_ADDR(3, addr, 1),				\
--- 
-2.20.1
 
