@@ -2,140 +2,112 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3E9C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EA8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB8A21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0287A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qa00vacP"
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="xtQ7y135"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfENIAL (ORCPT
+        id S1726363AbfENIA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:00:11 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59392 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfENIAK (ORCPT
+        Tue, 14 May 2019 04:00:59 -0400
+Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:27243
+        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726007AbfENIA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:00:10 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E7rZFV025235;
-        Tue, 14 May 2019 07:58:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=APVvqr1lJvph+nzc+bHSkxPBxoL6T6+MikT3VYcFYTY=;
- b=Qa00vacPoKAcDmadtKFTWQ86hpzpK8edI+E8nptO4qmbHNiluW4rA72QRsqn8dqQgb+H
- YGHr2ncstXf+JbqVMohLL2958KIfwz1ytfCJ7tbXXGN1fYU2kBNJ1BY7oD907Cqwg837
- A61+vFfLiLoFKI7Ug++Agy45D9NhL2tIeOvullD7o5jCeYuuFEqelfAWsJg31pIUxGK3
- zAykOuGR1A4gFP7D39sMxyz/OAWKeBzSF37EeCYYD6w2+diBlhHO4t4uR/f89UX7hgse
- NPu/z0kCRo8ZxHnDBqoSzEiQzVrR8NVl4GGZs4KQwlhUmJ6N7g8nenjrZc4sJIEKLJad cQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdm73v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 07:58:08 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E7vKet144428;
-        Tue, 14 May 2019 07:58:08 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2sdmeax9xs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 07:58:08 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4E7w7PM008960;
-        Tue, 14 May 2019 07:58:07 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 00:58:07 -0700
-Subject: Re: [RFC KVM 06/27] KVM: x86: Exit KVM isolation on IRQ entry
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-7-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrUzAjUFGd=xZRmCbyLfvDgC_WbPYyXB=OznwTkcV-PKNw@mail.gmail.com>
- <64c49aa6-e7f2-4400-9254-d280585b4067@oracle.com>
- <CALCETrUd2UO=+JOb_008mGbPdfW5YJgQyw5H7D_CxOgaWv=gxw@mail.gmail.com>
- <20190514070719.GD2589@hirez.programming.kicks-ass.net>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b17d8525-a83b-d37b-dfb4-f09ec3b6bcfc@oracle.com>
-Date:   Tue, 14 May 2019 09:58:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Tue, 14 May 2019 04:00:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
+         to:from:from;
+        bh=QlmDVaRpqxxukroinxw3TPJxyM76gDhPC9ypTGUAIq4=;
+        b=xtQ7y135cx8t5EkkC0nUAPWeX3hcy1sfumg5qyLt2aA9a9M++qdmephxzHIhiMEhFD94mRNcfx9sX
+         4MXCDOxNMX9nGm6X1cqXH8j0Uxuu8N6EqYOi6n4DUf99ec2AwhTszry9zU96x/QoC0dvMiKybErnpD
+         P9tqCsoxK3hee0nA=
+X-HalOne-Cookie: 3c078f0ae0e520a51c24966b95c318af61496e8f
+X-HalOne-ID: 664b6b39-761e-11e9-abc4-d0431ea8bb10
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 664b6b39-761e-11e9-abc4-d0431ea8bb10;
+        Tue, 14 May 2019 08:00:55 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] serial: 8250: Add support for 8250/16550 as MFD function
+References: <20190426084038.6377-1-esben@geanix.com>
+        <20190426084038.6377-3-esben@geanix.com> <20190507114905.GB29524@dell>
+        <87o94ejwrx.fsf@haabendal.dk> <20190507133844.GA6194@dell>
+Date:   Tue, 14 May 2019 10:00:54 +0200
+In-Reply-To: <20190507133844.GA6194@dell> (Lee Jones's message of "Tue, 7 May
+        2019 14:38:44 +0100")
+Message-ID: <87bm05mpmx.fsf@haabendal.dk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190514070719.GD2589@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140058
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140058
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Lee Jones <lee.jones@linaro.org> writes:
 
-On 5/14/19 9:07 AM, Peter Zijlstra wrote:
-> On Mon, May 13, 2019 at 11:13:34AM -0700, Andy Lutomirski wrote:
->> On Mon, May 13, 2019 at 9:28 AM Alexandre Chartre
->> <alexandre.chartre@oracle.com> wrote:
-> 
->>> Actually, I am not sure this is effectively useful because the IRQ
->>> handler is probably faulting before it tries to exit isolation, so
->>> the isolation exit will be done by the kvm page fault handler. I need
->>> to check that.
->>>
->>
->> The whole idea of having #PF exit with a different CR3 than was loaded
->> on entry seems questionable to me.  I'd be a lot more comfortable with
->> the whole idea if a page fault due to accessing the wrong data was an
->> OOPS and the code instead just did the right thing directly.
-> 
-> So I've ran into this idea before; it basically allows a lazy approach
-> to things.
-> 
-> I'm somewhat conflicted on things, on the one hand, changing CR3 from
-> #PF is a natural extention in that #PF already changes page-tables (for
-> userspace / vmalloc etc..), on the other hand, there's a thin line
-> between being lazy and being sloppy.
-> 
-> If we're going down this route; I think we need a very coherent design
-> and strong rules.
-> 
+> On Tue, 07 May 2019, Esben Haabendal wrote:
+>
+>> Lee Jones <lee.jones@linaro.org> writes:
+>> 
+>> > On Fri, 26 Apr 2019, Esben Haabendal wrote:
+>> >
+>> >> The serial8250-mfd driver is for adding 8250/16550 UART ports as functions
+>> >> to an MFD driver.
+>> >> 
+>> >> When calling mfd_add_device(), platform_data should be a pointer to a
+>> >> struct plat_serial8250_port, with proper settings like .flags, .type,
+>> >> .iotype, .regshift and .uartclk.  Memory (or ioport) and IRQ should be
+>> >> passed as cell resources.
+>> >
+>> > What?  No, please!
+>> >
+>> > If you *must* create a whole driver just to be able to use
+>> > platform_*() helpers (which I don't think you should), then please
+>> > call it something else.  This doesn't have anything to do with MFD.
+>> 
+>> True.
+>> 
+>> I really don't think it is a good idea to create a whole driver just to
+>> be able to use platform_get_*() helpers.  And if I am forced to do this,
+>> because I am unable to convince Andy to improve the standard serial8250
+>> driver to support that, it should be called MFD.  The driver would be
+>
+> I assume you mean "shouldn't"?
 
-Right. We should particularly ensure that the KVM page-table remains a
-subset of the kernel page-table, in particular page-table changes (e.g.
-for vmalloc etc...) should happen in the kernel page-table and not in
-the kvm page-table.
+Of-course.
 
-So we should probably enforce switching to the kernel page-table when
-doing operation like vmalloc. The current code doesn't enforce it, but
-I can see it faulting, when doing any allocation (because the kvm page
-table doesn't have all structures used during an allocation).
+>> generally usable for all usecases where platform_get_*() works.
+>> 
+>> I don't have any idea what to call such a driver.  It really would just
+>> be a fork of the current serial8250 driver, just allowing use of
+>> platform_get_*(), supporting exactly the same hardware.
+>> 
+>> I am still hoping that we can find a way to improve serial8250 to be
+>> usable in these cases.
+>
+> Me too.
 
-alex.
+Unfortunately, I don't seem to be able to convince Andy to accept
+something like that.
+
+I might have to do this out-of-tree :(
+
+/Esben
