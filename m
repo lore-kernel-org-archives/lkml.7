@@ -2,116 +2,187 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E31C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2A5D206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1662147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfENNWr (ORCPT
+        id S1726221AbfENNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:22:47 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725854AbfENNWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:22:46 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id DDD84239182CBA24B421;
-        Tue, 14 May 2019 14:22:44 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 14 May
- 2019 14:22:39 +0100
-Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
-To:     prakhar srivastava <prsriva02@gmail.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <inux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Mimi Zohar <zohar@linux.ibm.com>,
-        <ebiederm@xmission.com>, <vgoyal@redhat.com>,
-        Prakhar Srivastava <prsriva@microsoft.com>
-References: <20190510223744.10154-1-prsriva02@gmail.com>
- <20190510223744.10154-3-prsriva02@gmail.com>
- <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com>
- <CAEFn8qJVvNivP6Lmx+nVewPcHjH=V2OrR_HyHR6nOeuVQW0A4w@mail.gmail.com>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <ec8ee6f7-3a1d-6498-e009-f85e677b448a@huawei.com>
-Date:   Tue, 14 May 2019 15:22:46 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Tue, 14 May 2019 09:22:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52845 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENNWx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 09:22:53 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y3so2878714wmm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:22:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=30MZy6w8/UHFwckByseMshUTKJ0XAaQAYBwkRUyEATg=;
+        b=OAbHBD6oSpON8YAunry6q0BMtvIM3sKt8MU91M7yt5nExRepww52P3VqLplvn9V4UM
+         BewP07unongasMNJdT4ejFmT7LxGdcbRSG32qqODUHRwYdY8hvM7vrgGvJvQAyGvQCHj
+         d4JK/81DmzmmuqfCjcKcN4CHM5ta7MFgfxpx8sPAIqrq2Mnrf+WJWf3qChBTBpT6rT2q
+         x4yBELKkKLWk/pzAguRGr7ASPgkLzRroYg8j0ksGwWRBlBISRll7XPiB/4fe2skE5QQc
+         5oe1uyRbZXLA6XBCWjohNBV9RTzD/MBtuOVgi9HnTn6BjNsQjWjAciA1DXsm2MUI4rDF
+         Mfsg==
+X-Gm-Message-State: APjAAAX3rywUvPrDX+twFq/XfPE3rEX5LxYQRZJaG78A/D7TdK8ri1ka
+        4fXpcvpdnv8fsnrcmyTyEFg+
+X-Google-Smtp-Source: APXvYqwC3BFcZP2L4DGiVRCHRXmxW9RKCIZlsYi2qXCsH8aM1VNcEqntfDgjJ/dMsnZG1ORhmCvuTA==
+X-Received: by 2002:a1c:a7cc:: with SMTP id q195mr11561566wme.53.1557840170835;
+        Tue, 14 May 2019 06:22:50 -0700 (PDT)
+Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
+        by smtp.gmail.com with ESMTPSA id k30sm4597150wrd.0.2019.05.14.06.22.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 06:22:50 -0700 (PDT)
+Date:   Tue, 14 May 2019 14:22:49 +0100
+From:   Aaron Tomlin <atomlin@redhat.com>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH RFC v2 3/4] mm/ksm: introduce force_madvise knob
+Message-ID: <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
+References: <20190514131654.25463-1-oleksandr@redhat.com>
+ <20190514131654.25463-4-oleksandr@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEFn8qJVvNivP6Lmx+nVewPcHjH=V2OrR_HyHR6nOeuVQW0A4w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190514131654.25463-4-oleksandr@redhat.com>
+X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
+X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
+User-Agent: NeoMutt/20180716-1637-ee8449
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/2019 7:07 AM, prakhar srivastava wrote:
-> On Mon, May 13, 2019 at 6:48 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->>
->> On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
->>> From: Prakhar Srivastava <prsriva02@gmail.com>
->>>
->>> The buffer(cmdline args) added to the ima log cannot be attested
->>> without having the actual buffer. Thus to make the measured buffer
->>> available to store/read a new ima template (buf) is added.
->>
->> Hi Prakhar
->>
->> please fix the typos. More comments below.
->>
->>
->>> +     buffer_event_data->type = IMA_XATTR_BUFFER;
->>> +     buffer_event_data->buf_length = size;
->>> +     memcpy(buffer_event_data->buf, buf, size);
->>> +
->>> +     event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
->>> +     event_data.xattr_len = alloc_length;
->>
->> I would prefer that you introduce two new fields in the ima_event_data
->> structure. You can initialize them directly with the parameters of
->> process_buffer_measurement().
-> I will make the edits, this will definitely save the kzalloc in this code
-> path.
->>
->> ima_write_template_field_data() will make
->> a copy.
->>
-> Since event_data->type is used to distinguish what the template field
->   should contain.
-> Removing the type and subsequent check in the template_init,
->   buf template fmt will result in the whole event_Data structure
-> being added to the log, which is not the expected output.
-> For buffer entries, the buf templet fmt will contains the buffer itself.
-
-The purpose of ima_event_data is to pass data to the init method of
-template fields. Each method takes the data it needs.
-
-If you pass event_data->buf and event_data->buf_len to
-ima_write_template_field_data() this should be fine.
-
-Roberto
-
-
->>> +      .field_show = ima_show_template_buf},
->>
->> Please update Documentation/security/IMA-templates.rst
-> Will update the documentation.
+On Tue 2019-05-14 15:16 +0200, Oleksandr Natalenko wrote:
+> Present a new sysfs knob to mark task's anonymous memory as mergeable.
 > 
-> Thanks,
-> Prakhar Srivastava
->>
->> Thanks
->>
->> Roberto
+> To force merging task's VMAs, its PID is echoed in a write-only file:
+> 
+>    # echo PID > /sys/kernel/mm/ksm/force_madvise
+> 
+> Force unmerging is done similarly, but with "minus" sign:
+> 
+>    # echo -PID > /sys/kernel/mm/ksm/force_madvise
+> 
+> "0" or "-0" can be used to control the current task.
+> 
+> To achieve this, previously introduced ksm_enter()/ksm_leave() helpers
+> are used in the "store" handler.
+> 
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> ---
+>  mm/ksm.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index e9f3901168bb..22c59fb03d3a 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -2879,10 +2879,77 @@ static void wait_while_offlining(void)
+>  
+>  #define KSM_ATTR_RO(_name) \
+>  	static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+> +#define KSM_ATTR_WO(_name) \
+> +	static struct kobj_attribute _name##_attr = __ATTR_WO(_name)
+>  #define KSM_ATTR(_name) \
+>  	static struct kobj_attribute _name##_attr = \
+>  		__ATTR(_name, 0644, _name##_show, _name##_store)
+>  
+> +static ssize_t force_madvise_store(struct kobject *kobj,
+> +				     struct kobj_attribute *attr,
+> +				     const char *buf, size_t count)
+> +{
+> +	int err;
+> +	pid_t pid;
+> +	bool merge = true;
+> +	struct task_struct *tsk;
+> +	struct mm_struct *mm;
+> +	struct vm_area_struct *vma;
+> +
+> +	err = kstrtoint(buf, 10, &pid);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	if (pid < 0) {
+> +		pid = abs(pid);
+> +		merge = false;
+> +	}
+> +
+> +	if (!pid && *buf == '-')
+> +		merge = false;
+> +
+> +	rcu_read_lock();
+> +	if (pid) {
+> +		tsk = find_task_by_vpid(pid);
+> +		if (!tsk) {
+> +			err = -ESRCH;
+> +			rcu_read_unlock();
+> +			goto out;
+> +		}
+> +	} else {
+> +		tsk = current;
+> +	}
+> +
+> +	tsk = tsk->group_leader;
+> +
+> +	get_task_struct(tsk);
+> +	rcu_read_unlock();
+> +
+> +	mm = get_task_mm(tsk);
+> +	if (!mm) {
+> +		err = -EINVAL;
+> +		goto out_put_task_struct;
+> +	}
+> +	down_write(&mm->mmap_sem);
+> +	vma = mm->mmap;
+> +	while (vma) {
+> +		if (merge)
+> +			ksm_enter(vma->vm_mm, vma, &vma->vm_flags);
+> +		else
+> +			ksm_leave(vma, vma->vm_start, vma->vm_end, &vma->vm_flags);
+> +		vma = vma->vm_next;
+> +	}
+> +	up_write(&mm->mmap_sem);
+> +	mmput(mm);
+> +
+> +out_put_task_struct:
+> +	put_task_struct(tsk);
+> +
+> +out:
+> +	return err ? err : count;
+> +}
+> +KSM_ATTR_WO(force_madvise);
+> +
+>  static ssize_t sleep_millisecs_show(struct kobject *kobj,
+>  				    struct kobj_attribute *attr, char *buf)
+>  {
+> @@ -3185,6 +3252,7 @@ static ssize_t full_scans_show(struct kobject *kobj,
+>  KSM_ATTR_RO(full_scans);
+>  
+>  static struct attribute *ksm_attrs[] = {
+> +	&force_madvise_attr.attr,
+>  	&sleep_millisecs_attr.attr,
+>  	&pages_to_scan_attr.attr,
+>  	&run_attr.attr,
+
+Looks fine to me.
+
+Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
 
 -- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+Aaron Tomlin
