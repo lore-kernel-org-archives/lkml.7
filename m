@@ -2,72 +2,177 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E37CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FA3C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5456B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3526320881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557869130;
-	bh=UZ4GiHlaes+DK9pTRaINLCCHnDA+gTfRjxFFWYfxM7A=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Z9tKoM36GVfGpjr1wmpzL8C8SAxdq4vBOl+HgYnfQ+NyTehLUn6hDRYafJx4xxGKO
-	 wcDgU351XwoXCIgiwkGw1ua+NAe6y1rO5YYnxq/k7rVZNTFBMpAWmPzZPpUqT1AbeD
-	 Vqdg1z049Olvr3yJ50826ltiP3GdJdp3ZMaGl2uM=
+	s=default; t=1557869246;
+	bh=U+VL0dmjNNUjKe+d6kYcn7aIVhPL50PNNaeV/TC21FQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DB3sIARSFyzPMYvoLdhIopyRLU0TysihvrJXPRG9aDnvszVGnker90ZEmv5ezfc6/
+	 Cn/cZvnfVr+6C2QKS6x4m4ZHOem66vQMzrRlECozjd4pr2ix+tnNGXQLpkxwGEuxGE
+	 tD3UP6mWiF5vdZHg2BzE0QU+7pjF5YwwrcayHIbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfENVZ3 (ORCPT
+        id S1726519AbfENV1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 17:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56056 "EHLO mail.kernel.org"
+        Tue, 14 May 2019 17:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfENVZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:25:29 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726089AbfENV1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 17:27:24 -0400
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5477C20850;
-        Tue, 14 May 2019 21:25:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA7FE20881
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 21:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557869128;
-        bh=UZ4GiHlaes+DK9pTRaINLCCHnDA+gTfRjxFFWYfxM7A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=in6s4kavbJOqz1htYNcOrmRgNhqbR7debNloGeI2j6UOlezuFCKfAmXN7F5c9pKYh
-         uskx6J3YJLPlJeih8oVt5Lw4Q3e7lrzehsr6+Wwm0nz95Kyyi6g1d5+nS7LASkZZ7Q
-         xvOsJhAsaMVwkubJO9XAemKPjMf8QHfxQN/hX+ws=
-Date:   Tue, 14 May 2019 14:25:27 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: don't expose page to fast gup before it's ready
-Message-Id: <20190514142527.356cb071155cd1077536f3da@linux-foundation.org>
-In-Reply-To: <20180109101050.GA83229@google.com>
-References: <20180108225632.16332-1-yuzhao@google.com>
-        <20180109084622.GF1732@dhcp22.suse.cz>
-        <20180109101050.GA83229@google.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1557869243;
+        bh=U+VL0dmjNNUjKe+d6kYcn7aIVhPL50PNNaeV/TC21FQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=a6H2YSuKARMMhuuyHhIETuYs0P9Hma1HC7HGG3sklOhmnxAG6Y5pCa/nRsCMTCPLj
+         go2cZg8eakBmy0wHq1QWXH+RUKVJ/Ap3MANt4xZFyXhriY/1X/+DSrSHN25hZgD6pD
+         I2m8bCQHMsmy+cMktNCXv0juM0A1Uyx2dlE1Fei8=
+Received: by mail-wm1-f50.google.com with SMTP id y3so523177wmm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 14:27:22 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/tsPet1LAqzyA7tRT8rSgQgtcXMp1vTGaNOfUhS/1mn7wIHQA
+        qB7Tt4A03UJ49+7b+O3Vak6RXq/knOn5zcG6/dI3nw==
+X-Google-Smtp-Source: APXvYqxpB0lfEwMBY12IfeBayJqHYi+DvgTtLpUsZzB7VGY5SMRDncmL1z76a/QBfT/NRZ3R8qPWx+Ybaxb3yYRUAvw=
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr21871063wmh.32.1557869241523;
+ Tue, 14 May 2019 14:27:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com> <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com> <20190514204527.GC1977@linux.intel.com>
+In-Reply-To: <20190514204527.GC1977@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 May 2019 14:27:08 -0700
+X-Gmail-Original-Message-ID: <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+Message-ID: <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 9 Jan 2018 02:10:50 -0800 Yu Zhao <yuzhao@google.com> wrote:
+On Tue, May 14, 2019 at 1:45 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
+> > On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
+> > > > I did study through SDK's file format and realized that it does not
+> > > > does make sense after all to embed one.
+> > > >
+> > > > To implement it properly you would probably need a new syscall (lets say
+> > > > sgx_load_enclave) and also that enclaves are not just executables
+> > > > binaries. It is hard to find a generic format for them as applications
+> > > > range from simply protecting part of an application to running a
+> > > > containter inside enclave.
+> > >
+> > > I'm still puzzling what kind of changes you were discussing considering
+> > > SGX_IOC_ENCLAVE_ADD_PAGE.
+> >
+> > I think it's as simple as requiring that, if SECINFO.X is set, then
+> > the src pointer points to the appropriate number of bytes of
+> > executable memory.  (Unless there's some way for an enclave to change
+> > SECINFO after the fact -- is there?)
+>
+> Nit: SECINFO is just the struct passed to EADD, I think what you're really
+> asking is "can the EPCM permissions be changed after the fact".
+>
+> And the answer is, yes.
+>
+> On SGX2 hardware, the enclave can extend the EPCM permissions at runtime
+> via ENCLU[EMODPE], e.g. to make a page writable.
+>
+> Hardware also doesn't prevent doing EADD to the same virtual address
+> multiple times, e.g. an enclave could EADD a RX page, and then EADD a
+> RW page at the same virtual address with different data.  The second EADD
+> will affect MRENCLAVE, but so long as it's accounted for by the enclave's
+> signer, it's "legal".  SGX_IOC_ENCLAVE_ADD_PAGE *does* prevent adding the
+> "same" page to an enclave multiple times, so effectively this scenario is
+> blocked by the current implementation, but it's more of a side effect (of
+> a sane implementation) as opposed to deliberately preventing shenanigans.
+>
+> Regarding EMODPE, the kernel doesn't rely on EPCM permissions in any way
+> shape or form (the EPCM permissions are purely to protect the enclave
+> from the kernel), e.g. adding +X to a page in the EPCM doesn't magically
+> change the kernel's page tables and attempting to execute from the page
+> will still generate a (non-SGX) #PF.
+>
+> So rather than check SECINFO.X, I think we'd want to have EADD check that
+> the permissions in SECINFO are a subset of the VMA's perms (IIUC, this is
+> essentially what Cedric proposed).  That would prevent using EMODPE to
+> gain executable permissions, and would explicitly deny the scenario of a
+> double EADD to load non-executable data into an executable page.
 
-> > Also what prevents reordering here? There do not seem to be any barriers
-> > to prevent __SetPageSwapBacked leak after set_pte_at with your patch.
-> 
-> I assumed mem_cgroup_commit_charge() acted as full barrier. Since you
-> explicitly asked the question, I realized my assumption doesn't hold
-> when memcg is disabled. So we do need something to prevent reordering
-> in my patch. And it brings up the question whether we want to add more
-> barrier to other places that call page_add_new_anon_rmap() and
-> set_pte_at().
+Let me make sure I'm understanding this correctly: when an enclave
+tries to execute code, it only works if *both* the EPCM and the page
+tables grant the access, right?  This seems to be that 37.3 is trying
+to say.  So we should probably just ignore SECINFO for these purposes.
 
-Is a new version of this patch planned?
+But thinking this all through, it's a bit more complicated than any of
+this.  Looking at the SELinux code for inspiration, there are quite a
+few paths, but they boil down to two cases: EXECUTE is the right to
+map an unmodified file executably, and EXECMOD/EXECMEM (the
+distinction seems mostly irrelevant) is the right to create (via mmap
+or mprotect) a modified anonymous file mapping or a non-file-backed
+mapping that is executable.  So, if we do nothing, then mapping an
+enclave with execute permission will require either EXECUTE on the
+enclave inode or EXECMOD/EXECMEM, depending on exactly how this gets
+set up.
+
+So all is well, sort of.  The problem is that I expect there will be
+people who want enclaves to work in a process that does not have these
+rights.  To make this work, we probably need do some surgery on
+SELinux.  ISTM the act of copying (via the EADD ioctl) data from a
+PROT_EXEC mapping to an enclave should not be construed as "modifying"
+the enclave for SELinux purposes.  Actually doing this could be
+awkward, since the same inode will have executable parts and
+non-executable parts, and SELinux can't really tell the difference.
+
+Maybe the enclave should track a bitmap of which pages have ever been
+either mapped for write or EADDed with a *source* that wasn't
+PROT_EXEC.  And then SELinux could learn to allow those pages (and
+only those pages) to be mapped executably without EXECUTE or EXECMOD
+or whatever permission.
+
+Does this seem at all reasonable?
+
+I suppose it's not the end of the world if the initially merged
+version doesn't do this, as long as there's some reasonable path to
+adding a mechanism like this when there's demand for it.
