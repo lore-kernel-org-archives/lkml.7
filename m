@@ -2,322 +2,179 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC79FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242FCC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6AE520850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF79420850
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfENRXe (ORCPT
+        id S1726960AbfENRZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:23:34 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:41760 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfENRXS (ORCPT
+        Tue, 14 May 2019 13:25:53 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:53733 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726574AbfENRZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:23:18 -0400
-Received: from gsql.ggedos.sk (off-20.infotel.telecom.sk [212.5.213.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id BED4D7A04E9;
-        Tue, 14 May 2019 19:23:16 +0200 (CEST)
-From:   Ondrej Zary <linux@zary.sk>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] fdomain: Resurrect driver (ISA support)
-Date:   Tue, 14 May 2019 19:23:09 +0200
-Message-Id: <20190514172309.12874-4-linux@zary.sk>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190514172309.12874-1-linux@zary.sk>
-References: <20190514172309.12874-1-linux@zary.sk>
+        Tue, 14 May 2019 13:25:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TRk4ZGG_1557854744;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TRk4ZGG_1557854744)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 15 May 2019 01:25:47 +0800
+Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     jstancek@redhat.com, peterz@infradead.org, namit@vmware.com,
+        minchan@kernel.org, mgorman@suse.de, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1557444414-12090-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190513163804.GB10754@fuggles.cambridge.arm.com>
+ <360170d7-b16f-f130-f930-bfe54be9747a@linux.alibaba.com>
+ <20190514145445.GB2825@fuggles.cambridge.arm.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <21905828-d08d-a9a7-5ff9-2383f4fdce0f@linux.alibaba.com>
+Date:   Tue, 14 May 2019 10:25:43 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190514145445.GB2825@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Future Domain 16xx ISA SCSI support card support.
 
-Tested on IBM 92F0330 card (18C50 chip) with v1.00 BIOS.
 
-Signed-off-by: Ondrej Zary <linux@zary.sk>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
----
- drivers/scsi/Kconfig       |  14 +++
- drivers/scsi/Makefile      |   1 +
- drivers/scsi/fdomain_isa.c | 222 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 237 insertions(+)
- create mode 100644 drivers/scsi/fdomain_isa.c
+On 5/14/19 7:54 AM, Will Deacon wrote:
+> On Mon, May 13, 2019 at 04:01:09PM -0700, Yang Shi wrote:
+>>
+>> On 5/13/19 9:38 AM, Will Deacon wrote:
+>>> On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
+>>>> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+>>>> index 99740e1..469492d 100644
+>>>> --- a/mm/mmu_gather.c
+>>>> +++ b/mm/mmu_gather.c
+>>>> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+>>>>    {
+>>>>    	/*
+>>>>    	 * If there are parallel threads are doing PTE changes on same range
+>>>> -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+>>>> -	 * flush by batching, a thread has stable TLB entry can fail to flush
+>>>> -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+>>>> -	 * forcefully if we detect parallel PTE batching threads.
+>>>> +	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
+>>>> +	 * flush by batching, one thread may end up seeing inconsistent PTEs
+>>>> +	 * and result in having stale TLB entries.  So flush TLB forcefully
+>>>> +	 * if we detect parallel PTE batching threads.
+>>>> +	 *
+>>>> +	 * However, some syscalls, e.g. munmap(), may free page tables, this
+>>>> +	 * needs force flush everything in the given range. Otherwise this
+>>>> +	 * may result in having stale TLB entries for some architectures,
+>>>> +	 * e.g. aarch64, that could specify flush what level TLB.
+>>>>    	 */
+>>>> -	if (mm_tlb_flush_nested(tlb->mm)) {
+>>>> -		__tlb_reset_range(tlb);
+>>>> -		__tlb_adjust_range(tlb, start, end - start);
+>>>> +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
+>>>> +		/*
+>>>> +		 * Since we can't tell what we actually should have
+>>>> +		 * flushed, flush everything in the given range.
+>>>> +		 */
+>>>> +		tlb->freed_tables = 1;
+>>>> +		tlb->cleared_ptes = 1;
+>>>> +		tlb->cleared_pmds = 1;
+>>>> +		tlb->cleared_puds = 1;
+>>>> +		tlb->cleared_p4ds = 1;
+>>>> +
+>>>> +		/*
+>>>> +		 * Some architectures, e.g. ARM, that have range invalidation
+>>>> +		 * and care about VM_EXEC for I-Cache invalidation, need force
+>>>> +		 * vma_exec set.
+>>>> +		 */
+>>>> +		tlb->vma_exec = 1;
+>>>> +
+>>>> +		/* Force vma_huge clear to guarantee safer flush */
+>>>> +		tlb->vma_huge = 0;
+>>>> +
+>>>> +		tlb->start = start;
+>>>> +		tlb->end = end;
+>>>>    	}
+>>> Whilst I think this is correct, it would be interesting to see whether
+>>> or not it's actually faster than just nuking the whole mm, as I mentioned
+>>> before.
+>>>
+>>> At least in terms of getting a short-term fix, I'd prefer the diff below
+>>> if it's not measurably worse.
+>> I did a quick test with ebizzy (96 threads with 5 iterations) on my x86 VM,
+>> it shows slightly slowdown on records/s but much more sys time spent with
+>> fullmm flush, the below is the data.
+>>
+>>                                      nofullmm                 fullmm
+>> ops (records/s)              225606                  225119
+>> sys (s)                            0.69                        1.14
+>>
+>> It looks the slight reduction of records/s is caused by the increase of sys
+>> time.
+> That's not what I expected, and I'm unable to explain why moving to fullmm
+> would /increase/ the system time. I would've thought the time spent doing
+> the invalidation would decrease, with the downside that the TLB is cold
+> when returning back to userspace.
+>
+> FWIW, I ran 10 iterations of ebizzy on my arm64 box using a vanilla 5.1
+> kernel and the numbers are all over the place (see below). I think
+> deducing anything meaningful from this benchmark will be a challenge.
 
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index f9d058a07e2a..2ea77dafbc00 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -684,6 +684,20 @@ config SCSI_FDOMAIN_PCI
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called fdomain_pci.
- 
-+config SCSI_FDOMAIN_ISA
-+	tristate "Future Domain 16xx ISA SCSI support"
-+	depends on ISA && SCSI
-+	select CHECK_SIGNATURE
-+	select SCSI_FDOMAIN
-+	help
-+	  This is support for Future Domain's 16-bit SCSI host adapters
-+	  (TMC-1660/1680, TMC-1650/1670, TMC-1610M/MER/MEX) and other adapters
-+	  with ISA bus based on the Future Domain chipsets (Quantum ISA-200S,
-+	  ISA-250MG; and at least one IBM board).
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called fdomain_isa.
-+
- config SCSI_GDTH
- 	tristate "Intel/ICP (former GDT SCSI Disk Array) RAID Controller support"
- 	depends on PCI && SCSI
-diff --git a/drivers/scsi/Makefile b/drivers/scsi/Makefile
-index f6cc4fbe6957..2e2cffff777d 100644
---- a/drivers/scsi/Makefile
-+++ b/drivers/scsi/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_SCSI_ISCI)		+= isci/
- obj-$(CONFIG_SCSI_IPS)		+= ips.o
- obj-$(CONFIG_SCSI_FDOMAIN)	+= fdomain.o
- obj-$(CONFIG_SCSI_FDOMAIN_PCI)	+= fdomain_pci.o
-+obj-$(CONFIG_SCSI_FDOMAIN_ISA)	+= fdomain_isa.o
- obj-$(CONFIG_SCSI_GENERIC_NCR5380) += g_NCR5380.o
- obj-$(CONFIG_SCSI_QLOGIC_FAS)	+= qlogicfas408.o	qlogicfas.o
- obj-$(CONFIG_PCMCIA_QLOGIC)	+= qlogicfas408.o
-diff --git a/drivers/scsi/fdomain_isa.c b/drivers/scsi/fdomain_isa.c
-new file mode 100644
-index 000000000000..bca5d56f12aa
---- /dev/null
-+++ b/drivers/scsi/fdomain_isa.c
-@@ -0,0 +1,222 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/module.h>
-+#include <linux/io.h>
-+#include <linux/isa.h>
-+#include <scsi/scsi_host.h>
-+#include "fdomain.h"
-+
-+#define MAXBOARDS_PARAM 4
-+static int io[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(io, int, ioport, NULL, 0);
-+MODULE_PARM_DESC(io, "base I/O address of controller (0x140, 0x150, 0x160, 0x170)");
-+
-+static int irq[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(irq, int, irq, NULL, 0);
-+MODULE_PARM_DESC(irq, "IRQ of controller (0=auto [default])");
-+
-+static int scsi_id[MAXBOARDS_PARAM] = { 0, 0, 0, 0 };
-+module_param_hw_array(scsi_id, int, other, NULL, 0);
-+MODULE_PARM_DESC(scsi_id, "SCSI ID of controller (default = 7)");
-+
-+static unsigned long addresses[] = {
-+	0xc8000,
-+	0xca000,
-+	0xce000,
-+	0xde000,
-+};
-+#define ADDRESS_COUNT ARRAY_SIZE(addresses)
-+
-+static unsigned short ports[] = { 0x140, 0x150, 0x160, 0x170 };
-+#define PORT_COUNT ARRAY_SIZE(ports)
-+
-+static unsigned short irqs[] = { 3, 5, 10, 11, 12, 14, 15, 0 };
-+
-+/* This driver works *ONLY* for Future Domain cards using the TMC-1800,
-+ * TMC-18C50, or TMC-18C30 chip.  This includes models TMC-1650, 1660, 1670,
-+ * and 1680. These are all 16-bit cards.
-+ * BIOS versions prior to 3.2 assigned SCSI ID 6 to SCSI adapter.
-+ *
-+ * The following BIOS signature signatures are for boards which do *NOT*
-+ * work with this driver (these TMC-8xx and TMC-9xx boards may work with the
-+ * Seagate driver):
-+ *
-+ * FUTURE DOMAIN CORP. (C) 1986-1988 V4.0I 03/16/88
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V5.0C2/14/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1989 V6.0A7/28/89
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0105/31/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V6.0209/18/90
-+ * FUTURE DOMAIN CORP. (C) 1986-1990 V7.009/18/90
-+ * FUTURE DOMAIN CORP. (C) 1992 V8.00.004/02/92
-+ *
-+ * (The cards which do *NOT* work are all 8-bit cards -- although some of
-+ * them have a 16-bit form-factor, the upper 8-bits are used only for IRQs
-+ * and are *NOT* used for data. You can tell the difference by following
-+ * the tracings on the circuit board -- if only the IRQ lines are involved,
-+ * you have a "8-bit" card, and should *NOT* use this driver.)
-+ */
-+
-+static struct signature {
-+	const char *signature;
-+	int offset;
-+	int length;
-+	int this_id;
-+	int base_offset;
-+} signatures[] = {
-+/*          1         2         3         4         5         6 */
-+/* 123456789012345678901234567890123456789012345678901234567890 */
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89",	 5, 50,  6, 0x1fcc },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V1.07/28/89",	 5, 50,  6, 0x1fcc },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.07/28/89", 72, 50,  6, 0x1fa2 },
-+{ "FUTURE DOMAIN CORP. (C) 1986-1990 1800-V2.0",	73, 43,  6, 0x1fa2 },
-+{ "FUTURE DOMAIN CORP. (C) 1991 1800-V2.0.",		72, 39,  6, 0x1fa3 },
-+{ "FUTURE DOMAIN CORP. (C) 1992 V3.00.004/02/92",	 5, 44,  6, 0 },
-+{ "FUTURE DOMAIN TMC-18XX (C) 1993 V3.203/12/93",	 5, 44,  7, 0 },
-+{ "IBM F1 P2 BIOS v1.0011/09/92",			 5, 28,  7, 0x1ff3 },
-+{ "IBM F1 P2 BIOS v1.0104/29/93",			 5, 28,  7, 0 },
-+{ "Future Domain Corp. V1.0008/18/93",			 5, 33,  7, 0 },
-+{ "Future Domain Corp. V2.0108/18/93",			 5, 33,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.5008/18/93",			 5, 34,  7, 0 },
-+{ "FUTURE DOMAIN 18c30/18c50/1800 (C) 1994 V3.5",	 5, 44,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6008/18/93",			 5, 34,  7, 0 },
-+{ "FUTURE DOMAIN CORP.  V3.6108/18/93",			 5, 34,  7, 0 },
-+};
-+#define SIGNATURE_COUNT ARRAY_SIZE(signatures)
-+
-+static int fdomain_isa_match(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh;
-+	int i, base = 0, irq = 0;
-+	unsigned long bios_base = 0;
-+	struct signature *sig = NULL;
-+	void __iomem *p;
-+	static struct signature *saved_sig;
-+	int this_id = 7;
-+
-+	if (ndev < ADDRESS_COUNT) {	/* scan supported ISA BIOS addresses */
-+		p = ioremap(addresses[ndev], FDOMAIN_BIOS_SIZE);
-+		if (!p)
-+			return 0;
-+		for (i = 0; i < SIGNATURE_COUNT; i++)
-+			if (check_signature(p + signatures[i].offset,
-+					    signatures[i].signature,
-+					    signatures[i].length))
-+				break;
-+		if (i == SIGNATURE_COUNT)	/* no signature found */
-+			goto fail_unmap;
-+		sig = &signatures[i];
-+		bios_base = addresses[ndev];
-+		/* read I/O base from BIOS area */
-+		if (sig->base_offset)
-+			base = readb(p + sig->base_offset) +
-+			      (readb(p + sig->base_offset + 1) << 8);
-+		iounmap(p);
-+		if (base)
-+			dev_info(dev, "BIOS at 0x%lx specifies I/O base 0x%x\n",
-+				 bios_base, base);
-+		else
-+			dev_info(dev, "BIOS at 0x%lx\n", bios_base);
-+		if (!base) {	/* no I/O base in BIOS area */
-+			/* save BIOS signature for later use in port probing */
-+			saved_sig = sig;
-+			return 0;
-+		}
-+	} else	/* scan supported I/O ports */
-+		base = ports[ndev - ADDRESS_COUNT];
-+
-+	/* use saved BIOS signature if present */
-+	if (!sig && saved_sig)
-+		sig = saved_sig;
-+
-+	if (!request_region(base, FDOMAIN_REGION_SIZE, "fdomain_isa"))
-+		return 0;
-+
-+	irq = irqs[(inb(base + Configuration1) & 0x0e) >> 1];
-+
-+
-+	if (sig)
-+		this_id = sig->this_id;
-+
-+	sh = fdomain_create(base, irq, this_id, dev);
-+	if (!sh) {
-+		release_region(base, FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
-+
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+fail_unmap:
-+	iounmap(p);
-+	return 0;
-+}
-+
-+static int fdomain_isa_param_match(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh;
-+	int irq_ = irq[ndev];
-+
-+	if (!io[ndev])
-+		return 0;
-+
-+	if (!request_region(io[ndev], FDOMAIN_REGION_SIZE, "fdomain_isa")) {
-+		dev_err(dev, "base 0x%x already in use", io[ndev]);
-+		return 0;
-+	}
-+
-+	if (irq_ <= 0)
-+		irq_ = irqs[(inb(io[ndev] + Configuration1) & 0x0e) >> 1];
-+
-+	sh = fdomain_create(io[ndev], irq_, scsi_id[ndev], dev);
-+	if (!sh) {
-+		dev_err(dev, "controller not found at base 0x%x", io[ndev]);
-+		release_region(io[ndev], FDOMAIN_REGION_SIZE);
-+		return 0;
-+	}
-+
-+	dev_set_drvdata(dev, sh);
-+	return 1;
-+}
-+
-+static int fdomain_isa_remove(struct device *dev, unsigned int ndev)
-+{
-+	struct Scsi_Host *sh = dev_get_drvdata(dev);
-+	int base = sh->io_port;
-+
-+	fdomain_destroy(sh);
-+	release_region(base, FDOMAIN_REGION_SIZE);
-+	dev_set_drvdata(dev, NULL);
-+	return 0;
-+}
-+
-+static struct isa_driver fdomain_isa_driver = {
-+	.match		= fdomain_isa_match,
-+	.remove		= fdomain_isa_remove,
-+	.driver = {
-+		.name	= "fdomain_isa",
-+		.pm	= FDOMAIN_PM_OPS,
-+	},
-+};
-+
-+static int __init fdomain_isa_init(void)
-+{
-+	int isa_probe_count = ADDRESS_COUNT + PORT_COUNT;
-+
-+	if (io[0]) {	/* use module parameters if present */
-+		fdomain_isa_driver.match = fdomain_isa_param_match;
-+		isa_probe_count = MAXBOARDS_PARAM;
-+	}
-+
-+	return isa_register_driver(&fdomain_isa_driver, isa_probe_count);
-+}
-+
-+static void __exit fdomain_isa_exit(void)
-+{
-+	isa_unregister_driver(&fdomain_isa_driver);
-+}
-+
-+module_init(fdomain_isa_init);
-+module_exit(fdomain_isa_exit);
-+
-+MODULE_AUTHOR("Ondrej Zary, Rickard E. Faith");
-+MODULE_DESCRIPTION("Future Domain TMC-16x0 ISA SCSI driver");
-+MODULE_LICENSE("GPL");
--- 
-Ondrej Zary
+Yes, it looks so. What else benchmark do you suggest?
+
+>
+> Will
+>
+> --->8
+>
+> 306090 records/s
+> real 10.00 s
+> user 1227.55 s
+> sys   0.54 s
+> 323547 records/s
+> real 10.00 s
+> user 1262.95 s
+> sys   0.82 s
+> 409148 records/s
+> real 10.00 s
+> user 1266.54 s
+> sys   0.94 s
+> 341507 records/s
+> real 10.00 s
+> user 1263.49 s
+> sys   0.66 s
+> 375910 records/s
+> real 10.00 s
+> user 1259.87 s
+> sys   0.82 s
+> 376152 records/s
+> real 10.00 s
+> user 1265.76 s
+> sys   0.96 s
+> 358862 records/s
+> real 10.00 s
+> user 1251.13 s
+> sys   0.72 s
+> 358164 records/s
+> real 10.00 s
+> user 1243.48 s
+> sys   0.85 s
+> 332148 records/s
+> real 10.00 s
+> user 1260.93 s
+> sys   0.70 s
+> 367021 records/s
+> real 10.00 s
+> user 1264.06 s
+> sys   1.43 s
 
