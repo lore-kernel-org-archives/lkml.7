@@ -2,98 +2,137 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32169C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC49C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053D8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:07:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fj8Pr4HG"
+	by mail.kernel.org (Postfix) with ESMTP id 4EA11208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557817721;
+	bh=o+Vkk3LBE6/pL/wtJXU8wADpeJGCXpYZzZkDMYnD/VM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UMbUnhrK4rVS9YazubNka5auU5URJ/wz0bh/wEhjveSqV1qYt7VrjwmkBkbsk28Hj
+	 inlrNQxgF/xtpFr7U1pxDfes+00vTwjHyA0d+vhbv4XYZpWkPPOuKFIrlO3/zutzAV
+	 +fu19zNFDFIBH9ha6OLZa3varNc55zHgtL/Fqd9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfENHHm (ORCPT
+        id S1726565AbfENHIk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:07:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:34236 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfENHHl (ORCPT
+        Tue, 14 May 2019 03:08:40 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41864 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbfENHIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:07:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bnleR30QPIQpq+EFwBkF6XZjkSnpThngrZ0Pg3kgcGM=; b=fj8Pr4HGZz0EffcR3mMIilbKU
-        fw2M4dJTleSkNrTFwvh8Xs0jEjW3csUzM6UlbkmE+h4NJSbyN1qXkhAjKCTsO61cTx+t8imqrXN8S
-        0rQ6trjzcgY+Ek1FpZg4xVOto/iAuNkyo2qkztLhyrNP7BQdtcOmzL0dqS9biIpCkVAZyFIF27KIq
-        i59RJMm8ZVxQAWKjZk0Egm7j5WlaJRcSVPUVls0HDAmaHtOJzuXORnbslZy/3esomWW5W3XaQ5fMa
-        kgMziZKLho0llyMphjzIedWd+CVfi8S5JmkjDx1A4voaVaOPz2muFlfyL9z/18kaC3Y9VpXA9rT9k
-        KABV+JT4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQRX0-00063G-SZ; Tue, 14 May 2019 07:07:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E3F802029F87A; Tue, 14 May 2019 09:07:19 +0200 (CEST)
-Date:   Tue, 14 May 2019 09:07:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Subject: Re: [RFC KVM 06/27] KVM: x86: Exit KVM isolation on IRQ entry
-Message-ID: <20190514070719.GD2589@hirez.programming.kicks-ass.net>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-7-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrUzAjUFGd=xZRmCbyLfvDgC_WbPYyXB=OznwTkcV-PKNw@mail.gmail.com>
- <64c49aa6-e7f2-4400-9254-d280585b4067@oracle.com>
- <CALCETrUd2UO=+JOb_008mGbPdfW5YJgQyw5H7D_CxOgaWv=gxw@mail.gmail.com>
+        Tue, 14 May 2019 03:08:39 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k8so13259158lja.8;
+        Tue, 14 May 2019 00:08:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iS06kB5ZsaBvWO7SzJ2wNbRcRRxjQq61l0eGaYMLlY4=;
+        b=C7INfTl+sLIBTqFzuyD3AGgq2AzgLe1KNFOo9RSqXv3QzIuZzSahNn+TjQVKrtjf4U
+         Nx6woRk+8cZGARrOQBmv+kyNgfV5KL1VXGIhGi4ZLmhSMUvJSvSjkpfI+7H/yWtCvHQZ
+         tsbdmOq3rfEh7zIyhzUL5Ff9acIbxgS20giU0qVPBOJ8nBhHm/Dfmi1FVxJjy4Hc0wDp
+         pz+EXrfLsifY/lLpeOazgVFljR2v3i9hQGO7J+GG15EVxHq8azoptqXokg7mc1qEW9uu
+         rjaMdUizWpemB6XaI2muT/b5wVvbTyEYOQvAMzabsXf/Lou/hE4RVKCPccdXUuzNaHDj
+         pv/g==
+X-Gm-Message-State: APjAAAWr6esQLBBmTwyUEsNa7RFgkAKrDBufvUTJ4hRliPyUppioLaRs
+        2c+ZS1ELH2z556HoMLId3Zo=
+X-Google-Smtp-Source: APXvYqwejSvY0LujlCMKwCpvdJbpE/kk14WTjcpUwVa1O8v9+OBhLFqlPuwjADSNcsmW23aZr3Dp7Q==
+X-Received: by 2002:a2e:730c:: with SMTP id o12mr12659075ljc.61.1557817717250;
+        Tue, 14 May 2019 00:08:37 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id b28sm3712702lfj.37.2019.05.14.00.08.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 00:08:36 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hQRY7-00011s-Rg; Tue, 14 May 2019 09:08:31 +0200
+Date:   Tue, 14 May 2019 09:08:31 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        Peter Korsgaard <jacmet@sunsite.dk>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] tty: serial: uartlite: avoid null pointer dereference
+ during rmmod
+Message-ID: <20190514070831.GH9651@localhost>
+References: <20190514033219.169947-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrUd2UO=+JOb_008mGbPdfW5YJgQyw5H7D_CxOgaWv=gxw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190514033219.169947-1-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 11:13:34AM -0700, Andy Lutomirski wrote:
-> On Mon, May 13, 2019 at 9:28 AM Alexandre Chartre
-> <alexandre.chartre@oracle.com> wrote:
-
-> > Actually, I am not sure this is effectively useful because the IRQ
-> > handler is probably faulting before it tries to exit isolation, so
-> > the isolation exit will be done by the kvm page fault handler. I need
-> > to check that.
-> >
+On Tue, May 14, 2019 at 11:32:19AM +0800, Kefeng Wang wrote:
+> After commit 415b43bdb008 "tty: serial: uartlite: Move uart register to
+> probe", calling uart_unregister_driver unconditionally will trigger a
+> null pointer dereference due to ulite_uart_driver may not registed.
 > 
-> The whole idea of having #PF exit with a different CR3 than was loaded
-> on entry seems questionable to me.  I'd be a lot more comfortable with
-> the whole idea if a page fault due to accessing the wrong data was an
-> OOPS and the code instead just did the right thing directly.
+>   CPU: 1 PID: 3755 Comm: syz-executor.0 Not tainted 5.1.0+ #28
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+>   Call Trace:
+>    __dump_stack lib/dump_stack.c:77 [inline]
+>    dump_stack+0xa9/0x10e lib/dump_stack.c:113
+>    __kasan_report+0x171/0x18d mm/kasan/report.c:321
+>    kasan_report+0xe/0x20 mm/kasan/common.c:614
+>    tty_unregister_driver+0x19/0x100 drivers/tty/tty_io.c:3383
+>    uart_unregister_driver+0x30/0xc0 drivers/tty/serial/serial_core.c:2579
+>    __do_sys_delete_module kernel/module.c:1027 [inline]
+>    __se_sys_delete_module kernel/module.c:970 [inline]
+>    __x64_sys_delete_module+0x244/0x330 kernel/module.c:970
+>    do_syscall_64+0x72/0x2a0 arch/x86/entry/common.c:298
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Call uart_unregister_driver only if ulite_uart_driver.state not null to
+> fix it.
+> 
+> Cc: Peter Korsgaard <jacmet@sunsite.dk>
+> Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 415b43bdb008 ("tty: serial: uartlite: Move uart register to probe")
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/tty/serial/uartlite.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
+> index b8b912b5a8b9..06e79c11141d 100644
+> --- a/drivers/tty/serial/uartlite.c
+> +++ b/drivers/tty/serial/uartlite.c
+> @@ -897,7 +897,8 @@ static int __init ulite_init(void)
+>  static void __exit ulite_exit(void)
+>  {
+>  	platform_driver_unregister(&ulite_platform_driver);
+> -	uart_unregister_driver(&ulite_uart_driver);
+> +	if (ulite_uart_driver.state)
+> +		uart_unregister_driver(&ulite_uart_driver);
+>  }
+>  
+>  module_init(ulite_init);
 
-So I've ran into this idea before; it basically allows a lazy approach
-to things.
+This looks like you're just papering over the real issue, which is the
+crazy idea of ultimately registering one driver per port:
 
-I'm somewhat conflicted on things, on the one hand, changing CR3 from
-#PF is a natural extention in that #PF already changes page-tables (for
-userspace / vmalloc etc..), on the other hand, there's a thin line
-between being lazy and being sloppy.
+	https://lkml.kernel.org/r/1539685088-13465-1-git-send-email-shubhrajyoti.datta@gmail.com
 
-If we're going down this route; I think we need a very coherent design
-and strong rules.
+It appears only the preparatory patches from that series were applied,
+and I think whoever is responsible should consider reverting those
+instead.
+
+If the statically allocated port state is that big of any issue, you
+need to make serial core support dynamic allocation.
+
+Johan
