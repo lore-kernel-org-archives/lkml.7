@@ -2,133 +2,98 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 975EBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34FFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B4D6206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:25:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQyJklXn"
+	by mail.kernel.org (Postfix) with ESMTP id 6EF0F206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:26:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557876390;
+	bh=hAH8vKz0SbQIdYNHsX3PVV+sy/lDevsJ/oN8uqEq6yw=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=l/C/ozIFSVV+TUvj9I9RpzlJUNoZY+Mq+HKvSsm5x0TXvGAKtkXggxg9yREewjXyk
+	 6tdsSYXL+jsJgr7Un3EIs40M1rt8ButtAfV6Rd/TeKg0mFMUNTTIRX6i3lN0TDDXVQ
+	 3FatYMoS1GDPBJVyc6lT0/AZB63X84PAGRaDLW3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfENXZO (ORCPT
+        id S1726739AbfENX03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:25:14 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36365 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfENXZN (ORCPT
+        Tue, 14 May 2019 19:26:29 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:37943 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfENX02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:25:13 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so330961pgb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:25:13 -0700 (PDT)
+        Tue, 14 May 2019 19:26:28 -0400
+Received: by mail-it1-f194.google.com with SMTP id i63so1595990ita.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4Jy0W2AOE8X2G5DhaX0aRTRku/ISFojI4Jx+xxzmku0=;
-        b=MQyJklXnbo6c96JLKB7QksEJHkSpFBHsrJS476t6XQjCpcmGuNq+IaehI46rq7cwoT
-         5/83MudsTcPwLAbJQi+E/WmVnctS8ig6t3ILH9hcfgEVCDySDpa/WBKmvGuT+TW4+eQ/
-         S0mwkFbAjmxc5fsPkl2wQBiW7k+GUPaiQJ2GyWSoGs0PuW8MdgL5cUCvBhefg1tJKEs1
-         qTdCbxKYYLs1akDBll4MhMba7K4eHfr7lI87DpyzfvZwtlscx4zjYkzIKYzvyEhxi2i1
-         yOVJ7B7mk2BP2yJFkPIlDEqeXR3rL1YA08yj2q7YWAYVfzf7Fawslh7NINITcHYKajd3
-         6xGA==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=hAH8vKz0SbQIdYNHsX3PVV+sy/lDevsJ/oN8uqEq6yw=;
+        b=I8ZpdsRXDFIYfpwTIovojf2MqVTACOwVs8NPzhyQ3cT6+XLE6pCDc49kf1DxgNkDcM
+         Qxra2yyjtj5UJ6+Oy+FxmLZ4tt9bMzPTyxVqhDWSAqs+48nK/c/+wn9KXSlL5ByTCqI/
+         3Oa2/DpHvuerMiZgrzfb1DE9FYEXtBa6MnGzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Jy0W2AOE8X2G5DhaX0aRTRku/ISFojI4Jx+xxzmku0=;
-        b=HlwEQhOVzxDpzfGjn6ZqKTqo9DBSpEKVP3XS/N73FtZncpbev8GPqkCIGJgqLpNEvE
-         GmgGHq/oQuLYlMmfAn7PEMGJaA/OkrUROoKTwl8wcdICJWvDZ+S5BWpYv6Lp+A36msDk
-         XKj2ce+xCxucWKubhpl6pH29J1Jxo1Pegt2WGAp7FJCgwsMGHxvwFzGjnYnbiw9THQtH
-         +MLaKRG0XBrmWUycijR3FFUAqDo/hG83jRoyZs8LWePpeVkvaWEYGK3MOX9HqG/RaTsa
-         9KK6zpRmhDZ1eVBoBD553/Ym/Dw4J/RsP5GDsrYLX4XAsaIIKYZDtBRT2zGvkoW3VhPC
-         41Yw==
-X-Gm-Message-State: APjAAAXprAKItfsREzN1FUA+sglSIz5gL8M3LhpXkmkXwKQRVPM388b1
-        atVy8tyQrYyVzDkhO5moMmHkjQ==
-X-Google-Smtp-Source: APXvYqwFT36xTe7xIV4JHHBk0GWoU89u5XYlVl2IpbZ1GuRL1xHoENSFO5jHtT0PWOMWGfK71tbjWA==
-X-Received: by 2002:a62:6585:: with SMTP id z127mr4445645pfb.179.1557876312369;
-        Tue, 14 May 2019 16:25:12 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id 2sm205811pgc.49.2019.05.14.16.25.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 16:25:11 -0700 (PDT)
-Date:   Tue, 14 May 2019 16:25:06 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v4 16/18] MAINTAINERS: add entry for KUnit the unit
- testing framework
-Message-ID: <20190514232506.GA16788@google.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com>
- <20190514221711.248228-17-brendanhiggins@google.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hAH8vKz0SbQIdYNHsX3PVV+sy/lDevsJ/oN8uqEq6yw=;
+        b=rzOFFqqkFbma0zL5pG8PwPJ7hXWiX+v0lH5h/dFmHZbncKhvES5wzmWc5VoD1qsfV1
+         JfFYgDZEAIzHGUGJvnjnCWB9YsyzBKV2iogfD+lRIOBog5yZnB25HqF6Z5fk65zC4NTL
+         Jxmm76mi1Rz7aXnb9NYIqXrL5kbanhkHPOGpS/vv0ZOFQtxk9bKF6EFjB//t9oj/uf8Q
+         lFgcNHiyn3wW3ZpuDBfIJRt2OFf36yGuQthS0YIcEgrcleI/jzMqCNkW8Yo4CCVqfgIh
+         hhv2uWn7ellDrJZG9tYuajyC2RStcLrCsxY8dLQc4Wm1BW/o1C7+0CGP5aNsbc3VYsaa
+         /m1Q==
+X-Gm-Message-State: APjAAAWHy+wiQux8UukpsLH/KpWIACn6vJCZE6Rd59Qg8isAGILdekzm
+        H5diFF88pKsjYa1gpWO0lKYjKA==
+X-Google-Smtp-Source: APXvYqzz6wjr9rR0dcKYuIVtWRoyozIhVyv4pYB/pl9MYSqdpK8hRSYr6da+BpfHKegAj/ZOi72jzQ==
+X-Received: by 2002:a24:5fc2:: with SMTP id r185mr6436229itb.43.1557876387377;
+        Tue, 14 May 2019 16:26:27 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id s10sm126380iob.29.2019.05.14.16.26.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 16:26:26 -0700 (PDT)
+Subject: Re: [PATCH] selftests: pidfd: Create .gitignore to include pidfd_test
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+References: <20190512045711.4507-1-skunberg.kelsey@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f0f3c65d-2b1f-3633-ee18-7d49d18eb7a5@linuxfoundation.org>
+Date:   Tue, 14 May 2019 17:26:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514221711.248228-17-brendanhiggins@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190512045711.4507-1-skunberg.kelsey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:17:09PM -0700, Brendan Higgins wrote:
-> Add myself as maintainer of KUnit, the Linux kernel's unit testing
-> framework.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> ---
->  MAINTAINERS | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 2c2fce72e694f..8a91887c8d541 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8448,6 +8448,17 @@ S:	Maintained
->  F:	tools/testing/selftests/
->  F:	Documentation/dev-tools/kselftest*
->  
-> +KERNEL UNIT TESTING FRAMEWORK (KUnit)
-> +M:	Brendan Higgins <brendanhiggins@google.com>
-> +L:	linux-kselftest@vger.kernel.org
-> +L:	kunit-dev@googlegroups.com
-> +W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
-> +S:	Maintained
-> +F:	Documentation/kunit/
+Hi Kelsey,
 
-Dang it! I forgot to update the documentation path...
+On 5/11/19 10:57 PM, Kelsey Skunberg wrote:
+> Create /selftests/pidfd/.gitignore which holds the following file name
+> created after compiling:
 
-Will fix in next revision.
+This patch generates the following checkpatch warning.
 
-> +F:	include/kunit/
-> +F:	kunit/
-> +F:	tools/testing/kunit/
-> +
->  KERNEL USERMODE HELPER
->  M:	Luis Chamberlain <mcgrof@kernel.org>
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+WARNING: use relative pathname instead of absolute in changelog text
+#85:
+Create /selftests/drivers/.gitignore which holds the following file name
+
+
+I fixed it and applied the patch. Please make sure to run checkpatch
+before sending patches in the future.
+
+thanks,
+-- Shuah
