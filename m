@@ -2,137 +2,335 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC59CC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2610C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BA8208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AE9F2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="DzOCZYsw";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="D4NfohFd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmQgrtf6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfENKtY (ORCPT
+        id S1726349AbfENKyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:49:24 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:49946 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725893AbfENKtY (ORCPT
+        Tue, 14 May 2019 06:54:13 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40114 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfENKyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:49:24 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EAiV4F005903;
-        Tue, 14 May 2019 03:49:15 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=pfpt0818; bh=Rg6MXqva/u54PKsPFhJCWi1wvx8DobFjs6n97uiobds=;
- b=DzOCZYswUY/RZLJHTO09o9vWui2wI33TSJ+MYAPcy7JBVORsh0tnDRZ7Xn3sPf1U5xJQ
- Vz4QueMJpR80lcCqpZ/wPJJDUBGtPc5suM6EZJdA3jPweZsZIP7BVK0E9WnI3kbuvGMV
- DYy3U20MHqZhPjJnhE1xDhOoY1ImaEJ8pVP6YdsPMF6lhRZFRb8DgRTwOmQDoY9aOHe2
- 7VjFIRR+hQKjb/WLS8lj/ddI0lO1DcBWy/pfX42pQE3+4ME0GsSoHk0mlDATZc6UWhj2
- eqRD7fawmbZDgnAaq1/Y+OFM9NCmva05+NsU0uMFmV6Q4ngd7v2eKpUUH5kucQ4kBpEX mw== 
-Received: from sc-exch04.marvell.com ([199.233.58.184])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2sfmjxhvur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 14 May 2019 03:49:14 -0700
-Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH04.marvell.com
- (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 14 May
- 2019 03:49:13 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.56) by
- SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 14 May 2019 03:49:13 -0700
+        Tue, 14 May 2019 06:54:12 -0400
+Received: by mail-lf1-f68.google.com with SMTP id h13so11487864lfc.7;
+        Tue, 14 May 2019 03:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rg6MXqva/u54PKsPFhJCWi1wvx8DobFjs6n97uiobds=;
- b=D4NfohFdrndf+sGQWfjdrB5GFMIorVEBpix01juosJ2peKBsO6KtkVR5w7q6fA4mleNWXGOzaHzmPlZySjaVc2Pr1+EMBlTXctGmRYvzt0KKxXYCYhKo3TJx+wGxX/uAi4bfDaVjocS0lwUg9UIKCPCPf4qY1Qc05Ib89mn/3AM=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.238.217) by
- MN2PR18MB3087.namprd18.prod.outlook.com (20.179.20.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.20; Tue, 14 May 2019 10:49:09 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::7147:4fd1:1542:6b30]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::7147:4fd1:1542:6b30%4]) with mapi id 15.20.1878.024; Tue, 14 May 2019
- 10:49:09 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-CC:     Robert Richter <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] EDAC, mc: Fix edac_mc_find() in case no device is found
-Thread-Topic: [PATCH v2] EDAC, mc: Fix edac_mc_find() in case no device is
- found
-Thread-Index: AQHVCkKo5PKK2ZFcyECIGexDLr7k0A==
-Date:   Tue, 14 May 2019 10:49:09 +0000
-Message-ID: <20190514104838.15065-1-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR0402CA0014.eurprd04.prod.outlook.com
- (2603:10a6:203:90::24) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:16c::25)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [78.54.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 321b8527-e652-4dd0-e3d4-08d6d859cad6
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR18MB3087;
-x-ms-traffictypediagnostic: MN2PR18MB3087:
-x-microsoft-antispam-prvs: <MN2PR18MB308706F46D27E4C667CF99AAD9080@MN2PR18MB3087.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(39860400002)(366004)(346002)(189003)(199004)(54906003)(2906002)(86362001)(66066001)(6486002)(99286004)(6436002)(71200400001)(110136005)(14454004)(71190400001)(3846002)(6116002)(102836004)(478600001)(6506007)(386003)(52116002)(53936002)(26005)(25786009)(8936002)(316002)(14444005)(256004)(305945005)(7736002)(66556008)(66476007)(81166006)(64756008)(66446008)(66946007)(50226002)(73956011)(81156014)(36756003)(8676002)(486006)(186003)(5660300002)(6512007)(1076003)(4326008)(476003)(2616005)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3087;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yCzXOkiteNPU60UgMe9lienWgyOecyUk2FdumiweKk+8SM/pneGu+pjU+wBYCd10djUTkiSEpRFBrdvRcU+Vyvbq0IY+V4hBZz4acr3XtlSG2++RF3Szw0tIlscMl3p63n3TGhMk1zzRoXDyn0EUgeT8fuFN4eVcdw2vJpHl49e75+cj85F5GhqNhQIOt71m3saGA5OB2HvqgcFor2zkpefRoBCKtMALMxTof4ZrGdGFQ8dE20wGz1fdmkpiZOPbqob6XGLKl7jx3QjTgGJWoUk1+t35sJKjWqphCJMuaZZinn5asT/Xm2HR8ffQIuAovNUAsde3bMt5L0ltS3dwBEtY4MIl1Mhm9GfeUBBdc5qDGSGDaTRNWRfcNUYnf1XmVeUmZTiqIPkf3j3Tv1YsQyGo+fjz4v/tjmo6pmMrvoA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5gCf64f1i5mM+uxSTlPPa/WGFqpkB/FiHuLp6tdIK0=;
+        b=lmQgrtf6mjqtnOJukqqvlof6qvhh7grPUQbMEbN+vaTqv9uWfiZJox5LbQ4IiYUl/o
+         5594AFvH2C3+g1KlqAfB4aHp8g8sgO2Ph0P8g7r41NTEZREpB651Yaor+O0E+9m3nQj/
+         wBPQM7OYwSwz5Xy6EQnsng4BYJQepxnLinJHipaR9QlMaO4vqd23T2xjr/KXqsIxA642
+         AL26ootXNvXuRXRUVlp4ni51C7hqQqUarMqXaURxcSBmOrDwglUMhDea0vqeByOhUx3e
+         /5YuqX97wsI8T+DSn8UseIO4XcRPalU2KydE8+ke/jDV/eGOOkwMVNSDFC/47t1dpJ0D
+         L+Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=D5gCf64f1i5mM+uxSTlPPa/WGFqpkB/FiHuLp6tdIK0=;
+        b=IVeaLkGkHIhoguu5a0aOl9Sr6H195C2kwyVW4hoNPnK+xBkitO9nnQHKNuDi3ymn+8
+         84dEqC31qQs6eLfZY2PRps08lhSJ2AZ5YGEFd7+IJBy2ENO4ktUMAErmweBWOXEVzOEC
+         LRCLV2tr5VwfpTmeqCeSKeg4OC7oPClywhMHuqhdgxpCY4KftGpIuEk5ZknFKeMrrHan
+         Ti6oDB4/zFSmChBucieCvMqHsIAmwgEg2OD0PZngYtSmeZkxRgCJ1KQOWDQMxsIeog4i
+         kTRwwqEo0E7j24V4dHkS+G5F7bKHRyHJsj3xTl8McyxlSHAa9+K7dlPs5L8YV+HFyj+f
+         39EA==
+X-Gm-Message-State: APjAAAVi+bK4Pw+0angEpHW7bnV4fYMaeeNhHZWdOJBfgia9Z5dt+Ls0
+        /vL1ls80qqILV1RAHnAKenO9NqGucYk=
+X-Google-Smtp-Source: APXvYqwMcdkPLCuSYhYUsjIRzu5r2Xn+cWNNwTeG7Td/h8qREZL3iDZOTrFkK5nIkxQ3wzGtqjlOmA==
+X-Received: by 2002:ac2:494f:: with SMTP id o15mr1995575lfi.22.1557831250000;
+        Tue, 14 May 2019 03:54:10 -0700 (PDT)
+Received: from localhost.localdomain ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id j1sm665246lja.17.2019.05.14.03.54.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 03:54:09 -0700 (PDT)
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: cp210x: Add cp2108 GPIOs support
+Date:   Tue, 14 May 2019 13:53:57 +0300
+Message-Id: <20190514105358.18818-1-fancer.lancer@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 321b8527-e652-4dd0-e3d4-08d6d859cad6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 10:49:09.1237
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3087
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_06:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhlIGZ1bmN0aW9uIHNob3VsZCByZXR1cm4gTlVMTCBpbiBjYXNlIG5vIGRldmljZSBpcyBmb3Vu
-ZCwgYnV0IGl0DQphbHdheXMgcmV0dXJucyB0aGUgbGFzdCBjaGVja2VkIG1jIGRldmljZSBmcm9t
-IHRoZSBsaXN0IGV2ZW4gaWYgdGhlDQppbmRleCBkaWQgbm90IG1hdGNoLiBUaGlzIHBhdGNoIGZp
-eGVzIHRoaXMuDQoNCkkgZGlkIHNvbWUgYW5hbHlzaXMgd2h5IHRoaXMgZGlkIG5vdCByYWlzZSBh
-bnkgaXNzdWVzIGZvciBhYm91dCAzDQp5ZWFycyBhbmQgdGhlIHJlYXNvbiBpcyB0aGF0IGVkYWNf
-bWNfZmluZCgpIGlzIG1vc3RseSB1c2VkIHRvIHNlYXJjaA0KZm9yIGV4aXN0aW5nIGRldmljZXMu
-IFRodXMsIHRoZSBidWcgaXMgbm90IHRyaWdnZXJlZC4NCg0KRml4ZXM6IGM3M2U4ODMzYmVjNSAo
-IkVEQUMsIG1jOiBGaXggbG9ja2luZyBhcm91bmQgbWNfZGV2aWNlcyBsaXN0IikNClNpZ25lZC1v
-ZmYtYnk6IFJvYmVydCBSaWNodGVyIDxycmljaHRlckBtYXJ2ZWxsLmNvbT4NCi0tLQ0KIGRyaXZl
-cnMvZWRhYy9lZGFjX21jLmMgfCAxMiArKysrKy0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNSBp
-bnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFj
-L2VkYWNfbWMuYyBiL2RyaXZlcnMvZWRhYy9lZGFjX21jLmMNCmluZGV4IDEzNTk0ZmZhZGNiMy4u
-NjE0ZDRjMTBiMzM3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9lZGFjL2VkYWNfbWMuYw0KKysrIGIv
-ZHJpdmVycy9lZGFjL2VkYWNfbWMuYw0KQEAgLTY3OSwyMiArNjc5LDIwIEBAIHN0YXRpYyBpbnQg
-ZGVsX21jX2Zyb21fZ2xvYmFsX2xpc3Qoc3RydWN0IG1lbV9jdGxfaW5mbyAqbWNpKQ0KIA0KIHN0
-cnVjdCBtZW1fY3RsX2luZm8gKmVkYWNfbWNfZmluZChpbnQgaWR4KQ0KIHsNCi0Jc3RydWN0IG1l
-bV9jdGxfaW5mbyAqbWNpID0gTlVMTDsNCisJc3RydWN0IG1lbV9jdGxfaW5mbyAqbWNpOw0KIAlz
-dHJ1Y3QgbGlzdF9oZWFkICppdGVtOw0KIA0KIAltdXRleF9sb2NrKCZtZW1fY3Rsc19tdXRleCk7
-DQogDQogCWxpc3RfZm9yX2VhY2goaXRlbSwgJm1jX2RldmljZXMpIHsNCiAJCW1jaSA9IGxpc3Rf
-ZW50cnkoaXRlbSwgc3RydWN0IG1lbV9jdGxfaW5mbywgbGluayk7DQotDQotCQlpZiAobWNpLT5t
-Y19pZHggPj0gaWR4KSB7DQotCQkJaWYgKG1jaS0+bWNfaWR4ID09IGlkeCkgew0KLQkJCQlnb3Rv
-IHVubG9jazsNCi0JCQl9DQorCQlpZiAobWNpLT5tY19pZHggPT0gaWR4KQ0KKwkJCWdvdG8gdW5s
-b2NrOw0KKwkJaWYgKG1jaS0+bWNfaWR4ID4gaWR4KQ0KIAkJCWJyZWFrOw0KLQkJfQ0KIAl9DQog
-DQorCW1jaSA9IE5VTEw7DQogdW5sb2NrOg0KIAltdXRleF91bmxvY2soJm1lbV9jdGxzX211dGV4
-KTsNCiAJcmV0dXJuIG1jaTsNCi0tIA0KMi4yMC4xDQoNCg==
+Each chip from the cp210x series got GPIOs on board. This commit
+provides the support for sixteen ones placed on the cp2108 four-ports
+serial console controller. All of the GPIOs are equally distributed
+to four USB interfaces in accordance with GPIOs alternative functions
+attachment.
+
+cp2108 GPIOs can be either in open-drain or push-pull modes setup once
+after reset was cleared. In this matter it doesn't differ from the rest
+of cp210x devices supported by the driver. So with minor alterations the
+standard output/intput GPIO interface is implemented for cp2108.
+
+Aside from traditional GPIO functions like setting/getting pins value,
+each GPIO is also multiplexed with alternative functions: TX/RX LEDs, RS485
+TX-enable and Clocks source. These functions can't be activated on-fly.
+Instead the chips firmware should be properly setup, so they would be
+enabled in the ports-config structure at the controller logic startup.
+Needless to say, that when the alternative functions are activated,
+the GPIOs can't be used. Thus we need to check the GPIO pin config in the
+request callback and deny the request if GPIO standard function is
+disabled.
+
+Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+---
+ drivers/usb/serial/Kconfig  |   2 +-
+ drivers/usb/serial/cp210x.c | 158 ++++++++++++++++++++++++++++++++----
+ 2 files changed, 143 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/serial/Kconfig b/drivers/usb/serial/Kconfig
+index 7d031911d04e..20bd4c0632c7 100644
+--- a/drivers/usb/serial/Kconfig
++++ b/drivers/usb/serial/Kconfig
+@@ -138,7 +138,7 @@ config USB_SERIAL_DIGI_ACCELEPORT
+ config USB_SERIAL_CP210X
+ 	tristate "USB CP210x family of UART Bridge Controllers"
+ 	help
+-	  Say Y here if you want to use a CP2101/CP2102/CP2103 based USB
++	  Say Y here if you want to use a CP2101/2/3/4/5/8 based USB
+ 	  to RS232 converters.
+ 
+ 	  To compile this driver as a module, choose M here: the
+diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+index 979bef9bfb6b..a97f04d9e99f 100644
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -505,6 +505,56 @@ struct cp210x_gpio_write {
+ 	u8	state;
+ } __packed;
+ 
++/* CP2108 interfaces, gpio (per interface), port-blocks number, GPIO block. */
++#define CP2108_IFACE_NUM		4
++#define CP2108_GPIO_NUM			4
++#define CP2108_PB_NUM			5
++#define CP2108_GPIO_PB			1
++
++/*
++ * CP2108 default pins state. There are five PBs. Each one is with its specific
++ * pins-set (see USB Express SDK sources or SDK-based smt application
++ * https://github.com/fancer/smt-cp210x for details).
++ */
++struct cp2108_state {
++	__le16	mode[CP2108_PB_NUM];	/* 0 - Open-Drain, 1 - Push-Pull */
++	__le16	low_power[CP2108_PB_NUM];
++	__le16	latch[CP2108_PB_NUM];	/* 0 - Logic Low, 1 - Logic High */
++} __packed;
++
++/*
++ * CP210X_VENDOR_SPECIFIC, CP210X_GET_PORTCONFIG call reads these 73 bytes.
++ * Reset/Suspend latches describe default states after reset/suspend of the
++ * pins. The rest are responsible for alternate functions settings of the
++ * chip pins (see USB Express SDK sources or SDK-based smt application
++ * https://github.com/fancer/smt-cp210x for details).
++ */
++struct cp2108_config {
++	struct cp2108_state reset_latch;
++	struct cp2108_state suspend_latch;
++	u8	ip_delay[CP2108_IFACE_NUM];
++	u8	enhanced_fxn[CP2108_IFACE_NUM];
++	u8	enhanced_fxn_dev;
++	u8	ext_clock_freq[CP2108_IFACE_NUM];
++} __packed;
++
++/* CP2108 port alternate functions fields */
++#define CP2108_GPIO_TXLED_MODE		BIT(0)
++#define CP2108_GPIO_RXLED_MODE		BIT(1)
++#define CP2108_GPIO_RS485_MODE		BIT(2)
++#define CP2108_GPIO_RS485_LOGIC		BIT(3)
++#define CP2108_GPIO_CLOCK_MODE		BIT(4)
++#define CP2108_DYNAMIC_SUSPEND		BIT(5)
++
++/*
++ * CP210X_VENDOR_SPECIFIC, CP210X_WRITE_LATCH call writes these 0x4 bytes
++ * to CP2108 controller.
++ */
++struct cp2108_gpio_write {
++	__le16	mask;
++	__le16	state;
++} __packed;
++
+ /*
+  * Helper to get interface number when we only have struct usb_serial.
+  */
+@@ -1366,10 +1416,15 @@ static int cp210x_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+ 	struct usb_serial *serial = gpiochip_get_data(gc);
+ 	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
+ 	u8 req_type = REQTYPE_DEVICE_TO_HOST;
+-	int result;
+-	u8 buf;
+-
+-	if (priv->partnum == CP210X_PARTNUM_CP2105)
++	union {
++		u8 single;
++		__le16 dual;
++	} buf;
++	int result, bufsize = sizeof(buf.single);
++
++	if (priv->partnum == CP210X_PARTNUM_CP2108)
++		bufsize = sizeof(buf.dual);
++	else if (priv->partnum == CP210X_PARTNUM_CP2105)
+ 		req_type = REQTYPE_INTERFACE_TO_HOST;
+ 
+ 	result = usb_autopm_get_interface(serial->interface);
+@@ -1377,39 +1432,51 @@ static int cp210x_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+ 		return result;
+ 
+ 	result = cp210x_read_vendor_block(serial, req_type,
+-					  CP210X_READ_LATCH, &buf, sizeof(buf));
++					  CP210X_READ_LATCH, &buf, bufsize);
+ 	usb_autopm_put_interface(serial->interface);
+ 	if (result < 0)
+ 		return result;
+ 
+-	return !!(buf & BIT(gpio));
++	if (priv->partnum == CP210X_PARTNUM_CP2108)
++		result = !!(le16_to_cpu(buf.dual) & BIT(gpio));
++	else
++		result = !!(buf.single & BIT(gpio));
++
++	return result;
+ }
+ 
+ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+ {
+ 	struct usb_serial *serial = gpiochip_get_data(gc);
+ 	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
+-	struct cp210x_gpio_write buf;
+ 	int result;
+ 
+-	if (value == 1)
+-		buf.state = BIT(gpio);
+-	else
+-		buf.state = 0;
+-
+-	buf.mask = BIT(gpio);
+-
+ 	result = usb_autopm_get_interface(serial->interface);
+ 	if (result)
+ 		goto out;
+ 
+-	if (priv->partnum == CP210X_PARTNUM_CP2105) {
++	if (priv->partnum == CP210X_PARTNUM_CP2108) {
++		struct cp2108_gpio_write buf;
++
++		buf.state = ((value == 1) ? cpu_to_le16(BIT(gpio)) : 0);
++		buf.mask = cpu_to_le16(BIT(gpio));
++
++		result = cp210x_write_vendor_block(serial,
++						   REQTYPE_HOST_TO_DEVICE,
++						   CP210X_WRITE_LATCH, &buf,
++						   sizeof(buf));
++	} else if (priv->partnum == CP210X_PARTNUM_CP2105) {
++		struct cp210x_gpio_write buf;
++
++		buf.state = ((value == 1) ? BIT(gpio) : 0);
++		buf.mask = BIT(gpio);
++
+ 		result = cp210x_write_vendor_block(serial,
+ 						   REQTYPE_HOST_TO_INTERFACE,
+ 						   CP210X_WRITE_LATCH, &buf,
+ 						   sizeof(buf));
+ 	} else {
+-		u16 wIndex = buf.state << 8 | buf.mask;
++		u16 wIndex = ((value == 1) ? BIT(gpio) : 0) << 8 | BIT(gpio);
+ 
+ 		result = usb_control_msg(serial->dev,
+ 					 usb_sndctrlpipe(serial->dev, 0),
+@@ -1489,6 +1556,62 @@ static int cp210x_gpio_set_config(struct gpio_chip *gc, unsigned int gpio,
+ 	return -ENOTSUPP;
+ }
+ 
++/*
++ * CP2108 got 16 GPIOs, each of which can be configured either as input, or
++ * as open-drain with weak pulling up to VIO or as push-pull with strong
++ * pulling up to VIO. Similar to the rest of devices the open-drain mode
++ * with latch set high is treated as input mode. All GPIOs are equally
++ * distributed between four interfaces. Thanks to the mask-state based
++ * write-latch control message we don't need to worry about possible races.
++ */
++static int cp2108_gpioconf_init(struct usb_serial *serial)
++{
++	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
++	struct cp2108_config config;
++	u16 mode, latch;
++	u8 intf_num;
++	int result;
++
++	result = cp210x_read_vendor_block(serial, REQTYPE_DEVICE_TO_HOST,
++					  CP210X_GET_PORTCONFIG, &config,
++					  sizeof(config));
++	if (result < 0)
++		return result;
++
++	/*
++	 * There are four interfaces with four GPIOs for each port. Here we
++	 * parse the device config data to comply with the driver interface.
++	 * Note that the mode can be changed only after reset, which cause
++	 * the driver reloading anyway. So we can safely read the config just
++	 * once at attach procedure.
++	 */
++	intf_num = cp210x_interface_num(serial);
++	mode = le16_to_cpu(config.reset_latch.mode[CP2108_GPIO_PB]);
++	latch = le16_to_cpu(config.reset_latch.latch[CP2108_GPIO_PB]);
++
++	priv->gpio_altfunc = config.enhanced_fxn[intf_num];
++	priv->gpio_pushpull = (mode >> (intf_num*CP2108_GPIO_NUM)) & 0x0f;
++	priv->gpio_input = (latch >> (intf_num*CP2108_GPIO_NUM)) & 0x0f;
++
++	/*
++	 * Move the GPIO clock alternative function bit value to the fourth bit
++	 * as the corresponding GPIO pin reside. It shall make the generic
++	 * cp210x GPIO request method being suitable for cp2108 as well.
++	 */
++	priv->gpio_altfunc &= ~BIT(3);
++	if (priv->gpio_altfunc & CP2108_GPIO_CLOCK_MODE)
++		priv->gpio_altfunc |= BIT(3);
++
++	/*
++	 * Open-drain mode in combination with a high latch value is used
++	 * to emulate the GPIO input pin.
++	 */
++	priv->gpio_input &= ~priv->gpio_pushpull;
++	priv->gc.ngpio = CP2108_GPIO_NUM;
++
++	return 0;
++}
++
+ /*
+  * This function is for configuring GPIO using shared pins, where other signals
+  * are made unavailable by configuring the use of GPIO. This is believed to be
+@@ -1713,6 +1836,9 @@ static int cp210x_gpio_init(struct usb_serial *serial)
+ 	case CP210X_PARTNUM_CP2105:
+ 		result = cp2105_gpioconf_init(serial);
+ 		break;
++	case CP210X_PARTNUM_CP2108:
++		result = cp2108_gpioconf_init(serial);
++		break;
+ 	case CP210X_PARTNUM_CP2102N_QFN28:
+ 	case CP210X_PARTNUM_CP2102N_QFN24:
+ 	case CP210X_PARTNUM_CP2102N_QFN20:
+-- 
+2.21.0
+
