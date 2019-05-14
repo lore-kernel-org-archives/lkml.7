@@ -2,71 +2,85 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A3FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC47C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B886820879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16E220879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfENPed (ORCPT
+        id S1726260AbfENPgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:34:33 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54226 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfENPed (ORCPT
+        Tue, 14 May 2019 11:36:53 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34396 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfENPgx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:34:33 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so3363251wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:34:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8GrnAA+dMbE3aqWsuexkoodhKBT8YIQCDPCVk4/0ONU=;
-        b=n5NNPOKB4v75Mam64CegVqZbf9Z5L5NTuX/Hdch5oe8H2sWbXdwbA/oucfVs/dYIcV
-         vtMJ8qdBKm3Ky0YK4Pc9d5EPw8tl7BHzooJzqMerwbkD3E/ycoTW0Q2JJTJrGYTOHSU5
-         acPIl4A4XDZ2XLeGqqVVWBOgQvSWkD9GspiXNNUKT26QY7jU+lsAFXZfWIkvGo1XBj/G
-         0e2/WathEFGUzfdr0bB9wqMLs1APmosK3vy4hD0iVXhe6rKQAuIDHfO5t9rqOGrf+6hB
-         cLFgYQmto/CxTsWDgh0cnLh2LVNOA1DQNVfBOeBk/AWcMockP+8K1dm9sx3LUPJaXNPG
-         1nQg==
-X-Gm-Message-State: APjAAAVRHEkA8uhfnCBRdnNAHEzd2iKmTFaxeuokWMLRt+oLhV9VJwOd
-        MRN7PDpzs7xY71R8CUWS5+FfAg==
-X-Google-Smtp-Source: APXvYqzOyfjfuVw1aAFsWiF9tA0emSNhG599UJWPqNbEpMVozMuZdTdjulYB4nCzy79n6qV3UvxkPA==
-X-Received: by 2002:a1c:9c02:: with SMTP id f2mr6399273wme.8.1557848071813;
-        Tue, 14 May 2019 08:34:31 -0700 (PDT)
-Received: from linux.home (2a01cb05850ddf00045dd60e6368f84b.ipv6.abo.wanadoo.fr. [2a01:cb05:850d:df00:45d:d60e:6368:f84b])
-        by smtp.gmail.com with ESMTPSA id d72sm1644080wmd.12.2019.05.14.08.34.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 08:34:31 -0700 (PDT)
-Date:   Tue, 14 May 2019 17:34:29 +0200
-From:   Guillaume Nault <gnault@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     davem@davemloft.net, paulus@samba.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2] ppp: deflate: Fix possible crash in deflate_init
-Message-ID: <20190514153428.GA11430@linux.home>
-References: <20190514074300.42588-1-yuehaibing@huawei.com>
- <20190514145532.21932-1-yuehaibing@huawei.com>
+        Tue, 14 May 2019 11:36:53 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hQZU0-0005TC-0d; Tue, 14 May 2019 17:36:48 +0200
+Date:   Tue, 14 May 2019 17:36:47 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Corey Minyard <cminyard@mvista.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, minyard@acm.org,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190514153647.wri6ivffbq7r263y@linutronix.de>
+References: <20190508205728.25557-1-minyard@acm.org>
+ <20190509161925.kul66w54wpjcinuc@linutronix.de>
+ <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
+ <20190514091219.nesriqe7qplk3476@linutronix.de>
+ <20190514121350.GA6050@minyard.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190514145532.21932-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190514121350.GA6050@minyard.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 10:55:32PM +0800, YueHaibing wrote:
-> If ppp_deflate fails to register in deflate_init,
-> module initialization failed out, however
-> ppp_deflate_draft may has been regiestred and not
-> unregistered before return.
+On 2019-05-14 07:13:50 [-0500], Corey Minyard wrote:
+> > Corey, would it make any change which waiter is going to be woken up?
 > 
-Thanks!
+> In the application that found this, the wake order probably isn't
+> relevant.
 
-Acked-by: Guillaume Nault <gnault@redhat.com>
+what I expected.
+
+> For other applications, I really doubt that very many are using multiple
+> waiters.  If so, this bug would have been reported sooner, I think.
+
+most other do either one waiter/waker pair or one waker and multiple
+waiter. And then reinit_completion() is used for the next round.
+
+> As you mention, for RT you would want waiter woken by priority and FIFO
+> within priority.  I don't think POSIX says anything about FIFO within
+> priority, but that's probably a good idea.  That's no longer a simple
+> wait queue  The way it is now is probably closer to that than what Peter
+> suggested, but not really that close.
+> 
+> This is heavily used in drivers and fs code, where it probably doesn't
+> matter.  I looked through a few users in mm and kernel, and they had
+> one waiter or were init/shutdown type things where order is not important.
+> 
+> So I'm not sure it's important.
+
+Why did you bring POSIX into this? This isn't an API exported to
+userland which would fall into that category.
+
+Peter's suggestion for FIFO is that we probably don't want to starve one
+thread/waiter if it is always enqueued at the end of the list. As you
+said, in your case it does not matter because (I assume) each waiter is
+equal and the outcome would be the same.
+
+> -corey
+
+Sebastian
