@@ -2,115 +2,118 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAD8C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D99CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368612084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A112084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:08:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfENIHz convert rfc822-to-8bit (ORCPT
+        id S1726369AbfENIIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:07:55 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:62634 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725899AbfENIHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:07:54 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16548174-1500050 
-        for multiple; Tue, 14 May 2019 09:06:14 +0100
-Content-Type: text/plain; charset="utf-8"
+        Tue, 14 May 2019 04:08:38 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55536 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725899AbfENIIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 04:08:38 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 310FA79B1C67F328660D;
+        Tue, 14 May 2019 16:08:35 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
+ 16:08:27 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <paulus@samba.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ppp: deflate: Fix possible crash in deflate_init
+Date:   Tue, 14 May 2019 15:43:00 +0800
+Message-ID: <20190514074300.42588-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Michael Yang <michael.yang@imgtec.com>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <20190514075537.GA7483@michael-imgtec>
-Cc:     sumit.semwal@linaro.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, gustavo@padovan.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        gregkh@linuxfoundation.org
-References: <1554710495-6646-1-git-send-email-michael.yang@imgtec.com>
- <1557376451-20164-1-git-send-email-michael.yang@imgtec.com>
- <155740236592.28545.17880521046408313036@skylake-alporthouse-com>
- <20190514075537.GA7483@michael-imgtec>
-Message-ID: <155782117405.2525.2694876407407711784@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: [EXTERNAL] Re: [PATCH] sync_file: Return reasonable timestamp when
- merging signaled fences
-Date:   Tue, 14 May 2019 09:06:14 +0100
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Michael Yang (2019-05-14 08:55:37)
-> On Thu, May 09, 2019 at 12:46:05PM +0100, Chris Wilson wrote:
-> > Quoting Michael Yang (2019-05-09 05:34:11)
-> > > If all the sync points were signaled in both fences a and b,
-> > > there was only one sync point in merged fence which is a_fence[0].
-> > > The Fence structure in android framework might be confused about
-> > > timestamp if there were any sync points which were signaled after
-> > > a_fence[0]. It might be more reasonable to use timestamp of last signaled
-> > > sync point to represent the merged fence.
-> > > The issue can be found from EGL extension ANDROID_get_frame_timestamps.
-> > > Sometimes the return value of EGL_READS_DONE_TIME_ANDROID is head of
-> > > the return value of EGL_RENDERING_COMPLETE_TIME_ANDROID.
-> > > That means display/composition had been completed before rendering
-> > > was completed that is incorrect.
-> > > 
-> > > Some discussion can be found at:
-> > > https://urldefense.proofpoint.com/v2/url?u=https-3A__android-2Dreview.googlesource.com_c_kernel_common_-2B_907009&d=DwIFaQ&c=bq9ppmgvSw3oQFfR871D_w&r=Ngg6vhouPkgwSIbDMU7rDN0ZfT2Qax50xuWkXXqQ3zw&m=N9R9dXGJ3zk0e0gXNM4tsiro7xCOLlWx6c3HAEseSSw&s=6sY2t9i2wvylWH-rPUlvY1MIuWKjCPzT8SeCgpZOIGk&e= 
-> > > 
-> > > Signed-off-by: Michael Yang <michael.yang@imgtec.com>
-> > > ---
-> > > Hi,
-> > > I didn't get response since I previously sent this a month ago.
-> > > Could someone have a chance to look at it please?
-> > > Thanks.
-> > >  drivers/dma-buf/sync_file.c | 25 +++++++++++++++++++++++--
-> > >  1 file changed, 23 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
-> > > index 4f6305c..d46bfe1 100644
-> > > --- a/drivers/dma-buf/sync_file.c
-> > > +++ b/drivers/dma-buf/sync_file.c
-> > > @@ -274,8 +274,29 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
-> > >         for (; i_b < b_num_fences; i_b++)
-> > >                 add_fence(fences, &i, b_fences[i_b]);
-> > >  
-> > > -       if (i == 0)
-> > > -               fences[i++] = dma_fence_get(a_fences[0]);
-> > > +       /* If all the sync pts were signaled, then adding the sync_pt who
-> > > +        * was the last signaled to the fence.
-> > > +        */
-> > > +       if (i == 0) {
-> > > +               struct dma_fence *last_signaled_sync_pt = a_fences[0];
-> > > +               int iter;
-> > > +
-> > > +               for (iter = 1; iter < a_num_fences; iter++) {
-> > 
-> > If there is more than one fence, sync_file->fence is a fence_array and
-> > its timestamp is what you want. If there is one fence, sync_file->fence
-> > is a pointer to that fence, and naturally has the right timestamp.
-> > 
-> > In short, this should be handled by dma_fence_array_create() when given
-> > a complete set of signaled fences, it too should inherit the signaled
-> > status with the timestamp being taken from the last fence. It should
-> > also be careful to inherit the error status.
-> > -Chris
-> Thanks Chris for the inputs. For this case, there will be only one fence
-> in sync_file->fence after doing sync_file_merge(). Regarding to the current
-> implementation, dma_fence_array_create() is not called as num_fences is equal
-> to 1. I was wondering do you suggest that we pass a complete set of signaled
-> fences to sync_file_set_fence() and handle it in dma_fence_array_create().
-> Thanks.
+BUG: unable to handle kernel paging request at ffffffffa018f000
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 2307eb067 PTE 0
+Oops: 0000 [#1] PREEMPT SMP
+CPU: 0 PID: 4138 Comm: modprobe Not tainted 5.1.0-rc7+ #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:ppp_register_compressor+0x3e/0xd0 [ppp_generic]
+Code: 98 4a 3f e2 48 8b 15 c1 67 00 00 41 8b 0c 24 48 81 fa 40 f0 19 a0
+75 0e eb 35 48 8b 12 48 81 fa 40 f0 19 a0 74
+RSP: 0018:ffffc90000d93c68 EFLAGS: 00010287
+RAX: ffffffffa018f000 RBX: ffffffffa01a3000 RCX: 000000000000001a
+RDX: ffff888230c750a0 RSI: 0000000000000000 RDI: ffffffffa019f000
+RBP: ffffc90000d93c80 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffffffa0194080
+R13: ffff88822ee1a700 R14: 0000000000000000 R15: ffffc90000d93e78
+FS:  00007f2339557540(0000) GS:ffff888237a00000(0000)
+knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa018f000 CR3: 000000022bde4000 CR4: 00000000000006f0
+Call Trace:
+ ? 0xffffffffa01a3000
+ deflate_init+0x11/0x1000 [ppp_deflate]
+ ? 0xffffffffa01a3000
+ do_one_initcall+0x6c/0x3cc
+ ? kmem_cache_alloc_trace+0x248/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-No, in the case there is only one fence, we just inherit its timestamp
-along with its fence status. (A single fence is the degenerate case of
-a fence array.)
--Chris
+If ppp_deflate fails to register in deflate_init,
+module initialization failed out, however
+ppp_deflate_draft may has been regiestred and not
+unregistered before return.
+Then the seconed modprobe will trigger crash like this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/ppp/ppp_deflate.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ppp/ppp_deflate.c b/drivers/net/ppp/ppp_deflate.c
+index b5edc7f..2829efe 100644
+--- a/drivers/net/ppp/ppp_deflate.c
++++ b/drivers/net/ppp/ppp_deflate.c
+@@ -610,12 +610,16 @@ static void z_incomp(void *arg, unsigned char *ibuf, int icnt)
+ 
+ static int __init deflate_init(void)
+ {
+-        int answer = ppp_register_compressor(&ppp_deflate);
+-        if (answer == 0)
+-                printk(KERN_INFO
+-		       "PPP Deflate Compression module registered\n");
++	int answer;
++
++	answer = ppp_register_compressor(&ppp_deflate);
++	if (answer)
++		return answer;
++
++	pr_info("PPP Deflate Compression module registered\n");
+ 	ppp_register_compressor(&ppp_deflate_draft);
+-        return answer;
++
++	return 0;
+ }
+ 
+ static void __exit deflate_cleanup(void)
+-- 
+1.8.3.1
+
+
