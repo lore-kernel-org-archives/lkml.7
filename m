@@ -6,45 +6,72 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CC6C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9540C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E14C62147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A30E42147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726109AbfENNuF (ORCPT
+        id S1726201AbfENNy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:50:05 -0400
-Received: from verein.lst.de ([213.95.11.211]:45870 "EHLO newverein.lst.de"
+        Tue, 14 May 2019 09:54:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39880 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfENNuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:50:05 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 7561668BFE; Tue, 14 May 2019 15:49:43 +0200 (CEST)
-Date:   Tue, 14 May 2019 15:49:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Jonathan Corbet <corbet@lwn.net>,
+        id S1725901AbfENNy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 09:54:58 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A901F3097033;
+        Tue, 14 May 2019 13:54:58 +0000 (UTC)
+Received: from amt.cnet (ovpn-112-10.gru2.redhat.com [10.97.112.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F0F8608A7;
+        Tue, 14 May 2019 13:54:56 +0000 (UTC)
+Received: from amt.cnet (localhost [127.0.0.1])
+        by amt.cnet (Postfix) with ESMTP id B8E7F105174;
+        Tue, 14 May 2019 10:50:25 -0300 (BRT)
+Received: (from marcelo@localhost)
+        by amt.cnet (8.14.7/8.14.7/Submit) id x4EDoNXN004704;
+        Tue, 14 May 2019 10:50:23 -0300
+Date:   Tue, 14 May 2019 10:50:23 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     kvm-devel <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] LICENSES: Rename other to deprecated
-Message-ID: <20190514134943.GA13662@lst.de>
-References: <20190430105130.24500-1-hch@lst.de> <20190430105130.24500-4-hch@lst.de> <20190514102632.GA4574@zn.tnic>
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+Message-ID: <20190514135022.GD4392@amt.cnet>
+References: <20190507185647.GA29409@amt.cnet>
+ <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514102632.GA4574@zn.tnic>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 14 May 2019 13:54:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:26:32PM +0200, Borislav Petkov wrote:
-> This breaks scripts/spdxcheck.py, it needs below hunk. Also, should
-> "dual" be added to license_dirs too?
+On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
+> On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >
+> >
+> > Certain workloads perform poorly on KVM compared to baremetal
+> > due to baremetal's ability to perform mwait on NEED_RESCHED
+> > bit of task flags (therefore skipping the IPI).
+> 
+> KVM supports expose mwait to the guest, if it can solve this?
+> 
+> Regards,
+> Wanpeng Li
 
-Yes.  In fact two people already submitted patches for that before
-you, just waiting for them to get picked up.
+Unfortunately mwait in guest is not feasible (uncompatible with multiple
+guests). Checking whether a paravirt solution is possible.
+
