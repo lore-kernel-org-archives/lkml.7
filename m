@@ -2,177 +2,115 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA1CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E608C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BAE22085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:12:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sogj6wWy"
+	by mail.kernel.org (Postfix) with ESMTP id 5EF70216E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:13:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557846833;
+	bh=4s1JH387kDlibhLwvYQPkEPbjY6Gw9eLhkTj339NheI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Lzber7icH3RZ7GQiMx44Za4de5coS7ZHRG2sV17d8BUhAVlpfF5u7mV7LH9tCxeSD
+	 zsLN/H9iP6Y1OP5c/tDA0cv+kI3TUUJrGzHEASVFYoPVkPKEMHTx/lpGAObBbW6YTz
+	 SvXzoMpzYJhu243zgxUhO71gHVX2RdZJu/rCVfB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfENPMj (ORCPT
+        id S1726495AbfENPNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:12:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40702 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfENPMj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:12:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d31so8785980pgl.7;
-        Tue, 14 May 2019 08:12:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dm8dUNxqFzjXYzf0vGZtO+jODptjt86dBovZ/zou7XQ=;
-        b=sogj6wWy95JqrPPufFa+ZSyM7IOQfJmlJr4GYywOR6eOQdPqHFZ6EfId0QvBNb1FAx
-         x1IRKOkT4GfhS3SWhu7Vl5OUFq3MLKk+5Ysakj0zr0x0K+aVue6tyQAPgMfyCP6RGEFK
-         ON0wqym0Nwd0PMVTgKgReyrTMahF1xi4cj54OL1pf2/mZX2w/eOyjeOc203lT+ClvnDj
-         SMrPgnSwAv29eSBMKljzyeV4yfmOS+/OJGqyqtbjtY7L/e+mT3o5mddhpxSjIcyw3Pud
-         RJQ4P7PkhndIa5v+1lOOZzKcHGImyWrspw1/bYi6jm0S+91VLtoe5HmcAMuvqfGTPi38
-         hrMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dm8dUNxqFzjXYzf0vGZtO+jODptjt86dBovZ/zou7XQ=;
-        b=f3vrzNvtsa+4OhboNaItqqCLykRWP1tpSKKmrnbwri3C4DXIKLwNbcTH7nRpNNAw+V
-         7uIofNRCiCmI9CI4F4sUj/Kfsqycz2dGOXNeGGjg11tLRw+W44ei767mG2cGDhNVS9aJ
-         SBTrMYCY/F0t0IBTU+S3l378ioEeXT2M/s8v4mBC1MJrErgtuqa1I0oKjLzc7R0nRkFq
-         xkbf3mU9hUOkeVnRK9Ntf04qtHoo7OKK5seeygN0Tdt0WcFOzc8iZz9pZP8/ulblfyoo
-         3pCcrrtjCHqFw55x0MEUw6+Hcmo9DdAnruKDUyQ13HQMWWekp40r/O8K4dCGYiXPfG2A
-         CXug==
-X-Gm-Message-State: APjAAAUVgo/FJ9ZNUqXmKu7YEU20DcXBRh8hEPptpBGG0uxY7UszlcxY
-        Bzq+7HkSuMU6tkfFS3BUiTI=
-X-Google-Smtp-Source: APXvYqzAyPFaPbFrljCpc0Bf0GPmNvStDgQwNXkbonx+P0pHd5cQafypjlEVkHS4KfhQ1Uhk+l0Amg==
-X-Received: by 2002:a63:27c3:: with SMTP id n186mr35491171pgn.189.1557846758716;
-        Tue, 14 May 2019 08:12:38 -0700 (PDT)
-Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn (89.208.248.35.16clouds.com. [89.208.248.35])
-        by smtp.googlemail.com with ESMTPSA id i65sm25426594pgc.3.2019.05.14.08.12.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 08:12:38 -0700 (PDT)
-From:   Fuqian Huang <huangfq.daxian@gmail.com>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        Chas Williams <3chas3@gmail.com>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] atm: iphase: Avoid copying pointers to user space.
-Date:   Tue, 14 May 2019 23:11:59 +0800
-Message-Id: <20190514151205.5143-1-huangfq.daxian@gmail.com>
-X-Mailer: git-send-email 2.11.0
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 14 May 2019 11:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726060AbfENPNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:13:51 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 821092189E
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557846830;
+        bh=4s1JH387kDlibhLwvYQPkEPbjY6Gw9eLhkTj339NheI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lJRjQ7wIvnVVqhMeibjj0qkL1n8Ukyqx/inG9XnyS7L77Il3cTy3JkZTYYglghl6u
+         2+YrWLNZhDK/jAIUmVHUrOOVIquh0KUaPXHvI6oG3RGwipTYJ/5PLapHSpPwm3GZM8
+         bu4C5x6jCIUtq2Jv7kNeGmHuGNIHvhxBDEMZ1rTo=
+Received: by mail-wr1-f49.google.com with SMTP id e15so7258115wrs.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:13:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAXB/secy9iSrCUWKZE7tF4MbHBrj5iKAdC6sDDObn0ARQ3VmleI
+        d9ondSXmzrrUBVGZaPOz6t24P95M/hlUOBHyYT2TrA==
+X-Google-Smtp-Source: APXvYqzLv5DYWAo0v/h3Fw4xdAQX6813reZpYcna4ZZGgdSyCyedEpv2RbQy+PBGxmg9xoXjFQOvTRWzmzvDojnm+Fg=
+X-Received: by 2002:adf:fb4a:: with SMTP id c10mr21405885wrs.309.1557846828943;
+ Tue, 14 May 2019 08:13:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+ <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com> <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
+In-Reply-To: <20190514104323.GA7591@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 May 2019 08:13:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+Message-ID: <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When ia_cmds.sub_cmd is MEMDUMP_DEV in ia_ioctl,
-nullify the pointer fields of iadev before copying
-the whole structure to user space.
+On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
+> > I did study through SDK's file format and realized that it does not
+> > does make sense after all to embed one.
+> >
+> > To implement it properly you would probably need a new syscall (lets say
+> > sgx_load_enclave) and also that enclaves are not just executables
+> > binaries. It is hard to find a generic format for them as applications
+> > range from simply protecting part of an application to running a
+> > containter inside enclave.
+>
+> I'm still puzzling what kind of changes you were discussing considering
+> SGX_IOC_ENCLAVE_ADD_PAGE.
 
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
----
- drivers/atm/iphase.c | 73 +++++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 70 insertions(+), 3 deletions(-)
+I think it's as simple as requiring that, if SECINFO.X is set, then
+the src pointer points to the appropriate number of bytes of
+executable memory.  (Unless there's some way for an enclave to change
+SECINFO after the fact -- is there?)  Sadly, we don't really have the
+a nice in-kernel API for that right now.  You could do
+down_read(mmap_sem) and find_vma().  Arguably there is no value to
+checking that PKRU allows execute to the data.
 
-diff --git a/drivers/atm/iphase.c b/drivers/atm/iphase.c
-index 5278c57dce73..3ca73625fb1a 100644
---- a/drivers/atm/iphase.c
-+++ b/drivers/atm/iphase.c
-@@ -2746,11 +2746,71 @@ static int ia_change_qos(struct atm_vcc *vcc, struct atm_qos *qos, int flags)
- 	IF_EVENT(printk(">ia_change_qos\n");)  
- 	return 0;  
- }  
-+
-+static void ia_nullify_pointers(IADEV *src, IADEV *dest)
-+{
-+	memset(dest, 0, sizeof(IADEV));
-+	dest->tx_dma_q.qlen = src->tx_dma_q.qlen;
-+	dest->tx_dma_q.lock = src->tx_dma_q.lock;
-+	dest->tx_backlog.qlen = src->tx_backlog.qlen;
-+	dest->tx_backlog.lock = src->tx_backlog.lock;
-+	dest->tx_lock = src->tx_lock;
-+	dest->tx_return_q.data.timestamp = src->tx_return_q.data.timestamp;
-+	dest->close_pending = src->close_pending;
-+	dest->close_wait.lock = src->close_wait.lock;
-+	dest->timeout_wait.lock = src->timeout_wait.lock;
-+	dest->num_tx_desc = src->num_tx_desc;
-+	dest->tx_buf_sz = src->tx_buf_sz;
-+	dest->rate_limit = src->rate_limit;
-+	dest->tx_cell_cnt = src->tx_cell_cnt;
-+	dest->tx_pkt_cnt = src->tx_pkt_cnt;
-+	dest->rx_dma_q.qlen = src->rx_dma_q.qlen;
-+	dest->rx_dma_q.lock = src->rx_dma_q.lock;
-+	dest->rx_lock = src->rx_lock;
-+	dest->num_rx_desc = src->num_rx_desc;
-+	dest->rx_buf_sz = src->rx_buf_sz;
-+	dest->rxing = src->rxing;
-+	dest->rx_pkt_ram = src->rx_pkt_ram;
-+	dest->rx_tmp_cnt = src->rx_tmp_cnt;
-+	dest->rx_tmp_jif = src->rx_tmp_jif;
-+	dest->drop_rxpkt = src->drop_rxpkt;
-+	dest->drop_rxcell = src->drop_rxcell;
-+	dest->rx_cell_cnt = src->rx_cell_cnt;
-+	dest->rx_pkt_cnt = src->rx_pkt_cnt;
-+	dest->mem = src->mem;
-+	dest->real_base = src->real_base;
-+	dest->pci_map_size = src->pci_map_size;
-+	dest->irq = src->irq;
-+	dest->bus = src->bus;
-+	dest->dev_fn = src->dev_fn;
-+	dest->phy_type = src->phy_type;
-+	dest->num_vc = src->num_vc;
-+	dest->memSize = src->memSize;
-+	dest->memType = src->memType;
-+	dest->ffL = src->ffL;
-+	dest->rfL = src->rfL;
-+	dest->carrier_detect = src->carrier_detect;
-+	dest->tx_dma_cnt = src->tx_dma_cnt;
-+	dest->rx_dma_cnt = src->rx_dma_cnt;
-+	dest->NumEnabledCBR = src->NumEnabledCBR;
-+	dest->rx_mark_cnt = src->rx_mark_cnt;
-+	dest->CbrTotEntries = src->CbrTotEntries;
-+	dest->CbrRemEntries = src->CbrRemEntries;
-+	dest->CbrEntryPt = src->CbrEntryPt;
-+	dest->Granularity = src->Granularity;
-+	dest->sum_mcr = src->sum_mcr;
-+	dest->sum_cbr = src->sum_cbr;
-+	dest->LineRate = src->LineRate;
-+	dest->n_abr = src->n_abr;
-+	dest->host_tcq_wr = src->host_tcq_wr;
-+	dest->tx_dle_dma = src->tx_dle_dma;
-+	dest->rx_dle_dma = src->rx_dle_dma;
-+}
-   
- static int ia_ioctl(struct atm_dev *dev, unsigned int cmd, void __user *arg)  
- {  
-    IA_CMDBUF ia_cmds;
--   IADEV *iadev;
-+   IADEV *iadev, *output;
-    int i, board;
-    u16 __user *tmps;
-    IF_EVENT(printk(">ia_ioctl\n");)  
-@@ -2769,8 +2829,15 @@ static int ia_ioctl(struct atm_dev *dev, unsigned int cmd, void __user *arg)
- 	switch (ia_cmds.sub_cmd) {
-        	  case MEMDUMP_DEV:     
- 	     if (!capable(CAP_NET_ADMIN)) return -EPERM;
--	     if (copy_to_user(ia_cmds.buf, iadev, sizeof(IADEV)))
--                return -EFAULT;
-+	     output = kmalloc(sizeof(IADEV), GFP_KERNEL);
-+	     if (!output)
-+		     return -ENOMEM;
-+	     ia_nullify_pointers(iadev, output);
-+	     if (copy_to_user(ia_cmds.buf, output, sizeof(IADEV))) {
-+		     kfree(output);
-+		     return -EFAULT;
-+	     }
-+	     kfree(output);
-              ia_cmds.status = 0;
-              break;
-           case MEMDUMP_SEGREG:
--- 
-2.11.0
-
+Hey, Dave, if you're still paying attention to this thread, should we
+have copy_from_user_exec() that does the right thing wrt the page
+permissions and PKRU.
