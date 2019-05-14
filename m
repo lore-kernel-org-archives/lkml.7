@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4A9C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC43C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:00:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F82C20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EDC20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mMV13v3w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnw4+f4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfENS7H (ORCPT
+        id S1727708AbfENTAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:59:07 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43155 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfENS7G (ORCPT
+        Tue, 14 May 2019 15:00:38 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36880 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfENTAh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:59:06 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so20375019wro.10;
-        Tue, 14 May 2019 11:59:05 -0700 (PDT)
+        Tue, 14 May 2019 15:00:37 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so174648wmo.2;
+        Tue, 14 May 2019 12:00:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:cc:references:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=l9E2Hq9FLPs2R4k3v/109yiHwcmV7e1E97gP56BV7Ws=;
-        b=mMV13v3wYp7MeJP+JJbIIY9J6fwAq5WmMBPxNmmbBlBB6Gx3ZC8fn0Cmnri+Qjcxtm
-         EokZn6N8kNv7Qf7Kdul4pCvvg3/+Sp3BN6P+AAzp3cvdxVoYU8ZWsPK3kv+j55Taj7Cs
-         ZV9TFVy3CQEz4mUxB4WZmjSEtsu6U7OzTfHkdk3UJB0u8YnVw+mzcHk60MM4x3bFsgHs
-         ad2t43pqUV0H6qK2Y2xJlQqDlmYrGzZTLYf67VZt+4ALoQUfyWEb4/v1CkRSi1S9v+vp
-         q0xFR+SeYEl5DkZqLm60J1G0AD9QhtMpQFp6xGDH2IQearc0BqsxXTbPyzB2aH5V9H7r
-         VY8w==
+        bh=9JYN5xzhocSIglmrjAdysDK4dh65giGpdMAvsJFJJPY=;
+        b=bnw4+f4VuntzkI+xNK+UL5Y9TBkyQNyV2rFO1J/BdlRVHAFJUmJw5p4avlkaTep9zw
+         yzZvHk60Zeujrjmm5sWJhh5K7b+by/BSGaZ+zp+xZTkWw27JIS1a5UHs/o1Ne1K9Xypm
+         drZOSQTaYc2P2d0mPE0jGbvbSZ+EmENDDrg3yN4dpHEv+xFFY5ny3HhGBikLqUfrv9ZW
+         wHByoUYVIXJfd16ZmlBzMKNp5wNgbKC9dRiO8EoPbuVbXqDgZF2eCx3lIAG+rmI/IbkI
+         LaqcqeOvN//hllIJ/6cCIddIoIdfU26lGIf13bGgxTeZlYdsb/lSu+Qs0TRkqaf2QsDw
+         unyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=l9E2Hq9FLPs2R4k3v/109yiHwcmV7e1E97gP56BV7Ws=;
-        b=Vt+Rcr7fGjysIF5Lr8eeFipUMGepA+IOB+ua9QExwIR6P3Q/W0uJA+L3pTVv5D5uxB
-         lgNkW5kZ9zM5DTDscIBdV12SgAGAOXSSarsNECakMyoieP4W5+YvJFAs7FIMOhfqT22b
-         tIeJ2XG27B/81yPWOwjIgwiphOaVfGTGQVukG4keipanbh4Fizf3M02iS2Ia5gS6IRFf
-         N0Yg4IzZuRiD+kvFO7+HF2amhOcOJikmtKzqM6wKzXpnhO2dQk1Iqy35Pzvv38eCVJ+n
-         nIu6z2nd91a/fCu030QygOTC+dWEtUue+TcaB3TStKmBKyjAWYPmbIWrvKQkTgbHUxq5
-         88IQ==
-X-Gm-Message-State: APjAAAXrFR5iNb498+L7jJapN6AFc8i5vFO9SGcP5sSbqx+pZNoHNlEV
-        c0UEFDVAwktLqxnihdEHcpeqsrS41So=
-X-Google-Smtp-Source: APXvYqzIpS1v0F/fkPzu9k6g5HPhj2GoIeXfiNytHKhzM2h5jQ8M+SL7ngEBeIHCh1hOz0DT6t1diw==
-X-Received: by 2002:a5d:4f88:: with SMTP id d8mr4370508wru.34.1557860344753;
-        Tue, 14 May 2019 11:59:04 -0700 (PDT)
+        bh=9JYN5xzhocSIglmrjAdysDK4dh65giGpdMAvsJFJJPY=;
+        b=cr5dR9LlghqwUYAbsR4kVtHzYLXb1tk9Dxacx0RMYjVBtqkruKy3S8ptxXR56/eghf
+         Z8yBMlprnx28Rf/BEVrXmUSsk5t37JHbKLLNgndRNr9kYARt+QX9ciJJyQByUHQ92jrY
+         1r9wj8gO93EAl0lmIzWc30Jf2k1GaWLbRYNHr4p6X0YGL6uIZeSJywOthXaWsCGm0jOu
+         H7s1y1fPraY1w2pMicw4AY1GgC9rSsopdLQhsZAgA+jptTqng78E0t1dfGAUhHpKVr9R
+         oozKb196Wu0k2BfR48Ke4dAiktRboVW7uuz27IJ7+hma9TjGYSeHpIvVO7OxuK5mtDQv
+         E/9A==
+X-Gm-Message-State: APjAAAVgxGdOHqWFOlCB7nlL850ADhWaf6UklYQDXknINDWkDFY6F05H
+        0VOQDhcYMooMGhV4hh3/5crLJ//zwpA=
+X-Google-Smtp-Source: APXvYqwH6CnDSNclbIqoYhw2TUiwGx48ELojPYaEp/66QlUy6nqSg2Sbws0ZyFLMiYqUvI+EBIB3HA==
+X-Received: by 2002:a1c:ca0b:: with SMTP id a11mr20885165wmg.52.1557860434790;
+        Tue, 14 May 2019 12:00:34 -0700 (PDT)
 Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id a15sm23035106wru.88.2019.05.14.11.59.02
+        by smtp.gmail.com with ESMTPSA id l14sm16996166wrt.57.2019.05.14.12.00.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 11:59:04 -0700 (PDT)
-Subject: [PATCH v4 04/13] platform/x86: wmi: Add function to get _UID of WMI
- device
+        Tue, 14 May 2019 12:00:34 -0700 (PDT)
+Subject: [PATCH v4 05/13] platform/x86: asus-wmi: Improve DSTS WMI method ID
+ detection
 From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 Cc:     Corentin Chary <corentin.chary@gmail.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -67,11 +67,12 @@ Cc:     Corentin Chary <corentin.chary@gmail.com>,
         Chris Chiu <chiu@endlessm.com>,
         acpi4asus-user@lists.sourceforge.net,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org
 References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-Message-ID: <35811fe2-7aac-aa3c-46dc-2bef515b0f47@gmail.com>
-Date:   Tue, 14 May 2019 20:59:01 +0200
+Message-ID: <34f49a73-a556-9e5a-fa07-938d43ac6225@gmail.com>
+Date:   Tue, 14 May 2019 21:00:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -85,71 +86,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new function to acpi.h / wmi.c that returns _UID of the ACPI WMI
-device. For example, it returns "ATK" for the following declaration in
-DSDT:
-Device (ATKD)
-{
-    Name (_HID, "PNP0C14" /* Windows Management Instrumentation Device */)
-      // _HID: Hardware ID
-    Name (_UID, "ATK")  // _UID: Unique ID
-    ..
+The DSTS method detection mistakenly selects DCTS instead of DSTS if
+nothing is returned when the method ID is not defined in WMNB. As a result,
+the control of keyboard backlight is not functional for TUF Gaming series
+laptops. Implement detection based on _UID of the WMI device instead.
 
-Generally, it is possible that multiple PNP0C14 ACPI devices are present in
-the system as mentioned in the commit message of commit bff431e49ff5
-("ACPI: WMI: Add ACPI-WMI mapping driver").
+There is evidence that DCTS is handled by ACPI WMI devices that have _UID
+ASUSWMI, whereas none of the devices without ASUSWMI respond to DCTS and
+DSTS is used instead [1].
 
-Therefore the _UID is returned for a specific ACPI device that declares the
-given GUID, to which it is also mapped by other methods of wmi module.
+DSDT examples:
+
+FX505GM (_UID ATK):
+Method (WMNB, 3, Serialized)
+{ ...
+    If ((Local0 == 0x53545344))
+    {
+        ...
+        Return (Zero)
+    }
+    ...
+    // No return
+}
+
+K54C (_UID ATK):
+Method (WMNB, 3, Serialized)
+{ ...
+    If ((Local0 == 0x53545344))
+    {
+        ...
+        Return (0x02)
+    }
+    ...
+    Return (0xFFFFFFFE)
+}
+
+[1] Link: https://lkml.org/lkml/2019/4/11/322
 
 Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/wmi.c | 19 +++++++++++++++++++
- include/linux/acpi.h       |  1 +
- 2 files changed, 20 insertions(+)
+Suggested-by: Daniel Drake <drake@endlessm.com>
 
-diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-index 7b26b6ccf1a0..b08ffb769cbe 100644
---- a/drivers/platform/x86/wmi.c
-+++ b/drivers/platform/x86/wmi.c
-@@ -635,6 +635,25 @@ bool wmi_has_guid(const char *guid_string)
- }
- EXPORT_SYMBOL_GPL(wmi_has_guid);
+---
+Depends on the previous patch in the series that adds method to
+wmi module.
+---
+ drivers/hid/hid-asus.c                     |  2 +-
+ drivers/platform/x86/asus-wmi.c            | 23 +++++++++++++++++++---
+ include/linux/platform_data/x86/asus-wmi.h |  4 ++--
+ 3 files changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+index 336aeaed1159..1d01fe23ca0c 100644
+--- a/drivers/hid/hid-asus.c
++++ b/drivers/hid/hid-asus.c
+@@ -396,7 +396,7 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
+ 	if (!IS_ENABLED(CONFIG_ASUS_WMI))
+ 		return false;
  
-+/**
-+ * wmi_get_acpi_device_uid() - Get _UID name of ACPI device that defines GUID
-+ * @guid_string: 36 char string of the form fa50ff2b-f2e8-45de-83fa-65417f2f49ba
-+ *
-+ * Find the _UID of ACPI device associated with this WMI GUID.
-+ *
-+ * Return: The ACPI _UID field value or NULL if the WMI GUID was not found
-+ */
-+char *wmi_get_acpi_device_uid(const char *guid_string)
-+{
-+	struct wmi_block *wblock = NULL;
+-	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS2,
++	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
+ 				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
+ 	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
+ 	if (ret)
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 6b35c1f00a3e..5bdb4ffdbee3 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -83,6 +83,8 @@ MODULE_LICENSE("GPL");
+ #define USB_INTEL_XUSB2PR		0xD0
+ #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
+ 
++#define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
 +
-+	if (!find_guid(guid_string, &wblock))
-+		return NULL;
-+
-+	return acpi_device_uid(wblock->acpi_device);
-+}
-+EXPORT_SYMBOL_GPL(wmi_get_acpi_device_uid);
-+
- static struct wmi_block *dev_to_wblock(struct device *dev)
+ static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
+ 
+ static bool ashs_present(void)
+@@ -1874,6 +1876,8 @@ static int asus_wmi_sysfs_init(struct platform_device *device)
+  */
+ static int asus_wmi_platform_init(struct asus_wmi *asus)
  {
- 	return container_of(dev, struct wmi_block, dev.dev);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d5dcebd7aad3..d31c7fd66f97 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -376,6 +376,7 @@ extern acpi_status wmi_install_notify_handler(const char *guid,
- extern acpi_status wmi_remove_notify_handler(const char *guid);
- extern acpi_status wmi_get_event_data(u32 event, struct acpi_buffer *out);
- extern bool wmi_has_guid(const char *guid);
-+extern char *wmi_get_acpi_device_uid(const char *guid);
++	struct device *dev = &asus->platform_device->dev;
++	char *wmi_uid;
+ 	int rv;
  
- #endif	/* CONFIG_ACPI_WMI */
+ 	/* INIT enable hotkeys on some models */
+@@ -1903,11 +1907,24 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
+ 	 * Note, on most Eeepc, there is no way to check if a method exist
+ 	 * or note, while on notebooks, they returns 0xFFFFFFFE on failure,
+ 	 * but once again, SPEC may probably be used for that kind of things.
++	 *
++	 * Additionally at least TUF Gaming series laptops return nothing for
++	 * unknown methods, so the detection in this way is not possible.
++	 *
++	 * There is strong indication that only ACPI WMI devices that have _UID
++	 * equal to "ASUSWMI" use DCTS whereas those with "ATK" use DSTS.
+ 	 */
+-	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, 0, 0, NULL))
++	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
++	if (!wmi_uid)
++		return -ENODEV;
++
++	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI)) {
++		dev_info(dev, "Detected ASUSWMI, use DCTS\n");
++		asus->dsts_id = ASUS_WMI_METHODID_DCTS;
++	} else {
++		dev_info(dev, "Detected %s, not ASUSWMI, use DSTS\n", wmi_uid);
+ 		asus->dsts_id = ASUS_WMI_METHODID_DSTS;
+-	else
+-		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
++	}
  
+ 	/* CWAP allow to define the behavior of the Fn+F2 key,
+ 	 * this method doesn't seems to be present on Eee PCs */
+diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+index bfba245636a7..0668f76df921 100644
+--- a/include/linux/platform_data/x86/asus-wmi.h
++++ b/include/linux/platform_data/x86/asus-wmi.h
+@@ -18,8 +18,8 @@
+ #define ASUS_WMI_METHODID_GDSP		0x50534447 /* Get DiSPlay output */
+ #define ASUS_WMI_METHODID_DEVP		0x50564544 /* DEVice Policy */
+ #define ASUS_WMI_METHODID_OSVR		0x5256534F /* OS VeRsion */
+-#define ASUS_WMI_METHODID_DSTS		0x53544344 /* Device STatuS */
+-#define ASUS_WMI_METHODID_DSTS2		0x53545344 /* Device STatuS #2*/
++#define ASUS_WMI_METHODID_DCTS		0x53544344 /* Device status (DCTS) */
++#define ASUS_WMI_METHODID_DSTS		0x53545344 /* Device status (DSTS) */
+ #define ASUS_WMI_METHODID_BSTS		0x53545342 /* Bios STatuS ? */
+ #define ASUS_WMI_METHODID_DEVS		0x53564544 /* DEVice Set */
+ #define ASUS_WMI_METHODID_CFVS		0x53564643 /* CPU Frequency Volt Set */
 -- 
 2.17.1
 
