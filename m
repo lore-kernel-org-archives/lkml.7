@@ -2,296 +2,151 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FEAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351EEC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252292085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0813A20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="fng5q5pd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR0A1tsJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfENQGj (ORCPT
+        id S1726416AbfENQHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:06:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35023 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725916AbfENQGj (ORCPT
+        Tue, 14 May 2019 12:07:03 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37917 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfENQHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:06:39 -0400
-Received: by mail-wm1-f65.google.com with SMTP id q15so3403428wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 09:06:37 -0700 (PDT)
+        Tue, 14 May 2019 12:07:03 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 14so14856496ljj.5;
+        Tue, 14 May 2019 09:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=jPE7CBRqH5HXjnrbQiifD/Ul0H9caUyvMOcc1BzciPo=;
-        b=fng5q5pdI1sg1TGIfbcLdD7oudqH5yxs2v6QcuZuYI5decRZq+Kq5lHjvQHZeM2Bij
-         bDRkYTcfFVcBuJRqiRwSGtFla/btDXyicNNFMUWyJJicZpS/gcvjNosTlk9tqpkwnR+r
-         4aD8fc7y34Q1k0PHPrRu7w3K7jCYBa6ZmGqOW6yeY8Qer9tPUWIwt/7PdkkmU/6C6ZUm
-         kvhtSr01c2SOActTYxEWxwA1I4fCwcSu0smBxNqWjS2uXfObxPPbVW47hVEnksFSjoZ8
-         gw7lzy9kR4f6SkYtU+ePtNPBMpPYzwAEXKAI9OMiqzoxXqjM9sXrLqh05a+5TBvcYu8d
-         zbHg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=l2kzXztgdqxiHBF3c7LPxlH8bIvFcECDZTDG91ehbx4=;
+        b=PR0A1tsJWz8uRFCRpSiSR49AR79qD9JFrM3C5IFUaUKqkW9EOIRLCzUu8SOiWvWfZy
+         id33CYsnCKhiUe31pvJOiP8Kk3eh/s+2VdQ2xf+/lyAZP4p6X1IMXMqr4bLV4vJw+tzL
+         LGBSYQ0A1Q3l/HYvRmTYUcQ1xd/558FD9Czvp9+xVet/QRplBQ5+IlZYPuQCCLjBK+Dj
+         MOAjyWMUgnYDLXmR7RCHxtUPns0CUWvcyy5V70NenKBgJx9z+gYmpuGUbDIbNN0Cby+O
+         YUurbc2vI+8Isbo4KxBg/JtnkxUQ62/bY12IEzOc1C+CvH0tr1fc4qsUcDhi2BrPblEe
+         U1eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=jPE7CBRqH5HXjnrbQiifD/Ul0H9caUyvMOcc1BzciPo=;
-        b=iFoyWTfN8v51B6YcWLqlY/sL9wh2jFWO/EpFijJOztJFyKLg5ISl4jp+6H5AtTAl7P
-         sXwAdhgJ+7FKMkfm9EURu6IKcxo9y5/h/eEfP2ElaIgmuZFWBb2nRgTNceM7rtnNeSLj
-         DkT3CeSvX5pH81JeBfaUQkSGi7+NlJ/07XpfrwgESQTxcopP21D18Es/yUnNkNPRtrIP
-         HmE4IpbWedetYzqP9rgQ5XjcxL7VHm/8oiy2a6wyq0D73QCdpSYLoZBoKnJ3cyPGA7CX
-         7a9p6cp7Dpo+WM7EKO4MEYXWJRhFxUQKa9swzl8Hk4teaEL5brPJeuZG1MeA6AKD7rg+
-         67Zg==
-X-Gm-Message-State: APjAAAXRu0oZOdfYTSiauF3M7rYDNtSkpGI0BqxylXCQttz2YPaKJ3DT
-        iAYnR7CeFAjm4s4Q3AClPiv9Uw==
-X-Google-Smtp-Source: APXvYqwiW5Sc3nxqI/9mvmmbQDgeivZVpMGps7i/Q2JNloMCgWPZl3XPC0+Vc4ynQZLbStD1O7Ixjg==
-X-Received: by 2002:a1c:6783:: with SMTP id b125mr20727387wmc.41.1557849996400;
-        Tue, 14 May 2019 09:06:36 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d3sm4780111wmf.46.2019.05.14.09.06.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 09:06:35 -0700 (PDT)
-Message-ID: <5cdae78b.1c69fb81.a32a9.870f@mx.google.com>
-Date:   Tue, 14 May 2019 09:06:35 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: next
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: master
-X-Kernelci-Kernel: next-20190514
-Subject: next/master boot bisection: next-20190514 on rk3288-veyron-jaq
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Zhang Rui <rui.zhang@intel.com>,
-        linux-arm-kernel@lists.infradead.org
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=l2kzXztgdqxiHBF3c7LPxlH8bIvFcECDZTDG91ehbx4=;
+        b=Plj6ImSdQT+ZrQNCf2ZxoW+nvKxc53poSmn3qzN5q4hcndsPBXzAGB8xgYHTcSo7Bk
+         ej1D9Iw8QiPPpk3KenLZCryaBm1xgBsp/bTXGdMq5Pi/TD357aL/skbQx1RZZeErh12H
+         CEsFgR5nDLrxPb/rwDflLxC/Qr+WKS769qegr6MN8toxejesjU1by+C5uguZIREa8zpv
+         mJKZ05X/LYUW2aiOGC7PERjdroRvE7a+Wk/w4IdimHG61AIV7lm+YF4o6PKjBF7Q1Xfo
+         5ujH9P6onFSol26pvGDBRxeLtyEFCLSc+1w82mHIamPSw5BoacM1E/Kbk6oxnDOtfsET
+         Z+hQ==
+X-Gm-Message-State: APjAAAXeXyymRvW9BHW8rHlEDK9KSlabA/FnrgSjSQtYX3j+EYZNTq1B
+        TWLfkmIFTxsp1zzs0cwDowfcI7oU44A=
+X-Google-Smtp-Source: APXvYqyi9avFiaNSir3/zoPi1mqHFZMT68ODr7pS8T4yik0qllHQ5PZQlG47sWcl2hMoonrhcP4CMQ==
+X-Received: by 2002:a2e:81d0:: with SMTP id s16mr17263087ljg.145.1557850020781;
+        Tue, 14 May 2019 09:07:00 -0700 (PDT)
+Received: from otyshchenko.kyiv.epam.com (ll-74.141.223.85.sovam.net.ua. [85.223.141.74])
+        by smtp.gmail.com with ESMTPSA id v23sm946597ljk.53.2019.05.14.09.06.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 14 May 2019 09:07:00 -0700 (PDT)
+From:   Oleksandr Tyshchenko <olekstysh@gmail.com>
+To:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     julien.grall@arm.com, horms@verge.net.au, magnus.damm@gmail.com,
+        linux@armlinux.org.uk, geert@linux-m68k.org,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: [PATCH V4] ARM: mach-shmobile: Don't init CNTVOFF/counter if PSCI is available
+Date:   Tue, 14 May 2019 19:06:52 +0300
+Message-Id: <1557850012-16612-1-git-send-email-olekstysh@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+From: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 
-next/master boot bisection: next-20190514 on rk3288-veyron-jaq
+If PSCI is available then most likely we are running on PSCI-enabled
+U-Boot which, we assume, has already taken care of resetting CNTVOFF
+and updating counter module before switching to non-secure mode
+and we don't need to.
 
-Summary:
-  Start:      0a13f187b16a Add linux-next specific files for 20190514
-  Details:    https://kernelci.org/boot/id/5cda7f2259b514876d7a3628
-  Plain log:  https://storage.kernelci.org//next/master/next-20190514/arm/m=
-ulti_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8/lab-collabora/bo=
-ot-rk3288-veyron-jaq.txt
-  HTML log:   https://storage.kernelci.org//next/master/next-20190514/arm/m=
-ulti_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy/gcc-8/lab-collabora/bo=
-ot-rk3288-veyron-jaq.html
-  Result:     691d4947face thermal: rockchip: fix up the tsadc pinctrl sett=
-ing error
+As the psci_smp_available() helper always returns false if CONFIG_SMP
+is disabled, it can't be used safely as an indicator of PSCI usage.
+For that reason, we check for the mandatory PSCI operation to be
+available.
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+Please note, an extra check to prevent secure_cntvoff_init() from
+being called for secondary CPUs in headsmp-apmu.S is not needed,
+as SMP code for APMU based system is not executed if PSCI is in use.
 
-Parameters:
-  Tree:       next
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next=
-.git
-  Branch:     master
-  Target:     rk3288-veyron-jaq
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig+CONFIG_EFI=3Dy+CONFIG_ARM_LPAE=3Dy
-  Test suite: boot
+Signed-off-by: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+CC: Julien Grall <julien.grall@arm.com>
 
-Breaking commit found:
+---
+   You can find previous discussions here:
+   [v1]  https://lkml.org/lkml/2019/4/17/810
+   [v2]  https://lkml.org/lkml/2019/5/3/338
+   [v3]  https://lkml.org/lkml/2019/5/10/415
+   [RFC] https://lkml.org/lkml/2019/5/10/473
 
----------------------------------------------------------------------------=
-----
-commit 691d4947faceb8bd841900049e07c81c95ca4b0d
-Author: Elaine Zhang <zhangqing@rock-chips.com>
-Date:   Tue Apr 30 18:09:44 2019 +0800
+   Changes in v2:
+      - Clarify patch subject/description
+      - Don't use CONFIG_ARM_PSCI option, check whether the PSCI is available,
+        by using psci_smp_available()
+      - Check whether we are running on top of Xen, by using xen_domain()
 
-    thermal: rockchip: fix up the tsadc pinctrl setting error
-    =
+   Changes in v3:
+      - Don't check for the presence of Xen
 
-    Explicitly use the pinctrl to set/unset the right mode
-    instead of relying on the pinctrl init mode.
-    And it requires setting the tshut polarity before select pinctrl.
-    =
+   Changes in v4:
+      - Don't use psci_smp_available() helper, check for psci_ops.cpu_on
+        directly
+      - Skip updating counter module if PSCI is available
+---
+ arch/arm/mach-shmobile/setup-rcar-gen2.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-    When the temperature sensor mode is set to 0, it will automatically
-    reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-    threshold is reached. However, when the pinctrl initializes, it does a
-    transition to "otp_out" which may lead the SoC restart all the time.
-    =
-
-    "otp_out" IO may be connected to the RESET circuit on the hardware.
-    If the IO is in the wrong state, it will trigger RESET.
-    (similar to the effect of pressing the RESET button)
-    which will cause the soc to restart all the time.
-    =
-
-    Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-    Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-    Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_=
-thermal.c
-index 9c7643d62ed7..6dc7fc516abf 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -172,6 +172,9 @@ struct rockchip_thermal_data {
- 	int tshut_temp;
- 	enum tshut_mode tshut_mode;
- 	enum tshut_polarity tshut_polarity;
-+	struct pinctrl *pinctrl;
-+	struct pinctrl_state *gpio_state;
-+	struct pinctrl_state *otp_state;
- };
- =
-
- /**
-@@ -1242,6 +1245,8 @@ static int rockchip_thermal_probe(struct platform_dev=
-ice *pdev)
- 		return error;
- 	}
- =
-
-+	thermal->chip->control(thermal->regs, false);
+diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+index eea60b2..64e3abd 100644
+--- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+@@ -17,6 +17,7 @@
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
++#include <linux/psci.h>
+ #include <asm/mach/arch.h>
+ #include <asm/secure_cntvoff.h>
+ #include "common.h"
+@@ -63,6 +64,15 @@ void __init rcar_gen2_timer_init(void)
+ 	void __iomem *base;
+ 	u32 freq;
+ 
++	/*
++	 * If PSCI is available then most likely we are running on PSCI-enabled
++	 * U-Boot which, we assume, has already taken care of resetting CNTVOFF
++	 * and updating counter module before switching to non-secure mode
++	 * and we don't need to.
++	 */
++	if (psci_ops.cpu_on)
++		goto skip_update;
 +
- 	error =3D clk_prepare_enable(thermal->clk);
- 	if (error) {
- 		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
-@@ -1267,6 +1272,30 @@ static int rockchip_thermal_probe(struct platform_de=
-vice *pdev)
- 	thermal->chip->initialize(thermal->grf, thermal->regs,
- 				  thermal->tshut_polarity);
- =
-
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO) {
-+		thermal->pinctrl =3D devm_pinctrl_get(&pdev->dev);
-+		if (IS_ERR(thermal->pinctrl)) {
-+			dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
-+			return PTR_ERR(thermal->pinctrl);
-+		}
-+
-+		thermal->gpio_state =3D pinctrl_lookup_state(thermal->pinctrl,
-+							   "gpio");
-+		if (IS_ERR_OR_NULL(thermal->gpio_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal gpio state\n");
-+			return -EINVAL;
-+		}
-+
-+		thermal->otp_state =3D pinctrl_lookup_state(thermal->pinctrl,
-+							  "otpout");
-+		if (IS_ERR_OR_NULL(thermal->otp_state)) {
-+			dev_err(&pdev->dev, "failed to find thermal otpout state\n");
-+			return -EINVAL;
-+		}
-+
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
-+	}
-+
- 	for (i =3D 0; i < thermal->chip->chn_num; i++) {
- 		error =3D rockchip_thermal_register_sensor(pdev, thermal,
- 						&thermal->sensors[i],
-@@ -1337,8 +1366,8 @@ static int __maybe_unused rockchip_thermal_suspend(st=
-ruct device *dev)
- =
-
- 	clk_disable(thermal->pclk);
- 	clk_disable(thermal->clk);
--
--	pinctrl_pm_select_sleep_state(dev);
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->gpio_state);
- =
-
- 	return 0;
+ 	secure_cntvoff_init();
+ 
+ 	if (of_machine_is_compatible("renesas,r8a7745") ||
+@@ -102,6 +112,7 @@ void __init rcar_gen2_timer_init(void)
+ 
+ 	iounmap(base);
+ 
++skip_update:
+ 	of_clk_init(NULL);
+ 	timer_probe();
  }
-@@ -1383,7 +1412,8 @@ static int __maybe_unused rockchip_thermal_resume(str=
-uct device *dev)
- 	for (i =3D 0; i < thermal->chip->chn_num; i++)
- 		rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
- =
+-- 
+2.7.4
 
--	pinctrl_pm_select_default_state(dev);
-+	if (thermal->tshut_mode =3D=3D TSHUT_MODE_GPIO)
-+		pinctrl_select_state(thermal->pinctrl, thermal->otp_state);
- =
-
- 	return 0;
- }
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd] Merge tag 'gcc-plugins-v=
-5.2-rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/kees/linux
-git bisect good 63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd
-# bad: [0a13f187b16a77bec4e3b929f9785b57358d74e0] Add linux-next specific f=
-iles for 20190514
-git bisect bad 0a13f187b16a77bec4e3b929f9785b57358d74e0
-# good: [886c48ba76f6106efe5af1a2c78c8d03a28f507d] Merge remote-tracking br=
-anch 'printk/for-next'
-git bisect good 886c48ba76f6106efe5af1a2c78c8d03a28f507d
-# bad: [f95f816ab5b76ea666aa7424354177a86c82c898] Merge remote-tracking bra=
-nch 'battery/for-next'
-git bisect bad f95f816ab5b76ea666aa7424354177a86c82c898
-# good: [6c81e0d749706abb038417396ec5f1e737022321] Merge remote-tracking br=
-anch 'thermal/next'
-git bisect good 6c81e0d749706abb038417396ec5f1e737022321
-# bad: [0e0b9cb7796a0f9056ac58d10e087467ca1b97b3] Merge remote-tracking bra=
-nch 'input/next'
-git bisect bad 0e0b9cb7796a0f9056ac58d10e087467ca1b97b3
-# bad: [97aa7cbeb4bc9081105cb518157323341c976ccd] Merge remote-tracking bra=
-nch 'drm/drm-next'
-git bisect bad 97aa7cbeb4bc9081105cb518157323341c976ccd
-# bad: [fb27a6c55da7475509589a5fc4799c058679c5a7] dt-bindings: rockchip-the=
-rmal: Support the PX30 SoC compatible
-git bisect bad fb27a6c55da7475509589a5fc4799c058679c5a7
-# good: [686539daac9f5ed996a9f26de2d2dece3b75a2c0] drivers: thermal: tsens:=
- Add new operation to check if a sensor is enabled
-git bisect good 686539daac9f5ed996a9f26de2d2dece3b75a2c0
-# good: [f094d4eb07bce4b722427d99783d56a0364093d7] thermal: qoriq: Remove u=
-nnecessary DT node is NULL check
-git bisect good f094d4eb07bce4b722427d99783d56a0364093d7
-# good: [e0e2c0d5895ac818a5c2cae1a745e7ad2e2acada] thermal/drivers/cpu_cool=
-ing: Remove pointless test in power2state()
-git bisect good e0e2c0d5895ac818a5c2cae1a745e7ad2e2acada
-# good: [01c8d0e44e4cb7bbd50748d249904b2bb35f235d] thermal/drivers/cpu_cool=
-ing: Remove pointless field
-git bisect good 01c8d0e44e4cb7bbd50748d249904b2bb35f235d
-# good: [f88f39be23c6cd65674e6d39ae268c7341960d96] thermal: broadcom: Remov=
-e ACPI support
-git bisect good f88f39be23c6cd65674e6d39ae268c7341960d96
-# bad: [691d4947faceb8bd841900049e07c81c95ca4b0d] thermal: rockchip: fix up=
- the tsadc pinctrl setting error
-git bisect bad 691d4947faceb8bd841900049e07c81c95ca4b0d
-# first bad commit: [691d4947faceb8bd841900049e07c81c95ca4b0d] thermal: roc=
-kchip: fix up the tsadc pinctrl setting error
----------------------------------------------------------------------------=
-----
