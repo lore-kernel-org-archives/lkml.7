@@ -4,129 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78064C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23285C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48DB520881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC820873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T11Vup/c"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bg39hYCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfENXH6 (ORCPT
+        id S1726696AbfENXTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:07:58 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40876 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfENXH5 (ORCPT
+        Tue, 14 May 2019 19:19:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37245 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfENXTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:07:57 -0400
-Received: by mail-it1-f195.google.com with SMTP id g71so1527061ita.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:07:57 -0700 (PDT)
+        Tue, 14 May 2019 19:19:09 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p15so345129pll.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:19:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=fpPu6Srd12TWDsvx6xpShWyEQ5HvPxAwKNMasqNHAbk=;
-        b=T11Vup/cYbfwY6YzAWV/mGwGD1gQDYyQC6G2BxXK4PPC718ZLMCye+aG74WCj5fos9
-         09wYZgeFb/k3+WuqEj2zLbyGm+bkK2/fb3EhCCyuqqbpOLLYRADkdR71j6umz8fgOctZ
-         oqF99nuKSPFnPGmRSiq5LQk19GqyNEeW44WFHIe5sd7P733SpJ5y5USvprGUccgWM81n
-         nGOhxOhJ7X/f4vqn4W7KFFCnNxOOifuIbvXltdYt19gYBbkBHc5QoQjg7VswpWrjrFuw
-         ecnaOdC9+M3e21yFG1yAo7HXSJsQE+PZ29OeX51tStLm2xS3s+V9hEk1Af9GkrlUK6et
-         GgmQ==
+        bh=65cWsglVoepzFlykZ42+abk0YI6VmpB8isURvrndfio=;
+        b=Bg39hYCrdxq9ZvR+2i/HlXSRaq6orpc1oOB8WF33oCVFV3rNh0CexWyS1Z8QPqlm8F
+         634lbyY40ksqDjssWKmNVtGI+1F3APRXwSAL0XqoS1nJrYkqeYOkCUNp8JWFWm6ZNg2N
+         3YnG2RckdXyh7Hd/JvDkJlfyEQP3VpBJF0SPvweC+YvdIQjG/OVFu00sC5S5PmUtedb0
+         57OXt1xXLQFMEhV58WldO2KsTL77idwyKmIM1odUUjPKE4+37YyS67kBXQTSZPy0lER0
+         iehTg4wcOiUIvCRTLfByhOie4AbWZpgc/tuXOmP4dOA/iaDvGuiNcBG7UtbS06g67YaV
+         pQVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fpPu6Srd12TWDsvx6xpShWyEQ5HvPxAwKNMasqNHAbk=;
-        b=JgakVNbJKWvIy6di1Nw0EniozDLX6LUvYOPn9igpIDYQyPxqOZZcMB33KoPy+im9FH
-         PH6CdY6Qfgx5VynsgSLZEbPTRi7ixcQdlYTihEq2uuIOBw+Fs3Z6rPQAlU6RpiYeHWQN
-         CWgUPMtAMAQwoJeUbzNlRMZMYhk5pHLNlxI9zJaD0zDQQMdAYEia0PaSAuFRIAINXxB8
-         FvIFffOhU0GP8/VMnRWJK0N5EhL9WS85aMrsN2rAnKQaSsZeIB2BrCp3vKY+PQKCOUDY
-         ylfLFf2aT0j9veK8ArbqKc2FKLgm3US3BElAj89c0sVg0lm+SPMXLCzqduVjZDd8OD+f
-         rqcg==
-X-Gm-Message-State: APjAAAUBX+65INsq9Chz7mCM2LFVMu66uMTUKMg2ylMA8wpST8UOU0FV
-        BgRqQnJbGkrEEqWhkf4Bel0ITg==
-X-Google-Smtp-Source: APXvYqxzoN7tuegV3gbfgvvbtn2Q1L1KZkn1XCuidG9PwFMOYDrpY9iAjhpTh23QbBLY6Tw5nU3lYw==
-X-Received: by 2002:a24:8b07:: with SMTP id g7mr5386727ite.129.1557875276553;
-        Tue, 14 May 2019 16:07:56 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:9f3b:444a:4649:ca05])
-        by smtp.gmail.com with ESMTPSA id m142sm199408itb.31.2019.05.14.16.07.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=65cWsglVoepzFlykZ42+abk0YI6VmpB8isURvrndfio=;
+        b=CG/OwUNvXtnYcmOv8bHOPRPejEE8Fa3J3YOsg2teO3Y1C4kDS/3SFFmSzlgl+piBz6
+         fzinUQSRfEyY/q/Vyo3ZYbPTFSIdrlvFkQSWbk+XB1JOfsdVtuJhioBT4ZlpFnDCUi4i
+         E44Hg/VzWMpLeMW90lCRV/F13TuYJ4aQGj/FjtrcuTJRia14/elFT+k6r12GbyYNcST2
+         QD5nKyWQ4bbSjHz8IsurO1ZvECewddXtLFf5TBsrN6L6QI+7WzDp7P9lUTqrsUB6w1Xn
+         HobwATkOEgIU6YH+FWPCpOAPhI8QzcsBjhhPoPrRFuxauNLtsgD+Mi1UcybauvFVUMZk
+         OYzQ==
+X-Gm-Message-State: APjAAAVBN1vZElKA3t5FCWOuFqlIDF6w9M8+/yp4y5s1Zt+zhBpHtsUF
+        cvQbDqBo6s3NlLuwk3toVyzR5w==
+X-Google-Smtp-Source: APXvYqwRc6VN5ebH7uglXTpSRZvZHWA1IEE/QiHsPmobJB2SKK6EBwf8uUbYe/O8Vc0yLOYiPNp2/w==
+X-Received: by 2002:a17:902:5998:: with SMTP id p24mr23416476pli.9.1557875948193;
+        Tue, 14 May 2019 16:19:08 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
+        by smtp.gmail.com with ESMTPSA id p64sm253565pfp.72.2019.05.14.16.19.06
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 16:07:55 -0700 (PDT)
-Date:   Tue, 14 May 2019 17:07:51 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: don't expose page to fast gup before it's ready
-Message-ID: <20190514230751.GA70050@google.com>
-Reply-To: Andrew Morton <akpm@linux-foundation.org>,
-          Michal Hocko <mhocko@kernel.org>
-References: <20180108225632.16332-1-yuzhao@google.com>
- <20180109084622.GF1732@dhcp22.suse.cz>
- <20180109101050.GA83229@google.com>
- <20190514142527.356cb071155cd1077536f3da@linux-foundation.org>
+        Tue, 14 May 2019 16:19:07 -0700 (PDT)
+Date:   Tue, 14 May 2019 16:19:02 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
+        Felix Guo <felixguoxiuping@gmail.com>
+Subject: Re: [PATCH v3 15/18] Documentation: kunit: add documentation for
+ KUnit
+Message-ID: <20190514231902.GA12893@google.com>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-16-brendanhiggins@google.com>
+ <20190514073422.4287267c@lwn.net>
+ <20190514180810.GA109557@google.com>
+ <20190514121623.0314bf07@lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190514142527.356cb071155cd1077536f3da@linux-foundation.org>
+In-Reply-To: <20190514121623.0314bf07@lwn.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 02:25:27PM -0700, Andrew Morton wrote:
-> On Tue, 9 Jan 2018 02:10:50 -0800 Yu Zhao <yuzhao@google.com> wrote:
+On Tue, May 14, 2019 at 12:16:23PM -0600, Jonathan Corbet wrote:
+> On Tue, 14 May 2019 11:08:10 -0700
+> Brendan Higgins <brendanhiggins@google.com> wrote:
 > 
-> > > Also what prevents reordering here? There do not seem to be any barriers
-> > > to prevent __SetPageSwapBacked leak after set_pte_at with your patch.
-> > 
-> > I assumed mem_cgroup_commit_charge() acted as full barrier. Since you
-> > explicitly asked the question, I realized my assumption doesn't hold
-> > when memcg is disabled. So we do need something to prevent reordering
-> > in my patch. And it brings up the question whether we want to add more
-> > barrier to other places that call page_add_new_anon_rmap() and
-> > set_pte_at().
+> > > Naturally, though, I have one request: I'd rather not see this at the top
+> > > level, which is more than crowded enough as it is.  Can this material
+> > > please go into the development tools book, alongside the kselftest
+> > > documentation?
+
+Hmmm...probably premature to bring this up, but Documentation/dev-tools/
+is kind of thrown together.
+
+It would be nice to provide a coherent overview, maybe provide some
+basic grouping as well.
+
+It would be nice if there was kind of a gentle introduction to the
+tools, which ones you should be looking at, when, why, etc.
+
+> > Oh yeah, that seems like the obvious home for this in hindsight. Sorry
+> > about that. Will fix in next revision!
 > 
-> Is a new version of this patch planned?
-
-Sorry for the late reply. The last time I tried, I didn't come up
-with a better fix because:
-  1) as Michal pointed out, we need to make sure the fast gup sees
-  all changes made before set_pte_at();
-  2) pairing smp_wmb() in set_pte/pmd_at() with smp_rmb() in gup
-  seems the best way to prevent any potential ordering related
-  problems in the future;
-  3) but this slows down the paths that don't require the smp_mwb()
-  unnecessarily.
-
-I didn't give it further thought because the problem doesn't seem
-fatal at the time. Now the fast gup has changed and the problem is
-serious:
-
-	CPU 1				CPU 1
-set_pte_at			get_user_pages_fast
-page_add_new_anon_rmap		gup_pte_range
-__SetPageSwapBacked (fetch)
-				try_get_compound_head
-				page_ref_add_unless
-__SetPageSwapBacked (store)
-
-Or the similar problem could happen to __do_huge_pmd_anonymous_page(),
-for the reason of missing smp_wmb() between the non-atomic bit op
-and set_pmd_at().
-
-We could simply replace __SetPageSwapBacked() with its atomic
-version. But 2) seems more preferable to me because it addresses
-my original problem:
-
-> > I didn't observe the race directly. But I did get few crashes when
-> > trying to access mem_cgroup of pages returned by get_user_pages_fast().
-> > Those page were charged and they showed valid mem_cgroup in kdumps.
-> > So this led me to think the problem came from premature set_pte_at().
-
-Thoughts? Thanks.
+> No need to apologize - I have to say the same thing to everybody :)
