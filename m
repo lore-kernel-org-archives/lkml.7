@@ -2,132 +2,136 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FCBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FADC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143C72166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5366A2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:58:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Lac0zP3M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVwhDA/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfENN4Y (ORCPT
+        id S1726261AbfENN6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:56:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51589 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726098AbfENN4U (ORCPT
+        Tue, 14 May 2019 09:58:53 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38011 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfENN6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:56:20 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o189so3003655wmb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:56:19 -0700 (PDT)
+        Tue, 14 May 2019 09:58:53 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 14so14422617ljj.5;
+        Tue, 14 May 2019 06:58:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oDHxGsrXeJidj701untt/R6ogKG8h4nrtZU+2E4/fDA=;
-        b=Lac0zP3MgQDHm22bQE4nSrkyNe8uukQesol88+EA7fgTIY6grTc10fcGmsh3CQo5NT
-         SQDJGdzVXFupyQ8yU+5K4a9W2KYoCjvoMj1wbCM0yMPAgwMAELJFEZAoTLYJaOiHzc4t
-         HLolkemGtcdytaw3wngI2rM+VY2A1xnWlyBCifi85baEtTOzFqndDgdxcZiCSaYi8n5z
-         ZF+Nz+A05FvWbfUlEwKqXt4cgZ8DppFR33frFEoFlniGFd4qPz8bBPYED51Se9BeC+zl
-         p5TeAv5AL/GTHRweqp2FwNWdHSWWfHWShipgGGZ8PnBtQCGQUm4V5SPH8eS1DRt+/v96
-         8b8g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=TXkbr8S0quedHhwnVy9a2UzBuQwq+DVg7EOJ79R7nvk=;
+        b=dVwhDA/CsdVyGzQz4Zq5GyUImMVOPlzK7q92WaBv7aVR/QNOln6a9vHks5IQjJ21Xv
+         lqqj2A6TR2AD7nzeoZGHQw9U3U5x16XjiHEEig6Z/452AC8sMkgC/a05J/zbcBMKhokv
+         JFXrLfRjEZHm0QsChfdmptxwabFfnLT9X5Whod9F5xmQMwa/EpgUO7rF/emXZYUDuhb0
+         C5NcuAyuoyRYabw+YyRFGapqrOvp5n1PD//7/kUIGLdzhSM1QD73RBiBCQFG27o1SAzR
+         Am+gEbfJ3zA+PF2iPD5lC70v0VAYrp6hx4lBC2I647hu9NLKvwU2yVFg2iYqhRv4hNqI
+         vH1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oDHxGsrXeJidj701untt/R6ogKG8h4nrtZU+2E4/fDA=;
-        b=CNE1VHDjQB1H7sqNhLrfwi6cn7CJ/zR3jaNe9yjmEZquMJHxQP0h47YCDpc9KP//0b
-         z/IJuxe3xhUP2iemSxRz0SejvHxMhCkHVcK4TC1WZ2HIyPdvuXC8n2AZrDe1FR96YHgf
-         T749KVYGB5OPWRjTGjRr+vwvmi4ymUhdNTQbS1Wlgr5/FK63D0t7+4/nTr8XJDHexx+Q
-         x7jy92qFds8TduojoDIgR7G++F7HRnkXQy5M4VqprRDWPXHR1f11hAidUfckfrTU9wYB
-         ltxg3CBP6VvQ5lGaL6bhOe/m42A3pNMtPz+pghx6tlt9izFYwHN06N38lfSiz8U5tAKA
-         yP+Q==
-X-Gm-Message-State: APjAAAWHa146oNG1Uv8hWUnUiHoS1495lY3C/eYQMtPY0HhvDWzaYCsY
-        5ahsgY4qmbWddf+pdOLQN3k5FQ==
-X-Google-Smtp-Source: APXvYqysQhF099GYmS3TpeXdPijkIZtr1HbM/ak442MCB8g0sFSjtVD5TgYPOjSACa7qTnYfThZICw==
-X-Received: by 2002:a1c:701a:: with SMTP id l26mr19416389wmc.50.1557842178935;
-        Tue, 14 May 2019 06:56:18 -0700 (PDT)
-Received: from mjourdan-pc.numericable.fr (abo-99-183-68.mtp.modulonet.fr. [85.68.183.99])
-        by smtp.gmail.com with ESMTPSA id d72sm1375764wmd.12.2019.05.14.06.56.18
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=TXkbr8S0quedHhwnVy9a2UzBuQwq+DVg7EOJ79R7nvk=;
+        b=WmBEeCDRcxaFtvC7lZ4AzNlO2m6jfJiUR5bweo8+GyWPuHjvOJbZpPGw+8T3VQ/0mn
+         2herlUayYM1Xnxw88eMq+NE+ZkkECnVKeE2RaTTmUHzyK0VjjvE0rPlVktcx8L/T8H75
+         LZQwlN58Czp5QRdW3C998iPlrn0G7FV8VtkFSV+viGqZ4kkpvq8Nej2tzI34XJpdIkTK
+         zvWdH8DiX//HNwv1Cf0MMwJTKL6keKnyG3Wf/jRvbTsesQqmcnP4NdzADWHEsj5I33tj
+         3dl1MnJ3gSA4B7kEKePS4s14WApzyVjnioAlmH6pyUxAq09ibjietifq1hIlCgSuXjG7
+         fmAQ==
+X-Gm-Message-State: APjAAAWUI9BUSe0IpI7Wd50+hxSvRKg2+HOWQ7IJwa8hxCo6w6BdmHCr
+        WFnIx757GbjV4aB3rpgssqM=
+X-Google-Smtp-Source: APXvYqx0S1pl0aXedFJoDeY9xEINeBSgt0TzaWXi3c4ODg1MdUP8vfhIX2JBNMO1WKWZxmxyQf118Q==
+X-Received: by 2002:a2e:568b:: with SMTP id k11mr17057734lje.124.1557842330726;
+        Tue, 14 May 2019 06:58:50 -0700 (PDT)
+Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id y27sm1282033ljd.14.2019.05.14.06.58.49
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 06:56:18 -0700 (PDT)
-From:   Maxime Jourdan <mjourdan@baylibre.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH v6 2/4] media: videodev2: add V4L2_FMT_FLAG_FIXED_RESOLUTION
-Date:   Tue, 14 May 2019 15:56:10 +0200
-Message-Id: <20190514135612.30822-3-mjourdan@baylibre.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190514135612.30822-1-mjourdan@baylibre.com>
-References: <20190514135612.30822-1-mjourdan@baylibre.com>
+        Tue, 14 May 2019 06:58:49 -0700 (PDT)
+Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
+ region
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+ <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
+ <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
+ <CAMuHMdWODzaHSeXyB5CgGmq3ZumFGVZYOUT1v1_Ps-RguPLseA@mail.gmail.com>
+ <25f5f60e-46ff-18af-2a65-1e3f6719ef49@gmail.com>
+ <CAMuHMdWkEU7x_Lzk6NUCxEdZRx_xTBFzkETwShZ322aYL5=bLg@mail.gmail.com>
+From:   Oleksandr <olekstysh@gmail.com>
+Message-ID: <3e786103-69a4-2867-fc04-ccb4512bf221@gmail.com>
+Date:   Tue, 14 May 2019 16:58:48 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWkEU7x_Lzk6NUCxEdZRx_xTBFzkETwShZ322aYL5=bLg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a v4l2 driver exposes V4L2_EVENT_SOURCE_CHANGE, some (usually
-OUTPUT) formats may not be able to trigger this event.
 
-For instance, MPEG2 on Amlogic hardware does not support resolution
-switching on the fly, and a decode session must operate at a set
-resolution defined before the decoding start.
+On 14.05.19 10:16, Geert Uytterhoeven wrote:
+> Hi Oleksandr,
 
-Add a enum_fmt format flag to tag those specific formats.
+Hi Geert
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- Documentation/media/uapi/v4l/vidioc-enum-fmt.rst | 6 ++++++
- include/uapi/linux/videodev2.h                   | 5 +++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst b/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
-index 822d6730e7d2..b11448a1848b 100644
---- a/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
-+++ b/Documentation/media/uapi/v4l/vidioc-enum-fmt.rst
-@@ -127,6 +127,12 @@ one until ``EINVAL`` is returned.
-       - This format is not native to the device but emulated through
- 	software (usually libv4l2), where possible try to use a native
- 	format instead for better performance.
-+    * - ``V4L2_FMT_FLAG_FIXED_RESOLUTION``
-+      - 0x0004
-+      - Dynamic resolution switching is not supported for this format,
-+        even if the event ``V4L2_EVENT_SOURCE_CHANGE`` is supported by
-+        the device.
-+
- 
- 
- Return Value
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 1050a75fb7ef..9b0a7f82dd92 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -768,8 +768,9 @@ struct v4l2_fmtdesc {
- 	__u32		    reserved[4];
- };
- 
--#define V4L2_FMT_FLAG_COMPRESSED 0x0001
--#define V4L2_FMT_FLAG_EMULATED   0x0002
-+#define V4L2_FMT_FLAG_COMPRESSED	0x0001
-+#define V4L2_FMT_FLAG_EMULATED		0x0002
-+#define V4L2_FMT_FLAG_FIXED_RESOLUTION	0x0004
- 
- 	/* Frame Size and frame rate enumeration */
- /*
+>
+> On Mon, May 13, 2019 at 6:00 PM Oleksandr <olekstysh@gmail.com> wrote:
+>> On 13.05.19 18:13, Geert Uytterhoeven wrote:
+>>>> So, if the DT bindings for the counter module is not an option (if I
+>>>> correctly understood a discussion pointed by Geert in another letter),
+>>>> we should probably prevent all timer code here from being executed if
+>>>> PSCI is in use.
+>>>> What I mean is to return to [2], but with the modification to use
+>>>> psci_smp_available() helper as an indicator of PSCI usage.
+>>>>
+>>>> Julien, Geert, what do you think?
+>>> Yes, that sounds good to me.
+>>>
+>>> Note that psci_smp_available() seems to return false if CONFIG_SMP=n,
+>>> so checking for that is not sufficient to avoid crashes when running a
+>>> uniprocessor kernel on a PSCI-enabled system.
+>> Indeed, you are right.
+>>
+>>
+>> Nothing than just check for psci_ops.cpu_on == NULL directly comes to
+>> mind...
+>>
+>> Have already checked with CONFIG_SMP=n, it works.
+>>
+>> Sounds ok?
+> Fine for me, thanks!
+
+Great, I will send new version.
+
+
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
 -- 
-2.21.0
+Regards,
+
+Oleksandr Tyshchenko
 
