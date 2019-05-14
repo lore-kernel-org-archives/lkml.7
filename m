@@ -2,151 +2,98 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0207C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21345C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B982084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q9r/17xB"
+	by mail.kernel.org (Postfix) with ESMTP id F24F52168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726653AbfENO6R (ORCPT
+        id S1726691AbfENO6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:58:17 -0400
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:42052 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726009AbfENO6O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:58:14 -0400
-Received: by mail-pl1-f180.google.com with SMTP id x15so8387868pln.9;
-        Tue, 14 May 2019 07:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=0LsZkohtkLGwcDs9hRe0VJ+ypCQo2GRqxmcPfS0ioFc=;
-        b=q9r/17xBR7SJhg2wxXoddjTsUJl5WLsUQ0mM6cpOwkSyLeqhqanDu322FS9tp8tqGG
-         lXPHeBchF6lZJEWf67HKBafqZTfFsXZItGoWPREIfY4oYu37y/dyG8keOPX/Tn8x3MXg
-         zvTCK6Ga2EIe6xtvtqyIz30aUFddv+ti9A5M57Q5JQXrWrBZZLRqdwWPtasrQGxx1Wko
-         JBy7tCNr6wqHv0af7/fvI88DfdtIFviKartbD7o0AUt76Cei4eCPojbopRGgl7nCdlG8
-         x5oV9FLV7Ue/Phvd7tQYOnnc5Gwo1veuFDP9jAfoUZtXc6Zxof7PRPxq2HyiTCsxlBcM
-         KwNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=0LsZkohtkLGwcDs9hRe0VJ+ypCQo2GRqxmcPfS0ioFc=;
-        b=T61HVVNUju6b6uo7nO2Rwmk6NUUPkducpOBgvpfQrHa00faum3Sq9kWTIv78TLo1Is
-         Wrz6Ni/BC6rzjdyg2S2jLp0aIi8TAnQFzKz02yGUH4uyBujLpjV0+U94r1Ei/3OWusZi
-         9vDJq+q/RiLHc3ZHNNOPulfobxEsrKAAYLNUroEAfn/1lg7LGQJ4CoMm1wddKWJnoax3
-         Twdn9/3wjXjK1YY/601IBzAI/3/N5gOBZEUgUyrzFcBzMD9UnPQLc6O0nZ6V6kO7tzye
-         X3XXewErKcCqRJAUP/vj3I5Dmr5YAQUS4sZv0KGxvzRlAnspxd1EmcbuKeTEHe5IeWXH
-         /dCQ==
-X-Gm-Message-State: APjAAAVmGlQ7NV98tgdAISjiNSJEh5ywBQltkThNeYF0yHS1wiKuU/3P
-        oKeKyLIbyMuKzfea8wkRxdVltyfj
-X-Google-Smtp-Source: APXvYqyCJlRLzCMnsZYmmkcjVr7eBSSe4MvuLLZxWawlfMF0nyetLZsXq/olBoQm2HJua7HSGSY1wQ==
-X-Received: by 2002:a17:902:9a03:: with SMTP id v3mr39505744plp.27.1557845893729;
-        Tue, 14 May 2019 07:58:13 -0700 (PDT)
-Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.27? ([2402:f000:1:1501:200:5efe:a66f:471b])
-        by smtp.gmail.com with ESMTPSA id q17sm7643780pfq.74.2019.05.14.07.58.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 07:58:12 -0700 (PDT)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [BUG] usb: xhci: Possible resource leaks when xhci_run() fails
-To:     mathias.nyman@intel.com, Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <fd7610ec-5f14-7952-cd9a-e56adb4e1353@gmail.com>
-Date:   Tue, 14 May 2019 22:58:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 14 May 2019 10:58:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:12588 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfENO6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 10:58:33 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 40F99308623E;
+        Tue, 14 May 2019 14:58:33 +0000 (UTC)
+Received: from dhcp201-121.englab.pnq.redhat.com (unknown [10.65.16.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 164E65D71E;
+        Tue, 14 May 2019 14:58:12 +0000 (UTC)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Cc:     dan.j.williams@intel.com, zwisler@kernel.org,
+        vishal.l.verma@intel.com, dave.jiang@intel.com, mst@redhat.com,
+        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
+        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
+        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
+        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
+        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
+        stefanha@redhat.com, aarcange@redhat.com, david@redhat.com,
+        david@fromorbit.com, cohuck@redhat.com,
+        xiaoguangrong.eric@gmail.com, pbonzini@redhat.com,
+        kilobyte@angband.pl, yuval.shaia@oracle.com, jstaron@google.com,
+        pagupta@redhat.com
+Subject: [PATCH v9 6/7] ext4: disable map_sync for async flush
+Date:   Tue, 14 May 2019 20:24:21 +0530
+Message-Id: <20190514145422.16923-7-pagupta@redhat.com>
+In-Reply-To: <20190514145422.16923-1-pagupta@redhat.com>
+References: <20190514145422.16923-1-pagupta@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 14 May 2019 14:58:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xhci_pci_setup() is assigned to hc_driver.reset;
-xhci_run() is assigned to hc_driver.start();
-xhci_stop() is assigned to hc_driver.stop().
+Dont support 'MAP_SYNC' with non-DAX files and DAX files
+with asynchronous dax_device. Virtio pmem provides
+asynchronous host page cache flush mechanism. We don't
+support 'MAP_SYNC' with virtio pmem and ext4.
 
-xhci_pci_setup() calls xhci_gen_setup, which calls xhci_init(). And 
-xhci_init() calls xhci_mem_init() to allocate resources.
+Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+---
+ fs/ext4/file.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-xhci_stop() calls xhci_mem_cleanup(), to release the resources allocated 
-in xhci_mem_init() (also namely xhci_pci_setup()).
+diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+index 98ec11f69cd4..dee549339e13 100644
+--- a/fs/ext4/file.c
++++ b/fs/ext4/file.c
+@@ -360,15 +360,17 @@ static const struct vm_operations_struct ext4_file_vm_ops = {
+ static int ext4_file_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct inode *inode = file->f_mapping->host;
++	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
++	struct dax_device *dax_dev = sbi->s_daxdev;
+ 
+-	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
++	if (unlikely(ext4_forced_shutdown(sbi)))
+ 		return -EIO;
+ 
+ 	/*
+-	 * We don't support synchronous mappings for non-DAX files. At least
+-	 * until someone comes with a sensible use case.
++	 * We don't support synchronous mappings for non-DAX files and
++	 * for DAX files if underneath dax_device is not synchronous.
+ 	 */
+-	if (!IS_DAX(file_inode(file)) && (vma->vm_flags & VM_SYNC))
++	if (!daxdev_mapping_supported(vma, dax_dev))
+ 		return -EOPNOTSUPP;
+ 
+ 	file_accessed(file);
+-- 
+2.20.1
 
-xhci_run() can fail, because xhci_try_enable_msi() or 
-xhci_alloc_command() in this function can fail.
-
-In drivers/usb/core/hcd.c:
-     retval = hcd->driver->reset(hcd);
-     if (retval < 0) {
-         ......
-         goto err_hcd_driver_setup;
-     }
-     ......
-     retval = hcd->driver->start(hcd);
-     if (retval < 0) {
-         ......
-         goto err_hcd_driver_start;
-     }
-     .......
-     hcd->driver->stop(hcd);
-     hcd->state = HC_STATE_HALT;
-     clear_bit(HCD_FLAG_POLL_RH, &hcd->flags);
-     del_timer_sync(&hcd->rh_timer);
-err_hcd_driver_start:
-     if (usb_hcd_is_primary_hcd(hcd) && hcd->irq > 0)
-         free_irq(irqnum, hcd);
-err_request_irq:
-err_hcd_driver_setup:
-err_set_rh_speed:
-     usb_put_invalidate_rhdev(hcd);
-err_allocate_root_hub:
-     usb_deregister_bus(&hcd->self);
-err_register_bus:
-     hcd_buffer_destroy(hcd);
-err_create_buf:
-     usb_phy_roothub_power_off(hcd->phy_roothub);
-err_usb_phy_roothub_power_on:
-     usb_phy_roothub_exit(hcd->phy_roothub);
-
-Thus, when hcd->driver->reset() succeeds and hcd->driver->start() fails, 
-hcd->driver->stop() is not called.
-
-Namely, when xhci_pci_setup() successfully allocates resources, and 
-xhci_run() fails, xhci_stop() is not called to release the resources.
-For this reason, resource leaks occur in this case.
-
-I check the code of the ehci driver, uhci driver and ohci driver, and 
-find that they do not have such problem, because:
-In the ehci driver, ehci_run() (namely hcd->driver->start()) never fails.
-In the uhci driver, all the resources are allocated in uhci_start 
-(namely hcd->driver->start()), and no resources are allocated in 
-uhci_pci_init() (namely hcd->driver->reset()).
-In the ohci driver, ohci_setup() (namely hcd->driver->reset()) also 
-allocates resources. But when ohci_start() (namely hcd->driver->start()) 
-is going to fail, ohci_stop() is directly called to release the 
-resources allocated by ohci_setup().
-
-Thus, there are two possible ways of fixing bugs:
-1) Call xhci_stop() when xhci_run() is going to fail (like the ohci driver)
-2) Move all resource-allocation operations into xhci_run() (like the 
-uhci driver).
-
-I am not sure whether these ways are correct, so I only report bugs.
-
-These bugs are found by a runtime fuzzing tool named FIZZER written by us.
-
-
-Best wishes,
-Jia-Ju Bai
