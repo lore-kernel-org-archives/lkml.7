@@ -2,92 +2,112 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF11DC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F7EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB36220881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7B820881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfENKnK (ORCPT
+        id S1726494AbfENKnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:43:10 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53892 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfENKnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:43:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B12B8374;
-        Tue, 14 May 2019 03:43:09 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 122D93F703;
-        Tue, 14 May 2019 03:43:07 -0700 (PDT)
-Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
-To:     Auger Eric <eric.auger@redhat.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
- <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
- <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
- <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
- <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
- <1edd45e6-4da3-e393-36b2-9e63cd5f7607@redhat.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <4094baf1-6cf5-a33b-4717-08ced0673c50@arm.com>
-Date:   Tue, 14 May 2019 11:42:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 06:43:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39300 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725893AbfENKnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:43:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D4BF7AC3F;
+        Tue, 14 May 2019 10:43:13 +0000 (UTC)
+Date:   Tue, 14 May 2019 12:43:11 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     Yuri Norov <ynorov@marvell.com>
+Cc:     Andreas Schwab <schwab@suse.de>, Yury Norov <yury.norov@gmail.com>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Steve Ellcey <sellcey@caviumnetworks.com>,
+        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
+        Alexander Graf <agraf@suse.de>,
+        Bamvor Zhangjian <bamv2005@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Manuel Montezelo <manuel.montezelo@gmail.com>,
+        James Hogan <james.hogan@imgtec.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Pinski <pinskia@gmail.com>,
+        Lin Yongting <linyongting@huawei.com>,
+        Alexey Klimov <klimov.linux@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Nathan_Lynch <Nathan_Lynch@mentor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Subject: Re: [LTP] [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
+Message-ID: <20190514104311.GA24708@rei>
+References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+ <20190508225900.GA14091@yury-thinkpad>
+ <mvmtvdyoi33.fsf@suse.de>
+ <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <1edd45e6-4da3-e393-36b2-9e63cd5f7607@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2019 08:46, Auger Eric wrote:
-> Hi Jean,
+Hi!
+> > There is a problem with the stack size accounting during execve when
+> > there is no stack limit:
+> >
+> > $ ulimit -s
+> > 8192
+> > $ ./hello.ilp32 
+> > Hello World!
+> > $ ulimit -s unlimited
+> > $ ./hello.ilp32 
+> > Segmentation fault
+> > $ strace ./hello.ilp32 
+> > execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) = -1 ENOMEM (Cannot allocate memory)
+> > +++ killed by SIGSEGV +++
+> > Segmentation fault (core dumped)
+> >
+> > Andreas.
 > 
-> On 5/13/19 7:09 PM, Jean-Philippe Brucker wrote:
->> On 13/05/2019 17:50, Auger Eric wrote:
->>>> struct iommu_inv_pasid_info {
->>>> #define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
->>>> #define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
->>>> 	__u32	flags;
->>>> 	__u32	archid;
->>>> 	__u64	pasid;
->>>> };
->>> I agree it does the job now. However it looks a bit strange to do a
->>> PASID based invalidation in my case - SMMUv3 nested stage - where I
->>> don't have any PASID involved.
->>>
->>> Couldn't we call it context based invalidation then? A context can be
->>> tagged by a PASID or/and an ARCHID.
->>
->> I think calling it "context" would be confusing as well (I shouldn't
->> have used it earlier), since VT-d uses that name for device table
->> entries (=STE on Arm SMMU). Maybe "addr_space"?
-> yes you're right. Well we already pasid table table terminology so we
-> can use it here as well - as long as we understand what purpose it
-> serves ;-) - So OK for iommu_inv_pasid_info.
-> 
-> I think Jean understood we would keep pasid standalone field in
-> iommu_cache_invalidate_info's union. I understand the struct
-> iommu_inv_pasid_info now would replace it, correct?
+> Thanks Andreas, I will take a look. Do we have such test in LTP?
 
-Yes
+We do have a test that we can run a binary with very small stack size
+i.e. 512kB but there does not seem to be anything that would catch this
+specific problem.
 
-Thanks,
-Jean
+Can you please open an issue and describe how to reproduce the problem
+at our github tracker:
+
+https://github.com/linux-test-project/ltp/issues
+
+Then we can create testcase based on that reproducer later on.
+
+-- 
+Cyril Hrubis
+chrubis@suse.cz
