@@ -2,111 +2,126 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A26C04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 926FFC04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A524621473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557799365;
-	bh=4OBmtfQllm0RymwAbmCzcP2d3KH9f8oCMkSmd1HlaAA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CHj8aJjOaKFhFKpYAEK8V61eLZGgeovFwrq8fiJz3nnCXn/CSuPL7jJ1AHoMjT51x
-	 8wVsxQCS8TazCIBoSf/j2uDfiBCg2Gda5RVh7Tpzvi84X7VkZueNELCHCR8gagePRe
-	 RdJUrJVVy5B7dXYMKxnQgNqRIAP3SqDTyKmoQSdg=
+	by mail.kernel.org (Postfix) with ESMTP id 638762085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 02:07:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDzV41z7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfENCCo (ORCPT
+        id S1726680AbfENCHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 22:02:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40604 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfENCCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 22:02:44 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47249214D8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 02:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557799363;
-        bh=4OBmtfQllm0RymwAbmCzcP2d3KH9f8oCMkSmd1HlaAA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=15OxqietpeRfGcIVu5u4YGK6lQMkA8PXcTMZtnOt1lzuJODROCsf/5K71H11TL4ul
-         XIQLz6xsf1OfhAS72AXJbUsNOQo5rEO7Y4JJrc/YQcRpjxUqD+Y1DbYwehJXNSN6/d
-         Q0NETdnisf6YcHjz5rFLGoBCziHZbk+A/5MudBlA=
-Received: by mail-wm1-f53.google.com with SMTP id x64so1090184wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 19:02:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAUBf7JKWvc0NN+BxQCUVK8sdMTVl+E1i7ZPmnoUbvIcG+YBYdy+
-        o1jJgPg5Dtrx7LPsZwmfcEQpp3Fgrz4mMSbkV+aEyg==
-X-Google-Smtp-Source: APXvYqynOcw9YL9Rj7oZzy310IyYvddcWfkYtYUCrEZa+qhWQKqb0ESZyXTuKlKEYx+4/q84sAUpXBybTnLqOnGPL3A=
-X-Received: by 2002:a1c:486:: with SMTP id 128mr16481232wme.83.1557799361797;
- Mon, 13 May 2019 19:02:41 -0700 (PDT)
+        Mon, 13 May 2019 22:07:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42941 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726327AbfENCHf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 22:07:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x15so7389940pln.9;
+        Mon, 13 May 2019 19:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TUW58sFUl5sYOk3396X1MJdln3VeH0EXozxImmU59vw=;
+        b=gDzV41z701QnCrQ26V0bq4z6xWTHENKXtePpErSx1cTFZAEnR170Cb3GIh6X6MaWvS
+         P86mF/lBRPJUDD0wchUSehkIB5xvrpeuqlBa3x2Vho248Nn/RkVDrf1bXASF+h6UKMN4
+         RJw+91n48gNTDuIgc4nbPEe+W1cxRXTb+DWKeIovw8s8/EnknXE17L/40Sd6A2Ubbr5c
+         mWCcTIy0CdYWj6taw53+CmqUKawbwZcEhJArjMmEt6X9vDDg49TOvQtWuiBMVFdi+mON
+         IPNk5ELNC1d9yajDGEoP1a7uD/eSigryhXScvyM69k3K7CMtduUWmvSmvMIQ6zmk60J0
+         pPcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TUW58sFUl5sYOk3396X1MJdln3VeH0EXozxImmU59vw=;
+        b=OQXl/Ci0QDUwGmKmNrDFYUJTh+xKTkbDdO/K8RHRF3J8ccuola8H9M8lORL5vCvmby
+         AL6SP7t760ZYIajguGOoMoRZEAgGAAy2lgfEy5rRNHOAI9Cp9MGNdSKCzNtdIW95pbo1
+         hmKz/4DdnnSmXTtIOy47PCrbbV/aDMGYpTgJHsB+24fV62hpO7h/ayZ+hxyv3Th8A0oS
+         qFxgmnWZQdqHhDTrfKCU5I1KuDmO6ADOcMWyx85fqT8bdhIW09gsKIoLugaFXxCEgXjJ
+         m1UIizGv1sNmTpWwCOXiJyySqCQjh029Q5wWo9c4kKocvsuCK16dwRZ2+wGc9dUgNe8L
+         Z7mw==
+X-Gm-Message-State: APjAAAXYuEx1TTifdK+TLYFbepgfkJ0cYCKzxslQC+6+Y4ixXft3i/xi
+        5kbk6GwLJPO/wmepgsizJhs=
+X-Google-Smtp-Source: APXvYqyCY0Kzi1kXb0vmv87aGVQQILnCJJ8qRJqL49F8s8Dds7JPB7O9ESBZIffOVdyOAeqexsF5/w==
+X-Received: by 2002:a17:902:108a:: with SMTP id c10mr35439629pla.48.1557799654316;
+        Mon, 13 May 2019 19:07:34 -0700 (PDT)
+Received: from localhost ([39.7.55.172])
+        by smtp.gmail.com with ESMTPSA id v64sm19993908pfv.106.2019.05.13.19.07.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 19:07:33 -0700 (PDT)
+Date:   Tue, 14 May 2019 11:07:30 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Laight <David.Laight@aculab.com>,
+        'christophe leroy' <christophe.leroy@c-s.fr>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190514020730.GA651@jagdpanzerIV>
+References: <20190510081635.GA4533@jagdpanzerIV>
+ <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
 MIME-Version: 1.0
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-25-git-send-email-alexandre.chartre@oracle.com>
- <20190513151500.GY2589@hirez.programming.kicks-ass.net> <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
-In-Reply-To: <13F2FA4F-116F-40C6-9472-A1DE689FE061@oracle.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 13 May 2019 19:02:30 -0700
-X-Gmail-Original-Message-ID: <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com>
-Message-ID: <CALCETrUcR=3nfOtFW2qt3zaa7CnNJWJLqRY8AS9FTJVHErjhfg@mail.gmail.com>
-Subject: Re: [RFC KVM 24/27] kvm/isolation: KVM page fault handler
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 2:26 PM Liran Alon <liran.alon@oracle.com> wrote:
->
->
->
-> > On 13 May 2019, at 18:15, Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, May 13, 2019 at 04:38:32PM +0200, Alexandre Chartre wrote:
-> >> diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> >> index 46df4c6..317e105 100644
-> >> --- a/arch/x86/mm/fault.c
-> >> +++ b/arch/x86/mm/fault.c
-> >> @@ -33,6 +33,10 @@
-> >> #define CREATE_TRACE_POINTS
-> >> #include <asm/trace/exceptions.h>
-> >>
-> >> +bool (*kvm_page_fault_handler)(struct pt_regs *regs, unsigned long error_code,
-> >> +                           unsigned long address);
-> >> +EXPORT_SYMBOL(kvm_page_fault_handler);
-> >
-> > NAK NAK NAK NAK
-> >
-> > This is one of the biggest anti-patterns around.
->
-> I agree.
-> I think that mm should expose a mm_set_kvm_page_fault_handler() or something (give it a better name).
-> Similar to how arch/x86/kernel/irq.c have kvm_set_posted_intr_wakeup_handler().
->
-> -Liran
->
+On (05/13/19 14:42), Petr Mladek wrote:
+> > The "(null)" is good enough by itself and already an established
+> > practice..
+> 
+> (efault) made more sense with the probe_kernel_read() that
+> checked wide range of addresses. Well, I still think that
+> it makes sense to distinguish a pure NULL. And it still
+> used also for IS_ERR_VALUE().
 
-This sounds like a great use case for static_call().  PeterZ, do you
-suppose we could wire up static_call() with the module infrastructure
-to make it easy to do "static_call to such-and-such GPL module symbol
-if that symbol is in a loaded module, else nop"?
+Wouldn't anything within first PAGE_SIZE bytes be reported as
+a NULL deref?
+
+       char *p = (char *)(PAGE_SIZE - 2);
+       *p = 'a';
+
+gives
+
+ kernel: BUG: kernel NULL pointer dereference, address = 0000000000000ffe
+ kernel: #PF: supervisor-privileged write access from kernel code
+ kernel: #PF: error_code(0x0002) - not-present page
+
+
+And I like Steven's "(fault)" idea.
+How about this:
+
+	if ptr < PAGE_SIZE		-> "(null)"
+	if IS_ERR_VALUE(ptr)		-> "(fault)"
+
+	-ss
