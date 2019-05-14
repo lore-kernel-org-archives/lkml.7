@@ -3,112 +3,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442ADC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B69C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154762086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2EF2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBg4mAX3"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GS4pjnR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfENEhR (ORCPT
+        id S1726607AbfENEkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 00:37:17 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]:44735 "EHLO
-        mail-qt1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfENEhQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 00:37:16 -0400
-Received: by mail-qt1-f177.google.com with SMTP id f24so13078687qtk.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 21:37:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Tf3korJmRLD8o2Lf06LrqOczw1F6ZM2FyAdskXAP/yk=;
-        b=lBg4mAX3TS8PJBOsb+445RvCKsl4l9r5dT0BTkb/FL86zuZPgzqK0IYwRDoq8DS/wW
-         bkN3AEQUlfMHlZU+0IVgdRfgFaOm6ajkuDV2FOR1rhtOAcMcbR1RfK+japxmOfw3PGr1
-         1KkIg29RCtaWyEWi81wAsuTrGj7UFXSekgkO7QlV3qE02GyWhbmyKqhRfqgs+DR/k+CO
-         xdanmaGLWE6F7ApSxivM8U+T/V/mz9LNfgVXI9ujMA77bvmfSG2ZBWbf2GcKqwClQ0Rj
-         UHVn5SVbESeu1MTDsvNW1+ztooPYlK9Aop1IqrJ7HASDwOGZcC5O3Ly+tDFg9XW9YDEa
-         2uaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Tf3korJmRLD8o2Lf06LrqOczw1F6ZM2FyAdskXAP/yk=;
-        b=JKE4Qa42nsqN5YC8BLuPkfwCbSA8IyGMjOXWsqMboyD7AsSr9wabxTwZRa3wuBDgVM
-         7phrSVr3Yq/42KDcSVVlpiGBUSugLtmGymvh0wcSkwAhIFHMNEm2qQhJcWRGyil9beoH
-         x36AUtuiOFyVans7GWeQaHAl7+B8o2yI5Tg7oTly6eexkQ0Hg0l7ozfx0rhHKe2L8OYC
-         eRYgllrBKTR9s6bhCQJ0iIIieW2zzeyXpBeMdVKP7j1DlWXQQZSN6EllUXk2CwJkymyb
-         mUtv4IExXbBXIv1wdMvhklb+flm4J3uIDa+TGCvR2wzF3FS4wGDGU25Nq4HF7LS5+8gc
-         t8Ng==
-X-Gm-Message-State: APjAAAWWSKXDqz//m1kIgSlHru9Hwllf4oYS3Gb89I3FpOOnhF3U0rGb
-        rApF3N7C5wJaPStSyakOTwpK+8e2ys1ChutASGM=
-X-Google-Smtp-Source: APXvYqwh4a0o8vAEeDVZY6kolyij7RZoaYa1MYOibq43kvFPp4BJjJKs9M6IS2Pmf3oMCR3z5OP/uvmiygdphi38f9o=
-X-Received: by 2002:ac8:5409:: with SMTP id b9mr27316238qtq.326.1557808635902;
- Mon, 13 May 2019 21:37:15 -0700 (PDT)
+        Tue, 14 May 2019 00:40:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59485 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725881AbfENEkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 00:40:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4534jg2N0Zz9sBp;
+        Tue, 14 May 2019 14:40:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557808807;
+        bh=Yc6CnsKVV9TstH2Vl9g/5SEIYi+B95IbdtJuychAYjQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GS4pjnR4r5uBPQ3jyIpXzI49JWnhMnqaTL+aOfPNtniZ8KbrB5vQdzDiPizsUbeIk
+         tb3jnaDBkIr6/5tYrnF6iAWjnF9lCDkFuOhFD9OZnwPNBevxZnOrFbbRpPcyFtCgym
+         6WqwGo4BX0YgvWpyBGyeWWywEij+MdZRFUPfqKo82wt7B1dFuJJb8HbQULh6VcTva9
+         i6akbyi771Cfx5q/Sv3aeBbxS3RyeEj0CD6JIHuC4F5/MEW/aEPW+mWfIycjR8nXPO
+         12aXYgCf2CbSpl6OizBOGg6HtO3SxUWT5PxRP2DjU1yw8V40uC2/lEdh0UK15h3t7L
+         9cuyfxJvXIKtA==
+Date:   Tue, 14 May 2019 14:40:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Eduardo Valentin <edubezval@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gal Pressman <galpress@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Talel Shenhar <talel@amazon.com>
+Subject: Re: linux-next: manual merge of the thermal-soc tree with Linus'
+ tree
+Message-ID: <20190514144006.60df13bb@canb.auug.org.au>
+In-Reply-To: <20190514034409.GA5691@localhost.localdomain>
+References: <20190513104928.0265b40f@canb.auug.org.au>
+        <20190514034409.GA5691@localhost.localdomain>
 MIME-Version: 1.0
-References: <1557505420-21809-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190513080929.GC24036@dhcp22.suse.cz> <c3c26c7a-748c-6090-67f4-3014bedea2e6@linux.alibaba.com>
- <20190513214503.GB25356@dhcp22.suse.cz>
-In-Reply-To: <20190513214503.GB25356@dhcp22.suse.cz>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 13 May 2019 21:36:59 -0700
-Message-ID: <CAHbLzkpUE2wBp8UjH72ugXjWSfFY5YjV1Ps9t5EM2VSRTUKxRw@mail.gmail.com>
-Subject: Re: [v2 PATCH] mm: vmscan: correct nr_reclaimed for THP
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        kirill.shutemov@linux.intel.com, Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        william.kucharski@oracle.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/2EkBLwMj1P8kge3EWnSyVJG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 2:45 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 13-05-19 14:09:59, Yang Shi wrote:
-> [...]
-> > I think we can just account 512 base pages for nr_scanned for
-> > isolate_lru_pages() to make the counters sane since PGSCAN_KSWAPD/DIRECT
-> > just use it.
-> >
-> > And, sc->nr_scanned should be accounted as 512 base pages too otherwise we
-> > may have nr_scanned < nr_to_reclaim all the time to result in false-negative
-> > for priority raise and something else wrong (e.g. wrong vmpressure).
->
-> Be careful. nr_scanned is used as a pressure indicator to slab shrinking
-> AFAIR. Maybe this is ok but it really begs for much more explaining
+--Sig_/2EkBLwMj1P8kge3EWnSyVJG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I don't know why my company mailbox didn't receive this email, so I
-replied with my personal email.
+Hi Eduardo,
 
-It is not used to double slab pressure any more since commit
-9092c71bb724 ("mm: use sc->priority for slab shrink targets"). It uses
-sc->priority to determine the pressure for slab shrinking now.
-
-So, I think we can just remove that "double slab pressure" code. It is
-not used actually and looks confusing now. Actually, the "double slab
-pressure" does something opposite. The extra inc to sc->nr_scanned
-just prevents from raising sc->priority.
-
-> than "it should be fine". This should have happened when THP swap out
-> was implemented...
+On Mon, 13 May 2019 20:44:11 -0700 Eduardo Valentin <edubezval@gmail.com> w=
+rote:
 >
-> --
-> Michal Hocko
-> SUSE Labs
->
+> Thanks for spotting this. I am re-doing the branch based off v5.1-rc7,
+> where the last conflict went in with my current queue.
+
+Its really not worth the rebase.  Just fix the build problem and send it
+all to Linus.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/2EkBLwMj1P8kge3EWnSyVJG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzaRqYACgkQAVBC80lX
+0GxmzAf+OnMWPR/PLV6gW4+7P0DgN4H8+d6uMwOlG5XPsTAqH7IwFFj9HQNjtsRM
+GNMme0P2d3HRc9M9cIUAkZca29knRKS6lvE8QJPna3FDv5ma3T0Mjt5QE0EGCber
+Z+mXUPksD+qgyZ6TyOmj8v7Ih+38+4wzMRzW1DPF4bl4feyO6G4m3Lbcqg7EqplS
+3Peo7QW1s/l0vDJk3Ai6h7D0usNpW2ku8ba7geDPK2CyyaS9dWi4v72s2f2lt8M/
+hT2PL3XrM/qrRzR7qC0+V2T6SLT81F4J21hUNRjGndP7yziybuHG2vLJu0lWQDjg
+3CMRX+RT3RDRV1/6MfPmB466+o2/0Q==
+=8J15
+-----END PGP SIGNATURE-----
+
+--Sig_/2EkBLwMj1P8kge3EWnSyVJG--
