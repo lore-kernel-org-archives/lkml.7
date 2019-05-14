@@ -2,116 +2,71 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2734C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5854DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBA620644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B5E620644
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:25:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfENPZV (ORCPT
+        id S1726515AbfENPZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:25:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:15996 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfENPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:25:21 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4A433087BB4;
-        Tue, 14 May 2019 15:25:20 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A887B608A6;
-        Tue, 14 May 2019 15:25:20 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 62E0118089CC;
-        Tue, 14 May 2019 15:25:20 +0000 (UTC)
-Date:   Tue, 14 May 2019 11:25:20 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        dan j williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, jack@suse.cz, mst@redhat.com,
-        jasowang@redhat.com, david@fromorbit.com, lcapitulino@redhat.com,
-        adilger kernel <adilger.kernel@dilger.ca>, zwisler@kernel.org,
-        aarcange@redhat.com, dave jiang <dave.jiang@intel.com>,
-        jstaron@google.com, darrick wong <darrick.wong@oracle.com>,
-        vishal l verma <vishal.l.verma@intel.com>, david@redhat.com,
-        willy@infradead.org, hch@infradead.org, jmoyer@redhat.com,
-        nilal@redhat.com, lenb@kernel.org, kilobyte@angband.pl,
-        riel@surriel.com, yuval shaia <yuval.shaia@oracle.com>,
-        stefanha@redhat.com, pbonzini@redhat.com,
-        dan j williams <dan.j.williams@intel.com>, kwolf@redhat.com,
-        tytso@mit.edu, xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        cohuck@redhat.com, rjw@rjwysocki.net, imammedo@redhat.com
-Message-ID: <1112624345.28705248.1557847520326.JavaMail.zimbra@redhat.com>
-In-Reply-To: <c22d42f6-ef94-0310-36f2-e9085d3464c2@infradead.org>
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <c22d42f6-ef94-0310-36f2-e9085d3464c2@infradead.org>
-Subject: Re: [Qemu-devel] [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+        Tue, 14 May 2019 11:25:31 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:34374 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfENPZa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:25:30 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hQZIv-0005IH-9z; Tue, 14 May 2019 17:25:21 +0200
+Date:   Tue, 14 May 2019 17:25:21 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     minyard@acm.org, linux-rt-users@vger.kernel.org,
+        Corey Minyard <cminyard@mvista.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190514152521.2gz6w2bahhgkxav7@linutronix.de>
+References: <20190508205728.25557-1-minyard@acm.org>
+ <20190509161925.kul66w54wpjcinuc@linutronix.de>
+ <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
+ <20190514091219.nesriqe7qplk3476@linutronix.de>
+ <20190514113538.GL2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.16.148, 10.4.195.17]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: dlXNsat06Cmvl53reNYz3WCWYqwXeA==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 14 May 2019 15:25:21 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <20190514113538.GL2589@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-> On 5/14/19 7:54 AM, Pankaj Gupta wrote:
-> > diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> > index 35897649c24f..94bad084ebab 100644
-> > --- a/drivers/virtio/Kconfig
-> > +++ b/drivers/virtio/Kconfig
-> > @@ -42,6 +42,17 @@ config VIRTIO_PCI_LEGACY
-> >  
-> >  	  If unsure, say Y.
-> >  
-> > +config VIRTIO_PMEM
-> > +	tristate "Support for virtio pmem driver"
-> > +	depends on VIRTIO
-> > +	depends on LIBNVDIMM
-> > +	help
-> > +	This driver provides access to virtio-pmem devices, storage devices
-> > +	that are mapped into the physical address space - similar to NVDIMMs
-> > +	 - with a virtio-based flushing interface.
-> > +
-> > +	If unsure, say M.
+On 2019-05-14 13:35:38 [+0200], Peter Zijlstra wrote:
+> On Tue, May 14, 2019 at 11:12:19AM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-05-14 10:43:56 [+0200], Peter Zijlstra wrote:
+> > > Now.. that will fix it, but I think it is also wrong.
+> > > 
+> > > The problem being that it violates FIFO, something that might be more
+> > > important on -RT than elsewhere.
+> > 
+> > Wouldn't -RT be more about waking the task with the highest priority
+> > instead the one that waited the longest?
 > 
-> <beep>
-> from Documentation/process/coding-style.rst:
-> "Lines under a ``config`` definition
-> are indented with one tab, while help text is indented an additional two
-> spaces."
+> Possibly, but that's a far larger patch. Also, even with that
+> completions do not avoid inversions and thus don't really make nice RT
+> primitives anyway.
 
-ah... I changed help text and 'checkpatch' did not say anything :( .
+See. So it does not really matter if a particular waiter ends up at the
+end of the queue.
+Anyway, I don't really think we need this but if you want it, let me add
+it.
+What about the other question I had regarding completion_done()?
 
-Will wait for Dan, If its possible to add two spaces to help text while applying
-the series.
-
-Thanks,
-Pankaj
-  
-
-> 
-> > +
-> >  config VIRTIO_BALLOON
-> >  	tristate "Virtio balloon driver"
-> >  	depends on VIRTIO
-> 
-> thanks.
-> --
-> ~Randy
-> 
-> 
+Sebastian
