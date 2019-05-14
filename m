@@ -2,286 +2,87 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF67C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7C9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ED522166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uXDDy/8g"
+	by mail.kernel.org (Postfix) with ESMTP id 64C142166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557865692;
+	bh=SeTXnt4Kq0pwZ9i9q/N8y5cFP/35h05XfSXXT4hChF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T2VewQnbgKgkjzJO1vdCiX3/QXSfB6ulFTDdJPzUkgIpy6hluXLbsZinq/7QKu0k6
+	 iYyPASxqrN0kZShr6XHRSIjwj1qxvzzI5oW7iJ4Mp7K/cQXceJzXPCrA0udDybIsL5
+	 OuZIW1YucXfTMT8hZki7+qzgqthPrWrcNMtyQwYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfENU1z (ORCPT
+        id S1726599AbfENU2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:27:55 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42291 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfENU1z (ORCPT
+        Tue, 14 May 2019 16:28:11 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41398 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbfENU2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:27:55 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y13so199189lfh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cg+0pIxncJfvTs4tSoXl4GsGWbTnN63dbKG4EXKdY5I=;
-        b=uXDDy/8gSW0jEorXj4eEKaiOvkegZ9DkXL+itl4xCKsGvVnDxiqb9TOYJ7uZwxQQ6f
-         Z5zwbihzNlRL5hNx0YodjSJ1b0ibJ1+pIOHph2tL5/Jw0hYNo0axkDGfyiAlW8tpFsf+
-         Qiqpqp2Wq5e/kcKkbYo4NdSGqxA4Ajt8jDRBg1dlGf235oqdtzr9M52JXGW613NuIk6b
-         lKvC63Gx6Scwn48rpDrpKQXCfc4Rv2+M/BQyi1KlwGKNNEXPgSC7s+vKIhLey+YZDOXi
-         6c8QKUx6VHUS5BiVOs8NNBzxwigbKmDaRpAdHoMUpvqpzaNSH+7hBGLJb6z0J/Z0hq0v
-         ul0w==
+        Tue, 14 May 2019 16:28:11 -0400
+Received: by mail-oi1-f193.google.com with SMTP id y10so112752oia.8;
+        Tue, 14 May 2019 13:28:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Cg+0pIxncJfvTs4tSoXl4GsGWbTnN63dbKG4EXKdY5I=;
-        b=JZt/G2z1C4TV5yapIzwgBpfss/Xpb6tZPIlyULYua98GKCMd3D7qWBl4Cv8jptik12
-         LmJBVH/K4e/HKfiHFKu/I4+yWxcxyNDAFQ8a8tMGQ5NBT4mwx65rMfeAhD6uYd+zOOb+
-         dsXVIwfrGLp6uFZ/rU6o2xtFd2xvu4nkM6OVVfFXX6Q6BoGmDQJ5LdvAqqVpn6i9PoPy
-         kSOkGjeBT6UKJYFVmCqFRZgYq9gQy7IRVFRtRGW/u75q2oKdquYKNahjxQI0EkGvGe69
-         XgPqj1QNkZg2jUh1c/5mCby/XJlnkt4jt1AqCjrbF8NLUk5FQvkjFzkO3CX/G+jW7aZy
-         H7og==
-X-Gm-Message-State: APjAAAXWQOTDOnrLA+4F6KuN0RG0Hn/E9e3NNrNj3R2INB12EBMnAhNe
-        /SXREVnFufS9b+Bj0fjW7FHUaA==
-X-Google-Smtp-Source: APXvYqzPxsM8974bIW7yAai/77T/30BrUMlizPu9DEpJloaDJRxl1lG+PYCPEmvieuPciMNeWkUmjw==
-X-Received: by 2002:a05:6512:206:: with SMTP id a6mr18870241lfo.18.1557865672326;
-        Tue, 14 May 2019 13:27:52 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.86.127])
-        by smtp.gmail.com with ESMTPSA id x29sm3942315lfg.58.2019.05.14.13.27.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 13:27:51 -0700 (PDT)
-Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
- RPC-IF MFD bindings
-To:     masonccyang@mxic.com.tw, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
-References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
- <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
- <20190424212356.GA27103@bogus>
- <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
- <20190507125730.GD29524@dell>
- <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
- <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
- <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
- <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com>
- <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
- <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
- <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
- <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com>
- <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <44bc8f0a-cbdc-db4a-9a46-b8bae5cc37a2@cogentembedded.com>
-Date:   Tue, 14 May 2019 23:27:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/xEQhRe1Pra6YVRpwyMFKIovwszsqjuMIre3+73jdVw=;
+        b=BhnStekwb2faaqXnH0+BBovID7o3dRItCLSLGL1xZ8DAUxsUgXW3rWpQZpFHJ++5QJ
+         dBGBuJYQeBHLGCMb4hG9IUkL3RgC2jH1aonakoyOD81fcnd4AuzpmzTHP113vauKHCAa
+         Ln/PhXJ3rXFETIRyt6g4bz9FANFV4sWqympX+X/vc9cRUoRXAfEwZ4QvWx8CHPOw5NTi
+         L7gvQm2qmI2jqiGocO9vYeFBYryEtGGyANoT7BD2zAVIwnmBKiiTgTilU5dsf4iQsgFq
+         TlVBYssz6P+ef+gB8mPh3Ie/uM0anVQSc0CC6OhRULLxdM6cGm0oC/bk0Jjbz8bi1JcU
+         4rlg==
+X-Gm-Message-State: APjAAAVSMTkIwhkL8HocbR2b6japRYuqykoo4yq5Q9HQ6atl+/V/U3f+
+        Kiodqzi0ya980Kh9eVvrWg==
+X-Google-Smtp-Source: APXvYqwH5J0KSSwtut0OTNe86vsNzvw9QHm7hI902PxNhh3qNuE4E8bI0xQtbTD5Y+FzANVluP7iug==
+X-Received: by 2002:aca:aa8b:: with SMTP id t133mr4038437oie.101.1557865690412;
+        Tue, 14 May 2019 13:28:10 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g3sm6652578oif.25.2019.05.14.13.28.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 13:28:09 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:28:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: Re: [PATCH v2 3/5] dt-bindings: mfd: mt6397: Add bindings for MT6392
+ PMIC
+Message-ID: <20190514202808.GA21263@bogus>
+References: <20190513161026.31308-1-fparent@baylibre.com>
+ <20190513161026.31308-4-fparent@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513161026.31308-4-fparent@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/14/2019 12:46 PM, masonccyang@mxic.com.tw wrote:
-
->>>> There's precedence for such constructs being an MFD: please see
->>>> drivers/mfd/at91-usart.c, which registers a single MFD cell for 
-> either
->>>> serial or SPI.
->>
->>    Thanks fir your example, Geert! :-)
-
-   s/fir/for/, not the firtree season anymore. :-)
-
->>> okay, many thanks for your information.
->>>
->>> How about to patch RPF-IF dts to:
->>> -------------------------------------------------------------->
->>>
->>> Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
->>> ---------------------------------------------------------
->>>
->>>   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
->>>
->>>   Required properties:
->>>   - compatible: should be an SoC-specific compatible value, followed 
-> by
->>>                   "renesas,rcar-gen3-rpc" as a fallback.
->>>                   supported SoC-specific values are:
->>>                   "renesas,r8a77995-rpc"  (R-Car D3)
->>>   - reg: should contain three register areas:
->>>           first for the base address of RPC-IF registers,
->>
->>    I'd drop "the base address" here.
+On Mon, 13 May 2019 18:10:24 +0200, Fabien Parent wrote:
+> Add the currently supported bindings for the MT6392 PMIC.
 > 
-> okay.
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> ---
 > 
->>>           second for the direct mapping read mode and
->>>           third for the write buffer area.
->>>   - reg-names: should contain "regs", "dirmap" and "wbuf"
->>>   - clocks: should contain 1 entries for the module's clock
->>>   - clock-names: should contain "rpc"
->>
->>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not sure 
-> yet)...
+> V2:
+> 	* New patch
 > 
-> Need it ?
-
-   You seem to call clk_get_rate() on the module clock, I doubt that's
-correct topologically...
-
-> RPCD2 is derived from RPC and it's value is half of RPC,
-> i.e., RPC = 160MHz, RPCD2 = 80 MHz
-
-   I know.
-
->>    And how about "power-domains", "resets" (seen in the example below),
->> also what about #address-cells & #size-cells?
->>
->>>
->>>   Example:
->>
->>    Could you please indent with 1 or 2 tabs where you used 8 or 16 
-> spaces?
->>
->>>   - SPI mode:
->>>
->>>           rpc: rpc-if@ee200000 {
->>
->>    The node names should be generic, based on the device class. And in 
-> this
->> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching like 
-> below:
+> ---
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
 > 
-> okay, patch to
-> 
-> rpc_if: spi@<...>
 
-   That, or just keep the node label.
-
->> arch/arm64/boot/dts/renesas/r8a77980.dtsi:1344.21-1359.5: Warning 
-> (spi_bus_bridge):
->> /soc/rpc@ee200000: node name for SPI buses should be 'spi'
->>   also defined at 
-> arch/arm64/boot/dts/renesas/r8a77980-condor.dts:283.6-343.3
->> arch/arm64/boot/dts/renesas/r8a77980-condor.dtb: Warning (spi_bus_reg):
->> Failed prerequisite 'spi_bus_bridge'
->>
->>
->>>   - HF mode:
->>>           rpc: rpc-if@ee200000 {
->>
->>    Again, spi@<...>.
-> 
-> what about rpc_if: hf@<...>
-
-   Can't change the node name, as it's declared in the .dtsi files, not *.dts
-ones. And "spi" works for the HF case as well -- no complaints from dtc. :-)
-
->>>                   compatible = "renesas,r8a77995-rpc", 
-> "renesas,rcar-gen3-rpc";
->>>                   reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 
-> 0x4000000>,
->>>                         <0 0xee208000 0 0x100>;
->>>                   reg-names = "regs", "dirmap", "wbuf";
->>>                   clocks = <&cpg CPG_MOD 917>;
->>>                   clock-names = "rpc";
->>>                   power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->>>                   resets = <&cpg 917>;
->>>                   #address-cells = <1>;
->>>                   #size-cells = <1>;
->>>
->>>                   flash@0 {
->>>                           compatible = "cfi-flash";
->>
->>    The working HF implementation has "cypress,hyperflash" before 
-> "cfi-flash".
->>
->>>                           reg = <0 0x4000000>;
->>>                   };
->>>           };
->>>
->>> --------------------------------------------------------------<
->>>
->>> Is it OK ?
->>
->>    Yeah, seems good (assuming you fix the issues above).
-> 
-> Patch new DTS to
-> ===============================================================> 
-> 
-> +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
-> +---------------------------------------------------------
-> +
-> +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
-> +
-> +Required properties:
-> +- compatible: should be an SoC-specific compatible value, followed by
-> +                                "renesas,rcar-gen3-rpc" as a fallback.
-> +                                supported SoC-specific values are:
-> +                                "renesas,r8a77995-rpc"          (R-Car 
-> D3)
-> +- reg: should contain three register areas:
-> +                first for RPC-IF registers,
-> +                second for the direct mapping read mode and
-> +                third for the write buffer area.
-> +- reg-names: should contain "regs", "dirmap" and "wbuf"
-> +- clocks: should contain 1 entries for the module's clock
-> +- clock-names: should contain "rpc"
-> +- #address-cells: should be 1
-> +- #size-cells: should be 0
-
-   Still nothing about the "oower-domains" and "resets" props... :-(
-
-> +
-> +Example:
-> +- SPI mode:
-> +
-> +                rpc_if: spi@ee200000 {
-> +                                compatible = "renesas,r8a77995-rpc", 
-> "renesas,rcar-gen3-rpc";
-> +                                reg = <0 0xee200000 0 0x200>, <0 
-> 0x08000000 0 0x4000000>,
-> +                                      <0 0xee208000 0 0x100>;
-> +                                reg-names = "regs", "dirmap", "wbuf";
-> +                                clocks = <&cpg CPG_MOD 917>;
-> +                                clock-names = "rpc";
-> +                                power-domains = <&sysc 
-> R8A77995_PD_ALWAYS_ON>;
-> +                                resets = <&cpg 917>;
-> +                                #address-cells = <1>;
-> +                                #size-cells = <0>;
-[...]
-> =======================================================================<
-> 
-> OK ?
-
-   Yes, with the remaining issue fixed.
- 
-> thanks & best regards,
-> Mason
-
-[...]
-
-MBR, Sergei
+Reviewed-by: Rob Herring <robh@kernel.org>
