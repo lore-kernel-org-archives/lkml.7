@@ -2,98 +2,110 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E611C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF17C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684A020879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93ED20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfENI22 convert rfc822-to-8bit (ORCPT
+        id S1726974AbfENI2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:28:28 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46406 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726678AbfENI20 (ORCPT
+        Tue, 14 May 2019 04:28:48 -0400
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:34085 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfENI2s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:28:26 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-28-QSu0seGsPgOZSvrndg-J7w-1; Tue, 14 May 2019 09:28:22 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
- 14 May 2019 09:28:22 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 14 May 2019 09:28:22 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Sergey Senozhatsky' <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>
-CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        'christophe leroy' <christophe.leroy@c-s.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        "Stephen Rothwell" <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
-Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
-Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsA==
-Date:   Tue, 14 May 2019 08:28:21 +0000
-Message-ID: <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
-In-Reply-To: <20190514020730.GA651@jagdpanzerIV>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 14 May 2019 04:28:48 -0400
+Received: by mail-ua1-f67.google.com with SMTP id 7so1786842uah.1;
+        Tue, 14 May 2019 01:28:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/NA3o69AVedwbrS8I/JNFCMoka6aSRYx6sOSkm7j+ZY=;
+        b=sWgbCysasls5T0fl83xIYjpsrFQUwdFB9c00tAyeFdNssQL6P4oHoo5COXUm+f/6A1
+         ayG7O8p9Tgf2fUn8N6rzoQnSZUePC4/JzJQYlfE/ZbTkgMRO2yeAAefz8nq6YSGZ43UT
+         W40o3xXh9d9538IE0NrDii59lG6ogBdYvkRa2IauaAG5xJ7uc1KuS/rQOnixZrAe7IkV
+         1tUZYKZKemMSpYaD4ie9Edhd7FQdxBOUJtgHIEWJauyGGuCGGMc0SuzOceh1ZnGBbSPC
+         gOkQ68MKkpGA/wWNks4CnVKO7XO27I/VfMbgbocICTjRhe0O03pSpCDWYas++gLnEgYC
+         tp7g==
+X-Gm-Message-State: APjAAAVvpSQ02Mb7kYjA24EDNaHNWCNtrKlOwY3H1QsyyQlsrRNOd5wH
+        bc6ZGzQf0B8iRuPZ2FmWsH67XBV8TXG3PqFXj04=
+X-Google-Smtp-Source: APXvYqwdcU+/txalebspsx4VOD+EnsWOMl3ldpM6w0yNu5aBmbUhQ7DwUL4yoq5BDqRktbvDVPuCHNLpcUJd09+lby0=
+X-Received: by 2002:ab0:45e9:: with SMTP id u96mr4671687uau.75.1557822526733;
+ Tue, 14 May 2019 01:28:46 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: QSu0seGsPgOZSvrndg-J7w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
+In-Reply-To: <1557762446-23811-1-git-send-email-george_davis@mentor.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 May 2019 10:28:34 +0200
+Message-ID: <CAMuHMdVaNWa=Q-7K-+_rM-8yYWB0-+4_o4hgACK6o-4BOrY07A@mail.gmail.com>
+Subject: Re: [PATCH v2] serial: sh-sci: disable DMA for uart_console
+To:     "George G. Davis" <george_davis@mentor.com>
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        Ulrich Hecht <ulrich.hecht+renesas@gmail.com>,
+        Andy Lowe <andy_lowe@mentor.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS 
+        <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> And I like Steven's "(fault)" idea.
-> How about this:
-> 
-> 	if ptr < PAGE_SIZE		-> "(null)"
-> 	if IS_ERR_VALUE(ptr)		-> "(fault)"
-> 
-> 	-ss
+Hi George,
 
-Or:
-	if (ptr < PAGE_SIZE)
-		return ptr ? "(null+)" : "(null)";
-	if IS_ERR_VALUE(ptr)
-		return "(errno)"
+On Mon, May 13, 2019 at 5:48 PM George G. Davis <george_davis@mentor.com> wrote:
+> As noted in commit 84b40e3b57ee ("serial: 8250: omap: Disable DMA for
+> console UART"), UART console lines use low-level PIO only access functions
+> which will conflict with use of the line when DMA is enabled, e.g. when
+> the console line is also used for systemd messages. So disable DMA
+> support for UART console lines.
+>
+> Fixes: https://patchwork.kernel.org/patch/10929511/
 
-	David
+I don't think this is an appropriate reference, as it points to a patch that
+was never applied.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+As the problem has basically existed forever, IMHO no Fixes tag
+is needed.
 
+> Reported-by: Michael Rodin <mrodin@de.adit-jv.com>
+> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> ---
+> v2: Clarify comment regarding DMA support on kernel console,
+>     add {Tested,Reviewed}-by:, and Cc: linux-stable lines.
+
+Thanks for the update!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
