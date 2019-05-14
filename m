@@ -2,200 +2,143 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3ACC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62BA920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E577F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OXIGVEAc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPIXovgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfENToz (ORCPT
+        id S1726380AbfENTpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:44:55 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:44617 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfENToy (ORCPT
+        Tue, 14 May 2019 15:45:15 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:42578 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfENTpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:44:54 -0400
-Received: by mail-yw1-f66.google.com with SMTP id e74so230638ywe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:44:53 -0700 (PDT)
+        Tue, 14 May 2019 15:45:15 -0400
+Received: by mail-ed1-f68.google.com with SMTP id l25so536031eda.9;
+        Tue, 14 May 2019 12:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WWNzgUR578IGEFBbLtpCrpyvIXcz+Pq8uV/vbHZGD+s=;
-        b=OXIGVEAclJ24CckrLwHBe7KOlCnYTPq5OOSitVLOpgVht6ZiCChl6+yJ7aViSYPpGG
-         9HvafLnLPzRF7WTia1W/ogZktH7Y1zNQdDO5C4+g+ctGVR8yqDtV789qJ/hmv0u79aWn
-         N1Gh12znkPe1RXUlTVzjwqOTzT8BP/iDSGPg4wvQktMNZxi4o5Gnti4yFH0njCQSYr90
-         QeRfMooTXFqqP4heorGGkr/7435EboXPhnO1GLpleZQNJtVFJVhew8xXfSk9wpSMbcis
-         H8CMdDo7bs4IaRmG9Ahp7GgrHPIpHiD+p2RDNOqGL+8ERsu32UKtkDtqUAm67ugQ4DDB
-         L/Qg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Fu9WOeDbdlL/ua5Ah2bZTlJie+g3UL98LUXK/FhpkXQ=;
+        b=LPIXovgGUA7+D6oKZfVjcYMnrbagOKIgBIOb5NewyNJ34GdkG0K735sD0dyGuRsOrc
+         Ma1fbjdFgcd8fxKKGhQfHYGgTriKPgHFRQTP8GGOt8MgOq+gw9VxEHyz0y9DLBXwScwh
+         gIrdADKXUNCqCUrOEMDmv8WhBbLeKQQCZ8IkSWrAmftE4jF3rzwthp9WABk3qJSs7w1y
+         P9rwf4TwckKSorNd+oRWiDsqUlL5+iFIlB+d9T7GuAwJGYfgt5bcGRUBb0oNYFONZzjq
+         UKywE9BnSA/NU8wMalz+VX/rwAPYMDZQyc0NhRw4bpWMeRvnZL68JMR9kfwpvKkiAGai
+         29vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WWNzgUR578IGEFBbLtpCrpyvIXcz+Pq8uV/vbHZGD+s=;
-        b=Kw5uXb4+ZBPlhqxO05JXR8g51n4NeUDEYFxbtQBBfReSovJoC8kEm6e2/XaY3u4snq
-         QteAMhRjsmwJfAWQMtaigU6wFCx1qrsokPB2N4KRzrfxuEQFe0Lgm4OS/DaNY/z6YKsQ
-         3cQM1uQbpD0dTppZVV0n9pYO4vWuvUDGIlvj6YUc5GGCvfjbGtFZ754vl1W2oXapZqjr
-         7F2FcnZ8jHGVNM4dibnM5BqT8wKCG3qxFm1KP/VgLl8+LP/TIBTj7l53e7AmJRrjyX3B
-         PJmejs+lU7PsutAn0r12FH7L1g8+PBTcQ1+TDw/l6y9RJef/t3hS5U1BAg2C8NVFOR+G
-         VCOg==
-X-Gm-Message-State: APjAAAV25YSbwR95mqzTmHOqEMsd6ZuEPiAseSq0X7AM3ZCxDWCEa9mh
-        1qQP92PlAO7Q4ixaC40oO+S/AAjNO8IMlwPN5l9qTg==
-X-Google-Smtp-Source: APXvYqx9Q+7nW0k0HhrbLDn+euVlJ8+dDDSqHxkodW9CqTuwRx1EbaZHRhc2S2IKSuQF/Pyrgiz6q2gHxOQRNronuo4=
-X-Received: by 2002:a81:2513:: with SMTP id l19mr13039829ywl.299.1557863093359;
- Tue, 14 May 2019 12:44:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Fu9WOeDbdlL/ua5Ah2bZTlJie+g3UL98LUXK/FhpkXQ=;
+        b=LKR5bnviCqr9plzF4P14MYNn6yVRGcJqLqTG5qmlqiqTqo8llCewqCYrWaKhKxg1b3
+         3imXJA/F5rJQDz0qWjXbTxGWdjr5pm6Jyw6Uoo63kTdOPkvXFGyFxIijIpkgyyb0lDcV
+         vejwKkj6sbRWWZM+mHg9KD3W696pfmCDUujhN184WNI0JCsAAO/EBAQWlamTCykVs0Wm
+         ZMbm4oA1wAu6ofUJ202RsPrmOfsXzxkLVrkLWUGAYYy6hlyKY86H0h9yClGON57zXmg8
+         YGg4XqXL7LLJQnRaelxtMqKlmK9OxPrWxLKUWIEumvyPZlm7n1d9hcppeEcLki9qGe+w
+         Bt7Q==
+X-Gm-Message-State: APjAAAVgu8MF+3OqW5hJXsXpFyQrccuvWsDuUhDTVfcAUiEiTat4YJJp
+        KR40gibGfULMTvRzeQhIXYw=
+X-Google-Smtp-Source: APXvYqy29p1AGL/lhkLzcm9t9htDL/6Rgp/8i5IyzXb3FiDwnKLmonFhwH6a3wXa6z6BF4OHcI0LvA==
+X-Received: by 2002:a50:a51c:: with SMTP id y28mr32223328edb.280.1557863113126;
+        Tue, 14 May 2019 12:45:13 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id e33sm4855172edd.53.2019.05.14.12.45.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 12:45:12 -0700 (PDT)
+Date:   Tue, 14 May 2019 12:45:10 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Ariel Levkovich <lariel@mellanox.com>,
+        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Doug Ledford <dledford@redhat.com>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+Message-ID: <20190514194510.GA15465@archlinux-i9>
 MIME-Version: 1.0
-References: <20190514183935.143463-1-dianders@chromium.org> <20190514183935.143463-3-dianders@chromium.org>
-In-Reply-To: <20190514183935.143463-3-dianders@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 14 May 2019 12:44:42 -0700
-Message-ID: <CABXOdTdiEgF2Jypha1qZ4s1X2bkYqVTmT7XNYge19WQtSarSVw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] spi: Allow SPI devices to request the pumping
- thread be realtime
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:40 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> Right now the only way to get the SPI pumping thread bumped up to
-> realtime priority is for the controller to request it.  However it may
-> be that the controller works fine with the normal priority but
-> communication to a particular SPI device on the bus needs realtime
-> priority.
->
-> Let's add a way for devices to request realtime priority when they set
-> themselves up.
->
-> NOTE: this will just affect the priority of transfers that end up on
-> the SPI core's pumping thread.  In many cases transfers happen in the
-> context of the caller so if you need realtime priority for all
-> transfers you should ensure the calling context is also realtime
-> priority.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Hi all,
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+I checked the RDMA mailing list and trees and I haven't seen this
+reported/fixed yet (forgive me if it has) but when building for arm32
+with multi_v7_defconfig and the following configs (distilled from
+allyesconfig):
 
-> ---
->
-> Changes in v3:
-> - SPI core change now like patch v1 patch #2 (with name "rt").
->
-> Changes in v2:
-> - Now only force transfers to the thread for devices that want it.
-> - Squashed patch #1 and #2 together.
-> - Renamed variable to "force_rt_transfers".
->
->  drivers/spi/spi.c       | 36 ++++++++++++++++++++++++++++++------
->  include/linux/spi/spi.h |  2 ++
->  2 files changed, 32 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 8eb7460dd744..466984796dd9 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -1364,10 +1364,32 @@ static void spi_pump_messages(struct kthread_work *work)
->         __spi_pump_messages(ctlr, true);
->  }
->
-> -static int spi_init_queue(struct spi_controller *ctlr)
-> +/**
-> + * spi_set_thread_rt - set the controller to pump at realtime priority
-> + * @ctlr: controller to boost priority of
-> + *
-> + * This can be called because the controller requested realtime priority
-> + * (by setting the ->rt value before calling spi_register_controller()) or
-> + * because a device on the bus said that its transfers needed realtime
-> + * priority.
-> + *
-> + * NOTE: at the moment if any device on a bus says it needs realtime then
-> + * the thread will be at realtime priority for all transfers on that
-> + * controller.  If this eventually becomes a problem we may see if we can
-> + * find a way to boost the priority only temporarily during relevant
-> + * transfers.
-> + */
-> +static void spi_set_thread_rt(struct spi_controller *ctlr)
->  {
->         struct sched_param param = { .sched_priority = MAX_RT_PRIO - 1 };
->
-> +       dev_info(&ctlr->dev,
-> +               "will run message pump with realtime priority\n");
-> +       sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
-> +}
-> +
-> +static int spi_init_queue(struct spi_controller *ctlr)
-> +{
->         ctlr->running = false;
->         ctlr->busy = false;
->
-> @@ -1387,11 +1409,8 @@ static int spi_init_queue(struct spi_controller *ctlr)
->          * request and the scheduling of the message pump thread. Without this
->          * setting the message pump thread will remain at default priority.
->          */
-> -       if (ctlr->rt) {
-> -               dev_info(&ctlr->dev,
-> -                       "will run message pump with realtime priority\n");
-> -               sched_setscheduler(ctlr->kworker_task, SCHED_FIFO, &param);
-> -       }
-> +       if (ctlr->rt)
-> +               spi_set_thread_rt(ctlr);
->
->         return 0;
->  }
-> @@ -2982,6 +3001,11 @@ int spi_setup(struct spi_device *spi)
->
->         spi_set_cs(spi, false);
->
-> +       if (spi->rt && !spi->controller->rt) {
-> +               spi->controller->rt = true;
-> +               spi_set_thread_rt(spi->controller);
-> +       }
-> +
->         dev_dbg(&spi->dev, "setup mode %d, %s%s%s%s%u bits/w, %u Hz max --> %d\n",
->                         (int) (spi->mode & (SPI_CPOL | SPI_CPHA)),
->                         (spi->mode & SPI_CS_HIGH) ? "cs_high, " : "",
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 053abd22ad31..15505c2485d6 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -109,6 +109,7 @@ void spi_statistics_add_transfer_stats(struct spi_statistics *stats,
->   *     This may be changed by the device's driver, or left at the
->   *     default (0) indicating protocol words are eight bit bytes.
->   *     The spi_transfer.bits_per_word can override this for each transfer.
-> + * @rt: Make the pump thread real time priority.
->   * @irq: Negative, or the number passed to request_irq() to receive
->   *     interrupts from this device.
->   * @controller_state: Controller's runtime state
-> @@ -143,6 +144,7 @@ struct spi_device {
->         u32                     max_speed_hz;
->         u8                      chip_select;
->         u8                      bits_per_word;
-> +       bool                    rt;
->         u32                     mode;
->  #define        SPI_CPHA        0x01                    /* clock phase */
->  #define        SPI_CPOL        0x02                    /* clock polarity */
-> --
-> 2.21.0.1020.gf2820cf01a-goog
->
+CONFIG_INFINIBAND=y
+CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
+CONFIG_INFINIBAND_USER_ACCESS=y
+CONFIG_MLX5_CORE=y
+CONFIG_MLX5_INFINIBAND=y
+
+The following link time errors occur:
+
+arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: in function `mlx5_ib_alloc_dm':
+main.c:(.text+0x60c): undefined reference to `__aeabi_uldivmod'
+arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_alloc_sw_icm':
+cmd.c:(.text+0x6d4): undefined reference to `__aeabi_uldivmod'
+arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_dealloc_sw_icm':
+cmd.c:(.text+0x9ec): undefined reference to `__aeabi_uldivmod'
+
+Bisect log:
+
+git bisect start
+# good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
+git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+# bad: [63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd] Merge tag 'gcc-plugins-v5.2-rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/kees/linux
+git bisect bad 63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd
+# good: [80f232121b69cc69a31ccb2b38c1665d770b0710] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
+git bisect good 80f232121b69cc69a31ccb2b38c1665d770b0710
+# good: [a2d635decbfa9c1e4ae15cb05b68b2559f7f827c] Merge tag 'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
+git bisect good a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
+# bad: [8e4ff713ce313dcabbb60e6ede1ffc193e67631f] Merge tag 'rtc-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
+git bisect bad 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
+# good: [055128ee008b00fba14e3638e7e84fc2cff8d77d] Merge tag 'dmaengine-5.2-rc1' of git://git.infradead.org/users/vkoul/slave-dma
+git bisect good 055128ee008b00fba14e3638e7e84fc2cff8d77d
+# bad: [abde77eb5c66b2f98539c4644b54f34b7e179e6b] Merge branch 'for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup
+git bisect bad abde77eb5c66b2f98539c4644b54f34b7e179e6b
+# good: [3b70508a6bfbdc78b565e9da22fd98483263494e] RDMA/mlx5: Create flow table with max size supported
+git bisect good 3b70508a6bfbdc78b565e9da22fd98483263494e
+# bad: [e7a5b4aafd82771f8924905c208d5d236ddcb671] RDMA/device: Don't fire uevent before device is fully initialized
+git bisect bad e7a5b4aafd82771f8924905c208d5d236ddcb671
+# good: [dd05cb828d0ebecd3d772075fccb85ec3618bedf] RDMA: Get rid of iw_cm_verbs
+git bisect good dd05cb828d0ebecd3d772075fccb85ec3618bedf
+# bad: [a808273a495c657e33281b181fd7fcc2bb28f662] RDMA/verbs: Add a DMA iterator to return aligned contiguous memory blocks
+git bisect bad a808273a495c657e33281b181fd7fcc2bb28f662
+# good: [3a4ef2e2b5cf9a34bcc66c0d33f7eba180a14535] RDMA/rdmavt: Catch use-after-free access of AH structures
+git bisect good 3a4ef2e2b5cf9a34bcc66c0d33f7eba180a14535
+# bad: [33cde96fb5d7ae36207541c8a832d7fae3cadbde] IB/mlx5: Device resource control for privileged DEVX user
+git bisect bad 33cde96fb5d7ae36207541c8a832d7fae3cadbde
+# good: [4056b12efd43248d8331b6ed93df5ea5250106a9] IB/mlx5: Warn on allocated MEMIC buffers during cleanup
+git bisect good 4056b12efd43248d8331b6ed93df5ea5250106a9
+# bad: [25c13324d03d004f9e8071bf5bf5d5c6fdace71e] IB/mlx5: Add steering SW ICM device memory type
+git bisect bad 25c13324d03d004f9e8071bf5bf5d5c6fdace71e
+# first bad commit: [25c13324d03d004f9e8071bf5bf5d5c6fdace71e] IB/mlx5: Add steering SW ICM device memory type
+
+DIV_ROUND_UP is u64 / u32 in this case. I think DIV_ROUND_UP_ULL is
+needed but I am not sure if that has any unintended side effects so I
+didn't want to send a patch.
+
+I would appreciate if you guys could look into this.
+
+Cheers,
+Nathan
