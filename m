@@ -2,63 +2,87 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF16C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83C3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71FE21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B4B521473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:33:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="crHKh9Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfENJdE (ORCPT
+        id S1726422AbfENJdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:33:04 -0400
-Received: from foss.arm.com ([217.140.101.70]:52914 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbfENJdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:33:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2EC2374;
-        Tue, 14 May 2019 02:33:03 -0700 (PDT)
-Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FC633F703;
-        Tue, 14 May 2019 02:33:02 -0700 (PDT)
-From:   Raphael Gault <raphael.gault@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH] objtool: doc: Fix one-file exception Makefile directive
-Date:   Tue, 14 May 2019 10:32:43 +0100
-Message-Id: <20190514093243.17356-1-raphael.gault@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 May 2019 05:33:45 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:18670 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbfENJdp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:33:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cda8b740001>; Tue, 14 May 2019 02:33:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 14 May 2019 02:33:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 14 May 2019 02:33:44 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
+ 2019 09:33:42 +0000
+Subject: Re: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
+        <broonie@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>
+References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
+ <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
+Date:   Tue, 14 May 2019 10:33:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557826420; bh=SppUGGkQiIfOreEGJ0gp41fqANbwlVGWqwB/RkgMYEs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=crHKh9AoTrRZR2t1DyQhwrbWeZ4lfkpx15upl8kl/cm/hIwXkVJXG9BeBeEMgYczS
+         g3ObQFGnRU9MKkFIVbF43wRJYMUEmd1AvWSmHTDtiHnHLAzUJrDHV1iWA91nFSldjR
+         7uLJV5EgPSWoUB74FTIHFE6MTqXW4hm0+bnxOAKujElHJuwtXdrxsKQ5rm1Le1dhUH
+         qIjva0zeXJ6FAzE0rt8/G5hve+KA3uwe3CgIADJDn2ibk9mAdAsMPW+2ZhgWfqWQ9k
+         Ftg3eZIjzV70+0+1FID2PAoudpAEAyyqTZHmY9RUnZOskfco6yxDsoIo2vYEOLyNLR
+         wLIm4CTzkQYSA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The directive specified in the documentation to add an exception
-for a single file in a Makefile was inverted.
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
----
- tools/objtool/Documentation/stack-validation.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 14/05/2019 06:03, Sowjanya Komatineni wrote:
+> This patch adds support for GPIO based CS control through SPI core
+> function spi_set_cs.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Can you elaborate on the use-case where this is needed? I am curious
+what platforms are using this and why they would not use the dedicated
+CS signals.
 
-diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-index 3995735a878f..cd17ee022072 100644
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -306,7 +306,7 @@ ignore it:
- 
- - To skip validation of a file, add
- 
--    OBJECT_FILES_NON_STANDARD_filename.o := n
-+    OBJECT_FILES_NON_STANDARD_filename.o := y
- 
-   to the Makefile.
- 
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
