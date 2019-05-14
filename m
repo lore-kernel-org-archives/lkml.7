@@ -2,211 +2,172 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BBFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5223C2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:02:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C67CC20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AYYyR+Ex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfENNCv (ORCPT
+        id S1726142AbfENNIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:02:51 -0400
-Received: from 5.mo179.mail-out.ovh.net ([46.105.43.140]:33474 "EHLO
-        5.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENNCv (ORCPT
+        Tue, 14 May 2019 09:08:04 -0400
+Received: from mail-pf1-f171.google.com ([209.85.210.171]:45483 "EHLO
+        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENNIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:02:51 -0400
-X-Greylist: delayed 1796 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 09:02:47 EDT
-Received: from player688.ha.ovh.net (unknown [10.109.159.69])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id 86DD31311D3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 14:25:34 +0200 (CEST)
-Received: from kaod.org (deibp9eh1--blueice1n4.emea.ibm.com [195.212.29.166])
-        (Authenticated sender: groug@kaod.org)
-        by player688.ha.ovh.net (Postfix) with ESMTPSA id 5B3775A70662;
-        Tue, 14 May 2019 12:25:26 +0000 (UTC)
-Date:   Tue, 14 May 2019 14:25:24 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>
-Subject: Re: [PATCH] powerpc/powernv/npu: Fix reference leak
-Message-ID: <20190514142524.76c0417f@bahia.lan>
-In-Reply-To: <87sgths2zf.fsf@concordia.ellerman.id.au>
-References: <155568805354.600470.13376593185688810607.stgit@bahia.lan>
-        <962c1d9e-719c-cb82-cabc-1cf619e1510b@ozlabs.ru>
-        <20190429123659.00c0622b@bahia.lan>
-        <20190513135606.7d9a0902@bahia.lan>
-        <87sgths2zf.fsf@concordia.ellerman.id.au>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 14 May 2019 09:08:04 -0400
+Received: by mail-pf1-f171.google.com with SMTP id s11so9102556pfm.12;
+        Tue, 14 May 2019 06:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=HkTrup9eFQQ+oLlEDmRavF3Qjf2zdQSOrx8h9qp5+SQ=;
+        b=AYYyR+ExyOp9KaKCIYiyM8TaijaswJ4nql8ZYcwkMKNLB6qQn2w1u4/b3ykklPbopa
+         kUJCqAeNf9pNXqpeDOLXfY5W33ozl7X7pDq2vEaG5gzyGPNZmF2+lZz2L9NTJs+9NvpA
+         zrc1MdQJyK3EY0fEoxZ+PZL3q7GO2ZaY+hePqezPY8IZXt/SbAiz1XMpFEcDDc+He1je
+         9WnMaCxkHNZ2TpuDNwON4F24r6MgecQk2byObXMiwzuGgfpLxfDyNvaYOGsCxUqii3Ly
+         TFSDOqWXhYRxWHi48yfwNMuF8bZRFKETxiWBEpYuz4AcCxSAFt9mPK8NOZSbYxUbqAAX
+         TnmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=HkTrup9eFQQ+oLlEDmRavF3Qjf2zdQSOrx8h9qp5+SQ=;
+        b=hUHlINM2E0h23XGuOQbpKM2a54HMqpHIkwg8frfb6N6xc9wqADAi/8Z2lp7tNrmthg
+         3d6KKVEiCnOmzyFbYDSFlz0TCDumEiQ5qCbjUge3QEFPoFY2Z1iUVGAVBYUFaimpMG3D
+         Uk8CzhZi7PRm7wA+0cVkRKLbKcDbCR2gmxQjrMdrNH9jJueqOLeoSuO/1T5GdafBRKgc
+         P0ZzgFu93kz1Jn2/y3DLy3l3SERHDUo2hxEOE6rPuEAKDt1ZMb4XUWhKuSVQ9wMzNVfv
+         eM2bxnXBb0z4cihVF5tn6m0Ay0Xeydl9Xa47s/+l1SPdDHTCrs0CBIN9Zg0DB9AJG28U
+         7s4w==
+X-Gm-Message-State: APjAAAUpCA5mCkmDO0DbCfLZwMiG0FMPYn95z5yw5eHK+d1dO44kUWHZ
+        5cOAS/cj03ysf2euLzXHYLeQmUjz
+X-Google-Smtp-Source: APXvYqxdeFaXiGgR5XZIdBg6q2jWBImkdZ0F+r1FkMDsIuxIDKynydOuN5LTJMH1xZiF8NzRZ+nwPw==
+X-Received: by 2002:aa7:87ca:: with SMTP id i10mr14451676pfo.157.1557839283140;
+        Tue, 14 May 2019 06:08:03 -0700 (PDT)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.71.27? ([2402:f000:1:1501:200:5efe:a66f:471b])
+        by smtp.gmail.com with ESMTPSA id h14sm542472pgj.8.2019.05.14.06.08.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 06:08:02 -0700 (PDT)
+To:     pkshih@realtek.com, Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Subject: [BUG] rtlwifi: a crash in error handling code of rtl_pci_probe()
+Message-ID: <4627da7a-c56c-5d88-62ae-ea2be9430f6f@gmail.com>
+Date:   Tue, 14 May 2019 21:07:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 12951789578739882417
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduuddrleeigdehvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 21:13:40 +1000
-Michael Ellerman <mpe@ellerman.id.au> wrote:
+In rtl_pci_probe(), when request_irq() in rtl_pci_intr_mode_legacy() in 
+rtl_pci_intr_mode_decide() fails, a crash occurs.
+The crash information is as follows:
 
-> Greg Kurz <groug@kaod.org> writes:
-> > Michael,
-> >
-> > Any comments on this patch ? Should I repost with a shorter comment
-> > as suggested by Alexey ?  
-> 
-> No the longer comment seems fine to me.
-> 
-> I'm not a big fan of the patch, it's basically a hack :)
-> 
+[  108.271155] kasan: CONFIG_KASAN_INLINE enabled
+[  108.271163] kasan: GPF could be caused by NULL-ptr deref or user 
+memory access
+......
+[  108.271193] RIP: 0010:cfg80211_get_drvinfo+0xce/0x3b0 [cfg80211]
+......
+[  108.271235] Call Trace:
+[  108.271245]  ethtool_get_drvinfo+0x110/0x640
+[  108.271255]  ? cfg80211_get_chan_state+0x7e0/0x7e0 [cfg80211]
+[  108.271261]  ? ethtool_get_settings+0x340/0x340
+[  108.271268]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
+[  108.271279]  ? kasan_check_write+0x14/0x20
+[  108.271284]  dev_ethtool+0x272d/0x4c20
+[  108.271290]  ? unwind_get_return_address+0x66/0xb0
+[  108.271299]  ? __save_stack_trace+0x92/0x100
+[  108.271307]  ? ethtool_get_rxnfc+0x3f0/0x3f0
+[  108.271316]  ? save_stack+0xa3/0xd0
+[  108.271323]  ? save_stack+0x43/0xd0
+[  108.271331]  ? ftrace_graph_ret_addr+0x2d/0x170
+[  108.271338]  ? ftrace_graph_ret_addr+0x2d/0x170
+[  108.271346]  ? ftrace_graph_ret_addr+0x2d/0x170
+[  108.271354]  ? update_stack_state+0x3b2/0x670
+[  108.271361]  ? update_stack_state+0x3b2/0x670
+[  108.271370]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
+[  108.271379]  ? unwind_next_frame.part.5+0x19f/0xa60
+[  108.271388]  ? bpf_prog_kallsyms_find+0x3e/0x270
+[  108.271396]  ? is_bpf_text_address+0x1a/0x30
+[  108.271408]  ? kernel_text_address+0x11d/0x130
+[  108.271416]  ? __kernel_text_address+0x12/0x40
+[  108.271423]  ? unwind_get_return_address+0x66/0xb0
+[  108.271431]  ? __save_stack_trace+0x92/0x100
+[  108.271440]  ? save_stack+0xa3/0xd0
+[  108.271448]  ? udp_ioctl+0x35/0xe0
+[  108.271457]  ? inet_ioctl+0x100/0x320
+[  108.271466]  ? inet_stream_connect+0xb0/0xb0
+[  108.271475]  ? alloc_file+0x60/0x480
+[  108.271483]  ? alloc_file_pseudo+0x19d/0x270
+[  108.271495]  ? sock_alloc_file+0x51/0x170
+[  108.271502]  ? __sys_socket+0x12c/0x1f0
+[  108.271510]  ? __x64_sys_socket+0x78/0xb0
+[  108.271520]  ? do_syscall_64+0xb1/0x2e0
+[  108.271529]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  108.271538]  ? kasan_check_read+0x11/0x20
+[  108.271548]  ? mutex_lock+0x8f/0xe0
+[  108.271557]  ? __mutex_lock_slowpath+0x20/0x20
+[  108.271568]  dev_ioctl+0x1fb/0xae0
+[  108.271576]  ? dev_ioctl+0x1fb/0xae0
+[  108.271586]  ? _copy_from_user+0x71/0xd0
+[  108.271594]  sock_do_ioctl+0x1e2/0x2f0
+[  108.271602]  ? kmem_cache_alloc+0xf9/0x250
+[  108.271611]  ? ___sys_recvmsg+0x5a0/0x5a0
+[  108.271621]  ? apparmor_file_alloc_security+0x128/0x7e0
+[  108.271630]  ? kasan_unpoison_shadow+0x35/0x50
+[  108.271638]  ? kasan_kmalloc+0xad/0xe0
+[  108.271652]  ? apparmor_file_alloc_security+0x128/0x7e0
+[  108.271662]  ? apparmor_file_alloc_security+0x269/0x7e0
+[  108.271670]  sock_ioctl+0x361/0x590
+[  108.271678]  ? sock_ioctl+0x361/0x590
+[  108.271686]  ? routing_ioctl+0x470/0x470
+[  108.271695]  ? kasan_check_write+0x14/0x20
+[  108.271703]  ? __mutex_init+0xba/0x130
+[  108.271713]  ? percpu_counter_add_batch+0xc7/0x120
+[  108.271722]  ? alloc_empty_file+0xae/0x150
+[  108.271729]  ? routing_ioctl+0x470/0x470
+[  108.271738]  do_vfs_ioctl+0x1ae/0xfe0
+[  108.271745]  ? do_vfs_ioctl+0x1ae/0xfe0
+[  108.271754]  ? alloc_file_pseudo+0x1ad/0x270
+[  108.271762]  ? ioctl_preallocate+0x1e0/0x1e0
+[  108.271770]  ? alloc_file+0x480/0x480
+[  108.271778]  ? kasan_check_read+0x11/0x20
+[  108.271786]  ? __fget+0x24d/0x320
+[  108.271794]  ? iterate_fd+0x180/0x180
+[  108.271802]  ? fd_install+0x52/0x60
+[  108.271812]  ? security_file_ioctl+0x8c/0xb0
+[  108.271820]  ksys_ioctl+0x99/0xb0
+[  108.271829]  __x64_sys_ioctl+0x78/0xb0
+[  108.271839]  do_syscall_64+0xb1/0x2e0
+[  108.271857]  ? prepare_exit_to_usermode+0xc8/0x160
+[  108.271871]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+......
 
-Yeah :)
+I checked the driver source code, but cannot find the reason, so I only 
+report the crash...
+Can somebody give an explanation about this crash?
 
-> But for a backportable fix I guess it is OK.
-> 
-> I would be happier though if we eventually fix up the code to do the
-> refcounting properly.
-> 
+This crash is triggered by a runtime fuzzing tool named FIZZER written 
+by us.
 
-I had started to do just that before deciding to go for the backportable
-hack. Should I rebase the other patches I have on top of this patch and
-repost the whole thing, so that we have both the ugly fix for stable and
-the pretty one for 5.2 ?
 
-Cheers,
-
---
-Greg
-
-> cheers
-> 
-> > On Mon, 29 Apr 2019 12:36:59 +0200
-> > Greg Kurz <groug@kaod.org> wrote:  
-> >> On Mon, 29 Apr 2019 16:01:29 +1000
-> >> Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
-> >>   
-> >> > On 20/04/2019 01:34, Greg Kurz wrote:    
-> >> > > Since 902bdc57451c, get_pci_dev() calls pci_get_domain_bus_and_slot(). This
-> >> > > has the effect of incrementing the reference count of the PCI device, as
-> >> > > explained in drivers/pci/search.c:
-> >> > > 
-> >> > >  * Given a PCI domain, bus, and slot/function number, the desired PCI
-> >> > >  * device is located in the list of PCI devices. If the device is
-> >> > >  * found, its reference count is increased and this function returns a
-> >> > >  * pointer to its data structure.  The caller must decrement the
-> >> > >  * reference count by calling pci_dev_put().  If no device is found,
-> >> > >  * %NULL is returned.
-> >> > > 
-> >> > > Nothing was done to call pci_dev_put() and the reference count of GPU and
-> >> > > NPU PCI devices rockets up.
-> >> > > 
-> >> > > A natural way to fix this would be to teach the callers about the change,
-> >> > > so that they call pci_dev_put() when done with the pointer. This turns
-> >> > > out to be quite intrusive, as it affects many paths in npu-dma.c,
-> >> > > pci-ioda.c and vfio_pci_nvlink2.c.      
-> >> > 
-> >> > 
-> >> > afaict this referencing is only done to protect the current traverser
-> >> > and what you've done is actually a natural way (and the generic
-> >> > pci_get_dev_by_id() does exactly the same), although this looks a bit weird.
-> >> >     
-> >> 
-> >> Not exactly the same: pci_get_dev_by_id() always increment the refcount
-> >> of the returned PCI device. The refcount is only decremented when this
-> >> device is passed to pci_get_dev_by_id() to continue searching.
-> >> 
-> >> That means that the users of the PCI device pointer returned by
-> >> pci_get_dev_by_id() or its exported variants pci_get_subsys(),
-> >> pci_get_device() and pci_get_class() do handle the refcount. They
-> >> all pass the pointer to pci_dev_put() or continue the search,
-> >> which calls pci_dev_put() internally.
-> >> 
-> >> Direct and indirect callers of get_pci_dev() don't care for the
-> >> refcount at all unless I'm missing something.
-> >>   
-> >> >     
-> >> > > Also, the issue appeared in 4.16 and
-> >> > > some affected code got moved around since then: it would be problematic
-> >> > > to backport the fix to stable releases.
-> >> > > 
-> >> > > All that code never cared for reference counting anyway. Call pci_dev_put()
-> >> > > from get_pci_dev() to revert to the previous behavior.      
-> >> > >> Fixes: 902bdc57451c ("powerpc/powernv/idoa: Remove unnecessary pcidev      
-> >> > from pci_dn")    
-> >> > > Cc: stable@vger.kernel.org # v4.16
-> >> > > Signed-off-by: Greg Kurz <groug@kaod.org>
-> >> > > ---
-> >> > >  arch/powerpc/platforms/powernv/npu-dma.c |   15 ++++++++++++++-
-> >> > >  1 file changed, 14 insertions(+), 1 deletion(-)
-> >> > > 
-> >> > > diff --git a/arch/powerpc/platforms/powernv/npu-dma.c b/arch/powerpc/platforms/powernv/npu-dma.c
-> >> > > index e713ade30087..d8f3647e8fb2 100644
-> >> > > --- a/arch/powerpc/platforms/powernv/npu-dma.c
-> >> > > +++ b/arch/powerpc/platforms/powernv/npu-dma.c
-> >> > > @@ -31,9 +31,22 @@ static DEFINE_SPINLOCK(npu_context_lock);
-> >> > >  static struct pci_dev *get_pci_dev(struct device_node *dn)
-> >> > >  {
-> >> > >  	struct pci_dn *pdn = PCI_DN(dn);
-> >> > > +	struct pci_dev *pdev;
-> >> > >  
-> >> > > -	return pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-> >> > > +	pdev = pci_get_domain_bus_and_slot(pci_domain_nr(pdn->phb->bus),
-> >> > >  					   pdn->busno, pdn->devfn);
-> >> > > +
-> >> > > +	/*
-> >> > > +	 * pci_get_domain_bus_and_slot() increased the reference count of
-> >> > > +	 * the PCI device, but callers don't need that actually as the PE
-> >> > > +	 * already holds a reference to the device.      
-> >> > 
-> >> > Imho this would be just enough.
-> >> > 
-> >> > Anyway,
-> >> > 
-> >> > Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-> >> >     
-> >> 
-> >> Thanks !
-> >> 
-> >> I now realize that I forgot to add the --cc option for stable on my stgit
-> >> command line :-\.
-> >> 
-> >> Cc'ing now.
-> >>   
-> >> > 
-> >> > How did you find it? :)
-> >> >     
-> >> 
-> >> While reading code to find some inspiration for OpenCAPI passthrough. :)
-> >> 
-> >> I saw the following in vfio_pci_ibm_npu2_init():
-> >> 
-> >> 	if (!pnv_pci_get_gpu_dev(vdev->pdev))
-> >> 		return -ENODEV;
-> >> 
-> >> and simply followed the function calls.
-> >>   
-> >> >     
-> >> > > Since callers aren't
-> >> > > +	 * aware of the reference count change, call pci_dev_put() now to
-> >> > > +	 * avoid leaks.
-> >> > > +	 */
-> >> > > +	if (pdev)
-> >> > > +		pci_dev_put(pdev);
-> >> > > +
-> >> > > +	return pdev;
-> >> > >  }
-> >> > >  
-> >> > >  /* Given a NPU device get the associated PCI device. */
-> >> > >       
-> >> >     
-> >>   
-
+Best wishes,
+Jia-Ju Bai
