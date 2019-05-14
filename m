@@ -2,76 +2,77 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE62C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC703C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCF47208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vYmdyv9F"
+	by mail.kernel.org (Postfix) with ESMTP id 9671320879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557847444;
+	bh=lEnwwmU1XbKwYI+07sS2BHHk1ukbBjXSFcW1oRTxeAo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DhVfWhX8yFPpj3abcZ340m0Kz7NsjTAumwbYJxZ8Td2KYqAmV+kmBUyLY26+x9Zei
+	 1eoXT0dvChNuhjvhbFhm/+MUCONfswyJ9uS7apQnwoTbIaEKyoWu0NQQHXIvUwJFAR
+	 xJK8KZnXqi/t57GfyrTrQt4WA+rEf+dLOlCRtjU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfENPW7 (ORCPT
+        id S1726336AbfENPYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:22:59 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:33951 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENPW6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:22:58 -0400
-Received: by mail-yw1-f65.google.com with SMTP id n76so14314884ywd.1;
-        Tue, 14 May 2019 08:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EIqb4eEH0S4LgQ1Yuwg43BMgX8ef+eVurK6N5WcObMU=;
-        b=vYmdyv9F2aheI/anon+QKteAny7T9Jkr5RqQgnGlUFC7tfsc6l0uZhzwhbGkpKWrM+
-         0wIQgCkUqAIJJiuKcWpmOAP1rmiLDxREh2+HSn/77OrV2OmMe1GNryaK5Jhn6rMzT3bJ
-         k7ecYwXz++aYRjdGRlKRK/baHs1CClyfvLZPqRIbMWxra8vFvLGZETpzx0FWraGbciky
-         q0O/MwvkTRJBcA2bOTZykoX7/cO+79ijS0Lv86uRvIt5UvugjKjNs5tODTEkfpT5F4g6
-         Ih9QJYumpv8dTaoCeesPt1IjlsdakWKtHqihnDqKfQLwWnTw37x8K9mhyhAs1u18HPX8
-         3cuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EIqb4eEH0S4LgQ1Yuwg43BMgX8ef+eVurK6N5WcObMU=;
-        b=Qp8UB2hWxjQrbVIZKKK+Fz5r8f6WEkr7fIi1S+RZpLFQ9UOUVbyKxYo8jgSKQkaz4z
-         2ljmXE0hiX0Ho6b5HqBsC0ngXWxsoG/QYVS8Tp32dckSukSfGEKCvKhpPkdb4IiUMrDA
-         kkGk71mTZbtJFdNyUqYls5bBWMkXEBnr+q3goXmf9nCoZgZTTc0vWyY97fA5qhJjgGe9
-         76H0KfOYSq8WU4+EY2Zyy+Jf0lyiF/dx5E5qBWSUJmRb+JZ8B4o76oggSxXoG0FzpkMq
-         MWMissyhB+jOisWKyiASAnoQWYcVfyehMnLcucF71c+Z475qI/1gqaMYJ0T6ih27kCgw
-         4H6Q==
-X-Gm-Message-State: APjAAAUcLVYy1dlgwXwpQpjBG4l10O4IA9YBNKtYb+Bxk7Cvxb+FBW06
-        ugqjqSok131gKxhvXy3O3wjZ3kI8xrdiqvPTQNbf6PWOXpcOuw==
-X-Google-Smtp-Source: APXvYqzsCBCwG+CsZWtmfQH5I1TFQjALA0U5fvim+GZofqMADF7Ffsdbqc9gP3rOktGVVJdHyqlZTkKTnqD3qMMrmPs=
-X-Received: by 2002:a25:9b88:: with SMTP id v8mr17018094ybo.153.1557847377908;
- Tue, 14 May 2019 08:22:57 -0700 (PDT)
+        Tue, 14 May 2019 11:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50684 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfENPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:24:03 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 562672168B
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557847441;
+        bh=lEnwwmU1XbKwYI+07sS2BHHk1ukbBjXSFcW1oRTxeAo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eVCLg4/XxcMGOLsPFn6OR8b5+D0fSJ3C73EsiGv+ZP1UExvdsqIN8jEcRCYerQv8E
+         JiJQI0nJ+Wm5vH2G6Wc56NLBhB0dSfY8L+kVXyatxe3O+MvvIlYBmHROcAADcXdyMu
+         gmFnLgnQ5/GErDUj0tVtJM/DgF+Mw/f+QUS627hc=
+Received: by mail-wr1-f41.google.com with SMTP id s17so3237259wru.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:24:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAWf9t/IIDW5FJjlonyDOf1XEehg7/U42avxM9+aWj+f+5r34WjO
+        5MALYIzYhK7oPxpVNp6GS98wZt0yyPrVpE6RXTGakQ==
+X-Google-Smtp-Source: APXvYqwp/EH6Ur2QGhQN9gAoRRiB/nJpoSiqieV+SAlyq4722fUPl9jhM5kLhCa86Aomekj/B2SnT/Jc8fHYaltd/GY=
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr21163913wrn.77.1557847439920;
+ Tue, 14 May 2019 08:23:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190512174608.10083-1-peron.clem@gmail.com> <20190512174608.10083-6-peron.clem@gmail.com>
- <CAMty3ZBTO9+9HLikR8=KgWZQBp+1yVgxQ_rD-E8WeJ8VvpuAcA@mail.gmail.com> <CAGb2v64QpH2uL3Q2=ePEaYhrB1_J5uNT4VnBssBgwbOB0NDD0Q@mail.gmail.com>
-In-Reply-To: <CAGb2v64QpH2uL3Q2=ePEaYhrB1_J5uNT4VnBssBgwbOB0NDD0Q@mail.gmail.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 14 May 2019 17:22:46 +0200
-Message-ID: <CAJiuCccZvk_rHmh4Trt+1uG0APu886Zp_DvUwGcMkph0U0biAA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v4 5/8] arm64: dts: allwinner: Add mali GPU
- supply for Pine H64
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com>
+ <20190514070941.GE2589@hirez.programming.kicks-ass.net> <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
+ <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
+In-Reply-To: <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 May 2019 08:23:48 -0700
+X-Gmail-Original-Message-ID: <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
+Message-ID: <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
+Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
+ entries for percpu buffer
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,51 +80,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan, Chen-Yu,
-
-On Tue, 14 May 2019 at 12:18, Chen-Yu Tsai <wens@csie.org> wrote:
+On Tue, May 14, 2019 at 2:42 AM Alexandre Chartre
+<alexandre.chartre@oracle.com> wrote:
 >
-> On Mon, May 13, 2019 at 2:28 AM Jagan Teki <jagan@amarulasolutions.com> w=
-rote:
+>
+> On 5/14/19 10:34 AM, Andy Lutomirski wrote:
 > >
-> > On Sun, May 12, 2019 at 11:16 PM <peron.clem@gmail.com> wrote:
-> > >
-> > > From: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > >
-> > > Enable and add supply to the Mali GPU node on the
-> > > Pine H64 board.
-> > >
-> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/a=
-rch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > > index 4802902e128f..e16a8c6738f9 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > > @@ -85,6 +85,11 @@
-> > >         status =3D "okay";
-> > >  };
-> > >
-> > > +&gpu {
-> > > +       mali-supply =3D <&reg_dcdcc>;
-> > > +       status =3D "okay";
-> > > +};
 > >
-> > I think we can squash all these board dts changes into single patch.
+> >> On May 14, 2019, at 1:25 AM, Alexandre Chartre <alexandre.chartre@orac=
+le.com> wrote:
+> >>
+> >>
+> >>> On 5/14/19 9:09 AM, Peter Zijlstra wrote:
+> >>>> On Mon, May 13, 2019 at 11:18:41AM -0700, Andy Lutomirski wrote:
+> >>>> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
+> >>>> <alexandre.chartre@oracle.com> wrote:
+> >>>>>
+> >>>>> pcpu_base_addr is already mapped to the KVM address space, but this
+> >>>>> represents the first percpu chunk. To access a per-cpu buffer not
+> >>>>> allocated in the first chunk, add a function which maps all cpu
+> >>>>> buffers corresponding to that per-cpu buffer.
+> >>>>>
+> >>>>> Also add function to clear page table entries for a percpu buffer.
+> >>>>>
+> >>>>
+> >>>> This needs some kind of clarification so that readers can tell wheth=
+er
+> >>>> you're trying to map all percpu memory or just map a specific
+> >>>> variable.  In either case, you're making a dubious assumption that
+> >>>> percpu memory contains no secrets.
+> >>> I'm thinking the per-cpu random pool is a secrit. IOW, it demonstrabl=
+y
+> >>> does contain secrits, invalidating that premise.
+> >>
+> >> The current code unconditionally maps the entire first percpu chunk
+> >> (pcpu_base_addr). So it assumes it doesn't contain any secret. That is
+> >> mainly a simplification for the POC because a lot of core information
+> >> that we need, for example just to switch mm, are stored there (like
+> >> cpu_tlbstate, current_task...).
+> >
+> > I don=E2=80=99t think you should need any of this.
+> >
 >
-> Yes. Please do so for all patches with the same changes applied to differ=
-ent
-> boards, and authored by the same person.
+> At the moment, the current code does need it. Otherwise it can't switch f=
+rom
+> kvm mm to kernel mm: switch_mm_irqs_off() will fault accessing "cpu_tlbst=
+ate",
+> and then the page fault handler will fail accessing "current" before call=
+ing
+> the kvm page fault handler. So it will double fault or loop on page fault=
+s.
+> There are many different places where percpu variables are used, and I ha=
+ve
+> experienced many double fault/page fault loop because of that.
 
-I thought it was required to have "smallest" patch as possible.
-And it's also better for tracking "Tested-by" tag.
+Now you're experiencing what working on the early PTI code was like :)
 
-I will squash them in the next version.
+This is why I think you shouldn't touch current in any of this.
 
-Thanks,
-Clement
 >
-> ChenYu
+> >>
+> >> If the entire first percpu chunk effectively has secret then we will
+> >> need to individually map only buffers we need. The kvm_copy_percpu_map=
+ping()
+> >> function is added to copy mapping for a specified percpu buffer, so
+> >> this used to map percpu buffers which are not in the first percpu chun=
+k.
+> >>
+> >> Also note that mapping is constrained by PTE (4K), so mapped buffers
+> >> (percpu or not) which do not fill a whole set of pages can leak adjace=
+nt
+> >> data store on the same pages.
+> >>
+> >>
+> >
+> > I would take a different approach: figure out what you need and put it =
+in its
+> > own dedicated area, kind of like cpu_entry_area.
+>
+> That's certainly something we can do, like Julian proposed with "Process-=
+local
+> memory allocations": https://lkml.org/lkml/2018/11/22/1240
+>
+> That's fine for buffers allocated from KVM, however, we will still need s=
+ome
+> core kernel mappings so the thread can run and interrupts can be handled.
+>
+> > One nasty issue you=E2=80=99ll have is vmalloc: the kernel stack is in =
+the
+> > vmap range, and, if you allow access to vmap memory at all, you=E2=80=
+=99ll
+> > need some way to ensure that *unmap* gets propagated. I suspect the
+> > right choice is to see if you can avoid using the kernel stack at all
+> > in isolated mode.  Maybe you could run on the IRQ stack instead.
+>
+> I am currently just copying the task stack mapping into the KVM page tabl=
+e
+> (patch 23) when a vcpu is created:
+>
+>         err =3D kvm_copy_ptes(tsk->stack, THREAD_SIZE);
+>
+> And this seems to work. I am clearing the mapping when the VM vcpu is fre=
+ed,
+> so I am making the assumption that the same task is used to create and fr=
+ee
+> a vcpu.
+>
+
+vCPUs are bound to an mm but not a specific task, right?  So I think
+this is wrong in both directions.
+
+Suppose a vCPU is created, then the task exits, the stack mapping gets
+freed (the core code tries to avoid this, but it does happen), and a
+new stack gets allocated at the same VA with different physical pages.
+Now you're toast :)  On the flip side, wouldn't you crash if a vCPU is
+created and then run on a different thread?
+
+How important is the ability to enable IRQs while running with the KVM
+page tables?
