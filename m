@@ -2,128 +2,93 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B67C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683E4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5FB2166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25EDA2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557864186;
+	bh=zzstFzPM2CHMwP2Pz4T3k7angf1fcugPtkyS1d9Z8kY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sx9D88y9vPK+PWLLIphvAYNJh1AB2C7TcX0KLFs94rp5nVrZPRMu1CB9RqkCUqflB
+	 ODMHBaZmbSgH30EKpbWGgPvx1NMXxSd1wZKW/LlZK0CfVH9hFkk1HDgMe6FFia0j++
+	 bQ3TZacntoZLnM6wUPcrx2w9hdTr+CSIShsvPBkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfENUBm convert rfc822-to-8bit (ORCPT
+        id S1726362AbfENUDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:01:42 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:42899 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfENUBl (ORCPT
+        Tue, 14 May 2019 16:03:05 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44586 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfENUDE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:01:41 -0400
-X-Originating-IP: 46.193.9.130
-Received: from xps13 (cust-west-pareq2-46-193-9-130.wb.wifirst.net [46.193.9.130])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8B2F240005;
-        Tue, 14 May 2019 20:01:38 +0000 (UTC)
-Date:   Tue, 14 May 2019 22:01:36 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc:     Jeff Kletsky <lede@allycomm.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Message-ID: <20190514220136.5f4624ee@xps13>
-In-Reply-To: <e53a0569-6eca-4385-007d-baffc3f5c7ea@kontron.de>
-References: <20190510121727.29834-1-lede@allycomm.com>
-        <3cb32209-f246-e562-2aee-fdf566a60b30@kontron.de>
-        <1023ba21-b188-1dcc-3ecc-c563d4cb8a67@allycomm.com>
-        <e53a0569-6eca-4385-007d-baffc3f5c7ea@kontron.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 14 May 2019 16:03:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id z65so43421oia.11;
+        Tue, 14 May 2019 13:03:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fr00WeJI7LuY/N4++pQHRnJwZ0q8ePUBZpSaqAUAGZM=;
+        b=oQfyaUnnrQeGZN4T3LbSgGMZlAnUjyB5MBmCZqABsmil5LfoguTsaqprlVy+g9Vyyz
+         o4ztLrHRQX7r5FHcuIU4Y5osg3coXkSshLoc4KgURMdqLHPpODkd7wrZaMkmcEnVaPa3
+         wyB91XT0i5zDXCxBDmA9j6DiSvQZXwlRxsg+Ki2O8LAqO2tAVhZpRzGZmPGo9JyZttZ2
+         QQaV0GY6wC57IxERLB6n+mgNrYDJ+z2UUsLXPQaLrVjM4XdTUlVOjScGjwH6G6MRGkPw
+         UnS1WPK6MyabskaMQ2Gv6hQ9L6Cf1IsT8WpHOuvGy/kzLf0KZGwT8eQxbUDcT5JiOESc
+         5g8A==
+X-Gm-Message-State: APjAAAVVPp/O4ltoXzlPTG+PSqKoK2oCfVEG+eDCA9/U7UKo8KpuOD3p
+        zq6WPXNkSu2WsPj2igjz/g==
+X-Google-Smtp-Source: APXvYqyyGrngDLkf4JtW5jGewq3pbgcF+xgmfak6/x/AXfJYI3EEMCP71iIcdP81e9ElCqbZBI7PHw==
+X-Received: by 2002:aca:56c3:: with SMTP id k186mr4070933oib.95.1557864184052;
+        Tue, 14 May 2019 13:03:04 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e133sm6577619oif.44.2019.05.14.13.03.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 13:03:03 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:03:02 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Yannick =?iso-8859-1?Q?Fertr=E9?= <yannick.fertre@st.com>
+Cc:     Yannick Fertre <yannick.fertre@st.com>,
+        Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: display: stm32: add supply property
+ to DSI controller
+Message-ID: <20190514200302.GA10115@bogus>
+References: <1557498023-10766-1-git-send-email-yannick.fertre@st.com>
+ <1557498023-10766-2-git-send-email-yannick.fertre@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1557498023-10766-2-git-send-email-yannick.fertre@st.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Schrempf,
+On Fri, 10 May 2019 16:20:19 +0200, =?UTF-8?q?Yannick=20Fertr=C3=A9?= wrote:
+> This patch adds documentation of a new property phy-dsi-supply to the
+> STM32 DSI controller.
+> 
+> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
+> ---
+>  Documentation/devicetree/bindings/display/st,stm32-ltdc.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Tue, 14 May
-2019 16:11:28 +0000:
-
-> Hi Jeff,
-> 
-> On 14.05.19 17:42, Jeff Kletsky wrote:
-> > On 5/13/19 6:56 AM, Schrempf Frieder wrote:
-> >   
-> >> Hi Jeff,
-> >>
-> >> I just noticed I hit the wrong button and my previous reply was only
-> >> sent to the MTD list, so I'm resending with fixed recipients...
-> >>
-> >> On 10.05.19 14:17,lede@allycomm.com  wrote:  
-> >>> From: Jeff Kletsky<git-commits@allycomm.com>
-> >>>
-> >>> The GigaDevice GD5F1GQ4UFxxG SPI NAND is in current production devices
-> >>> and, while it has the same logical layout as the E-series devices,
-> >>> it differs in the SPI interfacing in significant ways.
-> >>>
-> >>> To accommodate these changes, this patch also:
-> >>>
-> >>>     * Adds support for two-byte manufacturer IDs
-> >>>     * Adds #define-s for three-byte addressing for read ops
-> >>>
-> >>> http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
-> >>>
-> >>> Signed-off-by: Jeff Kletsky<git-commits@allycomm.com>  
-> >> Maybe it would be better to split this patch into three parts:
-> >> * Add support for two-byte device IDs
-> >> * Add #define-s for three-byte addressing for read ops
-> >> * Add support for GD5F1GQ4UFxxG
-> >>
-> >> Anyway the content looks good to me, so:
-> >>
-> >> Reviewed-by: Frieder Schrempf<frieder.schrempf@kontron.de>
-> >>
-> >> [...]  
-> > 
-> > Thanks for the time in review and good words!  
-> 
-> You're welcome!
-> 
-> > My apologies for an incomplete git-send-email config that left
-> > me nameless in the headers.  
-> 
-> No problem, I guessed your name from the Signed-off-by tag ;)
-> 
-> > I wasn't sure if that was direction to submit as three patches
-> > at this time, but would be happy to do so if the consensus is
-> > that it the direction to follow.  
-> 
-> I think it's common to separate logical different changes. This makes it 
-> easier to read.
-> Also the preparation changes only touch the SPI NAND core. I guess 
-> that's another reason why they should be separated from the 
-> chip-specific changes.
-> 
-> > At least for me, I feel that the other two don't really stand
-> > on their own without the context for their need.  
-> 
-> I don't think that's a problem. Just add a note to the commit message 
-> that these core changes are needed to prepare for the GD5F1GQ4UFxxG support.
-> 
-> Thanks,
-> Frieder
-
-I agree with Frieder, if you don't mind, please split this commit in
-three.
-
-Thanks,
-MiquÃ¨l
+Reviewed-by: Rob Herring <robh@kernel.org>
