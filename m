@@ -2,142 +2,176 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C8C4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC0DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A3E20850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF07B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cujkGyaE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XlmB/6S5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfENRck (ORCPT
+        id S1727023AbfENRdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:32:40 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36864 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfENRcj (ORCPT
+        Tue, 14 May 2019 13:33:17 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:41969 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726013AbfENRdQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:32:39 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EHO0rR149319;
-        Tue, 14 May 2019 17:31:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=FtQCQKb34QOnKlLmREI+FcnpJx4AfZzwX5b5qv0IeYI=;
- b=cujkGyaEZ7wc59g7btd4CZOh+JxJgqteL5fHwDOjAMoNuLV5VKOP67PcvR6N5ghcvkKn
- jm3mQG/XklOnNHn03oj9ZIf5GIsD3NeZczGNEJcpGSscG9cr49WleRWajc3oOM4yBch7
- DXoCfILpXTAJHC+uMCy6A3wkby3VIhK0s3ug9piCe6bKH9QU1rHnQ/HP9s47cfeb6BCx
- TWEETPFGIC8rVsEPzmyAsyyZeoydAVzu/f0J6g6ty9PfXjMvUMB3XTNYMYlOk4ccL9Sx
- 8FMpg2HpNG79zwjSeKgQbu9Ni+EXnn3rTK5LxTYbM1rL40XBPZoUYLI8JbXLo6Qt4U8V jQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdnttqrrk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 17:31:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EHVLVM066018;
-        Tue, 14 May 2019 17:31:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2se0tw9nv2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 17:31:54 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4EHVpag002689;
-        Tue, 14 May 2019 17:31:53 GMT
-Received: from [10.132.91.213] (/10.132.91.213)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 17:31:51 +0000
-Subject: Re: [RFC V2 2/2] sched/fair: Fallback to sched-idle CPU if idle CPU
- isn't found
-To:     Steven Sistare <steven.sistare@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     songliubraving@fb.com, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>, tkjos@google.com,
+        Tue, 14 May 2019 13:33:16 -0400
+Received: by mail-qt1-f201.google.com with SMTP id l37so8753371qtc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:cc;
+        bh=BqvKyNI72vvS2gqJPoI8R/UL+5htusVnGEndKiYEuoY=;
+        b=XlmB/6S5tyl3kACOqI4RGi/AYAGBbATRdM/YoHuRUjzjL+KYSHDYtIQ/jaLlJWnrcO
+         kKFuLImD55wowWDHZK6Z+K7qCdb9oCnoRZofnbeT01aUlnPaQHRbv7Q5pFDCrhlJMZDC
+         d4rWVYIRVQQbvD2AYgyRg79TQ3ve4gSVzSDqG95sRbSs0/gjbTE0civ7xkXZUi54yVgn
+         qs+xruAdlj+DIojHH3pkdQwU/dtoryxtACifn8x8oI9V6ij4Vy9wLLGd80wSbdvObWhQ
+         mIbSq54jOvoKnkGStZrdrLOwft/OmmGVoOQ+QpxeMZNakr9QjkbbjZCXVHb7BB5CvMZR
+         69Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
+        bh=BqvKyNI72vvS2gqJPoI8R/UL+5htusVnGEndKiYEuoY=;
+        b=XobMI/SApvTxXYkOY7p99sOju/bxr8OvQiYUVscxfCzp3FYra08FL6RhxY1K2uOyvd
+         9yNVtOo4EdfTecl7KLuCpxNgHBjBNjU9V0JvUH26689xi2zeAD+/pdoKrbKe1MEpERkd
+         Uvsguz3yO0hEb3yh9y3cJbNIqV5l3ATXt71xO6Kari3eHEvqp6NOv19aMbaYkno/zipn
+         zQ8qOOD1D5kkYpKOTx0V4l0O3z5X+H6A7QTj/87Lw4mAJ+k1vW0ja6pZw7QLo38DaHNf
+         VgIZvnIW9kYtPUkeUMSuONzvrLYjyD178MhuOouUP1wqzGlJDlCiSFVw6bYMmasjE9g2
+         /Vjg==
+X-Gm-Message-State: APjAAAW9QzLFUDBv1/WNdZAPzJsBzhai94iuVkkS3bb4hLC8JNs3LhuA
+        dlkU04BITRpYvqoR1yaWDXqPPEI=
+X-Google-Smtp-Source: APXvYqzjdFzVH61R1ab0XzAVIAq2a6gann2WfIrLxzjrOU/9McW0tnQBAzZtO6M72haqhK0xoNa5U44=
+X-Received: by 2002:a05:620a:16b4:: with SMTP id s20mr29037867qkj.34.1557855195127;
+ Tue, 14 May 2019 10:33:15 -0700 (PDT)
+Date:   Tue, 14 May 2019 10:33:03 -0700
+Message-Id: <20190514173304.213692-1-wvw@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] thermal: make thermal_cooling_device_register accepts const string
+From:   Wei Wang <wvw@google.com>
+Cc:     wei.vince.wang@gmail.com, Wei Wang <wvw@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
-        quentin.perret@linaro.org, chris.redpath@arm.com,
-        Dietmar.Eggemann@arm.com, linux-kernel@vger.kernel.org
-References: <cover.1556182964.git.viresh.kumar@linaro.org>
- <59b37c56b8fcb834f7d3234e776eaeff74ad117f.1556182965.git.viresh.kumar@linaro.org>
- <20190510072125.GG2623@hirez.programming.kicks-ass.net>
- <20190513093418.altqhlhu4zsu75t4@vireshk-i7>
- <20190513113518.GQ2623@hirez.programming.kicks-ass.net>
- <05ffe5f4-4324-2977-e46e-155e1aef57fa@oracle.com>
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Message-ID: <b5f84cce-8000-d9c9-26ae-e34c9ca53ed5@oracle.com>
-Date:   Tue, 14 May 2019 10:27:47 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <05ffe5f4-4324-2977-e46e-155e1aef57fa@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140120
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140120
+        Guenter Roeck <linux@roeck-us.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Change the argument similarly to thermal_zone_device_register. This will
+help register names get from of_property_read_string during probe.
 
-On 5/14/19 9:03 AM, Steven Sistare wrote:
-> On 5/13/2019 7:35 AM, Peter Zijlstra wrote:
->> On Mon, May 13, 2019 at 03:04:18PM +0530, Viresh Kumar wrote:
->>> On 10-05-19, 09:21, Peter Zijlstra wrote:
->>>> I don't hate his per se; but the whole select_idle_sibling() thing is
->>>> something that needs looking at.
->>>>
->>>> There was the task stealing thing from Steve that looked interesting and
->>>> that would render your apporach unfeasible.
->>> I am surely missing something as I don't see how that patchset will
->>> make this patchset perform badly, than what it already does.
->> Nah; I just misremembered. I know Oracle has a patch set poking at
->> select_idle_siblings() _somewhere_ (as do I), and I just found the wrong
->> one.
->>
->> Basically everybody is complaining select_idle_sibling() is too
->> expensive for checking the entire LLC domain, except for FB (and thus
->> likely some other workloads too) that depend on it to kill their tail
->> latency.
->>
->> But I suppose we could still do this, even if we scan only a subset of
->> the LLC, just keep track of the last !idle CPU running only SCHED_IDLE
->> tasks and pick that if you do not (in your limited scan) find a better
->> candidate.
-> Subhra posted a patch that incrementally searches for an idle CPU in the LLC,
-> remembering the last CPU examined, and searching a fixed number of CPUs from there.
-> That technique is compatible with the one that Viresh suggests; the incremental
-> search would stop if a SCHED_IDLE cpu was found.
-This was the last version of patchset I sent:
-https://lkml.org/lkml/2018/6/28/810
+Signed-off-by: Wei Wang <wvw@google.com>
+---
+ Documentation/thermal/sysfs-api.txt |  7 ++++---
+ drivers/thermal/thermal_core.c      |  6 +++---
+ include/linux/thermal.h             | 12 ++++++------
+ 3 files changed, 13 insertions(+), 12 deletions(-)
 
-Also select_idle_core is a net -ve for certain workloads like OLTP. So I
-had put a SCHED_FEAT to be able to disable it.
+diff --git a/Documentation/thermal/sysfs-api.txt b/Documentation/thermal/sysfs-api.txt
+index c3fa500df92c..0c26c05197ad 100644
+--- a/Documentation/thermal/sysfs-api.txt
++++ b/Documentation/thermal/sysfs-api.txt
+@@ -31,7 +31,7 @@ temperature) and throttle appropriate devices.
+ 1. thermal sysfs driver interface functions
+ 
+ 1.1 thermal zone device interface
+-1.1.1 struct thermal_zone_device *thermal_zone_device_register(char *type,
++1.1.1 struct thermal_zone_device *thermal_zone_device_register(const char *type,
+ 		int trips, int mask, void *devdata,
+ 		struct thermal_zone_device_ops *ops,
+ 		const struct thermal_zone_params *tzp,
+@@ -160,8 +160,9 @@ temperature) and throttle appropriate devices.
+ 	drivers for temperature calculations.
+ 
+ 1.2 thermal cooling device interface
+-1.2.1 struct thermal_cooling_device *thermal_cooling_device_register(char *name,
+-		void *devdata, struct thermal_cooling_device_ops *)
++1.2.1 struct thermal_cooling_device *thermal_cooling_device_register(
++		const char *name, void *devdata,
++		struct thermal_cooling_device_ops *ops)
+ 
+     This interface function adds a new thermal cooling device (fan/processor/...)
+     to /sys/class/thermal/ folder as cooling_device[0-*]. It tries to bind itself
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 6590bb5cb688..b708b66fef94 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -941,7 +941,7 @@ static void bind_cdev(struct thermal_cooling_device *cdev)
+  */
+ static struct thermal_cooling_device *
+ __thermal_cooling_device_register(struct device_node *np,
+-				  char *type, void *devdata,
++				  const char *type, void *devdata,
+ 				  const struct thermal_cooling_device_ops *ops)
+ {
+ 	struct thermal_cooling_device *cdev;
+@@ -1015,7 +1015,7 @@ __thermal_cooling_device_register(struct device_node *np,
+  * ERR_PTR. Caller must check return value with IS_ERR*() helpers.
+  */
+ struct thermal_cooling_device *
+-thermal_cooling_device_register(char *type, void *devdata,
++thermal_cooling_device_register(const char *type, void *devdata,
+ 				const struct thermal_cooling_device_ops *ops)
+ {
+ 	return __thermal_cooling_device_register(NULL, type, devdata, ops);
+@@ -1039,7 +1039,7 @@ EXPORT_SYMBOL_GPL(thermal_cooling_device_register);
+  */
+ struct thermal_cooling_device *
+ thermal_of_cooling_device_register(struct device_node *np,
+-				   char *type, void *devdata,
++				   const char *type, void *devdata,
+ 				   const struct thermal_cooling_device_ops *ops)
+ {
+ 	return __thermal_cooling_device_register(np, type, devdata, ops);
+diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+index 5f4705f46c2f..0f58fffee9a8 100644
+--- a/include/linux/thermal.h
++++ b/include/linux/thermal.h
+@@ -442,10 +442,10 @@ void thermal_zone_device_update(struct thermal_zone_device *,
+ 				enum thermal_notify_event);
+ void thermal_zone_set_trips(struct thermal_zone_device *);
+ 
+-struct thermal_cooling_device *thermal_cooling_device_register(char *, void *,
+-		const struct thermal_cooling_device_ops *);
++struct thermal_cooling_device *thermal_cooling_device_register(const char *,
++		void *, const struct thermal_cooling_device_ops *);
+ struct thermal_cooling_device *
+-thermal_of_cooling_device_register(struct device_node *np, char *, void *,
++thermal_of_cooling_device_register(struct device_node *np, const char *, void *,
+ 				   const struct thermal_cooling_device_ops *);
+ void thermal_cooling_device_unregister(struct thermal_cooling_device *);
+ struct thermal_zone_device *thermal_zone_get_zone_by_name(const char *name);
+@@ -496,12 +496,12 @@ static inline void thermal_zone_device_update(struct thermal_zone_device *tz,
+ static inline void thermal_zone_set_trips(struct thermal_zone_device *tz)
+ { }
+ static inline struct thermal_cooling_device *
+-thermal_cooling_device_register(char *type, void *devdata,
++thermal_cooling_device_register(const char *type, void *devdata,
+ 	const struct thermal_cooling_device_ops *ops)
+ { return ERR_PTR(-ENODEV); }
+ static inline struct thermal_cooling_device *
+-thermal_of_cooling_device_register(struct device_node *np,
+-	char *type, void *devdata, const struct thermal_cooling_device_ops *ops)
++thermal_of_cooling_device_register(struct device_node *np, const char *type,
++	void *devdata, const struct thermal_cooling_device_ops *ops)
+ { return ERR_PTR(-ENODEV); }
+ static inline void thermal_cooling_device_unregister(
+ 	struct thermal_cooling_device *cdev)
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-Thanks,
-Subhra
->
-> I also fiddled with select_idle_sibling, maintaining a per-LLC bitmap of idle CPUs,
-> updated with atomic operations.  Performance was basically unchanged for the
-> workloads I tested, and I inserted timers around the idle search showing it was
-> a very small fraction of time both before and after my changes.  That led me to
-> ignore the push side and optimize the pull side with task stealing.
->
-> I would be very interested in hearing from folks that have workloads that demonstrate
-> that select_idle_sibling is too expensive.
->
-> - Steve
