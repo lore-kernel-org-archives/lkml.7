@@ -5,60 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC43C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90632C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EDC20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 621A620881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnw4+f4V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJPtOyES"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbfENTAi (ORCPT
+        id S1727738AbfENTBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:00:38 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36880 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfENTAh (ORCPT
+        Tue, 14 May 2019 15:01:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55977 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfENTBb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:00:37 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 7so174648wmo.2;
-        Tue, 14 May 2019 12:00:35 -0700 (PDT)
+        Tue, 14 May 2019 15:01:31 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x64so170338wmb.5;
+        Tue, 14 May 2019 12:01:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:from:cc:references:message-id:date:user-agent:mime-version
          :in-reply-to:content-language:content-transfer-encoding;
-        bh=9JYN5xzhocSIglmrjAdysDK4dh65giGpdMAvsJFJJPY=;
-        b=bnw4+f4VuntzkI+xNK+UL5Y9TBkyQNyV2rFO1J/BdlRVHAFJUmJw5p4avlkaTep9zw
-         yzZvHk60Zeujrjmm5sWJhh5K7b+by/BSGaZ+zp+xZTkWw27JIS1a5UHs/o1Ne1K9Xypm
-         drZOSQTaYc2P2d0mPE0jGbvbSZ+EmENDDrg3yN4dpHEv+xFFY5ny3HhGBikLqUfrv9ZW
-         wHByoUYVIXJfd16ZmlBzMKNp5wNgbKC9dRiO8EoPbuVbXqDgZF2eCx3lIAG+rmI/IbkI
-         LaqcqeOvN//hllIJ/6cCIddIoIdfU26lGIf13bGgxTeZlYdsb/lSu+Qs0TRkqaf2QsDw
-         unyw==
+        bh=yKJtRNLjUlsE2AHcVMIA1x07TU3dSlb+s1DhsyS3+wE=;
+        b=iJPtOyESOdvx9dnZIhnOoGHJy0PYv+xOrJEg5/QfqQuGBvfiuepkt7Zu3dmXEA58Ef
+         wpq1aXA5AEYjRQpu/i4NjYlMZ9x+9+Ukzlo5f4OgIfnOAHjyjIeODV2zSqCqvqH6xZrg
+         Gdqa/Bm73NZli+seeDAvdqDYYCGoZ9WpwN5gGYwIZYiVQDPUNkM0lCGXbEk0pLZTDDzb
+         8oC9Sb6myG8oYripgTZUJUZGEGHYqLrB8pk73D2SkxP3PxGWuT+NhTkAjQBJXnmauN8/
+         8QHY8svdTpYIGrvb3K/qe+cuSeT6M/wgUIslnm8mDNadJ7peGWUNyQhdMAxtt0oONvOw
+         Vh8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:from:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9JYN5xzhocSIglmrjAdysDK4dh65giGpdMAvsJFJJPY=;
-        b=cr5dR9LlghqwUYAbsR4kVtHzYLXb1tk9Dxacx0RMYjVBtqkruKy3S8ptxXR56/eghf
-         Z8yBMlprnx28Rf/BEVrXmUSsk5t37JHbKLLNgndRNr9kYARt+QX9ciJJyQByUHQ92jrY
-         1r9wj8gO93EAl0lmIzWc30Jf2k1GaWLbRYNHr4p6X0YGL6uIZeSJywOthXaWsCGm0jOu
-         H7s1y1fPraY1w2pMicw4AY1GgC9rSsopdLQhsZAgA+jptTqng78E0t1dfGAUhHpKVr9R
-         oozKb196Wu0k2BfR48Ke4dAiktRboVW7uuz27IJ7+hma9TjGYSeHpIvVO7OxuK5mtDQv
-         E/9A==
-X-Gm-Message-State: APjAAAVgxGdOHqWFOlCB7nlL850ADhWaf6UklYQDXknINDWkDFY6F05H
-        0VOQDhcYMooMGhV4hh3/5crLJ//zwpA=
-X-Google-Smtp-Source: APXvYqwH6CnDSNclbIqoYhw2TUiwGx48ELojPYaEp/66QlUy6nqSg2Sbws0ZyFLMiYqUvI+EBIB3HA==
-X-Received: by 2002:a1c:ca0b:: with SMTP id a11mr20885165wmg.52.1557860434790;
-        Tue, 14 May 2019 12:00:34 -0700 (PDT)
+        bh=yKJtRNLjUlsE2AHcVMIA1x07TU3dSlb+s1DhsyS3+wE=;
+        b=IlDr1gaUp+vSZ/CQMEtORuqOMhxgc80sumWr+EVywfoYFwVL7mhb7FM3P5xKJvf4/9
+         zLkLa/A9l17xsUoH4oeJDOZ0nIGIA0+RZjWTwqWGk8+oCDn3cuEicBZM9WQ2xoANNhkY
+         49WTzwCii6UbB83yH9k6mNfb6A02Z3Sa0s+oi6Jhl4pTcqpO1Qsma+Jn7rfYdKxzQpda
+         7H6FB+Tis4SebGOWBKTzBxHGZXRCp9jIPlCLZZan/V4FEmP86iG23qdDOdWjn9niqbYR
+         Cs5riSiunhRb3BVJy1SGaSpGKlmX9qjNfFq+Tf/JITzdb7MJ6ap6sWmDxfTvy7Cclo9q
+         l8zA==
+X-Gm-Message-State: APjAAAXVF5LfMAxc8vxTqeODi+j6kFh5jkCtLYEp9JDWiJEwH19+NXjX
+        5GrbB9lEUnfZTDmHGWzjZ0A7Vocr
+X-Google-Smtp-Source: APXvYqzoxI6X6dueMRlGpARdmg4YhJtdbP6LCeRQwDtlyNLOa+h3wXxUIh03CMQvg25fem92RzzWhw==
+X-Received: by 2002:a1c:3c2:: with SMTP id 185mr3024200wmd.91.1557860487478;
+        Tue, 14 May 2019 12:01:27 -0700 (PDT)
 Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id l14sm16996166wrt.57.2019.05.14.12.00.32
+        by smtp.gmail.com with ESMTPSA id z13sm2565466wrw.42.2019.05.14.12.01.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 12:00:34 -0700 (PDT)
-Subject: [PATCH v4 05/13] platform/x86: asus-wmi: Improve DSTS WMI method ID
- detection
+        Tue, 14 May 2019 12:01:27 -0700 (PDT)
+Subject: [PATCH v4 06/13] platform/x86: asus-wmi: Refactor WMI event handling
 From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
 Cc:     Corentin Chary <corentin.chary@gmail.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -66,13 +65,10 @@ Cc:     Corentin Chary <corentin.chary@gmail.com>,
         Daniel Drake <drake@endlessm.com>,
         Chris Chiu <chiu@endlessm.com>,
         acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-Message-ID: <34f49a73-a556-9e5a-fa07-938d43ac6225@gmail.com>
-Date:   Tue, 14 May 2019 21:00:31 +0200
+Message-ID: <6a62a746-6c0d-e786-1edc-febbfc083a64@gmail.com>
+Date:   Tue, 14 May 2019 21:01:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -86,133 +82,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DSTS method detection mistakenly selects DCTS instead of DSTS if
-nothing is returned when the method ID is not defined in WMNB. As a result,
-the control of keyboard backlight is not functional for TUF Gaming series
-laptops. Implement detection based on _UID of the WMI device instead.
-
-There is evidence that DCTS is handled by ACPI WMI devices that have _UID
-ASUSWMI, whereas none of the devices without ASUSWMI respond to DCTS and
-DSTS is used instead [1].
-
-DSDT examples:
-
-FX505GM (_UID ATK):
-Method (WMNB, 3, Serialized)
-{ ...
-    If ((Local0 == 0x53545344))
-    {
-        ...
-        Return (Zero)
-    }
-    ...
-    // No return
-}
-
-K54C (_UID ATK):
-Method (WMNB, 3, Serialized)
-{ ...
-    If ((Local0 == 0x53545344))
-    {
-        ...
-        Return (0x02)
-    }
-    ...
-    Return (0xFFFFFFFE)
-}
-
-[1] Link: https://lkml.org/lkml/2019/4/11/322
+Refactor WMI event handling into separate functions for getting the event
+code and handling the retrieved event code as a preparation for
+introduction of WMI event queue support.
 
 Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Suggested-by: Daniel Drake <drake@endlessm.com>
-
 ---
-Depends on the previous patch in the series that adds method to
-wmi module.
----
- drivers/hid/hid-asus.c                     |  2 +-
- drivers/platform/x86/asus-wmi.c            | 23 +++++++++++++++++++---
- include/linux/platform_data/x86/asus-wmi.h |  4 ++--
- 3 files changed, 23 insertions(+), 6 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 66 +++++++++++++++++++++------------
+ 1 file changed, 42 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 336aeaed1159..1d01fe23ca0c 100644
---- a/drivers/hid/hid-asus.c
-+++ b/drivers/hid/hid-asus.c
-@@ -396,7 +396,7 @@ static bool asus_kbd_wmi_led_control_present(struct hid_device *hdev)
- 	if (!IS_ENABLED(CONFIG_ASUS_WMI))
- 		return false;
- 
--	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS2,
-+	ret = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS,
- 				       ASUS_WMI_DEVID_KBD_BACKLIGHT, 0, &value);
- 	hid_dbg(hdev, "WMI backlight check: rc %d value %x", ret, value);
- 	if (ret)
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 6b35c1f00a3e..5bdb4ffdbee3 100644
+index 5bdb4ffdbee3..ed7c7857012e 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -83,6 +83,8 @@ MODULE_LICENSE("GPL");
- #define USB_INTEL_XUSB2PR		0xD0
- #define PCI_DEVICE_ID_INTEL_LYNXPOINT_LP_XHCI	0x9c31
+@@ -85,6 +85,8 @@ MODULE_LICENSE("GPL");
  
-+#define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
+ #define ASUS_ACPI_UID_ASUSWMI		"ASUSWMI"
+ 
++#define WMI_EVENT_MASK			0xFFFF
 +
  static const char * const ashs_ids[] = { "ATK4001", "ATK4002", NULL };
  
  static bool ashs_present(void)
-@@ -1874,6 +1876,8 @@ static int asus_wmi_sysfs_init(struct platform_device *device)
-  */
- static int asus_wmi_platform_init(struct asus_wmi *asus)
+@@ -1651,83 +1653,99 @@ static void asus_wmi_fnlock_update(struct asus_wmi *asus)
+ 	asus_wmi_set_devstate(ASUS_WMI_DEVID_FNLOCK, mode, NULL);
+ }
+ 
+-static void asus_wmi_notify(u32 value, void *context)
++static int asus_wmi_get_event_code(u32 value)
  {
-+	struct device *dev = &asus->platform_device->dev;
-+	char *wmi_uid;
- 	int rv;
+-	struct asus_wmi *asus = context;
+ 	struct acpi_buffer response = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	union acpi_object *obj;
+ 	acpi_status status;
+ 	int code;
+-	int orig_code;
+-	unsigned int key_value = 1;
+-	bool autorelease = 1;
  
- 	/* INIT enable hotkeys on some models */
-@@ -1903,11 +1907,24 @@ static int asus_wmi_platform_init(struct asus_wmi *asus)
- 	 * Note, on most Eeepc, there is no way to check if a method exist
- 	 * or note, while on notebooks, they returns 0xFFFFFFFE on failure,
- 	 * but once again, SPEC may probably be used for that kind of things.
-+	 *
-+	 * Additionally at least TUF Gaming series laptops return nothing for
-+	 * unknown methods, so the detection in this way is not possible.
-+	 *
-+	 * There is strong indication that only ACPI WMI devices that have _UID
-+	 * equal to "ASUSWMI" use DCTS whereas those with "ATK" use DSTS.
- 	 */
--	if (!asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, 0, 0, NULL))
-+	wmi_uid = wmi_get_acpi_device_uid(ASUS_WMI_MGMT_GUID);
-+	if (!wmi_uid)
-+		return -ENODEV;
+ 	status = wmi_get_event_data(value, &response);
+-	if (status != AE_OK) {
+-		pr_err("bad event status 0x%x\n", status);
+-		return;
++	if (ACPI_FAILURE(status)) {
++		pr_warn("Failed to get WMI notify code: %s\n",
++				acpi_format_exception(status));
++		return -EIO;
+ 	}
+ 
+ 	obj = (union acpi_object *)response.pointer;
+ 
+-	if (!obj || obj->type != ACPI_TYPE_INTEGER)
+-		goto exit;
++	if (obj && obj->type == ACPI_TYPE_INTEGER)
++		code = (int)(obj->integer.value & WMI_EVENT_MASK);
++	else
++		code = -EIO;
 +
-+	if (!strcmp(wmi_uid, ASUS_ACPI_UID_ASUSWMI)) {
-+		dev_info(dev, "Detected ASUSWMI, use DCTS\n");
-+		asus->dsts_id = ASUS_WMI_METHODID_DCTS;
-+	} else {
-+		dev_info(dev, "Detected %s, not ASUSWMI, use DSTS\n", wmi_uid);
- 		asus->dsts_id = ASUS_WMI_METHODID_DSTS;
--	else
--		asus->dsts_id = ASUS_WMI_METHODID_DSTS2;
-+	}
++	kfree(obj);
++	return code;
++}
++
++static void asus_wmi_handle_event_code(int code, struct asus_wmi *asus)
++{
++	int orig_code;
++	unsigned int key_value = 1;
++	bool autorelease = 1;
  
- 	/* CWAP allow to define the behavior of the Fn+F2 key,
- 	 * this method doesn't seems to be present on Eee PCs */
-diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index bfba245636a7..0668f76df921 100644
---- a/include/linux/platform_data/x86/asus-wmi.h
-+++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -18,8 +18,8 @@
- #define ASUS_WMI_METHODID_GDSP		0x50534447 /* Get DiSPlay output */
- #define ASUS_WMI_METHODID_DEVP		0x50564544 /* DEVice Policy */
- #define ASUS_WMI_METHODID_OSVR		0x5256534F /* OS VeRsion */
--#define ASUS_WMI_METHODID_DSTS		0x53544344 /* Device STatuS */
--#define ASUS_WMI_METHODID_DSTS2		0x53545344 /* Device STatuS #2*/
-+#define ASUS_WMI_METHODID_DCTS		0x53544344 /* Device status (DCTS) */
-+#define ASUS_WMI_METHODID_DSTS		0x53545344 /* Device status (DSTS) */
- #define ASUS_WMI_METHODID_BSTS		0x53545342 /* Bios STatuS ? */
- #define ASUS_WMI_METHODID_DEVS		0x53564544 /* DEVice Set */
- #define ASUS_WMI_METHODID_CFVS		0x53564643 /* CPU Frequency Volt Set */
+-	code = obj->integer.value;
+ 	orig_code = code;
+ 
+ 	if (asus->driver->key_filter) {
+ 		asus->driver->key_filter(asus->driver, &code, &key_value,
+ 					 &autorelease);
+ 		if (code == ASUS_WMI_KEY_IGNORE)
+-			goto exit;
++			return;
+ 	}
+ 
+ 	if (code >= NOTIFY_BRNUP_MIN && code <= NOTIFY_BRNUP_MAX)
+ 		code = ASUS_WMI_BRN_UP;
+-	else if (code >= NOTIFY_BRNDOWN_MIN &&
+-		 code <= NOTIFY_BRNDOWN_MAX)
++	else if (code >= NOTIFY_BRNDOWN_MIN && code <= NOTIFY_BRNDOWN_MAX)
+ 		code = ASUS_WMI_BRN_DOWN;
+ 
+ 	if (code == ASUS_WMI_BRN_DOWN || code == ASUS_WMI_BRN_UP) {
+ 		if (acpi_video_get_backlight_type() == acpi_backlight_vendor) {
+ 			asus_wmi_backlight_notify(asus, orig_code);
+-			goto exit;
++			return;
+ 		}
+ 	}
+ 
+ 	if (code == NOTIFY_KBD_BRTUP) {
+ 		kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+-		goto exit;
++		return;
+ 	}
+ 	if (code == NOTIFY_KBD_BRTDWN) {
+ 		kbd_led_set_by_kbd(asus, asus->kbd_led_wk - 1);
+-		goto exit;
++		return;
+ 	}
+ 	if (code == NOTIFY_KBD_BRTTOGGLE) {
+ 		if (asus->kbd_led_wk == asus->kbd_led.max_brightness)
+ 			kbd_led_set_by_kbd(asus, 0);
+ 		else
+ 			kbd_led_set_by_kbd(asus, asus->kbd_led_wk + 1);
+-		goto exit;
++		return;
+ 	}
+ 
+ 	if (code == NOTIFY_FNLOCK_TOGGLE) {
+ 		asus->fnlock_locked = !asus->fnlock_locked;
+ 		asus_wmi_fnlock_update(asus);
+-		goto exit;
++		return;
+ 	}
+ 
+-	if (is_display_toggle(code) &&
+-	    asus->driver->quirks->no_display_toggle)
+-		goto exit;
++	if (is_display_toggle(code) && asus->driver->quirks->no_display_toggle)
++		return;
+ 
+ 	if (!sparse_keymap_report_event(asus->inputdev, code,
+ 					key_value, autorelease))
+ 		pr_info("Unknown key %x pressed\n", code);
++}
+ 
+-exit:
+-	kfree(obj);
++static void asus_wmi_notify(u32 value, void *context)
++{
++	struct asus_wmi *asus = context;
++	int code = asus_wmi_get_event_code(value);
++
++	if (code < 0) {
++		pr_warn("Failed to get notify code: %d\n", code);
++		return;
++	}
++
++	asus_wmi_handle_event_code(code, asus);
+ }
+ 
+ /*
 -- 
 2.17.1
 
