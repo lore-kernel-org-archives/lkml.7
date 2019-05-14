@@ -2,486 +2,114 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A166AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC98AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5902085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC662084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1ifQeLg"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="PWGMigxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfENOsV (ORCPT
+        id S1726853AbfENOs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:48:21 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45700 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbfENOsK (ORCPT
+        Tue, 14 May 2019 10:48:27 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53444 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfENOsU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:48:10 -0400
-Received: by mail-pf1-f193.google.com with SMTP id s11so9250262pfm.12;
-        Tue, 14 May 2019 07:48:09 -0700 (PDT)
+        Tue, 14 May 2019 10:48:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 198so3194068wme.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AbeG7ZC17LO2AzR01P6OGZq8aSyttI2a8AzNiGLzFKI=;
-        b=D1ifQeLgGJ+S86fAC5ah2G8h9IBQIspNerc3U8ujZNkSW2U+y8M5SFvuRpQrAYEW8+
-         C+AEFPdjv6G1o+bgqyE7gtp5jZWuVtxffjmTvJyPdq5cmhs/OUkHYpimJcHhOSmnWrhf
-         MuPkfcI6xJv+Eqmaz1fkJDdvyC9UB+7VDBISsA+pYcRbaYlAGaETwLf1OCnPfdxYmCes
-         g+exC5bQYPw8qYJDuMpMfYUn1mMiVZTtHdAr/MekHpJ/qfxOs490Mp+soHxmnIFZVmlz
-         50M4GZS3gaFa14s6XYE6f5LwOtvvOW9GWxprJOcjFMuc74uPhiweWr+BR60DOlKT+7BG
-         w9Kw==
+        d=amarulasolutions.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oVzNv9Cda4AG48ayrkoKl5rIu1/NIqCv8NqNC2WTHNk=;
+        b=PWGMigxrpID6s8IULkbH99Y1lhvCduvvj46ce+Jn7M72fT9TeIXEZYECmVOQCUQNHr
+         FApeJ4e7A9fYy9hxGe5qnCUNcXvgdNuVkhfOD5K1xtfRWbarEA7+dfHVLkK7x7+g3xiK
+         Re4w+Z+2GFCXOd0H6gAQJMx6YjB9hvvcVK8f8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AbeG7ZC17LO2AzR01P6OGZq8aSyttI2a8AzNiGLzFKI=;
-        b=pjs5+NvUycCXqn2dFEaOo8Ry12/EN1ItiLz6lfov178Wf7E49vatD1D66EyMIfvFa2
-         7sT+mx2gfcZPqK07qysVewbLQR1ptNLPXlb1vRFMHi2bm4H+NnyR889Z9z3AI3tupd9u
-         c4c+uaEsnpxBZpceUUNnrftN9q/aCYJZKQ5yx+/gOLXZN+aMRudB7FlPg2wl3iaRcgqE
-         ODyltiFjqQrsdS5coSaOfivw8mp2Aw0rvrpsIlISrtJpDIapsxZY6lOddC0Ils/1l4mV
-         p+uZ+iftcKm5gCjG2JvuiOBcJ5khh01xJiDiGzYAM99zY0eBGC1Kg2hEDPXxd0Z0J+Kj
-         5aFQ==
-X-Gm-Message-State: APjAAAVDZEwKrM+0tEDwRgNHO+B734DXfLlAuIyq8mrOtLrgYhFXKpfq
-        1WG7lJj0X/Uf2LsFVyfQw06MUR99DEQ=
-X-Google-Smtp-Source: APXvYqwQsuNw1hMRhyrFiASrR+ymy8fkbwXrD2zfvpG1z+NKIiHgtUQ1UiFjrgaQTlIORAViJvrZ4g==
-X-Received: by 2002:a65:44cb:: with SMTP id g11mr38671772pgs.193.1557845289059;
-        Tue, 14 May 2019 07:48:09 -0700 (PDT)
-Received: from localhost.localdomain ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 07:48:08 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     bhelgaas@google.com, corbet@lwn.net
-Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
-        Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH v6 07/12] Documentation: PCI: convert pci-error-recovery.txt to reST
-Date:   Tue, 14 May 2019 22:47:29 +0800
-Message-Id: <20190514144734.19760-8-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
-References: <20190514144734.19760-1-changbin.du@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oVzNv9Cda4AG48ayrkoKl5rIu1/NIqCv8NqNC2WTHNk=;
+        b=VldS/TvQZjLXR9LwqHBve2yuSH6qO0aD68W2xD5NnWLZ75XRScr9ZKBv0oR9oYYEzw
+         FYSg9RFSHOFWFY770vAPronFWMh5acIkRjnulelSyev7y/rzVIfjjr3SfQ+T17Ocq1n0
+         ZdglP3WlULf01CLymaWR8VKdOKzESFe/KEEfmJv2bgN1i+wNwdJ88K2AgTsYxI8dieuq
+         CLrI9UMScNjaDPI599gQBGMxHMIe3iP2KKilXzF2vEvxNgjTb5fXHOEIJbVC6wOMxZ3y
+         MCsDUVxGbcGdssAbghLus+XaTy6LXa3G9OFyY/avnYFsztYux3l/etJitU15p1pHkjZa
+         iaAA==
+X-Gm-Message-State: APjAAAWO/y1wSsMUYA/4GBnZJuKsRI+zM4pdMRjTZkUuIeZ+DgZ35cR2
+        5Wora3hlVuRs1jnEIRgZ8T0v/g==
+X-Google-Smtp-Source: APXvYqxYk6Oc5UfGGWqyARsIZbZicHGDxdaBpkaV0YzlrdD1K6Gucx02gXt4F3GaCGNm3U6vsVvpfQ==
+X-Received: by 2002:a1c:3c2:: with SMTP id 185mr2275481wmd.91.1557845297691;
+        Tue, 14 May 2019 07:48:17 -0700 (PDT)
+Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
+        by smtp.gmail.com with ESMTPSA id p6sm12048114wrs.6.2019.05.14.07.48.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 07:48:17 -0700 (PDT)
+Date:   Tue, 14 May 2019 16:48:06 +0200
+From:   Andrea Parri <andrea.parri@amarulasolutions.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
+Cc:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Marciniszyn, Mike" <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 5/5] IB/hfi1: Fix improper uses of smp_mb__before_atomic()
+Message-ID: <20190514144806.GA14962@andrea>
+References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
+ <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
+ <14063C7AD467DE4B82DEDB5C278E8663BE6AADCE@FMSMSX108.amr.corp.intel.com>
+ <20190429231657.GA2733@andrea>
+ <20190509211221.GA4966@andrea>
+ <0a78eded-6c08-8d32-ec31-d62d6feb2118@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a78eded-6c08-8d32-ec31-d62d6feb2118@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the plain text documentation to reStructuredText format and
-add it to Sphinx TOC tree. No essential content change.
+On Tue, May 14, 2019 at 08:32:52AM -0400, Dennis Dalessandro wrote:
+> On 5/9/2019 5:12 PM, Andrea Parri wrote:
+> >On Tue, Apr 30, 2019 at 01:16:57AM +0200, Andrea Parri wrote:
+> >>Hi Mike,
+> >>
+> >>>>This barrier only applies to the read-modify-write operations; in
+> >>>>particular, it does not apply to the atomic_read() primitive.
+> >>>>
+> >>>>Replace the barrier with an smp_mb().
+> >>>
+> >>>This is one of a couple of barrier issues that we are currently looking into.
+> >>>
+> >>>See:
+> >>>
+> >>>[PATCH for-next 6/9] IB/rdmavt: Add new completion inline
+> >>>
+> >>>We will take a look at this one as well.
+> >>
+> >>Thank you for the reference and for looking into this,
+> >
+> >So, I'm planning to just drop this patch; or can I do something to help?
+> >
+> >Please let me know.
+> 
+> Mike was looking into this, and I've got a handful of patches from him to
+> review. He's unavailable for a while but if it's not included in the patches
+> I've got we'll get something out shortly. So yes I think we can hold off on
+> this patch for now. Thanks.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/PCI/index.rst                   |   1 +
- ...or-recovery.txt => pci-error-recovery.rst} | 287 +++++++++---------
- MAINTAINERS                                   |   4 +-
- 3 files changed, 152 insertions(+), 140 deletions(-)
- rename Documentation/PCI/{pci-error-recovery.txt => pci-error-recovery.rst} (67%)
+Thank you for the confirmation, Dennis.  I'll hold off on this one.
 
-diff --git a/Documentation/PCI/index.rst b/Documentation/PCI/index.rst
-index 6f573f3df993..92e62d0fc9e6 100644
---- a/Documentation/PCI/index.rst
-+++ b/Documentation/PCI/index.rst
-@@ -13,3 +13,4 @@ Linux PCI Bus Subsystem
-    pci-iov-howto
-    msi-howto
-    acpi-info
-+   pci-error-recovery
-diff --git a/Documentation/PCI/pci-error-recovery.txt b/Documentation/PCI/pci-error-recovery.rst
-similarity index 67%
-rename from Documentation/PCI/pci-error-recovery.txt
-rename to Documentation/PCI/pci-error-recovery.rst
-index 0b6bb3ef449e..83db42092935 100644
---- a/Documentation/PCI/pci-error-recovery.txt
-+++ b/Documentation/PCI/pci-error-recovery.rst
-@@ -1,12 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
- 
--                       PCI Error Recovery
--                       ------------------
--                        February 2, 2006
-+==================
-+PCI Error Recovery
-+==================
- 
--                 Current document maintainer:
--             Linas Vepstas <linasvepstas@gmail.com>
--          updated by Richard Lary <rlary@us.ibm.com>
--       and Mike Mason <mmlnx@us.ibm.com> on 27-Jul-2009
-+
-+:Authors: - Linas Vepstas <linasvepstas@gmail.com>
-+          - Richard Lary <rlary@us.ibm.com>
-+          - Mike Mason <mmlnx@us.ibm.com>
- 
- 
- Many PCI bus controllers are able to detect a variety of hardware
-@@ -63,7 +64,8 @@ mechanisms for dealing with SCSI bus errors and SCSI bus resets.
- 
- 
- Detailed Design
-----------------
-+===============
-+
- Design and implementation details below, based on a chain of
- public email discussions with Ben Herrenschmidt, circa 5 April 2005.
- 
-@@ -73,30 +75,33 @@ pci_driver. A driver that fails to provide the structure is "non-aware",
- and the actual recovery steps taken are platform dependent.  The
- arch/powerpc implementation will simulate a PCI hotplug remove/add.
- 
--This structure has the form:
--struct pci_error_handlers
--{
--	int (*error_detected)(struct pci_dev *dev, enum pci_channel_state);
--	int (*mmio_enabled)(struct pci_dev *dev);
--	int (*slot_reset)(struct pci_dev *dev);
--	void (*resume)(struct pci_dev *dev);
--};
--
--The possible channel states are:
--enum pci_channel_state {
--	pci_channel_io_normal,  /* I/O channel is in normal state */
--	pci_channel_io_frozen,  /* I/O to channel is blocked */
--	pci_channel_io_perm_failure, /* PCI card is dead */
--};
--
--Possible return values are:
--enum pci_ers_result {
--	PCI_ERS_RESULT_NONE,        /* no result/none/not supported in device driver */
--	PCI_ERS_RESULT_CAN_RECOVER, /* Device driver can recover without slot reset */
--	PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
--	PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
--	PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
--};
-+This structure has the form::
-+
-+	struct pci_error_handlers
-+	{
-+		int (*error_detected)(struct pci_dev *dev, enum pci_channel_state);
-+		int (*mmio_enabled)(struct pci_dev *dev);
-+		int (*slot_reset)(struct pci_dev *dev);
-+		void (*resume)(struct pci_dev *dev);
-+	};
-+
-+The possible channel states are::
-+
-+	enum pci_channel_state {
-+		pci_channel_io_normal,  /* I/O channel is in normal state */
-+		pci_channel_io_frozen,  /* I/O to channel is blocked */
-+		pci_channel_io_perm_failure, /* PCI card is dead */
-+	};
-+
-+Possible return values are::
-+
-+	enum pci_ers_result {
-+		PCI_ERS_RESULT_NONE,        /* no result/none/not supported in device driver */
-+		PCI_ERS_RESULT_CAN_RECOVER, /* Device driver can recover without slot reset */
-+		PCI_ERS_RESULT_NEED_RESET,  /* Device driver wants slot to be reset. */
-+		PCI_ERS_RESULT_DISCONNECT,  /* Device has completely failed, is unrecoverable */
-+		PCI_ERS_RESULT_RECOVERED,   /* Device driver is fully recovered and operational */
-+	};
- 
- A driver does not have to implement all of these callbacks; however,
- if it implements any, it must implement error_detected(). If a callback
-@@ -134,16 +139,17 @@ shouldn't do any new IOs. Called in task context. This is sort of a
- 
- All drivers participating in this system must implement this call.
- The driver must return one of the following result codes:
--		- PCI_ERS_RESULT_CAN_RECOVER:
--		  Driver returns this if it thinks it might be able to recover
--		  the HW by just banging IOs or if it wants to be given
--		  a chance to extract some diagnostic information (see
--		  mmio_enable, below).
--		- PCI_ERS_RESULT_NEED_RESET:
--		  Driver returns this if it can't recover without a
--		  slot reset.
--		- PCI_ERS_RESULT_DISCONNECT:
--		  Driver returns this if it doesn't want to recover at all.
-+
-+  - PCI_ERS_RESULT_CAN_RECOVER
-+      Driver returns this if it thinks it might be able to recover
-+      the HW by just banging IOs or if it wants to be given
-+      a chance to extract some diagnostic information (see
-+      mmio_enable, below).
-+  - PCI_ERS_RESULT_NEED_RESET
-+      Driver returns this if it can't recover without a
-+      slot reset.
-+  - PCI_ERS_RESULT_DISCONNECT
-+      Driver returns this if it doesn't want to recover at all.
- 
- The next step taken will depend on the result codes returned by the
- drivers.
-@@ -159,25 +165,27 @@ then recovery proceeds to STEP 4 (Slot Reset).
- If the platform is unable to recover the slot, the next step
- is STEP 6 (Permanent Failure).
- 
-->>> The current powerpc implementation assumes that a device driver will
-->>> *not* schedule or semaphore in this routine; the current powerpc
-->>> implementation uses one kernel thread to notify all devices;
-->>> thus, if one device sleeps/schedules, all devices are affected.
-->>> Doing better requires complex multi-threaded logic in the error
-->>> recovery implementation (e.g. waiting for all notification threads
-->>> to "join" before proceeding with recovery.)  This seems excessively
-->>> complex and not worth implementing.
--
-->>> The current powerpc implementation doesn't much care if the device
-->>> attempts I/O at this point, or not.  I/O's will fail, returning
-->>> a value of 0xff on read, and writes will be dropped. If more than
-->>> EEH_MAX_FAILS I/O's are attempted to a frozen adapter, EEH
-->>> assumes that the device driver has gone into an infinite loop
-->>> and prints an error to syslog.  A reboot is then required to
-->>> get the device working again.
-+.. note::
-+
-+   The current powerpc implementation assumes that a device driver will
-+   *not* schedule or semaphore in this routine; the current powerpc
-+   implementation uses one kernel thread to notify all devices;
-+   thus, if one device sleeps/schedules, all devices are affected.
-+   Doing better requires complex multi-threaded logic in the error
-+   recovery implementation (e.g. waiting for all notification threads
-+   to "join" before proceeding with recovery.)  This seems excessively
-+   complex and not worth implementing.
-+
-+   The current powerpc implementation doesn't much care if the device
-+   attempts I/O at this point, or not.  I/O's will fail, returning
-+   a value of 0xff on read, and writes will be dropped. If more than
-+   EEH_MAX_FAILS I/O's are attempted to a frozen adapter, EEH
-+   assumes that the device driver has gone into an infinite loop
-+   and prints an error to syslog.  A reboot is then required to
-+   get the device working again.
- 
- STEP 2: MMIO Enabled
---------------------
-+--------------------
- The platform re-enables MMIO to the device (but typically not the
- DMA), and then calls the mmio_enabled() callback on all affected
- device drivers.
-@@ -192,34 +200,36 @@ link reset was performed by the HW. If the platform can't just re-enable IOs
- without a slot reset or a link reset, it will not call this callback, and
- instead will have gone directly to STEP 3 (Link Reset) or STEP 4 (Slot Reset)
- 
-->>> The following is proposed; no platform implements this yet:
-->>> Proposal: All I/O's should be done _synchronously_ from within
-->>> this callback, errors triggered by them will be returned via
-->>> the normal pci_check_whatever() API, no new error_detected()
-->>> callback will be issued due to an error happening here. However,
-->>> such an error might cause IOs to be re-blocked for the whole
-->>> segment, and thus invalidate the recovery that other devices
-->>> on the same segment might have done, forcing the whole segment
-->>> into one of the next states, that is, link reset or slot reset.
-+.. note::
-+
-+   The following is proposed; no platform implements this yet:
-+   Proposal: All I/O's should be done _synchronously_ from within
-+   this callback, errors triggered by them will be returned via
-+   the normal pci_check_whatever() API, no new error_detected()
-+   callback will be issued due to an error happening here. However,
-+   such an error might cause IOs to be re-blocked for the whole
-+   segment, and thus invalidate the recovery that other devices
-+   on the same segment might have done, forcing the whole segment
-+   into one of the next states, that is, link reset or slot reset.
- 
- The driver should return one of the following result codes:
--		- PCI_ERS_RESULT_RECOVERED
--		  Driver returns this if it thinks the device is fully
--		  functional and thinks it is ready to start
--		  normal driver operations again. There is no
--		  guarantee that the driver will actually be
--		  allowed to proceed, as another driver on the
--		  same segment might have failed and thus triggered a
--		  slot reset on platforms that support it.
--
--		- PCI_ERS_RESULT_NEED_RESET
--		  Driver returns this if it thinks the device is not
--		  recoverable in its current state and it needs a slot
--		  reset to proceed.
--
--		- PCI_ERS_RESULT_DISCONNECT
--		  Same as above. Total failure, no recovery even after
--		  reset driver dead. (To be defined more precisely)
-+  - PCI_ERS_RESULT_RECOVERED
-+      Driver returns this if it thinks the device is fully
-+      functional and thinks it is ready to start
-+      normal driver operations again. There is no
-+      guarantee that the driver will actually be
-+      allowed to proceed, as another driver on the
-+      same segment might have failed and thus triggered a
-+      slot reset on platforms that support it.
-+
-+  - PCI_ERS_RESULT_NEED_RESET
-+      Driver returns this if it thinks the device is not
-+      recoverable in its current state and it needs a slot
-+      reset to proceed.
-+
-+  - PCI_ERS_RESULT_DISCONNECT
-+      Same as above. Total failure, no recovery even after
-+      reset driver dead. (To be defined more precisely)
- 
- The next step taken depends on the results returned by the drivers.
- If all drivers returned PCI_ERS_RESULT_RECOVERED, then the platform
-@@ -293,31 +303,33 @@ device will be considered "dead" in this case.
- Drivers for multi-function cards will need to coordinate among
- themselves as to which driver instance will perform any "one-shot"
- or global device initialization. For example, the Symbios sym53cxx2
--driver performs device init only from PCI function 0:
-+driver performs device init only from PCI function 0::
- 
--+       if (PCI_FUNC(pdev->devfn) == 0)
--+               sym_reset_scsi_bus(np, 0);
-+	+       if (PCI_FUNC(pdev->devfn) == 0)
-+	+               sym_reset_scsi_bus(np, 0);
- 
--	Result codes:
--		- PCI_ERS_RESULT_DISCONNECT
--		Same as above.
-+Result codes:
-+	- PCI_ERS_RESULT_DISCONNECT
-+	  Same as above.
- 
- Drivers for PCI Express cards that require a fundamental reset must
- set the needs_freset bit in the pci_dev structure in their probe function.
- For example, the QLogic qla2xxx driver sets the needs_freset bit for certain
--PCI card types:
-+PCI card types::
- 
--+	/* Set EEH reset type to fundamental if required by hba  */
--+	if (IS_QLA24XX(ha) || IS_QLA25XX(ha) || IS_QLA81XX(ha))
--+		pdev->needs_freset = 1;
--+
-+	+	/* Set EEH reset type to fundamental if required by hba  */
-+	+	if (IS_QLA24XX(ha) || IS_QLA25XX(ha) || IS_QLA81XX(ha))
-+	+		pdev->needs_freset = 1;
-+	+
- 
- Platform proceeds either to STEP 5 (Resume Operations) or STEP 6 (Permanent
- Failure).
- 
-->>> The current powerpc implementation does not try a power-cycle
-->>> reset if the driver returned PCI_ERS_RESULT_DISCONNECT.
-->>> However, it probably should.
-+.. note::
-+
-+   The current powerpc implementation does not try a power-cycle
-+   reset if the driver returned PCI_ERS_RESULT_DISCONNECT.
-+   However, it probably should.
- 
- 
- STEP 5: Resume Operations
-@@ -370,44 +382,43 @@ The current policy is to turn this into a platform policy.
- That is, the recovery API only requires that:
- 
-  - There is no guarantee that interrupt delivery can proceed from any
--device on the segment starting from the error detection and until the
--slot_reset callback is called, at which point interrupts are expected
--to be fully operational.
-+   device on the segment starting from the error detection and until the
-+   slot_reset callback is called, at which point interrupts are expected
-+   to be fully operational.
- 
-  - There is no guarantee that interrupt delivery is stopped, that is,
--a driver that gets an interrupt after detecting an error, or that detects
--an error within the interrupt handler such that it prevents proper
--ack'ing of the interrupt (and thus removal of the source) should just
--return IRQ_NOTHANDLED. It's up to the platform to deal with that
--condition, typically by masking the IRQ source during the duration of
--the error handling. It is expected that the platform "knows" which
--interrupts are routed to error-management capable slots and can deal
--with temporarily disabling that IRQ number during error processing (this
--isn't terribly complex). That means some IRQ latency for other devices
--sharing the interrupt, but there is simply no other way. High end
--platforms aren't supposed to share interrupts between many devices
--anyway :)
--
-->>> Implementation details for the powerpc platform are discussed in
-->>> the file Documentation/powerpc/eeh-pci-error-recovery.txt
--
-->>> As of this writing, there is a growing list of device drivers with
-->>> patches implementing error recovery. Not all of these patches are in
-->>> mainline yet. These may be used as "examples":
-->>>
-->>> drivers/scsi/ipr
-->>> drivers/scsi/sym53c8xx_2
-->>> drivers/scsi/qla2xxx
-->>> drivers/scsi/lpfc
-->>> drivers/next/bnx2.c
-->>> drivers/next/e100.c
-->>> drivers/net/e1000
-->>> drivers/net/e1000e
-->>> drivers/net/ixgb
-->>> drivers/net/ixgbe
-->>> drivers/net/cxgb3
-->>> drivers/net/s2io.c
-->>> drivers/net/qlge
--
--The End
---------
-+   a driver that gets an interrupt after detecting an error, or that detects
-+   an error within the interrupt handler such that it prevents proper
-+   ack'ing of the interrupt (and thus removal of the source) should just
-+   return IRQ_NOTHANDLED. It's up to the platform to deal with that
-+   condition, typically by masking the IRQ source during the duration of
-+   the error handling. It is expected that the platform "knows" which
-+   interrupts are routed to error-management capable slots and can deal
-+   with temporarily disabling that IRQ number during error processing (this
-+   isn't terribly complex). That means some IRQ latency for other devices
-+   sharing the interrupt, but there is simply no other way. High end
-+   platforms aren't supposed to share interrupts between many devices
-+   anyway :)
-+
-+.. note::
-+
-+   Implementation details for the powerpc platform are discussed in
-+   the file Documentation/powerpc/eeh-pci-error-recovery.txt
-+
-+   As of this writing, there is a growing list of device drivers with
-+   patches implementing error recovery. Not all of these patches are in
-+   mainline yet. These may be used as "examples":
-+
-+   - drivers/scsi/ipr
-+   - drivers/scsi/sym53c8xx_2
-+   - drivers/scsi/qla2xxx
-+   - drivers/scsi/lpfc
-+   - drivers/next/bnx2.c
-+   - drivers/next/e100.c
-+   - drivers/net/e1000
-+   - drivers/net/e1000e
-+   - drivers/net/ixgb
-+   - drivers/net/ixgbe
-+   - drivers/net/cxgb3
-+   - drivers/net/s2io.c
-+   - drivers/net/qlge
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fb9f9d71f7a2..6e5ec5d3987e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12101,7 +12101,7 @@ M:	Sam Bobroff <sbobroff@linux.ibm.com>
- M:	Oliver O'Halloran <oohall@gmail.com>
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Supported
--F:	Documentation/PCI/pci-error-recovery.txt
-+F:	Documentation/PCI/pci-error-recovery.rst
- F:	drivers/pci/pcie/aer.c
- F:	drivers/pci/pcie/dpc.c
- F:	drivers/pci/pcie/err.c
-@@ -12114,7 +12114,7 @@ PCI ERROR RECOVERY
- M:	Linas Vepstas <linasvepstas@gmail.com>
- L:	linux-pci@vger.kernel.org
- S:	Supported
--F:	Documentation/PCI/pci-error-recovery.txt
-+F:	Documentation/PCI/pci-error-recovery.rst
- 
- PCI MSI DRIVER FOR ALTERA MSI IP
- M:	Ley Foon Tan <lftan@altera.com>
--- 
-2.20.1
-
+  Andrea
