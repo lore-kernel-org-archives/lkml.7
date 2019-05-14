@@ -2,108 +2,283 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72F3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4140EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C29DF2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0465A21726
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfENKSo convert rfc822-to-8bit (ORCPT
+        id S1726561AbfENKSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:18:44 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34321 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfENKSo (ORCPT
+        Tue, 14 May 2019 06:18:47 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40284 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725892AbfENKSq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:18:44 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p27so22116540eda.1;
-        Tue, 14 May 2019 03:18:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ORyjFaWPbaw6KQxgFwnjj56eUspz8KmYIPTpXxpUWBU=;
-        b=gLcuWxDxj9m8W93Uk19t6LUgIs6UOPKRCrUw0YSWLNmNUpRGH4IFNx/8Mrk2a7c3GV
-         p0iOpnn0pzbYEhGiBKCRDdkRkuKGXFdW7wTxirFSdyh0ohIbzlmBOmnpzCaFTflJeq9B
-         JQoowiVaLv8hU7wyvbHOQh3UGf1ASECOK41f9uL99HQqBdHXM6NVig53VJEiTxYzuObM
-         1BU2aSwb4Z/HFM93dPt7MScoN7DPqulrxW4vyFPHRIXpmRGXRfMRKzF510i1eJR/1VuZ
-         X6gJTK/yGfIc2Q0671oIkhjPIYB2ZsuJaHOHi4y+D3zUT3qnufnfB10x0Dlojgpj1G8D
-         i2Wg==
-X-Gm-Message-State: APjAAAUg8AKnk2cEWUkQqBmWhwmHHJSsvnEdlJ8vKUGmeOFWKVC4TOki
-        Vvwzc38DysAzcyVGm8U5E+vLJRMs2os=
-X-Google-Smtp-Source: APXvYqwvv2jSD6YeCe78mDqfCjXli14r53XEk7VexiH8MYKFdBeG9+uEDlBugfU2tSg++E+CjryyqQ==
-X-Received: by 2002:a05:6402:648:: with SMTP id u8mr34659643edx.176.1557829121826;
-        Tue, 14 May 2019 03:18:41 -0700 (PDT)
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com. [209.85.221.53])
-        by smtp.gmail.com with ESMTPSA id w4sm4357344edf.89.2019.05.14.03.18.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:18:40 -0700 (PDT)
-Received: by mail-wr1-f53.google.com with SMTP id e15so6140116wrs.4;
-        Tue, 14 May 2019 03:18:39 -0700 (PDT)
-X-Received: by 2002:a5d:688f:: with SMTP id h15mr10564376wru.44.1557829119553;
- Tue, 14 May 2019 03:18:39 -0700 (PDT)
+        Tue, 14 May 2019 06:18:46 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EACc9H148745
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:18:44 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sftxja9qu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:18:44 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Tue, 14 May 2019 11:18:43 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 11:18:41 +0100
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EAIeKq7405952
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 10:18:40 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 918227805C;
+        Tue, 14 May 2019 10:18:40 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 417F178064;
+        Tue, 14 May 2019 10:18:40 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.248])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 10:18:40 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 01A832E3373; Tue, 14 May 2019 15:48:37 +0530 (IST)
+Date:   Tue, 14 May 2019 15:48:37 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition
+ in resize_hpt
+Reply-To: ego@linux.vnet.ibm.com
+References: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
+ <877eattta4.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-References: <20190512174608.10083-1-peron.clem@gmail.com> <20190512174608.10083-6-peron.clem@gmail.com>
- <CAMty3ZBTO9+9HLikR8=KgWZQBp+1yVgxQ_rD-E8WeJ8VvpuAcA@mail.gmail.com>
-In-Reply-To: <CAMty3ZBTO9+9HLikR8=KgWZQBp+1yVgxQ_rD-E8WeJ8VvpuAcA@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 14 May 2019 18:18:27 +0800
-X-Gmail-Original-Message-ID: <CAGb2v64QpH2uL3Q2=ePEaYhrB1_J5uNT4VnBssBgwbOB0NDD0Q@mail.gmail.com>
-Message-ID: <CAGb2v64QpH2uL3Q2=ePEaYhrB1_J5uNT4VnBssBgwbOB0NDD0Q@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v4 5/8] arm64: dts: allwinner: Add mali GPU
- supply for Pine H64
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Jagan Teki <jagan@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877eattta4.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19051410-8235-0000-0000-00000E951406
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011096; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203140; UDB=6.00631507; IPR=6.00984063;
+ MB=3.00026879; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-14 10:18:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051410-8236-0000-0000-0000458D3FDB
+Message-Id: <20190514101837.GG31206@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 2:28 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+Hi Michael,
+
+On Tue, May 14, 2019 at 05:00:19PM +1000, Michael Ellerman wrote:
+> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> >
+> > During a memory hotplug operations involving resizing of the HPT, we
+> > invoke a stop_machine() to perform the resizing. In this code path, we
+> > end up recursively taking the cpu_hotplug_lock, first in
+> > memory_hotplug_begin() and then subsequently in stop_machine(). This
+> > causes the system to hang.
 >
-> On Sun, May 12, 2019 at 11:16 PM <peron.clem@gmail.com> wrote:
+> This implies we have never tested a memory hotplug that resized the HPT.
+> Is that really true? Or did something change?
+>
+
+This was reported by Aneesh during a testcase involving reconfiguring
+the namespace for nvdimm where we do a memory remove followed by
+add. The memory add invokes resize_hpt().
+
+It seems we can hit this issue when we perform a memory hotplug/unplug
+in the guest.
+
+> > With lockdep enabled we get the following
+> > error message before the hang.
 > >
-> > From: Clément Péron <peron.clem@gmail.com>
+> >   swapper/0/1 is trying to acquire lock:
+> >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
 > >
-> > Enable and add supply to the Mali GPU node on the
-> > Pine H64 board.
+> >   but task is already holding lock:
+> >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+> 
+> Do we have the full stack trace?
+
+Yes, here is the complete log:
+
+[    0.537123] swapper/0/1 is trying to acquire lock:
+[    0.537197] (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
+[    0.537336]
+[    0.537336] but task is already holding lock:
+[    0.537429] (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+
+[    0.537570]                                   
+[    0.537570] other info that might help us debug this:
+[    0.537663]  Possible unsafe locking scenario:
+[    0.537663]
+[    0.537756]        CPU0                                     
+[    0.537794]        ----                                       
+[    0.537832]   lock(cpu_hotplug_lock.rw_sem);                                                        
+[    0.537906]   lock(cpu_hotplug_lock.rw_sem);             
+[    0.537980]                                       
+[    0.537980]  *** DEADLOCK ***                                                           
+[    0.537980]                                                                                      
+[    0.538074]  May be due to missing lock nesting notation                           
+[    0.538074]                                                                    
+[    0.538168] 3 locks held by swapper/0/1:               
+[    0.538224]  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
+[    0.538348]  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+[    0.538477]  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
+[    0.538608]
+[    0.538608] stack backtrace:                                              
+[    0.538685] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
+[    0.538812] Call Trace:                                          
+[    0.538863] [c0000000feb03150] [c000000000e32bd4] dump_stack+0xe8/0x164 (unreliable)
+[    0.538975] [c0000000feb031a0] [c00000000020d6c0] __lock_acquire+0x1110/0x1c70
+[    0.539086] [c0000000feb03320] [c00000000020f080] lock_acquire+0x240/0x290
+[    0.539180] [c0000000feb033e0] [c00000000017f554] cpus_read_lock+0x64/0xf0
+[    0.539273] [c0000000feb03420] [c00000000029ebac] stop_machine+0x2c/0x60     
+[    0.539367] [c0000000feb03460] [c0000000000d7f7c] pseries_lpar_resize_hpt+0x19c/0x2c0
+[    0.539479] [c0000000feb03500] [c0000000000788d0] resize_hpt_for_hotplug+0x70/0xd0
+[    0.539590] [c0000000feb03570] [c000000000e5d278] arch_add_memory+0x58/0xfc
+[    0.539683] [c0000000feb03610] [c0000000003553a8] devm_memremap_pages+0x5e8/0x8f0
+[    0.539804] [c0000000feb036c0] [c0000000009c2394] pmem_attach_disk+0x764/0x830    
+[    0.539916] [c0000000feb037d0] [c0000000009a7c38] nvdimm_bus_probe+0x118/0x240
+[    0.540026] [c0000000feb03860] [c000000000968500] really_probe+0x230/0x4b0
+[    0.540119] [c0000000feb038f0] [c000000000968aec] driver_probe_device+0x16c/0x1e0
+[    0.540230] [c0000000feb03970] [c000000000968ca8] __driver_attach+0x148/0x1b0
+[    0.540340] [c0000000feb039f0] [c0000000009650b0] bus_for_each_dev+0x90/0x130
+[    0.540451] [c0000000feb03a50] [c000000000967dd4] driver_attach+0x34/0x50
+[    0.540544] [c0000000feb03a70] [c000000000967068] bus_add_driver+0x1a8/0x360
+[    0.540654] [c0000000feb03b00] [c00000000096a498] driver_register+0x108/0x170
+[    0.540766] [c0000000feb03b70] [c0000000009a7400] __nd_driver_register+0xd0/0xf0
+[    0.540898] [c0000000feb03bd0] [c00000000128aa90] nd_pmem_driver_init+0x34/0x48
+[    0.541010] [c0000000feb03bf0] [c000000000010a10] do_one_initcall+0x1e0/0x45c
+[    0.541122] [c0000000feb03cd0] [c00000000122462c] kernel_init_freeable+0x540/0x64c          
+[    0.541232] [c0000000feb03db0] [c00000000001110c] kernel_init+0x2c/0x160
+[    0.541326] [c0000000feb03e20] [c00000000000bed4] ret_from_kernel_thread+0x5c/0x68
+
+
+> 
+> >   other info that might help us debug this:
+> >    Possible unsafe locking scenario:
 > >
-> > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> >          CPU0
+> >          ----
+> >     lock(cpu_hotplug_lock.rw_sem);
+> >     lock(cpu_hotplug_lock.rw_sem);
+> >
+> >    *** DEADLOCK ***
+> >
+> > Fix this issue by
+> >   1) Requiring all the calls to pseries_lpar_resize_hpt() be made
+> >      with cpu_hotplug_lock held.
+> >
+> >   2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
+> >      as a consequence of 1)
+> >
+> >   3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
+> >      with cpu_hotplug_lock held.
+> >
+> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
 > > ---
-> >  arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 5 +++++
-> >  1 file changed, 5 insertions(+)
 > >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > index 4802902e128f..e16a8c6738f9 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-> > @@ -85,6 +85,11 @@
-> >         status = "okay";
-> >  };
+> > Rebased this one against powerpc/next instead of linux/master.
 > >
-> > +&gpu {
-> > +       mali-supply = <&reg_dcdcc>;
-> > +       status = "okay";
-> > +};
+> >  arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
+> >  arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
+> >  2 files changed, 14 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+> > index 919a861..d07fcafd 100644
+> > --- a/arch/powerpc/mm/book3s64/hash_utils.c
+> > +++ b/arch/powerpc/mm/book3s64/hash_utils.c
+> > @@ -38,6 +38,7 @@
+> >  #include <linux/libfdt.h>
+> >  #include <linux/pkeys.h>
+> >  #include <linux/hugetlb.h>
+> > +#include <linux/cpu.h>
+> >  
+> >  #include <asm/debugfs.h>
+> >  #include <asm/processor.h>
+> > @@ -1928,10 +1929,16 @@ static int hpt_order_get(void *data, u64 *val)
+> >  
+> >  static int hpt_order_set(void *data, u64 val)
+> >  {
+> > +	int ret;
+> > +
+> >  	if (!mmu_hash_ops.resize_hpt)
+> >  		return -ENODEV;
+> >  
+> > -	return mmu_hash_ops.resize_hpt(val);
+> > +	cpus_read_lock();
+> > +	ret = mmu_hash_ops.resize_hpt(val);
+> > +	cpus_read_unlock();
+> > +
+> > +	return ret;
+> >  }
+> >  
+> >  DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
+> > diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+> > index 1034ef1..2fc9756 100644
+> > --- a/arch/powerpc/platforms/pseries/lpar.c
+> > +++ b/arch/powerpc/platforms/pseries/lpar.c
+> > @@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
+> >  	return 0;
+> >  }
+> >  
+> > -/* Must be called in user context */
+> > +/*
+> > + * Must be called in user context. The caller should hold the
+> 
+> I realise you're just copying that comment, but it seems wrong. "user
+> context" means userspace. I think it means "process context" doesn't it?
 >
-> I think we can squash all these board dts changes into single patch.
 
-Yes. Please do so for all patches with the same changes applied to different
-boards, and authored by the same person.
+Yes, from the qemu process context. I will fix this part of the
+comment and also change the should to must.
 
-ChenYu
+> Also "should" should be "must" :)
+>
+
+Thanks for the review.
+
+
+> > + * cpus_lock.
+> > + */
+> >  static int pseries_lpar_resize_hpt(unsigned long shift)
+> >  {
+> >  	struct hpt_resize_state state = {
+> > @@ -913,7 +916,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+> >  
+> >  	t1 = ktime_get();
+> >  
+> > -	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
+> > +	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
+> > +				     &state, NULL);
+> >  
+> >  	t2 = ktime_get();
+> 
+> cheers
+> 
+
