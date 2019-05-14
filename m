@@ -2,136 +2,114 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FADC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A896C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5366A2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285092147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dVwhDA/C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwNYEApl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfENN6x (ORCPT
+        id S1726221AbfENOB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:58:53 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38011 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfENN6x (ORCPT
+        Tue, 14 May 2019 10:01:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43176 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENOB0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:58:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 14so14422617ljj.5;
-        Tue, 14 May 2019 06:58:51 -0700 (PDT)
+        Tue, 14 May 2019 10:01:26 -0400
+Received: by mail-qt1-f196.google.com with SMTP id i26so1722085qtr.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:01:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=TXkbr8S0quedHhwnVy9a2UzBuQwq+DVg7EOJ79R7nvk=;
-        b=dVwhDA/CsdVyGzQz4Zq5GyUImMVOPlzK7q92WaBv7aVR/QNOln6a9vHks5IQjJ21Xv
-         lqqj2A6TR2AD7nzeoZGHQw9U3U5x16XjiHEEig6Z/452AC8sMkgC/a05J/zbcBMKhokv
-         JFXrLfRjEZHm0QsChfdmptxwabFfnLT9X5Whod9F5xmQMwa/EpgUO7rF/emXZYUDuhb0
-         C5NcuAyuoyRYabw+YyRFGapqrOvp5n1PD//7/kUIGLdzhSM1QD73RBiBCQFG27o1SAzR
-         Am+gEbfJ3zA+PF2iPD5lC70v0VAYrp6hx4lBC2I647hu9NLKvwU2yVFg2iYqhRv4hNqI
-         vH1A==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A96YK3qa328OsFHhTU2DWRziq1ETs18hqgWFjRch1IY=;
+        b=QwNYEApl0gyRquEbfTRP0H7a910BgQCEQTEw7R1BFKo5PUMXl3N8QfH3mjktpdVX0e
+         x0WT/7vD9Bx8hNEqqXwyJwgGG1V1J5cJ8AMrYXsmJUIl7Z1CwU9ewx0bWmcpiQHMCaEz
+         uBxrpWidi/3J5zBIFWs7Jr9oOaUd4VGo5z8NymHjaim7eb1Ozvg1rNktduJJrJJS+26E
+         u9uwns7WOm9bTRnUiBYNTUQEjUOsdiwwjFQrqOn7PzPyA8M3i/6NrHTkxRGiZ+xdvF7j
+         FtxMHJTjT3VugWwcgM7MiAGxMKygCs6WvANRnFUShrq9FQaethYefsP3GmOZGfZNIa9d
+         PZJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=TXkbr8S0quedHhwnVy9a2UzBuQwq+DVg7EOJ79R7nvk=;
-        b=WmBEeCDRcxaFtvC7lZ4AzNlO2m6jfJiUR5bweo8+GyWPuHjvOJbZpPGw+8T3VQ/0mn
-         2herlUayYM1Xnxw88eMq+NE+ZkkECnVKeE2RaTTmUHzyK0VjjvE0rPlVktcx8L/T8H75
-         LZQwlN58Czp5QRdW3C998iPlrn0G7FV8VtkFSV+viGqZ4kkpvq8Nej2tzI34XJpdIkTK
-         zvWdH8DiX//HNwv1Cf0MMwJTKL6keKnyG3Wf/jRvbTsesQqmcnP4NdzADWHEsj5I33tj
-         3dl1MnJ3gSA4B7kEKePS4s14WApzyVjnioAlmH6pyUxAq09ibjietifq1hIlCgSuXjG7
-         fmAQ==
-X-Gm-Message-State: APjAAAWUI9BUSe0IpI7Wd50+hxSvRKg2+HOWQ7IJwa8hxCo6w6BdmHCr
-        WFnIx757GbjV4aB3rpgssqM=
-X-Google-Smtp-Source: APXvYqx0S1pl0aXedFJoDeY9xEINeBSgt0TzaWXi3c4ODg1MdUP8vfhIX2JBNMO1WKWZxmxyQf118Q==
-X-Received: by 2002:a2e:568b:: with SMTP id k11mr17057734lje.124.1557842330726;
-        Tue, 14 May 2019 06:58:50 -0700 (PDT)
-Received: from [10.17.182.120] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id y27sm1282033ljd.14.2019.05.14.06.58.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 06:58:49 -0700 (PDT)
-Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory
- region
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Julien Grall <julien.grall@arm.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
- <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com>
- <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
- <CAMuHMdWODzaHSeXyB5CgGmq3ZumFGVZYOUT1v1_Ps-RguPLseA@mail.gmail.com>
- <25f5f60e-46ff-18af-2a65-1e3f6719ef49@gmail.com>
- <CAMuHMdWkEU7x_Lzk6NUCxEdZRx_xTBFzkETwShZ322aYL5=bLg@mail.gmail.com>
-From:   Oleksandr <olekstysh@gmail.com>
-Message-ID: <3e786103-69a4-2867-fc04-ccb4512bf221@gmail.com>
-Date:   Tue, 14 May 2019 16:58:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A96YK3qa328OsFHhTU2DWRziq1ETs18hqgWFjRch1IY=;
+        b=t30g9aymB+qGz9T2Yj+yDapHHa0hOv1hrc6cU/OiWsWzVS29V8WrQUo9kX96NiqX9w
+         nhyUGCUTbpRM8ulCcyqT0J6udQP8cQHOpra0oNI1+htNgNHUDGdY940uWCGDYP//5UMi
+         nfACsEqBYZv/ePxHvMgYwTSbmoELEpSHJ776hxykc2WpZztpBVt8079P1BUECsW0jEzC
+         47aSL2LsFYdXPrOtI4vT0Qbn0hN8xPI2b7ghHaeEugXdYzEWkIOmJ95x3HateRrTCKgM
+         P2KLXJ6VVVVScbm6jJj3IdndG0pHXQfMcy1ujdZzhHc7a2W+LqY3Xt0ZncZbsXHkCODt
+         gt5Q==
+X-Gm-Message-State: APjAAAX+VsvRgu9ROFrGZIwKY7amxFKvj7Kk8czDTND1HFQgcEJES91o
+        gD59CM5SiCuowlSvDlQDETU=
+X-Google-Smtp-Source: APXvYqz8uDQXac6fk/PmRpgyo3Ntb4iaTqZ5WoPGeg6Flk9a0J8oHZteZ89ouuvuvriHRkQgpp30XA==
+X-Received: by 2002:ac8:2516:: with SMTP id 22mr11270465qtm.55.1557842485662;
+        Tue, 14 May 2019 07:01:25 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.209.210])
+        by smtp.gmail.com with ESMTPSA id v3sm11691928qtc.97.2019.05.14.07.01.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 07:01:24 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 91C80403AD; Tue, 14 May 2019 11:01:13 -0300 (-03)
+Date:   Tue, 14 May 2019 11:01:13 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH -tip v8 0/6] tracing/probes: uaccess: Add support
+ user-space access
+Message-ID: <20190514140113.GI3198@kernel.org>
+References: <155741476971.28419.15837024173365724167.stgit@devnote2>
+ <20190513183412.GD8003@kernel.org>
+ <20190514140253.1edece79ff72ba47b9a8c72c@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdWkEU7x_Lzk6NUCxEdZRx_xTBFzkETwShZ322aYL5=bLg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514140253.1edece79ff72ba47b9a8c72c@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Tue, May 14, 2019 at 02:02:53PM +0900, Masami Hiramatsu escreveu:
+> On Mon, 13 May 2019 15:38:24 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Em Fri, May 10, 2019 at 12:12:49AM +0900, Masami Hiramatsu escreveu:
+> > > In this version, I fixed some typos/style issues and renamed fields
+> > > according to Ingo's comment, and added Ack from Steve.
+> > > 
+> > > Also this version is rebased on the latest -tip/master tree.
+> > 
+> > Ingo, since this touches 'perf probe' and Steven already provided an
+> > Acked-by, if you're ok with it I can process these, testing the 'perf
+> > probe' changes and then ship it to you in my next pull req, ok?
+> 
+> Thanks Arnaldo! For the perf probe enhancement, it should work on
+> the kernel which doesn't support 'u' prefix. :)
 
-On 14.05.19 10:16, Geert Uytterhoeven wrote:
-> Hi Oleksandr,
+Sure, I'll test that case too, i.e. old kernel + new tool, old tool +
+new kernel, new tool + new kernel, as usual.
 
-Hi Geert
-
-
->
-> On Mon, May 13, 2019 at 6:00 PM Oleksandr <olekstysh@gmail.com> wrote:
->> On 13.05.19 18:13, Geert Uytterhoeven wrote:
->>>> So, if the DT bindings for the counter module is not an option (if I
->>>> correctly understood a discussion pointed by Geert in another letter),
->>>> we should probably prevent all timer code here from being executed if
->>>> PSCI is in use.
->>>> What I mean is to return to [2], but with the modification to use
->>>> psci_smp_available() helper as an indicator of PSCI usage.
->>>>
->>>> Julien, Geert, what do you think?
->>> Yes, that sounds good to me.
->>>
->>> Note that psci_smp_available() seems to return false if CONFIG_SMP=n,
->>> so checking for that is not sufficient to avoid crashes when running a
->>> uniprocessor kernel on a PSCI-enabled system.
->> Indeed, you are right.
->>
->>
->> Nothing than just check for psci_ops.cpu_on == NULL directly comes to
->> mind...
->>
->> Have already checked with CONFIG_SMP=n, it works.
->>
->> Sounds ok?
-> Fine for me, thanks!
-
-Great, I will send new version.
-
-
->
-> Gr{oetje,eeting}s,
->
->                          Geert
->
--- 
-Regards,
-
-Oleksandr Tyshchenko
-
+- Arnaldo
