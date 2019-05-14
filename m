@@ -2,144 +2,155 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6658DC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526E7C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39D1D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:26:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aey9i1BR"
+	by mail.kernel.org (Postfix) with ESMTP id 2F173214C6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfENGZ7 (ORCPT
+        id S1726279AbfENGas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:25:59 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:13974 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfENGZ6 (ORCPT
+        Tue, 14 May 2019 02:30:48 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39014 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfENGar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:25:58 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cda5f700000>; Mon, 13 May 2019 23:25:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 May 2019 23:25:56 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 May 2019 23:25:56 -0700
-Received: from [10.24.47.172] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
- 2019 06:25:51 +0000
-Subject: Re: [PATCH V5 10/16] dt-bindings: PCI: tegra: Add device tree support
- for T194
-To:     Rob Herring <robh@kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        Manikanta Maddireddy <mmaddireddy@nvidia.com>,
-        <sagar.tv@gmail.com>
-References: <20190424052004.6270-1-vidyas@nvidia.com>
- <20190424052004.6270-11-vidyas@nvidia.com> <20190426154306.GA16455@bogus>
- <504abd8f-9eb3-1089-953c-a6372c34b346@nvidia.com>
- <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <4b1fe488-c99f-3deb-e6f0-a67eb65b2278@nvidia.com>
-Date:   Tue, 14 May 2019 11:55:48 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 02:30:47 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y42so2961081qtk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:30:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mgFD/HBmqD9tbHso2Ft8IrmU0HCter766u/5lDK5MD4=;
+        b=gmZ+nK/L1S2bq89wiQ5Hy2tKJOZRQRY4Lqfb4IcaUxFBXGiga6Ir/41FTMFgY2fD07
+         6NUfgfvShoVfoOX0/uW6PiwFNtLJBPJoJjfG4qkQ+MiE4T6hRLOLfHPyCG1qMnYHNfUv
+         yelVGaxPEDehyTDFvSBOyO8ORlkob9oTUjmJMIIQ8IdC6NcoQT/SN5S38vbFHRpjq3zQ
+         POjIP+h+Tl6AncXLglfF+Xfkm6P0u5sgzq4EYI2+HKb1bUO52ngSv0aYVIMLibffl2OE
+         evan7xmTbZeaFeRB3u1woPl59wtceLo8FEiLa/gpy/WRE0fAKTGIcdMy3i5+a0W4iGa3
+         1Cvg==
+X-Gm-Message-State: APjAAAXohvw1Xb/R9XgjarhJ+8RME8czbpykIWZw/J229KE/+SS74Zq2
+        m7+YjrO9lliY1S/8UWYcAZk2sw==
+X-Google-Smtp-Source: APXvYqwaf5mn0VEeYyYPcp4R3rX8b8NxqPdRtJziHb0+qXlt8ZvgtZIe0QaDDnNFxHyEY0wLoSEhbg==
+X-Received: by 2002:ac8:8ad:: with SMTP id v42mr27107649qth.337.1557815446620;
+        Mon, 13 May 2019 23:30:46 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id a51sm6532064qta.85.2019.05.13.23.30.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 23:30:45 -0700 (PDT)
+Date:   Tue, 14 May 2019 08:30:43 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH RFC 0/4] mm/ksm: add option to automerge VMAs
+Message-ID: <20190514063043.ojhsb6d3ohxx4wur@butterfly.localdomain>
+References: <20190510072125.18059-1-oleksandr@redhat.com>
+ <36a71f93-5a32-b154-b01d-2a420bca2679@virtuozzo.com>
+ <20190513113314.lddxv4kv5ajjldae@butterfly.localdomain>
+ <a3870e32-3a27-e6df-fcb2-79080cdd167a@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLEw+HAeqd2TD33cSVBjwDUNMb5amk2wGsW9m_4Z6CucQ@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557815152; bh=aymdfMw16yHSs7vet1wRgqNK0BlRIZ7Ycz6RCAS99N0=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=aey9i1BRHiCSfhSf1vClKCQmwTvcMOR82sYIz9bKYoXRvI3vXJ/Oha8Hds/elNyEJ
-         6E7I3LEGq2Q+hHWAr6WlxEE3ubFXOb9I8WilE6OBU8E/dJumpE34n2UHeklhKy3iMw
-         HDQQpyi0ojbwzbB5Nt10qCtZa8aCAPpQDT/8Cl0SmP1id2XoCxwVKlRdJLVCBHmqQV
-         LKjZhwNPds3PjPDGsyn1rwNfOe9pkq+97sC2EiQU2L4qLYcKUCjp1Uq6FzKyfUBU3+
-         OJQXPGukJJkaBw0Qg2QoRell9a16uzVDniOyvrWBukg9GbZBVbA9o9TGzSF8yVZ8n7
-         O/cob961AVKhA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3870e32-3a27-e6df-fcb2-79080cdd167a@virtuozzo.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/2019 8:50 PM, Rob Herring wrote:
-> On Tue, May 7, 2019 at 4:20 AM Vidya Sagar <vidyas@nvidia.com> wrote:
->>
->> On 4/26/2019 9:13 PM, Rob Herring wrote:
->>> On Wed, Apr 24, 2019 at 10:49:58AM +0530, Vidya Sagar wrote:
->>>> Add support for Tegra194 PCIe controllers. These controllers are based
->>>> on Synopsys DesignWare core IP.
->>>>
->>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>> ---
-> 
->>>> +- nvidia,bpmp: Must contain a phandle to BPMP controller node.
->>>> +- nvidia,controller-id : Controller specific ID
->>>> +    0: C0
->>>> +    1: C1
->>>> +    2: C2
->>>> +    3: C3
->>>> +    4: C4
->>>> +    5: C5
->>>
->>> We don't normal put device indexes into DT. Why do you need this.
->>> Perhaps for accessing the BPMP? If so, make nvidia,bpmp a phandle+cell.
->> BPMP needs to know the controller number to enable it hence it needs to be
->> passed to BPMP. Just for accessing BPMP, I already added 'nvidia,bpmp' property.
-> 
-> Then make nvidia,bpmp take the phandle and this number.
-Ok. I'll take care of it in next patch series.
+Hi.
 
+On Mon, May 13, 2019 at 03:37:56PM +0300, Kirill Tkhai wrote:
+> > Yes, I get your point. But the intention is to avoid another hacky trick
+> > (LD_PRELOAD), thus *something* should *preferably* be done on the
+> > kernel level instead.
 > 
+> I don't think so. Does userspace hack introduce some overhead? It does not
+> look so. Why should we think about mergeable VMAs in page fault handler?!
+> This is the last thing we want to think in page fault handler.
 > 
->>>> +- nvidia,disable-aspm-states: Controls advertisement of ASPM states
->>>> +    bit-0 to '1': Disables advertisement of ASPM-L0s
->>>> +    bit-1 to '1': Disables advertisement of ASPM-L1. This also disables
->>>> +                   advertisement of ASPM-L1.1 and ASPM-L1.2
->>>> +    bit-2 to '1': Disables advertisement of ASPM-L1.1
->>>> +    bit-3 to '1': Disables advertisement of ASPM-L1.2
->>>
->>> Can't this cover what 'supports-clkreq' does?
->> Well, they are related partially. i.e. if a platform doesn't have 'supports-clkreq' set,
->> then, by definition, it can't advertise support for ASPM L1.1 and L1.2 states. But, ASPM-L0s
->> and ASPM-L1 states don't depend on 'supports-clkreq' property.
->> Having this property gives more granularity as to support for which particular ASPM state
->> shouldn't be advertised by the root port.
+> Also, there is difficult synchronization in page fault handlers, and it's
+> easy to make a mistake. So, there is a mistake in [3/4], and you call
+> ksm_enter() with mmap_sem read locked, while normal way is to call it
+> with write lock (see madvise_need_mmap_write()).
 > 
-> Okay, then it should be a common property then.
-I'm planning to remove this given we have sysfs way (Heiner's patch series @
-http://patchwork.ozlabs.org/project/linux-pci/list/?series=107392 to control which ASPM states
-can be enabled run time. In case if that is not going to work for a given use case, I'll push
-patches separately for controlling ASPM states advertisement/working.
+> So, let's don't touch this path. Small optimization for unlikely case will
+> introduce problems in optimization for likely case in the future.
 
+Yup, you're right, I've missed the fact that write lock is needed there.
+Re-vamping locking there is not my intention, so lets find another
+solution.
+
+> > Also, just for the sake of another piece of stats here:
+> > 
+> > $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+> > 526
 > 
-> Rob
+> This all requires attentive analysis. The number looks pretty big for me.
+> What are the pages you get merged there? This may be just zero pages,
+> you have identical.
 > 
+> E.g., your browser want to work fast. It introduces smart schemes,
+> and preallocates many pages in background (mmap + write 1 byte to a page),
+> so in further it save some time (no page fault + alloc), when page is
+> really needed. But your change merges these pages and kills this
+> optimization. Sounds not good, does this?
+> 
+> I think, we should not think we know and predict better than application
+> writers, what they want from kernel. Let's people decide themselves
+> in dependence of their workload. The only exception is some buggy
+> or old applications, which impossible to change, so force madvise
+> workaround may help. But only in case there are really such applications...
+> 
+> I'd researched what pages you have duplicated in these 526 MB. Maybe
+> you find, no action is required or a report to userspace application
+> to use madvise is needed.
+
+OK, I agree, this is a good argument to move decision to userspace.
+
+> > 2) what kinds of opt-out we should maintain? Like, what if force_madvise
+> > is called, but the task doesn't want some VMAs to be merged? This will
+> > required new flag anyway, it seems. And should there be another
+> > write-only file to unmerge everything forcibly for specific task?
+> 
+> For example,
+> 
+> Merge:
+> #echo $task > /sys/kernel/mm/ksm/force_madvise
+
+Immediate question: what should be actually done on this? I see 2
+options:
+
+1) mark all VMAs as mergeable + set some flag for mmap() to mark all
+further allocations as mergeable as well;
+2) just mark all the VMAs as mergeable; userspace can call this
+periodically to mark new VMAs.
+
+My prediction is that 2) is less destructive, and the decision is
+preserved predominantly to userspace, thus it would be a desired option.
+
+> Unmerge:
+> #echo -$task > /sys/kernel/mm/ksm/force_madvise
+
+Okay.
+
+> In case of task don't want to merge some VMA, we just should skip it at all.
+
+This way we lose some flexibility, IMO, but I get you point.
+
+Thanks.
+
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
 
