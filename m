@@ -2,210 +2,156 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75709C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5ACC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FA72085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5391A20881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:22:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="BQbtuLZS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfENKTG (ORCPT
+        id S1726347AbfENKWD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:19:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725892AbfENKTF (ORCPT
+        Tue, 14 May 2019 06:22:03 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42056 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENKWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:19:05 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EACiIV090130
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:19:04 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sfu50sm4b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:19:04 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Tue, 14 May 2019 11:19:03 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 11:19:01 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EAIxJd45744180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 10:19:00 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C25ECC6055;
-        Tue, 14 May 2019 10:18:59 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DCF9C6057;
-        Tue, 14 May 2019 10:18:59 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.248])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 May 2019 10:18:59 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id F2A642E3373; Tue, 14 May 2019 15:48:56 +0530 (IST)
-Date:   Tue, 14 May 2019 15:48:56 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition
- in resize_hpt
-Reply-To: ego@linux.vnet.ibm.com
-References: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
- <874l5xtt6v.fsf@concordia.ellerman.id.au>
+        Tue, 14 May 2019 06:22:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l2so18535302wrb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E6SlSPXz/NIdq9DgRiId1vBM8lspvJEaKL5VgfIHa0Y=;
+        b=BQbtuLZS91vwp6fpyAbem8rN7fPncMazQmV/y0AcOR6uDjcfZFossqVs7rn5a+TKu3
+         5yBMTUmUSxgs/YuSfGrnjy36ntEB3WpESKMu39UtinXIeMoQScq5I4JkyTXbIgYYuChs
+         3Capo4uASxWtFSIX7EWLxAXdNj8bM6emdSc2dOrTADqhJbjmHNok1aN8SvsuPUsUhfWN
+         jfx/Pz5yRrLOUdpL57l3vjkA8BABi4Dq4HKtmTihMisl9onvtaCIk4oTFs/Xb+DVZjYn
+         GhoYM3ivV/nveCgDgXk8QdmvfT1Nxt7zQkgphlXOajQXdroRN7rilDAyO/pIIzQTXB8E
+         ZeNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E6SlSPXz/NIdq9DgRiId1vBM8lspvJEaKL5VgfIHa0Y=;
+        b=DEN2uD/I4dpAA/gqoKNPWKaZ5bW47kEg4qVwxzAjxW0JLBJhNPh7NglFACqcXehKl6
+         ducRQytWFpRMlf0WRRgwQM7n1AdLnEm0K2Nw0aFxNR8LZrgeGw75rkYIBAK+m6zcocle
+         lgJzjy5Fjukavkj6jSCQsR+dfSiHvucQvBBVEQkWIHiCrtoJKutkwy8lwM0FQsDJ0d2S
+         L6b4B1F7WKCfGzjOdIuO09u0qeSJ/IBBUA+/w16cO3QRcULKSVJTDkmjtHQv1/y7p6bp
+         BX3uyRLt4u0/uL0Owb6qQbAmfR4Zpl2aBcAneawRGBSg0+RihR8RWOP/bF1gtTjcZWED
+         +OWg==
+X-Gm-Message-State: APjAAAVIN7aDESgS/f720SRpupqIuzczexH/lFQaHAYvOtXYk76VqxVO
+        5v178PUQ8jwbeYe58Qa8MMtLJTrcTUnSkA==
+X-Google-Smtp-Source: APXvYqzAasMzhc3tS6ZAmslEDUvPmj4+tY32Vg3bcaJ+POdvq9tQsNUetRBRXqTLiOfUj/KhR8lHTg==
+X-Received: by 2002:adf:cf03:: with SMTP id o3mr13827712wrj.5.1557829320200;
+        Tue, 14 May 2019 03:22:00 -0700 (PDT)
+Received: from [192.168.1.62] (176-150-251-154.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id l14sm14999889wrt.57.2019.05.14.03.21.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 03:21:59 -0700 (PDT)
+Subject: Re: [PATCH 0/3] arm64: dts: meson: g12a: add mmc B and C
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20190514091611.15278-1-jbrunet@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <52aeb2a0-fe82-2039-d332-476db7d237db@baylibre.com>
+Date:   Tue, 14 May 2019 12:21:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874l5xtt6v.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-x-cbid: 19051410-0004-0000-0000-0000150E3C19
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011096; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203141; UDB=6.00631506; IPR=6.00984063;
- MB=3.00026879; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-14 10:19:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051410-0005-0000-0000-00008BA75E7A
-Message-Id: <20190514101856.GH31206@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140075
+In-Reply-To: <20190514091611.15278-1-jbrunet@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 05:02:16PM +1000, Michael Ellerman wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >
-> > Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
+On 14/05/2019 11:16, Jerome Brunet wrote:
+> This patchset adds the MMC controller B and C to the g12a SoC as well
+> as the u200 and sei510 boards.
 > 
-> ps. A "RESEND" implies the patch is unchanged and you're just resending
-> it because it was ignored.
+> MMC controller A has been left out on purpose. This controller is
+> special on this SoC family and will be added later on.
 > 
-> In this case it should have just been "PATCH v2", with a note below the "---"
-> saying "v2: Rebased onto powerpc/next ..."
-
-Ok. I will send a v3 :-)
-
+> Notice the use of the pinconf DT property 'drive-strength-microamp'.
+> Support for this property is not yet merged in meson pinctrl driver but
+> the DT part as been acked by the DT maintainer [0] so it should be safe
+> to use.
 > 
-> cheers
+> [0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
 > 
-> > During a memory hotplug operations involving resizing of the HPT, we
-> > invoke a stop_machine() to perform the resizing. In this code path, we
-> > end up recursively taking the cpu_hotplug_lock, first in
-> > memory_hotplug_begin() and then subsequently in stop_machine(). This
-> > causes the system to hang. With lockdep enabled we get the following
-> > error message before the hang.
-> >
-> >   swapper/0/1 is trying to acquire lock:
-> >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
-> >
-> >   but task is already holding lock:
-> >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-> >
-> >   other info that might help us debug this:
-> >    Possible unsafe locking scenario:
-> >
-> >          CPU0
-> >          ----
-> >     lock(cpu_hotplug_lock.rw_sem);
-> >     lock(cpu_hotplug_lock.rw_sem);
-> >
-> >    *** DEADLOCK ***
-> >
-> > Fix this issue by
-> >   1) Requiring all the calls to pseries_lpar_resize_hpt() be made
-> >      with cpu_hotplug_lock held.
-> >
-> >   2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
-> >      as a consequence of 1)
-> >
-> >   3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
-> >      with cpu_hotplug_lock held.
-> >
-> > Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> > Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> > ---
-> >
-> > Rebased this one against powerpc/next instead of linux/master.
-> >
-> >  arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
-> >  arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
-> >  2 files changed, 14 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-> > index 919a861..d07fcafd 100644
-> > --- a/arch/powerpc/mm/book3s64/hash_utils.c
-> > +++ b/arch/powerpc/mm/book3s64/hash_utils.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/libfdt.h>
-> >  #include <linux/pkeys.h>
-> >  #include <linux/hugetlb.h>
-> > +#include <linux/cpu.h>
-> >  
-> >  #include <asm/debugfs.h>
-> >  #include <asm/processor.h>
-> > @@ -1928,10 +1929,16 @@ static int hpt_order_get(void *data, u64 *val)
-> >  
-> >  static int hpt_order_set(void *data, u64 val)
-> >  {
-> > +	int ret;
-> > +
-> >  	if (!mmu_hash_ops.resize_hpt)
-> >  		return -ENODEV;
-> >  
-> > -	return mmu_hash_ops.resize_hpt(val);
-> > +	cpus_read_lock();
-> > +	ret = mmu_hash_ops.resize_hpt(val);
-> > +	cpus_read_unlock();
-> > +
-> > +	return ret;
-> >  }
-> >  
-> >  DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
-> > diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-> > index 1034ef1..2fc9756 100644
-> > --- a/arch/powerpc/platforms/pseries/lpar.c
-> > +++ b/arch/powerpc/platforms/pseries/lpar.c
-> > @@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
-> >  	return 0;
-> >  }
-> >  
-> > -/* Must be called in user context */
-> > +/*
-> > + * Must be called in user context. The caller should hold the
-> > + * cpus_lock.
-> > + */
-> >  static int pseries_lpar_resize_hpt(unsigned long shift)
-> >  {
-> >  	struct hpt_resize_state state = {
-> > @@ -913,7 +916,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
-> >  
-> >  	t1 = ktime_get();
-> >  
-> > -	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
-> > +	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
-> > +				     &state, NULL);
-> >  
-> >  	t2 = ktime_get();
-> >  
-> > -- 
-> > 1.9.4
+> Jerome Brunet (3):
+>   arm64: dts: meson: g12a: add mmc nodes
+>   arm64: dts: meson: u200: add sd and emmc
+>   arm64: dts: meson: sei510: add sd and emmc
+> 
+>  .../boot/dts/amlogic/meson-g12a-sei510.dts    |  42 ++++++
+>  .../boot/dts/amlogic/meson-g12a-u200.dts      |  42 ++++++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 124 ++++++++++++++++++
+>  3 files changed, 208 insertions(+)
 > 
 
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
