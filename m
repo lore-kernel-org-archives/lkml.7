@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B174CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD37C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8273F2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F932147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:14:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPF60NQY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BUr58BId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfENKOm (ORCPT
+        id S1726726AbfENKOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:14:42 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36392 "EHLO
+        Tue, 14 May 2019 06:14:38 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41822 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfENKOk (ORCPT
+        with ESMTP id S1726619AbfENKOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:14:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id z1so13771747ljb.3;
-        Tue, 14 May 2019 03:14:38 -0700 (PDT)
+        Tue, 14 May 2019 06:14:35 -0400
+Received: by mail-lj1-f193.google.com with SMTP id k8so13739193lja.8;
+        Tue, 14 May 2019 03:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wJX9SF3UY7JHR+kvaWwAxJyLE5sk5ey5I1uN0qqeGlw=;
-        b=BPF60NQYM9hKHJxp283UcsOH9eBso8/DH2YH3zv61zystYy31lPADB1EF8H7jlXftz
-         xAripLNHqO406rxkKpGMdQNHJyoIdddIHVyQPFpwV4dgt8AbFE1NGCeonNsLZmTTBjrP
-         4ytt1nLn5L09LvqQLSAdNpH7qnrCzzWMRWeVbr5sLECLyODW2le0/fab7MKqLVdvUrdg
-         rx507c98XQWJBr76TQbd7p76b2tdFBlvu8V46wM0IFNb4BV6v9VU0ruhNUlgqGQrxNdE
-         AxQBCAAyrVKT0Jp57MOyTNcgHpTMdncHXaW6QJMYC1D3DACothTzdlj69RxE5wSpBFlE
-         62nw==
+        bh=/CF3zUxT58FrI22dH2e8VkIScaME9jsEnqCoLXcGC50=;
+        b=BUr58BIdfrb26hi1VznHTWRuNTvi6PE2HM/d43lB1/4mLrMjLQsJh0h4EajAa0wLvK
+         W7gPUyAzH/kAtl78iqQr6puDgKqs2kteYoPBmP9j7Z7ozFE45hOf7xqcAAq6m/QvsdqC
+         r3Dq8EE91W/Y0SdAXy13jCvQ7S2XMd405dw9WVn6wwdMXS/7M9+T4JyNCMUGXzrokQ7c
+         KdlmlbBaEdEuF1441mKJlD53C+ObD+K6qSVWEvZ4cX/BVavJDNPsN7OJtw7Ogwo2LWBb
+         ZJKdpj1mi1P2nPY16QYGVdKq+1EGfhyW7D8A8mBni+bMEa8hIM5z6HiKjbhp8I6Tl6Fm
+         gmjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wJX9SF3UY7JHR+kvaWwAxJyLE5sk5ey5I1uN0qqeGlw=;
-        b=M21KFz63VTD+Kc2sqtNfuHATxsLpFz/7CnbxTUO6a2lfdUodnnOTNlB8FSmQTDEg7B
-         n3oR0p8/6WL/CGg6H4OYN1XVaYbl2Pfksk0IHBocohDk8lg2yU6/Dh0S6hK/JWolhgZn
-         nOZ+VAtozsq+0+2dmqxsaCp4W+yYUONY38LEtmFLChCmAizZIXIbXvAmCGI77dgc5gZT
-         5HbEXmPnBDi8kIVRvHhFmZJXbwNwF+oUHLiwqKoMHTjbk4OJnyh1rDUlA1e+W+Ih3lXB
-         4ar833h448WHUFRBQxoUbWIbqEdhBv+AZ2OCX1McyEMd6VFIyNA1I9hV9wB6700Q+7+J
-         pcTw==
-X-Gm-Message-State: APjAAAVWhO2g8UHv9OMXto2WDgLnX9ve3kkeD49FectbXgPPacAxAtix
-        1wpvGQUDV403FqWmKWTMQbM=
-X-Google-Smtp-Source: APXvYqxKAPIKTgQcSFzsi/73Id8EZCbCE4nG6nPu5WuXlQi2bq+BsyGkuwf+TztsEOcE2FUUC2n6qA==
-X-Received: by 2002:a2e:63d1:: with SMTP id s78mr17101496lje.166.1557828878014;
-        Tue, 14 May 2019 03:14:38 -0700 (PDT)
+        bh=/CF3zUxT58FrI22dH2e8VkIScaME9jsEnqCoLXcGC50=;
+        b=caAPVVIs2nQKHQ18LJ7AKXXmzY+C9Iy8aSwT6oeyIYzyYvAgYGZf7rryS2xS9J0sKG
+         Gp1ETxOCiFfzSqh15Kwzgtayqm9dfilkHuPrYG7CXuzZnIYo8FrsyAl135slRAiO+1tM
+         dW6cgaO4CAk2Ko/3yTd56AKbU5+ifmd+wU+u7oPXe7/aHo2QxEN2H/5WJv34heVeLDXW
+         SXahQKKHlxejZ1xbLJaMm0jJ88uyTVNizELxNdWJk1VBe9MMQkC1n2gOfzXx1KvnZ9Lr
+         gd/YpoSD8lY3dBNW+M3w4d5wqPrSGWXtR3IBW55OWW0x7UTQi4KtIrAsIxxtj41hboIS
+         JdZw==
+X-Gm-Message-State: APjAAAVvTv7X2JkKn8TN31k3EDGWNcNSSQyhc6c37SNh3k/9pozIBp4w
+        Zpl0rdeeu7zgOsL+3fWuD/k=
+X-Google-Smtp-Source: APXvYqwSVd6OkLCoa6TZGqISPUUOET/rwMPIIBMFxKzzi75QQFgeUI7iHRhG1dKdDCNBwDai7tW/PQ==
+X-Received: by 2002:a2e:5d49:: with SMTP id r70mr17505169ljb.102.1557828873407;
+        Tue, 14 May 2019 03:14:33 -0700 (PDT)
 Received: from localhost.localdomain ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id v2sm3126359ljg.6.2019.05.14.03.14.37
+        by smtp.gmail.com with ESMTPSA id v2sm3126359ljg.6.2019.05.14.03.14.32
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 03:14:37 -0700 (PDT)
+        Tue, 14 May 2019 03:14:32 -0700 (PDT)
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>
 Cc:     Serge Semin <Sergey.Semin@t-platforms.ru>,
         linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] tty: max310x: Split uart characters insertion loop
-Date:   Tue, 14 May 2019 13:14:15 +0300
-Message-Id: <20190514101415.26754-8-fancer.lancer@gmail.com>
+Subject: [PATCH 3/7] tty: max310x: Don't pass stacked buffers to SPI
+Date:   Tue, 14 May 2019 13:14:11 +0300
+Message-Id: <20190514101415.26754-4-fancer.lancer@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190514101415.26754-1-fancer.lancer@gmail.com>
 References: <20190514101415.26754-1-fancer.lancer@gmail.com>
@@ -74,49 +74,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Batch read mode doesn't check any conditions or flags except the Rx
-overflow one. But it may only happen after the last character is pushed
-into the RHR register. In this case we shouldn't push all the read
-characters with overrun flag set, but only the last one caused the
-FIFO overflow. This commit splits the characters retrieval loop into
-two parts. First one is ordinary intsert-chars procedure without taking
-the overrun status into account. Second part inserts the last character
-checking whether the overrun happened and pushing a '\0' character with
-TTY_OVERRUN flag to a flip-buffer.
+SPI transfer tx/rx buffers must be DMA-safe and the structure
+documentation clearly states this. Data declared on the system stack isn't
+DMA-safe [1]. Instead at least kernel memory should be used for the
+buffers. In order to fix this here we can create the buffers at the device
+probing stage and use them without any synchronization, since batch
+read/write methods are called from non-reentrant contexts - either from
+rx-event IRQ threaded handler or from the tx workqueue item.
 
-If we left the loop the way it was the '\0' character would be inserted
-after each character retrieved at the overrun occasion.
+[1] Documentation/DMA-API-HOWTO.txt
 
 Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
 ---
- drivers/tty/serial/max310x.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/tty/serial/max310x.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/tty/serial/max310x.c b/drivers/tty/serial/max310x.c
-index 36943f6c198c..81b2413c3da4 100644
+index 527f1476c24a..0e3dc89c459b 100644
 --- a/drivers/tty/serial/max310x.c
 +++ b/drivers/tty/serial/max310x.c
-@@ -680,10 +680,16 @@ static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
- 			port->icount.overrun++;
+@@ -258,6 +258,10 @@ struct max310x_one {
+ 	struct work_struct	tx_work;
+ 	struct work_struct	md_work;
+ 	struct work_struct	rs_work;
++
++	u8 wr_header;
++	u8 rd_header;
++	u8 rx_buf[MAX310X_FIFO_SIZE];
+ };
+ #define to_max310x_port(_port) \
+ 	container_of(_port, struct max310x_one, port)
+@@ -608,11 +612,11 @@ static int max310x_set_ref_clk(struct device *dev, struct max310x_port *s,
+ 
+ static void max310x_batch_write(struct uart_port *port, u8 *txbuf, unsigned int len)
+ {
+-	u8 header[] = { (port->iobase + MAX310X_THR_REG) | MAX310X_WRITE_BIT };
++	struct max310x_one *one = to_max310x_port(port);
+ 	struct spi_transfer xfer[] = {
+ 		{
+-			.tx_buf = &header,
+-			.len = sizeof(header),
++			.tx_buf = &one->wr_header,
++			.len = sizeof(one->wr_header),
+ 		}, {
+ 			.tx_buf = txbuf,
+ 			.len = len,
+@@ -623,11 +627,11 @@ static void max310x_batch_write(struct uart_port *port, u8 *txbuf, unsigned int
+ 
+ static void max310x_batch_read(struct uart_port *port, u8 *rxbuf, unsigned int len)
+ {
+-	u8 header[] = { port->iobase + MAX310X_RHR_REG };
++	struct max310x_one *one = to_max310x_port(port);
+ 	struct spi_transfer xfer[] = {
+ 		{
+-			.tx_buf = &header,
+-			.len = sizeof(header),
++			.tx_buf = &one->rd_header,
++			.len = sizeof(one->rd_header),
+ 		}, {
+ 			.rx_buf = rxbuf,
+ 			.len = len,
+@@ -638,8 +642,8 @@ static void max310x_batch_read(struct uart_port *port, u8 *rxbuf, unsigned int l
+ 
+ static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
+ {
++	struct max310x_one *one = to_max310x_port(port);
+ 	unsigned int sts, ch, flag, i;
+-	u8 buf[MAX310X_FIFO_SIZE];
+ 
+ 	if (port->read_status_mask == MAX310X_LSR_RXOVR_BIT) {
+ 		/* We are just reading, happily ignoring any error conditions.
+@@ -654,7 +658,7 @@ static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
+ 		 * */
+ 
+ 		sts = max310x_port_read(port, MAX310X_LSR_IRQSTS_REG);
+-		max310x_batch_read(port, buf, rxlen);
++		max310x_batch_read(port, one->rx_buf, rxlen);
+ 
+ 		port->icount.rx += rxlen;
+ 		flag = TTY_NORMAL;
+@@ -666,7 +670,8 @@ static void max310x_handle_rx(struct uart_port *port, unsigned int rxlen)
  		}
  
--		for (i = 0; i < rxlen; ++i) {
--			uart_insert_char(port, sts, MAX310X_LSR_RXOVR_BIT,
--					 one->rx_buf[i], flag);
--		}
-+		for (i = 0; i < (rxlen - 1); ++i)
-+			uart_insert_char(port, sts, 0, one->rx_buf[i], flag);
-+
-+		/*
-+		 * Handle the overrun case for the last character only, since
-+		 * the RxFIFO overflow happens after it is pushed to the FIFO
-+		 * tail.
-+		 */
-+		uart_insert_char(port, sts, MAX310X_LSR_RXOVR_BIT,
-+				 one->rx_buf[rxlen], flag);
+ 		for (i = 0; i < rxlen; ++i) {
+-			uart_insert_char(port, sts, MAX310X_LSR_RXOVR_BIT, buf[i], flag);
++			uart_insert_char(port, sts, MAX310X_LSR_RXOVR_BIT,
++					 one->rx_buf[i], flag);
+ 		}
  
  	} else {
- 		if (unlikely(rxlen >= port->fifosize)) {
+@@ -1298,6 +1303,10 @@ static int max310x_probe(struct device *dev, struct max310x_devtype *devtype,
+ 		INIT_WORK(&s->p[i].md_work, max310x_md_proc);
+ 		/* Initialize queue for changing RS485 mode */
+ 		INIT_WORK(&s->p[i].rs_work, max310x_rs_proc);
++		/* Initialize SPI-transfer buffers */
++		s->p[i].wr_header = (s->p[i].port.iobase + MAX310X_THR_REG) |
++				    MAX310X_WRITE_BIT;
++		s->p[i].rd_header = (s->p[i].port.iobase + MAX310X_RHR_REG);
+ 
+ 		/* Register port */
+ 		ret = uart_add_one_port(&max310x_uart, &s->p[i].port);
 -- 
 2.21.0
 
