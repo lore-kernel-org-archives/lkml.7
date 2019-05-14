@@ -2,121 +2,105 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63442C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D50EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344DC2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9F1A2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:45:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Loj+YPx+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VjNwcN6Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfENJnZ (ORCPT
+        id S1726472AbfENJps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:43:25 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57444 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbfENJnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:43:24 -0400
-Received: from zn.tnic (p200300EC2F29E5000DF69AC748EB6F4C.dip0.t-ipconnect.de [IPv6:2003:ec:2f29:e500:df6:9ac7:48eb:6f4c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A7A3A1EC0A6C;
-        Tue, 14 May 2019 11:43:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557827002;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+E5lh96Wa9iAgQ7eR2jPUVYeIwVyby6z2wH0NC4hJag=;
-        b=Loj+YPx+Ulf7wwk9slTNr9YVy0suTLXN3qw8ea0NQYVS2tnVSgSy0KVLwZRsn40AnYsi46
-        Ksjcn6R/bGJ3Wc6FjskIG0Dd20zv6wWDnPZ9SugRvLM8CSUn/wFAU48mxxR9PLv82LnSpS
-        pOiE1QMCuPBlVYHo1F2hoHhgL0Vas3U=
-Date:   Tue, 14 May 2019 11:43:17 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Robert Richter <rrichter@marvell.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] EDAC, mc: Fix edac_mc_find() in case no device is found
-Message-ID: <20190514094317.GB31140@zn.tnic>
-References: <20190514072514.312-1-rrichter@marvell.com>
+        Tue, 14 May 2019 05:45:48 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43097 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfENJps (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:45:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so18402022wro.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 02:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AImHa44p0mDvOU1NWVHOPq3uhogoe7GyDrgo2WEXj/c=;
+        b=VjNwcN6YD8r8chxHjTjcst6CSr1XuWPV3akry0c2LVIIlO2oxGYjnN3DcNSWBl0b/d
+         oEp7GfwJqAJEeljYW8HW+FBJTRJ9fDkORslgbwem3e/dUpvMuGkDLXpzfJxwn+XACW5X
+         OuCDrRzpgTynjSYhsony0A6maZCmOV5IL49Na7ViefXpKF7DykUNn2nnCc3SRtg57O7f
+         0IJDcUh6j/6D6Tq1Te5UnL35aFPK9aeh47tNlGI2Ne8qITWHvd6JyMQUlJ6BhAGjhLu7
+         aAYCrHKaJWq8AZzOHY/galHkdMJrjfHyCaPE4C8plGwAmx2w925YrSUeAf+sjYVz0veE
+         LZCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AImHa44p0mDvOU1NWVHOPq3uhogoe7GyDrgo2WEXj/c=;
+        b=fgYQA5GhVIq15URBM8DUPRxXvoo3n5G1gSQDdy1FIYpOkvjZfDAAURwloXCzuVO6go
+         7PFhnfkVM4dbCexJrm5vhlgAMO8YGqocFzPOBDmKR+wr0OjMV3nNHw8JyCG6yT+LHcAS
+         /hTm+uxbGefc06Ou32+hEj6ChVnGbbhMPSYGkh/xSsTl5LFWDztHEj0kfooJbp5yEHNK
+         mRca8twfjGsNncZ7P36zcXVRtlOFmqSswEVv6cQkJeOae0DLIagTLBEqn9UVFM1XlxYH
+         kXcfBjjrx80s73EI5q+JtkPBh+MxSdmTT0NdcHl1CIjG2q8GZwnVbgmVY1Bd+miHmgTx
+         dsnQ==
+X-Gm-Message-State: APjAAAX3sSQS6s+N29L5Zimf792cxb2A6pDF1sx6A/cjWiY8+wKqmMrm
+        qQpC1gmceODe8M1CBuH4lgqI/w==
+X-Google-Smtp-Source: APXvYqzSVHJmToHiREG3mWCkBwVsO8AwYFyO/y+AxQxPWtyxHM5C4VI+AE7HytatFMM38AV+Ys7+ZA==
+X-Received: by 2002:a5d:688a:: with SMTP id h10mr20000592wru.211.1557827146709;
+        Tue, 14 May 2019 02:45:46 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id n4sm5319216wmb.22.2019.05.14.02.45.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 02:45:46 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: meson: g12a: set uart_ao clocks
+Date:   Tue, 14 May 2019 11:45:37 +0200
+Message-Id: <20190514094537.8765-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190514072514.312-1-rrichter@marvell.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 07:25:58AM +0000, Robert Richter wrote:
-> The function should return NULL in case no device is found, but it
-> always returns the last checked mc device from the list even if the
-> index did not match. This patch fixes this.
-> 
-> I did some analysis why this did not raise any issues for about 3
-> years and the reason is that edac_mc_find() is mostly used to search
-> for existing devices. Thus, the bug is not triggered.
-> 
-> Fixes: c73e8833bec5 ("EDAC, mc: Fix locking around mc_devices list")
-> Signed-off-by: Robert Richter <rrichter@marvell.com>
-> ---
->  drivers/edac/edac_mc.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-> index 13594ffadcb3..aeeaaf30b38a 100644
-> --- a/drivers/edac/edac_mc.c
-> +++ b/drivers/edac/edac_mc.c
-> @@ -688,10 +688,9 @@ struct mem_ctl_info *edac_mc_find(int idx)
->  		mci = list_entry(item, struct mem_ctl_info, link);
->  
->  		if (mci->mc_idx >= idx) {
-> -			if (mci->mc_idx == idx) {
-> -				goto unlock;
-> -			}
-> -			break;
-> +			if (mci->mc_idx != idx)
-> +				mci = NULL;
-> +			goto unlock;
->  		}
->  	}
+Now that the AO clock controller is available, make the uarts of the
+always-on domain claim the appropriate peripheral clock.
 
-Can we simplify this silly code even more pls? I'm pasting the whole
-function instead of a diff for clarity:
-
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
-struct mem_ctl_info *edac_mc_find(int idx)
-{
-        struct mem_ctl_info *mci = NULL;
-        struct list_head *item;
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-        mutex_lock(&mem_ctls_mutex);
-
-        list_for_each(item, &mc_devices) {
-                mci = list_entry(item, struct mem_ctl_info, link);
-                if (mci->mc_idx == idx)
-                        goto unlock;
-        }
-
-        mci = NULL;
-
-unlock:
-        mutex_unlock(&mem_ctls_mutex);
-        return mci;
----
-
-Thx.
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index b2f08fc96568..ca01064a771a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -708,7 +708,7 @@
+ 					     "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x3000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
++				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
+@@ -718,7 +718,7 @@
+ 					     "amlogic,meson-ao-uart";
+ 				reg = <0x0 0x4000 0x0 0x18>;
+ 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
+-				clocks = <&xtal>, <&xtal>, <&xtal>;
++				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
+ 				clock-names = "xtal", "pclk", "baud";
+ 				status = "disabled";
+ 			};
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
