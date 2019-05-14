@@ -2,224 +2,118 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A593C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3ACC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE5E32084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uFs9wWBU"
+	by mail.kernel.org (Postfix) with ESMTP id 667FC2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfENOpA (ORCPT
+        id S1726229AbfENOqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:45:00 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35840 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENOpA (ORCPT
+        Tue, 14 May 2019 10:46:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725901AbfENOqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:45:00 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so8757449pgb.3;
-        Tue, 14 May 2019 07:45:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
-        b=uFs9wWBU7EuqOsDKvz+cVP5WgvZBLERAglZL1D1EkqgHFgsJFcJNyXUC4W/qD+DUa3
-         8wFk9QcPgy/7h0uKjPtKVTNXdaXwmBvISl6mRaVEvHW5ncRYa8bYA0efya5vogZZwjbv
-         ZZRfTT3sEw+11xOiYQgrMVJGZTnGUAR9nA2Oo6SyWt/RcHjjZjVImXlPL1/GTCpYKl+7
-         L4Y1bYP3a6NGTaOnfB2l0+o1sgCKRuDIpw0WMivnlUpPI75zzCsw/Lxv0C8FAiZSoJP1
-         KNPUcCAFyCXlofgYR6a3aCUoUI0ptZW0NEwo1L4oFkfpkqQhM/wr56mneob9Q1UemtAG
-         iDTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=M5gD5bOk+ivXRl6ir7PdHTTwAW2YSmsqQ0Eg23Ei5OU=;
-        b=ldN8rdtaLYyR4j8+pXLvpnPRXnvwVsgi2H01IHWYqbZy2XBMTFb+psjvPtNLYsy7vK
-         uSSqyqdykp7JMLmlPPNVxa9yZR4QuWLbu3c9sVdUO6FEJLdujiiOj0fpLQ8ulroFdIml
-         MEK9BGIjlBRzD2nZIL5Viq0cFOlE/KU8oP8P1frZDvnmk4owlTd/0PRfW/5K+KLVQqlQ
-         8xb6Xa+PcKyJ3XU3593HXTgfL3ABi514ChWVDqMvOLceUdYi9AICsSroAaU3S125RwmJ
-         VIWYn1PefmmCIw7meiK04eNAMHsOMmY8+ejyzWHDsGQOVCUDjqAydOVYOKOpTTVxuxg8
-         ZMtQ==
-X-Gm-Message-State: APjAAAVjWN/eCsfbGa2A4PtnOa0cwf2CzDeYzbV8o6/vxSKeIEMjLHwm
-        JEnrX3dq7FMYCz3t9ZqhhsXNPecQBdM=
-X-Google-Smtp-Source: APXvYqyszJva4EMMR5heKptgP1XLXDlVskpU1wnd/h+BaPS711IH58DJGKfAXnRBxzL0lGTgN6E4rg==
-X-Received: by 2002:a63:465b:: with SMTP id v27mr38671882pgk.38.1557845099636;
-        Tue, 14 May 2019 07:44:59 -0700 (PDT)
-Received: from mail.google.com ([104.238.181.70])
-        by smtp.gmail.com with ESMTPSA id u12sm2119425pfl.159.2019.05.14.07.44.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 07:44:59 -0700 (PDT)
-Date:   Tue, 14 May 2019 22:44:53 +0800
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>, bhelgaas@google.com,
-        corbet@lwn.net, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 11/12] Documentation: PCI: convert
- endpoint/pci-test-function.txt to reST
-Message-ID: <20190514144451.uxa4bkipmltllv5k@mail.google.com>
-References: <20190513142000.3524-1-changbin.du@gmail.com>
- <20190513142000.3524-12-changbin.du@gmail.com>
- <20190513120423.159b971f@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513120423.159b971f@coco.lan>
-User-Agent: NeoMutt/20180716
+        Tue, 14 May 2019 10:46:36 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EEkJ5a082694
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:46:35 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sfy8a9jh9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:46:31 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 May 2019 15:46:22 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 15:46:18 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EEkI5I49545464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 14:46:18 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8AC9AE045;
+        Tue, 14 May 2019 14:46:17 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF28CAE04D;
+        Tue, 14 May 2019 14:46:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.80.29])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 14:46:16 +0000 (GMT)
+Subject: Re: [PATCH 3/3 v5] call ima_kexec_cmdline from kexec_file_load path
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        inux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ebiederm@xmission.com, vgoyal@redhat.com, prsriva@microsoft.com,
+        Dave Young <dyoung@redhat.com>
+Date:   Tue, 14 May 2019 10:46:06 -0400
+In-Reply-To: <20190510223744.10154-4-prsriva02@gmail.com>
+References: <20190510223744.10154-1-prsriva02@gmail.com>
+         <20190510223744.10154-4-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051414-0020-0000-0000-0000033C9621
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051414-0021-0000-0000-0000218F528F
+Message-Id: <1557845166.4139.53.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 12:04:23PM -0300, Mauro Carvalho Chehab wrote:
-> Em Mon, 13 May 2019 22:19:59 +0800
-> Changbin Du <changbin.du@gmail.com> escreveu:
-> 
-> > This converts the plain text documentation to reStructuredText format and
-> > add it to Sphinx TOC tree. No essential content change.
-> > 
-> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
-> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  Documentation/PCI/endpoint/index.rst          |  1 +
-> >  ...est-function.txt => pci-test-function.rst} | 34 ++++++++++++-------
-> >  2 files changed, 22 insertions(+), 13 deletions(-)
-> >  rename Documentation/PCI/endpoint/{pci-test-function.txt => pci-test-function.rst} (84%)
-> > 
-> > diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
-> > index 3951de9f923c..b680a3fc4fec 100644
-> > --- a/Documentation/PCI/endpoint/index.rst
-> > +++ b/Documentation/PCI/endpoint/index.rst
-> > @@ -9,3 +9,4 @@ PCI Endpoint Framework
-> >  
-> >     pci-endpoint
-> >     pci-endpoint-cfs
-> > +   pci-test-function
-> > diff --git a/Documentation/PCI/endpoint/pci-test-function.txt b/Documentation/PCI/endpoint/pci-test-function.rst
-> > similarity index 84%
-> > rename from Documentation/PCI/endpoint/pci-test-function.txt
-> > rename to Documentation/PCI/endpoint/pci-test-function.rst
-> > index 5916f1f592bb..63148df97232 100644
-> > --- a/Documentation/PCI/endpoint/pci-test-function.txt
-> > +++ b/Documentation/PCI/endpoint/pci-test-function.rst
-> > @@ -1,5 +1,10 @@
-> > -				PCI TEST
-> > -		    Kishon Vijay Abraham I <kishon@ti.com>
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +=================
-> > +PCI Test Function
-> > +=================
-> > +
-> > +:Author: Kishon Vijay Abraham I <kishon@ti.com>
-> >  
-> >  Traditionally PCI RC has always been validated by using standard
-> >  PCI cards like ethernet PCI cards or USB PCI cards or SATA PCI cards.
-> > @@ -23,30 +28,31 @@ The PCI endpoint test device has the following registers:
-> >  	8) PCI_ENDPOINT_TEST_IRQ_TYPE
-> >  	9) PCI_ENDPOINT_TEST_IRQ_NUMBER
-> >  
-> > -*) PCI_ENDPOINT_TEST_MAGIC
-> > +* PCI_ENDPOINT_TEST_MAGIC
-> >  
-> >  This register will be used to test BAR0. A known pattern will be written
-> >  and read back from MAGIC register to verify BAR0.
-> >  
-> > -*) PCI_ENDPOINT_TEST_COMMAND:
-> > +* PCI_ENDPOINT_TEST_COMMAND
-> >  
-> >  This register will be used by the host driver to indicate the function
-> >  that the endpoint device must perform.
-> >  
-> > -Bitfield Description:
-> > +Bitfield Description::
-> > +
-> >    Bit 0		: raise legacy IRQ
-> >    Bit 1		: raise MSI IRQ
-> >    Bit 2		: raise MSI-X IRQ
-> >    Bit 3		: read command (read data from RC buffer)
-> >    Bit 4		: write command (write data to RC buffer)
-> > -  Bit 5		: copy command (copy data from one RC buffer to another
-> > -		  RC buffer)
-> > +  Bit 5		: copy command (copy data from one RC buffer to another RC buffer)
-> 
-> Why not use a table instead?
->
-hmm, table looks better.
-> >  
-> > -*) PCI_ENDPOINT_TEST_STATUS
-> > +* PCI_ENDPOINT_TEST_STATUS
-> >  
-> >  This register reflects the status of the PCI endpoint device.
-> >  
-> > -Bitfield Description:
-> > +Bitfield Description::
-> > +
-> >    Bit 0		: read success
-> >    Bit 1		: read fail
-> >    Bit 2		: write success
-> > @@ -57,31 +63,33 @@ Bitfield Description:
-> >    Bit 7		: source address is invalid
-> >    Bit 8		: destination address is invalid
-> 
-> Same here.
-> 
-> If you replace the two bitfield descriptions to table:
-> 	Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> 
-sure.
+[Cc'ing Dave Young]
 
-> >  
-> > -*) PCI_ENDPOINT_TEST_SRC_ADDR
-> > +* PCI_ENDPOINT_TEST_SRC_ADDR
-> >  
-> >  This register contains the source address (RC buffer address) for the
-> >  COPY/READ command.
-> >  
-> > -*) PCI_ENDPOINT_TEST_DST_ADDR
-> > +* PCI_ENDPOINT_TEST_DST_ADDR
-> >  
-> >  This register contains the destination address (RC buffer address) for
-> >  the COPY/WRITE command.
-> >  
-> > -*) PCI_ENDPOINT_TEST_IRQ_TYPE
-> > +* PCI_ENDPOINT_TEST_IRQ_TYPE
-> >  
-> >  This register contains the interrupt type (Legacy/MSI) triggered
-> >  for the READ/WRITE/COPY and raise IRQ (Legacy/MSI) commands.
-> >  
-> >  Possible types:
-> > +
-> >   - Legacy	: 0
-> >   - MSI		: 1
-> >   - MSI-X	: 2
-> >
-Also take this as table.
+On Fri, 2019-05-10 at 15:37 -0700, Prakhar Srivastava wrote:
+> From: Prakhar Srivastava <prsriva02@gmail.com>
 
-> > -*) PCI_ENDPOINT_TEST_IRQ_NUMBER
-> > +* PCI_ENDPOINT_TEST_IRQ_NUMBER
-> >  
-> >  This register contains the triggered ID interrupt.
-> >  
-> >  Admissible values:
-> > +
-> >   - Legacy	: 0
-> >   - MSI		: [1 .. 32]
-> >   - MSI-X	: [1 .. 2048]
-> 
-> 
-> 
-> Thanks,
-> Mauro
+The "From" line above should only appear when the patch author and the
+sender differ.  You can create the patches under one id and post them
+from another id.  Something is still wrong.
 
--- 
-Cheers,
-Changbin Du
+> 
+> To measure the cmldine args used in case of soft reboot. Call the 
+> ima hook defined in [PATCH 1/3 v5]:"add a new ima hook and policy to measure the cmdline"
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+
+> ---
+>  kernel/kexec_file.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index f1d0e00a3971..e779bcf674a0 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -241,6 +241,8 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			ret = -EINVAL;
+>  			goto out;
+>  		}
+> +
+> +		ima_kexec_cmdline(image->cmdline_buf, image->cmdline_buf_len - 1);
+>  	}
+>  
+>  	/* Call arch image load handlers */
+
+Much better!
+
+Mimi
+
