@@ -2,138 +2,98 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBFCC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E611C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCBD20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1eEmFBvm"
+	by mail.kernel.org (Postfix) with ESMTP id 684A020879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbfENI2X (ORCPT
+        id S1726702AbfENI22 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:28:23 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19238 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726678AbfENI1c (ORCPT
+        Tue, 14 May 2019 04:28:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46406 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726678AbfENI20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:27:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8Q8xq029562;
-        Tue, 14 May 2019 10:27:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=ug1rZBb4tp1QfVGX2K2LUauv8v7kBPMYnK+aqeqOCBA=;
- b=1eEmFBvmFp2Kt7iCklqkRaGZECElRyWYDZQKUavC/hkOrkWqInyOfUJ4V3EfoGkQunUO
- mzyEcMfs6zP80CO1aLv0H90K/en9L/uuuEbjsmMCDX1IGEKBwWmPz4a/tD6kCSlw/BlO
- /JChmB/bESSdhZXKh1u18gMzat0TS6ArSsMrP33vT/8t+oBWMM4uztUwrDRXqObDxZ+/
- Y5HuDFYCxKUi8080cfGbKPJ5T7JK555Yx5341xPf0+LX09oxsts7jga1BnZPYcq87IW2
- PAkYqbM16UoKoHYLlUbGt9cWXCUCHTLNg+k759GiW7pDH57hU2ZqD40/X/L2FWw4eru+ gg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdkuyqnmr-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 14 May 2019 10:27:09 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC3643F;
-        Tue, 14 May 2019 08:27:08 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9666A1550;
-        Tue, 14 May 2019 08:27:08 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May
- 2019 10:27:08 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May 2019 10:27:07
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        "Ludovic Barre" <ludovic.barre@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 1/8] dt-bindings: stm32: add bindings for ML-AHB interconnect
-Date:   Tue, 14 May 2019 10:26:56 +0200
-Message-ID: <1557822423-22658-2-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
-References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
+        Tue, 14 May 2019 04:28:26 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-28-QSu0seGsPgOZSvrndg-J7w-1; Tue, 14 May 2019 09:28:22 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
+ 14 May 2019 09:28:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 14 May 2019 09:28:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sergey Senozhatsky' <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        'christophe leroy' <christophe.leroy@c-s.fr>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Russell Currey <ruscur@russell.cc>,
+        "Stephen Rothwell" <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsA==
+Date:   Tue, 14 May 2019 08:28:21 +0000
+Message-ID: <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
+References: <20190510081635.GA4533@jagdpanzerIV>
+ <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+ <20190514020730.GA651@jagdpanzerIV>
+In-Reply-To: <20190514020730.GA651@jagdpanzerIV>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_05:,,
- signatures=0
+X-MC-Unique: QSu0seGsPgOZSvrndg-J7w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the ML-AHB interconnect for stm32 SoCs.
+> And I like Steven's "(fault)" idea.
+> How about this:
+> 
+> 	if ptr < PAGE_SIZE		-> "(null)"
+> 	if IS_ERR_VALUE(ptr)		-> "(fault)"
+> 
+> 	-ss
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- .../devicetree/bindings/arm/stm32/mlahb.txt        | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+Or:
+	if (ptr < PAGE_SIZE)
+		return ptr ? "(null+)" : "(null)";
+	if IS_ERR_VALUE(ptr)
+		return "(errno)"
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-new file mode 100644
-index 0000000..25307aa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-@@ -0,0 +1,37 @@
-+ML-AHB interconnect bindings
-+
-+These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-+a Cortex-M subsystem with dedicated memories.
-+The MCU SRAM and RETRAM memory parts can be accessed through different addresses
-+(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
-+Cortex-M firmware accesses among those ports allows to tune the system
-+performance.
-+
-+[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-+[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-+
-+Required properties:
-+- compatible: should be "simple-bus"
-+- dma-ranges: describes memory addresses translation between the local CPU and
-+	   the remote Cortex-M processor. Each memory region, is declared with
-+	   3 parameters:
-+		 - param 1: device base address (Cortex-M processor address)
-+		 - param 2: physical base address (local CPU address)
-+		 - param 3: size of the memory region.
-+
-+The Cortex-M remote processor accessed via the mlahb interconnect is described
-+by a child node.
-+
-+Example:
-+mlahb {
-+	compatible = "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	dma-ranges = <0x00000000 0x38000000 0x10000>,
-+		     <0x10000000 0x10000000 0x60000>,
-+		     <0x30000000 0x30000000 0x60000>;
-+
-+	m4_rproc: m4@10000000 {
-+		...
-+	};
-+};
--- 
-2.7.4
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
