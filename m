@@ -2,73 +2,93 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C66C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF13C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767E02147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF0F22168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfENRN0 (ORCPT
+        id S1726910AbfENROR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:13:26 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:49802 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfENRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:13:25 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 32C76200017;
-        Tue, 14 May 2019 19:13:24 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 264A120014B;
-        Tue, 14 May 2019 19:13:24 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id C7A6D2061C;
-        Tue, 14 May 2019 19:13:23 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH] crypto: caam - fix typo in i.MX6 devices list for errata
-Date:   Tue, 14 May 2019 20:13:09 +0300
-Message-Id: <1557853989-29075-1-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 14 May 2019 13:14:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:60250 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726335AbfENROR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 13:14:17 -0400
+Received: from [10.200.157.26] (unknown [131.107.147.154])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 24BF220A115B;
+        Tue, 14 May 2019 10:14:16 -0700 (PDT)
+To:     Linux Integrity <linux-integrity@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+From:   Lakshmi <nramas@linux.microsoft.com>
+Subject: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
+ Signature signer in IMA log
+Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva@linux.microsoft.com>
+Message-ID: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
+Date:   Tue, 14 May 2019 10:14:15 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix a typo in the list of i.MX6 devices affected by an
-issue wherein AXI bus transactions may not occur in
-the correct order.
+The motive behind this patch series is to measure the public key
+of the IMA signature signer in the IMA log.
 
-Fixes: 33d69455e402 ("crypto: caam - limit AXI pipeline to a depth of
-1")
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
- drivers/crypto/caam/ctrl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The IMA signature of the file, logged using ima-sig template, contains
+the key identifier of the key that was used to generate the signature.
+But outside the client machine this key id is not sufficient to
+uniquely determine which key the signature corresponds to.
+Providing the public key of the signer in the IMA log would
+allow, for example, an attestation service to securely verify
+if the key used to generate the IMA signature is a valid and
+trusted one, and that the key has not been revoked or expired.
 
-diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-index e2ba3d2..fec39c3 100644
---- a/drivers/crypto/caam/ctrl.c
-+++ b/drivers/crypto/caam/ctrl.c
-@@ -469,7 +469,7 @@ static int caam_get_era(struct caam_ctrl __iomem *ctrl)
- }
- 
- /*
-- * ERRATA: imx6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6DQ)
-+ * ERRATA: imx6 devices (imx6D, imx6Q, imx6DL, imx6S, imx6DP and imx6QP)
-  * have an issue wherein AXI bus transactions may not occur in the correct
-  * order. This isn't a problem running single descriptors, but can be if
-  * running multiple concurrent descriptors. Reworking the driver to throttle
+An attestation service would just need to maintain a list of
+valid public keys and using the data from the IMA log can attest
+the system files loaded on the client machine.
+
+To achieve the above the patch series does the following:
+   - Adds a new method in asymmetric_key_subtype to query
+     the public key of the given key
+   - Adds a new IMA template namely "ima-sigkey" to store\read
+     the public key of the IMA signature signer. This template
+     extends the existing template "ima-sig"
+
+Lakshmi (2):
+   add support for querying public key from a given key
+   add a new template ima-sigkey to store/read the public, key of ima
+     signature signer
+
+  .../admin-guide/kernel-parameters.txt         |  2 +-
+  Documentation/crypto/asymmetric-keys.txt      |  1 +
+  Documentation/security/IMA-templates.rst      |  5 +-
+  crypto/asymmetric_keys/public_key.c           |  7 +++
+  crypto/asymmetric_keys/signature.c            | 24 +++++++++
+  include/crypto/public_key.h                   |  1 +
+  include/keys/asymmetric-subtype.h             |  3 ++
+  security/integrity/digsig.c                   | 54 +++++++++++++++++--
+  security/integrity/digsig_asymmetric.c        | 44 +++++++++++++++
+  security/integrity/ima/Kconfig                |  3 ++
+  security/integrity/ima/ima_template.c         |  3 ++
+  security/integrity/ima/ima_template_lib.c     | 43 +++++++++++++++
+  security/integrity/ima/ima_template_lib.h     |  4 ++
+  security/integrity/integrity.h                | 29 +++++++++-
+  14 files changed, 216 insertions(+), 7 deletions(-)
+
 -- 
-2.1.0
-
+2.17.1
