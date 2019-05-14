@@ -2,266 +2,165 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60A0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82C7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B67E206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73C8B21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="0Sn4sk2A"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="W2TgjKjt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfENHWP (ORCPT
+        id S1726561AbfENHYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:22:15 -0400
-Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:43261
-        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726190AbfENHWO (ORCPT
+        Tue, 14 May 2019 03:24:16 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:64662 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfENHYQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:22:14 -0400
+        Tue, 14 May 2019 03:24:16 -0400
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="Nicolas.Ferre@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Nicolas.Ferre@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.60,467,1549954800"; 
+   d="scan'208";a="33027039"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 00:24:15 -0700
+Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.49) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Tue, 14 May 2019 00:24:04 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=haabendal.dk; s=20140924;
-        h=content-type:mime-version:message-id:in-reply-to:date:references:subject:cc:
-         to:from:from;
-        bh=lHJDEPi83/7TupgeVc/Ztzp6V7A4QR/sUMN42jYTWxI=;
-        b=0Sn4sk2AmAlV8NX9YMTrCyxoDA+mB43rp1kIvUNYNuamcfuy+oQgxFbc8Wd3PrnG3Fkrt9lU4WfkO
-         hJR8c403WYb8OE3ZvYpYX+PU5fRdUjVjLQgMvu6yRYfTJasFTfH793uR0brmC3K/fK0IjxcMZFoln+
-         Wyuo2Ddk4H/xqIpA=
-X-HalOne-Cookie: 53fd3c0f1aa55a61d90a2fd056e5d74f25d59243
-X-HalOne-ID: fb4ad7ed-7618-11e9-abc4-d0431ea8bb10
-Received: from localhost (unknown [193.163.1.7])
-        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id fb4ad7ed-7618-11e9-abc4-d0431ea8bb10;
-        Tue, 14 May 2019 07:22:08 +0000 (UTC)
-From:   Esben Haabendal <esben@haabendal.dk>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, linux-serial@vger.kernel.org,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
-References: <20190430140416.4707-1-esben@geanix.com>
-        <20190430153736.GL9224@smile.fi.intel.com>
-        <874l6efxta.fsf@haabendal.dk>
-        <20190502104556.GS9224@smile.fi.intel.com>
-        <87pnp11112.fsf@haabendal.dk> <20190507093239.GB4529@dell>
-        <87sgtqjy3l.fsf@haabendal.dk>
-        <20190507115325.GV9224@smile.fi.intel.com>
-        <87k1f2jvyd.fsf@haabendal.dk>
-        <20190507150847.GW9224@smile.fi.intel.com>
-Date:   Tue, 14 May 2019 09:22:07 +0200
-In-Reply-To: <20190507150847.GW9224@smile.fi.intel.com> (Andy Shevchenko's
-        message of "Tue, 7 May 2019 18:08:47 +0300")
-Message-ID: <87k1etmrfk.fsf@haabendal.dk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mj/17vUNWUDyqVec96UZVHVD14D6vp/DKaBx2tvwpVM=;
+ b=W2TgjKjtivYyRkbDbdc5at+VhmQPq2KJfhPJTorus3J6TB1FX8NMzPb+B/jLg/CU+lnqjW0r8nZoRZF76/oHYuW+ATRiuys/J5yDqxPAMF5J7WFgSB0TNlvVhq9+SPwu18/f402MRPEdzLM9mINmrpPKGgltLeoo4O4utTInrJg=
+Received: from DM5PR11MB1658.namprd11.prod.outlook.com (10.172.36.9) by
+ DM5PR11MB1849.namprd11.prod.outlook.com (10.175.90.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Tue, 14 May 2019 07:24:02 +0000
+Received: from DM5PR11MB1658.namprd11.prod.outlook.com
+ ([fe80::11ae:9a85:a3d:f722]) by DM5PR11MB1658.namprd11.prod.outlook.com
+ ([fe80::11ae:9a85:a3d:f722%8]) with mapi id 15.20.1878.024; Tue, 14 May 2019
+ 07:24:02 +0000
+From:   <Nicolas.Ferre@microchip.com>
+To:     <luca@lucaceresoli.net>, <netdev@vger.kernel.org>
+CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH] net: macb: fix error format in dev_err()
+Thread-Topic: [PATCH] net: macb: fix error format in dev_err()
+Thread-Index: AQHVCiU4ThIIVTJw1Ey4CFSnWt1LDaZqN7AA
+Date:   Tue, 14 May 2019 07:24:02 +0000
+Message-ID: <775ea7ee-f879-149a-8a60-97635a2cd218@microchip.com>
+References: <20190514071450.27760-1-luca@lucaceresoli.net>
+In-Reply-To: <20190514071450.27760-1-luca@lucaceresoli.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR04CA0034.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::47) To DM5PR11MB1658.namprd11.prod.outlook.com
+ (2603:10b6:4:8::9)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: abdf06a0-cd3b-4820-c008-08d6d83d23b2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1849;
+x-ms-traffictypediagnostic: DM5PR11MB1849:
+x-microsoft-antispam-prvs: <DM5PR11MB1849E28B382124E03FDD74D2E0080@DM5PR11MB1849.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:765;
+x-forefront-prvs: 0037FD6480
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(39860400002)(346002)(136003)(199004)(189003)(229853002)(6506007)(386003)(476003)(6436002)(6512007)(31686004)(2616005)(102836004)(446003)(31696002)(53546011)(66066001)(86362001)(11346002)(71190400001)(256004)(71200400001)(26005)(486006)(4326008)(6246003)(2501003)(68736007)(6486002)(53936002)(186003)(8936002)(107886003)(36756003)(76176011)(2906002)(99286004)(5660300002)(54906003)(110136005)(81156014)(25786009)(73956011)(66946007)(52116002)(66556008)(66476007)(66446008)(64756008)(478600001)(14454004)(6116002)(81166006)(14444005)(316002)(305945005)(3846002)(72206003)(8676002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1849;H:DM5PR11MB1658.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UKbCpzJZIEZvmXhy8nWxxlaupGkhj3Vi3POTej6fGSMz5iAxTrC4muznmFGm6fU6BEtRSNWkphSsmqgkGhFj7JK38sopQfEHIbz3RSYrMuRv0j41rD06NE2+SctA+4fJaaEri1bVkztyjEAOwxrdWApGT85/O2umUh4ZTkcBgrK2PLPI/LHufAHVoy2huKY/ii+Id1COcTxwlOIpL9Qzfhm1ZRXeQCeQAuHLpvdsc9wUUbu+C4NWNTTD1/046QGryp3f0a/XVccR/+w7lVs1cazJJ0kw6c1RpGjXBnYxIdzVknagKvipmNLOAi/VqPLeqsCr/U+rymZi13rCQJfoQ6HsjlQZNF0chH1MaiwL+79XktrLG52ZeDzNFghtCpU6YbKaeglDlQ+EH4oV/Lw80hUq/CBt7oUlELMB4Q7XexM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <398B1A0F0F35F64687BFA9C51DFFDEF4@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-CrossTenant-Network-Message-Id: abdf06a0-cd3b-4820-c008-08d6d83d23b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 07:24:02.5307
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1849
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-
-> On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
->> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
->> > On Tue, May 07, 2019 at 01:35:58PM +0200, Esben Haabendal wrote:
->> >> Lee Jones <lee.jones@linaro.org> writes:
->> >> > On Thu, 02 May 2019, Esben Haabendal wrote:
->> >> >
->> >> >> Could you help clarify whether or not this patch is trying to do
->> >> >> something odd/wrong?
->> >> >> 
->> >> >> I might be misunderstanding Andy (probably is), but the discussion
->> >> >> revolves around the changes I propose where I change the serial8250
->> >> >> driver to use platform_get_resource() in favour of
->> >> >> request_mem_region()/release_mem_region().
->> >> >
->> >> > Since 'serial8250' is registered as a platform device, I don't see any
->> >> > reason why it shouldn't have the capability to obtain its memory
->> >> > regions from the platform_get_*() helpers.
->> >> 
->> >> Good to hear.  That is exactly what I am trying do with this patch.
->> >> 
->> >> @Andy: If you still don't like my approach, could you please advice an
->> >> acceptable method for improving the serial8250 driver to allow the use
->> >> of platform_get_*() helpers?
->> >
->> > I still don't get why you need this.
->> 
->> Because platform_get_resource() is a generally available and useful
->> helper function for working with platform_device resources, that the
->> current standard serial8250 driver does not support.
->> 
->> I am uncertain if I still haven't convinced you that current serial8250
->> driver does not work with platform_get_resource(), or if you believe
->> that it really should not support it.
->
-> I believe there is no need to do this support.
->
-> Most of the platform code that uses it is quite legacy,
-
-So all code that use/support platform_get_resource() is legacy code?
-
-commit 7945f929f1a77a1c8887a97ca07f87626858ff42
-Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed Feb 20 11:12:39 2019 +0000
-
-    drivers: provide devm_platform_ioremap_resource()
-    
-    There are currently 1200+ instances of using platform_get_resource()
-    and devm_ioremap_resource() together in the kernel tree.
-    
-    This patch wraps these two calls in a single helper. Thanks to that
-    we don't have to declare a local variable for struct resource * and can
-    omit the redundant argument for resource type. We also have one
-    function call less.
-    
-    Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-    Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-It does not looks quite dead to me.
-
-> and all under arch/
-> ideally should be converted to use Device Tree.
-
-When do you expect arch/x86 to be converted to device tree?
-
->> > If it's MFD, you may use "serial8250" with a given platform data like
->> > dozens of current users do.
->> 
->> There is only one in-tree mfd driver using "serial8250", the sm501.c
->> driver.  And that driver predates the mfd framework (mfd-core.c) by a
->> year, and does not use any of the mfd-core functionality.
->
-> So, does it have an issue?
-
-I don't have hardware so I can test it, but I assume that it is
-working.
-
-It is ignoring framework code (mfd-core), that is implemented to await
-re-inventing the wheel for each and every mfd driver.  If that is an
-issue, then yes, sm501.c does have an issue and could be improved/fixed.
-
->> I want to use the mfd-core provided handling of resource splitting,
->> because it makes it easier to handle splitting of a single memory
->> resource as defined by a PCI BAR in this case.  And the other drivers I
->> need to use all support/use platform_get_resource(), so it would even
->> have an impact on the integration of that if I cannot use mfd resource
->> splitting with serial8250.
->
-> I tired to repeat, that is OKAY! You *may* split and supply resources to the
-> drivers, nothing prevents you to do that with current code base.
->
-> Do you see any problem with that? What is that problem?
->
-> If you would like utilize serial8250, just provide a platform data for
-> it.
-
-I fear we are coming to an end here.
-
-I don't seem to be able to break through to you, to get you to
-understand the issue here.
-
-I want to write a simple and elegant mfd driver, using mfd-core
-framework (the mfd_add_devices() function call to be specific).  I don't
-want to reimplement similar functionality in the mfd driver.
-
-The other drivers I need all work fine with this, but serial8250 does
-not.
-
-As I understand Lee Jones, he seem to agree with me, so could you
-please, please consider that I might not be totally on crack, and might
-actually have brough forward a valid proposition.
-
->> > Another approach is to use 8250 library, thus, creating a specific
->> > glue driver (like all 8250_* do).
->> 
->> As mentioned, I think this is a bad approach, and I would prefer to
->> improve the "serial8250" driver instead.  But if you insist, what should
->> I call such a driver?  It needs a platform_driver name, for use when
->> matching with platform_device devices.  And it would support exactly the
->> same hardware as the current "serial8250" driver.
->
-> If you need some specifics, you create a driver with whatever name
-> suits the IP in question. Nevertheless, if it's simple generic 8250, nothing
-> needs to be added, except platform data, see above.
-
-We are on repeat here.  I don't agree with you here.  I have a simple
-generic 8250 (16550A) compatible device, and cannot use it in a mfd
-driver using the standard mfd-core framework.
-
-The lacking of support for platform_get_resource() in the generic
-serial8250 driver is not a feature.  It should be supported, just as it
-is in several of the specialized 8250 drivers.
-
->> > Yes, I understand that 8250 driver is full of quirks and not modern
->> > approaches
->> > to do one or another thing. Unfortunately it's not too easy to fix it
->> > without
->> > uglifying code and doing some kind of ping-pong thru the conversion. I don't
->> > think it worth to do it in the current state of affairs. Though, cleaning up
->> > the core part from the quirks and custom pieces would make this task
->> > achievable.
->> 
->> I think it should be possible and worthwhile to improve serial8250
->> driver with support for using platform_device resources
->> (platform_get_resource() helper).
->
-> I simple can't understand why it's needed. What problem would it solve which
-> can't be solved with existing code base?
-
-On repeat again.  I have explained it way to many times, so I guess I
-must assume by now that you do not think that being able to use
-serial8250 together with mfd-core is something that should be solved.
-
->> If we could stop discussing if it is a proper thing to do, we could try
->> to find a good way to do it instead.
->
->> > Btw, what exact IP of UART do you have implemented there?
->> 
->> It is an XPS 16550 UART (v3.00a).
->> https://www.xilinx.com/support/documentation/ip_documentation/xps_uart16550.pdf
->
-> So, briefly looking at it I didn't find any deviations from a standard 16550a.
-
-Exactly. I am pretty sure I have said this more than once in this
-thread.  This IP is perfectly standard.  It would be completely wrong to
-write a specialized 8250 driver for this.
-
-But if I fail to find a way to get something merged which allows using
-the generic serial8250 driver with platform_get_resource(), I guess I
-need to handle this out-of-tree.  And anybody else needing/wanting to do
-the same would have to do that as well.
-
-> Also there are two drivers mentioned Xilinx, though I'm pretty sure it's not
-> your case.
->
-> Since you have more than one of them, it's even smaller to use current
-> infrastructure to enumerate them using only one serial8250 description.
-> See plenty examples in the Linux kernel, such as 8250_exar_st16c554.c.
-> That is what you may just modify for your needs and put inside your MFD.
-
-It would still mean that I would have revert to not using convenient and
-otherwise fully appropriate API calls like pci_request_regions() and
-mfd_add_devices().
-
-The mfd driver in question is for a PCI device.  Not being able to
-request the PCI regions seems silly.
-
-Not being able to register all child devices with the call introduced
-for that sole purpose also seems silly.
-
-/Esben
+T24gMTQvMDUvMjAxOSBhdCAwOToxNCwgTHVjYSBDZXJlc29saSB3cm90ZToNCj4gRXh0ZXJuYWwg
+RS1NYWlsDQo+IA0KPiANCj4gRXJyb3JzIGFyZSBuZWdhdGl2ZSBudW1iZXJzLiBVc2luZyAldSBz
+aG93cyB0aGVtIGFzIHZlcnkgbGFyZ2UgcG9zaXRpdmUNCj4gbnVtYmVycyBzdWNoIGFzIDQyOTQ5
+NjcyNzcgdGhhdCBkb24ndCBtYWtlIHNlbnNlLiBVc2UgdGhlICVkIGZvcm1hdA0KPiBpbnN0ZWFk
+LCBhbmQgZ2V0IGEgbXVjaCBuaWNlciAtMTkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWNhIENl
+cmVzb2xpIDxsdWNhQGx1Y2FjZXJlc29saS5uZXQ+DQoNCkluZGVlZCENCkFja2VkLWJ5OiBOaWNv
+bGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+ICAgZHJp
+dmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYyB8IDE2ICsrKysrKysrLS0tLS0t
+LS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0K
+PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWlu
+LmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IGluZGV4IGMw
+NDk0MTBiYzg4OC4uYmViZDliMWFlYjY0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
+cm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nh
+ZGVuY2UvbWFjYl9tYWluLmMNCj4gQEAgLTMzNDMsNyArMzM0Myw3IEBAIHN0YXRpYyBpbnQgbWFj
+Yl9jbGtfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrICoqcGNs
+aywNCj4gICAJCWlmICghZXJyKQ0KPiAgIAkJCWVyciA9IC1FTk9ERVY7DQo+ICAgDQo+IC0JCWRl
+dl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBnZXQgbWFjYl9jbGsgKCV1KVxuIiwgZXJyKTsN
+Cj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCBtYWNiX2NsayAoJWQpXG4i
+LCBlcnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0KPiBAQCAtMzM1Miw3ICsz
+MzUyLDcgQEAgc3RhdGljIGludCBtYWNiX2Nsa19pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
+KnBkZXYsIHN0cnVjdCBjbGsgKipwY2xrLA0KPiAgIAkJaWYgKCFlcnIpDQo+ICAgCQkJZXJyID0g
+LUVOT0RFVjsNCj4gICANCj4gLQkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCBo
+Y2xrICgldSlcbiIsIGVycik7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBn
+ZXQgaGNsayAoJWQpXG4iLCBlcnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0K
+PiBAQCAtMzM3MCwzMSArMzM3MCwzMSBAQCBzdGF0aWMgaW50IG1hY2JfY2xrX2luaXQoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKnBjbGssDQo+ICAgDQo+ICAgCWVy
+ciA9IGNsa19wcmVwYXJlX2VuYWJsZSgqcGNsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2
+X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBwY2xrICgldSlcbiIsIGVycik7DQo+
+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBlbmFibGUgcGNsayAoJWQpXG4iLCBl
+cnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBjbGtfcHJl
+cGFyZV9lbmFibGUoKmhjbGspOw0KPiAgIAlpZiAoZXJyKSB7DQo+IC0JCWRldl9lcnIoJnBkZXYt
+PmRldiwgImZhaWxlZCB0byBlbmFibGUgaGNsayAoJXUpXG4iLCBlcnIpOw0KPiArCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIGhjbGsgKCVkKVxuIiwgZXJyKTsNCj4gICAJ
+CWdvdG8gZXJyX2Rpc2FibGVfcGNsazsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBjbGtfcHJl
+cGFyZV9lbmFibGUoKnR4X2Nsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2X2VycigmcGRl
+di0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0eF9jbGsgKCV1KVxuIiwgZXJyKTsNCj4gKwkJZGV2
+X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0eF9jbGsgKCVkKVxuIiwgZXJyKTsN
+Cj4gICAJCWdvdG8gZXJyX2Rpc2FibGVfaGNsazsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBj
+bGtfcHJlcGFyZV9lbmFibGUoKnJ4X2Nsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSByeF9jbGsgKCV1KVxuIiwgZXJyKTsNCj4g
+KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSByeF9jbGsgKCVkKVxuIiwg
+ZXJyKTsNCj4gICAJCWdvdG8gZXJyX2Rpc2FibGVfdHhjbGs7DQo+ICAgCX0NCj4gICANCj4gICAJ
+ZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKCp0c3VfY2xrKTsNCj4gICAJaWYgKGVycikgew0KPiAt
+CQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIHRzdV9jbGsgKCV1KVxuIiwg
+ZXJyKTsNCj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0c3VfY2xr
+ICglZClcbiIsIGVycik7DQo+ICAgCQlnb3RvIGVycl9kaXNhYmxlX3J4Y2xrOw0KPiAgIAl9DQo+
+ICAgDQo+IEBAIC0zODY4LDcgKzM4NjgsNyBAQCBzdGF0aWMgaW50IGF0OTFldGhlcl9jbGtfaW5p
+dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrICoqcGNsaywNCj4gICAN
+Cj4gICAJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKCpwY2xrKTsNCj4gICAJaWYgKGVycikgew0K
+PiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIHBjbGsgKCV1KVxuIiwg
+ZXJyKTsNCj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBwY2xrICgl
+ZClcbiIsIGVycik7DQo+ICAgCQlyZXR1cm4gZXJyOw0KPiAgIAl9DQo+ICAgDQo+IA0KDQoNCi0t
+IA0KTmljb2xhcyBGZXJyZQ0K
