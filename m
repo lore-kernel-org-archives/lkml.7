@@ -2,117 +2,190 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEFFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1E8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5582168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71D6D2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:06:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pKmnvzEB"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="MeFq+tmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfENTFw (ORCPT
+        id S1727758AbfENTGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:05:52 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:32885 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfENTFv (ORCPT
+        Tue, 14 May 2019 15:06:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39716 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727687AbfENTGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:05:51 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d9so30407wrx.0;
-        Tue, 14 May 2019 12:05:50 -0700 (PDT)
+        Tue, 14 May 2019 15:06:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id f1so44215lfl.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:cc:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=9pfI3srMSByRODiYcZr4ZtqF03RJNVK9yMTlRMMaTfQ=;
-        b=pKmnvzEB/YevalzL3D4GOPHycFYANAZx8DsdP7qscjQC8l9kIKvTzSREC8owpzMwcW
-         viucoLH1r0jh/MncSEpmVVSQSPJqar1kPsVer1xylbvQQRxdaVrmiea+A5oasrcEjlBf
-         WyuxhM9ej+EflZqlGtHl8Fme1VoVdoAwRABgHaoAqNGzqRda0pkk+CODW4/OJmFBUVbW
-         aqYmMut1d4Hv/xV4L2VYVKuNu7WQ55BfoK0PfSjudxhSD5zC1TJ//saw3c4I8Bh07VnU
-         sf+HBQs0y0cqQUQRiva1yYWsvN/Om8XMdaiwRLzIyI7IgcMxZiu2VSIFNldqMEZQNaQ9
-         71HQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:cc:references:message-id:date
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=9pfI3srMSByRODiYcZr4ZtqF03RJNVK9yMTlRMMaTfQ=;
-        b=rhw63wD+EyXWhQcGt7NPXhXastXfDm3QZ2+0YUbOo1QbQ/zDshk9EVv51U6rohJg/a
-         ud3HGfxY2eaFtB9Hgsh9DdqkaQdJEcyLB9Rkoy6YLCqRjrLEQKSpNxi1z1wd/8hkCkBG
-         3Vq/nKdgCr8FX1PoK/AjSuIc4VE9k4TiXB7LZDqsiEC2wvR+3LNrnjhdY1SV3sfsBUzI
-         0+4kFe1WuqSHqRVA6Af1GqS6gT3oA43dDEprOE3bFCnjvTAOHtzVKz/y8Td3wNlTFsyg
-         Yz43b/Q/T1R5vH42EjWBvYGq/emsk4Vh3o+VqVoPTL4S9L1pa3klY7S1LbGLGiUquhCT
-         ipGQ==
-X-Gm-Message-State: APjAAAWPqxguxC2Dr5cjYy+QxOw7yL9fLwlP0f45EfyIDCEnROdINh9c
-        aqXdi2+9UhaN91vMoUypmue3NnVW
-X-Google-Smtp-Source: APXvYqwwaILkvlFnNKLGMYnZtPK7bU9k+Ym3LnugsCnNJ/JoamOttTiPRE49z/Ea9+psKnWxXW4Adw==
-X-Received: by 2002:a5d:53c6:: with SMTP id a6mr21892400wrw.232.1557860749292;
-        Tue, 14 May 2019 12:05:49 -0700 (PDT)
-Received: from [192.168.20.141] ([194.99.104.18])
-        by smtp.gmail.com with ESMTPSA id n2sm30109774wra.89.2019.05.14.12.05.47
+        bh=SPWmKpq6VDGUfyOzmQTA3tI7BJu0RPpA6WUx4ql1p0M=;
+        b=MeFq+tmDozlVwHUa/pirnaQUyzHzhiC922oLEAd3VZSh7SQs/8lTjYBKazPc8OI/3f
+         aD8IoPZ8mJx5iLrL+MCV/S9RnL1ffUq9tgdO6ubADK0wQj3lx2tIb2T9eO5FVg9jcnEV
+         l48gJnNLj8cFsXg356nvAolyYevr0DwKfyW0dhSkz3vR3T0wCBP7RPDLfxZt50xi69l5
+         u5zLWcDHJcPmasR54xK+MBfniS3Mh21UfWPTl7N6KLj8pwkK/rhJg8/W7QjH7+ex66Dm
+         OamrI2TSVd9HUuywpc6pkUClP5OK0UHg6vlo0K4S2IF+L5a4DN5OMKLT2ucSF52OXx9s
+         Sxkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SPWmKpq6VDGUfyOzmQTA3tI7BJu0RPpA6WUx4ql1p0M=;
+        b=SuZNL8l2YioOlLb+xO48V4boGOJROkmJQy9Ku6QkgIfE07jdNeZQnYtn2rggycSt6m
+         dRV69pk/cZ0H/+ORlOMstLQ6pEvOvuhFVVuqHfMKw93YQECJriclG5+o1rv919rIFl/u
+         JmA8v4WvSfBpEQ0S/40IS3hBWET2KXDQaBlOqCNdXFrbll+KCKWQMvCGyA4HdW1tE6yS
+         OAc/iDlbdzgATLrNgmzfb63lFEyQFL7v20/UjfYrucs05MLTxL0VSr22bop3b39/vmiE
+         LSIPIgRCa75qrkUU0RiwMUfNQSIRAkas7fCwPnnWltnhXHvX7xoP/AvpY+romcYoc1Ps
+         yuNA==
+X-Gm-Message-State: APjAAAVfDy5GRhVXdpBJUIRhIL5QCOd8oyvD4AJrSWHIy2VBNJQUmFQC
+        qbOliYsBYzJYnn9CXCHXP8ngeg==
+X-Google-Smtp-Source: APXvYqwRZdUgwLeaMIdAgHuhbJILXHkJsRzfX0+TBZ94IjzXws/h3v/fHnQlT4e7PoL8NqcM0zp2iA==
+X-Received: by 2002:a19:1dc3:: with SMTP id d186mr17340891lfd.101.1557860800826;
+        Tue, 14 May 2019 12:06:40 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.86.127])
+        by smtp.gmail.com with ESMTPSA id j19sm3969610lfj.52.2019.05.14.12.06.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 12:05:48 -0700 (PDT)
-Subject: [PATCH v4 11/13] platform/x86: asus-wmi: Enhance detection of thermal
- data
-From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Daniel Drake <drake@endlessm.com>,
-        Chris Chiu <chiu@endlessm.com>,
-        acpi4asus-user@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
-Message-ID: <f6fe0ba2-309f-0d64-3fc8-8bc8727a40b5@gmail.com>
-Date:   Tue, 14 May 2019 21:05:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 12:06:40 -0700 (PDT)
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        zhengxunli@mxic.com.tw
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+ <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
+ <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
+ <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
+ <3d334751-8fd4-7db1-9deb-e6c94936df13@cogentembedded.com>
+ <OF4ABCC306.B053BA23-ON482583E0.000F480C-482583E0.000FAD4A@mxic.com.tw>
+ <3971c669-9095-9d18-d029-37f9663a54b2@cogentembedded.com>
+ <OF58AAFF49.C4593DEB-ON482583E1.001D551E-482583E1.001F089D@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <9014077e-2648-adad-72c1-baf834f5a511@cogentembedded.com>
+Date:   Tue, 14 May 2019 22:06:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
+In-Reply-To: <OF58AAFF49.C4593DEB-ON482583E1.001D551E-482583E1.001F089D@mxic.com.tw>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The obviously wrong value 1 for temperature device ID in this driver is
-returned by at least some devices, including TUF Gaming series laptops,
-instead of 0 as expected previously. Observable effect is that a
-temp1_input in hwmon reads temperature near absolute zero.
+Hello!
 
-Consider 0.1 K an erroneous value in addition to 0 K.
+On 04/19/2019 08:38 AM, masonccyang@mxic.com.tw wrote:
 
-Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
----
- drivers/platform/x86/asus-wmi.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+>> >> >> >> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+>> >> >> >>
+>> >> >> >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> >> >> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> >> >> > [...]
+>> >> >> >> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-
+>> >> renesas-rpc.c
+>> >> >> >> new file mode 100644
+>> >> >> >> index 0000000..037f273
+>> >> >> >> --- /dev/null
+>> >> >> >> +++ b/drivers/spi/spi-renesas-rpc.c
+>> >> >> > [...]
+>> >> >> >> +static int rpc_spi_probe(struct platform_device *pdev)
+>> >> >> >> +{
+>> >> >> >> +   struct spi_controller *ctlr;
+>> >> >> >> +   struct rpc_mfd *rpc_mfd = dev_get_drvdata(pdev->dev.parent);
+>> >> >> >> +   struct rpc_spi *rpc;
+>> >> >> >> +   int ret;
+>> >> >> >> +
+>> >> >> >> +   ctlr = spi_alloc_master(&pdev->dev, sizeof(*rpc));
+>> >> >> >> +   if (!ctlr)
+>> >> >> >> +      return -ENOMEM;
+>> >> >> >> +
+>> >> >> >> +   platform_set_drvdata(pdev, ctlr);
+>> >> >> >> +
+>> >> >> >> +   rpc = spi_controller_get_devdata(ctlr);
+>> >> >> >> +
+>> >> >> >> +   ctlr->dev.of_node = pdev->dev.of_node;
+>> >> >> > [...]
+>> >> >> >> +
+>> >> >> >> +   pm_runtime_enable(&pdev->dev);
+>> >> >> >> +   ctlr->auto_runtime_pm = true;
+>> >> >> >
+>> >> >> >    I think this line no longer works as expected with the new
+>> >> >> probing scheme.
+>> >>
+>> >>    That's because we added another (SPI) device under our MFD.
+>> >
+>> > Do you mean just to remove one line
+>> > ctlr->auto_runtime_pm = true;
+>> > ?
+> 
+> how did you test it ?
+> what is your testing flow ?
+> 
+>>    No, you should explicitly call RPM for the MFD (not the SPI device).
+> 
+> okay, patch RPM to RPC MFD and will remove SPI RPM enable part.
+> 
+>>
+>> >> >> > Have you tested reading? v8 patch still works while v9 patches
+>> >> >> > hang on doing:
+>> >> >> >
+>> >> >> > $ cat /dev/mtd<n>...
+>> >> >>
+>> >> >>    Sorry, 'od -x', not 'cat'.
+>> >> >
+>> >> > root@draak:/# cat /proc/mtd
+>> >> > dev:    size   erasesize  name
+>> >> > mtd0: 00040000 00001000 "Bank 1 - Boot parameter"
+>> >> > mtd1: 00140000 00001000 "Bank 1 - Loader-BL2"
+>> >> > mtd2: 00040000 00001000 "Bank 1 - Certification"
+>> >> > mtd3: 00080000 00001000 "Bank 1 - ARM Trusted FW"
+>> >> > mtd4: 00400000 00001000 "Bank 1 - Reserved-1"
+>> >> > mtd5: 00300000 00001000 "Bank 1 - U-Boot"
+>> >> > mtd6: 00200000 00001000 "Bank 1 - Reserved-2"
+>> >> > mtd7: 00480000 00001000 "Bank 1 - Splash"
+>> >> > mtd8: 00040000 00001000 "Bank 1 - Device Tree"
+>> >> > root@draak:/# od -x /dev/mtd1
+>> >> > 0000000 0000 d280 0001 d280 0002 d280 0003 d280
+>> >> > 0000020 0004 d280 0005 d280 0006 d280 0007 d280
+>> >> > 0000040 0008 d280 0009 d280 000a d280 000b d280
+>> >> > 0000060 000c d280 000d d280 000e d280 000f d280
+>> >> > 0000100 0010 d280 0011 d280 0012 d280 0013 d280
+>> >> > 0000120 0014 d280 0015 d280 0016 d280 0017 d280
+>> >> > 0000140 0018 d280 0019 d280 001a d280 001b d280
+>> >> > 0000160 001c d280 001d d280 001e d280 1000 d53e
+>> >> > 0000200 f800 9266 1000 d51e 3fdf d503 3ba0 1005
+>> >>
+>> >>    Still hangs for me. After I patches spi-mem.c and the driver to
+>> >> call RPM for the MFD, it started working again. Perhaps, that clock>> >> is still enabled on your target. What does the following print (for
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index bd9eb00f3a27..ffb4e2530ea4 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -1428,8 +1428,11 @@ static umode_t asus_hwmon_sysfs_is_visible(struct kobject *kobj,
- 		else
- 			ok = fan_attr <= asus->asus_hwmon_num_fans;
- 	} else if (dev_id == ASUS_WMI_DEVID_THERMAL_CTRL) {
--		/* If value is zero, something is clearly wrong */
--		if (!value)
-+		/*
-+		 * If the temperature value in deci-Kelvin is near the absolute
-+		 * zero temperature, something is clearly wrong
-+		 */
-+		if (value == 0 || value == 1)
- 			ok = false;
- 	} else if (fan_attr <= asus->asus_hwmon_num_fans && fan_attr != -1) {
- 		ok = true;
--- 
-2.17.1
+   Even with these issues worked around, I still see strange behavior on
+writes, e.g. after I mount JFFS2 partition, remove 1 file, unmount, re-mount,
+and mount again, the removed file is back! :-/
 
+[...]
+
+> thanks & best regards,
+> Mason
+
+MBR, Sergei
