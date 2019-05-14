@@ -2,165 +2,115 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D9CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C66C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAEC20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A6502085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfENKFg (ORCPT
+        id S1726447AbfENKII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:05:36 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:12085 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726369AbfENKFf (ORCPT
+        Tue, 14 May 2019 06:08:08 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:34906 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726075AbfENKIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:05:35 -0400
-X-UUID: ed43b230cdd94b658c5208c3594f28a3-20190514
-X-UUID: ed43b230cdd94b658c5208c3594f28a3-20190514
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <lecopzer.chen@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 595000805; Tue, 14 May 2019 18:05:29 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 18:05:27 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 18:05:27 +0800
-From:   Lecopzer Chen <lecopzer.chen@mediatek.com>
-To:     <sre@kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <lecopzer.chen@mediatek.com>
-CC:     <srv_heupstream@mediatek.com>, <yj.chiang@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] test_power: Add CURRENT and CHARGE_COUNTER properties
-Date:   Tue, 14 May 2019 18:04:58 +0800
-Message-ID: <1557828298-16591-1-git-send-email-lecopzer.chen@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Tue, 14 May 2019 06:08:07 -0400
+Received: by mail-vs1-f67.google.com with SMTP id q13so5084946vso.2;
+        Tue, 14 May 2019 03:08:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dUhPIQQJZs5Vh3eweO1WtOgzVtv83v6N5NsZQ6JZ7+c=;
+        b=YxNiTXXHoDBFpFTaWS7OqKMlXpPl8foshheVv3W3yV5+1Ss2Os8TxkKZHNQuDYaMys
+         WqMr06byaneCZaHr5b2/T1VPn6HHKFfFEW+nzSZSkyODGX8NaY/SxIeT7OFU8NKSHLQz
+         29GrbXgDKHkJ97lGVCCF29j4lyWKjnCEhYymxNtWbNdHBR1HlSfk8P/3AtmEzm8xzEoR
+         s7h4FbAORuytl3hOST6tTBF/nmlOnh2h3iPBVyzGB+KP1F9FIbcpACOlMtv4QNnXov8S
+         y4QcbJTBmxkMN2l3YARFcSdyiLCc4nRuicrK39wAyOu8GEsfInzGnyUaZ8oHmRa5UhNj
+         gvqw==
+X-Gm-Message-State: APjAAAV69evRn/yCRv/Iu+4e1Jgw/tLccKBbsKt9mti0n+v+rAAtRrPi
+        JdvJVCvgGCYSLwYtOT8X8EvsgUqpKJaEb+CZ1sE=
+X-Google-Smtp-Source: APXvYqyKB1cL40577bS36WrKoIvy12plVmfKdngymvdB6XDyb6Wgl/Dtk2X3JeqP2l9zunBcmzvTb9DUCwWc+RrOsBs=
+X-Received: by 2002:a67:fdd4:: with SMTP id l20mr12127723vsq.63.1557828486542;
+ Tue, 14 May 2019 03:08:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw>
+ <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw>
+ <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com>
+ <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw>
+ <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell>
+ <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw>
+ <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw>
+ <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com>
+ <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw>
+ <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
+In-Reply-To: <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 May 2019 12:07:54 +0200
+Message-ID: <CAMuHMdVyfnO+wTHNrjjvJoqopC_xC0+sxSY+9a=pv-Wf=w6aCQ@mail.gmail.com>
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF MFD bindings
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>, zhengxunli@mxic.com.tw
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Lecopzer Chen" <lecopzer.chen@mediatek.com>
+Hi Mason,
 
-Emulate battery current (variable) and battery CHARGE_COUNTER
-(same as battery_capacity) properties.
+On Tue, May 14, 2019 at 11:46 AM <masonccyang@mxic.com.tw> wrote:
+> > >> There's precedence for such constructs being an MFD: please see
+> > >> drivers/mfd/at91-usart.c, which registers a single MFD cell for
+> > >           second for the direct mapping read mode and
+> > >           third for the write buffer area.
+> > >   - reg-names: should contain "regs", "dirmap" and "wbuf"
+> > >   - clocks: should contain 1 entries for the module's clock
+> > >   - clock-names: should contain "rpc"
+> >
+> >    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not sure
+> yet)...
+>
+> Need it ?
+> RPCD2 is derived from RPC and it's value is half of RPC,
+> i.e., RPC = 160MHz, RPCD2 = 80 MHz
 
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc: YJ Chiang <yj.chiang@mediatek.com>
+That hierarchy depends on the actual SoC, right?
+AFAIU, both are derived from RPCSRC, and can be controlled individually
+on some SoCs.
 
----
- drivers/power/supply/test_power.c | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+BTW, I still haven't seen a patch for drivers/clk/renesas/r8a77995-cpg-mssr.c
+adding RPC-related clocks, so I have no idea what's the Linux view of the
+hierarchy on your system.
 
-diff --git a/drivers/power/supply/test_power.c b/drivers/power/supply/test_power.c
-index 57246cdbd042..9f85060c84de 100644
---- a/drivers/power/supply/test_power.c
-+++ b/drivers/power/supply/test_power.c
-@@ -36,6 +36,7 @@ static int battery_present		= 1; /* true */
- static int battery_technology		= POWER_SUPPLY_TECHNOLOGY_LION;
- static int battery_capacity		= 50;
- static int battery_voltage		= 3300;
-+static int battery_current		= 1600;
- 
- static bool module_initialized;
- 
-@@ -101,6 +102,7 @@ static int test_power_get_battery_property(struct power_supply *psy,
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
- 	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
- 		val->intval = battery_capacity;
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
-@@ -117,6 +119,10 @@ static int test_power_get_battery_property(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
- 		val->intval = battery_voltage;
- 		break;
-+	case POWER_SUPPLY_PROP_CURRENT_AVG:
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		val->intval = battery_current;
-+		break;
- 	default:
- 		pr_info("%s: some properties deliberately report errors.\n",
- 			__func__);
-@@ -138,6 +144,7 @@ static enum power_supply_property test_power_battery_props[] = {
- 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
- 	POWER_SUPPLY_PROP_CHARGE_FULL,
- 	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_COUNTER,
- 	POWER_SUPPLY_PROP_CAPACITY,
- 	POWER_SUPPLY_PROP_CAPACITY_LEVEL,
- 	POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG,
-@@ -147,6 +154,8 @@ static enum power_supply_property test_power_battery_props[] = {
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- 	POWER_SUPPLY_PROP_TEMP,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_AVG,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
- 
- static char *test_power_ac_supplied_to[] = {
-@@ -450,6 +459,21 @@ static int param_set_battery_voltage(const char *key,
- 
- #define param_get_battery_voltage param_get_int
- 
-+static int param_set_battery_current(const char *key,
-+					const struct kernel_param *kp)
-+{
-+	int tmp;
-+
-+	if (1 != sscanf(key, "%d", &tmp))
-+		return -EINVAL;
-+
-+	battery_current = tmp;
-+	signal_power_supply_changed(test_power_supplies[TEST_BATTERY]);
-+	return 0;
-+}
-+
-+#define param_get_battery_current param_get_int
-+
- static const struct kernel_param_ops param_ops_ac_online = {
- 	.set = param_set_ac_online,
- 	.get = param_get_ac_online,
-@@ -490,6 +514,11 @@ static const struct kernel_param_ops param_ops_battery_voltage = {
- 	.get = param_get_battery_voltage,
- };
- 
-+static const struct kernel_param_ops param_ops_battery_current = {
-+	.set = param_set_battery_current,
-+	.get = param_get_battery_current,
-+};
-+
- #define param_check_ac_online(name, p) __param_check(name, p, void);
- #define param_check_usb_online(name, p) __param_check(name, p, void);
- #define param_check_battery_status(name, p) __param_check(name, p, void);
-@@ -498,6 +527,7 @@ static const struct kernel_param_ops param_ops_battery_voltage = {
- #define param_check_battery_health(name, p) __param_check(name, p, void);
- #define param_check_battery_capacity(name, p) __param_check(name, p, void);
- #define param_check_battery_voltage(name, p) __param_check(name, p, void);
-+#define param_check_battery_current(name, p) __param_check(name, p, void);
- 
- 
- module_param(ac_online, ac_online, 0644);
-@@ -528,6 +558,9 @@ MODULE_PARM_DESC(battery_capacity, "battery capacity (percentage)");
- module_param(battery_voltage, battery_voltage, 0644);
- MODULE_PARM_DESC(battery_voltage, "battery voltage (millivolts)");
- 
-+module_param(battery_current, battery_current, 0644);
-+MODULE_PARM_DESC(battery_current, "battery current (milliampere)");
-+
- MODULE_DESCRIPTION("Power supply driver for testing");
- MODULE_AUTHOR("Anton Vorontsov <cbouatmailru@gmail.com>");
- MODULE_LICENSE("GPL");
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.18.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
