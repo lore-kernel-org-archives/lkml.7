@@ -2,186 +2,204 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E983C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2FAC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 690FA2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E602147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJsDKL3+"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l8ck8zkg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="guEDP78f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfENKyz (ORCPT
+        id S1726324AbfENK4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:54:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32792 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfENKyw (ORCPT
+        Tue, 14 May 2019 06:56:38 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38334 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENK4h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:54:52 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 66so14792366otq.0;
-        Tue, 14 May 2019 03:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QtB5Rs/peEa4JN+D+iPr59JmMiQWnsnfd52Mq2rk5Fc=;
-        b=RJsDKL3+Kry+B8IxmAwZ/vkcvpAaZsiTayf7bGzVyoBmjaVPIPTy6hYnyGjK3EPmI5
-         0dkYQAXR/6f5xfTqU0cT+sgI+EAf38OalOkteS7YBoR7WfHHZmXOyOCyNDjxA3cvWd2d
-         9S4V2K2oWDeZnzSC6nxRDEiZI22X8Y5JiE9fmvbdJ7rfDjaWSFieKVaquT0XPwPCxeMk
-         Wjk1RS6dm+cqTciREvRf4v97LERVEiYepfpEj8ylrbLMbzf6/p1C0sIqtadUW1V+k9TA
-         KBO4zS7HKLrY/nxQ62xfsPS4fk+wr3md8lz10+V8sYXiA9VjnPEAVRvAij8OGC+yjNRv
-         W0ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QtB5Rs/peEa4JN+D+iPr59JmMiQWnsnfd52Mq2rk5Fc=;
-        b=PCA9mO3c+Pt6i0Kd6JviphUHwzxCJCDO4gWwesHRSvyifOd9xhZ7jEFSq6689Jzemy
-         +RUhybPxecZZ/294+o1oJmaBHBpjF1rYrHXS1qLtZsNq6THcP8/x06ebYXZwQXxhz+hC
-         cGnim6Gm9emCtVP8UZAYUHqJCPz+pcM04A8yIDSfpZRZqVL/u6WWN3nGPBOZEIifedva
-         8knnajhUxWxvy+Jqp+7mJZSmCotvnf2zNlQg8WUK+7dkAThAIXtUmsX2uqCw7an6ocIf
-         7APK3n8rWgNS1KqmGUvnfd59ETAJF6EhDZKzFZyfFPbWERt9HNSzsEqx/iNTG55exvA0
-         k6xQ==
-X-Gm-Message-State: APjAAAUQ+xnDYaUOazWfG8FeoTEZ6sIw1QXvIBTyR2hFbIWl4Z6Vkhc3
-        kU7IJpYUPWGlxR54MbOVleYhjkPa1wgqSFg0ahQ=
-X-Google-Smtp-Source: APXvYqzGzg2Ya/Iw5LDBCkQejuZY4jHMDMNe2KOKzz+WDUQpKWBSS25E8Ee7CzBzY4e9gtDoeWLGqwc2gVWxNpBbM3g=
-X-Received: by 2002:a9d:7343:: with SMTP id l3mr19766347otk.63.1557831291504;
- Tue, 14 May 2019 03:54:51 -0700 (PDT)
+        Tue, 14 May 2019 06:56:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 45C57608A5; Tue, 14 May 2019 10:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557831396;
+        bh=fGqna/CZgD5q6L36JKE1ZYhzI779tZesCVLAnPuLHXw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=l8ck8zkgjTB4IZijbSEFGgD8U0g8eSWBuG8Ov+mhOAbphGXlZt/HeaLtT11ZG/B5U
+         yTxgneLPpbhfNH8JTzwFHF1cx23Cn17HEOnQf5yIAQTKztKBu1+sXqVdf/voekfAmR
+         O3K7r6GAasIBpk4bpU8/3cweTnscciVwKXyouOhs=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5326B608A5;
+        Tue, 14 May 2019 10:56:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557831395;
+        bh=fGqna/CZgD5q6L36JKE1ZYhzI779tZesCVLAnPuLHXw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=guEDP78frWjR3ZrDHzt7F5g2aj4vTdEl09DANs909ufyyQAeOxUHYEDYKyVJ4Ptsv
+         07HlrBbCMiCopen5uATMCObhvkV2ZKN48uhnncF65tBwPmPtrl5PQuvMyTArU6PQy8
+         wEI74TB96CtQQQFKLh4gV9Li5CUeDxsasBaqyljo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5326B608A5
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] driver core: Fix use-after-free and double free on glue
+ directory
+To:     Muchun Song <smuchun@gmail.com>, gregkh@linuxfoundation.org,
+        rafael@kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        prsood@codeaurora.org
+References: <20190423143258.96706-1-smuchun@gmail.com>
+ <24b0fff3775147c04b006282727d94fea7f408b4.camel@kernel.crashing.org>
+ <CAPSr9jHhwASv7=83hU+81mC0JJyuyt2gGxLmyzpCOfmc9vKgGQ@mail.gmail.com>
+ <a37e7a49c3e7fa6ece2be2b76798fef3e51ade4e.camel@kernel.crashing.org>
+ <CAPSr9jHCVCHNK+AmKkUBgs4dPC0UC5KdYKqMinkauyL3OL6qrQ@mail.gmail.com>
+ <79fbc203bc9fa09d88ab2c4bff8635be4c293d49.camel@kernel.crashing.org>
+ <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <d9495ef6-17bc-dc50-f5fe-fb5ff20edfde@codeaurora.org>
+Date:   Tue, 14 May 2019 16:26:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1557401361-3828-1-git-send-email-wanpengli@tencent.com>
- <1557401361-3828-4-git-send-email-wanpengli@tencent.com> <20190513195417.GM28561@linux.intel.com>
- <CANRm+CxVRMQF9yHoqDMJR9FROGtLwYgaQXPqu++S7Juneh2vtw@mail.gmail.com>
-In-Reply-To: <CANRm+CxVRMQF9yHoqDMJR9FROGtLwYgaQXPqu++S7Juneh2vtw@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 14 May 2019 18:56:04 +0800
-Message-ID: <CANRm+Czg-0m1dV1DVfqSTr89Xrq169xx3LqEGTYH0mmjafvhMQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] KVM: LAPIC: Optimize timer latency further
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAPSr9jHw9hgAZo2TuDAKdSLEG1c6EtJG005MWxsxfnbsk1AXow@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 at 09:45, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Tue, 14 May 2019 at 03:54, Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Thu, May 09, 2019 at 07:29:21PM +0800, Wanpeng Li wrote:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > >
-> > > Advance lapic timer tries to hidden the hypervisor overhead between h=
-ost
-> > > timer fires and the guest awares the timer is fired. However, it just=
- hidden
-> > > the time between apic_timer_fn/handle_preemption_timer -> wait_lapic_=
-expire,
-> > > instead of the real position of vmentry which is mentioned in the ori=
-gnial
-> > > commit d0659d946be0 ("KVM: x86: add option to advance tscdeadline hrt=
-imer
-> > > expiration"). There is 700+ cpu cycles between the end of wait_lapic_=
-expire
-> > > and before world switch on my haswell desktop, it will be 2400+ cycle=
-s if
-> > > vmentry_l1d_flush is tuned to always.
-> > >
-> > > This patch tries to narrow the last gap, it measures the time between
-> > > the end of wait_lapic_expire and before world switch, we take this
-> > > time into consideration when busy waiting, otherwise, the guest still
-> > > awares the latency between wait_lapic_expire and world switch, we als=
-o
-> > > consider this when adaptively tuning the timer advancement. The patch
-> > > can reduce 50% latency (~1600+ cycles to ~800+ cycles on a haswell
-> > > desktop) for kvm-unit-tests/tscdeadline_latency when testing busy wai=
-ts.
-> > >
-> > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > > Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> > > Cc: Liran Alon <liran.alon@oracle.com>
-> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > ---
-> > >  arch/x86/kvm/lapic.c   | 23 +++++++++++++++++++++--
-> > >  arch/x86/kvm/lapic.h   |  8 ++++++++
-> > >  arch/x86/kvm/vmx/vmx.c |  2 ++
-> > >  3 files changed, 31 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > index e7a0660..01d3a87 100644
-> > > --- a/arch/x86/kvm/lapic.c
-> > > +++ b/arch/x86/kvm/lapic.c
-> > > @@ -1545,13 +1545,19 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
-> > >
-> > >       tsc_deadline =3D apic->lapic_timer.expired_tscdeadline;
-> > >       apic->lapic_timer.expired_tscdeadline =3D 0;
-> > > -     guest_tsc =3D kvm_read_l1_tsc(vcpu, rdtsc());
-> > > +     guest_tsc =3D kvm_read_l1_tsc(vcpu, (apic->lapic_timer.measure_=
-delay_done =3D=3D 2) ?
-> > > +             rdtsc() + apic->lapic_timer.vmentry_delay : rdtsc());
-> > >       trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_dead=
-line);
-> > >
-> > >       if (guest_tsc < tsc_deadline)
-> > >               __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
-> > >
-> > >       adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
-> > > +
-> > > +     if (!apic->lapic_timer.measure_delay_done) {
-> > > +             apic->lapic_timer.measure_delay_done =3D 1;
-> > > +             apic->lapic_timer.vmentry_delay =3D rdtsc();
-> > > +     }
-> > >  }
-> > >
-> > >  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> > > @@ -1837,6 +1843,18 @@ static void apic_manage_nmi_watchdog(struct kv=
-m_lapic *apic, u32 lvt0_val)
-> > >       }
-> > >  }
-> > >
-> > > +void kvm_lapic_measure_vmentry_delay(struct kvm_vcpu *vcpu)
-> > > +{
-> > > +     struct kvm_timer *ktimer =3D &vcpu->arch.apic->lapic_timer;
-> >
-> > This will #GP if the APIC is not in-kernel, i.e. @apic is NULL.
-> >
-> > > +
-> > > +     if (ktimer->measure_delay_done =3D=3D 1) {
-> > > +             ktimer->vmentry_delay =3D rdtsc() -
-> > > +                     ktimer->vmentry_delay;
-> > > +             ktimer->measure_delay_done =3D 2;
-> >
-> > Measuring the delay a single time is bound to result in random outliers=
-,
-> > e.g. if an NMI happens to occur after wait_lapic_expire().
-> >
-> > Rather than reinvent the wheel, can we simply move the call to
-> > wait_lapic_expire() into vmx.c and svm.c?  For VMX we'd probably want t=
-o
-> > support the advancement if enable_unrestricted_guest=3Dtrue so that we =
-avoid
-> > the emulation_required case, but other than that I don't see anything t=
-hat
-> > requires wait_lapic_expire() to be called where it is.
->
-> I also considered to move wait_lapic_expire() into vmx.c and svm.c
-> before, what do you think, Paolo, Radim?
+++
 
-However, guest_enter_irqoff() also prevents this. Otherwise, we will
-account busy wait time as guest time. How about sampling several times
-and get the average value or conservative min value to handle Sean's
-concern?
-
-Regards,
-Wanpeng Li
+On 5/4/2019 8:17 PM, Muchun Song wrote:
+> Benjamin Herrenschmidt <benh@kernel.crashing.org> 于2019年5月2日周四 下午2:25写道：
+>
+>>>> The basic idea yes, the whole bool *locked is horrid though.
+>>>> Wouldn't it
+>>>> work to have a get_device_parent_locked that always returns with
+>>>> the mutex held,
+>>>> or just move the mutex to the caller or something simpler like this
+>>>> ?
+>>>>
+>>> Greg and Rafael, do you have any suggestions for this? Or you also
+>>> agree with Ben?
+>> Ping guys ? This is worth fixing...
+> I also agree with you. But Greg and Rafael seem to be high latency right now.
+>
+>  From your suggestions, I think introduce get_device_parent_locked() may easy
+> to fix. So, do you agree with the fix of the following code snippet
+> (You can also
+> view attachments)?
+>
+> I introduce a new function named get_device_parent_locked_if_glue_dir() which
+> always returns with the mutex held only when we live in glue dir. We should call
+> unlock_if_glue_dir() to release the mutex. The
+> get_device_parent_locked_if_glue_dir()
+> and unlock_if_glue_dir() should be called in pairs.
+>
+> ---
+> drivers/base/core.c | 44 ++++++++++++++++++++++++++++++++++++--------
+> 1 file changed, 36 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 4aeaa0c92bda..5112755c43fa 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class,
+> struct kobject *parent_kobj)
+> static DEFINE_MUTEX(gdp_mutex);
+> -static struct kobject *get_device_parent(struct device *dev,
+> -                    struct device *parent)
+> +static struct kobject *__get_device_parent(struct device *dev,
+> +                    struct device *parent,
+> +                    bool lock)
+> {
+>     if (dev->class) {
+>         struct kobject *kobj = NULL;
+> @@ -1779,14 +1780,16 @@ static struct kobject
+> *get_device_parent(struct device *dev,
+>             }
+>         spin_unlock(&dev->class->p->glue_dirs.list_lock);
+>         if (kobj) {
+> -           mutex_unlock(&gdp_mutex);
+> +           if (!lock)
+> +               mutex_unlock(&gdp_mutex);
+>             return kobj;
+>         }
+>         /* or create a new class-directory at the parent device */
+>         k = class_dir_create_and_add(dev->class, parent_kobj);
+>         /* do not emit an uevent for this simple "glue" directory */
+> -       mutex_unlock(&gdp_mutex);
+> +       if (!lock)
+> +           mutex_unlock(&gdp_mutex);
+>         return k;
+>     }
+> @@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct
+> device *dev,
+>     return NULL;
+> }
+> +static inline struct kobject *get_device_parent(struct device *dev,
+> +                       struct device *parent)
+> +{
+> +   return __get_device_parent(dev, parent, false);
+> +}
+> +
+> +static inline struct kobject *
+> +get_device_parent_locked_if_glue_dir(struct device *dev,
+> +                struct device *parent)
+> +{
+> +   return __get_device_parent(dev, parent, true);
+> +}
+> +
+> static inline bool live_in_glue_dir(struct kobject *kobj,
+>                  struct device *dev)
+> {
+> @@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device
+> *dev, struct kobject *glue_dir)
+>     mutex_unlock(&gdp_mutex);
+> }
+> +static inline void unlock_if_glue_dir(struct device *dev,
+> +                struct kobject *glue_dir)
+> +{
+> +   /* see if we live in a "glue" directory */
+> +   if (!live_in_glue_dir(glue_dir, dev))
+> +       return;
+> +
+> +   mutex_unlock(&gdp_mutex);
+> +}
+> +
+> static int device_add_class_symlinks(struct device *dev)
+> {
+>     struct device_node *of_node = dev_of_node(dev);
+> @@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
+>     pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
+>     parent = get_device(dev->parent);
+> -   kobj = get_device_parent(dev, parent);
+> +   kobj = get_device_parent_locked_if_glue_dir(dev, parent);
+>     if (IS_ERR(kobj)) {
+>         error = PTR_ERR(kobj);
+>         goto parent_error;
+> @@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
+>     /* first, register with generic layer. */
+>     /* we require the name to be set before, and pass NULL */
+>     error = kobject_add(&dev->kobj, dev->kobj.parent, NULL);
+> -   if (error) {
+> -       glue_dir = get_glue_dir(dev);
+> +
+> +   glue_dir = get_glue_dir(dev);
+> +   unlock_if_glue_dir(dev, glue_dir);
+> +
+> +   if (error)
+>         goto Error;
+> -   }
+>     /* notify platform of device entry */
+>     error = device_platform_notify(dev, KOBJ_ADD);
+> --
