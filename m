@@ -2,131 +2,592 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9639C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC83C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 778EF20843
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:23:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQSL1vI8"
+	by mail.kernel.org (Postfix) with ESMTP id 6408F20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbfENJXp (ORCPT
+        id S1726481AbfENJZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:23:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43233 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfENJXp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:23:45 -0400
-Received: by mail-pg1-f193.google.com with SMTP id t22so8311452pgi.10;
-        Tue, 14 May 2019 02:23:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5YuxfzalVyz39bS5lxDVxBPQxHNRqBsXyUAh+iAMKKQ=;
-        b=vQSL1vI8y/pobIeEAf+6sVKN7MQRUqCOKfqM1PV+aH5OE0icjkzECfBzZmitQ98Svo
-         XDXmRTZkyLfN5eIgZ0B6daFC5TZWFFedUokzmDo+74gY2ifevOAaozTMu8KDUuFHgKP9
-         ZBvGng5nkXYXeXpoVAw3EUrjwdjr+MkdQ3oL89XiX/dNM+d8hx5ECzbkWs9V/wiqTffQ
-         MO9dWCuiwA7T0ZP0xx84t21FGJIb2pHO8NalHjrMCPfbnqd8A6nIXYPQzWaeb87QfSJj
-         1THQRYa+38c2f0GuRdugvKBnRTbY76ebqzhfQZpgmX+y5gGuto1ECPqS0yFggz6F8+mL
-         Ui+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5YuxfzalVyz39bS5lxDVxBPQxHNRqBsXyUAh+iAMKKQ=;
-        b=jeQRRn18Bl76K2zvhBK3uiaGEmU3ESj60UtXql1dUByilr1xK7fY9dPXOFUYHTzu8H
-         8mznUCbovoKeNw3rd+xCi8AcPY5V2YNqv9ORctZ3U9HjROj1VeEfIQLNsdCY1i5L1EgL
-         8iIaQ4451v0UtKBCmoLAzSaCzUxzpF1og8AdioWYZyYjp4GziE/e4I2Jq04J4WwAkEJ+
-         1SAt7HIjxppX+C0p2uACwdjUsl0um30pUDNP6QUJG6NZx7eTmPLMbjT6E9z4J52zpZsb
-         76hzvUbVihtc4X5pQAelYzc+DN/J1cZ8nbLNq3MSEpho0KhtVI1D7ZavTeq2TbHWv8/a
-         OZtQ==
-X-Gm-Message-State: APjAAAXgtcs6e/B1CoHElrf1bBX9jVBaO1u4LUl6KzRU8n3b7+K0qUKA
-        XbHe6G01ThkhajEPpG6Iu6O8Ydcv7fkBRDpB33ZIgDPY2ZA=
-X-Google-Smtp-Source: APXvYqxijTaU+rkG79VpDp9pINfS+w4/WWN8EseUFB++/R49pbRj0MA3YmeqtZC5mrvUYTir5ATJZ3WL6YPAGz1RJXE=
-X-Received: by 2002:a63:42:: with SMTP id 63mr37044591pga.337.1557825824401;
- Tue, 14 May 2019 02:23:44 -0700 (PDT)
+        Tue, 14 May 2019 05:25:45 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52774 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfENJZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:25:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F185B374;
+        Tue, 14 May 2019 02:25:43 -0700 (PDT)
+Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E8FB93F703;
+        Tue, 14 May 2019 02:25:40 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] arm64: Fix incorrect irqflag restore for priority
+ masking
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        yuzenghui@huawei.com, wanghaibin.wang@huawei.com,
+        james.morse@arm.com, will.deacon@arm.com, catalin.marinas@arm.com,
+        mark.rutland@arm.com, liwei391@huawei.com,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>
+References: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
+ <1556553607-46531-4-git-send-email-julien.thierry@arm.com>
+ <2b023ba4-b95b-f823-4635-6a75deef5386@arm.com>
+From:   Julien Thierry <julien.thierry@arm.com>
+Message-ID: <1739c8ac-9073-798f-ed0b-0dc617c195d6@arm.com>
+Date:   Tue, 14 May 2019 10:25:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190430140416.4707-1-esben@geanix.com> <20190430153736.GL9224@smile.fi.intel.com>
- <874l6efxta.fsf@haabendal.dk> <20190502104556.GS9224@smile.fi.intel.com>
- <87pnp11112.fsf@haabendal.dk> <20190507093239.GB4529@dell>
- <87sgtqjy3l.fsf@haabendal.dk> <20190507115325.GV9224@smile.fi.intel.com>
- <87k1f2jvyd.fsf@haabendal.dk> <20190507150847.GW9224@smile.fi.intel.com> <87k1etmrfk.fsf@haabendal.dk>
-In-Reply-To: <87k1etmrfk.fsf@haabendal.dk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 May 2019 12:23:33 +0300
-Message-ID: <CAHp75VfrP6SLVzmp6LepN7dU1c7QYxfRDRtj7dCTuWzmYp2tCA@mail.gmail.com>
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
-To:     Esben Haabendal <esben@haabendal.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2b023ba4-b95b-f823-4635-6a75deef5386@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 10:24 AM Esben Haabendal <esben@haabendal.dk> wrote:
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> > On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
 
-> We are on repeat here.  I don't agree with you here.  I have a simple
-> generic 8250 (16550A) compatible device, and cannot use it in a mfd
-> driver using the standard mfd-core framework.
 
-> The lacking of support for platform_get_resource() in the generic
-> serial8250 driver is not a feature.  It should be supported, just as it
-> is in several of the specialized 8250 drivers.
+On 07/05/2019 09:36, Marc Zyngier wrote:
+> On 29/04/2019 17:00, Julien Thierry wrote:
+>> When using IRQ priority masking to disable interrupts, in order to deal
+>> with the PSR.I state, local_irq_save() would convert the I bit into a
+>> PMR value (GIC_PRIO_IRQOFF). This resulted in local_irq_restore()
+>> potentially modifying the value of PMR in undesired location due to the
+>> state of PSR.I upon flag saving [1].
+>>
+>> In an attempt to solve this issue in a less hackish manner, introduce
+>> a bit (GIC_PRIO_IGNORE_PMR) for the PMR values that can represent
+>> whether PSR.I is being used to disable interrupts, in which case it
+>> takes precedence of the status of interrupt masking via PMR.
+>>
+>> GIC_PRIO_IGNORE_PMR is chosen such that (<pmr_value> |
+>> GIC_PRIO_IGNORE_PMR) does not mask more interrupts than <pmr_value> as
+>> some sections (e.g. arch_cpu_idle(), interrupt acknowledge path)
+>> requires PMR not to mask interrupts that could be signaled to the
+>> CPU when using only PSR.I.
+>>
+>> [1] https://www.spinics.net/lists/arm-kernel/msg716956.html
+>>
+>> Fixes: commit 4a503217ce37 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
+>> Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+>> Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> Cc: Wei Li <liwei391@huawei.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: James Morse <james.morse@arm.com>
+>> Cc: Suzuki K Pouloze <suzuki.poulose@arm.com>
+>> Cc: Oleg Nesterov <oleg@redhat.com>
+>> ---
+>>  arch/arm64/include/asm/arch_gicv3.h |  4 ++-
+>>  arch/arm64/include/asm/assembler.h  |  9 +++++
+>>  arch/arm64/include/asm/daifflags.h  | 22 ++++++++----
+>>  arch/arm64/include/asm/irqflags.h   | 69 ++++++++++++++++---------------------
+>>  arch/arm64/include/asm/kvm_host.h   |  4 ++-
+>>  arch/arm64/include/asm/ptrace.h     | 10 ++++--
+>>  arch/arm64/kernel/entry.S           | 30 +++++++++++++---
+>>  arch/arm64/kernel/process.c         |  2 +-
+>>  arch/arm64/kernel/smp.c             |  8 +++--
+>>  arch/arm64/kvm/hyp/switch.c         |  2 +-
+>>  10 files changed, 100 insertions(+), 60 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/arch_gicv3.h b/arch/arm64/include/asm/arch_gicv3.h
+>> index 14b41dd..3102c9a 100644
+>> --- a/arch/arm64/include/asm/arch_gicv3.h
+>> +++ b/arch/arm64/include/asm/arch_gicv3.h
+>> @@ -163,7 +163,9 @@ static inline bool gic_prio_masking_enabled(void)
+>>
+>>  static inline void gic_pmr_mask_irqs(void)
+>>  {
+>> -	BUILD_BUG_ON(GICD_INT_DEF_PRI <= GIC_PRIO_IRQOFF);
+>> +	BUILD_BUG_ON(GICD_INT_DEF_PRI < (GIC_PRIO_IRQOFF |
+>> +					 GIC_PRIO_IGNORE_PMR));
+>> +	BUILD_BUG_ON(GICD_INT_DEF_PRI >= GIC_PRIO_IRQON);
+>>  	gic_write_pmr(GIC_PRIO_IRQOFF);
+>>  }
+>>
+>> diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
+>> index c5308d0..601154d 100644
+>> --- a/arch/arm64/include/asm/assembler.h
+>> +++ b/arch/arm64/include/asm/assembler.h
+>> @@ -62,6 +62,15 @@
+>>  	msr	daifclr, #(8 | 4 | 1)
+>>  	.endm
+>>
+>> +	.macro	suspend_irq_prio_masking, tmp:req
+>> +#ifdef CONFIG_ARM64_PSEUDO_NMI
+>> +	alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+>> +	mov	\tmp, #(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR)
+>> +	msr_s	SYS_ICC_PMR_EL1, \tmp
+>> +	alternative_else_nop_endif
+>> +#endif
+>> +	.endm
+>> +
+>>  /*
+>>   * Save/restore interrupts.
+>>   */
+>> diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+>> index db452aa..a32ece9 100644
+>> --- a/arch/arm64/include/asm/daifflags.h
+>> +++ b/arch/arm64/include/asm/daifflags.h
+>> @@ -18,6 +18,7 @@
+>>
+>>  #include <linux/irqflags.h>
+>>
+>> +#include <asm/arch_gicv3.h>
+>>  #include <asm/cpufeature.h>
+>>
+>>  #define DAIF_PROCCTX		0
+>> @@ -32,6 +33,11 @@ static inline void local_daif_mask(void)
+>>  		:
+>>  		:
+>>  		: "memory");
+>> +
+>> +	/* Don't really care for a dsb here, we don't intend to enable IRQs */
+>> +	if (system_uses_irq_prio_masking())
+>> +		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
+>> +
+>>  	trace_hardirqs_off();
+>>  }
+>>
+>> @@ -43,7 +49,7 @@ static inline unsigned long local_daif_save(void)
+>>
+>>  	if (system_uses_irq_prio_masking()) {
+>>  		/* If IRQs are masked with PMR, reflect it in the flags */
+>> -		if (read_sysreg_s(SYS_ICC_PMR_EL1) <= GIC_PRIO_IRQOFF)
+>> +		if (read_sysreg_s(SYS_ICC_PMR_EL1) != GIC_PRIO_IRQON)
+>>  			flags |= PSR_I_BIT;
+>>  	}
+>>
+>> @@ -59,14 +65,16 @@ static inline void local_daif_restore(unsigned long flags)
+>>  	if (!irq_disabled) {
+>>  		trace_hardirqs_on();
+>>
+>> -		if (system_uses_irq_prio_masking())
+>> -			arch_local_irq_enable();
+>> -	} else if (!(flags & PSR_A_BIT)) {
+>> +		if (system_uses_irq_prio_masking()) {
+>> +			gic_write_pmr(GIC_PRIO_IRQON);
+>> +			dsb(sy);
+>> +		}
+>> +	} else if (system_uses_irq_prio_masking()) {
+>>  		/*
+>>  		 * If interrupts are disabled but we can take
+>>  		 * asynchronous errors, we can take NMIs
+>>  		 */
+>> -		if (system_uses_irq_prio_masking()) {
+>> +		if (!(flags & PSR_A_BIT)) {
+>>  			flags &= ~PSR_I_BIT;
+>>  			/*
+>>  			 * There has been concern that the write to daif
+>> @@ -87,7 +95,9 @@ static inline void local_daif_restore(unsigned long flags)
+>>  			 *
+>>  			 * So we don't need additional synchronization here.
+>>  			 */
+>> -			arch_local_irq_disable();
+>> +			gic_write_pmr(GIC_PRIO_IRQOFF);
+>> +		} else {
+>> +			gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
+>>  		}
+> 
+> Nit: move the write to PMR outside of the if/else clause with an
+> intermediate variable to hold the PMR value. Not a big deal, but I think
+> it helps with the nesting.
+> 
 
-We are going circles here.
-What exactly prevents you to use it? Presence of request_mem_region()?
+Done.
 
-> It would still mean that I would have revert to not using convenient and
-> otherwise fully appropriate API calls like pci_request_regions() and
-> mfd_add_devices().
+>>  	}
+>>
+>> diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+>> index 43d8366..516cdfc 100644
+>> --- a/arch/arm64/include/asm/irqflags.h
+>> +++ b/arch/arm64/include/asm/irqflags.h
+>> @@ -67,43 +67,48 @@ static inline void arch_local_irq_disable(void)
+>>   */
+>>  static inline unsigned long arch_local_save_flags(void)
+>>  {
+>> -	unsigned long daif_bits;
+>>  	unsigned long flags;
+>>
+>> -	daif_bits = read_sysreg(daif);
+>> -
+>> -	/*
+>> -	 * The asm is logically equivalent to:
+>> -	 *
+>> -	 * if (system_uses_irq_prio_masking())
+>> -	 *	flags = (daif_bits & PSR_I_BIT) ?
+>> -	 *			GIC_PRIO_IRQOFF :
+>> -	 *			read_sysreg_s(SYS_ICC_PMR_EL1);
+>> -	 * else
+>> -	 *	flags = daif_bits;
+>> -	 */
+>>  	asm volatile(ALTERNATIVE(
+>> -			"mov	%0, %1\n"
+>> -			"nop\n"
+>> -			"nop",
+>> -			"mrs_s	%0, " __stringify(SYS_ICC_PMR_EL1) "\n"
+>> -			"ands	%1, %1, " __stringify(PSR_I_BIT) "\n"
+>> -			"csel	%0, %0, %2, eq",
+>> -			ARM64_HAS_IRQ_PRIO_MASKING)
+>> -		: "=&r" (flags), "+r" (daif_bits)
+>> -		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
+>> +		"mrs	%0, daif",
+>> +		"mrs_s	%0, " __stringify(SYS_ICC_PMR_EL1) "\n",
+>> +		ARM64_HAS_IRQ_PRIO_MASKING)
+>> +		: "=&r" (flags)
+>> +		:
+>>  		: "memory");
+>>
+>>  	return flags;
+>>  }
+>>
+>> +static inline int arch_irqs_disabled_flags(unsigned long flags)
+>> +{
+>> +	int res;
+>> +
+>> +	asm volatile(ALTERNATIVE(
+>> +		"and	%w0, %w1, #" __stringify(PSR_I_BIT) "\n"
+>> +		"nop",
+>> +		"cmp	%w1, #" __stringify(GIC_PRIO_IRQON) "\n"
+>> +		"cset	%w0, ne",
+>> +		ARM64_HAS_IRQ_PRIO_MASKING)
+>> +		: "=&r" (res)
+>> +		: "r" ((int) flags)
+>> +		: "memory");
+> 
+> I wonder if this should have "cc" as part of the clobber list.
 
-Yes, here is the issue. 8250 requires the parent not to *request*
-resources. Because child handles IO access itself.
+Is there any special semantic to "cc" on arm64? All I can find is that
+in the general case it indicates that it is modifying the "flags" register.
 
-> The mfd driver in question is for a PCI device.  Not being able to
-> request the PCI regions seems silly.
+Is your suggestion only for the PMR case? Or is it something that we
+should add regardless of PMR?
+The latter makes sense to me, but for the former, I fail to understand
+why this should affect only PMR.
 
-Nope. Otherwise, the parent which *doesn't handle* IO on behalf of
-child should not request its resources.
+> 
+>> +
+>> +	return res;
+>> +}
+>> +
+>>  static inline unsigned long arch_local_irq_save(void)
+>>  {
+>>  	unsigned long flags;
+>>
+>>  	flags = arch_local_save_flags();
+>>
+>> -	arch_local_irq_disable();
+>> +	/*
+>> +	 * There are too many states with IRQs disabled, just keep the current
+>> +	 * state if interrupts are already disabled/masked.
+>> +	 */
+>> +	if (!arch_irqs_disabled_flags(flags))
+>> +		arch_local_irq_disable();
+>>
+>>  	return flags;
+>>  }
+>> @@ -119,26 +124,10 @@ static inline void arch_local_irq_restore(unsigned long flags)
+>>  			"msr_s	" __stringify(SYS_ICC_PMR_EL1) ", %0\n"
+>>  			"dsb	sy",
+>>  			ARM64_HAS_IRQ_PRIO_MASKING)
+>> -		: "+r" (flags)
+>>  		:
+>> +		: "r" (flags)
+>>  		: "memory");
+>>  }
+>>
+>> -static inline int arch_irqs_disabled_flags(unsigned long flags)
+>> -{
+>> -	int res;
+>> -
+>> -	asm volatile(ALTERNATIVE(
+>> -			"and	%w0, %w1, #" __stringify(PSR_I_BIT) "\n"
+>> -			"nop",
+>> -			"cmp	%w1, #" __stringify(GIC_PRIO_IRQOFF) "\n"
+>> -			"cset	%w0, ls",
+>> -			ARM64_HAS_IRQ_PRIO_MASKING)
+>> -		: "=&r" (res)
+>> -		: "r" ((int) flags)
+>> -		: "memory");
+>> -
+>> -	return res;
+>> -}
+>>  #endif
+>>  #endif
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index a01fe087..0ec398c 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -532,9 +532,11 @@ static inline void kvm_arm_vhe_guest_enter(void)
+>>  	 * will not signal the CPU of interrupts of lower priority, and the
+>>  	 * only way to get out will be via guest exceptions.
+>>  	 * Naturally, we want to avoid this.
+>> +	 *
+>> +	 * local_daif_mask() already sets IGNORE_PMR, we just need a
+>> +	 * dsb to ensure the redistributor is forwards EL2 IRQs to the CPU.
+>>  	 */
+>>  	if (system_uses_irq_prio_masking()) {
+>> -		gic_write_pmr(GIC_PRIO_IRQON);
+>>  		dsb(sy);
+>>  	}
+> 
+> nit: drop the (now superfluous) brackets.
+> 
 
-> Not being able to register all child devices with the call introduced
-> for that sole purpose also seems silly.
+Done.
 
-> Please take a look at https://lkml.org/lkml/2019/4/9/576
-> ("[PATCH v2 2/4] mfd: ioc3: Add driver for SGI IOC3 chip")
+>>  }
+>> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+>> index ec60174..7861a5d 100644
+>> --- a/arch/arm64/include/asm/ptrace.h
+>> +++ b/arch/arm64/include/asm/ptrace.h
+>> @@ -35,9 +35,15 @@
+>>   * means masking more IRQs (or at least that the same IRQs remain masked).
+>>   *
+>>   * To mask interrupts, we clear the most significant bit of PMR.
+>> + *
+>> + * Some code sections either automatically switch back to PSR.I or explicitly
+>> + * require to not use priority masking. If bit GIC_PRIO_IGNORE_PMR is included
+>> + * in the  the priority mask, it indicates that PSR.I should be set and
+>> + * interrupt disabling temporarily does not rely on IRQ priorities.
+>>   */
+>> -#define GIC_PRIO_IRQON		0xf0
+>> -#define GIC_PRIO_IRQOFF		(GIC_PRIO_IRQON & ~0x80)
+>> +#define GIC_PRIO_IRQON			0xc0
+>> +#define GIC_PRIO_IRQOFF			(GIC_PRIO_IRQON & ~0x80)
+>> +#define GIC_PRIO_IGNORE_PMR		(1 << 4)
+> 
+> The naming of this last value is still a bit odd: it says "ignore PMR",
+> and yet it only works because it is a valid PMR value. So it is not so
+> much that PMR is not used (it is), but that PSTATE.I is set, thus
+> overriding the interrupt signaling.
+> 
+> How about something like GIC_PRIO_PSTATE_I_SET, which has the advantage
+> of exactly matching the above comment?
+> 
 
-Thank you for this link.
-Now, look at this comment:
+Sounds good to me, also depends on how I go with the next comment.
 
-+ /*
-+ * Map all IOC3 registers.  These are shared between subdevices
-+ * so the main IOC3 module manages them.
-+ */
+>>
+>>  /* Additional SPSR bits not exposed in the UABI */
+>>  #define PSR_IL_BIT		(1 << 20)
+>> diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+>> index 00c1f21..e6df781 100644
+>> --- a/arch/arm64/kernel/entry.S
+>> +++ b/arch/arm64/kernel/entry.S
+>> @@ -258,6 +258,7 @@ alternative_else_nop_endif
+>>  	/*
+>>  	 * Registers that may be useful after this macro is invoked:
+>>  	 *
+>> +	 * x20 - ICC_PMR_EL1
+>>  	 * x21 - aborted SP
+>>  	 * x22 - aborted PC
+>>  	 * x23 - aborted PSTATE
+>> @@ -434,6 +435,16 @@ alternative_endif
+>>  	.endm
+>>  #endif
+>>
+>> +
+>> +	.macro irq_entry_ignore_pmr, pmr:req, tmp:req
+>> +#ifdef CONFIG_ARM64_PSEUDO_NMI
+>> +	alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+>> +	orr	\tmp, \pmr, #GIC_PRIO_IGNORE_PMR
+>> +	msr_s	SYS_ICC_PMR_EL1, \tmp
+>> +	alternative_else_nop_endif
+>> +#endif
+>> +	.endm
+>> +
+>>  	.text
+>>
+>>  /*
+>> @@ -612,6 +623,7 @@ el1_dbg:
+>>  	cmp	x24, #ESR_ELx_EC_BRK64		// if BRK64
+>>  	cinc	x24, x24, eq			// set bit '0'
+>>  	tbz	x24, #0, el1_inv		// EL1 only
+>> +	suspend_irq_prio_masking tmp=x21
+>>  	mrs	x0, far_el1
+>>  	mov	x2, sp				// struct pt_regs
+>>  	bl	do_debug_exception
+>> @@ -629,12 +641,10 @@ ENDPROC(el1_sync)
+>>  	.align	6
+>>  el1_irq:
+>>  	kernel_entry 1
+>> +	irq_entry_ignore_pmr pmr=x20, tmp=x0
+> 
+> What are the conditions for which we use 'suspend', and those we use
+> 'ignore'? They obviously are very similar, and putting the rational
+> wouldn't hurt.
+> 
 
-Is it your case? Can we see the code?
+The conditions are probably the wrong ones. Or at least they don't
+really warrant slapping names on them like I did.
+
+I wanted to factor the assembly code by using helpers while avoiding to
+add unnecessary instructions in said helpers. And since there are at
+least two cases (one where we have to modify the current value of PMR
+and others where we can just set an immediate value) I ended up with two
+helpers, trying to put semantics onto them.
+
+I'll try to get something cleaner.
+
+> Of course, should you decide to adopt my naming suggestion above, some
+> names need to change too... ;-)
+> 
+>>  	enable_da_f
+>>
+>>  #ifdef CONFIG_ARM64_PSEUDO_NMI
+>> -alternative_if ARM64_HAS_IRQ_PRIO_MASKING
+>> -	ldr	x20, [sp, #S_PMR_SAVE]
+>> -alternative_else_nop_endif
+>>  	test_irqs_unmasked	res=x0, pmr=x20
+>>  	cbz	x0, 1f
+>>  	bl	asm_nmi_enter
+>> @@ -664,8 +674,9 @@ alternative_else_nop_endif
+>>
+>>  #ifdef CONFIG_ARM64_PSEUDO_NMI
+>>  	/*
+>> -	 * if IRQs were disabled when we received the interrupt, we have an NMI
+>> -	 * and we are not re-enabling interrupt upon eret. Skip tracing.
+>> +	 * When using IRQ priority masking, we can get spurious interrupts while
+>> +	 * PMR is set to GIC_PRIO_IRQOFF. An NMI might also have occurred in a
+>> +	 * section with interrupts disabled. Skip tracing in those cases.
+>>  	 */
+>>  	test_irqs_unmasked	res=x0, pmr=x20
+>>  	cbz	x0, 1f
+>> @@ -794,6 +805,7 @@ el0_ia:
+>>  	 * Instruction abort handling
+>>  	 */
+>>  	mrs	x26, far_el1
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	enable_da_f
+>>  #ifdef CONFIG_TRACE_IRQFLAGS
+>>  	bl	trace_hardirqs_off
+>> @@ -839,6 +851,7 @@ el0_sp_pc:
+>>  	 * Stack or PC alignment exception handling
+>>  	 */
+>>  	mrs	x26, far_el1
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	enable_da_f
+>>  #ifdef CONFIG_TRACE_IRQFLAGS
+>>  	bl	trace_hardirqs_off
+>> @@ -873,6 +886,7 @@ el0_dbg:
+>>  	 * Debug exception handling
+>>  	 */
+>>  	tbnz	x24, #0, el0_inv		// EL0 only
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	mrs	x0, far_el1
+>>  	mov	x1, x25
+>>  	mov	x2, sp
+>> @@ -894,7 +908,9 @@ ENDPROC(el0_sync)
+>>  el0_irq:
+>>  	kernel_entry 0
+>>  el0_irq_naked:
+>> +	irq_entry_ignore_pmr pmr=x20, tmp=x0
+>>  	enable_da_f
+>> +
+>>  #ifdef CONFIG_TRACE_IRQFLAGS
+>>  	bl	trace_hardirqs_off
+>>  #endif
+>> @@ -916,6 +932,7 @@ ENDPROC(el0_irq)
+>>  el1_error:
+>>  	kernel_entry 1
+>>  	mrs	x1, esr_el1
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	enable_dbg
+>>  	mov	x0, sp
+>>  	bl	do_serror
+>> @@ -926,6 +943,7 @@ el0_error:
+>>  	kernel_entry 0
+>>  el0_error_naked:
+>>  	mrs	x1, esr_el1
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	enable_dbg
+>>  	mov	x0, sp
+>>  	bl	do_serror
+>> @@ -950,6 +968,7 @@ work_pending:
+>>   */
+>>  ret_to_user:
+>>  	disable_daif
+>> +	suspend_irq_prio_masking tmp=x0
+>>  	ldr	x1, [tsk, #TSK_TI_FLAGS]
+>>  	and	x2, x1, #_TIF_WORK_MASK
+>>  	cbnz	x2, work_pending
+>> @@ -966,6 +985,7 @@ ENDPROC(ret_to_user)
+>>   */
+>>  	.align	6
+>>  el0_svc:
+>> +	suspend_irq_prio_masking tmp=x1
+>>  	mov	x0, sp
+>>  	bl	el0_svc_handler
+>>  	b	ret_to_user
+>> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+>> index 3767fb2..f5bae97 100644
+>> --- a/arch/arm64/kernel/process.c
+>> +++ b/arch/arm64/kernel/process.c
+>> @@ -94,7 +94,7 @@ static void __cpu_do_idle_irqprio(void)
+>>  	 * be raised.
+>>  	 */
+>>  	pmr = gic_read_pmr();
+>> -	gic_write_pmr(GIC_PRIO_IRQON);
+>> +	gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
+>>
+>>  	__cpu_do_idle();
+>>
+>> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+>> index 824de70..2a6d0dd1 100644
+>> --- a/arch/arm64/kernel/smp.c
+>> +++ b/arch/arm64/kernel/smp.c
+>> @@ -192,11 +192,13 @@ static void init_gic_priority_masking(void)
+>>
+>>  	WARN_ON(!(cpuflags & PSR_I_BIT));
+>>
+>> -	gic_write_pmr(GIC_PRIO_IRQOFF);
+>> -
+>>  	/* We can only unmask PSR.I if we can take aborts */
+>> -	if (!(cpuflags & PSR_A_BIT))
+>> +	if (!(cpuflags & PSR_A_BIT)) {
+>> +		gic_write_pmr(GIC_PRIO_IRQOFF);
+>>  		write_sysreg(cpuflags & ~PSR_I_BIT, daif);
+>> +	} else {
+>> +		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
+>> +	}
+>>  }
+>>
+>>  /*
+>> diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+>> index 3563fe6..083e319 100644
+>> --- a/arch/arm64/kvm/hyp/switch.c
+>> +++ b/arch/arm64/kvm/hyp/switch.c
+>> @@ -533,7 +533,7 @@ int __hyp_text __kvm_vcpu_run_nvhe(struct kvm_vcpu *vcpu)
+>>  	 * Naturally, we want to avoid this.
+>>  	 */
+>>  	if (system_uses_irq_prio_masking()) {
+>> -		gic_write_pmr(GIC_PRIO_IRQON);
+>> +		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_IGNORE_PMR);
+>>  		dsb(sy);
+>>  	}
+>>
+>> --
+>> 1.9.1
+>>
+> 
+> Overall, I like the way it looks, and my comments are more cosmetic than
+> anything else.
+> 
+
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Julien Thierry
