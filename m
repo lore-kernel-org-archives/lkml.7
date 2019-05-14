@@ -2,121 +2,131 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E560C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B8BC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C4A20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119FE216FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geh9IqmP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeffY7Re"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfENWuU (ORCPT
+        id S1726584AbfENWun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:50:20 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46658 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726148AbfENWuU (ORCPT
+        Tue, 14 May 2019 18:50:43 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43720 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfENWun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:50:20 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z19so1028795qtz.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:50:19 -0700 (PDT)
+        Tue, 14 May 2019 18:50:43 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z5so707714lji.10;
+        Tue, 14 May 2019 15:50:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sBibEd37orYwP+TZJ5qBpxDkSgs2ES/yDrUDzm5pB78=;
-        b=geh9IqmPLBJnUYyIo6PAtXPXPLzNqILn5iLKHhl3l7XLKEzLv96wpC28OF3APbM+la
-         TOtRGScvJ5U5bTjKE0JlFWhLmkUwdMeuaCdnPmez7BbWHdUuph7Amatgae0AfRhL7cte
-         BL0NyLQedCTo9hxX2Pff2SfoYlMCLzn7ev4of0WnzljKeawIaQg3HSp1Oj+oy+2/URdk
-         GLJyoFA0tv5AKTt32ZT1fPPz6lCXSy+Rb4lGKs3wFYHaMCYeoEDRlrks9H509X3Blbm1
-         UhHSoOhPs/DB6q5rTa4eXS3Ijy2tkLwodP+/UnOCDC/2OJbexQpvrJXfVBHtCMsVIH8r
-         hERA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zn4G2bFjrYQCf9SnncqZRscUBjdYIodDzPMbFewZnc8=;
+        b=ZeffY7RelLSaziG4wNcOE/BLaHjI07TAmpkKsAzc1bjup1PGCn5j9VkuH2n8+N8aBy
+         kEH8i7At0K331Cz74YM+RuMyH2YyULShVU74pTW/qoLY1tPgF73m+M/bwd9M9Y2Sw9Bf
+         oVB7cB+SxcGpGrYQ72y+w+mWlKmm60KFad1FRppux8PBB2sGoJsgiQcvVvxLyOh7x4fm
+         aGPPEgbyFb8w31cbo1hWAW0qxHlOq1tvfwl6h47YY19XX0v0sAf44T+ysD4+teNjByvO
+         b9+s1pxdRJcuwlGgq7WzUTxDvixJMtmu4FLOwaMskFq/YX03o7S2Q8GTq9D7rPDeGGtf
+         y+fA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sBibEd37orYwP+TZJ5qBpxDkSgs2ES/yDrUDzm5pB78=;
-        b=f1CWcRjIMhpBLON2pTeyvXTcO1ji35JFjTu+d6y8wGTcC6B1+sAC+SRg2ap2AsLEza
-         77Fyga9tLlCau1g2TIM0tOzURRxuTuJCj1pqefSvtS2WNpN9eDGMDRERDrzoNClRA33z
-         4Yb0lVsyV034HLL8K9CPrrKFKPsWkd8nQxR4sIfehpGqury27Rz8/raIGK12G2fBDBTa
-         Ah0gQBM4zrt1rgrJ4p1bYOgVI2yvG5+jUCX5Xbzexfl1uruZU8xdNDYCLLiEe37Xm9yA
-         Ln7qyS8X6pSLy/FUsasrnfobYplg3DK+Foz7URQi3oG8ZkoryWpRFM/7T/fhwNnr1nSv
-         3PjQ==
-X-Gm-Message-State: APjAAAWhjjuIiYzP4EIn3upYW3yuRiX1m31/tkag3zEMDyt8PgwPJraY
-        E4/oWwKsLAzZm+WjxojMtNX/nIpR06nG2zENDaBv7JE3
-X-Google-Smtp-Source: APXvYqzOqoD4C9YC9a8iIwRTwQ6rEod1EWH5hmXbAkGou8uu9bNPaymY5aCx1bt1prrRWUNg0zk7S08Hq5eQ/SB1DlY=
-X-Received: by 2002:ac8:16b4:: with SMTP id r49mr24380657qtj.157.1557874219298;
- Tue, 14 May 2019 15:50:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zn4G2bFjrYQCf9SnncqZRscUBjdYIodDzPMbFewZnc8=;
+        b=XmvrYzxHKW9beTaAcYSDNI2cKevVl6BUVn7e5li8DMvu8/zv1N808tSIwfAC38a5N3
+         MYy2XEsJBD1jmgNTJyj4RpgQG0NcUqiGnHJbEovOVfCQxzV74VuMko/QgWNcYOPpW/6A
+         Zh1xDh/EAfwbBaq6qA32PrwxUEEsaHMCW4GMveWKA5cgQl/xbGHe73hRMPjrjh4ECtD6
+         1jQQBb2RV+pZhOivtKiG6ONPtzsgOHJyyKmPAHA4U8dhijjCy7Q0OAAGkMGV+eizctAY
+         b93aTHwXSyn+8t6UikcNBahHydFCP4ex7aZ3EQp4llGxud+2sSpPgntQAHhhabVqHWjC
+         hNKA==
+X-Gm-Message-State: APjAAAXF2a11o8mIsrxTsCu3LEzBETT4STV4nT9CH3Gko3cKH/A/jctV
+        GNMSeumChhR6b/+kAfzDJAI=
+X-Google-Smtp-Source: APXvYqxF8F0ef6U2TWFXrcQPbHuZWP7IKGIXBYt0eXRhSsrpoTZ7kq/2sVbGruhOiI72J6QQYZyINQ==
+X-Received: by 2002:a2e:121d:: with SMTP id t29mr9763738lje.29.1557874240760;
+        Tue, 14 May 2019 15:50:40 -0700 (PDT)
+Received: from z50.gdansk-morena.vectranet.pl (109241207190.gdansk.vectranet.pl. [109.241.207.190])
+        by smtp.gmail.com with ESMTPSA id s6sm50190lje.89.2019.05.14.15.50.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 15:50:39 -0700 (PDT)
+From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Subject: [PATCH v6 0/3] media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
+Date:   Wed, 15 May 2019 00:48:20 +0200
+Message-Id: <20190514224823.11564-1-jmkrzyszt@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com> <66e2f965-4f4d-a755-69b3-5342aa761ff3@linux.alibaba.com>
-In-Reply-To: <66e2f965-4f4d-a755-69b3-5342aa761ff3@linux.alibaba.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 14 May 2019 15:50:07 -0700
-Message-ID: <CAHbLzkqU=O9JmE9Fnie1MzRB_fbD1=3turBtmaRwX-p=PMHHXw@mail.gmail.com>
-Subject: Re: [PATCH] mm: filemap: correct the comment about VM_FAULT_RETRY
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     josef@toxicpanda.com, Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josef,
+Correctness of format type (try or active) and pad ID parameters passed
+to subdevice operation callbacks is now verified only for IOCTL calls.
+However, those callbacks are also used by drivers, e.g., V4L2 host
+interfaces.
+    
+Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
+macro while calling subdevice operations, move those parameter checks
+from subdev_do_ioctl() to v4l2_subdev_call().  Also, add check for
+non-NULL pointers, including pad config if V4L2_SUBDEV_FORMAT_tRY is
+requested.
 
-Any comment on this patch? I switched to my personal email since the
-mail may get bounced back with my work email sometime.
+Having that done, we can avoid taking care of those checks inside
+drivers.
 
+Janusz Krzysztofik (3):
+  media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
+  media: v4l2-subdev: Verify v4l2_subdev_call() pointer arguments
+  media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
 
-On Wed, May 8, 2019 at 9:55 AM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
-> Ping.
->
->
-> Josef, any comment on this one?
->
->
-> Thanks,
->
-> Yang
->
->
->
-> On 4/25/19 4:22 PM, Yang Shi wrote:
-> > The commit 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking
-> > operations") changed when mmap_sem is dropped during filemap page fault
-> > and when returning VM_FAULT_RETRY.
-> >
-> > Correct the comment to reflect the change.
-> >
-> > Cc: Josef Bacik <josef@toxicpanda.com>
-> > Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> > ---
-> >   mm/filemap.c | 6 ++----
-> >   1 file changed, 2 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/filemap.c b/mm/filemap.c
-> > index d78f577..f0d6250 100644
-> > --- a/mm/filemap.c
-> > +++ b/mm/filemap.c
-> > @@ -2545,10 +2545,8 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
-> >    *
-> >    * vma->vm_mm->mmap_sem must be held on entry.
-> >    *
-> > - * If our return value has VM_FAULT_RETRY set, it's because
-> > - * lock_page_or_retry() returned 0.
-> > - * The mmap_sem has usually been released in this case.
-> > - * See __lock_page_or_retry() for the exception.
-> > + * If our return value has VM_FAULT_RETRY set, it's because the mmap_sem
-> > + * may be dropped before doing I/O or by lock_page_maybe_drop_mmap().
-> >    *
-> >    * If our return value does not have VM_FAULT_RETRY set, the mmap_sem
-> >    * has not been released.
->
+ drivers/media/v4l2-core/v4l2-subdev.c | 262 +++++++++++++++++---------
+ include/media/v4l2-subdev.h           |   6 +
+ 2 files changed, 182 insertions(+), 86 deletions(-)
+
+Changelog:
+v5->v6:
+- rename wrappers to call_something() as suggested by Sakari - thanks!
+- make check_ functions inline - also on Sakari's suggestion, thanks!
+- drop patch 2/4 and remove WARN_ONs from remaining patches to avoid
+  kernel WARNs on non-kernel bugs - thanks Hans for pointing this out!
+
+v4->v5:
+- a few coding style and code formatting changes,
+- require CONFIG_MEDIA_CONTROLLER, not CONFIG_VIDEO_V4L2_SUBDEV_API,
+  for a valid pad ID check,
+- perform pad ID check only if at least one pad is configured so
+  drivers which don't configure pads are not affected if built with
+  CONFIG_MEDIA_CONTROLLER defined,
+- issue kernel warnings on invalid parameters (new patch - 2/4),
+- validate pointers before using them (new patch - 3/4).
+
+v3->v4:
+- fix 'struct' keyword missing from patch 2/2,
+- fix checkpatch reported style issue in patch 2/2
+Sorry for that.
+
+v2->v3:
+- add patch 2/2 with pad config check,
+- adjust continuation line alignments in patch 1/2 to match those
+  used in 2/2.
+
+v1->v2:
+- replace the horrible macro with a structure of wrapper functions;
+  inspired by Hans' and Sakari's comments - thanks!
+
+-- 
+2.21.0
+
