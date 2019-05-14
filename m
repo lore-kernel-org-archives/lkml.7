@@ -2,151 +2,308 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE40C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C96C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EACB320862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3DCF20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:34:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bGKa/Zt6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VTm/BvXF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbfENTeR (ORCPT
+        id S1726352AbfENTeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:34:17 -0400
-Received: from mail-eopbgr150043.outbound.protection.outlook.com ([40.107.15.43]:23269
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726013AbfENTeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:34:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wjlb1F565UolY8iB+CdaT0Fa4CFl8wrCMHACaEWawDs=;
- b=bGKa/Zt6Sz7T74NDy+M+hswY82qqEPoAjVZvPpqiwrxr+vZ8typ90hPdF6lMB3jODIZP3V/FAZdvyFO5tQfj1bsXnPzUhfOwnYgduNBszDUQdUWm89jBqr8G/JLE99e051Cd7qToyTBYDdcMjEbGs1qMdQP2mSNxhPniuDmDJCU=
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
- AM0PR04MB4034.eurprd04.prod.outlook.com (52.134.124.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Tue, 14 May 2019 19:34:10 +0000
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1900.010; Tue, 14 May 2019
- 19:34:10 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Alexandre Bailon <abailon@baylibre.com>,
-        Jacky Bai <ping.bai@nxp.com>
-CC:     Michael Turquette <mturquette@baylibre.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Patrick Titiano <ptitiano@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Emilio Lopez <emilio@elopez.com.ar>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Zening Wang <zening.wang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Carlo Caione <ccaione@baylibre.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC PATCH 0/3] Add support of busfreq
-Thread-Topic: [RFC PATCH 0/3] Add support of busfreq
-Thread-Index: AQHU2dO+g7FtRU5+MUaLzLMJn01eLA==
-Date:   Tue, 14 May 2019 19:34:10 +0000
-Message-ID: <AM0PR04MB643434FB6A26B4D70F52F350EE080@AM0PR04MB6434.eurprd04.prod.outlook.com>
-References: <20190313193408.23740-1-abailon@baylibre.com>
- <CAEG3pNA+U1tw4sWq9i2cTni6QKQkLyd3qyZXd2i8M7WFDF4ZsQ@mail.gmail.com>
- <8af96425-a6f5-0114-7abb-c2a67b952e1b@baylibre.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6b581bec-232e-4e02-5246-08d6d8a3234f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4034;
-x-ms-traffictypediagnostic: AM0PR04MB4034:
-x-microsoft-antispam-prvs: <AM0PR04MB40348DFC8A9DAE6AA1C15C4CEE080@AM0PR04MB4034.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(376002)(396003)(346002)(189003)(199004)(446003)(316002)(110136005)(54906003)(74316002)(33656002)(71200400001)(71190400001)(4326008)(66946007)(25786009)(55016002)(68736007)(7696005)(476003)(86362001)(99286004)(486006)(9686003)(6506007)(53546011)(44832011)(76176011)(7416002)(6636002)(305945005)(26005)(229853002)(186003)(6436002)(66066001)(478600001)(14454004)(256004)(8936002)(52536014)(6246003)(53936002)(102836004)(5660300002)(8676002)(81156014)(73956011)(91956017)(66476007)(64756008)(81166006)(66556008)(66446008)(14444005)(76116006)(7736002)(6116002)(3846002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4034;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: wPqGYTShWwbwZBwFTLFsyajA5OR4p+TDB+/sPgqTbWldVAU55kzWd/FsnmjqDj29B7mcV3piCEBXmb4L3BGkWV8yhjE+SnyHgmR1RJkBeXailv1EcAWX7VB4vFHMdYjtBknpFyGCOwWrrhQoaAXvczwoRggYroF0QaeSqgPfvM5MRI9jzU0GtUEM+8Qtr/IwHVNEXYfOld9zJgKXSv2memqlOI+Kco3fQqS6pBya23bN7DQ/dYK4bx/5N+V5bwyp3KyqHnOazRkH52AIfZz6fg/UsgLUC/wGjl0ILFpkQFifgHaHaAjCKK8ZY8Hlelf8J/G8cmazdLLkmyCDnXhmFXzk7VCC0DQwZxT5yW7AGbYOKCiexvjMFXKfarVNZS4f/XVdXQrg2wfzvhZ4isXkKrs7dJmgO7V3JVcUohS278s=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 May 2019 15:34:46 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43569 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfENTeq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 15:34:46 -0400
+Received: by mail-yw1-f67.google.com with SMTP id t5so223755ywf.10
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:34:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SQWdR6M1bjA5E+nekafkDtjgeu8tRbwrT58SnilDw98=;
+        b=VTm/BvXF7CB8JN7kN9QXABAueDzMJCPc0kvojGn8Jr4yODlW5pnbnuvXgQ+W6Y6FIk
+         j+rIfGppQF3ULbrliYTb5x5r6kw6+GYjhyeYmGsqrLMoXWfgUci1kTSyCm9E4FuiiCnw
+         OihJYG3zZL9jDNOr1Lss8gx6HAlP9Q/mzGA+heDC3KJPD8tut/Ip6EHzakkgWC5l8vY8
+         QDjPXSSbcRFXZZhbWn800AnSj/TXAw0tvZwjAEke9WQVB36L+ZsbzKkxEMXt1adlVDLV
+         ++ZG203U86KvfO/43CSEMX9TpqZKYah1AU+qH24kpxccTpKePzT97nrIqAG+c/85ggSu
+         FwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SQWdR6M1bjA5E+nekafkDtjgeu8tRbwrT58SnilDw98=;
+        b=jBEHqBAKERrij0IQS4Uy8rsZWPEF2QljUnyzM/zIU5AoG5Wtao+TZfWCjbW0BxRrL/
+         o/vayRGxfjbT1YrnCRieDrs69JkhscBmi4FONcMUI8GEwq6yi65Yw1wg1QmbyFnzSkvB
+         RUdjqTRzGAGOCQxY0RNQGyjSYBIBYWqtwI+SxZSvgDvR5CGeUEDODGuvEOubAXR8S+6w
+         uBSRd0E4k2bgYYWriJVrdq6OrBVXE9b9SF+OVsYzHylorWxF+1ZXA6sKYJ80Aize1bpC
+         2D21Q7KU9vCL4BBeRyrmK9yriWPSws9iBisfSQG62BmeTQ44ehL9FzaBTLHzjJy/1OlJ
+         Mm5g==
+X-Gm-Message-State: APjAAAUn+E3jOGbM2gJhz9jxqC3dWbou5JHBGvrtKZ+euaPOkByiCMC4
+        TS2nDWw00ZNQlOWVLnTjCJCK0NW7qECyaMKCo1jzOw==
+X-Google-Smtp-Source: APXvYqybgfi+BJU2SWBbUsNHCW9HAljOxaVdzf/lwwO7O/6dlTexrfBwYt9Pwh2t5dPe+HmevcUBE4jWsw5Q+1iUUYs=
+X-Received: by 2002:a81:2513:: with SMTP id l19mr13016377ywl.299.1557862484830;
+ Tue, 14 May 2019 12:34:44 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b581bec-232e-4e02-5246-08d6d8a3234f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 19:34:10.2224
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4034
+References: <20190514183935.143463-1-dianders@chromium.org> <20190514183935.143463-2-dianders@chromium.org>
+In-Reply-To: <20190514183935.143463-2-dianders@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Tue, 14 May 2019 12:34:33 -0700
+Message-ID: <CABXOdTc36r7XV-3o8MJiaUTkaALtfQAQpi1gV2xvsDSX+S3s2A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] platform/chrome: cros_ec_spi: Move to real time
+ priority for transfers
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.03.2019 18:55, Alexandre Bailon wrote:=0A=
->> On Wed, Mar 13, 2019 at 12:33 PM Alexandre Bailon <abailon@baylibre.com>=
- wrote:=0A=
-=0A=
->>> As exemple, this series implements busfreq for i.MX8MM whose=0A=
->>> upstreaming is in progress. Because this relies on ATF to=0A=
->>> do the frequency scaling, it won't be hard make it work.=0A=
->>=0A=
->> It's not clear to me whether this series actual scales the dram=0A=
->> frequency based on what you said above. Is it just theoretical or do=0A=
->> you have it working with a pile of out-of-tree patches? Would be good=0A=
->> to include that pile of patches in your integration branch that I=0A=
->> suggested above.=0A=
-=0A=
-> The current series only introduce busfreq generic driver, and the=0A=
-> busfreq driver for the imx8mm.=0A=
-> As is, the imx8mm driver will just be loaded, but do nothing because=0A=
-> none of the drivers have been updated to request bandwidth using the=0A=
-> interconnect framework.=0A=
-> =0A=
-> My intent was to sent a first draft o busfreq, to get some feedback,=0A=
-> before to send a more complete, and fully functional series.=0A=
-=0A=
-It's been a while since this was first posted and imx8mm now boots fine =0A=
-in linux-next. Is there a more up-to-date WIP branch somewhere? =0A=
-Otherwise I can try to hack this series into a bootable form.=0A=
-=0A=
- > In addition, the current clock driver of imx8mm doesn't allow dram=0A=
- > frequency scaling, so if busfreq driver tries, it will fail (should be=
-=0A=
- > harmless because any other clocks should restored to their previous=0A=
- > rate).=0A=
-=0A=
-I'm confused about this. In NXP tree the actual DRAM switch is done =0A=
-inside ATF via SIP calls and involves corralling all CPUs. Do you want =0A=
-an "dram" clk which wraps the SIP calls required to changing dram =0A=
-frequency and root switching etc?=0A=
-=0A=
-I've been looking at the busfreq implementation in the NXP tree and =0A=
-refactoring just the "dram freq switch" behind a clk might work nicely.=0A=
-=0A=
-This would be similar to the imx_cpu clk used for cpufreq-dt and it =0A=
-might even be possible to upstream this separately from the rest of =0A=
-busfreq logic dealing with device requests.=0A=
-=0A=
-=0A=
-I haven't done a very careful review but I noticed you're not using the =0A=
-OPP framework and instead redefined everything? It's not clear why.=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+On Tue, May 14, 2019 at 11:40 AM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> In commit 37a186225a0c ("platform/chrome: cros_ec_spi: Transfer
+> messages at high priority") we moved transfers to a high priority
+> workqueue.  This helped make them much more reliable.
+>
+> ...but, we still saw failures.
+>
+> We were actually finding ourselves competing for time with dm-crypt
+> which also scheduled work on HIGHPRI workqueues.  While we can
+> consider reverting the change that made dm-crypt run its work at
+> HIGHPRI, the argument in commit a1b89132dc4f ("dm crypt: use
+> WQ_HIGHPRI for the IO and crypt workqueues") is somewhat compelling.
+> It does make sense for IO to be scheduled at a priority that's higher
+> than the default user priority.  It also turns out that dm-crypt isn't
+> alone in using high priority like this.  loop_prepare_queue() does
+> something similar for loopback devices.
+>
+> Looking in more detail, it can be seen that the high priority
+> workqueue isn't actually that high of a priority.  It runs at MIN_NICE
+> which is _fairly_ high priority but still below all real time
+> priority.
+>
+> Should we move cros_ec_spi to real time priority to fix our problems,
+> or is this just escalating a priority war?  I'll argue here that
+> cros_ec_spi _does_ belong at real time priority.  Specifically
+> cros_ec_spi actually needs to run quickly for correctness.  As I
+> understand this is exactly what real time priority is for.
+>
+> There currently doesn't appear to be any way to use the standard
+> workqueue APIs with a real time priority, so we'll switch over to
+> using using a kthread worker.  We'll match the priority that the SPI
+> core uses when it wants to do things on a realtime thread and just use
+> "MAX_RT_PRIO - 1".
+>
+> This commit plus the patch ("platform/chrome: cros_ec_spi: Request the
+> SPI thread be realtime") are enough to get communications very close
+> to 100% reliable (the only known problem left is when serial console
+> is turned on, which isn't something that happens in shipping devices).
+> Specifically this test case now passes (tested on rk3288-veyron-jerry):
+>
+>   dd if=/dev/zero of=/var/log/foo.txt bs=4M count=512&
+>   while true; do
+>     ectool version > /dev/null;
+>   done
+>
+> It should be noted that "/var/log" is encrypted (and goes through
+> dm-crypt) and also passes through a loopback device.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v3:
+> - cros_ec realtime patch replaces revert; now patch #1
+>
+> Changes in v2: None
+>
+>  drivers/platform/chrome/cros_ec_spi.c | 88 +++++++++++++++++++++++----
+>  1 file changed, 77 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
+> index 8e9451720e73..b89bf11dda64 100644
+> --- a/drivers/platform/chrome/cros_ec_spi.c
+> +++ b/drivers/platform/chrome/cros_ec_spi.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/spi/spi.h>
+>
+> +#include <uapi/linux/sched/types.h>
+> +
+
+Extra newline.
+
+>
+>  /* The header byte, which follows the preamble */
+>  #define EC_MSG_HEADER                  0xec
+> @@ -67,12 +69,16 @@
+>   *      is sent when we want to turn on CS at the start of a transaction.
+>   * @end_of_msg_delay: used to set the delay_usecs on the spi_transfer that
+>   *      is sent when we want to turn off CS at the end of a transaction.
+> + * @high_pri_worker: Used to give work to high_pri_thread.
+> + * @high_pri_thread: We'll do our transfers here to reduce preemption problems.
+>   */
+>  struct cros_ec_spi {
+>         struct spi_device *spi;
+>         s64 last_transfer_ns;
+>         unsigned int start_of_msg_delay;
+>         unsigned int end_of_msg_delay;
+> +       struct kthread_worker high_pri_worker;
+> +       struct task_struct *high_pri_thread;
+>  };
+>
+>  typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
+> @@ -89,7 +95,7 @@ typedef int (*cros_ec_xfer_fn_t) (struct cros_ec_device *ec_dev,
+>   */
+>
+>  struct cros_ec_xfer_work_params {
+> -       struct work_struct work;
+> +       struct kthread_work work;
+>         cros_ec_xfer_fn_t fn;
+>         struct cros_ec_device *ec_dev;
+>         struct cros_ec_command *ec_msg;
+> @@ -632,7 +638,7 @@ static int do_cros_ec_cmd_xfer_spi(struct cros_ec_device *ec_dev,
+>         return ret;
+>  }
+>
+> -static void cros_ec_xfer_high_pri_work(struct work_struct *work)
+> +static void cros_ec_xfer_high_pri_work(struct kthread_work *work)
+>  {
+>         struct cros_ec_xfer_work_params *params;
+>
+> @@ -644,12 +650,14 @@ static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
+>                                  struct cros_ec_command *ec_msg,
+>                                  cros_ec_xfer_fn_t fn)
+>  {
+> -       struct cros_ec_xfer_work_params params;
+> -
+> -       INIT_WORK_ONSTACK(&params.work, cros_ec_xfer_high_pri_work);
+> -       params.ec_dev = ec_dev;
+> -       params.ec_msg = ec_msg;
+> -       params.fn = fn;
+> +       struct cros_ec_spi *ec_spi = ec_dev->priv;
+> +       struct cros_ec_xfer_work_params params = {
+> +               .work = KTHREAD_WORK_INIT(params.work,
+> +                                         cros_ec_xfer_high_pri_work),
+> +               .ec_dev = ec_dev,
+> +               .ec_msg = ec_msg,
+> +               .fn = fn,
+> +       };
+>
+>         /*
+>          * This looks a bit ridiculous.  Why do the work on a
+> @@ -660,9 +668,8 @@ static int cros_ec_xfer_high_pri(struct cros_ec_device *ec_dev,
+>          * context switched out for too long and the EC giving up on
+>          * the transfer.
+>          */
+> -       queue_work(system_highpri_wq, &params.work);
+> -       flush_work(&params.work);
+> -       destroy_work_on_stack(&params.work);
+> +       kthread_queue_work(&ec_spi->high_pri_worker, &params.work);
+> +       kthread_flush_work(&params.work);
+>
+>         return params.ret;
+>  }
+> @@ -694,6 +701,61 @@ static void cros_ec_spi_dt_probe(struct cros_ec_spi *ec_spi, struct device *dev)
+>                 ec_spi->end_of_msg_delay = val;
+>  }
+>
+> +static void cros_ec_spi_high_pri_release(struct device *dev, void *res)
+> +{
+> +       struct cros_ec_spi *ec_spi = *(struct cros_ec_spi **)res;
+> +
+> +       kthread_stop(ec_spi->high_pri_thread);
+
+Is that needed ? kthread_destroy_worker() does it for you.
+
+> +       kthread_destroy_worker(&ec_spi->high_pri_worker);
+> +}
+> +
+> +static int cros_ec_spi_devm_high_pri_alloc(struct device *dev,
+> +                                          struct cros_ec_spi *ec_spi)
+> +{
+> +       struct sched_param sched_priority = {
+> +               .sched_priority = MAX_RT_PRIO - 1,
+> +       };
+> +       struct cros_ec_spi **ptr;
+> +       int err = 0;
+> +
+> +       ptr = devres_alloc(cros_ec_spi_high_pri_release, sizeof(*ptr),
+> +                          GFP_KERNEL);
+> +       if (!ptr)
+> +               return -ENOMEM;
+> +       *ptr = ec_spi;
+> +
+> +       kthread_init_worker(&ec_spi->high_pri_worker);
+> +       ec_spi->high_pri_thread = kthread_create(kthread_worker_fn,
+> +                                                &ec_spi->high_pri_worker,
+> +                                                "cros_ec_spi_high_pri");
+> +       if (IS_ERR(ec_spi->high_pri_thread)) {
+> +               err = PTR_ERR(ec_spi->high_pri_thread);
+> +               dev_err(dev, "Can't create cros_ec high pri thread: %d\n", err);
+> +               goto err_worker_initted;
+> +       }
+> +
+> +       err = sched_setscheduler_nocheck(ec_spi->high_pri_thread,
+> +                                        SCHED_FIFO, &sched_priority);
+> +       if (err) {
+> +               dev_err(dev, "Can't set cros_ec high pri priority: %d\n", err);
+> +               goto err_thread_created;
+> +       }
+> +
+> +       wake_up_process(ec_spi->high_pri_thread);
+> +
+> +       devres_add(dev, ptr);
+> +
+
+If you move that ahead of sched_setscheduler_nocheck(), you would not
+need the err_thread_created: label.
+
+> +       return 0;
+> +
+> +err_thread_created:
+> +       kthread_stop(ec_spi->high_pri_thread);
+> +
+> +err_worker_initted:
+> +       kthread_destroy_worker(&ec_spi->high_pri_worker);
+
+Are you sure about this ? The worker isn't started here, but
+kthread_destroy_worker() tries to stop it.
+
+> +       devres_free(ptr);
+> +       return err;
+> +}
+> +
+>  static int cros_ec_spi_probe(struct spi_device *spi)
+>  {
+>         struct device *dev = &spi->dev;
+> @@ -732,6 +794,10 @@ static int cros_ec_spi_probe(struct spi_device *spi)
+>
+>         ec_spi->last_transfer_ns = ktime_get_ns();
+>
+> +       err = cros_ec_spi_devm_high_pri_alloc(dev, ec_spi);
+> +       if (err)
+> +               return err;
+> +
+>         err = cros_ec_register(ec_dev);
+>         if (err) {
+>                 dev_err(dev, "cannot register EC\n");
+> --
+> 2.21.0.1020.gf2820cf01a-goog
+>
