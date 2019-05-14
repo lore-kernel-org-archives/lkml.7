@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24975C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B76CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:50:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9DF20850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E366320862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:50:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="inf+nl8j"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="o7LaBHG6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfENQsm (ORCPT
+        id S1726325AbfENQuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:48:42 -0400
-Received: from mout.web.de ([212.227.17.11]:59027 "EHLO mout.web.de"
+        Tue, 14 May 2019 12:50:46 -0400
+Received: from mout.web.de ([217.72.192.78]:34963 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726013AbfENQsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:48:42 -0400
+        id S1726013AbfENQuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 12:50:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557852500;
-        bh=qPRDclKWLr4lyBo4BDHe8YC1/qFNclCth5wfnoNSOSA=;
+        s=dbaedf251592; t=1557852620;
+        bh=tTdGn7PAdq23/snhcsDYMPF+/i7fZBX9nZlKLsqxWGQ=;
         h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=inf+nl8j2dH/j2pQX1wEdcE//KPuXDNYBiifeiiylPH3lL5J5o7Vc5uHcuTc9QyBT
-         sTsIMBYjcV7GZdyeo/OX0ccRSnMIXd6klT1rRKlW/e3rVqXAixzLb4lIeWC0RrrNdg
-         8LIxDvVYNkd6MRbqf7aVKfW7DB7NxdzhQgaiHmco=
+        b=o7LaBHG6AeXvjOrrrZmK8VGcB45IX2YXT+HOE6N0fwo6LF0Y33mU8hyvb6fVWoz1Y
+         1WIPgZ6pQOjaJ59JYnBcIzsnnfRon0NJZ5X2OB37/6yaHPBA4rd7muMgWQQxq6n+JG
+         t+gL7mmCuWUoxlaFAeXnNwIJOLo1OQbKwl6+DEsE=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
 Received: from [192.168.1.3] ([93.131.122.180]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MbQOe-1hA1eS0vYa-00IhvQ; Tue, 14
- May 2019 18:48:20 +0200
-Subject: [PATCH 1/3] Coccinelle: pci_free_consistent: Use formatted strings
- directly in SmPL rules
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Md4pC-1h8NFx3eJW-00IA5g; Tue, 14
+ May 2019 18:50:20 +0200
+Subject: [PATCH 2/3] Coccinelle: pci_free_consistent: Reduce a bit of
+ duplicate SmPL code
 From:   Markus Elfring <Markus.Elfring@web.de>
 To:     Gilles Muller <Gilles.Muller@lip6.fr>,
         Julia Lawall <Julia.Lawall@lip6.fr>,
@@ -90,8 +90,8 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <a91f9a9b-57be-59a8-1755-37936512ff20@web.de>
-Date:   Tue, 14 May 2019 18:48:17 +0200
+Message-ID: <112fa697-3073-1a95-eb5b-fa62ad9607fb@web.de>
+Date:   Tue, 14 May 2019 18:50:18 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
@@ -99,76 +99,65 @@ In-Reply-To: <e30b9777-6440-b041-9df9-f1a27ce06c6c@web.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:QRBx1IBclryj4Qq+8nzvCHNrTNzgL3iA9Tq3fVJ8slY/WF989bS
- HEVGWOw0X/WfmbruvCyIv+XyqSoWOWn5Efyc+gBmShbTCJ910rQTXHUf4/s4FQu7Kh8r3jp
- 8eOXkNIbD/GJ9kLHjODAAnUadEjTA00D9kVoJYySwHxhsG5f1G9XtgcH7PbMBGIY3i3W5+7
- JzwrCC/De1fffX2f3o1fA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aDcyGZmwSOY=:ftrzw8FyBsz6XW6XOwkdEo
- 3KJX+5VUcYNTh8qgox3SusotVQ/h4EYHPb0DUvLTC6JnsY9UH5LOQJxFKGrXuG4k0eXr/ljqN
- DcRWfxtnQ9HXaiAaj5YL4NSGro13No1pP4nfqFUJ+Vov0DKYGfGVQAyXtU+CJu1Hs+zgpJ/nG
- ADuhBXH0+hExa0xN9kHeHv3ISR0bt29I2qAGXqgaazqRcM2tflm7tqJ9jLmQyiUjL/xIyKfAQ
- j1ERTcHUwAplnAg21VnQf7pQLr9sjfj87VTAKAMv3SqQC6EOdgnIQVdwQ3h4LAoMLQ2coixNj
- mOQ84Hz6XKQptpSg7auZPId84enLSY4nu2X/W0IDG5KGFHgHv6rHfLH7gabP6f/Rt6fDqvtzU
- dqrq1SX2EedjeTiNjD/E463bzrquyfMKgqHwrvz4gMEbNL0Qw7LJfxNE74UcXJdP7HGW9kDwH
- kuLcfedlY9JnqcsKPQznL4ReqSk40eJeEpjjjsjxtUQRymZtdq0lB3HY48iyuUZxLCcz6mUB3
- 4+NM8vcGFsUpE/oUcsfhZoucvuGx6Knx3+Ps12o/AokhzA0R5p8eHlwDim45YTqP+saOCSMfM
- F3ErJ5YBpRH8a/BcD+jMUspwDGpKQi+k985Dgpb85roJhLQYeFkk5C+eJRf2WN5jULKk8GTO8
- x9MNqCpD/wKHmkE72TCzLOyg7q7WToApUgSuL7f6u4CQZ/DjDrW/s+YfI2d8Y98JE/6tX95ap
- aHTa56COk/8FQw0X78Lk79lJ1rhfAGVQvWLPzkfuynRU0dXnSS3MWR2Qgi5XI2biQ2YLpK2DW
- rty9FybEYoe2yB0aA1YZDBsr+vPmoTww854zBMWTINysqfDhqEynNRZPvtGVSFfca8isuy9z9
- SondxUJXlLTaLPkxJoY1Q48hoVBKOi7JYOVHbcwgEVI5BuLUqu/SQDbdn0iGJIg+JC09Tfgdf
- z5AvtWSQVEA==
+X-Provags-ID: V03:K1:aQfd8KeT4EeqJHpXk52onmgzbYMUPPIQ12nkbW+Tb0Et4jY68c9
+ yTnrWu3+jaJKf1hM7BoqY8RfyCCOu0Ik81VEgUDoLQvFmEGUnq2b65ydwgxDvlFAmvwRd4S
+ VYKWMmo78rSVN02tN1APtVk0VR5V8grwms9LSbP8D+D/JjKGbcTricQ09c678gW+vsyFUd/
+ dRwt+JHNt5O4sUX79vJFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:okwvb/1LyTo=:ozl2oOGiUrNQcjJ3xL3StE
+ GyYJBS7DYKjmzffTHLNmJnCQiz0e2cnq6G2zTooG0/hL40hm7sXdf205B899c7nkUBkCIxpNj
+ J1LIxGsB7o44T6a+q6rKNYTsxRGPqvm0gG+AEgA+LLRCpfWFyKuQZue27AcNV+ctQOK6uqg3Q
+ +ZCt32bC+3LIF5JhBDGg5a4MGcVxmg+XWQZbC99nVzqIKyotvCgMHEIrggbQ1Kwaob5fOs/83
+ PUfhmwLnc5KmiW3OW5Oi6pgKDQm1cSLmxMj+WEU6+zL43yyujgVs5saaF8Nx05nl8Udzl0yOK
+ c8xiNYQO1U7+JhdCR4rg+H7D60rEzrCfY7RG2d/W7zKLm4K6Xdo4At5tzKo5lMaznIgx4Y2hY
+ XMP0o8NtvCvi84RKSt+AF467y61kPgcLfw1H5FTAJn8XjtWy+H5yqClYZttY9ylAtPlZUfwwJ
+ nmiwlSki9Tp+yVpPhVe2k7E2Ga7fUn9lcuEPLpxGR+gGNiCqRjlhs9Q0ekpGlOMU2ygNRh3ma
+ R3GkFepcNXV3CutXkvkFnP4p7SBKz2eGjpfnpiJyBM3SMf7C0xxs+DP5cZU3Hnlq97ebsbC/R
+ 4hTMULuPvOqkibf9OPGpTHLM9/wz8RihSi+7d0fn4ehNzIcqpv8jpcT1BD5SwtTwl2wDVJp/u
+ IQmboNoVZn20Wxry56V+qlEN+OP6K8VEipoPdkuGYgftmHxqzJb1kHaZe9wUaj1sEzVFy/UcG
+ ShoazwRF1C6c0T8/WciQUA6tMP/sPKUvGDH+HDb/wfAeOy72sPR8aO91Bm7ZWs0zwoof1f//4
+ Rfvo3gD8WlAG1Vxe/BTHBj1FfrTRXd5y9cdrS+ss/aB0J1ST5UGTL7iy+/tOqNKexx0luieMD
+ H1HlbrkxiK+KaMOgg83YNesH6VX/Mo2TFJj6bua9unFGr+av5Dc3wWH6+FNMKZWia2v7oNuOj
+ rAJnHy3+55g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 14 May 2019 16:54:40 +0200
+Date: Tue, 14 May 2019 17:18:24 +0200
 
-Formatted strings were always assigned to the Python variable =E2=80=9Cmsg=
-=E2=80=9D
-before they were used in two rules of a script for the semantic
-patch language.
-Delete these extra variables so that the specified string objects
-are directly used for the desired data output.
+A return statement was specified with a known value for three branches
+of a SmPL disjunction.
+Reduce duplicate SmPL code there by using another disjunction for
+these return values.
 
 Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 =2D--
- scripts/coccinelle/free/pci_free_consistent.cocci | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ scripts/coccinelle/free/pci_free_consistent.cocci | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/scripts/coccinelle/free/pci_free_consistent.cocci b/scripts/c=
 occinelle/free/pci_free_consistent.cocci
-index 43600ccb62a8..2056d6680cb8 100644
+index 2056d6680cb8..45bc14ece151 100644
 =2D-- a/scripts/coccinelle/free/pci_free_consistent.cocci
 +++ b/scripts/coccinelle/free/pci_free_consistent.cocci
-@@ -38,15 +38,15 @@ return@p2 ...;
- p1 << search.p1;
- p2 << search.p2;
- @@
--
--msg =3D "ERROR: missing pci_free_consistent; pci_alloc_consistent on line=
- %s and return without freeing on line %s" % (p1[0].line,p2[0].line)
--coccilib.report.print_report(p2[0],msg)
-+coccilib.report.print_report(p2[0],
-+                             "ERROR: missing pci_free_consistent; pci_all=
-oc_consistent on line %s and return without freeing on line %s"
-+                             % (p1[0].line,p2[0].line))
-
- @script:python depends on org@
- p1 << search.p1;
- p2 << search.p2;
- @@
--
--msg =3D "ERROR: missing pci_free_consistent; pci_alloc_consistent on line=
- %s and return without freeing on line %s" % (p1[0].line,p2[0].line)
--cocci.print_main(msg,p1)
-+cocci.print_main("ERROR: missing pci_free_consistent; pci_alloc_consisten=
-t on line %s and return without freeing on line %s"
-+                 % (p1[0].line,p2[0].line),
-+                 p1)
- cocci.print_secs("",p2)
+@@ -25,11 +25,11 @@ if (id =3D=3D NULL || ...) { ... return ...; }
+     when !=3D e =3D (T)id
+     when exists
+ (
+-return 0;
+-|
+-return 1;
+-|
+-return id;
++ return
++(0
++|1
++|id
++);
+ |
+ return@p2 ...;
+ )
 =2D-
 2.21.0
 
