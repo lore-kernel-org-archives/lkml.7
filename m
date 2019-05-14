@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4A8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D95EFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE69C20881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9454D21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lJr0Zzq/"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Mazte5J0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfENSZF (ORCPT
+        id S1727548AbfENS3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:25:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37761 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfENSZF (ORCPT
+        Tue, 14 May 2019 14:29:18 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35920 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfENS3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:25:05 -0400
-Received: by mail-oi1-f193.google.com with SMTP id f4so5548619oib.4;
-        Tue, 14 May 2019 11:25:04 -0700 (PDT)
+        Tue, 14 May 2019 14:29:17 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l203so12920767oia.3;
+        Tue, 14 May 2019 11:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kw3IOsl4tz1Kex8D0hbfYf2WNfpKc0o/lXZ+cVw7qjc=;
-        b=lJr0Zzq/wwnxu0m2KeQgieErswd5Yc517neOCGeh1PtLvrXwf/bAxE4Lb1MJS5E2iU
-         Q1JQhCcj6az7Bn1+cEetwZ3KUCQYjPa1r5R9lWU+KscBgqT4bNBBfR/jO3OWnG8Xf2Rb
-         mclBcWeZF2rY7uG8NkF6YY3WksmciEdWC1KnQOc03AvywuyPRgkWsk/0FbAyuGETryaS
-         fxp7e3UNkBLueJWWkKWj5oiAks30wFhQexvpgGbPeUHHnSoPUFliBwVVMYFhai5DBTCi
-         g4Cjo6ccfLQkmSMk7pkq3Btuq7ZH9zROPV/CRPoIQnJdoUaloOZc8z6PHvZA0xVnT/m5
-         qoFA==
+        bh=WeXlOJL3K8v7KWG3tXskIvOY8eKPAZMh5I01Otu6OTo=;
+        b=Mazte5J0xZY5ZnJfnGirkWTAZb5+4/H/0co+UgIgZU/D1vfggLqWv01UNPYuKhIq9F
+         OfHXSuq8vva/s+Ar+KXiMBzrIhJnPtcEjmPop9A/n+keRtck9Vg2GvLn0xjSOptk5XN+
+         9hr/1bl14aFkba1o5tFjeXVysOyPE9ynh8b4tlq19M1B+FANVS/b8w0l8fkYqjLq07iq
+         2E1OKm4kUFZOnKZ27oYHQm7RW3qwrN0lxooI6r3DlMKaVV+AORj0+CLat+OkfYhaUpfE
+         Shpipt4CmDiY27XLMIxF5VVNmhifPPuzasJoSlfG0soyk5Vu7Y834e9KDKepFbYeSHlH
+         xR0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kw3IOsl4tz1Kex8D0hbfYf2WNfpKc0o/lXZ+cVw7qjc=;
-        b=tGCyWhtkcNJqLxeQiqQw8LSwnrM5UWfq0cTvc0AzdxraGKx9aUtM9Iu+0cPdxwUfoM
-         T/F3qQYiUhgyoAiS/QfBKMl0sClfNYu/L546JjfMC63ZNkoDUDD5BmYryk0pUGfkTn9L
-         Ki1cXb2UM1dIP88TWFrwOdlxrYjJdwU8soOTv7lojLMhWKQybvqSYYsMM+fPD/kfhnpQ
-         uvo5gROp5a6PN9kYX7+/2srOotH1RD/Xh+9HXC5U7X77kkk+mi3iZ7OcdHoCZiBsMgJe
-         lhIH96k2ysClg87ttPWsL2DioR01PRd8/+lNJgdvDs90728ON7cw9Vpmf/ZkndreNCl/
-         +PGQ==
-X-Gm-Message-State: APjAAAUl41j1FIg2TU1kTHLI29b6H9hYOMZxoUz5ysCdqJBNWS4US2Qc
-        FEduFLBv2eqlPPaJlaaNKXZi5qZtlmvdHKF4vl4=
-X-Google-Smtp-Source: APXvYqyJrHbY/exB6YGUUMsPrCvn/3mcKsx1q0CU06ZeAfCGMaEVzFez/hJkMHPJ0+gpcEtC6YgIIDJWKB6/cggmMh0=
-X-Received: by 2002:aca:b68a:: with SMTP id g132mr3828880oif.47.1557858304300;
- Tue, 14 May 2019 11:25:04 -0700 (PDT)
+        bh=WeXlOJL3K8v7KWG3tXskIvOY8eKPAZMh5I01Otu6OTo=;
+        b=tXMrrtXScov6QZ58hKb40U9EbHba0WSm0hIAvX1H7wKnsb6I+JwRPf7yb56VT8lQsM
+         u0yw9FxrrKNJ6yZTOGno39+yoqIbTT4pEo3DFVNyEQIzvaoF9bRAoSM7inWjsVfjSkn3
+         oqx3yZhBIufuEkDK0LBZuiwuolUCPrdAqbm+KBpjFOy/xlEE/oANGOx4MjGYWYd+2Ght
+         VrprPd9zMoxpyKSYl6YBjb+aHv4AD0PtTIue9NKLIe2iFpv5D2qkv5z9VufurPF1pu0U
+         6HZBBwlbrp3SYN8TYc7Uap0daYezF+M+mndfA/1mVij0Oe48yuxxIc4Knr97gqw+y9wd
+         olFQ==
+X-Gm-Message-State: APjAAAXpLt4ibHuuh0etalKzMqoyEMMgIsEcngGJxZXTQDeY+FPhkNWb
+        dYM5c4JdywcrEjId96ikHYkS9+3gu7Kuw6rerZo=
+X-Google-Smtp-Source: APXvYqzl/vS4QgHDQEBICZ17isICjtzP1YI2jmHtSQ5pyW6Bkeg/9KCzddZ5Rl5YpUXAKAtnHUPcDScg+Nti+VynZWw=
+X-Received: by 2002:aca:bdc4:: with SMTP id n187mr4077569oif.140.1557858556579;
+ Tue, 14 May 2019 11:29:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514091611.15278-1-jbrunet@baylibre.com> <20190514091611.15278-3-jbrunet@baylibre.com>
-In-Reply-To: <20190514091611.15278-3-jbrunet@baylibre.com>
+References: <20190514091611.15278-1-jbrunet@baylibre.com> <20190514091611.15278-2-jbrunet@baylibre.com>
+In-Reply-To: <20190514091611.15278-2-jbrunet@baylibre.com>
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 14 May 2019 20:24:53 +0200
-Message-ID: <CAFBinCDdyctRu04PrnsrvLMbe+Ty7xo1jxaRzomjwq9VVu215w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: dts: meson: u200: add sd and emmc
+Date:   Tue, 14 May 2019 20:29:05 +0200
+Message-ID: <CAFBinCCrJ+qXgKkDrePWGriYyttwjHV+8jgT=Hk55Mr0VNhw7A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: meson: g12a: add mmc nodes
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
@@ -70,9 +70,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, May 14, 2019 at 11:16 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
 >
-> Enable eMMC and SDCard on the g12a u200 board
->
+> Add port B (sdcard) and port C (eMMC) pinctrl and controllers nodes to
+> the g12a DT.
+I assume port A is missing due to the controller bug (missing DDR
+access) for which Neil has sent a fix. this shouldn't stop us from
+adding SD card and eMMC support though
+
+first I was surprised to see that the MMC controllers are not part of any bus.
+however, the public S922X datasheet mentions the MMC controllers
+directly in the memory map (on page 83), so Jerome is doing the right
+thing here as far as I can tell
+
 > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-I compared the GPIOs with the Odroid-N2 schematics because I'm
-assuming that they will be the same on all G12A/G12B boards:
 Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
