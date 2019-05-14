@@ -2,109 +2,229 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2E9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E398C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2F52168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C87E2168B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="quTKkalk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymgdp0ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfENWTv (ORCPT
+        id S1727097AbfENWT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:19:51 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:37918 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfENWTs (ORCPT
+        Tue, 14 May 2019 18:19:56 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46425 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfENWTx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:19:48 -0400
-Received: by mail-pl1-f202.google.com with SMTP id o7so437426pls.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:19:48 -0700 (PDT)
+        Tue, 14 May 2019 18:19:53 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y11so210253pfm.13;
+        Tue, 14 May 2019 15:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=NNCnVCTAATMxlDMarLLJ67yqDDVFt+vwrBh9wh5mNVQ=;
-        b=quTKkalkkcdvAmo8Q5W/BySUzf8yCwwTH5YR563mPWxNUSE5MultuJds8qTnGLUd9G
-         GJOMcET4Wz5Z093noXRAIdno9qE82hEKyL9OWEEEeZgvMsgKsoo6ySFkGuc/6WqHcU0M
-         Hpl+SDxyqgLaiTUqKbcRAQtyOX/1f7cvhIRr9mCHA88MjEoBBMBrKFxLj+V+PJU2icQz
-         YZVy0jog5dz9kph3TsyRuJuDu4mNIMZwKmuJy8P56loFGJEgPnUHKRTVucDlKHqh0GsE
-         xE/dwKEOx3hf4rdD0KCrCmTo1nwHhw2rMCTcX3tA2M9n443niRuAWkZ8t1kGad/emCxN
-         xZ2A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NpNKWpk0dhZtsgjTpnTjpNeuJvE2ie8OCm0VYOC11Yw=;
+        b=Ymgdp0ww36ijbybPmnjvX3CkRq8JPXQuyDODxbY7p/eQxFpqNA6vOJ49PcY+/1cDes
+         eIoCiQMMnyb9BOfiEzd6N30U0mawYsZHeiMHLNyzLztJBjMApyFqL3Y03kJFhxh/Y5VE
+         vjZ0H0n9+dsPGZpubSkJS0eAHSKoXcdTA0tNEi6A3P236THgmS3AMtVZPjmfi/o/bi2b
+         Z4e/7HfO3g0l4GRy1AQKdXN8xQtwRZdoakoaEvhirIiwkNNF1YbbrvHss4QfhOatCM6W
+         Fd9dKd/l/1SdoK4OzQ9V9noV7kZ4djcjtxvsEkljmjcMIEZZJ3UrQdm0B7JamQNImMsA
+         pkZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=NNCnVCTAATMxlDMarLLJ67yqDDVFt+vwrBh9wh5mNVQ=;
-        b=kiMTn10BB5wz5dHmyacSxeTkR7N2VVFEV/EFQkw8LRQaq2RhRR+02lTg38m5yOt9Ye
-         DtoZeBV7jACQepB+3DYIlWB7WBLQNLz8M0k7JBCNFBofROeqvwIV4CpjSUE8kKrBLeDF
-         KJfcFZzcVAddQqz4R+WQ/ariEuTkZkO+PcfDb72Xa8rqaiH4ESbqxeu9qggWt0TGuov+
-         zs4wqajHnUimKqppkh/LbL3MIj1Ngzt9GcrV2FD+PqLhLJ5mKXeHF4iL4pMZvEV3X7cR
-         dUQ1O3OPjcLrYMl65A64+FHNDgCpLLZTqIPTCnRVcZPJSOLYEbmLfwUQSKl73PBGe8uC
-         bTrA==
-X-Gm-Message-State: APjAAAUYwwHx4LVUVn5beufreB9HnGtORgtBHCFGMhN7BCRen73rS8c9
-        yY2j1NOYd2lg0Zipoj9YRwwJjZp5QZCFiWfUZntBuA==
-X-Google-Smtp-Source: APXvYqxo6OjC5cnI7G46g6hiP/P8iTXGx7hD0/zp0LMpsykXkRPUvVhudAT1yu9PqFgJEj2J/jGAQAQ3/X7UkXFAG8BMDA==
-X-Received: by 2002:a63:6988:: with SMTP id e130mr40887298pgc.150.1557872385659;
- Tue, 14 May 2019 15:19:45 -0700 (PDT)
-Date:   Tue, 14 May 2019 15:17:11 -0700
-In-Reply-To: <20190514221711.248228-1-brendanhiggins@google.com>
-Message-Id: <20190514221711.248228-19-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190514221711.248228-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v4 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
- SYSCTL section
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NpNKWpk0dhZtsgjTpnTjpNeuJvE2ie8OCm0VYOC11Yw=;
+        b=qmuHB2tV2FijE/J1gyoS1d2TmU6WfyweHdYQKhf7ZuMmKsM1hvNRWZEhFFxlhRqOmJ
+         31FAAD04qm6X7dJpZVJJH3MFnm2nyBnUy7TKqDkBw+IU+NVo404dzFe20vw9IM5jX7SF
+         Gdov3eMeRPvO3OKRvGqTqTu8Gaxot5rKtdeessM2ncyQZt+JNftpy9NY8Y0Oo0gVWEX+
+         6+Od88s7QbjMYk2UuWQyOMrAK4989E8TO53A5FPivuXOWgYIsZZLZv9a1Fu4ksO9F9ZQ
+         XSwFBxk5lzfT+rFoy6rEtS6nbwz6TN81Hyp0oib/cHJl825S5SNbUpprRb5JP7bRU4BC
+         BoYA==
+X-Gm-Message-State: APjAAAWJ/qLgCE+CHqYewVRVcVl6Gcv6MbWOMDt6YRauSLAvRy8BJ/bx
+        K5bnqrf6qJZAuGjtlsv5PnqSwYa79Do=
+X-Google-Smtp-Source: APXvYqwSr/tHvF6QYBxfVFYDBHbQN2t1+/McP1SUoNaQ0m1qacR4Hoh/Bvnh7fzBfICIgJtPCcEPAw==
+X-Received: by 2002:a63:3c14:: with SMTP id j20mr40679521pga.410.1557872392566;
+        Tue, 14 May 2019 15:19:52 -0700 (PDT)
+Received: from Gentoo ([103.231.91.66])
+        by smtp.gmail.com with ESMTPSA id i17sm141046pfo.103.2019.05.14.15.19.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 15:19:51 -0700 (PDT)
+Date:   Wed, 15 May 2019 03:49:39 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.1.2
+Message-ID: <20190514221939.GA18303@Gentoo>
+References: <20190514180424.GA11131@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <20190514180424.GA11131@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add entry for the new proc sysctl KUnit test to the PROC SYSCTL section.
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8a91887c8d541..2e539647589fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12526,6 +12526,7 @@ S:	Maintained
- F:	fs/proc/proc_sysctl.c
- F:	include/linux/sysctl.h
- F:	kernel/sysctl.c
-+F:	kernel/sysctl-test.c
- F:	tools/testing/selftests/sysctl/
- 
- PS3 NETWORK SUPPORT
--- 
-2.21.0.1020.gf2820cf01a-goog
+Thanks, a bunch Greg!
 
+On 20:04 Tue 14 May , Greg KH wrote:
+>I'm announcing the release of the 5.1.2 kernel.
+>
+>All users of the 5.1 kernel series must upgrade.  Well, kind of, let me rephrase that...
+>
+>All users of Intel processors made since 2011 must upgrade.
+>
+>Note, this release, and the other stable releases that are all being
+>released right now at the same time, just went out all contain patches
+>that have only seen the "public eye" for about 5 minutes.  So be
+>forwarned, they might break things, they might not build, but hopefully
+>they fix things.  Odds are we will be fixing a number of small things in
+>this area for the next few weeks as things shake out on real hardware
+>and workloads.  So don't think you are done updating your kernel, you
+>never are done with that :)
+>
+>As for what specifically these changes fix, I'll let the tech news sites
+>fill you in on the details.  Or go read the excellently written Xen
+>Security Advisory 297:
+>	https://xenbits.xen.org/xsa/advisory-297.html
+>That should give you a good idea of what a number of people have been
+>dealing with for many many many months now.
+>
+>Many thanks goes out to Thomas Gleixner for going above and beyond to do
+>the backports to the 5.1, 5.0, 4.19, and 4.14 kernel trees, and to Ben
+>Hutchings for doing the 4.9 work.  And of course to all of the
+>developers who have been working on this in secret and doing reviews of
+>the many different proposals and versions of the patches.
+>
+>As I said before just over a year ago, Intel once again owes a bunch of
+>people a lot of drinks for fixing their hardware bugs, in our
+>software...
+>
+>Anyway, as usual, the updated 5.1.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.1.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+>
+>thanks,
+>
+>greg k-h
+>
+>------------
+>
+> Documentation/ABI/testing/sysfs-devices-system-cpu |    4
+> Documentation/admin-guide/hw-vuln/index.rst        |   13
+> Documentation/admin-guide/hw-vuln/l1tf.rst         |  615 +++++++++++++++++++++
+> Documentation/admin-guide/hw-vuln/mds.rst          |  308 ++++++++++
+> Documentation/admin-guide/index.rst                |    6
+> Documentation/admin-guide/kernel-parameters.txt    |   62 ++
+> Documentation/admin-guide/l1tf.rst                 |  614 --------------------
+> Documentation/index.rst                            |    1
+> Documentation/x86/conf.py                          |   10
+> Documentation/x86/index.rst                        |    8
+> Documentation/x86/mds.rst                          |  225 +++++++
+> Makefile                                           |    2
+> arch/powerpc/kernel/security.c                     |    6
+> arch/powerpc/kernel/setup_64.c                     |    2
+> arch/s390/kernel/nospec-branch.c                   |    3
+> arch/x86/entry/common.c                            |    3
+> arch/x86/include/asm/cpufeatures.h                 |    3
+> arch/x86/include/asm/irqflags.h                    |    4
+> arch/x86/include/asm/msr-index.h                   |   39 -
+> arch/x86/include/asm/mwait.h                       |    7
+> arch/x86/include/asm/nospec-branch.h               |   50 +
+> arch/x86/include/asm/processor.h                   |    6
+> arch/x86/kernel/cpu/bugs.c                         |  146 ++++
+> arch/x86/kernel/cpu/common.c                       |  121 ++--
+> arch/x86/kernel/nmi.c                              |    4
+> arch/x86/kernel/traps.c                            |    8
+> arch/x86/kvm/cpuid.c                               |    3
+> arch/x86/kvm/vmx/vmx.c                             |    7
+> arch/x86/mm/pti.c                                  |    4
+> drivers/base/cpu.c                                 |    8
+> include/linux/cpu.h                                |   26
+> kernel/cpu.c                                       |   15
+> tools/power/x86/turbostat/Makefile                 |    2
+> tools/power/x86/x86_energy_perf_policy/Makefile    |    2
+> 34 files changed, 1632 insertions(+), 705 deletions(-)
+>
+>Andi Kleen (2):
+>      x86/speculation/mds: Add basic bug infrastructure for MDS
+>      x86/kvm: Expose X86_FEATURE_MD_CLEAR to guests
+>
+>Boris Ostrovsky (1):
+>      x86/speculation/mds: Fix comment
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.1.2
+>
+>Josh Poimboeuf (9):
+>      x86/speculation/mds: Add mds=full,nosmt cmdline option
+>      x86/speculation: Move arch_smt_update() call to after mitigation decisions
+>      x86/speculation/mds: Add SMT warning message
+>      cpu/speculation: Add 'mitigations=' cmdline option
+>      x86/speculation: Support 'mitigations=' cmdline option
+>      powerpc/speculation: Support 'mitigations=' cmdline option
+>      s390/speculation: Support 'mitigations=' cmdline option
+>      x86/speculation/mds: Add 'mitigations=' support for MDS
+>      x86/speculation/mds: Fix documentation typo
+>
+>Konrad Rzeszutek Wilk (1):
+>      x86/speculation/mds: Print SMT vulnerable on MSBDS with mitigations off
+>
+>Thomas Gleixner (12):
+>      x86/msr-index: Cleanup bit defines
+>      x86/speculation: Consolidate CPU whitelists
+>      x86/speculation/mds: Add BUG_MSBDS_ONLY
+>      x86/speculation/mds: Add mds_clear_cpu_buffers()
+>      x86/speculation/mds: Clear CPU buffers on exit to user
+>      x86/kvm/vmx: Add MDS protection when L1D Flush is not active
+>      x86/speculation/mds: Conditionally clear CPU buffers on idle entry
+>      x86/speculation/mds: Add mitigation control for MDS
+>      x86/speculation/mds: Add sysfs reporting for MDS
+>      x86/speculation/mds: Add mitigation mode VMWERV
+>      Documentation: Move L1TF to separate directory
+>      Documentation: Add MDS vulnerability documentation
+>
+>Tyler Hicks (1):
+>      Documentation: Correct the possible MDS sysfs values
+>
+>speck for Pawan Gupta (1):
+>      x86/mds: Add MDSUM variant to the MDS documentation
+>
+
+
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzbPvcACgkQsjqdtxFL
+KRVIYwf/d4rMZRSS+y1x9heAi7GgBYRpVpMZGAG6uKgSNd61XnNK6nqoC8ZOxU6w
+Z8zk7BFeQNXimKcS7+MMkIlntqBvXQUMSAVa5JHvVSTYug9Q8YRtj7A+RiybYtwI
+uXG1/FvYFXwkq7+Os9kxm71ul+MBVUIxK2MElnoUOQ65dhkHkp2iPd+/gqZnBwez
+uM8axjJMtElkxgHps6Z4o+njs7NH4ZvAjt5dirTsznvoaRqXhpcWTkfPeklo+Jqv
+xG+CpaOM0LXCLwKK1SLQ708ocmJag/BnSkZQo89w+EMIWX0Qqk7In75+zkwRDNOc
+DeoY1GjBKuj7Q1NWisjzP6d2pAqeHA==
+=8SQM
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
