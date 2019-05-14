@@ -2,229 +2,434 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E398C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B15C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C87E2168B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7218C20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 22:20:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymgdp0ww"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e/AVxKLY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfENWT4 (ORCPT
+        id S1726799AbfENWTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 18:19:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46425 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727079AbfENWTx (ORCPT
+        Tue, 14 May 2019 18:19:48 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:50855 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfENWTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 18:19:53 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y11so210253pfm.13;
-        Tue, 14 May 2019 15:19:53 -0700 (PDT)
+        Tue, 14 May 2019 18:19:44 -0400
+Received: by mail-pl1-f202.google.com with SMTP id o12so419171pll.17
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:19:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NpNKWpk0dhZtsgjTpnTjpNeuJvE2ie8OCm0VYOC11Yw=;
-        b=Ymgdp0ww36ijbybPmnjvX3CkRq8JPXQuyDODxbY7p/eQxFpqNA6vOJ49PcY+/1cDes
-         eIoCiQMMnyb9BOfiEzd6N30U0mawYsZHeiMHLNyzLztJBjMApyFqL3Y03kJFhxh/Y5VE
-         vjZ0H0n9+dsPGZpubSkJS0eAHSKoXcdTA0tNEi6A3P236THgmS3AMtVZPjmfi/o/bi2b
-         Z4e/7HfO3g0l4GRy1AQKdXN8xQtwRZdoakoaEvhirIiwkNNF1YbbrvHss4QfhOatCM6W
-         Fd9dKd/l/1SdoK4OzQ9V9noV7kZ4djcjtxvsEkljmjcMIEZZJ3UrQdm0B7JamQNImMsA
-         pkZw==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=Lws/EEgAna63rQ3vCEL1Uuu3Iu+1ZPUf+T+yTIZZ48c=;
+        b=e/AVxKLY/BTIPy4M0b2OmdVg9I3Cjf+83tQc/8RUiKrxRYVCGqg3Zl0SrlluXiU/O/
+         pwRWVuewqkQb+4jm3lDA+uWqqZl/5Qp2jsoqkSh7txRje8sBKgc2T24cBCYyPIDbL3Td
+         2vOT6mtX7FAkvYixgfpQMuOXbD+WsLVTxJRWRjPcIHwh7xhhVzaUINCrENO+6zqHBIXX
+         1IbAD9CKmDlwv5PLKIqbnItGhE3IuhWhKpDPTriVbhNQOEnRRWM36VOw1YpDb6jyrZ4J
+         jLuqmwKAU9M8W3HAZbA4spHc+Ryxcow/wAF3N76tVz5jJtszzJCzEVPYaTO2Oq9+4bCM
+         GX3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NpNKWpk0dhZtsgjTpnTjpNeuJvE2ie8OCm0VYOC11Yw=;
-        b=qmuHB2tV2FijE/J1gyoS1d2TmU6WfyweHdYQKhf7ZuMmKsM1hvNRWZEhFFxlhRqOmJ
-         31FAAD04qm6X7dJpZVJJH3MFnm2nyBnUy7TKqDkBw+IU+NVo404dzFe20vw9IM5jX7SF
-         Gdov3eMeRPvO3OKRvGqTqTu8Gaxot5rKtdeessM2ncyQZt+JNftpy9NY8Y0Oo0gVWEX+
-         6+Od88s7QbjMYk2UuWQyOMrAK4989E8TO53A5FPivuXOWgYIsZZLZv9a1Fu4ksO9F9ZQ
-         XSwFBxk5lzfT+rFoy6rEtS6nbwz6TN81Hyp0oib/cHJl825S5SNbUpprRb5JP7bRU4BC
-         BoYA==
-X-Gm-Message-State: APjAAAWJ/qLgCE+CHqYewVRVcVl6Gcv6MbWOMDt6YRauSLAvRy8BJ/bx
-        K5bnqrf6qJZAuGjtlsv5PnqSwYa79Do=
-X-Google-Smtp-Source: APXvYqwSr/tHvF6QYBxfVFYDBHbQN2t1+/McP1SUoNaQ0m1qacR4Hoh/Bvnh7fzBfICIgJtPCcEPAw==
-X-Received: by 2002:a63:3c14:: with SMTP id j20mr40679521pga.410.1557872392566;
-        Tue, 14 May 2019 15:19:52 -0700 (PDT)
-Received: from Gentoo ([103.231.91.66])
-        by smtp.gmail.com with ESMTPSA id i17sm141046pfo.103.2019.05.14.15.19.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 15:19:51 -0700 (PDT)
-Date:   Wed, 15 May 2019 03:49:39 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.1.2
-Message-ID: <20190514221939.GA18303@Gentoo>
-References: <20190514180424.GA11131@kroah.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <20190514180424.GA11131@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=Lws/EEgAna63rQ3vCEL1Uuu3Iu+1ZPUf+T+yTIZZ48c=;
+        b=Jmjfcf/dSnydmYYiA/xDVMStp94FM073WNRmUK8adOZ5gItdb+8yq72Vd8+PbZWs8V
+         U4OSKlvxUEmcLrx62oNtDqjqbaY3LcXDhnR0XhKugiwPRyK+mkPPdQjAlxrfv0tPsesX
+         EwwLk4/zkj8KXuvayfz+HT+6Hb1DqMmVU1E0akLUYJWObZhraVc7W3DKzIQJpZzqnMD7
+         dm779sXy7PJNnIktMmtPsItqxq3oidlX7xll40ZVcQV6TL6Gavw1yeJBwD6LP4LHyAY1
+         obEz3LK40Cgh7vQkElvG+Blngn+LugVwSIkXudxsimzdN93UqNzr0y3A7VMnPDwLjbDW
+         Rh7w==
+X-Gm-Message-State: APjAAAWrTBDVsLtrWkDTj+COHb2pcvsHDYLPPurVAPrmaI0zTdSzaG3b
+        BeN0rHw3kGNa5/Znd17xw78IiCU4qsWxH9JwL6UGNQ==
+X-Google-Smtp-Source: APXvYqyZO5hIVWx6sj5d5P+JfXAMjq8I7SEzOnNldWvrtI+QS/XQfLFxsuITIB0YkKXfskRKbkqe8bGObCnzw53RKnA6Hg==
+X-Received: by 2002:a63:1a42:: with SMTP id a2mr39736396pgm.358.1557872383130;
+ Tue, 14 May 2019 15:19:43 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:17:10 -0700
+In-Reply-To: <20190514221711.248228-1-brendanhiggins@google.com>
+Message-Id: <20190514221711.248228-18-brendanhiggins@google.com>
+Mime-Version: 1.0
+References: <20190514221711.248228-1-brendanhiggins@google.com>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v4 17/18] kernel/sysctl-test: Add null pointer test for sysctl.c:proc_dointvec()
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Iurii Zaikin <yzaikin@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Iurii Zaikin <yzaikin@google.com>
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+KUnit tests for initialized data behavior of proc_dointvec that is
+explicitly checked in the code. Includes basic parsing tests including
+int min/max overflow.
 
-Thanks, a bunch Greg!
+Signed-off-by: Iurii Zaikin <yzaikin@google.com>
+Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ kernel/Makefile      |   2 +
+ kernel/sysctl-test.c | 293 +++++++++++++++++++++++++++++++++++++++++++
+ lib/Kconfig.debug    |   6 +
+ 3 files changed, 301 insertions(+)
+ create mode 100644 kernel/sysctl-test.c
 
-On 20:04 Tue 14 May , Greg KH wrote:
->I'm announcing the release of the 5.1.2 kernel.
->
->All users of the 5.1 kernel series must upgrade.  Well, kind of, let me rephrase that...
->
->All users of Intel processors made since 2011 must upgrade.
->
->Note, this release, and the other stable releases that are all being
->released right now at the same time, just went out all contain patches
->that have only seen the "public eye" for about 5 minutes.  So be
->forwarned, they might break things, they might not build, but hopefully
->they fix things.  Odds are we will be fixing a number of small things in
->this area for the next few weeks as things shake out on real hardware
->and workloads.  So don't think you are done updating your kernel, you
->never are done with that :)
->
->As for what specifically these changes fix, I'll let the tech news sites
->fill you in on the details.  Or go read the excellently written Xen
->Security Advisory 297:
->	https://xenbits.xen.org/xsa/advisory-297.html
->That should give you a good idea of what a number of people have been
->dealing with for many many many months now.
->
->Many thanks goes out to Thomas Gleixner for going above and beyond to do
->the backports to the 5.1, 5.0, 4.19, and 4.14 kernel trees, and to Ben
->Hutchings for doing the 4.9 work.  And of course to all of the
->developers who have been working on this in secret and doing reviews of
->the many different proposals and versions of the patches.
->
->As I said before just over a year ago, Intel once again owes a bunch of
->people a lot of drinks for fixing their hardware bugs, in our
->software...
->
->Anyway, as usual, the updated 5.1.y git tree can be found at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.1.y
->and can be browsed at the normal kernel.org git web browser:
->	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
->
->thanks,
->
->greg k-h
->
->------------
->
-> Documentation/ABI/testing/sysfs-devices-system-cpu |    4
-> Documentation/admin-guide/hw-vuln/index.rst        |   13
-> Documentation/admin-guide/hw-vuln/l1tf.rst         |  615 +++++++++++++++++++++
-> Documentation/admin-guide/hw-vuln/mds.rst          |  308 ++++++++++
-> Documentation/admin-guide/index.rst                |    6
-> Documentation/admin-guide/kernel-parameters.txt    |   62 ++
-> Documentation/admin-guide/l1tf.rst                 |  614 --------------------
-> Documentation/index.rst                            |    1
-> Documentation/x86/conf.py                          |   10
-> Documentation/x86/index.rst                        |    8
-> Documentation/x86/mds.rst                          |  225 +++++++
-> Makefile                                           |    2
-> arch/powerpc/kernel/security.c                     |    6
-> arch/powerpc/kernel/setup_64.c                     |    2
-> arch/s390/kernel/nospec-branch.c                   |    3
-> arch/x86/entry/common.c                            |    3
-> arch/x86/include/asm/cpufeatures.h                 |    3
-> arch/x86/include/asm/irqflags.h                    |    4
-> arch/x86/include/asm/msr-index.h                   |   39 -
-> arch/x86/include/asm/mwait.h                       |    7
-> arch/x86/include/asm/nospec-branch.h               |   50 +
-> arch/x86/include/asm/processor.h                   |    6
-> arch/x86/kernel/cpu/bugs.c                         |  146 ++++
-> arch/x86/kernel/cpu/common.c                       |  121 ++--
-> arch/x86/kernel/nmi.c                              |    4
-> arch/x86/kernel/traps.c                            |    8
-> arch/x86/kvm/cpuid.c                               |    3
-> arch/x86/kvm/vmx/vmx.c                             |    7
-> arch/x86/mm/pti.c                                  |    4
-> drivers/base/cpu.c                                 |    8
-> include/linux/cpu.h                                |   26
-> kernel/cpu.c                                       |   15
-> tools/power/x86/turbostat/Makefile                 |    2
-> tools/power/x86/x86_energy_perf_policy/Makefile    |    2
-> 34 files changed, 1632 insertions(+), 705 deletions(-)
->
->Andi Kleen (2):
->      x86/speculation/mds: Add basic bug infrastructure for MDS
->      x86/kvm: Expose X86_FEATURE_MD_CLEAR to guests
->
->Boris Ostrovsky (1):
->      x86/speculation/mds: Fix comment
->
->Greg Kroah-Hartman (1):
->      Linux 5.1.2
->
->Josh Poimboeuf (9):
->      x86/speculation/mds: Add mds=full,nosmt cmdline option
->      x86/speculation: Move arch_smt_update() call to after mitigation decisions
->      x86/speculation/mds: Add SMT warning message
->      cpu/speculation: Add 'mitigations=' cmdline option
->      x86/speculation: Support 'mitigations=' cmdline option
->      powerpc/speculation: Support 'mitigations=' cmdline option
->      s390/speculation: Support 'mitigations=' cmdline option
->      x86/speculation/mds: Add 'mitigations=' support for MDS
->      x86/speculation/mds: Fix documentation typo
->
->Konrad Rzeszutek Wilk (1):
->      x86/speculation/mds: Print SMT vulnerable on MSBDS with mitigations off
->
->Thomas Gleixner (12):
->      x86/msr-index: Cleanup bit defines
->      x86/speculation: Consolidate CPU whitelists
->      x86/speculation/mds: Add BUG_MSBDS_ONLY
->      x86/speculation/mds: Add mds_clear_cpu_buffers()
->      x86/speculation/mds: Clear CPU buffers on exit to user
->      x86/kvm/vmx: Add MDS protection when L1D Flush is not active
->      x86/speculation/mds: Conditionally clear CPU buffers on idle entry
->      x86/speculation/mds: Add mitigation control for MDS
->      x86/speculation/mds: Add sysfs reporting for MDS
->      x86/speculation/mds: Add mitigation mode VMWERV
->      Documentation: Move L1TF to separate directory
->      Documentation: Add MDS vulnerability documentation
->
->Tyler Hicks (1):
->      Documentation: Correct the possible MDS sysfs values
->
->speck for Pawan Gupta (1):
->      x86/mds: Add MDSUM variant to the MDS documentation
->
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 6c57e78817dad..c81a8976b6a4b 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -112,6 +112,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomem.o
+ obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+ obj-$(CONFIG_RSEQ) += rseq.o
+ 
++obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
++
+ obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+ KASAN_SANITIZE_stackleak.o := n
+ KCOV_INSTRUMENT_stackleak.o := n
+diff --git a/kernel/sysctl-test.c b/kernel/sysctl-test.c
+new file mode 100644
+index 0000000000000..fe0f2bae66085
+--- /dev/null
++++ b/kernel/sysctl-test.c
+@@ -0,0 +1,293 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test of proc sysctl.
++ */
++
++#include <kunit/test.h>
++#include <linux/printk.h>
++#include <linux/sysctl.h>
++#include <linux/uaccess.h>
++
++static int i_zero;
++static int i_one_hundred = 100;
++
++struct test_sysctl_data {
++	int int_0001;
++	int int_0002;
++	int int_0003[4];
++
++	unsigned int uint_0001;
++
++	char string_0001[65];
++};
++
++static struct test_sysctl_data test_data = {
++	.int_0001 = 60,
++	.int_0002 = 1,
++
++	.int_0003[0] = 0,
++	.int_0003[1] = 1,
++	.int_0003[2] = 2,
++	.int_0003[3] = 3,
++
++	.uint_0001 = 314,
++
++	.string_0001 = "(none)",
++};
++
++static void sysctl_test_dointvec_null_tbl_data(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= NULL,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	size_t len;
++	loff_t pos;
++
++	len = 1234;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++	len = 1234;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++}
++
++static void sysctl_test_dointvec_table_maxlen_unset(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= 0,
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	size_t len;
++	loff_t pos;
++
++	len = 1234;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++	len = 1234;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++}
++
++static void sysctl_test_dointvec_table_len_is_zero(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	size_t len;
++	loff_t pos;
++
++	len = 0;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++}
++
++static void sysctl_test_dointvec_table_read_but_position_set(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	void  *buffer = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	size_t len;
++	loff_t pos;
++
++	len = 1234;
++	pos = 1;
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 0, buffer, &len, &pos));
++	KUNIT_EXPECT_EQ(test, 0, len);
++}
++
++static void sysctl_test_dointvec_happy_single_positive(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	char input[] = "9";
++	size_t len = sizeof(input) - 1;
++	loff_t pos = 0;
++
++	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
++	KUNIT_EXPECT_EQ(test, 9, *(int *)table.data);
++}
++
++static void sysctl_test_dointvec_happy_single_negative(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	char input[] = "-9";
++	size_t len = sizeof(input) - 1;
++	loff_t pos = 0;
++
++	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	KUNIT_EXPECT_EQ(test, 0, proc_dointvec(&table, 1, input, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, pos);
++	KUNIT_EXPECT_EQ(test, -9, *(int *)table.data);
++}
++
++static void sysctl_test_dointvec_single_less_int_min(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	char input[32];
++	size_t len = sizeof(input) - 1;
++	loff_t pos = 0;
++	unsigned long abs_of_less_than_min = (unsigned long)INT_MAX
++					     - (INT_MAX + INT_MIN) + 1;
++
++	KUNIT_EXPECT_LT(test,
++			snprintf(input, sizeof(input), "-%lu",
++				 abs_of_less_than_min),
++			sizeof(input));
++
++	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			proc_dointvec(&table, 1, input, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
++	KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
++}
++
++static void sysctl_test_dointvec_single_greater_int_max(struct kunit *test)
++{
++	struct ctl_table table = {
++		.procname = "foo",
++		.data		= &test_data.int_0001,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &i_zero,
++		.extra2         = &i_one_hundred,
++	};
++	char input[32];
++	size_t len = sizeof(input) - 1;
++	loff_t pos = 0;
++	unsigned long greater_than_max = (unsigned long)INT_MAX + 1;
++
++	KUNIT_EXPECT_GT(test, greater_than_max, INT_MAX);
++	KUNIT_EXPECT_LT(test, snprintf(input, sizeof(input), "%lu",
++				       greater_than_max),
++			sizeof(input));
++	table.data = kunit_kzalloc(test, sizeof(int), GFP_USER);
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++			proc_dointvec(&table, 1, input, &len, &pos));
++	KUNIT_EXPECT_EQ(test, sizeof(input) - 1, len);
++	KUNIT_EXPECT_EQ(test, 0, *(int *)table.data);
++}
++
++static int sysctl_test_init(struct kunit *test)
++{
++	return 0;
++}
++
++/*
++ * This is run once after each test case, see the comment on example_test_module
++ * for more information.
++ */
++static void sysctl_test_exit(struct kunit *test)
++{
++}
++
++/*
++ * Here we make a list of all the test cases we want to add to the test module
++ * below.
++ */
++static struct kunit_case sysctl_test_cases[] = {
++	/*
++	 * This is a helper to create a test case object from a test case
++	 * function; its exact function is not important to understand how to
++	 * use KUnit, just know that this is how you associate test cases with a
++	 * test module.
++	 */
++	KUNIT_CASE(sysctl_test_dointvec_null_tbl_data),
++	KUNIT_CASE(sysctl_test_dointvec_table_maxlen_unset),
++	KUNIT_CASE(sysctl_test_dointvec_table_len_is_zero),
++	KUNIT_CASE(sysctl_test_dointvec_table_read_but_position_set),
++	KUNIT_CASE(sysctl_test_dointvec_happy_single_positive),
++	KUNIT_CASE(sysctl_test_dointvec_happy_single_negative),
++	KUNIT_CASE(sysctl_test_dointvec_single_less_int_min),
++	KUNIT_CASE(sysctl_test_dointvec_single_greater_int_max),
++	{},
++};
++
++/*
++ * This defines a suite or grouping of tests.
++ *
++ * Test cases are defined as belonging to the suite by adding them to
++ * `test_cases`.
++ *
++ * Often it is desirable to run some function which will set up things which
++ * will be used by every test; this is accomplished with an `init` function
++ * which runs before each test case is invoked. Similarly, an `exit` function
++ * may be specified which runs after every test case and can be used to for
++ * cleanup. For clarity, running tests in a test module would behave as follows:
++ *
++ * module.init(test);
++ * module.test_case[0](test);
++ * module.exit(test);
++ * module.init(test);
++ * module.test_case[1](test);
++ * module.exit(test);
++ * ...;
++ */
++static struct kunit_module sysctl_test_module = {
++	.name = "sysctl_test",
++	.init = sysctl_test_init,
++	.exit = sysctl_test_exit,
++	.test_cases = sysctl_test_cases,
++};
++
++/*
++ * This registers the above test module telling KUnit that this is a suite of
++ * tests that need to be run.
++ */
++module_test(sysctl_test_module);
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index d5a4a4036d2f8..772af4ec70111 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1908,6 +1908,12 @@ config TEST_SYSCTL
+ 
+ 	  If unsure, say N.
+ 
++config SYSCTL_KUNIT_TEST
++	bool "KUnit test for sysctl"
++	depends on KUNIT
++	help
++	  Enables KUnit sysctl test.
++
+ config TEST_UDELAY
+ 	tristate "udelay test driver"
+ 	help
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-
-
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzbPvcACgkQsjqdtxFL
-KRVIYwf/d4rMZRSS+y1x9heAi7GgBYRpVpMZGAG6uKgSNd61XnNK6nqoC8ZOxU6w
-Z8zk7BFeQNXimKcS7+MMkIlntqBvXQUMSAVa5JHvVSTYug9Q8YRtj7A+RiybYtwI
-uXG1/FvYFXwkq7+Os9kxm71ul+MBVUIxK2MElnoUOQ65dhkHkp2iPd+/gqZnBwez
-uM8axjJMtElkxgHps6Z4o+njs7NH4ZvAjt5dirTsznvoaRqXhpcWTkfPeklo+Jqv
-xG+CpaOM0LXCLwKK1SLQ708ocmJag/BnSkZQo89w+EMIWX0Qqk7In75+zkwRDNOc
-DeoY1GjBKuj7Q1NWisjzP6d2pAqeHA==
-=8SQM
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
