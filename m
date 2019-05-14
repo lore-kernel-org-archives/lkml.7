@@ -2,128 +2,138 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDB5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98DBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF4020675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93DD2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RbfAZWNa"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Me7oLnU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfENI1h (ORCPT
+        id S1726838AbfENI1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:27:37 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:59152 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726148AbfENI1c (ORCPT
+        Tue, 14 May 2019 04:27:45 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52738 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfENI1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:27:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8Q8xp029562;
-        Tue, 14 May 2019 10:27:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=cSw7dbXcAbS5Q/0FeaUhUZjqh7E4PIut1NGw2jFxHQc=;
- b=RbfAZWNaTw7ekn4Qvx6XDaQ9kqvaprs9BUC9VSJL84SFK4sSm4IYGB51dn7AVuELdKoP
- JSLiGo8Fmqbtkb59Zu0MpxjzII8Uvb6kOpnhQnrURRAMdVfldmCuTLq+IdVrZkk1eDgv
- gcWXN1t+8q2Bs9CVPZ2C7eIGkBEZnSfZEPbP5eDejPJeEuWjC2uT5p2GFDtUUyDHvBFQ
- 20//UDlxX1gc5+EWb3v/UiVhVHOhGayDDMnxANEaOvvpz+sYlUclC0+XaQPUSH0W9JS6
- XA6upeebVf4E7YerIPeavihghI6g1hWcVEekqpgFqlBZ2R84MtOZV7lznn3YJb8dip9A sQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdkuyqnmk-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 14 May 2019 10:27:08 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B86A434;
-        Tue, 14 May 2019 08:27:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7E2C81551;
-        Tue, 14 May 2019 08:27:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May
- 2019 10:27:07 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May 2019 10:27:06
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        "Ludovic Barre" <ludovic.barre@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 0/8] stm32 m4 remoteproc on STM32MP157c
-Date:   Tue, 14 May 2019 10:26:55 +0200
-Message-ID: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 May 2019 04:27:43 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E8NRWe038322;
+        Tue, 14 May 2019 08:26:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=4GwONZKT5RET7N6PWlM860uaduZb6+5QuVv3rFgtIho=;
+ b=Me7oLnU0/rmmtbQAySa5AOY/0LStOilrC3J76991LQTTFatI8eSBS258oGayJxjOmJ/D
+ yHWDyCS73SnTaafYTYObBvbUdom0TeUggz2cbj3NFCkO1ERgywX83bGDVXanVtBN1ADK
+ rA9iUbU7+FYqBDOL8FnBoQQUrjXihLOaBqP3eCUS59RzXfix50RyTJXON2aGBWJKluN4
+ nYFPxujFDsqwPztKIgZhuv4YbdpzXoGhW26Z4odBcUA885M8JB4OpiAy7A73R0NJiT0E
+ Jao0Uz8of4JvQOSHd+YQqAK/xhBmvYcu6KHzbKIrQkMWK4Qd0qKc+Pxc/nzUYRNj0Iuo ag== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2sdnttm68s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 08:26:05 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E8OA2d011637;
+        Tue, 14 May 2019 08:26:05 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2sf3cn4jgq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 08:26:04 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4E8Q0LQ024611;
+        Tue, 14 May 2019 08:26:00 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 May 2019 01:26:00 -0700
+Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
+ entries for percpu buffer
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com>
+ <20190514070941.GE2589@hirez.programming.kicks-ass.net>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
+Date:   Tue, 14 May 2019 10:25:56 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_05:,,
- signatures=0
+In-Reply-To: <20190514070941.GE2589@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905140062
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905140062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
-Cortex-M4.
-This patchset adds the support of the stm32_rproc driver allowing to control
-the M4 remote processor.
 
-Changes since v3:
--Replaced "st,auto_boot" with "st,auto-boot"
--Update m4 reg values and align with unit-address
+On 5/14/19 9:09 AM, Peter Zijlstra wrote:
+> On Mon, May 13, 2019 at 11:18:41AM -0700, Andy Lutomirski wrote:
+>> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
+>> <alexandre.chartre@oracle.com> wrote:
+>>>
+>>> pcpu_base_addr is already mapped to the KVM address space, but this
+>>> represents the first percpu chunk. To access a per-cpu buffer not
+>>> allocated in the first chunk, add a function which maps all cpu
+>>> buffers corresponding to that per-cpu buffer.
+>>>
+>>> Also add function to clear page table entries for a percpu buffer.
+>>>
+>>
+>> This needs some kind of clarification so that readers can tell whether
+>> you're trying to map all percpu memory or just map a specific
+>> variable.  In either case, you're making a dubious assumption that
+>> percpu memory contains no secrets.
+> 
+> I'm thinking the per-cpu random pool is a secrit. IOW, it demonstrably
+> does contain secrits, invalidating that premise.
+> 
 
-Changes since v2:
-- Clarified "reg" description
-- Change m4 unit adress to 38000000
-- Renamed "auto_boot" in "st,auto-boot"
+The current code unconditionally maps the entire first percpu chunk
+(pcpu_base_addr). So it assumes it doesn't contain any secret. That is
+mainly a simplification for the POC because a lot of core information
+that we need, for example just to switch mm, are stored there (like
+cpu_tlbstate, current_task...).
 
-Changes since v1:
-- Gave details about the memory mapping (in bindings).
-- Used 'dma-ranges' instead of 'ranges'.
-- Updated the 'compatible' property.
-- Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
-- Clarified why / when mailboxes are optional.
+If the entire first percpu chunk effectively has secret then we will
+need to individually map only buffers we need. The kvm_copy_percpu_mapping()
+function is added to copy mapping for a specified percpu buffer, so
+this used to map percpu buffers which are not in the first percpu chunk.
 
-Fabien Dessenne (8):
-  dt-bindings: stm32: add bindings for ML-AHB interconnect
-  dt-bindings: remoteproc: add bindings for stm32 remote processor
-    driver
-  remoteproc: stm32: add an ST stm32_rproc driver
-  ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
-  ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
-  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
-  ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
-  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
+Also note that mapping is constrained by PTE (4K), so mapped buffers
+(percpu or not) which do not fill a whole set of pages can leak adjacent
+data store on the same pages.
 
- .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
- .../devicetree/bindings/remoteproc/stm32-rproc.txt |  63 +++
- arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
- arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
- arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
- drivers/remoteproc/Kconfig                         |  15 +
- drivers/remoteproc/Makefile                        |   1 +
- drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
- 8 files changed, 868 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
- create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
- create mode 100644 drivers/remoteproc/stm32_rproc.c
-
--- 
-2.7.4
-
+alex.
