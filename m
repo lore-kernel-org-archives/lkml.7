@@ -2,70 +2,125 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41CD6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65206C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103A521726
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3476020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:25:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557865505;
-	bh=2Y53EyDD14aT6cgQS+5yEtZ95iiGMtp3cPUFxI50hjM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=y948eGEveyP2cEl0//OUr2nGpiTbq/v/j0v+k1CvYKh8hVsL1BizllxlIn1l2Mdaa
-	 pVVik7sKxEEYcigjL5yk7WgZ1+71JxIW7NjFjwBSqVmLW7DQwWTZXpx3IruaeXwirE
-	 oajJZg36ZQyGYUR6RpM5k6vqjfwbA9Aq3O6WECf0=
+	s=default; t=1557865511;
+	bh=V8lGZOijGGroDQlnNtg2WHMwlbIFGtORUHrj5N/6N5M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vurm5AsvPLjsXtOf5C8MvjFJ5Qv/LndSdeVrNlhteFhRFkdmKfOgJvbWF4kTvhRC0
+	 5l0uzrBC5qVrykQfxaUvVQfn+ea2PoOrjRQM3JEBnFbQWwN9+X4shkC9G4VFQGDAdG
+	 TOhlU0gQeZuPLhkea6EdJiocnB2NJwA07xQz13dY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfENUZE (ORCPT
+        id S1726542AbfENUZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34624 "EHLO mail.kernel.org"
+        Tue, 14 May 2019 16:25:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726279AbfENUZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:25:03 -0400
-Subject: Re: [GIT PULL] parisc architecture updates for kernel v5.2
+        id S1726448AbfENUZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 16:25:05 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4410321726;
+        Tue, 14 May 2019 20:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557865503;
-        bh=2Y53EyDD14aT6cgQS+5yEtZ95iiGMtp3cPUFxI50hjM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=AUfOMO3avDQg1fxZwGZxf7E5nvNOmk31+znDmiZ67crwpbG5jZaHLJZcIkIFJjYry
-         Df8K3AOyckvighsB0afq9LQyH2GQFduU071VGeNCh1picRyRujrNsOFx4TrHX443VO
-         d+ttUlV2cKRS6nep9cj1aTsJ2wlKSv405tw3xh/E=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190514200010.GA30418@ls3530.dellerweb.de>
-References: <20190514200010.GA30418@ls3530.dellerweb.de>
-X-PR-Tracked-List-Id: <linux-parisc.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190514200010.GA30418@ls3530.dellerweb.de>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git
- parisc-5.2-2
-X-PR-Tracked-Commit-Id: 4e617c86ba9be5211643e53f5f69d1195c956d68
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b2c91128212a4c1a36bd3085191bff21a34324be
-Message-Id: <155786550298.4888.14619113787082061340.pr-tracker-bot@kernel.org>
-Date:   Tue, 14 May 2019 20:25:02 +0000
-To:     Helge Deller <deller@gmx.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
+        s=default; t=1557865505;
+        bh=V8lGZOijGGroDQlnNtg2WHMwlbIFGtORUHrj5N/6N5M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BKe0Vn5rSFeLvnBCMcdBjQAKWYOEpXQK9RMljVhjjKEiZA6Gmpj4B6Re7H5B1bEtK
+         knwD7OfJ7ZtvkeCzHuOZu1FPMSbgWSCn0AhBBq7VGhCXqRWIN8zg23VPYMDyTlK3p4
+         6hRgRJfoTUiuqiTHJChgQeWeNQvTuwjge//9L4UM=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>, stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>
+Subject: [PATCH 1/2] x86/speculation/mds: Revert CPU buffer clear on double fault exit
+Date:   Tue, 14 May 2019 13:24:39 -0700
+Message-Id: <ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1557865329.git.luto@kernel.org>
+References: <cover.1557865329.git.luto@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 14 May 2019 22:00:10 +0200:
+The double fault ESPFIX path doesn't return to user mode at all --
+it returns back to the kernel by simulating a #GP fault.
+prepare_exit_to_usermode() will run on the way out of
+general_protection before running user code.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.2-2
+Cc: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Jon Masters <jcm@redhat.com>
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+---
+ Documentation/x86/mds.rst | 7 -------
+ arch/x86/kernel/traps.c   | 8 --------
+ 2 files changed, 15 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b2c91128212a4c1a36bd3085191bff21a34324be
-
-Thank you!
-
+diff --git a/Documentation/x86/mds.rst b/Documentation/x86/mds.rst
+index 534e9baa4e1d..0dc812bb9249 100644
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -158,13 +158,6 @@ Mitigation points
+      mitigated on the return from do_nmi() to provide almost complete
+      coverage.
+ 
+-   - Double fault (#DF):
+-
+-     A double fault is usually fatal, but the ESPFIX workaround, which can
+-     be triggered from user space through modify_ldt(2) is a recoverable
+-     double fault. #DF uses the paranoid exit path, so explicit mitigation
+-     in the double fault handler is required.
+-
+    - Machine Check Exception (#MC):
+ 
+      Another corner case is a #MC which hits between the CPU buffer clear
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 7de466eb960b..8b6d03e55d2f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -58,7 +58,6 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
+-#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
+@@ -368,13 +367,6 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code)
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
+ 
+-		/*
+-		 * This situation can be triggered by userspace via
+-		 * modify_ldt(2) and the return does not take the regular
+-		 * user space exit, so a CPU buffer clear is required when
+-		 * MDS mitigation is enabled.
+-		 */
+-		mds_user_clear_cpu_buffers();
+ 		return;
+ 	}
+ #endif
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.21.0
+
