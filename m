@@ -2,68 +2,137 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AF2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69834C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5300F2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4504920863
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:33:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfENQct (ORCPT
+        id S1726473AbfENQd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:32:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55236 "EHLO mx1.suse.de"
+        Tue, 14 May 2019 12:33:27 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32939 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfENQct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:32:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D67C7AEF3;
-        Tue, 14 May 2019 16:32:47 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 8A58ADA866; Tue, 14 May 2019 18:33:48 +0200 (CEST)
-Date:   Tue, 14 May 2019 18:33:48 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     linux-crypto@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: Can crypto API provide information about hw acceleration?
-Message-ID: <20190514163348.GM3138@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        id S1725916AbfENQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 12:33:26 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 453499C173FFC64BA28C;
+        Tue, 14 May 2019 17:33:25 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.34) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 14 May
+ 2019 17:33:22 +0100
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     Rob Landley <rob@landley.net>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        "Linux FS Devel" <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        <initramfs@vger.kernel.org>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <9357cb32-3803-2a7e-4949-f9e4554c1ee9@huawei.com>
+Date:   Tue, 14 May 2019 18:33:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 5/14/2019 5:19 PM, Andy Lutomirski wrote:
+> On Mon, May 13, 2019 at 5:47 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
+>>
+>> On 5/13/2019 11:07 AM, Rob Landley wrote:
+>>>
+>>>
+>>> On 5/13/19 2:49 AM, Roberto Sassu wrote:
+>>>> On 5/12/2019 9:43 PM, Arvind Sankar wrote:
+>>>>> On Sun, May 12, 2019 at 05:05:48PM +0000, Rob Landley wrote:
+>>>>>> On 5/12/19 7:52 AM, Mimi Zohar wrote:
+>>>>>>> On Sun, 2019-05-12 at 11:17 +0200, Dominik Brodowski wrote:
+>>>>>>>> On Thu, May 09, 2019 at 01:24:17PM +0200, Roberto Sassu wrote:
+>>>>>>>>> This proposal consists in marshaling pathnames and xattrs in a file called
+>>>>>>>>> .xattr-list. They are unmarshaled by the CPIO parser after all files have
+>>>>>>>>> been extracted.
+>>>>>>>>
+>>>>>>>> Couldn't this parsing of the .xattr-list file and the setting of the xattrs
+>>>>>>>> be done equivalently by the initramfs' /init? Why is kernel involvement
+>>>>>>>> actually required here?
+>>>>>>>
+>>>>>>> It's too late.  The /init itself should be signed and verified.
+>>>>>>
+>>>>>> If the initramfs cpio.gz image was signed and verified by the extractor, how is
+>>>>>> the init in it _not_ verified?
+>>>>>>
+>>>>>> Ro
+>>>>>
+>>>>> Wouldn't the below work even before enforcing signatures on external
+>>>>> initramfs:
+>>>>> 1. Create an embedded initramfs with an /init that does the xattr
+>>>>> parsing/setting. This will be verified as part of the kernel image
+>>>>> signature, so no new code required.
+>>>>> 2. Add a config option/boot parameter to panic the kernel if an external
+>>>>> initramfs attempts to overwrite anything in the embedded initramfs. This
+>>>>> prevents overwriting the embedded /init even if the external initramfs
+>>>>> is unverified.
+>>>>
+>>>> Unfortunately, it wouldn't work. IMA is already initialized and it would
+>>>> verify /init in the embedded initial ram disk.
+>>>
+>>> So you made broken infrastructure that's causing you problems. Sounds unfortunate.
+>>
+>> The idea is to be able to verify anything that is accessed, as soon as
+>> rootfs is available, without distinction between embedded or external
+>> initial ram disk.
+>>
+>> Also, requiring an embedded initramfs for xattrs would be an issue for
+>> systems that use it for other purposes.
+>>
+>>
+>>>> The only reason why
+>>>> opening .xattr-list works is that IMA is not yet initialized
+>>>> (late_initcall vs rootfs_initcall).
+>>>
+>>> Launching init before enabling ima is bad because... you didn't think of it?
+>>
+>> No, because /init can potentially compromise the integrity of the
+>> system.
+> 
+> I think Rob is right here.  If /init was statically built into the
+> kernel image, it has no more ability to compromise the kernel than
+> anything else in the kernel.  What's the problem here?
 
-Q: is there a way to query the crypto layer whether a given algorithm
-(digest, crypto) is accelerated by the driver?
+Right, the measurement/signature verification of the kernel image is
+sufficient.
 
-This information can be used to decide if eg. a checksum should can be
-calculated right away or offloaded to a thread. This is done in btrfs,
-(fs/btrfs/disk-io.c:check_async_write).
+Now, assuming that we defer the IMA initialization until /init in the
+embedded initramfs has been executed, the problem is how to handle
+processes launched with the user mode helper or files directly read by
+the kernel (if it can happen before /init is executed). If IMA is not
+yet enabled, these operations will be performed without measurement and
+signature verification.
 
-At this moment it contains a static check for a cpu feature, and only
-for x86. I briefly searched the arch/ directory for implementations of
-crc32c that possibly use hw aid and there are several of them. Adding a
-static check a-la x86 for the other architectures (arm, ppc, mips,
-sparc, s390) is wrong, so I'm looking for a clean solution.
+Roberto
 
-The struct shash_alg definition of the algorithms does not say anything
-about the acceleration. The closest thing is the cra_priority, but I
-don't know if this is reliable information. The default implementations
-seem to have 100, and acceleated 200 or 300.
-
-This would be probably sufficient, but I'd like a confirmation from
-crypto people.
-
-Thanks.
+-- 
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
