@@ -2,114 +2,109 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0206C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB53C46460
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:40:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24632084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8B720873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="rH1kN6xj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kO9iPKcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfENXio (ORCPT
+        id S1726572AbfENXkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:38:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45115 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfENXio (ORCPT
+        Tue, 14 May 2019 19:40:24 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:33505 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfENXkY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:38:44 -0400
-Received: by mail-oi1-f196.google.com with SMTP id w144so432447oie.12
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:38:43 -0700 (PDT)
+        Tue, 14 May 2019 19:40:24 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m32so1245041qtf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:40:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kYvQT6mY9JfQHDpLNfUkCh431/BzUwth4mETG8vnTcM=;
-        b=rH1kN6xjlUQPAimKjhf1g5xol5K7bxpX+XExDwea7rJ/vrEQeHR+gNLXC3ZVH4TQZ9
-         nB+xK5+dfFBG+AS7/qk8hqyz2HQWexnTzW8k5LJW1xanq4EH8KofvdU+krYoB4fiF8Vt
-         fPWv1qAMT3PwG44QcHmls8cQO1gCx6JOi0ZF7v60B6oUPIayDactRAml6HwN/Z9XOve5
-         ipNHYxw0+3e1MrlsX6gxLtTtFC7qklUGicX7c6sNm+KGZAZRTO3CR+Vb+0+CyjD/lvna
-         uv4xTwEp5X40rPribrLMqvuk4Sk3d3SkDo1lGscczxN91c6+TpmIAuOPFrsNrQ2x/hlX
-         cVOQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mqlrXy5kwdDrwo0UFJq8GGPqMotywoeM6XVl2pYk4JQ=;
+        b=kO9iPKcdYHvq7Sy8SSA7D9MRPKbtN9+us4/EErldh7Q6WJGODf0MesKSC5OhxQ7IN7
+         lPxyWzUjq99r96cm2T2CxpIw0l5KV8jnTT5Jg5O4a4n29kjPQQCyfjfxzDkFEw3RrC1C
+         Q16I9GbitKoCMSEaV4V6wt7Tt2HupryJBrlm+WwpOv/TYRHgp4VC8IdN0ygNNWTs6JFt
+         zDH91eVMgIzDnvEIToaXNoZSbRBcGtPwjJvusEUBxuRhCqb28S75HrSU6QVGvsj4qhOA
+         sS3OBF3WfP4GXaT75hzGXjBonIl3CyNpZNaLXN3sNusLlIPjy2g4Poa93CznpOcD5a2Y
+         FfSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kYvQT6mY9JfQHDpLNfUkCh431/BzUwth4mETG8vnTcM=;
-        b=FZJm563nfe6zLAHW6QJ0hsiL+Ig25XjuJfvT6ah5PZcv4xv4SWt/yQ/dbyWQ3jkb0+
-         6cxljQ+NpsF7KzM6g0dyVrqw+aReAUOctH40BvExTQQn+fciumbQAXXrw6kLPV0s1eCw
-         2CJovS8dBSCRHT5EWmLmO+J/oxa9P3efKjyA9Xjb29Qny7LWpOek1zz6yI2nITlfAgLF
-         8xZWOlMqib4GbnCrYjkqgr1ofR+zLN9XLb797yTgfxGm85+y2ilGGClCnvbE0qvoJaTy
-         QTUb8OSOwbFB9CroCIQJzrAXwUoGRpa6FEjJOlPmNqr/ONjoxxzcsfFBh2nZOzZ7c7zr
-         cyaA==
-X-Gm-Message-State: APjAAAU6IL6KBIj4acghPUdgZiUaissqz01QkPGcsgD7x1N3vQfTLgdW
-        WCM6cxULTz3NTPv/FaF/NRDLTA==
-X-Google-Smtp-Source: APXvYqxxe8Yr5f9XAWXGbDojS8nV2uootZLPvLP3tvJ3cgiNcLPrf4uxkN+Rr9TfiQsk/Azg0isydg==
-X-Received: by 2002:aca:f189:: with SMTP id p131mr367929oih.89.1557877123450;
-        Tue, 14 May 2019 16:38:43 -0700 (PDT)
-Received: from [192.168.1.5] (rrcs-97-77-70-138.sw.biz.rr.com. [97.77.70.138])
-        by smtp.googlemail.com with ESMTPSA id x64sm141795oia.32.2019.05.14.16.38.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 16:38:42 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        initramfs@vger.kernel.org
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
- <1557861511.3378.19.camel@HansenPartnership.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
-Date:   Tue, 14 May 2019 18:39:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mqlrXy5kwdDrwo0UFJq8GGPqMotywoeM6XVl2pYk4JQ=;
+        b=fS3SIqrmaEKcnERB9dKE+S+oC6YK9s1gBuihGzQZzguOMpNUgoO+WG9yNiQKd9rz9b
+         WDR4oRF2+lpxl9xhlZWuHJwvPT9d+nSngaa9vusHHMmG/SZcm2SgwrbFcnz5CJ8UDuH5
+         dODWlKd6P/JTGPzo/bBaMhZVU1raWtczM1ip3cqezXbOvBzvsSUJUW2Yagx3Jz8dy13S
+         LRqg6aiYUrR2gkLlP1nn/D9MrcYtn+CZcYjg5LGGH9Qgb0XPKYJ4cw2MKCo+xZpp0nKj
+         w0xh9EFD035914dAID1x2+2UI/Bjj1vt4uDi3k7iRzbgdEIxGbQCDTrAj22B0JbauZTZ
+         Fwtw==
+X-Gm-Message-State: APjAAAW7x1EhcmOlnSGMykU1SFZCMAmsnqui+xpIP9Rh3oR7x/C4Zra6
+        Ing0LHRDCgRIMbf2K2NWF4cYVUPuCbYWdUEB6tY=
+X-Google-Smtp-Source: APXvYqzwbNTznSBrD6LoX9VLQYRvaPeKLNqZGrq7TRAldxBbjP7SsrUY2Ndu+OYRW/2V+3p4I5kx8+x21B1wcVBFZZo=
+X-Received: by 2002:a0c:aed4:: with SMTP id n20mr30980915qvd.195.1557877223375;
+ Tue, 14 May 2019 16:40:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1557861511.3378.19.camel@HansenPartnership.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
+In-Reply-To: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 14 May 2019 16:40:12 -0700
+Message-ID: <CAPhsuW5B5twTEk=SZZqZCH9_hjEjJ_KFP_GYq3T6nzv7kRSM0w@mail.gmail.com>
+Subject: Re: [PATCH] mm: filemap: correct the comment about VM_FAULT_RETRY
+To:     Yang Shi <yang.shi@linux.alibaba.com>, jbacik@fb.com
+Cc:     josef@toxicpanda.com, Andrew Morton <akpm@linux-foundation.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 2:18 PM, James Bottomley wrote:
->> I think Rob is right here.  If /init was statically built into the
->> kernel image, it has no more ability to compromise the kernel than
->> anything else in the kernel.  What's the problem here?
-> 
-> The specific problem is that unless you own the kernel signing key,
-> which is really untrue for most distribution consumers because the
-> distro owns the key, you cannot build the initrd statically into the
-> kernel.  You can take the distro signed kernel, link it with the initrd
-> then resign the combination with your key, provided you insert your key
-> into the MoK variables as a trusted secure boot key, but the distros
-> have been unhappy recommending this as standard practice.
-> 
-> If our model for security is going to be to link the kernel and the
-> initrd statically to give signature protection over the aggregate then
-> we need to figure out how to execute this via the distros.  If we
-> accept that the split model, where the distro owns and signs the kernel
-> but the machine owner builds and is responsible for the initrd, then we
-> need to explore split security models like this proposal.
+On Thu, Apr 25, 2019 at 4:22 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
+>
+> The commit 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking
+> operations") changed when mmap_sem is dropped during filemap page fault
+> and when returning VM_FAULT_RETRY.
+>
+> Correct the comment to reflect the change.
+>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-You can have a built-in and an external initrd? The second extracts over the
-first? (I know because once upon a time conflicting files would append. It
-sounds like the desired behavior here is O_EXCL fail and move on.)
+Looks good to me!
 
-Rob
+Acked-by: Song Liu <songliubraving@fb.com>
+
+> ---
+>  mm/filemap.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index d78f577..f0d6250 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -2545,10 +2545,8 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+>   *
+>   * vma->vm_mm->mmap_sem must be held on entry.
+>   *
+> - * If our return value has VM_FAULT_RETRY set, it's because
+> - * lock_page_or_retry() returned 0.
+> - * The mmap_sem has usually been released in this case.
+> - * See __lock_page_or_retry() for the exception.
+> + * If our return value has VM_FAULT_RETRY set, it's because the mmap_sem
+> + * may be dropped before doing I/O or by lock_page_maybe_drop_mmap().
+>   *
+>   * If our return value does not have VM_FAULT_RETRY set, the mmap_sem
+>   * has not been released.
+> --
+> 1.8.3.1
+>
