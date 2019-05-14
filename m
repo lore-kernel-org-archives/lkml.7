@@ -2,109 +2,148 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB53C46460
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EC8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8B720873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:40:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7FBA2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:41:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kO9iPKcd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X4mfkQzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfENXkY (ORCPT
+        id S1726651AbfENXlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:40:24 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33505 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfENXkY (ORCPT
+        Tue, 14 May 2019 19:41:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34680 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfENXlw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:40:24 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m32so1245041qtf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:40:23 -0700 (PDT)
+        Tue, 14 May 2019 19:41:52 -0400
+Received: by mail-pg1-f193.google.com with SMTP id c13so353950pgt.1;
+        Tue, 14 May 2019 16:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mqlrXy5kwdDrwo0UFJq8GGPqMotywoeM6XVl2pYk4JQ=;
-        b=kO9iPKcdYHvq7Sy8SSA7D9MRPKbtN9+us4/EErldh7Q6WJGODf0MesKSC5OhxQ7IN7
-         lPxyWzUjq99r96cm2T2CxpIw0l5KV8jnTT5Jg5O4a4n29kjPQQCyfjfxzDkFEw3RrC1C
-         Q16I9GbitKoCMSEaV4V6wt7Tt2HupryJBrlm+WwpOv/TYRHgp4VC8IdN0ygNNWTs6JFt
-         zDH91eVMgIzDnvEIToaXNoZSbRBcGtPwjJvusEUBxuRhCqb28S75HrSU6QVGvsj4qhOA
-         sS3OBF3WfP4GXaT75hzGXjBonIl3CyNpZNaLXN3sNusLlIPjy2g4Poa93CznpOcD5a2Y
-         FfSQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DY6OWxXL6Mkjdnz9bKItmOBCwg7lWspCryDrZpJJELw=;
+        b=X4mfkQznNYHZpXmFQYc7WK7z6OUmo6Sk25Nz/vjKV2dkhuYPBTUE6ya8Uuvkk/gBjh
+         yA9ixJsoOl6ZMN9xYtfiFtg3vHtMFGQ1iOyOf+mqu3wjSEummwRW/BRDCd+QtgiQZPHj
+         pa7E7QrakEnijd59IO6EK+x0NSpSwHa5cORHnMYA76qNEjYcLFOmQ1p30SGuBQR708zp
+         CygDrnfb/RYOSwMJwPiynqo8DLa4PyaW8HtNT/zDcyu4TUn3xmi3AVBPGtHTxz+qem38
+         Nxe3M+AbbxfJsYvo5uXQMhJnOobYuVgUeifiaAKUUDLjXnmhcvT22u4FH00JEvinEmNk
+         a4zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mqlrXy5kwdDrwo0UFJq8GGPqMotywoeM6XVl2pYk4JQ=;
-        b=fS3SIqrmaEKcnERB9dKE+S+oC6YK9s1gBuihGzQZzguOMpNUgoO+WG9yNiQKd9rz9b
-         WDR4oRF2+lpxl9xhlZWuHJwvPT9d+nSngaa9vusHHMmG/SZcm2SgwrbFcnz5CJ8UDuH5
-         dODWlKd6P/JTGPzo/bBaMhZVU1raWtczM1ip3cqezXbOvBzvsSUJUW2Yagx3Jz8dy13S
-         LRqg6aiYUrR2gkLlP1nn/D9MrcYtn+CZcYjg5LGGH9Qgb0XPKYJ4cw2MKCo+xZpp0nKj
-         w0xh9EFD035914dAID1x2+2UI/Bjj1vt4uDi3k7iRzbgdEIxGbQCDTrAj22B0JbauZTZ
-         Fwtw==
-X-Gm-Message-State: APjAAAW7x1EhcmOlnSGMykU1SFZCMAmsnqui+xpIP9Rh3oR7x/C4Zra6
-        Ing0LHRDCgRIMbf2K2NWF4cYVUPuCbYWdUEB6tY=
-X-Google-Smtp-Source: APXvYqzwbNTznSBrD6LoX9VLQYRvaPeKLNqZGrq7TRAldxBbjP7SsrUY2Ndu+OYRW/2V+3p4I5kx8+x21B1wcVBFZZo=
-X-Received: by 2002:a0c:aed4:: with SMTP id n20mr30980915qvd.195.1557877223375;
- Tue, 14 May 2019 16:40:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DY6OWxXL6Mkjdnz9bKItmOBCwg7lWspCryDrZpJJELw=;
+        b=MhFrLICxYeyG1sLxG005khR4XzbPUPvwVaSGdLkhQB2LPSbri+aCSuL2DEAAWDIncm
+         whd+FefsCD6Tv+74PyJ6vg9wwbPGuEzOL8a2/g/6Z8QkTHbC1dOBC/zthloX3/f3sT40
+         4wDaM+jeawho9E5SSUhwYm6lyAMoYNZVyha2Ix6VQlL/7TMLMcTEtumUkjPylo1MJCn+
+         5Z2Eu/ug9TMLNToS0D5r/GZrqV637UihhUL/oTeIhlh1duTbbW4Q7e61f8H9TSzx969t
+         II5nfyi2ZBq40sZ24GfrZs6HDw7XQfLstKB0qD2tU2KYH8YeqhAveUeuwL1UyDZ2UgWu
+         8CZQ==
+X-Gm-Message-State: APjAAAXVlRbOpSeBT53jmiW0GQMhHP/Yn8WWB/xupgMlWR40yEx8V6yI
+        3D1aQBHUu0gVHeZ1lmtt3Go=
+X-Google-Smtp-Source: APXvYqwNBpkrVnbSQYAwgohdGmjunNQdCGyoDBa+JV+/+DN57azD9XaTe7h6TpYw5x0TTy4MoQNjgQ==
+X-Received: by 2002:a63:4346:: with SMTP id q67mr40722725pga.241.1557877311862;
+        Tue, 14 May 2019 16:41:51 -0700 (PDT)
+Received: from localhost ([2601:640:5:a19f:19d3:11c4:475e:3daa])
+        by smtp.gmail.com with ESMTPSA id u123sm290199pfu.67.2019.05.14.16.41.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 16:41:51 -0700 (PDT)
+Date:   Tue, 14 May 2019 16:41:49 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Cyril Hrubis <chrubis@suse.cz>
+Cc:     Yuri Norov <ynorov@marvell.com>, Andreas Schwab <schwab@suse.de>,
+        "ltp@lists.linux.it" <ltp@lists.linux.it>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Steve Ellcey <sellcey@caviumnetworks.com>,
+        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
+        Alexander Graf <agraf@suse.de>,
+        Bamvor Zhangjian <bamv2005@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Manuel Montezelo <manuel.montezelo@gmail.com>,
+        James Hogan <james.hogan@imgtec.com>,
+        Chris Metcalf <cmetcalf@mellanox.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Pinski <pinskia@gmail.com>,
+        Lin Yongting <linyongting@huawei.com>,
+        Alexey Klimov <klimov.linux@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Nathan_Lynch <Nathan_Lynch@mentor.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Subject: Re: [LTP] [EXT] Re: [PATCH v9 00/24] ILP32 for ARM64
+Message-ID: <20190514234149.GA12077@yury-thinkpad>
+References: <20180516081910.10067-1-ynorov@caviumnetworks.com>
+ <20190508225900.GA14091@yury-thinkpad>
+ <mvmtvdyoi33.fsf@suse.de>
+ <MN2PR18MB30865B950D85C6463EB0E1D4CB0F0@MN2PR18MB3086.namprd18.prod.outlook.com>
+ <20190514104311.GA24708@rei>
 MIME-Version: 1.0
-References: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
-In-Reply-To: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Tue, 14 May 2019 16:40:12 -0700
-Message-ID: <CAPhsuW5B5twTEk=SZZqZCH9_hjEjJ_KFP_GYq3T6nzv7kRSM0w@mail.gmail.com>
-Subject: Re: [PATCH] mm: filemap: correct the comment about VM_FAULT_RETRY
-To:     Yang Shi <yang.shi@linux.alibaba.com>, jbacik@fb.com
-Cc:     josef@toxicpanda.com, Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514104311.GA24708@rei>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 4:22 PM Yang Shi <yang.shi@linux.alibaba.com> wrote:
->
-> The commit 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking
-> operations") changed when mmap_sem is dropped during filemap page fault
-> and when returning VM_FAULT_RETRY.
->
-> Correct the comment to reflect the change.
->
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+On Tue, May 14, 2019 at 12:43:11PM +0200, Cyril Hrubis wrote:
+> Hi!
+> > > There is a problem with the stack size accounting during execve when
+> > > there is no stack limit:
+> > >
+> > > $ ulimit -s
+> > > 8192
+> > > $ ./hello.ilp32 
+> > > Hello World!
+> > > $ ulimit -s unlimited
+> > > $ ./hello.ilp32 
+> > > Segmentation fault
+> > > $ strace ./hello.ilp32 
+> > > execve("./hello.ilp32", ["./hello.ilp32"], 0xfffff10548f0 /* 77 vars */) = -1 ENOMEM (Cannot allocate memory)
+> > > +++ killed by SIGSEGV +++
+> > > Segmentation fault (core dumped)
+> > >
+> > > Andreas.
+> > 
+> > Thanks Andreas, I will take a look. Do we have such test in LTP?
+> 
+> We do have a test that we can run a binary with very small stack size
+> i.e. 512kB but there does not seem to be anything that would catch this
+> specific problem.
+> 
+> Can you please open an issue and describe how to reproduce the problem
+> at our github tracker:
+> 
+> https://github.com/linux-test-project/ltp/issues
+> 
+> Then we can create testcase based on that reproducer later on.
 
-Looks good to me!
+This is it:
+https://github.com/linux-test-project/ltp/issues/530
 
-Acked-by: Song Liu <songliubraving@fb.com>
-
-> ---
->  mm/filemap.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index d78f577..f0d6250 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -2545,10 +2545,8 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
->   *
->   * vma->vm_mm->mmap_sem must be held on entry.
->   *
-> - * If our return value has VM_FAULT_RETRY set, it's because
-> - * lock_page_or_retry() returned 0.
-> - * The mmap_sem has usually been released in this case.
-> - * See __lock_page_or_retry() for the exception.
-> + * If our return value has VM_FAULT_RETRY set, it's because the mmap_sem
-> + * may be dropped before doing I/O or by lock_page_maybe_drop_mmap().
->   *
->   * If our return value does not have VM_FAULT_RETRY set, the mmap_sem
->   * has not been released.
-> --
-> 1.8.3.1
->
+Yury
