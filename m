@@ -2,123 +2,90 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02102C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908EAC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCB8D20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D2F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DCcz3Yp6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OgduG/cM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbfENI06 (ORCPT
+        id S1726482AbfENI1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:26:58 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51980 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbfENI05 (ORCPT
+        Tue, 14 May 2019 04:27:01 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33956 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfENI05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 May 2019 04:26:57 -0400
-Received: by mail-wm1-f66.google.com with SMTP id o189so1857102wmb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:26:55 -0700 (PDT)
+Received: by mail-ed1-f67.google.com with SMTP id p27so21661770eda.1;
+        Tue, 14 May 2019 01:26:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
-        b=DCcz3Yp69wR3bZBKDn/QuVK0FvCSof8Ew0WzSEPM81nXrM6IGVV4Z378IW/wEmApc9
-         6rJYt5azj7d//VJx3fFlxx9csNHdvyMki7rvr5x0lXeY3yt4/TBV9idded8Kfj3wGnko
-         zZVMKUlZf8rv79WH6OmPz8scKITVnTsJKQwfXSdwK0y5KG61Lqd1DXDQHF8y76Osrs7I
-         timrhpRIfLeKoo3xSDFVYbgKZZPLMUW2NaoCeqDtvrYVz9+f7pxgnBO0ut49nHYqsWMp
-         ikucev/DepoE0LeBL3uM7ZWS+hdInkxhqj33nX/o47Qnyegi6YG8MQGwk4yydf7LXlFg
-         bEfA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8pF0Ay0b8Dgr2gdGhko9AZ082vGA43NgkUHSE5gdgZI=;
+        b=OgduG/cMoh/3Sc/Gxac9dWTtWdVzzhFzEWOo95wV8BHwox3PuUmIk5DfLw+wrNKHFB
+         jklYPI1DcXqo2DsLHuQmmG8YsjwEXNmaBTc4wNPoGxlRfPMS75lojToepR9tV6tBq6JL
+         QCZBAzpEJ84AMXugniFV3xZ/S5ERhM65zI2tUmy8YzJkvRSi1PqlbVK4eymKbz0r2STD
+         M+r49IJVSHzKJ6/syq4E3EBoXrE9uhAUGmqnr7hZXqHUC5+CMnHClRhKpvzlIK1ZiSv0
+         felmRjiC/ujBmPn9IqF8Z/2BPaDts1CQSOwrXi+nV+EQNFnz5cb2n7RUEz/Wgsvfrixf
+         10mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=X0toZzy5jG06W74WS/hZf53CDr/smndRtb9GSpbhzgw=;
-        b=CIBpx+Mif0VogfOXSCypZdestPBqY9xp1H+Mf0nIGBMwkl8WxcMMepA1m5ctK8uZ2Y
-         knrz6LTWyJJmeHvli96Cj3rAdWap7NzScimX3Ddj198wA6R19eqxvvTcgEd228Sn1LI8
-         WzIOKmNZ93Lk6sZzde6kcWpYOgMNgL2c+LmOjPPHYInTAHWy2XBEa42ad/Z3mf2AJHzq
-         wuwtdOP4anmbW0GNQ7xceeHxN5EAH8djN4/IdWEzMba8cWuBtZnaXNrnLXnNNqDqcgzU
-         AspAP/NPf2EqexLOLSmH6ZUDNIpKfUO+x0B8xonmrWOVSe2SCPGKZ/i3bik7jAoUK1EE
-         USDQ==
-X-Gm-Message-State: APjAAAX87+U6zPlBsGG9NF2fehbkEwmpTQvvoDpfJdsChLlis4e2fry/
-        TRe9RsIP1QTbgwt4j03wQRXlbw==
-X-Google-Smtp-Source: APXvYqxnQPc8uylG3Vch3Y5Tb7DiuQJ87G8GH7fcOBvIRwt2mlcz4eOXf1LUsAUj88af8nCLk1cElQ==
-X-Received: by 2002:a1c:21c1:: with SMTP id h184mr1792485wmh.78.1557822414947;
-        Tue, 14 May 2019 01:26:54 -0700 (PDT)
-Received: from glaroque-ThinkPad-T480.home ([2a01:cb1d:379:8b00:1910:6694:7019:d3a])
-        by smtp.gmail.com with ESMTPSA id j190sm2450772wmb.19.2019.05.14.01.26.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 01:26:53 -0700 (PDT)
-From:   Guillaume La Roque <glaroque@baylibre.com>
-To:     linus.walleij@linaro.org, khilman@baylibre.com
-Cc:     jbrunet@baylibre.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
-Date:   Tue, 14 May 2019 10:26:46 +0200
-Message-Id: <20190514082652.20686-1-glaroque@baylibre.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8pF0Ay0b8Dgr2gdGhko9AZ082vGA43NgkUHSE5gdgZI=;
+        b=g0gYKmTTXhleGUHF6V+N1rjjxt9Q4hb5aRG6CRfjpejxmsRWt/RHB4Sl7J62UOqSLd
+         EQbHoN2NPgmKYI89LDqfM/tAVB/3+OKc1dXe8kccFYG9uaUaKwwuO+XFqp87H5PsNW8C
+         ST5/dJdRC3XMLIH4Onx7XK5/6B6XjMJBUQiOPiIhuJGFWsIxy6AVKgagoDRaW4O4x1RG
+         9qCoBSnE+ccHEZWCq25qQAJxdPbTcRqkUp4Nd4fXVtTjNIopxV7REIRf/U5Ovr1h7kij
+         EAUWb3diZ24L5d7+EeDfU6Qj2gdFL2lxj22CoYFaNcWsRavHbMZuRqqiCxHy5xr6grjJ
+         OZLA==
+X-Gm-Message-State: APjAAAX8kyXE5jHrHYg0HLMvT5xOwhn48JbYSU+hMPJm2sqfuaxHFMPA
+        lLwQrIwvG6dJUq6e537gaWyK4Y2CTV6hLoV3+6o=
+X-Google-Smtp-Source: APXvYqyJwXW1r146kB+f/e6hzh6KUROJ54XMwp/FqVdMFYzgc4rAU//wq4xtndEhJPfjzVSFFS+EgYWH0IITInluacI=
+X-Received: by 2002:a50:91d0:: with SMTP id h16mr34769727eda.265.1557822415775;
+ Tue, 14 May 2019 01:26:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <1557813807-3919-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1557813807-3919-1-git-send-email-Anson.Huang@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 14 May 2019 11:26:43 +0300
+Message-ID: <CAEnQRZBNHXHvUu=90DZQzZHM3gp6sABPPbh5yfGQrrd5jdCRhQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Remove unnecessary blank lines
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The purpose of this patchset is to add drive-strength support in meson pinconf
-driver. This is a new feature that was added on the g12a. It is critical for us
-to support this since many functions are failing with default pad drive-strength.
+On Tue, May 14, 2019 at 9:09 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Unnecessary blank lines do NOT help readability, so remove them.
+>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
-'drive-strength' is expressed in mA.
-So this patch add another generic property "drive-strength-microamp". The change to do so
-would be minimal and could be benefit to other platforms later on.
-
-Cheers
-Guillaume
-
-Changes since v5:
-- restore Tested-by/Reviewed-by/Ack-by tags
-
-Changes since v4:
-- fix dt-binding documentation
-- rename drive-strength-uA to drive-strength-microamp in coverletter
-
-Changes since v3:
-- remove dev_err in meson_get_drive_strength
-- cleanup code
-
-Changes since v2:
-- rename driver-strength-uA property to drive-strength-microamp
-- rework patch series for better understanding
-- rework set_bias function
-
-Changes since v1:
-- fix missing break
-- implement new pinctrl generic property "drive-strength-uA"
-
-[1] https://lkml.kernel.org/r/20190314163725.7918-1-jbrunet@baylibre.com
-Tested-by: Jerome Brunet <jbrunet@baylibre.com>
-
-Guillaume La Roque (6):
-  dt-bindings: pinctrl: add a 'drive-strength-microamp' property
-  pinctrl: generic: add new 'drive-strength-microamp' property support
-  dt-bindings: pinctrl: meson: Add drive-strength-microamp property
-  pinctrl: meson: Rework enable/disable bias part
-  pinctrl: meson: add support of drive-strength-microamp
-  pinctrl: meson: g12a: add DS bank value
-
- .../bindings/pinctrl/meson,pinctrl.txt        |   4 +
- .../bindings/pinctrl/pinctrl-bindings.txt     |   3 +
- drivers/pinctrl/meson/pinctrl-meson-g12a.c    |  36 ++--
- drivers/pinctrl/meson/pinctrl-meson.c         | 180 ++++++++++++++----
- drivers/pinctrl/meson/pinctrl-meson.h         |  18 +-
- drivers/pinctrl/pinconf-generic.c             |   2 +
- include/linux/pinctrl/pinconf-generic.h       |   3 +
- 7 files changed, 193 insertions(+), 53 deletions(-)
-
--- 
-2.17.1
-
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
