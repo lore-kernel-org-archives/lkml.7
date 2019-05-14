@@ -3,186 +3,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3B6C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8991C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC1662147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 951462147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726221AbfENNWx (ORCPT
+        id S1726335AbfENNXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:22:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52845 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENNWx (ORCPT
+        Tue, 14 May 2019 09:23:31 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39837 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726246AbfENNXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:22:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id y3so2878714wmm.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:22:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=30MZy6w8/UHFwckByseMshUTKJ0XAaQAYBwkRUyEATg=;
-        b=OAbHBD6oSpON8YAunry6q0BMtvIM3sKt8MU91M7yt5nExRepww52P3VqLplvn9V4UM
-         BewP07unongasMNJdT4ejFmT7LxGdcbRSG32qqODUHRwYdY8hvM7vrgGvJvQAyGvQCHj
-         d4JK/81DmzmmuqfCjcKcN4CHM5ta7MFgfxpx8sPAIqrq2Mnrf+WJWf3qChBTBpT6rT2q
-         x4yBELKkKLWk/pzAguRGr7ASPgkLzRroYg8j0ksGwWRBlBISRll7XPiB/4fe2skE5QQc
-         5oe1uyRbZXLA6XBCWjohNBV9RTzD/MBtuOVgi9HnTn6BjNsQjWjAciA1DXsm2MUI4rDF
-         Mfsg==
-X-Gm-Message-State: APjAAAX3rywUvPrDX+twFq/XfPE3rEX5LxYQRZJaG78A/D7TdK8ri1ka
-        4fXpcvpdnv8fsnrcmyTyEFg+
-X-Google-Smtp-Source: APXvYqwC3BFcZP2L4DGiVRCHRXmxW9RKCIZlsYi2qXCsH8aM1VNcEqntfDgjJ/dMsnZG1ORhmCvuTA==
-X-Received: by 2002:a1c:a7cc:: with SMTP id q195mr11561566wme.53.1557840170835;
-        Tue, 14 May 2019 06:22:50 -0700 (PDT)
-Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
-        by smtp.gmail.com with ESMTPSA id k30sm4597150wrd.0.2019.05.14.06.22.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 06:22:50 -0700 (PDT)
-Date:   Tue, 14 May 2019 14:22:49 +0100
-From:   Aaron Tomlin <atomlin@redhat.com>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH RFC v2 3/4] mm/ksm: introduce force_madvise knob
-Message-ID: <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
-References: <20190514131654.25463-1-oleksandr@redhat.com>
- <20190514131654.25463-4-oleksandr@redhat.com>
+        Tue, 14 May 2019 09:23:30 -0400
+Received: from [109.168.11.45] (port=60568 helo=pc-ceresoli.dev.aim)
+        by hostingweb31.netsons.net with esmtpa (Exim 4.91)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1hQXOp-00FJWI-FG; Tue, 14 May 2019 15:23:19 +0200
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+To:     netdev@vger.kernel.org
+Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org,
+        "Nicolas . Ferre" <Nicolas.Ferre@microchip.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Soren Brinkmann <soren.brinkmann@xilinx.com>,
+        Cyrille Pitchen <cyrille.pitchen@atmel.com>,
+        "shubhrajyoti . datta @ xilinx . com" <shubhrajyoti.datta@xilinx.com>,
+        Harini Katakam <harini.katakam@xilinx.com>
+Subject: [PATCH net RESEND] net: macb: fix error format in dev_err()
+Date:   Tue, 14 May 2019 15:23:07 +0200
+Message-Id: <20190514132307.15311-1-luca@lucaceresoli.net>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190514131654.25463-4-oleksandr@redhat.com>
-X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
-X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
-User-Agent: NeoMutt/20180716-1637-ee8449
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-05-14 15:16 +0200, Oleksandr Natalenko wrote:
-> Present a new sysfs knob to mark task's anonymous memory as mergeable.
-> 
-> To force merging task's VMAs, its PID is echoed in a write-only file:
-> 
->    # echo PID > /sys/kernel/mm/ksm/force_madvise
-> 
-> Force unmerging is done similarly, but with "minus" sign:
-> 
->    # echo -PID > /sys/kernel/mm/ksm/force_madvise
-> 
-> "0" or "-0" can be used to control the current task.
-> 
-> To achieve this, previously introduced ksm_enter()/ksm_leave() helpers
-> are used in the "store" handler.
-> 
-> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> ---
->  mm/ksm.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index e9f3901168bb..22c59fb03d3a 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -2879,10 +2879,77 @@ static void wait_while_offlining(void)
->  
->  #define KSM_ATTR_RO(_name) \
->  	static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
-> +#define KSM_ATTR_WO(_name) \
-> +	static struct kobj_attribute _name##_attr = __ATTR_WO(_name)
->  #define KSM_ATTR(_name) \
->  	static struct kobj_attribute _name##_attr = \
->  		__ATTR(_name, 0644, _name##_show, _name##_store)
->  
-> +static ssize_t force_madvise_store(struct kobject *kobj,
-> +				     struct kobj_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	int err;
-> +	pid_t pid;
-> +	bool merge = true;
-> +	struct task_struct *tsk;
-> +	struct mm_struct *mm;
-> +	struct vm_area_struct *vma;
-> +
-> +	err = kstrtoint(buf, 10, &pid);
-> +	if (err)
-> +		return -EINVAL;
-> +
-> +	if (pid < 0) {
-> +		pid = abs(pid);
-> +		merge = false;
-> +	}
-> +
-> +	if (!pid && *buf == '-')
-> +		merge = false;
-> +
-> +	rcu_read_lock();
-> +	if (pid) {
-> +		tsk = find_task_by_vpid(pid);
-> +		if (!tsk) {
-> +			err = -ESRCH;
-> +			rcu_read_unlock();
-> +			goto out;
-> +		}
-> +	} else {
-> +		tsk = current;
-> +	}
-> +
-> +	tsk = tsk->group_leader;
-> +
-> +	get_task_struct(tsk);
-> +	rcu_read_unlock();
-> +
-> +	mm = get_task_mm(tsk);
-> +	if (!mm) {
-> +		err = -EINVAL;
-> +		goto out_put_task_struct;
-> +	}
-> +	down_write(&mm->mmap_sem);
-> +	vma = mm->mmap;
-> +	while (vma) {
-> +		if (merge)
-> +			ksm_enter(vma->vm_mm, vma, &vma->vm_flags);
-> +		else
-> +			ksm_leave(vma, vma->vm_start, vma->vm_end, &vma->vm_flags);
-> +		vma = vma->vm_next;
-> +	}
-> +	up_write(&mm->mmap_sem);
-> +	mmput(mm);
-> +
-> +out_put_task_struct:
-> +	put_task_struct(tsk);
-> +
-> +out:
-> +	return err ? err : count;
-> +}
-> +KSM_ATTR_WO(force_madvise);
-> +
->  static ssize_t sleep_millisecs_show(struct kobject *kobj,
->  				    struct kobj_attribute *attr, char *buf)
->  {
-> @@ -3185,6 +3252,7 @@ static ssize_t full_scans_show(struct kobject *kobj,
->  KSM_ATTR_RO(full_scans);
->  
->  static struct attribute *ksm_attrs[] = {
-> +	&force_madvise_attr.attr,
->  	&sleep_millisecs_attr.attr,
->  	&pages_to_scan_attr.attr,
->  	&run_attr.attr,
+Errors are negative numbers. Using %u shows them as very large positive
+numbers such as 4294967277 that don't make sense. Use the %d format
+instead, and get a much nicer -19.
 
-Looks fine to me.
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Fixes: b48e0bab142f ("net: macb: Migrate to devm clock interface")
+Fixes: 93b31f48b3ba ("net/macb: unify clock management")
+Fixes: 421d9df0628b ("net/macb: merge at91_ether driver into macb driver")
+Fixes: aead88bd0e99 ("net: ethernet: macb: Add support for rx_clk")
+Fixes: f5473d1d44e4 ("net: macb: Support clock management for tsu_clk")
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
+---
 
+No content change. Resending with 'net' in the subject and with Fixes: tags
+as suggested by Andrew Lunn. There are many because the error was added
+once and replicated while adding more dev_err() lines. Also adding
+Acked/Reviewed-by: tags got in the meanwhile.
+---
+ drivers/net/ethernet/cadence/macb_main.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index c049410bc888..bebd9b1aeb64 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3343,7 +3343,7 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 		if (!err)
+ 			err = -ENODEV;
+ 
+-		dev_err(&pdev->dev, "failed to get macb_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to get macb_clk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+@@ -3352,7 +3352,7 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 		if (!err)
+ 			err = -ENODEV;
+ 
+-		dev_err(&pdev->dev, "failed to get hclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to get hclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+@@ -3370,31 +3370,31 @@ static int macb_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 
+ 	err = clk_prepare_enable(*pclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
+ 	err = clk_prepare_enable(*hclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable hclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable hclk (%d)\n", err);
+ 		goto err_disable_pclk;
+ 	}
+ 
+ 	err = clk_prepare_enable(*tx_clk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable tx_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable tx_clk (%d)\n", err);
+ 		goto err_disable_hclk;
+ 	}
+ 
+ 	err = clk_prepare_enable(*rx_clk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable rx_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable rx_clk (%d)\n", err);
+ 		goto err_disable_txclk;
+ 	}
+ 
+ 	err = clk_prepare_enable(*tsu_clk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable tsu_clk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable tsu_clk (%d)\n", err);
+ 		goto err_disable_rxclk;
+ 	}
+ 
+@@ -3868,7 +3868,7 @@ static int at91ether_clk_init(struct platform_device *pdev, struct clk **pclk,
+ 
+ 	err = clk_prepare_enable(*pclk);
+ 	if (err) {
+-		dev_err(&pdev->dev, "failed to enable pclk (%u)\n", err);
++		dev_err(&pdev->dev, "failed to enable pclk (%d)\n", err);
+ 		return err;
+ 	}
+ 
 -- 
-Aaron Tomlin
+2.21.0
+
