@@ -2,181 +2,206 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76288C04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C681C04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0DE2189E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557795037;
-	bh=2O5Fxjx2lYALZsM+zw5tgPGHy1irMs8ps80aJVg+kso=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Q5FKNUdDJvAJUoEFplGCbaf0Md+ehNT0SE1J8dW8Bl3PFh84f5eG0GUhXMJLcZH72
-	 xJ9Xwblt060vFbX9Dmgz+HPrsDY7+bbrZGCnmH5p/+VrOQTAyWIMVJl+c1HSlHjpIj
-	 hbTAGsZ8ca84VAiCa7nHb6cFh4hRjYdjyZnCaCt0=
+	by mail.kernel.org (Postfix) with ESMTP id 015E120879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 00:55:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MEimntid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbfENAug (ORCPT
+        id S1726901AbfENAzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 20:50:36 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42726 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbfENAug (ORCPT
+        Mon, 13 May 2019 20:55:25 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42696 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfENAzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 20:50:36 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k9so10819544oig.9;
-        Mon, 13 May 2019 17:50:35 -0700 (PDT)
+        Mon, 13 May 2019 20:55:24 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j53so17050409qta.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 17:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=pUBFTG3mMVYxmSF25knkwovcz+vklh44Q18Z6S9OSMc=;
+        b=MEimntidxOkQd50CgVh8V2VxRsFvKBoAstt85gad8xJKVyOeEoV11zNRiqblSvAjiq
+         1QMi0NcKTVMLI1kA/Ti0gtw7ZFby3wLfPdAYxMEersXhqvV0bIM4WNTeqPD3JVn0eq3L
+         fXCzgi2TPzX1K+d0wwQ8aa0i+RPNEWdCQhRT0tVOFlu9oLDteHUUwFB6fGSD9P5kO5Fy
+         QMPfyLpS3waf7LwPmFKhZOL+oGi8jEkKE5cOJIomUMyRcDSV7JsDlyP/y0jWzDqj9i00
+         VlzwONALu4JbkW8pjGfZbB2qrLpPHFJKoEUZRXHhDVxONQG1nfBbKJzOdnph7/mfKImg
+         wP8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rv0mn5KUbHgge7O7vIawkh8Ujbd2zyxMdRjz07XVw40=;
-        b=kTtzAuxgmhxh87CJ67XqCJP8v9zY8Q+KVygMCILTgQSm7ovqHV/f6aIIK1tkA4p5pN
-         07vWnqadPyrEOekU/IUuwle3BFL2ZTk03VN+Uo1x5h9vn6sJSWY+gjrAPg9tDP1jv4lx
-         Ev2p1fc9BTq/Ed4xMFQmF1TB5OZzttsYJ3j4+OO+K0eB7xdu9FV9eBiPe1fVwJxflni/
-         60fpmGHKIDGCC+UINkOKTFlQJmGbX9Y4E+6Pj6YIigMfrTB0/gXvbT8Z43Khtm6VEPsO
-         Q+i0z593oSf6/8FSZtXBUFAHqEAYEDEe3YrZ0oe0JY/xRvIZKyy0e0LTmlKKtlnEolyF
-         acmA==
-X-Gm-Message-State: APjAAAWO5Tax4JuQHfz41UuHfavI9uuHwgvsxBQUcm1f8NzOGq9Apftv
-        md1GwKwQnsUr0mPxoSLjkA==
-X-Google-Smtp-Source: APXvYqwcKIXRuwDcyH4/5BZxQTsVYy/bl0ZkdHMSWsUga3eOtXdA70ypXhk0MsnTri1K/oUOAtmxsQ==
-X-Received: by 2002:aca:3cc5:: with SMTP id j188mr1363334oia.88.1557795034674;
-        Mon, 13 May 2019 17:50:34 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id w192sm5990259oiw.57.2019.05.13.17.50.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 13 May 2019 17:50:33 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     linus.walleij@linaro.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: Convert Arm PL061 to json-schema
-Date:   Mon, 13 May 2019 19:50:33 -0500
-Message-Id: <20190514005033.15593-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=pUBFTG3mMVYxmSF25knkwovcz+vklh44Q18Z6S9OSMc=;
+        b=s6EAQ4kyv31z3OmCozPk1xzOxaLe4S/i5G2hnk6yWwzQWJYDDFgBUSfJbqNBYnZNLn
+         gwNm47ZNvxDQmgF7I/3wEXUlMW7sy1lt3wKkWgqhqhBm9Kmo7KC8thqoMMzDe0+EwXmS
+         SzazdIveZNiP/PymcGl3pv844s5Z9DxW3SYhyhU8YXsBg8oJqQ2l5UPNybn9u0QYDdiy
+         upWokKT1C0yF0Nq6e7psIUH7OITbVWvi0K095Z0XmBYIjAH9kN04S0di7OrR2JC1ao7p
+         XT4vEjt6vBfBEHke2z5VzHoCyD3j53gkRcCX3vQex+f9jvZQ4DPdbLSjQOeptVdzjgg4
+         iPYw==
+X-Gm-Message-State: APjAAAXpXMKRqnU/a/h8Jbe+c/lqL5r9T70TmtsjSyDfqBOmRuaNuYaS
+        +yXjJE5g2Qt2INACkcaMDO4ZhQ==
+X-Google-Smtp-Source: APXvYqyBUTx5Iw2WP9ZH7PL2DyEW9PA/PLDHy2q3fM6GCCJLcIjrlSwisidKRxN8NrlAM44YqdEpjA==
+X-Received: by 2002:ac8:4304:: with SMTP id z4mr18655245qtm.275.1557795322864;
+        Mon, 13 May 2019 17:55:22 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
+        by smtp.gmail.com with ESMTPSA id r47sm11534911qtc.14.2019.05.13.17.55.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 May 2019 17:55:22 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hQLiz-0008Kd-Jd; Mon, 13 May 2019 21:55:21 -0300
+Date:   Mon, 13 May 2019 21:55:21 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: [PATCH v2] RDMA: Directly cast the sockaddr union to sockaddr
+Message-ID: <20190514005521.GA18085@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Arm PL061 GPIO controller binding to json-schema format.
+gcc 9 now does allocation size tracking and thinks that passing the member
+of a union and then accessing beyond that member's bounds is an overflow.
 
-As I'm the author for all but the gpio-ranges line, make the schema dual
-GPL/BSD license.
+Instead of using the union member, use the entire union with a cast to
+get to the sockaddr. gcc will now know that the memory extends the full
+size of the union.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
-This warns on a few platforms missing clocks, interrupt-controller 
-and/or #interrupt-cells. We could not make those required, but really 
-they should be IMO. OTOH, it's platforms like Spear and Calxeda which 
-aren't too active, so I don't know that we want to fix them.
+ drivers/infiniband/core/addr.c           | 16 ++++++++--------
+ drivers/infiniband/hw/ocrdma/ocrdma_ah.c |  5 ++---
+ drivers/infiniband/hw/ocrdma/ocrdma_hw.c |  5 ++---
+ 3 files changed, 12 insertions(+), 14 deletions(-)
 
- .../devicetree/bindings/gpio/pl061-gpio.txt   | 10 ---
- .../devicetree/bindings/gpio/pl061-gpio.yaml  | 69 +++++++++++++++++++
- 2 files changed, 69 insertions(+), 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/pl061-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
+I missed the ocrdma files in the v1
 
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt b/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-deleted file mode 100644
-index 89058d375b7c..000000000000
---- a/Documentation/devicetree/bindings/gpio/pl061-gpio.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--ARM PL061 GPIO controller
--
--Required properties:
--- compatible : "arm,pl061", "arm,primecell"
--- #gpio-cells : Should be two. The first cell is the pin number and the
--  second cell is used to specify optional parameters:
--  - bit 0 specifies polarity (0 for normal, 1 for inverted)
--- gpio-controller : Marks the device node as a GPIO controller.
--- interrupts : Interrupt mapping for GPIO IRQ.
--- gpio-ranges : Interaction with the PINCTRL subsystem.
-diff --git a/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-new file mode 100644
-index 000000000000..313b17229247
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/pl061-gpio.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/pl061-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ARM PL061 GPIO controller
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+  - Rob Herring <robh@kernel.org>
-+
-+# We need a select here so we don't match all nodes with 'arm,primecell'
-+select:
-+  properties:
-+    compatible:
-+      contains:
-+        const: arm,pl061
-+  required:
-+    - compatible
-+
-+properties:
-+  $nodename:
-+    pattern: "^gpio@[0-9a-f]+$"
-+
-+  compatible:
-+    items:
-+      - const: arm,pl061
-+      - const: arm,primecell
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    oneOf:
-+      - maxItems: 1
-+      - maxItems: 8
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges:
-+    maxItems: 8
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - clocks
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+...
+We can revisit what to do with that repetitive union after the merge
+window, but this simple patch will eliminate the warnings for now.
+
+Linus, I'll send this as a PR tomorrow - there is also a bug fix for
+the rdma-netlink changes posted that should go too.
+
+Thanks,
+Jason
+
+diff --git a/drivers/infiniband/core/addr.c b/drivers/infiniband/core/addr.c
+index ba01b90c04e775..2f7d14159841f8 100644
+--- a/drivers/infiniband/core/addr.c
++++ b/drivers/infiniband/core/addr.c
+@@ -731,8 +731,8 @@ int roce_resolve_route_from_path(struct sa_path_rec *rec,
+ 	if (rec->roce.route_resolved)
+ 		return 0;
+ 
+-	rdma_gid2ip(&sgid._sockaddr, &rec->sgid);
+-	rdma_gid2ip(&dgid._sockaddr, &rec->dgid);
++	rdma_gid2ip((struct sockaddr *)&sgid, &rec->sgid);
++	rdma_gid2ip((struct sockaddr *)&dgid, &rec->dgid);
+ 
+ 	if (sgid._sockaddr.sa_family != dgid._sockaddr.sa_family)
+ 		return -EINVAL;
+@@ -743,7 +743,7 @@ int roce_resolve_route_from_path(struct sa_path_rec *rec,
+ 	dev_addr.net = &init_net;
+ 	dev_addr.sgid_attr = attr;
+ 
+-	ret = addr_resolve(&sgid._sockaddr, &dgid._sockaddr,
++	ret = addr_resolve((struct sockaddr *)&sgid, (struct sockaddr *)&dgid,
+ 			   &dev_addr, false, true, 0);
+ 	if (ret)
+ 		return ret;
+@@ -815,22 +815,22 @@ int rdma_addr_find_l2_eth_by_grh(const union ib_gid *sgid,
+ 	struct rdma_dev_addr dev_addr;
+ 	struct resolve_cb_context ctx;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+ 	int ret;
+ 
+-	rdma_gid2ip(&sgid_addr._sockaddr, sgid);
+-	rdma_gid2ip(&dgid_addr._sockaddr, dgid);
++	rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
++	rdma_gid2ip((struct sockaddr *)&dgid_addr, dgid);
+ 
+ 	memset(&dev_addr, 0, sizeof(dev_addr));
+ 	dev_addr.net = &init_net;
+ 	dev_addr.sgid_attr = sgid_attr;
+ 
+ 	init_completion(&ctx.comp);
+-	ret = rdma_resolve_ip(&sgid_addr._sockaddr, &dgid_addr._sockaddr,
+-			      &dev_addr, 1000, resolve_cb, true, &ctx);
++	ret = rdma_resolve_ip((struct sockaddr *)&sgid_addr,
++			      (struct sockaddr *)&dgid_addr, &dev_addr, 1000,
++			      resolve_cb, true, &ctx);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_ah.c b/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
+index 1d4ea135c28f2a..8d3e36d548aae9 100644
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_ah.c
+@@ -83,7 +83,6 @@ static inline int set_av_attr(struct ocrdma_dev *dev, struct ocrdma_ah *ah,
+ 	struct iphdr ipv4;
+ 	const struct ib_global_route *ib_grh;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+@@ -133,9 +132,9 @@ static inline int set_av_attr(struct ocrdma_dev *dev, struct ocrdma_ah *ah,
+ 		ipv4.tot_len = htons(0);
+ 		ipv4.ttl = ib_grh->hop_limit;
+ 		ipv4.protocol = nxthdr;
+-		rdma_gid2ip(&sgid_addr._sockaddr, sgid);
++		rdma_gid2ip((struct sockaddr *)&sgid_addr, sgid);
+ 		ipv4.saddr = sgid_addr._sockaddr_in.sin_addr.s_addr;
+-		rdma_gid2ip(&dgid_addr._sockaddr, &ib_grh->dgid);
++		rdma_gid2ip((struct sockaddr*)&dgid_addr, &ib_grh->dgid);
+ 		ipv4.daddr = dgid_addr._sockaddr_in.sin_addr.s_addr;
+ 		memcpy((u8 *)ah->av + eth_sz, &ipv4, sizeof(struct iphdr));
+ 	} else {
+diff --git a/drivers/infiniband/hw/ocrdma/ocrdma_hw.c b/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
+index 32674b291f60da..5127e2ea4bdd2d 100644
+--- a/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
++++ b/drivers/infiniband/hw/ocrdma/ocrdma_hw.c
+@@ -2499,7 +2499,6 @@ static int ocrdma_set_av_params(struct ocrdma_qp *qp,
+ 	u16 vlan_id = 0xFFFF;
+ 	u8 mac_addr[6], hdr_type;
+ 	union {
+-		struct sockaddr     _sockaddr;
+ 		struct sockaddr_in  _sockaddr_in;
+ 		struct sockaddr_in6 _sockaddr_in6;
+ 	} sgid_addr, dgid_addr;
+@@ -2542,8 +2541,8 @@ static int ocrdma_set_av_params(struct ocrdma_qp *qp,
+ 
+ 	hdr_type = rdma_gid_attr_network_type(sgid_attr);
+ 	if (hdr_type == RDMA_NETWORK_IPV4) {
+-		rdma_gid2ip(&sgid_addr._sockaddr, &sgid_attr->gid);
+-		rdma_gid2ip(&dgid_addr._sockaddr, &grh->dgid);
++		rdma_gid2ip((struct sockaddr *)&sgid_addr, &sgid_attr->gid);
++		rdma_gid2ip((struct sockaddr *)&dgid_addr, &grh->dgid);
+ 		memcpy(&cmd->params.dgid[0],
+ 		       &dgid_addr._sockaddr_in.sin_addr.s_addr, 4);
+ 		memcpy(&cmd->params.sgid[0],
 -- 
-2.20.1
+2.21.0
 
