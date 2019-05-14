@@ -6,51 +6,51 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4140EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75709C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0465A21726
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FA72085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:19:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfENKSr (ORCPT
+        id S1726586AbfENKTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:18:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40284 "EHLO
+        Tue, 14 May 2019 06:19:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34110 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725892AbfENKSq (ORCPT
+        by vger.kernel.org with ESMTP id S1725892AbfENKTF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:18:46 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EACc9H148745
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:18:44 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sftxja9qu-1
+        Tue, 14 May 2019 06:19:05 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EACiIV090130
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:19:04 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sfu50sm4b-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:18:44 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 06:19:04 -0400
 Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Tue, 14 May 2019 11:18:43 +0100
-Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 14 May 2019 11:19:03 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 11:18:41 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EAIeKq7405952
+        Tue, 14 May 2019 11:19:01 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EAIxJd45744180
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 10:18:40 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 918227805C;
-        Tue, 14 May 2019 10:18:40 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 417F178064;
-        Tue, 14 May 2019 10:18:40 +0000 (GMT)
+        Tue, 14 May 2019 10:19:00 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C25ECC6055;
+        Tue, 14 May 2019 10:18:59 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DCF9C6057;
+        Tue, 14 May 2019 10:18:59 +0000 (GMT)
 Received: from sofia.ibm.com (unknown [9.124.35.248])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 14 May 2019 10:18:40 +0000 (GMT)
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 10:18:59 +0000 (GMT)
 Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 01A832E3373; Tue, 14 May 2019 15:48:37 +0530 (IST)
-Date:   Tue, 14 May 2019 15:48:37 +0530
+        id F2A642E3373; Tue, 14 May 2019 15:48:56 +0530 (IST)
+Date:   Tue, 14 May 2019 15:48:56 +0530
 From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
@@ -62,21 +62,21 @@ Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition
  in resize_hpt
 Reply-To: ego@linux.vnet.ibm.com
 References: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
- <877eattta4.fsf@concordia.ellerman.id.au>
+ <874l5xtt6v.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <877eattta4.fsf@concordia.ellerman.id.au>
+In-Reply-To: <874l5xtt6v.fsf@concordia.ellerman.id.au>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 X-TM-AS-GCONF: 00
-x-cbid: 19051410-8235-0000-0000-00000E951406
+x-cbid: 19051410-0004-0000-0000-0000150E3C19
 X-IBM-SpamModules-Scores: 
 X-IBM-SpamModules-Versions: BY=3.00011096; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203140; UDB=6.00631507; IPR=6.00984063;
- MB=3.00026879; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-14 10:18:43
+ PH=3.00000004; SC=3.00000285; SDB=6.01203141; UDB=6.00631506; IPR=6.00984063;
+ MB=3.00026879; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-14 10:19:02
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051410-8236-0000-0000-0000458D3FDB
-Message-Id: <20190514101837.GG31206@in.ibm.com>
+x-cbparentid: 19051410-0005-0000-0000-00008BA75E7A
+Message-Id: <20190514101856.GH31206@in.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -89,30 +89,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On Tue, May 14, 2019 at 05:00:19PM +1000, Michael Ellerman wrote:
+On Tue, May 14, 2019 at 05:02:16PM +1000, Michael Ellerman wrote:
 > "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
 > > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 > >
+> > Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
+> 
+> ps. A "RESEND" implies the patch is unchanged and you're just resending
+> it because it was ignored.
+> 
+> In this case it should have just been "PATCH v2", with a note below the "---"
+> saying "v2: Rebased onto powerpc/next ..."
+
+Ok. I will send a v3 :-)
+
+> 
+> cheers
+> 
 > > During a memory hotplug operations involving resizing of the HPT, we
 > > invoke a stop_machine() to perform the resizing. In this code path, we
 > > end up recursively taking the cpu_hotplug_lock, first in
 > > memory_hotplug_begin() and then subsequently in stop_machine(). This
-> > causes the system to hang.
->
-> This implies we have never tested a memory hotplug that resized the HPT.
-> Is that really true? Or did something change?
->
-
-This was reported by Aneesh during a testcase involving reconfiguring
-the namespace for nvdimm where we do a memory remove followed by
-add. The memory add invokes resize_hpt().
-
-It seems we can hit this issue when we perform a memory hotplug/unplug
-in the guest.
-
-> > With lockdep enabled we get the following
+> > causes the system to hang. With lockdep enabled we get the following
 > > error message before the hang.
 > >
 > >   swapper/0/1 is trying to acquire lock:
@@ -120,65 +118,7 @@ in the guest.
 > >
 > >   but task is already holding lock:
 > >   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-> 
-> Do we have the full stack trace?
-
-Yes, here is the complete log:
-
-[    0.537123] swapper/0/1 is trying to acquire lock:
-[    0.537197] (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
-[    0.537336]
-[    0.537336] but task is already holding lock:
-[    0.537429] (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-
-[    0.537570]                                   
-[    0.537570] other info that might help us debug this:
-[    0.537663]  Possible unsafe locking scenario:
-[    0.537663]
-[    0.537756]        CPU0                                     
-[    0.537794]        ----                                       
-[    0.537832]   lock(cpu_hotplug_lock.rw_sem);                                                        
-[    0.537906]   lock(cpu_hotplug_lock.rw_sem);             
-[    0.537980]                                       
-[    0.537980]  *** DEADLOCK ***                                                           
-[    0.537980]                                                                                      
-[    0.538074]  May be due to missing lock nesting notation                           
-[    0.538074]                                                                    
-[    0.538168] 3 locks held by swapper/0/1:               
-[    0.538224]  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
-[    0.538348]  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
-[    0.538477]  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
-[    0.538608]
-[    0.538608] stack backtrace:                                              
-[    0.538685] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
-[    0.538812] Call Trace:                                          
-[    0.538863] [c0000000feb03150] [c000000000e32bd4] dump_stack+0xe8/0x164 (unreliable)
-[    0.538975] [c0000000feb031a0] [c00000000020d6c0] __lock_acquire+0x1110/0x1c70
-[    0.539086] [c0000000feb03320] [c00000000020f080] lock_acquire+0x240/0x290
-[    0.539180] [c0000000feb033e0] [c00000000017f554] cpus_read_lock+0x64/0xf0
-[    0.539273] [c0000000feb03420] [c00000000029ebac] stop_machine+0x2c/0x60     
-[    0.539367] [c0000000feb03460] [c0000000000d7f7c] pseries_lpar_resize_hpt+0x19c/0x2c0
-[    0.539479] [c0000000feb03500] [c0000000000788d0] resize_hpt_for_hotplug+0x70/0xd0
-[    0.539590] [c0000000feb03570] [c000000000e5d278] arch_add_memory+0x58/0xfc
-[    0.539683] [c0000000feb03610] [c0000000003553a8] devm_memremap_pages+0x5e8/0x8f0
-[    0.539804] [c0000000feb036c0] [c0000000009c2394] pmem_attach_disk+0x764/0x830    
-[    0.539916] [c0000000feb037d0] [c0000000009a7c38] nvdimm_bus_probe+0x118/0x240
-[    0.540026] [c0000000feb03860] [c000000000968500] really_probe+0x230/0x4b0
-[    0.540119] [c0000000feb038f0] [c000000000968aec] driver_probe_device+0x16c/0x1e0
-[    0.540230] [c0000000feb03970] [c000000000968ca8] __driver_attach+0x148/0x1b0
-[    0.540340] [c0000000feb039f0] [c0000000009650b0] bus_for_each_dev+0x90/0x130
-[    0.540451] [c0000000feb03a50] [c000000000967dd4] driver_attach+0x34/0x50
-[    0.540544] [c0000000feb03a70] [c000000000967068] bus_add_driver+0x1a8/0x360
-[    0.540654] [c0000000feb03b00] [c00000000096a498] driver_register+0x108/0x170
-[    0.540766] [c0000000feb03b70] [c0000000009a7400] __nd_driver_register+0xd0/0xf0
-[    0.540898] [c0000000feb03bd0] [c00000000128aa90] nd_pmem_driver_init+0x34/0x48
-[    0.541010] [c0000000feb03bf0] [c000000000010a10] do_one_initcall+0x1e0/0x45c
-[    0.541122] [c0000000feb03cd0] [c00000000122462c] kernel_init_freeable+0x540/0x64c          
-[    0.541232] [c0000000feb03db0] [c00000000001110c] kernel_init+0x2c/0x160
-[    0.541326] [c0000000feb03e20] [c00000000000bed4] ret_from_kernel_thread+0x5c/0x68
-
-
-> 
+> >
 > >   other info that might help us debug this:
 > >    Possible unsafe locking scenario:
 > >
@@ -250,20 +190,6 @@ Yes, here is the complete log:
 > > -/* Must be called in user context */
 > > +/*
 > > + * Must be called in user context. The caller should hold the
-> 
-> I realise you're just copying that comment, but it seems wrong. "user
-> context" means userspace. I think it means "process context" doesn't it?
->
-
-Yes, from the qemu process context. I will fix this part of the
-comment and also change the should to must.
-
-> Also "should" should be "must" :)
->
-
-Thanks for the review.
-
-
 > > + * cpus_lock.
 > > + */
 > >  static int pseries_lpar_resize_hpt(unsigned long shift)
@@ -278,7 +204,8 @@ Thanks for the review.
 > > +				     &state, NULL);
 > >  
 > >  	t2 = ktime_get();
-> 
-> cheers
+> >  
+> > -- 
+> > 1.9.4
 > 
 
