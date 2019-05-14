@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CB5C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97BBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 936B0214C6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:47:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51B52085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfENIrn (ORCPT
+        id S1726680AbfENIrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:47:43 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:4294 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726449AbfENIrl (ORCPT
+        Tue, 14 May 2019 04:47:45 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:16331 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726078AbfENIrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:47:41 -0400
-X-UUID: 96eaa1e971b94ae6bcaac495a40ffc84-20190514
-X-UUID: 96eaa1e971b94ae6bcaac495a40ffc84-20190514
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Tue, 14 May 2019 04:47:43 -0400
+X-UUID: bf67b581522545769da9ebb09abf606a-20190514
+X-UUID: bf67b581522545769da9ebb09abf606a-20190514
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1430199521; Tue, 14 May 2019 16:47:35 +0800
+        with ESMTP id 1296192849; Tue, 14 May 2019 16:47:37 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 16:47:33 +0800
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 14 May 2019 16:47:36 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 16:47:32 +0800
+ Transport; Tue, 14 May 2019 16:47:34 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -50,9 +50,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-mediatek@lists.infradead.org>,
         Biju Das <biju.das@bp.renesas.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v5 3/6] dt-bindings: usb: mtu3: add properties about USB Role Switch
-Date:   Tue, 14 May 2019 16:47:20 +0800
-Message-ID: <1557823643-8616-4-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
+Date:   Tue, 14 May 2019 16:47:21 +0800
+Message-ID: <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
 In-Reply-To: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
 References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
@@ -64,65 +64,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now the USB Role Switch is supported, so add properties about it,
-and modify some description related.
+Add fwnode_usb_role_switch_get() to make easier to get
+usb_role_switch by fwnode which register it.
+It's useful when there is not device_connection registered
+between two drivers and only knows the fwnode which register
+usb_role_switch.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Tested-by: Biju Das <biju.das@bp.renesas.com>
 ---
-v5 changes
- 1. modify decription about extcon and vbus-supply properties
- 2. make this patch depend on [1]
+v5 changes:
+ 1. remove linux/of.h suggested by Biju
+ 2. add tested by Biju
 
- [1]: [v3] dt-binding: usb: add usb-role-switch property
-      https://patchwork.kernel.org/patch/10934835/
+Note: still depends on [1]
+ [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+      https://patchwork.kernel.org/patch/10909971/
 
-v4: no changes
-v3: no changes
+v4 changes:
+  1. use switch_fwnode_match() to find fwnode suggested by Heikki
+  2. this patch now depends on [1]
 
-v2 changes:
-  1. fix typo
-  2. refer new binding about connector property
+ [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
+    https://patchwork.kernel.org/patch/10909971/
+
+v3 changes:
+  1. use fwnodes instead of node suggested by Andy
+  2. rebuild the API suggested by Heikki
+
+v2 no changes
 ---
- .../devicetree/bindings/usb/mediatek,mtu3.txt          | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
+ include/linux/usb/role.h  |  8 ++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-index 3382b5cb471d..3a8300205cdb 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-@@ -28,8 +28,13 @@ Optional properties:
- 	parent's address space
-  - extcon : external connector for vbus and idpin changes detection, needed
- 	when supports dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and use "usb-role-switch" property instead.
-  - vbus-supply : reference to the VBUS regulator, needed when supports
- 	dual-role mode.
-+	it's considered valid for compatibility reasons, not allowed for
-+	new bindings, and put into a usb-connector node.
-+	see connector/usb-connector.txt.
-  - pinctrl-names : a pinctrl state named "default" is optional, and need be
- 	defined if auto drd switch is enabled, that means the property dr_mode
- 	is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
-@@ -39,6 +44,8 @@ Optional properties:
+diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
+index f45d8df5cfb8..4a1f09a41ec0 100644
+--- a/drivers/usb/roles/class.c
++++ b/drivers/usb/roles/class.c
+@@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(usb_role_switch_get);
  
-  - maximum-speed : valid arguments are "super-speed", "high-speed" and
- 	"full-speed"; refer to usb/generic.txt
-+ - usb-role-switch : use USB Role Switch to support dual-role switch, but
-+	not extcon; see usb/generic.txt.
-  - enable-manual-drd : supports manual dual-role switch via debugfs; usually
- 	used when receptacle is TYPE-A and also wants to support dual-role
- 	mode.
-@@ -61,6 +68,9 @@ The xhci should be added as subnode to mtu3 as shown in the following example
- if host mode is enabled. The DT binding details of xhci can be found in:
- Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.txt
- 
-+The port would be added as subnode if use "usb-role-switch" property.
-+	see graph.txt
++/**
++ * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
++ * @fwnode: The fwnode that register USB role switch
++ *
++ * Finds and returns role switch registered by @fwnode. The reference count
++ * for the found switch is incremented.
++ */
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	struct usb_role_switch *sw;
++	struct device *dev;
 +
- Example:
- ssusb: usb@11271000 {
- 	compatible = "mediatek,mt8173-mtu3";
++	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
++	if (!dev)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	sw = to_role_switch(dev);
++	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
++
++	return sw;
++}
++EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
++
+ /**
+  * usb_role_switch_put - Release handle to a switch
+  * @sw: USB Role Switch
+diff --git a/include/linux/usb/role.h b/include/linux/usb/role.h
+index da2b9641b877..35d460f9ec40 100644
+--- a/include/linux/usb/role.h
++++ b/include/linux/usb/role.h
+@@ -48,6 +48,8 @@ int usb_role_switch_set_role(struct usb_role_switch *sw, enum usb_role role);
+ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw);
+ struct usb_role_switch *usb_role_switch_get(struct device *dev);
+ void usb_role_switch_put(struct usb_role_switch *sw);
++struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode);
+ 
+ struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+@@ -72,6 +74,12 @@ static inline struct usb_role_switch *usb_role_switch_get(struct device *dev)
+ 
+ static inline void usb_role_switch_put(struct usb_role_switch *sw) { }
+ 
++static inline struct usb_role_switch *
++fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
++{
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline struct usb_role_switch *
+ usb_role_switch_register(struct device *parent,
+ 			 const struct usb_role_switch_desc *desc)
 -- 
 2.21.0
 
