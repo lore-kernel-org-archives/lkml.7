@@ -2,147 +2,152 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54496C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8353EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6B12085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523BC2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfENOaY (ORCPT
+        id S1726218AbfENOd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:30:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726060AbfENOaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:30:23 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EENMfj111756
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:30:22 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sfwuww20f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 10:30:15 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 14 May 2019 15:30:01 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 15:29:59 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EETwkn40108172
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 14:29:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 977DB11C052;
-        Tue, 14 May 2019 14:29:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31F7211C04A;
-        Tue, 14 May 2019 14:29:57 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 14 May 2019 14:29:57 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 14 May 2019 17:29:56 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] mm/gup: continue VM_FAULT_RETRY processing event for pre-faults
-Date:   Tue, 14 May 2019 17:29:55 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19051414-0020-0000-0000-0000033C94E2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051414-0021-0000-0000-0000218F5139
-Message-Id: <1557844195-18882-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140103
+        Tue, 14 May 2019 10:33:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51147 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725901AbfENOd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 10:33:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 07:33:57 -0700
+X-ExtLoop1: 1
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.255.33.85])
+  by orsmga008.jf.intel.com with ESMTP; 14 May 2019 07:33:52 -0700
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To:     "Jethro Beekman" <jethro@fortanix.com>,
+        "Andy Lutomirski" <luto@kernel.org>
+Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, "X86 ML" <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "Josh Triplett" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "David Rientjes" <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Reply-To: haitao.huang@linux.intel.com
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com>
+ <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
+ <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com>
+ <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com>
+ <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com>
+ <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
+ <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
+ <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+Date:   Tue, 14 May 2019 09:33:51 -0500
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From:   "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.z1saqpzxwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+User-Agent: Opera Mail/1.0 (Win32)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When get_user_pages*() is called with pages = NULL, the processing of
-VM_FAULT_RETRY terminates early without actually retrying to fault-in all
-the pages.
+On Fri, 10 May 2019 14:22:34 -0500, Andy Lutomirski <luto@kernel.org>  
+wrote:
 
-If the pages in the requested range belong to a VMA that has userfaultfd
-registered, handle_userfault() returns VM_FAULT_RETRY *after* user space
-has populated the page, but for the gup pre-fault case there's no actual
-retry and the caller will get no pages although they are present.
+> On Fri, May 10, 2019 at 12:04 PM Jethro Beekman <jethro@fortanix.com>  
+> wrote:
+>>
+>> On 2019-05-10 11:56, Xing, Cedric wrote:
+>> > Hi Jethro,
+>> >
+>> >> ELF files are explicitly designed such that you can map them (with  
+>> mmap)
+>> >> in 4096-byte chunks. However, sometimes there's overlap and you will
+>> >> sometimes see that a particular offset is mapped twice because the  
+>> first
+>> >> half of the page in the file belongs to an RX range and the second  
+>> half
+>> >> to an R-only range. Also, ELF files don't (normally) describe stack,
+>> >> heap, etc. which you do need for enclaves.
+>> >
+>> > You have probably misread my email. By mmap(), I meant the enclave  
+>> file would be mapped via *multiple* mmap() calls, in the same way as  
+>> what dlopen() would do in loading regular shared object. The intention  
+>> here is to make the enclave file subject to the same checks as regular  
+>> shared objects.
+>>
+>> No, I didn't misread your email. My original point still stands:
+>> requiring that an enclave's memory is created from one or more mmap
+>> calls of a file puts significant restrictions on the enclave's on-disk
+>> representation.
+>>
+>
+> For a tiny bit of background, Linux (AFAIK*) makes no effort to ensure
+> the complete integrity of DSOs.  What Linux *does* do (if so
+> configured) is to make sure that only approved data is mapped
+> executable.  So, if you want to have some bytes be executable, those
+> bytes have to come from a file that passes the relevant LSM and IMA
+> checks.
 
-This issue was uncovered when running post-copy memory restore in CRIU
-after commit d9c9ce34ed5c ("x86/fpu: Fault-in user stack if
-copy_fpstate_to_sigframe() fails").
+Given this, I just want to step back a little to understand the exact  
+issue that SGX is causing here for LSM/IMA. Sorry if I missed points  
+discussed earlier.
 
-After this change, the copying of FPU state to the sigframe switched from
-copy_to_user() variants which caused a real page fault to get_user_pages()
-with pages parameter set to NULL.
+By the time of EADD, enclave file is opened and should have passed IMA and  
+SELinux policy enforcement gates if any. We really don't need extra mmaps  
+on the enclave files to be IMA and SELinux compliant. We are loading  
+enclave files as RO and copying those into EPC. An IMA policy can enforce  
+RO files (or any file). And SELinux policy can say which processes can  
+open the file for what permissions. No extra needed here.
 
-In post-copy mode of CRIU, the destination memory is managed with
-userfaultfd and lack of the retry for pre-fault case in get_user_pages()
-causes a crash of the restored process.
+And sgx enclaves are always signed and integrity protected and verified at  
+the time of EINIT. So if EINIT passes, we know the content loaded  
+(including permission flags) is matching the sigstruct.  But  
+sigstruct/signature is part of the file, should be accounted for in IMA  
+measurement of the whole file, so it is also verified by IMA during file  
+open, right?
 
-Making the pre-fault behavior of get_user_pages() the same as the "normal"
-one fixes the issue.
+The only potential gap/difference comparing to regular ELF executable or  
+DSOs:for enclaves, we need mmap portions of enclave linear range with RW  
+to do EADD IOC, then mprotect those pages to RX after EINIT. But this is  
+operated on enclave fd provided by driver. So we can have an SELinux  
+policy say: only this type of processes is allowed to open enclave fd, and  
+allowed to do mmap/mprotect with read, write, execute on it. Wouldn't that  
+be enough?
 
-Fixes: d9c9ce34ed5c ("x86/fpu: Fault-in user stack if copy_fpstate_to_sigframe() fails")
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- mm/gup.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/mm/gup.c b/mm/gup.c
-index 91819b8..c32ae5a 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -936,10 +936,6 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 			BUG_ON(ret >= nr_pages);
- 		}
- 
--		if (!pages)
--			/* If it's a prefault don't insist harder */
--			return ret;
--
- 		if (ret > 0) {
- 			nr_pages -= ret;
- 			pages_done += ret;
-@@ -955,8 +951,12 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 				pages_done = ret;
- 			break;
- 		}
--		/* VM_FAULT_RETRY triggered, so seek to the faulting offset */
--		pages += ret;
-+		/*
-+		 * VM_FAULT_RETRY triggered, so seek to the faulting offset.
-+		 * For the prefault case (!pages) we only update counts.
-+		 */
-+		if (likely(pages))
-+			pages += ret;
- 		start += ret << PAGE_SHIFT;
- 
- 		/*
-@@ -979,7 +979,8 @@ static __always_inline long __get_user_pages_locked(struct task_struct *tsk,
- 		pages_done++;
- 		if (!nr_pages)
- 			break;
--		pages++;
-+		if (likely(pages))
-+			pages++;
- 		start += PAGE_SIZE;
- 	}
- 	if (lock_dropped && *locked) {
--- 
-2.7.4
-
+Thanks
+Haitao
