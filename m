@@ -2,107 +2,125 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC20FC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1D0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE1620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:58:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q8lxVzyz"
+	by mail.kernel.org (Postfix) with ESMTP id 02F1620862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfENI6l (ORCPT
+        id S1726490AbfENJAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:58:41 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:33552 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726058AbfENI6l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:58:41 -0400
-Received: by mail-vs1-f67.google.com with SMTP id y6so9836078vsb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:58:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MLSCBYZPRnRjPoWF2biQlF2E7iPn0TGMhmM3d3DWvJk=;
-        b=q8lxVzyzoXF98rEkWk5wquphTuXEip2RN7SWX+ji6R038d7laVaDsxolVn4Lifr3L4
-         nDasZXSsGt9J3K/Dma2aHgNQXDd5PmwH0TmaWaaa1ielTpN5NpWI1KuO6GzoTid1P87V
-         W+5QUyaNPx3uISiPfkM3GUlQFtkj6y4HL+j6jrliPgZKgTNgOWzvACEQGlWMm/hygShh
-         Hk/tX4mdGKpaW3Nb3aJUV384CKlCitHayN9Zw9WXdnfRaWYon4saa+Za6XYQRGPeEULH
-         F5R1ANYbch30daXqS7q1vJFNPngTOJVKDjhVvf3ixaqY34sSs44//FI0jLdvax1IQdpR
-         9YTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MLSCBYZPRnRjPoWF2biQlF2E7iPn0TGMhmM3d3DWvJk=;
-        b=NcstbSu+9AM0MBs3xqKpOhcnWVc4+rEAGF5sV6DPMSy2fMGYq2nNHFx5QhTuGWJhGb
-         Y5YdZeY0MF2KPHtvZ9trIkQJWWsk/kkXd7dP1cA7PEgpeR9mMxiI6XVg/o8TMtCW41JM
-         1EI5ubn9QA/UxhWtr3Zv/SPQZKoYOMYqGCDk6UFGhkN6dYiQU/pARIOcIkRE9IU+ZJBT
-         8q4UFPVqdr+MlsZDKJ6HkDAUZCF6aSKC2H5PrKxwuHVzhBkSDYBv7MQyUomBgccJmKwt
-         N9cXG1oWHSjFsELhu/3FqDZiG3aeempcJBfg0KHfOO1Ls4PPdwnfbhnSIn4XmJGjCqKJ
-         /FxA==
-X-Gm-Message-State: APjAAAU00plbp5BxDZoapDGzTSBVc0xjZpEpU3hhbe/KhDNRtgtVRPAs
-        rmW+ef14Zya2zuT4tmE9noVgUUi0oUyBjHlOD24Iww==
-X-Google-Smtp-Source: APXvYqwycH28jEcSrDkjPUkWW/Zcz25ycb6BQFN7+w/8A+3I/hQsVj2ek7HBD2590jjCbU0ruGu2wcP3lpcGlb4hlPI=
-X-Received: by 2002:a67:ebc5:: with SMTP id y5mr13449930vso.34.1557824320126;
- Tue, 14 May 2019 01:58:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 14 May 2019 10:58:04 +0200
-Message-ID: <CAPDyKFpU3u248Gi+FnrVdY-EWXJQuu14uNV9d3Xs0W-K-EMEhg@mail.gmail.com>
-Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement for PSCI
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 May 2019 05:00:09 -0400
+Received: from foss.arm.com ([217.140.101.70]:51906 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbfENJAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:00:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDE66374;
+        Tue, 14 May 2019 02:00:07 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6C03A3F71E;
+        Tue, 14 May 2019 02:00:00 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com,
+        will.deacon@arm.com
+Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
+        mark.rutland@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        ira.weiny@intel.com
+Subject: [PATCH V3 0/4] arm64/mm: Enable memory hot remove
+Date:   Tue, 14 May 2019 14:30:03 +0530
+Message-Id: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019 at 10:08, Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Mon, May 13, 2019 at 9:23 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > This series enables support for hierarchical CPU arrangement, managed by PSCI
-> > for ARM/ARM64. It's based on using the generic PM domain (genpd), which
-> > recently was extended to manage devices belonging to CPUs.
->
-> ACK for the patches touching cpuidle in this series (from the
-> framework perspective), but I'm assuming it to be taken care of by
-> ARM/ARM64 maintainers.
+This series enables memory hot remove on arm64 after fixing a memblock
+removal ordering problem in generic __remove_memory() and kernel page
+table race conditions on arm64. This is based on the following arm64
+working tree.
 
-Thanks for the ack! Yes, this is for PSCI/ARM maintainers.
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
 
-BTW, apologize for sending this in the merge window, but wanted to
-take the opportunity for people to have a look before OSPM Pisa next
-week.
+David had pointed out that the following patch is already in next/master
+(58b11e136dcc14358) and will conflict with the last patch here. Will fix
+the conflict once this series gets reviewed and agreed upon.
 
-Kind regards
-Uffe
+Author: David Hildenbrand <david@redhat.com>
+Date:   Wed Apr 10 11:02:27 2019 +1000
+
+    mm/memory_hotplug: make __remove_pages() and arch_remove_memory() never fail
+
+    All callers of arch_remove_memory() ignore errors.  And we should really
+    try to remove any errors from the memory removal path.  No more errors are
+    reported from __remove_pages().  BUG() in s390x code in case
+    arch_remove_memory() is triggered.  We may implement that properly later.
+    WARN in case powerpc code failed to remove the section mapping, which is
+    better than ignoring the error completely right now.
+
+Testing:
+
+Tested memory hot remove on arm64 for 4K, 16K, 64K page config options with
+all possible CONFIG_ARM64_VA_BITS and CONFIG_PGTABLE_LEVELS combinations. But
+build tested on non arm64 platforms.
+
+Changes in V3:
+ 
+- Implemented most of the suggestions from Mark Rutland for remove_pagetable()
+- Fixed applicable PGTABLE_LEVEL wrappers around pgtable page freeing functions
+- Replaced 'direct' with 'sparse_vmap' in remove_pagetable() with inverted polarity
+- Changed pointer names ('p' at end) and removed tmp from iterations
+- Perform intermediate TLB invalidation while clearing pgtable entries
+- Dropped flush_tlb_kernel_range() in remove_pagetable()
+- Added flush_tlb_kernel_range() in remove_pte_table() instead
+- Renamed page freeing functions for pgtable page and mapped pages
+- Used page range size instead of order while freeing mapped or pgtable pages
+- Removed all PageReserved() handling while freeing mapped or pgtable pages
+- Replaced XXX_index() with XXX_offset() while walking the kernel page table
+- Used READ_ONCE() while fetching individual pgtable entries
+- Taken overall init_mm.page_table_lock instead of just while changing an entry
+- Dropped previously added [pmd|pud]_index() which are not required anymore
+
+- Added a new patch to protect kernel page table race condtion for ptdump
+- Added a new patch from Mark Rutland to prevent huge-vmap with ptdump
+
+Changes in V2: (https://lkml.org/lkml/2019/4/14/5)
+
+- Added all received review and ack tags
+- Split the series from ZONE_DEVICE enablement for better review
+- Moved memblock re-order patch to the front as per Robin Murphy
+- Updated commit message on memblock re-order patch per Michal Hocko
+- Dropped [pmd|pud]_large() definitions
+- Used existing [pmd|pud]_sect() instead of earlier [pmd|pud]_large()
+- Removed __meminit and __ref tags as per Oscar Salvador
+- Dropped unnecessary 'ret' init in arch_add_memory() per Robin Murphy
+- Skipped calling into pgtable_page_dtor() for linear mapping page table
+  pages and updated all relevant functions
+
+Changes in V1: (https://lkml.org/lkml/2019/4/3/28)
+
+Anshuman Khandual (3):
+  mm/hotplug: Reorder arch_remove_memory() call in __remove_memory()
+  arm64/mm: Hold memory hotplug lock while walking for kernel page table dump
+  arm64/mm: Enable memory hot remove
+
+Mark Rutland (1):
+  arm64/mm: Inhibit huge-vmap with ptdump
+
+ arch/arm64/Kconfig             |   3 +
+ arch/arm64/mm/mmu.c            | 215 ++++++++++++++++++++++++++++++++++++++++-
+ arch/arm64/mm/ptdump_debugfs.c |   3 +
+ mm/memory_hotplug.c            |   3 +-
+ 4 files changed, 217 insertions(+), 7 deletions(-)
+
+-- 
+2.7.4
+
