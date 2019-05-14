@@ -2,133 +2,219 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B4AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B58FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786412166E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0278120881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AI5EJ0Pj";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="OFGnSFKL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CCE5qzle"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfENUG7 (ORCPT
+        id S1726302AbfENUOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:06:59 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:41540 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726107AbfENUG7 (ORCPT
+        Tue, 14 May 2019 16:14:39 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33274 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726201AbfENUOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:06:59 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EJwJGb001902;
-        Tue, 14 May 2019 13:05:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=nAvEob6Kh3imkf/jkDHpX8X0Pv+7hR1jBzS4jh+zXhg=;
- b=AI5EJ0PjpAn0WpxTLN4yXat5kceFTVPe7QaKQSJeQLv8uUNNdNQZIJqVr6UZaWzI9dFm
- VxH/gcc6bONw8F2UGlH0D/sRTGu/aASdOcAcl/X/FnztKflroV2fvLst8udTFyLPoGLr
- LX79H+IScBBo8JyPglVk7qDPiQHfUrtNNSc= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sfy23sdrj-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 14 May 2019 13:05:59 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 May 2019 13:05:59 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 14 May 2019 13:05:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nAvEob6Kh3imkf/jkDHpX8X0Pv+7hR1jBzS4jh+zXhg=;
- b=OFGnSFKLrl+vrJLTNfKuPeI79meaMHFTGvGreLRTu9AxVUvwFoqcqodm+DOU+YBLVviolmiKV1bCPNjqULA8HQtTR+uBKREv92/oRH4UlEL7E+SaDYUNumUA3u/mxw4fzyRnYHQ3QvzYID56b93g0K+Digjr33OcU6ryT3vIFCQ=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2791.namprd15.prod.outlook.com (20.179.158.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Tue, 14 May 2019 20:05:57 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1878.024; Tue, 14 May 2019
- 20:05:57 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Matteo Croce <mcroce@redhat.com>
-CC:     "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: WARNING: CPU: 1 PID: 228 at kernel/cgroup/cgroup.c:5929
-Thread-Topic: WARNING: CPU: 1 PID: 228 at kernel/cgroup/cgroup.c:5929
-Thread-Index: AQHVCoqk1mZJtzvIAk+xNbeMmTPUdKZqj/2AgAB4sACAAAMbgA==
-Date:   Tue, 14 May 2019 20:05:57 +0000
-Message-ID: <20190514200553.GF12629@tower.DHCP.thefacebook.com>
-References: <CAGnkfhwMSNm4uSkcGtqaGmYanfNK9rx6m2a3TqJh08YitbGAUg@mail.gmail.com>
- <20190514194249.GD12629@tower.DHCP.thefacebook.com>
- <CAGnkfhxwP1SwJLv2E-6Xd7ZXN8XUPRyXkM=tB0Z=jre8Rij6=A@mail.gmail.com>
-In-Reply-To: <CAGnkfhxwP1SwJLv2E-6Xd7ZXN8XUPRyXkM=tB0Z=jre8Rij6=A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR01CA0037.prod.exchangelabs.com (2603:10b6:300:101::23)
- To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::298]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bc7612bc-db73-4f36-5152-08d6d8a793b3
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB2791;
-x-ms-traffictypediagnostic: BYAPR15MB2791:
-x-microsoft-antispam-prvs: <BYAPR15MB2791F392A573A8431C33BA24BE080@BYAPR15MB2791.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(376002)(39860400002)(136003)(199004)(189003)(6486002)(486006)(54906003)(11346002)(446003)(7736002)(476003)(186003)(66946007)(33656002)(6916009)(2906002)(99286004)(9686003)(6512007)(46003)(6436002)(68736007)(316002)(73956011)(66476007)(66556008)(64756008)(66446008)(53936002)(229853002)(4326008)(81156014)(558084003)(14454004)(5660300002)(71190400001)(81166006)(305945005)(8676002)(478600001)(86362001)(76176011)(8936002)(25786009)(52116002)(1076003)(6116002)(386003)(14444005)(256004)(6506007)(71200400001)(102836004)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2791;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ALoi8StZIjTHD5UY2dqCAyxYAkQSd6Qw7sdj6zDyxUfulTocho/+Aj2Swre35tyIgdVVWr6j7BABgETHS32Y6aPHdv66CWFEa5cpKAJf2U1M8xJYVf1dKSTZwE1OJFgzamrlWmVGLepztEQmbv/WLTGrLAFYett9jRvSiGiKpiPrJg6YF6FiQq0/+LjxPBA4IdHvkzbgqFJm4EVn6meQzKObOfG9qgJxVLke9pBEo/xD/wRPw3u6IGK+oN1oHeYzByjxLNTZy1ofXk0v81QSBlxSl1i2femz9HCwOGmQf6Aqrl/D2t7p0bX1raN1m9zAkec/GnL3GfuAGiEdk4kbwmMJ+O5929a9t+ufwDYUrB7VxzvkugE55VsOcdzbAfGDPRc8Q7sANkGJ8qsdlkoFe9uqMe9L2Hm0v9mzG+Ij1DQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <84E68961D69B6B4FB14640807D9BDB97@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 14 May 2019 16:14:39 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h17so127416pgv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:from
+         :subject:cc:to:message-id:user-agent:date;
+        bh=NwBKkvRALDSfJXSRslkyqKuEQQ49X1NvKTDQCoJHdlI=;
+        b=CCE5qzleFDtTOHIb/LPu8GAOVirRmVFIRYv2NvKSnorxyMLWDwMVTbDQNdiG4j1kxd
+         cFx1dYDfqw+fuqMLvgYSomNiIrrgPxPOWY884zW4I65CqNYiEe0Loz/t6G4UK8OHSwaN
+         muyemZmyBqRdfBFtb7yczMlrj2swanAKfQpu8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:from:subject:cc:to:message-id:user-agent
+         :date;
+        bh=NwBKkvRALDSfJXSRslkyqKuEQQ49X1NvKTDQCoJHdlI=;
+        b=c7y04I5yR5N6kcQUTbg8Yyl1L4SKgNrsKleLS12w1PIWqM2A1TOB1wH0P72GQt7j86
+         1ukXFwyTMbOayCrCwlUng45cJSCk9vb8wCftU7RzooSICFMENsug+MXG7lrThI+/msG5
+         E1Ltgg8iyGSDkfe1dZ5EKu93PE8M1podPvXHByTClyGHjE5rSikJTwFmlhCCKOrMH3es
+         5A/468vZyo24/EDT0/feX5aB6nF3kEGBvEMUYmlgApsjLw2fymo3Jvah2rS9cnkzW508
+         zf8gwfV7JwEATdeSH1WSwsGpMEkSydIgAsB5gVLRABXmxj1Bp1cVaCXUBz+1CZ3fveJc
+         Qccg==
+X-Gm-Message-State: APjAAAXUfLL9d1Y0Kdxl4ukjk2M6Tv2BvIF/CoVgFWHfZAqoOeL020On
+        rUslAmGRF4Xv2TzCTalk43ZZpQ==
+X-Google-Smtp-Source: APXvYqzDQ19kpSxfLWSgqhbEO+Bv2cEGlMH90i1VoP/vOiYQQXLgL9nWWDvQ5o3dkbO5mmiC4br8CQ==
+X-Received: by 2002:aa7:880f:: with SMTP id c15mr44432292pfo.100.1557864878218;
+        Tue, 14 May 2019 13:14:38 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x4sm21867128pfm.19.2019.05.14.13.14.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 13:14:37 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc7612bc-db73-4f36-5152-08d6d8a793b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 20:05:57.0993
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2791
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=679 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140134
-X-FB-Internal: deliver
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com>
+References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org> <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com> <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Message-ID: <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 14 May 2019 13:14:36 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:54:46PM +0200, Matteo Croce wrote:
-> Hi Roman,
+Quoting Nicolas Boichat (2019-05-13 18:37:58)
+> On Tue, May 14, 2019 at 6:29 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> >
+> > Quoting Nicolas Boichat (2019-04-28 20:55:15)
+> > > During suspend/resume, mtk_eint_mask may be called while
+> > > wake_mask is active. For example, this happens if a wake-source
+> > > with an active interrupt handler wakes the system:
+> > > irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
+> > > that it can be handled later on in the resume flow.
+> > >
+> > > However, this may happen before mtk_eint_do_resume is called:
+> > > in this case, wake_mask is loaded, and cur_mask is restored
+> > > from an older copy, re-enabling the interrupt, and causing
+> > > an interrupt storm (especially for level interrupts).
+> > >
+> > > Instead, we just record mask/unmask changes in cur_mask. This
+> > > also avoids the need to read the current mask in eint_do_suspend,
+> > > and we can remove mtk_eint_chip_read_mask function.
+> > >
+> > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> >
+> > It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
+> > here. Isn't that what's happening? All non-wake irqs should be masked at
+> > the hardware level so they can't cause a wakeup during suspend and on
+> > resume they can be unmasked?
 >=20
-> yes, this one fixes it.
+> No, this is for an line that has both wake and interrupt enabled. To
+> reword the commit message above:
+
+Is my understanding correct that there isn't a different "wake up"
+register that can be written to cause a GPIO to be configured to wake
+the system from suspend? The only way to do so is to leave the GPIO
+unmasked in the hardware by having EINT_EN[irq] =3D 1? And thus any
+interrupts that we don't want to wake us up during suspend should be
+masked in the hardware?=20
+
+If that's true, the code here that's trying to keep track of enabled
+irqs and wakeup enabled irqs can be replaced with the irqchip flag so
+that wakeup irqs are not masked while non-wakeups are masked.
+
+
+>  1. cur_mask[irq] =3D 1; wake_mask[irq] =3D 1; EINT_EN[irq] =3D 1 (interr=
+upt
+> enabled at hardware level)
+>  2. System suspends, resumes due to that line (at this stage EINT_HW
+> =3D=3D wake_mask)
+>  3. irq_pm_check_wakeup is called, and disables the interrupt =3D>
+> EINT_EN[irq] =3D 0, but we still have cur_mask[irq] =3D 1
+>  4. mtk_eint_do_resume is called, and restores EINT_EN =3D cur_mask, so
+> it reenables EINT_EN[irq] =3D 1 =3D> interrupt storm.
 >=20
-> --=20
-> Matteo Croce
-> per aspera ad upstream
+> This patch fixes the issue in step 3. So that the interrupt can be
+> re-enabled properly later on, sometimes after mtk_eint_do_resume, when
+> the driver is ready to handle it.
 
-Thank you for the confirmation!
+Right, we'd rather not see irqchip drivers working around the genirq
+layer to do these things like tracking cur_mask and wake_mask. That
+leads to subtle bugs and makes the driver maintain state across the
+irqchip callbacks and system suspend/resume.
 
-The patch will be merged upstream soon.
+>=20
+> Also, IRQCHIP_MASK_ON_SUSPEND does not handle lines that are enabled
+> as a wake source, but without interrupt enabled (e.g. cros_ec driver
+> does that), which we do want to support.
 
-Thanks!
+Hmm. I thought that even if the irq is disabled by a driver, that would
+be a lazy disable so it isn't really masked in the hardware. Then if an
+interrupt comes in during suspend on a wake configured irq line, the
+hardware will have left it unmasked because IRQCHIP_MASK_ON_SUSPEND in
+combination with lazy disable would mean that the line is left unmasked
+(ignoring whatever this mediatek driver is doing to mask and unmask in
+PM hooks).
+
+Just reading Documentation/power/suspend-and-interrupts.txt I'm led to
+believe that the cros_ec driver shouldn't call disable_irq() on the
+interrupt if it wants to wakeup from it:
+
+"Calling enable_irq_wake() causes suspend_device_irqs() to treat the
+given IRQ in a special way.  Namely, the IRQ remains enabled, by on the
+first interrupt it will be disabled, marked as pending and "suspended"
+so that it will be re-enabled by resume_device_irqs() during the
+subsequent system resume.  Also the PM core is notified about the event
+which causes the system suspend in progress to be aborted (that doesn't
+have to happen immediately, but at one of the points where the suspend
+thread looks for pending wakeup events)."
+
+I suppose the problem is an irq line disabled in hardware that has
+wakeup armed on it? Is this even valid? Shouldn't an irq be enabled for
+wakeup to work?
+
+We could immediately unmask those lines in the hardware when the
+set_wake() callback is called. That way the genirq layer can use the
+driver to do what it wants with the hardware and the driver can make
+sure that set_wake() will always cause the wakeup interrupt to be
+delivered to genirq even when software has disabled it.
+
+But I think that there might be a problem with how genirq understands
+the masked state of a line when the wakeup implementation conflates
+masked state with wakeup armed state. Consider this call-flow:
+
+	irq masked in hardware, IRQD_IRQ_MASKED is set
+	enable_irq_wake()
+	  unmask_irq in hardware
+	IRQD_WAKEUP_ARMED is set
+	<suspend and wakeup from irq>
+	handle_level_irq()
+	  mask_ack_irq()
+	    mask_irq()
+	      if (irqd_irq_masked()) -> returns true and skips masking!
+	    if (desc->irq_data.chip->irq_ack)
+	      ...
+	  irq_may_run()
+	    irq_pm_check_wakeup()
+	      irq_disable()
+	        mask_irq() -> does nothing again
+
+In the above flow, we never mask the irq because we thought it was
+already masked when it was disabled, but the irqchip implementation
+unmasked it to make wakeup work. Maybe we should always mask the irq if
+wakeup is armed and we're trying to call mask_irq()? Looks hacky.
+
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 51128bea3846..20257d528880 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -411,7 +411,7 @@ static inline void mask_ack_irq(struct irq_desc *desc)
+=20
+ void mask_irq(struct irq_desc *desc)
+ {
+-	if (irqd_irq_masked(&desc->irq_data))
++	if (!irqd_is_wakeup_armed(&desc->irq_data) && irqd_irq_masked(&desc->irq_=
+data))
+ 		return;
+=20
+ 	if (desc->irq_data.chip->irq_mask) {
+
+
