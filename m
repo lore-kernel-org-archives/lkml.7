@@ -4,102 +4,83 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB2DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23856C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4741820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D492020873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557865772;
-	bh=fbPcIuE4LpfXACLuNQZ/br1V8i83hANg4CTtYRdn12Q=;
+	s=default; t=1557865880;
+	bh=FskvUTDJQzAj/MQ+BVdgeqCPsjIDUr68yObfG00qqi0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gikmLiKPn/iHyyD0McFgsPpNAmDmWJpwGC83WJlleRfzqxkuI0R5ZVqdE1jwGyro+
-	 P04k9KTvEwvLmXwDKofrm3vq1qHU7234NwtwP+HEGG/mnn4nVAn4hdNCMGu3ZD1HXR
-	 r1j6dC3r9XyByq9gZ4QCtmba42q+3Rt/j9JQ1ocw=
+	b=NzspbB+RCP/SjihqHC3HPoRwyYsfptW/u7ioRtea8xIayeafDaOBXlA6ykThsrxNH
+	 3EVksNW4VNrumvq1g2+eVCoJ5nujcNwDgsaqfVi2VR60Y7WJC14ojyLcvWIbcwEGGO
+	 w2jJkGHsyUYIl1AjNuXOwMjiCoHCqqxorE9YprCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfENU3b (ORCPT
+        id S1726460AbfENUbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:29:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42354 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfENU3a (ORCPT
+        Tue, 14 May 2019 16:31:19 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36440 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbfENUbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:29:30 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f23so109707otl.9;
-        Tue, 14 May 2019 13:29:30 -0700 (PDT)
+        Tue, 14 May 2019 16:31:19 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l203so141617oia.3;
+        Tue, 14 May 2019 13:31:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oPaY+Ss9+ep2GCkhb8u3t1B3H/GvEu2ypW66c2/qd9s=;
-        b=gyJ/fWOEYB8Ki78+dj79xyZWtls6GDQy57l7Nmz0zem0/razc7TuHHlg4z5h4eKvhQ
-         KbkSYIrCZ98dRT4a6hfSIffW6A2GnzybIV+Vsh9nJdmdbsPbJG8lHIp9g682qGVrGXDD
-         fFD1oKpRROpclivzqRfJbJ7X/hL3J/rkZf2dSEEoDJ3/2IupnrPd06gnrCguDhR3Nqri
-         nZ/qtB8WhDxhHGk1t8LjEVbuSpT8rJYUunpclggdnAZJxDezRWe6I4P5zs9+nkJY4rou
-         8+61G0GDQjZ8glcP8AiWNZsjQ+aS/ZzoNOta4cqOG5lNgh50ZBqlnaPjsnu7n6F3cCXe
-         0AwQ==
-X-Gm-Message-State: APjAAAXLDq6V/F5fnzLtzxxgmSE8Nt0G1afv5JnW9YlVa/9rFS+xZOmb
-        NLwQm/Lxq4nrS0vw9xPh1w==
-X-Google-Smtp-Source: APXvYqzvuTeT7D9lZIqV3PwgDn5MJm1tKGPk0EO3gjy5o6D/bZ1ZmxMIWQbWUaiO3rbeleX4+VOgHQ==
-X-Received: by 2002:a9d:7354:: with SMTP id l20mr23489464otk.115.1557865770039;
-        Tue, 14 May 2019 13:29:30 -0700 (PDT)
+        bh=uj/aNb3lhudAxuL9yVxzedyisH6/evVA53ck6BzySPY=;
+        b=aVxhJ7JI3YEYNTSnKBXyUcw8dfJdGabGo91KGA010wDpFrQK9zsW8zJiu5guNj0GwX
+         dlMnafg3tNLs/qi0IAw0LbI8mQi3M3nNoHeroYEcvGeJf5mZjKWQQYFZDS+v6+QiSko3
+         GWpUW/yp1vGMVyCc/sjlDkGnzR2IYWC1CgG8Dbq5MYilbGH3S3I0/o4LbKNk3pGDWaWX
+         jhxDFHe4tIeZDjgdPTyOavkWqrKDvM1Ko7gIYluZoTOHJXtmWgPXmb2gs6J4n6+90XPf
+         P2cItsCMSKXDio38lrni5snupmRGht+ZYnHLaT69x1o7aQQZ+06Xf4X2FZaYugh4QCBd
+         cfUg==
+X-Gm-Message-State: APjAAAWCaQr33aZxVswxd3GwyikO9OTiEOHXT7kKJtIibvSK8cnqDhpB
+        cdYKgDx209wGChPOKa04lA==
+X-Google-Smtp-Source: APXvYqzdjUlWTvBq+1madUv/8ZYMJ50qHKkthS9BLDmfCh7nxydKkUzHB56DapylG98G+Oz/KHde/A==
+X-Received: by 2002:aca:5041:: with SMTP id e62mr4403410oib.60.1557865878559;
+        Tue, 14 May 2019 13:31:18 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b25sm2460790otq.65.2019.05.14.13.29.29
+        by smtp.gmail.com with ESMTPSA id m8sm6538868otl.40.2019.05.14.13.31.17
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 13:29:29 -0700 (PDT)
-Date:   Tue, 14 May 2019 15:29:28 -0500
+        Tue, 14 May 2019 13:31:17 -0700 (PDT)
+Date:   Tue, 14 May 2019 15:31:17 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Megan Wachs <megan@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] dt-bindings: sifive: describe sifive-blocks versioning
-Message-ID: <20190514202928.GA23497@bogus>
-References: <20190513215152.26578-1-paul.walmsley@sifive.com>
+To:     Fabien Parent <fparent@baylibre.com>
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, matthias.bgg@gmail.com, perex@perex.cz,
+        tiwai@suse.com, kaichieh.chuang@mediatek.com,
+        shunli.wang@mediatek.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Fabien Parent <fparent@baylibre.com>
+Subject: Re: [PATCH 2/5] dt-bindings: sound: Add MT8516 AFE PCM bindings
+Message-ID: <20190514203117.GA26954@bogus>
+References: <20190502121041.8045-1-fparent@baylibre.com>
+ <20190502121041.8045-3-fparent@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190513215152.26578-1-paul.walmsley@sifive.com>
+In-Reply-To: <20190502121041.8045-3-fparent@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019 14:51:53 -0700, Paul Walmsley wrote:
-> For IP blocks that are generated from the public, open-source
-> sifive-blocks repository, describe the version numbering policy
-> that its maintainers intend to use, upon request from Rob
-> Herring <robh@kernel.org>.
+On Thu,  2 May 2019 14:10:38 +0200, Fabien Parent wrote:
+> Add documentation for the bindings of the MT8516 AFE PCM driver.
 > 
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
-> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Megan Wachs <megan@sifive.com>
-> Cc: Wesley Terpstra <wesley@sifive.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
-> 
-> This second version updates the example URL, requested by
-> Rob Herring <robh+dt@kernel.org>.
-> 
->  .../sifive/sifive-blocks-ip-versioning.txt    | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+>  .../bindings/sound/mt8516-afe-pcm.txt         | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/mt8516-afe-pcm.txt
 > 
 
-Applied, thanks.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
