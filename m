@@ -2,169 +2,102 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C0BC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FA7C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E076B208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00354208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfENHPl (ORCPT
+        id S1726638AbfENHQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:15:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38314 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfENHPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:15:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC599859FC;
-        Tue, 14 May 2019 07:15:39 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC7D918EE4;
-        Tue, 14 May 2019 07:15:39 +0000 (UTC)
-Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A35EC18089C8;
-        Tue, 14 May 2019 07:15:39 +0000 (UTC)
-Date:   Tue, 14 May 2019 03:15:39 -0400 (EDT)
-From:   Jan Stancek <jstancek@redhat.com>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        Will Deacon <will.deacon@arm.com>, peterz@infradead.org,
-        minchan@kernel.org, mgorman@suse.de, stable@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Jan Stancek <jstancek@redhat.com>
-Message-ID: <914836977.22577826.1557818139522.JavaMail.zimbra@redhat.com>
-In-Reply-To: <45c6096e-c3e0-4058-8669-75fbba415e07@email.android.com>
-References: <45c6096e-c3e0-4058-8669-75fbba415e07@email.android.com>
-Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
+        Tue, 14 May 2019 03:16:16 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:43994 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfENHQQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:16:16 -0400
+Received: by mail-vs1-f67.google.com with SMTP id d128so9633060vsc.10;
+        Tue, 14 May 2019 00:16:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Yp0fJxub6ZjKZY0jtIHu8KIkPHhsLNLtdfrqfrKo7/o=;
+        b=PnRrrvyZN4sxJnSz77QMiPa/5s93YWvQRg3E+l1dbNlo7qmqHnVKZwKVy5L8ZxnaPq
+         1aBAA6CNnKv0p/r3b7zpJT7iYgqqPappVpDqLD5dNgTS1EEyn/ieayxTLX+mU47XggvE
+         dIPTF83rguG+HtG3KFAID0digI0FV9dE2zxOt3+2No1B6dILy6mpQmApuCrWS39vHxkN
+         xoFq0Kcyz8+2WK24O4wMLXQJ/gQwG/5xA0v70L+Zl0raiLzAN7lp3kR+1E+p5GZ8rMin
+         6rS6SXL3AxkAzAyFy9DkL99oNGIUU9omwXWR8hNlWYpicyoJFSJI/jiALYeJ583HslBy
+         Ah9Q==
+X-Gm-Message-State: APjAAAX9gd0xZ3raIP/3jxiTBiJJiLrTHu+RadUkYTdx9BBGHPNAf2cd
+        LZiQz5LslnC+bbDjrZv5u0XCDa8zL1ZbZCMw7Gg=
+X-Google-Smtp-Source: APXvYqzGLgiPXxb7cqkTUuev9vbQu6GXMlTpBhL6Ycq9p4IxkMcEEg5na6EfwrgDmLAKugBNM3Su1HcDn4HbHVdWKio=
+X-Received: by 2002:a67:7c93:: with SMTP id x141mr8341728vsc.96.1557818175047;
+ Tue, 14 May 2019 00:16:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.17.163, 10.4.195.30]
-Thread-Topic: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
- flush
-Thread-Index: AQHVCfj1/ZS8SZ4p0ke1CH5gp1S1IPlIMumf
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 14 May 2019 07:15:40 +0000 (UTC)
+References: <1557505377-28577-1-git-send-email-olekstysh@gmail.com>
+ <e64d7f2f-209e-cf7d-6ddc-88d338b1c010@arm.com> <cc9c5c48-2bc1-be49-4188-8b26dbf7ecc1@gmail.com>
+ <CAMuHMdWODzaHSeXyB5CgGmq3ZumFGVZYOUT1v1_Ps-RguPLseA@mail.gmail.com> <25f5f60e-46ff-18af-2a65-1e3f6719ef49@gmail.com>
+In-Reply-To: <25f5f60e-46ff-18af-2a65-1e3f6719ef49@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 14 May 2019 09:16:03 +0200
+Message-ID: <CAMuHMdWkEU7x_Lzk6NUCxEdZRx_xTBFzkETwShZ322aYL5=bLg@mail.gmail.com>
+Subject: Re: [RFC PATCH] ARM: mach-shmobile: Parse DT to get ARCH timer memory region
+To:     Oleksandr <olekstysh@gmail.com>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Oleksandr,
 
------ Original Message -----
-> 
-> 
-> On May 13, 2019 4:01 PM, Yang Shi <yang.shi@linux.alibaba.com> wrote:
-> 
-> 
-> On 5/13/19 9:38 AM, Will Deacon wrote:
-> > On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
-> >> diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-> >> index 99740e1..469492d 100644
-> >> --- a/mm/mmu_gather.c
-> >> +++ b/mm/mmu_gather.c
-> >> @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
-> >>   {
-> >>       /*
-> >>        * If there are parallel threads are doing PTE changes on same range
-> >> -     * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
-> >> -     * flush by batching, a thread has stable TLB entry can fail to flush
-> >> -     * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
-> >> -     * forcefully if we detect parallel PTE batching threads.
-> >> +     * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
-> >> +     * flush by batching, one thread may end up seeing inconsistent PTEs
-> >> +     * and result in having stale TLB entries.  So flush TLB forcefully
-> >> +     * if we detect parallel PTE batching threads.
-> >> +     *
-> >> +     * However, some syscalls, e.g. munmap(), may free page tables, this
-> >> +     * needs force flush everything in the given range. Otherwise this
-> >> +     * may result in having stale TLB entries for some architectures,
-> >> +     * e.g. aarch64, that could specify flush what level TLB.
-> >>        */
-> >> -    if (mm_tlb_flush_nested(tlb->mm)) {
-> >> -            __tlb_reset_range(tlb);
-> >> -            __tlb_adjust_range(tlb, start, end - start);
-> >> +    if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
-> >> +            /*
-> >> +             * Since we can't tell what we actually should have
-> >> +             * flushed, flush everything in the given range.
-> >> +             */
-> >> +            tlb->freed_tables = 1;
-> >> +            tlb->cleared_ptes = 1;
-> >> +            tlb->cleared_pmds = 1;
-> >> +            tlb->cleared_puds = 1;
-> >> +            tlb->cleared_p4ds = 1;
-> >> +
-> >> +            /*
-> >> +             * Some architectures, e.g. ARM, that have range invalidation
-> >> +             * and care about VM_EXEC for I-Cache invalidation, need
-> >> force
-> >> +             * vma_exec set.
-> >> +             */
-> >> +            tlb->vma_exec = 1;
-> >> +
-> >> +            /* Force vma_huge clear to guarantee safer flush */
-> >> +            tlb->vma_huge = 0;
-> >> +
-> >> +            tlb->start = start;
-> >> +            tlb->end = end;
-> >>       }
-> > Whilst I think this is correct, it would be interesting to see whether
-> > or not it's actually faster than just nuking the whole mm, as I mentioned
-> > before.
+On Mon, May 13, 2019 at 6:00 PM Oleksandr <olekstysh@gmail.com> wrote:
+> On 13.05.19 18:13, Geert Uytterhoeven wrote:
+> >> So, if the DT bindings for the counter module is not an option (if I
+> >> correctly understood a discussion pointed by Geert in another letter),
+> >> we should probably prevent all timer code here from being executed if
+> >> PSCI is in use.
+> >> What I mean is to return to [2], but with the modification to use
+> >> psci_smp_available() helper as an indicator of PSCI usage.
+> >>
+> >> Julien, Geert, what do you think?
+> > Yes, that sounds good to me.
 > >
-> > At least in terms of getting a short-term fix, I'd prefer the diff below
-> > if it's not measurably worse.
-> 
-> I did a quick test with ebizzy (96 threads with 5 iterations) on my x86
-> VM, it shows slightly slowdown on records/s but much more sys time spent
-> with fullmm flush, the below is the data.
-> 
->                                      nofullmm                 fullmm
-> ops (records/s)              225606                  225119
-> sys (s)                            0.69                        1.14
-> 
-> It looks the slight reduction of records/s is caused by the increase of
-> sys time.
-> 
-> >
-> > Will
-> >
-> > --->8
-> >
-> > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
-> > index 99740e1dd273..cc251422d307 100644
-> > --- a/mm/mmu_gather.c
-> > +++ b/mm/mmu_gather.c
-> > @@ -251,8 +251,9 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
-> >         * forcefully if we detect parallel PTE batching threads.
-> >         */
-> >        if (mm_tlb_flush_nested(tlb->mm)) {
-> > +             tlb->fullmm = 1;
-> >                __tlb_reset_range(tlb);
-> > -             __tlb_adjust_range(tlb, start, end - start);
-> > +             tlb->freed_tables = 1;
-> >        }
-> >
-> >        tlb_flush_mmu(tlb);
-> 
-> 
-> I think that this should have set need_flush_all and not fullmm.
-> 
+> > Note that psci_smp_available() seems to return false if CONFIG_SMP=n,
+> > so checking for that is not sufficient to avoid crashes when running a
+> > uniprocessor kernel on a PSCI-enabled system.
+>
+> Indeed, you are right.
+>
+>
+> Nothing than just check for psci_ops.cpu_on == NULL directly comes to
+> mind...
+>
+> Have already checked with CONFIG_SMP=n, it works.
+>
+> Sounds ok?
 
-Wouldn't that skip the flush?
+Fine for me, thanks!
 
-If fulmm == 0, then __tlb_reset_range() sets tlb->end = 0.
-  tlb_flush_mmu
-    tlb_flush_mmu_tlbonly
-      if (!tlb->end)
-         return
+Gr{oetje,eeting}s,
 
-Replacing fullmm with need_flush_all, brings the problem back / reproducer hangs.
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
