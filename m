@@ -2,140 +2,98 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8F9C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45268C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430BF20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157242147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gQyJ4Bn+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfENIsI (ORCPT
+        id S1726822AbfENIsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:48:08 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:55472 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725916AbfENIrj (ORCPT
+        Tue, 14 May 2019 04:48:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35050 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfENIsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:47:39 -0400
-X-UUID: bf7c4763819d42ffbce3bc351accec92-20190514
-X-UUID: bf7c4763819d42ffbce3bc351accec92-20190514
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2021548160; Tue, 14 May 2019 16:47:34 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 16:47:30 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 16:47:28 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v5 2/6] dt-bindings: usb: add binding for Type-B GPIO connector driver
-Date:   Tue, 14 May 2019 16:47:19 +0800
-Message-ID: <1557823643-8616-3-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
+        Tue, 14 May 2019 04:48:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6D6XPiWXHxqHbgGlzUb4e9FTkb9mj+8eXq8zwFhMaYI=; b=gQyJ4Bn+wwRdSW9t/2bWSVmyc
+        AwkGokt1sRtEs0MFOzfvXdxNauIujIkO6DiCAA3SOTN0UFbrDi+SLIZripyW+aGfpCexFCP0BzvAH
+        IlYP9j/H30eFgvgo9ZkFb3AKPBLsupHh7y68WZsbeVhh54K9lwJtSLIvcIDJS1VEaRQGKi/fVSfGS
+        48zJdBoc3DzvL/pKKac0qDcALZBmcyi0ZeXu7FkhM4YyodyeuMGqq3ZAdBYQrpl3nrJxsVTrtSutJ
+        0YkFNQHEEV1TPeoT3CoGRRj7cYr67v35O8QkZL1uGCglGPoJ5gpayGhWwv0+XlAiPH89k4GZ/Z81C
+        usWzVhhCw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQT5N-0006we-E6; Tue, 14 May 2019 08:46:57 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 662E32029FD7A; Tue, 14 May 2019 10:46:55 +0200 (CEST)
+Date:   Tue, 14 May 2019 10:46:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Message-ID: <20190514084655.GK2589@hirez.programming.kicks-ass.net>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-9-brendanhiggins@google.com>
+ <20190514065643.GC2589@hirez.programming.kicks-ass.net>
+ <20190514081223.GA230665@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514081223.GA230665@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's used to support dual role switch via GPIO when use Type-B
-receptacle, typically the USB ID pin is connected to an input
-GPIO pin
+On Tue, May 14, 2019 at 01:12:23AM -0700, Brendan Higgins wrote:
+> On Tue, May 14, 2019 at 08:56:43AM +0200, Peter Zijlstra wrote:
+> > On Mon, May 13, 2019 at 10:42:42PM -0700, Brendan Higgins wrote:
+> > > This fixes the following warning seen on GCC 7.3:
+> > >   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+> > > 
+> > 
+> > What is that file and function; no kernel tree near me seems to have
+> > that.
+> 
+> Oh, sorry about that. The function is added in the following patch,
+> "[PATCH v3 09/18] kunit: test: add support for test abort"[1].
+> 
+> My apologies if this patch is supposed to come after it in sequence, but
+> I assumed it should come before otherwise objtool would complain about
+> the symbol when it is introduced.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v5 changes:
- 1. treat type-B connector as child device of USB controller's, but not
-    as a separate virtual device, suggested by Rob
- 2. put connector's port node under connector node, suggested by Rob
-
-v4 no changes
-
-v3 changes:
- 1. treat type-B connector as a virtual device, but not child device of
-    USB controller's
-
-v2 changes:
-  1. new patch to make binding clear suggested by Hans
----
- .../bindings/usb/typeb-conn-gpio.txt          | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-new file mode 100644
-index 000000000000..20dd3499a348
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typeb-conn-gpio.txt
-@@ -0,0 +1,42 @@
-+USB Type-B GPIO Connector
-+
-+This is used to switch dual role mode from the USB ID pin connected to
-+an input GPIO pin.
-+
-+Required properties:
-+- compatible : should include "linux,typeb-conn-gpio" and "usb-b-connector".
-+- id-gpios, vbus-gpios : either one of them must be present, and both
-+	can be present as well.
-+- vbus-supply : can be present if needed when supports dual role mode or
-+	host mode.
-+	see connector/usb-connector.txt
-+
-+Sub-nodes:
-+- port : should be present.
-+	see graph.txt
-+
-+Example:
-+
-+&mtu3 {
-+	status = "okay";
-+
-+	connector {
-+		compatible = "linux,typeb-conn-gpio", "usb-b-connector";
-+		label = "micro-USB";
-+		type = "micro";
-+		id-gpios = <&pio 12 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb_p0_vbus>;
-+
-+		port {
-+			bconn_ep: endpoint@0 {
-+				remote-endpoint = <&usb_role_sw>;
-+			};
-+		};
-+	};
-+
-+	port {
-+		usb_role_sw: endpoint@0 {
-+			remote-endpoint = <&bconn_ep>;
-+		};
-+	};
-+};
--- 
-2.21.0
-
+Or send me all patches such that I have context, or have a sane
+Changelog that gives me context. Just don't give me one patch with a
+crappy changelog.
