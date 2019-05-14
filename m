@@ -2,96 +2,145 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8515BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 902ACC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1E220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B5E20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 21:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Sqp9nGAl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfENVzV (ORCPT
+        id S1726553AbfENVzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 14 May 2019 17:55:25 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45369 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfENVzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 May 2019 17:55:21 -0400
-Received: from mx.allycomm.com ([138.68.30.55]:19989 "EHLO mx.allycomm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfENVzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 17:55:20 -0400
-Received: from allycomm.com (inet.guidewire.com [199.91.42.30])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx.allycomm.com (Postfix) with ESMTPSA id 37F7C3B853;
+Received: by mail-pg1-f195.google.com with SMTP id i21so213424pgi.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 14:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zGsQ7lgpHhpTbszYslBdzxyDCXSizX6+VVJQr1o6b6I=;
+        b=Sqp9nGAlWQZ5vX1dxWHDTDuxZAQ8qZWMKHz3Jl8zJhU4HCd4U5LRW6+WrNk+FFVT4m
+         hghwxry4xwaDl/HQX8VpDYEsXxjpIc+C5kovvhxiwYCqXTRQef29CxCNWFm1bW5znOQt
+         K7SZARGMC8Rt7RfHAn3RpY8sM6daSCeeLH7swaooopzfa3ObMdZ6EWj/nj1LpViuniyi
+         4bbhnkKWhoastGyfdBE/DJkoP1Rh8R0rld6KSf2YfFl4gdmjFXNecFeWf9TzQuYX9kSC
+         yl5u8Qe4FV0TiiOwcMABkeTC1I2KGOOO/tJlPkFrFplmiajsczCkdhcwsEb9HLfHGJbp
+         bZGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=zGsQ7lgpHhpTbszYslBdzxyDCXSizX6+VVJQr1o6b6I=;
+        b=PZrb9PU2h+ZB2G9/pfBLMhQxb20AVTSJjrSN68tBTXU7kiXbSvQSdh0XE0njLZlkNI
+         uEJndtWkYa2BGEyRbJ0wkq6RxeO6T75ywf+1FBE5eArAW3z5AuTkfxu9TDG4trWfHsAi
+         BwXgzoNvm107eQR/AqrqA0UBAuwV81wjUrlHQLQoKmO7FqIfYUmzcRqsiHQyKKy33xS7
+         6Oz58ltYXJe4vQRk3CQ/9tFKl5OL31Xm8ziXfmShH3B8RMiS+BvQCkvEY+Yn/Yniww9y
+         IOUeCXm+GOUsfA5a3+Mr2ms3beVZrdmcBnE8hcZli6+kKWcBmhIaTJQbuGXbszSzX/pu
+         8IIA==
+X-Gm-Message-State: APjAAAVvqN8dxS45HROdQMpem9EBwp40ILUM1HRBYU9iy9FAbpM2iMWH
+        Gs+wug+FJrPclrwdmCfgnUup/Q==
+X-Google-Smtp-Source: APXvYqw24l2gqEGsaEZKg5LYXhvlKPM4W+qe2urWfGhhgYhWFa149ACdSpb4zow/e83hwlMY5jdZGg==
+X-Received: by 2002:a63:2bc8:: with SMTP id r191mr39777166pgr.72.1557870920728;
+        Tue, 14 May 2019 14:55:20 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:bde9:fbad:7d91:52eb? ([2601:646:c200:1ef2:bde9:fbad:7d91:52eb])
+        by smtp.gmail.com with ESMTPSA id d15sm116637pfm.186.2019.05.14.14.55.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Tue, 14 May 2019 14:55:19 -0700 (PDT)
-From:   Jeff Kletsky <lede@allycomm.com>
-To:     Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] mtd: spinand: Add support for two-byte device IDs
-Date:   Tue, 14 May 2019 14:53:14 -0700
-Message-Id: <20190514215315.19228-3-lede@allycomm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190514215315.19228-1-lede@allycomm.com>
-References: <20190514215315.19228-1-lede@allycomm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table entries for percpu buffer
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <20190514210603.GD1977@linux.intel.com>
+Date:   Tue, 14 May 2019 14:55:18 -0700
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <A1EB80C0-2D88-4DC0-A898-3BED50A4F5A8@amacapital.net>
+References: <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com> <20190514070941.GE2589@hirez.programming.kicks-ass.net> <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com> <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com> <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com> <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com> <20190514170522.GW2623@hirez.programming.kicks-ass.net> <20190514180936.GA1977@linux.intel.com> <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com> <20190514210603.GD1977@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kletsky <git-commits@allycomm.com>
 
-The GigaDevice GD5F1GQ4UFxxG SPI NAND utilizes two-byte device IDs.
 
-http://www.gigadevice.com/datasheet/gd5f1gq4xfxxg/
+> On May 14, 2019, at 2:06 PM, Sean Christopherson <sean.j.christopherson@in=
+tel.com> wrote:
+>=20
+>> On Tue, May 14, 2019 at 01:33:21PM -0700, Andy Lutomirski wrote:
+>> On Tue, May 14, 2019 at 11:09 AM Sean Christopherson
+>> <sean.j.christopherson@intel.com> wrote:
+>>> For IRQs it's somewhat feasible, but not for NMIs since NMIs are unblock=
+ed
+>>> on VMX immediately after VM-Exit, i.e. there's no way to prevent an NMI
+>>> from occuring while KVM's page tables are loaded.
+>>>=20
+>>> Back to Andy's question about enabling IRQs, the answer is "it depends".=
 
-Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
----
- drivers/mtd/nand/spi/core.c | 2 +-
- include/linux/mtd/spinand.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+>>> Exits due to INTR, NMI and #MC are considered high priority and are
+>>> serviced before re-enabling IRQs and preemption[1].  All other exits are=
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index fa87ae28cdfe..a13154785dad 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -853,7 +853,7 @@ spinand_select_op_variant(struct spinand_device *spinand,
-  */
- int spinand_match_and_init(struct spinand_device *spinand,
- 			   const struct spinand_info *table,
--			   unsigned int table_size, u8 devid)
-+			   unsigned int table_size, u16 devid)
- {
- 	struct nand_device *nand = spinand_to_nand(spinand);
- 	unsigned int i;
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 05fe98eebe27..8901ba272538 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -290,7 +290,7 @@ struct spinand_ecc_info {
-  */
- struct spinand_info {
- 	const char *model;
--	u8 devid;
-+	u16 devid;
- 	u32 flags;
- 	struct nand_memory_organization memorg;
- 	struct nand_ecc_req eccreq;
-@@ -445,7 +445,7 @@ static inline void spinand_set_of_node(struct spinand_device *spinand,
- 
- int spinand_match_and_init(struct spinand_device *dev,
- 			   const struct spinand_info *table,
--			   unsigned int table_size, u8 devid);
-+			   unsigned int table_size, u16 devid);
- 
- int spinand_upd_cfg(struct spinand_device *spinand, u8 mask, u8 val);
- int spinand_select_target(struct spinand_device *spinand, unsigned int target);
--- 
-2.20.1
+>>> handled after IRQs and preemption are re-enabled.
+>>>=20
+>>> A decent number of exit handlers are quite short, e.g. CPUID, most RDMSR=
 
+>>> and WRMSR, any event-related exit, etc...  But many exit handlers requir=
+e
+>>> significantly longer flows, e.g. EPT violations (page faults) and anythi=
+ng
+>>> that requires extensive emulation, e.g. nested VMX.  In short, leaving
+>>> IRQs disabled across all exits is not practical.
+>>>=20
+>>> Before going down the path of figuring out how to handle the corner case=
+s
+>>> regarding kvm_mm, I think it makes sense to pinpoint exactly what exits
+>>> are a) in the hot path for the use case (configuration) and b) can be
+>>> handled fast enough that they can run with IRQs disabled.  Generating th=
+at
+>>> list might allow us to tightly bound the contents of kvm_mm and sidestep=
+
+>>> many of the corner cases, i.e. select VM-Exits are handle with IRQs
+>>> disabled using KVM's mm, while "slow" VM-Exits go through the full conte=
+xt
+>>> switch.
+>>=20
+>> I suspect that the context switch is a bit of a red herring.  A
+>> PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slow,
+>> but it's probably minor compared to the full cost of the vm exit.  The
+>> pain point is kicking the sibling thread.
+>=20
+> Speaking of PCIDs, a separate mm for KVM would mean consuming another
+> ASID, which isn't good.
+
+I=E2=80=99m not sure we care. We have many logical address spaces (two per m=
+m plus a few more).  We have 4096 PCIDs, but we only use ten or so.  And we h=
+ave some undocumented number of *physical* ASIDs with some undocumented mech=
+anism by which PCID maps to a physical ASID.
+
+I don=E2=80=99t suppose you know how many physical ASIDs we have?  And how i=
+t interacts with the VPID stuff?
