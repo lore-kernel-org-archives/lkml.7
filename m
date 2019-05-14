@@ -2,114 +2,132 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05632C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61350C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBE3D206A3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3271D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 06:08:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley-net.20150623.gappssmtp.com header.i=@landley-net.20150623.gappssmtp.com header.b="e91q8D7a"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BaA/vS70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726216AbfENGGN (ORCPT
+        id S1726142AbfENGIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 02:06:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42625 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbfENGGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 02:06:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id f23so14113212otl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 23:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=landley-net.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PXt1KR8uTPyJUn4Yxy2apR4YARPk5L8lEm2vMkzJPBM=;
-        b=e91q8D7aFphaY4A6IL5QmEU/FViV57G/ehUkaEkFrK1dcpjq0tV/orbAlirGH4/L0V
-         HiNO6aGwsRRgCXa9Hh5CgGQmS+70E/uhKmZPWtXXVpGjcYHJ2hDsl0yyTFjkgTK/xlmx
-         PhNiLFgJYZJwyvVHfroFvFD0FW7PSkb2EPJ0qQW74bWCcU2i2RSPzx/nzo6/Od7NLPJ+
-         Ond0PKkr+1PCB1r5YvqNf3Nfocj1tasDuWueMZIbWi966AHRCkQ2utNMgUMZndXBy68H
-         g+ssB7URZ3eeNsnjb5ZvI8b2btqbFB0jfNIfgT8YzZ7FAnbWztIJtQChnH90RVS4ob7n
-         Uq+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PXt1KR8uTPyJUn4Yxy2apR4YARPk5L8lEm2vMkzJPBM=;
-        b=ZAODWYD+8m8l017cewFaLrrldWxkGVEWU0pHkYUO1NGDd9HHIivKRWUy1LMItepPu5
-         SZju1mNYXQgKkZCGpxLeQIpsjqupvfKFYqLVF/fMicqISVTUvkzkrnuhSc1dy3Lip7Ca
-         JZ1hhLBJTC5OMNHTIdPUvibiXYFMmM7OY9a38HQbe+AJADlj/7nvJbymg5R4FHu7MGoc
-         PeQyZAQ6p1NFItCcGshm2HXijml54lLBA3sBMABc7rlwlqQUksxHcCe+5QJWGI5dAVp9
-         VzdyeA5wOQ3mqennnM+5an57V7CzeX02clqWjxD8cocMNMY4npmXl1g7CcFRhzk7nFxN
-         jtOw==
-X-Gm-Message-State: APjAAAUkCbK3LniyZwyRMh+DLgwFdJdUNS8omd5DPWl2DF6ouqw4/Mn6
-        66NdqWq1nqZxw9PqUOOo4FJqZw==
-X-Google-Smtp-Source: APXvYqz34cqK8ejkbSx+SrrTyV2DMUPTt7fPvQMKcNmaB8vAqawQFjp1e57tMQIaPu2wl3v6VjClBA==
-X-Received: by 2002:a9d:638f:: with SMTP id w15mr7650121otk.16.1557813972655;
-        Mon, 13 May 2019 23:06:12 -0700 (PDT)
-Received: from [192.168.1.5] (072-182-052-210.res.spectrum.com. [72.182.52.210])
-        by smtp.googlemail.com with ESMTPSA id a1sm6771206oiy.38.2019.05.13.23.06.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 May 2019 23:06:12 -0700 (PDT)
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        initramfs@vger.kernel.org
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <20190513172007.GA69717@rani.riverdale.lan>
- <20190513175250.GC69717@rani.riverdale.lan>
- <1557772584.4969.62.camel@linux.ibm.com>
- <20190513184744.GA12386@rani.riverdale.lan>
- <1557785351.4969.94.camel@linux.ibm.com>
-From:   Rob Landley <rob@landley.net>
-Message-ID: <66b57ae5-bb5a-c008-8490-2c90e050fc65@landley.net>
-Date:   Tue, 14 May 2019 01:06:45 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557785351.4969.94.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 14 May 2019 02:08:36 -0400
+Received: from mail-eopbgr70057.outbound.protection.outlook.com ([40.107.7.57]:10193
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725866AbfENGIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 02:08:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YTiyz7oOoBnGCYjmw0SOe1q6ZRigsgPAgF6dcT8cwZQ=;
+ b=BaA/vS70LAxYBPFEI9hKS4/HQpEkjfUjTBgwQsO6yncLrPvMFqzgHIENUOGku+w1GLMNw77B3RkX43Gcbg6Grf1hhVRGV1nNwl23ainszLMVuAPHOENPMvJiLeSby+x9YCotXUwyps5hV6QmVz2k9bAHxgFS2O70B9ilXbQOXo8=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3675.eurprd04.prod.outlook.com (52.134.69.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Tue, 14 May 2019 06:08:29 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1900.010; Tue, 14 May 2019
+ 06:08:29 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>,
+        "ccaione@baylibre.com" <ccaione@baylibre.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mq: Remove unnecessary blank lines
+Thread-Topic: [PATCH] arm64: dts: imx8mq: Remove unnecessary blank lines
+Thread-Index: AQHVChtz7Wi0Kxez2EK8fnK8F+Cmog==
+Date:   Tue, 14 May 2019 06:08:29 +0000
+Message-ID: <1557813807-3919-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0P153CA0007.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:203:18::19) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5c12eae6-5a6e-4ff5-39a1-08d6d8329569
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3675;
+x-ms-traffictypediagnostic: DB3PR0402MB3675:
+x-microsoft-antispam-prvs: <DB3PR0402MB36751B1668481B36EF2CE2A0F5080@DB3PR0402MB3675.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:296;
+x-forefront-prvs: 0037FD6480
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(136003)(39860400002)(396003)(346002)(199004)(189003)(14444005)(256004)(6116002)(2201001)(26005)(7416002)(3846002)(2906002)(8936002)(66476007)(5660300002)(66556008)(64756008)(66446008)(102836004)(4744005)(66946007)(73956011)(6512007)(86362001)(71200400001)(6506007)(386003)(71190400001)(99286004)(476003)(2616005)(486006)(186003)(52116002)(110136005)(25786009)(4326008)(305945005)(478600001)(6436002)(14454004)(2501003)(6486002)(7736002)(53936002)(36756003)(68736007)(316002)(50226002)(8676002)(66066001)(81156014)(81166006)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3675;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZD2NTU+t/4FgzYsceJzdPLlWZ5opnZIzLc67PeNXndR1dfZR0+iimqAuZA422KnpuQpnr6kda7JRPRpbvfMG8rc+xiQJLDUZoI2+2tLW9cUtpvKMfNrN8YgYszVNjK8D7HemPvfbAhRyCgoQayZ1gL0J2R9g58d+AjzZt+FAUYlKQMdMw4WI86PC6urbgjeCie0CnTaxoKKDTeTaUvmWRGHiMTsz2qStLHSqa/AlLZyte6UHg1Q/1udWEnfFq+JPHzvdJ+G46rpckeLr30gOCFubladv9QPC8U8ZfkBNt4y32gEC+05cBarVaFczBVraxKbFUmPmqqn1pPEP/K+3ZUzlv5QYpwwH5mUNFiVbOx4a6zWcRSK1Mwd2M7lqlYkzaNveMW6W4huRPi1IEbfYMsackaN1L0BTc3jMTXayhdY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <1A0B0733A7F8DB418C08491CEEC218DE@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c12eae6-5a6e-4ff5-39a1-08d6d8329569
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 06:08:29.3064
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3675
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/13/19 5:09 PM, Mimi Zohar wrote:
->> Ok, but wouldn't my idea still work? Leave the default compiled-in
->> policy set to not appraise initramfs. The embedded /init sets all the
->> xattrs, changes the policy to appraise tmpfs, and then exec's the real
->> init? Then everything except the embedded /init and the file with the
->> xattrs will be appraised, and the embedded /init was verified as part of
->> the kernel image signature. The only additional kernel change needed
->> then is to add a config option to the kernel to disallow overwriting the
->> embedded initramfs (or at least the embedded /init).
-> 
-> Yes and no.  The current IMA design allows a builtin policy to be
-> specified on the boot command line ("ima_policy="), so that it exists
-> from boot, and allows it to be replaced once with a custom policy.
->  After that, assuming that CONFIG_IMA_WRITE_POLICY is configured,
-> additional rules may be appended.  As your embedded /init solution
-> already replaces the builtin policy, the IMA policy couldn't currently
-> be replaced a second time with a custom policy based on LSM labels.
+Unnecessary blank lines do NOT help readability, so remove them.
 
-So your design assumption you're changing other code to work around in that
-instance is the policy can only be replaced once rather than having a "finalize"
-option when it's set, making it immutable from then on.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-Rob
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index df33672..e5f3133 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -439,7 +439,6 @@
+ 					interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+ 						<GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+ 				};
+-
+ 			};
+=20
+ 			clk: clock-controller@30380000 {
+@@ -908,7 +907,6 @@
+ 			status =3D "disabled";
+ 		};
+=20
+-
+ 		pcie0: pcie@33800000 {
+ 			compatible =3D "fsl,imx8mq-pcie";
+ 			reg =3D <0x33800000 0x400000>,
+--=20
+2.7.4
+
