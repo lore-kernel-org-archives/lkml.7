@@ -2,92 +2,172 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4F5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CF7C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E282085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7FA216E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557847065;
+	bh=YFy/nYWt/1wDeI6Wes9DRgCpXcOCSwz4D6RK9vtdIWM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AYoKiTdSF5rwWsjDNKknYbfSXJLA6wfo6hJkSCzYHTtzofTODYA42ppve+y2coc/8
+	 5aKecWa/ANrXYoTFZBMNvdrhzK4gsz1TdMx3U/CkSlok9qSA+wIY7lpHrWHO8shPhw
+	 to89LHCNhj95/RBq6Xf2jnY3mYWa+PTrT9PBz9m0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfENPRl (ORCPT
+        id S1726597AbfENPRp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:17:41 -0400
-Received: from foss.arm.com ([217.140.101.70]:57540 "EHLO foss.arm.com"
+        Tue, 14 May 2019 11:17:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfENPRj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:17:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71362374;
-        Tue, 14 May 2019 08:17:39 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFDAD3F703;
-        Tue, 14 May 2019 08:17:37 -0700 (PDT)
-Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
- rework
-To:     laurentiu.tudor@nxp.com, hch@lst.de, stern@rowland.harvard.edu,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        marex@denx.de, noring@nocrew.org, JuergenUrban@gmx.de
-Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org
-References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com>
-Date:   Tue, 14 May 2019 16:17:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726571AbfENPRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:17:43 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA704218B8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 15:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557847063;
+        bh=YFy/nYWt/1wDeI6Wes9DRgCpXcOCSwz4D6RK9vtdIWM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oUX6k3i6A6UNmz5a6v0uvyPtjIEgSWCKycA+MNBAJUmXt+OPgLl/milCDUvwzu+/M
+         OXGS0G8SsUc6sHoxO9+SqjrKas/YiZfqNRT2xP4uXSNIWDsnlbqFx+OFiyJTeCCQNA
+         YYGf+ZwVto+GNnW0S9y/M/GvfLQJh9yNtodgoCYA=
+Received: by mail-wr1-f53.google.com with SMTP id h4so19688121wre.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:17:42 -0700 (PDT)
+X-Gm-Message-State: APjAAAUdKSZ9g9joQsREtA7R2NLWc2yXY82rZrqdJ/lxeAeANuz+kA/G
+        T+dvXsnQbJdVngXaoSYNzCHLbwBiIS8j0KgTaa7Kbg==
+X-Google-Smtp-Source: APXvYqzyU5eSSdhAGQxvaWP61Tslj6Uzw3JhQgTzoGx9Hsnh9UahExMuh3r6E1GjeJRvn/+/5l+4Y/DhiCVwoJ8IJfA=
+X-Received: by 2002:adf:ec42:: with SMTP id w2mr21139901wrn.77.1557847061170;
+ Tue, 14 May 2019 08:17:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+ <alpine.DEB.2.21.1904192233390.3174@nanos.tec.linutronix.de>
+ <8c5133bc-1301-24ca-418d-7151a6eac0e2@fortanix.com> <alpine.DEB.2.21.1904192248550.3174@nanos.tec.linutronix.de>
+ <e1478f70-7e44-6e3e-2aaf-1b12a96328ed@fortanix.com> <2AE80EA3-799E-4808-BBE4-3872F425BCF8@amacapital.net>
+ <49b28ca1-6e66-87d9-2202-84c58f13fb99@fortanix.com> <444537E3-4156-41FB-83CA-57C5B660523F@amacapital.net>
+ <f9d93291-9b59-7b66-de9f-af92246f1c9c@fortanix.com> <alpine.DEB.2.21.1904192337160.3174@nanos.tec.linutronix.de>
+ <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com> <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
+ <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com> <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <op.z1saqpzxwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <op.z1saqpzxwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 14 May 2019 08:17:29 -0700
+X-Gmail-Original-Message-ID: <CALCETrXHbRL-pzZ7CG+RrMNGNEPKO9LY=6Bo4tuFzcZ_ZTMQvQ@mail.gmail.com>
+Message-ID: <CALCETrXHbRL-pzZ7CG+RrMNGNEPKO9LY=6Bo4tuFzcZ_ZTMQvQ@mail.gmail.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+To:     Haitao Huang <haitao.huang@linux.intel.com>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Fredrik, Juergen
+On Tue, May 14, 2019 at 7:33 AM Haitao Huang
+<haitao.huang@linux.intel.com> wrote:
+>
+> On Fri, 10 May 2019 14:22:34 -0500, Andy Lutomirski <luto@kernel.org>
+> wrote:
+>
+> > On Fri, May 10, 2019 at 12:04 PM Jethro Beekman <jethro@fortanix.com>
+> > wrote:
+> >>
+> >> On 2019-05-10 11:56, Xing, Cedric wrote:
+> >> > Hi Jethro,
+> >> >
+> >> >> ELF files are explicitly designed such that you can map them (with
+> >> mmap)
+> >> >> in 4096-byte chunks. However, sometimes there's overlap and you will
+> >> >> sometimes see that a particular offset is mapped twice because the
+> >> first
+> >> >> half of the page in the file belongs to an RX range and the second
+> >> half
+> >> >> to an R-only range. Also, ELF files don't (normally) describe stack,
+> >> >> heap, etc. which you do need for enclaves.
+> >> >
+> >> > You have probably misread my email. By mmap(), I meant the enclave
+> >> file would be mapped via *multiple* mmap() calls, in the same way as
+> >> what dlopen() would do in loading regular shared object. The intention
+> >> here is to make the enclave file subject to the same checks as regular
+> >> shared objects.
+> >>
+> >> No, I didn't misread your email. My original point still stands:
+> >> requiring that an enclave's memory is created from one or more mmap
+> >> calls of a file puts significant restrictions on the enclave's on-disk
+> >> representation.
+> >>
+> >
+> > For a tiny bit of background, Linux (AFAIK*) makes no effort to ensure
+> > the complete integrity of DSOs.  What Linux *does* do (if so
+> > configured) is to make sure that only approved data is mapped
+> > executable.  So, if you want to have some bytes be executable, those
+> > bytes have to come from a file that passes the relevant LSM and IMA
+> > checks.
+>
+> Given this, I just want to step back a little to understand the exact
+> issue that SGX is causing here for LSM/IMA. Sorry if I missed points
+> discussed earlier.
+>
+> By the time of EADD, enclave file is opened and should have passed IMA and
+> SELinux policy enforcement gates if any. We really don't need extra mmaps
+> on the enclave files to be IMA and SELinux compliant.
 
-On 14/05/2019 15:38, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> 
-> For HCs that have local memory, replace the current DMA API usage
-> with a genalloc generic allocator to manage the mappings for these
-> devices.
-> This is in preparation for dropping the existing "coherent" dma
-> mem declaration APIs. Current implementation was relying on a short
-> circuit in the DMA API that in the end, was acting as an allocator
-> for these type of devices.
-> 
-> Only compiled tested, so any volunteers willing to test are most welcome.
+The problem, as i see it, is that they passed the *wrong* checks,
+because, as you noticed:
 
-I recall an out-of-tree PlayStation 2 OHCI driver being another 
-HCD_LOCAL_MEM user - if Fredrik and Juergen are still active on that, 
-hopefully they might be able to comment on whether this approach can 
-work for them too. Patchwork link just in case: 
-https://patchwork.kernel.org/project/linux-usb/list/?series=117433
+> We are loading
+> enclave files as RO and copying those into EPC.
 
-Robin.
+Which is, semantically, a lot like loading a normal file as RO and
+then mprotecting() it to RX, which is disallowed under quite a few LSM
+policies.
 
-> 
-> Thank you!
-> 
-> For context, see thread here: https://lkml.org/lkml/2019/4/22/357
-> 
-> Changes in v2:
->   - use genalloc also in core usb (based on comment from Robin)
->   - moved genpool decl to usb_hcd to be accesible from core usb
-> 
-> Laurentiu Tudor (3):
->    USB: use genalloc for USB HCs with local memory
->    usb: host: ohci-sm501: init genalloc for local memory
->    usb: host: ohci-tmio: init genalloc for local memory
-> 
->   drivers/usb/core/buffer.c     | 12 ++++++-
->   drivers/usb/host/ohci-hcd.c   | 23 +++++++++++---
->   drivers/usb/host/ohci-sm501.c | 60 +++++++++++++++++++----------------
->   drivers/usb/host/ohci-tmio.c  | 23 +++++++++-----
->   include/linux/usb/hcd.h       |  3 ++
->   5 files changed, 80 insertions(+), 41 deletions(-)
-> 
+> An IMA policy can enforce
+> RO files (or any file). And SELinux policy can say which processes can
+> open the file for what permissions. No extra needed here.
+
+If SELinux says a process may open a file as RO, that does *not* mean
+that it can be opened as RX.
+
+>
+> And sgx enclaves are always signed and integrity protected and verified at
+> the time of EINIT. So if EINIT passes, we know the content loaded
+> (including permission flags) is matching the sigstruct.  But
+> sigstruct/signature is part of the file, should be accounted for in IMA
+> measurement of the whole file, so it is also verified by IMA during file
+> open, right?
+
+This does work, but only if the kernel parses that file so that the
+kernel can trust that the enclave data actually came from the file as
+intended.  And moving the parsing to the kernel seems like a mess that
+no one really wants to do.
