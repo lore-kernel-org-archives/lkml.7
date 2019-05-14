@@ -6,129 +6,178 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF74C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700DBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CF320818
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AE1720879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfENJ5X (ORCPT
+        id S1726462AbfENKBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:57:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43628 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbfENJ5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:57:22 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 19F27306E171;
-        Tue, 14 May 2019 09:57:22 +0000 (UTC)
-Received: from [10.36.117.118] (ovpn-117-118.ams2.redhat.com [10.36.117.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D318E61995;
-        Tue, 14 May 2019 09:57:05 +0000 (UTC)
-Subject: Re: [PATCH v8 2/6] virtio-pmem: Add virtio pmem driver
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, mst@redhat.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
-        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
-        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
-        aarcange@redhat.com, david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        pbonzini@redhat.com, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-References: <20190510155202.14737-1-pagupta@redhat.com>
- <20190510155202.14737-3-pagupta@redhat.com>
- <f2ea35a6-ec98-447c-44fe-0cb3ab309340@redhat.com>
- <752392764.28554139.1557826022323.JavaMail.zimbra@redhat.com>
- <86298c2c-cc7c-5b97-0f11-335d7da8c450@redhat.com>
- <712871093.28555872.1557827242385.JavaMail.zimbra@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <cd5572ac-14d0-f872-6321-c522daa70f49@redhat.com>
-Date:   Tue, 14 May 2019 11:57:05 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 06:01:15 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:28157 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726338AbfENKBP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:01:15 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x4EA0CRn014521;
+        Tue, 14 May 2019 18:00:12 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id 289945F35EA95B20A0AB;
+        Tue, 14 May 2019 18:00:13 +0800 (CST)
+In-Reply-To: <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@LocalDomain>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com> <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@LocalDomain>
+To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Lee Jones" <lee.jones@linaro.org>
+Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi" <linux-spi@vger.kernel.org>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Rob Herring" <robh@kernel.org>,
+        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
 MIME-Version: 1.0
-In-Reply-To: <712871093.28555872.1557827242385.JavaMail.zimbra@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 14 May 2019 09:57:22 +0000 (UTC)
+X-KeepSent: ADD61EE8:84C8DE88-482583FA:0036510D;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFADD61EE8.84C8DE88-ON482583FA.0036510D-482583FA.0036F37A@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 14 May 2019 18:00:13 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/14 PM 06:00:13,
+        Serialize complete at 2019/05/14 PM 06:00:13
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x4EA0CRn014521
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>
->> I think you should do the same here, vdev->priv is allocated in
->> virtio_pmem_probe.
->>
->> But maybe I am missing something important here :)
+
+Hi Sergei, 
+
+> > 
+> >    Could you please indent with 1 or 2 tabs where you used 8 or 16 
+spaces?
+
+Sorry, I just copy this new DTS from git to my Notes email system,
+therefore, the "tabs space" is not alignment with original file.
+
 > 
-> Because virtio_balloon use "kzalloc" for allocation and needs to be freed. 
-> But virtio pmem uses "devm_kzalloc" which takes care of automatically deleting 
-> the device memory when associated device is detached.
+> Patch new DTS to
+> ===============================================================> 
+> 
+> +Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> +---------------------------------------------------------
+> +
+> +RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> +
+> +Required properties:
+> +- compatible: should be an SoC-specific compatible value, followed by
+> +      "renesas,rcar-gen3-rpc" as a fallback.
+> +      supported SoC-specific values are:
+> +      "renesas,r8a77995-rpc"   (R-Car D3)
+> +- reg: should contain three register areas:
+> +   first for RPC-IF registers,
+> +   second for the direct mapping read mode and
+> +   third for the write buffer area.
+> +- reg-names: should contain "regs", "dirmap" and "wbuf"
+> +- clocks: should contain 1 entries for the module's clock
+> +- clock-names: should contain "rpc"
+> +- #address-cells: should be 1
+> +- #size-cells: should be 0
+> +
+> +Example:
+> +- SPI mode:
+> +
+> +   rpc_if: spi@ee200000 {
+> +      compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +      reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
+> +            <0 0xee208000 0 0x100>;
+> +      reg-names = "regs", "dirmap", "wbuf";
+> +      clocks = <&cpg CPG_MOD 917>;
+> +      clock-names = "rpc";
+> +      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +      resets = <&cpg 917>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      flash@0 {
+> +         compatible = "jedec,spi-nor";
+> +         reg = <0>;
+> +         spi-max-frequency = <40000000>;
+> +         spi-tx-bus-width = <1>;
+> +         spi-rx-bus-width = <1>;
+> +      };
+> +   };
+> +
+> +- HF mode:
+> +   rpc_if: hf@ee200000 {
+> +      compatible = "renesas,r8a77995-rpc", "renesas,rcar-gen3-rpc";
+> +      reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 0x4000000>,
+> +            <0 0xee208000 0 0x100>;
+> +      reg-names = "regs", "dirmap", "wbuf";
+> +      clocks = <&cpg CPG_MOD 917>;
+> +      clock-names = "rpc";
+> +      power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> +      resets = <&cpg 917>;
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      flash@0 {
+> +         compatible = "cypress,hyperflash", "cfi-flash";
+> +         reg = <0>;
+> +      };
+> +   };
+> 
+> =======================================================================<
 
-Hehe, thanks, that was the part that I was missing!
+thanks for your review.
 
--- 
+best regards,
+Mason 
 
-Thanks,
 
-David / dhildenb
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
