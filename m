@@ -2,111 +2,158 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5250AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5F8C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243332147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFD0208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:19:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="MsI3redr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfENMOL (ORCPT
+        id S1726347AbfENMTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:14:11 -0400
-Received: from freki.datenkhaos.de ([81.7.17.101]:50248 "EHLO
-        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfENMOL (ORCPT
+        Tue, 14 May 2019 08:19:38 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35941 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfENMTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:14:11 -0400
-X-Greylist: delayed 575 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 08:14:10 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by freki.datenkhaos.de (Postfix) with ESMTP id 46C4F12F2625;
-        Tue, 14 May 2019 14:04:34 +0200 (CEST)
-Received: from freki.datenkhaos.de ([127.0.0.1])
-        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JVAF5zPZzDM4; Tue, 14 May 2019 14:04:26 +0200 (CEST)
-Received: from probook (geri.datenkhaos.de [81.7.17.45])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by freki.datenkhaos.de (Postfix) with ESMTPSA;
-        Tue, 14 May 2019 14:04:26 +0200 (CEST)
-Date:   Tue, 14 May 2019 14:04:21 +0200
-From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
-Message-ID: <20190514120416.GA11736@probook>
-References: <20190423183827.GA4012@beast>
+        Tue, 14 May 2019 08:19:38 -0400
+Received: by mail-qt1-f193.google.com with SMTP id a17so17386713qth.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:19:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=U0DpT43tjbc+zKgowoXNj4gD+VXgSMT7iXcdOXpGfnk=;
+        b=MsI3redrPwQrIOqOIgfojac/SeflfTeSEEHbupT3uBsTZOa0Fwu17Q/4GFem24pier
+         vnqRKPL/wbNcwCaoZqeRX79HadZM7b7Df0PWoQokbBaY5NO6Q61enz3FUQYzVOzCjSRh
+         Jqs1kXHB/1coy7gansBBV9Mqf9q8rqShoZuWHlZnwTVcOvG8ddZsiyHFyixvF3LtFc0j
+         L17JRrdPeEVYX2q2LFoX3pn4SECSkSnD/ppXxsWz0TTYPI9m5Z0GxmIddijElsAdWwc9
+         bLNiCJSvuSnGFYKrKEQIwPPtVcZTbVDpQTyqEruDc6wUUjIoXyMQy1lvlA5PbQ77siXE
+         ia+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=U0DpT43tjbc+zKgowoXNj4gD+VXgSMT7iXcdOXpGfnk=;
+        b=dFU/QkKOFYWKW/GxTZiHnexg4mS1QHFJyL75jSXiF6mUfAKsV3SlLQScC8EoZknFDG
+         NsXQVTj8LbjiGTYHz7grtWXI8X/qlokIv1IN4POGhgp8QFwX6p9e+WMDDUVl3tuBzIEN
+         /tL/c8ojXz0zVNS72cc+LTgy8NsfZDkcZt/9t5EUPqhHocCP7gvbecp+xPI+bQDUWXRC
+         B6dsYs1VfAuyyBMvFyY9e3VUcBVboR0UxDe6e35nB4Kw6iGMS7RQQGOfsBxaToj/Wi+C
+         GUrCFfrzs/ZKK1obMfu93V9KUFEI/Soa4Hms4TpBgPWEAuMSx43qucug6tb15GnSghIN
+         phkA==
+X-Gm-Message-State: APjAAAW3Z4PFA4KREEMRdk6JpHgTfMVU30MqgDzKltjhsgiPUkMfEwLY
+        1zjm4/gSR/W8wZu6vxBt+55f3g==
+X-Google-Smtp-Source: APXvYqxD2KIzuB0hooUSp+6DNIlDqA8GfSvdV41V1sBC1GAHZF5hrB10YsOIvolxxzU+uDonglNXbg==
+X-Received: by 2002:a0c:ad46:: with SMTP id v6mr7839465qvc.82.1557836376895;
+        Tue, 14 May 2019 05:19:36 -0700 (PDT)
+Received: from skullcanyon ([2002:c0de:c115:0:481e:e17e:2f68:43f8])
+        by smtp.gmail.com with ESMTPSA id f33sm2792457qtf.64.2019.05.14.05.19.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 05:19:36 -0700 (PDT)
+Message-ID: <ecdb8da5f00a8f5bd5d5ec125e2aa162e0091728.camel@ndufresne.ca>
+Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 14 May 2019 08:19:34 -0400
+In-Reply-To: <a1807c37-99cf-d1fa-bcb9-67af2935abaf@xs4all.nl>
+References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
+         <a1807c37-99cf-d1fa-bcb9-67af2935abaf@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 (3.32.1-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190423183827.GA4012@beast>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019 Apr 23, Kees Cook wrote:
-> When building x86 with Clang LTO and CFI, CFI jump regions are
-> automatically added to the end of the .text section late in linking. As a
-> result, the _etext position was being labelled before the appended jump
-> regions, causing confusion about where the boundaries of the executable
-> region actually are in the running kernel, and broke at least the fault
-> injection code. This moves the _etext mark to outside (and immediately
-> after) the .text area, as it already the case on other architectures
-> (e.g. arm64, arm).
+Le mardi 14 mai 2019 à 10:54 +0200, Hans Verkuil a écrit :
+> Hi Stanimir,
 > 
-> Reported-and-tested-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 4/12/19 5:59 PM, Stanimir Varbanov wrote:
+> > This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
+> > field description to allow v4l clients to set bigger image size
+> > in case of variable length compressed data.
 > 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index bad8c51fee6e..de94da2366e7 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -141,11 +141,11 @@ SECTIONS
->  		*(.text.__x86.indirect_thunk)
->  		__indirect_thunk_end = .;
->  #endif
-> -
-> -		/* End of text section */
-> -		_etext = .;
->  	} :text = 0x9090
->  
-> +	/* End of text section */
-> +	_etext = .;
-> +
->  	NOTES :text :note
->  
->  	EXCEPTION_TABLE(16) :text = 0x9090
-> -- 
-> 2.17.1
+> I've been reconsidering this change. The sizeimage value in the format
+> is the minimum size a buffer should have in order to store the data of
+> an image of the width and height as described in the format.
 
-This breaks the build on my system:
+Should this read as the minimum size for the specific (returned by
+driver) width/height/bytesperline ?
 
-  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
-  CC      arch/x86/boot/compressed/early_serial_console.o
-  CC      arch/x86/boot/compressed/kaslr.o
-  AS      arch/x86/boot/compressed/mem_encrypt.o
-  CC      arch/x86/boot/compressed/kaslr_64.o
-Invalid absolute R_X86_64_32S relocation: _etext
-make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
-make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [arch/x86/boot/Makefile:112: arch/x86/boot/compressed/vmlinux] Error 2
-make: *** [arch/x86/Makefile:283: bzImage] Error 2
-
-
-
--- 
-Regards,
-  Johannes
+> 
+> But there is nothing that prevents userspace from calling VIDIOC_CREATEBUFS
+> instead of VIDIOC_REQBUFS to allocate larger buffers.
+> 
+> So do we really need this change?
+> 
+> The more I think about this, the more uncomfortable I become with this change.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> > ---
+> >  Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst | 13 ++++++++++++-
+> >  Documentation/media/uapi/v4l/pixfmt-v4l2.rst        | 11 ++++++++++-
+> >  2 files changed, 22 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> > index 5688c816e334..005428a8121e 100644
+> > --- a/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> > +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2-mplane.rst
+> > @@ -31,7 +31,18 @@ describing all planes of that format.
+> >  
+> >      * - __u32
+> >        - ``sizeimage``
+> > -      - Maximum size in bytes required for image data in this plane.
+> > +      - Maximum size in bytes required for image data in this plane,
+> > +	set by the driver. When the image consists of variable length
+> > +	compressed data this is the number of bytes required by the
+> > +	codec to support the worst-case compression scenario.
+> > +
+> > +	For uncompressed images the driver will set the value. For
+> > +	variable length compressed data clients are allowed to set
+> > +	the sizeimage field, but the driver may ignore it and set the
+> > +	value itself, or it may modify the provided value based on
+> > +	alignment requirements or minimum/maximum size requirements.
+> > +	If the client wants to leave this to the driver, then it should
+> > +	set sizeimage to 0.
+> >      * - __u32
+> >        - ``bytesperline``
+> >        - Distance in bytes between the leftmost pixels in two adjacent
+> > diff --git a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> > index 71eebfc6d853..0f7771151db9 100644
+> > --- a/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> > +++ b/Documentation/media/uapi/v4l/pixfmt-v4l2.rst
+> > @@ -89,7 +89,16 @@ Single-planar format structure
+> >        - Size in bytes of the buffer to hold a complete image, set by the
+> >  	driver. Usually this is ``bytesperline`` times ``height``. When
+> >  	the image consists of variable length compressed data this is the
+> > -	maximum number of bytes required to hold an image.
+> > +	number of bytes required by the codec to support the worst-case
+> > +	compression scenario.
+> > +
+> > +	For uncompressed images the driver will set the value. For
+> > +	variable length compressed data clients are allowed to set
+> > +	the sizeimage field, but the driver may ignore it and set the
+> > +	value itself, or it may modify the provided value based on
+> > +	alignment requirements or minimum/maximum size requirements.
+> > +	If the client wants to leave this to the driver, then it should
+> > +	set sizeimage to 0.
+> >      * - __u32
+> >        - ``colorspace``
+> >        - Image colorspace, from enum :c:type:`v4l2_colorspace`.
+> > 
 
