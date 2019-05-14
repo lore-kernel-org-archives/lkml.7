@@ -2,102 +2,156 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCCBC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A19420881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:43:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6AE208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfENKnZ (ORCPT
+        id S1726339AbfENKpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:43:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:49549 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfENKnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:43:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 03:43:24 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga008.jf.intel.com with ESMTP; 14 May 2019 03:43:16 -0700
-Date:   Tue, 14 May 2019 13:43:23 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190514104323.GA7591@linux.intel.com>
-References: <5854e66a-950e-1b12-5393-d9cdd15367dc@fortanix.com>
- <CALCETrV7CcDnx1hVtmBnDNABG11GuMqyspJMMpV+zHpVeFu3ow@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
- <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
+        Tue, 14 May 2019 06:45:42 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8186 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725892AbfENKpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:45:42 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9E3799C08F69048496F2;
+        Tue, 14 May 2019 18:45:39 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
+ 18:45:31 +0800
+Subject: Re: [PATCH 2/2] scsi: libsas: delete sas port if expander discover
+ failed
+To:     Jason Yan <yanaijie@huawei.com>, <martin.petersen@oracle.com>,
+        <jejb@linux.vnet.ibm.com>
+References: <20190514024239.47313-1-yanaijie@huawei.com>
+ <20190514024239.47313-2-yanaijie@huawei.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hare@suse.com>, <dan.j.williams@intel.com>, <jthumshirn@suse.de>,
+        <hch@lst.de>, <huangdaode@hisilicon.com>,
+        <chenxiang66@hisilicon.com>, <miaoxie@huawei.com>,
+        <zhaohongjiang@huawei.com>, Linuxarm <linuxarm@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <6b831fd1-825e-19a7-0981-bc182cf4685f@huawei.com>
+Date:   Tue, 14 May 2019 11:45:23 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190513102926.GD8743@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190514024239.47313-2-yanaijie@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
-> I did study through SDK's file format and realized that it does not
-> does make sense after all to embed one.
-> 
-> To implement it properly you would probably need a new syscall (lets say
-> sgx_load_enclave) and also that enclaves are not just executables
-> binaries. It is hard to find a generic format for them as applications
-> range from simply protecting part of an application to running a
-> containter inside enclave.
+On 14/05/2019 03:42, Jason Yan wrote:
+> The sas_port(phy->port) allocated in sas_ex_discover_expander() will not
+> be deleted when the expander failed to discover. This will cause
+> resource leak and a further issue of kernel BUG like below:
+>
+> [159785.843156]  port-2:17:29: trying to add phy phy-2:17:29 fails: it's
+> already part of another port
+> [159785.852144] ------------[ cut here  ]------------
+> [159785.856833] kernel BUG at drivers/scsi/scsi_transport_sas.c:1086!
+> [159785.863000] Internal error: Oops - BUG: 0 [#1] SMP
+> [159785.867866] CPU: 39 PID: 16993 Comm: kworker/u96:2 Tainted: G
+> W  OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
+> [159785.878458] Hardware name: Huawei Technologies Co., Ltd.
+> Hi1620EVBCS/Hi1620EVBCS, BIOS Hi1620 CS B070 1P TA 03/21/2019
+> [159785.889231] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
+> [159785.895224] pstate: 40c00009 (nZcv daif +PAN +UAO)
+> [159785.900094] pc : sas_port_add_phy+0x188/0x1b8
+> [159785.904524] lr : sas_port_add_phy+0x188/0x1b8
+> [159785.908952] sp : ffff0001120e3b80
+> [159785.912341] x29: ffff0001120e3b80 x28: 0000000000000000
+> [159785.917727] x27: ffff802ade8f5400 x26: ffff0000681b7560
+> [159785.923111] x25: ffff802adf11a800 x24: ffff0000680e8000
+> [159785.928496] x23: ffff802ade8f5728 x22: ffff802ade8f5708
+> [159785.933880] x21: ffff802adea2db40 x20: ffff802ade8f5400
+> [159785.939264] x19: ffff802adea2d800 x18: 0000000000000010
+> [159785.944649] x17: 00000000821bf734 x16: ffff00006714faa0
+> [159785.950033] x15: ffff0000e8ab4ecf x14: 7261702079646165
+> [159785.955417] x13: 726c612073277469 x12: ffff00006887b830
+> [159785.960802] x11: ffff00006773eaa0 x10: 7968702079687020
+> [159785.966186] x9 : 0000000000002453 x8 : 726f702072656874
+> [159785.971570] x7 : 6f6e6120666f2074 x6 : ffff802bcfb21290
+> [159785.976955] x5 : ffff802bcfb21290 x4 : 0000000000000000
+> [159785.982339] x3 : ffff802bcfb298c8 x2 : 337752b234c2ab00
+> [159785.987723] x1 : 337752b234c2ab00 x0 : 0000000000000000
+> [159785.993108] Process kworker/u96:2 (pid: 16993, stack limit =
+> 0x0000000072dae094)
+> [159786.000576] Call trace:
+> [159786.003097]  sas_port_add_phy+0x188/0x1b8
+> [159786.007179]  sas_ex_get_linkrate.isra.5+0x134/0x140
+> [159786.012130]  sas_ex_discover_expander+0x128/0x408
+> [159786.016906]  sas_ex_discover_dev+0x218/0x4c8
+> [159786.021249]  sas_ex_discover_devices+0x9c/0x1a8
+> [159786.025852]  sas_discover_root_expander+0x134/0x160
+> [159786.030802]  sas_discover_domain+0x1b8/0x1e8
+> [159786.035148]  process_one_work+0x1b4/0x3f8
+> [159786.039230]  worker_thread+0x54/0x470
+> [159786.042967]  kthread+0x134/0x138
+> [159786.046269]  ret_from_fork+0x10/0x18
+> [159786.049918] Code: 91322300 f0004402 91178042 97fe4c9b (d4210000)
+> [159786.056083] Modules linked in: hns3_enet_ut(OE) hclge(OE) hnae3(OE)
+> hisi_sas_test_hw(OE) hisi_sas_test_main(OE) serdes(OE)
+> [159786.067202] ---[ end trace 03622b9e2d99e196  ]---
+> [159786.071893] Kernel panic - not syncing: Fatal exception
+> [159786.077190] SMP: stopping secondary CPUs
+> [159786.081192] Kernel Offset: disabled
+> [159786.084753] CPU features: 0x2,a2a00a38
+>
+> Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+> Reported-by: Jian Luo <luojian5@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
+> CC: John Garry <john.garry@huawei.com>
+> ---
+>  drivers/scsi/libsas/sas_expander.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+> index 83f2fd70ce76..9f7e2457360e 100644
+> --- a/drivers/scsi/libsas/sas_expander.c
+> +++ b/drivers/scsi/libsas/sas_expander.c
+> @@ -1019,6 +1019,8 @@ static struct domain_device *sas_ex_discover_expander(
+>  		list_del(&child->dev_list_node);
+>  		spin_unlock_irq(&parent->port->dev_list_lock);
+>  		sas_put_device(child);
+> +		sas_port_delete(phy->port);
+> +		phy->port = NULL;
+
+This looks ok.
+
+However, I wonder if we miss something else, and I see this code earlier 
+in sas_ex_discover_expander():
+
+     kref_get(&parent->kref);
+     child->parent = parent;
+     child->port = port;
+     child->iproto = phy->attached_iproto;
+     child->tproto = phy->attached_tproto;
+
+I assume the kref get is for the child referencing the parent. Do we 
+need the kref put? I couldn't see it.
+
+If yes, maybe it should it go in sas_free_device(), along with kfree() 
+for expander device phys.
+
+Thanks,
+John
+
+>  		return NULL;
+>  	}
+>  	list_add_tail(&child->siblings, &parent->ex_dev.children);
+>
 
 
-When I looked at SDK's data structures embedded to the ELF they contain
-data that is also used by the run-time. Thus, run-time would anyway need
-to also parse the file containing the enclave.
 
-There is not same way a single rigid structure of what executable means
-as for normal application and in many cases enclave could be just used
-to seal a portion of the code. In extreme case you might construct
-enclave even on run-time.
-
-I think SIGSTRUCT in a file is the right choice. It is the lowest common
-denominator for enclaves that locks in its contents and is same for any
-enclave. Practicing access control to that file should be enough to
-define whatever security policy required.
-
-I'm still puzzling what kind of changes you were discussing considering
-SGX_IOC_ENCLAVE_ADD_PAGE.
-
-/Jarkko
