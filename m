@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 783B2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1965C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4794620675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:27:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FDC82166E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RpgRH4d8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="GasoZNZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfENI15 (ORCPT
+        id S1726920AbfENI17 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:27:57 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21726 "EHLO
+        Tue, 14 May 2019 04:27:59 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21716 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726710AbfENI1e (ORCPT
+        by vger.kernel.org with ESMTP id S1726702AbfENI1e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 May 2019 04:27:34 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8Q9LX029569;
-        Tue, 14 May 2019 10:27:16 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8Q9Dv029568;
+        Tue, 14 May 2019 10:27:14 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=1o06nvg0yiRzSz6eS9Xrdf2ZM2k+yNHw9AgQjl+bz+c=;
- b=RpgRH4d82Et3MvL/pCs9WabJUUqlFNqAurLvEojtmvEcjqgR9GgNvP7nYc2Eff1E7V2y
- DB/BY3YSyCDOBt35n1lhi43PBk0l23pgjCs9gZw6AAg89H+meJwwPaQxd0/ourNblUJr
- fq/9IqFf7Dx70ymAH3MrcjOFtyso9K+xsGrkLw/XKyi8h8+pea8m2xRw0a6FToioufIR
- WC7PcmbfePHA2PF8m+RBQcwJgCTDx3Lc43LsxYtOmemCr/fg1x6FeeF3dmbca0UV8Zri
- dOjUGOUKK58IOmLyJ0GiuH0PArI9075CwFJCO3klJfM9wTNcjkJ1rGp7TCPR5hay14oY ig== 
+ bh=d6E9IXGLFgoY3c/GRqylXXvGDNAabRYzqsWi4VZvanE=;
+ b=GasoZNZCHE90iax8E6q6am560kKRs96W45HOaOXoVCxl6Pr4utopT+ErfZoD1fNR/BRD
+ QnwF4MqUAOEz3qOz2FJLy1pOrg6LAEj9shd96xm23fqxyebgs6/PFcDC59/5D1luaL3i
+ 7iE3bRqCSxkD0RFvitCuDY1wYVOx6t4vKkE1P4NZl3gjLC5hOYBDEtnxlKTjg5E+esZL
+ YBE462e+tMqCJANQ0M8F0PP/GZaLSax50tNu4AL/WvNkvE0nWV6s0OM305Q6oZ7h1ujD
+ 4IOW/ZsEIZCZKlDihh3hlkERALLx1zzJ6qGv8eQ4joq+/+DprVaodZaTFprW1xXd/EVs pg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdkuyqnnq-1
+        by mx07-00178001.pphosted.com with ESMTP id 2sdkuyqnne-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 14 May 2019 10:27:16 +0200
+        Tue, 14 May 2019 10:27:14 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CC3FE34;
-        Tue, 14 May 2019 08:27:15 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A73781550;
-        Tue, 14 May 2019 08:27:15 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May
- 2019 10:27:15 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6DF6131;
+        Tue, 14 May 2019 08:27:13 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 453D41550;
+        Tue, 14 May 2019 08:27:13 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May
+ 2019 10:27:13 +0200
 Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May 2019 10:27:14
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 14 May 2019 10:27:12
  +0200
 From:   Fabien Dessenne <fabien.dessenne@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -67,9 +67,9 @@ CC:     Fabien Dessenne <fabien.dessenne@st.com>,
         Arnaud Pouliquen <arnaud.pouliquen@st.com>,
         "Ludovic Barre" <ludovic.barre@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 7/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
-Date:   Tue, 14 May 2019 10:27:02 +0200
-Message-ID: <1557822423-22658-8-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v4 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+Date:   Tue, 14 May 2019 10:27:00 +0200
+Message-ID: <1557822423-22658-6-git-send-email-fabien.dessenne@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
 References: <1557822423-22658-1-git-send-email-fabien.dessenne@st.com>
@@ -83,19 +83,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Declare reserved memories shared by the processors for STM32MP157a-dk1
+Declare reserved memories shared by the processors for STM32MP157c-ed1
+board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 42 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
  1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 85a761a..26ce8de 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -27,6 +27,48 @@
- 		reg = <0xc0000000 0x20000000>;
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 626ceb3..acfc5cd 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -21,6 +21,48 @@
+ 		reg = <0xC0000000 0x40000000>;
  	};
  
 +	reserved-memory {
@@ -140,9 +141,9 @@ index 85a761a..26ce8de 100644
 +		};
 +	};
 +
- 	led {
- 		compatible = "gpio-leds";
- 		blue {
+ 	aliases {
+ 		serial0 = &uart4;
+ 	};
 -- 
 2.7.4
 
