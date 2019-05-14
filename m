@@ -2,159 +2,119 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CAEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB76C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8BF214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842182086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfENHCU (ORCPT
+        id S1726513AbfENHDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:02:20 -0400
-Received: from ozlabs.org ([203.11.71.1]:33657 "EHLO ozlabs.org"
+        Tue, 14 May 2019 03:03:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49692 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfENHCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:02:20 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725946AbfENHDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:03:43 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4537sh6nsKz9sMr;
-        Tue, 14 May 2019 17:02:16 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
-In-Reply-To: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
-References: <1557480294-808-1-git-send-email-ego@linux.vnet.ibm.com>
-Date:   Tue, 14 May 2019 17:02:16 +1000
-Message-ID: <874l5xtt6v.fsf@concordia.ellerman.id.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id 84137307D941;
+        Tue, 14 May 2019 07:03:42 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F266160C4D;
+        Tue, 14 May 2019 07:03:28 +0000 (UTC)
+Date:   Tue, 14 May 2019 09:03:26 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Yan Zhao <yan.y.zhao@intel.com>
+Cc:     Erik Skultety <eskultet@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>
+Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
+Message-ID: <20190514090326.2f4288ae.cohuck@redhat.com>
+In-Reply-To: <20190514061235.GC20407@joy-OptiPlex-7040>
+References: <20190506014904.3621-1-yan.y.zhao@intel.com>
+        <20190507151826.502be009@x1.home>
+        <20190509173839.2b9b2b46.cohuck@redhat.com>
+        <20190509154857.GF2868@work-vm>
+        <20190509175404.512ae7aa.cohuck@redhat.com>
+        <20190509164825.GG2868@work-vm>
+        <20190510110838.2df4c4d0.cohuck@redhat.com>
+        <20190510093608.GD2854@work-vm>
+        <20190510114838.7e16c3d6.cohuck@redhat.com>
+        <20190513132804.GD11139@beluga.usersys.redhat.com>
+        <20190514061235.GC20407@joy-OptiPlex-7040>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 14 May 2019 07:03:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
->
-> Subject: Re: [RESEND PATCH] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt
+On Tue, 14 May 2019 02:12:35 -0400
+Yan Zhao <yan.y.zhao@intel.com> wrote:
 
-ps. A "RESEND" implies the patch is unchanged and you're just resending
-it because it was ignored.
+> On Mon, May 13, 2019 at 09:28:04PM +0800, Erik Skultety wrote:
 
-In this case it should have just been "PATCH v2", with a note below the "---"
-saying "v2: Rebased onto powerpc/next ..."
+> > In case of libvirt checking the compatibility, it won't matter how good the
+> > error message in the kernel log is and regardless of how many error states you
+> > want to handle, libvirt's only limited to errno here, since we're going to do
+> > plain read/write, so our internal error message returned to the user is only
+> > going to contain what the errno says - okay, of course we can (and we DO)
+> > provide libvirt specific string, further specifying the error but like I
+> > mentioned, depending on how many error cases we want to distinguish this may be
+> > hard for anyone to figure out solely on the error code, as apps will most
+> > probably not parse the
+> > logs.
+> > 
+> > Regards,
+> > Erik  
+> hi Erik
+> do you mean you are agreeing on defining common errors and only returning errno?
+> 
+> e.g.
+> #define ENOMIGRATION         140  /* device not supporting migration */
+> #define EUNATCH              49  /* software version not match */
+> #define EHWNM                142  /* hardware not matching*/
 
-cheers
+Defining custom error codes is probably not such a good idea... can we
+match to common error codes instead? Do we have a good idea about
+common error categories, anyway?
 
-> During a memory hotplug operations involving resizing of the HPT, we
-> invoke a stop_machine() to perform the resizing. In this code path, we
-> end up recursively taking the cpu_hotplug_lock, first in
-> memory_hotplug_begin() and then subsequently in stop_machine(). This
-> causes the system to hang. With lockdep enabled we get the following
-> error message before the hang.
->
->   swapper/0/1 is trying to acquire lock:
->   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
->
->   but task is already holding lock:
->   (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
->
->   other info that might help us debug this:
->    Possible unsafe locking scenario:
->
->          CPU0
->          ----
->     lock(cpu_hotplug_lock.rw_sem);
->     lock(cpu_hotplug_lock.rw_sem);
->
->    *** DEADLOCK ***
->
-> Fix this issue by
->   1) Requiring all the calls to pseries_lpar_resize_hpt() be made
->      with cpu_hotplug_lock held.
->
->   2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
->      as a consequence of 1)
->
->   3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
->      with cpu_hotplug_lock held.
->
-> Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> ---
->
-> Rebased this one against powerpc/next instead of linux/master.
->
->  arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
->  arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
->  2 files changed, 14 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
-> index 919a861..d07fcafd 100644
-> --- a/arch/powerpc/mm/book3s64/hash_utils.c
-> +++ b/arch/powerpc/mm/book3s64/hash_utils.c
-> @@ -38,6 +38,7 @@
->  #include <linux/libfdt.h>
->  #include <linux/pkeys.h>
->  #include <linux/hugetlb.h>
-> +#include <linux/cpu.h>
->  
->  #include <asm/debugfs.h>
->  #include <asm/processor.h>
-> @@ -1928,10 +1929,16 @@ static int hpt_order_get(void *data, u64 *val)
->  
->  static int hpt_order_set(void *data, u64 val)
->  {
-> +	int ret;
-> +
->  	if (!mmu_hash_ops.resize_hpt)
->  		return -ENODEV;
->  
-> -	return mmu_hash_ops.resize_hpt(val);
-> +	cpus_read_lock();
-> +	ret = mmu_hash_ops.resize_hpt(val);
-> +	cpus_read_unlock();
-> +
-> +	return ret;
->  }
->  
->  DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-> index 1034ef1..2fc9756 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
->  	return 0;
->  }
->  
-> -/* Must be called in user context */
-> +/*
-> + * Must be called in user context. The caller should hold the
-> + * cpus_lock.
-> + */
->  static int pseries_lpar_resize_hpt(unsigned long shift)
->  {
->  	struct hpt_resize_state state = {
-> @@ -913,7 +916,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
->  
->  	t1 = ktime_get();
->  
-> -	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
-> +	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
-> +				     &state, NULL);
->  
->  	t2 = ktime_get();
->  
-> -- 
-> 1.9.4
+(Btw: does libvirt do a generic error-to-description translation, or
+does it match to the context? I.e., can libvirt translate well-defined
+error codes to a useful message for a specific case?)
