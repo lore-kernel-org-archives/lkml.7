@@ -2,105 +2,299 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D50EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED4EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9F1A2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="VjNwcN6Y"
+	by mail.kernel.org (Postfix) with ESMTP id 2134C21530
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfENJps (ORCPT
+        id S1726425AbfENJrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:45:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43097 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfENJps (ORCPT
+        Tue, 14 May 2019 05:47:08 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:32354 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfENJrH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:45:48 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r4so18402022wro.10
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 02:45:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AImHa44p0mDvOU1NWVHOPq3uhogoe7GyDrgo2WEXj/c=;
-        b=VjNwcN6YD8r8chxHjTjcst6CSr1XuWPV3akry0c2LVIIlO2oxGYjnN3DcNSWBl0b/d
-         oEp7GfwJqAJEeljYW8HW+FBJTRJ9fDkORslgbwem3e/dUpvMuGkDLXpzfJxwn+XACW5X
-         OuCDrRzpgTynjSYhsony0A6maZCmOV5IL49Na7ViefXpKF7DykUNn2nnCc3SRtg57O7f
-         0IJDcUh6j/6D6Tq1Te5UnL35aFPK9aeh47tNlGI2Ne8qITWHvd6JyMQUlJ6BhAGjhLu7
-         aAYCrHKaJWq8AZzOHY/galHkdMJrjfHyCaPE4C8plGwAmx2w925YrSUeAf+sjYVz0veE
-         LZCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AImHa44p0mDvOU1NWVHOPq3uhogoe7GyDrgo2WEXj/c=;
-        b=fgYQA5GhVIq15URBM8DUPRxXvoo3n5G1gSQDdy1FIYpOkvjZfDAAURwloXCzuVO6go
-         7PFhnfkVM4dbCexJrm5vhlgAMO8YGqocFzPOBDmKR+wr0OjMV3nNHw8JyCG6yT+LHcAS
-         /hTm+uxbGefc06Ou32+hEj6ChVnGbbhMPSYGkh/xSsTl5LFWDztHEj0kfooJbp5yEHNK
-         mRca8twfjGsNncZ7P36zcXVRtlOFmqSswEVv6cQkJeOae0DLIagTLBEqn9UVFM1XlxYH
-         kXcfBjjrx80s73EI5q+JtkPBh+MxSdmTT0NdcHl1CIjG2q8GZwnVbgmVY1Bd+miHmgTx
-         dsnQ==
-X-Gm-Message-State: APjAAAX3sSQS6s+N29L5Zimf792cxb2A6pDF1sx6A/cjWiY8+wKqmMrm
-        qQpC1gmceODe8M1CBuH4lgqI/w==
-X-Google-Smtp-Source: APXvYqzSVHJmToHiREG3mWCkBwVsO8AwYFyO/y+AxQxPWtyxHM5C4VI+AE7HytatFMM38AV+Ys7+ZA==
-X-Received: by 2002:a5d:688a:: with SMTP id h10mr20000592wru.211.1557827146709;
-        Tue, 14 May 2019 02:45:46 -0700 (PDT)
-Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.googlemail.com with ESMTPSA id n4sm5319216wmb.22.2019.05.14.02.45.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 02:45:46 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: meson: g12a: set uart_ao clocks
-Date:   Tue, 14 May 2019 11:45:37 +0200
-Message-Id: <20190514094537.8765-1-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 14 May 2019 05:47:07 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x4E9kZNO034854;
+        Tue, 14 May 2019 17:46:35 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 6E7F8B0A48767D46D953;
+        Tue, 14 May 2019 17:46:35 +0800 (CST)
+In-Reply-To: <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com>
+References: <1556092536-17095-1-git-send-email-masonccyang@mxic.com.tw> <1556092536-17095-4-git-send-email-masonccyang@mxic.com.tw> <20190424212356.GA27103@bogus> <65853dc2-6f3c-1494-7e72-54877797cdd2@gmail.com> <20190507125730.GD29524@dell> <OF08A5650B.8AE8977C-ON482583F4.000E5B1E-482583F4.000F7215@mxic.com.tw> <d229b19e-351c-c576-b5c4-716d10dad1a0@gmail.com> <20190508061119.GB7627@dell> <OFE86674B9.06D723A0-ON482583F5.000AD50C-482583F5.000BA075@mxic.com.tw> <a05cff8f-7df2-1938-c0e7-f9366bece607@cogentembedded.com> <OFB19BCE91.6EBBAA77-ON482583F6.000234E2-482583F6.00061290@mxic.com.tw> <CAMuHMdUP8KU3Dbv6cwOvrY0hWOcm1xqVcsi20+GvazYMDLGGZg@mail.gmail.com> <OFD932ABFC.E3FFCEB8-ON482583F9.003412B1-482583F9.0034D5CA@mxic.com.tw> <b51d1cb7-b3b5-208f-ab4c-145ecb57805d@cogentembedded.com>
+To:     "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Lee Jones" <lee.jones@linaro.org>
+Cc:     "Boris Brezillon" <bbrezillon@kernel.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
+        "Lee Jones" <lee.jones@linaro.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Linux-Renesas" <linux-renesas-soc@vger.kernel.org>,
+        "linux-spi" <linux-spi@vger.kernel.org>,
+        "Marek Vasut" <marek.vasut@gmail.com>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Rob Herring" <robh@kernel.org>, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v12 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
+ MFD bindings
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+X-KeepSent: AD9AA573:86373900-482583FA:0034781A;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OFAD9AA573.86373900-ON482583FA.0034781A-482583FA.0035B40C@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 14 May 2019 17:46:35 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/14 PM 05:46:35,
+        Serialize complete at 2019/05/14 PM 05:46:35
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x4E9kZNO034854
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the AO clock controller is available, make the uarts of the
-always-on domain claim the appropriate peripheral clock.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hello,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index b2f08fc96568..ca01064a771a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -708,7 +708,7 @@
- 					     "amlogic,meson-ao-uart";
- 				reg = <0x0 0x3000 0x0 0x18>;
- 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART>, <&xtal>;
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
-@@ -718,7 +718,7 @@
- 					     "amlogic,meson-ao-uart";
- 				reg = <0x0 0x4000 0x0 0x18>;
- 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
-+				clocks = <&xtal>, <&clkc_AO CLKID_AO_UART2>, <&xtal>;
- 				clock-names = "xtal", "pclk", "baud";
- 				status = "disabled";
- 			};
--- 
-2.20.1
+
+> >> There's precedence for such constructs being an MFD: please see
+> >> drivers/mfd/at91-usart.c, which registers a single MFD cell for 
+either
+> >> serial or SPI.
+> 
+>    Thanks fir your example, Geert! :-)
+> 
+> > okay, many thanks for your information.
+> > 
+> > How about to patch RPF-IF dts to:
+> > -------------------------------------------------------------->
+> > 
+> > Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
+> > ---------------------------------------------------------
+> > 
+> >   RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
+> > 
+> >   Required properties:
+> >   - compatible: should be an SoC-specific compatible value, followed 
+by
+> >                   "renesas,rcar-gen3-rpc" as a fallback.
+> >                   supported SoC-specific values are:
+> >                   "renesas,r8a77995-rpc"  (R-Car D3)
+> >   - reg: should contain three register areas:
+> >           first for the base address of RPC-IF registers,
+> 
+>    I'd drop "the base address" here.
+
+okay.
+
+> 
+> >           second for the direct mapping read mode and
+> >           third for the write buffer area.
+> >   - reg-names: should contain "regs", "dirmap" and "wbuf"
+> >   - clocks: should contain 1 entries for the module's clock
+> >   - clock-names: should contain "rpc"
+> 
+>    I suspect we'd need the RPC/RPCD2 clocks mentioned as well (not sure 
+yet)...
+
+Need it ?
+RPCD2 is derived from RPC and it's value is half of RPC,
+i.e., RPC = 160MHz, RPCD2 = 80 MHz
+
+
+>    And how about "power-domains", "resets" (seen in the example below),
+> also what about #address-cells & #size-cells?
+> 
+> > 
+> >   Example:
+> 
+>    Could you please indent with 1 or 2 tabs where you used 8 or 16 
+spaces?
+> 
+> >   - SPI mode:
+> > 
+> >           rpc: rpc-if@ee200000 {
+> 
+>    The node names should be generic, based on the device class. And in 
+this
+> case I'd like to use "spi@ee200000" as otherwise dtc keeps bitching like 
+below:
+
+okay, patch to
+
+rpc_if: spi@<...>
+
+> 
+> arch/arm64/boot/dts/renesas/r8a77980.dtsi:1344.21-1359.5: Warning 
+(spi_bus_bridge):
+> /soc/rpc@ee200000: node name for SPI buses should be 'spi'
+>   also defined at 
+arch/arm64/boot/dts/renesas/r8a77980-condor.dts:283.6-343.3
+> arch/arm64/boot/dts/renesas/r8a77980-condor.dtb: Warning (spi_bus_reg):
+> Failed prerequisite 'spi_bus_bridge'
+> 
+> 
+> >   - HF mode:
+> >           rpc: rpc-if@ee200000 {
+> 
+>    Again, spi@<...>.
+
+what about rpc_if: hf@<...>
+
+
+> 
+> >                   compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
+> >                   reg = <0 0xee200000 0 0x200>, <0 0x08000000 0 
+0x4000000>,
+> >                         <0 0xee208000 0 0x100>;
+> >                   reg-names = "regs", "dirmap", "wbuf";
+> >                   clocks = <&cpg CPG_MOD 917>;
+> >                   clock-names = "rpc";
+> >                   power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+> >                   resets = <&cpg 917>;
+> >                   #address-cells = <1>;
+> >                   #size-cells = <1>;
+> > 
+> >                   flash@0 {
+> >                           compatible = "cfi-flash";
+> 
+>    The working HF implementation has "cypress,hyperflash" before 
+"cfi-flash".
+> 
+> >                           reg = <0 0x4000000>;
+> >                   };
+> >           };
+> > 
+> > --------------------------------------------------------------<
+> > 
+> > Is it OK ?
+> 
+>    Yeah, seems good (assuming you fix the issues above).
+
+Patch new DTS to
+===============================================================> 
+
++Renesas R-Car Gen3 RPC-IF controller Device Tree Bindings
++---------------------------------------------------------
++
++RPC-IF supports both SPI NOR and HyperFlash (CFI-compliant flash)
++
++Required properties:
++- compatible: should be an SoC-specific compatible value, followed by
++                                "renesas,rcar-gen3-rpc" as a fallback.
++                                supported SoC-specific values are:
++                                "renesas,r8a77995-rpc"          (R-Car 
+D3)
++- reg: should contain three register areas:
++                first for RPC-IF registers,
++                second for the direct mapping read mode and
++                third for the write buffer area.
++- reg-names: should contain "regs", "dirmap" and "wbuf"
++- clocks: should contain 1 entries for the module's clock
++- clock-names: should contain "rpc"
++- #address-cells: should be 1
++- #size-cells: should be 0
++
++Example:
++- SPI mode:
++
++                rpc_if: spi@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"jedec,spi-nor";
++                                                reg = <0>;
++                                                spi-max-frequency = 
+<40000000>;
++                                                spi-tx-bus-width = <1>;
++                                                spi-rx-bus-width = <1>;
++                                };
++                };
++
++- HF mode:
++                rpc_if: hf@ee200000 {
++                                compatible = "renesas,r8a77995-rpc", 
+"renesas,rcar-gen3-rpc";
++                                reg = <0 0xee200000 0 0x200>, <0 
+0x08000000 0 0x4000000>,
++                                      <0 0xee208000 0 0x100>;
++                                reg-names = "regs", "dirmap", "wbuf";
++                                clocks = <&cpg CPG_MOD 917>;
++                                clock-names = "rpc";
++                                power-domains = <&sysc 
+R8A77995_PD_ALWAYS_ON>;
++                                resets = <&cpg 917>;
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++
++                                flash@0 {
++                                                compatible = 
+"cypress,hyperflash", "cfi-flash";
++                                                reg = <0>;
++                                };
++                };
+
+=======================================================================<
+
+OK ?
+
+
+thanks & best regards,
+Mason
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
