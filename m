@@ -2,249 +2,130 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FFDC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B0CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB7CA20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g4qKFaFE"
+	by mail.kernel.org (Postfix) with ESMTP id E415820881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfENUyT (ORCPT
+        id S1726553AbfENUyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:54:19 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46457 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfENUyT (ORCPT
+        Tue, 14 May 2019 16:54:54 -0400
+Received: from mailoutvs12.siol.net ([185.57.226.203]:33943 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726362AbfENUyx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:54:19 -0400
-Received: by mail-pg1-f196.google.com with SMTP id t187so146004pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=XygOuwoFm7gzQhhUOvWTZyqOBt7ptJW7nbpWmuwFcVs=;
-        b=g4qKFaFE7Yh7H28KycQARZrVqeKj92RMFbA+a72bVGE1wixE+szHEVqZsfsCy/c0sr
-         gvMzBI+cl1YducKsOuGaRhPvvo8n9HH5M0xOHiViD5KfsMxdIS9cpguok8JG7ChAcHGU
-         RDtXuaLArDabdyJmiJY2aa5NeS+f1bjEcUhBO2Nz+HSP3Ovqxtt5GPMBfcfs+VgkRthb
-         iHpOF/lPVIIEEAHwrrk7Ay8SQKzd0mL+GynkKMuKDNpOieChw+I5hnv++0884h7Mmiym
-         YC6Zi5Hm6rVagGpO5c910E3PjbiUk/DNb9WUv3huqAImMMW6T6uHIgzQDEXt/Q47cqIt
-         jnTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=XygOuwoFm7gzQhhUOvWTZyqOBt7ptJW7nbpWmuwFcVs=;
-        b=ciZz9Zx/BkXQQq2zZ7x8o6TdbRzU2yFLemn0cEaRl93u2rNFpwykFFrIIZDMUICyWQ
-         ruUBPPL2q59iEe1KWpm48+8qrSbz+heuzOBkusFKWp2FLhrGKXL9qih+5tqzrzYZCumK
-         1kWDJIM+0N2dojDFs1luH2q2qLgqzucQUgd8Zh/LGiLQAu/tQg8Z6t0oeY7bruGTZZEE
-         c36F1rJC00qTaOuNyQc7cWNbfnQ8rLS1Y9uDxu1uYO2m6NhF470SlK/Uw1IB1LhBqaVy
-         qKQ79JIPqVjKthZyNjPZPZABTyb5pXZBe67dkHQzVTZGfvFW1hiphbzAwvDMepbAHES2
-         2Mmw==
-X-Gm-Message-State: APjAAAWKVyW3kb6NOFgqx5i1PRe1tVXr8c/P3M9twIcAeQR4aEmVPeaj
-        cELA1z3vJKahI6gLIIdKM1MYng==
-X-Google-Smtp-Source: APXvYqwd+Jkh7md+hSBxZPhzl0i1uY2dXHZTreHilHxyWOiiHKFUut9EjRbN0xnr1SmnWhFYXdyBgA==
-X-Received: by 2002:a63:2943:: with SMTP id p64mr40698957pgp.151.1557867257289;
-        Tue, 14 May 2019 13:54:17 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id j184sm2017pge.83.2019.05.14.13.54.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 13:54:16 -0700 (PDT)
-Date:   Tue, 14 May 2019 13:54:09 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190514205409.GA154649@google.com>
-References: <20190509015856.GB7031@mit.edu>
- <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
- <2aed675e-0408-c812-3e1a-b90710c528f2@gmail.com>
+        Tue, 14 May 2019 16:54:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 72127521E15;
+        Tue, 14 May 2019 22:54:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pn1ki_A1-MXA; Tue, 14 May 2019 22:54:51 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 11E89521E6F;
+        Tue, 14 May 2019 22:54:51 +0200 (CEST)
+Received: from localhost.localdomain (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id A83ED521E15;
+        Tue, 14 May 2019 22:54:50 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     maxime.ripard@bootlin.com, wens@csie.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: [PATCH v2] arm64: dts: allwinner: a64: orangepi-win: Add wifi and bluetooth nodes
+Date:   Tue, 14 May 2019 22:54:45 +0200
+Message-Id: <20190514205445.11591-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2aed675e-0408-c812-3e1a-b90710c528f2@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 02:52:59PM -0700, Frank Rowand wrote:
+The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
 
-Sorry, I forgot to get back to this thread.
+WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
+in a 4 wire configuration. Same as the WiFi side, due to being the same
+chip and package, DLDO2 provides overall power via VBAT, and DLDO4
+provides I/O power via VDDIO. The RTC clock output provides the LPO low
+power clock at 32.768 kHz.
 
-> On 5/9/19 3:20 PM, Logan Gunthorpe wrote:
-> > 
-> > 
-> > On 2019-05-09 3:42 p.m., Theodore Ts'o wrote:
-> >> On Thu, May 09, 2019 at 11:12:12AM -0700, Frank Rowand wrote:
-> >>>
-> >>>     "My understanding is that the intent of KUnit is to avoid booting a kernel on
-> >>>     real hardware or in a virtual machine.  That seems to be a matter of semantics
-> >>>     to me because isn't invoking a UML Linux just running the Linux kernel in
-> >>>     a different form of virtualization?
-> >>>
-> >>>     So I do not understand why KUnit is an improvement over kselftest.
-> >>>
-> >>>     ...
-> >>> 
-> >>> What am I missing?"
-> >> 
-> >> One major difference: kselftest requires a userspace environment;
-> >> it starts systemd, requires a root file system from which you can
-> >> load modules, etc.  Kunit doesn't require a root file system;
-> >> doesn't require that you start systemd; doesn't allow you to run
-> >> arbitrary perl, python, bash, etc. scripts.  As such, it's much
-> >> lighter weight than kselftest, and will have much less overhead
-> >> before you can start running tests.  So it's not really the same
-> >> kind of virtualization.
-> 
-> I'm back to reply to this subthread, after a delay, as promised.
-> 
-> 
-> > I largely agree with everything Ted has said in this thread, but I
-> > wonder if we are conflating two different ideas that is causing an
-> > impasse. From what I see, Kunit actually provides two different
-> > things:
-> 
-> > 1) An execution environment that can be run very quickly in userspace
-> > on tests in the kernel source. This speeds up the tests and gives a
-> > lot of benefit to developers using those tests because they can get
-> > feedback on their code changes a *lot* quicker.
-> 
-> kselftest in-kernel tests provide exactly the same when the tests are
-> configured as "built-in" code instead of as modules.
-> 
-> 
-> > 2) A framework to write unit tests that provides a lot of the same
-> > facilities as other common unit testing frameworks from userspace
-> > (ie. a runner that runs a list of tests and a bunch of helpers such
-> > as KUNIT_EXPECT_* to simplify test passes and failures).
-> 
-> > The first item from Kunit is novel and I see absolutely no overlap
-> > with anything kselftest does. It's also the valuable thing I'd like
-> > to see merged and grow.
-> 
-> The first item exists in kselftest.
-> 
-> 
-> > The second item, arguably, does have significant overlap with
-> > kselftest. Whether you are running short tests in a light weight UML
-> > environment or higher level tests in an heavier VM the two could be
-> > using the same framework for writing or defining in-kernel tests. It
-> > *may* also be valuable for some people to be able to run all the UML
-> > tests in the heavy VM environment along side other higher level
-> > tests.
-> > 
-> > Looking at the selftests tree in the repo, we already have similar
-> > items to what Kunit is adding as I described in point (2) above.
-> > kselftest_harness.h contains macros like EXPECT_* and ASSERT_* with
-> > very similar intentions to the new KUNIT_EXECPT_* and KUNIT_ASSERT_*
-> > macros.
-> 
-> I might be wrong here because I have not dug deeply enough into the
-> code!!!  Does this framework apply to the userspace tests, the
-> in-kernel tests, or both?  My "not having dug enough GUESS" is that
-> these are for the user space tests (although if so, they could be
-> extended for in-kernel use also).
-> 
-> So I think this one maybe does not have an overlap between KUnit
-> and kselftest.
+This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
+missing LPO clock on the WiFi side. PCM connection also exists for
+Bluetooth audio, but it's not used here.
 
-You are right, Frank: the EXPECT_* and ASSERT_* in kselftest_harness.h
-is for userspace only. kselftest_harness.h provides it's own main method
-for running the tests[1]. It also makes assumptions around having access
-to this main method[2].
+Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
+audio. While module supports even higher speeds, currently sunxi clock
+driver doesn't support higher speed.
 
-There actually isn't that much infrastructure that that I can reuse
-there. I can't even reuse the API definitions because they only pass the
-context object (for me it is struct kunit, for them it is their fixture)
-that they use to their test cases.
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+---
+Changes from v1:
+- fix commit log by stating that current clock driver doesn't support
+  higher speeds instead of UART driver
 
-> > However, the number of users of this harness appears to be quite
-> > small. Most of the code in the selftests tree seems to be a random
-> > mismash of scripts and userspace code so it's not hard to see it as
-> > something completely different from the new Kunit:
-> > $ git grep --files-with-matches kselftest_harness.h *
-> > Documentation/dev-tools/kselftest.rst
-> > MAINTAINERS
-> > tools/testing/selftests/kselftest_harness.h
-> > tools/testing/selftests/net/tls.c
-> > tools/testing/selftests/rtc/rtctest.c
-> > tools/testing/selftests/seccomp/Makefile
-> > tools/testing/selftests/seccomp/seccomp_bpf.c
-> > tools/testing/selftests/uevent/Makefile
-> > tools/testing/selftests/uevent/uevent_filtering.c
-> 
-> 
-> > Thus, I can personally see a lot of value in integrating the kunit
-> > test framework with this kselftest harness. There's only a small
-> > number of users of the kselftest harness today, so one way or another
-> > it seems like getting this integrated early would be a good idea.
-> > Letting Kunit and Kselftests progress independently for a few years
-> > will only make this worse and may become something we end up
-> > regretting.
-> 
-> Yes, this I agree with.
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-I think I agree with this point. I cannot see any reason not to have
-KUnit tests able to be run from the kselftest harness.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/=
+arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+index 510f661229dc..5ef3c62c765e 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
+@@ -109,6 +109,8 @@
+ 	wifi_pwrseq: wifi_pwrseq {
+ 		compatible =3D "mmc-pwrseq-simple";
+ 		reset-gpios =3D <&r_pio 0 8 GPIO_ACTIVE_LOW>; /* PL8 */
++		clocks =3D <&rtc 1>;
++		clock-names =3D "ext_clock";
+ 	};
+ };
+=20
+@@ -170,6 +172,14 @@
+ 	bus-width =3D <4>;
+ 	non-removable;
+ 	status =3D "okay";
++
++	brcmf: wifi@1 {
++		reg =3D <1>;
++		compatible =3D "brcm,bcm4329-fmac";
++		interrupt-parent =3D <&r_pio>;
++		interrupts =3D <0 7 IRQ_TYPE_LEVEL_LOW>; /* PL7 */
++		interrupt-names =3D "host-wake";
++	};
+ };
+=20
+ &ohci0 {
+@@ -342,7 +352,20 @@
+ &uart1 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&uart1_pins>, <&uart1_rts_cts_pins>;
++	uart-has-rtscts;
+ 	status =3D "okay";
++
++	bluetooth {
++		compatible =3D "brcm,bcm43438-bt";
++		max-speed =3D <1500000>;
++		clocks =3D <&rtc 1>;
++		clock-names =3D "lpo";
++		vbat-supply =3D <&reg_dldo2>;
++		vddio-supply =3D <&reg_dldo4>;
++		device-wakeup-gpios =3D <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++		host-wakeup-gpios =3D <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		shutdown-gpios =3D <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PL4 */
++	};
+ };
+=20
+ /* On Pi-2 connector, RTS/CTS optional */
+--=20
+2.21.0
 
-Conceptually, I think we are mostly in agreement that kselftest and
-KUnit are distinct things. Like Shuah said, kselftest is a black box
-regression test framework, KUnit is a white box unit testing framework.
-So making kselftest the only interface to use KUnit would be a mistake
-in my opinion (and I think others on this thread would agree).
-
-That being said, when you go to run kselftest, I think there is an
-expectation that you run all your tests. Or at least that kselftest
-should make that possible. From my experience, usually when someone
-wants to run all the end-to-end tests, *they really just want to run all
-the tests*. This would imply that all your KUnit tests get run too.
-
-Another added benefit of making it possible for the kselftest harness to
-run KUnit tests would be that it would somewhat guarantee that the
-interfaces between the two would remain compatible meaning that test
-automation tools like CI and presubmit systems are more likely to be
-easy to integrate in each and less likely to break for either.
-
-Would anyone object if I explore this in a follow-up patchset? I have an
-idea of how I might start, but I think it would be easiest to explore in
-it's own patchset. I don't expect it to be a trivial amount of work.
-
-Cheers!
-
-[1] https://elixir.bootlin.com/linux/v5.1.2/source/tools/testing/selftests/kselftest_harness.h#L329
-[2] https://elixir.bootlin.com/linux/v5.1.2/source/tools/testing/selftests/kselftest_harness.h#L681
