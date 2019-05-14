@@ -2,97 +2,95 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28134C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0B9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE3521473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D343B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="JOFFcrn8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gekg/Ime"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfENFfu (ORCPT
+        id S1726755AbfENFjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:35:50 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51758 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726613AbfENFfu (ORCPT
+        Tue, 14 May 2019 01:39:53 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34185 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENFjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:35:50 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0DF6783640;
-        Tue, 14 May 2019 17:35:46 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1557812146;
-        bh=wVBdohI/n7MSYwyFNnz215vNMEvAa3jglAQK0ECa5I4=;
-        h=From:To:Cc:Subject:Date;
-        b=JOFFcrn8RIENx/dQf01nsQ/ykId81TYnfgoIUsH/wt1MwT9B1+5afXa/3TBKJeBRy
-         AEEnqOGKWbuAI5mzdKATGmCeNGUm1069Km3FOmPYEv4mrQiIp/x1++bVRhcJrkv5kN
-         aLb0ZBSKBwDslYoKxcgiwnVwbYBhSwlvEmpN1ct7v97AwYUH8fmy5SkBxug0sevxmT
-         QThL50rqMFLrIZhhvrfa4GsCzA1I4iNrVrxxJyXQg6O2Fwem8t+sbukrz2Tk9K50Oj
-         fWDDczmwiSTZlHV3JDjsHQGFw7218LfrzsIFWGGUXuh9x+2ySHzLGWrEQ7nxZsy2ks
-         Igr8lOeHCDn1g==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5cda53b20000>; Tue, 14 May 2019 17:35:46 +1200
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
-        by smtp (Postfix) with ESMTP id 5142F13ED45;
-        Tue, 14 May 2019 17:35:46 +1200 (NZST)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id CB2A11E1D5B; Tue, 14 May 2019 17:35:45 +1200 (NZST)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     johan@kernel.org, gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] USB: serial: pl2303: add Allied Telesis VT-Kit3
-Date:   Tue, 14 May 2019 17:35:42 +1200
-Message-Id: <20190514053542.28047-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.21.0
+        Tue, 14 May 2019 01:39:53 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h1so9808550qtp.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2019 22:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LX0XaYHmt6JczsEsNVrSRTTBxFWPZ8BYZiJCI1WPlfs=;
+        b=Gekg/ImeDsjdwbPk3/9Rec4Nz+REdcTbuknK61Hxcqut8GFddxQb8OhftCzpwpFmzx
+         SLqT9+k7QiUXSoifO0lm/QfE2jSK94dfcZgdaAM9mYzow8Ie+evrF/C4+bhC+QxdEK+g
+         RtwGV6qJSY3Det823v7PxQf3yt31hBY7GSxVt7ziPaoS7hNoQ4+9+4XCPMNSeBcJXXhS
+         WDqCHNsD9juiWMQFGLajowPD8rNgf6+EJNzXcblGHVU1BK3vjalBgcWebTmxMus4WD7U
+         w9PPt6y39A+fAGPB9imEHReWkn+8GrmuSIghIZ/UlQLw1/PDuyKZO+WVg4EeUF+GUF3O
+         1aVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LX0XaYHmt6JczsEsNVrSRTTBxFWPZ8BYZiJCI1WPlfs=;
+        b=nJD/P3ojeaIDX4bDDPqFzUfxIyn/hjiFZxwTdeBajKw8NILgWh20DlkxLXD6YXUQXV
+         dtWIqBaTRrqK4npmPCp7aOqVP1XlamHM3167UBWTYOwS07MLNcNBIxPBgPzej83Us8WB
+         IHWwj6gtTT1ekE3eFullbQkn8MdIkpbdhj1eSQgtDuGycwWBXu6c5mKXj/gatgJt3cXH
+         clSarQolG35cX0uhBFTaQgi4z24LyUCCJmSBan23oQWr6sqwm0aztWUk3FrK0sipZOpS
+         ktyGcBFSRSiz2SUDLW0iTHCUAVEl383V2Gj1PsyfC7yUu3BguA5jbf1CxVYZUrVi6rYv
+         Nujw==
+X-Gm-Message-State: APjAAAWpHepPSSVErHmNJ8kregOoaHAwh0aRcAnF88fzXVAp4CzEzUOh
+        daH5YrMTC+gWcWOMZtb5QO1ZjNhu3cilve2fM68=
+X-Google-Smtp-Source: APXvYqxoQmjPOX4z5nn8aA71WQnVuMX6mmygZa/Jn16QvBTxak3EDI/Irrk3FF8KmKluSoI68DkTq3eLvSlzUS57szg=
+X-Received: by 2002:a0c:ee28:: with SMTP id l8mr26055818qvs.67.1557812392608;
+ Mon, 13 May 2019 22:39:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20180529205048.39694-1-jaegeuk@kernel.org>
+In-Reply-To: <20180529205048.39694-1-jaegeuk@kernel.org>
+From:   Ju Hyung Park <qkrwngud825@gmail.com>
+Date:   Tue, 14 May 2019 14:39:41 +0900
+Message-ID: <CAD14+f154_t1-TbbSDb9xV_ikDAWfF+8H7aOSK4VF8UmqWRDAQ@mail.gmail.com>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: issue discard commands proactively in
+ high fs utilization
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is adds the vendor and device id for the AT-VT-Kit3 which is a
-pl2303-based device.
+On Wed, May 30, 2018 at 5:51 AM Jaegeuk Kim <jaegeuk@kernel.org> wrote:
+>
+> In the high utilization like over 80%, we don't expect huge # of large discard
+> commands, but do many small pending discards which affects FTL GCs a lot.
+> Let's issue them in that case.
+>
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 6e40e536dae0..8c1f7a6bf178 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -915,6 +915,38 @@ static void __check_sit_bitmap(struct f2fs_sb_info *sbi,
+> +                       dpolicy->max_interval = DEF_MIN_DISCARD_ISSUE_TIME;
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/usb/serial/pl2303.c | 1 +
- drivers/usb/serial/pl2303.h | 3 +++
- 2 files changed, 4 insertions(+)
+Isn't this way too aggressive?
 
-diff --git a/drivers/usb/serial/pl2303.c b/drivers/usb/serial/pl2303.c
-index 55122ac84518..d7abde14b3cf 100644
---- a/drivers/usb/serial/pl2303.c
-+++ b/drivers/usb/serial/pl2303.c
-@@ -106,6 +106,7 @@ static const struct usb_device_id id_table[] =3D {
- 	{ USB_DEVICE(SANWA_VENDOR_ID, SANWA_PRODUCT_ID) },
- 	{ USB_DEVICE(ADLINK_VENDOR_ID, ADLINK_ND6530_PRODUCT_ID) },
- 	{ USB_DEVICE(SMART_VENDOR_ID, SMART_PRODUCT_ID) },
-+	{ USB_DEVICE(AT_VENDOR_ID, AT_VTKIT3_PRODUCT_ID) },
- 	{ }					/* Terminating entry */
- };
-=20
-diff --git a/drivers/usb/serial/pl2303.h b/drivers/usb/serial/pl2303.h
-index 559941ca884d..b0175f17d1a2 100644
---- a/drivers/usb/serial/pl2303.h
-+++ b/drivers/usb/serial/pl2303.h
-@@ -155,3 +155,6 @@
- #define SMART_VENDOR_ID	0x0b8c
- #define SMART_PRODUCT_ID	0x2303
-=20
-+/* Allied Telesis VT-Kit3 */
-+#define AT_VENDOR_ID		0x0caa
-+#define AT_VTKIT3_PRODUCT_ID	0x3001
---=20
-2.21.0
+Discard thread will wake up on 50ms interval just because the user has
+used 80% of space.
+60,000ms vs 50ms is too much of a stark difference.
 
+I feel something like 10 seconds(10,000ms) could be a much more
+reasonable choice than this.
+
+Thanks.
