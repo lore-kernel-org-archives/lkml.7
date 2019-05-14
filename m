@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30866C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952A62086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013A62086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HPhNvCZi"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="LfhBMaLS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfENPpn (ORCPT
+        id S1726681AbfENPpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:45:43 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:35770 "EHLO
+        Tue, 14 May 2019 11:45:46 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:35836 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726044AbfENPpl (ORCPT
+        by vger.kernel.org with ESMTP id S1726467AbfENPpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:45:41 -0400
+        Tue, 14 May 2019 11:45:42 -0400
 Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 59AF1C0174;
-        Tue, 14 May 2019 15:45:31 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6ED6BC01BF;
+        Tue, 14 May 2019 15:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557848731; bh=Ky3auTImAfe37zrIkXpYgTd4Sk3t6wEQs0RE5Rcse8o=;
+        t=1557848732; bh=cWCfFRRT85g4HpsA7Tx1dUIhm7cKnK5Zaiec1rLJZsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=HPhNvCZiExgGYqGUf6fV6Zhe7k4V7e9KGiMNj4lLHxmp3KlqKOngpSyFxj24/yPQg
-         T2vpxJOhD768iSiNs28K0Xm33Nsf3vH8wwotw6AKzW/R93NqN5F0dzTaRsiTO5rBHE
-         wEoKeizaqLSea5A9vwWNL2Szf/3VPKk+YZAhhagfUe+AyqdaAvzWZTxSn4ex7UWOcM
-         K8iqlXrVcA93JU5cvFoynz2xZ8xI+KDcWHOfJz0ipq6SEoAUtFZECxSAC9YVmQlzJI
-         ndcDEfBWTglM7rnQ0bDMvpTGuXlRJYteGhvjhAPJV77G4FTswQbXlOEFYoskDh77SO
-         QkvKrHXjvNM2w==
+        b=LfhBMaLS52tLy7CY7u944844ffvIDEusvxg7xzxi//hYLKDlZgpMihPVHpV4LG/dJ
+         J6QosUCS5973faj32T1BJcozdbhdHBXyldireOjyLUJFe4UfwRjWECsKugrZMh1/AZ
+         rAB2tULoSo0MRNcXEwnozFnFlscWs0pdMh5+f7gZjFR5sqh9KirEnLU4BGMEU+kuya
+         9Owd1l+d3yL1zqv/slIImD8wE3LUxRLqz8WVvpZlBWzXKKpYRoV17oppJE8kPPHtj1
+         4wOiIxS1U0yRDZ6HMCRBKwDDze17S1zQBXTF8Z5OZmvRxWzqKOgR52YU3ksDziTTM0
+         /hGlEECwM3Ouw==
 Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 10FABA0242;
-        Tue, 14 May 2019 15:45:39 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 99E44A00AB;
+        Tue, 14 May 2019 15:45:41 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id 2F0D23EA14;
-        Tue, 14 May 2019 17:45:39 +0200 (CEST)
+        by de02.synopsys.com (Postfix) with ESMTP id 13B523EA3D;
+        Tue, 14 May 2019 17:45:40 +0200 (CEST)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -52,9 +52,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [RFC net-next v2 02/14] net: stmmac: dwmac100: Add MAC loopback support
-Date:   Tue, 14 May 2019 17:45:24 +0200
-Message-Id: <74f003170161809eb914504c18311eaf7b0a617a.1557848472.git.joabreu@synopsys.com>
+Subject: [RFC net-next v2 13/14] net: stmmac: dwmac1000: Clear unused address entries
+Date:   Tue, 14 May 2019 17:45:35 +0200
+Message-Id: <2f3b629b1f41997f804441f90d8a25f5d5e9f797.1557848472.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
 References: <cover.1557848472.git.joabreu@synopsys.com>
@@ -65,8 +65,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for the addition of stmmac selftests we implement the MAC
-loopback callback in dwmac100 core.
+In case we don't use a given address entry we need to clear it because
+it could contain previous values that are no longer valid.
+
+Found out while running stmmac selftests.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -75,40 +77,26 @@ Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-index b735143987e1..d621b5189c41 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_core.c
-@@ -160,6 +160,18 @@ static void dwmac100_pmt(struct mac_device_info *hw, unsigned long mode)
- 	return;
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index bc91af6c01b6..ebe41dd09bab 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -217,6 +217,12 @@ static void dwmac1000_set_filter(struct mac_device_info *hw,
+ 					    GMAC_ADDR_LOW(reg));
+ 			reg++;
+ 		}
++
++		while (reg <= perfect_addr_number) {
++			writel(0, ioaddr + GMAC_ADDR_HIGH(reg));
++			writel(0, ioaddr + GMAC_ADDR_LOW(reg));
++			reg++;
++		}
+ 	}
  
-+static void dwmac100_set_mac_loopback(void __iomem *ioaddr, bool enable)
-+{
-+	u32 value = readl(ioaddr + MAC_CONTROL);
-+
-+	if (enable)
-+		value |= MAC_CONTROL_OM;
-+	else
-+		value &= ~MAC_CONTROL_OM;
-+
-+	writel(value, ioaddr + MAC_CONTROL);
-+}
-+
- const struct stmmac_ops dwmac100_ops = {
- 	.core_init = dwmac100_core_init,
- 	.set_mac = stmmac_set_mac,
-@@ -171,6 +183,7 @@ const struct stmmac_ops dwmac100_ops = {
- 	.pmt = dwmac100_pmt,
- 	.set_umac_addr = dwmac100_set_umac_addr,
- 	.get_umac_addr = dwmac100_get_umac_addr,
-+	.set_mac_loopback = dwmac100_set_mac_loopback,
- };
- 
- int dwmac100_setup(struct stmmac_priv *priv)
+ #ifdef FRAME_FILTER_DEBUG
 -- 
 2.7.4
 
