@@ -2,114 +2,277 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC98AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF8DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC662084E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A3D2084E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:48:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="PWGMigxr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rOO4eMP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfENOs1 (ORCPT
+        id S1726882AbfENOsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:48:27 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53444 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbfENOsU (ORCPT
+        Tue, 14 May 2019 10:48:31 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40714 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfENOs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:48:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 198so3194068wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:48:18 -0700 (PDT)
+        Tue, 14 May 2019 10:48:28 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g69so995510plb.7;
+        Tue, 14 May 2019 07:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oVzNv9Cda4AG48ayrkoKl5rIu1/NIqCv8NqNC2WTHNk=;
-        b=PWGMigxrpID6s8IULkbH99Y1lhvCduvvj46ce+Jn7M72fT9TeIXEZYECmVOQCUQNHr
-         FApeJ4e7A9fYy9hxGe5qnCUNcXvgdNuVkhfOD5K1xtfRWbarEA7+dfHVLkK7x7+g3xiK
-         Re4w+Z+2GFCXOd0H6gAQJMx6YjB9hvvcVK8f8=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=KPJyTDsfdBAYb4kysJw7JhftNxA9CSPFTGsSIHtwfqc=;
+        b=rOO4eMP6bP0ZbCBCWBxaWr3kileZ/U/I6PRg8YIZNKxxcWr7Zv+dvPfOUBwYrNmyK7
+         7g3F1xIKA4bBdX6nKK0wxc1NIsbf0+3aidO3bYu4n/gSl3AEv18WHtN5VMmyBHocoq18
+         Vpev+t7CMgbNxTIEcrJYEecAGeDCsKm8GPAR4yZZeQnJRg/dva6Zoqwt29SuTcan0FtX
+         ibnGB/MPaSQE+xVHDTSzbeb7bMRPIfOWi0z6xpkS6gAk2KeGXf+g7ylptMrJ4zvfVoDE
+         hFyQkcgiwupmylbqDDyIKPqfaYK09LUe7X1yOaNcYzMqrB1mB9Px6SPZLtGPYT/5vxjz
+         cqsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oVzNv9Cda4AG48ayrkoKl5rIu1/NIqCv8NqNC2WTHNk=;
-        b=VldS/TvQZjLXR9LwqHBve2yuSH6qO0aD68W2xD5NnWLZ75XRScr9ZKBv0oR9oYYEzw
-         FYSg9RFSHOFWFY770vAPronFWMh5acIkRjnulelSyev7y/rzVIfjjr3SfQ+T17Ocq1n0
-         ZdglP3WlULf01CLymaWR8VKdOKzESFe/KEEfmJv2bgN1i+wNwdJ88K2AgTsYxI8dieuq
-         CLrI9UMScNjaDPI599gQBGMxHMIe3iP2KKilXzF2vEvxNgjTb5fXHOEIJbVC6wOMxZ3y
-         MCsDUVxGbcGdssAbghLus+XaTy6LXa3G9OFyY/avnYFsztYux3l/etJitU15p1pHkjZa
-         iaAA==
-X-Gm-Message-State: APjAAAWO/y1wSsMUYA/4GBnZJuKsRI+zM4pdMRjTZkUuIeZ+DgZ35cR2
-        5Wora3hlVuRs1jnEIRgZ8T0v/g==
-X-Google-Smtp-Source: APXvYqxYk6Oc5UfGGWqyARsIZbZicHGDxdaBpkaV0YzlrdD1K6Gucx02gXt4F3GaCGNm3U6vsVvpfQ==
-X-Received: by 2002:a1c:3c2:: with SMTP id 185mr2275481wmd.91.1557845297691;
-        Tue, 14 May 2019 07:48:17 -0700 (PDT)
-Received: from andrea (86.100.broadband17.iol.cz. [109.80.100.86])
-        by smtp.gmail.com with ESMTPSA id p6sm12048114wrs.6.2019.05.14.07.48.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 07:48:17 -0700 (PDT)
-Date:   Tue, 14 May 2019 16:48:06 +0200
-From:   Andrea Parri <andrea.parri@amarulasolutions.com>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Marciniszyn, Mike" <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 5/5] IB/hfi1: Fix improper uses of smp_mb__before_atomic()
-Message-ID: <20190514144806.GA14962@andrea>
-References: <1556568902-12464-1-git-send-email-andrea.parri@amarulasolutions.com>
- <1556568902-12464-6-git-send-email-andrea.parri@amarulasolutions.com>
- <14063C7AD467DE4B82DEDB5C278E8663BE6AADCE@FMSMSX108.amr.corp.intel.com>
- <20190429231657.GA2733@andrea>
- <20190509211221.GA4966@andrea>
- <0a78eded-6c08-8d32-ec31-d62d6feb2118@intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=KPJyTDsfdBAYb4kysJw7JhftNxA9CSPFTGsSIHtwfqc=;
+        b=FK0aqg5rvqUrPCiDak6lOcIHBWpRZaIzl4MtwTwHFghjvnWOLKPC4lbkG/IP1LRoUH
+         r8mvkBFf+Ypq+a35SO62nIvaxAKMjD972gua7xju43mciNc16x2pyfJAJwR+Dq/5+aXs
+         OJFCze/4dU923MUrQ8cCVCC1UxXCho+B6JmOPHNskIDDgBO6PUyDQu3dObCMuzbs2LSu
+         7Tfq6kqTikKRRp4wrVq1PS0Kk80IkaH/36jmvAUyxd1nQuIStCQxOVemQqsyecDAeaja
+         KSqEYRPF7SsJQZyXJJUoileKlgwLRrwTMQRiGhZX5VQOtyZ84pBgwyrqJtvVmi6I7udI
+         V0Mw==
+X-Gm-Message-State: APjAAAU2y9j2vae4SN50MP615E5smnRrboGpAyQ2f20RwFKV2lbVvz6k
+        b0XmDsOWqfdjBLWWfM3c/2A=
+X-Google-Smtp-Source: APXvYqwX5TN+tqAbQnc6BvQKXFne+HWaJ9EpPUCur0+tbIDeE5ZEZj2xJWCsmgPcLkv0r1no4pkMGw==
+X-Received: by 2002:a17:902:b410:: with SMTP id x16mr36605336plr.174.1557845307459;
+        Tue, 14 May 2019 07:48:27 -0700 (PDT)
+Received: from localhost.localdomain ([104.238.181.70])
+        by smtp.gmail.com with ESMTPSA id j12sm20461415pff.148.2019.05.14.07.48.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 07:48:26 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     bhelgaas@google.com, corbet@lwn.net
+Cc:     linux-pci@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mchehab+samsung@kernel.org,
+        Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH v6 12/12] Documentation: PCI: convert endpoint/pci-test-howto.txt to reST
+Date:   Tue, 14 May 2019 22:47:34 +0800
+Message-Id: <20190514144734.19760-13-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190514144734.19760-1-changbin.du@gmail.com>
+References: <20190514144734.19760-1-changbin.du@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0a78eded-6c08-8d32-ec31-d62d6feb2118@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 08:32:52AM -0400, Dennis Dalessandro wrote:
-> On 5/9/2019 5:12 PM, Andrea Parri wrote:
-> >On Tue, Apr 30, 2019 at 01:16:57AM +0200, Andrea Parri wrote:
-> >>Hi Mike,
-> >>
-> >>>>This barrier only applies to the read-modify-write operations; in
-> >>>>particular, it does not apply to the atomic_read() primitive.
-> >>>>
-> >>>>Replace the barrier with an smp_mb().
-> >>>
-> >>>This is one of a couple of barrier issues that we are currently looking into.
-> >>>
-> >>>See:
-> >>>
-> >>>[PATCH for-next 6/9] IB/rdmavt: Add new completion inline
-> >>>
-> >>>We will take a look at this one as well.
-> >>
-> >>Thank you for the reference and for looking into this,
-> >
-> >So, I'm planning to just drop this patch; or can I do something to help?
-> >
-> >Please let me know.
-> 
-> Mike was looking into this, and I've got a handful of patches from him to
-> review. He's unavailable for a while but if it's not included in the patches
-> I've got we'll get something out shortly. So yes I think we can hold off on
-> this patch for now. Thanks.
+This converts the plain text documentation to reStructuredText format and
+add it to Sphinx TOC tree. No essential content change.
 
-Thank you for the confirmation, Dennis.  I'll hold off on this one.
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/PCI/endpoint/index.rst          |  1 +
+ ...{pci-test-howto.txt => pci-test-howto.rst} | 81 +++++++++++++------
+ 2 files changed, 56 insertions(+), 26 deletions(-)
+ rename Documentation/PCI/endpoint/{pci-test-howto.txt => pci-test-howto.rst} (78%)
 
-  Andrea
+diff --git a/Documentation/PCI/endpoint/index.rst b/Documentation/PCI/endpoint/index.rst
+index b680a3fc4fec..d114ea74b444 100644
+--- a/Documentation/PCI/endpoint/index.rst
++++ b/Documentation/PCI/endpoint/index.rst
+@@ -10,3 +10,4 @@ PCI Endpoint Framework
+    pci-endpoint
+    pci-endpoint-cfs
+    pci-test-function
++   pci-test-howto
+diff --git a/Documentation/PCI/endpoint/pci-test-howto.txt b/Documentation/PCI/endpoint/pci-test-howto.rst
+similarity index 78%
+rename from Documentation/PCI/endpoint/pci-test-howto.txt
+rename to Documentation/PCI/endpoint/pci-test-howto.rst
+index 040479f437a5..909f770a07d6 100644
+--- a/Documentation/PCI/endpoint/pci-test-howto.txt
++++ b/Documentation/PCI/endpoint/pci-test-howto.rst
+@@ -1,38 +1,51 @@
+-			    PCI TEST USERGUIDE
+-		    Kishon Vijay Abraham I <kishon@ti.com>
++.. SPDX-License-Identifier: GPL-2.0
++
++===================
++PCI Test User Guide
++===================
++
++:Author: Kishon Vijay Abraham I <kishon@ti.com>
+ 
+ This document is a guide to help users use pci-epf-test function driver
+ and pci_endpoint_test host driver for testing PCI. The list of steps to
+ be followed in the host side and EP side is given below.
+ 
+-1. Endpoint Device
++Endpoint Device
++===============
+ 
+-1.1 Endpoint Controller Devices
++Endpoint Controller Devices
++---------------------------
+ 
+-To find the list of endpoint controller devices in the system:
++To find the list of endpoint controller devices in the system::
+ 
+ 	# ls /sys/class/pci_epc/
+ 	  51000000.pcie_ep
+ 
+-If PCI_ENDPOINT_CONFIGFS is enabled
++If PCI_ENDPOINT_CONFIGFS is enabled::
++
+ 	# ls /sys/kernel/config/pci_ep/controllers
+ 	  51000000.pcie_ep
+ 
+-1.2 Endpoint Function Drivers
+ 
+-To find the list of endpoint function drivers in the system:
++Endpoint Function Drivers
++-------------------------
++
++To find the list of endpoint function drivers in the system::
+ 
+ 	# ls /sys/bus/pci-epf/drivers
+ 	  pci_epf_test
+ 
+-If PCI_ENDPOINT_CONFIGFS is enabled
++If PCI_ENDPOINT_CONFIGFS is enabled::
++
+ 	# ls /sys/kernel/config/pci_ep/functions
+ 	  pci_epf_test
+ 
+-1.3 Creating pci-epf-test Device
++
++Creating pci-epf-test Device
++----------------------------
+ 
+ PCI endpoint function device can be created using the configfs. To create
+-pci-epf-test device, the following commands can be used
++pci-epf-test device, the following commands can be used::
+ 
+ 	# mount -t configfs none /sys/kernel/config
+ 	# cd /sys/kernel/config/pci_ep/
+@@ -42,7 +55,7 @@ The "mkdir func1" above creates the pci-epf-test function device that will
+ be probed by pci_epf_test driver.
+ 
+ The PCI endpoint framework populates the directory with the following
+-configurable fields.
++configurable fields::
+ 
+ 	# ls functions/pci_epf_test/func1
+ 	  baseclass_code	interrupt_pin	progif_code	subsys_id
+@@ -51,67 +64,83 @@ configurable fields.
+ 
+ The PCI endpoint function driver populates these entries with default values
+ when the device is bound to the driver. The pci-epf-test driver populates
+-vendorid with 0xffff and interrupt_pin with 0x0001
++vendorid with 0xffff and interrupt_pin with 0x0001::
+ 
+ 	# cat functions/pci_epf_test/func1/vendorid
+ 	  0xffff
+ 	# cat functions/pci_epf_test/func1/interrupt_pin
+ 	  0x0001
+ 
+-1.4 Configuring pci-epf-test Device
++
++Configuring pci-epf-test Device
++-------------------------------
+ 
+ The user can configure the pci-epf-test device using configfs entry. In order
+ to change the vendorid and the number of MSI interrupts used by the function
+-device, the following commands can be used.
++device, the following commands can be used::
+ 
+ 	# echo 0x104c > functions/pci_epf_test/func1/vendorid
+ 	# echo 0xb500 > functions/pci_epf_test/func1/deviceid
+ 	# echo 16 > functions/pci_epf_test/func1/msi_interrupts
+ 	# echo 8 > functions/pci_epf_test/func1/msix_interrupts
+ 
+-1.5 Binding pci-epf-test Device to EP Controller
++
++Binding pci-epf-test Device to EP Controller
++--------------------------------------------
+ 
+ In order for the endpoint function device to be useful, it has to be bound to
+ a PCI endpoint controller driver. Use the configfs to bind the function
+-device to one of the controller driver present in the system.
++device to one of the controller driver present in the system::
+ 
+ 	# ln -s functions/pci_epf_test/func1 controllers/51000000.pcie_ep/
+ 
+ Once the above step is completed, the PCI endpoint is ready to establish a link
+ with the host.
+ 
+-1.6 Start the Link
++
++Start the Link
++--------------
+ 
+ In order for the endpoint device to establish a link with the host, the _start_
+-field should be populated with '1'.
++field should be populated with '1'::
+ 
+ 	# echo 1 > controllers/51000000.pcie_ep/start
+ 
+-2. RootComplex Device
+ 
+-2.1 lspci Output
++RootComplex Device
++==================
++
++lspci Output
++------------
+ 
+-Note that the devices listed here correspond to the value populated in 1.4 above
++Note that the devices listed here correspond to the value populated in 1.4
++above::
+ 
+ 	00:00.0 PCI bridge: Texas Instruments Device 8888 (rev 01)
+ 	01:00.0 Unassigned class [ff00]: Texas Instruments Device b500
+ 
+-2.2 Using Endpoint Test function Device
++
++Using Endpoint Test function Device
++-----------------------------------
+ 
+ pcitest.sh added in tools/pci/ can be used to run all the default PCI endpoint
+-tests. To compile this tool the following commands should be used:
++tests. To compile this tool the following commands should be used::
+ 
+ 	# cd <kernel-dir>
+ 	# make -C tools/pci
+ 
+-or if you desire to compile and install in your system:
++or if you desire to compile and install in your system::
+ 
+ 	# cd <kernel-dir>
+ 	# make -C tools/pci install
+ 
+ The tool and script will be located in <rootfs>/usr/bin/
+ 
+-2.2.1 pcitest.sh Output
++
++pcitest.sh Output
++~~~~~~~~~~~~~~~~~
++::
++
+ 	# pcitest.sh
+ 	BAR tests
+ 
+-- 
+2.20.1
+
