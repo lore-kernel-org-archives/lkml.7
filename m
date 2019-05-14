@@ -2,129 +2,145 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98841C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E060C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65EBC20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oKzn3k5m"
+	by mail.kernel.org (Postfix) with ESMTP id 6605A21537
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 10:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbfENKli (ORCPT
+        id S1726462AbfENKlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 06:41:38 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55357 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfENKlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 06:41:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x64so2303422wmb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 03:41:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=Eb2g/Gd8rqWbiIQQI1Pc54fC1sFwjpsg8qdBE5kpowU=;
-        b=oKzn3k5mHco+6JoK01TjcY0DpfVD0zW701YfvR2BzUFSNNUPcYdbtMzsjrxBkPTgVI
-         Nf3qaYxQURJ/WBszuS/S65gqatcG8k8PH9svkg0ZqsraBUWVEsbrzXaCtiE0zTNYsyD7
-         9VjIRNUoQhkYijMedIvLRKQjiZAy24wvqgq8oC2Oph0lncNc/BtqDXXA8SsrT0SrSAhb
-         1sOZUgWGB0RjpYQK26tbBJUc96nuEzw81RuPk81oViJCIs79kT70eAZLxfxsy6t4hXBX
-         WybWjWTMdDLCFfGp3isGiQRRHiTKxUFsDpK1ciLC8Nyp+aaqbU5Mdw3nuhifAkqW96ZO
-         eRVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=Eb2g/Gd8rqWbiIQQI1Pc54fC1sFwjpsg8qdBE5kpowU=;
-        b=BkpM0P5zhIJzGz1KfjO9qEUUE+Fkx8Kur+zPO3kGn0E9bDXIE5/ngAs1YLmwBSbU1k
-         sLmJ/tC79X/7Sfs4n5nkfpNCqLK8YXu3wswb6hGvGmCXq2T2ETViaC1y7FRYA8ttE8ps
-         Fjn1gnf6CaIAhjq8zMOtl6tzVgr8AZV2Kfz+Xd4x3nraDKnAJpzCh3sgtRKYoel02QeX
-         gN/Yal9ULjqRcJT3kM2mj0ywoZgZj0Knp5yL3rQ/0ZeYZfleBpLZcAYqBLNBd2zVYhIQ
-         q2y6JhXzIOGS/zxUylPNgOnrZZGaTkLKjt0FoV0pTWvNw6lLEACztP1JnNNCgRLrs7+H
-         mS5g==
-X-Gm-Message-State: APjAAAVVN5PFjQ/dbIvAf3OuT8C3r43HcyJ+kt7gpmlRx5C7kbNl9pru
-        6BtvFGOGg0658Ag7poG8Q6/G4Q==
-X-Google-Smtp-Source: APXvYqzEVJX7s0m3SP4pwS9SMq9Ps+DjhgnEnZS7CasDvZlvEl+21YpzUE7mhicTX4jP7nQQ+jFOYg==
-X-Received: by 2002:a1c:700f:: with SMTP id l15mr19209811wmc.150.1557830495359;
-        Tue, 14 May 2019 03:41:35 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id s10sm14674958wrt.66.2019.05.14.03.41.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 03:41:34 -0700 (PDT)
-Date:   Tue, 14 May 2019 11:41:33 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Backlight for v5.2
-Message-ID: <20190514104133.GN4319@dell>
+        Tue, 14 May 2019 06:41:49 -0400
+Received: from foss.arm.com ([217.140.101.70]:53872 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfENKls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 06:41:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 372B4374;
+        Tue, 14 May 2019 03:41:48 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AF0A3F703;
+        Tue, 14 May 2019 03:41:46 -0700 (PDT)
+Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
+To:     Auger Eric <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
+ <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
+ <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
+ <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
+ <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
+ <20190513151637.79c273e2@jacob-builder>
+ <0da76e57-76f6-06fa-d34e-30cd0c294984@redhat.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <f319bd4c-3092-84e1-233a-34832551249e@arm.com>
+Date:   Tue, 14 May 2019 11:41:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <0da76e57-76f6-06fa-d34e-30cd0c294984@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enjoy!
+On 14/05/2019 08:36, Auger Eric wrote:
+> Hi Jacob,
+> 
+> On 5/14/19 12:16 AM, Jacob Pan wrote:
+>> On Mon, 13 May 2019 18:09:48 +0100
+>> Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+>>
+>>> On 13/05/2019 17:50, Auger Eric wrote:
+>>>>> struct iommu_inv_pasid_info {
+>>>>> #define IOMMU_INV_PASID_FLAGS_PASID	(1 << 0)
+>>>>> #define IOMMU_INV_PASID_FLAGS_ARCHID	(1 << 1)
+>>>>> 	__u32	flags;
+>>>>> 	__u32	archid;
+>>>>> 	__u64	pasid;
+>>>>> };  
+>>>> I agree it does the job now. However it looks a bit strange to do a
+>>>> PASID based invalidation in my case - SMMUv3 nested stage - where I
+>>>> don't have any PASID involved.
+>>>>
+>>>> Couldn't we call it context based invalidation then? A context can
+>>>> be tagged by a PASID or/and an ARCHID.  
+>>>
+>>> I think calling it "context" would be confusing as well (I shouldn't
+>>> have used it earlier), since VT-d uses that name for device table
+>>> entries (=STE on Arm SMMU). Maybe "addr_space"?
+>>>
+>> I am still struggling to understand what ARCHID is after scanning
+>> through SMMUv3.1 spec. It seems to be a constant for a given SMMU. Why
+>> do you need to pass it down every time? Could you point to me the
+>> document or explain a little more on ARCHID use cases.
+>> We have three fileds called pasid under this struct
+>> iommu_cache_invalidate_info{}
+>> Gets confusing :)
+> archid is a generic term. That's why you did not find it in the spec ;-)
+> 
+> On ARM SMMU the archid is called the ASID (Address Space ID, up to 16
+> bits. The ASID is stored in the Context Descriptor Entry (your PASID
+> entry) and thus characterizes a given stage 1 translation
+> "context"/"adress space".
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+Yes, another way to look at it is, for a given address space:
+* PASID tags device-IOTLB (ATC) entries.
+* ASID (here called archid) tags IOTLB entries.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+They could have the same value, but it depends on the guest's allocation
+policy which isn't in our control. With my PASID patches for SMMUv3,
+they have different values. So we need both fields if we intend to
+invalidate both ATC and IOTLB with a single call.
 
-are available in the Git repository at:
+Thanks,
+Jean
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git tags/backlight-next-5.2
+> 
+> At the moment the ASID is allocated per iommu domain. With aux domains
+> we should have one ASID per aux domain, Jean-Philippe said.
+> 
+> ASID tags IOTLB S1 entries. As the ASID is part of the "context
+> descriptor" which is owned by the guest, the API must pass it somehow.
+> 
+> 4.4.1.2 CMD_TLBI_NH_ASID(VMID, ASID) invalidation command allows to
+> invalidate all IOTLB S1 entries for a given VMID/ASID and this is the
+> functionality which is currently missing in the API. This is not an
+> address based invalidation or a "pure" PASID based invalidation. At the
+> moment we don't support PASIDs on ARM and I need this capability.
+> 
+> Thanks
+> 
+> Eric
+> 
+> 
+> 
+>>> Thanks,
+>>> Jean
+>>>
+>>>>
+>>>> Domain invalidation would invalidate all the contexts belonging to
+>>>> that domain.
+>>>>
+>>>> Thanks
+>>>>
+>>>> Eric  
+>>
+>> [Jacob Pan]
+>>
 
-for you to fetch changes up to 8fbce8efe15cd2ca7a4947bc814f890dbe4e43d7:
-
-  backlight: lm3630a: Add firmware node support (2019-05-14 08:16:01 +0100)
-
-----------------------------------------------------------------
- - Fix-ups
-   - Remove unused BACKLIGHT_LCD_SUPPORT symbol; Kconfig
-   - Remove unused BACKLIGHT_CLASS_DEVICE dependencies; Kconfig
-   - Add DT support; lm3630a_bl
-
- - Bug Fixes
-   - Fix error path issues; lm3630a_bl
-
-----------------------------------------------------------------
-Alexander Shiyan (2):
-      video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel symbol
-      video: lcd: Remove useless BACKLIGHT_CLASS_DEVICE dependencies
-
-Brian Masney (3):
-      backlight: lm3630a: Return 0 on success in update_status functions
-      dt-bindings: backlight: Add lm3630a bindings
-      backlight: lm3630a: Add firmware node support
-
- .../bindings/leds/backlight/lm3630a-backlight.yaml | 129 +++++++++++++++++
- arch/unicore32/Kconfig                             |   1 -
- drivers/gpu/drm/Kconfig                            |   2 -
- drivers/gpu/drm/bridge/Kconfig                     |   1 -
- drivers/gpu/drm/fsl-dcu/Kconfig                    |   1 -
- drivers/gpu/drm/i915/Kconfig                       |   1 -
- drivers/gpu/drm/nouveau/Kconfig                    |   2 -
- drivers/gpu/drm/shmobile/Kconfig                   |   1 -
- drivers/gpu/drm/tilcdc/Kconfig                     |   1 -
- drivers/staging/olpc_dcon/Kconfig                  |   1 -
- drivers/usb/misc/Kconfig                           |   1 -
- drivers/video/backlight/Kconfig                    |  35 ++---
- drivers/video/backlight/lm3630a_bl.c               | 153 ++++++++++++++++++++-
- drivers/video/fbdev/Kconfig                        |   5 -
- include/linux/platform_data/lm3630a_bl.h           |   4 +
- 15 files changed, 293 insertions(+), 45 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
