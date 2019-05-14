@@ -2,181 +2,151 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A1FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A82CAC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA29920645
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E26020645
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GyRIMQHW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F15QTDXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfENIi2 (ORCPT
+        id S1726562AbfENIjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:38:28 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41388 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725985AbfENIi1 (ORCPT
+        Tue, 14 May 2019 04:39:05 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45231 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfENIjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:38:27 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q17so260770pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:38:27 -0700 (PDT)
+        Tue, 14 May 2019 04:39:04 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g57so21664869edc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=igN9DgvcsdnnQcED87MufBXYemaWzI/btuCv4zC86yk=;
-        b=GyRIMQHWrRSVtwP9IB5pyhtzqC4lPgeL0Y6beT6Qu4IZvr3gGiC9moimim+D9LkzvQ
-         MEEZopp3jLTd3NW9rr2av+zcSv5sG6yxATJxZch96iyR7Vt5O8iVVR9KeDDdv3u44RDl
-         UaYKlPaw3B25/ilDWdybyms52YrdOWkcCimnCd0rzMk7lbnW3wG7xJD+7Y1cPxm3eo8x
-         /IcHai8RyaPGpuO10KNBGL34tDo7TgLJzFqFXMzrzaYkd6OZrO9RZjsPnFXRWFxr8t0z
-         83455vvpULAaytz3l+5A0IgFjdYbPuwM+AftAn4nKNFSHLn0MwKll6hrPVQk06gNdVTQ
-         mAhQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RVI9iWgc55Qe0q3tLtvRyel7wrcIN68nuDWX5YnzBtc=;
+        b=F15QTDXnjQ7h1JnwI/L/yLlLHNZz3LU5SuAP4NtoAxncLb9P+u6MXb0HOEomLvKrBX
+         3R9ouMCzZJj6s16y+Np4CXsnPFiAOlSVa8xYckHTSa1HLBClfVhbUguAPcjWoqOvWPuv
+         tV5M9+7jxZSHo1moP4c4ra1XRQeRyuTrJn4kI8khIhUhF/EpSRRo3Atj1lPHAgnIHylm
+         wvMtnm6MJ/nMjug4ihZ4d+//xf/pNpsXyGoDbE6mlzji05xNaUfGMsL3JaqClUCqmqTC
+         o/nyt/ObxuovlVXJDhYwxJroRLP1vPfKnMjW35G99l4PLkfjN/A6jJj1l8dvl/9C2oAg
+         Dd5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=igN9DgvcsdnnQcED87MufBXYemaWzI/btuCv4zC86yk=;
-        b=I5BMGq97i7IbsEBsRwwkoiWQWG+UtvGUrStia+5/5cymQm6jLfXVwbUKH4XhM5pETs
-         vbodKXbYgkZ9ZkJUlhqdb1lxnlWR4VuTsNUkeQE+weDl5eNlDVj4/xsC3ubdl5tthw1b
-         MBS2wP89MwDD4LRAAsJf4rAiADewYNvIe8BPB+RJQhDB0faVyfzGMiZnK1c1oQnhICbK
-         nF7iTEMiu+KHVI2a5kDuNU/2HOJYvTfNwQnqhii/lmfbNPv9fas44rRXdfz1ZISyw6V/
-         18JyT4msA7lz5m4ohh9SOM4zj2Jdn2V3G70D/Fde82spD5pLvFMdtdGk453l6uz/ZLMg
-         xBbg==
-X-Gm-Message-State: APjAAAU1NzaOqpyD+G49vLkVP+BcW19RSOM9DMxmfD2HAQO12owIna1X
-        dyxhVRkj0aErpKQ1qdMsemlL+A==
-X-Google-Smtp-Source: APXvYqyqn2NOwOEZgtTbGy9WkrWx9lpJrCvlzVQwgRZJjBLJCvhNFSg43dsH15YYKmWUEQTHx4ScMw==
-X-Received: by 2002:a65:578a:: with SMTP id b10mr20396367pgr.161.1557823106177;
-        Tue, 14 May 2019 01:38:26 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id j184sm18479757pge.83.2019.05.14.01.38.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 01:38:25 -0700 (PDT)
-Date:   Tue, 14 May 2019 01:38:19 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190514083819.GC230665@google.com>
-References: <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
- <20190509233043.GC20877@mit.edu>
- <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
- <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
- <3faa022b-0b70-0375-aa6d-12ea83a2671f@deltatee.com>
- <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RVI9iWgc55Qe0q3tLtvRyel7wrcIN68nuDWX5YnzBtc=;
+        b=cN9QZGj99x6EXVOu//dCI6mKKuFT3HF17XmwEFQeNvLFiVcGgGl+c+GLafAMLp6wKu
+         RrVSwERGDIhqiRkB3uL3tm6HxI9IPi8UniVM/rNM2b3YDxb5mpilgHNv8Zqj7zGHnFCF
+         q71rvWlnL2ckhGFVhgfxK424MszkOACf4OZBMl7iZKKIxTwaD0KK9azD8e4JRgXUqV+O
+         Ry7rH7OG0FV/EfIsZTPV74wh9sGiFmOONUj6lGSWTU1NAH0zQga6x7hruciZry+WB0RJ
+         3C5/rMGBRz+zGW9rx2Vwcmce/wYCA0pbXQBYvLkW7aDdJiVDFRjhImaEAB/EeGo/J/E4
+         heXQ==
+X-Gm-Message-State: APjAAAVvgflYfmoJu1nHLnvkmkoESlPJkknljjnPYfWJIzqWfp+m4guY
+        om8K3xJHCkp/gfFHgRPyOgLhHJZwEE2n7HJSv/Q=
+X-Google-Smtp-Source: APXvYqzsuyJYkvShd5DlSehIbVnkw3GSm4SjUrW2ugHXKkw4JHSYr09nLMugB2wNXgGzymTdiBIdkaEWk1hFz8jrH1w=
+X-Received: by 2002:a50:9441:: with SMTP id q1mr34683894eda.101.1557823142649;
+ Tue, 14 May 2019 01:39:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1557716049-22744-1-git-send-email-Anson.Huang@nxp.com>
+ <CAEnQRZDSTuUMrc9AC1S2zfo0PdQ-v35GmNrf70Zoasid_XMJzw@mail.gmail.com> <DB3PR0402MB3916A46BFFE5E6F3D4832A33F50F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916A46BFFE5E6F3D4832A33F50F0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 14 May 2019 11:38:51 +0300
+Message-ID: <CAEnQRZB0fs2g=h4pq97t+E9U9LOxSafYhx07Xia_J+snjqefEw@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/2] soc: imx: Add SCU SoC info driver support
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "robh@kernel.org" <robh@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 03:13:40PM -0700, Frank Rowand wrote:
-> On 5/10/19 9:17 AM, Logan Gunthorpe wrote:
-> > 
-> > 
-> > On 2019-05-09 11:18 p.m., Frank Rowand wrote:
-> > 
-> >> YES, kselftest has in-kernel tests.  (Excuse the shouting...)
-> > 
-> > Cool. From my cursory look, in my opinion, these would be greatly
-> > improved by converting them to the framework Brendan is proposing for Kunit.
-> > 
-> >>> If they do exists, it seems like it would make sense to
-> >>> convert those to kunit and have Kunit tests run-able in a VM or
-> >>> baremetal instance.
-> >>
-> >> They already run in a VM.
-> >>
-> >> They already run on bare metal.
-> >>
-> >> They already run in UML.
-> > 
-> > Simply being able to run in UML is not the only thing here. Kunit
-> > provides the infrastructure to quickly build, run and report results for
-> > all the tests from userspace without needing to worry about the details
-> > of building and running a UML kernel, then parsing dmesg to figure out
-> > what tests were run or not.
-> 
-> Yes.  But that is not the only environment that KUnit must support to be
-> of use to me for devicetree unittests (this is not new, Brendan is quite
-> aware of my needs and is not ignoring them).
-> 
-> 
-> >> This is not to say that KUnit does not make sense.  But I'm still trying
-> >> to get a better description of the KUnit features (and there are
-> >> some).
-> > 
-> > So read the patches, or the documentation[1] or the LWN article[2]. It's
-> > pretty well described in a lot of places -- that's one of the big
-> > advantages of it. In contrast, few people seems to have any concept of
-> > what kselftests are or where they are or how to run them (I was
-> > surprised to find the in-kernel tests in the lib tree).
-> > 
-> > Logan
-> > 
-> > [1] https://google.github.io/kunit-docs/third_party/kernel/docs/
-> > [2] https://lwn.net/Articles/780985/
-> 
-> I have been following the RFC versions.  I have installed the RFC patches
-> and run them to the extent that they worked (devicetree unittests were
-> a guinea pig for test conversion in the RFC series, but the converted
-> tests did not work).  I read portions of the code while trying to
-> understand the unittests conversion.  I made review comments based on
-> the portion of the code that I did read.  I have read the documentation
-> (very nice btw, as I have said before, but should be expanded).
-> 
-> My comment is that the description to submit the patch series should
-> be fuller -- KUnit potentially has a lot of nice attributes, and I
-> still think I have only scratched the surface.  The average reviewer
-> may have even less in-depth knowledge than I do.  And as I have
-> commented before, I keep diving into areas that I had no previous
-> experience with (such as kselftest) to be able to properly judge this
-> patch series.
+On Tue, May 14, 2019 at 2:34 AM Anson Huang <anson.huang@nxp.com> wrote:
+>
+> Hi, Daniel
+>
+> > -----Original Message-----
+> > From: Daniel Baluta [mailto:daniel.baluta@gmail.com]
+> > Sent: Monday, May 13, 2019 10:30 PM
+> > To: Anson Huang <anson.huang@nxp.com>
+> > Cc: catalin.marinas@arm.com; will.deacon@arm.com;
+> > shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+> > festevam@gmail.com; maxime.ripard@bootlin.com; agross@kernel.org;
+> > olof@lixom.net; horms+renesas@verge.net.au;
+> > jagan@amarulasolutions.com; bjorn.andersson@linaro.org; Leonard Crestez
+> > <leonard.crestez@nxp.com>; marc.w.gonzalez@free.fr;
+> > dinguyen@kernel.org; enric.balletbo@collabora.com; Aisheng Dong
+> > <aisheng.dong@nxp.com>; robh@kernel.org; Abel Vesa
+> > <abel.vesa@nxp.com>; l.stach@pengutronix.de; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; dl-linux-imx
+> > <linux-imx@nxp.com>; Daniel Baluta <daniel.baluta@nxp.com>
+> > Subject: Re: [PATCH RESEND 1/2] soc: imx: Add SCU SoC info driver support
+> >
+> > <snip>
+> >
+> > > +
+> > > +static u32 imx8qxp_soc_revision(void) {
+> > > +       struct imx_sc_msg_misc_get_soc_id msg;
+> > > +       struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> > > +       u32 rev = 0;
+> > > +       int ret;
+> > > +
+> > > +       hdr->ver = IMX_SC_RPC_VERSION;
+> > > +       hdr->svc = IMX_SC_RPC_SVC_MISC;
+> > > +       hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
+> > > +       hdr->size = 3;
+> > > +
+> > > +       msg.data.send.control = IMX_SC_C_ID;
+> > > +       msg.data.send.resource = IMX_SC_R_SYSTEM;
+> > > +
+> > > +       ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
+> > > +       if (ret) {
+> > > +               dev_err(&imx_scu_soc_pdev->dev,
+> > > +                       "get soc info failed, ret %d\n", ret);
+> > > +               return rev;
+> >
+> > So you return 0 (rev  = 0) here in case of error? This doesn't seem to be right.
+> > Maybe return ret?
+>
+> This is intentional, similar with current i.MX8MQ soc info driver, when getting revision
+> failed, just return 0 as revision info and it will show "unknown" in sysfs.
 
-Thanks for the praise! That means a lot coming from you!
+Ok, I understand. Lets make this clear from the source code.
 
-I really cannot disagree that I could use more documentation. You can
-pretty much always use more documentation. Nevertheless, is there a
-particular part of the documentation that you think it lacking?
-
-It sounds like there was a pretty long discussion here about, a number
-of different things.
-
-Do you want a better description of what unit testing is and how KUnit
-helps make it possible?
-
-Do you want more of an explanation distinguishing KUnit from kselftest?
-How so?
-
-Do you just want better documentation on how to test the kernel? What
-tools we have at our disposal and when to use what tools?
-
-Thanks!
+   ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
++       if (ret) {
++               dev_err(&imx_scu_soc_pdev->dev,
++                       "get soc info failed, ret %d\n", ret);
+                /* returning 0 means getting revision failed */
++               return 0;
++       }
