@@ -2,128 +2,164 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85A7C04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A50DC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7B572147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="uv78+xKC"
+	by mail.kernel.org (Postfix) with ESMTP id 158292086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfENIXO (ORCPT
+        id S1726332AbfENIXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:23:14 -0400
-Received: from mx07-00376f01.pphosted.com ([185.132.180.163]:28378 "EHLO
-        mx07-00376f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725985AbfENIXO (ORCPT
+        Tue, 14 May 2019 04:23:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54230 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726130AbfENIXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:23:14 -0400
-X-Greylist: delayed 1637 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 04:23:12 EDT
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-        by mx07-00376f01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E7hLLU012623;
-        Tue, 14 May 2019 08:55:42 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=dk201812; bh=uKFpAT7GrQSucExulDdH+qORJ6Ns2etUzr/PYek6Ejo=;
- b=uv78+xKCIP2KAgoPoLFzjakPS3sRS4qdQA4jVZnoFVUCXbE0As6rDPZpgOZFpxLGLw5W
- bIgn2bPSswq6S4LlAeBOwR0sw2DOFb3JllXfs8GWs0xiuKQ8IgqzN+kyPHvDUU3PqoCw
- IRV+wOq11mv3MpakmxE0ekRjIuIFa3VtKZM/e0EoaVlXPqT14i542tlMsrRjMRD9795t
- hksBwX+1eIgBFbGa3JodYXnlkXS7cP6rvyVR9Vv/7RSK1NC1dbZRjsWvqQxADTOKmbQ5
- eOeRvzAV+5lB7ngjVxdFv6BoqQkOQJl9QQceVp5A7qSN2c60J9n9x31u1kDFBScL4lU8 tw== 
-Received: from hhmail02.hh.imgtec.org ([217.156.249.195])
-        by mx07-00376f01.pphosted.com with ESMTP id 2sdpft2tqw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 14 May 2019 08:55:42 +0100
-Received: from michael-imgtec (10.80.17.22) by hhmail02.hh.imgtec.org
- (10.100.10.21) with Microsoft SMTP Server (TLS) id 14.3.408.0; Tue, 14 May
- 2019 08:55:41 +0100
-Date:   Tue, 14 May 2019 15:55:37 +0800
-From:   Michael Yang <michael.yang@imgtec.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-CC:     <sumit.semwal@linaro.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <gustavo@padovan.org>,
-        <linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>,
-        <gregkh@linuxfoundation.org>
-Subject: Re: [EXTERNAL] Re: [PATCH] sync_file: Return reasonable timestamp
- when merging signaled fences
-Message-ID: <20190514075537.GA7483@michael-imgtec>
-References: <1554710495-6646-1-git-send-email-michael.yang@imgtec.com>
- <1557376451-20164-1-git-send-email-michael.yang@imgtec.com>
- <155740236592.28545.17880521046408313036@skylake-alporthouse-com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <155740236592.28545.17880521046408313036@skylake-alporthouse-com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.80.17.22]
+        Tue, 14 May 2019 04:23:43 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E8MHkR131745
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 04:23:42 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sfqjdp32h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 04:23:42 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 14 May 2019 09:23:39 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 09:23:37 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4E8Na4951970092
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 08:23:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12FFF52051;
+        Tue, 14 May 2019 08:23:36 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id A12D952050;
+        Tue, 14 May 2019 08:23:34 +0000 (GMT)
+Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 14 May 2019 11:23:34 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] docs: reorder memory-hotplug documentation
+Date:   Tue, 14 May 2019 11:23:33 +0300
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19051408-4275-0000-0000-000003348A71
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051408-4276-0000-0000-00003844097D
+Message-Id: <1557822213-19058-1-git-send-email-rppt@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 09, 2019 at 12:46:05PM +0100, Chris Wilson wrote:
-> Quoting Michael Yang (2019-05-09 05:34:11)
-> > If all the sync points were signaled in both fences a and b,
-> > there was only one sync point in merged fence which is a_fence[0].
-> > The Fence structure in android framework might be confused about
-> > timestamp if there were any sync points which were signaled after
-> > a_fence[0]. It might be more reasonable to use timestamp of last signaled
-> > sync point to represent the merged fence.
-> > The issue can be found from EGL extension ANDROID_get_frame_timestamps.
-> > Sometimes the return value of EGL_READS_DONE_TIME_ANDROID is head of
-> > the return value of EGL_RENDERING_COMPLETE_TIME_ANDROID.
-> > That means display/composition had been completed before rendering
-> > was completed that is incorrect.
-> > 
-> > Some discussion can be found at:
-> > https://urldefense.proofpoint.com/v2/url?u=https-3A__android-2Dreview.googlesource.com_c_kernel_common_-2B_907009&d=DwIFaQ&c=bq9ppmgvSw3oQFfR871D_w&r=Ngg6vhouPkgwSIbDMU7rDN0ZfT2Qax50xuWkXXqQ3zw&m=N9R9dXGJ3zk0e0gXNM4tsiro7xCOLlWx6c3HAEseSSw&s=6sY2t9i2wvylWH-rPUlvY1MIuWKjCPzT8SeCgpZOIGk&e= 
-> > 
-> > Signed-off-by: Michael Yang <michael.yang@imgtec.com>
-> > ---
-> > Hi,
-> > I didn't get response since I previously sent this a month ago.
-> > Could someone have a chance to look at it please?
-> > Thanks.
-> >  drivers/dma-buf/sync_file.c | 25 +++++++++++++++++++++++--
-> >  1 file changed, 23 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/dma-buf/sync_file.c b/drivers/dma-buf/sync_file.c
-> > index 4f6305c..d46bfe1 100644
-> > --- a/drivers/dma-buf/sync_file.c
-> > +++ b/drivers/dma-buf/sync_file.c
-> > @@ -274,8 +274,29 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
-> >         for (; i_b < b_num_fences; i_b++)
-> >                 add_fence(fences, &i, b_fences[i_b]);
-> >  
-> > -       if (i == 0)
-> > -               fences[i++] = dma_fence_get(a_fences[0]);
-> > +       /* If all the sync pts were signaled, then adding the sync_pt who
-> > +        * was the last signaled to the fence.
-> > +        */
-> > +       if (i == 0) {
-> > +               struct dma_fence *last_signaled_sync_pt = a_fences[0];
-> > +               int iter;
-> > +
-> > +               for (iter = 1; iter < a_num_fences; iter++) {
-> 
-> If there is more than one fence, sync_file->fence is a fence_array and
-> its timestamp is what you want. If there is one fence, sync_file->fence
-> is a pointer to that fence, and naturally has the right timestamp.
-> 
-> In short, this should be handled by dma_fence_array_create() when given
-> a complete set of signaled fences, it too should inherit the signaled
-> status with the timestamp being taken from the last fence. It should
-> also be careful to inherit the error status.
-> -Chris
-Thanks Chris for the inputs. For this case, there will be only one fence
-in sync_file->fence after doing sync_file_merge(). Regarding to the current
-implementation, dma_fence_array_create() is not called as num_fences is equal
-to 1. I was wondering do you suggest that we pass a complete set of signaled
-fences to sync_file_set_fence() and handle it in dma_fence_array_create().
-Thanks.
-- Michael
+The "Locking Internals" section of the memory-hotplug documentation is
+duplicated in admin-guide and core-api. Drop the admin-guide copy as
+locking internals does not belong there.
+
+While on it, move the "Future Work" section to the core-api part.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ Documentation/admin-guide/mm/memory-hotplug.rst | 51 -------------------------
+ Documentation/core-api/memory-hotplug.rst       | 11 ++++++
+ 2 files changed, 11 insertions(+), 51 deletions(-)
+
+diff --git a/Documentation/admin-guide/mm/memory-hotplug.rst b/Documentation/admin-guide/mm/memory-hotplug.rst
+index 5c4432c..72090ba 100644
+--- a/Documentation/admin-guide/mm/memory-hotplug.rst
++++ b/Documentation/admin-guide/mm/memory-hotplug.rst
+@@ -391,54 +391,3 @@ Physical memory remove
+ Need more implementation yet....
+  - Notification completion of remove works by OS to firmware.
+  - Guard from remove if not yet.
+-
+-
+-Locking Internals
+-=================
+-
+-When adding/removing memory that uses memory block devices (i.e. ordinary RAM),
+-the device_hotplug_lock should be held to:
+-
+-- synchronize against online/offline requests (e.g. via sysfs). This way, memory
+-  block devices can only be accessed (.online/.state attributes) by user
+-  space once memory has been fully added. And when removing memory, we
+-  know nobody is in critical sections.
+-- synchronize against CPU hotplug and similar (e.g. relevant for ACPI and PPC)
+-
+-Especially, there is a possible lock inversion that is avoided using
+-device_hotplug_lock when adding memory and user space tries to online that
+-memory faster than expected:
+-
+-- device_online() will first take the device_lock(), followed by
+-  mem_hotplug_lock
+-- add_memory_resource() will first take the mem_hotplug_lock, followed by
+-  the device_lock() (while creating the devices, during bus_add_device()).
+-
+-As the device is visible to user space before taking the device_lock(), this
+-can result in a lock inversion.
+-
+-onlining/offlining of memory should be done via device_online()/
+-device_offline() - to make sure it is properly synchronized to actions
+-via sysfs. Holding device_hotplug_lock is advised (to e.g. protect online_type)
+-
+-When adding/removing/onlining/offlining memory or adding/removing
+-heterogeneous/device memory, we should always hold the mem_hotplug_lock in
+-write mode to serialise memory hotplug (e.g. access to global/zone
+-variables).
+-
+-In addition, mem_hotplug_lock (in contrast to device_hotplug_lock) in read
+-mode allows for a quite efficient get_online_mems/put_online_mems
+-implementation, so code accessing memory can protect from that memory
+-vanishing.
+-
+-
+-Future Work
+-===========
+-
+-  - allowing memory hot-add to ZONE_MOVABLE. maybe we need some switch like
+-    sysctl or new control file.
+-  - showing memory block and physical device relationship.
+-  - test and make it better memory offlining.
+-  - support HugeTLB page migration and offlining.
+-  - memmap removing at memory offline.
+-  - physical remove memory.
+diff --git a/Documentation/core-api/memory-hotplug.rst b/Documentation/core-api/memory-hotplug.rst
+index de7467e..e08be1c 100644
+--- a/Documentation/core-api/memory-hotplug.rst
++++ b/Documentation/core-api/memory-hotplug.rst
+@@ -123,3 +123,14 @@ In addition, mem_hotplug_lock (in contrast to device_hotplug_lock) in read
+ mode allows for a quite efficient get_online_mems/put_online_mems
+ implementation, so code accessing memory can protect from that memory
+ vanishing.
++
++Future Work
++===========
++
++  - allowing memory hot-add to ZONE_MOVABLE. maybe we need some switch like
++    sysctl or new control file.
++  - showing memory block and physical device relationship.
++  - test and make it better memory offlining.
++  - support HugeTLB page migration and offlining.
++  - memmap removing at memory offline.
++  - physical remove memory.
+-- 
+2.7.4
+
