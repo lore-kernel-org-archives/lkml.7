@@ -2,129 +2,144 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C371CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B1FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AF421473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584BE2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g8xs//Up"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="kS6gbv1S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfENSar (ORCPT
+        id S1727553AbfENSdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:30:47 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37352 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfENSar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:30:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h19so172155ljj.4;
-        Tue, 14 May 2019 11:30:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EapbBImn7I+/owIGCCoZMA8xARMudBKelPedvhh+T0w=;
-        b=g8xs//UpQ1Q8Scvyoyixf5Mzv3wzHeM1TX75i/V8BbFxI+7dVXn5RZsEdWKW3h3wkR
-         pxgCiKUHmbkG3n41FZbbVe7J9TBJbwyv3JLRHkIUp22Jsk6p5xxCSQd/Bh1pQqCsxfki
-         DzYfQD+rPM6BytD1sbNYJIp1UkGCw4kNcEzcSZYclch6BmgNuj/2kHacAdmWVRlZHoT5
-         5iGgP3QWOmZ/3FoeLwrfuZ/TESfYQ2DjZHtXJztqR42Dg9RpznW3Tl1F9JjjApKNxATd
-         HOape8rhaCOE+0wXixSXmvKdZF/2ERBzoUnX/xSiz+l/oLKeR9HhLAfXYWWuxJ0sr7S7
-         UGxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EapbBImn7I+/owIGCCoZMA8xARMudBKelPedvhh+T0w=;
-        b=cUhbnpYm0fT6aV/AyJkUIrX+eZQ9AcwKLVRT6k3AZLHnctQ5s8Ljn562RPvxKKLkq1
-         EwVNlm+hZyhFOU7lv5BzugVoouXH7yzpgM7uoS1109RUBXsguzlwpZpac1QfkqCWKowp
-         zz9ICkXJ8O9AdB9aEs3BRNKdF+8JsIUH+fPka1gutnHYW+EfJL7k2KMHVIEnmueFdIi+
-         5HoShFQKQ83lx19ckJzY95Rc9zCw3Dm08fFLTc5kcUFRqhQtkfs3dD9dfOkOBG3lruIE
-         o3wnufIoouAMKyhvnj7Z5Sv4XeXQj/dFcSGf0zpHZBs0kTcLW8FZTDQivfIsDnxEL4mB
-         12mQ==
-X-Gm-Message-State: APjAAAXwnntrPU2ZMqm8r9/vnMQrTkCCJeGzmPykeG7wyq81Z+TZU8sD
-        Fx/yTUKusN304UWrMiMfokl4KRV9
-X-Google-Smtp-Source: APXvYqwLvJck93JW05fM6HY3C3TUPBQmER3GljRPzmCs4nsw11FSIBQUuEcbyhjeGddnf6tkDlvtCA==
-X-Received: by 2002:a2e:8849:: with SMTP id z9mr1832510ljj.164.1557858644707;
-        Tue, 14 May 2019 11:30:44 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id s26sm3639022ljj.52.2019.05.14.11.30.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 11:30:43 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
- for Tegra30
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-7-digetx@gmail.com>
- <20190508075848.GX14916@sirena.org.uk>
- <af6de446-ab45-1745-30e5-426c6b34421f@gmail.com>
- <20190512090446.GN21483@sirena.org.uk>
- <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
- <20190513174000.GH5168@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9e13bbd1-ff28-1570-b1a6-0cc6337b8f6c@gmail.com>
-Date:   Tue, 14 May 2019 21:30:05 +0300
+        Tue, 14 May 2019 14:33:09 -0400
+Received: from mout.gmx.net ([212.227.15.19]:34043 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfENSdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 14:33:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1557858784;
+        bh=UmmAvvJcx8I5MMGXOj9REi0B1R3jq6Ia0rLijAgsU0U=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=kS6gbv1SZ2XMU9peN3uYmv9WbMJO+ytypmiPtxGaue8HXVOzgAY5lwFMh5TpreA80
+         0tj6gxW+kCar/ffJoxXfN0V8k2e4lCHbpNffvoguvKDFLdtzfgljNKicf3vikAXElM
+         Jxz4thTAQJBQAM03W0Cq1N7AASE4pfNS+DMTLZ8w=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.178.24] ([77.6.146.38]) by mail.gmx.com (mrgmx001
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0LuOYx-1gj8fI3PyJ-011lSy; Tue, 14
+ May 2019 20:33:03 +0200
+Subject: Re:
+ https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/mds.html gives 404
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Kernel <linux-kernel@vger.kernel.org>
+References: <d200d191-258e-ba3f-1c7f-9f2e7fee5b36@gmx.de>
+ <20190514121436.7770a83a@lwn.net>
+From:   =?UTF-8?Q?Toralf_F=c3=b6rster?= <toralf.foerster@gmx.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=toralf.foerster@gmx.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <087cd550-3b07-5e96-c91a-6c6f2d8dc251@gmx.de>
+Date:   Tue, 14 May 2019 20:33:02 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190513174000.GH5168@sirena.org.uk>
+In-Reply-To: <20190514121436.7770a83a@lwn.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:B2yO+2IVvZ4PRr/uPHpdbcS4iqZxm7pZMkd9cAQMRVO1VHLCYCO
+ IVGePwANfsFwrN09Lbd96GeUk2aQ7fICZSP4gWYMLHhyF914NvNb26JHWKcD+UN7QspUbz3
+ IiKuyIMYbxMXu5P2uRjbtLz7HzIvlbOThjlEUmL+K6+8eFwwGKp4NzfXFkKGCGDzAcYMmka
+ X4Fl0yO2WzJSoJ2H401ZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:44g8DuR7jhU=:iJZhdFB+Bg1PLc9kDT9suF
+ 8NK/gLga6w8jlrvnmL7gYEQt25iZuB34xEKuZ227jXhThI7I07a7DHytm+7UYFzouDzj99x66
+ 7LKh+zFlmoHRnyjxlGwWA3u6JIad8Y79I7Vl7TGb0Lev4SIwu4YjnQwSxT82Co8cXvPKib6CJ
+ i+91XjIp/URAq11fnhji22N5A2QlrAP79vsrIpdJls0qYPMuMxajlkK+3Mw5+ocs0SJoYeZV7
+ 7336gHuBZHNI1XrwYAncqlASuou5W6divifEiIhqm5oicWcVvCwTQjy7MNPBx2B6ZVO5kic3x
+ ZILY5/GO2/iuysxgbC3CUrzvUckhyM5/YKhPEIItjgRWhXj8LjiSMUkbZofjfZimpX9vzafy/
+ uDjxNJhcnFHkixJ/1UG/iaOjzNiiGvZm6s/dIFfNd7bWbSA6TxbDiegDXB6Yiyyxjljun/89Q
+ KkWq0I0CPAzvalpSA1MiaAyLH3e1TlcUUER4aNjMOUn8dbKLHnBBgXSqBVwanY9dsHnrlzGv0
+ jMSanBWnEPaMrke5zlLpl64EvQuVb42slcYFVc0pmkoQ+lSKTlfJ4m6TZ+wdclVZ4ePllkEwp
+ wz018i0h3Z67CywXs5tT+VK4tq4bMMjXA03PCfAmUwaLJ07kHBhsbnxFsBp+gUSZbrGP6XHYR
+ 011Na7BkpzrEjoq+I/37MR/0GTB3rhk2Yk9CY4Eprhlb6jhQJcdJe6IsBsJSgtWm1tCttCz9V
+ /UdI/BkL62VSLjErq5/phjEMZwv8nNizQx3JLrbdxSFuN4K1GDNHbT2maz2yV8lsqbreCe0oG
+ nFKMB6qXcPYVUOjzYcLViffiaAGrEaNnrpfBJGb137+ib4s5HahEc04lyXwRmnf7yTEdve4ds
+ SPhlAw4fxvZ8xvMkU5ch+6OSLCBby127lic2eDzQd3UygvNcwfmoBXdTNx3jRuMt58Ufs4leh
+ gXwU83D31ZA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.05.2019 20:40, Mark Brown пишет:
-> On Sun, May 12, 2019 at 09:29:54PM +0300, Dmitry Osipenko wrote:
->> 12.05.2019 12:04, Mark Brown пишет:
->>> On Wed, May 08, 2019 at 04:27:42PM +0300, Dmitry Osipenko wrote:
-> 
->>> Those seem like they should be doable in generic code, though the fact
->>> that the constraint is variable makes it annoying to specify - otherwise
->>> it'd just be a minimum and maximum spread.  I'm not really coming up
->>> with any great ideas right now, it's getting into OPP type territory but
->>> it sounds like there's more flexibility for ramping the core voltage so
->>> you'd end up with silly numbers of OPPs.
-> 
->> The OPP shouldn't have to do anything in regards to the regulators
->> coupling. The whole idea of the regulators coupling is to make device
->> drivers to not churn with the coupling. The coupling in this case is
->> specific to SoC and not to a particular board.
-> 
-> The thing with OPPs is that they specify a whole table of values that
-> work together including regulator settings, the result being that you
-> have many fewer options but don't need to think about constraints.
+On 14.05.19 20:14, Jonathan Corbet wrote:
+> On Tue, 14 May 2019 19:48:12 +0200
+> Toralf F=C3=B6rster <toralf.foerster@gmx.de> wrote:
+>
+>> But this link is mentioned in dmesg of 5.1.2
+>
+> It works for me.  I think you just needed to wait for the relevant commi=
+t
+> to make it upstream and the docs to be regenerated.
+>
+> Thanks,
+>
+> jon
+>
+Indeed, works now.
+Thx
 
-I'm afraid this is just a way of abusing the OPP's. I actually already
-had variant of the CPUFreq driver where it was managing all of the
-coupled regulators and gave up on it because it's just not very
-practical and adds a lot of unnecessary churning into the code. Note
-that it's just the CPUFreq driver, there are quite a lot of other (CORE)
-drivers as well and there are a lot of voltage combinations because OPP
-entries are also specific to a range of hardware versions.
+=2D-
+Toralf
+PGP C4EACDDE 0076E94E
 
->> I think the current approach with the customized regulators coupler is
->> the best solution for the time being. We may consider something more
->> generic if there will be other users with a similar coupling
->> requirements, otherwise it's quite difficult to judge what is "generic".
->> Do you agree?
-> 
-> Some of the constraints (like having drivers loaded) are kind of fun...
-> 
-
-AFAIK, there is no good solution in upstream kernel for that problem
-yet. Maybe it will be possible to reset hardware into a some more
-predictable state early during kernel's boot for the start, will see.
