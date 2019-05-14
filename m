@@ -2,170 +2,119 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65696C04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2B8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BBFE2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99890206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AF0Ok7DQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dZV9RO/I";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dZV9RO/I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfENXvW (ORCPT
+        id S1726669AbfENXyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:51:22 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35754 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726362AbfENXvU (ORCPT
+        Tue, 14 May 2019 19:54:15 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53400 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726265AbfENXyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:51:20 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4ENlllN002310
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:51:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=mUkFppAAxjAaE2wXhVtrJ91WjjBKr6GRw5GrMLKoRzU=;
- b=AF0Ok7DQriDizVKzZBOD4/IvxG41k64FkudQjZGoUgeoSUlhZgjI3RD4N38CtZxZ69t1
- c+ds43zMjz93JkylISnxoDGviWrHVwUrwJkeZ6Dq6FmILolxzBa9NNSM4YDrF3I5MxA7
- 3R66NJ+77s92Ekew/l8KJ0g08ubFAFhqooo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sg6px868h-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 16:51:19 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::c) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 14 May 2019 16:51:17 -0700
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id E265312084F4A; Tue, 14 May 2019 16:51:15 -0700 (PDT)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
-Date:   Tue, 14 May 2019 16:51:11 -0700
-Message-ID: <20190514235111.2817276-2-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190514235111.2817276-1-guro@fb.com>
-References: <20190514235111.2817276-1-guro@fb.com>
-X-FB-Internal: Safe
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140154
-X-FB-Internal: deliver
+        Tue, 14 May 2019 19:54:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 58BE08EE109;
+        Tue, 14 May 2019 16:54:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557878054;
+        bh=j9GFywY1HLyNTdpWDqU6DRZqFaBO1GawDh8yt+cMaqU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dZV9RO/IA1wL58RbfktzvhF4K1xZl/4zGz3TLRxcm5GlTLjC8covABFSucBWREaS9
+         OSBPyqqim2IdYRtdQFIEyy2fzVtY/Vq9MwU3Jngf6/fjS6Z38hRGtcegh99WZyvLSm
+         aWkuGylJdngUC4YlL6U49VhosDHd1xpTt5qV56rc=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id woy7T4AMZn2a; Tue, 14 May 2019 16:54:14 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9FDBB8EE0ED;
+        Tue, 14 May 2019 16:54:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557878054;
+        bh=j9GFywY1HLyNTdpWDqU6DRZqFaBO1GawDh8yt+cMaqU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dZV9RO/IA1wL58RbfktzvhF4K1xZl/4zGz3TLRxcm5GlTLjC8covABFSucBWREaS9
+         OSBPyqqim2IdYRtdQFIEyy2fzVtY/Vq9MwU3Jngf6/fjS6Z38hRGtcegh99WZyvLSm
+         aWkuGylJdngUC4YlL6U49VhosDHd1xpTt5qV56rc=
+Message-ID: <1557878052.2873.6.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Rob Landley <rob@landley.net>, Andy Lutomirski <luto@kernel.org>
+Cc:     Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org
+Date:   Tue, 14 May 2019 16:54:12 -0700
+In-Reply-To: <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+         <20190512194322.GA71658@rani.riverdale.lan>
+         <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+         <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+         <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+         <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+         <1557861511.3378.19.camel@HansenPartnership.com>
+         <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vmalloc() is getting more and more used these days (kernel stacks,
-bpf and percpu allocator are new top users), and the total %
-of memory consumed by vmalloc() can be pretty significant
-and changes dynamically.
+On Tue, 2019-05-14 at 18:39 -0500, Rob Landley wrote:
+> On 5/14/19 2:18 PM, James Bottomley wrote:
+> > > I think Rob is right here.  If /init was statically built into
+> > > the kernel image, it has no more ability to compromise the kernel
+> > > than anything else in the kernel.  What's the problem here?
+> > 
+> > The specific problem is that unless you own the kernel signing key,
+> > which is really untrue for most distribution consumers because the
+> > distro owns the key, you cannot build the initrd statically into
+> > the kernel.  You can take the distro signed kernel, link it with
+> > the initrd then resign the combination with your key, provided you
+> > insert your key into the MoK variables as a trusted secure boot
+> > key, but the distros have been unhappy recommending this as
+> > standard practice.
+> > 
+> > If our model for security is going to be to link the kernel and the
+> > initrd statically to give signature protection over the aggregate
+> > then we need to figure out how to execute this via the distros.  If
+> > we accept that the split model, where the distro owns and signs the
+> > kernel but the machine owner builds and is responsible for the
+> > initrd, then we need to explore split security models like this
+> > proposal.
+> 
+> You can have a built-in and an external initrd? The second extracts
+> over the first? (I know because once upon a time conflicting files
+> would append. It sounds like the desired behavior here is O_EXCL fail
+> and move on.)
 
-/proc/meminfo is the best place to display this information:
-its top goal is to show top consumers of the memory.
+Technically yes, because the first initrd could find the second by some
+predefined means, extract it to a temporary directory and do a
+pivot_root() and then the second would do some stuff, find the real
+root and do a pivot_root() again.  However, while possible, wouldn't it
+just add to the rendezvous complexity without adding any benefits? even
+if the first initrd is built and signed by the distro and the second is
+built by you, the first has to verify the second somehow.  I suppose
+the second could be tar extracted, which would add xattrs, if that's
+the goal?
 
-Since the VmallocUsed field in /proc/meminfo is not in use
-for quite a long time (it has been defined to 0 by the
-commit a5ad88ce8c7f ("mm: get rid of 'vmalloc_info' from
-/proc/meminfo")), let's reuse it for showing the actual
-physical memory consumption of vmalloc().
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- fs/proc/meminfo.c       |  2 +-
- include/linux/vmalloc.h |  2 ++
- mm/vmalloc.c            | 10 ++++++++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 568d90e17c17..465ea0153b2a 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -120,7 +120,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 	show_val_kb(m, "Committed_AS:   ", committed);
- 	seq_printf(m, "VmallocTotal:   %8lu kB\n",
- 		   (unsigned long)VMALLOC_TOTAL >> 10);
--	show_val_kb(m, "VmallocUsed:    ", 0ul);
-+	show_val_kb(m, "VmallocUsed:    ", vmalloc_nr_pages());
- 	show_val_kb(m, "VmallocChunk:   ", 0ul);
- 	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
- 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index 51e131245379..9b21d0047710 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -72,10 +72,12 @@ extern void vm_unmap_aliases(void);
- 
- #ifdef CONFIG_MMU
- extern void __init vmalloc_init(void);
-+extern unsigned long vmalloc_nr_pages(void);
- #else
- static inline void vmalloc_init(void)
- {
- }
-+static inline unsigned long vmalloc_nr_pages(void) { return 0; }
- #endif
- 
- extern void *vmalloc(unsigned long size);
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 8d4907865614..65871ddba497 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -398,6 +398,13 @@ static void purge_vmap_area_lazy(void);
- static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
- static unsigned long lazy_max_pages(void);
- 
-+static atomic_long_t nr_vmalloc_pages;
-+
-+unsigned long vmalloc_nr_pages(void)
-+{
-+	return atomic_long_read(&nr_vmalloc_pages);
-+}
-+
- static struct vmap_area *__find_vmap_area(unsigned long addr)
- {
- 	struct rb_node *n = vmap_area_root.rb_node;
-@@ -2214,6 +2221,7 @@ static void __vunmap(const void *addr, int deallocate_pages)
- 			BUG_ON(!page);
- 			__free_pages(page, 0);
- 		}
-+		atomic_long_sub(area->nr_pages, &nr_vmalloc_pages);
- 
- 		kvfree(area->pages);
- 	}
-@@ -2390,12 +2398,14 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 		if (unlikely(!page)) {
- 			/* Successfully allocated i pages, free them in __vunmap() */
- 			area->nr_pages = i;
-+			atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
- 			goto fail;
- 		}
- 		area->pages[i] = page;
- 		if (gfpflags_allow_blocking(gfp_mask|highmem_mask))
- 			cond_resched();
- 	}
-+	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
- 
- 	if (map_vm_area(area, prot, pages))
- 		goto fail;
--- 
-2.20.1
+James
 
