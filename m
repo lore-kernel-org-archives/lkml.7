@@ -3,113 +3,194 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A7DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89389C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43493208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:04:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557821077;
-	bh=FsHAXVU1kpY9F9AvdtiEi956l31pNzSnE+Z4NXxfgSo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ifeETCci6v5XQ0plskZ86zZ6K72dZZJfI3tJH02QUEbof+Zw5m7lvFS4t7OfWZ8Hi
-	 m0zYGAZd338mkqGPKL3zt8Ad1oY5CTlvJBS91GG5srnVOkab7co6s6QVrGmBhU0uUw
-	 CfnM2Ru2wvNTv3Co4AjUu/dhT9EeE2k53h7IJrC4=
+	by mail.kernel.org (Postfix) with ESMTP id 4B7882084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="snV2Nlrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfENIEg (ORCPT
+        id S1726229AbfENIHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:04:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46342 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfENIEf (ORCPT
+        Tue, 14 May 2019 04:07:36 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47892 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfENIHg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:04:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j49so6720805otc.13;
-        Tue, 14 May 2019 01:04:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kB17CNIkNudo9lQqUE06/YkvGevRbJzz0AoPJPb6ktc=;
-        b=Z+HjzeLhr0Dqle03P0O/1srlROaWqziSFK4q78z4SOkQaRR1v5+3EiYgyR7pxtafXm
-         WK2tdbr1ofhyHluvIPiN6bByHsuVFwA0iL+xSjp/ZEPVls6HBbndwscET8eYWwDeFTUj
-         TlCGUk6Y0P51eW6yYTPe4oBjHaQ33pghQ88z0kHIKS2m05++SCVmj6O3VfqQGaWCJGxY
-         fUv6btXYZmQi1Mt225fkX0QwDqdWMdI13AA2uhr9SvVJ+VWghqyTS5O66HN+IM/npiO1
-         6GH3EsXNAOnz9ux59nxIZwm7GrvzT0gPJoHY7+J4L7d8wTU8YRqPuMBfyzzGFBbx0DGb
-         XvlQ==
-X-Gm-Message-State: APjAAAXhj1w/ku1PCqdgvzVN/D8YI19rrKKbLZJFdJBiy5s2kYcy2MFt
-        SLvnBMAecax2k9PM0uSCtax3Pqii+gxN/zjUinE=
-X-Google-Smtp-Source: APXvYqxWif0G6pQHhcU4KlJ5vC6KPXRlOORPDLaMZI5cz8NUcPo2oZliCB12ipxHoYjnRvcTjRrFXRhyFfoFmxezLIc=
-X-Received: by 2002:a9d:5912:: with SMTP id t18mr14859091oth.252.1557821074817;
- Tue, 14 May 2019 01:04:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190510212937.11661-1-keith.busch@intel.com> <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
- <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
- <20190513143741.GA25500@lst.de> <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
- <20190513145522.GA15421@localhost.localdomain> <d69ff7154191492eaa8f55535a7effa5@AUSX13MPC105.AMER.DELL.COM>
- <20190513150458.GA15437@localhost.localdomain>
-In-Reply-To: <20190513150458.GA15437@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 14 May 2019 10:04:22 +0200
-Message-ID: <CAJZ5v0g3cCYK3rAQn09pCr7LMrRr=zQy_ceaEB5AKhVx604YgA@mail.gmail.com>
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Mario Limonciello <Mario.Limonciello@dell.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 May 2019 04:07:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E7xP2K031699;
+        Tue, 14 May 2019 08:05:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=B0Y+NEwWZFt6JvGfM9bAxeiqnPSo8BnTeZpdh3Z+JGM=;
+ b=snV2NlrmriYM5JjJRsJw7giHlgdfVylr/v61et/3DktkJgcHN5UfhEof1Xmmjbcqmiqy
+ xORAFW1lWLC1DZTvC9mTKnoy0PKAOnVMmxl2Ox3GahdUrMV17UgmQ+m/qN4+x6l4kcIH
+ IbEKSsVLZ2OP1KHNwRBajhd0QaCJkK1FlXcrE6mY3ktTB+IgYCkGsJQgberUZIcAp0Sp
+ 8BVyOMEHqNlUrSwjdYIhsQa+BzohRTzTtxxZCUurg6MBBiNbMVBCM+QOQtmSPp/z9EXW
+ 27cyT3jm7MzGAGXtApRgbzLpnWfeq0d0ZLXMptIVEhrdn8eHUXjzeVq5nu/UrxCDsKLj 6Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2sdq1qbycj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 08:05:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4E84ATh150192;
+        Tue, 14 May 2019 08:05:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sf3cn47q9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 08:05:52 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4E85osk015007;
+        Tue, 14 May 2019 08:05:50 GMT
+Received: from [10.0.5.57] (/213.57.127.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 14 May 2019 01:05:50 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
+Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
+From:   Liran Alon <liran.alon@oracle.com>
+In-Reply-To: <CALCETrXK8+tUxNA=iVDse31nFRZyiQYvcrQxV1JaidhnL4GC0w@mail.gmail.com>
+Date:   Tue, 14 May 2019 11:05:44 +0300
+Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Jonathan Adams <jwadams@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1BFC571D-6C85-409C-8FD3-1E34559A277D@oracle.com>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+ <CALCETrVhRt0vPgcun19VBqAU_sWUkRg1RDVYk4osY6vK0SKzgg@mail.gmail.com>
+ <C2A30CC6-1459-4182-B71A-D8FF121A19F2@oracle.com>
+ <CALCETrXK8+tUxNA=iVDse31nFRZyiQYvcrQxV1JaidhnL4GC0w@mail.gmail.com>
+To:     Andy Lutomirski <luto@kernel.org>
+X-Mailer: Apple Mail (2.3445.4.7)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905140059
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905140059
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 5:10 PM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Mon, May 13, 2019 at 03:05:42PM +0000, Mario.Limonciello@dell.com wrote:
-> > This system power state - suspend to idle is going to freeze threads.
-> > But we're talking a multi threaded kernel.  Can't there be a timing problem going
-> > on then too?  With a disk flush being active in one task and the other task trying
-> > to put the disk into the deepest power state.  If you don't freeze the queues how
-> > can you guarantee that didn't happen?
->
-> But if an active data flush task is running, then we're not idle and
-> shouldn't go to low power.
 
-To be entirely precise, system suspend prevents user space from
-running while it is in progress.  It doesn't do that to kernel
-threads, at least not by default, though, so if there is a kernel
-thread flushing the data, it needs to be stopped or suspended somehow
-directly in the system suspend path.  [And yes, system suspend (or
-hibernation) may take place at any time so long as all user space can
-be prevented from running then (by means of the tasks freezer).]
 
-However, freezing the queues from a driver ->suspend callback doesn't
-help in general and the reason why is hibernation.  Roughly speaking,
-hibernation works in two steps, the first of which creates a snapshot
-image of system memory and the second one writes that image to
-persistent storage.  Devices are resumed between the two steps in
-order to make it possible to do the write, but that would unfreeze the
-queues and let the data flusher run.  If it runs, it may cause the
-memory snapshot image that has just been created to become outdated
-and restoring the system memory contents from that image going forward
-may cause corruption to occur.
+> On 14 May 2019, at 5:07, Andy Lutomirski <luto@kernel.org> wrote:
+>=20
+> On Mon, May 13, 2019 at 2:09 PM Liran Alon <liran.alon@oracle.com> =
+wrote:
+>>=20
+>>=20
+>>=20
+>>> On 13 May 2019, at 21:17, Andy Lutomirski <luto@kernel.org> wrote:
+>>>=20
+>>>> I expect that the KVM address space can eventually be expanded to =
+include
+>>>> the ioctl syscall entries. By doing so, and also adding the KVM =
+page table
+>>>> to the process userland page table (which should be safe to do =
+because the
+>>>> KVM address space doesn't have any secret), we could potentially =
+handle the
+>>>> KVM ioctl without having to switch to the kernel pagetable (thus =
+effectively
+>>>> eliminating KPTI for KVM). Then the only overhead would be if a =
+VM-Exit has
+>>>> to be handled using the full kernel address space.
+>>>>=20
+>>>=20
+>>> In the hopefully common case where a VM exits and then gets =
+re-entered
+>>> without needing to load full page tables, what code actually runs?
+>>> I'm trying to understand when the optimization of not switching is
+>>> actually useful.
+>>>=20
+>>> Allowing ioctl() without switching to kernel tables sounds...
+>>> extremely complicated.  It also makes the dubious assumption that =
+user
+>>> memory contains no secrets.
+>>=20
+>> Let me attempt to clarify what we were thinking when creating this =
+patch series:
+>>=20
+>> 1) It is never safe to execute one hyperthread inside guest while =
+it=E2=80=99s sibling hyperthread runs in a virtual address space which =
+contains secrets of host or other guests.
+>> This is because we assume that using some speculative gadget (such as =
+half-Spectrev2 gadget), it will be possible to populate *some* CPU core =
+resource which could then be *somehow* leaked by the hyperthread running =
+inside guest. In case of L1TF, this would be data populated to the L1D =
+cache.
+>>=20
+>> 2) Because of (1), every time a hyperthread runs inside host kernel, =
+we must make sure it=E2=80=99s sibling is not running inside guest. i.e. =
+We must kick the sibling hyperthread outside of guest using IPI.
+>>=20
+>> 3) =46rom (2), we should have theoretically deduced that for every =
+#VMExit, there is a need to kick the sibling hyperthread also outside of =
+guest until the #VMExit is completed. Such a patch series was =
+implemented at some point but it had (obviously) significant performance =
+hit.
+>>=20
+>>=20
+> 4) The main goal of this patch series is to preserve (2), but to avoid
+> the overhead specified in (3).
+>>=20
+>> The way this patch series achieves (4) is by observing that during =
+the run of a VM, most #VMExits can be handled rather quickly and locally =
+inside KVM and doesn=E2=80=99t need to reference any data that is not =
+relevant to this VM or KVM code. Therefore, if we will run these =
+#VMExits in an isolated virtual address space (i.e. KVM isolated address =
+space), there is no need to kick the sibling hyperthread from guest =
+while these #VMExits handlers run.
+>=20
+> Thanks!  This clarifies a lot of things.
+>=20
+>> The hope is that the very vast majority of #VMExit handlers will be =
+able to completely run without requiring to switch to full address =
+space. Therefore, avoiding the performance hit of (2).
+>> However, for the very few #VMExits that does require to run in full =
+kernel address space, we must first kick the sibling hyperthread outside =
+of guest and only then switch to full kernel address space and only once =
+all hyperthreads return to KVM address space, then allow then to enter =
+into guest.
+>=20
+> What exactly does "kick" mean in this context?  It sounds like you're
+> going to need to be able to kick sibling VMs from extremely atomic
+> contexts like NMI and MCE.
 
-Thus freezing the queues from a driver ->suspend callback should not
-be relied on for correctness if the same callback is used for system
-suspend and hibernation, which is the case here.  If doing that
-prevents the system from crashing, it is critical to find out why IMO,
-as that may very well indicate a broader issue, not necessarily in the
-driver itself.
+Yes that=E2=80=99s true.
+=E2=80=9Ckick=E2=80=9D in this context will probably mean sending an IPI =
+to all sibling hyperthreads.
+This IPI will cause these sibling hyperthreads to exit from guest to =
+host on EXTERNAL_INTERRUPT
+and wait for a condition that again allows to enter back into guest.
+This condition will be once all hyperthreads of CPU core is again =
+running only within KVM isolated address space of this VM.
 
-But note that even if the device turns out to behave oddly, it still
-needs to be handled, unless it may be prevented from shipping to users
-in that shape.  If it ships, users will face the odd behavior anyway.
+-Liran
+
+
+
