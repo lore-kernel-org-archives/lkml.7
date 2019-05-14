@@ -2,152 +2,113 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BB7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90045C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1002084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600682084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:12:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SqRCNlo6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qf/S0L0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726270AbfENIMM (ORCPT
+        id S1726412AbfENIMc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:12:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41169 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfENIMM (ORCPT
+        Tue, 14 May 2019 04:12:32 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36457 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbfENIMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:12:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q17so221026pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:12:11 -0700 (PDT)
+        Tue, 14 May 2019 04:12:31 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d21so7881690plr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:12:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ELhRuMsUIWwL7cdxk7yZxKy2OTGQGdFenKWb/rZoxgA=;
-        b=SqRCNlo6hgzL0YlpNY/t44ggLN4avw6PNEKVCowpQgDmtPe0yYAQj9zGkyyZYVInr7
-         tU3BoBdA/O05irkUhvlaGqhHK4oBnhKrmD7FKGxl4h/VRzJGhAafoL/L0RUuIgzFTDz9
-         4plTolbqfLjzBlqbOscGy6bSw0pQMx+M3HnI0=
+        bh=NVJCQ/meS0Lsexv3IBx7F9d7yUIfFyO6avMbOIjFh4s=;
+        b=Qf/S0L0GOg+nfU17642TqGkQqhXSonrx9ER/aBydfh/biW25VannRP2+rJFupFnjNQ
+         6O3jNdfrZjij+GeMIqitmfstQ1mnbWWM05ksAzIPhV2I5nUim0wwLfODJnqnUNud35CU
+         dbKTV24y+A9OvRbYlzMzJKLZHVKLHAMmsK1K7rVw6Co+mNGh5+PF42t5apYIhH35lC7k
+         TgKcpWx2X2H+uW5hCymmqwV2gfLLNQvl8xN1+zUkXShWD4K7KWjS5GQDAMIh63fYGXm+
+         ed3BAsVtwYpPvqJsF7boIU5AB93ewkgqizm7aT4FDCBxNcM20DD8HvqPNk6s6Afw8A0a
+         krHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ELhRuMsUIWwL7cdxk7yZxKy2OTGQGdFenKWb/rZoxgA=;
-        b=i+vpFm8hJ++8BASiJPzh2EazvAZls2K765b/HqfGnZb3ZAxyBqm1AGn2G793ePPhu5
-         np684F6N6tvaX6avO3C+vvvN9N5ZZ822F7ivqP27l5v+k76OLPv2bdCBm3k+XeBsKQip
-         H0ewDJYVY5ATzEqdA73rfsM3+h7oLR7WS7cFyZzUVlnyDCbM8iYUjpfE8tmfGN4UIZBc
-         h5iIZXRv2qB4965iuFBvXcS7afEFK9kwmRnFyPesid6+nRg3weMXIsOGzZYRkYCUZt46
-         lfuftgpExpXzAOmUukF42AJBsMfClvtX3fMNWxfKCG7t7IVYx+JDqnbxN1n5ihC2R2f6
-         rUpw==
-X-Gm-Message-State: APjAAAV3fuHIBR/7REHLJ/Ks1uf39EaEKUteRt9wmeK0HlrpyC7aGujl
-        2lbk3+jKkVH4CqjFvlNCTr4y5g==
-X-Google-Smtp-Source: APXvYqwo+K+cbzWQE4wnVaj+lvOIDoSw50OP67oo8SVrG+i1C9Q42J+rxF8oGU2S0atGGLD19ZYbkA==
-X-Received: by 2002:a62:6807:: with SMTP id d7mr38391742pfc.75.1557821531245;
-        Tue, 14 May 2019 01:12:11 -0700 (PDT)
-Received: from chromium.org ([2401:fa00:4:4:6d27:f13:a0fa:d4b6])
-        by smtp.gmail.com with ESMTPSA id f87sm23387384pff.56.2019.05.14.01.12.06
+        bh=NVJCQ/meS0Lsexv3IBx7F9d7yUIfFyO6avMbOIjFh4s=;
+        b=VXBemw+q0P4urI5/AMj7qatTHfHbPRkmuHumVAxMdtwKVs7014JiRr7sQg7+apSBfX
+         MGsWy1kP26nQzIkDNJxxxajidP6ItQ+zSVuIDRKEhv7U3tjMWNlnwTEO0C/L33y1EtE2
+         9uZm/Z9pEqhC8wI5WnDjS510g+hEAn5XBMem5EGali5O2KpcnMZ020+mXuHAgzhWPb1A
+         xSzKLFDq2Igv3RW/zu1vjHnRSBcv/Nt1oU8sUZuylFvDL/+ZtUWNLCsAvQKk7YUYjGJG
+         DzERE5uKRU3SE8YxSGF1PT0Z1eta//ugOs+jCJqQy8VaUmWg1rmVZoAdwIp55n54BW+2
+         YVqQ==
+X-Gm-Message-State: APjAAAU8YSOPNSDpny1Z+/OIQhMtPfODY96YoE9zWYpj2VyMmfKSQXiS
+        7ycyGZWy7eG3lXwNoxYy8C8xpw==
+X-Google-Smtp-Source: APXvYqxsZM0ICZqWX68w0XRe09cnfhLQe5GD234bzH2jX1Q7W6s2mg37aevN5UE3Oi+D1MLUU05rWw==
+X-Received: by 2002:a17:902:e9:: with SMTP id a96mr9816444pla.37.1557821549846;
+        Tue, 14 May 2019 01:12:29 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
+        by smtp.gmail.com with ESMTPSA id v1sm23451654pgb.85.2019.05.14.01.12.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 01:12:10 -0700 (PDT)
-Date:   Tue, 14 May 2019 17:12:04 +0900
-From:   Tomasz Figa <tfiga@chromium.org>
-To:     Michael Tretter <m.tretter@pengutronix.de>
-Cc:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Pawel Osciak <posciak@chromium.org>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Kamil Debski <kamil@wypas.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jeongtae Park <jtp.park@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Tiffany Lin =?utf-8?B?KOael+aFp+ePiik=?= 
-        <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen =?utf-8?B?KOmZs+aZuui/qik=?= 
-        <andrew-ct.chen@mediatek.com>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Todor Tomov <todor.tomov@linaro.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dave.stevenson@raspberrypi.org,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
-Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
- encoder interface
-Message-ID: <20190514081204.GA132745@chromium.org>
-References: <20190124100419.26492-1-tfiga@chromium.org>
- <20190124100419.26492-3-tfiga@chromium.org>
- <20190430193412.4291fca8@litschi.hi.pengutronix.de>
+        Tue, 14 May 2019 01:12:28 -0700 (PDT)
+Date:   Tue, 14 May 2019 01:12:23 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        knut.omang@oracle.com, logang@deltatee.com, mpe@ellerman.id.au,
+        pmladek@suse.com, rdunlap@infradead.org, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v3 08/18] objtool: add kunit_try_catch_throw to the
+ noreturn list
+Message-ID: <20190514081223.GA230665@google.com>
+References: <20190514054251.186196-1-brendanhiggins@google.com>
+ <20190514054251.186196-9-brendanhiggins@google.com>
+ <20190514065643.GC2589@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190430193412.4291fca8@litschi.hi.pengutronix.de>
+In-Reply-To: <20190514065643.GC2589@hirez.programming.kicks-ass.net>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
-
-On Tue, Apr 30, 2019 at 07:34:12PM +0200, Michael Tretter wrote:
-> On Thu, 24 Jan 2019 19:04:19 +0900, Tomasz Figa wrote:
-
-[snip]
-
-> > +State machine
-> > +=============
-> > +
-> > +.. kernel-render:: DOT
-> > +   :alt: DOT digraph of encoder state machine
-> > +   :caption: Encoder state machine
-> > +
-> > +   digraph encoder_state_machine {
-> > +       node [shape = doublecircle, label="Encoding"] Encoding;
-> > +
-> > +       node [shape = circle, label="Initialization"] Initialization;
-> > +       node [shape = circle, label="Stopped"] Stopped;
-> > +       node [shape = circle, label="Drain"] Drain;
-> > +       node [shape = circle, label="Reset"] Reset;
-> > +
-> > +       node [shape = point]; qi
-> > +       qi -> Initialization [ label = "open()" ];
-> > +
-> > +       Initialization -> Encoding [ label = "Both queues streaming" ];
-> > +
-> > +       Encoding -> Drain [ label = "V4L2_DEC_CMD_STOP" ];
-> > +       Encoding -> Reset [ label = "VIDIOC_STREAMOFF(CAPTURE)" ];
-> > +       Encoding -> Stopped [ label = "VIDIOC_STREAMOFF(OUTPUT)" ];
-> > +       Encoding -> Encoding;
-> > +
-> > +       Drain -> Stopped [ label = "All CAPTURE\nbuffers dequeued\nor\nVIDIOC_STREAMOFF(CAPTURE)" ];
+On Tue, May 14, 2019 at 08:56:43AM +0200, Peter Zijlstra wrote:
+> On Mon, May 13, 2019 at 10:42:42PM -0700, Brendan Higgins wrote:
+> > This fixes the following warning seen on GCC 7.3:
+> >   kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
+> > 
 > 
-> Shouldn't this be
-> 
-> 	Drain -> Stopped [ label = "All OUTPUT\nbuffers dequeued\nor\nVIDIOC_STREAMOFF(OUTPUT)" ];
-> 
-> ? While draining, the encoder continues encoding until all source
-> buffers, i.e., buffers in the OUTPUT queue, are encoded or STREAMOFF
-> happens on the OUTPUT queue. At the same time, the client continues to
-> queue and dequeue buffers on the CAPTURE queue and there might be
-> buffers queued on the CAPTURE queue even if the driver returned the
-> buffer with the FLAG_LAST set and returns -EPIPE on further DQBUF
-> requests.
->
+> What is that file and function; no kernel tree near me seems to have
+> that.
 
-The STREAMOFF should be on OUTPUT indeed, because that immediately
-removes any OUTPUT buffers from the queue, so there is nothing to be
-encoded to wait for anymore.
+Oh, sorry about that. The function is added in the following patch,
+"[PATCH v3 09/18] kunit: test: add support for test abort"[1].
 
-The "All OUTPUT buffers dequeued" part is correct, though. The last
-OUTPUT buffer in the flush sequence is considered encoded after the
-application dequeues the corresponding CAPTURE buffer is dequeued and
-that buffer is marked with the V4L2_BUF_FLAG_LAST flag.
+My apologies if this patch is supposed to come after it in sequence, but
+I assumed it should come before otherwise objtool would complain about
+the symbol when it is introduced.
 
-Best regards,
-Tomasz
+Thanks!
+
+[1] https://lkml.org/lkml/2019/5/14/44
