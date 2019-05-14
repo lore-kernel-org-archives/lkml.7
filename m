@@ -2,114 +2,118 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB0CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F6DC04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1F220863
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBAC520863
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rEV45d52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfENQLd (ORCPT
+        id S1726528AbfENQLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:11:33 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:47864 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726013AbfENQLd (ORCPT
+        Tue, 14 May 2019 12:11:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:37366 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfENQLl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:11:33 -0400
-Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id 58C216000B7;
-        Tue, 14 May 2019 18:11:29 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail12r.snt-is.com
- (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 14 May
- 2019 18:11:28 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Tue, 14 May 2019 18:11:28 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Jeff Kletsky <lede@allycomm.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Thread-Topic: [PATCH] mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG
-Thread-Index: AQHVBypxyGCaW3KLokGl7ivY8UUpB6Zo92KAgAGv7YCAAAg0AA==
-Date:   Tue, 14 May 2019 16:11:28 +0000
-Message-ID: <e53a0569-6eca-4385-007d-baffc3f5c7ea@kontron.de>
-References: <20190510121727.29834-1-lede@allycomm.com>
- <3cb32209-f246-e562-2aee-fdf566a60b30@kontron.de>
- <1023ba21-b188-1dcc-3ecc-c563d4cb8a67@allycomm.com>
-In-Reply-To: <1023ba21-b188-1dcc-3ecc-c563d4cb8a67@allycomm.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <69EEC9F891FDAF4C9BBF3481A0F38A3B@snt-world.com>
-Content-Transfer-Encoding: base64
+        Tue, 14 May 2019 12:11:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id q17so1833688lfo.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 09:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=79OCTNk458byBS2H3Xt0sE1+KJDhnYCsFyQ7h5W7n7w=;
+        b=rEV45d52FtweB9bt6szB4ocHbp9e/OFDripRbyALASst+32ezBZgc9ZQa9pOVQkL1A
+         L0DxpCJVbFC36R+TXLsFNjOX0MARBsJcPrC9gDqBL70Gy2LQ5PThRWGt5k1jFqLg8tfz
+         xL1Pu2dxruYOFf1S1pjMiPx3P9gZzs7jKL70DZdRMFqwtxoAhmCrmYmE5+za2E4YjjyR
+         SwYld9BX/B0E6O8aQmBaemGdb3gFJ7wKTT5rYm6hDogI81VKNyZcp5c4pFgFLtXKUY9o
+         BRjOYI72AtYR/DFo3zNXYrJmGPZ7bq0lJWhylHd6EEok0J8IIOGhmoefLXWUbj5a69d4
+         Ygwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=79OCTNk458byBS2H3Xt0sE1+KJDhnYCsFyQ7h5W7n7w=;
+        b=CDhwUMJDocnlFRFZ8zR1dwXHSy2354cxFz1T2laZz7g/BTNS3LFEdbHx+4XoQBILQU
+         MNLI9f5TFGgvrTRwnH4GGco9/vq9ymDueJoDY/L6vTNgiHbYzZ/R11ts91Q1oYD5m9fO
+         HSz7X4fSYgLCxGyYblmrA8QwDQ2WvxRPEKR3mvP5KcftySzU1pEiqz5Mc860ULhNe9eT
+         buKu24irxp9ww588kmd6J1clOWcgWNKZrFzi8jK1pnozySoQW3A8e8App+9c/rF8c3Sl
+         HG12uDu0qd1i06vCK9es2sSJckMLIoXD7olzXCsQOi9Duw5JSahTbN6uZEzpsApHIU9T
+         NZZA==
+X-Gm-Message-State: APjAAAUD0LtqqbnmIpkIy5++O1psSvvRT/bvycFs7O+IglKcLlRhn4N1
+        z5yDYWSuLfvj7363lPXpxGMMSA==
+X-Google-Smtp-Source: APXvYqyi7e9TjI8XPxrwpktl3EJ2JyOz0p4Se1vjd3AUZyBeZPecL5wHHXSzDB/JwQyEV0EZ41oNRA==
+X-Received: by 2002:ac2:4479:: with SMTP id y25mr17316963lfl.95.1557850298941;
+        Tue, 14 May 2019 09:11:38 -0700 (PDT)
+Received: from centauri.ideon.se ([85.235.10.227])
+        by smtp.gmail.com with ESMTPSA id l14sm3850033lfc.61.2019.05.14.09.11.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 14 May 2019 09:11:37 -0700 (PDT)
+Date:   Tue, 14 May 2019 18:11:35 +0200
+From:   Niklas Cassel <niklas.cassel@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, andy.gross@linaro.org,
+        David Brown <david.brown@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCHv1 1/8] arm64: dts: Fix various entry-method properties to
+ reflect documentation
+Message-ID: <20190514161135.GA1824@centauri.ideon.se>
+References: <cover.1557486950.git.amit.kucheria@linaro.org>
+ <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 58C216000B7.AD04F
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, lede@allycomm.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab5bad0258e455ef84059b749ca9e79f311b5e3c.1557486950.git.amit.kucheria@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmVmZiwNCg0KT24gMTQuMDUuMTkgMTc6NDIsIEplZmYgS2xldHNreSB3cm90ZToNCj4gT24g
-NS8xMy8xOSA2OjU2IEFNLCBTY2hyZW1wZiBGcmllZGVyIHdyb3RlOg0KPiANCj4+IEhpIEplZmYs
-DQo+Pg0KPj4gSSBqdXN0IG5vdGljZWQgSSBoaXQgdGhlIHdyb25nIGJ1dHRvbiBhbmQgbXkgcHJl
-dmlvdXMgcmVwbHkgd2FzIG9ubHkNCj4+IHNlbnQgdG8gdGhlIE1URCBsaXN0LCBzbyBJJ20gcmVz
-ZW5kaW5nIHdpdGggZml4ZWQgcmVjaXBpZW50cy4uLg0KPj4NCj4+IE9uIDEwLjA1LjE5IDE0OjE3
-LGxlZGVAYWxseWNvbW0uY29tICB3cm90ZToNCj4+PiBGcm9tOiBKZWZmIEtsZXRza3k8Z2l0LWNv
-bW1pdHNAYWxseWNvbW0uY29tPg0KPj4+DQo+Pj4gVGhlIEdpZ2FEZXZpY2UgR0Q1RjFHUTRVRnh4
-RyBTUEkgTkFORCBpcyBpbiBjdXJyZW50IHByb2R1Y3Rpb24gZGV2aWNlcw0KPj4+IGFuZCwgd2hp
-bGUgaXQgaGFzIHRoZSBzYW1lIGxvZ2ljYWwgbGF5b3V0IGFzIHRoZSBFLXNlcmllcyBkZXZpY2Vz
-LA0KPj4+IGl0IGRpZmZlcnMgaW4gdGhlIFNQSSBpbnRlcmZhY2luZyBpbiBzaWduaWZpY2FudCB3
-YXlzLg0KPj4+DQo+Pj4gVG8gYWNjb21tb2RhdGUgdGhlc2UgY2hhbmdlcywgdGhpcyBwYXRjaCBh
-bHNvOg0KPj4+DQo+Pj4gICAgICogQWRkcyBzdXBwb3J0IGZvciB0d28tYnl0ZSBtYW51ZmFjdHVy
-ZXIgSURzDQo+Pj4gICAgICogQWRkcyAjZGVmaW5lLXMgZm9yIHRocmVlLWJ5dGUgYWRkcmVzc2lu
-ZyBmb3IgcmVhZCBvcHMNCj4+Pg0KPj4+IGh0dHA6Ly93d3cuZ2lnYWRldmljZS5jb20vZGF0YXNo
-ZWV0L2dkNWYxZ3E0eGZ4eGcvDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBKZWZmIEtsZXRza3k8
-Z2l0LWNvbW1pdHNAYWxseWNvbW0uY29tPg0KPj4gTWF5YmUgaXQgd291bGQgYmUgYmV0dGVyIHRv
-IHNwbGl0IHRoaXMgcGF0Y2ggaW50byB0aHJlZSBwYXJ0czoNCj4+ICogQWRkIHN1cHBvcnQgZm9y
-IHR3by1ieXRlIGRldmljZSBJRHMNCj4+ICogQWRkICNkZWZpbmUtcyBmb3IgdGhyZWUtYnl0ZSBh
-ZGRyZXNzaW5nIGZvciByZWFkIG9wcw0KPj4gKiBBZGQgc3VwcG9ydCBmb3IgR0Q1RjFHUTRVRnh4
-Rw0KPj4NCj4+IEFueXdheSB0aGUgY29udGVudCBsb29rcyBnb29kIHRvIG1lLCBzbzoNCj4+DQo+
-PiBSZXZpZXdlZC1ieTogRnJpZWRlciBTY2hyZW1wZjxmcmllZGVyLnNjaHJlbXBmQGtvbnRyb24u
-ZGU+DQo+Pg0KPj4gWy4uLl0NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHRpbWUgaW4gcmV2aWV3IGFu
-ZCBnb29kIHdvcmRzIQ0KDQpZb3UncmUgd2VsY29tZSENCg0KPiBNeSBhcG9sb2dpZXMgZm9yIGFu
-IGluY29tcGxldGUgZ2l0LXNlbmQtZW1haWwgY29uZmlnIHRoYXQgbGVmdA0KPiBtZSBuYW1lbGVz
-cyBpbiB0aGUgaGVhZGVycy4NCg0KTm8gcHJvYmxlbSwgSSBndWVzc2VkIHlvdXIgbmFtZSBmcm9t
-IHRoZSBTaWduZWQtb2ZmLWJ5IHRhZyA7KQ0KDQo+IEkgd2Fzbid0IHN1cmUgaWYgdGhhdCB3YXMg
-ZGlyZWN0aW9uIHRvIHN1Ym1pdCBhcyB0aHJlZSBwYXRjaGVzDQo+IGF0IHRoaXMgdGltZSwgYnV0
-IHdvdWxkIGJlIGhhcHB5IHRvIGRvIHNvIGlmIHRoZSBjb25zZW5zdXMgaXMNCj4gdGhhdCBpdCB0
-aGUgZGlyZWN0aW9uIHRvIGZvbGxvdy4NCg0KSSB0aGluayBpdCdzIGNvbW1vbiB0byBzZXBhcmF0
-ZSBsb2dpY2FsIGRpZmZlcmVudCBjaGFuZ2VzLiBUaGlzIG1ha2VzIGl0IA0KZWFzaWVyIHRvIHJl
-YWQuDQpBbHNvIHRoZSBwcmVwYXJhdGlvbiBjaGFuZ2VzIG9ubHkgdG91Y2ggdGhlIFNQSSBOQU5E
-IGNvcmUuIEkgZ3Vlc3MgDQp0aGF0J3MgYW5vdGhlciByZWFzb24gd2h5IHRoZXkgc2hvdWxkIGJl
-IHNlcGFyYXRlZCBmcm9tIHRoZSANCmNoaXAtc3BlY2lmaWMgY2hhbmdlcy4NCg0KPiBBdCBsZWFz
-dCBmb3IgbWUsIEkgZmVlbCB0aGF0IHRoZSBvdGhlciB0d28gZG9uJ3QgcmVhbGx5IHN0YW5kDQo+
-IG9uIHRoZWlyIG93biB3aXRob3V0IHRoZSBjb250ZXh0IGZvciB0aGVpciBuZWVkLg0KDQpJIGRv
-bid0IHRoaW5rIHRoYXQncyBhIHByb2JsZW0uIEp1c3QgYWRkIGEgbm90ZSB0byB0aGUgY29tbWl0
-IG1lc3NhZ2UgDQp0aGF0IHRoZXNlIGNvcmUgY2hhbmdlcyBhcmUgbmVlZGVkIHRvIHByZXBhcmUg
-Zm9yIHRoZSBHRDVGMUdRNFVGeHhHIHN1cHBvcnQuDQoNClRoYW5rcywNCkZyaWVkZXI=
+On Fri, May 10, 2019 at 04:59:39PM +0530, Amit Kucheria wrote:
+> The idle-states binding documentation[1] mentions that the
+
+This [1] reference is a null pointer ;)
+
+Other than that:
+Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+
+> 'entry-method' property is required on 64-bit platforms and must be set
+> to "psci".
+> 
+> We fixed up all uses of the entry-method property in
+> commit e9880240e4f4 ("arm64: dts: Fix various entry-method properties to
+> reflect documentation"). But a new one has appeared. Fix it up.
+> 
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index 2896bbcfa3bb..42e7822a0227 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -51,7 +51,7 @@
+>  		 * PSCI node is not added default, U-boot will add missing
+>  		 * parts if it determines to use PSCI.
+>  		 */
+> -		entry-method = "arm,psci";
+> +		entry-method = "psci";
+>  
+>  		CPU_PH20: cpu-ph20 {
+>  			compatible = "arm,idle-state";
+> -- 
+> 2.17.1
+> 
