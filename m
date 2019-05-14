@@ -2,203 +2,137 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280D2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6ABCC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF16420850
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32B220850
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbfENR3p (ORCPT
+        id S1726977AbfENRaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:29:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41572 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726272AbfENR3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:29:44 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1D47CC05FBCB;
-        Tue, 14 May 2019 17:29:44 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4654C1001E98;
-        Tue, 14 May 2019 17:29:39 +0000 (UTC)
-Date:   Tue, 14 May 2019 13:29:38 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Tim Murray <timmurray@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        LKML <linux-kernel@vger.kernel.org>, dm-devel@redhat.com,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: Problems caused by dm crypt: use WQ_HIGHPRI for the IO and crypt
- workqueues
-Message-ID: <20190514172938.GA31835@redhat.com>
-References: <CAD=FV=VOAjgdrvkK8YKPP-8zqwPpo39rA43JH2BCeYLB0UkgAQ@mail.gmail.com>
- <20190513171519.GA26166@redhat.com>
- <CAD=FV=X7GDNoJVvRgBTDoVkf9UYA69B-rTY2G3888w=9iS=RtQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=X7GDNoJVvRgBTDoVkf9UYA69B-rTY2G3888w=9iS=RtQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 14 May 2019 17:29:44 +0000 (UTC)
+        Tue, 14 May 2019 13:30:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38918 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726303AbfENRaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 13:30:01 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EHMj34010495
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:30:00 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sg0994ydv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:29:59 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 14 May 2019 18:29:57 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 May 2019 18:29:55 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EHTsUG55705608
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 17:29:54 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2317CA405F;
+        Tue, 14 May 2019 17:29:54 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47FC2A4054;
+        Tue, 14 May 2019 17:29:53 +0000 (GMT)
+Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 May 2019 17:29:53 +0000 (GMT)
+Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of
+ IMA Signature signer in IMA log
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi <nramas@linux.microsoft.com>,
+        Linux Integrity <linux-integrity@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
+        Prakhar Srivastava <prsriva@linux.microsoft.com>
+Date:   Tue, 14 May 2019 13:29:52 -0400
+In-Reply-To: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
+References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051417-0028-0000-0000-0000036DA362
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051417-0029-0000-0000-0000242D3648
+Message-Id: <1557854992.4139.69.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14 2019 at 12:47pm -0400,
-Doug Anderson <dianders@chromium.org> wrote:
+On Tue, 2019-05-14 at 10:14 -0700, Lakshmi wrote:
+> The motive behind this patch series is to measure the public key
+> of the IMA signature signer in the IMA log.
+> 
+> The IMA signature of the file, logged using ima-sig template, contains
+> the key identifier of the key that was used to generate the signature.
+> But outside the client machine this key id is not sufficient to
+> uniquely determine which key the signature corresponds to.
+> Providing the public key of the signer in the IMA log would
+> allow, for example, an attestation service to securely verify
+> if the key used to generate the IMA signature is a valid and
+> trusted one, and that the key has not been revoked or expired.
+> 
+> An attestation service would just need to maintain a list of
+> valid public keys and using the data from the IMA log can attest
+> the system files loaded on the client machine.
+> 
+> To achieve the above the patch series does the following:
+>    - Adds a new method in asymmetric_key_subtype to query
+>      the public key of the given key
+>    - Adds a new IMA template namely "ima-sigkey" to store\read
+>      the public key of the IMA signature signer. This template
+>      extends the existing template "ima-sig"
 
-> Hi,
-> 
-> On Mon, May 13, 2019 at 10:15 AM Mike Snitzer <snitzer@redhat.com> wrote:
-> 
-> > On Mon, May 13 2019 at 12:18pm -0400,
-> > Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > > Hi,
-> > >
-> > > I wanted to jump on the bandwagon of people reporting problems with
-> > > commit a1b89132dc4f ("dm crypt: use WQ_HIGHPRI for the IO and crypt
-> > > workqueues").
-> > >
-> > > Specifically I've been tracking down communication errors when talking
-> > > to our Embedded Controller (EC) over SPI.  I found that communication
-> > > errors happened _much_ more frequently on newer kernels than older
-> > > ones.  Using ftrace I managed to track the problem down to the dm
-> > > crypt patch.  ...and, indeed, reverting that patch gets rid of the
-> > > vast majority of my errors.
-> > >
-> > > If you want to see the ftrace of my high priority worker getting
-> > > blocked for 7.5 ms, you can see:
-> > >
-> > > https://bugs.chromium.org/p/chromium/issues/attachmentText?aid=392715
-> > >
-> > >
-> > > In my case I'm looking at solving my problems by bumping the CrOS EC
-> > > transfers fully up to real time priority.  ...but given that there are
-> > > other reports of problems with the dm-crypt priority (notably I found
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=199857) maybe we should
-> > > also come up with a different solution for dm-crypt?
-> > >
-> >
-> > And chance you can test how behaviour changes if you remove
-> > WQ_CPU_INTENSIVE? e.g.:
-> >
-> > diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-> > index 692cddf3fe2a..c97d5d807311 100644
-> > --- a/drivers/md/dm-crypt.c
-> > +++ b/drivers/md/dm-crypt.c
-> > @@ -2827,8 +2827,7 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
-> >
-> >         ret = -ENOMEM;
-> >         cc->io_queue = alloc_workqueue("kcryptd_io/%s",
-> > -                                      WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
-> > -                                      1, devname);
-> > +                                      WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
-> >         if (!cc->io_queue) {
-> >                 ti->error = "Couldn't create kcryptd io queue";
-> >                 goto bad;
-> > @@ -2836,11 +2835,10 @@ static int crypt_ctr(struct dm_target *ti, unsigned int argc, char **argv)
-> >
-> >         if (test_bit(DM_CRYPT_SAME_CPU, &cc->flags))
-> >                 cc->crypt_queue = alloc_workqueue("kcryptd/%s",
-> > -                                                 WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM,
-> > -                                                 1, devname);
-> > +                                                 WQ_HIGHPRI | WQ_MEM_RECLAIM, 1, devname);
-> >         else
-> >                 cc->crypt_queue = alloc_workqueue("kcryptd/%s",
-> > -                                                 WQ_HIGHPRI | WQ_CPU_INTENSIVE | WQ_MEM_RECLAIM | WQ_UNBOUND,
-> > +                                                 WQ_HIGHPRI | WQ_MEM_RECLAIM | WQ_UNBOUND,
-> >                                                   num_online_cpus(), devname);
-> >         if (!cc->crypt_queue) {
-> >                 ti->error = "Couldn't create kcryptd queue";
-> 
-> It's not totally trivially easy for me to test.  My previous failure
-> cases were leaving a few devices "idle" over a long period of time.  I
-> did that on 3 machines last night and didn't see any failures.  Thus
-> removing "WQ_CPU_INTENSIVE" may have made things better.  Before I say
-> for sure I'd want to test for longer / redo the test a few times,
-> since I've seen the problem go away on its own before (just by
-> timing/luck) and then re-appear.
+Why duplicate the certificate info on each record in the measurement
+list?  Why not add the certificate info once, as the key is loaded
+onto the .ima and .platform keyrings?
 
-What you shared below seems to indicate that removing WQ_CPU_INTENSIVE
-didn't work.
+Mimi
 
-> Do you have a theory about why removing WQ_CPU_INTENSIVE would help?
 
-Reading this comment is what made me think to ask:
-https://bugzilla.kernel.org/show_bug.cgi?id=199857#c4
+> 
+> Lakshmi (2):
+>    add support for querying public key from a given key
+>    add a new template ima-sigkey to store/read the public, key of ima
+>      signature signer
+> 
+>   .../admin-guide/kernel-parameters.txt         |  2 +-
+>   Documentation/crypto/asymmetric-keys.txt      |  1 +
+>   Documentation/security/IMA-templates.rst      |  5 +-
+>   crypto/asymmetric_keys/public_key.c           |  7 +++
+>   crypto/asymmetric_keys/signature.c            | 24 +++++++++
+>   include/crypto/public_key.h                   |  1 +
+>   include/keys/asymmetric-subtype.h             |  3 ++
+>   security/integrity/digsig.c                   | 54 +++++++++++++++++--
+>   security/integrity/digsig_asymmetric.c        | 44 +++++++++++++++
+>   security/integrity/ima/Kconfig                |  3 ++
+>   security/integrity/ima/ima_template.c         |  3 ++
+>   security/integrity/ima/ima_template_lib.c     | 43 +++++++++++++++
+>   security/integrity/ima/ima_template_lib.h     |  4 ++
+>   security/integrity/integrity.h                | 29 +++++++++-
+>   14 files changed, 216 insertions(+), 7 deletions(-)
+> 
 
-> NOTE: in trying to reproduce problems more quickly I actually came up
-> with a better test case for the problem I was seeing.  I found that I
-> can reproduce my own problems much better with this test:
-> 
->   dd if=/dev/zero of=/var/log/foo.txt bs=4M count=512&
->   while true; do
->     ectool version > /dev/null;
->   done
-> 
-> It should be noted that "/var" is on encrypted stateful on my system
-> so throwing data at it stresses dm-crypt.  It should also be noted
-> that somehow "/var" also ends up traversing through a loopback device
-> (this becomes relevant below):
-> 
-> 
-> With the above test:
-> 
-> 1. With a mainline kernel that has commit 37a186225a0c
-> ("platform/chrome: cros_ec_spi: Transfer messages at high priority"):
-> I see failures.
-> 
-> 2. With a mainline kernel that has commit 37a186225a0c plus removing
-> WQ_CPU_INTENSIVE in dm-crypt: I still see failures.
-> 
-> 3. With a mainline kernel that has commit 37a186225a0c plus removing
-> high priority (but keeping CPU intensive) in dm-crypt: I still see
-> failures.
-> 
-> 4. With a mainline kernel that has commit 37a186225a0c plus removing
-> high priority (but keeping CPU intensive) in dm-crypt plus removing
-> set_user_nice() in loop_prepare_queue(): I get a pass!
-> 
-> 5. With a mainline kernel that has commit 37a186225a0c plus removing
-> set_user_nice() in loop_prepare_queue() plus leaving dm-crypt alone: I
-> see failures.
-> 
-> 6. With a mainline kernel that has commit 37a186225a0c plus removing
-> set_user_nice() in loop_prepare_queue() plus removing WQ_CPU_INTENSIVE
-> in dm-crypt: I still see failures
-> 
-> 7. With my new "cros_ec at realtime" series and no other patches, I get a pass!
-> 
-> 
-> tl;dr: High priority (even without CPU_INTENSIVE) definitely causes
-> interference with my high priority work starving it for > 8 ms, but
-> dm-crypt isn't unique here--loopback devices also have problems.
-
-Well I read it all ;)  
-
-I don't have a commit 37a186225a0c, the original commit in querstion is
-a1b89132dc4 right?
-
-But I think we need a deeper understanding from workqueue maintainers on
-what the right way forward is here.  I cc'd Tejun in my previous reply
-but IIRC he no longer looks after the workqueue code.
-
-I think it'd be good for you to work with the original author of commit
-a1b89132dc4 (Tim, on cc) to see if you can reach consensus on what works
-for both of your requirements.
-
-Given 7 above, if your new "cros_ec at realtime" series fixes it.. ship
-it?
-
-Mike
