@@ -2,231 +2,127 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA6CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2E9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3628208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FAF8208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IAsJ4EQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfENHxV (ORCPT
+        id S1726290AbfENHyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:53:21 -0400
-Received: from mga11.intel.com ([192.55.52.93]:6153 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbfENHxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:53:21 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 00:53:21 -0700
-X-ExtLoop1: 1
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.9])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2019 00:53:15 -0700
-Date:   Tue, 14 May 2019 03:47:36 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Erik Skultety <eskultet@redhat.com>
-Cc:     "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "arei.gonglei@huawei.com" <arei.gonglei@huawei.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v2 1/2] vfio/mdev: add version attribute for mdev device
-Message-ID: <20190514074736.GE20407@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20190509175404.512ae7aa.cohuck@redhat.com>
- <20190509164825.GG2868@work-vm>
- <20190510110838.2df4c4d0.cohuck@redhat.com>
- <20190510093608.GD2854@work-vm>
- <20190510114838.7e16c3d6.cohuck@redhat.com>
- <20190513132804.GD11139@beluga.usersys.redhat.com>
- <20190514061235.GC20407@joy-OptiPlex-7040>
- <20190514072039.GA2089@beluga.usersys.redhat.com>
- <20190514073219.GD20407@joy-OptiPlex-7040>
- <20190514074344.GB2089@beluga.usersys.redhat.com>
+        Tue, 14 May 2019 03:54:12 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39820 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfENHyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 03:54:11 -0400
+Received: by mail-ua1-f68.google.com with SMTP id v7so5843436ual.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 00:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zf8IJjcdPrQOgX1z3j6gO2WdWT6UVn+L7AhNfe6yMi8=;
+        b=IAsJ4EQAYOn036lV8psLdhXQfclTm/pOQHGolyhy+F/M9PN51UF1V/AzbmQ2+szdeA
+         50WNp67zAeq6LM46Rm5S8gA77LBMEMw1JsVn/tpSuW3Fmn2xta1oG5hpd6oQAlItiBS0
+         V7wGhDfi+6qvy0RGWnt2gDFdS1UQBmLgdXkSmdDpeafokFQHUZoUqTZIOHCETe6JfFAC
+         a7PnXUppJHzhn2AVGetOalutM2jS6ypHR9488igXkCBQ8h9ghd/iSRHKRauDRdWVhy3O
+         1dBuucve8gsrdUniXl3OAxGA0NC4JSN5HrSsxuOzyO7z9KI/68uSfGyLt3t1vA/hmfgL
+         34qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zf8IJjcdPrQOgX1z3j6gO2WdWT6UVn+L7AhNfe6yMi8=;
+        b=tGRuPylhniiroFAP8XonLoW9DyF/KqsuOxAqoCJ0G7TLJPwsFnYdDQd5ainCEdBlFE
+         zK2djAvuW2G/Eq+by+i2f8WPBAfFdtqqPTu61QanPhtxT6DCmPxD85+iZVDUUxmIAAgq
+         9kFTJUYgTQH/d5StbcLJIBahJSOWMb7uz2vnUnAv59MdBaTOk2ipfUdHPay7cDsPvbBx
+         HTOaBrR4Yu+j2BIZ+AVpvzjNS/w/gYJXkLS/DzS8+aU50zJxqQnxuUNTsYSsP0amSsc+
+         i4Ubjt7LrrH1bEEIck3rXcA3QpLgTRclAs54w5UyqVfOYCjFdTBWXlPLw/QG9zwJzJue
+         ksgA==
+X-Gm-Message-State: APjAAAXl52Tzee188sq+N3SGW4rU5urscRSDmHviVKFv+l7LVBwXN3EH
+        kgZRup36yZKXNUWtqDnAymVtKs9LX9J0mxSARYTNWw==
+X-Google-Smtp-Source: APXvYqw26na4iAl9OES8/pXHjHR4OX/mYE4JxGMYMoMM698JgOYmYEnp2SYDxqwKYvDyL7iTIXPA7w04vcm/XFFuFFI=
+X-Received: by 2002:ab0:30a1:: with SMTP id b1mr13121475uam.104.1557820450699;
+ Tue, 14 May 2019 00:54:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514074344.GB2089@beluga.usersys.redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190320094918.20234-1-rnayak@codeaurora.org> <20190320094918.20234-9-rnayak@codeaurora.org>
+In-Reply-To: <20190320094918.20234-9-rnayak@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 14 May 2019 09:53:34 +0200
+Message-ID: <CAPDyKFppirfM7B9TB=jZzo67E=rdMnfVKEjdv0wn1zBAUoY_HA@mail.gmail.com>
+Subject: Re: [RFC v2 08/11] arm64: dts: sdm845: Add ufs opps and power-domains
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Doug Anderson <dianders@chromium.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 03:43:44PM +0800, Erik Skultety wrote:
-> On Tue, May 14, 2019 at 03:32:19AM -0400, Yan Zhao wrote:
-> > On Tue, May 14, 2019 at 03:20:40PM +0800, Erik Skultety wrote:
-> > > On Tue, May 14, 2019 at 02:12:35AM -0400, Yan Zhao wrote:
-> > > > On Mon, May 13, 2019 at 09:28:04PM +0800, Erik Skultety wrote:
-> > > > > On Fri, May 10, 2019 at 11:48:38AM +0200, Cornelia Huck wrote:
-> > > > > > On Fri, 10 May 2019 10:36:09 +0100
-> > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> > > > > >
-> > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:
-> > > > > > > > On Thu, 9 May 2019 17:48:26 +0100
-> > > > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:
-> > > > > > > > > > On Thu, 9 May 2019 16:48:57 +0100
-> > > > > > > > > > "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > > * Cornelia Huck (cohuck@redhat.com) wrote:
-> > > > > > > > > > > > On Tue, 7 May 2019 15:18:26 -0600
-> > > > > > > > > > > > Alex Williamson <alex.williamson@redhat.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > > On Sun,  5 May 2019 21:49:04 -0400
-> > > > > > > > > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > > > > > > > > >
-> > > > > > > > > > > > > > +  Errno:
-> > > > > > > > > > > > > > +  If vendor driver wants to claim a mdev device incompatible to all other mdev
-> > > > > > > > > > > > > > +  devices, it should not register version attribute for this mdev device. But if
-> > > > > > > > > > > > > > +  a vendor driver has already registered version attribute and it wants to claim
-> > > > > > > > > > > > > > +  a mdev device incompatible to all other mdev devices, it needs to return
-> > > > > > > > > > > > > > +  -ENODEV on access to this mdev device's version attribute.
-> > > > > > > > > > > > > > +  If a mdev device is only incompatible to certain mdev devices, write of
-> > > > > > > > > > > > > > +  incompatible mdev devices's version strings to its version attribute should
-> > > > > > > > > > > > > > +  return -EINVAL;
-> > > > > > > > > > > > >
-> > > > > > > > > > > > > I think it's best not to define the specific errno returned for a
-> > > > > > > > > > > > > specific situation, let the vendor driver decide, userspace simply
-> > > > > > > > > > > > > needs to know that an errno on read indicates the device does not
-> > > > > > > > > > > > > support migration version comparison and that an errno on write
-> > > > > > > > > > > > > indicates the devices are incompatible or the target doesn't support
-> > > > > > > > > > > > > migration versions.
-> > > > > > > > > > > >
-> > > > > > > > > > > > I think I have to disagree here: It's probably valuable to have an
-> > > > > > > > > > > > agreed error for 'cannot migrate at all' vs 'cannot migrate between
-> > > > > > > > > > > > those two particular devices'. Userspace might want to do different
-> > > > > > > > > > > > things (e.g. trying with different device pairs).
-> > > > > > > > > > >
-> > > > > > > > > > > Trying to stuff these things down an errno seems a bad idea; we can't
-> > > > > > > > > > > get much information that way.
-> > > > > > > > > >
-> > > > > > > > > > So, what would be a reasonable approach? Userspace should first read
-> > > > > > > > > > the version attributes on both devices (to find out whether migration
-> > > > > > > > > > is supported at all), and only then figure out via writing whether they
-> > > > > > > > > > are compatible?
-> > > > > > > > > >
-> > > > > > > > > > (Or just go ahead and try, if it does not care about the reason.)
-> > > > > > > > >
-> > > > > > > > > Well, I'm OK with something like writing to test whether it's
-> > > > > > > > > compatible, it's just we need a better way of saying 'no'.
-> > > > > > > > > I'm not sure if that involves reading back from somewhere after
-> > > > > > > > > the write or what.
-> > > > > > > >
-> > > > > > > > Hm, so I basically see two ways of doing that:
-> > > > > > > > - standardize on some error codes... problem: error codes can be hard
-> > > > > > > >   to fit to reasons
-> > > > > > > > - make the error available in some attribute that can be read
-> > > > > > > >
-> > > > > > > > I'm not sure how we can serialize the readback with the last write,
-> > > > > > > > though (this looks inherently racy).
-> > > > > > > >
-> > > > > > > > How important is detailed error reporting here?
-> > > > > > >
-> > > > > > > I think we need something, otherwise we're just going to get vague
-> > > > > > > user reports of 'but my VM doesn't migrate'; I'd like the error to be
-> > > > > > > good enough to point most users to something they can understand
-> > > > > > > (e.g. wrong card family/too old a driver etc).
-> > > > > >
-> > > > > > Ok, that sounds like a reasonable point. Not that I have a better idea
-> > > > > > how to achieve that, though... we could also log a more verbose error
-> > > > > > message to the kernel log, but that's not necessarily where a user will
-> > > > > > look first.
-> > > > >
-> > > > > In case of libvirt checking the compatibility, it won't matter how good the
-> > > > > error message in the kernel log is and regardless of how many error states you
-> > > > > want to handle, libvirt's only limited to errno here, since we're going to do
-> > > > > plain read/write, so our internal error message returned to the user is only
-> > > > > going to contain what the errno says - okay, of course we can (and we DO)
-> > > > > provide libvirt specific string, further specifying the error but like I
-> > > > > mentioned, depending on how many error cases we want to distinguish this may be
-> > > > > hard for anyone to figure out solely on the error code, as apps will most
-> > > > > probably not parse the
-> > > > > logs.
-> > > > >
-> > > > > Regards,
-> > > > > Erik
-> > > > hi Erik
-> > > > do you mean you are agreeing on defining common errors and only returning errno?
-> > >
-> > > In a sense, yes. While it is highly desirable to have logs with descriptive
-> > > messages which will help in troubleshooting tremendously, I wanted to point out
-> > > that spending time with error logs may not be that worthwhile especially since
-> > > most apps (like libvirt) will solely rely on using read(3)/write(3) to sysfs.
-> > > That means that we're limited by the errnos available, so apart from
-> > > reporting the generic system message we can't any more magic in terms of the
-> > > error messages, so the driver needs to assure that a proper message is
-> > > propagated to the journal and at best libvirt can direct the user (consumer) to
-> > > look through the system logs for more info. I also agree with the point
-> > > mentioned above that defining a specific errno is IMO not the way to go, as
-> > > these would be just too specific for the read(3)/write(3) use case.
-> > >
-> > > That said, from libvirt POV as a consumer, I'd expect there to be truly only 2
-> > > errors (I believe Alex has mentioned something similar in one of his responses
-> > > in one of the threads):
-> > >     a) read error indicating that an mdev type doesn't support migration
-> > >         - I assume if one type doesn't support migration, none of the other
-> > >           types exposed on the parent device do, is that a fair assumption?
-> > >     b) write error indicating that the mdev types are incompatible for
-> > >     migration
-> > >
-> > > Regards,
-> > > Erik
-> > Thanks for this explanation.
-> > so, can we arrive at below agreements?
-> >
-> > 1. "not to define the specific errno returned for a specific situation,
-> > let the vendor driver decide, userspace simply needs to know that an errno on
-> > read indicates the device does not support migration version comparison and
-> > that an errno on write indicates the devices are incompatible or the target
-> > doesn't support migration versions. "
-> > 2. vendor driver should log detailed error reasons in kernel log.
-> 
-> That would be my take on this, yes, but I open to hear any other suggestions and
-> ideas I couldn't think of as well.
-> 
-> Erik
-got it. thanks a lot!
+On Wed, 20 Mar 2019 at 10:50, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+> Add the additional power domain and the OPP table for ufs on sdm845
+> so the driver can set the appropriate performance state of the
+> power domain while setting the clock rate.
+>
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 027ffe6e93e8..a3af4a1757b4 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1140,6 +1140,21 @@
+>                         };
+>                 };
+>
+> +               ufs_opp_table: ufs-opp-table {
+> +                       compatible = "operating-points-v2";
+> +
+> +                       opp-50000000 {
+> +                               opp-hz = /bits/ 64 <50000000>;
+> +                               required-opps = <&rpmhpd_opp_min_svs>;
+> +                       };
+> +
+> +                       opp-200000000 {
+> +                               opp-hz = /bits/ 64 <200000000>;
+> +                               required-opps = <&rpmhpd_opp_nom>;
+> +
+> +                       };
+> +               };
+> +
+>                 ufs_mem_hc: ufshc@1d84000 {
+>                         compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
+>                                      "jedec,ufs-2.0";
+> @@ -1148,7 +1163,7 @@
+>                         phys = <&ufs_mem_phy_lanes>;
+>                         phy-names = "ufsphy";
+>                         lanes-per-direction = <2>;
+> -                       power-domains = <&gcc UFS_PHY_GDSC>;
+> +                       power-domains = <&gcc UFS_PHY_GDSC>, <&rpmhpd SDM845_CX>;
 
-hi Cornelia and Dave,
-do you also agree on:
-1. "not to define the specific errno returned for a specific situation,
-let the vendor driver decide, userspace simply needs to know that an errno on
-read indicates the device does not support migration version comparison and
-that an errno on write indicates the devices are incompatible or the target
-doesn't support migration versions. "
-2. vendor driver should log detailed error reasons in kernel log.
- 
-Thanks
-Yan
+You probably want to use "power-domain-names" as well.
+
+[...]
+
+Kind regards
+Uffe
