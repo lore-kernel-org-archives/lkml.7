@@ -2,74 +2,142 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887F2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27974C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EBC20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E55E920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 08:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="V1fySS88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfENIdI (ORCPT
+        id S1726510AbfENIeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 04:33:08 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:39722 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfENIdH (ORCPT
+        Tue, 14 May 2019 04:34:07 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44299 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfENIeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 04:33:07 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hQSrt-0004y8-U3; Tue, 14 May 2019 10:33:02 +0200
-Message-ID: <9c8492a1f5dbe3a8d743a40b6788a1a21d6b977f.camel@sipsolutions.net>
-Subject: Re: [PATCH] mac80211: fix possible deadlock in TX path
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Erik Stromdahl <erik.stromdahl@gmail.com>, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Toke =?ISO-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Date:   Tue, 14 May 2019 10:33:00 +0200
-In-Reply-To: <20190427204155.14211-1-erik.stromdahl@gmail.com> (sfid-20190427_224204_178829_B91A7E8B)
-References: <20190427204155.14211-1-erik.stromdahl@gmail.com>
-         (sfid-20190427_224204_178829_B91A7E8B)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 14 May 2019 04:34:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z16so8234396pgv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 01:34:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hDxyx52ZHxybLIaQgqYkgIgM9saZTw3PtnrtMC+I7nY=;
+        b=V1fySS88ojdaA5J3kVvNrhouMk585i4pA8vbBVomSrsOi8RHjcgYc7KvrkPXXZNgSV
+         OLpeJryWoG+Z8+3ehqnV1obfrxQBzF2iFd1KXeVg3V1BZ2ocLrRihAV4elcX6OOBPOsH
+         BridwfMxgjM1a7LU4JUrULKuAzfjFanypx5iYzIeDOj+B966bCEcMkWtBWeCaULiJHgY
+         D4wopj3OIqUTsuWy/NWee71NbSfJLuDwHsyQpNoPX19EWvpgueGaASh1pibGPPqrgW7A
+         nlb7D7mdsF2VCyicLPcSaXUwID0nqqYEcvVRf69YRGaV5Q0Id4jXgYWdUERJ0MIn+2mD
+         a4iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=hDxyx52ZHxybLIaQgqYkgIgM9saZTw3PtnrtMC+I7nY=;
+        b=ZSf6eTHaMQEeLERIy7s7qksDQuNaW2BBGctSpwdiubXNHvA/5pb0/Ri7s7GbQR6dH6
+         QCPnhbpg1TB0K2jklJ5xaBKBiZczuYGyBe2+Wduw4w27KFepTFbZtCM/iN0JASACDEwC
+         LSbbcLe6XsHpwcqTFonqA0Y00uLeDC+5ab/qMvesyR2mNLFfFd5eaxa6fpNCpxZbT4t5
+         aoEfaMK7ABwcIpdzPu8/L0sfU68PjZ4yZd/i/4GMNyg1Bu3ZfNeGAlWQ24W4VoSGYRhX
+         2VYgd3RgtYC8owfE5TKO961kyDegAlMjuja//vdqbDcKYmncmJmNqaniiX3+XBRKEaZc
+         5iFA==
+X-Gm-Message-State: APjAAAX8CZPivc7n+fUe747Fl10hDkX48oL6vFPULlGIZXcqohGdgtlz
+        8ojd2MI2ta/mIHKULN2mAyZ5yg==
+X-Google-Smtp-Source: APXvYqxB0DOj3jPg4XTP8ysT/Cm6VZ9xZKvJqY9OspcXVOxXFZC/gIG8dRa0HQwDP7wA9IM/8Cp1og==
+X-Received: by 2002:a62:570a:: with SMTP id l10mr38957276pfb.151.1557822846594;
+        Tue, 14 May 2019 01:34:06 -0700 (PDT)
+Received: from ?IPv6:2601:646:c200:1ef2:1d0a:33b8:7824:bf6b? ([2601:646:c200:1ef2:1d0a:33b8:7824:bf6b])
+        by smtp.gmail.com with ESMTPSA id u75sm40423546pfa.138.2019.05.14.01.34.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 01:34:05 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table entries for percpu buffer
+From:   Andy Lutomirski <luto@amacapital.net>
+X-Mailer: iPhone Mail (16E227)
+In-Reply-To: <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
+Date:   Tue, 14 May 2019 01:34:05 -0700
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
+        Jonathan Adams <jwadams@google.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net>
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com> <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com> <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com> <20190514070941.GE2589@hirez.programming.kicks-ass.net> <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-04-27 at 22:41 +0200, Erik Stromdahl wrote:
-> This patch fixes a possible deadlock when updating the TX statistics
-> (when calling into ieee80211_tx_stats()) from ieee80211_tx_dequeue().
-> 
-> ieee80211_tx_dequeue() might be called from process context.
 
-I think this really is the problem.
 
-> [<c0cb1864>] (ieee80211_xmit_fast_finish) from [<c0cb4504>] (ieee80211_tx_dequeue+0x30c/0xb9c)
->  r10:d2f1a900 r9:d2d607a4 r8:d2cf20dc r7:d330b29c r6:d2cf2000 r5:d2c342ba
->  r4:d2899d3c
-> [<c0cb41f8>] (ieee80211_tx_dequeue) from [<bf057f64>] (ath10k_mac_tx_push_txq+0x78/0x2a4 [ath10k_core])
->  r10:d2d607cc r9:d2fe06a0 r8:00000000 r7:d2fe1e30 r6:d2fe1d38 r5:d2fe1540
->  r4:d2cf20dc
-> [<bf057eec>] (ath10k_mac_tx_push_txq [ath10k_core]) from [<bf058364>] (ath10k_mac_tx_push_pending+0x1d4/0x2e0 [ath10k_core])
->  r10:d2cf20dc r9:bf0582b4 r8:bf0b1dba r7:00000002 r6:c1429994 r5:00000000
->  r4:d2fe06a0
-> [<bf058190>] (ath10k_mac_tx_push_pending [ath10k_core]) from [<bf0e25a4>] (ath10k_sdio_irq_handler+0x30c/0x4d8 [ath10k_sdio])
->  r10:00005b5a r9:d2fcc040 r8:00180201 r7:d2fe6540 r6:d2fe6a7c r5:00000000
->  r4:d2fe1540
+> On May 14, 2019, at 1:25 AM, Alexandre Chartre <alexandre.chartre@oracle.c=
+om> wrote:
+>=20
+>=20
+>> On 5/14/19 9:09 AM, Peter Zijlstra wrote:
+>>> On Mon, May 13, 2019 at 11:18:41AM -0700, Andy Lutomirski wrote:
+>>> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
+>>> <alexandre.chartre@oracle.com> wrote:
+>>>>=20
+>>>> pcpu_base_addr is already mapped to the KVM address space, but this
+>>>> represents the first percpu chunk. To access a per-cpu buffer not
+>>>> allocated in the first chunk, add a function which maps all cpu
+>>>> buffers corresponding to that per-cpu buffer.
+>>>>=20
+>>>> Also add function to clear page table entries for a percpu buffer.
+>>>>=20
+>>>=20
+>>> This needs some kind of clarification so that readers can tell whether
+>>> you're trying to map all percpu memory or just map a specific
+>>> variable.  In either case, you're making a dubious assumption that
+>>> percpu memory contains no secrets.
+>> I'm thinking the per-cpu random pool is a secrit. IOW, it demonstrably
+>> does contain secrits, invalidating that premise.
+>=20
+> The current code unconditionally maps the entire first percpu chunk
+> (pcpu_base_addr). So it assumes it doesn't contain any secret. That is
+> mainly a simplification for the POC because a lot of core information
+> that we need, for example just to switch mm, are stored there (like
+> cpu_tlbstate, current_task...).
 
-It seems to be entirely ath10k's fault, and quite possibly our
-documentation, but we probably should have local_bh_disable() there
-rather than try to do u64_stats_update_begin_irqsave() in some path that
-really doesn't need it.
+I don=E2=80=99t think you should need any of this.
 
-This is going to be whack-a-mole otherwise - the TX path in mac80211
-really expects to not be interrupted by softirqs.
+>=20
+> If the entire first percpu chunk effectively has secret then we will
+> need to individually map only buffers we need. The kvm_copy_percpu_mapping=
+()
+> function is added to copy mapping for a specified percpu buffer, so
+> this used to map percpu buffers which are not in the first percpu chunk.
+>=20
+> Also note that mapping is constrained by PTE (4K), so mapped buffers
+> (percpu or not) which do not fill a whole set of pages can leak adjacent
+> data store on the same pages.
+>=20
+>=20
 
-johannes
+I would take a different approach: figure out what you need and put it in it=
+s own dedicated area, kind of like cpu_entry_area.
 
+One nasty issue you=E2=80=99ll have is vmalloc: the kernel stack is in the v=
+map range, and, if you allow access to vmap memory at all, you=E2=80=99ll ne=
+ed some way to ensure that *unmap* gets propagated. I suspect the right choi=
+ce is to see if you can avoid using the kernel stack at all in isolated mode=
+.  Maybe you could run on the IRQ stack instead.=
