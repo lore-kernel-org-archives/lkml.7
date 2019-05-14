@@ -2,121 +2,180 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCB7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0CCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BAB92084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D08092084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 18:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlYGPpce"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZB9BiPN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbfENSyJ (ORCPT
+        id S1727716AbfENSy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 14:54:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34770 "EHLO
+        Tue, 14 May 2019 14:54:57 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41474 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbfENSyI (ORCPT
+        with ESMTP id S1727262AbfENSy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 14:54:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f8so2555340wrt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 11:54:07 -0700 (PDT)
+        Tue, 14 May 2019 14:54:57 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d12so20348764wrm.8;
+        Tue, 14 May 2019 11:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=VCAQGz8qjml6ASU2OK1LEnrW5ChvncfEkzJRDaJ9AfM=;
-        b=tlYGPpceDt4GjqHqn8XvdeH7oSM4djD9WBPrOe1X0oZ0wDG5pryX0rfiv5SFEB76LU
-         JF8LJ6bu8T4YJ78yelc8P/8CAQXBiiY4sQb5MN0t2afe+OrgCaooEL+PBudgmZk3lZLa
-         Z0RZOdsq8VBwI8pemYXk/7gNDSyGmcPFvDhPdEQ/3xefc2UwmmiquzJ2SHSkDvz+Tz/T
-         Yrwc9WSg1emsJwcguVZ/NnVSIeCVPmK5JFqaL8uiMElLtPsdYvUlCPN+1RvBJklEk4/w
-         lJ9WBrUsU19nQ8Xb6Sgezkr3UWCPjyiVX9vc/+AjdkufhHjZ/QboyUGR//IqfzGnbQbX
-         I7pQ==
+        d=gmail.com; s=20161025;
+        h=subject:from:cc:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=1Vtv8vjo+k0fYAQaZ6ozljyJomIPXdJKSl6iEIq/F3I=;
+        b=ZB9BiPN3mcV8aYqzXsJCUdohCAJcs08wznHfJLne6ytAI+7YW66CB4j1QAr2ejeI24
+         ExZL6IRV+C9NnawmAZlpIK/w+So5zGRd6VfHyDgkMG1gDIi1O/9Wil+w9MaUBQUwaMDm
+         YxZDEcBtjD/rBBahOKUssDBN8r6QwXdvtgal8m0fK+Oda3fQb/DX6d33LuxI/f84JUbR
+         NpsTXTXY1+v2ehlxiFq3SCLUQdeHumdqOYZ9IkCKWB7lVKFOvRLh9oHOCL8q2JhRjdIy
+         7cjVS//GqEo3uZBcPcdZPtPh4rbydR3cGLI9okWOED7gY+DK/TBV4jbEdpZI/qx2/Aak
+         8XKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=VCAQGz8qjml6ASU2OK1LEnrW5ChvncfEkzJRDaJ9AfM=;
-        b=Vn5o8fRKgN2Di3VQGmedgdADWD3F0+XxTEnrbLwwIYDgLbc5jejlggxjX24MzlXA+O
-         YdpYG16UBQg2ftZOKXwYl6qR73irHCMNWmdDqBOKyOSfd5CArRpbDKfEVVz+tLvy7p1a
-         loL94k2XQ4l8zE7Ygo4HxhR4X0++TAZAfcC3CO/CQMZbjzOgB0jZEaZw1ZfzfJU33VJm
-         JvlAVcyCDA33BMoM5n76W5bloZE9ds4qYnRGMsY8se5SDt4IexYy5a7JAfvJTdDYxzbB
-         DXUNGbaEdBz2hnTrAdeIrBkR6yOeALw/UunWq0bIN9Rv25bqTGZZTFNaXcAq8A2ESE6f
-         IFrQ==
-X-Gm-Message-State: APjAAAUrM9ZdhMVaQChjjBiAwY2CPdFqBTels6GgT4ywkjFDgVj2uh4q
-        H67DKsxMmVQT4tBu2hX5YvQgbA==
-X-Google-Smtp-Source: APXvYqyXK6O0Aqh/1goILlJaZM+s8rUCdPYL1LSk9ZSGB1TPgYZuXHgOORUbKQn4wE9vtJIsBxrKSw==
-X-Received: by 2002:a5d:4b07:: with SMTP id v7mr12420510wrq.106.1557860046921;
-        Tue, 14 May 2019 11:54:06 -0700 (PDT)
-Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id s22sm5469199wmh.45.2019.05.14.11.54.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 11:54:06 -0700 (PDT)
-Date:   Tue, 14 May 2019 19:54:04 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mfd: stmfx: Fix macro definition spelling
-Message-ID: <20190514185404.GP4319@dell>
-References: <20190511012301.2661-1-natechancellor@gmail.com>
- <20190513073059.GH4319@dell>
- <20190514183900.GA7559@archlinux-i9>
+        h=x-gm-message-state:subject:from:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1Vtv8vjo+k0fYAQaZ6ozljyJomIPXdJKSl6iEIq/F3I=;
+        b=YraSFOM3ruQDYKtXncObjgYGc3nI35eHPCuJNDNRy50ucI65UkNaOUQ8sZ6R9duza7
+         hTTHMTia9g4eWXfFOdxqIH5wTSkDn0iaSr9sKkLrLu6Vuepkumb22A/xjHguVzCDrqr3
+         v4GOsM9ROpZHP1C9kzFZlaxQ8QWhZzFKTCvaABlZv/ngwMlq9yn1BWruYrAXmzq2vdvf
+         L7bQyZltuwtoR9SYrsmxgGDkpM9iuGyIwYjBplqNrfDCNI+XwEyp8okmmxRK5dqI209F
+         eaobenUkQ0jxB/LuOm1IxUTARuIH//AqUH3w/aUvNLEUTFxkvRKpH457UNfLT2vKCveF
+         QJcg==
+X-Gm-Message-State: APjAAAVXTP99DOJ0EkUgqd1NRP5j+B+o2Dmqbxb1tNGuXwURSykmsKHA
+        op33O1R2JfSl4mc+uVSkEQa+yeBW
+X-Google-Smtp-Source: APXvYqwmzaWet/cwInE/bAm/HtJVcfbTml8/21zp+y0sovf2T8Cf+yRxZPqzQ9qNOVGsGvEv61ZE3g==
+X-Received: by 2002:a5d:6145:: with SMTP id y5mr12600574wrt.96.1557860095100;
+        Tue, 14 May 2019 11:54:55 -0700 (PDT)
+Received: from [192.168.20.141] ([194.99.104.18])
+        by smtp.gmail.com with ESMTPSA id a6sm14168275wrp.49.2019.05.14.11.54.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 11:54:54 -0700 (PDT)
+Subject: [PATCH v4 03/13] platform/x86: asus-wmi: Increase input buffer size
+ of WMI methods
+From:   Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Daniel Drake <drake@endlessm.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        acpi4asus-user@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
+Message-ID: <4613f54b-b6ba-c9ad-15ca-e43d440b9f63@gmail.com>
+Date:   Tue, 14 May 2019 20:54:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <c8cdb347-e206-76b2-0d43-546ef660ffb7@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190514183900.GA7559@archlinux-i9>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 14 May 2019, Nathan Chancellor wrote:
+The asus-nb-wmi driver is matched by WMI alias but fails to load on TUF
+Gaming series laptops producing multiple ACPI errors in the kernel log.
 
-> On Mon, May 13, 2019 at 08:30:59AM +0100, Lee Jones wrote:
-> > On Fri, 10 May 2019, Nathan Chancellor wrote:
-> > 
-> > > Clang warns:
-> > > 
-> > > In file included from drivers/mfd/stmfx.c:13:
-> > > include/linux/mfd/stmfx.h:7:9: warning: 'MFD_STMFX_H' is used as a
-> > > header guard here, followed by #define of a different macro
-> > > [-Wheader-guard]
-> > > 
-> > > Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/475
-> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > ---
-> > >  include/linux/mfd/stmfx.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > Applied, thanks.
-> > 
-> 
-> Hi Lee,
-> 
-> Thanks for picking it up. It seems this didn't make it into your MFD
-> pull request for 5.2, was that intentional? It would be nice to avoid
-> this warning.
+The input buffer for WMI method invocation size is 2 dwords, whereas
+3 are expected by this model.
 
-Hmm... no it was not intentional.  Not sure what happened there.
+FX505GM:
+..
+Method (WMNB, 3, Serialized)
+{
+    P8XH (Zero, 0x11)
+    CreateDWordField (Arg2, Zero, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    CreateDWordField (Arg2, 0x08, IIA2)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
 
-I will pick it up for the -rcs.
+Compare with older K54C:
+...
+Method (WMNB, 3, NotSerialized)
+{
+    CreateDWordField (Arg2, 0x00, IIA0)
+    CreateDWordField (Arg2, 0x04, IIA1)
+    Local0 = (Arg1 & 0xFFFFFFFF)
+    ...
 
+Increase buffer size to 3 dwords. No negative consequences of this change
+are expected, as the input buffer size is not verified. The original
+function is replaced by a wrapper for a new method passing value 0 for the
+last parameter. The new function will be used to control RGB keyboard
+backlight.
+
+Signed-off-by: Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>
+---
+One of current kernel errors:
+ACPI BIOS Error (bug): AE_AML_BUFFER_LIMIT, Field [IIA2] at bit offset/
+	length 64/32 exceeds size of target Buffer (64 bits)
+	(20190215/dsopcode-203)
+[ 4528.573948] No Local Variables are initialized for Method [WMNB]
+[ 4528.573949] Initialized Arguments for Method [WMNB]:  (3 arguments
+	defined for method invocation)
+[ 4528.573950]   Arg0:   00000000bd1bea5a <Obj>
+	Integer 0000000000000000
+[ 4528.573952]   Arg1:   00000000d414dc53 <Obj>
+	Integer 000000004E464741
+[ 4528.573954]   Arg2:   00000000fcefea4b <Obj>
+	Buffer(8) F0 95 08 00 00 00 00 00
+[ 4528.573959] ACPI Error: Aborting method \_SB.ATKD.WMNB due to previous
+	error (AE_AML_BUFFER_LIMIT) (20190215/psparse-531)
+[ 4528.686425] asus-nb-wmi: probe of asus-nb-wmi failed with error -5
+---
+ drivers/platform/x86/asus-wmi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index 84d7fc6f941c..6b35c1f00a3e 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -98,6 +98,7 @@ static bool ashs_present(void)
+ struct bios_args {
+ 	u32 arg0;
+ 	u32 arg1;
++	u32 arg2; /* At least TUF Gaming series uses 3 dword input buffer. */
+ } __packed;
+ 
+ /*
+@@ -224,11 +225,13 @@ static void asus_wmi_input_exit(struct asus_wmi *asus)
+ 	asus->inputdev = NULL;
+ }
+ 
+-int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++static int asus_wmi_evaluate_method3(u32 method_id,
++		u32 arg0, u32 arg1, u32 arg2, u32 *retval)
+ {
+ 	struct bios_args args = {
+ 		.arg0 = arg0,
+ 		.arg1 = arg1,
++		.arg2 = arg2,
+ 	};
+ 	struct acpi_buffer input = { (acpi_size) sizeof(args), &args };
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+@@ -260,6 +263,11 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+ 
+ 	return 0;
+ }
++
++int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
++{
++	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
++}
+ EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
+ 
+ static int asus_wmi_evaluate_method_agfn(const struct acpi_buffer args)
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.17.1
+
