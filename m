@@ -2,171 +2,215 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E8EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B8EC04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6978920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:33:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557866017;
-	bh=/S2BDC6o9SOizwLDYiMYffbUvwSokVCxv3BmfflaHzY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M7C4bwg6PMBRDqo3ct5/uvnRU6go6rfGn0PYSYNq5E5a0p0n5pL+QZmECjhPO1sr5
-	 6vHx+cgAgtggR3NgjbQm0xLq/1t76ShuMMkbiOEkE4fKsYuwuYnZ/V46U2njTv1Kys
-	 ck+LWfMyMMFey3IUoc7GQt1pAovj/kx4uyLNfPFM=
+	by mail.kernel.org (Postfix) with ESMTP id C444B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 20:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfENUdg (ORCPT
+        id S1726553AbfENUeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 16:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37442 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726151AbfENUdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 16:33:35 -0400
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35081216FD
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 20:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557866014;
-        bh=/S2BDC6o9SOizwLDYiMYffbUvwSokVCxv3BmfflaHzY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=U/yY8Nvhi8iji1+459+sjubgg/1JF0X07D7wRnqqKjlo6h1Ahjbdv/0J0MnwVVdl5
-         PvBDOd4AkYiGhiqxEc6ukoCYeoOoDLIXKbu/M85AdHMxpL9STA5P0oBhzNoLQvnalz
-         Wel3PIj0edEHiSp4UKTwYSZR0xDnIvhhppn9Cwe8=
-Received: by mail-wm1-f43.google.com with SMTP id j187so3180766wma.1
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 13:33:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAVdUOTiDLHI94/U/JuxoIPiWw1sGjIEdP0OBhxgifPY0+X13Wea
-        0kyTkhTKof7ohMq9nyntDVKE0srxUvDylQgbUYq+pg==
-X-Google-Smtp-Source: APXvYqyXeyn0oYCthx1qDhe+XBQk39HmQh0lbW3xk+9rI/DwgWNX22XR5PLS9FUku0W/WER2EovhvkXecp1Ggfo8H90=
-X-Received: by 2002:a1c:a745:: with SMTP id q66mr11466245wme.83.1557866012756;
- Tue, 14 May 2019 13:33:32 -0700 (PDT)
+        Tue, 14 May 2019 16:34:07 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53067 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfENUeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 16:34:07 -0400
+X-Originating-IP: 46.193.9.130
+Received: from localhost (cust-west-pareq2-46-193-9-130.wb.wifirst.net [46.193.9.130])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E95A1C0002;
+        Tue, 14 May 2019 20:34:01 +0000 (UTC)
+Date:   Tue, 14 May 2019 22:34:01 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>, Tero Kristo <t-kristo@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
+Message-ID: <20190514203401.xq7giy63nhsws2i5@flea>
+References: <20190514170931.56312-1-sboyd@kernel.org>
 MIME-Version: 1.0
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com>
- <20190514070941.GE2589@hirez.programming.kicks-ass.net> <b8487de1-83a8-2761-f4a6-26c583eba083@oracle.com>
- <B447B6E8-8CEF-46FF-9967-DFB2E00E55DB@amacapital.net> <4e7d52d7-d4d2-3008-b967-c40676ed15d2@oracle.com>
- <CALCETrXtwksWniEjiWKgZWZAyYLDipuq+sQ449OvDKehJ3D-fg@mail.gmail.com>
- <e5fedad9-4607-0aa4-297e-398c0e34ae2b@oracle.com> <20190514170522.GW2623@hirez.programming.kicks-ass.net>
- <20190514180936.GA1977@linux.intel.com>
-In-Reply-To: <20190514180936.GA1977@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 14 May 2019 13:33:21 -0700
-X-Gmail-Original-Message-ID: <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com>
-Message-ID: <CALCETrVzbBLokip5n0KEyG6irH6aoEWqyNODTy8embpXhB1GQg@mail.gmail.com>
-Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
- entries for percpu buffer
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:09 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On Tue, May 14, 2019 at 10:09:31AM -0700, Stephen Boyd wrote:
+> Now that we've gotten rid of clk_readl() we can remove io.h from the
+> clk-provider header and push out the io.h include to any code that isn't
+> already including the io.h header but using things like readl/writel,
+> etc.
 >
-> On Tue, May 14, 2019 at 07:05:22PM +0200, Peter Zijlstra wrote:
-> > On Tue, May 14, 2019 at 06:24:48PM +0200, Alexandre Chartre wrote:
-> > > On 5/14/19 5:23 PM, Andy Lutomirski wrote:
-> >
-> > > > How important is the ability to enable IRQs while running with the KVM
-> > > > page tables?
-> > > >
-> > >
-> > > I can't say, I would need to check but we probably need IRQs at least for
-> > > some timers. Sounds like you would really prefer IRQs to be disabled.
-> > >
-> >
-> > I think what amluto is getting at, is:
-> >
-> > again:
-> >       local_irq_disable();
-> >       switch_to_kvm_mm();
-> >       /* do very little -- (A) */
-> >       VMEnter()
-> >
-> >               /* runs as guest */
-> >
-> >       /* IRQ happens */
-> >       WMExit()
-> >       /* inspect exit raisin */
-> >       if (/* IRQ pending */) {
-> >               switch_from_kvm_mm();
-> >               local_irq_restore();
-> >               goto again;
-> >       }
-> >
-> >
-> > but I don't know anything about VMX/SVM at all, so the above might not
-> > be feasible, specifically I read something about how VMX allows NMIs
-> > where SVM did not somewhere around (A) -- or something like that,
-> > earlier in this thread.
+> Found with this grep:
 >
-> For IRQs it's somewhat feasible, but not for NMIs since NMIs are unblocked
-> on VMX immediately after VM-Exit, i.e. there's no way to prevent an NMI
-> from occuring while KVM's page tables are loaded.
+>   git grep -l clk-provider.h | grep '.c$' | xargs git grep -L 'linux/io.h' | \
+>   	xargs git grep -l \
+> 	-e '\<__iowrite32_copy\>' --or \
+> 	-e '\<__ioread32_copy\>' --or \
+> 	-e '\<__iowrite64_copy\>' --or \
+> 	-e '\<ioremap_page_range\>' --or \
+> 	-e '\<ioremap_huge_init\>' --or \
+> 	-e '\<arch_ioremap_pud_supported\>' --or \
+> 	-e '\<arch_ioremap_pmd_supported\>' --or \
+> 	-e '\<devm_ioport_map\>' --or \
+> 	-e '\<devm_ioport_unmap\>' --or \
+> 	-e '\<IOMEM_ERR_PTR\>' --or \
+> 	-e '\<devm_ioremap\>' --or \
+> 	-e '\<devm_ioremap_nocache\>' --or \
+> 	-e '\<devm_ioremap_wc\>' --or \
+> 	-e '\<devm_iounmap\>' --or \
+> 	-e '\<devm_ioremap_release\>' --or \
+> 	-e '\<devm_memremap\>' --or \
+> 	-e '\<devm_memunmap\>' --or \
+> 	-e '\<__devm_memremap_pages\>' --or \
+> 	-e '\<pci_remap_cfgspace\>' --or \
+> 	-e '\<arch_has_dev_port\>' --or \
+> 	-e '\<arch_phys_wc_add\>' --or \
+> 	-e '\<arch_phys_wc_del\>' --or \
+> 	-e '\<memremap\>' --or \
+> 	-e '\<memunmap\>' --or \
+> 	-e '\<arch_io_reserve_memtype_wc\>' --or \
+> 	-e '\<arch_io_free_memtype_wc\>' --or \
+> 	-e '\<__io_aw\>' --or \
+> 	-e '\<__io_pbw\>' --or \
+> 	-e '\<__io_paw\>' --or \
+> 	-e '\<__io_pbr\>' --or \
+> 	-e '\<__io_par\>' --or \
+> 	-e '\<__raw_readb\>' --or \
+> 	-e '\<__raw_readw\>' --or \
+> 	-e '\<__raw_readl\>' --or \
+> 	-e '\<__raw_readq\>' --or \
+> 	-e '\<__raw_writeb\>' --or \
+> 	-e '\<__raw_writew\>' --or \
+> 	-e '\<__raw_writel\>' --or \
+> 	-e '\<__raw_writeq\>' --or \
+> 	-e '\<readb\>' --or \
+> 	-e '\<readw\>' --or \
+> 	-e '\<readl\>' --or \
+> 	-e '\<readq\>' --or \
+> 	-e '\<writeb\>' --or \
+> 	-e '\<writew\>' --or \
+> 	-e '\<writel\>' --or \
+> 	-e '\<writeq\>' --or \
+> 	-e '\<readb_relaxed\>' --or \
+> 	-e '\<readw_relaxed\>' --or \
+> 	-e '\<readl_relaxed\>' --or \
+> 	-e '\<readq_relaxed\>' --or \
+> 	-e '\<writeb_relaxed\>' --or \
+> 	-e '\<writew_relaxed\>' --or \
+> 	-e '\<writel_relaxed\>' --or \
+> 	-e '\<writeq_relaxed\>' --or \
+> 	-e '\<readsb\>' --or \
+> 	-e '\<readsw\>' --or \
+> 	-e '\<readsl\>' --or \
+> 	-e '\<readsq\>' --or \
+> 	-e '\<writesb\>' --or \
+> 	-e '\<writesw\>' --or \
+> 	-e '\<writesl\>' --or \
+> 	-e '\<writesq\>' --or \
+> 	-e '\<inb\>' --or \
+> 	-e '\<inw\>' --or \
+> 	-e '\<inl\>' --or \
+> 	-e '\<outb\>' --or \
+> 	-e '\<outw\>' --or \
+> 	-e '\<outl\>' --or \
+> 	-e '\<inb_p\>' --or \
+> 	-e '\<inw_p\>' --or \
+> 	-e '\<inl_p\>' --or \
+> 	-e '\<outb_p\>' --or \
+> 	-e '\<outw_p\>' --or \
+> 	-e '\<outl_p\>' --or \
+> 	-e '\<insb\>' --or \
+> 	-e '\<insw\>' --or \
+> 	-e '\<insl\>' --or \
+> 	-e '\<outsb\>' --or \
+> 	-e '\<outsw\>' --or \
+> 	-e '\<outsl\>' --or \
+> 	-e '\<insb_p\>' --or \
+> 	-e '\<insw_p\>' --or \
+> 	-e '\<insl_p\>' --or \
+> 	-e '\<outsb_p\>' --or \
+> 	-e '\<outsw_p\>' --or \
+> 	-e '\<outsl_p\>' --or \
+> 	-e '\<ioread8\>' --or \
+> 	-e '\<ioread16\>' --or \
+> 	-e '\<ioread32\>' --or \
+> 	-e '\<ioread64\>' --or \
+> 	-e '\<iowrite8\>' --or \
+> 	-e '\<iowrite16\>' --or \
+> 	-e '\<iowrite32\>' --or \
+> 	-e '\<iowrite64\>' --or \
+> 	-e '\<ioread16be\>' --or \
+> 	-e '\<ioread32be\>' --or \
+> 	-e '\<ioread64be\>' --or \
+> 	-e '\<iowrite16be\>' --or \
+> 	-e '\<iowrite32be\>' --or \
+> 	-e '\<iowrite64be\>' --or \
+> 	-e '\<ioread8_rep\>' --or \
+> 	-e '\<ioread16_rep\>' --or \
+> 	-e '\<ioread32_rep\>' --or \
+> 	-e '\<ioread64_rep\>' --or \
+> 	-e '\<iowrite8_rep\>' --or \
+> 	-e '\<iowrite16_rep\>' --or \
+> 	-e '\<iowrite32_rep\>' --or \
+> 	-e '\<iowrite64_rep\>' --or \
+> 	-e '\<__io_virt\>' --or \
+> 	-e '\<pci_iounmap\>' --or \
+> 	-e '\<virt_to_phys\>' --or \
+> 	-e '\<phys_to_virt\>' --or \
+> 	-e '\<ioremap_uc\>' --or \
+> 	-e '\<ioremap\>' --or \
+> 	-e '\<__ioremap\>' --or \
+> 	-e '\<iounmap\>' --or \
+> 	-e '\<ioremap\>' --or \
+> 	-e '\<ioremap_nocache\>' --or \
+> 	-e '\<ioremap_uc\>' --or \
+> 	-e '\<ioremap_wc\>' --or \
+> 	-e '\<ioremap_wc\>' --or \
+> 	-e '\<ioremap_wt\>' --or \
+> 	-e '\<ioport_map\>' --or \
+> 	-e '\<ioport_unmap\>' --or \
+> 	-e '\<ioport_map\>' --or \
+> 	-e '\<ioport_unmap\>' --or \
+> 	-e '\<xlate_dev_kmem_ptr\>' --or \
+> 	-e '\<xlate_dev_mem_ptr\>' --or \
+> 	-e '\<unxlate_dev_mem_ptr\>' --or \
+> 	-e '\<virt_to_bus\>' --or \
+> 	-e '\<bus_to_virt\>' --or \
+> 	-e '\<memset_io\>' --or \
+> 	-e '\<memcpy_fromio\>' --or \
+> 	-e '\<memcpy_toio\>'
 >
-> Back to Andy's question about enabling IRQs, the answer is "it depends".
-> Exits due to INTR, NMI and #MC are considered high priority and are
-> serviced before re-enabling IRQs and preemption[1].  All other exits are
-> handled after IRQs and preemption are re-enabled.
+> I also reordered a couple includes when they weren't alphabetical and
+> removed clk.h from kona, replacing it with clk-provider.h because
+> that driver doesn't use clk consumer APIs.
 >
-> A decent number of exit handlers are quite short, e.g. CPUID, most RDMSR
-> and WRMSR, any event-related exit, etc...  But many exit handlers require
-> significantly longer flows, e.g. EPT violations (page faults) and anything
-> that requires extensive emulation, e.g. nested VMX.  In short, leaving
-> IRQs disabled across all exits is not practical.
->
-> Before going down the path of figuring out how to handle the corner cases
-> regarding kvm_mm, I think it makes sense to pinpoint exactly what exits
-> are a) in the hot path for the use case (configuration) and b) can be
-> handled fast enough that they can run with IRQs disabled.  Generating that
-> list might allow us to tightly bound the contents of kvm_mm and sidestep
-> many of the corner cases, i.e. select VM-Exits are handle with IRQs
-> disabled using KVM's mm, while "slow" VM-Exits go through the full context
-> switch.
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
 
-I suspect that the context switch is a bit of a red herring.  A
-PCID-don't-flush CR3 write is IIRC under 300 cycles.  Sure, it's slow,
-but it's probably minor compared to the full cost of the vm exit.  The
-pain point is kicking the sibling thread.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-When I worked on the PTI stuff, I went to great lengths to never have
-a copy of the vmalloc page tables.  The top-level entry is either
-there or it isn't, so everything is always in sync.  I'm sure it's
-*possible* to populate just part of it for this KVM isolation, but
-it's going to be ugly.  It would be really nice if we could avoid it.
-Unfortunately, this interacts unpleasantly with having the kernel
-stack in there.  We can freely use a different stack (the IRQ stack,
-for example) as long as we don't schedule, but that means we can't run
-preemptable code.
+Maxime
 
-Another issue is tracing, kprobes, etc -- I don't think anyone will
-like it if a kprobe in KVM either dramatically changes performance by
-triggering isolation exits or by crashing.  So you may need to
-restrict the isolated code to a file that is compiled with tracing off
-and has everything marked NOKPROBE.  Yuck.
-
-I hate to say this, but at what point do we declare that "if you have
-SMT on, you get to keep both pieces, simultaneously!"?
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
