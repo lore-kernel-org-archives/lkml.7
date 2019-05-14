@@ -2,174 +2,108 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321D1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDE7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B869020862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:09:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hTG+d6BL"
+	by mail.kernel.org (Postfix) with ESMTP id 4687C20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 16:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfENQJa (ORCPT
+        id S1726429AbfENQKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 12:09:30 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:42886 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfENQJ3 (ORCPT
+        Tue, 14 May 2019 12:10:47 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51648 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfENQKq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 12:09:29 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EG46i6086549;
-        Tue, 14 May 2019 16:09:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=9uHuet9oULx3Dl16D7fXJItXNL536JRp038hEDJp0PY=;
- b=hTG+d6BL9woEPC6IiRUTVyEe7702u71K9isLvRg/yPznlo1GVQ0LT2b+Z0buG/nZSaEZ
- D7r8jKL/vR6mkpUcDVsTXqQIQ25EQzoCqxK8ApEve4zw7qi5xJgjXF5QmmBw8nInnEe4
- ruWczm6LvllaInybKkZmJh21TR/sU6rvaDNSjvYGW+fpHgQuWO2waTQplqO/aMFYT4lb
- U51dRjQ2NM+augMoQrfEOKQFxn/0Ub4iujx8fR1AdnF8DUZMD4bMIp7F/LwkQbI2xDN4
- 2cj8boMAppZHFdhkD+50H72XjiqJ1tUuTh2Sz5ir7JbJ5drl9bJLT0Xsogr45jCoaKmS Yw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2130.oracle.com with ESMTP id 2sdkwdqdnv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 16:09:11 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EG7Kgo034402;
-        Tue, 14 May 2019 16:09:11 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2se0tw887w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 16:09:10 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4EG98PO024162;
-        Tue, 14 May 2019 16:09:09 GMT
-Received: from ubuette (/75.80.107.76)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 16:09:08 +0000
-Date:   Tue, 14 May 2019 09:09:06 -0700
-From:   Larry Bassel <larry.bassel@oracle.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Larry Bassel <larry.bassel@oracle.com>, mike.kravetz@oracle.com,
-        willy@infradead.org, dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH, RFC 0/2] Share PMDs for FS/DAX on x86
-Message-ID: <20190514160906.GB27569@ubuette>
-References: <1557417933-15701-1-git-send-email-larry.bassel@oracle.com>
- <20190514122820.26zddpb27uxgrwzp@box>
+        Tue, 14 May 2019 12:10:46 -0400
+Received: by mail-wm1-f66.google.com with SMTP id o189so3493527wmb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 09:10:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wYcnLcHNEWzuyUPaOSPaqvipKhwQq75NVlrWVwfonxY=;
+        b=iPGpbgoa2jROmIx6GbH6qFx0eFA5h97R1e9TRWoT3fSfXTR63760onDAK7bnPItBCg
+         rcYR1bO0gtBVNABZakrovUceHM1iJEMs+gMce4qG3ysD2Yxk7kmiqeEXZjg2fDBCZCZ0
+         fHQqExonBdKVKO/Kt5uoys/SkYSHXbyoqQhiw6hwcCmqik2It/dQZLGR/H9V0xB1goVP
+         uSI9jgmTh8J2350J+6TwEjld1w7GqpFuyhRxtky6exQItFH17AvHGMScaH5WtF35MJ7L
+         +I2/FvsLCSaLm8DMzXLoP16whDZG7e7gTvVCr8Nuvjp9fG03MSrWlh5bF7HDa45Cfhs5
+         2ocA==
+X-Gm-Message-State: APjAAAXFsQkJxGWElAW0OlDdWXVmdQKnmgz1WbrrOa4HQV44keCz0Cn3
+        mfVcCPW4XZNklto35TTATuHTOg==
+X-Google-Smtp-Source: APXvYqxqlLOgXzEWalLGMo/rtA7vvFLalOSyrklAhb9ipPKK7DakL4gduRG3L+0mF5EDXgRvQwftWw==
+X-Received: by 2002:a1c:2dd2:: with SMTP id t201mr9244992wmt.136.1557850244405;
+        Tue, 14 May 2019 09:10:44 -0700 (PDT)
+Received: from steredhat (host151-251-static.12-87-b.business.telecomitalia.it. [87.12.251.151])
+        by smtp.gmail.com with ESMTPSA id l2sm5293724wmf.16.2019.05.14.09.10.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 09:10:43 -0700 (PDT)
+Date:   Tue, 14 May 2019 18:10:41 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>
+Subject: Re: [PATCH v2 8/8] vsock/virtio: make the RX buffer size tunable
+Message-ID: <20190514161041.y4exigcwwys34naf@steredhat>
+References: <20190510125843.95587-1-sgarzare@redhat.com>
+ <20190510125843.95587-9-sgarzare@redhat.com>
+ <eddb5a89-ed44-3a65-0181-84f7f27dd2cb@redhat.com>
+ <8e72ef5e-cf6a-a635-3f76-bdeac95761b8@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190514122820.26zddpb27uxgrwzp@box>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140113
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9256 signatures=668686
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140113
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8e72ef5e-cf6a-a635-3f76-bdeac95761b8@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14 May 19 15:28, Kirill A. Shutemov wrote:
-> On Thu, May 09, 2019 at 09:05:31AM -0700, Larry Bassel wrote:
-> > This patchset implements sharing of page table entries pointing
-> > to 2MiB pages (PMDs) for FS/DAX on x86.
+On Mon, May 13, 2019 at 08:46:19PM +0800, Jason Wang wrote:
 > 
-> -EPARSE.
+> On 2019/5/13 下午6:05, Jason Wang wrote:
+> > 
+> > On 2019/5/10 下午8:58, Stefano Garzarella wrote:
+> > > The RX buffer size determines the memory consumption of the
+> > > vsock/virtio guest driver, so we make it tunable through
+> > > a module parameter.
+> > > 
+> > > The size allowed are between 4 KB and 64 KB in order to be
+> > > compatible with old host drivers.
+> > > 
+> > > Suggested-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > 
+> > 
+> > I don't see much value of doing this through kernel command line. We
+> > should deal with them automatically like what virtio-net did. Or even a
+> > module parameter is better.
+> > 
+> > Thanks
 > 
-> How do you share entries? Entries do not take any space, page tables that
-> cointain these entries do.
-
-Yes, I'll correct this in v2.
-
 > 
-> Have you checked if the patch makes memory consumption any better. I have
-> doubts in it.
+> Sorry, I misread the patch. But even module parameter is something not
+> flexible enough. We should deal with them transparently.
+> 
 
-Yes I have -- the following is debugging output I have from my testing.
-The (admittedly simple) test case is two copies of a program that mmaps
-1GiB of a DAX/XFS file (with 2MiB page size), touches the first page
-(physical 200400000 in this case) and then sleeps forever.
+Okay, I'll try to understand how we can automatically adapt the RX
+buffer size. Since the flow is stream based, the receiver doesn't know the
+original packet size.
 
-sharing disabled:
+Maybe I can reuse the EWMA approach to understand if the buffers are
+entirely filled or not.
+In that case I can increase (e.g. double) or decrease the size.
 
-(process A)
-[  420.369975] pgd_index = fe
-[  420.369975] pgd = 00000000e1ebf83b
-[  420.369975] pgd_val = 8000000405ca8067
-[  420.369976] pud_index = 100
-[  420.369976] pud = 00000000bd7a7df0
-[  420.369976] pud_val = 4058f9067
-[  420.369977] pmd_index = 0
-[  420.369977] pmd = 00000000791e93d4
-[  420.369977] pmd_val = 84000002004008e7
-[  420.369978] pmd huge
-[  420.369978] page_addr = 200400000, page_offset = 0
-[  420.369979] vaddr = 7f4000000000, paddr = 200400000
+I'll try to do it!
 
-(process B)
-[  420.370013] pgd_index = fe
-[  420.370014] pgd = 00000000a2bac60d
-[  420.370014] pgd_val = 8000000405a8f067
-[  420.370015] pud_index = 100
-[  420.370015] pud = 00000000dcc3ff1a
-[  420.370015] pud_val = 3fc713067
-[  420.370016] pmd_index = 0
-[  420.370016] pmd = 000000006b4679db
-[  420.370016] pmd_val = 84000002004008e7
-[  420.370017] pmd huge
-[  420.370017] page_addr = 200400000, page_offset = 0
-[  420.370018] vaddr = 7f4000000000, paddr = 200400000
-
-sharing enabled:
-
-(process A)
-[  696.992342] pgd_index = fe
-[  696.992342] pgd = 000000009612024b
-[  696.992343] pgd_val = 8000000404725067
-[  696.992343] pud_index = 100
-[  696.992343] pud = 00000000c98ab17c
-[  696.992344] pud_val = 4038e3067
-[  696.992344] pmd_index = 0
-[  696.992344] pmd = 000000002437681b
-[  696.992344] pmd_val = 84000002004008e7
-[  696.992345] pmd huge
-[  696.992345] page_addr = 200400000, page_offset = 0
-[  696.992345] vaddr = 7f4000000000, paddr = 200400000
-
-(process B)
-[  696.992351] pgd_index = fe
-[  696.992351] pgd = 0000000012326848
-[  696.992352] pgd_val = 800000040a953067
-[  696.992352] pud_index = 100
-[  696.992352] pud = 00000000f989bcf6
-[  696.992352] pud_val = 4038e3067
-[  696.992353] pmd_index = 0
-[  696.992353] pmd = 000000002437681b
-[  696.992353] pmd_val = 84000002004008e7
-[  696.992353] pmd huge
-[  696.992354] page_addr = 200400000, page_offset = 0
-[  696.992354] vaddr = 7f4000000000, paddr = 200400000
-
-Note that in the sharing enabled case, the pud_val and pmd are
-the same for the two processes. In the disabled case we
-have two separate pmds (and so more memory was allocated).
-
-Also, (though not visible from the output above) the second
-process did not take a page fault as the virtual->physical mapping
-was already established thanks to the sharing.
-
-Larry
+Thanks,
+Stefano
