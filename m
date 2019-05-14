@@ -2,122 +2,114 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AD9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86F8C04AB6
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7E8F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99EC620881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yy4gZZjw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="FYrdoogo";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="JeEEo+Nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfENTN1 (ORCPT
+        id S1726246AbfENTSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:13:27 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:33238 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfENTN0 (ORCPT
+        Tue, 14 May 2019 15:18:35 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:48764 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726013AbfENTSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:13:26 -0400
-Received: by mail-lf1-f68.google.com with SMTP id x132so83305lfd.0;
-        Tue, 14 May 2019 12:13:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BbR9Yrok2+r2iuSrKXyCdVxdVyCF4DRzoDzjudqSfhs=;
-        b=Yy4gZZjwjJJL96M9LqthkzzzWTHN4Io+F8xLcItoTr4/Um5vZiAIr6E+glB340PTT8
-         L9b9U1YC4gEvcYbJcs/i62APNBZP5dKdvn7H4Q6Ot7lxn3hMrKFT34ycFROM8Bjm4ZKN
-         evgIPQY8PEeaLZM7e/mRLTzIgCekVbWlGDvvuUE8s9DU5xxPgkmw8wyoy4t2hPJ0lTYp
-         wr+ao2gipTZ4NbA8lAb697F8YzfWzUkQCoGMVETA9+y4VqSg93KjdEvlDhHthF3O5yE2
-         AtDfflLbwtdR15cQf7By5X/YImbk42qKmkI8bnlCiyhmhkn7PhGdnotDqxd/UmhRe67U
-         VCLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BbR9Yrok2+r2iuSrKXyCdVxdVyCF4DRzoDzjudqSfhs=;
-        b=X8AVmdCRqwS0S6pY34braDtgK0rL+mQ63OSGjFSmRn9gg6pghxAPMwmGdcB12O5v0c
-         /AgTpNtO8z63uv8+khJzUjwNhqpVOVHjQQC4Lkr0Z6HlwadkfMF5BaAQQx/UHjCiOScz
-         ufLEMzt44vvVJD41v22Rjcctl9JtVV1El0QXCoOR+U6IXwrYjm0djFdgy8JwonogJFE8
-         S+Z14AgLbKzjmb/boSU/VkLbJEgwwGvJuGRPl65TwQmsHf1BCTBL45uUlJRzRu3f6p1J
-         4ilFRzrtf9X16FViF3lqJ2z1Ph0KO4PhFaLzZHh0P4JNvY8qTCOINIacGazpEEV3NFQN
-         00WA==
-X-Gm-Message-State: APjAAAX1jARxCYxkecP4rXbytPLl9tzXTGINvpyHvyxwJIAaDOrHj/TZ
-        dRx7p6oFmqLT2+q2825oMMyblGIm
-X-Google-Smtp-Source: APXvYqwjGA+6FKnifsb5grJr693AVLfaeSckMZG5ZsXPoEQ/sbIwaQj3WiG1KpI+c0W8Zge5/da5tw==
-X-Received: by 2002:ac2:5986:: with SMTP id w6mr18939816lfn.147.1557861204485;
-        Tue, 14 May 2019 12:13:24 -0700 (PDT)
-Received: from [192.168.2.145] (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.googlemail.com with ESMTPSA id b15sm3843192ljj.1.2019.05.14.12.13.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 12:13:23 -0700 (PDT)
-Subject: Re: [RFC PATCH v1 5/6] soc/tegra: regulators: Add regulators coupler
- for Tegra20
-To:     Mark Brown <broonie@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190414175939.12368-1-digetx@gmail.com>
- <20190414175939.12368-6-digetx@gmail.com>
- <20190508075706.GW14916@sirena.org.uk>
- <9756d8ca-0778-5185-5b6b-3168d63819ec@gmail.com>
- <20190512090627.GO21483@sirena.org.uk>
- <586b4f29-1937-2d7b-3944-c29311502878@gmail.com>
- <20190513173816.GG5168@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b7bd37d4-471a-4c31-f561-8d4eb89519a4@gmail.com>
-Date:   Tue, 14 May 2019 22:12:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190513173816.GG5168@sirena.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 14 May 2019 15:18:35 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id EEA368EE109;
+        Tue, 14 May 2019 12:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557861514;
+        bh=kEo/SVpo1ALfduxjBL6j4BgvcDYrykkEFotN47vMdpo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=FYrdoogoLnISQM1Gna4zR8dFz0m1XqoyYVy6MoFrTEVnU1hi7m7DSZV3h/A2XZcZK
+         HsqRkNweLASCPrYAmWtU/51Zax8vrUpzjyu751TcYxE1QZc61MAVSntV/NhaZG+E5j
+         phj1QTEdYcMFyulxVm8BeM7Q6aZReGPxpRKST4Lk=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QdQKJpAzFTsY; Tue, 14 May 2019 12:18:33 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 4F2438EE0ED;
+        Tue, 14 May 2019 12:18:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1557861513;
+        bh=kEo/SVpo1ALfduxjBL6j4BgvcDYrykkEFotN47vMdpo=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=JeEEo+NfnkowNE+9caNm6hsbGtn0T6bU8NF+hBTf94ux0+YI/Yfe8OsASW6MhvDb3
+         wtySyGjG0MToAmT+lQFezolyaeD/lHNHpWchGwk0XgpylgDu2zsE3rXzmufIdJJEXa
+         ko7T09bgCGxuMzfgUSW2rrqIqCefgkntCBg38DTI=
+Message-ID: <1557861511.3378.19.camel@HansenPartnership.com>
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andy Lutomirski <luto@kernel.org>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Rob Landley <rob@landley.net>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org
+Date:   Tue, 14 May 2019 12:18:31 -0700
+In-Reply-To: <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+         <20190512194322.GA71658@rani.riverdale.lan>
+         <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+         <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+         <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+         <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-13.05.2019 20:38, Mark Brown пишет:
-> On Sun, May 12, 2019 at 08:42:39PM +0300, Dmitry Osipenko wrote:
->> 12.05.2019 12:06, Mark Brown пишет:
+On Tue, 2019-05-14 at 08:19 -0700, Andy Lutomirski wrote:
+> On Mon, May 13, 2019 at 5:47 AM Roberto Sassu <roberto.sassu@huawei.c
+> om> wrote:
+> > On 5/13/2019 11:07 AM, Rob Landley wrote:
+[...]
+> > > > The only reason why opening .xattr-list works is that IMA is
+> > > > not yet initialized (late_initcall vs rootfs_initcall).
+> > > 
+> > > Launching init before enabling ima is bad because... you didn't
+> > > think of it?
+> > 
+> > No, because /init can potentially compromise the integrity of the
+> > system.
 > 
->>> This seems like it should be easy enough to describe - we just need
->>> minimum and maximum spreads between pairs of rails.
-> 
->> Yes, but the proper CORE/RTC minimum voltages shall be maintained until
->> all drivers will get support for the voltage management, which likely to
->> take a lot of time to get upstreamed. So I'd want to get at least some
->> basics working for the start, later on it should be possible to consider
->> generalization of the regulators coupling. Mark, are you okay with
->> having the custom regulators coupler as an interim solution?
-> 
-> Let me think about it.  Interim solutions have this habit of hanging
-> around and the bit with needing to get all the drivers loaded is very
-> much an open and substantial question...  :/  Definitely not something
-> I'd close the door on at this point though.
-> 
+> I think Rob is right here.  If /init was statically built into the
+> kernel image, it has no more ability to compromise the kernel than
+> anything else in the kernel.  What's the problem here?
 
-This one has a good chance to stick around for a substantial time.
+The specific problem is that unless you own the kernel signing key,
+which is really untrue for most distribution consumers because the
+distro owns the key, you cannot build the initrd statically into the
+kernel.  You can take the distro signed kernel, link it with the initrd
+then resign the combination with your key, provided you insert your key
+into the MoK variables as a trusted secure boot key, but the distros
+have been unhappy recommending this as standard practice.
 
-Realistically I see two variants right now:
+If our model for security is going to be to link the kernel and the
+initrd statically to give signature protection over the aggregate then
+we need to figure out how to execute this via the distros.  If we
+accept that the split model, where the distro owns and signs the kernel
+but the machine owner builds and is responsible for the initrd, then we
+need to explore split security models like this proposal.
 
-  1) get at least some basics to work (regulators coupling, CPUFreq
-voltage managing) and then continue step-by-step
+James
 
-  2) give up on it all in upstream because likely that an immediate
-complete solution will take just too much time and effort for a one
-person to cope (I have other things to do as well)
-
-Mark, I'm glad that you're not strongly opposed. Will prepare  v2.
-
-If anyone else has something to say, please don't shy.
