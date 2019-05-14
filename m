@@ -2,130 +2,131 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E496C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF62C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793B7208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0788C21530
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:14:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="gKMZt+rm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726363AbfENMJu (ORCPT
+        id S1726360AbfENMN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:09:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38198 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726286AbfENMJt (ORCPT
+        Tue, 14 May 2019 08:13:59 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34753 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENMN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:09:49 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4EC45pf052715
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:09:48 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sfva3bac0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:09:47 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 14 May 2019 13:09:44 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 13:09:39 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4EC9c1l55050322
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 12:09:38 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DD0C42052;
-        Tue, 14 May 2019 12:09:38 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 175C14204B;
-        Tue, 14 May 2019 12:09:36 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.29])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 May 2019 12:09:35 +0000 (GMT)
-Subject: Re: [PATCH v10 09/12] ima: Implement support for module-style
- appended signatures
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        linux-integrity@vger.kernel.org
-Cc:     linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        David Howells <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Date:   Tue, 14 May 2019 08:09:25 -0400
-In-Reply-To: <20190418035120.2354-10-bauerman@linux.ibm.com>
-References: <20190418035120.2354-1-bauerman@linux.ibm.com>
-         <20190418035120.2354-10-bauerman@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051412-0020-0000-0000-0000033C871A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051412-0021-0000-0000-0000218F42B3
-Message-Id: <1557835765.4139.9.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140089
+        Tue, 14 May 2019 08:13:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v10so11929743oib.1
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:13:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=J6T7mgXIvnET5l/tpGXLopOXL/eCRoBVjJ8wVdjfvJM=;
+        b=gKMZt+rmO48Wd6LixwSFA5uP+tnHbIOOzUMW7+cBpiXeFZOAPzh53vAAif3AgkqbCQ
+         1qOovLLoGbwFNYLJHR9YWAxqooTAwxUakSopoiggHN/gyfCHB9iSN5+ffCnzv5xHnSSY
+         1HX5wrQvZ28MsrkDdHaV9KzwQSClciBtzVYJV+CzkD0V87c/OW4S9UkgNiWaUm00HP6O
+         inW6jQyHzZS5r4rWyYh2cWIY5bhfa2eYUZvyrJwh7jBdJse1t06e3uVksOSgWbViKwtI
+         wuadLwR/wSvMZP+RSe9VR5YNWctqW6aqDOo1HpmPgILV98ku9QPoARijDhLUJb+vUJ4R
+         ujNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=J6T7mgXIvnET5l/tpGXLopOXL/eCRoBVjJ8wVdjfvJM=;
+        b=hsy3GadyDxQHdP2YDbB054c8+/Wy0AT6lXAj8q1IYiShQ3agYHe4I5WLy3st6urGm0
+         yHAC7NH1YCWZzUn9D4FX4oRuRV0nyE3aqeauoKhVUSX0wt4VA99yAxvhOfLQV4s/n1gf
+         2TEms1iWddy24LTVTTW7oKuwD6MavFRuKhv3n3ki18Idzlr7F3aAM7Jxy+7rTCeB93ye
+         Uz9fPvRhmi6HyfaIwOXtn5x7M+6ndrXJSG2OYtMGv1DsEJycHj+P1k8Z7xMAt/187NEa
+         /Z7lwyZSZT/osKc7I8sp47wYw7NZReFh6E8oA7fzVQUDqmkUKb2k9Bm1gCiBXcvTNKLC
+         SfBA==
+X-Gm-Message-State: APjAAAVFfqgognhaFvqRDXXGpRrE5mXwY+ExLXEJn0K0TWADgiOS93kk
+        oiQwmobLPLxiZpYivY6nRTUGKQ==
+X-Google-Smtp-Source: APXvYqxt8u10XFlJlrW+Z8Xzk2QlxKIYWgUazpaKKgLWQ5dFhciFxSHt8Xc4H3c7OWeomT6MpjW7Zg==
+X-Received: by 2002:aca:fd0c:: with SMTP id b12mr2471522oii.55.1557836033811;
+        Tue, 14 May 2019 05:13:53 -0700 (PDT)
+Received: from minyard.net ([2001:470:b8f6:1b:b9a9:ba56:cfab:b3bf])
+        by smtp.gmail.com with ESMTPSA id f7sm6912633otb.66.2019.05.14.05.13.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 05:13:52 -0700 (PDT)
+Date:   Tue, 14 May 2019 07:13:50 -0500
+From:   Corey Minyard <cminyard@mvista.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>, minyard@acm.org,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190514121350.GA6050@minyard.net>
+Reply-To: cminyard@mvista.com
+References: <20190508205728.25557-1-minyard@acm.org>
+ <20190509161925.kul66w54wpjcinuc@linutronix.de>
+ <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
+ <20190514091219.nesriqe7qplk3476@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514091219.nesriqe7qplk3476@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thiago,
-
-On Thu, 2019-04-18 at 00:51 -0300, Thiago Jung Bauermann wrote:
+On Tue, May 14, 2019 at 11:12:19AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-05-14 10:43:56 [+0200], Peter Zijlstra wrote:
+> > Now.. that will fix it, but I think it is also wrong.
+> > 
+> > The problem being that it violates FIFO, something that might be more
+> > important on -RT than elsewhere.
 > 
-> @@ -326,6 +356,10 @@ int ima_appraise_measurement(enum ima_hooks func,
->         case INTEGRITY_UNKNOWN:
->                 break;
->         case INTEGRITY_NOXATTRS:        /* No EVM protected xattrs. */
-> +               /* It's fine not to have xattrs when using a modsig. */
-> +               if (try_modsig)
-> +                       break;
-> +               /* fall through */
->         case INTEGRITY_NOLABEL:         /* No security.evm xattr. */
->                 cause = "missing-HMAC";
->                 goto out;
-> @@ -340,6 +374,14 @@ int ima_appraise_measurement(enum ima_hooks func,
->                 rc = xattr_verify(func, iint, xattr_value, xattr_len, &status,
->                                   &cause);
->  
-> +       /*
-> +        * If we have a modsig and either no imasig or the imasig's key isn't
-> +        * known, then try verifying the modsig.
-> +        */
-> +       if (status != INTEGRITY_PASS && try_modsig &&
-> +           (!xattr_value || rc == -ENOKEY))
-> +               rc = modsig_verify(func, modsig, &status, &cause);
+> Wouldn't -RT be more about waking the task with the highest priority
+> instead the one that waited the longest?
+> 
+> > The regular wait API seems confused/inconsistent when it uses
+> > autoremove_wake_function and default_wake_function, which doesn't help,
+> > but we can easily support this with swait -- the problematic thing is
+> > the custom wake functions, we musn't do that.
+> > 
+> > (also, mingo went and renamed a whole bunch of wait_* crap and didn't do
+> > the same to swait_ so now its named all different :/)
+> > 
+> > Something like the below perhaps.
+> 
+> This still violates FIFO because a task can do wait_for_completion(),
+> not enqueue itself on the list because it noticed a pending wake and
+> leave. The list order is preserved, we have that.
+> But this a completion list. We have probably multiple worker waiting for
+> something to do so all of those should be of equal priority, maybe one
+> for each core or so. So it shouldn't matter which one we wake up.
+> 
+> Corey, would it make any change which waiter is going to be woken up?
 
-EVM protects other security xattrs, not just security.ima, if they
-exist.  As a result, evm_verifyxattr() could pass based on the other
-security xattrs.
+In the application that found this, the wake order probably isn't
+relevant.
 
-Mimi
+For other applications, I really doubt that very many are using multiple
+waiters.  If so, this bug would have been reported sooner, I think.
 
-> +
->  out:
->         /*
->          * File signatures on some filesystems can not be properly verified.
+As you mention, for RT you would want waiter woken by priority and FIFO
+within priority.  I don't think POSIX says anything about FIFO within
+priority, but that's probably a good idea.  That's no longer a simple
+wait queue  The way it is now is probably closer to that than what Peter
+suggested, but not really that close.
 
+This is heavily used in drivers and fs code, where it probably doesn't
+matter.  I looked through a few users in mm and kernel, and they had
+one waiter or were init/shutdown type things where order is not important.
+
+So I'm not sure it's important.
+
+-corey
+
+> 
+> Sebastian
