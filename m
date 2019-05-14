@@ -2,227 +2,93 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD92DC04AA7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2329BC04AA7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A26D21019
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F12208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 03:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbfENDBO (ORCPT
+        id S1726663AbfENDWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 May 2019 23:01:14 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21854 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726387AbfENDBL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 May 2019 23:01:11 -0400
-X-UUID: b36ef4d0821f4f448c642b4e9be2fe76-20190514
-X-UUID: b36ef4d0821f4f448c642b4e9be2fe76-20190514
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <biao.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1315209358; Tue, 14 May 2019 11:00:59 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 14 May 2019 11:00:51 +0800
-Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 14 May 2019 11:00:51 +0800
-From:   Biao Huang <biao.huang@mediatek.com>
-To:     Jose Abreu <joabreu@synopsys.com>, <davem@davemloft.net>
-CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <netdev@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <yt.shen@mediatek.com>,
-        <biao.huang@mediatek.com>, <jianguo.zhang@mediatek.comi>,
-        <boon.leong.ong@intel.com>
-Subject: [v2, PATCH] net: stmmac: add support for hash table size 128/256 in dwmac4
-Date:   Tue, 14 May 2019 11:00:43 +0800
-Message-ID: <1557802843-31718-2-git-send-email-biao.huang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1557802843-31718-1-git-send-email-biao.huang@mediatek.com>
-References: <1557802843-31718-1-git-send-email-biao.huang@mediatek.com>
+        Mon, 13 May 2019 23:22:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51390 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726379AbfENDWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 May 2019 23:22:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E13A1C057F8F;
+        Tue, 14 May 2019 03:22:15 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-131.pek2.redhat.com [10.72.12.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDAE71001DD5;
+        Tue, 14 May 2019 03:22:11 +0000 (UTC)
+Date:   Tue, 14 May 2019 11:22:08 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>, j-nomura@ce.jp.nec.com,
+        kasong@redhat.com, fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
+References: <20190424092944.30481-1-bhe@redhat.com>
+ <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv>
+ <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+ <20190513080653.GD16774@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513080653.GD16774@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 14 May 2019 03:22:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. get hash table size in hw feature reigster, and add support
-for taller hash table(128/256) in dwmac4.
-2. only clear PR/HMC/PM bits of GMAC_PACKET_FILTER, to avoid
-side effect to functions of other bits.
+On 05/13/19 at 04:06pm, Baoquan He wrote:
+> Hi Dave,
+> 
+> On 05/13/19 at 09:50am, Borislav Petkov wrote:
+> > On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
+> > > This is a critical bug which breaks memory hotplug,
+> > 
+> > Please concentrate and stop the blabla:
+> > 
+> > 36f0c423552d ("x86/boot: Disable RSDP parsing temporarily")
+> > 
+> > already explains what the deal is. This code was *purposefully* disabled
+> > because we ran out of time and it broke a couple of machines. Don't make
+> 
+> I remember your machine is the one on whihc the issue is reported. Could
+> you also test it and confirm if these all things found ealier are
+> cleared out?
+> 
 
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h      |    7 +--
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h      |    4 +-
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |   50 ++++++++++++---------
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c  |    1 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++
- 5 files changed, 40 insertions(+), 26 deletions(-)
+I did some tests on the laptop,  thing is:
+1. apply the 3 patches (two you posted + Boris's revert commit 52b922c3d49c)
+   on latest Linus master branch, everything works fine.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 272b9ca6..709dcec 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -335,6 +335,7 @@ struct dma_features {
- 	/* 802.3az - Energy-Efficient Ethernet (EEE) */
- 	unsigned int eee;
- 	unsigned int av;
-+	unsigned int hash_tb_sz;
- 	unsigned int tsoen;
- 	/* TX and RX csum */
- 	unsigned int tx_coe;
-@@ -427,9 +428,9 @@ struct mac_device_info {
- 	struct mii_regs mii;	/* MII register Addresses */
- 	struct mac_link link;
- 	void __iomem *pcsr;     /* vpointer to device CSRs */
--	int multicast_filter_bins;
--	int unicast_filter_entries;
--	int mcast_bits_log2;
-+	unsigned int multicast_filter_bins;
-+	unsigned int unicast_filter_entries;
-+	unsigned int mcast_bits_log2;
- 	unsigned int rx_csum;
- 	unsigned int pcs;
- 	unsigned int pmt;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-index eb013d5..a5eb7df 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4.h
-@@ -18,8 +18,7 @@
- /*  MAC registers */
- #define GMAC_CONFIG			0x00000000
- #define GMAC_PACKET_FILTER		0x00000008
--#define GMAC_HASH_TAB_0_31		0x00000010
--#define GMAC_HASH_TAB_32_63		0x00000014
-+#define GMAC_HASH_TAB(x)		(0x10 + x * 4)
- #define GMAC_RX_FLOW_CTRL		0x00000090
- #define GMAC_QX_TX_FLOW_CTRL(x)		(0x70 + x * 4)
- #define GMAC_TXQ_PRTY_MAP0		0x98
-@@ -181,6 +180,7 @@ enum power_event {
- #define GMAC_HW_FEAT_MIISEL		BIT(0)
- 
- /* MAC HW features1 bitmap */
-+#define GMAC_HW_HASH_TB_SZ		GENMASK(25, 24)
- #define GMAC_HW_FEAT_AVSEL		BIT(20)
- #define GMAC_HW_TSOEN			BIT(18)
- #define GMAC_HW_TXFIFOSIZE		GENMASK(10, 6)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 7e5d5db..1f682ec 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -401,41 +401,49 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			      struct net_device *dev)
- {
- 	void __iomem *ioaddr = (void __iomem *)dev->base_addr;
--	unsigned int value = 0;
-+	unsigned int value;
-+	int numhashregs = (hw->multicast_filter_bins >> 5);
-+	int mcbitslog2 = hw->mcast_bits_log2;
-+	int i;
-+
-+	value = readl(ioaddr + GMAC_PACKET_FILTER);
-+	value &= ~GMAC_PACKET_FILTER_PR;
-+	value &= ~GMAC_PACKET_FILTER_HMC;
-+	value &= ~GMAC_PACKET_FILTER_PM;
- 
- 	if (dev->flags & IFF_PROMISC) {
--		value = GMAC_PACKET_FILTER_PR;
-+		value |= GMAC_PACKET_FILTER_PR;
- 	} else if ((dev->flags & IFF_ALLMULTI) ||
--			(netdev_mc_count(dev) > HASH_TABLE_SIZE)) {
-+		   (netdev_mc_count(dev) > hw->multicast_filter_bins)) {
- 		/* Pass all multi */
--		value = GMAC_PACKET_FILTER_PM;
--		/* Set the 64 bits of the HASH tab. To be updated if taller
--		 * hash table is used
--		 */
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_0_31);
--		writel(0xffffffff, ioaddr + GMAC_HASH_TAB_32_63);
-+		value |= GMAC_PACKET_FILTER_PM;
-+		/* Set all the bits of the HASH tab */
-+		for (i = 0; i < numhashregs; i++)
-+			writel(0xffffffff, ioaddr + GMAC_HASH_TAB(i));
- 	} else if (!netdev_mc_empty(dev)) {
--		u32 mc_filter[2];
-+		u32 mc_filter[8];
- 		struct netdev_hw_addr *ha;
- 
- 		/* Hash filter for multicast */
--		value = GMAC_PACKET_FILTER_HMC;
-+		value |= GMAC_PACKET_FILTER_HMC;
- 
- 		memset(mc_filter, 0, sizeof(mc_filter));
- 		netdev_for_each_mc_addr(ha, dev) {
--			/* The upper 6 bits of the calculated CRC are used to
--			 * index the content of the Hash Table Reg 0 and 1.
-+			/* The upper n bits of the calculated CRC are used to
-+			 * index the contents of the hash table. The number of
-+			 * bits used depends on the hardware configuration
-+			 * selected at core configuration time.
- 			 */
--			int bit_nr =
--				(bitrev32(~crc32_le(~0, ha->addr, 6)) >> 26);
--			/* The most significant bit determines the register
--			 * to use while the other 5 bits determines the bit
--			 * within the selected register
-+			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
-+					ETH_ALEN)) >> (32 - mcbitslog2);
-+			/* The most significant bit determines the register to
-+			 * use (H/L) while the other 5 bits determine the bit
-+			 * within the register.
- 			 */
--			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1F));
-+			mc_filter[bit_nr >> 5] |= (1 << (bit_nr & 0x1f));
- 		}
--		writel(mc_filter[0], ioaddr + GMAC_HASH_TAB_0_31);
--		writel(mc_filter[1], ioaddr + GMAC_HASH_TAB_32_63);
-+		for (i = 0; i < numhashregs; i++)
-+			writel(mc_filter[i], ioaddr + GMAC_HASH_TAB(i));
- 	}
- 
- 	/* Handle multiple unicast addresses */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-index edb6053..59afb53 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c
-@@ -354,6 +354,7 @@ static void dwmac4_get_hw_feature(void __iomem *ioaddr,
- 
- 	/* MAC HW feature1 */
- 	hw_cap = readl(ioaddr + GMAC_HW_FEATURE1);
-+	dma_cap->hash_tb_sz = (hw_cap & GMAC_HW_HASH_TB_SZ) >> 24;
- 	dma_cap->av = (hw_cap & GMAC_HW_FEAT_AVSEL) >> 20;
- 	dma_cap->tsoen = (hw_cap & GMAC_HW_TSOEN) >> 18;
- 	/* RX and TX FIFO sizes are encoded as log2(n / 128). Undo that by
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 97c5e1a..1971f9f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4159,6 +4159,10 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 		priv->plat->enh_desc = priv->dma_cap.enh_desc;
- 		priv->plat->pmt = priv->dma_cap.pmt_remote_wake_up;
- 		priv->hw->pmt = priv->plat->pmt;
-+		if (priv->dma_cap.hash_tb_sz) {
-+			priv->hw->multicast_filter_bins = BIT(priv->dma_cap.hash_tb_sz) * 32;
-+			priv->hw->mcast_bits_log2 = ilog2(priv->hw->multicast_filter_bins);
-+		}
- 
- 		/* TXCOE doesn't work in thresh DMA mode */
- 		if (priv->plat->force_thresh_dma_mode)
--- 
-1.7.9.5
+2. build and test the tip/next-merge-window branch, kernel hangs early
+without output, (both 1st boot and kexec boot)
 
+So I think these 3 patches are good,  but there could be other issues
+which is not related to the problem we saw.
+
+Another thing is we can move the get rsdp after console_init, but that
+can be done later as separate patch.
+
+Thanks
+Dave
