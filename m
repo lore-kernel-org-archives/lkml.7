@@ -2,91 +2,116 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9324CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0888C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60144208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0628208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uX/PF8/B"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="EnlwuG8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfENHJw (ORCPT
+        id S1726541AbfENHNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:09:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfENHJv (ORCPT
+        Tue, 14 May 2019 03:13:23 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46801 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbfENHNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:09:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/z5RzNGJzW1HToa5OVxP0O9danntTUkXNkeid122vEM=; b=uX/PF8/BZSeVv5cPYS/kBWxFp
-        UDDr+gcUIfetuw8aGDKQAfysqqZJaUz81VHEMON8xTdLLiTpmvG5WCRkt/CEY21gb3D6P2AlCsjNa
-        sf0i36/+rwA+lGQOrFddAhvfXScybliJbFvtwsTcLmcFia80AO9SPV6fbZAreQpv5iwSvaXbG5clt
-        qAWW+0m229JhnOySjs3Bm0qnNwoc5kzUN/Zdjgf7IEFS/vVTiv9X4ZmIi0PMu6AnplhZzKcMcqcbA
-        pBmJBkzg/ZEv1TJPg3f7a2OKjgL7A/SQEMkkAMbOx0FX6IMKXMEaIGyTsnQkbUyFo8ri6RR70llLI
-        uwPjbMl2g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQRZH-0006YZ-Fs; Tue, 14 May 2019 07:09:43 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 032842029F87A; Tue, 14 May 2019 09:09:41 +0200 (CEST)
-Date:   Tue, 14 May 2019 09:09:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        kvm list <kvm@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        jan.setjeeilers@oracle.com, Liran Alon <liran.alon@oracle.com>,
-        Jonathan Adams <jwadams@google.com>
-Subject: Re: [RFC KVM 18/27] kvm/isolation: function to copy page table
- entries for percpu buffer
-Message-ID: <20190514070941.GE2589@hirez.programming.kicks-ass.net>
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
- <1557758315-12667-19-git-send-email-alexandre.chartre@oracle.com>
- <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com>
+        Tue, 14 May 2019 03:13:23 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4E7D1nM3904743
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 14 May 2019 00:13:01 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4E7D1nM3904743
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557817982;
+        bh=xQjJyNqXazPOXIYLNRb/BA2jAUGCULfn5jnQCl9oViA=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=EnlwuG8CUQcOn0wPoE1sdwn0kaBlNKhOWN6w8dmXsCqZyr+3osw7sK1Ah76t4EyVi
+         QtKTHl9iu5vk3RfQNdiZl+ieceE0+FLGb4iIlXhecNTM6Ly2XOPbur01T05GpmczH9
+         vg0Yr+Y0wFg4Ldf1d/Tdqt/jIbf2IbrFrET0cimfITZ7WYjyF/VRPsQCZ1xtVAIMqa
+         6i1H3yCwLJ5XQ6ojZ5p2qPTIVsofnYJiq1nS3a/g8mwA77CUz5TIB/Dy5viBYmpFSh
+         eys8UKnZ/UmEDSgl4BVVdBJiS+V3JltJ8az+APLHIAolvR/6rnifhdg1sFO0aTqYfK
+         cDg28NF9nc52w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4E7D1Rr3904740;
+        Tue, 14 May 2019 00:13:01 -0700
+Date:   Tue, 14 May 2019 00:13:01 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Stephane Eranian <tipbot@zytor.com>
+Message-ID: <tip-c7a286577d7592720c2f179aadfb325a1ff48c95@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, eranian@google.com,
+        torvalds@linux-foundation.org, peterz@infradead.org,
+        mingo@kernel.org, tglx@linutronix.de
+Reply-To: peterz@infradead.org, torvalds@linux-foundation.org,
+          tglx@linutronix.de, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, hpa@zytor.com, eranian@google.com
+In-Reply-To: <20190514003400.224340-1-eranian@google.com>
+References: <20190514003400.224340-1-eranian@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf/x86/intel: Allow PEBS multi-entry in
+ watermark mode
+Git-Commit-ID: c7a286577d7592720c2f179aadfb325a1ff48c95
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrWUKZv=wdcnYjLrHDakamMBrJv48wp2XBxZsEmzuearRQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 11:18:41AM -0700, Andy Lutomirski wrote:
-> On Mon, May 13, 2019 at 7:39 AM Alexandre Chartre
-> <alexandre.chartre@oracle.com> wrote:
-> >
-> > pcpu_base_addr is already mapped to the KVM address space, but this
-> > represents the first percpu chunk. To access a per-cpu buffer not
-> > allocated in the first chunk, add a function which maps all cpu
-> > buffers corresponding to that per-cpu buffer.
-> >
-> > Also add function to clear page table entries for a percpu buffer.
-> >
-> 
-> This needs some kind of clarification so that readers can tell whether
-> you're trying to map all percpu memory or just map a specific
-> variable.  In either case, you're making a dubious assumption that
-> percpu memory contains no secrets.
+Commit-ID:  c7a286577d7592720c2f179aadfb325a1ff48c95
+Gitweb:     https://git.kernel.org/tip/c7a286577d7592720c2f179aadfb325a1ff48c95
+Author:     Stephane Eranian <eranian@google.com>
+AuthorDate: Mon, 13 May 2019 17:34:00 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 14 May 2019 09:07:58 +0200
 
-I'm thinking the per-cpu random pool is a secrit. IOW, it demonstrably
-does contain secrits, invalidating that premise.
+perf/x86/intel: Allow PEBS multi-entry in watermark mode
+
+This patch fixes a restriction/bug introduced by:
+
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index ef763f535e3a..12ec402f4114 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3265,7 +3265,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
+ 
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_large_pebs_flags(event)))
