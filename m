@@ -2,107 +2,178 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B181BC04A6B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05D0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82942208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE9220843
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 04:32:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UB6b3zpE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GVQjCh/Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726060AbfENER2 (ORCPT
+        id S1726659AbfENEcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 00:17:28 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:42188 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENER1 (ORCPT
+        Tue, 14 May 2019 00:32:02 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8371 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfENEcB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 00:17:27 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4E4HDFA005755;
-        Tue, 14 May 2019 13:17:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4E4HDFA005755
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557807434;
-        bh=uRp+cc23+8o4aJFfDFUvNr7qqKp95Z2gvy75q0uzix8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UB6b3zpELhUZXA0h4xPUsDO7uR1Yb0GLpjjrLO3W8En7OZnXwu89zqn7aUabdNGgB
-         Vg4jzH1sC05Xxo/4+8ZqSYHKixq9rSyV2O7pA52j2oHE+0cAt2itxU3jJZktbCA57G
-         Dqw97Tg14yjw8Dv1Q6icY5f+pynmDxZUwUfdjBqwWD4fwEer19z0V24PV/wiaeWrCw
-         l5VI2R24Z9FF/HwsvfzSoRx9P7fAxIhC1t7+C0GzewpveEupcTHrYUxXCAjSNxs8kH
-         US04ig+zG5qUUZKGcVET2umksU6wqZmw1PxBkW4BLb/NIAqOMUr0Q69ca9tAcfu8xL
-         BLuQ2yYgVJEVQ==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id d4so5688251uaj.7;
-        Mon, 13 May 2019 21:17:14 -0700 (PDT)
-X-Gm-Message-State: APjAAAWKz0c9khAdXNIYIXHHQhM6DAOuY5sVLA5w97Xyj8Bq0Fz5d9R2
-        JZbk+oUoZrZkiSfQ/nXiR7hcbX2EQEejSsNDQ4k=
-X-Google-Smtp-Source: APXvYqwqpAai8X9ieuHPJXrpIn0TQTpjZm16VliqTUnUVfd+ar/fZ1I0cMmbkmphVXPVFdIqs8JEM6M5THbpk4ltr3I=
-X-Received: by 2002:a9f:3381:: with SMTP id p1mr7970759uab.40.1557807433109;
- Mon, 13 May 2019 21:17:13 -0700 (PDT)
+        Tue, 14 May 2019 00:32:01 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cda44bb0000>; Mon, 13 May 2019 21:31:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 13 May 2019 21:31:59 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 13 May 2019 21:31:59 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
+ 2019 04:31:59 +0000
+Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL102.nvidia.com
+ (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
+ 2019 04:31:58 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 14 May 2019 04:31:58 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.164.159]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cda44bd0000>; Mon, 13 May 2019 21:31:58 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <ldewangan@nvidia.com>, <broonie@kernel.org>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V4 2/4] spi: tegra114: add support for hw based cs
+Date:   Mon, 13 May 2019 21:31:50 -0700
+Message-ID: <1557808312-3213-2-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557808312-3213-1-git-send-email-skomatineni@nvidia.com>
+References: <1557808312-3213-1-git-send-email-skomatineni@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190514100910.6996d2f5@canb.auug.org.au> <CAK7LNAT_aJ4-abaNXe5VwvAYa2TOprjFL-vcUc730EDwHq80kw@mail.gmail.com>
- <20190514110334.424cf0be@canb.auug.org.au>
-In-Reply-To: <20190514110334.424cf0be@canb.auug.org.au>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 14 May 2019 13:16:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS-KDO0Cuq34T5MZvJjxZ-A3HaG3qnJi3v4P9xS=4fRQA@mail.gmail.com>
-Message-ID: <CAK7LNAS-KDO0Cuq34T5MZvJjxZ-A3HaG3qnJi3v4P9xS=4fRQA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the ecryptfs tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557808315; bh=k2pwjMQe73pMINbpya/u7vDdSHArgZLiAfPjTQcuzGE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=GVQjCh/ZP5YvapW/s7RNGkWxGwmNfEWsRtNsKrgaE9lBvtAnavv6SLM4JS+4qKhvm
+         01pevPAjUXp7jia8u9nOMR+DnHECG7RbZF4dBBoEANYe6e0Asva8sHgHE3bvBRqp3U
+         b4vLZjCTYDSmxCu92ZngBD/JK+j2qxMtYJ2OFtnnFUHCSBX2U7ltx4p4BqURudOVhT
+         NRPfpb/uJUZZMf/HMgYgksos5XBYNiiejc48pG8/LB/PfzRgsj5MHeg+QJUarw0H6y
+         gISLForlvD4FLI29svtYJSKAOYvcWm1Kjzclm+emDZ1WOBeJu5kDEtBqlm3ipadFRC
+         3SEry/rHpPNeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Tegra SPI controller supports both HW and SW based CS control
+for SPI transfers.
 
-On Tue, May 14, 2019 at 10:04 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Masahiro,
->
-> Also, this:
->
-> On Tue, 14 May 2019 09:40:53 +0900 Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >
-> > > Mind you, I have no itdea why this file was begin rebuilt, the merge
-> > > only touched these files:
-> > >
-> > > fs/ecryptfs/crypto.c
-> > > fs/ecryptfs/keystore.c
->
-> Its a bit annoying that the module was even being looked at given
-> nothing it files depend upon had been modified.
+This patch adds support for HW based CS control where CS is driven
+to active state during the transfer and is driven inactive at the
+end of the transfer directly by the HW.
 
+This patch enables the use of HW based CS only for single transfers
+without cs_change request.
 
-If you are talking about the rebuild of
-.tmp_versions/*.mod files,
-yes, they are cleaned up every time.
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/spi/spi-tegra114.c | 39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-# Create temporary dir for module support files
-# clean it up only when building all modules
-cmd_crmodverdir = $(Q)mkdir -p $(MODVERDIR) \
-                  $(if $(KBUILD_MODULES),; rm -f $(MODVERDIR)/*)
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index f47417dd9edb..0cb0932d32fd 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -193,6 +193,7 @@ struct tegra_spi_data {
+ 	unsigned				dma_buf_size;
+ 	unsigned				max_buf_size;
+ 	bool					is_curr_dma_xfer;
++	bool					use_hw_based_cs;
+ 
+ 	struct completion			rx_dma_complete;
+ 	struct completion			tx_dma_complete;
+@@ -723,7 +724,9 @@ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
+ }
+ 
+ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
+-		struct spi_transfer *t, bool is_first_of_msg)
++					struct spi_transfer *t,
++					bool is_first_of_msg,
++					bool is_single_xfer)
+ {
+ 	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
+ 	u32 speed = t->speed_hz;
+@@ -780,11 +783,17 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
+ 		if (spi->cs_gpiod)
+ 			gpiod_set_value(spi->cs_gpiod, 1);
+ 
+-		command1 |= SPI_CS_SW_HW;
+-		if (spi->mode & SPI_CS_HIGH)
+-			command1 |= SPI_CS_SW_VAL;
+-		else
+-			command1 &= ~SPI_CS_SW_VAL;
++		if (is_single_xfer && !(t->cs_change)) {
++			tspi->use_hw_based_cs = true;
++			command1 &= ~(SPI_CS_SW_HW | SPI_CS_SW_VAL);
++		} else {
++			tspi->use_hw_based_cs = false;
++			command1 |= SPI_CS_SW_HW;
++			if (spi->mode & SPI_CS_HIGH)
++				command1 |= SPI_CS_SW_VAL;
++			else
++				command1 &= ~SPI_CS_SW_VAL;
++		}
+ 
+ 		tegra_spi_writel(tspi, 0, SPI_COMMAND2);
+ 	} else {
+@@ -905,11 +914,14 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
+ 	if (spi->cs_gpiod)
+ 		gpiod_set_value(spi->cs_gpiod, 0);
+ 
+-	if (cs_val)
+-		tspi->command1_reg |= SPI_CS_SW_VAL;
+-	else
+-		tspi->command1_reg &= ~SPI_CS_SW_VAL;
+-	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
++	if (!tspi->use_hw_based_cs) {
++		if (cs_val)
++			tspi->command1_reg |= SPI_CS_SW_VAL;
++		else
++			tspi->command1_reg &= ~SPI_CS_SW_VAL;
++		tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
++	}
++
+ 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
+ }
+ 
+@@ -936,16 +948,19 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
+ 	struct spi_device *spi = msg->spi;
+ 	int ret;
+ 	bool skip = false;
++	int single_xfer;
+ 
+ 	msg->status = 0;
+ 	msg->actual_length = 0;
+ 
++	single_xfer = list_is_singular(&msg->transfers);
+ 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
+ 		u32 cmd1;
+ 
+ 		reinit_completion(&tspi->xfer_completion);
+ 
+-		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg);
++		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
++						    single_xfer);
+ 
+ 		if (!xfer->len) {
+ 			ret = 0;
+-- 
+2.7.4
 
-
-I think the reason is that
-we want to make sure stale modules are not remaining
-when CONFIG_MY_DRIVER=m is turned into CONFIG_MY_DRIVER=n
-
-
-Rebuilding .mod files is not expensive.
-
-I think this behavior can be improved, but
-that is how it has been working for a long time.
-
-
---
-Best Regards
-Masahiro Yamada
