@@ -2,87 +2,121 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DC7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88B8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5237B20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hz3x2Hx3"
+	by mail.kernel.org (Postfix) with ESMTP id A45592147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 13:09:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfENNIj (ORCPT
+        id S1726279AbfENNJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 09:08:39 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46599 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725562AbfENNIj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 09:08:39 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so12486250ljk.13;
-        Tue, 14 May 2019 06:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jGnWaeTdAGYVob1R/TxXevTDDOUSFKjgVCqNbbE/1nI=;
-        b=hz3x2Hx3tvoY4x19hxjgKQPiNUhxFg13owl7/k6Ky6dO4KK2ca5+M2T/ZQAHHSZThe
-         xIwgSLc13QESbL3hNX+o5utV03dRJChs7nOKk6wkDO5elb16VMgToE05vxVoHrSD0yoL
-         wABAYKND66EjSnJljB/B9NcK7jayPwmR0lvS/EA3rYOLZ0RgNQDRysBwK/VkBtP/rZDu
-         fpeYAXJCvJ/wpkfEqBrurLrugaGUcJWi5Gg5sSe+sTbPk7iJLXpCd0hDsQ77PQ5vCPhL
-         Bn/CBBeO0ID0BLatVCRMm/lGrg5qSdZa628QsHlslnMeW58ygsZykh2ii05BeCZeaFJi
-         gQiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jGnWaeTdAGYVob1R/TxXevTDDOUSFKjgVCqNbbE/1nI=;
-        b=BWR0nYQH05fktCcFwntfwVLMF9UUsEMrP1uiAp9k7etusazA+UH64M7ao3MfsRomgx
-         Yf4Zt8NIwptxv3IzinHOo1CCsB3VlRc/cz8Qt7MnN8WH+K4h0lmmvarlOS1hK836qCpd
-         23NMtXjpgeEDaSw8Xp/EanWnMWwgpNtwBmyIxGbtQkzyu0nmTZSpLcXc5Fw/h0OBWLT3
-         7y8v1weo8c2+08f9FXl++FMAzq0n4mLtxdl4EzFrB4nQUriPzz+I3GpD+Fac1IeMWhZE
-         BiYcqoYVAs11GWNyvwLZIQCEQP8vlOIN/EHMUB16AVDHJtle6EUaVIcFKBqQi1D9p2tQ
-         mj4Q==
-X-Gm-Message-State: APjAAAVmIAtCRNuCoru7KAA3S/T27L9Vk8HJheASRfUdMqCp5tqkeAFn
-        Z3isVjx8RfZf5F5U9j34fLvv6/meSXqGvQwBgFY=
-X-Google-Smtp-Source: APXvYqwGecBzbpfdMXAIjdCxJTDl5Ws8nyl0nWjhHtCf7epuYAKPy0fZvIPVELRzmMR4xkE3iE/POW6O04b/VHIW07o=
-X-Received: by 2002:a2e:2b81:: with SMTP id r1mr15614143ljr.138.1557839316690;
- Tue, 14 May 2019 06:08:36 -0700 (PDT)
+        Tue, 14 May 2019 09:09:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:55942 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726025AbfENNJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 09:09:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92095341;
+        Tue, 14 May 2019 06:09:02 -0700 (PDT)
+Received: from [10.1.197.45] (e112298-lin.cambridge.arm.com [10.1.197.45])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01A013F6C4;
+        Tue, 14 May 2019 06:08:57 -0700 (PDT)
+Subject: Re: [PATCH v2 3/5] arm64: Fix incorrect irqflag restore for priority
+ masking
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     mark.rutland@arm.com, Suzuki K Pouloze <suzuki.poulose@arm.com>,
+        catalin.marinas@arm.com, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        james.morse@arm.com, Oleg Nesterov <oleg@redhat.com>,
+        yuzenghui@huawei.com, wanghaibin.wang@huawei.com,
+        liwei391@huawei.com
+References: <1556553607-46531-1-git-send-email-julien.thierry@arm.com>
+ <1556553607-46531-4-git-send-email-julien.thierry@arm.com>
+ <2b023ba4-b95b-f823-4635-6a75deef5386@arm.com>
+ <1739c8ac-9073-798f-ed0b-0dc617c195d6@arm.com>
+ <5e8a85f5-c837-3ce8-5830-f3ae7897e326@arm.com>
+From:   Julien Thierry <julien.thierry@arm.com>
+Message-ID: <0a0dfd57-af99-f603-a56f-ee05f5c7b98a@arm.com>
+Date:   Tue, 14 May 2019 14:08:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190513202258.30949-1-angus@akkea.ca> <20190513202258.30949-2-angus@akkea.ca>
-In-Reply-To: <20190513202258.30949-2-angus@akkea.ca>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 14 May 2019 10:08:33 -0300
-Message-ID: <CAOMZO5Dn4sVJx3UPo-WXMen9N36CiBvq3i+GosJ_4FGZ7jnTqA@mail.gmail.com>
-Subject: Re: [PATCH v11 1/4] MAINTAINERS: add an entry for for arm63 imx devicetrees
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Shawn Guo <shawnguo@kernel.org>,
-        Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5e8a85f5-c837-3ce8-5830-f3ae7897e326@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 5:23 PM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
->
-> Add an explicit reference to imx* devicetrees
->
-> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
 
-There is a typo in the Subject: "arm63" --> "arm64".
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+On 14/05/2019 13:01, Robin Murphy wrote:
+> On 14/05/2019 10:25, Julien Thierry wrote:
+> [...]
+>>>> +static inline int arch_irqs_disabled_flags(unsigned long flags)
+>>>> +{
+>>>> +    int res;
+>>>> +
+>>>> +    asm volatile(ALTERNATIVE(
+>>>> +        "and    %w0, %w1, #" __stringify(PSR_I_BIT) "\n"
+>>>> +        "nop",
+>>>> +        "cmp    %w1, #" __stringify(GIC_PRIO_IRQON) "\n"
+>>>> +        "cset    %w0, ne",
+>>>> +        ARM64_HAS_IRQ_PRIO_MASKING)
+>>>> +        : "=&r" (res)
+>>>> +        : "r" ((int) flags)
+>>>> +        : "memory");
+>>>
+>>> I wonder if this should have "cc" as part of the clobber list.
+>>
+>> Is there any special semantic to "cc" on arm64? All I can find is that
+>> in the general case it indicates that it is modifying the "flags"
+>> register.
+>>
+>> Is your suggestion only for the PMR case? Or is it something that we
+>> should add regardless of PMR?
+>> The latter makes sense to me, but for the former, I fail to understand
+>> why this should affect only PMR.
+> 
+> The PMR case really ought to have have a cc clobber, because who knows
+> what this may end up inlined into, and compilers can get pretty
+> aggressive with instruction scheduling in ways which leave a live value
+> in CPSR across sizeable chunks of other code. It's true that the non-PMR
+> case doesn't need it, but the surrounding code still needs to be
+> generated to accommodate both possible versions of the alternative. From
+> the look of the rest of the patch, the existing pseudo-NMI code has this
+> bug in a few places.
+> 
+> Technically you could omit it when ARM64_PSEUDO_NMI is configured out
+> entirely, but at that point you may as well omit the whole alternative
+> as well. It's probably not worth the bother unless it proves to have a
+> significant impact on codegen overall. On which note the memory clobber
+> also seems superfluous either way :/
+> 
+
+Right, I see. I misunderstood what was meant by "cc" indicating that the
+assembly modified the flags.
+
+Due to the context I interpreted it as irqflags whereas it concerns the
+condition flags (hence the 'c' I presume...). It all makes more sense now.
+
+> That said, now that I've been looking at it for this long, if the aim is
+> just to create a zero/nonzero value then couldn't the PMR case just be
+> "eor %w0, %w1, #GIC_PRIO_IRQON" and avoid the need for clobbers at all?
+> 
+
+Yes, definitely seems like it would be better! I'll take that
+suggestion, thanks.
+
+Cheers,
+
+-- 
+Julien Thierry
