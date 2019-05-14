@@ -2,99 +2,133 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC485C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2163C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9841F21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44CE21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 05:27:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GWsXtVm0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbfENFQg (ORCPT
+        id S1726678AbfENF1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 01:16:36 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11715 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbfENFQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 01:16:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 22:16:35 -0700
-X-ExtLoop1: 1
-Received: from llanecki-mobl1.ger.corp.intel.com ([10.252.11.109])
-  by fmsmga001.fm.intel.com with ESMTP; 13 May 2019 22:16:32 -0700
-Message-ID: <c4a1fd36abf6acafa35bb70f87791d4ef802d87c.camel@intel.com>
-Subject: Re: [PATCH][next] iwlwifi: d3: Use struct_size() helper
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 14 May 2019 08:16:32 +0300
-In-Reply-To: <20190403160342.GA24396@embeddedor>
-References: <20190403160342.GA24396@embeddedor>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Tue, 14 May 2019 01:27:13 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15437 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfENF1N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 01:27:13 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cda51b60000>; Mon, 13 May 2019 22:27:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 13 May 2019 22:27:12 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 13 May 2019 22:27:12 -0700
+Received: from [10.24.47.172] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 May
+ 2019 05:27:06 +0000
+Subject: Re: [PATCH V6 06/15] dt-bindings: PCI: designware: Add binding for
+ CDM register check
+To:     Rob Herring <robh@kernel.org>
+CC:     <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-7-vidyas@nvidia.com> <20190513151038.GA30653@bogus>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <bdffcc1e-062a-a39e-1a3d-bc48e78f9668@nvidia.com>
+Date:   Tue, 14 May 2019 10:57:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190513151038.GA30653@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557811639; bh=Dq8qnb1ysO5RsRvY1YBGjeDlfEbkkUSeJAsfidt5wpQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GWsXtVm0irwfCt46TdsXdVGHhKZ9q888BDruFt5aAi9LxMNGaaumFAq7MIX/j2Ed+
+         EeQx0ggPp1kqnzq/M1zeYmDAU3f8dgCu43hjNwZbLbJeJE3BvFxQ/hjLwBUg9SXgYs
+         Ao0UdVfoAkAHe0h9G+rpfQp4l8Kxl4IoRj/KMr4ddnaOiHzjKpTq24d4kUt2cN86fY
+         zLQ4wEo/Sqj/8v9ys5GwXNjXNVH+W+xtI8/CiItwIw2tyXDwaIriMmsxGpWclU9NHg
+         IwPPAp7xxXyay8xLmm+kolhyLoQemXTdisK6RM2j7m3CDMR+71rFljtXg3ka8QLUsa
+         ym5Aix8T+vEFg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-03 at 11:03 -0500, Gustavo A. R. Silva wrote:
-> Make use of the struct_size() helper instead of an open-coded version
-> in order to avoid any potential type mistakes, in particular in the
-> context in which this code is being used.
+On 5/13/2019 8:40 PM, Rob Herring wrote:
+> On Mon, May 13, 2019 at 10:36:17AM +0530, Vidya Sagar wrote:
+>> Add support to enable CDM (Configuration Dependent Module) registers check
+>> for any data corruption. CDM registers include standard PCIe configuration
+>> space registers, Port Logic registers and iATU and DMA registers.
+>> Refer Section S.4 of Synopsys DesignWare Cores PCI Express Controller Databook
+>> Version 4.90a
+>>
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes since [v5]:
+>> * None
+>>
+>> Changes since [v4]:
+>> * None
+>>
+>> Changes since [v3]:
+>> * None
+>>
+>> Changes since [v2]:
+>> * Changed flag name from 'cdm-check' to 'enable-cdm-check'
+>> * Added info about Port Logic and DMA registers being part of CDM
+>>
+>> Changes since [v1]:
+>> * This is a new patch in v2 series
+>>
+>>   Documentation/devicetree/bindings/pci/designware-pcie.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> index 5561a1c060d0..85b872c42a9f 100644
+>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> @@ -34,6 +34,11 @@ Optional properties:
+>>   - clock-names: Must include the following entries:
+>>   	- "pcie"
+>>   	- "pcie_bus"
+>> +- enable-cdm-check: This is a boolean property and if present enables
+>> +   automatic checking of CDM (Configuration Dependent Module) registers
+>> +   for data corruption. CDM registers include standard PCIe configuration
+>> +   space registers, Port Logic registers, DMA and iATU (internal Address
+>> +   Translation Unit) registers.
 > 
-> So, change the following form:
-> 
-> sizeof(*pattern_cmd) +
->                wowlan->n_patterns * sizeof(struct
-> iwlagn_wowlan_pattern)
-> 
->  to :
-> 
-> struct_size(pattern_cmd, patterns, wowlan->n_patterns)
-> 
-> This code was detected with the help of Coccinelle.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> index 83fd7f93d9f5..99589b910bce 100644
-> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
-> @@ -398,8 +398,7 @@ static int iwl_mvm_send_patterns(struct iwl_mvm
-> *mvm,
->  	if (!wowlan->n_patterns)
->  		return 0;
->  
-> -	cmd.len[0] = sizeof(*pattern_cmd) +
-> -		wowlan->n_patterns * sizeof(struct iwl_wowlan_pattern);
-> +	cmd.len[0] = struct_size(pattern_cmd, patterns, wowlan-
-> >n_patterns);
->  
->  	pattern_cmd = kmalloc(cmd.len[0], GFP_KERNEL);
->  	if (!pattern_cmd)
+> snps,enable-cdm-check
+Ok. Done.
 
-
-Thanks! Applied to our internal tree and it will reach the mainline
-following our normal upstreaming process.
-
---
-Cheers,
-Luca.
+> 
+>>   RC mode:
+>>   - num-viewport: number of view ports configured in hardware. If a platform
+>>     does not specify it, the driver assumes 2.
+>> -- 
+>> 2.17.1
+>>
 
