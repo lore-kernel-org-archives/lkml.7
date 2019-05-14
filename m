@@ -2,196 +2,106 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8272EC04AB7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED8EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BB421473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AD7421473
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 14:26:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GGnQupwE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="a1B4CJaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfENOYw (ORCPT
+        id S1726265AbfENO05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 10:24:52 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37214 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfENOYw (ORCPT
+        Tue, 14 May 2019 10:26:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40958 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfENO05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 10:24:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=hm1UM2Dyzmm4/2VGkCewdkXEur4+eXaud+hFBkvm8Qk=; b=GGnQupwE3Eiry8hhOS4ygjiNFF
-        vi4kfYjg7Cwb4Mes22cPrJqw4PhtWwlQhWCgQjKvqMV5BEYulbSQtv578dbW160VOiS0C7n3k1gRJ
-        rB7t30DZfC2Qm+RybYTvzpKk9Ph+mdmInmdshJmnoEGuZCExchR0e9APwDvBRi9wf82GpRSvj4SBe
-        vfjv/XFfyluXSXsn6l1tUOT0kQZ2Eo1zch0FKRHtdTFzkAqXBinTqleGwenOPTMmKLW99OOImEnge
-        BXF41RqpZRAHZA0WZzK8dnbTqR3HKvHzfRrG3aNtgg3sOHWTFyg1lcLPGXZeAaLhFVzxF/0E1jZc1
-        mqNZptqQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQYME-0008KZ-5i; Tue, 14 May 2019 14:24:42 +0000
-Subject: Re: [RFC PATCH v3 04/21] x86/hpet: Add hpet_set_comparator() for
- periodic and one-shot modes
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>
-Cc:     Ashok Raj <ashok.raj@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
- <1557842534-4266-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3c82f3e0-999c-b389-aa9b-f06919800bb4@infradead.org>
-Date:   Tue, 14 May 2019 07:24:38 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 10:26:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h11so3012793wmb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 07:26:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xo30xwvbJA7vC66mclDC+YHAOBu9mjboSFr2MJ8sIkM=;
+        b=a1B4CJazlurgVaQLDCYH/QOGHp+/p5etIFGptl1W62ONAx6U3RDXJXTKd2M2P39Gek
+         aFEKW4XmW9mBars8x0oQfyOljHLaWGC3IDMQxIe51gkJ9nBLU524QESKxwDuoeKdmPd0
+         i1wzZnfEtllMr7ZKgIgeJRk7jgAv01EIsOjwPZiQ9+D9kEpqdtjQO/crlDsp39WkskPF
+         ybRAUTiYNNsHQLl6Mi6TKidPWJnX0yRwg93HPaiwF6raYh22p0LpMN/rQa3/o6tg8BTK
+         VS8uNVsuXMvp7E5B9EOV9QHGUEnAwI2DuN7nqHRFovcdQrsJZwTAnu3mJJoY/PEFqUEh
+         W/0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xo30xwvbJA7vC66mclDC+YHAOBu9mjboSFr2MJ8sIkM=;
+        b=V0lHqWHAO/bEjSxAq5JJo/nwLf1T0DJokcpgclIUw/AuK4tLqGozNs6WVWLXQVMihB
+         uLFVdznvQCNeUnNR/+hJ5UHn0jQ3pfGaGnZVcnufQbpgqHXV6Zm+5KBO2NQVdDbKds+P
+         1IG/AWzWwjUGm/Sg6tlacvE5RWuzyeTgbURaAKS9JOGwG2LVk5q3o24gzxF9JD0UEZPT
+         RDb7+kzy4G7ee/xVjmHF7uYQP9/dpg0d2vglLnehDUtM91Mx0CuOsxQUti38qCAwZRPR
+         Tl8gpD1jKe8eHvGcYWhMCa4mWjFKkV6m0o4AMXdGnvgysDiqeCtHrFK0BPprcljMjS+6
+         PCrA==
+X-Gm-Message-State: APjAAAXlumOfU4t4HvPXquadFvDo3CP6DpOd+8mBTVMe9pmmYxUyxsT4
+        IVIrCzYp/hzqveS2OH6WJ8Kfyw==
+X-Google-Smtp-Source: APXvYqyxM8SBZKfuvPU5hDHnz2X0CskNKmcHoNnyDsUoWSQq5AQWOIwbyW+/3fdboHLdg35Qv7soLw==
+X-Received: by 2002:a1c:7a12:: with SMTP id v18mr4071578wmc.69.1557844015433;
+        Tue, 14 May 2019 07:26:55 -0700 (PDT)
+Received: from boomer.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id h15sm12343642wru.52.2019.05.14.07.26.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 07:26:54 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/8] arm64: dts: meson: g12a: add audio devices
+Date:   Tue, 14 May 2019 16:26:41 +0200
+Message-Id: <20190514142649.1127-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1557842534-4266-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 7:01 AM, Ricardo Neri wrote:
-> Instead of setting the timer period directly in hpet_set_periodic(), add a
-> new helper function hpet_set_comparator() that only sets the accumulator
-> and comparator. hpet_set_periodic() will only prepare the timer for
-> periodic mode and leave the expiration programming to
-> hpet_set_comparator().
-> 
-> This new function can also be used by other components (e.g., the HPET-
-> based hardlockup detector) which also need to configure HPET timers. Thus,
-> add its declaration into the hpet header file.
-> 
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Ashok Raj <ashok.raj@intel.com>
-> Cc: Andi Kleen <andi.kleen@intel.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Philippe Ombredanne <pombredanne@nexb.com>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> Cc: Stephane Eranian <eranian@google.com>
-> Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
-> Cc: x86@kernel.org
-> Originally-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
->  arch/x86/include/asm/hpet.h |  1 +
->  arch/x86/kernel/hpet.c      | 57 ++++++++++++++++++++++++++++---------
->  2 files changed, 45 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
-> index f132fbf984d4..e7098740f5ee 100644
-> --- a/arch/x86/include/asm/hpet.h
-> +++ b/arch/x86/include/asm/hpet.h
-> @@ -102,6 +102,7 @@ extern int hpet_rtc_timer_init(void);
->  extern irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id);
->  extern int hpet_register_irq_handler(rtc_irq_handler handler);
->  extern void hpet_unregister_irq_handler(rtc_irq_handler handler);
-> +extern void hpet_set_comparator(int num, unsigned int cmp, unsigned int period);
->  
->  #endif /* CONFIG_HPET_EMULATE_RTC */
->  
-> diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
-> index 560fc28e1d13..c5c5fc150193 100644
-> --- a/arch/x86/kernel/hpet.c
-> +++ b/arch/x86/kernel/hpet.c
-> @@ -289,6 +289,46 @@ static void hpet_legacy_clockevent_register(void)
->  	printk(KERN_DEBUG "hpet clockevent registered\n");
->  }
->  
-> +/**
-> + * hpet_set_comparator() - Helper function for setting comparator register
-> + * @num:	The timer ID
-> + * @cmp:	The value to be written to the comparator/accumulator
-> + * @period:	The value to be written to the period (0 = oneshot mode)
-> + *
-> + * Helper function for updating comparator, accumulator and period values.
-> + *
-> + * In periodic mode, HPET needs HPET_TN_SETVAL to be set before writing
-> + * to the Tn_CMP to update the accumulator. Then, HPET needs a second
-> + * write (with HPET_TN_SETVAL cleared) to Tn_CMP to set the period.
-> + * The HPET_TN_SETVAL bit is automatically cleared after the first write.
-> + *
-> + * For one-shot mode, HPET_TN_SETVAL does not need to be set.
-> + *
-> + * See the following documents:
-> + *   - Intel IA-PC HPET (High Precision Event Timers) Specification
-> + *   - AMD-8111 HyperTransport I/O Hub Data Sheet, Publication # 24674
-> + */
-> +void hpet_set_comparator(int num, unsigned int cmp, unsigned int period)
-> +{
-> +	if (period) {
-> +		unsigned int v = hpet_readl(HPET_Tn_CFG(num));
-> +
-> +		hpet_writel(v | HPET_TN_SETVAL, HPET_Tn_CFG(num));
-> +	}
-> +
-> +	hpet_writel(cmp, HPET_Tn_CMP(num));
-> +
-> +	if (!period)
-> +		return;
-> +
-> +	/* This delay is seldom used: never in one-shot mode and in periodic
-> +	 * only when reprogramming the timer.
-> +	 */
+This patchset adds audio related devices to g12a SoC family.
+It adds the clock controller as well as the memory, tdm, spdif
+and pdm interfaces.
 
-comment style warning ;)
+At this stage, the HDMI and internal audio DAC are still missing.
 
-> +	udelay(1);
-> +	hpet_writel(period, HPET_Tn_CMP(num));
-> +}
-> +EXPORT_SYMBOL_GPL(hpet_set_comparator);
-> +
->  static int hpet_set_periodic(struct clock_event_device *evt, int timer)
->  {
->  	unsigned int cfg, cmp, now;
-> @@ -300,19 +340,10 @@ static int hpet_set_periodic(struct clock_event_device *evt, int timer)
->  	now = hpet_readl(HPET_COUNTER);
->  	cmp = now + (unsigned int)delta;
->  	cfg = hpet_readl(HPET_Tn_CFG(timer));
-> -	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
-> -	       HPET_TN_32BIT;
-> -	hpet_writel(cfg, HPET_Tn_CFG(timer));
-> -	hpet_writel(cmp, HPET_Tn_CMP(timer));
-> -	udelay(1);
-> -	/*
-> -	 * HPET on AMD 81xx needs a second write (with HPET_TN_SETVAL
-> -	 * cleared) to T0_CMP to set the period. The HPET_TN_SETVAL
-> -	 * bit is automatically cleared after the first write.
-> -	 * (See AMD-8111 HyperTransport I/O Hub Data Sheet,
-> -	 * Publication # 24674)
-> -	 */
-> -	hpet_writel((unsigned int)delta, HPET_Tn_CMP(timer));
-> +	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_32BIT;
-> +
-> +	hpet_set_comparator(timer, cmp, (unsigned int)delta);
-> +
->  	hpet_start_counter();
->  	hpet_print_config();
->  
-> 
+Notice the use of the pinconf DT property 'drive-strength-microamp'.
+Support for this property is not yet merged in meson pinctrl driver but
+the DT part as been acked by the DT maintainer [0] so it should be safe
+to use.
 
+Changes since v1: [1]
+ * Had missing axg compatibles for the fifos (one last harmless change ...)
+ * Fix a few underscores in node names
+
+[0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
+[1]: https://lkml.kernel.org/r/20190514111510.23299-1-jbrunet@baylibre.com
+
+Jerome Brunet (8):
+  arm64: dts: meson: g12a: add audio clock controller
+  arm64: dts: meson: g12a: add audio memory arbitrer
+  arm64: dts: meson: g12a: add audio fifos
+  arm64: dts: meson: g12a: add tdm
+  arm64: dts: meson: g12a: add spdifouts
+  arm64: dts: meson: g12a: add pdm
+  arm64: dts: meson: g12a: add spdifin
+  arm64: dts: meson: g12a: enable hdmi_tx sound dai provider
+
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 1233 +++++++++++++++++--
+ 1 file changed, 1142 insertions(+), 91 deletions(-)
 
 -- 
-~Randy
+2.20.1
+
