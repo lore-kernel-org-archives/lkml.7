@@ -2,101 +2,187 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B68C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E20E1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD3420881
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A870720881
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:05:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c/Yu05Re"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="a7BcpiAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726394AbfENMEX (ORCPT
+        id S1726525AbfENMFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:04:23 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36310 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726075AbfENMEW (ORCPT
+        Tue, 14 May 2019 08:05:20 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39895 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726467AbfENMFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:04:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ANiALWppH8ILUGFxS4Qrkx79rFjQyK8e8zRwG0vYFV8=; b=c/Yu05Reag7wzOJIwT0uOImpO
-        EKhRRNkobwhMnBKiBQjvxenWIkAaDDHsLs9tA7Et8kWapmXMYqu6S4cMBKbejEICut8reVwxeb+Oj
-        YB394+UFayke869Y1+ppmtJN+TBE2WDtcA8OA2gDWxW8vV227TeHHLFUXWBH/kIvtY1GjNxHHEGEW
-        3BKaJxP40zy6VY4aGG/WU6aICA9b9BRTVmIWW6XMqkiIEZuaH6tdY7MAqtIpXdfkb1031bZxYN+YA
-        Rh77icdImp+fUfm+xa3QlWfVLYeX3R01lJ/An7pZWBiUzFa2AjFwRoUyc3cN8fzfhn9bpfQ/TJJIp
-        GMpWZDwRA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQWAA-0007l3-DF; Tue, 14 May 2019 12:04:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 086162029F877; Tue, 14 May 2019 14:04:05 +0200 (CEST)
-Date:   Tue, 14 May 2019 14:04:04 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yuyang Du <duyuyang@gmail.com>
-Cc:     will.deacon@arm.com, Ingo Molnar <mingo@kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>, ming.lei@redhat.com,
-        Frederic Weisbecker <frederic@kernel.org>, tglx@linutronix.de,
-        Boqun Feng <boqun.feng@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/17] locking/lockdep: Add lock type enum to explicitly
- specify read or write locks
-Message-ID: <20190514120404.GQ2589@hirez.programming.kicks-ass.net>
-References: <20190513091203.7299-1-duyuyang@gmail.com>
- <20190513091203.7299-2-duyuyang@gmail.com>
- <20190513114504.GR2623@hirez.programming.kicks-ass.net>
- <CAHttsrYf_SSEHwPZRqs2KGznPgC9Je3dPOft1bwZ5pYC5R0xUg@mail.gmail.com>
+        Tue, 14 May 2019 08:05:19 -0400
+Received: by mail-io1-f67.google.com with SMTP id m7so12791950ioa.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3cCt7Fv9PrSN+POfdDA9BhvmV9/m6Z9B8cT0V9l7bcU=;
+        b=a7BcpiAa3cXS6NukeVFgCH7xf3ARmd8J6e/ULZ0a8xqTBwTNaq+N8QguChZh3uzW7f
+         kWHSY7qQUZbeMlUwXYdXunYt1ZQd2SKBDUTXd3jKW+KmrJ1DqqIRVtLYOVb1f+tEQL2N
+         W7DqiSEqrT+k9VDAEFt9iTN+c6I6bW1EG18JM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3cCt7Fv9PrSN+POfdDA9BhvmV9/m6Z9B8cT0V9l7bcU=;
+        b=TvrxZbGU8b4W9rd/tr6fQePn/7m+FWEYHr3+UQA1Oc3E0fONpzksK4cw10gQKV1/dg
+         WIQKIMgNrK/shsAbtaMbiceiPKpXWITobW5ZJ4tKuxr2uRb6sXYU0ONONCSqJTmbqPsN
+         nm+d4wss8kCgKYLncLnW0xsJziRBakFL5x2R1gDCFjmPm9/wgcuHOHC/PMebNYtIYGOU
+         iw59yCD4w2V+qqW7Rjou1EwMdFHhWnGg1uy3vR2/4e6M+sn2cC0BE2TSAduaPawfF26p
+         3S26dr3rxdRYLAkPZR3iOOGM81W9iDmt98B6UyGi/3x+HpkI4h+uVvTeaOeROmUXPJX/
+         SyOQ==
+X-Gm-Message-State: APjAAAWLt9wmzZ5i3V7RukOYdm1s/BSp1/s5IwdF0JnL95QG568i6fGm
+        Mg8aViWHrGP2MWeyFoMz3WugqLGnal4i4YLcRuT7Hw==
+X-Google-Smtp-Source: APXvYqyhBqCsjjVPPpuo20Er/14b4Noh22uMAdPO6o3WUMvHLuILgjBTMJK3Dh0BqwvOEYcjDaa/KDS4xlT8iYcmIUQ=
+X-Received: by 2002:a6b:b654:: with SMTP id g81mr3614153iof.34.1557835518050;
+ Tue, 14 May 2019 05:05:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHttsrYf_SSEHwPZRqs2KGznPgC9Je3dPOft1bwZ5pYC5R0xUg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu> <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu> <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com> <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com> <20190511173344.GA8507@mit.edu>
+ <20190513144451.GQ17751@phenom.ffwll.local> <20190514060433.GA181462@google.com>
+In-Reply-To: <20190514060433.GA181462@google.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 14 May 2019 14:05:05 +0200
+Message-ID: <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        Knut Omang <knut.omang@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:31:48AM +0800, Yuyang Du wrote:
-> Thanks for review.
-> 
-> On Mon, 13 May 2019 at 19:45, Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, May 14, 2019 at 8:04 AM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
+> > On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
+> > > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
+> > > > However, the reply is incorrect.  Kselftest in-kernel tests (which
+> > > > is the context here) can be configured as built in instead of as
+> > > > a module, and built in a UML kernel.  The UML kernel can boot,
+> > > > running the in-kernel tests before UML attempts to invoke the
+> > > > init process.
+> > >
+> > > Um, Citation needed?
+> > >
+> > > I don't see any evidence for this in the kselftest documentation, nor
+> > > do I see any evidence of this in the kselftest Makefiles.
+> > >
+> > > There exists test modules in the kernel that run before the init
+> > > scripts run --- but that's not strictly speaking part of kselftests,
+> > > and do not have any kind of infrastructure.  As noted, the
+> > > kselftests_harness header file fundamentally assumes that you are
+> > > running test code in userspace.
 > >
-> > On Mon, May 13, 2019 at 05:11:47PM +0800, Yuyang Du wrote:
-> > > + * Note that we have an assumption that a lock class cannot ever be both
-> > > + * read and recursive-read.
+> > Yeah I really like the "no userspace required at all" design of kunit,
+> > while still collecting results in a well-defined way (unless the current
+> > self-test that just run when you load the module, with maybe some
+> > kselftest ad-hoc wrapper around to collect the results).
 > >
-> > We have such locks in the kernel... see:
-> >
-> >   kernel/qrwlock.c:queued_read_lock_slowpath()
-> >
-> > And yes, that is somewhat unfortunate, but hard to get rid of due to
-> > hysterical raisins.
-> 
-> That is ok, then LOCK_TYPE_RECURSIVE has to be 3 such that
-> LOCK_TYPE_RECURSIVE & LOCK_TYPE_READ != 0. I thought to do this in the
-> first place without assuming. Anyway, it is better to know.
-> 
-> And I guess in a task:
-> 
-> (1) read(X);
->     recursive_read(x);      /* this is ok ? */
+> > What I want to do long-term is to run these kernel unit tests as part of
+> > the build-testing, most likely in gitlab (sooner or later, for drm.git
+>
+> Totally! This is part of the reason I have been insisting on a minimum
+> of UML compatibility for all unit tests. If you can suffiently constrain
+> the environment that is required for tests to run in, it makes it much
+> easier not only for a human to run your tests, but it also makes it a
+> lot easier for an automated service to be able to run your tests.
+>
+> I actually have a prototype presubmit already working on my
+> "stable/non-upstream" branch. You can checkout what presubmit results
+> look like here[1][2].
 
-Correct, that is the use-case for that 'funny' construct.
+ug gerrit :-)
 
-> (2) recursive_read(x);
->     read(x)      /* not ok ? */
+> > only ofc). So that people get their pull requests (and patch series, we
+> > have some ideas to tie this into patchwork) automatically tested for this
+>
+> Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
+> and he seemed pretty open to collaboration.
+>
+> Before I heard about Snowpatch, I had an intern write a translation
+> layer that made Prow (the presubmit service that I used in the prototype
+> above) work with LKML[4].
 
-Indeed, read can block due to a pending writer, while recurise_read will
-not suffer like that.
+There's about 3-4 forks/clones of patchwork. snowpatch is one, we have
+a different one on freedesktop.org. It's a bit a mess :-/
 
-> Either way, very small change may need to be made.
+> I am not married to either approach, but I think between the two of
+> them, most of the initial legwork has been done to make presubmit on
+> LKML a reality.
 
-OK, excellent.
+We do have presubmit CI working already with our freedesktop.org
+patchwork. The missing glue is just tying that into gitlab CI somehow
+(since we want to unify build testing more and make it easier for
+contributors to adjust things).
+-Daniel
+
+> > super basic stuff.
+>
+> I am really excited to hear back on what you think!
+>
+> Cheers!
+>
+> [1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
+> [2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
+> [3] https://developer.ibm.com/open/projects/snowpatch/
+> [4] https://kunit.googlesource.com/prow-lkml/
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
