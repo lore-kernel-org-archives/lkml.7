@@ -2,165 +2,180 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82C7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 668FCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73C8B21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="W2TgjKjt"
+	by mail.kernel.org (Postfix) with ESMTP id 345DE206A3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 07:24:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557818673;
+	bh=OZOGw17C5y7P4QyBq+KymGT53tFnUaLISyz6+l2ybpM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iPxitVccxeRibl+eyUXhbvnwYAw5NH57hYalO5KPEXmy9xmSdmzQ5ffS06L0orJPK
+	 2plxSWtzl0kg3gPNuPTOzffH1WswjV5wwaAsnU+ukw/1mWRgovQIfoG0BvG3M0hz1F
+	 cn9Acl2k4tiB81MEYJFDhqN4CrtiEBvPnLzb04rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfENHYQ (ORCPT
+        id S1726622AbfENHYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 03:24:16 -0400
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:64662 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfENHYQ (ORCPT
+        Tue, 14 May 2019 03:24:32 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35740 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfENHYb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 03:24:16 -0400
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-X-IronPort-AV: E=Sophos;i="5.60,467,1549954800"; 
-   d="scan'208";a="33027039"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 May 2019 00:24:15 -0700
-Received: from NAM05-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.49) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Tue, 14 May 2019 00:24:04 -0700
+        Tue, 14 May 2019 03:24:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q15so1630736wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 00:24:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mj/17vUNWUDyqVec96UZVHVD14D6vp/DKaBx2tvwpVM=;
- b=W2TgjKjtivYyRkbDbdc5at+VhmQPq2KJfhPJTorus3J6TB1FX8NMzPb+B/jLg/CU+lnqjW0r8nZoRZF76/oHYuW+ATRiuys/J5yDqxPAMF5J7WFgSB0TNlvVhq9+SPwu18/f402MRPEdzLM9mINmrpPKGgltLeoo4O4utTInrJg=
-Received: from DM5PR11MB1658.namprd11.prod.outlook.com (10.172.36.9) by
- DM5PR11MB1849.namprd11.prod.outlook.com (10.175.90.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Tue, 14 May 2019 07:24:02 +0000
-Received: from DM5PR11MB1658.namprd11.prod.outlook.com
- ([fe80::11ae:9a85:a3d:f722]) by DM5PR11MB1658.namprd11.prod.outlook.com
- ([fe80::11ae:9a85:a3d:f722%8]) with mapi id 15.20.1878.024; Tue, 14 May 2019
- 07:24:02 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <luca@lucaceresoli.net>, <netdev@vger.kernel.org>
-CC:     <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
-        <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH] net: macb: fix error format in dev_err()
-Thread-Topic: [PATCH] net: macb: fix error format in dev_err()
-Thread-Index: AQHVCiU4ThIIVTJw1Ey4CFSnWt1LDaZqN7AA
-Date:   Tue, 14 May 2019 07:24:02 +0000
-Message-ID: <775ea7ee-f879-149a-8a60-97635a2cd218@microchip.com>
-References: <20190514071450.27760-1-luca@lucaceresoli.net>
-In-Reply-To: <20190514071450.27760-1-luca@lucaceresoli.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR04CA0034.namprd04.prod.outlook.com
- (2603:10b6:a03:40::47) To DM5PR11MB1658.namprd11.prod.outlook.com
- (2603:10b6:4:8::9)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [94.177.32.154]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: abdf06a0-cd3b-4820-c008-08d6d83d23b2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM5PR11MB1849;
-x-ms-traffictypediagnostic: DM5PR11MB1849:
-x-microsoft-antispam-prvs: <DM5PR11MB1849E28B382124E03FDD74D2E0080@DM5PR11MB1849.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:765;
-x-forefront-prvs: 0037FD6480
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(39860400002)(346002)(136003)(199004)(189003)(229853002)(6506007)(386003)(476003)(6436002)(6512007)(31686004)(2616005)(102836004)(446003)(31696002)(53546011)(66066001)(86362001)(11346002)(71190400001)(256004)(71200400001)(26005)(486006)(4326008)(6246003)(2501003)(68736007)(6486002)(53936002)(186003)(8936002)(107886003)(36756003)(76176011)(2906002)(99286004)(5660300002)(54906003)(110136005)(81156014)(25786009)(73956011)(66946007)(52116002)(66556008)(66476007)(66446008)(64756008)(478600001)(14454004)(6116002)(81166006)(14444005)(316002)(305945005)(3846002)(72206003)(8676002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB1849;H:DM5PR11MB1658.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UKbCpzJZIEZvmXhy8nWxxlaupGkhj3Vi3POTej6fGSMz5iAxTrC4muznmFGm6fU6BEtRSNWkphSsmqgkGhFj7JK38sopQfEHIbz3RSYrMuRv0j41rD06NE2+SctA+4fJaaEri1bVkztyjEAOwxrdWApGT85/O2umUh4ZTkcBgrK2PLPI/LHufAHVoy2huKY/ii+Id1COcTxwlOIpL9Qzfhm1ZRXeQCeQAuHLpvdsc9wUUbu+C4NWNTTD1/046QGryp3f0a/XVccR/+w7lVs1cazJJ0kw6c1RpGjXBnYxIdzVknagKvipmNLOAi/VqPLeqsCr/U+rymZi13rCQJfoQ6HsjlQZNF0chH1MaiwL+79XktrLG52ZeDzNFghtCpU6YbKaeglDlQ+EH4oV/Lw80hUq/CBt7oUlELMB4Q7XexM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <398B1A0F0F35F64687BFA9C51DFFDEF4@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PMBiH0fOhoCzthvDFi4qFPlUhsDPVegxAJCzU1U6rjc=;
+        b=YztrRTcrskZTvrbwYDF0cLS3u7TdUzLSXncRP92BMnh34+TLU+G98+w2ytkJPyU4eo
+         GxVnT0MIPTUN6ocHPS4fV5phR3Caq3nowIt/hD3X/cGUSzeIRUBCjowpXuulJ3LvWKMl
+         iYCW9JaUN+O2bUAppkUtaQS9si4znEO9fT2cv4GheHYJJs9VRyIL+DIO8uFcvBdrRllO
+         sY5NVGMcAUZTT+WTD9pYdmkgTlwf2phAR1DOMo/YfEv3z3SEx0VKe+a9VxDdz57MhFmX
+         GZ6fhpiWjaowvU68Whsow8DJb2qmcF+zJY6Lfm/cZywl8xqLq58tARs3rP9iT9ZCA45U
+         Eesg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PMBiH0fOhoCzthvDFi4qFPlUhsDPVegxAJCzU1U6rjc=;
+        b=i+xsJF+XVroTfz0rYvStvv6UYPHY8Iw10eQ21BqQV/6iZN3lV9Y2LEySpgpMnhmBpS
+         avHvu7I6fU6gZIO08ZGEHUymzuJn11eA+BJumRGdBvXv3nx0M4RdxpnRG/h1HElHtGDT
+         cNFrwSH4+1kQ6ujA7feIccFFynZGtt1Y7NDvxywBFCGqdrUr5UUa0+SsbgmCK4c64kMk
+         +HCPb8R+TPbmRJFbgghRiQJjbkal+F3oCPx/1QGzEhuGx126aTakZk+I+ayhpFEsIU9T
+         zD6t9C7liyV0ekB5vltfd/tEFqpWvuJcrnjzSK2EPuMOvSH+EBGo+Q7v3X2NCgWN8RyK
+         bKQw==
+X-Gm-Message-State: APjAAAXqIpCGFb0ipRIu3RxIwoQJn7biBwbFK1eyWg+yBVLiMhnN/G6h
+        NrNExWBarlUmu+skkuas4uA=
+X-Google-Smtp-Source: APXvYqwTbsuUQu9esDd3Exdlor65xhGZroKkipycR8gB2EwgOawhHxRXpCNhBahhv/XlnunrpzbAiQ==
+X-Received: by 2002:a05:600c:21d2:: with SMTP id x18mr18084274wmj.81.1557818669221;
+        Tue, 14 May 2019 00:24:29 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id i185sm1851459wmg.32.2019.05.14.00.24.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 00:24:28 -0700 (PDT)
+Date:   Tue, 14 May 2019 09:24:26 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH -tip v8 3/6] tracing/probe: Add ustring type for
+ user-space string
+Message-ID: <20190514072426.GB18949@gmail.com>
+References: <155741476971.28419.15837024173365724167.stgit@devnote2>
+ <155741481560.28419.14407082249601887394.stgit@devnote2>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: abdf06a0-cd3b-4820-c008-08d6d83d23b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2019 07:24:02.5307
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB1849
-X-OriginatorOrg: microchip.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155741481560.28419.14407082249601887394.stgit@devnote2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTQvMDUvMjAxOSBhdCAwOToxNCwgTHVjYSBDZXJlc29saSB3cm90ZToNCj4gRXh0ZXJuYWwg
-RS1NYWlsDQo+IA0KPiANCj4gRXJyb3JzIGFyZSBuZWdhdGl2ZSBudW1iZXJzLiBVc2luZyAldSBz
-aG93cyB0aGVtIGFzIHZlcnkgbGFyZ2UgcG9zaXRpdmUNCj4gbnVtYmVycyBzdWNoIGFzIDQyOTQ5
-NjcyNzcgdGhhdCBkb24ndCBtYWtlIHNlbnNlLiBVc2UgdGhlICVkIGZvcm1hdA0KPiBpbnN0ZWFk
-LCBhbmQgZ2V0IGEgbXVjaCBuaWNlciAtMTkuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBMdWNhIENl
-cmVzb2xpIDxsdWNhQGx1Y2FjZXJlc29saS5uZXQ+DQoNCkluZGVlZCENCkFja2VkLWJ5OiBOaWNv
-bGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+ICAgZHJp
-dmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYyB8IDE2ICsrKysrKysrLS0tLS0t
-LS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWlu
-LmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IGluZGV4IGMw
-NDk0MTBiYzg4OC4uYmViZDliMWFlYjY0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhl
-cm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Nh
-ZGVuY2UvbWFjYl9tYWluLmMNCj4gQEAgLTMzNDMsNyArMzM0Myw3IEBAIHN0YXRpYyBpbnQgbWFj
-Yl9jbGtfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrICoqcGNs
-aywNCj4gICAJCWlmICghZXJyKQ0KPiAgIAkJCWVyciA9IC1FTk9ERVY7DQo+ICAgDQo+IC0JCWRl
-dl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBnZXQgbWFjYl9jbGsgKCV1KVxuIiwgZXJyKTsN
-Cj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCBtYWNiX2NsayAoJWQpXG4i
-LCBlcnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0KPiBAQCAtMzM1Miw3ICsz
-MzUyLDcgQEAgc3RhdGljIGludCBtYWNiX2Nsa19pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYsIHN0cnVjdCBjbGsgKipwY2xrLA0KPiAgIAkJaWYgKCFlcnIpDQo+ICAgCQkJZXJyID0g
-LUVOT0RFVjsNCj4gICANCj4gLQkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGdldCBo
-Y2xrICgldSlcbiIsIGVycik7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBn
-ZXQgaGNsayAoJWQpXG4iLCBlcnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0K
-PiBAQCAtMzM3MCwzMSArMzM3MCwzMSBAQCBzdGF0aWMgaW50IG1hY2JfY2xrX2luaXQoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldiwgc3RydWN0IGNsayAqKnBjbGssDQo+ICAgDQo+ICAgCWVy
-ciA9IGNsa19wcmVwYXJlX2VuYWJsZSgqcGNsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBwY2xrICgldSlcbiIsIGVycik7DQo+
-ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byBlbmFibGUgcGNsayAoJWQpXG4iLCBl
-cnIpOw0KPiAgIAkJcmV0dXJuIGVycjsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBjbGtfcHJl
-cGFyZV9lbmFibGUoKmhjbGspOw0KPiAgIAlpZiAoZXJyKSB7DQo+IC0JCWRldl9lcnIoJnBkZXYt
-PmRldiwgImZhaWxlZCB0byBlbmFibGUgaGNsayAoJXUpXG4iLCBlcnIpOw0KPiArCQlkZXZfZXJy
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIGhjbGsgKCVkKVxuIiwgZXJyKTsNCj4gICAJ
-CWdvdG8gZXJyX2Rpc2FibGVfcGNsazsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBjbGtfcHJl
-cGFyZV9lbmFibGUoKnR4X2Nsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0eF9jbGsgKCV1KVxuIiwgZXJyKTsNCj4gKwkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0eF9jbGsgKCVkKVxuIiwgZXJyKTsN
-Cj4gICAJCWdvdG8gZXJyX2Rpc2FibGVfaGNsazsNCj4gICAJfQ0KPiAgIA0KPiAgIAllcnIgPSBj
-bGtfcHJlcGFyZV9lbmFibGUoKnJ4X2Nsayk7DQo+ICAgCWlmIChlcnIpIHsNCj4gLQkJZGV2X2Vy
-cigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSByeF9jbGsgKCV1KVxuIiwgZXJyKTsNCj4g
-KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSByeF9jbGsgKCVkKVxuIiwg
-ZXJyKTsNCj4gICAJCWdvdG8gZXJyX2Rpc2FibGVfdHhjbGs7DQo+ICAgCX0NCj4gICANCj4gICAJ
-ZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKCp0c3VfY2xrKTsNCj4gICAJaWYgKGVycikgew0KPiAt
-CQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIHRzdV9jbGsgKCV1KVxuIiwg
-ZXJyKTsNCj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSB0c3VfY2xr
-ICglZClcbiIsIGVycik7DQo+ICAgCQlnb3RvIGVycl9kaXNhYmxlX3J4Y2xrOw0KPiAgIAl9DQo+
-ICAgDQo+IEBAIC0zODY4LDcgKzM4NjgsNyBAQCBzdGF0aWMgaW50IGF0OTFldGhlcl9jbGtfaW5p
-dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgY2xrICoqcGNsaywNCj4gICAN
-Cj4gICAJZXJyID0gY2xrX3ByZXBhcmVfZW5hYmxlKCpwY2xrKTsNCj4gICAJaWYgKGVycikgew0K
-PiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gZW5hYmxlIHBjbGsgKCV1KVxuIiwg
-ZXJyKTsNCj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBwY2xrICgl
-ZClcbiIsIGVycik7DQo+ICAgCQlyZXR1cm4gZXJyOw0KPiAgIAl9DQo+ICAgDQo+IA0KDQoNCi0t
-IA0KTmljb2xhcyBGZXJyZQ0K
+
+* Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> +/* Return the length of string -- including null terminal byte */
+> +static nokprobe_inline int
+> +fetch_store_strlen_user(unsigned long addr)
+> +{
+> +	return strnlen_unsafe_user((__force const void __user *)addr,
+> +				   MAX_STRING_SIZE);
+
+Pointless line break that doesn't improve readability.
+
+> +/*
+> + * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
+> + * with max length and relative data location.
+> + */
+> +static nokprobe_inline int
+> +fetch_store_string_user(unsigned long addr, void *dest, void *base)
+> +{
+> +	const void __user *uaddr =  (__force const void __user *)addr;
+> +	int maxlen = get_loc_len(*(u32 *)dest);
+> +	u8 *dst = get_loc_data(dest, base);
+> +	long ret;
+> +
+> +	if (unlikely(!maxlen))
+> +		return -ENOMEM;
+> +	ret = strncpy_from_unsafe_user(dst, uaddr, maxlen);
+> +
+> +	if (ret >= 0)
+> +		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
+> +
+>  	return ret;
+
+Firstly, why is there a 'dest' and a 'dst' variable name as well - the 
+two are very similar and the difference not explained at all.
+
+Secondly, a style nit: if you group statements then please group 
+statements based on the usual logic - which is the group them by the flow 
+of logic. In the above case you grouped the 'maxlen' check with the 
+strncpy_from_unsafe_user() call, while the grouping should be the other 
+way around:
+
+	if (unlikely(!maxlen))
+		return -ENOMEM;
+
+	ret = strncpy_from_unsafe_user(dst, uaddr, maxlen);
+	if (ret >= 0)
+		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
+
+	return ret;
+
+Third, hiding the get_loc_data() call within variable initialization is 
+bad style - we usually only put 'trivial' (constant) initializations 
+there.
+
+Fourth, 'dst' is independent of 'maxlen', so it should probably 
+calculated *after* maxlen.
+
+I.e. the whole sequence should be:
+
+
+	maxlen = get_loc_len(*(u32 *)dest);
+	if (unlikely(!maxlen))
+		return -ENOMEM;
+
+	dst = get_loc_data(dest, base);
+
+	ret = strncpy_from_unsafe_user(dst, uaddr, maxlen);
+	if (ret >= 0)
+		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
+
+	return ret;
+
+Fifth, we don't actually dereference 'dst', do we? So the whole type 
+casting to 'void *' could be avoided by declaring 'dst' (or whatever its 
+new, clearer name is) not as u8 *, but as void *.
+
+I.e. these are five problems in a short sequence of code, which it sad to 
+see in a v8 submission. :-/
+
+Please review the other patches and the whole code base for similar 
+mishaps and small details as well.
+
+Thanks,
+
+	Ingo
