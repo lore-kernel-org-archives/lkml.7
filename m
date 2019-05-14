@@ -2,153 +2,194 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C90DBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B06C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82EA520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="bYM7ZfDp"
+	by mail.kernel.org (Postfix) with ESMTP id B02E920873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfENTZb (ORCPT
+        id S1726424AbfENTZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:25:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36265 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfENTZb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:25:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c14so11084138qke.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:25:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=KGcQ9upC29gYa4IvVNB87+RZG37gSQZLhYRKnsdq/QU=;
-        b=bYM7ZfDp2uyEwMRdAYGgW1UMkTQBI1XJSNiLk0bjPhoCi78+HQrKbdoeWOJcuqGomf
-         6dZ3Hmp4hYZYf2j1gzRJOFLW+uKLzutlwe/Fxuv0SIqZWsK2ILOwjR/lN11/ulXuJKgE
-         hLrq9z7xfO1WB9cK1ZCLt8jh4Q6jExUIiLEjPyMSrSfg8YrBpBwUiTT+iKKxjT8D054V
-         TZiKEoZkrlQjv3yDxjPWXNG2izGQUrRRFF7HUh9mInJk7/ijFtr9Pi6cEttPcM1u/A/m
-         ltUIUJ26tsQNXAxVMgFrmgvJ1iobNUwK3KZsZkNXtG2EP8EpMb7MsIvRNPGgvMTeE5GR
-         fH8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=KGcQ9upC29gYa4IvVNB87+RZG37gSQZLhYRKnsdq/QU=;
-        b=AaoOHgcXfqn5AdHHr/ifwfsme6Rb4PkCYvsI6druAZ5HbNNtRHNT2y8uyABO+9v4Nb
-         JduAudnQxGjY+FKHu1DPePorg76gl3HQnltNpczz5kjVsO6TUH2sxt9bJ6tWOZiuLKNS
-         8HaTaICeGR+KOXkyNXqNw1HC+wt6POSDSohXBluo3FmKvhO0uq7b5iQUYip2MZ4p9TqP
-         9v3BvLPVnQ0NX5w8zJ7V3I+66ZFgvhoR+n0iAPVUjMRAtE3Drhc7l/y+IfCay8HzArTN
-         cWUVbbYA5dYzQ2YyFolHKCWn83WyjQY9jrInUIB9tVT1v1QwDLubFP72F3w99g+CQn0k
-         xkYg==
-X-Gm-Message-State: APjAAAX0qsmF7YWv8sHp9J9rw0BGzVqtkGUJx0zb8e9lZRaqkO+3WkNo
-        Ru/i3i2fMurQkxrjM/OSmaXplpUzrEQ=
-X-Google-Smtp-Source: APXvYqzERwp4vgEjaoTLtN65oy2xv6PWcLZSxjMr1K1/3w/5NNxyQxqNR336BTtj0/TQaFIv5HjabQ==
-X-Received: by 2002:ae9:e30e:: with SMTP id v14mr30149993qkf.91.1557861929556;
-        Tue, 14 May 2019 12:25:29 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id j26sm3061100qtj.70.2019.05.14.12.25.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 12:25:29 -0700 (PDT)
-Date:   Tue, 14 May 2019 12:25:09 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     NeilBrown <neilb@suse.com>
-Cc:     Thomas Graf <tgraf@suug.ch>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/5] rhashtable: reorder some inline functions and
- macros.
-Message-ID: <20190514122509.46ab191a@cakuba.netronome.com>
-In-Reply-To: <155503392797.17793.15780367123758287135.stgit@noble.brown>
-References: <155503371949.17793.8266195008003399968.stgit@noble.brown>
-        <155503392797.17793.15780367123758287135.stgit@noble.brown>
-Organization: Netronome Systems, Ltd.
+        Tue, 14 May 2019 15:25:55 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9264 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbfENTZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 15:25:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 12:25:53 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga004.fm.intel.com with ESMTP; 14 May 2019 12:25:53 -0700
+Received: from [10.254.90.245] (kliang2-mobl.ccr.corp.intel.com [10.254.90.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id A0CD7580414;
+        Tue, 14 May 2019 12:25:52 -0700 (PDT)
+Subject: Re: [PATCH 2/3] perf parse-regs: Add generic support for non-gprs
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+References: <1557844753-58223-1-git-send-email-kan.liang@linux.intel.com>
+ <1557844753-58223-2-git-send-email-kan.liang@linux.intel.com>
+ <20190514181902.GB1756@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <4b2b6e69-4e39-0946-4010-1bc3a2a60696@linux.intel.com>
+Date:   Tue, 14 May 2019 15:25:51 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190514181902.GB1756@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 12 Apr 2019 11:52:08 +1000, NeilBrown wrote:
-> This patch only moves some code around, it doesn't
-> change the code at all.
-> A subsequent patch will benefit from this as it needs
-> to add calls to functions which are now defined before the
-> call-site, but weren't before.
+
+
+On 5/14/2019 2:19 PM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, May 14, 2019 at 07:39:12AM -0700, kan.liang@linux.intel.com escreveu:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Some non general purpose registers, e.g. XMM, can be collected on some
+>> platforms, e.g. X86 Icelake.
+>>
+>> Add a weak function has_non_gprs_support() to check if the
+>> kernel/hardware support non-gprs collection.
+>> Add a weak function non_gprs_mask() to return non-gprs mask.
+>>
+>> By default, the non-gprs collection is not support. Specific platforms
+>> should implement their own non-gprs functions if they can collect
+>> non-gprs.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>   tools/perf/util/parse-regs-options.c | 10 +++++++++-
+>>   tools/perf/util/perf_regs.c          | 10 ++++++++++
+>>   tools/perf/util/perf_regs.h          |  2 ++
+>>   3 files changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+>> index b21617f..2f90f31 100644
+>> --- a/tools/perf/util/parse-regs-options.c
+>> +++ b/tools/perf/util/parse-regs-options.c
+>> @@ -12,6 +12,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>   	const struct sample_reg *r;
+>>   	char *s, *os = NULL, *p;
+>>   	int ret = -1;
+>> +	bool has_non_gprs = has_non_gprs_support(intr);
 > 
-> Signed-off-by: NeilBrown <neilb@suse.com>
+> This is generic code, what does "non gprs" means for !Intel? Can we come
+> up with a better, not architecture specific jargon? Or you mean "general
+> purpose registers"?
 
-Hi Neil, I think this patch introduces as slew of sparse warnigns:
+I mean "general purpose registers".
 
-include/linux/rhashtable.h:724:23: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:724:23:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:724:23:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:728:33: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:728:33:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:728:33:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:760:41: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:760:41:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:760:41:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:801:25: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:801:25:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:801:25:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:1003:23: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:1003:23:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:1003:23:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:1047:41: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:1047:41:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:1047:41:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
-include/linux/rhashtable.h:1054:25: warning: incorrect type in argument 2 (different address spaces)
-include/linux/rhashtable.h:1054:25:    expected struct rhash_lock_head **bkt
-include/linux/rhashtable.h:1054:25:    got struct rhash_lock_head [noderef] <asn:4>**[assigned] bkt
+> 
+> Perhaps we can ask for a register mask for use with intr? I.e.:
+> 
+> For the -I/--intr-regs
+> 
+>          uint64_t mask = arch__intr_reg_mask();
+> 
+> And for --user-regs
+> 
+>          uint64_t mask = arch__user_reg_mask();
+> 
+> And then on that loop do:
+> 
+>    	for (r = sample_reg_masks; r->name; r++) {
+> 		if (r->mask & mask))
+>    			fprintf(stderr, "%s ", r->name);
+>    	}
+> 
+> ?
 
-Is there any chance to get those fixed?  Presumably a __force would be
-appropriate?  Maybe like this?
+Yes, it looks like a little bit simpler than my implementation.
+I will send out V2.
 
-diff --git a/include/linux/rhashtable.h b/include/linux/rhashtable.h
-index f7714d3b46bd..997017a85032 100644
---- a/include/linux/rhashtable.h
-+++ b/include/linux/rhashtable.h
-@@ -325,27 +325,28 @@ static inline struct rhash_lock_head __rcu **rht_bucket_insert(
-  */
- 
- static inline void rht_lock(struct bucket_table *tbl,
--                           struct rhash_lock_head **bkt)
-+                           struct rhash_lock_head __rcu **bkt)
- {
-+
-        local_bh_disable();
--       bit_spin_lock(0, (unsigned long *)bkt);
-+       bit_spin_lock(0, (unsigned long __force *)bkt);
-        lock_map_acquire(&tbl->dep_map);
- }
- 
- static inline void rht_lock_nested(struct bucket_table *tbl,
--                                  struct rhash_lock_head **bucket,
-+                                  struct rhash_lock_head __rcu **bkt,
-                                   unsigned int subclass)
- {
-        local_bh_disable();
--       bit_spin_lock(0, (unsigned long *)bucket);
-+       bit_spin_lock(0, (unsigned long __force *)bkt);
-        lock_acquire_exclusive(&tbl->dep_map, subclass, 0, NULL, _THIS_IP_);
- }
- 
- static inline void rht_unlock(struct bucket_table *tbl,
--                             struct rhash_lock_head **bkt)
-+                             struct rhash_lock_head __rcu **bkt)
- {
-        lock_map_release(&tbl->dep_map);
--       bit_spin_unlock(0, (unsigned long *)bkt);
-+       bit_spin_unlock(0, (unsigned long __force *)bkt);
-        local_bh_enable();
- }
- 
+Thanks,
+Kan
+
+>    
+>>   	if (unset)
+>>   		return 0;
+>> @@ -37,6 +38,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>   			if (!strcmp(s, "?")) {
+>>   				fprintf(stderr, "available registers: ");
+>>   				for (r = sample_reg_masks; r->name; r++) {
+>> +					if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
+>> +						break;
+>>   					fprintf(stderr, "%s ", r->name);
+>>   				}
+>>   				fputc('\n', stderr);
+>> @@ -44,6 +47,8 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>   				return -1;
+>>   			}
+>>   			for (r = sample_reg_masks; r->name; r++) {
+>> +				if (!has_non_gprs && (r->mask & ~PERF_REGS_MASK))
+>> +					continue;
+>>   				if (!strcasecmp(s, r->name))
+>>   					break;
+>>   			}
+>> @@ -64,8 +69,11 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+>>   	ret = 0;
+>>   
+>>   	/* default to all possible regs */
+>> -	if (*mode == 0)
+>> +	if (*mode == 0) {
+>>   		*mode = PERF_REGS_MASK;
+>> +		if (has_non_gprs)
+>> +			*mode |= non_gprs_mask(intr);
+>> +	}
+>>   error:
+>>   	free(os);
+>>   	return ret;
+>> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+>> index 2acfcc5..0d278b6 100644
+>> --- a/tools/perf/util/perf_regs.c
+>> +++ b/tools/perf/util/perf_regs.c
+>> @@ -13,6 +13,16 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
+>>   	return SDT_ARG_SKIP;
+>>   }
+>>   
+>> +bool __weak has_non_gprs_support(bool intr __maybe_unused)
+>> +{
+>> +	return false;
+>> +}
+>> +
+>> +u64 __weak non_gprs_mask(bool intr __maybe_unused)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>   #ifdef HAVE_PERF_REGS_SUPPORT
+>>   int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
+>>   {
+>> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+>> index 1a15a4b..983b4e6 100644
+>> --- a/tools/perf/util/perf_regs.h
+>> +++ b/tools/perf/util/perf_regs.h
+>> @@ -23,6 +23,8 @@ enum {
+>>   };
+>>   
+>>   int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+>> +bool has_non_gprs_support(bool intr);
+>> +u64 non_gprs_mask(bool intr);
+>>   
+>>   #ifdef HAVE_PERF_REGS_SUPPORT
+>>   #include <perf_regs.h>
+>> -- 
+>> 2.7.4
+> 
