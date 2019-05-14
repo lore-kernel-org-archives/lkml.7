@@ -2,140 +2,131 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DBCC04AB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9639C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B175208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 778EF20843
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:23:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQSL1vI8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbfENJVG (ORCPT
+        id S1726409AbfENJXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:21:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43516 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726122AbfENJVF (ORCPT
+        Tue, 14 May 2019 05:23:45 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43233 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726148AbfENJXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:21:05 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4E98NuW130257
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:21:04 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sft85a3r2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 05:21:03 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 14 May 2019 10:21:01 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 May 2019 10:20:57 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4E9KuoB51052608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 09:20:56 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94131A4051;
-        Tue, 14 May 2019 09:20:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 441F5A4053;
-        Tue, 14 May 2019 09:20:56 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 14 May 2019 09:20:56 +0000 (GMT)
-Date:   Tue, 14 May 2019 11:20:54 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Jan Stancek <jstancek@redhat.com>, "Theodore Ts'o" <tytso@mit.edu>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        lkft-triage@lists.linaro.org, ltp@lists.linux.it,
-        LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>
-Subject: Re: [LTP] LTP: Syscalls: 274 failures: EROFS(30): Read-only file
- system
-References: <CA+G9fYuLXPnCmpnnLqBf5qinV6wrFx=HBH2KrB8s1HmCxLM=Zw@mail.gmail.com>
- <1723398651.22256606.1557731771283.JavaMail.zimbra@redhat.com>
+        Tue, 14 May 2019 05:23:45 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t22so8311452pgi.10;
+        Tue, 14 May 2019 02:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5YuxfzalVyz39bS5lxDVxBPQxHNRqBsXyUAh+iAMKKQ=;
+        b=vQSL1vI8y/pobIeEAf+6sVKN7MQRUqCOKfqM1PV+aH5OE0icjkzECfBzZmitQ98Svo
+         XDXmRTZkyLfN5eIgZ0B6daFC5TZWFFedUokzmDo+74gY2ifevOAaozTMu8KDUuFHgKP9
+         ZBvGng5nkXYXeXpoVAw3EUrjwdjr+MkdQ3oL89XiX/dNM+d8hx5ECzbkWs9V/wiqTffQ
+         MO9dWCuiwA7T0ZP0xx84t21FGJIb2pHO8NalHjrMCPfbnqd8A6nIXYPQzWaeb87QfSJj
+         1THQRYa+38c2f0GuRdugvKBnRTbY76ebqzhfQZpgmX+y5gGuto1ECPqS0yFggz6F8+mL
+         Ui+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5YuxfzalVyz39bS5lxDVxBPQxHNRqBsXyUAh+iAMKKQ=;
+        b=jeQRRn18Bl76K2zvhBK3uiaGEmU3ESj60UtXql1dUByilr1xK7fY9dPXOFUYHTzu8H
+         8mznUCbovoKeNw3rd+xCi8AcPY5V2YNqv9ORctZ3U9HjROj1VeEfIQLNsdCY1i5L1EgL
+         8iIaQ4451v0UtKBCmoLAzSaCzUxzpF1og8AdioWYZyYjp4GziE/e4I2Jq04J4WwAkEJ+
+         1SAt7HIjxppX+C0p2uACwdjUsl0um30pUDNP6QUJG6NZx7eTmPLMbjT6E9z4J52zpZsb
+         76hzvUbVihtc4X5pQAelYzc+DN/J1cZ8nbLNq3MSEpho0KhtVI1D7ZavTeq2TbHWv8/a
+         OZtQ==
+X-Gm-Message-State: APjAAAXgtcs6e/B1CoHElrf1bBX9jVBaO1u4LUl6KzRU8n3b7+K0qUKA
+        XbHe6G01ThkhajEPpG6Iu6O8Ydcv7fkBRDpB33ZIgDPY2ZA=
+X-Google-Smtp-Source: APXvYqxijTaU+rkG79VpDp9pINfS+w4/WWN8EseUFB++/R49pbRj0MA3YmeqtZC5mrvUYTir5ATJZ3WL6YPAGz1RJXE=
+X-Received: by 2002:a63:42:: with SMTP id 63mr37044591pga.337.1557825824401;
+ Tue, 14 May 2019 02:23:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1723398651.22256606.1557731771283.JavaMail.zimbra@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19051409-0012-0000-0000-0000031B773C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051409-0013-0000-0000-000021540E58
-Message-Id: <20190514092054.GA6949@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905140067
+References: <20190430140416.4707-1-esben@geanix.com> <20190430153736.GL9224@smile.fi.intel.com>
+ <874l6efxta.fsf@haabendal.dk> <20190502104556.GS9224@smile.fi.intel.com>
+ <87pnp11112.fsf@haabendal.dk> <20190507093239.GB4529@dell>
+ <87sgtqjy3l.fsf@haabendal.dk> <20190507115325.GV9224@smile.fi.intel.com>
+ <87k1f2jvyd.fsf@haabendal.dk> <20190507150847.GW9224@smile.fi.intel.com> <87k1etmrfk.fsf@haabendal.dk>
+In-Reply-To: <87k1etmrfk.fsf@haabendal.dk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 14 May 2019 12:23:33 +0300
+Message-ID: <CAHp75VfrP6SLVzmp6LepN7dU1c7QYxfRDRtj7dCTuWzmYp2tCA@mail.gmail.com>
+Subject: Re: [PATCH] serial: 8250: Add support for using platform_device resources
+To:     Esben Haabendal <esben@haabendal.dk>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
+        Douglas Anderson <dianders@chromium.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 03:16:11AM -0400, Jan Stancek wrote:
-> ----- Original Message -----
-> > We have noticed 274 syscall test failures on x86_64 and i386 due to
-> > Make the temporary directory in one shot using mkdtemp failed.
-> > tst_tmpdir.c:264: BROK: tst_tmpdir:
-> > mkdtemp(/scratch/ltp-7D8vAcYeFG/OXuquJ) failed: EROFS
-> 
-> Looks like ext4 bug:
-> 
-> [ 1916.032087] EXT4-fs error (device sda): ext4_find_extent:909: inode #8: comm jbd2/sda-8: pblk 121667583 bad header/extent: invalid extent entries - magic f30a, entries 8, max 340(340), depth 0(0)
-> [ 1916.073840] jbd2_journal_bmap: journal block not found at offset 4455 on sda-8
-> [ 1916.081071] Aborting journal on device sda-8.
-> [ 1916.348652] EXT4-fs error (device sda): ext4_journal_check_start:61: Detected aborted journal
-> [ 1916.357222] EXT4-fs (sda): Remounting filesystem read-only
-> 
-> So best place for report is likely linux-ext4@vger.kernel.org
+On Tue, May 14, 2019 at 10:24 AM Esben Haabendal <esben@haabendal.dk> wrote:
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
+> > On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
 
-Actually adding the mailing list, since there has been at least one
-other report about ext4 filesystem corruption.
+> We are on repeat here.  I don't agree with you here.  I have a simple
+> generic 8250 (16550A) compatible device, and cannot use it in a mfd
+> driver using the standard mfd-core framework.
 
-FWIW, I've seen the above also at least once on s390 when using a
-kernel built with git commit 47782361aca2.
+> The lacking of support for platform_get_resource() in the generic
+> serial8250 driver is not a feature.  It should be supported, just as it
+> is in several of the specialized 8250 drivers.
 
-> > 
-> > Failed log:
-> > ------------
-> > pread01     1  TBROK  :  tst_tmpdir.c:264: tst_tmpdir:
-> > mkdtemp(/scratch/ltp-7D8vAcYeFG/preAUvXAE) failed: errno=EROFS(30):
-> > Read-only file system
-> > pread01     2  TBROK  :  tst_tmpdir.c:264: Remaining cases broken
-> > 
-> > full test log,
-> > --------------
-> > https://lkft.validation.linaro.org/scheduler/job/711826#L7834
-> > 
-> > LTP Version: 20190115
-> > 
-> > Kernel bad commit:
-> > ------------
-> > git branch master
-> > git commit dd5001e21a991b731d659857cd07acc7a13e6789
-> > git describe v5.1-3486-gdd5001e21a99
-> > git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > 
-> > Kernel good commit:
-> > ------------
-> > git branch master
-> > git commit d3511f53bb2475f2a4e8460bee5a1ae6dea2a433
-> > git describe v5.1-3385-gd3511f53bb24
-> > git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> > 
-> > Best regards
-> > Naresh Kamboju
-> > 
-> 
-> -- 
-> Mailing list info: https://lists.linux.it/listinfo/ltp
+We are going circles here.
+What exactly prevents you to use it? Presence of request_mem_region()?
 
+> It would still mean that I would have revert to not using convenient and
+> otherwise fully appropriate API calls like pci_request_regions() and
+> mfd_add_devices().
+
+Yes, here is the issue. 8250 requires the parent not to *request*
+resources. Because child handles IO access itself.
+
+> The mfd driver in question is for a PCI device.  Not being able to
+> request the PCI regions seems silly.
+
+Nope. Otherwise, the parent which *doesn't handle* IO on behalf of
+child should not request its resources.
+
+> Not being able to register all child devices with the call introduced
+> for that sole purpose also seems silly.
+
+> Please take a look at https://lkml.org/lkml/2019/4/9/576
+> ("[PATCH v2 2/4] mfd: ioc3: Add driver for SGI IOC3 chip")
+
+Thank you for this link.
+Now, look at this comment:
+
++ /*
++ * Map all IOC3 registers.  These are shared between subdevices
++ * so the main IOC3 module manages them.
++ */
+
+Is it your case? Can we see the code?
+
+-- 
+With Best Regards,
+Andy Shevchenko
