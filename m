@@ -2,202 +2,249 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721B3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DA62C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C04B20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3690420862
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 09:05:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="QEXAUooo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfENJF3 (ORCPT
+        id S1726872AbfENJFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 05:05:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48818 "EHLO mx1.redhat.com"
+        Tue, 14 May 2019 05:05:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:25760 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbfENJF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 05:05:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 76463305AC91;
-        Tue, 14 May 2019 09:05:25 +0000 (UTC)
-Received: from [10.36.117.118] (ovpn-117-118.ams2.redhat.com [10.36.117.118])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 814E4608A6;
-        Tue, 14 May 2019 09:05:16 +0000 (UTC)
-Subject: Re: [PATCH V3 1/4] mm/hotplug: Reorder arch_remove_memory() call in
- __remove_memory()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will.deacon@arm.com
-Cc:     mhocko@suse.com, mgorman@techsingularity.net, james.morse@arm.com,
-        mark.rutland@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        cai@lca.pw, logang@deltatee.com, ira.weiny@intel.com
-References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
- <1557824407-19092-2-git-send-email-anshuman.khandual@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <1f43d480-0335-c9ed-8778-a4a2b18e8398@redhat.com>
-Date:   Tue, 14 May 2019 11:05:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1557824407-19092-2-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 14 May 2019 09:05:28 +0000 (UTC)
+        id S1725916AbfENJFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 05:05:17 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 453BbY47qqz9v0YZ;
+        Tue, 14 May 2019 11:05:13 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=QEXAUooo; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id b0W5i0t6Q68R; Tue, 14 May 2019 11:05:13 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 453BbY301Rz9v0YY;
+        Tue, 14 May 2019 11:05:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557824713; bh=v4bNhQOc7ZvxUNO59OYToxqsttx0pncVXMsK3CmHAi4=;
+        h=From:Subject:To:Cc:Date:From;
+        b=QEXAUoooJ0KRP4YbPD13py3w4zLXPhVu4CkmcJFYQi5j7hsZ0t4HmObK8oCaHfsda
+         Rem60QOLsHg4ZpIuHXgUBxZAdBp5vl8zlNx0GZNilvjDfKxERLPKt8ZHwxVuNACHA3
+         Ekz9EZFNrLrSZAuM0phNLlNx3MXmLmJdEZD1GaEI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 776788B8BE;
+        Tue, 14 May 2019 11:05:14 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id IJPs24qvg3OW; Tue, 14 May 2019 11:05:14 +0200 (CEST)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 23C578B8BD;
+        Tue, 14 May 2019 11:05:14 +0200 (CEST)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B72316742D; Tue, 14 May 2019 09:05:13 +0000 (UTC)
+Message-Id: <239d1c8f15b8bedc161a234f9f1a22a07160dbdf.1557824379.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 1/4] powerpc/64: flush_inval_dcache_range() becomes
+ flush_dcache_range()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 14 May 2019 09:05:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.05.19 11:00, Anshuman Khandual wrote:
-> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
-> entries between memory block and node. It first checks pfn validity with
-> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
-> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
-> 
-> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
-> which scans all mapped memblock regions with memblock_is_map_memory(). This
-> creates a problem in memory hot remove path which has already removed given
-> memory range from memory block with memblock_[remove|free] before arriving
-> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
-> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
-> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
-> of existing sysfs entries.
-> 
-> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
-> [   62.052517] ------------[ cut here ]------------
-> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
-> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> [   62.054589] Modules linked in:
-> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
-> [   62.056274] Hardware name: linux,dummy-virt (DT)
-> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
-> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
-> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
-> [   62.059842] sp : ffff0000168b3ce0
-> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
-> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
-> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
-> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
-> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
-> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
-> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
-> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
-> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
-> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
-> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
-> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
-> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
-> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
-> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
-> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
-> [   62.076930] Call trace:
-> [   62.077411]  add_memory_resource+0x1cc/0x1d8
-> [   62.078227]  __add_memory+0x70/0xa8
-> [   62.078901]  probe_store+0xa4/0xc8
-> [   62.079561]  dev_attr_store+0x18/0x28
-> [   62.080270]  sysfs_kf_write+0x40/0x58
-> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
-> [   62.081744]  __vfs_write+0x18/0x40
-> [   62.082400]  vfs_write+0xa4/0x1b0
-> [   62.083037]  ksys_write+0x5c/0xc0
-> [   62.083681]  __arm64_sys_write+0x18/0x20
-> [   62.084432]  el0_svc_handler+0x88/0x100
-> [   62.085177]  el0_svc+0x8/0xc
-> 
-> Re-ordering arch_remove_memory() with memblock_[free|remove] solves the
-> problem on arm64 as pfn_valid() behaves correctly and returns positive
-> as memblock for the address range still exists. arch_remove_memory()
-> removes applicable memory sections from zone with __remove_pages() and
-> tears down kernel linear mapping. Removing memblock regions afterwards
-> is safe because there is no other memblock (bootmem) allocator user that
-> late. So nobody is going to allocate from the removed range just to blow
-> up later. Also nobody should be using the bootmem allocated range else
-> we wouldn't allow to remove it. So reordering is indeed safe.
-> 
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  mm/memory_hotplug.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 0082d69..71d0d79 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1872,11 +1872,10 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> +	arch_remove_memory(nid, start, size, NULL);
->  	memblock_free(start, size);
->  	memblock_remove(start, size);
->  
-> -	arch_remove_memory(nid, start, size, NULL);
-> -
->  	try_offline_node(nid);
->  
->  	mem_hotplug_done();
-> 
+On most arches having function flush_dcache_range(), including PPC32,
+this function does a writeback and invalidation of the cache bloc.
 
-I think you have to rebase this patch to -next (and soon to linus master).
+On PPC64, flush_dcache_range() only does a writeback while
+flush_inval_dcache_range() does the invalidation in addition.
 
+In addition it looks like within arch/powerpc/, there are no PPC64
+platforms using flush_dcache_range()
+
+This patch drops the existing 64 bits version of flush_dcache_range()
+and renames flush_inval_dcache_range() into flush_dcache_range().
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/include/asm/cacheflush.h |  1 -
+ arch/powerpc/kernel/misc_64.S         | 27 ++-------------------------
+ arch/powerpc/lib/pmem.c               |  8 ++++----
+ arch/powerpc/mm/mem.c                 |  4 ++--
+ arch/powerpc/sysdev/dart_iommu.c      |  2 +-
+ drivers/macintosh/smu.c               |  4 ++--
+ 6 files changed, 11 insertions(+), 35 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/cacheflush.h b/arch/powerpc/include/asm/cacheflush.h
+index d5a8d7bf0759..e9a40b110f1d 100644
+--- a/arch/powerpc/include/asm/cacheflush.h
++++ b/arch/powerpc/include/asm/cacheflush.h
+@@ -109,7 +109,6 @@ static inline void invalidate_dcache_range(unsigned long start,
+ #endif /* CONFIG_PPC32 */
+ #ifdef CONFIG_PPC64
+ extern void flush_dcache_range(unsigned long start, unsigned long stop);
+-extern void flush_inval_dcache_range(unsigned long start, unsigned long stop);
+ #endif
+ 
+ #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
+diff --git a/arch/powerpc/kernel/misc_64.S b/arch/powerpc/kernel/misc_64.S
+index 262ba9481781..a4fd536efb44 100644
+--- a/arch/powerpc/kernel/misc_64.S
++++ b/arch/powerpc/kernel/misc_64.S
+@@ -121,31 +121,8 @@ EXPORT_SYMBOL(flush_icache_range)
+  *
+  *    flush all bytes from start to stop-1 inclusive
+  */
+-_GLOBAL_TOC(flush_dcache_range)
+ 
+-/*
+- * Flush the data cache to memory 
+- * 
+- * Different systems have different cache line sizes
+- */
+- 	ld	r10,PPC64_CACHES@toc(r2)
+-	lwz	r7,DCACHEL1BLOCKSIZE(r10)	/* Get dcache block size */
+-	addi	r5,r7,-1
+-	andc	r6,r3,r5		/* round low to line bdy */
+-	subf	r8,r6,r4		/* compute length */
+-	add	r8,r8,r5		/* ensure we get enough */
+-	lwz	r9,DCACHEL1LOGBLOCKSIZE(r10)	/* Get log-2 of dcache block size */
+-	srw.	r8,r8,r9		/* compute line count */
+-	beqlr				/* nothing to do? */
+-	mtctr	r8
+-0:	dcbst	0,r6
+-	add	r6,r6,r7
+-	bdnz	0b
+-	sync
+-	blr
+-EXPORT_SYMBOL(flush_dcache_range)
+-
+-_GLOBAL(flush_inval_dcache_range)
++_GLOBAL_TOC(flush_dcache_range)
+  	ld	r10,PPC64_CACHES@toc(r2)
+ 	lwz	r7,DCACHEL1BLOCKSIZE(r10)	/* Get dcache block size */
+ 	addi	r5,r7,-1
+@@ -164,7 +141,7 @@ _GLOBAL(flush_inval_dcache_range)
+ 	sync
+ 	isync
+ 	blr
+-
++EXPORT_SYMBOL(flush_dcache_range)
+ 
+ /*
+  * Flush a particular page from the data cache to RAM.
+diff --git a/arch/powerpc/lib/pmem.c b/arch/powerpc/lib/pmem.c
+index 53c018762e1c..36e08bf850e0 100644
+--- a/arch/powerpc/lib/pmem.c
++++ b/arch/powerpc/lib/pmem.c
+@@ -23,14 +23,14 @@
+ void arch_wb_cache_pmem(void *addr, size_t size)
+ {
+ 	unsigned long start = (unsigned long) addr;
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ }
+ EXPORT_SYMBOL(arch_wb_cache_pmem);
+ 
+ void arch_invalidate_pmem(void *addr, size_t size)
+ {
+ 	unsigned long start = (unsigned long) addr;
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ }
+ EXPORT_SYMBOL(arch_invalidate_pmem);
+ 
+@@ -43,7 +43,7 @@ long __copy_from_user_flushcache(void *dest, const void __user *src,
+ 	unsigned long copied, start = (unsigned long) dest;
+ 
+ 	copied = __copy_from_user(dest, src, size);
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ 
+ 	return copied;
+ }
+@@ -53,7 +53,7 @@ void *memcpy_flushcache(void *dest, const void *src, size_t size)
+ 	unsigned long start = (unsigned long) dest;
+ 
+ 	memcpy(dest, src, size);
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ 
+ 	return dest;
+ }
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index cd525d709072..39e66f033995 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -125,7 +125,7 @@ int __ref arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altm
+ 			start, start + size, rc);
+ 		return -EFAULT;
+ 	}
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ 
+ 	return __add_pages(nid, start_pfn, nr_pages, altmap, want_memblock);
+ }
+@@ -153,7 +153,7 @@ int __ref arch_remove_memory(int nid, u64 start, u64 size,
+ 
+ 	/* Remove htab bolted mappings for this section of memory */
+ 	start = (unsigned long)__va(start);
+-	flush_inval_dcache_range(start, start + size);
++	flush_dcache_range(start, start + size);
+ 	ret = remove_section_mapping(start, start + size);
+ 
+ 	/* Ensure all vmalloc mappings are flushed in case they also
+diff --git a/arch/powerpc/sysdev/dart_iommu.c b/arch/powerpc/sysdev/dart_iommu.c
+index 2a751795ec1e..bc259a8d3f2d 100644
+--- a/arch/powerpc/sysdev/dart_iommu.c
++++ b/arch/powerpc/sysdev/dart_iommu.c
+@@ -158,7 +158,7 @@ static void dart_cache_sync(unsigned int *base, unsigned int count)
+ 	unsigned int tmp;
+ 
+ 	/* Perform a standard cache flush */
+-	flush_inval_dcache_range(start, end);
++	flush_dcache_range(start, end);
+ 
+ 	/*
+ 	 * Perform the sequence described in the CPC925 manual to
+diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+index 6a844125cf2d..97758eed03f2 100644
+--- a/drivers/macintosh/smu.c
++++ b/drivers/macintosh/smu.c
+@@ -133,7 +133,7 @@ static void smu_start_cmd(void)
+ 	/* Flush command and data to RAM */
+ 	faddr = (unsigned long)smu->cmd_buf;
+ 	fend = faddr + smu->cmd_buf->length + 2;
+-	flush_inval_dcache_range(faddr, fend);
++	flush_dcache_range(faddr, fend);
+ 
+ 
+ 	/* We also disable NAP mode for the duration of the command
+@@ -195,7 +195,7 @@ static irqreturn_t smu_db_intr(int irq, void *arg)
+ 		 * reply length (it's only 2 cache lines anyway)
+ 		 */
+ 		faddr = (unsigned long)smu->cmd_buf;
+-		flush_inval_dcache_range(faddr, faddr + 256);
++		flush_dcache_range(faddr, faddr + 256);
+ 
+ 		/* Now check ack */
+ 		ack = (~cmd->cmd) & 0xff;
 -- 
+2.13.3
 
-Thanks,
-
-David / dhildenb
