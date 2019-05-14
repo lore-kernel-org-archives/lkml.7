@@ -2,99 +2,115 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5852DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F107C04AB7
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA8720879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D3F20879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 17:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nqXYlNZ3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYamd2nf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfENRh2 (ORCPT
+        id S1726948AbfENRiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 13:37:28 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42240 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfENRh1 (ORCPT
+        Tue, 14 May 2019 13:38:22 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44295 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfENRiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 13:37:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EHNwbu149298;
-        Tue, 14 May 2019 17:37:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=hHqEGvBgw/HFtBdP4Hbpaoa+IOhMS3wp3QgyUigg06A=;
- b=nqXYlNZ3UXI9YF9LFb+rZM47ZxFvnqRQRnHnj8dxH6fg5Zvyx98gIp80Id8MtimweCHI
- wmnfK8/4pksEFHIgwS4qnDRZ+fOVUyopaMcH0RwHdKztXbXHSk84GJkFVRyITzgbmMtn
- 3QIDiKaKkO+LjgxQfQTGVEDpyIrEcmHkKj6NFscEYYYl/LZxuvGmejP0K0V8MSCU/iCp
- AjTfzBWUPyd3qwqFYjSlK9yDW2flINBZTHIArckG8LjJflPLxu7CfNY6XbibN1WOLu8p
- HX3h6WP8UOdzHlGkDGSYUnJFdvgILdNkKaBIA+zNyL4unqHi3fRBM6uta2ehBwIFvM4m 1g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2sdnttqspd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 17:37:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4EHbJum049732;
-        Tue, 14 May 2019 17:37:20 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2sdmeb7f43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 May 2019 17:37:20 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4EHbIsL021477;
-        Tue, 14 May 2019 17:37:18 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 14 May 2019 10:37:18 -0700
-To:     Ondrej Zary <linux@zary.sk>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] fdomain: Resurrect driver
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190514172309.12874-1-linux@zary.sk>
-Date:   Tue, 14 May 2019 13:37:09 -0400
-In-Reply-To: <20190514172309.12874-1-linux@zary.sk> (Ondrej Zary's message of
-        "Tue, 14 May 2019 19:23:06 +0200")
-Message-ID: <yq1r291c4ze.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=612
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905140120
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=663 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905140120
+        Tue, 14 May 2019 13:38:22 -0400
+Received: by mail-pl1-f194.google.com with SMTP id c5so885286pll.11;
+        Tue, 14 May 2019 10:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yQwlOtBHnK6CRRjE4ab4v9zRwfsos8oSSPSf6ns3DeM=;
+        b=fYamd2nfaPVrWYUlTU2JQo4Hjv80wsUG5q2CIWedan+EMdJUs8r6IroZINOLDxuk4t
+         hUd+rrb1Ggo5A9sXY/vhycaQNaoO4ea/Q7Kr6TKg3Qe8DOwZcxiaSTU8TiuZxZXoKvTm
+         djuup/Bb+CIIhKlnKHjAMoqJweQ7zu3xQNDcOLoGBSUSsbD9MUrKHniw239K4dOOpsPW
+         CgkL7fZ4e2yvAue4fa2pPYBIQ03R8VNGlqj5T8sruSi/4icWRCBTKaYUPy1w3X5ErU/H
+         WNHIC36xyhikn+ZM+yRT2vtYa4SFdW/wpwHXD1tJQriZsiuTnN30YMmu2rYs0fl4s8nP
+         ot7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yQwlOtBHnK6CRRjE4ab4v9zRwfsos8oSSPSf6ns3DeM=;
+        b=Y7ms9/rOGBK97x7oyD7Xo4a6D9F5CQkf70tFsC/+wRCB5dMpkLqNDvVCRRVJqSXKiK
+         bAtQBJChYGbBEaTGulWd0oXRAnIDrHs/DIqXvQ+zqKnxMsmzjcD0tEPIqb3uO0cKy/nN
+         v6TABkdMR5Jt9GJU/62R1NkyGx8xbWTFq89Fjlr+x5U72kA5IHd0kmzbngdwBPx+75NR
+         qBdxUcTcjmnIRN6fH14qhwQMTjkv4j8eWlTwDQsGeaYFJ4yiYe35KEaOiTy+m/UaSxBa
+         866txLLHhppjwTdOt+Ja7xFGo0o2TYXl0//6pOs5YKe9kgAmqEL2IEJJOg0xrjhmIqB1
+         qYxA==
+X-Gm-Message-State: APjAAAVrrAJB0qo8SvVGU80NY17nM7+Kk48SIEWXEvP7YfO5k/n2eAGP
+        e68Nov1CJoL8TI1CPmwn1YTSOUfM
+X-Google-Smtp-Source: APXvYqwIkqz2URE7Givd+nsWZchVlcnU3FFpVXxK/+Y/f80GPujaPxXDenUc3ZH3hMItbKNhPcLPTQ==
+X-Received: by 2002:a17:902:4624:: with SMTP id o33mr21139240pld.268.1557855501351;
+        Tue, 14 May 2019 10:38:21 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id a80sm46115717pfj.105.2019.05.14.10.38.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 10:38:20 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-mips@linux-mips.org
+Cc:     joe@perches.com, Florian Fainelli <f.fainelli@gmail.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+        linux-mips@vger.kernel.org (open list:BROADCOM NVRAM DRIVER),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/2] firmware: bcm47xx_nvram: Correct size_t printf format
+Date:   Tue, 14 May 2019 10:38:14 -0700
+Message-Id: <20190514173816.17030-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+When building on a 64-bit host, we will get warnings like those:
 
-Ondrej,
+drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
+   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+   ^~~~~~
+drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
+   pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+                           ~^
+                           %li
 
-> Resurrect previously removed fdomain driver, in modern style.
-> Initialization is rewritten completely, with support for multiple
-> cards, no more global state variables.  Most of the code from
-> interrupt handler is moved to a workqueue.
->
-> This is a modularized version with core separated from bus-specific
-> drivers (PCI, ISA and PCMCIA). Only PCI and ISA drivers are submitted
-> for now.
+Use %zu instead for that purpose.
 
-Applied to 5.3/scsi-queue. Thanks!
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
+- Use %zu instead of %zi (Joe Perches)
 
+ drivers/firmware/broadcom/bcm47xx_nvram.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/firmware/broadcom/bcm47xx_nvram.c b/drivers/firmware/broadcom/bcm47xx_nvram.c
+index d25f080fcb0d..8698c5dd29d9 100644
+--- a/drivers/firmware/broadcom/bcm47xx_nvram.c
++++ b/drivers/firmware/broadcom/bcm47xx_nvram.c
+@@ -100,7 +100,7 @@ static int nvram_find_and_copy(void __iomem *iobase, u32 lim)
+ 		nvram_len = size;
+ 	}
+ 	if (nvram_len >= NVRAM_SPACE) {
+-		pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
++		pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+ 		       nvram_len, NVRAM_SPACE - 1);
+ 		nvram_len = NVRAM_SPACE - 1;
+ 	}
+@@ -152,7 +152,7 @@ static int nvram_init(void)
+ 	    header.len > sizeof(header)) {
+ 		nvram_len = header.len;
+ 		if (nvram_len >= NVRAM_SPACE) {
+-			pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
++			pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
+ 				header.len, NVRAM_SPACE);
+ 			nvram_len = NVRAM_SPACE - 1;
+ 		}
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.17.1
+
