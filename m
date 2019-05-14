@@ -2,101 +2,71 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1219C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A3FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF94F20879
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B886820879
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 15:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726279AbfENPeX (ORCPT
+        id S1726394AbfENPed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 11:34:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7645 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfENPeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 11:34:23 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 18DD8EF5B46FE4019ED3;
-        Tue, 14 May 2019 23:34:20 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
- 23:34:10 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <sudipm.mukherjee@gmail.com>, <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] parport: Fix mem leak in parport_register_dev_model
-Date:   Tue, 14 May 2019 23:24:37 +0800
-Message-ID: <20190514152437.35744-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 14 May 2019 11:34:33 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54226 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfENPed (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 11:34:33 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 198so3363251wme.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 08:34:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8GrnAA+dMbE3aqWsuexkoodhKBT8YIQCDPCVk4/0ONU=;
+        b=n5NNPOKB4v75Mam64CegVqZbf9Z5L5NTuX/Hdch5oe8H2sWbXdwbA/oucfVs/dYIcV
+         vtMJ8qdBKm3Ky0YK4Pc9d5EPw8tl7BHzooJzqMerwbkD3E/ycoTW0Q2JJTJrGYTOHSU5
+         acPIl4A4XDZ2XLeGqqVVWBOgQvSWkD9GspiXNNUKT26QY7jU+lsAFXZfWIkvGo1XBj/G
+         0e2/WathEFGUzfdr0bB9wqMLs1APmosK3vy4hD0iVXhe6rKQAuIDHfO5t9rqOGrf+6hB
+         cLFgYQmto/CxTsWDgh0cnLh2LVNOA1DQNVfBOeBk/AWcMockP+8K1dm9sx3LUPJaXNPG
+         1nQg==
+X-Gm-Message-State: APjAAAVRHEkA8uhfnCBRdnNAHEzd2iKmTFaxeuokWMLRt+oLhV9VJwOd
+        MRN7PDpzs7xY71R8CUWS5+FfAg==
+X-Google-Smtp-Source: APXvYqzOyfjfuVw1aAFsWiF9tA0emSNhG599UJWPqNbEpMVozMuZdTdjulYB4nCzy79n6qV3UvxkPA==
+X-Received: by 2002:a1c:9c02:: with SMTP id f2mr6399273wme.8.1557848071813;
+        Tue, 14 May 2019 08:34:31 -0700 (PDT)
+Received: from linux.home (2a01cb05850ddf00045dd60e6368f84b.ipv6.abo.wanadoo.fr. [2a01:cb05:850d:df00:45d:d60e:6368:f84b])
+        by smtp.gmail.com with ESMTPSA id d72sm1644080wmd.12.2019.05.14.08.34.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 08:34:31 -0700 (PDT)
+Date:   Tue, 14 May 2019 17:34:29 +0200
+From:   Guillaume Nault <gnault@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     davem@davemloft.net, paulus@samba.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2] ppp: deflate: Fix possible crash in deflate_init
+Message-ID: <20190514153428.GA11430@linux.home>
+References: <20190514074300.42588-1-yuehaibing@huawei.com>
+ <20190514145532.21932-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514145532.21932-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: memory leak
-unreferenced object 0xffff8881df48cda0 (size 16):
-  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
-  hex dump (first 16 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
-    [<00000000782f6dab>] 0xffffffffc15d1196
-    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
-    [<00000000628c2a94>] really_probe+0x342/0x4d0
-    [<000000006874f5da>] driver_probe_device+0x8c/0x170
-    [<00000000424de37a>] __device_attach_driver+0xda/0x100
-    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
-    [<000000003d9e5f31>] __device_attach+0x190/0x230
-    [<0000000035d32f80>] bus_probe_device+0x123/0x140
-    [<00000000a05ba627>] device_add+0x7cc/0xce0
-    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
-    [<000000002a0be07d>] 0xffffffffc15d0949
-    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
-    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
-    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
-    [<00000000987f06fc>] 0xffffffffc15d803e
-	
-After commit 4e5a74f1db8d ("parport: Revert "parport: fix
-memory leak""), free_pardevice do not free par_dev->state,
-we should free it in error path of parport_register_dev_model
-before return.
+On Tue, May 14, 2019 at 10:55:32PM +0800, YueHaibing wrote:
+> If ppp_deflate fails to register in deflate_init,
+> module initialization failed out, however
+> ppp_deflate_draft may has been regiestred and not
+> unregistered before return.
+> 
+Thanks!
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/parport/share.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 5dc53d4..7b4ee33 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 	par_dev->devmodel = true;
- 	ret = device_register(&par_dev->dev);
- 	if (ret) {
-+		kfree(par_dev->state);
- 		put_device(&par_dev->dev);
- 		goto err_put_port;
- 	}
-@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 			spin_unlock(&port->physport->pardevice_lock);
- 			pr_debug("%s: cannot grant exclusive access for device %s\n",
- 				 port->name, name);
-+			kfree(par_dev->state);
- 			device_unregister(&par_dev->dev);
- 			goto err_put_port;
- 		}
--- 
-2.7.4
-
-
+Acked-by: Guillaume Nault <gnault@redhat.com>
