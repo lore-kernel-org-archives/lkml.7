@@ -2,161 +2,103 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F410C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F79C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B262147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 057552147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 12:39:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=haabendal.dk header.i=@haabendal.dk header.b="oxSmO0LU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfENMis (ORCPT
+        id S1726393AbfENMj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 08:38:48 -0400
-Received: from mga12.intel.com ([192.55.52.136]:56137 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfENMis (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 08:38:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 05:38:47 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga005.fm.intel.com with ESMTP; 14 May 2019 05:38:44 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1hQWhf-0007xn-3y; Tue, 14 May 2019 15:38:43 +0300
-Date:   Tue, 14 May 2019 15:38:43 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Esben Haabendal <esben@haabendal.dk>
+        Tue, 14 May 2019 08:39:29 -0400
+Received: from mailrelay4-1.pub.mailoutpod1-cph3.one.com ([46.30.210.185]:22011
+        "EHLO mailrelay4-1.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726400AbfENMj2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 08:39:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=haabendal.dk; s=20140924;
+        h=content-type:mime-version:message-id:date:references:in-reply-to:subject:cc:
+         to:from:from;
+        bh=Wa3jMi9KJqQDLWw1Eka2Kg0cxZh4xKk+W+ZTUzGIaG4=;
+        b=oxSmO0LUNg00fuse7wmhh0Fuyyv2SvcOl1hI7vbPECEGfOV7VZgHlGPL9+zifZn/c3jfCVy5y6YlM
+         XlnOoVjElTVY1N5teGwZlLP3Bo+SZrIgD8+pq6wAPeRiijAZwE2B6ML4xOYeVqx8Mei3K3Jbilp+tb
+         +L9lmrDeJgI+EaFQ=
+X-HalOne-Cookie: 1b0e2f114696488111d802a7184ddba9a359d67a
+X-HalOne-ID: 4e568cd5-7645-11e9-abc4-d0431ea8bb10
+Received: from localhost (unknown [193.163.1.7])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 4e568cd5-7645-11e9-abc4-d0431ea8bb10;
+        Tue, 14 May 2019 12:39:25 +0000 (UTC)
+From:   Esben Haabendal <esben@haabendal.dk>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Cc:     Lee Jones <lee.jones@linaro.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Enrico Weigelt <lkml@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Darwin Dingel <darwin.dingel@alliedtelesis.co.nz>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        He Zhe <zhe.he@windriver.com>, Marek Vasut <marex@denx.de>,
-        Douglas Anderson <dianders@chromium.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paul.burton@mips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] serial: 8250: Add support for using platform_device
- resources
-Message-ID: <20190514123843.GC9224@smile.fi.intel.com>
-References: <20190502104556.GS9224@smile.fi.intel.com>
- <87pnp11112.fsf@haabendal.dk>
- <20190507093239.GB4529@dell>
- <87sgtqjy3l.fsf@haabendal.dk>
- <20190507115325.GV9224@smile.fi.intel.com>
- <87k1f2jvyd.fsf@haabendal.dk>
- <20190507150847.GW9224@smile.fi.intel.com>
- <87k1etmrfk.fsf@haabendal.dk>
- <CAHp75VfrP6SLVzmp6LepN7dU1c7QYxfRDRtj7dCTuWzmYp2tCA@mail.gmail.com>
- <871s11meg3.fsf@haabendal.dk>
+        James Hogan <jhogan@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] mfd: ioc3: Add driver for SGI IOC3 chip
+In-Reply-To: <20190409154610.6735-3-tbogendoerfer@suse.de> (Thomas Bogendoerfers's message of "Tue, 9 Apr 2019 17:46:06 +0200")
+References: <20190409154610.6735-1-tbogendoerfer@suse.de>
+        <20190409154610.6735-3-tbogendoerfer@suse.de>
+        <20190508102313.GG3995@dell>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+Date:   Tue, 14 May 2019 14:39:25 +0200
+Message-ID: <87mujpky6a.fsf@haabendal.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <871s11meg3.fsf@haabendal.dk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 02:02:36PM +0200, Esben Haabendal wrote:
-> Andy Shevchenko <andy.shevchenko@gmail.com> writes:
-> > On Tue, May 14, 2019 at 10:24 AM Esben Haabendal <esben@haabendal.dk> wrote:
-> >> Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> >> > On Tue, May 07, 2019 at 02:22:18PM +0200, Esben Haabendal wrote:
-> >
-> >> We are on repeat here.  I don't agree with you here.  I have a simple
-> >> generic 8250 (16550A) compatible device, and cannot use it in a mfd
-> >> driver using the standard mfd-core framework.
-> >
-> >> The lacking of support for platform_get_resource() in the generic
-> >> serial8250 driver is not a feature.  It should be supported, just as it
-> >> is in several of the specialized 8250 drivers.
-> >
-> > We are going circles here.
-> > What exactly prevents you to use it? Presence of request_mem_region()?
+On Tue, 09 Apr 2019, Thomas Bogendoerfer wrote:
 > 
-> Exactly.
+> diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
+> index 358e66b81926..21fe722ebcd8 100644
+> --- a/drivers/net/ethernet/sgi/ioc3-eth.c
+> +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
+>  
+>  [ ... ]
+>  
+> -	err = pci_request_regions(pdev, "ioc3");
 
-And I completely tired to repeat that this is okay and does not prevent you to
-use MFD.
+Why are you dropping the call to pci_request_regions()?  Shouldn't you
+do something similar in the new mfd driver?
 
-> >> It would still mean that I would have revert to not using convenient and
-> >> otherwise fully appropriate API calls like pci_request_regions() and
-> >> mfd_add_devices().
-> >
-> > Yes, here is the issue. 8250 requires the parent not to *request*
-> > resources. Because child handles IO access itself.
-> 
-> Ok, clearly we are not discussing the actual IO access.  The only issue
-> is how to handle the memory resource management.
-> 
-> And yes, serial8250 requires "the parent" to not request the resources.
-> But by doing so, it gets in the way of the mfd-core way of splitting a
-> properly requested resource.
+When you are use the the BAR 0 resource as mem_base argument to
+mfd_add_devices() later on, it will be split into child resources for
+the child devices, but they will not be related to the IORESOURCE_MEM
+root tree (iomem_resource) anymore.  I don't think that is how it is
+supposed to be done, as it will allow random other drivers to request
+the exact same memory area.
 
-Which is right thing to do. Requesting resources should be done by their actual
-user, no?
+How/where is the memory resources inserted in the root IORESOURCE_MEM
+resource (iomem_resource)?  Or is it allowed to use resources without
+inserting it into the root tree?
 
-Moreover, if you look at /proc/iomem, for example, I bet there will be
-a difference with your proposed method and a established one.
+> +	SET_NETDEV_DEV(dev, &pdev->dev);
+> +	ip = netdev_priv(dev);
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	ip->regs = ioremap(r->start, resource_size(r));
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	ip->ssram = ioremap(r->start, resource_size(r));
 
-> >> The mfd driver in question is for a PCI device.  Not being able to
-> >> request the PCI regions seems silly.
-> >
-> > Nope. Otherwise, the parent which *doesn't handle* IO on behalf of
-> > child should not request its resources.
-> 
-> If I may, could I get you to discuss this with Lee Jones?
-> 
-> As I read both of your comments in this thread, you are not aligned on
-> how mfd drivers should handle resources.  And in that case, one of you
-> are most likely more right than the other, and if Lee is right, I seem
-> to be unable to convince you about that.
+Maybe use devm_platform_ioremap_resource() instead, which handles both
+platform_get_resource() and ioremap() in one call..
 
-MFD has nothing to do with *requesting* resource. It's about *slicing* them.
-*Requesting* resource is orthogonal to the *slicing*.
-
-> >> Not being able to register all child devices with the call introduced
-> >> for that sole purpose also seems silly.
-> >
-> >> Please take a look at https://lkml.org/lkml/2019/4/9/576
-> >> ("[PATCH v2 2/4] mfd: ioc3: Add driver for SGI IOC3 chip")
-> >
-> > Thank you for this link.
-> > Now, look at this comment:
-> >
-> > + /*
-> > + * Map all IOC3 registers.  These are shared between subdevices
-> > + * so the main IOC3 module manages them.
-> > + */
-> >
-> > Is it your case? Can we see the code?
-> 
-> That comment seems quite misleading.  I am quote certain that the uart
-> registers which are part of BAR 0 is not more shared between subdevices
-> than the uart registers in BAR 0 in my case.
-> 
-> But BAR 0 as a whole is shared between subdevices.  But BAR 0 can be
-> (is) split in parts that are exclusive to one subdevice.  The only
-> difference I see is that I don't have any registers accessed directly by
-> the mfd driver.
-
-I stopped here. Let's discuss an actual code.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+/Esben
