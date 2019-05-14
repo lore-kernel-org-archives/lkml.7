@@ -2,143 +2,128 @@ Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A69C04AB4
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E577F20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30DC20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 19:46:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LPIXovgG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvOC26sX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbfENTpP (ORCPT
+        id S1726424AbfENTqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 15:45:15 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42578 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfENTpP (ORCPT
+        Tue, 14 May 2019 15:46:02 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40773 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726036AbfENTqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 15:45:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id l25so536031eda.9;
-        Tue, 14 May 2019 12:45:13 -0700 (PDT)
+        Tue, 14 May 2019 15:46:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id j12so551861eds.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 12:46:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=Fu9WOeDbdlL/ua5Ah2bZTlJie+g3UL98LUXK/FhpkXQ=;
-        b=LPIXovgGUA7+D6oKZfVjcYMnrbagOKIgBIOb5NewyNJ34GdkG0K735sD0dyGuRsOrc
-         Ma1fbjdFgcd8fxKKGhQfHYGgTriKPgHFRQTP8GGOt8MgOq+gw9VxEHyz0y9DLBXwScwh
-         gIrdADKXUNCqCUrOEMDmv8WhBbLeKQQCZ8IkSWrAmftE4jF3rzwthp9WABk3qJSs7w1y
-         P9rwf4TwckKSorNd+oRWiDsqUlL5+iFIlB+d9T7GuAwJGYfgt5bcGRUBb0oNYFONZzjq
-         UKywE9BnSA/NU8wMalz+VX/rwAPYMDZQyc0NhRw4bpWMeRvnZL68JMR9kfwpvKkiAGai
-         29vg==
+        bh=SNWKhmqL1RfT8Ocb1OCe8VtXVVSNF6ph0Xhv4SOWB40=;
+        b=CvOC26sX0Xespaa+PiqBMpVSVDalmpu07UNwcKEhcgmeP2TDr0wk6JF8RLwrn+q8XC
+         tTzs0QE62dfTI68neDTbRlFyFY08xmW0ApwLtoG9MHfKXaTM9op4nNTlAisylxHhICqs
+         Zn9bOWMTQWRFqK3iuLsX3ufb/cQ8OIaOscTRNoDTMK6SUPK8xlD5hPKhe737Gv5WMP/e
+         8OYFSvpKd5U5A0a7Z5XGR9K3Vzlps8Dd7wEJNK5oGDkIPOgzbRRGDQKBHp39ynhfOUkj
+         l0bxU5MA6DYnwb8//D2+Cw6tEhpXw8TMIh0ozArYTv8mAz9lJiTsa0Bb6Fjt4rYaf4Mu
+         Yx4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Fu9WOeDbdlL/ua5Ah2bZTlJie+g3UL98LUXK/FhpkXQ=;
-        b=LKR5bnviCqr9plzF4P14MYNn6yVRGcJqLqTG5qmlqiqTqo8llCewqCYrWaKhKxg1b3
-         3imXJA/F5rJQDz0qWjXbTxGWdjr5pm6Jyw6Uoo63kTdOPkvXFGyFxIijIpkgyyb0lDcV
-         vejwKkj6sbRWWZM+mHg9KD3W696pfmCDUujhN184WNI0JCsAAO/EBAQWlamTCykVs0Wm
-         ZMbm4oA1wAu6ofUJ202RsPrmOfsXzxkLVrkLWUGAYYy6hlyKY86H0h9yClGON57zXmg8
-         YGg4XqXL7LLJQnRaelxtMqKlmK9OxPrWxLKUWIEumvyPZlm7n1d9hcppeEcLki9qGe+w
-         Bt7Q==
-X-Gm-Message-State: APjAAAVgu8MF+3OqW5hJXsXpFyQrccuvWsDuUhDTVfcAUiEiTat4YJJp
-        KR40gibGfULMTvRzeQhIXYw=
-X-Google-Smtp-Source: APXvYqy29p1AGL/lhkLzcm9t9htDL/6Rgp/8i5IyzXb3FiDwnKLmonFhwH6a3wXa6z6BF4OHcI0LvA==
-X-Received: by 2002:a50:a51c:: with SMTP id y28mr32223328edb.280.1557863113126;
-        Tue, 14 May 2019 12:45:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=SNWKhmqL1RfT8Ocb1OCe8VtXVVSNF6ph0Xhv4SOWB40=;
+        b=PWnuPqgZAQotFuNtP5e5jAXxqwYtnQWNwWM2wnv+23Z0gfo09KzLuSHTuImq/KhaFn
+         TA1wUjUR4WFalsF23df4mtjqkQylA0j5n6vwSM5pM0L/FH5afkdx20CyC3GwW1M3G7Om
+         POX0x86+4aDD1jI13VQzzGFsk/lI6mAOqwmu5adVEINctXAl8DR7c7x2YlLLzmoTmaYi
+         stCm9cpRHKRI+U/QKUX4N3f8qyojG5hlOoKTYjP0PkPWZ9gNQMb6q1B00mRu1Av46MMJ
+         lc1GUDuj0ejGis9AN5ddnoTfN9sM9bVRbl1X73XvoRMmNxKXifVH0qOoxdhraVI6rVub
+         P6GQ==
+X-Gm-Message-State: APjAAAX1PA6ZM+3Glnw8vFrJ0jI7UGVpBXboiyMG0PA+4UQyXPlIYfAO
+        OzmQ1uizwpsYu40JIh19Sog=
+X-Google-Smtp-Source: APXvYqzqsM6YxhwDwuwnA/BDNBMRsL7Bv72pN9sp+FWRDWg10cTe5/0GsN+ZRTKbAmaakhT/NWUJZA==
+X-Received: by 2002:a50:9b10:: with SMTP id o16mr37943864edi.229.1557863160506;
+        Tue, 14 May 2019 12:46:00 -0700 (PDT)
 Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id e33sm4855172edd.53.2019.05.14.12.45.11
+        by smtp.gmail.com with ESMTPSA id x49sm4911383edm.25.2019.05.14.12.45.59
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 12:45:12 -0700 (PDT)
-Date:   Tue, 14 May 2019 12:45:10 -0700
+        Tue, 14 May 2019 12:45:59 -0700 (PDT)
+Date:   Tue, 14 May 2019 12:45:57 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Doug Ledford <dledford@redhat.com>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Message-ID: <20190514194510.GA15465@archlinux-i9>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Amelie Delaunay <amelie.delaunay@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] mfd: stmfx: Fix macro definition spelling
+Message-ID: <20190514194557.GA12421@archlinux-i9>
+References: <20190511012301.2661-1-natechancellor@gmail.com>
+ <20190513073059.GH4319@dell>
+ <20190514183900.GA7559@archlinux-i9>
+ <20190514185404.GP4319@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190514185404.GP4319@dell>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue, May 14, 2019 at 07:54:04PM +0100, Lee Jones wrote:
+> On Tue, 14 May 2019, Nathan Chancellor wrote:
+> 
+> > On Mon, May 13, 2019 at 08:30:59AM +0100, Lee Jones wrote:
+> > > On Fri, 10 May 2019, Nathan Chancellor wrote:
+> > > 
+> > > > Clang warns:
+> > > > 
+> > > > In file included from drivers/mfd/stmfx.c:13:
+> > > > include/linux/mfd/stmfx.h:7:9: warning: 'MFD_STMFX_H' is used as a
+> > > > header guard here, followed by #define of a different macro
+> > > > [-Wheader-guard]
+> > > > 
+> > > > Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/475
+> > > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > > ---
+> > > >  include/linux/mfd/stmfx.h | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > Applied, thanks.
+> > > 
+> > 
+> > Hi Lee,
+> > 
+> > Thanks for picking it up. It seems this didn't make it into your MFD
+> > pull request for 5.2, was that intentional? It would be nice to avoid
+> > this warning.
+> 
+> Hmm... no it was not intentional.  Not sure what happened there.
+> 
+> I will pick it up for the -rcs.
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 
-I checked the RDMA mailing list and trees and I haven't seen this
-reported/fixed yet (forgive me if it has) but when building for arm32
-with multi_v7_defconfig and the following configs (distilled from
-allyesconfig):
+Thank you, I appreciate it!
 
-CONFIG_INFINIBAND=y
-CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
-CONFIG_INFINIBAND_USER_ACCESS=y
-CONFIG_MLX5_CORE=y
-CONFIG_MLX5_INFINIBAND=y
-
-The following link time errors occur:
-
-arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: in function `mlx5_ib_alloc_dm':
-main.c:(.text+0x60c): undefined reference to `__aeabi_uldivmod'
-arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_alloc_sw_icm':
-cmd.c:(.text+0x6d4): undefined reference to `__aeabi_uldivmod'
-arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_dealloc_sw_icm':
-cmd.c:(.text+0x9ec): undefined reference to `__aeabi_uldivmod'
-
-Bisect log:
-
-git bisect start
-# good: [e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd] Linux 5.1
-git bisect good e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
-# bad: [63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd] Merge tag 'gcc-plugins-v5.2-rc1' of ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/kees/linux
-git bisect bad 63863ee8e2f6f6ae47be3dff4af2f2806f5ca2dd
-# good: [80f232121b69cc69a31ccb2b38c1665d770b0710] Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next
-git bisect good 80f232121b69cc69a31ccb2b38c1665d770b0710
-# good: [a2d635decbfa9c1e4ae15cb05b68b2559f7f827c] Merge tag 'drm-next-2019-05-09' of git://anongit.freedesktop.org/drm/drm
-git bisect good a2d635decbfa9c1e4ae15cb05b68b2559f7f827c
-# bad: [8e4ff713ce313dcabbb60e6ede1ffc193e67631f] Merge tag 'rtc-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/abelloni/linux
-git bisect bad 8e4ff713ce313dcabbb60e6ede1ffc193e67631f
-# good: [055128ee008b00fba14e3638e7e84fc2cff8d77d] Merge tag 'dmaengine-5.2-rc1' of git://git.infradead.org/users/vkoul/slave-dma
-git bisect good 055128ee008b00fba14e3638e7e84fc2cff8d77d
-# bad: [abde77eb5c66b2f98539c4644b54f34b7e179e6b] Merge branch 'for-5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup
-git bisect bad abde77eb5c66b2f98539c4644b54f34b7e179e6b
-# good: [3b70508a6bfbdc78b565e9da22fd98483263494e] RDMA/mlx5: Create flow table with max size supported
-git bisect good 3b70508a6bfbdc78b565e9da22fd98483263494e
-# bad: [e7a5b4aafd82771f8924905c208d5d236ddcb671] RDMA/device: Don't fire uevent before device is fully initialized
-git bisect bad e7a5b4aafd82771f8924905c208d5d236ddcb671
-# good: [dd05cb828d0ebecd3d772075fccb85ec3618bedf] RDMA: Get rid of iw_cm_verbs
-git bisect good dd05cb828d0ebecd3d772075fccb85ec3618bedf
-# bad: [a808273a495c657e33281b181fd7fcc2bb28f662] RDMA/verbs: Add a DMA iterator to return aligned contiguous memory blocks
-git bisect bad a808273a495c657e33281b181fd7fcc2bb28f662
-# good: [3a4ef2e2b5cf9a34bcc66c0d33f7eba180a14535] RDMA/rdmavt: Catch use-after-free access of AH structures
-git bisect good 3a4ef2e2b5cf9a34bcc66c0d33f7eba180a14535
-# bad: [33cde96fb5d7ae36207541c8a832d7fae3cadbde] IB/mlx5: Device resource control for privileged DEVX user
-git bisect bad 33cde96fb5d7ae36207541c8a832d7fae3cadbde
-# good: [4056b12efd43248d8331b6ed93df5ea5250106a9] IB/mlx5: Warn on allocated MEMIC buffers during cleanup
-git bisect good 4056b12efd43248d8331b6ed93df5ea5250106a9
-# bad: [25c13324d03d004f9e8071bf5bf5d5c6fdace71e] IB/mlx5: Add steering SW ICM device memory type
-git bisect bad 25c13324d03d004f9e8071bf5bf5d5c6fdace71e
-# first bad commit: [25c13324d03d004f9e8071bf5bf5d5c6fdace71e] IB/mlx5: Add steering SW ICM device memory type
-
-DIV_ROUND_UP is u64 / u32 in this case. I think DIV_ROUND_UP_ULL is
-needed but I am not sure if that has any unintended side effects so I
-didn't want to send a patch.
-
-I would appreciate if you guys could look into this.
-
-Cheers,
 Nathan
