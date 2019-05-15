@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA860C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CEAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8BA2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F002053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921059;
-	bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
+	s=default; t=1557921077;
+	bh=UjCmd7J2iUazaY7PNJkpgdb79FJriDZ/S84sBfScR5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VZ42PKU1J8KgfjrPiCEy7AfW1jI9mvR8adx3wu/CNxQyxF0jPrvQ5HwLR/Y8Sc2Si
-	 M1eIS4uFOhSThXC2DJv/02VQG1KHv+UVQoHzLnb0R6EpZAHRzDopPJ1fLUYs1N+p4C
-	 Df9S30EQAylp6+2d2XiLTU5kmaoZp4eVPSVqFsPo=
+	b=ISSR/fF27Ru5cvtE4kop39sznskFJ3hJ7mXLQdTBnBwsNhphHxyu62TZBp7F2YdAX
+	 uVhbq0F9fXfLalcZIAXsINtwfRQIzhVMIvPnuVW9EpUPJJxJu7D2UzV2P/6D5R6Qb8
+	 dnvPzF8ubJ6CeQQPMHM2ITbl54CtQsJUsXCVsxZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfEOLu5 (ORCPT
+        id S1731580AbfEOLvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:50:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59988 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:51:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731368AbfEOLVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:55 -0400
+        id S1729194AbfEOLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CAA220862;
-        Wed, 15 May 2019 11:21:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54DBB20818;
+        Wed, 15 May 2019 11:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919314;
-        bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
+        s=default; t=1557919298;
+        bh=UjCmd7J2iUazaY7PNJkpgdb79FJriDZ/S84sBfScR5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F8HfI6DFv37lSAd8UmGppqpupkU0tyzwbwHQw+vOoIiivdZWjZtnr+Y7GszMoHHMu
-         1W/4sHahKm8Fn3+rRvQpi/Cb3cSoo0vnaoJbriRWnDTo+Ej/YRvL2wD9ZeK28adI90
-         RyWrr5mfXTcksforzvcLxnBr7YBVmiPQKQMFv5j4=
+        b=ht/nBkAQmJazDAph1gAFhJe497MVrXnHiDkrZtb1OWqrOIvmia/pxS3cKs1ZHlTg7
+         nZpAXv6JKnU1GAD/l0k5bmSmAW13Shk802fZKy2tpraTiYlKyBlsXU/xem0giUslBl
+         DvJjhTprQC1ARrQuL7Dqg6cgeqgqFL9ePoyifPOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/113] clocksource/drivers/oxnas: Fix OX820 compatible
-Date:   Wed, 15 May 2019 12:55:19 +0200
-Message-Id: <20190515090655.665218556@linuxfoundation.org>
+Subject: [PATCH 4.19 022/113] mac80211: fix memory accounting with A-MSDU aggregation
+Date:   Wed, 15 May 2019 12:55:13 +0200
+Message-Id: <20190515090655.165980920@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,29 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
+[ Upstream commit eb9b64e3a9f8483e6e54f4e03b2ae14ae5db2690 ]
 
-The OX820 compatible is wrong is the driver, fix it.
+skb->truesize can change due to memory reallocation or when adding extra
+fragments. Adjust fq->memory_usage accordingly
 
-Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
-Reported-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/timer-oxnas-rps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/tx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
-index eed6feff8b5f2..30c6f4ce672b3 100644
---- a/drivers/clocksource/timer-oxnas-rps.c
-+++ b/drivers/clocksource/timer-oxnas-rps.c
-@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
- TIMER_OF_DECLARE(ox810se_rps,
- 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
- TIMER_OF_DECLARE(ox820_rps,
--		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
-+		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 743cde66aaf62..2f726cde9998b 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -3185,6 +3185,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	u8 max_subframes = sta->sta.max_amsdu_subframes;
+ 	int max_frags = local->hw.max_tx_fragments;
+ 	int max_amsdu_len = sta->sta.max_amsdu_len;
++	int orig_truesize;
+ 	__be16 len;
+ 	void *data;
+ 	bool ret = false;
+@@ -3218,6 +3219,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	if (!head)
+ 		goto out;
+ 
++	orig_truesize = head->truesize;
+ 	orig_len = head->len;
+ 
+ 	if (skb->len + head->len > max_amsdu_len)
+@@ -3272,6 +3274,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	*frag_tail = skb;
+ 
+ out_recalc:
++	fq->memory_usage += head->truesize - orig_truesize;
+ 	if (head->len != orig_len) {
+ 		flow->backlog += head->len - orig_len;
+ 		tin->backlog_bytes += head->len - orig_len;
 -- 
 2.20.1
 
