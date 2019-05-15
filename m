@@ -2,116 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C862C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA141C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFD72089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920784;
-	bh=EA6NedQph8PMX3qsnEJopeDYubZLnPwmefdEEmbJ5RY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MDTFzdfBoiEJb9bOThFQkt5k7V2UcC5M88PgEfW3n4EPejeMHMOuKP6wXwCbfrZw/
-	 LvOduwh3PZ+PTHlX41kG1F/hBe2fnxw2Wu21k19zs3nhJxT33IwBroAJB0gYL92rTp
-	 X7mZwwSjV5WSADyNpG1jLmPg9RTC6Gkx84fBSY5g=
+	by mail.kernel.org (Postfix) with ESMTP id 6D9E32053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JeFk7xcC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbfEOLqW (ORCPT
+        id S1732111AbfEOLqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731995AbfEOLZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCB812084F;
-        Wed, 15 May 2019 11:25:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919525;
-        bh=EA6NedQph8PMX3qsnEJopeDYubZLnPwmefdEEmbJ5RY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2m/3vszLu1F1BTj0CtRo8Dny7Yct94igUq97KSK6xOKWo0RzcmTqXkssW6xWtGxG
-         ZrXi2RGqwabCPlGNQmF9iNB40abPSNOeOmBc+eddgkRpGgN6gDaCZJgQvIINwoIP1g
-         2C3XeiJFBsIKv5H7shFgBGBK4m//y2h+fHEKQZV8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rick Lindsley <ricklind@vnet.linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 108/113] powerpc/book3s/64: check for NULL pointer in pgd_alloc()
-Date:   Wed, 15 May 2019 12:56:39 +0200
-Message-Id: <20190515090701.876183332@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
-References: <20190515090652.640988966@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:46:35 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:59972 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731686AbfEOLqc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:46:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4FBk9X7066201;
+        Wed, 15 May 2019 06:46:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1557920769;
+        bh=ErZPSnkvpW1ltnGA1FPiw4W2WDwUubKfvtcFuldMMbo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=JeFk7xcC5uF8iif4I2oxfzx5DC25I04BKsRowLeWGNJiOLKwhsC9BszWU9wc2hyhQ
+         tmocg2hT+SJRAtzTALA3XtvHx+8ofLS4OlrR5xYHTThVMrti7e6vOhmHWmdoQOVKP1
+         KGS+N7F+oBTZVQUNX7E3U2vBnMv5dM14Wt8DGKpM=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4FBk9UR066924
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 May 2019 06:46:09 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
+ May 2019 06:46:09 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 15 May 2019 06:46:09 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4FBk4qH020658;
+        Wed, 15 May 2019 06:46:05 -0500
+Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <20190514170931.56312-1-sboyd@kernel.org>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <7d38658e-02f5-d6f4-ca66-5fdb57fb0352@ti.com>
+Date:   Wed, 15 May 2019 17:16:03 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Lindsley <ricklind@linux.vnet.ibm.com>
+On 14/05/19 10:39 PM, Stephen Boyd wrote:
+> Now that we've gotten rid of clk_readl() we can remove io.h from the
+> clk-provider header and push out the io.h include to any code that isn't
+> already including the io.h header but using things like readl/writel,
+> etc.
 
-commit f39356261c265a0689d7ee568132d516e8b6cecc upstream.
+For mach-davinci and drivers/clk/davinci
 
-When the memset code was added to pgd_alloc(), it failed to consider
-that kmem_cache_alloc() can return NULL. It's uncommon, but not
-impossible under heavy memory contention. Example oops:
+Acked-by: Sekhar Nori <nsekhar@ti.com>
 
-  Unable to handle kernel paging request for data at address 0x00000000
-  Faulting instruction address: 0xc0000000000a4000
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE SMP NR_CPUS=2048 NUMA pSeries
-  CPU: 70 PID: 48471 Comm: entrypoint.sh Kdump: loaded Not tainted 4.14.0-115.6.1.el7a.ppc64le #1
-  task: c000000334a00000 task.stack: c000000331c00000
-  NIP:  c0000000000a4000 LR: c00000000012f43c CTR: 0000000000000020
-  REGS: c000000331c039c0 TRAP: 0300   Not tainted  (4.14.0-115.6.1.el7a.ppc64le)
-  MSR:  800000010280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44022840  XER: 20040000
-  CFAR: c000000000008874 DAR: 0000000000000000 DSISR: 42000000 SOFTE: 1
-  ...
-  NIP [c0000000000a4000] memset+0x68/0x104
-  LR [c00000000012f43c] mm_init+0x27c/0x2f0
-  Call Trace:
-    mm_init+0x260/0x2f0 (unreliable)
-    copy_mm+0x11c/0x638
-    copy_process.isra.28.part.29+0x6fc/0x1080
-    _do_fork+0xdc/0x4c0
-    ppc_clone+0x8/0xc
-  Instruction dump:
-  409e000c b0860000 38c60002 409d000c 90860000 38c60004 78a0d183 78a506a0
-  7c0903a6 41820034 60000000 60420000 <f8860000> f8860008 f8860010 f8860018
-
-Fixes: fc5c2f4a55a2 ("powerpc/mm/hash64: Zero PGD pages on allocation")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Rick Lindsley <ricklind@vnet.linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/include/asm/book3s/64/pgalloc.h |    3 +++
- 1 file changed, 3 insertions(+)
-
---- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-@@ -83,6 +83,9 @@ static inline pgd_t *pgd_alloc(struct mm
- 
- 	pgd = kmem_cache_alloc(PGT_CACHE(PGD_INDEX_SIZE),
- 			       pgtable_gfp_flags(mm, GFP_KERNEL));
-+	if (unlikely(!pgd))
-+		return pgd;
-+
- 	/*
- 	 * Don't scan the PGD for pointers, it contains references to PUDs but
- 	 * those references are not full pointers and so can't be recognised by
-
-
+Thanks,
+Sekhar
