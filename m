@@ -2,145 +2,174 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C1AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C52C9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2698F20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U2X6HEGg"
+	by mail.kernel.org (Postfix) with ESMTP id 979B320578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557920869;
+	bh=/Knt8xjcoJe8gqAS3xYIiKbzWv7WPMOG1/F8dNUlEno=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wPGmWC5nXB5lU0V0s7YNASe64EyLGXYvuTYPRKpMrT5fN0cLPC6gai3oBoVxcBRWa
+	 C7h6a/6ffQ8Ha1xc6G/QWhshX8qnY01cK8BqUZ2ES8spI6F+lwvaujIRQYIUWgm6o2
+	 h+uDKclLQRGCPI3SFGnyj4oA86Jff47edtVlNohI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731827AbfEOLYd (ORCPT
+        id S1732046AbfEOLrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:24:33 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19659 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731805AbfEOLY1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:27 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdbf6c20000>; Wed, 15 May 2019 04:23:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 15 May 2019 04:24:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 04:24:26 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 May
- 2019 11:24:26 +0000
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.54) by
- HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 15 May 2019 11:24:26 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com (20.178.196.24) by
- BYAPR12MB2888.namprd12.prod.outlook.com (20.179.91.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.21; Wed, 15 May 2019 11:24:22 +0000
-Received: from BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::e843:91f7:56c:73e8]) by BYAPR12MB3398.namprd12.prod.outlook.com
- ([fe80::e843:91f7:56c:73e8%5]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 11:24:22 +0000
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     Jonathan Hunter <jonathanh@nvidia.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        "Krishna Yarlagadda" <kyarlagadda@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-Subject: Re: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
-Thread-Topic: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
-Thread-Index: AQHVChJyTuikRwKAUUyx+CcmS+4wvqZqXBUAgACAP+CAARKPAIAAHQTz
-Date:   Wed, 15 May 2019 11:24:22 +0000
-Message-ID: <BYAPR12MB3398ED52051F5BFA08D7B3A6C2090@BYAPR12MB3398.namprd12.prod.outlook.com>
-References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
- <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
- <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
- <BYAPR12MB33986B88CF3A30036E3F1F04C2080@BYAPR12MB3398.namprd12.prod.outlook.com>,<20190515093522.GC5613@sirena.org.uk>
-In-Reply-To: <20190515093522.GC5613@sirena.org.uk>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=skomatineni@nvidia.com; 
-x-originating-ip: [24.176.232.13]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9a389552-fcc3-42fd-d114-08d6d927e157
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR12MB2888;
-x-ms-traffictypediagnostic: BYAPR12MB2888:
-x-microsoft-antispam-prvs: <BYAPR12MB2888F1D7A3D1AB4DE35F95E1C2090@BYAPR12MB2888.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(39860400002)(396003)(199004)(189003)(6916009)(102836004)(66066001)(54906003)(229853002)(256004)(6506007)(478600001)(14454004)(71200400001)(71190400001)(86362001)(6116002)(2906002)(7736002)(66476007)(4326008)(186003)(9686003)(81166006)(8676002)(68736007)(11346002)(81156014)(446003)(486006)(8936002)(3846002)(73956011)(55016002)(52536014)(5660300002)(66446008)(99286004)(64756008)(66556008)(6436002)(66946007)(76116006)(7696005)(76176011)(25786009)(74316002)(53936002)(6246003)(26005)(33656002)(305945005)(476003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2888;H:BYAPR12MB3398.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nvidia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: h+6GLRc1A+sEBDIzX0BGHQksHEmu8SyHtqJdQTrYbCy5w9fnmgKKWV9geCxLUqWmCDSN+k/hGfkaowDvFnYejaHWaHOYzBr58WZw8aync2jTaK0M/wS6GbTkpHjvS5J+3rM0qBYDKDctYaOam57ksl2uhp1qQKZ3uAz8k0Ng1eDMMD1c+/dWkdp2vaEOCN/IOsPJ50pYb4/qWO+rB2SOPTSnCQYP+othZjVei6HPgBMHWDvp60jymgNkxd8eMg7Ub/NK1ffkzZ8Z9HWEgwBibRVlU7tYzbVRAnCWSzpANeSSceWPmYuk9UAD+bv/ZLeNIo/l6KQjzBGmvVu6/amDgBlahCRFDPD2nJCwnZrIegozGvuIDjygWWVuuJvESTTI5gbxoVffK2E+5+3BpRDsFaJQbKZgcf7zjwK6sT6+toU=
+        Wed, 15 May 2019 07:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35146 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731783AbfEOLYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E8932084F;
+        Wed, 15 May 2019 11:24:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919470;
+        bh=/Knt8xjcoJe8gqAS3xYIiKbzWv7WPMOG1/F8dNUlEno=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1a9hfWrKhmZfHCNJY7E71fU+nYpx//MxbpFm1upodP66GgbchJdgjkjvA4uJrmTHe
+         HzHv2zxnT6bJlQ5goAxffBGOcvBFB2fOhIrRrUyEkZj3R7eIprSjmFmCsRzIiDZ9pz
+         Qes7UDLd20PPVnZ4o5CDKcr6ens7+RKjl24Scn/w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        David Jeffery <djeffery@redhat.com>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 085/113] Dont jump to compute_result state from check_result state
+Date:   Wed, 15 May 2019 12:56:16 +0200
+Message-Id: <20190515090700.085990812@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
+References: <20190515090652.640988966@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a389552-fcc3-42fd-d114-08d6d927e157
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 11:24:22.5275
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2888
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1557919426; bh=JeH8eqv+lXYcPjDvBywwbC9f2Ip3KnltI9obfH5lE+Q=;
-        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
-         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
-         x-microsoft-antispam:x-ms-traffictypediagnostic:
-         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
-         x-forefront-prvs:x-forefront-antispam-report:received-spf:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
-         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=U2X6HEGgqdYQjZYMzAPA48gRYv9szkbYqpuKbWc3M/LQGd6cpKq8K59xTRajIKSKu
-         kwl5g9tS6vZIr4SzneQwhGWa/+XGHAoWDBYuS1rGCGHKW8aqQrUdf0Gae7mWMB3fll
-         Rcd90mnxTxDw9IkJ1DTJ0MOGnQMiuk8bv0K4pKzO2yTywCJuXBBiJUUPuP5eS4VsN2
-         MH7+Ign8JrE/IBBvJM7TNK1nXNwUO0UtIH90MgGrUFtpoF0AZZ3LWnpVuzo9AHnal/
-         0tG8QjRDn0pyBQgMsD6PJu4oqaGtG4rf8wM8yKBF/y4mT3awBp+kK3bmW62x3g/tUW
-         LyLYZllAW7w5A==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > Tegra SPI doesn=92t support inter byte delay directly to meet some SPI =
-slave requirements.
-> > So we use GPIO control CS in parallel with a dummy HW CS and use inacti=
-ve cycles delay of SPI controller to mimic inter byte delay.
+From: Nigel Croxon <ncroxon@redhat.com>
 
-> Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
+commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef upstream.
 
-I did changed but looks like it didn't made diff. Will try with different e=
-mail client.
+Changing state from check_state_check_result to
+check_state_compute_result not only is unsafe but also doesn't
+appear to serve a valid purpose.  A raid6 check should only be
+pushing out extra writes if doing repair and a mis-match occurs.
+The stripe dev management will already try and do repair writes
+for failing sectors.
 
-> Please don't ignore review comments, people are generally making them
-for a reason and are likely to have the same concerns if issues remain
-unaddressed.  Having to repeat the same comments can get repetitive and
-make people question the value of time spent reviewing.  If you disagree
-with the review comments that's fine but you need to reply and discuss
-your concerns so that the reviewer can understand your decisions.
+This patch makes the raid6 check_state_check_result handling
+work more like raid5's.  If somehow too many failures for a
+check, just quit the check operation for the stripe.  When any
+checks pass, don't try and use check_state_compute_result for
+a purpose it isn't needed for and is unsafe for.  Just mark the
+stripe as in sync for passing its parity checks and let the
+stripe dev read/write code and the bad blocks list do their
+job handling I/O errors.
+
+Repro steps from Xiao:
+
+These are the steps to reproduce this problem:
+1. redefined OPT_MEDIUM_ERR_ADDR to 12000 in scsi_debug.c
+2. insmod scsi_debug.ko dev_size_mb=11000  max_luns=1 num_tgts=1
+3. mdadm --create /dev/md127 --level=6 --raid-devices=5 /dev/sde1 /dev/sde2 /dev/sde3 /dev/sde5 /dev/sde6
+sde is the disk created by scsi_debug
+4. echo "2" >/sys/module/scsi_debug/parameters/opts
+5. raid-check
+
+It panic:
+[ 4854.730899] md: data-check of RAID array md127
+[ 4854.857455] sd 5:0:0:0: [sdr] tag#80 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.859246] sd 5:0:0:0: [sdr] tag#80 Sense Key : Medium Error [current]
+[ 4854.860694] sd 5:0:0:0: [sdr] tag#80 Add. Sense: Unrecovered read error
+[ 4854.862207] sd 5:0:0:0: [sdr] tag#80 CDB: Read(10) 28 00 00 00 2d 88 00 04 00 00
+[ 4854.864196] print_req_error: critical medium error, dev sdr, sector 11656 flags 0
+[ 4854.867409] sd 5:0:0:0: [sdr] tag#100 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.869469] sd 5:0:0:0: [sdr] tag#100 Sense Key : Medium Error [current]
+[ 4854.871206] sd 5:0:0:0: [sdr] tag#100 Add. Sense: Unrecovered read error
+[ 4854.872858] sd 5:0:0:0: [sdr] tag#100 CDB: Read(10) 28 00 00 00 2e e0 00 00 08 00
+[ 4854.874587] print_req_error: critical medium error, dev sdr, sector 12000 flags 4000
+[ 4854.876456] sd 5:0:0:0: [sdr] tag#101 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.878552] sd 5:0:0:0: [sdr] tag#101 Sense Key : Medium Error [current]
+[ 4854.880278] sd 5:0:0:0: [sdr] tag#101 Add. Sense: Unrecovered read error
+[ 4854.881846] sd 5:0:0:0: [sdr] tag#101 CDB: Read(10) 28 00 00 00 2e e8 00 00 08 00
+[ 4854.883691] print_req_error: critical medium error, dev sdr, sector 12008 flags 4000
+[ 4854.893927] sd 5:0:0:0: [sdr] tag#166 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.896002] sd 5:0:0:0: [sdr] tag#166 Sense Key : Medium Error [current]
+[ 4854.897561] sd 5:0:0:0: [sdr] tag#166 Add. Sense: Unrecovered read error
+[ 4854.899110] sd 5:0:0:0: [sdr] tag#166 CDB: Read(10) 28 00 00 00 2e e0 00 00 10 00
+[ 4854.900989] print_req_error: critical medium error, dev sdr, sector 12000 flags 0
+[ 4854.902757] md/raid:md127: read error NOT corrected!! (sector 9952 on sdr1).
+[ 4854.904375] md/raid:md127: read error NOT corrected!! (sector 9960 on sdr1).
+[ 4854.906201] ------------[ cut here ]------------
+[ 4854.907341] kernel BUG at drivers/md/raid5.c:4190!
+
+raid5.c:4190 above is this BUG_ON:
+
+    handle_parity_checks6()
+        ...
+        BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
+
+Cc: <stable@vger.kernel.org> # v3.16+
+OriginalAuthor: David Jeffery <djeffery@redhat.com>
+Cc: Xiao Ni <xni@redhat.com>
+Tested-by: David Jeffery <djeffery@redhat.com>
+Signed-off-by: David Jeffy <djeffery@redhat.com>
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/raid5.c |   19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -4221,26 +4221,15 @@ static void handle_parity_checks6(struct
+ 	case check_state_check_result:
+ 		sh->check_state = check_state_idle;
+ 
++		if (s->failed > 1)
++			break;
+ 		/* handle a successful check operation, if parity is correct
+ 		 * we are done.  Otherwise update the mismatch count and repair
+ 		 * parity if !MD_RECOVERY_CHECK
+ 		 */
+ 		if (sh->ops.zero_sum_result == 0) {
+-			/* both parities are correct */
+-			if (!s->failed)
+-				set_bit(STRIPE_INSYNC, &sh->state);
+-			else {
+-				/* in contrast to the raid5 case we can validate
+-				 * parity, but still have a failure to write
+-				 * back
+-				 */
+-				sh->check_state = check_state_compute_result;
+-				/* Returning at this point means that we may go
+-				 * off and bring p and/or q uptodate again so
+-				 * we make sure to check zero_sum_result again
+-				 * to verify if p or q need writeback
+-				 */
+-			}
++			/* Any parity checked was correct */
++			set_bit(STRIPE_INSYNC, &sh->state);
+ 		} else {
+ 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
+ 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery)) {
 
 
-If you are referring to comment from Jon on updating commit, I didn't ignor=
-ed. I am just waiting if any more comments from you or others before postin=
-g updated patch.=20
-
-But I see you applied patch now. So how should I post with updated commit?=
