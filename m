@@ -2,91 +2,114 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25952C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FBBC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC82720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920285;
-	bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joDSEJJ2BdrTGKbg+slI1KnvseyjeItVxejlSfzFYV9l1bexCrajJqdXn/QIFIMAY
-	 dKkIF44+tvh1JFbG+P5p7XR/gGrIZ3zYIuAoL+l5nCuZUVSehEg3wu/9Almb1ODJXj
-	 QI8N2O6mevAjgDBnk07tCp8E+QvIJRQBSO/BUROE=
+	by mail.kernel.org (Postfix) with ESMTP id B842B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oaroJl5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbfEOLiD (ORCPT
+        id S1733064AbfEOLiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:38:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731226AbfEOLb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28A5A206BF;
-        Wed, 15 May 2019 11:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919886;
-        bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCV4y51TQguAiyFowtvoomoQiInWXefBFY0DnSyDNXMt/ysgQwWdAjZYN90nEbzHN
-         OMr4ac1glrq6pYBkcpPrP6SO7q7F++OPOzRJgx+nlQ3rX9LWZaFUVWDegme6MerQ/N
-         7thILZXbOwln+nEhrpp+emVvLWO9Jw82uZLZUJjc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 132/137] powerpc/booke64: set RI in default MSR
-Date:   Wed, 15 May 2019 12:56:53 +0200
-Message-Id: <20190515090703.457545678@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:38:08 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:40437 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727962AbfEOLiG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:38:06 -0400
+Received: by mail-ua1-f68.google.com with SMTP id d4so891193uaj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qhei19leC0v0ZA7DjLdtqOfvCqcIJBYFgz9DlYcngkI=;
+        b=oaroJl5NO9j75iHIVOTNAlnBr/aL4E1ohUkTQsEeea3XZJ4vkAJGhQEDeBrR6d9ESr
+         zglYQaxjZnMOHQ3PUAzn9NB1Y1VnE6M/XP5FhlAis8HoPvrB2vebngrgqVa63OIQlFjj
+         3QJBzbCLyw2i4gU1XWgA1ofiQgv26zC0eaoEgMsgG+D/RcTaw4TZ64Sk8h/VEN093i2D
+         VBSUyrGXyWK7qYJQizQPcwPjf6UcDtZ0n8pIPGoRQfW3jieIYYVPlhywkXl3NSklXSgi
+         blezqhaxahIUTuQ1COcVUiDME7s0xvpY2+3SXnOQNVSUFpIJH4Fs8c0pf+ZNxGB28k6K
+         xqKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qhei19leC0v0ZA7DjLdtqOfvCqcIJBYFgz9DlYcngkI=;
+        b=Lr41/RsCPCrwbC5CASDtnfO0R6aVyNcPQpXLjj4QJPRkQsTZuqy4Ye3Ki+qxkQKkNt
+         v4ITTa1jTmB8sZl8pvlAsa7/XrNwgyHOLDW1yFCALXp7hcA5kGQO+d5G/yzpV+1qX8Xr
+         Xwa/B+WtUzJGNSqJ71DOo27yWP8+saga7PjF2IZGEGThebLxcTRxsQIhJRlpq6seG8gC
+         WRW6PgAVSBqSYdjgy1J9HUNZ3EKDYNjiOw8YS79hVND2vnZEFjk4fsTvEiPTD1iLWrXl
+         KB8E1f+aEKUb1DqTbaI6Xjd1BkO0vh+2SQswTVfbUuLQTvhP3EBnFcCqTlZOifxvHyda
+         8PSw==
+X-Gm-Message-State: APjAAAWhMlG/s0Z7LxUOovbu/Wkkhvq9RVACKBOM+dX6XCdicOtWZxe6
+        OT7G5nm5pSkF91sVi5n4+jCJ08rxUFE1GpCvprIT+g==
+X-Google-Smtp-Source: APXvYqx2ho4ZoBSxolOdsewMdtUC+zzflgrlf7FvoPJG2+KVlkzz73geamFsVboy/g6Mx0Z2VtH6zsmbje4Xwvjdgv4=
+X-Received: by 2002:ab0:2399:: with SMTP id b25mr300951uan.129.1557920285743;
+ Wed, 15 May 2019 04:38:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190513091548.16674-1-narmstrong@baylibre.com> <20190513091548.16674-2-narmstrong@baylibre.com>
+In-Reply-To: <20190513091548.16674-2-narmstrong@baylibre.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 15 May 2019 13:37:29 +0200
+Message-ID: <CAPDyKFr9HVLNpqncs6YhGvqPdXCk6mtVSPVcWDvmnrKiNB+ACQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk property
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        DTML <devicetree@vger.kernel.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Mon, 13 May 2019 at 11:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
+> makes any DDR access from the MMC controller fail.
+>
+> Add the amlogic,ddr-access-quirk property so signal this particular
+> controller has this bug and needs a quirk to work properly.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> index 13e70409e8ac..f8914dab06c6 100644
+> --- a/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt
+> @@ -22,6 +22,10 @@ Required properties:
+>    clock rate requested by the MMC core.
+>  - resets     : phandle of the internal reset line
+>
+> +Optional properties:
+> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
+> +  the G12A SDIO controller.
 
-commit 5266e58d6cd90ac85c187d673093ad9cb649e16d upstream.
+As stated on the other patch, may I suggest to use DRAM instead of DDR.
 
-Set RI in the default kernel's MSR so that the architected way of
-detecting unrecoverable machine check interrupts has a chance to work.
-This is inline with the MSR setup of the rest of booke powerpc
-architectures configured here.
+Moreover, please mention that this is about the internal DMA support
+of the controller.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +
+>  Example:
+>
+>         sd_emmc_a: mmc@70000 {
+> --
+> 2.21.0
+>
 
----
- arch/powerpc/include/asm/reg_booke.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/powerpc/include/asm/reg_booke.h
-+++ b/arch/powerpc/include/asm/reg_booke.h
-@@ -41,7 +41,7 @@
- #if defined(CONFIG_PPC_BOOK3E_64)
- #define MSR_64BIT	MSR_CM
- 
--#define MSR_		(MSR_ME | MSR_CE)
-+#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
- #define MSR_KERNEL	(MSR_ | MSR_64BIT)
- #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
- #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
-
-
+Kind regards
+Uffe
