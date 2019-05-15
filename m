@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D582C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD240C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECE921744
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8049E2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918102;
-	bh=COjpMTKRrd6+rqyZlyYzLSofHABkiXx5LjRNNSNKVjo=;
+	s=default; t=1557918105;
+	bh=oHPELByl9M22/Gl9ucSlDkC3SSx/IiY/03J/tm8ILx8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hFIpEfEiJes5VxMnI4BB/sRax4l8omz1HgdoexGx1pTao5R/X7PGI8ipZyq9Mtwex
-	 ctDI4NFDXNcVlEJ0oA+DuV/CapkseEIFjLz9WDOQFjYBzvmDH8O5MwWjcRiUrBwAA4
-	 +k9Lq2J7v62+QcOqmRfXI57LTlbc038jdyOoNFMk=
+	b=yHJ3PyoVJ5I5sT4PsYBzRvnOcBvI+R6csVC10AM5jvyWmzxJifZ/0Z2iXsH+1EWvx
+	 JFmDwvvClmUgItL5PhZR2ipYSAFyw+qXIlPlxsfCqJiPZ6EL3pxPvZAJKEWmggbHyR
+	 ZjE6OBsD1ZbLpVKi0jKD6s0HiT7wxpJMKY0HzNt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfEOLBl (ORCPT
+        id S1727769AbfEOLBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:01:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58678 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727733AbfEOLBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:01:38 -0400
+        id S1727754AbfEOLBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB75D20881;
-        Wed, 15 May 2019 11:01:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BA8F216FD;
+        Wed, 15 May 2019 11:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918097;
-        bh=COjpMTKRrd6+rqyZlyYzLSofHABkiXx5LjRNNSNKVjo=;
+        s=default; t=1557918100;
+        bh=oHPELByl9M22/Gl9ucSlDkC3SSx/IiY/03J/tm8ILx8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IVoeLQOv1bh9JqgMuN7oo81ydeI+zTqJ5JbkpDeRLpeZwXaBNruRK4hVl4+bWVivU
-         gzvUY3Le79JdxAyozu7y0ZmrOrz/mjzVAJRwFSTHU0Cz4CP6ZNxBV4QZQ4PaaX9HFl
-         b7x1rR1mT5Hm/5OBuQjYFzr8sQABiAaWpGsTy3PI=
+        b=JjWuzzo9vm+w1HBU6NE4MTsBB3i2vx0zlNftbM+Eyir7GBtIBIZeWaR/dkBBnZaOl
+         O0+nwisRKEAynxDhFdaEH02gVuceEDGnh6sQOh39HMneZN+/MkBpTXgxZ+eAOpx1xG
+         iN4YACqySrcyKudJ/pyK1PV/rFsPGCcsMeaQYSGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 3.18 64/86] platform/x86: sony-laptop: Fix unintentional fall-through
-Date:   Wed, 15 May 2019 12:55:41 +0200
-Message-Id: <20190515090654.585128581@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 65/86] iio: adc: xilinx: fix potential use-after-free on remove
+Date:   Wed, 15 May 2019 12:55:42 +0200
+Message-Id: <20190515090654.643286016@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,53 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+When cancel_delayed_work() returns, the delayed work may still
+be running. This means that the core could potentially free
+the private structure (struct xadc) while the delayed work
+is still using it. This is a potential use-after-free.
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
+Fix by calling cancel_delayed_work_sync(), which waits for
+any residual work to finish before returning.
 
-return AE_CTRL_TERMINATE;
-
-This fix is based on the following thread of discussion:
-
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/sony-laptop.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4399,14 +4399,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
- 
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index a483747cdc9b9..b520de11fc17f 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1315,7 +1315,7 @@ static int xadc_remove(struct platform_device *pdev)
  	}
--	return AE_CTRL_TERMINATE;
- }
+ 	free_irq(irq, indio_dev);
+ 	clk_disable_unprepare(xadc->clk);
+-	cancel_delayed_work(&xadc->zynq_unmask_work);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ 	kfree(xadc->data);
+ 	kfree(indio_dev->channels);
  
- static int sony_pic_possible_resources(struct acpi_device *device)
+-- 
+2.20.1
+
 
 
