@@ -2,91 +2,138 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA500C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8FBC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FF420675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FD820675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfEOMRF (ORCPT
+        id S1727859AbfEOLCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:17:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19567 "EHLO mga09.intel.com"
+        Wed, 15 May 2019 07:02:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:40818 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbfEOMQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:16:56 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 05:16:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,472,1549958400"; 
-   d="scan'208";a="171938220"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 15 May 2019 05:16:54 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hQsq6-000CjN-5j; Wed, 15 May 2019 20:16:54 +0800
-Date:   Wed, 15 May 2019 20:16:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Matt Sickler <Matt.Sickler@daktronics.com>
-Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] staging: kpc2000: fix alloc_cast.cocci warnings
-Message-ID: <20190515121615.GA52823@lkp-kbuild04>
-References: <201905152009.JVEMePDb%lkp@intel.com>
+        id S1727836AbfEOLCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF55080D;
+        Wed, 15 May 2019 04:02:02 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60A463F703;
+        Wed, 15 May 2019 04:02:00 -0700 (PDT)
+Date:   Wed, 15 May 2019 12:01:58 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, edubezval@gmail.com,
+        rui.zhang@intel.com, javi.merino@kernel.org,
+        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
+        catalin.marinas@arm.com, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
+Message-ID: <20190515110156.ru2wxqvwffqgq3t3@queper01-lin>
+References: <20190515082318.7993-3-quentin.perret@arm.com>
+ <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
+ <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
+ <698400c0-e0a4-4a86-b9df-cdb9bd683c0f@linaro.org>
+ <20190515100748.q3t4kt72h2akdpcs@queper01-lin>
+ <cf1474cb-7e31-7070-b988-a0c4d3f6f081@linaro.org>
+ <20190515102200.s6uq63qnwea6xtpl@vireshk-i7>
+ <20190515104043.vogspxgkapp6qsny@queper01-lin>
+ <20190515104651.tv5odug7ce4zlupc@queper01-lin>
+ <5b55e432-f8b0-91ae-a7de-fe02e0cad322@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <201905152009.JVEMePDb%lkp@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <5b55e432-f8b0-91ae-a7de-fe02e0cad322@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+On Wednesday 15 May 2019 at 12:51:57 (+0200), Daniel Lezcano wrote:
+> On 15/05/2019 12:46, Quentin Perret wrote:
+> > On Wednesday 15 May 2019 at 11:40:44 (+0100), Quentin Perret wrote:
+> 
+> [ ... ]
+> 
+> >> +#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+> >>         if (capacitance) {
+> >>                 ret = update_freq_table(cpufreq_cdev, capacitance);
+> >>                 if (ret) {
+> >>                         cdev = ERR_PTR(ret);
+> >>                         goto remove_ida;
+> >>                 }
+> >> -
+> >> -               cooling_ops = &cpufreq_power_cooling_ops;
+> >> -       } else {
+> >> -               cooling_ops = &cpufreq_cooling_ops;
+> >>         }
+> >> +#endif
+> >> +       cooling_ops = &cpufreq_cooling_ops;
+> > 
+> > Argh, that is actually broken with !capacitance and
+> > THERMAL_GOV_POWER_ALLOCATOR=y ... Perhaps it's best to keep the two
+> > thermal_cooling_device_ops struct separated in the end.
+> 
+> Or alternatively you can keep one structure but instead of filling the
+> state2power,power2state and getrequestedpower fields in the declaration,
+> you fill them in the if (capacitance) block, no?
 
-drivers/staging/kpc2000/kpc_dma/fileops.c:60:8-26: WARNING: casting value returned by memory allocation function to (struct aio_cb_data *) is useless.
+Something like the below ? Yes, that works too. I'll write a proper
+patch and send that next week or so.
 
- Remove casting the values returned by memory allocation functions
- like kmalloc, kzalloc, kmem_cache_alloc, kmem_cache_zalloc etc.
+Thanks,
+Quentin
 
-Semantic patch information:
- This makes an effort to find cases of casting of values returned by
- kmalloc, kzalloc, kcalloc, kmem_cache_alloc, kmem_cache_zalloc,
- kmem_cache_alloc_node, kmalloc_node and kzalloc_node and removes
- the casting as it is not required. The result in the patch case may
- need some reformatting.
+--->8---
 
-Generated by: scripts/coccinelle/api/alloc/alloc_cast.cocci
+ /* Bind cpufreq callbacks to thermal cooling device ops */
 
-Fixes: 7df95299b94a ("staging: kpc2000: Add DMA driver")
-CC: Matt Sickler <Matt.Sickler@daktronics.com>
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
+ static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
+-       .get_max_state = cpufreq_get_max_state,
+-       .get_cur_state = cpufreq_get_cur_state,
+-       .set_cur_state = cpufreq_set_cur_state,
+-};
+-
+-static struct thermal_cooling_device_ops cpufreq_power_cooling_ops = {
+        .get_max_state          = cpufreq_get_max_state,
+        .get_cur_state          = cpufreq_get_cur_state,
+        .set_cur_state          = cpufreq_set_cur_state,
+-       .get_requested_power    = cpufreq_get_requested_power,
+-       .state2power            = cpufreq_state2power,
+-       .power2state            = cpufreq_power2state,
+ };
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5ac94332248ee017964ba368cdda4ce647e3aba7
-commit: 7df95299b94a63ec67a6389fc02dc25019a80ee8 staging: kpc2000: Add DMA driver
+ /* Notifier for cpufreq policy change */
+@@ -674,18 +667,19 @@ __cpufreq_cooling_register(struct device_node *np,
+                        pr_debug("%s: freq:%u KHz\n", __func__, freq);
+        }
 
- fileops.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/staging/kpc2000/kpc_dma/fileops.c
-+++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -57,7 +57,7 @@ int  kpc_dma_transfer(struct dev_private
- 	
- 	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", priv, kcb, (void*)iov_base, iov_len, ldev);
- 	
--	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
-+	acd = kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
- 	if (!acd){
- 		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
- 		return -ENOMEM;
++       cooling_ops = &cpufreq_cooling_ops;
++#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+        if (capacitance) {
+                ret = update_freq_table(cpufreq_cdev, capacitance);
+                if (ret) {
+                        cdev = ERR_PTR(ret);
+                        goto remove_ida;
+                }
+-
+-               cooling_ops = &cpufreq_power_cooling_ops;
+-       } else {
+-               cooling_ops = &cpufreq_cooling_ops;
++               cooling_ops->get_requested_power = cpufreq_get_requested_power;
++               cooling_ops->state2power = cpufreq_state2power;
++               cooling_ops->power2state = cpufreq_power2state;
+        }
+-
++#endif
+        cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
+                                                  cooling_ops);
+        if (IS_ERR(cdev))
