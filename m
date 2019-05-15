@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1A9C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78843C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F105720881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A80520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919424;
-	bh=judf+XwGOFgEc1K8XR07gJwpkpBZHL9DDk/Stit+E5s=;
+	s=default; t=1557919427;
+	bh=sArjO93LdjXnGm7f5fCgwScBap13y8eJduemGfPgfn4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRGqoy7Es+xed5BZBYKr08kS+mimXfTxUAIpVfqg9WnXqT6z9l63qlu7h7HlQKU3L
-	 x+g4bQeHAGrW5rIFx/nB9oiNLS8v7XcwQ1764CZBiwypktJb2YK0Di6G2WjaXUDyrr
-	 xb6U5edK48q9JRsxfPn5Q96ahs1CmI6zDwDqNkBU=
+	b=OocT6HmwqJgdOVuvUXY4wAbftbKMNny8yWjYFoyT7CRGSVab1A2uvAtgKvI+pY7MW
+	 mMfNUpaUMV/pAiCvIuDMfdwezhw4YSRd6oo+tLVqUTdebvwOVxrFB1V19OtNrIP+Gz
+	 ABoGfOAxNydXV9QCkzIrHOkrabLdqU1ZlbbMVYA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbfEOLXn (ORCPT
+        id S1731705AbfEOLXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34108 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbfEOLXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:41 -0400
+        id S1731694AbfEOLXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A9420862;
-        Wed, 15 May 2019 11:23:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 156A520862;
+        Wed, 15 May 2019 11:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919419;
-        bh=judf+XwGOFgEc1K8XR07gJwpkpBZHL9DDk/Stit+E5s=;
+        s=default; t=1557919422;
+        bh=sArjO93LdjXnGm7f5fCgwScBap13y8eJduemGfPgfn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DdqAtKzTO0NCx3fkQNUEXW4R7n3EoB80XOBwRmFhtlpb2czuyNvi9ExJyhZuzLQjO
-         Z951yYW9EYF0wTCF+IWsDrtFwdLWiSN4AcibilQHTqCfC/crRQ2wrTg3HMBHx94/Uc
-         MnAS01PcckLeEd2rO+Mx5MfBwNRA079K8pvVvjDE=
+        b=GG6THTIzDABEUTvVGbftWogPaBzTNhibcZzq7e4AqEl7ZWHHkGFDtbCzjE+cbquLz
+         iUoiIkCjfwZ3Z8AwQAn09jc4BWAWaS6OdRH9zPc8/ILaweZPFWVmZoHqhamJCcsm3G
+         qALKnliX7s9id0lx/6zCYZDO42khRZaMQY7SErAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 068/113] mm/memory.c: fix modifying of page protection by insert_pfn()
-Date:   Wed, 15 May 2019 12:55:59 +0200
-Message-Id: <20190515090658.700487167@linuxfoundation.org>
+        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 042/113] ocelot: Dont sleep in atomic context (irqs_disabled())
+Date:   Wed, 15 May 2019 12:55:33 +0200
+Message-Id: <20190515090656.813206864@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -64,77 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cae85cb8add35f678cf487139d05e083ce2f570a ]
+[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
 
-Aneesh has reported that PPC triggers the following warning when
-excercising DAX code:
+Preemption disabled at:
+ [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
+ Call trace:
+ [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
+ [<ffff00000808a9a4>] show_stack+0x14/0x20
+ [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
+ [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
+ [<ffff0000080fe890>] __might_sleep+0x50/0x88
+ [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
+ [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
+ [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
+ [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
 
-  IP set_pte_at+0x3c/0x190
-  LR insert_pfn+0x208/0x280
-  Call Trace:
-     insert_pfn+0x68/0x280
-     dax_iomap_pte_fault.isra.7+0x734/0xa40
-     __xfs_filemap_fault+0x280/0x2d0
-     do_wp_page+0x48c/0xa40
-     __handle_mm_fault+0x8d0/0x1fd0
-     handle_mm_fault+0x140/0x250
-     __do_page_fault+0x300/0xd60
-     handle_page_fault+0x18
+Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
 
-Now that is WARN_ON in set_pte_at which is
-
-        VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-
-The problem is that on some architectures set_pte_at() cannot cope with
-a situation where there is already some (different) valid entry present.
-
-Use ptep_set_access_flags() instead to modify the pfn which is built to
-deal with modifying existing PTE.
-
-Link: http://lkml.kernel.org/r/20190311084537.16029-1-jack@suse.cz
-Fixes: b2770da64254 "mm: add vm_insert_mixed_mkwrite()"
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Chandan Rajendra <chandan@linux.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mscc/ocelot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 9c69278173b78..e0010cb870e05 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1796,10 +1796,12 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
- 				goto out_unlock;
- 			}
--			entry = *pte;
--			goto out_mkwrite;
--		} else
--			goto out_unlock;
-+			entry = pte_mkyoung(*pte);
-+			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-+			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-+				update_mmu_cache(vma, addr, pte);
-+		}
-+		goto out_unlock;
- 	}
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index 0bdd3c400c92f..10291198decd6 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -605,7 +605,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
+ 			      struct netdev_hw_addr *hw_addr)
+ {
+ 	struct ocelot *ocelot = port->ocelot;
+-	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
++	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
  
- 	/* Ok, finally just insert the thing.. */
-@@ -1808,7 +1810,6 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 	else
- 		entry = pte_mkspecial(pfn_t_pte(pfn, prot));
- 
--out_mkwrite:
- 	if (mkwrite) {
- 		entry = pte_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+ 	if (!ha)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
