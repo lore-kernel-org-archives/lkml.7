@@ -2,164 +2,133 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194E1C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933CCC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:57:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD482084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C5DD20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:57:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gBB5sus/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kVWsmQN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfEOJ4e (ORCPT
+        id S1726547AbfEOJ5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:56:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38825 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfEOJ4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:56:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d18so1382749wrs.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 02:56:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5JYhbd/vO4XoD/CtHSzLTiUyvf3UwZx+Y3JbyqMKmfs=;
-        b=gBB5sus/t6TCjIaVANYvetAi+rVR0U8RlHgIDuV/jFgGLO+E1mCWhtrSTMhXNFruCm
-         oPrKOEGbTeOD1NtJi1vidX6vzkumsEJOBrlGTQnk8hrfl1chmz5IH8f9cRpeQRJsdiaR
-         YY4qKKN1F0c3u1J9yFL/C5SX10FLE0/hxCSwJYrZ6Hl0aeJ22yn9zSx3wRh5puqiTPyR
-         Kk9DCJ71sIF1+eThGf3kvQ2mzTptKwPEdKUL6Lj4wJ08VOl+Lsw4LOR4suWgQntD8A5+
-         5/DLw2QsC6AceztCAROjPZPOBJNb88rLyqNCJFD2VqR6wwI4RdqabmfoXRyqZkfptEus
-         tDpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5JYhbd/vO4XoD/CtHSzLTiUyvf3UwZx+Y3JbyqMKmfs=;
-        b=qoIXUW7nXFK5yhRqJCzWEoTqsLO6Yidspe7BemmN01phVc9NxOvEjmBNwnREP+0X3w
-         AfhPe4+ZxoyjdWS0/fxLsjVU5RUhlzADgQ9Da3bYlKtjsqJSvnplwfFdAoYjpsE+jLc0
-         ypspvZj3zYSV5qj96CxPNePkPbI+plkCTPKOIDKLWhrC9M0uHIxAY6qV6cTnWxiZQ84F
-         e6esGqDuZnN+q9Bn+O63rTl5HZUdZfI15ytR4ZLgL8vB19CJvgqOnWNNwRR4+WoAtDxl
-         d+wFiPfdmb+sH80kX5vbHYNaZVFwp5Kn5hLU7I+JF8ATskNJcEOzDP0ZOayjVEuKIXaP
-         MOUA==
-X-Gm-Message-State: APjAAAXKU3is1twXEEDqR1/1ZqPe66yuMwuelOA2txJx1aqRL9fod4GU
-        BzGXofTwyFv5thDYpKfeAWlWVQ==
-X-Google-Smtp-Source: APXvYqxozk+6bk7th/l8gbao/9YhKjUJ5EJNO5OynkqEGlmWbYZkWun7AiVJeD9feyohHwCreEO9hQ==
-X-Received: by 2002:adf:b3d1:: with SMTP id x17mr24575739wrd.31.1557914191908;
-        Wed, 15 May 2019 02:56:31 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id j13sm1096094wru.78.2019.05.15.02.56.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 02:56:31 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190515082318.7993-1-quentin.perret@arm.com>
- <20190515082318.7993-3-quentin.perret@arm.com>
- <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
- <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <698400c0-e0a4-4a86-b9df-cdb9bd683c0f@linaro.org>
-Date:   Wed, 15 May 2019 11:56:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 May 2019 05:57:17 -0400
+Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:16610
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfEOJ5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:57:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dppGzgebjPo1AJQyzMCQOUh3IaiJM6Z+MV7oriSNvSg=;
+ b=kVWsmQN8ixeLh67ux0jKYP2oDruZQBMOlZfELJo4eJl2j5to3h8C40DZHZrWzhm2sErF1ZoasNsWEt3ATZhf4Q0xf43th2Inxj68Av6m95sJrDsYesEY5vOezkBHvnxf0JPL+yCWrSEMMwzOeqBzYkMSrqJmZs0jXFS3abhyDkk=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
+ VI1PR04MB5391.eurprd04.prod.outlook.com (20.178.120.209) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Wed, 15 May 2019 09:57:12 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8942:6d16:631:413]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8942:6d16:631:413%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 09:57:12 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local
+ memory
+Thread-Topic: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local
+ memory
+Thread-Index: AQHVCmKqi2RLbkcB50+PlEfeksPwEqZqsaYAgAFCsgA=
+Date:   Wed, 15 May 2019 09:57:12 +0000
+Message-ID: <f4fc0151-5e49-77fd-7736-37cdfe57c268@nxp.com>
+References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
+ <20190514143807.7745-2-laurentiu.tudor@nxp.com>
+ <20190514144210.GA14625@lst.de>
+In-Reply-To: <20190514144210.GA14625@lst.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 859a986c-3961-4da0-91e6-08d6d91bb3ed
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5391;
+x-ms-traffictypediagnostic: VI1PR04MB5391:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <VI1PR04MB5391B5C45057BEA12A932AF8EC090@VI1PR04MB5391.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(136003)(376002)(396003)(39860400002)(189003)(199004)(54094003)(81166006)(53546011)(81156014)(8936002)(8676002)(6506007)(31686004)(54906003)(316002)(76176011)(305945005)(7736002)(3846002)(6916009)(102836004)(2906002)(99286004)(6116002)(229853002)(256004)(6436002)(6486002)(6512007)(66476007)(64756008)(66556008)(5660300002)(44832011)(71190400001)(66066001)(68736007)(71200400001)(26005)(36756003)(66446008)(186003)(4326008)(53936002)(86362001)(6246003)(31696002)(476003)(2616005)(478600001)(14454004)(25786009)(966005)(11346002)(486006)(66946007)(446003)(91956017)(76116006)(73956011)(6306002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5391;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yW0dQZRgz7ZYJQNMRpu6QWAVfaNPn96jxaeYrgkPKE5XLCY1LVm5SCajuAHBEKq8Yf4iT6SoRmQOuA0aW/i40uA2b0fLLd7WYWloTwmOTUQRMALOSFIzyQqjnvI4WjCfPz1RtA+GEFUxqI4VtFiKUPB8P1QOxC5z+OSDuhYdcjYaD+YXKcsdzUfBtIxvS1oZogpfOE6P7AYWgT5J4LoD8xnT8EeX+KXqPgllogNxcpGj8LyFKZi5kNtJSh1OwMQ5EIFIXUFKRw5H42w+vBcpNYEb4W22KJ1Lu28P+AAlqtq97jsyyZ5BDAnG0RDNQhzLsGwkU2NgyNOLCOwHAM498bap0xk1HHKYcmUSlJ3ptocVtu4FkZ87T98KFlbxijT+TsRKtNt0OTx7FjOOlmfnoRU/1g6cI+SSil/KrlureNY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2C2AEA4CE488064C8DE45118DD24BB87@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 859a986c-3961-4da0-91e6-08d6d91bb3ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 09:57:12.3988
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5391
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2019 11:17, Quentin Perret wrote:
-> Hi Daniel,
-> 
-> On Wednesday 15 May 2019 at 11:06:18 (+0200), Daniel Lezcano wrote:
->> On 15/05/2019 10:23, Quentin Perret wrote:
->>> In the current state, the perf_domain struct is fully defined only when
->>> CONFIG_ENERGY_MODEL=y. Since we need to write code that compiles both
->>> with or without that option in the thermal framework, make sure to
->>> actually define the struct regardless of the config option. That allows
->>> to avoid using stubbed accessor functions all the time in code paths
->>> that use the EM.
->>>
->>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->>> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
->>
->> This patch implies the cpu cooling device can be set without the energy
->> model.
->>
->> Isn't it possible to make a strong dependency for the cpu cooling device
->> on the energy model option, add the energy model as default on arm arch
->> and drop this patch?
-> 
-> Right, that should work too.
-> 
->> After all, the cpu cooling is using the em framework.
-> 
-> The reason I did it that way is simply to keep things flexible. If you
-> don't compile in THERMAL_GOV_POWER_ALLOCATOR, you will never use the EM
-> for CPU thermal. So I thought it would be good to not mandate compiling
-> in ENERGY_MODEL in this case -- that should save a bit of space.
-> 
-> But TBH I don't have a strong opinion on this one, so if everybody
-> agrees it's fine to just make CPU_THERMAL depend on ENERGY_MODEL, I'm
-> happy to drop this patch and fix patch 3/3. That would indeed simplify
-> things a bit.
-
-Ok in this case it will be better to drop the 2/3 and add a small series
-doing for the cpu_cooling.c
-
-#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-
-/* structure freq */
-
-/* power2state */
-
-/* state2power*/
-
-/* getrequestedpower */
-
-/* All functions needed for the above */
-
-#endif
-
-static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
-        .get_max_state          = cpufreq_get_max_state,
-        .get_cur_state          = cpufreq_get_cur_state,
-        .set_cur_state          = cpufreq_set_cur_state,
-#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-        .get_requested_power    = cpufreq_get_requested_power,
-        .state2power            = cpufreq_state2power,
-        .power2state            = cpufreq_power2state,
-#endif
-};
-
-So you don't have to care about ENERGY_MODEL to be set as
-THERMAL_GOV_POWER_ALLOCATOR depends on it.
-
-I think the result for cpu_cooling.c will be even more cleaner with the
-em change.
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+T24gMTQuMDUuMjAxOSAxNzo0MiwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+PiBAQCAtMTM2
+LDYgKzEzNywxMCBAQCB2b2lkICpoY2RfYnVmZmVyX2FsbG9jKA0KPj4gICAJCWlmIChzaXplIDw9
+IHBvb2xfbWF4W2ldKQ0KPj4gICAJCQlyZXR1cm4gZG1hX3Bvb2xfYWxsb2MoaGNkLT5wb29sW2ld
+LCBtZW1fZmxhZ3MsIGRtYSk7DQo+PiAgIAl9DQo+PiArDQo+PiArCWlmIChoY2QtPmRyaXZlci0+
+ZmxhZ3MgJiBIQ0RfTE9DQUxfTUVNKQ0KPj4gKwkJcmV0dXJuIGdlbl9wb29sX2RtYV9hbGxvYyho
+Y2QtPmxvY2FsbWVtX3Bvb2wsIHNpemUsIGRtYSk7DQo+IA0KPiBJIHRoaW5rIHRoaXMgY2hlY2sg
+bmVlZHMgdG8gYmUgYmVmb3JlIHRoZSBhYm92ZSBjb2RlIHRvIHVzZSB0aGUgZG1hDQo+IHBvb2xz
+LCBhcyB3ZSBzaG91bGQgYWx3YXlzIHVzZSB0aGUgSENEIGxvY2FsIG1lbW9yeS4gIFByb2JhYmx5
+IGFsbCB0aGUNCj4gd2F5IHVwIGp1c3QgYmVsb3cgdGhlIHNpemUgPT0gMCBjaGVjaywgdGhhdCB3
+YXkgd2UgY2FuIGFsc28gcmVtb3ZlIHRoZQ0KPiBvdGhlciBIQ0RfTE9DQUxfTUVNIGNoZWNrLg0K
+DQpBbHJpZ2h0Lg0KDQo+PiBAQCAtMTY1LDUgKzE3MCwxMCBAQCB2b2lkIGhjZF9idWZmZXJfZnJl
+ZSgNCj4+ICAgCQkJcmV0dXJuOw0KPj4gICAJCX0NCj4+ICAgCX0NCj4+IC0JZG1hX2ZyZWVfY29o
+ZXJlbnQoaGNkLT5zZWxmLnN5c2Rldiwgc2l6ZSwgYWRkciwgZG1hKTsNCj4+ICsNCj4+ICsJaWYg
+KGhjZC0+ZHJpdmVyLT5mbGFncyAmIEhDRF9MT0NBTF9NRU0pDQo+PiArCQlnZW5fcG9vbF9mcmVl
+KGhjZC0+bG9jYWxtZW1fcG9vbCwgKHVuc2lnbmVkIGxvbmcpYWRkciwNCj4+ICsJCQkgICAgICBz
+aXplKTsNCj4+ICsJZWxzZQ0KPj4gKwkJZG1hX2ZyZWVfY29oZXJlbnQoaGNkLT5zZWxmLnN5c2Rl
+diwgc2l6ZSwgYWRkciwgZG1hKTsNCj4gDQo+IFNhbWUgaGVyZS4NCg0KT2suDQoNCj4+IEBAIC01
+MDUsOCArNTA2LDE1IEBAIHN0YXRpYyBpbnQgb2hjaV9pbml0IChzdHJ1Y3Qgb2hjaV9oY2QgKm9o
+Y2kpDQo+PiAgIAl0aW1lcl9zZXR1cCgmb2hjaS0+aW9fd2F0Y2hkb2csIGlvX3dhdGNoZG9nX2Z1
+bmMsIDApOw0KPj4gICAJb2hjaS0+cHJldl9mcmFtZV9ubyA9IElPX1dBVENIRE9HX09GRjsNCj4+
+ICAgDQo+PiAtCW9oY2ktPmhjY2EgPSBkbWFfYWxsb2NfY29oZXJlbnQgKGhjZC0+c2VsZi5jb250
+cm9sbGVyLA0KPj4gLQkJCXNpemVvZigqb2hjaS0+aGNjYSksICZvaGNpLT5oY2NhX2RtYSwgR0ZQ
+X0tFUk5FTCk7DQo+PiArCWlmIChoY2QtPmRyaXZlci0+ZmxhZ3MgJiBIQ0RfTE9DQUxfTUVNKQ0K
+Pj4gKwkJb2hjaS0+aGNjYSA9IGdlbl9wb29sX2RtYV9hbGxvYyhoY2QtPmxvY2FsbWVtX3Bvb2ws
+DQo+PiArCQkJCQkJc2l6ZW9mKCpvaGNpLT5oY2NhKSwNCj4+ICsJCQkJCQkmb2hjaS0+aGNjYV9k
+bWEpOw0KPj4gKwllbHNlDQo+PiArCQlvaGNpLT5oY2NhID0gZG1hX2FsbG9jX2NvaGVyZW50KGhj
+ZC0+c2VsZi5jb250cm9sbGVyLA0KPj4gKwkJCQkJCXNpemVvZigqb2hjaS0+aGNjYSksDQo+PiAr
+CQkJCQkJJm9oY2ktPmhjY2FfZG1hLA0KPj4gKwkJCQkJCUdGUF9LRVJORUwpOw0KPiANCj4gSSB3
+b25kZXIgaWYgd2UgY291bGQganVzdCB1c2UgaGNkX2J1ZmZlcl9hbGxvYy9mcmVlIGhlcmUsIGFs
+dGhvdWdodA0KPiB0aGF0IHdvdWxkIHJlcXVpcmUgdGhlbSB0byBiZSBleHBvcnRlZC4gIEknbGwg
+bGVhdmUgdGhhdCBkZWNpc2lvbiB0bw0KPiB0aGUgcmVsZXZhbnQgbWFpbnRhaW5lcnMsIHRob3Vn
+aC4NCj4gDQo+IEV4Y2VwdCBmb3IgdGhpcyB0aGUgc2VyaWVzIGxvb2tzIGV4YWN0bHkgd2hhdCBJ
+IGhhZCBlbnZpc2lvbmVkIHRvDQo+IGdldCByaWQgb2YgdGhlIGRldmljZSBsb2NhbCBkbWFfZGVj
+bGFyZV9jb2hlcmVudCB1c2UgY2FzZSwgdGhhbmtzIQ0KDQpHbGFkIEkgY291bGQgaGVscC4gT24g
+dGhlIHJlbW90ZXByb2NfdmlydGlvLmMgY2FzZSwgSSBoYWQgYSBjdXJzb3J5IGxvb2sgDQphbmQg
+Zm91bmQgb3V0IHRoYXQgdGhlIGRtYV9kZWNsYXJlX2NvaGVyZW50X21lbW9yeSgpIHVzYWdlIHdh
+cyANCmludHJvZHVjZWQgcXVpdGUgcmVjZW50bHksIGJ5IHRoaXMgcGF0Y2g6DQpodHRwczovL2dp
+dC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQv
+Y29tbWl0Lz9pZD0wODZkMDg3MjVkMzRjNmIzMzMzZGI3MTAzNDRhZTljNGZkYWZiMmQ1DQoNCi0t
+LQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
