@@ -2,292 +2,167 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B1C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44548C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA072168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557898755;
-	bh=RQbZdEywXTKImIQgtR0Ab98Z5+mb/iASPOUkCd/efAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J4MGgRjZS2jTPN8DJP2Vd4XtWc8dpvtvnjHbhu2D2V7Vji7qHN/YSvVoldQE0SaN1
-	 gNAWmbDBDuxWNciscyo7qvt3BKyTEJjqzFMqWnW0bo7x4ylUM2Nv/WydP21gtNmjEH
-	 xoWeRa2hLU5bQTLcTJRVeeYV1ZlpDAUAOV3LRJ5g=
+	by mail.kernel.org (Postfix) with ESMTP id 1D9B2216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfEOFjO (ORCPT
+        id S1726447AbfEOFqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 01:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53216 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 01:46:46 -0400
+Received: from mga06.intel.com ([134.134.136.31]:51202 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfEOFjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 01:39:14 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51AA52166E;
-        Wed, 15 May 2019 05:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557898752;
-        bh=RQbZdEywXTKImIQgtR0Ab98Z5+mb/iASPOUkCd/efAY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZOhIAVfAd9m4jWGQvrRabdqEUCl3BNIzW+QB0ASst+V7nx3nqHG2P/kLrmQSWWjA4
-         TbGgbzJWNXtphr/r4g7+2pDuVmcyQWQRdVUC3gjfUfn5lWGP5iGRuSxqQiaGjK4iK8
-         tZ3qJoonlsnGe9n7Rj2WFUyRo4VNdTg67B5X00VM=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: [PATCH -tip v9 6/6] perf-probe: Add user memory access attribute support
-Date:   Wed, 15 May 2019 14:39:05 +0900
-Message-Id: <155789874562.26965.10836126971405890891.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155789866428.26965.8344923934342528416.stgit@devnote2>
-References: <155789866428.26965.8344923934342528416.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        id S1725781AbfEOFqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 01:46:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 22:46:45 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 May 2019 22:46:45 -0700
+Received: from [10.252.16.172] (abudanko-mobl.ccr.corp.intel.com [10.252.16.172])
+        by linux.intel.com (Postfix) with ESMTP id 9ED8F5800CB;
+        Tue, 14 May 2019 22:46:42 -0700 (PDT)
+Subject: Re: [PATCH v10 09/12] perf record: implement
+ -z,--compression_level[=<n>] option
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <12cce142-6238-475b-b9aa-236531c12c2b@linux.intel.com>
+ <9ff06518-ae63-a908-e44d-5d9e56dd66d9@linux.intel.com>
+ <20190514200424.GB8945@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <08ee0c0f-fc4b-c8cb-4ab4-6f976d156004@linux.intel.com>
+Date:   Wed, 15 May 2019 08:46:41 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190514200424.GB8945@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add user memory access attribute for kprobe event arguments.
-If a given 'local variable' is in user-space, User can
-specify memory access method by '@user' suffix. This is
-not only for string but also for data structure.
+On 14.05.2019 23:04, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Mar 18, 2019 at 08:44:42PM +0300, Alexey Budankov escreveu:
+>>
+>> Implemented -z,--compression_level[=<n>] option that enables compression
+>> of mmaped kernel data buffers content in runtime during perf record
+>> mode collection. Default option value is 1 (fastest compression).
+>>
+>> Compression overhead has been measured for serial and AIO streaming
+>> when profiling matrix multiplication workload:
+>>
+>>     -------------------------------------------------------------
+>>     | SERIAL			  | AIO-1                       |
+>> ----------------------------------------------------------------|
+> 
+> Please don't have lines starting with --- in the cset comment log
+> message, breaks scripts, fixing it up now.
 
-If we access a field of data structure in user memory from
-kernel on some arch, it will fail. e.g.
+Oops, will do my best about that. Thanks.
 
- perf probe -a "sched_setscheduler param->sched_priority"
+~Alexey
 
-This will fail to access the "param->sched_priority" because
-the param is __user pointer. Instead, we can now specify
-@user suffix for such argument.
-
- perf probe -a "sched_setscheduler param->sched_priority@user"
-
-Note that kernel memory access with "@user" must always fail
-on any arch.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- Changes in v8
-  - Fix a typo and rename user field to user_access field. (Thanks Ingo!)
----
- tools/perf/Documentation/perf-probe.txt |    3 ++-
- tools/perf/util/probe-event.c           |   11 +++++++++++
- tools/perf/util/probe-event.h           |    2 ++
- tools/perf/util/probe-file.c            |    7 +++++++
- tools/perf/util/probe-file.h            |    1 +
- tools/perf/util/probe-finder.c          |   19 ++++++++++++-------
- 6 files changed, 35 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index b6866a05edd2..ed3ecfa422e1 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -194,12 +194,13 @@ PROBE ARGUMENT
- --------------
- Each probe argument follows below syntax.
- 
-- [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE]
-+ [NAME=]LOCALVAR|$retval|%REG|@SYMBOL[:TYPE][@user]
- 
- 'NAME' specifies the name of this argument (optional). You can use the name of local variable, local data structure member (e.g. var->field, var.field2), local array with fixed index (e.g. array[1], var->array[0], var->pointer[2]), or kprobe-tracer argument format (e.g. $retval, %ax, etc). Note that the name of this argument will be set as the last member name if you specify a local data structure member (e.g. field2 for 'var->field1.field2'.)
- '$vars' and '$params' special arguments are also available for NAME, '$vars' is expanded to the local variables (including function parameters) which can access at given probe point. '$params' is expanded to only the function parameters.
- 'TYPE' casts the type of this argument (optional). If omitted, perf probe automatically set the type based on debuginfo (*). Currently, basic types (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal integers (x/x8/x16/x32/x64), signedness casting (u/s), "string" and bitfield are supported. (see TYPES for detail)
- On x86 systems %REG is always the short form of the register: for example %AX. %RAX or %EAX is not valid.
-+"@user" is a special attribute which means the LOCALVAR will be treated as a user-space memory. This is only valid for kprobe event.
- 
- TYPES
- -----
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 198e09ff611e..a7ca17be5fc5 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1577,6 +1577,17 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
- 		str = tmp + 1;
- 	}
- 
-+	tmp = strchr(str, '@');
-+	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
-+		if (!user_access_is_supported()) {
-+			semantic_error("ftrace does not support user access\n");
-+			return -EINVAL;
-+		}
-+		*tmp = '\0';
-+		arg->user_access = true;
-+		pr_debug("user_access ");
-+	}
-+
- 	tmp = strchr(str, ':');
- 	if (tmp) {	/* Type setting */
- 		*tmp = '\0';
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 05c8d571a901..96a319cd2378 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -37,6 +37,7 @@ struct probe_trace_point {
- struct probe_trace_arg_ref {
- 	struct probe_trace_arg_ref	*next;	/* Next reference */
- 	long				offset;	/* Offset value */
-+	bool				user_access;	/* User-memory access */
- };
- 
- /* kprobe-tracer and uprobe-tracer tracing argument */
-@@ -82,6 +83,7 @@ struct perf_probe_arg {
- 	char				*var;	/* Variable name */
- 	char				*type;	/* Type name */
- 	struct perf_probe_arg_field	*field;	/* Structure fields */
-+	bool				user_access;	/* User-memory access */
- };
- 
- /* Perf probe probing event (point + arg) */
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index 4062bc4412a9..89ce1a9c3798 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -1015,6 +1015,7 @@ enum ftrace_readme {
- 	FTRACE_README_PROBE_TYPE_X = 0,
- 	FTRACE_README_KRETPROBE_OFFSET,
- 	FTRACE_README_UPROBE_REF_CTR,
-+	FTRACE_README_USER_ACCESS,
- 	FTRACE_README_END,
- };
- 
-@@ -1027,6 +1028,7 @@ static struct {
- 	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
- 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
- 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
-+	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
- };
- 
- static bool scan_ftrace_readme(enum ftrace_readme type)
-@@ -1087,3 +1089,8 @@ bool uprobe_ref_ctr_is_supported(void)
- {
- 	return scan_ftrace_readme(FTRACE_README_UPROBE_REF_CTR);
- }
-+
-+bool user_access_is_supported(void)
-+{
-+	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
-+}
-diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 2a249182f2a6..986c1c94f64f 100644
---- a/tools/perf/util/probe-file.h
-+++ b/tools/perf/util/probe-file.h
-@@ -70,6 +70,7 @@ int probe_cache__show_all_caches(struct strfilter *filter);
- bool probe_type_is_available(enum probe_type type);
- bool kretprobe_offset_is_supported(void);
- bool uprobe_ref_ctr_is_supported(void);
-+bool user_access_is_supported(void);
- #else	/* ! HAVE_LIBELF_SUPPORT */
- static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
- {
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index c37fbef1711d..c202027716d0 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -294,7 +294,7 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
- 
- static int convert_variable_type(Dwarf_Die *vr_die,
- 				 struct probe_trace_arg *tvar,
--				 const char *cast)
-+				 const char *cast, bool user_access)
- {
- 	struct probe_trace_arg_ref **ref_ptr = &tvar->ref;
- 	Dwarf_Die type;
-@@ -334,7 +334,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	pr_debug("%s type is %s.\n",
- 		 dwarf_diename(vr_die), dwarf_diename(&type));
- 
--	if (cast && strcmp(cast, "string") == 0) {	/* String type */
-+	if (cast && (!strcmp(cast, "string") || !strcmp(cast, "ustring"))) {
-+		/* String type */
- 		ret = dwarf_tag(&type);
- 		if (ret != DW_TAG_pointer_type &&
- 		    ret != DW_TAG_array_type) {
-@@ -357,6 +358,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 				pr_warning("Out of memory error\n");
- 				return -ENOMEM;
- 			}
-+			(*ref_ptr)->user_access = user_access;
- 		}
- 		if (!die_compare_name(&type, "char") &&
- 		    !die_compare_name(&type, "unsigned char")) {
-@@ -411,7 +413,7 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				    struct perf_probe_arg_field *field,
- 				    struct probe_trace_arg_ref **ref_ptr,
--				    Dwarf_Die *die_mem)
-+				    Dwarf_Die *die_mem, bool user_access)
- {
- 	struct probe_trace_arg_ref *ref = *ref_ptr;
- 	Dwarf_Die type;
-@@ -448,6 +450,7 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 				*ref_ptr = ref;
- 		}
- 		ref->offset += dwarf_bytesize(&type) * field->index;
-+		ref->user_access = user_access;
- 		goto next;
- 	} else if (tag == DW_TAG_pointer_type) {
- 		/* Check the pointer and dereference */
-@@ -519,17 +522,18 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		}
- 	}
- 	ref->offset += (long)offs;
-+	ref->user_access = user_access;
- 
- 	/* If this member is unnamed, we need to reuse this field */
- 	if (!dwarf_diename(die_mem))
- 		return convert_variable_fields(die_mem, varname, field,
--						&ref, die_mem);
-+						&ref, die_mem, user_access);
- 
- next:
- 	/* Converting next field */
- 	if (field->next)
- 		return convert_variable_fields(die_mem, field->name,
--					field->next, &ref, die_mem);
-+				field->next, &ref, die_mem, user_access);
- 	else
- 		return 0;
- }
-@@ -555,11 +559,12 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- 	else if (ret == 0 && pf->pvar->field) {
- 		ret = convert_variable_fields(vr_die, pf->pvar->var,
- 					      pf->pvar->field, &pf->tvar->ref,
--					      &die_mem);
-+					      &die_mem, pf->pvar->user_access);
- 		vr_die = &die_mem;
- 	}
- 	if (ret == 0)
--		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type);
-+		ret = convert_variable_type(vr_die, pf->tvar, pf->pvar->type,
-+					    pf->pvar->user_access);
- 	/* *expr will be cached in libdw. Don't free it. */
- 	return ret;
- }
-
+> 
+> - Arnaldo
+> 
+>> |-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+>> |---------------------------------------------------------------|
+>> | 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+>> | 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+>> | 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+>> | 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+>> | 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+>> | 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+>> -----------------------------------------------------------------
+>>
+>> OVH = (Execution time with -z N) / (Execution time with -z 0)
+>>
+>> ratio - compression ratio
+>> size  - number of bytes that was compressed
+>>
+>> 	size ~= trace size x ratio
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/Documentation/perf-record.txt |  5 +++++
+>>  tools/perf/builtin-record.c              | 25 ++++++++++++++++++++++++
+>>  2 files changed, 30 insertions(+)
+>>
+>> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+>> index 18fceb49434e..0567bacc2ae6 100644
+>> --- a/tools/perf/Documentation/perf-record.txt
+>> +++ b/tools/perf/Documentation/perf-record.txt
+>> @@ -471,6 +471,11 @@ Also at some cases executing less trace write syscalls with bigger data size can
+>>  shorter than executing more trace write syscalls with smaller data size thus lowering
+>>  runtime profiling overhead.
+>>  
+>> +-z::
+>> +--compression-level[=n]::
+>> +Produce compressed trace using specified level n (default: 1 - fastest compression,
+>> +22 - smallest trace)
+>> +
+>>  --all-kernel::
+>>  Configure all used events to run in kernel space.
+>>  
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index 2e083891affa..7258f2964a3b 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -440,6 +440,26 @@ static int record__mmap_flush_parse(const struct option *opt,
+>>  	return 0;
+>>  }
+>>  
+>> +#ifdef HAVE_ZSTD_SUPPORT
+>> +static unsigned int comp_level_default = 1;
+>> +static int record__parse_comp_level(const struct option *opt,
+>> +				    const char *str,
+>> +				    int unset)
+>> +{
+>> +	struct record_opts *opts = (struct record_opts *)opt->value;
+>> +
+>> +	if (unset) {
+>> +		opts->comp_level = 0;
+>> +	} else {
+>> +		if (str)
+>> +			opts->comp_level = strtol(str, NULL, 0);
+>> +		if (!opts->comp_level)
+>> +			opts->comp_level = comp_level_default;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +#endif
+>>  static unsigned int comp_level_max = 22;
+>>  
+>>  static int record__comp_enabled(struct record *rec)
+>> @@ -2169,6 +2189,11 @@ static struct option __record_options[] = {
+>>  	OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
+>>  		     "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
+>>  		     record__parse_affinity),
+>> +#ifdef HAVE_ZSTD_SUPPORT
+>> +	OPT_CALLBACK_OPTARG('z', "compression-level", &record.opts, &comp_level_default,
+>> +		     "n", "Produce compressed trace using specified level (default: 1 - fastest compression, 22 - smallest trace)",
+>> +		     record__parse_comp_level),
+>> +#endif
+>>  	OPT_END()
+>>  };
+>>  
+>> -- 
+>> 2.20.1
+> 
