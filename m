@@ -2,55 +2,60 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C719C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D5C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B33E216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314DA2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918814;
-	bh=EkxhnBWCf7u5Dfk0q5o+FUIQZF3yV0qzuLvDXWN/rXw=;
+	s=default; t=1557918817;
+	bh=EPd20mHdzbvtQrcoHfWRAyuF3QmcVTLdRG1MIV51Cec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0el/41Wf1nLNUdlgMcEGCFM8kk0oxp2pccUWe78/M3CKdSpgMwDLmVawll+eiOaBI
-	 XZcvtMSTj2AANNEbI7UzGQdorqqvGpYkpkzitPy9UIuxRrL+FuGpjTeTaqGAroAgSy
-	 RSM6A0EECgi0MFe1I7ChSRbT8nxv/ZVeFiWRoHGU=
+	b=NF1GI7ed5T8vDcikWAjx2AZ35OHYiV55YZDuBGncanzTWoRAlKL3n54j8cHKG1hxe
+	 oEH0Nd+8VURtRRVf9/9BbfMmaXmZXm5AgllW2LcGUbBpb8Hx5Crx56eqE2e3y9hk2j
+	 qO1amge44oDQYGS3tr98k1OWXF4Snfgd8Vno6Mg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfEOLNc (ORCPT
+        id S1729996AbfEOLNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49168 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfEOLN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:27 -0400
+        id S1729977AbfEOLNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF6820644;
-        Wed, 15 May 2019 11:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5EF20644;
+        Wed, 15 May 2019 11:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918806;
-        bh=EkxhnBWCf7u5Dfk0q5o+FUIQZF3yV0qzuLvDXWN/rXw=;
+        s=default; t=1557918811;
+        bh=EPd20mHdzbvtQrcoHfWRAyuF3QmcVTLdRG1MIV51Cec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZcVPPy2DMCstag1QDYXzZdoOLxNWpOderY0qs8g8KPZQPgo9Ztd4PljaK20VW1Ct
-         BZ6HAs8DPSM2CQMwajTREXps5EiJKkEjdgeWCANSWWjI888/TaGCnuGdOy7zALLNGy
-         +YaFO0FyQXNUvxZcbkwNcyx8Y0M04LEsVY3zPIWQ=
+        b=CpxATUoSCM7dA1cZvJLuJWbqMI3/sXeI0ADARMg1Td3BExhvj+cN/+wqL3nns+zdu
+         03r3PjrQlccPppKCQ0YMguSp7zJM1pddB0tcF2/DdOJiQIer0aqUkUNwhBidm3FOYV
+         MD1+PzhjjUXOQQO1RTWlt2zIDz6WjAZ3IbWwdAhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 258/266] net: ucc_geth - fix Oops when changing number of buffers in the ring
-Date:   Wed, 15 May 2019 12:56:05 +0200
-Message-Id: <20190515090731.744216416@linuxfoundation.org>
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Zubin Mithra <zsm@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/51] netfilter: compat: initialize all fields in xt_init
+Date:   Wed, 15 May 2019 12:55:36 +0200
+Message-Id: <20190515090618.008520070@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
-References: <20190515090722.696531131@linuxfoundation.org>
+In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
+References: <20190515090616.669619870@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,81 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+commit 8d29d16d21342a0c86405d46de0c4ac5daf1760f upstream
 
-[ Upstream commit ee0df19305d9fabd9479b785918966f6e25b733b ]
+If a non zero value happens to be in xt[NFPROTO_BRIDGE].cur at init
+time, the following panic can be caused by running
 
-When changing the number of buffers in the RX ring while the interface
-is running, the following Oops is encountered due to the new number
-of buffers being taken into account immediately while their allocation
-is done when opening the device only.
+% ebtables -t broute -F BROUTING
 
-[   69.882706] Unable to handle kernel paging request for data at address 0xf0000100
-[   69.890172] Faulting instruction address: 0xc033e164
-[   69.895122] Oops: Kernel access of bad area, sig: 11 [#1]
-[   69.900494] BE PREEMPT CMPCPRO
-[   69.907120] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.115-00006-g179ade8ce3-dirty #269
-[   69.915956] task: c0684310 task.stack: c06da000
-[   69.920470] NIP:  c033e164 LR: c02e44d0 CTR: c02e41fc
-[   69.925504] REGS: dfff1e20 TRAP: 0300   Not tainted  (4.14.115-00006-g179ade8ce3-dirty)
-[   69.934161] MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 22004428  XER: 20000000
-[   69.940869] DAR: f0000100 DSISR: 20000000
-[   69.940869] GPR00: c0352d70 dfff1ed0 c0684310 f00000a4 00000040 dfff1f68 00000000 0000001f
-[   69.940869] GPR08: df53f410 1cc00040 00000021 c0781640 42004424 100c82b6 f00000a4 df53f5b0
-[   69.940869] GPR16: df53f6c0 c05daf84 00000040 00000000 00000040 c0782be4 00000000 00000001
-[   69.940869] GPR24: 00000000 df53f400 000001b0 df53f410 df53f000 0000003f df708220 1cc00044
-[   69.978348] NIP [c033e164] skb_put+0x0/0x5c
-[   69.982528] LR [c02e44d0] ucc_geth_poll+0x2d4/0x3f8
-[   69.987384] Call Trace:
-[   69.989830] [dfff1ed0] [c02e4554] ucc_geth_poll+0x358/0x3f8 (unreliable)
-[   69.996522] [dfff1f20] [c0352d70] net_rx_action+0x248/0x30c
-[   70.002099] [dfff1f80] [c04e93e4] __do_softirq+0xfc/0x310
-[   70.007492] [dfff1fe0] [c0021124] irq_exit+0xd0/0xd4
-[   70.012458] [dfff1ff0] [c000e7e0] call_do_irq+0x24/0x3c
-[   70.017683] [c06dbe80] [c0006bac] do_IRQ+0x64/0xc4
-[   70.022474] [c06dbea0] [c001097c] ret_from_except+0x0/0x14
-[   70.027964] --- interrupt: 501 at rcu_idle_exit+0x84/0x90
-[   70.027964]     LR = rcu_idle_exit+0x74/0x90
-[   70.037585] [c06dbf60] [20000000] 0x20000000 (unreliable)
-[   70.042984] [c06dbf80] [c004bb0c] do_idle+0xb4/0x11c
-[   70.047945] [c06dbfa0] [c004bd14] cpu_startup_entry+0x18/0x1c
-[   70.053682] [c06dbfb0] [c05fb034] start_kernel+0x370/0x384
-[   70.059153] [c06dbff0] [00003438] 0x3438
-[   70.063062] Instruction dump:
-[   70.066023] 38a00000 38800000 90010014 4bfff015 80010014 7c0803a6 3123ffff 7c691910
-[   70.073767] 38210010 4e800020 38600000 4e800020 <80e3005c> 80c30098 3107ffff 7d083910
-[   70.081690] ---[ end trace be7ccd9c1e1a9f12 ]---
+from a 32-bit user level on a 64-bit kernel. This patch replaces
+kmalloc_array with kcalloc when allocating xt.
 
-This patch forbids the modification of the number of buffers in the
-ring while the interface is running.
+[  474.680846] BUG: unable to handle kernel paging request at 0000000009600920
+[  474.687869] PGD 2037006067 P4D 2037006067 PUD 2038938067 PMD 0
+[  474.693838] Oops: 0000 [#1] SMP
+[  474.697055] CPU: 9 PID: 4662 Comm: ebtables Kdump: loaded Not tainted 4.19.17-11302235.AroraKernelnext.fc18.x86_64 #1
+[  474.707721] Hardware name: Supermicro X9DRT/X9DRT, BIOS 3.0 06/28/2013
+[  474.714313] RIP: 0010:xt_compat_calc_jump+0x2f/0x63 [x_tables]
+[  474.720201] Code: 40 0f b6 ff 55 31 c0 48 6b ff 70 48 03 3d dc 45 00 00 48 89 e5 8b 4f 6c 4c 8b 47 60 ff c9 39 c8 7f 2f 8d 14 08 d1 fa 48 63 fa <41> 39 34 f8 4c 8d 0c fd 00 00 00 00 73 05 8d 42 01 eb e1 76 05 8d
+[  474.739023] RSP: 0018:ffffc9000943fc58 EFLAGS: 00010207
+[  474.744296] RAX: 0000000000000000 RBX: ffffc90006465000 RCX: 0000000002580249
+[  474.751485] RDX: 00000000012c0124 RSI: fffffffff7be17e9 RDI: 00000000012c0124
+[  474.758670] RBP: ffffc9000943fc58 R08: 0000000000000000 R09: ffffffff8117cf8f
+[  474.765855] R10: ffffc90006477000 R11: 0000000000000000 R12: 0000000000000001
+[  474.773048] R13: 0000000000000000 R14: ffffc9000943fcb8 R15: ffffc9000943fcb8
+[  474.780234] FS:  0000000000000000(0000) GS:ffff88a03f840000(0063) knlGS:00000000f7ac7700
+[  474.788612] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
+[  474.794632] CR2: 0000000009600920 CR3: 0000002037422006 CR4: 00000000000606e0
+[  474.802052] Call Trace:
+[  474.804789]  compat_do_replace+0x1fb/0x2a3 [ebtables]
+[  474.810105]  compat_do_ebt_set_ctl+0x69/0xe6 [ebtables]
+[  474.815605]  ? try_module_get+0x37/0x42
+[  474.819716]  compat_nf_setsockopt+0x4f/0x6d
+[  474.824172]  compat_ip_setsockopt+0x7e/0x8c
+[  474.828641]  compat_raw_setsockopt+0x16/0x3a
+[  474.833220]  compat_sock_common_setsockopt+0x1d/0x24
+[  474.838458]  __compat_sys_setsockopt+0x17e/0x1b1
+[  474.843343]  ? __check_object_size+0x76/0x19a
+[  474.847960]  __ia32_compat_sys_socketcall+0x1cb/0x25b
+[  474.853276]  do_fast_syscall_32+0xaf/0xf6
+[  474.857548]  entry_SYSENTER_compat+0x6b/0x7a
 
-Fixes: ac421852b3a0 ("ucc_geth: add ethtool support")
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/ucc_geth_ethtool.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/netfilter/x_tables.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/freescale/ucc_geth_ethtool.c
-+++ b/drivers/net/ethernet/freescale/ucc_geth_ethtool.c
-@@ -253,14 +253,12 @@ uec_set_ringparam(struct net_device *net
- 		return -EINVAL;
+diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+index 751fec729ffb0..e065140d0c93b 100644
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -1728,7 +1728,7 @@ static int __init xt_init(void)
+ 		seqcount_init(&per_cpu(xt_recseq, i));
  	}
  
-+	if (netif_running(netdev))
-+		return -EBUSY;
-+
- 	ug_info->bdRingLenRx[queue] = ring->rx_pending;
- 	ug_info->bdRingLenTx[queue] = ring->tx_pending;
+-	xt = kmalloc(sizeof(struct xt_af) * NFPROTO_NUMPROTO, GFP_KERNEL);
++	xt = kcalloc(NFPROTO_NUMPROTO, sizeof(struct xt_af), GFP_KERNEL);
+ 	if (!xt)
+ 		return -ENOMEM;
  
--	if (netif_running(netdev)) {
--		/* FIXME: restart automatically */
--		netdev_info(netdev, "Please re-open the interface\n");
--	}
--
- 	return ret;
- }
- 
+-- 
+2.20.1
+
 
 
